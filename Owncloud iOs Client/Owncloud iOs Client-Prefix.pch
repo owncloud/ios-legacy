@@ -1,0 +1,32 @@
+//
+// Prefix header for all source files of the 'Owncloud iOs Client' target in the 'Owncloud iOs Client' project
+//
+
+/*
+ Copyright (C) 2014, ownCloud, Inc.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
+
+
+#import <Availability.h>
+ 
+
+#ifndef __IPHONE_4_0
+#warning "This project uses features only available in iOS SDK 4.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import <SystemConfiguration/SystemConfiguration.h>
+    #import "SystemConstants.h"
+#endif
+
+#ifdef DEBUG_MODE
+#define DLog( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
+#else
+#define DLog( s, ... )
+#endif

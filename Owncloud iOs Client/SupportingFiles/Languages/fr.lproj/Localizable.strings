@@ -1,0 +1,251 @@
+/*
+ Localizable.strings
+ Owncloud iOs Client
+ 
+ Created by Javier Gonzalez on 7/17/12.
+ */
+
+/*
+ Copyright (C) 2014, ownCloud, Inc.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
+
+
+//First Screen
+"go_to_login" = "Configuration de compte";
+"you_need_an_account" = "Pas de compte $appname sur cet appareil.\r\nPour utiliser cette application, vous devez en créer un.";
+
+//Login Screen
+"testing_connection" = "Test de connexion";
+"server_instance_not_found" = "Serveur introuvable";
+"secure_connection_established" = "Connexion sécurisée établie";
+"https_non_secure_connection_established" = "Redirigée par une voie peu sûre";
+"connection_established" = "Connexion établie";
+"login_details" = "Informations de connexion";
+"username" = "Identifiant";
+"password" = "Mot de passe";
+"login" = "Se connecter";
+"cancel" = "Annuler";
+"error_login_message" = "Identifiant ou mot de passe incorrect";
+"ok" = "OK";
+"url_sample" = "Adresse serveur https://…";
+"forbidden_characters" = "Ce mot de passe contient des caractères interdits";
+"server" = "Serveur";
+"url" = "URL";
+"session_expired" = "Votre session a expiré";
+"credentials_different_user" = "L'utilisateur indiqué ne correspond pas à l'utilisateur de ce compte";
+"auth_unsupported_auth_method" = "Méthode d'authentification non supportée par le serveur";
+"saml_server_does_not_give_user_id" = "The server does not return a correct user ID. Please contact your admin.";
+"authentification_not_valid" = "Can not authenticate against this server";
+"error_too_many_http_redirects" = "There has been an error when establishing the connection. Please, try it again.";
+"retry" = "Retry";
+
+//TabBarItems
+"settings"="Paramètres";
+"files_tab"="Fichiers";
+
+//Uploading
+"upload" = "Chargement";
+"account" = "Compte";
+"location" = "Emplacement:";
+"photo_albums" = "Albums Photo";
+"loading" = "Chargement...";
+"no_access_to_gallery" = "Se il vous plaît permettre l'accès aux photos et vidéos pour $appname. Cette option peut être trouvé dans Paramètres> privacité> Photos";
+"error" = "Erreur";
+"upload_failed"="Echec du chargement";
+"redirection_problem"="Redirection de l'URL non supportée";
+
+//First View
+"menu_upload" = "Chargement Photo/Vidéo";
+"menu_folder" = "Créer un dossier";
+
+//Create Folder
+"create_folder" = "Créer un dossier";
+"folder_name" = "Entrez le nom du dossier:";
+"save" = "Enregistrer";
+"folder_forbbiden_characters" = "Le nom du dossier contient des caractères interdits. Merci d'indiquer un autre nom.";
+"file_forbbiden_characters" = "Le nom du fichier contient des caractères interdits. Merci d'indiquer un autre nom.";
+"folder_exist" = "Ce nom de dossier existe déjà. Merci d'indiquer un autre nom.";
+"folder_create_error" = "Le dossier n'a pas pu être créé";
+"not_show_potrait" = "Menu non disponible en vue paysage. Merci de passer en vue portrait.";
+"not_possible_create_folder" = "Le dossier n'a pas pu être créé.";
+
+//FilesView
+"confirm_to_delete_item" = "Veuillez confirmer la suppression de l'élément";
+"yes" = "Oui";
+"no" = "Non";
+"delete_from_device" = "Etes-vous sûr de vouloir supprimer ce fichier de l'appareil?";
+"delete_from_server" = "Etes-vous sûr de vouloir supprimer ce fichier du serveur?";
+"not_possible_connect_to_server" = "Impossible de se connecter au serveur pour le moment.";
+"delete_folder_from_server" = "Etes-vous sûr de vouloir supprimer ce dossier du serveur?";
+"delete_local_server" = "Supprimer de l'appareil et du serveur";
+"delete_local" = "Supprimer de l'appareil";
+"delete_server" = "Supprimer du serveur";
+"error_path" = "Impossible d'ouvrir ce dossier. Veuillez vous assurer qu'il existe";
+"error_not_permission" = "Vous n'avez pas l'autorisation d'effectuer cette action";
+"folders" = "dossiers";
+"files" = "fichiers";
+"folder" = "dossier";
+"file" = "fichier";
+"more_swipe" = "Plus";
+"message_not_files" = "Il n'y a rien ici! Envoyez donc quelque chose.";
+
+//Refresh file list
+"release_refresh"="Relâchez pour mettre à jour...";
+"loading_refresh"="Chargement...";
+"pull_down_refresh"="Tirez pour mettre à jour.";
+
+//Miscelanea
+"back" = "Retour";
+
+//Preview
+"open_with_label" = "Ouvrir avec";
+"delete_label"= "Supprimer";
+
+//Open with
+"file_cannot_be_opened" = "Le fichier ne peut pas être ouvert";
+"no_app_instaled_to_open_it" = "Il n'y a pas d'application installée pour ouvrir ce type de fichier.";
+
+//WTClient messages (Download/Upload)
+"establishing_connection" = "Connexion en cours";
+"not_establishing_connection" = "Connexion impossible";
+"connection_closed" = "Connexion fermée";
+"connection_lost" = "Connexion perdue";
+"auth_failed" = "Echec de l'authentification";
+"auth_passed" = "Authentification réussie";
+"request_file_not_found" = "Fichier introuvable sur le serveur";
+"request_file_not_accesed" = "Fichier spécifié non accessible";
+"unknow_response_server" = "Problème de connexion avec le serveur.";
+"uploading_data" = "Chargement des données";
+"downloading_data" = "Téléchargement des données";
+"transfer_complete" = "Transfert réussi";
+"transfer_failed" = "Echec du transfert";
+
+//Settings and PinCode
+"title_app_pin" = "Code de sécurité";
+"enter_app_pin" = "Veuillez saisir votre code de sécurité";
+"enter_app_pin_long_description" = "Veuillez saisir votre code de sécurité";
+"reenter_app_pin" = "Veuillez saisir à nouveau votre code de sécurité";
+"remove_app_pin" = "Retirer le code de sécurité";
+"both_pass_not_same" = "Les codes de sécurité indiqués ne sont pas identiques";
+"app_pin_incorrect" = "Code de sécurité incorrect";
+"disconnect_button" = "Déconnexion du serveur";
+"pin_removed" = "Code de sécurité supprimé";
+"incorrect_pin" = "Code de sécurité incorrect";
+"app_pin_stored" = "Code de sécurité enregistré";
+"help" = "Aide";
+"recommend_to_friend" = "Recommandez à un ami";
+"send_feedback" = "Contactez l'équipe";
+"manage_accounts" = "Gérer les comptes";
+"add_new_account" = "Ajouter un nouveau compte";
+"save_changes" = "Enregistrer";
+"add_account" = "Ajouter";
+"user_exist" = "L'utilisateur indiqué existe déjà";
+"imprint_button" = "Imprimer";
+
+//Downloading
+"can_no_copy_to_gallery" = "Ce fichier ne peut pas être copié car il ne peut pas être ouvert dans la galerie";
+"file_is_downloading" = "Ce fichier est déjà en cours de téléchargement";
+"download_file_exist" = "Impossible d'ouvrir ce fichier. Veuillez vous assurer qu'il existe";
+"wait_to_download" = "Téléchargement en cours";
+"msg_while_downloads" = "Impossible d'effectuer cette opération, merci d'attendre la fin du téléchargement actuel";
+
+//SSL
+"invalid_ssl_cert" = "L'identité du site n'a pu être vérifiée. Voulez-vous faire confiance au certificat?";
+"connection_declined" = "Connexion refusée par l'utilisateur";
+
+//Recent view
+"recent_now"="il y a secondes";
+"recent_minutes"="il y a $minutes minutes";
+"recent_minute"="il y a $minutes minute";
+"recent_hours"="il y a $hours heures";
+"recent_hour"="il y a $hours heure";
+"recent_days"="il y a $days jours";
+"recent_day"="il y a $days jour";
+"recent_months"="il y a $months mois";
+"recent_month"="il y a $months mois";
+
+"uploads_tab"="Chargements";
+"current_section"="En cours";
+"uploader_section"="Chargements récents";
+"nothing_was_upload_recently"="Aucun fichier n'a été chargé récemment depuis cet appareil";
+"failed_uploader_section"="Echec de chargement";
+"error_credential"="Erreur de certificat";
+"error_destiny_does_not_exist"="Erreur dossier";
+"error_file_exists"="Fichier déjà existant";
+"error_permission" = "Erreur d'autorisation";
+"error_file_does_not_exist" = "Erreur fichier";
+"error_file_in_background" = "Erreur de Serveur";
+"change_active_user"="Changer l'utilisateur";
+"waiting_for_server"="En attente de connexion au serveur";
+"waiting_for_upload"="En attente de chargement";
+"error_permission_alert_message" = "Vous n'avez pas l'autorisation de charger un fichier dans ce dossier";
+"choose_folder" = "Choisir le dossier";
+
+//Select Folder View
+"upload_label"="Charger vers";
+"create_button"="Créer";
+"choose_button"="Choisir";
+
+//Rename
+"rename_long_press" = "Renommer";
+"rename_file_title" = "Renommer";
+"enter_new_name" = "Entrer un nouveau nom";
+"rename_file_exist" = "Nom de fichier déjà existant, merci d'indiquer un nom différent";
+
+//Move
+"move_long_press" = "Déplacer";
+"move_to_label" = "Déplacer vers";
+"file_exist" = "Fichier déjà existant dans le dossier de destination";
+"override_file" = "Voulez-vous remplacer le fichier existant par celui-ci?";
+"accept" = "Accepter";
+"error_folder_destiny_is_the_same" = "Impossible de déplacer le dossier : dossier de destination identique";
+"original_file_exist" = "Impossible de déplacer le fichier. Veuillez vous assurer qu'il existe";
+"original_folder_exist" = "Impossible de déplacer le dossier. Veuillez vous assurer qu'il existe";
+
+//Upload from other apps
+"other_apps_title" = "Emplacement";
+"other_apps_account" = "Compte";
+"other_apps_folder" = "Dossier";
+"other_apps_file_name" = "Nom du fichier";
+"other_apps_send_to" = "Charger vers";
+"error_moving_file" = "Impossible de déplacer le fichier. Veuillez vous assurer que le dossier de destination existe";
+"forbiden_characters" = "Nom invalide : '\\', '/', '<', '>', ':', \", '|', '?' et '*' ne sont pas autorisés";
+"overwritte_title" = "Ecraser";
+
+//Social
+"twitter_message" = "Essayez $twitteruser sur votre smartphone! ";
+"facebook_message" = "Essayez $appname sur votre smartphone!\r\n";
+"mail_recommendation_subject" = "Essayez $appname sur votre smartphone!";
+"mail_recommendation_body" = "Je souhaite vous inviter à utiliser $appname sur votre smartphone!\r\nTéléchargez ici: ";
+"device_not_support_mail" = "Votre appareil n'est pas configuré pour l'envoi de mails. Rendez-vous dans Paramètres pour le configurer.";
+"mail_feedback_subject" = "Remarque application $appname";
+"account_not_configure" = "Votre appareil n'est pas configuré pour cette application. Rendez-vous dans Paramètres pour le configurer.";
+
+//Storage
+"of_storage" = "of";
+"occupied_storage" = "Occupé";
+"storage" = "Stockage";
+"storage_upgrade" = "Augmenter la capacité de stockage";
+
+//Jimmies
+"this_file_is_older" = "Nouvelle version disponible";
+"msg_update_file_0_bytes" = "Le fichier qui est dans le serveur a 0 bytes. Est-ce que vous voulez remplacer le fichier qui est dans votre dispositif par le fichier vide?";
+
+//Shared
+"shared_tab" = "Liens partagés";
+"message_not_shared_files" = "Aucun fichier ou dossier partagé par un lien pour le moment.";
+"message_not_shared_api_support" = "Partage non autorisé sur votre serveur. Veuillez contacter votre administrateur";
+"share_link_long_press" = "Partager le lien";
+"unshare_link" = "Supprimer le partage du lien";
+"share_not_available_on_this_server" = "Fonctionnalité non autorisée sur votre serveur. Veuillez contacter votre administrateur";
+"copy_link" = "Copier le lien";
+"file_to_share_not_exist" = "Impossible de partager ce fichier ou dossier. Veuillez vous assurer qu'il existe";
+"file_to_unshare_not_exist" = "Impossible d'annuler le partage de ce fichier ou dossier. Veuillez vous assurer qu'il existe";
+
+//Favorites
+"favorite" = "Favori";
+"unfavorite" = "Non favori";

@@ -1,0 +1,120 @@
+###################################################################
+
+	Copyright (C) 2014, ownCloud Inc.
+
+
+  	This code is covered by the GNU Public License Version 3.
+  
+  	For distribution utilizing Apple mechanisms please see
+ 	https://owncloud.org/contribute/iOS-license-exception/
+
+	
+	You should have received a copy of this license along with this program. 
+	If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>,
+	<https://owncloud.com/de/licenses/owncloud-commercial/>.
+	
+	
+###################################################################
+
+
+###########
+# LICENSE #
+###########
+ 
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License verions 3,
+as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+The source distribution of this program should include a full copy
+of the GNU GPL version 3 license in the LICENSE.txt file located 
+in its root directory. If not, see <http://www.gnu.org/licenses/>.
+
+
+########################
+# THIRD PARTY LICENSES #
+########################
+
+Both the source and binary distributions of this software contain
+some third party software. All the third party software included
+or linked is redistributed under the terms and conditions of their 
+original licenses. These licenses are compatible the GPL license 
+that govern this software, for the purposes they are being used.
+
+The third party software included and used by this project is:
+
+
+ * 	CWStatusBarNotification
+   	Copyright (c) 2013 Cezary Wojcik <http://www.cezarywojcik.com>
+   	Licensed under MIT License.
+   	Placed at ExternalLibreries/CustomStatusBar.
+	Original license document included at ExternalLibreries/CustomStatusBar/LICENSE.
+   	See https://github.com/cezarywojcik/CWStatusBarNotification
+
+ * 	Includes a modified version of SWTableViewCell
+   	Original SWTableViewCell  Copyright (c) 2013 Christopher Wendel.
+   	Licensed under MIT License.
+   	Placed at ExternalLibreries/SWTableViewCell.
+	Original license document included at ExternalLibreries/SWTableViewCell/LICENSE.
+   	See https://github.com/CEWendel/SWTableViewCell
+
+ * 	Includes a modified version of KKPasscodeLock
+   	Original KKPasscodeLock  Copyright (c) 2011-2012 Kosher Penguin LLC.
+   	Licensed under Apache License, Version 2.0.
+   	Placed at ExternalLibreries/KKPasscodeLock.
+	Original license document included at ExternalLibreries/KKPasscodeLock/LICENSE.
+   	See https://github.com/aporat/KKPasscodeLock
+
+ * 	Includes a modified version of ELCImagePickerController
+	Original ELCImagePickerController Copyright (c) 2010 ELC Technologies.
+   	Licensed under MIT License
+   	Placed at ExternalLibreries/ELCPickerLib.
+	Original license document included at ExternalLibreries/ELCPickerLib/LICENSE.
+   	See https://github.com/B-Sides/ELCImagePickerController
+
+ * 	Includes a modified version of MBProgressHUD
+   	Original MBProgressHUD Copyright (c) 2013 Matej Bukovinski, version 0.9
+   	Licensed under MIT License
+   	Placed at ExternalLibreries/LoadingScreen.
+	Original license document included at ExternalLibreries/LoadingScreen/LICENSE.
+   	See https://github.com/jdg/MBProgressHUD
+
+ * 	Includes a modified version of MGSplitViewController
+   	Original MGSplitViewController copyright (c) 2010 Matt Legend Gemmell.
+	Licensed under Matt Legend Gemmell / Instinctive Code Source Code License,
+   	Placed at ExternalLibreries/MGSplitViewController.
+	Original license document included at ExternalLibreries/MGSplitViewController/LICENSE.
+   	See https://github.com/mattgemmell/MGSplitViewController
+
+ * 	OAuth - SURFnetConextIOSClient 
+   	Copyright (c) 2012 SURFnet bv, The Netherlands
+   	Licensed under Apache License, Version 2.0.
+   	Placed at ExternalLibreries/OAuth.
+	Original license document included at ExternalLibreries/OAuth/LICENSE.
+   	See https://github.com/OpenConextApps/ios-oauth-app
+
+ * 	UIAlertView-Blocks
+   	Copyright (c) 2013 Ryan Maxwell.
+   	Licensed under MIT License.
+   	Placed at ExternalLibreries/UIAlertViewWithBlocks
+	Original license document included at ExternalLibreries/UIAlertViewWithBlocks/LICENSE.
+   	See https://github.com/ryanmaxwell/UIAlertView-Blocks
+
+ * 	Includes a modified version of UIImage+Resize, UIImage+Alpha, UIImage+RoundedCorner
+	Original Copyright (c) 2009 Created by Trevor Harmon.
+   	Placed at Utils/Image Scale
+	Original license document included at Utils/Image Scale/LICENSE.
+   	See http://vocaro.com/trevor/blog/2009/10/12/resize-a-uiimage-the-right-way/
+
+ * 	ownCloud iOS Library
+   	Copyright (c) 2014 ownCloud Inc. (http://www.owncloud.org/)
+   	Licensed under MIT License.
+   	Placed at OCCommunicationLib
+	Original license document included at OCCommunicationLib/LICENSE.
+   	See https://github.com/owncloud/ios-library
+
+

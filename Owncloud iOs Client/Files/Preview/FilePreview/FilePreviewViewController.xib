@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FilePreviewViewController">
+            <connections>
+                <outlet property="_favoriteButtonBar" destination="ykv-ED-YQ0" id="w9h-pY-K4k"/>
+                <outlet property="_progressViewHeightConstraint" destination="9w9-TH-Dm8" id="Ys7-aW-Ykk"/>
+                <outlet property="cancelButton" destination="22" id="23"/>
+                <outlet property="previewImageView" destination="4" id="18"/>
+                <outlet property="progressLabel" destination="27" id="28"/>
+                <outlet property="progressView" destination="19" id="21"/>
+                <outlet property="toolBar" destination="6" id="26"/>
+                <outlet property="view" destination="1" id="3"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="1">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4">
+                    <rect key="frame" x="128" y="132" width="64" height="64"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="64" id="2tc-6X-ldQ"/>
+                        <constraint firstAttribute="height" constant="64" id="H3R-CK-OVC"/>
+                    </constraints>
+                </imageView>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6" customClass="OCToolBar">
+                    <rect key="frame" x="0.0" y="372" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="RhL-9u-Zc2"/>
+                    </constraints>
+                    <items>
+                        <barButtonItem image="openWithTB.png" width="60" style="plain" id="7">
+                            <connections>
+                                <action selector="didPressOpenWithButton:" destination="-1" id="14"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="34"/>
+                        <barButtonItem image="favoriteTB.png" width="60" style="plain" id="ykv-ED-YQ0">
+                            <connections>
+                                <action selector="didPressFavoritesButton:" destination="-1" id="Wrl-Aq-1ah"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="gO7-AJ-90I"/>
+                        <barButtonItem image="sharedItem.png" width="60" style="plain" id="JrE-63-Upc">
+                            <connections>
+                                <action selector="didPressShareLinkButton:" destination="-1" id="a6E-nw-FJL"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="33"/>
+                        <barButtonItem image="deleteTB.png" width="60" style="plain" id="10">
+                            <connections>
+                                <action selector="didPressDeleteButton:" destination="-1" id="17"/>
+                            </connections>
+                        </barButtonItem>
+                    </items>
+                </toolbar>
+                <progressView opaque="NO" contentMode="scaleToFill" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="19">
+                    <rect key="frame" x="85" y="217" width="150" height="2"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="2" id="9w9-TH-Dm8"/>
+                        <constraint firstAttribute="width" constant="150" id="kIX-yO-F65"/>
+                    </constraints>
+                </progressView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="22">
+                    <rect key="frame" x="255" y="205" width="25" height="25"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="boldSystem" size="button"/>
+                    <state key="normal" image="cancel_download.png">
+                        <color key="titleColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <state key="highlighted">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="didPressCancelButton:" destination="-1" eventType="touchUpInside" id="24"/>
+                    </connections>
+                </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="27">
+                    <rect key="frame" x="160" y="235" width="0.0" height="0.0"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="4" secondAttribute="centerX" id="35e-QE-N4k"/>
+                <constraint firstItem="27" firstAttribute="top" secondItem="19" secondAttribute="bottom" constant="16" id="AhT-J3-Kex"/>
+                <constraint firstAttribute="centerY" secondItem="4" secondAttribute="centerY" constant="44" id="Gjy-0m-h6E"/>
+                <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" id="Sz7-3p-C9e"/>
+                <constraint firstItem="4" firstAttribute="centerX" secondItem="27" secondAttribute="centerX" id="Yi7-iS-yt9"/>
+                <constraint firstAttribute="bottom" secondItem="6" secondAttribute="bottom" id="fs0-iF-JWa"/>
+                <constraint firstAttribute="centerY" secondItem="22" secondAttribute="centerY" constant="-9.5" id="hr6-Vo-IrT"/>
+                <constraint firstAttribute="centerX" secondItem="19" secondAttribute="centerX" id="ihh-Fj-Nqf"/>
+                <constraint firstAttribute="centerY" secondItem="19" secondAttribute="centerY" constant="-10" id="oN6-it-G7P"/>
+                <constraint firstAttribute="centerX" secondItem="22" secondAttribute="centerX" constant="-107.5" id="qbL-6I-weh"/>
+                <constraint firstItem="6" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="zFV-Nc-SM4"/>
+            </constraints>
+        </view>
+    </objects>
+    <resources>
+        <image name="cancel_download.png" width="25" height="25"/>
+        <image name="deleteTB.png" width="25" height="25"/>
+        <image name="favoriteTB.png" width="25" height="25"/>
+        <image name="openWithTB.png" width="25" height="25"/>
+        <image name="sharedItem.png" width="25" height="25"/>
+    </resources>
+</document>

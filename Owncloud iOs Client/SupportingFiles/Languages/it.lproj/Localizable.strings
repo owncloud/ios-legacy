@@ -1,0 +1,252 @@
+/*
+ Localizable.strings
+ Owncloud iOs Client
+ 
+ Created by Javier Gonzalez on 7/17/12.
+ */
+
+/*
+ Copyright (C) 2014, ownCloud, Inc.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
+
+
+//First Screen
+"go_to_login" = "Imposta Account";
+"you_need_an_account" = "Non ci sono account $appname sul tuo dispositivo\r\nPer poter utilizzare questa applicazione, è necessario crearne uno.";
+
+//Login Screen
+"testing_connection" = "Prova la connessione";
+"server_instance_not_found" = "Server non trovato";
+"secure_connection_established" = "Connessione sicura stabilita";
+"https_non_secure_connection_established" = "Redirect da un percorso pericoloso";
+"connection_established" = "Connessione stabilita";
+"login_details" = "Dettagli sessione";
+"username" = "Utente";
+"password" = "Password";
+"login" = "Accedi";
+"cancel" = "Cancella";
+"error_login_message" = "Il nome utente o la password sono errati";
+"ok" = "OK";
+"url_sample" = "Indirizzo del server https://...";
+"forbidden_characters" = "La password contiene caratteri invalidi";
+"server" = "Server";
+"url" = "URL";
+"session_expired" = "La sessione è scaduta";
+"credentials_different_user" = "Le credenziali che avete inserito non sono dello stesso utente";
+"auth_unsupported_auth_method" = "Questo metodo di autenticazione non è disponibile sul server";
+"saml_server_does_not_give_user_id" = "Si server restituisce un ID utente corretto, si prega di contattare l'amministratore di";
+"authentification_not_valid" = "Non è possibile accedere a questo server";
+"error_too_many_http_redirects" = "There has been an error when establishing the connection. Please, try it again.";
+"retry" = "Retry";
+
+//TabBarItems
+"settings"="Impostazioni";
+"files_tab"="File";
+
+//Uploading
+"upload" = "Carica";
+"account" = "Account:";
+"location" = "Posizione:";
+"photo_albums" = "Album Foto";
+"loading" = "Caricamento...";
+"no_access_to_gallery" = "Si prega di abilitare l'accesso a Foto e Video per $appname. Questa opzione può essere trovato in Impostazioni> Privacity> Foto.";
+"error" = "Errore";
+"upload_failed"="Caricamento Fallito";
+"redirection_problem"="URL redirect action is not supported";
+
+//First View
+"menu_upload" = "Carica Foto/Video";
+"menu_folder" = "Nuova cartella";
+
+//Create Folder
+"create_folder" = "Crea nuova cartella";
+"folder_name" = "Inserisci il nome della cartella:";
+"save" = "Salva";
+"folder_forbbiden_characters" = "Il nome della cartella contiene caratteri non permessi. Si prega di rimuoverli.";
+"file_forbbiden_characters" = "Il nome del file contiene caratteri non permessi. Si prega di rimuoverli.";
+"folder_exist" = "Il nome della cartella esiste già, si prega di modificarlo";
+"folder_create_error"="La directory non può essere creata";
+"not_show_potrait"="Menù non disponibile in orizzontale. Si prega di passare alla visualizzazione verticale.";
+"not_possible_create_folder" = "La cartella non può essere creata.";
+
+//FilesView
+"confirm_to_delete_item" = "Conferma cancellazione dell'oggetto";
+"yes" = "Sì";
+"no" = "No";
+"delete_from_device" = "Sei sicuro di voler eliminare questo file dal dispositivo?";
+"delete_from_server" = "Sei sicuro di voler eliminare questo file dal server?";
+"not_possible_connect_to_server" = "Non è possibile connettersi al server in questo momento.";
+"delete_folder_from_server" = "Sei sicuro di voler eliminare la cartella dal server?";
+"delete_local_server" = "Elimina dal dispositivo e dal server";
+"delete_local" = "Elimina dal dispositivo";
+"delete_server" = "Elimina dal server";
+"error_path" = "Impossibile aprire questa cartella. Per favore, assicuratevi che esista";
+"error_not_permission" = "Non si dispone dell'autorizzazione per completare l'operazione";
+"folders" = "cartelle";
+"files" = "file";
+"folder" = "cartella";
+"file" = "file";
+"more_swipe" = "Altro";
+"message_not_files" = "Non c'è niente qui. Carica qualcosa!";
+
+//Refresh file list
+"release_refresh"="Rilasciare per aggiornare ...";
+"loading_refresh"="Caricamento...";
+"pull_down_refresh"="Tirare verso il basso per aggiornare.";
+
+//Miscelanea
+"back" = "Indietro";
+
+//Preview
+"open_with_label" = "Apri con";
+"delete_label"= "Elimina";
+
+//Open with
+"file_cannot_be_opened" = "Il file non può essere aperto";
+"no_app_instaled_to_open_it" = "Non vi è alcuna applicazione installata per aprire questo tipo di file.";
+
+//WTClient messages (Download/Upload)
+"establishing_connection" = "Stabilire connessione";
+"not_establishing_connection" = "Impossibile stabilire la connessione";
+"connection_closed" = "Connessione chiusa";
+"connection_lost" = "Connessione persa";
+"auth_failed" = "Autenticazione fallita";
+"auth_passed" = "Autenticazione accettata";
+"request_file_not_found" = "Il file richiesto non è stato trovato nel server";
+"request_file_not_accesed" = "Il file richiesto non può essere aperto";
+"unknow_response_server" = "Errore. Risposta imprevista dal server.";
+"uploading_data" = "Caricamento dei dati";
+"downloading_data" = "Scaricamento dei dati";
+"transfer_complete" = "Trasferimento completato";
+"transfer_failed" = "Trasferimento fallito";
+
+//Settings and PinCode
+"title_app_pin" = "PIN Applicazione";
+"enter_app_pin" = "Inserisci PIN Applicazione";
+"enter_app_pin_long_description" = "Inserisci PIN Applicazione";
+"reenter_app_pin" = "Reinserisci PIN";
+"remove_app_pin" = "Rimuovi PIN";
+"both_pass_not_same" = "I PIN inseriti non corrispondono";
+"app_pin_incorrect" = "PIN Errato";
+"disconnect_button" = "Disconnetti da questo server";
+"pin_removed" = "PIN Rimosso";
+"incorrect_pin" = "PIN Errato";
+"app_pin_stored" = "PIN Memorizzato";
+"help" = "Aiuto";
+"recommend_to_friend" = "Invia a un amico";
+"send_feedback" = "Invia Feedback";
+"manage_accounts" = "Gestisci account";
+"add_new_account" = "Aggiungi nuovo account";
+"save_changes" = "Salva";
+"add_account" = "Aggiungi";
+"user_exist" = "L'utente che hai inserito esiste già";
+"imprint_button" = "Impressum";
+
+//Downloading
+"can_no_copy_to_gallery" = "Questo file non può essere copiato nella galleria perché non può essere aperto dalla galleria";
+"file_is_downloading" = "Questo file è in coda per essere scaricato";
+"download_file_exist" = "Impossibile aprire il file. Per favore, assicuratevi che esista";
+"wait_to_download" = "Preparazione al download";
+"updating" = "Aggiornamento";
+"msg_while_downloads" = "Non è possibile fare questa operazione, si prega di attendere il scarico corrente finisce";
+
+//SSL
+"invalid_ssl_cert" = "L'identità del sito non può essere verificata. Vuoi accettare il certificato in ogni caso?";
+"connection_declined" = "Collegamento rifiutato dall'utente";
+
+//Recent view
+"recent_now"="Secondi fa";
+"recent_minutes"="$minutes minuti fa";
+"recent_minute"="$minutes minuto fa";
+"recent_hours"="$hours ore fa";
+"recent_hour"="$hours ora fa";
+"recent_days"="$days giorni fa";
+"recent_day"="$days giorno fa";
+"recent_months"="$months mesi fa";
+"recent_month"="$months mese fa";
+
+"uploads_tab"="Caricamenti";
+"current_section"="Corrente";
+"uploader_section"="Uploader";
+"nothing_was_upload_recently"="Non è stato caricato nulla di recente da questo dispositivo";
+"failed_uploader_section"="Uploads falliti";
+"error_credential"="Errore di credenziali";
+"error_destiny_does_not_exist"="Errore di cartella";
+"error_file_exists"="Errore di conflitto";
+"error_permission" = "Errore di autorizzazione";
+"error_file_does_not_exist" = "Errore di file";
+"error_file_in_background" = "Errori di server";
+"change_active_user"="Cambiare l'utente attivo per";
+"waiting_for_server"="In attesa di connessione al server";
+"waiting_for_upload"="In attesa di caricamento";
+"error_permission_alert_message" = "L'utente non ha il permesso di caricare file in questa cartella";
+"choose_folder" = "Scegli cartella";
+
+//Select Folder View
+"upload_label"="Carica in";
+"create_button"="Crea...";
+"choose_button"="Scegli";
+
+//Rename
+"rename_long_press" = "Rinomina";
+"rename_file_title" = "Rinomina";
+"enter_new_name" = "Inserisci il nuovo nome:";
+"rename_file_exist" = "FFile con il nome specificato esiste già, inserisci un nome diverso";
+
+//Move
+"move_long_press" = "Sposta";
+"move_to_label" = "Sposta in";
+"file_exist" = "Il file esiste già nella cartella di destinazione";
+"override_file" = "Vuoi sostituire il file esistente con qello attuale?";
+"accept" = "Accettato";
+"error_folder_destiny_is_the_same" = "ERRORE: non è possibile spostare la stessa cartella";
+"original_file_exist" = "Impossibile spostare il file. Per favore, assicuratevi che esista";
+"original_folder_exist" = "Impossibile spostare la cartella. Per favore, assicuratevi che esista";
+
+//Upload from other apps
+"other_apps_title" = "Destinazione";
+"other_apps_account" = "Account";
+"other_apps_folder" = "Cartella";
+"other_apps_file_name" = "Nome del file";
+"other_apps_send_to" = "Carica in";
+"error_moving_file" = "Impossibile spostare il file. Assicurarsi che la cartella di destinazione esista";
+"forbiden_characters" = "Nome non valido '\\', '/', '<', '>', ':', \", '|', '?' e '*' non sono consentiti";
+"overwritte_title" = "Sostituire"; //TODO
+
+//Social
+"twitter_message" = "Prova $twitteruser sul tuo smartphone! ";
+"facebook_message" = "Prova $appname sul tuo smartphone\r\n";
+"mail_recommendation_subject" = "Prova $appname sul tuo smartphone!";
+"mail_recommendation_body" = "Vi consiglio di provare $appname sul vostro smartphone!\r\nScarica ora: ";
+"device_not_support_mail" = "Il dispositivo non supporta la scheda di compositore";
+"mail_feedback_subject" = "Feedback $appname";
+"account_not_configure" = "Il dispositivo non ha l'account configurato. Vai su Impostazioni per configurarlo.";
+
+//Storage
+"of_storage" = "of";
+"occupied_storage" = "occupato";
+"storage" = "Memoria";
+"storage_upgrade" = "Aumento lo spazio";
+
+//Jimmies
+"this_file_is_older" = "Newer version available";
+"msg_update_file_0_bytes" = "Il file sul server ha 0 byte. Desidera sovrascrivere il file esistente sul vostro dispositivo con il file vuoto?";
+
+//Shared
+"shared_tab" = "Link condivisi";
+"message_not_shared_files" = "Non ci sono file / cartelle collegamento condivise.";
+"message_not_shared_api_support" = "Spiacenti, la condivisione non è disponibile sul server. Si prega di contattare l'amministratore.";
+"share_link_long_press" = "Condividi link";
+"unshare_link" = "Link non condiviso";
+"share_not_available_on_this_server" = "Mi dispiace, questa funzione non è abilitata sul server. Prega di contattare l'amministratore";
+"copy_link" = "Copia link";
+"file_to_share_not_exist" = "Impossibile condividi questa cartella o file. Per favore, assicuratevi che esista";
+"file_to_unshare_not_exist" = "Impossibile non condiviso questa cartella o file. Per favore, assicuratevi che esista";
+
+//Favorites
+"favorite" = "Preferito";
+"unfavorite" = "No preferito";

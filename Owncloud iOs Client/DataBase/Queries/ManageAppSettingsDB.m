@@ -1,0 +1,175 @@
+//
+//  ManageAppSettingsDB.m
+//  Owncloud iOs Client
+//
+//  Created by Gonzalo Gonzalez on 24/06/13.
+//
+
+/*
+ Copyright (C) 2014, ownCloud, Inc.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
+
+#import "ManageAppSettingsDB.h"
+#import "FMDatabaseQueue.h"
+#import "FMDatabase.h"
+#import "AppDelegate.h"
+#import "UtilsUrls.h"
+
+@implementation ManageAppSettingsDB
+
+
+/*
+ * Method that return if exist pass code or not
+ */
++(BOOL)isPasscode {
+    
+    __block BOOL output = NO;
+    __block int size = 0;
+    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT count(*) FROM passcode"];
+        
+        while ([rs next]) {
+            
+            size = [rs intForColumnIndex:0];
+        }
+        
+        if(size > 0) {
+            output = YES;
+        }
+        
+    }];
+    
+    return output;
+    
+}
+
+/*
+* Method that insert pin code
+* @passcode -> pin code
+*/
++(void) insertPasscode: (NSString *) passcode {
+    
+    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"INSERT INTO passcode(passcode) Values(?)", passcode];
+        
+        if (!correctQuery) {
+            DLog(@"Error insert pin code");
+        }
+    }];
+    
+}
+
+/*
+ * Method that return the pin code
+ */
++(NSString *) getPassCode {
+    
+    DLog(@"getPassCode");
+    
+    __block NSString *output = [NSString new];
+ 
+    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT passcode FROM passcode  ORDER BY id DESC LIMIT 1"];
+        
+        while ([rs next]) {
+            
+            output = [rs stringForColumn:@"passcode"];
+        }
+        
+    }];
+    
+    return output;
+
+}
+
+
+/*
+ * Method that remove the pin code
+ */
++(void) removePasscode {
+    
+    
+    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"DELETE FROM passcode"];
+        
+        if (!correctQuery) {
+            DLog(@"Error delete the pin code");
+        }
+    }];
+    
+}
+
+/*
+ * Method that insert certificate
+ * @certificateLocation -> path of certificate
+ */
++(void) insertCertificate: (NSString *) certificateLocation {
+    
+    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"INSERT INTO certificates(certificate_location) Values(?)", certificateLocation];
+        
+        if (!correctQuery) {
+            DLog(@"Error insert certificate");
+        }
+    }];
+    
+}
+
+/*
+ * Method that return an array with all of certifications
+ */
++(NSMutableArray*) getAllCertificatesLocation {
+    
+    DLog(@"getAllCertificatesLocation");
+    
+    NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
+    
+    NSString *localCertificatesFolder = [NSString stringWithFormat:@"%@/Certificates/",documentsDirectory];
+    
+    
+    __block NSMutableArray *output = [NSMutableArray new];
+    
+    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT certificate_location FROM certificates"];
+        
+        while ([rs next]) {
+            
+            NSString *certificatePath = [NSString stringWithFormat:@"%@%@", localCertificatesFolder, [rs stringForColumn:@"certificate_location"]];
+            [output addObject:certificatePath];
+        }
+        
+    }];
+    
+    DLog(@"Number of certificates: %d", [output count]);
+    
+    return output;
+}
+
+
+
+
+
+
+@end

@@ -1,0 +1,2441 @@
+//
+//  LoginViewController.m
+//  Owncloud iOs Client
+//
+//  Created by Javier Gonzalez on 10/8/12.
+//
+
+/*
+ Copyright (C) 2014, ownCloud, Inc.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
+
+#import "LoginViewController.h"
+#import "AppDelegate.h"
+#import "UserDto.h"
+#import "MBProgressHUD.h"
+#import "FilesViewController.h"
+#import "SettingsViewController.h"
+#import "RecentViewController.h"
+#import "CheckAccessToServer.h"
+#import "constants.h"
+#import "AccountCell.h"
+#import "constants.h"
+#import "UIColor+Constants.h"
+#import "Customization.h"
+#import "ManageUsersDB.h"
+#import "ManageFilesDB.h"
+#import "FileNameUtils.h"
+#import "OCNavigationController.h"
+#import "OCTabBarController.h"
+#import "UtilsDtos.h"
+#import "OCCommunication.h"
+#import "OCErrorMsg.h"
+#import "UtilsFramework.h"
+#import "UtilsCookies.h"
+#import "ManageCookiesStorageDB.h"
+
+#define k_http_prefix @"http://"
+#define k_https_prefix @"https://"
+
+NSString *loginViewControllerRotate = @"loginViewControllerRotate";
+
+@interface LoginViewController ()
+
+@end
+
+
+@implementation LoginViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.auxUrlForReloadTable = k_default_url_server;
+        self.auxUsernameForReloadTable = @"";
+        self.auxPasswordForReloadTable = @"";
+        
+        urlEditable = YES;
+        userNameEditable = YES;
+        
+        isSSLAccepted = YES;
+        isErrorOnCredentials = NO;
+        isError500 = NO;
+        isCheckingTheServerRightNow = NO;
+        isConnectionToServer = NO;
+        isNeedToCheckAgain = YES;
+        hasInvalidAuth = NO;
+        isHttpsSecure = NO;
+        
+        showPasswordCharacterButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [showPasswordCharacterButton setHidden:YES];
+    }
+    return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self setTableBackGroundColor];
+    
+    //Set background company color like a comanyImageColor
+    [_backCompanyView setBackgroundColor:[UIColor colorOfLoginTopBackground]];
+    
+    //Set background color of company image v
+    [logoImageView setBackgroundColor:[UIColor colorOfLoginTopBackground]];
+    
+    //Configure view for interface position
+    [self configureViewForInterfacePosition];
+    [self internazionaliceTheInitialInterface];
+    
+    isLoginButtonEnabled = NO;
+    
+    //Keyboard hidding after write url, name and password
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    
+    [nc addObserver:self selector:@selector(keyboardWillShow:) name:
+     UIKeyboardWillShowNotification object:nil];
+    
+    [nc addObserver:self selector:@selector(keyboardWillHide:) name:
+     UIKeyboardWillHideNotification object:nil];
+    
+    tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapAnywhere:)];
+    
+    isUserTextUp = NO;
+    isPasswordTextUp = NO;
+
+}
+
+-(void) viewDidAppear:(BOOL)animated {
+    
+    [super viewDidAppear:animated];
+    
+    if(![self.auxUrlForReloadTable isEqualToString:@""]) {
+        DLog(@"1- self.auxUrlForReloadTable: %@",self.auxUrlForReloadTable);
+        [self checkUrlManually];
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    
+     [super viewWillAppear:animated];
+    
+    mCheckAccessToServer = [[CheckAccessToServer alloc] init];
+    mCheckAccessToServer.delegate = self;
+    
+    if(self.urlTextField.text.length > 0 && isConnectionToServer == NO) {
+        [self checkUrlManually];
+    }
+    
+}
+
+- (void)setTableBackGroundColor {
+    [self.tableView setBackgroundColor:[UIColor colorOfLoginBackground]];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    //return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
+    return YES;
+}
+
+//Only for ios 6
+- (BOOL)shouldAutorotate {
+    
+    return YES;
+}
+
+//For one of the next user story
+-(UIStatusBarStyle)preferredStatusBarStyle {
+    
+    if (k_is_text_status_bar_white) {
+        return UIStatusBarStyleLightContent;
+    } else {
+        return UIStatusBarStyleDefault;
+    }
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+#pragma markt - Internacionalization
+
+-(void)internazionaliceTheInitialInterface {
+    
+    self.loginButtonString = NSLocalizedString(@"login", nil);
+    //[loginButton setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
+    //[cancelButton setTitle:NSLocalizedString(@"cancel", nil) forState:UIControlStateNormal];
+}
+#pragma mark - Draw Position
+
+///-----------------------------------
+/// @name Configure View for Interface Position
+///-----------------------------------
+
+/**
+ * This method get the current interface position and call the
+ * specific method to configure the view for the current position
+ *
+ * There are direrents configurations depends of the device:
+ * iPhone 3.5"
+ * iPhone 4"
+ * iPad
+ *
+ * @discussion In this method we could use the toInterfaceOrientation object of the 
+ *  willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration method, but
+ * the "toInterfaceOrientation" gets in iPad in iOS 7 is wrong.
+ *
+ */
+-(void)configureViewForInterfacePosition{
+    
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    switch (orientation) {
+        case UIInterfaceOrientationPortrait:
+        case UIInterfaceOrientationPortraitUpsideDown:
+            if (IS_IPHONE) {
+                [self potraitViewiPhone];
+            } else {
+                [self potraitViewiPad];
+            }
+            
+            break;
+            
+        case UIInterfaceOrientationLandscapeLeft:
+        case UIInterfaceOrientationLandscapeRight:
+            if (IS_IPHONE) {
+                if ([UIScreen mainScreen].bounds.size.height<=480.0) {
+                    //3.5" screen
+                    [self landscapeViewiPhone];
+                } else {
+                    //4" screen
+                    [self landscapeViewiPhone5];
+                }
+            } else {
+                //iPad landscape
+                [self landscapeViewiPad];
+            }
+            
+            break;
+            
+        default:
+            if (IS_IPHONE) {
+                [self potraitViewiPhone];
+            } else {
+                [self potraitViewiPad];
+            }
+            
+            break;
+    }
+}
+
+-(void) potraitViewiPhone {
+    
+    DLog(@"Vertical iPhone");
+    
+    //to set the scroll
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 260, 0);
+    
+    //Padding correction in case of versions lower that iOS 7
+    float leftPaddingCorrection = 0.0;
+    if (!IS_IOS7 && !IS_IOS8) {
+        leftPaddingCorrection = - 10.0;
+    }
+    
+//FIRST SECTION
+    
+    //Frame for url field
+     _urlFrame = CGRectMake(60 + leftPaddingCorrection,14,200,20);
+    
+    //Server image - User image - Password image
+    _imageTextFieldLeftFrame = CGRectMake(20.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    //Refresh button
+    refreshButtonFrame = CGRectMake(260.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    
+    
+//FOOTER FOR FIRST SECTION
+    
+    //Frame used for Loading icon, secure or not secure connection
+    lockImageFrame = CGRectMake(20.0, 5.0, 25.0, 25.0);
+    
+    //Frame used for information message under the url field
+    textFooterFrame1 = CGRectMake((lockImageFrame.origin.x + lockImageFrame.size.width + 15), 7.0, (self.view.frame.size.width - ((lockImageFrame.origin.x + lockImageFrame.size.width) * 2)), 25.0);
+    
+    
+//SECOND SECTION
+    
+    //user and password text fields frame
+    _userAndPasswordFrame = CGRectMake(60 + leftPaddingCorrection,14,200,20);
+    
+    //image about show/hide the password
+    showPasswordButtonFrame = CGRectMake(260.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+
+//FOOTER FOR SECOND SECTION
+    
+    //Frame for uiview that contains image and text
+    footerSection1Frame = CGRectMake(0, 0, 320, 40);
+    
+    //Error image for bad credentials
+    okNokImageFrameFooter = CGRectMake(20.0, 7.5, 25.0, 25.0);
+    
+    //Test with information about the problem
+    textFooterFrame2 = CGRectMake((okNokImageFrameFooter.origin.x + okNokImageFrameFooter.size.width + 15), 0, (self.view.frame.size.width - ((okNokImageFrameFooter.origin.x + okNokImageFrameFooter.size.width) * 2)), 40.0);
+    
+
+    
+//HEADER OF THE TABLE WHEN THE ARE NOT URL FRAME
+    
+    //Frame used for add the information under the url field
+    _txtWithLogoWhenNoURLFrame = CGRectMake(0,0,320,90);
+    
+    //Frame used for reconection icon
+    syncImageFrameForNoURL = CGRectMake(280.0 + leftPaddingCorrection, 5.0, 25.0, 25.0);
+
+
+    
+}
+
+-(void) addEditAccountsViewiPad {
+    
+    DLog(@"Vertical iPhone");
+    
+    //to set the scroll
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 260, 0);
+    
+    //Padding correction in case of versions lower that iOS 7
+    float leftPaddingCorrection = 0.0;
+    if (!IS_IOS7 && !IS_IOS8) {
+        leftPaddingCorrection = - 10.0;
+    }
+    
+    //FIRST SECTION
+    
+    //Frame for url field
+    _urlFrame = CGRectMake(60 + leftPaddingCorrection,14,420,20);
+    
+    //Server image - User image - Password image
+    _imageTextFieldLeftFrame = CGRectMake(20.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    //Refresh button
+    refreshButtonFrame = CGRectMake(480.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    
+    
+    //FOOTER FOR FIRST SECTION
+    
+    //Frame used for Loading icon, secure or not secure connection
+    lockImageFrame = CGRectMake(20.0, 5.0, 25.0, 25.0);
+    
+    //Frame used for information message under the url field
+    textFooterFrame1 = CGRectMake((lockImageFrame.origin.x + lockImageFrame.size.width + 15), 7.0, (self.view.frame.size.width - ((lockImageFrame.origin.x + lockImageFrame.size.width) * 2)), 25.0);
+    
+    
+    //SECOND SECTION
+    
+    //user and password text fields frame
+    _userAndPasswordFrame = CGRectMake(60 + leftPaddingCorrection,14,420,20);
+    
+    //image about show/hide the password
+    showPasswordButtonFrame = CGRectMake(480.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    
+    //FOOTER FOR SECOND SECTION
+    
+    //Frame for uiview that contains image and text
+    footerSection1Frame = CGRectMake(0, 0, 320, 40);
+    
+    //Error image for bad credentials
+    okNokImageFrameFooter = CGRectMake(20.0, 7.5, 25.0, 25.0);
+    
+    //Test with information about the problem
+    textFooterFrame2 = CGRectMake((okNokImageFrameFooter.origin.x + okNokImageFrameFooter.size.width + 15), 0, (self.view.frame.size.width - ((okNokImageFrameFooter.origin.x + okNokImageFrameFooter.size.width) * 2)), 40.0);
+    
+    
+    
+    //HEADER OF THE TABLE WHEN THE ARE NOT URL FRAME
+    
+    //Frame used for add the information under the url field
+    _txtWithLogoWhenNoURLFrame = CGRectMake(0,0,320,90);
+    
+    //Frame used for reconection icon
+    syncImageFrameForNoURL = CGRectMake(280.0 + leftPaddingCorrection, 5.0, 25.0, 25.0);
+    
+    
+    
+}
+
+-(void)landscapeViewiPhone{
+    
+    DLog(@"Horizontal iPhone");
+
+    //to set the scroll
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 170, 0);
+    
+    //Padding correction in case of versions lower that iOS 7
+    float leftPaddingCorrection = 0.0;
+    if (!IS_IOS7 && !IS_IOS8) {
+        leftPaddingCorrection = - 10.0;
+    }
+    
+    
+//FIRST SECTION
+    
+    //Frame for url field
+    _urlFrame = CGRectMake(60 + leftPaddingCorrection,14,340,20);
+    
+    //Server image - User image - Password image
+     _imageTextFieldLeftFrame = CGRectMake(20.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    //Refresh button
+    refreshButtonFrame = CGRectMake(420.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    
+//FOOTER FOR FIRST SECTION
+    
+    //Frame used for Loading icon, secure or not secure connection
+    lockImageFrame = CGRectMake(20.0, 5.0, 25.0, 25.0);
+    
+    //Frame used for information message under the url field
+    textFooterFrame1 = CGRectMake((lockImageFrame.origin.x + lockImageFrame.size.width + 15), 5.0, (self.view.frame.size.width - (lockImageFrame.origin.x + lockImageFrame.size.width + 10)), 25.0);
+    
+    
+//SECOND SECTION
+    
+    //user and password text fields frame
+    _userAndPasswordFrame = CGRectMake(60 + leftPaddingCorrection,14,340,20);
+    
+    //image about show/hide the password
+    showPasswordButtonFrame = CGRectMake(420.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+
+//FOOTER FOR SECOND SECTION
+    
+    //Frame for uiview that contains image and text
+    footerSection1Frame = CGRectMake(0, 0, 480, 40);
+    
+    //Error image for bad credentials
+    okNokImageFrameFooter = CGRectMake(20.0, 7.5, 25.0, 25.0);
+    
+    //Test with information about the problem
+    textFooterFrame2 = CGRectMake((okNokImageFrameFooter.origin.x + okNokImageFrameFooter.size.width + 15), 0.0, 280.0, 40.0);
+    
+    
+//HEADER OF THE TABLE WHEN THE ARE NOT URL FRAME
+    
+    //Frame used for add the information under the url field
+    _txtWithLogoWhenNoURLFrame = CGRectMake(0,0,480,90);
+    
+    //Frame used for reconection icon
+    syncImageFrameForNoURL = CGRectMake(420.0 + leftPaddingCorrection, 5.0, 25.0, 25.0);
+
+   
+}
+
+-(void)landscapeViewiPhone5{
+    
+    DLog(@"Horizontal iPhone 5");
+    
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 170, 0);
+    
+    //Padding correction in case of versions lower that iOS 7
+    float leftPaddingCorrection = 0.0;
+    if (!IS_IOS7 && !IS_IOS8) {
+        leftPaddingCorrection = - 10.0;
+    }
+    
+    
+//FIRST SECTION
+    
+    //Frame for url field
+    _urlFrame = CGRectMake(60 + leftPaddingCorrection,14,430,20);
+    
+    //Server image - User image - Password image
+    _imageTextFieldLeftFrame = CGRectMake(20.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    //Refresh button
+    refreshButtonFrame = CGRectMake(510.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+
+//FOOTER FOR FIRST SECTION
+    
+    //Frame used for Loading icon, secure or not secure connection
+    lockImageFrame = CGRectMake(20.0, 5.0, 25.0, 25.0);
+    
+    //Frame used for information message under the url field
+    textFooterFrame1 = CGRectMake((lockImageFrame.origin.x + lockImageFrame.size.width + 15), 5.0, (self.view.frame.size.width - (lockImageFrame.origin.x + lockImageFrame.size.width + 10)), 25.0);
+    
+    
+    
+//SECOND SECTION
+    
+    //user and password text fields frame
+    _userAndPasswordFrame = CGRectMake(60 + leftPaddingCorrection,14,430,20);
+    
+    //image about show/hide the password
+    showPasswordButtonFrame = CGRectMake(510.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+
+//FOOTER FOR SECOND SECTION
+    
+    //Frame for uiview that contains image and text
+    footerSection1Frame = CGRectMake(0, 0, 568, 40);
+    
+    //Error image for bad credentials
+    okNokImageFrameFooter = CGRectMake(20.0, 7.5, 25.0, 25.0);
+    
+    //Test with information about the problem
+    textFooterFrame2 = CGRectMake((okNokImageFrameFooter.origin.x + okNokImageFrameFooter.size.width + 15), 0.0, 280.0, 40.0);
+    
+    
+    
+//HEADER OF THE TABLE WHEN THE ARE NOT URL FRAME
+    
+    //Frame used for add the information under the url field
+    _txtWithLogoWhenNoURLFrame = CGRectMake(0,0,568,90);
+    
+    //Frame used for reconection icon
+    syncImageFrameForNoURL = CGRectMake(510.0 + leftPaddingCorrection, 5.0, 25.0, 25.0);
+    
+    
+}
+
+-(void)potraitViewiPad{
+    
+    DLog(@"Vertical iPad");
+
+    [self.tableView setBackgroundView:nil];
+    [self.tableView setBackgroundView:[[UIView alloc] init]];
+    
+    //Padding correction in case of versions lower that iOS 7
+    float leftPaddingCorrection = 0.0;
+    
+    if (!IS_IOS7 && !IS_IOS8) {
+        leftPaddingCorrection = - 45.0;
+    }
+
+    
+//FIRST SECTION
+    
+    //Frame for url field
+    _urlFrame = CGRectMake(280 + leftPaddingCorrection,14,420,20);
+    
+    //Server image - User image - Password image
+    _imageTextFieldLeftFrame = CGRectMake(235.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    //Refresh button
+    refreshButtonFrame = CGRectMake(680.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    
+//FOOTER FOR FIRST SECTION
+    
+    //Frame used for Loading icon, secure or not secure connection
+    lockImageFrame = CGRectMake(235.0, 5.0, 25.0, 25.0);
+    
+    //Frame used for information message under the url field
+    textFooterFrame1 = CGRectMake(280.0, 7.0, 300.0, 25.0);
+    
+    
+//SECOND SECTION
+    
+    //user and password text fields frame
+    _userAndPasswordFrame = CGRectMake(280 + leftPaddingCorrection,14,220,20);
+    
+    //image about show/hide the password
+    showPasswordButtonFrame = CGRectMake(500.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    
+//FOOTER FOR SECOND SECTION
+    
+    //Frame for uiview that contains image and text
+    footerSection1Frame = CGRectMake(0, 0, 685, 40);
+    
+    //Error image for bad credentials
+    okNokImageFrameFooter = CGRectMake(235.0, 7.5, 25.0, 25.0);
+    
+    //Test with information about the problem
+    textFooterFrame2 = CGRectMake(280, 0.0, 300.0, 40.0);
+    
+    
+//HEADER OF THE TABLE WHEN THE ARE NOT URL FRAME
+    
+    //Frame used for add the information under the url field
+     _txtWithLogoWhenNoURLFrame = CGRectMake(0,0,768,195);
+    
+    //Frame used for reconection icon when there are not url frame
+    syncImageFrameForNoURL = CGRectMake(500.0, 5.0, 25.0, 25.0);
+
+    
+    
+}
+
+-(void)landscapeViewiPad{
+    
+    DLog(@"Horizontal iPad");
+    
+    //to set the scroll
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 500, 0);
+    
+    [self.tableView setBackgroundView:nil];
+    [self.tableView setBackgroundView:[[UIView alloc] init]];
+    
+    //Padding correction in case of versions lower that iOS 7
+    float leftPaddingCorrection = 0.0;
+    if (!IS_IOS7 && !IS_IOS8) {
+        leftPaddingCorrection = - 45.0;
+    }
+    
+    
+//FIRST SECTION
+    
+    //Frame for url field
+    _urlFrame = CGRectMake(408.0 + leftPaddingCorrection,14,420,20);
+    
+    //Server image - User image - Password image
+    _imageTextFieldLeftFrame = CGRectMake(368.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    //Refresh button
+    refreshButtonFrame = CGRectMake(828.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    
+//FOOTER FOR FIRST SECTION
+    
+    //Frame used for Loading icon, secure or not secure connection
+    lockImageFrame = CGRectMake(368.0, 5.0, 25.0, 25.0);
+    
+    //Frame used for information message under the url field
+    textFooterFrame1 = CGRectMake(408.0, 7.0, 300.0, 25.0);
+    
+    
+    
+//SECOND SECTION
+    
+    //user and password text fields frame
+    _userAndPasswordFrame = CGRectMake(408 + leftPaddingCorrection,14,220,20);
+    
+    
+    //image about show/hide the password
+    showPasswordButtonFrame = CGRectMake(628.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    
+    
+//FOOTER FOR SECOND SECTION
+    
+    //Frame for uiview that contains image and text
+    footerSection1Frame = CGRectMake(0, 0, 785, 40);
+    
+    //Error image for bad credentials
+    okNokImageFrameFooter = CGRectMake(368.0, 7.5, 25.0, 25.0);
+    
+    
+    //Test with information about the problem
+    textFooterFrame2 = CGRectMake(408, 0.0, 300.0, 40.0);
+    
+    
+    
+//HEADER OF THE TABLE WHEN THE ARE NOT URL FRAME
+    
+    //Frame used for add the information under the url field
+    _txtWithLogoWhenNoURLFrame = CGRectMake(0,0,1024,195);
+    
+    //Frame used for reconection icon when there are not url frame
+    syncImageFrameForNoURL = CGRectMake(628.0, 5.0, 25.0, 25.0);
+    
+
+    
+}
+
+//Only for ios 6
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    //Configure View For interface position
+    [self configureViewForInterfacePosition];
+    [self.tableView reloadData];
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
+    //Send a notification
+    [[NSNotificationCenter defaultCenter] postNotificationName: loginViewControllerRotate object: nil];
+}
+
+//Only for ios6
+- (NSUInteger)supportedInterfaceOrientations
+{
+    if (IS_IPHONE) {
+        return UIInterfaceOrientationMaskAllButUpsideDown;
+    }else{
+        return UIInterfaceOrientationMaskAll;
+    }
+}
+
+#pragma mark - UITableView datasource
+
+// Asks the data source to return the number of sections in the table view.
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    if(k_hide_url_server) {
+        return 2;
+    } else {
+        return 3;
+    }
+    
+    
+}
+
+// Returns the table view managed by the controller object.
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    NSInteger n = 0;
+    
+    if(k_hide_url_server) {
+        if(k_is_oauth_active || k_is_sso_active) {
+            if (section==0) {
+                n=0;
+            } else if (section==1) {
+                n=1;
+            }
+        } else {
+            if (section==0) {
+                n=2;
+            } else if (section==1) {
+                n=1;
+            }
+        }
+    } else {
+        if(k_is_oauth_active || k_is_sso_active) {
+            if (section==0) {
+                n=1;
+            } else if (section==1) {
+                n=1;
+            } else if (section==2) {
+                n=0;
+            }
+        } else {
+            if (section==0) {
+                n=1;
+            } else if (section==1) {
+                n=2;
+            } else if (section==2) {
+                n=1;
+            }
+        }
+    }
+    return n;
+}
+
+
+// Returns the table view managed by the controller object.
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    static NSString *CellIdentifier = @"AccountCell";
+    
+    AccountCell *cell = (AccountCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+		
+		NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"AccountCell" owner:self options:nil];
+		
+		for (id currentObject in topLevelObjects){
+			if ([currentObject isKindOfClass:[UITableViewCell class]]){
+				cell =  (AccountCell *) currentObject;
+				break;
+			}
+		}
+	}
+    
+    UIFont *cellBoldFont = [UIFont boldSystemFontOfSize:16.0];
+    cell.textLabel.font=cellBoldFont;
+    
+    if (indexPath.section==0) {
+        
+        if(k_hide_url_server) {
+            if(k_is_oauth_active || k_is_sso_active) {
+                switch (indexPath.row) {
+                    case 0:
+                        cell = [self configureCellToLoginByAccountCell:cell];
+                        
+                        //we configure too the server url
+                        self.urlTextField = [[UITextField alloc]initWithFrame:_urlFrame];
+                        self.urlTextField.delegate = self;
+                        DLog(@"5- self.auxUrlForReloadTable: %@", self.auxUrlForReloadTable);
+                        self.urlTextField.text = self.auxUrlForReloadTable;
+                        
+                        break;
+                        
+                    default:
+                        break;
+                }
+            } else {
+                switch (indexPath.row) {
+                    case 0:
+                        cell = [self configureCellToUsernameByAccountCell:cell];
+                        
+                        break;
+                    case 1:
+                        cell = [self configureCellToPasswordByAccountCell:cell];
+                        
+                        break;
+                        
+                    default:
+                        break;
+                }
+            }
+        } else {
+            switch (indexPath.row) {
+                case 0:
+                    cell = [self configureCellToURLServerByAccountCell:cell];
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+        
+    }else if (indexPath.section==1) {
+        
+        if(k_hide_url_server) {
+                switch (indexPath.row) {
+                    case 0:
+                        cell = [self configureCellToLoginByAccountCell:cell];
+                        
+                        //we configure too the server url
+                        self.urlTextField = [[UITextField alloc]initWithFrame:_urlFrame];
+                        self.urlTextField.delegate = self;
+                        DLog(@"4- self.auxUrlForReloadTable: %@", self.auxUrlForReloadTable);
+                        self.urlTextField.text = self.auxUrlForReloadTable;
+                        
+                        break;
+                        
+                    default:
+                        break;
+                }
+        } else {
+            if(k_is_oauth_active || k_is_sso_active) {
+                switch (indexPath.row) {
+                    case 0:
+                        cell = [self configureCellToLoginByAccountCell:cell];
+                        
+                        break;
+                        
+                    default:
+                        break;
+                }
+            } else {
+                switch (indexPath.row) {
+                    case 0:
+                        cell = [self configureCellToUsernameByAccountCell:cell];
+                        
+                        break;
+                    case 1:
+                        cell = [self configureCellToPasswordByAccountCell:cell];
+                        
+                        break;
+                        
+                    default:
+                        break;
+                }
+            }
+        }
+    } else if (indexPath.section==2) {
+        
+        switch (indexPath.row) {
+            case 0:
+                cell = [self configureCellToLoginByAccountCell:cell];
+                
+                break;
+                
+            default:
+                break;
+        }
+    }
+    return cell;
+}
+
+#pragma mark - Configure cells
+
+-(AccountCell *) configureCellToURLServerByAccountCell:(AccountCell *) cell {
+
+    cell.textLabel.textColor = [UIColor colorWithRed:0/256.0f green:0/256.0f blue:0/256.0f alpha:1];
+    
+    UIImageView *iconLeftImage= [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"server.png"]];
+    [iconLeftImage setFrame:_imageTextFieldLeftFrame];
+    
+    self.urlTextField = [[UITextField alloc]initWithFrame:_urlFrame];
+    self.urlTextField.delegate = self;
+    [self.urlTextField setKeyboardType:UIKeyboardTypeURL];
+    [self.urlTextField setAutocorrectionType:UITextAutocorrectionTypeNo];
+    
+    [self.urlTextField setClearButtonMode:UITextFieldViewModeNever];
+    //searchField.borderStyle= UITextBorderStyleRoundedRect;
+    self.urlTextField.borderStyle= UITextBorderStyleNone;
+    //searchField.background=img;
+    [self.urlTextField setReturnKeyType:UIReturnKeyDone];
+    [self.urlTextField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+    
+    self.urlTextField.textAlignment = NSTextAlignmentLeft;
+    self.urlTextField.font = [UIFont boldSystemFontOfSize:14.0];
+    self.urlTextField.textColor = [UIColor colorOfURLUserPassword];
+    self.urlTextField.placeholder = NSLocalizedString(@"url_sample", nil);
+    
+    if(!urlEditable) {
+        [self.urlTextField setEnabled:NO];
+    }
+    
+    DLog(@"2- self.auxUrlForReloadTable: %@", self.auxUrlForReloadTable);
+    
+    self.urlTextField.text = self.auxUrlForReloadTable;
+    
+    refreshTestServerButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [refreshTestServerButton addTarget:self action:@selector(checkUrlManually) forControlEvents:UIControlEventTouchUpInside];
+    [refreshTestServerButton setFrame:refreshButtonFrame];
+    [refreshTestServerButton setBackgroundImage:[UIImage imageNamed:@"ReconnectIcon.png"] forState:UIControlStateNormal];
+    
+    if(([self.urlTextField.text length] > 0) && !isConnectionToServer && !isCheckingTheServerRightNow) {
+        [refreshTestServerButton setHidden:NO];
+    } else {
+        [refreshTestServerButton setHidden:YES];
+    }
+    
+    [cell.contentView addSubview:iconLeftImage];
+    [cell.contentView addSubview:self.urlTextField];
+    [cell.contentView addSubview:refreshTestServerButton];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+    return cell;
+}
+
+-(AccountCell *) configureCellToUsernameByAccountCell:(AccountCell *) cell {
+    
+    cell.textLabel.textColor = [UIColor colorWithRed:0/255.0f green:0/255.0f blue:0/255.0f alpha:1];
+    
+    UIImageView *iconLeftImage= [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"user.png"]];
+    [iconLeftImage setFrame:_imageTextFieldLeftFrame];
+    
+    self.usernameTextField = [[UITextField alloc]initWithFrame:_userAndPasswordFrame];
+    self.usernameTextField.delegate = self;
+    
+    
+    [self.usernameTextField setClearButtonMode:UITextFieldViewModeNever];
+    //searchField.borderStyle= UITextBorderStyleRoundedRect;
+    self.usernameTextField.borderStyle= UITextBorderStyleNone;
+    //searchField.background=img;
+    [self.usernameTextField setReturnKeyType:UIReturnKeyDone];
+    [self.usernameTextField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+    [self.usernameTextField setAutocorrectionType:UITextAutocorrectionTypeNo];
+    
+    self.usernameTextField.textAlignment = NSTextAlignmentLeft;
+    self.usernameTextField.font = [UIFont boldSystemFontOfSize:14.0];
+    self.usernameTextField.textColor = [UIColor colorOfURLUserPassword];
+    self.usernameTextField.placeholder = NSLocalizedString(@"username", nil);
+    self.usernameTextField.text = self.auxUsernameForReloadTable;
+    
+    [self.usernameTextField addTarget:self action:@selector(textFieldDidChange) forControlEvents:UIControlEventEditingChanged];
+    
+    if(!userNameEditable) {
+        [self.usernameTextField setEnabled:NO];
+    }
+    
+    [cell.contentView addSubview:iconLeftImage];
+    [cell.contentView addSubview:self.usernameTextField];
+    
+    //Separator (Not works in iOS 7 in iPad)
+    if (IS_IPHONE) {
+        UIView *separator = [UIView new];
+        separator.backgroundColor = [UIColor lightGrayColor];
+        separator.frame = CGRectMake(0, cell.contentView.frame.size.height - 0.5, cell.contentView.frame.size.width, 0.5);
+        separator.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        
+        [cell.contentView addSubview:separator];
+    }
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    return cell;
+}
+
+-(AccountCell *) configureCellToPasswordByAccountCell:(AccountCell *) cell {
+    
+    cell.textLabel.textColor = [UIColor colorWithRed:0/256.0f green:0/256.0f blue:0/256.0f alpha:1];
+    
+    UIImageView *iconLeftImage= [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"password.png"]];
+    [iconLeftImage setFrame:_imageTextFieldLeftFrame];
+    
+    self.passwordTextField = [[UITextField alloc]initWithFrame:_userAndPasswordFrame];
+    self.passwordTextField.textColor = [UIColor colorOfURLUserPassword];
+    self.passwordTextField.delegate = self;
+    [self.passwordTextField setSecureTextEntry:YES];
+    
+    [self.passwordTextField setClearButtonMode:UITextFieldViewModeNever];
+    //searchField.borderStyle= UITextBorderStyleRoundedRect;
+    self.passwordTextField.borderStyle= UITextBorderStyleNone;
+    //searchField.background=img;
+    [self.passwordTextField setReturnKeyType:UIReturnKeyDone];
+    [self.passwordTextField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+    [self.passwordTextField setAutocorrectionType:UITextAutocorrectionTypeNo];
+    
+    self.passwordTextField.textAlignment = NSTextAlignmentLeft;
+    self.passwordTextField.font = [UIFont boldSystemFontOfSize:14.0];
+    self.passwordTextField.placeholder = NSLocalizedString(@"password", nil);
+    self.passwordTextField.text = self.auxPasswordForReloadTable;
+    
+    [showPasswordCharacterButton addTarget:self action:@selector(hideOrShowPassword) forControlEvents:UIControlEventTouchUpInside];
+    [showPasswordCharacterButton setFrame:showPasswordButtonFrame];
+    
+    [showPasswordCharacterButton setBackgroundImage:[UIImage imageNamed:@"RevealPasswordIcon.png"] forState:UIControlStateNormal];
+    
+    [cell.contentView addSubview:iconLeftImage];
+    [cell.contentView addSubview:self.passwordTextField];
+    [cell.contentView addSubview:showPasswordCharacterButton];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    
+    return cell;
+}
+
+-(AccountCell *) configureCellToLoginByAccountCell:(AccountCell *) cell {
+    
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    cell.textLabel.text=self.loginButtonString;
+    cell.textLabel.textColor = [UIColor colorOfLoginButtonTextColor];
+  //  cell.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"gradImage.png"]];
+    cell.backgroundColor = [UIColor colorOfLoginButtonBackground];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
+    
+    if(!isLoginButtonEnabled) {
+        // Mac's native DigitalColor Meter reads exactly {R:143, G:143, B:143}.
+        cell.textLabel.alpha = 0.439216f; // (1 - alpha) * 255 = 143
+        
+        cell.userInteractionEnabled = NO;
+    }
+    return cell;
+}
+
+-(CGFloat)tableView:(UITableView*)tableView heightForFooterInSection:(NSInteger)section
+{
+    if (section==0) {
+        if(k_hide_url_server) {
+            return 40.0;
+        } else {
+            return 35.0;
+        }
+    }else if (section==1){
+        return 40;
+    } else {
+        return 0;
+    }
+    
+}
+
+-(CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if(section == 0) {
+        if(k_hide_url_server) {
+            return 35.0;
+        } else {
+            return 15.0;
+        }
+    } else {
+        return 1;
+    }
+    
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    
+    if(section == 0) {
+        if(k_hide_url_server) {
+            UIView *textView = [self configureViewForFooterURLServer];
+            [textView setFrame:_txtWithLogoWhenNoURLFrame];
+            
+            UIView *headerView = [[UIView alloc] init];
+            
+            //[headerView addSubview:logoImageView];
+            [headerView addSubview:textView];
+            
+            return headerView;
+        } else {
+          //  UIView *headerView = [[UIView alloc] init];
+           // [headerView addSubview:logoImageView];
+            
+            return nil;
+        }
+    } else {
+        return nil;
+    }
+}
+
+
+#pragma mark - UITableView delegate
+
+
+// Tells the delegate that the specified row is now selected.
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    DLog(@"cell tapped number: %d, in section:%d", indexPath.row, indexPath.section);
+    
+    //check if the constant k_hide_url_server is Yes or Not, depend of the branding
+    if(k_hide_url_server) {
+        //hide url
+        if (indexPath.section==1) {
+            
+            switch (indexPath.row) {
+                case 0:
+                    //in oaut or saml is the login button
+                    if(k_is_oauth_active) {
+                        [self oAuthScreen];
+                    } else if (k_is_sso_active) {
+                        [self checkURLServerForSSO];
+                    } else{
+                        //login button
+                        [self goTryToDoLogin];
+                    }
+                    break;
+                  
+                case 1:
+                    //login button
+                    [self goTryToDoLogin];
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+    } else {
+        //show url
+        switch (indexPath.section) {
+            case 0:
+                //Nothing, is the url field
+                break;
+                
+            case 1:
+                //in oauth or saml is the login button
+                if(k_is_oauth_active) {
+                    [self oAuthScreen];
+                } else if (k_is_sso_active) {
+                    [self checkURLServerForSSO];
+                }
+                break;
+            
+            case 2:
+                //in section 2 is the login button
+                [self goTryToDoLogin];
+                break;
+                
+            default:
+                break;
+        }
+    }
+}
+
+- (UIView *) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    if (section == 0) {
+        if(k_hide_url_server) {
+            return [self generateFooterForUsernameAndPassword];
+        } else {
+            return [self configureViewForFooterURLServer];
+        }
+    } else if (section == 1) {
+          if(!k_hide_url_server) {
+             return [self generateFooterForUsernameAndPassword];
+          } else {
+              return nil;
+          }
+    } else {
+        return nil;
+    }
+}
+
+-(UIView *) configureViewForFooterURLServer {
+    UIView *view = [[UIView alloc] initWithFrame:textFooterFrame1];
+    
+    if (!([self.auxUrlForReloadTable isEqualToString:@""] || mCheckAccessToServer.delegate == nil)) {
+        
+        UILabel *label = [self setTheDefaultStyleOfTheServerFooterLabel];
+        UIImageView *errorImage;
+        
+        if (isCheckingTheServerRightNow) {
+            UIActivityIndicatorView *activity = [self setTheActivityIndicatorWhileTheConnectionIsBeenEstablished];
+            [view addSubview:activity];
+            label.text = NSLocalizedString(@"testing_connection",nil);
+        } else if (isConnectionToServer) {
+            if (hasInvalidAuth) {
+                errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CredentialsError.png"]];
+                label.text = NSLocalizedString(@"authentification_not_valid",nil);
+                label.numberOfLines = 1;
+                [label setAdjustsFontSizeToFitWidth:YES];
+            } else if (isHttps) {
+                if (isHttpsSecure) {
+                    errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"SecureConnectionIcon.png"]];
+                    label.text = NSLocalizedString(@"secure_connection_established",nil);
+                } else {
+                    errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"NonSecureConnectionIcon.png"]];
+                    label.text = NSLocalizedString(@"https_non_secure_connection_established",nil);
+                }
+            } else {
+                errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"NonSecureConnectionIcon.png"]];
+                label.text = NSLocalizedString(@"connection_established",nil);
+            }
+        } else {
+            if(isSSLAccepted) {
+                errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CredentialsError.png"]];
+                NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+                label.text = [NSLocalizedString(@"server_instance_not_found",nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
+                if(k_hide_url_server) {
+                    UIButton *button = [self setTheButtonForReconnectWithTheCurrentServer];
+                    [view addSubview:button];
+                }
+            } else {
+                errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CredentialsError.png"]];
+                label.text = NSLocalizedString(@"connection_declined",nil);
+            }
+        }
+        [errorImage setFrame:lockImageFrame];
+        [view addSubview:errorImage];
+        [view addSubview:label];
+    }
+    return view;
+}
+
+
+///-----------------------------------
+/// @name setTheDefaultStyleOfTheServerFooterLabel
+///-----------------------------------
+
+/**
+ * This method set the default parameters of the label located on the server footer
+ */
+- (UILabel *) setTheDefaultStyleOfTheServerFooterLabel {
+    UILabel* label = [[UILabel alloc] initWithFrame:textFooterFrame1];
+    label.backgroundColor       = [UIColor clearColor];
+    label.baselineAdjustment    = UIBaselineAdjustmentAlignCenters;
+    label.lineBreakMode         = NSLineBreakByWordWrapping;
+    label.textAlignment         = NSTextAlignmentLeft;
+    label.textColor             = [UIColor colorOfLoginText];
+    label.numberOfLines         = 0;
+    label.font                  = [UIFont fontWithName:@"Arial" size:12.5];
+    
+    return label;
+}
+
+
+///-----------------------------------
+/// @name setTheActivityIndicatorWhileTheConnectionIsBeenEstablished
+///-----------------------------------
+
+/**
+ * This method set the activity indicator in the label located on the server footer
+ */
+- (UIActivityIndicatorView *) setTheActivityIndicatorWhileTheConnectionIsBeenEstablished {
+    UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [activity setFrame:lockImageFrame];
+    [activity startAnimating];
+    
+    return activity;
+}
+
+
+///-----------------------------------
+/// @name setTheButtonForReconnectWithTheCurrentServer
+///-----------------------------------
+
+/**
+ * This method set the button located on the server field for reconnect the server
+ */
+- (UIButton *) setTheButtonForReconnectWithTheCurrentServer {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setFrame:syncImageFrameForNoURL];
+    [button setBackgroundImage:[UIImage imageNamed:@"ReconnectIcon.png"] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(checkUrlManually) forControlEvents:UIControlEventTouchDown];
+    
+    return button;
+}
+
+-(UIView *) generateFooterForUsernameAndPassword {
+    
+    if(isError500) {
+        UIImageView *errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CredentialsError.png"]];
+        [errorImage setFrame:okNokImageFrameFooter];
+        
+        UILabel* label = [[UILabel alloc] initWithFrame:textFooterFrame2];
+        label.backgroundColor = [UIColor clearColor];
+        label.text = NSLocalizedString(@"unknow_response_server",nil);
+        label.baselineAdjustment= UIBaselineAdjustmentAlignCenters;
+        label.lineBreakMode     =  NSLineBreakByWordWrapping;
+        label.textAlignment     = NSTextAlignmentLeft;
+        label.font          = [UIFont fontWithName:@"Arial" size:13];
+        label.textColor     = [UIColor colorOfLoginErrorText];
+        label.numberOfLines = 0;
+        
+        
+        UIView *view = [[UIView alloc] initWithFrame:footerSection1Frame];
+        
+        [view addSubview:errorImage];
+        [view addSubview:label];
+        
+        return view;
+    }
+    
+    if(isErrorOnCredentials) {
+        
+        UIImageView *errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CredentialsError.png"]];
+        [errorImage setFrame:okNokImageFrameFooter];
+        
+        UILabel* label = [[UILabel alloc] initWithFrame:textFooterFrame2];
+        label.backgroundColor = [UIColor clearColor];
+        //In SAML the error message is about the session expired
+        if (k_is_sso_active) {
+            label.text = NSLocalizedString(@"session_expired",nil);
+        }
+        else{
+            label.text = NSLocalizedString(@"error_login_message",nil);
+        }
+        label.baselineAdjustment= UIBaselineAdjustmentAlignCenters;
+        label.lineBreakMode     = NSLineBreakByWordWrapping;
+        label.textAlignment     = NSTextAlignmentLeft;
+        label.font          = [UIFont fontWithName:@"Arial" size:13];
+        label.textColor     = [UIColor colorOfLoginErrorText];
+        label.numberOfLines = 0;
+        
+        
+        UIView *view = [[UIView alloc] initWithFrame:footerSection1Frame];
+        
+        [view addSubview:errorImage];
+        [view addSubview:label];
+        
+        return view;
+    } else {
+        return nil;
+    }
+}
+
+#pragma mark - Keyboard
+
+-(void) keyboardWillShow:(NSNotification *) note {
+    [self.view addGestureRecognizer:tapRecognizer];
+}
+
+-(void) keyboardWillHide:(NSNotification *) note
+{
+    [self.view removeGestureRecognizer:tapRecognizer];
+}
+
+-(void)didTapAnywhere: (UITapGestureRecognizer*) recognizer {
+    [self.urlTextField resignFirstResponder];
+    [self.usernameTextField resignFirstResponder];
+    [self.passwordTextField resignFirstResponder];
+    
+    if (isUserTextUp==YES || isPasswordTextUp==YES) {
+        [self undoAnimate];
+    }
+    
+    //Hide password
+    [self hidePassword];
+}
+
+// Asks the delegate if the text field should process the pressing of the return button.
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    
+    if (textField == self.urlTextField) {
+        //[self.usernameTextField becomeFirstResponder];
+        [textField resignFirstResponder];
+    }
+    else if (textField == self.usernameTextField) {
+        if([self.passwordTextField.text isEqualToString:@""]) {
+            [self.passwordTextField becomeFirstResponder];
+        } else {
+            [textField resignFirstResponder];
+        }
+    } else if (textField == self.passwordTextField) {
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [textField resignFirstResponder];
+        
+        //if the scrroll is not a the start of the tableview we move the scroll
+       /* if(self.tableView.contentOffset.y > 0) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        }*/
+    }
+    
+    return YES;
+}
+
+#pragma mark - Animation write
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    
+    if (IS_IPHONE) {
+        [self animateTextField:textField up:YES];
+        
+        if (textField == self.passwordTextField){
+            [showPasswordCharacterButton setHidden:YES];
+        } else if (textField == self.urlTextField) {
+            [refreshTestServerButton setHidden:YES];
+            
+            [self.urlTextField setFrame:_urlFrame];
+        }
+        
+        //Show or not show password
+        if (textField==self.passwordTextField) {
+            
+        }else{
+            [self hidePassword];
+        }
+    }
+}
+
+- (void)animateTextField: (UITextField*) textField up: (BOOL) up {
+    DLog(@"Animate text field");
+    
+    if (textField==self.usernameTextField) {
+        isUserTextUp=YES;
+    }
+    
+    if (textField==self.passwordTextField) {
+        isPasswordTextUp=YES;
+    }
+    
+    NSIndexPath *scrollIndexPath = nil;
+    
+    if(k_hide_url_server) {
+        
+        if(textField == self.usernameTextField) {
+            scrollIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        } else if(textField == self.passwordTextField) {
+            scrollIndexPath = [NSIndexPath indexPathForRow:1 inSection:0];
+        }
+    } else {
+        
+        if(textField == self.usernameTextField) {
+            scrollIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+        } else if(textField == self.passwordTextField) {
+            scrollIndexPath = [NSIndexPath indexPathForRow:1 inSection:1];
+        } else if(textField == self.urlTextField) {
+            scrollIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        }
+    }
+    
+    DLog(@"Before the scroll To Row At IndexPath Medhod");
+    if (textField == _usernameTextField || textField == _passwordTextField) {
+        [[self tableView] scrollToRowAtIndexPath:scrollIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
+    
+    /*
+     if(textField == self.passwordTextField || textField == self.usernameTextField) {
+     const int movementDistancePortTrait = 100; // tweak as needed
+     const int movementDistanceLandscape = 150; // tweak as needed
+     const float movementDuration = 0.3f; // tweak as needed
+     
+     [UIView beginAnimations: @"anim" context: nil];
+     [UIView setAnimationBeginsFromCurrentState: YES];
+     [UIView setAnimationDuration: movementDuration];
+     
+     UIInterfaceOrientation currentOrientation;
+     currentOrientation=[[UIApplication sharedApplication] statusBarOrientation];
+     BOOL isPotrait = UIDeviceOrientationIsPortrait(currentOrientation);
+     
+     if(isPotrait) {
+     self.view.frame = CGRectOffset(self.view.frame, 0, -movementDistancePortTrait);
+     } else {
+     self.view.frame = CGRectOffset(self.view.frame, -movementDistanceLandscape, 0);
+     }
+     //[UIView commitAnimations];
+     
+     NSIndexPath *scrollIndexPath = [NSIndexPath indexPathForRow:1 inSection:1];
+     [[self tableView] scrollToRowAtIndexPath:scrollIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+     }*/
+}
+
+- (void) undoAnimate {
+    
+    if (isUserTextUp==YES) {
+        isUserTextUp=NO;
+    }
+    
+    if (isPasswordTextUp==YES) {
+        isPasswordTextUp=NO;
+    }
+    
+   //[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    [_tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+    
+    
+    
+    
+    
+    // DLog(@"undoAnimateTextField");
+    
+    /*const int movementDistancePortTrait = 100; // tweak as needed
+     const int movementDistanceLandscape = 150; // tweak as needed
+     const float movementDuration = 0.3f; // tweak as needed
+     
+     //int movement = (up ? -movementDistance : movementDistance);
+     
+     [UIView beginAnimations: @"anim" context: nil];
+     [UIView setAnimationBeginsFromCurrentState: YES];
+     [UIView setAnimationDuration: movementDuration];
+     
+     UIInterfaceOrientation currentOrientation;
+     currentOrientation=[[UIApplication sharedApplication] statusBarOrientation];
+     BOOL isPotrait = UIDeviceOrientationIsPortrait(currentOrientation);
+     
+     if(isPotrait) {
+     self.view.frame = CGRectOffset(self.view.frame, 0, movementDistancePortTrait);
+     } else {
+     self.view.frame = CGRectOffset(self.view.frame, movementDistanceLandscape, 0);
+     }
+     
+     
+     //self.view.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height+20.0);
+     //[UIView commitAnimations];
+     */
+}
+
+#pragma mark - Loading
+
+-(void) showTryingToLogin {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //hud.mode=MBProgressHUDModeDeterminate;
+    hud.labelText = NSLocalizedString(@"loading", nil);
+    hud.dimBackground = NO;
+    
+    self.view.userInteractionEnabled = NO;
+    self.navigationController.navigationBar.userInteractionEnabled = NO;
+    self.tabBarController.tabBar.userInteractionEnabled = NO;
+}
+
+-(void) hideTryingToLogin {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    self.view.userInteractionEnabled = YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
+    self.tabBarController.tabBar.userInteractionEnabled = YES;
+}
+
+#pragma mark - TextField delegates
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    
+    
+    DLog(@"6- self.auxUrlForReloadTable %@", self.auxUrlForReloadTable);
+    DLog(@"6- self.urlTextField.text %@", self.urlTextField.text);
+    
+    if(self.urlTextField != nil) {
+        self.auxUrlForReloadTable = self.urlTextField.text;
+    } else {
+        //This is when we deleted the last account and go to the login screen
+        self.urlTextField = [[UITextField alloc]initWithFrame:_urlFrame];
+        self.urlTextField.text = self.auxUrlForReloadTable;
+        textField = self.urlTextField;
+    }
+    
+    self.auxUsernameForReloadTable = self.usernameTextField.text;
+    self.auxPasswordForReloadTable = self.passwordTextField.text;
+    
+    //if it is nill the screen is not here
+    if(mCheckAccessToServer.delegate != nil) {
+        
+        //[self undoAnimateTextField:textField up:YES];
+        
+        if(isUserTextUp==YES || isPasswordTextUp==YES){
+           // [self undoAnimate];
+        }
+        
+        if(textField == self.urlTextField) {
+            isError500 = NO;
+        }
+        
+        if(textField == self.urlTextField && self.urlTextField.text.length > 0) {
+            [self animateTextField: textField up: NO];
+            
+            
+            if(textField == self.urlTextField) {
+                
+                if(threadToCheckUrl.isExecuting) {
+                    [threadToCheckUrl cancel];
+                }
+                
+                //[self.tableView reloadData];                
+                [self isConnectionToTheServerByUrlInOtherThread];
+                
+                //[self performSelectorInBackground:@selector(isConnectionToTheServerByUrlInOtherThread) withObject:nil];
+            }
+        }
+        
+        if(textField == self.passwordTextField && ![textField.text isEqualToString:self.auxPasswordForShowPasswordOnEdit]) {
+            self.auxPasswordForShowPasswordOnEdit = @"";
+            [showPasswordCharacterButton setHidden:NO];
+        } else if (textField == self.urlTextField) {
+            [refreshTestServerButton setHidden:NO];
+        }
+        
+        if ((self.urlTextField.text.length > 0 && self.passwordTextField.text.length > 0 && self.passwordTextField.text.length > 0 && isConnectionToServer==YES && hasInvalidAuth == NO) || (isConnectionToServer && (k_is_oauth_active || k_is_sso_active))) {
+            //[loginButton setEnabled:YES];
+            isLoginButtonEnabled = YES;
+            [self.tableView reloadData];
+        }else {
+            isLoginButtonEnabled = NO;
+        }
+        
+        if(textField == self.urlTextField) {
+            [self.urlTextField setFrame:_urlFrame];
+        }
+        
+        if (textField == _passwordTextField) {
+            //if the scrroll is not a the start of the tableview we move the scroll
+            if(_tableView.contentOffset.y > 0) {
+                //[_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                [_tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+            }
+        }
+    }
+}
+
+-(void) textFieldDidChange {
+    
+    if(k_is_autocomplete_username_necessary) {
+        DLog(@"textFieldDidChange: %@", self.usernameTextField.text);
+        
+        if([self.usernameTextField.text hasSuffix:k_letter_to_begin_autocomplete]) {
+            self.usernameTextField.text = [NSString stringWithFormat:@"%@%@",self.usernameTextField.text,k_text_to_autocomplete];
+        }
+    }
+}
+
+-(void) isConnectionToTheServerByUrlInOtherThread {
+    
+    [self.tableView reloadData];
+    
+    isCheckingTheServerRightNow = YES;
+    isConnectionToServer = NO;
+    
+    mCheckAccessToServer.delegate = nil;
+    
+    mCheckAccessToServer = [[CheckAccessToServer alloc] init];
+    mCheckAccessToServer.delegate = self;
+    
+    [mCheckAccessToServer isConnectionToTheServerByUrl:[self getUrlToCheck]];
+}
+
+-(NSString *)getUrlToCheck {
+    
+    DLog(@"getUrlToCheck");
+    
+    NSString *url = [self getUrlChecked:self.urlTextField.text];
+    
+    if ([url hasPrefix:k_https_prefix]) {
+        isNeedToCheckAgain = NO;
+        isHttps=YES;
+        url = [NSString stringWithFormat:@"%@", [self getUrlChecked: self.urlTextField.text]];
+    } else if ([url hasPrefix:k_http_prefix]) {
+        isNeedToCheckAgain = NO;
+        isHttps = NO;
+        url = [NSString stringWithFormat:@"%@", [self getUrlChecked: self.urlTextField.text]];
+    } else if (isNeedToCheckAgain) {
+        isNeedToCheckAgain = YES;
+        isHttps = YES;
+        url = [NSString stringWithFormat:@"%@%@",k_https_prefix,[self getUrlChecked: self.urlTextField.text]];
+    } else {
+        isNeedToCheckAgain = NO;
+        isHttps = NO;
+        url = [NSString stringWithFormat:@"%@%@",k_http_prefix,[self getUrlChecked: self.urlTextField.text]];
+    }
+    return url;
+}
+
+-(NSString *)getUrlChecked:(NSString *)byUrl {
+    
+    //We remove the accidentally last spaces " "
+    while([byUrl hasSuffix:@" "]) {
+        byUrl = [byUrl substringToIndex:[byUrl length] - 1];
+    }
+    
+    DLog(@"byURL: |%@|",byUrl);
+    
+    //We check if the last char is a / if it is not we set it
+    char urlLastChar =[byUrl characterAtIndex:([byUrl length]-1)];
+    if(urlLastChar != '/') {
+        byUrl = [byUrl stringByAppendingString:@"/"];
+    }
+    
+    DLog(@"URL with /: %@", byUrl);
+    
+    //We remove the accidentally first spaces " "
+    while([byUrl hasPrefix:@" "]) {
+        byUrl = [byUrl substringFromIndex:1];
+        
+        DLog(@"byURL: |%@|",byUrl);
+    }
+    
+    return byUrl;
+}
+
+-(void)repeatTheCheckToTheServer {
+    [self isConnectionToTheServerByUrlInOtherThread];
+}
+
+
+///-----------------------------------
+/// @name Update Interface With Connection to the server
+///-----------------------------------
+
+/**
+ * This method update the login view depends of the server is 
+ * conected or not.
+ *
+ * Is called from "connectionToTheServer" and "checkIfServerAutentificationIsNormalFromURL"
+ *
+ * @param isConnection -> BOOL
+ */
+-(void)updateInterfaceWithConnectionToTheServer:(BOOL)isConnection{
+    
+    if(isConnection) {
+        isConnectionToServer = YES;
+        if (self.urlTextField.text.length > 0 && self.usernameTextField.text.length > 0 && self.passwordTextField.text.length > 0 && hasInvalidAuth == NO) {
+            //[loginButton setEnabled:YES];
+            isLoginButtonEnabled = YES;
+        }
+        
+    } else {
+        isConnectionToServer = NO;
+        //[loginButton setEnabled:NO];
+        isLoginButtonEnabled = NO;
+    }
+    
+    
+    if (isNeedToCheckAgain && !isConnectionToServer) {
+        isNeedToCheckAgain = NO;
+        //[loginButton setEnabled:NO];
+        isLoginButtonEnabled = NO;
+        
+        if (isConnection) {
+            isConnectionToServer = YES;
+            //[loginButton setEnabled:YES];
+            isLoginButtonEnabled = YES;
+            
+            if (self.urlTextField.text.length > 0 && self.usernameTextField.text.length > 0 && self.passwordTextField.text.length > 0) {
+                //[loginButton setEnabled:YES];
+                isLoginButtonEnabled = YES;
+            }
+            
+        } else {
+            isConnectionToServer = NO;
+            //[loginButton setEnabled:NO];
+            isLoginButtonEnabled = NO;
+        }
+    }
+    
+    if (isConnectionToServer) {
+        if (isHttps) {
+            UIImage *currentImage = [UIImage imageNamed: @"SecureConnectionIcon.png"];
+            [checkConnectionToTheServerImage setImage:currentImage];
+            [checkConnectionToTheServerImage setHidden:NO];
+        } else {
+            UIImage *currentImage = [UIImage imageNamed: @"NonSecureConnectionIcon.png"];
+            [checkConnectionToTheServerImage setImage:currentImage];
+            [checkConnectionToTheServerImage setHidden:NO];
+        }
+        
+    } else {
+        
+        if (isHttps && ![self.urlTextField.text hasPrefix:k_https_prefix]) {
+            DLog(@"es HTTPS no hay conexión");
+            [mCheckAccessToServer isConnectionToTheServerByUrl:[self getUrlToCheck]];
+            
+        } else {
+            UIImage *currentImage = [UIImage imageNamed: @"CredentialsError.png"];
+            [checkConnectionToTheServerImage setImage:currentImage];
+            [checkConnectionToTheServerImage setHidden:NO];
+        }
+    }
+    
+    isCheckingTheServerRightNow = NO;
+    [self.tableView reloadData];
+    
+    isNeedToCheckAgain = YES;
+}
+
+///-----------------------------------
+/// @name Connection to the server
+///-----------------------------------
+
+/**
+ * It's a delegate method of CheckAccessToServer class that
+ * it's called when the app know if the server is connected or not
+ *
+ * @param isConnection -> BOOL
+ *
+ */
+-(void)connectionToTheServer:(BOOL)isConnection {
+    //Set to NO, before the checking
+    hasInvalidAuth = NO;
+    
+    if (isConnection) {
+        [self checkIfServerAutentificationIsNormalFromURL];
+    }else{
+        //Update the interface
+        [self updateInterfaceWithConnectionToTheServer:isConnection];
+    }
+    
+}
+
+#pragma mark - Checklogin
+
+///-----------------------------------
+/// @name Update Connect String
+///-----------------------------------
+
+/**
+ * This method update the global variable _connectString, 
+ * it's called sometimes in the code in order to get a correct 
+ * full url dependes of the protocol
+ *
+ */
+- (void) updateConnectString{
+    
+    NSString *httpOrHttps = @"";
+    
+    if(isHttps) {
+        if([_urlTextField.text hasPrefix:k_https_prefix]) {
+            httpOrHttps = @"";
+        } else {
+            httpOrHttps = k_https_prefix;
+            
+        }
+    } else {
+        if([_urlTextField.text hasPrefix:k_http_prefix]) {
+            httpOrHttps = @"";
+        } else {
+            httpOrHttps = k_http_prefix;
+        }
+    }
+    
+    NSString *connectURL =[NSString stringWithFormat:@"%@%@%@",httpOrHttps,[self getUrlChecked: _urlTextField.text], k_url_webdav_server];
+    _connectString=connectURL;
+   
+}
+
+
+
+-(void) checkLogin {
+    
+    //Update connect string
+    [self updateConnectString];
+    
+    [self eraseURLCache];
+    [self eraseCredentials];
+    
+    [self performSelector:@selector(connectToServer) withObject:nil afterDelay:0.5];
+}
+
+
+///-----------------------------------
+/// @name Check if server autentification is normal
+///-----------------------------------
+
+/**
+ * This method is called in a normal autentification to check if the autentification
+ * server is normal.
+ *
+ */
+- (void) checkIfServerAutentificationIsNormalFromURL {
+    
+    //Update connect string
+    [self updateConnectString];
+    
+    //Empty username and password to get a fail response to the server
+    NSString *userName=@"";
+    NSString *password=@"";
+    
+    DLog(@"connect string: %@", _connectString);
+    
+    [[AppDelegate sharedOCCommunication] setCredentialsWithUser:userName andPassword:password];
+    
+    [[AppDelegate sharedOCCommunication] checkServer:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+        
+        BOOL isInvalid = NO;
+        
+        if (k_is_sso_active == YES) {
+            isInvalid = NO;
+            isLoginButtonEnabled = YES;
+        } else {
+            //Unkown, must be invalid
+            isInvalid = YES;
+        }
+        
+        //Update the interface depend of if isInvalid or not
+        if (isInvalid) {
+            hasInvalidAuth = YES;
+            isLoginButtonEnabled = NO;
+        } else {
+            hasInvalidAuth = NO;
+        }
+        
+        [self checkTheSecurityOfTheRedirectedURL:response];
+        
+        [_tableView reloadData];
+        [self updateInterfaceWithConnectionToTheServer:YES];
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        
+        BOOL isInvalid = NO;
+        
+        if (k_is_sso_active == NO) {
+            //Get header related with autentication type
+            NSString *autenticationType = [[response allHeaderFields] valueForKey:@"Www-Authenticate"];
+            
+            if (autenticationType) {
+                //Autentication type basic
+                if ([autenticationType hasPrefix:@"Basic"]) {
+                    isInvalid = NO;
+                } else if ([autenticationType hasPrefix:@"Bearer"]) {
+                    //Autentication type oauth
+                    if (k_is_oauth_active == YES) {
+                        //Check if is activate oauth
+                        isInvalid = NO;
+                    } else {
+                        isInvalid = YES;
+                    }
+                } else {
+                    //Unknown autentication type
+                    isInvalid = YES;
+                }
+            } else {
+                //The server not return a Www-Authenticate header
+                isInvalid = YES;
+            }
+        } else {
+            //If sso_active the check does not fail
+            //As we are receiving a SAML error from SAML server, we forced the flag to accept this connection
+            isInvalid = NO;
+            isLoginButtonEnabled = YES;
+        }
+        
+        //Update the interface depend of if isInvalid or not
+        if (isInvalid) {
+            hasInvalidAuth = YES;
+        } else {
+            hasInvalidAuth = NO;
+        }
+        
+        [self checkTheSecurityOfTheRedirectedURL:response];
+        
+        [_tableView reloadData];
+        [self updateInterfaceWithConnectionToTheServer:YES];
+    }];
+}
+
+
+///-----------------------------------
+/// @name checkTheSecurityOfTheRedirectedURL
+///-----------------------------------
+
+/**
+ * This method checks if the redirected URL has a downgrade of the security
+    So, if the first URL has https but the redirected one has http, we show a message to the user
+ *
+ * @param repsonse -> NSHTTPURLResponse, the response of the server
+ */
+- (void) checkTheSecurityOfTheRedirectedURL: (NSHTTPURLResponse *)response {
+    //Check the security of the redirection
+    NSURL *redirectionURL = response.URL;
+    NSString *redirectionURLString = [redirectionURL absoluteString];
+    
+    if (isHttps) {
+        if ([redirectionURLString hasPrefix:k_https_prefix]) {
+            isHttpsSecure = YES;
+        } else {
+            isHttpsSecure = NO;
+        }
+    }
+}
+
+
+///-----------------------------------
+/// @name Connect to Server
+///-----------------------------------
+
+/**
+ * This method do the proffind request to the webdav server in order
+ * to do the login and get the root folder
+ *
+ * If the request "success" call the method "createUserAndDataInTheSystemWithRequest"
+ *
+ */
+- (void) connectToServer{
+    
+    NSString *userName=self.usernameTextField.text;
+    NSString *password=self.passwordTextField.text;
+    
+    //Set the right credentials
+
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:userName andPassword:password];
+    }
+    
+    [[AppDelegate sharedOCCommunication] readFolder:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+        
+        DLog(@"Operation response code: %d", response.statusCode);
+        
+        BOOL isSamlServer = NO;
+
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlServer = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlServer) {
+                [self errorLogin];
+            }
+            
+        }
+        
+        if (!isSamlServer) {
+            //Pass the items with OCFileDto to FileDto Array
+            NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
+            [self createUserAndDataInTheSystemWithRequest:directoryList andCode:response.statusCode];
+        }
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        
+        DLog(@"error: %@", error);
+        DLog(@"Operation error: %d", response.statusCode);
+        
+        switch (response.statusCode) {
+            case kOCErrorServerUnauthorized:
+                //Unauthorized (bad username or password)
+                [self errorLogin];
+                break;
+            case kOCErrorServerForbidden:
+                //403 Forbidden
+                [self manageFailOfServerConnection];
+                break;
+            case kOCErrorServerPathNotFound:
+                //404 Not Found. When for example we try to access a path that now not exist
+                [self manageFailOfServerConnection];;
+                break;
+            case kOCErrorServerTimeout:
+                //408 timeout
+                [self manageFailOfServerConnection];
+                break;
+            default:
+                [self manageFailOfServerConnection];
+                break;
+        }
+        
+    }];
+    
+}
+
+- (void) manageFailOfServerConnection{
+    
+    [self hideTryingToLogin];
+    _alert = nil;
+    _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_possible_connect_to_server", nil)
+                                                    message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+    [_alert show];
+}
+
+
+
+///-----------------------------------
+/// @name Create data with server data
+///-----------------------------------
+
+/**
+ * This method is called when the app receive the data of the login proffind
+ *
+ * @param items -> Items of the proffind
+ * @param requestCode -> webdav server response
+ *
+ * @warning This method it's present also in AddAcountViewController and EditViewController
+ */
+-(void)createUserAndDataInTheSystemWithRequest:(NSArray *)items andCode:(int) requestCode {
+      
+   // DLog(@"Request Did Fetch Directory Listing And Test Authetification");
+    
+    if(requestCode >= 400) {
+        isError500 = YES;
+        [self hideTryingToLogin];
+        
+        [self.tableView reloadData];
+    } else {
+        
+        UserDto *userDto = [[UserDto alloc] init];
+        
+        //We check if start with http or https to concat it
+        if([self.urlTextField.text hasPrefix:k_http_prefix] || [self.urlTextField.text hasPrefix:k_https_prefix]) {
+            userDto.url = [self getUrlChecked: self.urlTextField.text];
+            
+        } else {
+            if(isHttps) {
+                userDto.url = [NSString stringWithFormat:@"%@%@",k_https_prefix, [self getUrlChecked: self.urlTextField.text]];
+            } else {
+                userDto.url = [NSString stringWithFormat:@"%@%@",k_http_prefix, [self getUrlChecked: self.urlTextField.text]];
+            }
+        }
+        
+        //DLog(@"URL FINAL: %@", userDto.url);
+        
+        NSString *userNameUTF8=self.usernameTextField.text;
+        NSString *passwordUTF8=self.passwordTextField.text;
+        
+        userDto.username = userNameUTF8;
+        userDto.password = passwordUTF8;
+        userDto.ssl = isHttps;
+        userDto.activeaccount = YES;
+        
+        [ManageUsersDB insertUser:userDto];
+        
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        app.activeUser=[ManageUsersDB getActiveUser];
+        
+        NSMutableArray *directoryList = [NSMutableArray arrayWithArray:items];
+        
+        //Change the filePath from the library to our format
+        for (FileDto *currentFile in directoryList) {
+            //Remove part of the item file path
+            NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:app.activeUser];
+            if([currentFile.filePath length] >= [partToRemove length]){
+                currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
+            }
+        }
+        
+        DLog(@"The directory List have: %d elements", directoryList.count);
+        
+        DLog(@"Directoy list: %@", directoryList);
+    
+        [ManageFilesDB insertManyFiles:directoryList andFileId:0];
+        
+        [self hideTryingToLogin];
+        
+        //Generate the app interface
+        [app generateAppInterfaceFromLoginScreen:YES];
+        
+    }
+    
+}
+
+-(void) errorLogin {
+    
+    
+    DLog(@"Error login");
+    
+    [self hideTryingToLogin];
+    
+    isErrorOnCredentials = YES;
+    
+    [self.tableView reloadData];
+}
+
+#pragma mark - Cookies support
+//-----------------------------------
+/// @name restoreTheCookiesOfActiveUserByNewUser
+///-----------------------------------
+
+/**
+ * Method to restore the cookies of the active after add a new user
+ *
+ * @param UserDto -> user
+ *
+ */
+- (void) restoreTheCookiesOfActiveUser {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    //1- Clean the cookies storage
+    [UtilsFramework deleteAllCookies];
+    //2- We restore the previous cookies of the active user on the System cookies storage
+    [UtilsCookies setOnSystemStorageCookiesByUser:app.activeUser];
+    //3- We delete the cookies of the active user on the databse because it could change and it is not necessary keep them there
+    [ManageCookiesStorageDB deleteCookiesByUser:app.activeUser];
+}
+
+#pragma mark - Delete HTTP cache
+
+- (void)eraseCredentials
+{
+    NSString *urlString = self.connectString;
+    NSURLCredentialStorage *credentialsStorage = [NSURLCredentialStorage sharedCredentialStorage];
+    NSDictionary *allCredentials = [credentialsStorage allCredentials];
+    
+    if ([allCredentials count] > 0)
+    {
+        for (NSURLProtectionSpace *protectionSpace in allCredentials)
+        {
+            DLog(@"Protetion espace: %@", [protectionSpace host]);
+            
+            if ([[protectionSpace host] isEqualToString:urlString])
+            {
+                DLog(@"Credentials erase");
+                NSDictionary *credentials = [credentialsStorage credentialsForProtectionSpace:protectionSpace];
+                for (NSString *credentialKey in credentials)
+                {
+                    [credentialsStorage removeCredential:[credentials objectForKey:credentialKey] forProtectionSpace:protectionSpace];
+                }
+            }
+        }
+    }
+}
+
+- (void)eraseURLCache
+{
+    //  NSURL *loginUrl = [NSURL URLWithString:self.connectString];
+    //  NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc]initWithURL:loginUrl];
+    // [NSMutableURLRequest requestWithURL:loginUrl];
+    //  [[NSURLCache sharedURLCache] removeCachedResponseForRequest:urlRequest];
+    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
+    [[NSURLCache sharedURLCache] setDiskCapacity:0];
+}
+
+#pragma marK - Action Buttons
+
+-(void)checkUrlManually {
+    [self textFieldDidEndEditing:self.urlTextField];
+}
+
+-(void)hideOrShowPassword {
+    
+    if ([self.passwordTextField isSecureTextEntry]) {
+        [self.passwordTextField setSecureTextEntry:NO];
+        [showPasswordCharacterButton setBackgroundImage:[UIImage imageNamed:@"NonRevealPasswordIcon.png"] forState:UIControlStateNormal];
+    } else {
+        [self.passwordTextField setSecureTextEntry:YES];
+        [showPasswordCharacterButton setBackgroundImage:[UIImage imageNamed:@"RevealPasswordIcon.png"] forState:UIControlStateNormal];
+    }
+}
+
+- (void)hidePassword{
+    [self.passwordTextField setSecureTextEntry:YES];
+    [showPasswordCharacterButton setBackgroundImage:[UIImage imageNamed:@"RevealPasswordIcon.png"] forState:UIControlStateNormal];
+}
+
+-(void)goTryToDoLogin {
+    DLog(@"goTryToDoLogin");
+    DLog(@"user: %@ | pass: %@", self.usernameTextField.text, self.passwordTextField.text);
+    
+    isError500 = NO;
+    
+    if (self.urlTextField.text.length > 0 && self.usernameTextField.text.length > 0 && self.passwordTextField.text.length > 0 && isConnectionToServer==YES && hasInvalidAuth==NO) {
+        
+        //We check the problematic characters before login
+        //if([self isProblematicCharactersOnPassword:passwordTxtField.text]) {
+        if(NO) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters", nil)
+                                                            message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+            [alert show];
+        } else {
+            [self showTryingToLogin];
+            
+            if(isConnectionToServer){
+                //Try login
+                [self checkLogin];
+            }
+        }
+    }else {
+        isLoginButtonEnabled = NO;
+    }
+}
+
+#pragma mark - SSL Certificates
+
+-(void)badCertificateNoAcceptedByUser {
+    
+    isCheckingTheServerRightNow = NO;
+    isSSLAccepted = NO;
+    //[loginButton setEnabled:NO];
+    isLoginButtonEnabled = NO;
+    
+    UIImage *currentImage = [UIImage imageNamed: @"CredentialsError.png"];
+    [checkConnectionToTheServerImage setImage:currentImage];
+    [checkConnectionToTheServerImage setHidden:NO];
+    
+    isNeedToCheckAgain = YES;
+    
+    [self.tableView reloadData];
+}
+
+
+#pragma mark - OAuth
+
+-(void)oAuthScreen {
+    
+    NSURL *url = [NSURL URLWithString:k_oauth_login];
+    [[UIApplication sharedApplication] openURL:url];
+}
+
+#pragma mark - SSO
+
+///-----------------------------------
+/// @name Check URL Server For SSO
+///-----------------------------------
+
+/**
+ * This method checks the URL in URLTextField in order to know if
+ * is a valid SSO server.
+ *
+ * @warning This method uses a NSURLConnection delegate methods
+ */
+
+-(void) checkURLServerForSSO {
+    
+    //Get the URL string
+    NSString *urlString = [self getUrlToCheck];
+    
+    //Check SSO Server
+    CheckSSOServer *checkSSOServer = [CheckSSOServer new];
+    checkSSOServer.delegate = self;
+    [checkSSOServer checkURLServerForSSOForThisPath:urlString];
+    
+    //Show Loading screen
+    [self showTryingToLogin];
+}
+
+
+
+#pragma mark - CheckSSOServer Delegate methods
+
+///-----------------------------------
+/// @name Show Shibboleth Login Screen
+///-----------------------------------
+
+/**
+ * Method called from CheckSSOServer that show the Shibboleth login Screen
+ *
+ */
+- (void) showSSOLoginScreen{
+    
+    //Server url
+    NSString * urlString = [self getUrlToCheck];
+    
+    //In main thread
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        //Hide the loading icon
+        [self hideTryingToLogin];
+        
+        //WebView controller
+        SSOViewController *ssoViewController = [[SSOViewController alloc] initWithNibName:@"SSOViewController" bundle:nil];
+        ssoViewController.delegate = self;
+        ssoViewController.urlString = urlString;
+        
+        //Branding navigation bar
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:ssoViewController];
+        
+        //Check if is iPhone or iPad
+        if (!IS_IPHONE) {
+            //iPad
+            navController.modalTransitionStyle=UIModalTransitionStyleCoverVertical;
+            navController.modalPresentationStyle = UIModalPresentationFormSheet;
+            
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            
+            //Check if the splitViewController exist
+           if (appDelegate.splitViewController) {
+                 [appDelegate.splitViewController.detailViewController presentViewController:navController animated:YES completion:nil];
+            } else {
+                [self presentViewController:navController animated:YES completion:nil];
+            }
+            
+           
+        } else {
+            //iPhone
+            [self presentViewController:navController animated:YES completion:nil];
+        }
+    });
+    
+}
+
+
+///-----------------------------------
+/// @name Show SSO Error Server
+///-----------------------------------
+
+/**
+ * Method called from CheckSSOServer that shows an alert view when the URLTextField isn't a valid SSO server
+ *
+ */
+- (void) showSSOErrorServer {
+    
+    //In main thread
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self hideTryingToLogin];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"auth_unsupported_auth_method", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        [alertView show];
+    });
+}
+
+
+///-----------------------------------
+/// @name Show Error Connection
+///-----------------------------------
+
+/**
+ * Method called from CheckSSOServer that show an alert view with error connection
+ *
+ */
+- (void)showErrorConnection{
+    
+    //In main thread
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self hideTryingToLogin];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_possible_connect_to_server", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        [alertView show];
+    });
+}
+
+
+#pragma mark - SSODelegate methods
+
+///-----------------------------------
+/// @name Set Cookie For SSO
+///-----------------------------------
+
+/**
+ * This delegate method is called from SSOViewController when the user
+ * sets a correct credencials
+ *
+ * @param cookieString -> NSString
+ * @param samUserName -> NSString
+ *
+ */
+- (void)setCookieForSSO:(NSString *) cookieString andSamlUserName:(NSString*)samlUserName {
+    
+    //We should be change this behaviour when in the server side update the cookies.
+    if (samlUserName) {
+        _usernameTextField = [UITextField new];
+        _usernameTextField.text = samlUserName;
+        
+        _passwordTextField = [UITextField new];
+        _passwordTextField.text = cookieString;
+        [self goTryToDoLogin];
+        
+    }else{
+    
+        //Show message in main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"saml_server_does_not_give_user_id", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+            [alertView show];
+        });
+       
+    }
+    
+   
+
+}
+
+@end

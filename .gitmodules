@@ -1,0 +1,3 @@
+[submodule "OCCommunicationLib"]
+	path = OCCommunicationLib
+	url = git@github.com:owncloud/ios-library.git

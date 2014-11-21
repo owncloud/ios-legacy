@@ -1,0 +1,252 @@
+/*
+ Localizable.strings
+ Owncloud iOs Client
+ 
+ Created by Javier Gonzalez on 7/17/12.
+ */
+
+/*
+ Copyright (C) 2014, ownCloud, Inc.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
+
+
+//First Screen
+"go_to_login" = "Määritä tili";
+"you_need_an_account" = "Päätelaitteessa ei ole yhtään $appname tiliä määriteltynä.\r\nSinun tulee luoda tili käyttääksesi sovellusta.";
+
+//Login Screen
+"testing_connection" = "Testataan yhteyttä";
+"server_instance_not_found" = "Palvelinta ei löytynyt";
+"secure_connection_established" = "Salattu yhteys muodostettu";
+"https_non_secure_connection_established" = "Uudelleenohjattu salaamattomaan polkuun";
+"connection_established" = "Yhteys muodostettu";
+"login_details" = "Tilin tiedot";
+"username" = "Käyttäjätunnus";
+"password" = "Salasana";
+"login" = "Kirjaudu sisään";
+"cancel" = "Peruuta";
+"error_login_message" = "Käyttäjätunnus tai salasana on väärä";
+"ok" = "Ok";
+"url_sample" = "http://esimerkki.fi/palvelu/";
+"forbidden_characters" = "Salasanassa on kiellettyjä merkkejä";
+"server" = "Palvelin";
+"url" = "URL";
+"session_expired" = "Istunto on vanhentunut";
+"credentials_different_user" = "Syötetty käyttäjä ei täsmää tämän tilin käyttäjän kanssa";
+"auth_unsupported_auth_method" = "Palvelin ei tue tätä autentikointitapaa";
+"saml_server_does_not_give_user_id" = "Palvelin palauttaa virheellisen käyttäjä-ID:n. Ota yhteys palvelun ylläpitäjään.";
+"authentification_not_valid" = "Autentikointi palvelimen kanssa ei onnistu";
+"error_too_many_http_redirects" = "Yhteyttä muodostaessa tapahtui virhe. Yritä uudelleen.";
+"retry" = "Yritä uudelleen";
+
+//TabBarItems
+"settings"="Asetukset";
+"files"="Tiedostot";
+
+//Uploading
+"upload" = "Lähetä";
+"account" = "Tili:";
+"location" = "Sijainti:";
+"photo_albums" = "Valokuva-albumit";
+"loading" = "Ladataan...";
+"no_access_to_gallery" = "Salli pääsy kuviin ja videoihin $appname sovellusta varten. Voit muokata asetusta kohdassa Asetukset > Yksityisyys > Kuvat.";
+"error" = "Virhe";
+"upload_failed"="Lähetys epäonnistui";
+"redirection_problem"="URL-uudelleenohjaus ei ole tuettu toiminto";
+
+//First View
+"menu_upload" = "Lähetä valokuva/video";
+"menu_folder" = "Luo kansio";
+
+//Create Folder
+"create_folder" = "Luo uusi kansio";
+"folder_name" = "Syötä kansion nimi:";
+"save" = "Tallenna";
+"folder_forbbiden_characters" = "Kansion nimi sisältää kiellettyjä merkkejä. Ole hyvä ja poista ne.";
+"file_forbbiden_characters" = "Tiedostonimi sisältää kiellettyjä merkkejä. Ole hyvä ja poista ne.";
+"folder_exist" = "Kansio on jo olemassa. Ole hyvä ja syötä jokin toinen nimi.";
+"folder_create_error"="Hakemiston luonti epäonnistui.";
+"not_show_potrait"="Valikko ei ole saatavilla vaakanäkymässä. Ole hyvä ja vaihda pystynäkymään.";
+"not_possible_create_folder" = "Kansion luonti epäonnistui.";
+
+//FilesView
+"confirm_to_delete_item" = "Vahvista poistaminen";
+"yes" = "KYLLÄ";
+"no" = "EI";
+"delete_from_device" = "Oletko varma, että haluat poistaa tämän tiedoston päätelaitteesta?";
+"delete_from_server" = "Oletko varma, että haluat poistaa tämän tiedoston palvelimelta?";
+"not_possible_connect_to_server" = "Palvelimeen ei saada yhteyttä tällä hetkellä.";
+"delete_folder_from_server" = "Oletko varma, että haluat poistaa tämän kansion palvelimelta?";
+"delete_local_server" = "Poista laitteesta ja palvelimelta";
+"delete_local" = "Poista laitteesta";
+"delete_server" = "Poista palvelimelta";
+"error_path" = "Kansion avaaminen ei onnistu. Varmista että kansio on olemassa.";
+"error_not_permission" = "Sinulla ei ole tarvittavia oikeuksia toiminnon suorittamiseksi";
+"folders" = "kansiot";
+"files" = "tiedostot";
+"folder" = "kansio";
+"file" = "tiedosto";
+"more_swipe" = "Lisää";
+"message_not_files" = "Ei sisältöä. Siirrä tänne jotakin!";
+
+//Refresh file list
+"release_refresh"="Vapauta päivittääksesi...";
+"loading_refresh"="Ladataan...";
+"pull_down_refresh"="Pyyhkäise alas päivittääksesi.";
+
+//Miscelanea
+"back" = "Takaisin";
+
+//Preview
+"open_with_label" = "Avaa sovelluksessa";
+"delete_label"= "Poista";
+
+//Open with
+"file_cannot_be_opened" = "Tiedostoa ei voida avata";
+"no_app_instaled_to_open_it" = "Sopivaa sovellusta tiedoston avaamiseksi ei löytynyt.";
+
+//WTClient messages (Download/Upload)
+"establishing_connection" = "Muodostetaan yhteyttä";
+"not_establishing_connection" = "Yhteyttä ei voitu muodostaa";
+"connection_closed" = "Yhteys suljettu";
+"connection_lost" = "Yhteys menetetty";
+"auth_failed" = "Autentikointi epäonnistui";
+"auth_passed" = "Autentikointi onnistui";
+"request_file_not_found" = "Tiedostoa ei löytynyt palvelimelta";
+"request_file_not_accesed" = "Tiedostoa ei voida avata";
+"unknow_response_server" = "Virhe. Odottamaton vastaus palvelimelta.";
+"uploading_data" = "Dataa siirretään";
+"downloading_data" = "Dataa ladataan";
+"transfer_complete" = "Siirto valmis";
+"transfer_failed" = "Siirto epäonnistui";
+
+//Settings and PinCode
+"title_app_pin" = "Sovelluksen PIN";
+"enter_app_pin" = "Syötä Sovelluksen PIN";
+"enter_app_pin_long_description" = "Syötä sovelluksen PIN\r\nPIN pyydetään aina kun sovellusta avattaessa.";
+"reenter_app_pin" = "Syötä sovelluksen PIN uudestaan";
+"remove_app_pin" = "Poista sovelluksen PIN";
+"both_pass_not_same" = "PIN-koodit eivät täsmää";
+"app_pin_incorrect" = "Virheellinen PIN";
+"disconnect_button" = "Katkaise yhteys tähän palvelimeen";
+"pin_removed" = "Sovelluksen PIN poistettu";
+"incorrect_pin" = "Virheellinen PIN";
+"app_pin_stored" = "Sovelluksen PIN tallennettu";
+"help" = "Apua";
+"recommend_to_friend" = "Suosittele ystävälle";
+"send_feedback" = "Lähetä palautetta";
+"manage_accounts" = "Hallitse tilejä";
+"add_new_account" = "Lisää uusi tili";
+"save_changes" = "Tallenna";
+"add_account" = "Lisää";
+"user_exist" = "Käyttäjä on jo olemassa";
+"imprint_button" = "Impressumi";
+
+//Downloading
+"can_no_copy_to_gallery" = "Tiedostoa ei voida kopioida galleriaan sillä sen avaaminen epäonnistui";
+"file_is_downloading" = "Tiedostoa ladataan jo";
+"download_file_exist" = "Tiedoston avaaminen epäonnistui. Varmista, että tiedosto on olemassa";
+"wait_to_download" = "Valmistautuu lataamaan";
+"updating" = "Päivittää";
+"msg_while_downloads" = "Toimintoa ei voida suorittaa. Odota kunnes käynnissä oleva lataus on valmis.";
+
+//SSL
+"invalid_ssl_cert" = "Palvelimen todentaminen epäonnistui. Haluatko luottaa sertifikaattiin tästä huolimatta?";
+"connection_declined" = "Yhteys hylätty käyttäjän toimesta";
+
+//Recent view
+"recent_now"="sekunttia sitten";
+"recent_minutes"="$minutes minuuttia sitten";
+"recent_minute"="$minutes minuutti sitten";
+"recent_hours"="$hours tuntia sitten";
+"recent_hour"="$hours tunti sitten";
+"recent_days"="$days päivää sitten";
+"recent_day"="$days päivä sitten";
+"recent_months"="$months kuukautta sitten";
+"recent_month"="$months kuukausi sitten";
+
+"uploads_tab"="Lataukset";
+"current_section"="Nykyiset";
+"uploader_section"="Siirtäjä";
+"nothing_was_upload_recently"="Tästä laitteesta ei ole hiljattain siirretty sisältöä.";
+"failed_uploader_section"="Epäonnistuneet siirrot";
+"error_credential"="Valtuutusvirhe";
+"error_destiny_does_not_exist"="Kansiovirhe";
+"error_file_exists"="Ristiriitavirhe";
+"error_permission" = "Oikeusvirhe";
+"error_file_does_not_exist" = "Tiedostovirhe";
+"error_file_in_background" = "Palvelinvirhe";
+"change_active_user"="Vaihda aktiivinen käyttäjä käyttäjään ";
+"waiting_for_server"="Odottaa palvelinyhteyttä";
+"waiting_for_upload"="Odottaa siirtoa";
+"error_permission_alert_message" = "Sinulla ei ole tarvittavia oikeuksia siirtääksesi sisältöä tähän kansioon";
+"choose_folder" = "Valitse kansio";
+
+//Select Folder View
+"upload_label"="Siirrä kohteeseen";
+"create_button"="Luo";
+"choose_button"="Valitse";
+
+//Rename
+"rename_long_press" = "Nimeä uudelleen";
+"rename_file_title" = "Nimeä uudelleen";
+"enter_new_name" = "Syötä uusi nimi:";
+"rename_file_exist" = "Tiedosto on jo olemassa. Syötä uusi nimi";
+
+//Move
+"move_long_press" = "Siirrä";
+"move_to_label" = "Siirrä kohteeseen";
+"file_exist" = "Tiedosto on jo kohdekansiossa.";
+"override_file" = "Haluatko korvata olemssa olevan tiedoston tällä tiedostolla?";
+"accept" = "Hyväksy";
+"error_folder_destiny_is_the_same" = "VIRHE: kansion siirtäminen itsensä sisään ei ole mahdollista";
+"original_file_exist" = "Tiedoston siirtäminen epäonnistui. Varmista, että tiedosto on olemassa";
+"original_folder_exist" = "Kansion siirtäminen epäonnistui. Varmista, että kansio on olemassa";
+
+//Upload from other apps
+"other_apps_title" = "Kohde";
+"other_apps_account" = "Tili";
+"other_apps_folder" = "Kansio";
+"other_apps_file_name" = "Tiedostonimi";
+"other_apps_send_to" = "Siirrä kohteeseen";
+"error_moving_file" = "Tiedoston siirtäminen epäonnistui. Tarkista, että kohdekansio on olemassa";
+"forbiden_characters" = "Virheellinen nimi: '\\', '/', '<', '>', ':', \", '|', '?' sekä '*' eivät ole sallittuja merkkejä";
+"overwritte_title" = "Ylikirjoita";
+
+//Social
+"twitter_message" = "Kokeile $twitteruser älypuhelimellasi! ";
+"facebook_message" = "Kokeile $appname älypuhelimessasi!\r\n";
+"mail_recommendation_subject" = "Kokeile $appname älypuhelimessasi!";
+"mail_recommendation_body" = "Haluaisin kutsua sinut käyttämään $appname älypuhelimessasi!\r\nLataa täältä: ";
+"device_not_support_mail" = "Päätelaitteesi ei ole tuettu";
+"mail_feedback_subject" = "Palaute $appname";
+"account_not_configure" = "Tiliä ei ole määritelty päätelaitteeseesi. Siirry asetuksiin ja määrittele tili.";
+
+//Storage
+"of_storage" = "/";
+"occupied_storage" = "Varattu";
+"storage" = "Tallennustila";
+"storage_upgrade" = "Päivitä tallennustila";
+
+//Jimmies
+"this_file_is_older" = "Uudempi versio saatavilla";
+"msg_update_file_0_bytes" = "Palvelimella olevan tiedoston koko on 0 tavua. Haluatko varmasti ylikirjoittaa päätelaitteessasi olevan tiedoston palvelimen tyhjällä tiedostolla?";
+
+//Shared
+"shared_tab" = "Jaetut linkit";
+"message_not_shared_files" = "Linkillä jaettuja tiedostoja/kansioita ei ole.";
+"message_not_shared_api_support" = "Tiedostojen jakaminen palvelimellasi ei ole sallittu. Ota yhteyttä palvelun ylläpitäjään.";
+"share_link_long_press" = "Jaa linkki";
+"unshare_link" = "Poista linkin jako";
+"share_not_available_on_this_server" = "Tämän toiminnon suorittaminen palvelimellasi ei ole sallittu. Ota yhteyttä palvelun ylläpitäjään.";
+"copy_link" = "Kopioi linkki";
+"file_to_share_not_exist" = "Tiedoston/kansion jakaminen ei onnistunut. Varmista, että se on olemassa.";
+"file_to_unshare_not_exist" = "Tiedoston/kanion jakamisen poisto ei onnistunut. Varmista, että se on olemassa.";
+
+//Favorites
+"favorite" = "Suosikit";
+"unfavorite" = "Poista suosikeista";

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4510" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ELCAlbumPickerController">
+            <connections>
+                <outlet property="albumPickerTableView" destination="4" id="LhV-2p-rfU"/>
+                <outlet property="bottomToolBar" destination="wBT-Wp-tS4" id="IFC-Fz-5Cu"/>
+                <outlet property="folderToUploadButton" destination="TAb-B9-2Ax" id="qw4-Dp-QxJ"/>
+                <outlet property="view" destination="ccb-7O-Y8V" id="ol5-aI-5Ma"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="ccb-7O-Y8V">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <tableView opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="4">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="WmR-0W-tea"/>
+                        <outlet property="delegate" destination="-1" id="LmR-b9-Jnl"/>
+                    </connections>
+                </tableView>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wBT-Wp-tS4" customClass="OCToolBar">
+                    <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="92C-LI-FBA"/>
+                    </constraints>
+                    <items>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="nO6-wp-Boz"/>
+                        <barButtonItem title="Item" id="TAb-B9-2Ax">
+                            <connections>
+                                <action selector="selectFolderToUploadFiles:" destination="-1" id="SNE-fE-IQD"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Qhn-6t-FKj"/>
+                    </items>
+                </toolbar>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="4" firstAttribute="leading" secondItem="wBT-Wp-tS4" secondAttribute="leading" id="5Hw-AU-lIq"/>
+                <constraint firstItem="4" firstAttribute="bottom" secondItem="wBT-Wp-tS4" secondAttribute="top" id="FMI-Al-yXG"/>
+                <constraint firstItem="4" firstAttribute="top" secondItem="ccb-7O-Y8V" secondAttribute="top" id="UGC-Wn-HTC"/>
+                <constraint firstItem="4" firstAttribute="leading" secondItem="ccb-7O-Y8V" secondAttribute="leading" id="XPH-B8-Jbn"/>
+                <constraint firstItem="4" firstAttribute="trailing" secondItem="wBT-Wp-tS4" secondAttribute="trailing" id="fzw-mS-2BP"/>
+                <constraint firstAttribute="trailing" secondItem="4" secondAttribute="trailing" id="j6V-tS-Jzf"/>
+                <constraint firstAttribute="bottom" secondItem="wBT-Wp-tS4" secondAttribute="bottom" id="ys6-jg-D2r"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+        </view>
+    </objects>
+</document>
