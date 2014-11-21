@@ -22,7 +22,7 @@ NOTE: This will connect with our ownCloud iOS Library repository at "https://git
 
 ### 3. Create pull request:
   
-NOTE: You must sign the [Contributor Agreement][1] before your changes can be accepted!
+NOTE: You must sign the [Contributor Agreement][1] or contribute your code under the [MIT license][2] before your changes can be accepted! See the [iOS license exception][3] for testing the ownCloud iOS app on Apple hardware.
 
 * Commit your changes locally: "git commit -a"
 * Push your changes to your Github repo: "git push"
@@ -43,4 +43,6 @@ To make sure your new pull request does not contain commits which are already co
 
 
 [0]: https://github.com/owncloud/ios/CONTRIBUTING.md
-[1]: http://owncloud.org/about/contributor-agreement/
+[1]: https://owncloud.org/about/contributor-agreement/
+[2]: http://opensource.org/licenses/MIT
+[3]: https://owncloud.org/contribute/iOS-license-exception/
