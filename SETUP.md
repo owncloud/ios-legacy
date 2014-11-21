@@ -26,7 +26,7 @@ NOTE: You must sign the [Contributor Agreement][1] before your changes can be ac
 
 * Commit your changes locally: "git commit -a"
 * Push your changes to your Github repo: "git push"
-* Browse to https://github.com/YOURGITHUBNAME/ios-issues/pulls and issue pull request
+* Browse to https://github.com/YOURGITHUBNAME/ios/pulls and issue pull request
 * Click "Edit" and set "base:develop"
 * Again, click "Edit" and set "compare:develop"
 * Enter description and send pull request.
