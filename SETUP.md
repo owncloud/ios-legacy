@@ -42,5 +42,5 @@ To make sure your new pull request does not contain commits which are already co
 * Use Github to issue PR
 
 
-[0]: https://github.com/owncloud/ios-issues/CONTRIBUTING.md
+[0]: https://github.com/owncloud/ios/CONTRIBUTING.md
 [1]: http://owncloud.org/about/contributor-agreement/
