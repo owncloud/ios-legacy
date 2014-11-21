@@ -5,11 +5,11 @@ If you want to start help developing ownCloud please follow the [contribution gu
 NOTE: To compile the code you need xcode 6 or above.
   
 * Navigate to https://github.com/owncloud/ios, click fork.
-* Clone your new repo: "git clone git@github.com:YOURGITHUBNAME/ios-issues.git"
-* Move to the project folder with "cd ios-issues"
+* Clone your new repo: "git clone git@github.com:YOURGITHUBNAME/ios.git"
+* Move to the project folder with "cd ios"
 * Checkout remote develop branch: "git checkout -b develop remotes/origin/develop"
 * Pull changes from your develop branch: "git pull origin develop"
-* Make official ownCloud repo known as upstream: "git remote add upstream git@github.com:owncloud/ios-issues.git"
+* Make official ownCloud repo known as upstream: "git remote add upstream git@github.com:owncloud/ios.git"
 * Make sure to get the latest changes from official ios-issues/develop branch: "git pull upstream develop"
 
 ### 2. Add the ownCloud iOS library:
