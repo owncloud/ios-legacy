@@ -445,7 +445,7 @@
     //Change the filePath from the library to our format
     for (FileDto *currentFile in directoryList) {
         //Remove part of the item file path
-        NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:app.activeUser];
+        NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
         if([currentFile.filePath length] >= [partToRemove length]){
             currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
         }
@@ -619,7 +619,7 @@
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
             NSString *newURL = [NSString stringWithFormat:@"%@%@",self.currentRemoteFolder,[name encodeString:NSUTF8StringEncoding]];
-            NSString *rootPath = [UtilsDtos getDbBFilePathFromFullFilePath:newURL];
+            NSString *rootPath = [UtilsDtos getDbBFilePathFromFullFilePath:newURL andUser:app.activeUser];
             
             //Set the right credentials
             if (k_is_sso_active) {
@@ -962,14 +962,14 @@
    // DLog(@"name: %@", self.selectedFileDto.fileName);
    // DLog(@"self.nextRemoteFolder: %@", self.nextRemoteFolder);
     
-    _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath] andUser:app.activeUser];
+    _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     NSMutableArray *directoryList = [NSMutableArray arrayWithArray:requestArray];
     
     //Change the filePath from the library to our format
     for (FileDto *currentFile in directoryList) {
         //Remove part of the item file path
-        NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:app.activeUser];
+        NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
         if([currentFile.filePath length] >= [partToRemove length]){
             currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
         }

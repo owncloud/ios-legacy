@@ -19,6 +19,7 @@
 #import "UserDto.h"
 #import "AppDelegate.h"
 #import "UtilsDtos.h"
+#import "UtilsUrls.h"
 #import "Customization.h"
 #import "ManageFilesDB.h"
 #import "constants.h"
@@ -67,7 +68,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Get file object
-    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath] andUser:app.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
     _fileDto=file;
     
     //Obtain the etag
@@ -424,7 +425,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     }
     
     //Update the datas of the new file
-    _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath] andUser:app.activeUser];
+    _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     //Set file status like downloaded in Data Base
     [ManageFilesDB setFileIsDownloadState:_fileDto.idFile andState:downloaded];
@@ -482,7 +483,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         //Get FileDto
-        _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath] andUser:app.activeUser];
+        _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
         
         //If is downloaded or not
         if ([_fileDto isDownload] == downloaded && !_fileDto.isNecessaryUpdate) {
@@ -691,7 +692,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", app.activeUser.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileDto.filePath], _fileDto.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileDto.filePath andUser:app.activeUser], _fileDto.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -727,7 +728,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             //Change the filePath from the library to our format
             for (FileDto *currentFile in items) {
                 //Remove part of the item file path
-                NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:app.activeUser];
+                NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
                 if([currentFile.filePath length] >= [partToRemove length]){
                     currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
                 }

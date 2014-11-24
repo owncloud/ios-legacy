@@ -38,12 +38,12 @@
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
     
     if(stsExist == errSecSuccess) {
-        NSLog(@"Unable add item with id =%@ error",idUser);
+        DLog(@"Unable add item with id =%@ error",idUser);
     }else {
         [keychainItem setObject:[password dataUsingEncoding:NSUTF8StringEncoding] forKey:(__bridge id)kSecValueData];
         OSStatus stsAdd = SecItemAdd((__bridge CFDictionaryRef)keychainItem, NULL);
         
-        NSLog(@"(setCredentials)Error Code: %d", (int)stsAdd);
+        DLog(@"(setCredentials)Error Code: %d", (int)stsAdd);
         if (stsAdd == errSecSuccess) {
             output = YES;
         }
@@ -73,10 +73,10 @@
     
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, (CFTypeRef *)&result);
     
-    NSLog(@"(getCredentials)Error Code %d", (int)stsExist);
+    DLog(@"(getCredentials)Error Code %d", (int)stsExist);
 
     if(stsExist != errSecSuccess) {
-        NSLog(@"Unable to get the item with id =%@ ",idUser);
+        DLog(@"Unable to get the item with id =%@ ",idUser);
         
     }else {
         
@@ -107,13 +107,13 @@
 
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
     
-    NSLog(@"(removeCredentials)Error Code: %d", (int)stsExist);
+    DLog(@"(removeCredentials)Error Code: %d", (int)stsExist);
     
     if(stsExist != errSecSuccess) {
-        NSLog(@"Unable to delete the item with id =%@ ",idUser);
+        DLog(@"Unable to delete the item with id =%@ ",idUser);
     } else {
         OSStatus sts = SecItemDelete((__bridge CFDictionaryRef)keychainItem);
-        NSLog(@"Error Code: %d", (int)sts);
+        DLog(@"Error Code: %d", (int)sts);
         if (sts == errSecSuccess) {
             output = YES;
         }
@@ -137,7 +137,7 @@
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
     
     if(stsExist != errSecSuccess) {
-        NSLog(@"Unable to update item with id =%@ ",idUser);
+        DLog(@"Unable to update item with id =%@ ",idUser);
         
     }else {
         
@@ -147,7 +147,7 @@
         
         OSStatus stsUpd = SecItemUpdate((__bridge CFDictionaryRef)(keychainItem), (__bridge CFDictionaryRef)(attrToUpdate));
         
-        NSLog(@"(updateCredentials)Error Code: %d", (int)stsUpd);
+        DLog(@"(updateCredentials)Error Code: %d", (int)stsUpd);
         
         if (stsUpd == errSecSuccess) {
             output = YES;
@@ -169,7 +169,7 @@
     [keychainQuery setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
     OSStatus sts = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
-    NSLog(@"Reset keychain Error Code: %d", (int)sts);
+    DLog(@"Reset keychain Error Code: %d", (int)sts);
     if (sts == errSecSuccess) {
         output = YES;
     }
