@@ -312,15 +312,11 @@
 		400560751A03B1190030D502 /* MainAppIcon_40-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400560741A03B1190030D502 /* MainAppIcon_40-40@2x.png */; };
 		400560771A03B4F80030D502 /* MainAppIcon_40-40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400560761A03B4F80030D502 /* MainAppIcon_40-40@3x.png */; };
 		4005607C1A03CEEE0030D502 /* MainAppIcon_60-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4005607B1A03CEEE0030D502 /* MainAppIcon_60-60@2x.png */; };
-		400904D11A02428E00E3DD15 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
-		400904D21A0242A100E3DD15 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		400904D61A02AE3300E3DD15 /* Default-667h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400904D41A02AE3300E3DD15 /* Default-667h@2x.png */; };
 		400904D71A02AE3300E3DD15 /* Default-736h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400904D51A02AE3300E3DD15 /* Default-736h@3x.png */; };
 		400904DA1A02B49600E3DD15 /* MainAppIcon_29-29@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400904D91A02B49600E3DD15 /* MainAppIcon_29-29@3x.png */; };
 		400904DC1A02B54600E3DD15 /* MainAppIcon_60-60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400904DB1A02B54600E3DD15 /* MainAppIcon_60-60@3x.png */; };
 		4016E5C51A0CE9410022163C /* MainAppIcon_76_76@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4016E5C41A0CE9410022163C /* MainAppIcon_76_76@3x.png */; };
-		401E75681A13AE290034ADBF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1324297C15ADBB3700DF823E /* UIKit.framework */; };
-		401E756A1A13AE600034ADBF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1324297C15ADBB3700DF823E /* UIKit.framework */; };
 		4026610C1A07926000517663 /* MainAppIcon_76-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4026610B1A07926000517663 /* MainAppIcon_76-76@2x.png */; };
 		402661141A07C66A00517663 /* Default-Landscape_375h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 402661121A07C66A00517663 /* Default-Landscape_375h@2x.png */; };
 		402661151A07C66A00517663 /* Default-Landscape_414h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 402661131A07C66A00517663 /* Default-Landscape_414h@3x.png */; };
@@ -370,6 +366,7 @@
 		593D531D17BF701800191846 /* SSOViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 593D531B17BF701800191846 /* SSOViewController.m */; };
 		593D531E17BF701800191846 /* SSOViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 593D531C17BF701800191846 /* SSOViewController.xib */; };
 		593F7CAA19EFDE96004136F7 /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
+		595333FB1A1DF26000C57ED5 /* UIAlertView+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 595333FA1A1DF26000C57ED5 /* UIAlertView+Blocks.m */; };
 		597A87981A0143000071F2AF /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
 		59990A251A0BD67A00D3B842 /* InfoFileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 14AB382D18C8E35200B34697 /* InfoFileUtils.m */; };
 		59990A271A0BD74000D3B842 /* FileNameUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6FC17786BF200FB9977 /* FileNameUtils.m */; };
@@ -448,6 +445,12 @@
 		59990A701A0BDBCD00D3B842 /* fileSharedWithUs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 149D98BC195AAD08005E0C73 /* fileSharedWithUs@2x.png */; };
 		599956A21A136B6900229FC4 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5FC1778556500FB9977 /* MBProgressHUD.m */; };
 		599956A41A13BC8A00229FC4 /* FileListDBOperations.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6AD177866A400FB9977 /* FileListDBOperations.m */; };
+		599D80A21A23366D0071B66E /* SimpleFileListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 599D80A01A23366D0071B66E /* SimpleFileListTableViewController.m */; };
+		599D80A31A23366D0071B66E /* SimpleFileListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 599D80A01A23366D0071B66E /* SimpleFileListTableViewController.m */; };
+		599D80A41A23366D0071B66E /* SimpleFileListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 599D80A11A23366D0071B66E /* SimpleFileListTableViewController.xib */; };
+		599D80A51A23366D0071B66E /* SimpleFileListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 599D80A11A23366D0071B66E /* SimpleFileListTableViewController.xib */; };
+		599D80B21A2338100071B66E /* FileListDocumentProviderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 599D80B01A2338100071B66E /* FileListDocumentProviderViewController.m */; };
+		599D80B31A2338100071B66E /* FileListDocumentProviderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 599D80B11A2338100071B66E /* FileListDocumentProviderViewController.xib */; };
 		599D99EE1A02566B008A9DB3 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F155177C3392004A1A5A /* FMDatabaseQueue.m */; };
 		599D99EF1A0256AF008A9DB3 /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
 		599D99F01A0256D9008A9DB3 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F14F177C3392004A1A5A /* FMDatabase.m */; };
@@ -460,8 +463,6 @@
 		599D99F91A0294A0008A9DB3 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		599DDD4F1A19FBD3008725DE /* OCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FF874219F81396008B7C62 /* OCKeychain.m */; };
 		599DDD511A19FBF8008725DE /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
-		599E57331A08D27800744EC9 /* SimpleFileListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 599E57311A08D27800744EC9 /* SimpleFileListTableViewController.m */; };
-		599E57341A08D27800744EC9 /* SimpleFileListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 599E57321A08D27800744EC9 /* SimpleFileListTableViewController.xib */; };
 		599E57351A08E62700744EC9 /* FileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F146177C315D004A1A5A /* FileDto.m */; };
 		599E5C271A0CD0E500E83C03 /* EmptyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B0083E18FD1B5B004CB06B /* EmptyCell.m */; };
 		599E5C291A0CD0EF00E83C03 /* EmptyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14B0083F18FD1B5B004CB06B /* EmptyCell.xib */; };
@@ -470,7 +471,6 @@
 		599E5C2C1A0CF42700E83C03 /* ImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA50180539E70006DB7C /* ImageUtils.m */; };
 		599E5C2D1A0CF45500E83C03 /* PassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4A18041E2F0006DB7C /* PassthroughView.m */; };
 		599E5C2E1A0CF47E00E83C03 /* UIColor+Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5B41778436A00FB9977 /* UIColor+Constants.m */; };
-		595333FB1A1DF26000C57ED5 /* UIAlertView+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 595333FA1A1DF26000C57ED5 /* UIAlertView+Blocks.m */; };
 		59A0DADB1941A7A60088FECD /* CheckAccessToServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A0DAD91941A7A60088FECD /* CheckAccessToServer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		59A6B65719458F6E000B107D /* OCURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A6B65619458F6E000B107D /* OCURLSessionManager.m */; };
 		59A6F4E91A1612B700345229 /* CheckAccessToServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A0DAD91941A7A60088FECD /* CheckAccessToServer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -1062,11 +1062,14 @@
 		593F7CA819EFDE96004136F7 /* UtilsUrls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsUrls.h; path = Utils/UtilsUrls.h; sourceTree = "<group>"; };
 		593F7CA919EFDE96004136F7 /* UtilsUrls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsUrls.m; path = Utils/UtilsUrls.m; sourceTree = "<group>"; };
 		593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Owncloud iOs Client.entitlements"; sourceTree = "<group>"; };
-		599E57301A08D27800744EC9 /* SimpleFileListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleFileListTableViewController.h; path = "File List/SimpleFileListTableViewController.h"; sourceTree = "<group>"; };
-		599E57311A08D27800744EC9 /* SimpleFileListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleFileListTableViewController.m; path = "File List/SimpleFileListTableViewController.m"; sourceTree = "<group>"; };
-		599E57321A08D27800744EC9 /* SimpleFileListTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SimpleFileListTableViewController.xib; path = "File List/SimpleFileListTableViewController.xib"; sourceTree = "<group>"; };
 		595333F91A1DF26000C57ED5 /* UIAlertView+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Blocks.h"; sourceTree = "<group>"; };
 		595333FA1A1DF26000C57ED5 /* UIAlertView+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Blocks.m"; sourceTree = "<group>"; };
+		599D809F1A23366D0071B66E /* SimpleFileListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleFileListTableViewController.h; sourceTree = "<group>"; };
+		599D80A01A23366D0071B66E /* SimpleFileListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleFileListTableViewController.m; sourceTree = "<group>"; };
+		599D80A11A23366D0071B66E /* SimpleFileListTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleFileListTableViewController.xib; sourceTree = "<group>"; };
+		599D80AF1A2338100071B66E /* FileListDocumentProviderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileListDocumentProviderViewController.h; path = "File List/FileListDocumentProviderViewController.h"; sourceTree = "<group>"; };
+		599D80B01A2338100071B66E /* FileListDocumentProviderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FileListDocumentProviderViewController.m; path = "File List/FileListDocumentProviderViewController.m"; sourceTree = "<group>"; };
+		599D80B11A2338100071B66E /* FileListDocumentProviderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FileListDocumentProviderViewController.xib; path = "File List/FileListDocumentProviderViewController.xib"; sourceTree = "<group>"; };
 		59A0DAD91941A7A60088FECD /* CheckAccessToServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckAccessToServer.m; path = Utils/SSL/CheckAccessToServer.m; sourceTree = "<group>"; };
 		59A0DADA1941A7A60088FECD /* CheckAccessToServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckAccessToServer.h; path = Utils/SSL/CheckAccessToServer.h; sourceTree = "<group>"; };
 		59A6B65519458F6E000B107D /* OCURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCURLSessionManager.h; path = "Network/URLSession Subclasses/OCURLSessionManager.h"; sourceTree = "<group>"; };
@@ -1340,6 +1343,7 @@
 		132429C515ADC5F900DF823E /* Files Tab */ = {
 			isa = PBXGroup;
 			children = (
+				599D809E1A23366D0071B66E /* SimpleFileList */,
 				EA42FA52180565CB0006DB7C /* OCTabBarController.h */,
 				EA42FA53180565CB0006DB7C /* OCTabBarController.m */,
 				EA42FA4C1804217D0006DB7C /* OCToolBar.h */,
@@ -2190,16 +2194,6 @@
 			name = SSO;
 			sourceTree = "<group>";
 		};
-		599E572E1A08D23400744EC9 /* File List */ = {
-			isa = PBXGroup;
-			children = (
-				599E57301A08D27800744EC9 /* SimpleFileListTableViewController.h */,
-				599E57311A08D27800744EC9 /* SimpleFileListTableViewController.m */,
-				599E57321A08D27800744EC9 /* SimpleFileListTableViewController.xib */,
-			);
-			name = "File List";
-        sourceTree = "<group>";
-        };
 		595333F81A1DF26000C57ED5 /* UIAlertViewWithBlocks */ = {
 			isa = PBXGroup;
 			children = (
@@ -2208,6 +2202,27 @@
 			);
 			name = UIAlertViewWithBlocks;
 			path = ExternalLibreries/UIAlertViewWithBlocks;
+			sourceTree = "<group>";
+		};
+		599D809E1A23366D0071B66E /* SimpleFileList */ = {
+			isa = PBXGroup;
+			children = (
+				599D809F1A23366D0071B66E /* SimpleFileListTableViewController.h */,
+				599D80A01A23366D0071B66E /* SimpleFileListTableViewController.m */,
+				599D80A11A23366D0071B66E /* SimpleFileListTableViewController.xib */,
+			);
+			name = SimpleFileList;
+			path = Tabs/FileTab/SimpleFileList;
+			sourceTree = "<group>";
+		};
+		599D80A61A23367F0071B66E /* File List */ = {
+			isa = PBXGroup;
+			children = (
+				599D80AF1A2338100071B66E /* FileListDocumentProviderViewController.h */,
+				599D80B01A2338100071B66E /* FileListDocumentProviderViewController.m */,
+				599D80B11A2338100071B66E /* FileListDocumentProviderViewController.xib */,
+			);
+			name = "File List";
 			sourceTree = "<group>";
 		};
 		59A0DAD71941A5060088FECD /* SSL */ = {
@@ -2372,8 +2387,8 @@
 			children = (
 				EAB0AB3719ED356A00764C31 /* DocumentPickerViewController.h */,
 				EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */,
+				599D80A61A23367F0071B66E /* File List */,
 				59DA4F3B1A07A97100472639 /* DocumentPickerViewController.xib */,
-				599E572E1A08D23400744EC9 /* File List */,
 				EAB0AB3419ED356A00764C31 /* Supporting Files */,
 			);
 			path = ownCloudExtApp;
@@ -2739,6 +2754,7 @@
 				13A5ADBA18883C77000EB617 /* WhatsappShareiphone@2x.png in Resources */,
 				EA2678FF1876E4B8008678DE /* notSharedItem.png in Resources */,
 				EABF68F3188FC2FA00A2217C /* TABShares@2x.png in Resources */,
+				599D80A41A23366D0071B66E /* SimpleFileListTableViewController.xib in Resources */,
 				14A4796E18EC708D003500BA /* FileFavoriteUpdatingIcon.png in Resources */,
 				148DD5DA177851E700FB9977 /* UploadCell.xib in Resources */,
 				40AB1F651A123B99003E7397 /* TABfiles@3x.png in Resources */,
@@ -3049,11 +3065,13 @@
 				59990A4B1A0BDB5000D3B842 /* movie_icon@2x.png in Resources */,
 				59990A4C1A0BDB5000D3B842 /* movie_icon@2x~ipad.png in Resources */,
 				59990A4D1A0BDB5000D3B842 /* movie_icon~ipad.png in Resources */,
+				599D80B31A2338100071B66E /* FileListDocumentProviderViewController.xib in Resources */,
 				59990A4E1A0BDB5000D3B842 /* pdf_icon.png in Resources */,
 				59990A4F1A0BDB5000D3B842 /* pdf_icon@2x.png in Resources */,
 				59990A501A0BDB5000D3B842 /* pdf_icon@2x~ipad.png in Resources */,
 				59990A511A0BDB5000D3B842 /* pdf_icon~ipad.png in Resources */,
 				59990A521A0BDB5000D3B842 /* popover_arrow.png in Resources */,
+				599D80A51A23366D0071B66E /* SimpleFileListTableViewController.xib in Resources */,
 				59990A531A0BDB5000D3B842 /* presentation_icon.png in Resources */,
 				59990A541A0BDB5000D3B842 /* presentation_icon@2x.png in Resources */,
 				59990A551A0BDB5000D3B842 /* presentation_icon@2x~ipad.png in Resources */,
@@ -3081,7 +3099,6 @@
 				59990A6B1A0BDB5000D3B842 /* zip_icon@2x~ipad.png in Resources */,
 				59990A6C1A0BDB5000D3B842 /* zip_icon~ipad.png in Resources */,
 				590849F01A0A7D6D00D3E842 /* CustomCellFileAndDirectory.xib in Resources */,
-				599E57341A08D27800744EC9 /* SimpleFileListTableViewController.xib in Resources */,
 				599D99F91A0294A0008A9DB3 /* Owncloud iOs Client.entitlements in Resources */,
 				59DA4F3C1A07A97100472639 /* DocumentPickerViewController.xib in Resources */,
 			);
@@ -3202,6 +3219,7 @@
 				148DD6F717786BDA00FB9977 /* UIImage+Resize.m in Sources */,
 				148DD6F817786BDA00FB9977 /* UIImage+RoundedCorner.m in Sources */,
 				1467037519372ACC00087289 /* DownloadUtils.m in Sources */,
+				599D80A21A23366D0071B66E /* SimpleFileListTableViewController.m in Sources */,
 				148DD6FE17786BF200FB9977 /* FileNameUtils.m in Sources */,
 				40FF874319F81396008B7C62 /* OCKeychain.m in Sources */,
 				1487F135177C2F08004A1A5A /* ManageAppSettingsDB.m in Sources */,
@@ -3270,15 +3288,16 @@
 				590849F41A0A811000D3E842 /* SWTableViewCell.m in Sources */,
 				590849F51A0A811000D3E842 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				590849F61A0A811000D3E842 /* SWUtilityButtonView.m in Sources */,
+				599D80B21A2338100071B66E /* FileListDocumentProviderViewController.m in Sources */,
 				590849EF1A0A7D6000D3E842 /* CustomCellFileAndDirectory.m in Sources */,
 				593C16D01A09008C006C20AF /* ManageFilesDB.m in Sources */,
 				599E57351A08E62700744EC9 /* FileDto.m in Sources */,
 				599D99F81A026004008A9DB3 /* UserDto.m in Sources */,
 				599D99F71A025F24008A9DB3 /* ManageUsersDB.m in Sources */,
 				599D99F11A0256F1008A9DB3 /* FMDatabaseAdditions.m in Sources */,
+				599D80A31A23366D0071B66E /* SimpleFileListTableViewController.m in Sources */,
 				599D99F21A0256F1008A9DB3 /* FMDatabasePool.m in Sources */,
 				599D99F31A0256F1008A9DB3 /* FMResultSet.m in Sources */,
-				599E57331A08D27800744EC9 /* SimpleFileListTableViewController.m in Sources */,
 				599D99F01A0256D9008A9DB3 /* FMDatabase.m in Sources */,
 				599D99EF1A0256AF008A9DB3 /* UtilsUrls.m in Sources */,
 				599D99EE1A02566B008A9DB3 /* FMDatabaseQueue.m in Sources */,

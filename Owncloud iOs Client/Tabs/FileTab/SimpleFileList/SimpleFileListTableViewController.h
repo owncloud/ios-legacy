@@ -21,7 +21,9 @@
 extern NSString * userHasChangeNotification;
 
 // init method to load view from nib with an array of files
--(id) initWithNibName:(NSString *) nibNameOrNil onFolder:(FileDto *) currentFolder;
+- (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(FileDto *) currentFolder;
+
+- (void) checkBeforeNavigationToFolder:(FileDto *) file;
 
 @property (nonatomic, strong) UserDto *user;
 @property (nonatomic, strong) FileDto *currentFolder;

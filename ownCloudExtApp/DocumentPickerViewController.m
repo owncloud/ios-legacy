@@ -18,7 +18,7 @@
 #import "ManageFilesDB.h"
 #import "UserDto.h"
 #import "UtilsUrls.h"
-#import "SimpleFileListTableViewController.h"
+#import "FileListDocumentProviderViewController.h"
 #import "OCNavigationController.h"
 #import "OCCommunication.h"
 #import "OCFrameworkConstants.h"
@@ -57,7 +57,7 @@
     self.user = [ManageUsersDB getActiveUser];
     
     if (self.user) {
-        SimpleFileListTableViewController *fileListTableViewController = [[SimpleFileListTableViewController alloc] initWithNibName:@"SimpleFileListTableViewController" onFolder:[ManageFilesDB getRootFileDtoByUser:self.user]];
+        FileListDocumentProviderViewController *fileListTableViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:[ManageFilesDB getRootFileDtoByUser:self.user]];
         
         OCNavigationController *navigationViewController = [[OCNavigationController alloc] initWithRootViewController:fileListTableViewController];
 

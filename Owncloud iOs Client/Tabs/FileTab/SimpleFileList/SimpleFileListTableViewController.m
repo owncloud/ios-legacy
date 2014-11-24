@@ -17,7 +17,6 @@
 #import "FileNameUtils.h"
 #import "EmptyCell.h"
 #import "Customization.h"
-#import "DocumentPickerViewController.h"
 #import "OCCommunication.h"
 #import "UtilsDtos.h"
 #import "OCFileDto.h"
@@ -25,6 +24,13 @@
 #import "UtilsUrls.h"
 #import "FileListDBOperations.h"
 #import "UIColor+Constants.h"
+
+#ifdef CONTAINER_APP
+#import "AppDelegate.h"
+#else
+#import "DocumentPickerViewController.h"
+#endif
+
 
 NSString *userHasChangeNotification = @"userHasChangeNotification";
 
@@ -97,24 +103,6 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-
-#pragma mark - Check User
-
-- (BOOL) isTheSameUserHereAndOnTheDatabase {
-    
-    UserDto *userFromDB = [ManageUsersDB getActiveUser];
-    
-    BOOL isTheSameUser = NO;
-    
-    if (userFromDB.idUser == self.user.idUser) {
-        self.user = userFromDB;
-        isTheSameUser = YES;
-    }
-    
-    return isTheSameUser;
-
 }
     
 - (void)orientationChange:(NSNotification*)notification
@@ -339,41 +327,6 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    [self.tableView deselectRowAtIndexPath: indexPath animated:YES];
-    
-    //Check if the user is the same and does not change
-    if ([self isTheSameUserHereAndOnTheDatabase]) {
-        FileDto *file = (FileDto *)[[_sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
-        
-        if (file.isDirectory) {
-            [self checkBeforeNavigationToFolder:file];
-        } else {
-            //TODO: here we should return the file to the document picker or download it
-        }
-    } else {
-        //The user has change
-        
-        UIAlertController *alert =   [UIAlertController
-                                      alertControllerWithTitle:@""
-                                      message:@"The user has change on the ownCloud App" //TODO: add a string error internationzalized
-                                      preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction* ok = [UIAlertAction
-                             actionWithTitle:NSLocalizedString(@"ok", nil)
-                             style:UIAlertActionStyleDefault
-                             handler:^(UIAlertAction * action) {
-                                 [super dismissViewControllerAnimated:YES completion:^{
-                                    [[NSNotificationCenter defaultCenter] postNotificationName: userHasChangeNotification object: nil];
-                                 }];
-                             }];
-        [alert addAction:ok];
-        
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-}
-
 /*
  * Method that sorts alphabetically array by selector
  *@array -> array of sections and rows of tableview
@@ -403,18 +356,27 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     return sections;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    //Method to be overwritten
+}
+
 #pragma mark - Navigation
 
 - (void) checkBeforeNavigationToFolder:(FileDto *) file {
     
     if ([ManageFilesDB getFilesByFileIdForActiveUser: (int)file.idFile].count > 0) {
-        SimpleFileListTableViewController *filesViewController = [[SimpleFileListTableViewController alloc] initWithNibName:@"SimpleFileListTableViewController" onFolder:file];
-        
-        [[self navigationController] pushViewController:filesViewController animated:YES];
+        [self navigateToFile:file];
     } else {
         [self initLoading];
         [self loadRemote:file andNavigateIfIsNecessary:YES];
     }
+}
+
+- (void) navigateToFile:(FileDto *) file {
+    //Method to be overwritten
+    SimpleFileListTableViewController *filesViewController = [[SimpleFileListTableViewController alloc] initWithNibName:@"SimpleFileListTableViewController" onFolder:file];
+    
+    [[self navigationController] pushViewController:filesViewController animated:YES];
 }
 
 - (void) reloadCurrentFolder {
@@ -423,19 +385,27 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 
 - (void) loadRemote:(FileDto *) file andNavigateIfIsNecessary:(BOOL) isNecessaryNavigate {
     
+    OCCommunication *sharedCommunication;
+    
+#ifdef CONTAINER_APP
+    sharedCommunication = [AppDelegate sharedOCCommunication];
+#else
+    sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
+#endif
+    
     //Set the right credentials
     if (k_is_sso_active) {
-        [[DocumentPickerViewController sharedOCCommunication] setCredentialsWithCookie:self.user.password];
+        [sharedCommunication setCredentialsWithCookie:self.user.password];
     } else if (k_is_oauth_active) {
-        [[DocumentPickerViewController sharedOCCommunication] setCredentialsOauthWithToken:self.user.password];
+        [sharedCommunication setCredentialsOauthWithToken:self.user.password];
     } else {
-        [[DocumentPickerViewController sharedOCCommunication] setCredentialsWithUser:self.user.username andPassword:self.user.password];
+        [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
     }
     
     NSString *remotePath = [UtilsDtos getRemoteUrlByFile:file andUserDto:self.user];
     remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    [[DocumentPickerViewController sharedOCCommunication] readFolder:remotePath onCommunication:[DocumentPickerViewController sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+    [sharedCommunication readFolder:remotePath onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
         for (OCFileDto *file in items) {
             DLog(@"File: %@", file.filePath);
@@ -474,10 +444,8 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
             if (isNecessaryNavigate) {
                 
                 [self endLoading];
-                
-                SimpleFileListTableViewController *filesViewController = [[SimpleFileListTableViewController alloc] initWithNibName:@"SimpleFileListTableViewController" onFolder:file];
-                
-                [[self navigationController] pushViewController:filesViewController animated:YES];
+            
+                [self navigateToFile:file];
             } else {
                 
                 _currentDirectoryArray = [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:file.idFile];
@@ -672,20 +640,28 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 
 - (void) reloadFolderByEtag {
     
+    OCCommunication *sharedCommunication;
+    
+#ifdef CONTAINER_APP
+    sharedCommunication = [AppDelegate sharedOCCommunication];
+#else
+    sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
+#endif
+    
     if (!self.isRefreshInProgress) {
         //Set the right credentials
         if (k_is_sso_active) {
-            [[DocumentPickerViewController sharedOCCommunication] setCredentialsWithCookie:self.user.password];
+            [sharedCommunication setCredentialsWithCookie:self.user.password];
         } else if (k_is_oauth_active) {
-            [[DocumentPickerViewController sharedOCCommunication] setCredentialsOauthWithToken:self.user.password];
+            [sharedCommunication setCredentialsOauthWithToken:self.user.password];
         } else {
-            [[DocumentPickerViewController sharedOCCommunication] setCredentialsWithUser:self.user.username andPassword:self.user.password];
+            [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
         }
         
         NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
         remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
-        [[DocumentPickerViewController sharedOCCommunication] readFile:remotePath onCommunication:[DocumentPickerViewController sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+        [sharedCommunication readFile:remotePath onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
             
             DLog(@"Operation response code: %d", (int)response.statusCode);
             
