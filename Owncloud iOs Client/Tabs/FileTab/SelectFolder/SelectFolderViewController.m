@@ -41,7 +41,6 @@
 @implementation SelectFolderViewController
 @synthesize createButton=_createButton;
 @synthesize chooseButton=_chooseButton;
-@synthesize folderTableView=_folderTableView;
 @synthesize toolBarLabel=_toolBarLabel;
 @synthesize toolBar=_toolBar;
 @synthesize sortedArray=_sortedArray;
@@ -143,12 +142,12 @@
 {
     
     if (IS_IOS8) {
-        if ([self.folderTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.folderTableView setSeparatorInset:UIEdgeInsetsMake(0, 15, 0, 0)];
+        if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+            [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 15, 0, 0)];
         }
         
-        if ([self.folderTableView respondsToSelector:@selector(setLayoutMargins:)]) {
-            [self.folderTableView setLayoutMargins:UIEdgeInsetsZero];
+        if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
+            [self.tableView setLayoutMargins:UIEdgeInsetsZero];
         }
         
     }
@@ -158,12 +157,12 @@
 {
     
     if (IS_IOS8) {
-        if ([self.folderTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.folderTableView setSeparatorInset:UIEdgeInsetsMake(0, 15, 0, 0)];
+        if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+            [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 15, 0, 0)];
         }
         
-        if ([self.folderTableView respondsToSelector:@selector(setLayoutMargins:)]) {
-            [self.folderTableView setLayoutMargins:UIEdgeInsetsZero];
+        if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
+            [self.tableView setLayoutMargins:UIEdgeInsetsZero];
         }
         
     }
@@ -378,7 +377,7 @@
     self.currentDirectoryArray = onlyFolders;    
     //Sorted the files array with the selector "fileName"
     self.sortedArray = [self partitionObjects: self.currentDirectoryArray collationStringSelector:@selector(fileName)];  
-    [_folderTableView reloadData];
+    [self.tableView reloadData];
     
 }
 
@@ -478,7 +477,7 @@
     //Sorted the files array
     self.sortedArray = [self partitionObjects: self.currentDirectoryArray collationStringSelector:@selector(fileName)];
     
-    [_folderTableView reloadData];
+    [self.tableView reloadData];
     [self endLoading];
     
 }
