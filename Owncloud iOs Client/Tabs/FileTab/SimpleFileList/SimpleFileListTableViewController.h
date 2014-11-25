@@ -16,7 +16,7 @@
 
 @class SimpleFileListTableViewController;
 
-@interface SimpleFileListTableViewController : UITableViewController <MBProgressHUDDelegate, CheckAccessToServerDelegate, ManageNetworkErrorsDelegate>
+@interface SimpleFileListTableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MBProgressHUDDelegate, CheckAccessToServerDelegate, ManageNetworkErrorsDelegate>
 
 extern NSString * userHasChangeNotification;
 
@@ -24,6 +24,8 @@ extern NSString * userHasChangeNotification;
 - (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(FileDto *) currentFolder;
 
 - (void) checkBeforeNavigationToFolder:(FileDto *) file;
+
+@property (nonatomic, strong) IBOutlet UITableView *tableView;
 
 @property (nonatomic, strong) UserDto *user;
 @property (nonatomic, strong) FileDto *currentFolder;
