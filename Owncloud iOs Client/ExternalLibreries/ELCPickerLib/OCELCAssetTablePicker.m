@@ -69,28 +69,28 @@
     long currentRow = [pathOfTheCell row];
     DLog(@"Number: %ld", currentRow);
     
-    int numberOfRowInView = [[[self tableView] visibleCells] count];
-    int currentImagesAtEachRow = 0;
-    int futureImagesAtEachRow = 0;
+    NSInteger numberOfRowInView = [[[self tableView] visibleCells] count];
+    NSInteger currentImagesAtEachRow = 0;
+    NSInteger futureImagesAtEachRow = 0;
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        currentImagesAtEachRow = (int)(self.view.frame.size.width/78);
-        futureImagesAtEachRow = (int)((self.view.frame.size.height + self.navigationController.navigationBar.frame.size.height+20)/78);
+        currentImagesAtEachRow = (NSInteger)(self.view.frame.size.width/78);
+        futureImagesAtEachRow = (NSInteger)((self.view.frame.size.height + self.navigationController.navigationBar.frame.size.height+20)/78);
     } else {
         currentImagesAtEachRow = 6;
         futureImagesAtEachRow = 6;
     }
     
-    DLog(@"numberOfRowInView: %d", numberOfRowInView);
-    DLog(@"currentImagesAtEachRow: %d", currentImagesAtEachRow);
-    DLog(@"futureImagesAtEachRow: %d", futureImagesAtEachRow);
+    DLog(@"numberOfRowInView: %ld", (long)numberOfRowInView);
+    DLog(@"currentImagesAtEachRow: %ld", (long)currentImagesAtEachRow);
+    DLog(@"futureImagesAtEachRow: %ld", (long)futureImagesAtEachRow);
     
     _rowToScrollAfterRotation = ((currentRow*currentImagesAtEachRow)/futureImagesAtEachRow);
     if (_rowToScrollAfterRotation != 0) {
         _rowToScrollAfterRotation = _rowToScrollAfterRotation  + numberOfRowInView-1;
     }
     
-    DLog(@"A: %d", [self.tableView numberOfRowsInSection:0]);
+    DLog(@"A: %ld", (long)[self.tableView numberOfRowsInSection:0]);
     DLog(@"B: %ld", currentRow);
     
     
@@ -113,7 +113,7 @@
     long row = [self tableView:self.tableView numberOfRowsInSection:section] - 1;
     if (section >= 0 && row >= 0) {
         
-        DLog(@"self.tableView numberOfRowsInSection:0]: %d", [self.tableView numberOfRowsInSection:0]);
+        DLog(@"self.tableView numberOfRowsInSection:0]: %ld", (long)[self.tableView numberOfRowsInSection:0]);
         DLog(@"_rowToScrollAfterRotation: %ld", _rowToScrollAfterRotation);
         DLog(@"([self.tableView numberOfRowsInSection:0] - _rowToScrollAfterRotation): %ld", ([self.tableView numberOfRowsInSection:0] - _rowToScrollAfterRotation));
         

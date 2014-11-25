@@ -340,7 +340,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
@@ -362,7 +362,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                 }
             }
             
-            DLog(@"The directory List have: %d elements", items.count);
+            DLog(@"The directory List have: %ld elements", (long)items.count);
             
             //Check if there are almost one item in the array
             if (items.count >= 1) {
@@ -378,7 +378,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         
         dispatch_semaphore_signal(semaphore);
     }];

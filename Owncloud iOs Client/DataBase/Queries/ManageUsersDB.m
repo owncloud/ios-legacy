@@ -133,7 +133,7 @@
  * Method that return the user object of the idUser
  * @idUser -> id User.
  */
-+ (UserDto *) getUserByIdUser:(int) idUser {
++ (UserDto *) getUserByIdUser:(NSInteger) idUser {
     
     DLog(@"getUserByIdUser:(int) idUser");
     
@@ -144,7 +144,7 @@
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support FROM users WHERE id = ?", [NSNumber numberWithInt:idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
         
     
         while ([rs next]) {
@@ -158,7 +158,7 @@
             output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
             
-            NSString *idString = [NSString stringWithFormat:@"%d", output.idUser];
+            NSString *idString = [NSString stringWithFormat:@"%ld", (long)output.idUser];
             CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
             output.username = credDto.userName;
             output.password = credDto.password;

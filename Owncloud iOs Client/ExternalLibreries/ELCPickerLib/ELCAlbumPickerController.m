@@ -251,7 +251,7 @@
     
     //We get the current folder to create the local tree
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    NSString *localRootUrlString = [NSString stringWithFormat:@"%@%d/", [UtilsUrls getOwnCloudFilePath],app.activeUser.idUser];
+    NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser];
     
     sf.currentLocalFolder = localRootUrlString;
     

@@ -262,16 +262,16 @@
     
 }
 
-+(void) setStatus:(int) status andKindOfError:(int) kindOfError byUploadOffline:(UploadsOfflineDto *) currentUpload {
++(void) setStatus:(NSInteger) status andKindOfError:(NSInteger) kindOfError byUploadOffline:(UploadsOfflineDto *) currentUpload {
     
-    DLog(@"setStatus: %d andKindOfError: %d currentUpload: %@", status, kindOfError, currentUpload.uploadFileName);
+    DLog(@"setStatus: %ld andKindOfError: %ld currentUpload: %@", (long)status, (long)kindOfError, currentUpload.uploadFileName);
     
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=?, kind_of_error = ? WHERE id = ?", [NSNumber numberWithInt:status], [NSNumber numberWithInt:kindOfError], [NSNumber numberWithInt:currentUpload.idUploadsOffline]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=?, kind_of_error = ? WHERE id = ?", [NSNumber numberWithInteger:status], [NSNumber numberWithInteger:kindOfError], [NSNumber numberWithInteger:currentUpload.idUploadsOffline]];
         
         if (!correctQuery) {
             DLog(@"Error in setState");

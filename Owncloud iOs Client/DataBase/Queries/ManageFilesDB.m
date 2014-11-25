@@ -118,19 +118,19 @@
 }
 
 
-+ (FileDto *) getFileDtoByIdFile:(int) idFile {
++ (FileDto *) getFileDtoByIdFile:(NSInteger) idFile {
     
     __block FileDto *output = nil;
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UserDto *mUser = app.activeUser;
     
-    DLog(@"getFileByIdFile: %d", idFile);
+    DLog(@"getFileByIdFile: %ld", (long)idFile);
     
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, etag, is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier FROM files WHERE id = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInt:idFile], [NSNumber numberWithInt:mUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, etag, is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier FROM files WHERE id = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:idFile], [NSNumber numberWithInteger:mUser.idUser]];
         while ([rs next]) {
             
             output = [FileDto new];
@@ -211,7 +211,7 @@
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT DISTINCT file_path, file_name, id FROM files WHERE user_id = ? AND file_path LIKE ? ORDER BY file_name ASC", [NSNumber numberWithInt:mUser.idUser], beginFilePath];
+        FMResultSet *rs = [db executeQuery:@"SELECT DISTINCT file_path, file_name, id FROM files WHERE user_id = ? AND file_path LIKE ? ORDER BY file_name ASC", [NSNumber numberWithInteger:mUser.idUser], beginFilePath];
         while ([rs next]) {
             
             FileDto *currentFile = [FileDto new];
@@ -228,7 +228,7 @@
     return output;
 }
 
-+(void) setFileIsDownloadState: (int) idFile andState:(enumDownload)downloadState {
++(void) setFileIsDownloadState: (NSInteger) idFile andState:(enumDownload)downloadState {
     
     DLog(@"setFileIsDownloadState");
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
@@ -236,7 +236,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET is_download=? WHERE id = ?", [NSNumber numberWithInt:downloadState], [NSNumber numberWithInt:idFile]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET is_download=? WHERE id = ?", [NSNumber numberWithInt:downloadState], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
             DLog(@"Error in setFileIsDownloadState");
@@ -649,14 +649,14 @@
  *
  * @param idFile -> int
  */
-+ (void) setIsNecessaryUpdateOfTheFile: (int) idFile {
++ (void) setIsNecessaryUpdateOfTheFile: (NSInteger) idFile {
     DLog(@"setIsNecessaryUpdateOfTheFile");
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET is_necessary_update = 1 WHERE id = ?", [NSNumber numberWithInt:idFile]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET is_necessary_update = 1 WHERE id = ?", [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
             DLog(@"Error in update the field setIsNecessaryUpdateOfTheFile");
@@ -1565,7 +1565,7 @@
  * @param idFile -> int
  * @param isFavorite -> BOOL
  */
-+ (void) updateTheFileID: (int)idFile asFavorite: (BOOL) isFavorite {
++ (void) updateTheFileID: (NSInteger)idFile asFavorite: (BOOL) isFavorite {
     DLog(@"updateTheFavoriteFile");
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     

@@ -48,7 +48,7 @@
  * Method that give the file with the idFile 
  * @idFile -> id of tha file that we want
  */
-+ (FileDto *) getFileDtoByIdFile:(int) idFile;
++ (FileDto *) getFileDtoByIdFile:(NSInteger) idFile ;
 
 /*
  * Method that give a file without the idFile but we know the name, the user and where is the file
@@ -69,7 +69,7 @@
  * @idFile -> id of the file
  * @downloadState -> new state
  */
-+ (void) setFileIsDownloadState: (int) idFile andState:(enumDownload)downloadState;
++(void) setFileIsDownloadState: (NSInteger) idFile andState:(enumDownload)downloadState ;
 
 /*
  * Method to change the download state of a file
@@ -170,7 +170,7 @@
  *
  * @param idFile -> int
  */
-+ (void) setIsNecessaryUpdateOfTheFile: (int) idFile;
++ (void) setIsNecessaryUpdateOfTheFile: (NSInteger) idFile;
 
 
 /*
@@ -485,10 +485,10 @@
 /**
  * This method updates the favorite filed of the file
  *
- * @param idFile -> int
+ * @param idFile -> NSInteger
  * @param isFavorite -> BOOL
  */
-+ (void) updateTheFileID: (int)idFile asFavorite: (BOOL) isFavorite;
++ (void) updateTheFileID: (NSInteger)idFile asFavorite: (BOOL) isFavorite;
 
 ///-----------------------------------
 /// @name getAllFavoritesOfUserId:userId

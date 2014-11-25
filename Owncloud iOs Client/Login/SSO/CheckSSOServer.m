@@ -125,8 +125,8 @@
     if (redirectResponse) {
         DLog(@"redirecction");
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) redirectResponse;
-        int statusCode = [httpResponse statusCode];
-        DLog(@"HTTP status %d", statusCode);
+        NSInteger statusCode = [httpResponse statusCode];
+        DLog(@"HTTP status %ld", (long)statusCode);
         
         if (k_is_sso_active && (statusCode == k_redirected_code_1 || statusCode == k_redirected_code_2 || statusCode == k_redirected_code_3)) {
             //sso login error

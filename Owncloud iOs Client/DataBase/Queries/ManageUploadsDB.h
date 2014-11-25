@@ -57,7 +57,7 @@
 /*
  * Method to change the state of a UploadOffline
  */
-+(void) setStatus:(int) status andKindOfError:(int) kindOfError byUploadOffline:(UploadsOfflineDto *) currentUpload;
++(void) setStatus:(NSInteger) status andKindOfError:(NSInteger) kindOfError byUploadOffline:(UploadsOfflineDto *) currentUpload;
 
 
 /*
