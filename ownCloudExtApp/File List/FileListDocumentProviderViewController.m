@@ -72,5 +72,12 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     
 }
 
+- (void) navigateToFile:(FileDto *) file {
+    //Method to be overwritten
+    FileListDocumentProviderViewController *filesViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:file];
+    
+    [[self navigationController] pushViewController:filesViewController animated:YES];
+}
+
 
 @end
