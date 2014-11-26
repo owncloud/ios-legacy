@@ -47,7 +47,6 @@
 @synthesize sortedArray=_sortedArray;
 @synthesize currentDirectoryArray=_currentDirectoryArray;
 @synthesize currentLocalFolder=_currentLocalFolder;
-@synthesize currentRemoteFolder=_currentRemoteFolder;
 @synthesize nextRemoteFolder=_nextRemoteFolder;
 @synthesize mCheckAccessToServer=_mCheckAccessToServer;
 @synthesize fileIdToShowFiles=_fileIdToShowFiles;
@@ -240,9 +239,9 @@
     
     [self dismissViewControllerAnimated:YES completion:nil];
     
-   DLog(@"Current remote folder: %@", self.currentRemoteFolder);
+    NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
     
-   [(SelectFolderNavigation*)self.parent selectFolder:self.currentRemoteFolder];    
+    [(SelectFolderNavigation*)self.parent selectFolder:remotePath];
 
 }
 
@@ -310,7 +309,9 @@
             
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
-            NSString *newURL = [NSString stringWithFormat:@"%@%@",self.currentRemoteFolder,[name encodeString:NSUTF8StringEncoding]];
+            NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
+            
+            NSString *newURL = [NSString stringWithFormat:@"%@%@",remotePath,[name encodeString:NSUTF8StringEncoding]];
             NSString *rootPath = [UtilsDtos getDbBFilePathFromFullFilePath:newURL andUser:app.activeUser];
             
             //Set the right credentials
@@ -322,7 +323,7 @@
                 [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
             }
             
-            NSString *pathOfNewFolder = [NSString stringWithFormat:@"%@%@",[_currentRemoteFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding], name ];
+            NSString *pathOfNewFolder = [newURL stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
             [[AppDelegate sharedOCCommunication] createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
                 DLog(@"Folder created");
@@ -396,6 +397,14 @@
     FileDto *file = (FileDto *)[[self.sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
     
     [self checkBeforeNavigationToFolder:file];
+}
+
+- (void) navigateToFile:(FileDto *) file {
+    //Method to be overwritten
+    SelectFolderViewController *filesViewController = [[SelectFolderViewController alloc] initWithNibName:@"SelectFolderViewController" onFolder:file];
+    filesViewController.parent = self.parent;
+    
+    [self.parent pushViewController:filesViewController animated:YES];
 }
 
 #pragma mark - UIAlertViewDelegate

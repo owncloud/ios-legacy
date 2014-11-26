@@ -453,11 +453,11 @@
                     self.currentFolder.etag = currentFile.etag;
                     
                     //We update the current folder with the new etag
-                    [ManageFilesDB updateEtagOfFileDtoByid:self.currentFolder.idFile andNewEtag: self.currentFolder.etag];
+                    [ManageFilesDB updateEtagOfFileDtoByid:file.idFile andNewEtag: file.etag];
                 }
             }
             
-            [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:self.currentFolder.idFile];
+            [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:file.idFile];
             
             //Send the data to DB and refresh the table
             [self deleteOldDataFromDBBeforeRefresh:directoryList ofFolder:file];

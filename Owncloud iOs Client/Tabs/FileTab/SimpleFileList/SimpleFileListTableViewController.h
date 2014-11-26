@@ -25,6 +25,8 @@
 
 - (void) checkBeforeNavigationToFolder:(FileDto *) file;
 
+- (void) navigateToFile:(FileDto *) file;
+
 - (void) reloadCurrentFolder;
 
 - (NSArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector;
