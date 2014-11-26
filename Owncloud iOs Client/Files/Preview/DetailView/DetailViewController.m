@@ -2162,7 +2162,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         _file.isDownload=downloaded;
         _isOverwritedFile = YES;
         [self handleFile:_file fromController:_controllerManager];
-        DLog(@"id file: %d",_file.idFile);
+        DLog(@"id file: %ld", (long)_file.idFile);
     }    
 }
 

@@ -109,9 +109,9 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
             NSUInteger length = rep.size;
             
             DLog(@"rep size %lld", (rep.size/1024)/1024);
-            DLog(@"rep size %d", (length/1024)/1024);
+            DLog(@"rep size %lu", (unsigned long) (length/1024)/1024);
             
-            if (length<(k_lenght_chunk *1024)) {
+            if (length < (k_lenght_chunk *1024)) {
                 Byte *buffer = (Byte*)malloc(rep.size);
                 NSUInteger k = [rep getBytes:buffer fromOffset: 0.0
                                       length:rep.size error:nil];
@@ -175,7 +175,7 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
             } else {
                 
                 //We finish all the files of this block
-                DLog(@"self.listOfUploadOfflineToGenerateSQL: %d", [self.listOfUploadOfflineToGenerateSQL count]);
+                DLog(@"self.listOfUploadOfflineToGenerateSQL: %lu", (unsigned long)[self.listOfUploadOfflineToGenerateSQL count]);
                 
                 //In this point we have all the files to upload in the Array
                 [ManageUploadsDB insertManyUploadsOffline:self.listOfUploadOfflineToGenerateSQL];
