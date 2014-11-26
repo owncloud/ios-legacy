@@ -331,7 +331,7 @@
         
     } failureRquest:^(NSHTTPURLResponse *response, NSError *error) {
         
-        DLog(@"error: %@ with code: %d", error, error.code);
+        DLog(@"error: %@ with code: %ld", error, (long)error.code);
         
         [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error];
     }];

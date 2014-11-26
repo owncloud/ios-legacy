@@ -26,7 +26,7 @@
  * Method that give all files from a single folder
  * @fileId -> id of the folder father and we want all his files and folders
  */
-+ (NSMutableArray *) getFilesByFileIdForActiveUser:(int) fileId;
++ (NSMutableArray *) getFilesByFileIdForActiveUser:(NSInteger) fileId;
 
 
 ///-----------------------------------
@@ -96,7 +96,8 @@
  * Method to delete a file
  * @fileId -> id of the file to delete
  */
-+ (void) deleteFileByIdFileOfActiveUser: (int) idFile;
+
++(void) deleteFileByIdFileOfActiveUser:(NSInteger) idFile;
 
 ///-----------------------------------
 /// @name Delete File by idfile
@@ -108,6 +109,7 @@
  * @param idFile -> NSInteger (Item to delete)
  */
 +(void) deleteFileByIdFile:(NSInteger) idFile;
+
 
 #pragma mark - Methods to refresh folder
 
@@ -299,7 +301,7 @@
  * @idFile -> file id to identify the file that we need change
  * @isNecessaryUpdate -> Boolean to set if we need to update or not
  */
-+ (void) setFile:(int)idFile isNecessaryUpdate:(BOOL)isNecessaryUpdate;
++ (void) setFile:(NSInteger)idFile isNecessaryUpdate:(BOOL)isNecessaryUpdate;
 
 
 /*
