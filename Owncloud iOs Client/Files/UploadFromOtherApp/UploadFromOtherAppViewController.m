@@ -539,14 +539,14 @@
         
         
         //Bytes
-        if (fileSize<1024) {
+        if (fileSize < 1024) {
             fileSizeString = [NSString stringWithFormat:@"%lu Bytes", (unsigned long)fileSize];
         }else if ((fileSize/1024)<1048576){
             //KB
-            fileSizeString = [NSString stringWithFormat:@"%lu KB", (fileSize/1024)];
+            fileSizeString = [NSString stringWithFormat:@"%lu KB", (unsigned long)(fileSize/1024)];
         }else{
             //MB
-            fileSizeString = [NSString stringWithFormat:@"%lu MB", ((fileSize/1024)/1024)];
+            fileSizeString = [NSString stringWithFormat:@"%lu MB", (unsigned long)((fileSize/1024)/1024)];
         }
         
         //Image name by extension
