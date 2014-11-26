@@ -56,7 +56,7 @@
 @synthesize toolBarLabelTxt = _toolBarLabelTxt;
 @synthesize alert = _alert;
 
-#pragma mark load view life
+#pragma mark Load View Life
 
 - (void)viewDidLoad {
     

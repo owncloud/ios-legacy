@@ -11,6 +11,7 @@
 
 @interface FileListDocumentProviderViewController : SimpleFileListTableViewController
 
+//Notification to notify that the user has change
 extern NSString * userHasChangeNotification;
 
 @end

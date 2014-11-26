@@ -19,6 +19,14 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 
 @implementation FileListDocumentProviderViewController
 
+#pragma mark Load View Life
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [self.tableView deselectRowAtIndexPath: indexPath animated:YES];
@@ -72,6 +80,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     
 }
 
+#pragma mark - Navigation
 - (void) navigateToFile:(FileDto *) file {
     //Method to be overwritten
     FileListDocumentProviderViewController *filesViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:file];

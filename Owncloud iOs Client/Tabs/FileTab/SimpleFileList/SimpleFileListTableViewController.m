@@ -53,6 +53,8 @@
     return self;
 }
 
+#pragma mark Load View Life
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -90,20 +92,8 @@
     
     [self reloadFolderByEtag];
 }
-
-- (void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-    
-- (void)orientationChange:(NSNotification*)notification
-{
+- (void)orientationChange:(NSNotification*)notification {
     UIInterfaceOrientation orientation = (UIInterfaceOrientation)[[notification.userInfo objectForKey:UIApplicationStatusBarOrientationUserInfoKey] intValue];
     
     if(UIInterfaceOrientationIsPortrait(orientation)){
@@ -112,7 +102,7 @@
 }
 
 //We have to remove the status bar height in navBar and view after rotate
-- (void) refreshTheInterfaceInPortrait{
+- (void) refreshTheInterfaceInPortrait {
     
     CGRect frameNavigationBar = self.navigationController.navigationBar.frame;
     CGRect frameView = self.view.frame;
@@ -133,7 +123,7 @@
     self.sortedArray = [self partitionObjects:self.currentDirectoryArray collationStringSelector:@selector(fileName)];
 }
 
-#pragma mark - Table view data source
+#pragma mark - TableView dataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     //If the _currentDirectoryArray doesn't have object it will have one section
@@ -312,8 +302,6 @@
     return cell;
 }
 
-
-
 //Return the row height
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -429,7 +417,7 @@
         if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError) {
             
 
-            //1 - Pass the items with OCFileDto to FileDto Array
+            //Pass the items with OCFileDto to FileDto Array
             NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
             
             //Change the filePath from the library to our format
@@ -440,9 +428,6 @@
                     currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
                 }
             }
-            
-            // DLog(@"The directory List have: %d elements", directoryList.count);
-            // DLog(@"Directoy list: %@", directoryList);
             
             for (int i = 0 ; i < directoryList.count ; i++) {
                 
