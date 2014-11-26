@@ -18,12 +18,20 @@
 
 @interface SimpleFileListTableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MBProgressHUDDelegate, CheckAccessToServerDelegate, ManageNetworkErrorsDelegate>
 
-extern NSString * userHasChangeNotification;
-
 // init method to load view from nib with an array of files
 - (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(FileDto *) currentFolder;
 
+- (void) fillTheArraysFromDatabase;
+
 - (void) checkBeforeNavigationToFolder:(FileDto *) file;
+
+- (void) reloadCurrentFolder;
+
+- (NSArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector;
+
+//Loading methods
+- (void)initLoading;
+- (void)endLoading;
 
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 

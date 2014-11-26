@@ -28,6 +28,11 @@
  */
 + (NSMutableArray *) getFilesByFileIdForActiveUser:(int) fileId;
 
+/*
+ * Method that give all folders from a single folder
+ * @fileId -> id of the folder father and we want all his files and folders
+ */
++ (NSMutableArray *) getFoldersByFileIdForActiveUser:(int) fileId;
 
 ///-----------------------------------
 /// @name Get Files by idFile

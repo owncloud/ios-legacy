@@ -31,9 +31,6 @@
 #import "DocumentPickerViewController.h"
 #endif
 
-
-NSString *userHasChangeNotification = @"userHasChangeNotification";
-
 @interface SimpleFileListTableViewController ()
 
 @end
@@ -50,8 +47,8 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         self.manageNetworkErrors.delegate = self;
         self.currentFolder = currentFolder;
         self.user = [ManageUsersDB getActiveUser];
-        self.currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser: (int)currentFolder.idFile];
-        self.sortedArray = [self partitionObjects:self.currentDirectoryArray collationStringSelector:@selector(fileName)];
+        
+        [self fillTheArraysFromDatabase];
     }
     return self;
 }
@@ -126,6 +123,14 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     self.navigationController.navigationBar.frame = frameNavigationBar;
     self.view.frame = frameView;
 
+}
+
+#pragma mark - Fill the arrays from Database
+
+- (void) fillTheArraysFromDatabase {
+    
+    self.currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser: (int)self.currentFolder.idFile];
+    self.sortedArray = [self partitionObjects:self.currentDirectoryArray collationStringSelector:@selector(fileName)];
 }
 
 #pragma mark - Table view data source
@@ -314,8 +319,6 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     
     CGFloat height = 0.0;
     
-    DLog(@"currentDirectoryArray: %d", (int) [self.currentDirectoryArray count]);
-    
     //If the _currentDirectoryArray doesn't have object it will have a big row
     if ([self.currentDirectoryArray count] == 0) {
         
@@ -408,9 +411,8 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     [sharedCommunication readFolder:remotePath onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
         for (OCFileDto *file in items) {
-            DLog(@"File: %@", file.filePath);
+            DLog(@"File: %@", file.fileName);
         }
-        
         
         DLog(@"Operation response code: %d", (int)response.statusCode);
         BOOL isSamlCredentialsError=NO;
@@ -426,17 +428,36 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         
         if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError) {
             
+
             //1 - Pass the items with OCFileDto to FileDto Array
             NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
             
-            //2 - We update the current folder with the new etag
-            FileDto *remoteFolderOfSelectedFolder;
-            for (FileDto *current in directoryList) {
-                if (!current.fileName) {
-                    remoteFolderOfSelectedFolder = current;
+            //Change the filePath from the library to our format
+            for (FileDto *currentFile in directoryList) {
+                //Remove part of the item file path
+                NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:self.user];
+                if([currentFile.filePath length] >= [partToRemove length]){
+                    currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
                 }
             }
-            [ManageFilesDB updateEtagOfFileDtoByid:file.idFile andNewEtag: remoteFolderOfSelectedFolder.etag];
+            
+            // DLog(@"The directory List have: %d elements", directoryList.count);
+            // DLog(@"Directoy list: %@", directoryList);
+            
+            for (int i = 0 ; i < directoryList.count ; i++) {
+                
+                FileDto *currentFile = [directoryList objectAtIndex:i];
+                
+                if (currentFile.fileName == nil) {
+                    //This is the fileDto of the current father folder
+                    self.currentFolder.etag = currentFile.etag;
+                    
+                    //We update the current folder with the new etag
+                    [ManageFilesDB updateEtagOfFileDtoByid:self.currentFolder.idFile andNewEtag: self.currentFolder.etag];
+                }
+            }
+            
+            [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:self.currentFolder.idFile];
             
             //Send the data to DB and refresh the table
             [self deleteOldDataFromDBBeforeRefresh:directoryList ofFolder:file];
@@ -448,11 +469,8 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
                 [self navigateToFile:file];
             } else {
                 
-                _currentDirectoryArray = [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:file.idFile];
-                
-                //Sorted the files array
-                _sortedArray = [self partitionObjects: _currentDirectoryArray collationStringSelector:@selector(fileName)];
-                [self.tableView reloadData];
+                [self fillTheArraysFromDatabase];
+                [self.tableView reloadData];    
                 
                 [self stopPullRefresh];
                 [self endLoading];
@@ -498,7 +516,11 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
             }
         }
         
-        NSArray *listOfRemoteFilesAndFolders = [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:file.idFile];
+        NSArray *listOfRemoteFilesAndFolders = [ManageFilesDB getFilesByFileIdForActiveUser:(int) self.currentFolder.idFile];
+        
+        for (FileDto *current in listOfRemoteFilesAndFolders) {
+            DLog(@"current: %@", current.fileName);
+        }
         
         [FileListDBOperations createAllFoldersByArrayOfFilesDto:listOfRemoteFilesAndFolders andLocalFolder:[UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:self.user]];
 
@@ -680,6 +702,9 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
                 NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
                 
                 FileDto *remoteFile = [directoryList objectAtIndex:0];
+                
+                DLog(@"remoteFile.etag: %lld", remoteFile.etag);
+                DLog(@"self.currentFolder: %lld", self.currentFolder.etag);
                 
                 if (remoteFile.etag != self.currentFolder.etag) {
                     [self reloadCurrentFolder];

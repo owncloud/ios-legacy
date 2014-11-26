@@ -11,6 +11,8 @@
 #import "UserDto.h"
 #import "ManageUsersDB.h"
 
+NSString *userHasChangeNotification = @"userHasChangeNotification";
+
 @interface FileListDocumentProviderViewController ()
 
 @end

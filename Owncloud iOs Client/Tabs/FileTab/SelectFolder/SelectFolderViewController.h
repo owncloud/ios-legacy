@@ -57,7 +57,6 @@
 @property (nonatomic, strong) IBOutlet UIBarButtonItem *chooseButton;
 @property (nonatomic, strong) IBOutlet UILabel *toolBarLabel;
 @property (nonatomic, strong) IBOutlet OCToolBar *toolBar;
-@property(nonatomic, strong) UserDto *mUser;
 @property(nonatomic, retain) CheckAccessToServer *mCheckAccessToServer;
 @property(nonatomic, strong) FileDto *selectedFileDto;
 @property (nonatomic, weak) id parent;
@@ -70,9 +69,6 @@
 @property(nonatomic, strong) NSString *toolBarLabelTxt;
 @property(nonatomic, strong) UIAlertView *folderView;
 @property(nonatomic, strong) UIAlertView *alert;
-
-//Custom init
-- (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(int) fileIdToShowFiles andCurrentLocalFolder:(NSString *) currentLocalFoler;
 
 //Actions
 - (IBAction)chooseFolder;

@@ -30,6 +30,10 @@
 
 @implementation ManageFilesDB
 
+/*
+ * Method that give all files from a single folder
+ * @fileId -> id of the folder father and we want all his files and folders
+ */
 + (NSMutableArray *) getFilesByFileIdForActiveUser:(int) fileId {
     
     UserDto *mUser;
@@ -53,6 +57,62 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, etag, is_favorite, is_necessary_update, shared_file_source, permissions, task_identifier FROM files WHERE file_id = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInt:fileId], [NSNumber numberWithInteger:mUser.idUser]];
+        while ([rs next]) {
+            
+            FileDto *currentFile = [[FileDto alloc] init];
+            
+            currentFile.idFile = [rs intForColumn:@"id"];
+            currentFile.filePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:mUser],[rs stringForColumn:@"file_path"]];
+            currentFile.fileName = [rs stringForColumn:@"file_name"];
+            currentFile.isDirectory = [rs intForColumn:@"is_directory"];
+            currentFile.userId = [rs intForColumn:@"user_id"];
+            currentFile.isDownload = [rs intForColumn:@"is_download"];
+            currentFile.size = [rs longForColumn:@"size"];
+            currentFile.fileId = [rs intForColumn:@"file_id"];
+            currentFile.date = [rs longForColumn:@"date"];
+            currentFile.etag = [rs longLongIntForColumn:@"etag"];
+            currentFile.isFavorite = [rs intForColumn:@"is_favorite"];
+            currentFile.localFolder = [UtilsUrls getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:mUser];
+            currentFile.isNecessaryUpdate = [rs boolForColumn:@"is_necessary_update"];
+            currentFile.sharedFileSource = [rs intForColumn:@"shared_file_source"];
+            currentFile.permissions = [rs stringForColumn:@"permissions"];
+            currentFile.taskIdentifier = [rs intForColumn:@"task_identifier"];
+            
+            [output addObject:currentFile];
+        }
+        [rs close];
+    }];
+    
+    return output;
+}
+
+/*
+ * Method that give all folders from a single folder
+ * @fileId -> id of the folder father and we want all his files and folders
+ */
++ (NSMutableArray *) getFoldersByFileIdForActiveUser:(int) fileId {
+    
+    UserDto *mUser;
+    
+#ifdef CONTAINER_APP
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    mUser = app.activeUser;
+#else
+    mUser = [ManageUsersDB getActiveUser];
+#endif
+    
+    __block NSMutableArray *output = [NSMutableArray new];
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, etag, is_favorite, is_necessary_update, shared_file_source, permissions, task_identifier FROM files WHERE file_id = ? AND is_directory = 1 AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInt:fileId], [NSNumber numberWithInteger:mUser.idUser]];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];

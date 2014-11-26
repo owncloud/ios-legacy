@@ -1958,7 +1958,10 @@
             }
         }
         
-        _currentDirectoryArray = [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:_fileIdToShowFiles.idFile];
+        [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:_fileIdToShowFiles.idFile];
+        
+        //Get from database all the files of the current folder (fileIdToShowFiles)
+        _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
         
         [FileListDBOperations createAllFoldersByArrayOfFilesDto:_currentDirectoryArray andLocalFolder:_currentLocalFolder];
         

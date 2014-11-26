@@ -96,7 +96,7 @@
  * Method that realice the refresh process
  *
  */
-+ (NSArray*)makeTheRefreshProcessWith:(NSMutableArray*)arrayFromServer inThisFolder:(NSInteger)idFolder{
++ (void)makeTheRefreshProcessWith:(NSMutableArray*)arrayFromServer inThisFolder:(NSInteger)idFolder{
     
     DLog(@"self.fileIdToShowFiles before refresh: %d", idFolder);
     
@@ -124,12 +124,6 @@
     [ManageFilesDB updateFilesFromBackup];
     //Read all backups favourites files and update the new registers with the favourite status
     [ManageFilesDB updateFavoriteFilesFromBackup];
-    
-    //Get from database all the files of the current folder (fileIdToShowFiles)
-    NSArray *currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:idFolder];
-    
-    return currentDirectoryArray;
-    
 }
 
 /*
