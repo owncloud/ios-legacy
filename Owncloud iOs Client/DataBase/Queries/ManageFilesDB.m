@@ -936,7 +936,7 @@
     }];
 }
 
-+(void) updatePath:(NSString *) oldFilePath withNew:(NSString *) newFilePath andFileId:(int) fileId andSelectedFileId:(int) selectedFileId andChangedFileName:(NSString *) fileName {
++(void) updatePath:(NSString *) oldFilePath withNew:(NSString *) newFilePath andFileId:(NSInteger) fileId andSelectedFileId:(NSInteger) selectedFileId andChangedFileName:(NSString *) fileName {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UserDto *mUser = app.activeUser;
@@ -946,7 +946,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET file_path=?, file_id=?, file_name=? WHERE user_id = ? AND id = ?", newFilePath, [NSNumber numberWithInt:fileId], fileName, [NSNumber numberWithInt:mUser.idUser], [NSNumber numberWithInt:selectedFileId]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET file_path=?, file_id=?, file_name=? WHERE user_id = ? AND id = ?", newFilePath, [NSNumber numberWithInteger:fileId], fileName, [NSNumber numberWithInteger:mUser.idUser], [NSNumber numberWithInteger:selectedFileId]];
                 
         if (!correctQuery) {
             DLog(@"Error in updateFolderOfFileDtoByNewFilePath");
@@ -1021,7 +1021,7 @@
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, etag, is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier FROM files WHERE user_id = ? AND is_root_folder = 1 ORDER BY file_name ASC", [NSNumber numberWithInt:currentUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, etag, is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier FROM files WHERE user_id = ? AND is_root_folder = 1 ORDER BY file_name ASC", [NSNumber numberWithInteger:currentUser.idUser]];
         
         while ([rs next]) {
             

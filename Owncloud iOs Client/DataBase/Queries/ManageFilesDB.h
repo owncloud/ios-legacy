@@ -244,7 +244,7 @@
  * @selectedFileId -> idFile of the file moved
  * @fileName -> name of the file moved
  */
-+ (void) updatePath:(NSString *) oldFilePath withNew:(NSString *) newFilePath andFileId:(int) fileId andSelectedFileId:(int) selectedFileId andChangedFileName:(NSString *) fileName;
++(void) updatePath:(NSString *) oldFilePath withNew:(NSString *) newFilePath andFileId:(NSInteger) fileId andSelectedFileId:(NSInteger) selectedFileId andChangedFileName:(NSString *) fileName;
 
 /*
  * Method to update the related files of a folder
