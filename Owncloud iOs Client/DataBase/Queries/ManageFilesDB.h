@@ -117,13 +117,13 @@
  * Method to delete all the files and folders from the folder that we want to refresh
  * @fileId -> id of the folder
  */
-+ (void) deleteFilesFromDBBeforeRefreshByFileId: (int) fileId;
++(void) deleteFilesFromDBBeforeRefreshByFileId: (NSInteger) fileId;
 
 /*
  * Method to backup the necessary files and folders to make a right refresh and keep the previous information (files downloads, subfolders and favourites)
  * @fileId -> id of the folder
  */
-+ (void) backupOfTheProcessingFilesAndFoldersByFileId:(int) fileId;
++ (void) backupOfTheProcessingFilesAndFoldersByFileId:(NSInteger) fileId;
 
 /*
  * Method to update the related files from the backup after refresh (related files = subfolders and files from those subfolders)
@@ -158,9 +158,9 @@
  * The only exception is that the field is not set to YES is the file is overwritten, in this
  * case the etag must be updated on the files DB: check the method updateFilesFromBackup
  *
- * @param idFile -> int, the file that want to update
+ * @param idFile -> NSInteger, the file that want to update
  */
-+(void) setUpdateIsNecessaryFromBackup:(int) idFile;
++(void) setUpdateIsNecessaryFromBackup:(NSInteger) idFile;
 
 
 ///-----------------------------------
@@ -413,11 +413,11 @@
 /**
  * This method get all the file where the download status is equal to status
  *
- * @param int -> The download status
+ * @param NSInteger -> The download status
  *
  * @return NSMutableArray -> The array with the files
  */
-+ (NSMutableArray *) getFilesByDownloadStatus:(int) status;
++ (NSMutableArray *) getFilesByDownloadStatus:(NSInteger) status;
 
 
 
