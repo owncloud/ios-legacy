@@ -1052,14 +1052,14 @@
     return output;
 }
 
-+(void) updateEtagOfFileDtoByid:(int) idFile andNewEtag: (long long)etag {
++(void) updateEtagOfFileDtoByid:(NSInteger) idFile andNewEtag: (long long)etag {
     
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET etag=? WHERE id = ?", [NSNumber numberWithLongLong:etag], [NSNumber numberWithInt:idFile]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET etag=? WHERE id = ?", [NSNumber numberWithLongLong:etag], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
             DLog(@"Error in updatePathwithNewPath");

@@ -208,7 +208,7 @@
     NSNumber * size = [attributes objectForKey: NSFileSize];
     NSUInteger length = [size integerValue];
     
-    DLog(@"Size is: %d", length);
+    DLog(@"Size is: %lu", (unsigned long)length);
     
     return length;    
 }
@@ -493,7 +493,7 @@
         
         //We get the current folder to create the local tree
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        NSString *localRootUrlString = [NSString stringWithFormat:@"%@%d/", [UtilsUrls getOwnCloudFilePath],app.activeUser.idUser];
+        NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser];
         
         sf.currentLocalFolder = localRootUrlString;
         
@@ -540,13 +540,13 @@
         
         //Bytes
         if (fileSize<1024) {
-            fileSizeString = [NSString stringWithFormat:@"%d Bytes", fileSize];
+            fileSizeString = [NSString stringWithFormat:@"%lu Bytes", (unsigned long)fileSize];
         }else if ((fileSize/1024)<1048576){
             //KB
-            fileSizeString = [NSString stringWithFormat:@"%d KB", (fileSize/1024)];
+            fileSizeString = [NSString stringWithFormat:@"%lu KB", (fileSize/1024)];
         }else{
             //MB
-            fileSizeString = [NSString stringWithFormat:@"%d MB", ((fileSize/1024)/1024)];
+            fileSizeString = [NSString stringWithFormat:@"%lu MB", ((fileSize/1024)/1024)];
         }
         
         //Image name by extension
