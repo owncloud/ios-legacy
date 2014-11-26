@@ -253,9 +253,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             
-            DLog(@"response.statusCode: %d", httpResponse.statusCode);
+            DLog(@"response.statusCode: %ld", (long)httpResponse.statusCode);
             DLog(@"Error: %@", error);
-            DLog(@"error.code: %d", error.code);
+            DLog(@"error.code: %ld", (long)error.code);
             
             BOOL isSamlCredentialsError=NO;
             
@@ -450,9 +450,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             
-            DLog(@"response.statusCode: %d", response.statusCode);
+            DLog(@"response.statusCode: %ld", (long)response.statusCode);
             DLog(@"Error: %@", error);
-            DLog(@"error.code: %d", error.code);
+            DLog(@"error.code: %ld", (long)error.code);
             
             BOOL isSamlCredentialsError = NO;
             
@@ -570,7 +570,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         [self.delegate uploadAddedContinueWithNext];
     }
     
-    DLog(@"taskIdentifier: %d", _uploadTask.taskIdentifier);
+    DLog(@"taskIdentifier: %lu", (unsigned long)_uploadTask.taskIdentifier);
     
     if (_uploadTask) {
         [self setTaskIdentifier];
@@ -628,7 +628,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         DLog(@"Local folder:%@",localFolder);
         
         FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:_currentUpload.uploadFileName andFilePath:localFolder andUser:_userUploading];
-        DLog(@"id file: %d",deleteOverwriteFile.idFile);
+        DLog(@"id file: %ld",(long)deleteOverwriteFile.idFile);
         
         //In iPad clean the view
         if (!IS_IPHONE){
@@ -812,7 +812,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
@@ -834,7 +834,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 }
             }
             
-            DLog(@"The directory List have: %d elements", items.count);
+            DLog(@"The directory List have: %lu elements", (unsigned long)items.count);
             
             
             //Check if there are almost one item in the array
@@ -858,7 +858,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         
     }];
     //Erase cache and cookies
