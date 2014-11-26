@@ -109,7 +109,7 @@
     
     FileDto *currentFolder = [ManageFilesDB getFileDtoByIdFile:idFolder];
     
-    DLog(@"idFile: %d", currentFolder.idFile);
+    DLog(@"idFile: %ld", (long)currentFolder.idFile);
     DLog(@"name: %@", currentFolder.fileName);
     
   //  NSMutableArray *directoryList = [[req getDirectoryList] mutableCopy];

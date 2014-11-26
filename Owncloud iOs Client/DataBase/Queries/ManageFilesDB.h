@@ -90,7 +90,7 @@
  * @listOfFiles -> List of all the files
  * @fileId -> id of the folder father
  */
-+ (void) insertManyFiles:(NSMutableArray *)listOfFiles andFileId:(int)fileId;
++(void) insertManyFiles:(NSMutableArray *)listOfFiles andFileId:(NSInteger)fileId;
 
 /*
  * Method to delete a file
@@ -293,7 +293,7 @@
  * @oldFileId -> old fileId (usually 0 to update the root folder)
  * @fileId -> new fileId
  */
-+ (void) updateFilesWithFileId:(int) oldFileId withNewFileId:(int) fileId;
++ (void) updateFilesWithFileId:(NSInteger) oldFileId withNewFileId:(NSInteger) fileId;
 
 
 /*

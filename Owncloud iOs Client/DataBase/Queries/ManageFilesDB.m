@@ -280,7 +280,7 @@
     }];
 }
 
-+(void) insertManyFiles:(NSMutableArray *)listOfFiles andFileId:(int)fileId {
++(void) insertManyFiles:(NSMutableArray *)listOfFiles andFileId:(NSInteger)fileId {
     
     NSString *sql = @"";
     NSMutableArray *arrayOfSqlRequests = [NSMutableArray new];
@@ -288,7 +288,7 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UserDto *mUser = app.activeUser;
     
-    int numberOfInsertEachTime = 0;
+    NSInteger numberOfInsertEachTime = 0;
     
     //if count == 1 the file is the current folder so there is nothing to insert
     if([listOfFiles count] > 1) {
@@ -302,7 +302,7 @@
                 
                 //to jump the first becouse it is not necesary (is the same directory) and the other if is to insert 450 by 450
                 if(numberOfInsertEachTime == 0) {
-                    sql = [NSString stringWithFormat:@"INSERT INTO files SELECT null as id, '%@' as 'file_path','%@' as 'file_name', %d as 'user_id', %d as 'is_directory',%d as 'is_download', %d as 'file_id', %@ as 'size', %@ as 'date', %d as 'is_favorite',%lld as 'etag', %d as 'is_root_folder', %d as 'is_necessary_update', %d as 'shared_file_source', '%@' as 'permissions', %d as 'task_identifier'",
+                    sql = [NSString stringWithFormat:@"INSERT INTO files SELECT null as id, '%@' as 'file_path','%@' as 'file_name', %ld as 'user_id', %d as 'is_directory',%ld as 'is_download', %ld as 'file_id', %@ as 'size', %@ as 'date', %d as 'is_favorite',%lld as 'etag', %d as 'is_root_folder', %d as 'is_necessary_update', %ld as 'shared_file_source', '%@' as 'permissions', %ld as 'task_identifier'",
                            current.filePath,
                            current.fileName,
                            current.userId,
@@ -321,7 +321,7 @@
                     
                     //DLog(@"sql!!!: %@", sql);
                 } else {
-                    sql = [NSString stringWithFormat:@"%@ UNION SELECT null, '%@','%@',%d,%d,%d,%d,%@,%@,%d,%lld,%d,%d,%d,'%@',%d",
+                    sql = [NSString stringWithFormat:@"%@ UNION SELECT null, '%@','%@',%ld,%d,%ld,%ld,%@,%@,%d,%lld,%d,%d,%ld,'%@',%ld",
                            sql,
                            current.filePath,
                            current.fileName,
@@ -1084,7 +1084,7 @@
     }];
 }
 
-+ (void) updateFilesWithFileId:(int) oldFileId withNewFileId:(int) fileId {
++ (void) updateFilesWithFileId:(NSInteger) oldFileId withNewFileId:(NSInteger) fileId {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UserDto *mUser = app.activeUser;
@@ -1094,7 +1094,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET file_id=? WHERE file_id = ? AND user_id = ?", [NSNumber numberWithInt:fileId], [NSNumber numberWithInt:oldFileId], [NSNumber numberWithInt:mUser.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET file_id=? WHERE file_id = ? AND user_id = ?", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:oldFileId], [NSNumber numberWithInteger:mUser.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error in updatePathwithNewPath");
