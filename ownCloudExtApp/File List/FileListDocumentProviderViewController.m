@@ -22,6 +22,19 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 
 #pragma mark Load View Life
 
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self performSelector:@selector(delay) withObject:nil afterDelay:2.0];
+}
+
+- (void) delay {
+    DLog(@"Delay");
+ 
+    [self.view.window layoutSubviews];
+    [self.view.window layoutIfNeeded];
+}
+
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     

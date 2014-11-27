@@ -127,6 +127,18 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closeAlertView) name:CloseAlertViewWhenApplicationDidEnterBackground object:nil];
 }
 
+///-----------------------------------
+/// @name Close the Alert View pop-up
+///-----------------------------------
+
+/**
+ * Close the alertView pop-up when the app
+ * go to background
+ */
+- (void) closeAlertView {
+    [_folderView dismissWithClickedButtonIndex:0 animated:NO];
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
