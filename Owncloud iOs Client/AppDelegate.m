@@ -2362,7 +2362,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Insert the specific data to recents view
     NSDate *uploadedDate = [NSDate dateWithTimeIntervalSince1970:currentUploadBackground.uploadedDate];
     currentManageUploadRequest.date = uploadedDate;
-    currentManageUploadRequest.currentUpload.uploadedDate = uploadedDate;
+    currentManageUploadRequest.currentUpload.uploadedDate = uploadedDate.timeIntervalSince1970;
     //Set uploadOffline
     currentManageUploadRequest.currentUpload = currentUploadBackground;
     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:currentUploadBackground.estimateLength];

@@ -68,15 +68,6 @@
 + (void) setDatebyUploadOffline:(UploadsOfflineDto *)currentUpload;
 
 
-
-/*
- * This method set the date of finished upload
- * @currentUpload --> object updated
- */
-
-+ (void) setDatebyUploadOffline:(UploadsOfflineDto *)currentUpload;
-
-
 /*
  * Method to return all the files with a single status
  */

@@ -778,7 +778,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  *
  */
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    return UIModalTransitionStyleCrossDissolve;
+    return UIStatusBarAnimationFade;
 }
 
 #pragma mark - Media player methods

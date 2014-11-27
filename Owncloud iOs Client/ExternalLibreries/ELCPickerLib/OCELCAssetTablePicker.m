@@ -38,7 +38,8 @@
     if (self.immediateReturn) {
         
     } else {
-        UIBarButtonItem *doneButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"upload", nil) style:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)] autorelease];
+        UIBarButtonItem *doneButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"upload", nil) style:UIBarButtonItemStyleDone target:self action:@selector(doneAction:)] autorelease];
+        
         [self.navigationItem setRightBarButtonItem:doneButtonItem];
         [self.navigationItem setTitle:NSLocalizedString(@"loading", nil)];
         

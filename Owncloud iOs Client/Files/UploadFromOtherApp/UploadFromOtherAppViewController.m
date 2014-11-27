@@ -90,7 +90,7 @@
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel)];
 	[self.navigationItem setLeftBarButtonItem:cancelButton];
     
-    UIBarButtonItem *sendToButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"other_apps_send_to", nil) style:UIBarButtonSystemItemCancel target:self action:@selector(sendTo)];
+    UIBarButtonItem *sendToButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"other_apps_send_to", nil) style:UIBarButtonItemStyleDone target:self action:@selector(sendTo)];
     
 	[self.navigationItem setRightBarButtonItem:sendToButton];
     
