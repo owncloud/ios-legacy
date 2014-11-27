@@ -83,6 +83,8 @@
  */
 - (void) reloadCurrentFolder;
 
+- (void) loadRemote:(FileDto *) file andNavigateIfIsNecessary:(BOOL) isNecessaryNavigate;
+
 ///-----------------------------------
 /// @name partitionObjects
 ///-----------------------------------

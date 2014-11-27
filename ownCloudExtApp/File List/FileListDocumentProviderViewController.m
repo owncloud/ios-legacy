@@ -10,6 +10,7 @@
 #import "FileDto.h"
 #import "UserDto.h"
 #import "ManageUsersDB.h"
+#import "ManageFilesDB.h"
 
 NSString *userHasChangeNotification = @"userHasChangeNotification";
 
@@ -31,37 +32,41 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     
     [self.tableView deselectRowAtIndexPath: indexPath animated:YES];
     
-    //Check if the user is the same and does not change
-    if ([self isTheSameUserHereAndOnTheDatabase]) {
-        FileDto *file = (FileDto *)[[self.sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
-        
-        if (file.isDirectory) {
-            [self checkBeforeNavigationToFolder:file];
-        } else {
-            //TODO: here we should return the file to the document picker or download it
-        }
+    FileDto *file = (FileDto *)[[self.sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
+    
+    if (file.isDirectory) {
+        [self checkBeforeNavigationToFolder:file];
     } else {
-        //The user has change
-        
-        UIAlertController *alert =   [UIAlertController
-                                      alertControllerWithTitle:@""
-                                      message:@"The user has change on the ownCloud App" //TODO: add a string error internationzalized
-                                      preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction* ok = [UIAlertAction
-                             actionWithTitle:NSLocalizedString(@"ok", nil)
-                             style:UIAlertActionStyleDefault
-                             handler:^(UIAlertAction * action) {
-                                 [super dismissViewControllerAnimated:YES completion:^{
-                                     [[NSNotificationCenter defaultCenter] postNotificationName: userHasChangeNotification object: nil];
-                                 }];
-                             }];
-        [alert addAction:ok];
-        
-        [self presentViewController:alert animated:YES completion:nil];
+        //TODO: here we should return the file to the document picker or download it
     }
 }
 
+- (void) checkBeforeNavigationToFolder:(FileDto *) file {
+    
+    //Check if the user is the same and does not change
+    if ([self isTheSameUserHereAndOnTheDatabase]) {
+        
+        if ([ManageFilesDB getFilesByFileIdForActiveUser: (int)file.idFile].count > 0) {
+            [self navigateToFile:file];
+        } else {
+            [self initLoading];
+            [self loadRemote:file andNavigateIfIsNecessary:YES];
+        }
+        
+    } else {
+        [self showErrorUserHasChange];
+    }
+}
+
+- (void) reloadCurrentFolder {
+    
+    //Check if the user is the same and does not change
+    if ([self isTheSameUserHereAndOnTheDatabase]) {
+        [self loadRemote:self.currentFolder andNavigateIfIsNecessary:NO];
+    } else {
+        [self showErrorUserHasChange];
+    }
+}
 
 #pragma mark - Check User
 
@@ -78,6 +83,27 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     
     return isTheSameUser;
     
+}
+
+- (void) showErrorUserHasChange {
+    //The user has change
+    
+    UIAlertController *alert =   [UIAlertController
+                                  alertControllerWithTitle:@""
+                                  message:@"The user has change on the ownCloud App" //TODO: add a string error internationzalized
+                                  preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* ok = [UIAlertAction
+                         actionWithTitle:NSLocalizedString(@"ok", nil)
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action) {
+                             [super dismissViewControllerAnimated:YES completion:^{
+                                 [[NSNotificationCenter defaultCenter] postNotificationName: userHasChangeNotification object: nil];
+                             }];
+                         }];
+    [alert addAction:ok];
+    
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - Navigation
