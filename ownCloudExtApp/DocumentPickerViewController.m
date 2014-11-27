@@ -26,6 +26,7 @@
 #import "CheckAccessToServer.h"
 #import "OCKeychain.h"
 #import "CredentialsDto.h"
+#import "FileListDBOperations.h"
 
 @interface DocumentPickerViewController ()
 
@@ -57,7 +58,14 @@
     self.user = [ManageUsersDB getActiveUser];
     
     if (self.user) {
-        FileListDocumentProviderViewController *fileListTableViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:[ManageFilesDB getRootFileDtoByUser:self.user]];
+        
+        FileDto *rootFolder = [ManageFilesDB getRootFileDtoByUser:self.user];
+        
+        if (!rootFolder) {
+            rootFolder = [FileListDBOperations createRootFolderAndGetFileDtoByUser:self.user];
+        }
+        
+        FileListDocumentProviderViewController *fileListTableViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:rootFolder];
         
         OCNavigationController *navigationViewController = [[OCNavigationController alloc] initWithRootViewController:fileListTableViewController];
 

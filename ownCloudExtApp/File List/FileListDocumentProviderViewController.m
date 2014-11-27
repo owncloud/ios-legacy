@@ -59,7 +59,6 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 }
 
 - (void) reloadCurrentFolder {
-    
     //Check if the user is the same and does not change
     if ([self isTheSameUserHereAndOnTheDatabase]) {
         [self loadRemote:self.currentFolder andNavigateIfIsNecessary:NO];
