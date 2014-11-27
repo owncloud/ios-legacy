@@ -40,6 +40,12 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void) viewDidAppear:(BOOL)animated {
+    
+    //When we rotate while make the push of the view does not get resized
+    [self.view setFrame: CGRectMake(0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height)];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [self.tableView deselectRowAtIndexPath: indexPath animated:YES];
