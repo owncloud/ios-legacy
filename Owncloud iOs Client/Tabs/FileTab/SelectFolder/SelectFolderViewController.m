@@ -76,12 +76,12 @@
     return self;
 }
 
-- (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(int) fileIdToShowFiles andCurrentLocalFolder:(NSString *)currentLocalFoler
+- (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(NSInteger) fileIdToShowFiles andCurrentLocalFolder:(NSString *)currentLocalFolder
 {
     self.currentRemoteFolder = currentFolder;
     DLog(@"self.currentRemoteFolder: %@", self.currentRemoteFolder);
     self.fileIdToShowFiles = [ManageFilesDB getFileDtoByIdFile:fileIdToShowFiles];
-    self.currentLocalFolder = currentLocalFoler;
+    self.currentLocalFolder = currentLocalFolder;
     
     DLog(@"self.currentLocalFolder: %@", self.currentLocalFolder);
     
@@ -90,7 +90,7 @@
         self.mCheckAccessToServer.delegate = self;
     }
     
-    DLog(@"currentRemoteFolder: %@ and fileIdToShowFiles: %d", currentFolder, self.fileIdToShowFiles.idFile);
+    DLog(@"currentRemoteFolder: %@ and fileIdToShowFiles: %ld", currentFolder, (long)self.fileIdToShowFiles.idFile);
     
     self = [super initWithNibName:nibNameOrNil bundle:nil];
     return self;
@@ -410,7 +410,7 @@
     
     [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         
         BOOL isSamlCredentialsError = NO;
         
@@ -431,7 +431,7 @@
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         [self manageServerErrors:response.statusCode and:error];
     }];
 
@@ -647,7 +647,7 @@
                 if (!isSamlCredentialsError) {
                 
                     //Obtain the path where the folder will be created in the file system
-                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%d/%@",[UtilsUrls getOwnCloudFilePath],app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
                     
                     DLog(@"Name of the folder: %@ to create in: %@",name, currentLocalFileToCreateFolder);
@@ -658,7 +658,7 @@
                 }
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                 DLog(@"error: %@", error);
-                DLog(@"Operation error: %d", response.statusCode);
+                DLog(@"Operation error: %ld", (long)response.statusCode);
                 [self manageServerErrors:response.statusCode and:error];
             } errorBeforeRequest:^(NSError *error) {
                 if (error.code == OCErrorForbidenCharacters) {
@@ -907,7 +907,7 @@
     
     [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         
         BOOL isSamlCredentialsError = NO;
         
@@ -927,13 +927,13 @@
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         [self manageServerErrors:response.statusCode and:error];
         
     }];
 
 }
--(void)navigateToUrl:(NSString *) url andFileId:(int)fileIdToShowFiles {
+-(void)navigateToUrl:(NSString *) url andFileId:(NSInteger)fileIdToShowFiles {
     
     DLog(@"url: %@", url);
     
@@ -994,12 +994,10 @@
  * @error -> NSError of NSURLConnection
  */
 
-- (void)manageServerErrors: (NSInteger *)errorCodeFromServer and:(NSError *)error{
+- (void)manageServerErrors: (NSInteger)errorCodeFromServer and:(NSError *)error{
     
-    int code = errorCodeFromServer;
-    
-    DLog(@"Error code from  web dav server: %d", code);
-    DLog(@"Error code from server: %d", error.code);
+    DLog(@"Error code from  web dav server: %ld", (long)errorCodeFromServer);
+    DLog(@"Error code from server: %ld", (long)error.code);
     
     [self endLoading];
     
@@ -1013,7 +1011,7 @@
             
         default:
             //Web Dav Error Code
-            switch (code) {
+            switch (errorCodeFromServer) {
                 case kOCErrorServerUnauthorized:
                     //Unauthorized (bad username or password)
                     [self errorLogin];

@@ -41,7 +41,7 @@
  * Method that realice the refresh process
  *
  */
-+ (NSArray*)makeTheRefreshProcessWith:(NSMutableArray*)arrayFromServer inThisFolder:(int)idFolder;
++ (NSArray*)makeTheRefreshProcessWith:(NSMutableArray*)arrayFromServer inThisFolder:(NSInteger)idFolder;
 
 
 /*

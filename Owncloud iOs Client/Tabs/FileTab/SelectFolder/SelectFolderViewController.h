@@ -73,7 +73,7 @@
 @property(nonatomic, strong) UIAlertView *alert;
 
 //Custom init
-- (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(int) fileIdToShowFiles andCurrentLocalFolder:(NSString *) currentLocalFoler;
+- (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(NSInteger) fileIdToShowFiles andCurrentLocalFolder:(NSString *)currentLocalFolder;
 
 //Actions
 - (IBAction)chooseFolder;
