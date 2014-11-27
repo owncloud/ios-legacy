@@ -66,7 +66,7 @@
  * Method that set a user like a active account
  * @idUser -> id user
  */
-+(void) setActiveAccountByIdUser: (int) idUser;
++(void) setActiveAccountByIdUser: (NSInteger) idUser;
 
 /*
  * Method that set all acount as a no active.

@@ -407,7 +407,7 @@
     
 }
 
--(void)activeAccountByPosition:(int)position {
+-(void)activeAccountByPosition:(NSInteger)position {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:position];
@@ -448,7 +448,7 @@
         
         //We get the current folder to create the local tree
         //we create the user folder to haver multiuser
-        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%d/",[UtilsUrls getOwnCloudFilePath],selectedUser.idUser];
+        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)selectedUser.idUser];
         DLog(@"current: %@", currentLocalFileToCreateFolder);
         
         if (![[NSFileManager defaultManager] fileExistsAtPath:currentLocalFileToCreateFolder]) {

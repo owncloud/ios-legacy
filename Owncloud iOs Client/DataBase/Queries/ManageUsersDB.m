@@ -296,14 +296,14 @@
  * Method that set a user like a active account
  * @idUser -> id user
  */
-+(void) setActiveAccountByIdUser: (int) idUser {
++(void) setActiveAccountByIdUser: (NSInteger) idUser {
     
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET activeaccount=1 WHERE id = ?", [NSNumber numberWithInt:idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET activeaccount=1 WHERE id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
             DLog(@"Error setting the active account");
