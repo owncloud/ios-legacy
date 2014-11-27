@@ -32,7 +32,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO uploads_offline (origin_path, destiny_folder, upload_filename, estimate_length, user_id, is_last_upload_file_of_this_Array, chunk_position, chunk_unique_number, chunks_length, status,kind_of_error,is_internal_upload,is_not_necessary_check_if_exist, task_identifier) Values('%@', '%@', '%@',%ld, %d, %d, %d, %d, %ld, %d, %d, %d, %d, %d)", upload.originPath,upload.destinyFolder,upload.uploadFileName, upload.estimateLength, upload.userId, upload.isLastUploadFileOfThisArray, upload.chunkPosition, upload.chunkUniqueNumber, upload.chunksLength,upload.status, upload.kindOfError, upload.isInternalUpload, upload.isNotNecessaryCheckIfExist, upload.taskIdentifier];
+        NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO uploads_offline (origin_path, destiny_folder, upload_filename, estimate_length, user_id, is_last_upload_file_of_this_Array, chunk_position, chunk_unique_number, chunks_length, status,kind_of_error,is_internal_upload,is_not_necessary_check_if_exist, task_identifier) Values('%@', '%@', '%@',%ld, %ld, %d, %ld, %ld, %ld, %ld, %ld, %d, %d, %ld)", upload.originPath,upload.destinyFolder,upload.uploadFileName, upload.estimateLength, (long)upload.userId, upload.isLastUploadFileOfThisArray, (long)upload.chunkPosition, (long)upload.chunkUniqueNumber, upload.chunksLength,(long)upload.status, (long)upload.kindOfError, upload.isInternalUpload, upload.isNotNecessaryCheckIfExist, (long)upload.taskIdentifier];
 
         correctQuery = [db executeUpdate:sqlString];
         
@@ -144,25 +144,23 @@
             
             UploadsOfflineDto *current = [listOfUploadOffline objectAtIndex:i];
             
-            correctQuery = [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO uploads_offline SELECT null as id, '%@' as 'origin_path','%@' as 'destiny_folder', '%@' as 'upload_filename', %ld as 'estimate_length',%d as 'user_id', %d as 'is_last_upload_file_of_this_Array', %d as 'chunk_position', %d as 'chunk_unique_number',%ld as 'chunks_length', %d as 'status',%ld as 'uploaded_date', %d as 'kind_of_error', %d as 'is_internal_upload', %d as 'is_not_necessary_check_if_exist', %d as 'task_identifier'",
+            correctQuery = [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO uploads_offline SELECT null as id, '%@' as 'origin_path','%@' as 'destiny_folder', '%@' as 'upload_filename', %ld as 'estimate_length',%ld as 'user_id', %d as 'is_last_upload_file_of_this_Array', %ld as 'chunk_position', %ld as 'chunk_unique_number',%ld as 'chunks_length', %ld as 'status',%ld as 'uploaded_date', %ld as 'kind_of_error', %d as 'is_internal_upload', %d as 'is_not_necessary_check_if_exist', %ld as 'task_identifier'",
                                               current.originPath,
                                               current.destinyFolder,
                                               current.uploadFileName,
                                               current.estimateLength,
-                                              current.userId,
+                                              (long)current.userId,
                                               current.isLastUploadFileOfThisArray,
-                                              current.chunkPosition,
-                                              current.chunkUniqueNumber,
+                                              (long)current.chunkPosition,
+                                              (long)current.chunkUniqueNumber,
                                               current.chunksLength,
-                                              current.status,
+                                              (long)current.status,
                                               current.uploadedDate,
-                                              current.kindOfError,
+                                              (long)current.kindOfError,
                                               current.isInternalUpload,
                                               current.isNotNecessaryCheckIfExist,
-                                              current.taskIdentifier]];
+                                              (long)current.taskIdentifier]];
         }
-        
-        
         
         if (!correctQuery) {
             DLog(@"Error in insertManyUploadsOffline");
@@ -292,7 +290,7 @@
         BOOL correctQuery=NO;
         
 
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET uploaded_date=? WHERE id = ?", [NSNumber numberWithLong:currentUpload.uploadedDate], [NSNumber numberWithInt:currentUpload.idUploadsOffline]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET uploaded_date=? WHERE id = ?", [NSNumber numberWithLong:currentUpload.uploadedDate], [NSNumber numberWithInteger:currentUpload.idUploadsOffline]];
         
         if (!correctQuery) {
             DLog(@"Error in set date");
@@ -487,7 +485,7 @@
         [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             BOOL correctQuery=NO;
             
-            correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=? WHERE status != ? AND status != ? AND status !=? AND kind_of_error = ? AND id = ?", [NSNumber numberWithInt:errorUploading], [NSNumber numberWithInt:uploaded],[NSNumber numberWithInt:uploading],[NSNumber numberWithInt:waitingForUpload], [NSNumber numberWithInt:notAnError], [NSNumber numberWithInt:current.idUploadsOffline]];
+            correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=? WHERE status != ? AND status != ? AND status !=? AND kind_of_error = ? AND id = ?", [NSNumber numberWithInt:errorUploading], [NSNumber numberWithInt:uploaded],[NSNumber numberWithInt:uploading],[NSNumber numberWithInt:waitingForUpload], [NSNumber numberWithInt:notAnError], [NSNumber numberWithInteger:current.idUploadsOffline]];
             
             if (!correctQuery) {
                 DLog(@"Error in setState");
@@ -506,7 +504,7 @@
         [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             BOOL correctQuery=NO;
             
-            correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=? WHERE status != ? AND kind_of_error = ? AND id = ?", [NSNumber numberWithInt:errorUploading], [NSNumber numberWithInt:uploaded], [NSNumber numberWithInt:notAnError], [NSNumber numberWithInt:current.idUploadsOffline]];
+            correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=? WHERE status != ? AND kind_of_error = ? AND id = ?", [NSNumber numberWithInt:errorUploading], [NSNumber numberWithInteger:uploaded], [NSNumber numberWithInt:notAnError], [NSNumber numberWithInteger:current.idUploadsOffline]];
             
             if (!correctQuery) {
                 DLog(@"Error in setState");
@@ -617,7 +615,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=? WHERE kind_of_error = ? AND user_id = ?", [NSNumber numberWithInt:notAnError], [NSNumber numberWithInt:errorCredentials], [NSNumber numberWithInt:userId]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=? WHERE kind_of_error = ? AND user_id = ?", [NSNumber numberWithInt:notAnError], [NSNumber numberWithInteger:errorCredentials], [NSNumber numberWithInteger:userId]];
         
         if (!correctQuery) {
             DLog(@"Error in setState");
@@ -637,7 +635,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=?, destiny_folder=?  WHERE id = ?", [NSNumber numberWithInt:notAnError], folder, [NSNumber numberWithInt:selectedUpload.idUploadsOffline]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=?, destiny_folder=?  WHERE id = ?", [NSNumber numberWithInteger:notAnError], folder, [NSNumber numberWithInteger:selectedUpload.idUploadsOffline]];
         
         if (!correctQuery) {
             DLog(@"Error in setState");
@@ -659,7 +657,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=?, upload_filename = ? WHERE id = ?", [NSNumber numberWithInt:notAnError], name, [NSNumber numberWithInt:selectedUpload.idUploadsOffline]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=?, upload_filename = ? WHERE id = ?", [NSNumber numberWithInteger:notAnError], name, [NSNumber numberWithInteger:selectedUpload.idUploadsOffline]];
         
         if (!correctQuery) {
             DLog(@"Error in setState");
@@ -680,7 +678,7 @@
         BOOL correctQuery=NO;
         
         //We do not need set anything on the DB about overwrite only on the UploadOfflineDto
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=?, is_not_necessary_check_if_exist = ? WHERE id = ?", [NSNumber numberWithInt:notAnError], [NSNumber numberWithBool:isNotNecessaryCheckIfExist], [NSNumber numberWithInt:selectedUpload.idUploadsOffline]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=?, is_not_necessary_check_if_exist = ? WHERE id = ?", [NSNumber numberWithInteger:notAnError], [NSNumber numberWithBool:isNotNecessaryCheckIfExist], [NSNumber numberWithInteger:selectedUpload.idUploadsOffline]];
         
         if (!correctQuery) {
             DLog(@"Error in setState");
@@ -726,7 +724,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET task_identifier = ? WHERE id = ?", [NSNumber numberWithInteger:taskIdentifier], [NSNumber numberWithInt:upload.idUploadsOffline]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET task_identifier = ? WHERE id = ?", [NSNumber numberWithInteger:taskIdentifier], [NSNumber numberWithInteger:upload.idUploadsOffline]];
         
         if (!correctQuery) {
             DLog(@"Error in set task_identifier");
