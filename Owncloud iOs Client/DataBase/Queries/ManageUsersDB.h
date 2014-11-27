@@ -83,7 +83,7 @@
  * Method that remove user data in all tables
  * @idUser -> id user
  */
-+(void) removeUserAndDataByIdUser:(int)idUser;
++(void) removeUserAndDataByIdUser:(NSInteger)idUser;
 
 /*
  * Method that set the user storage of a user

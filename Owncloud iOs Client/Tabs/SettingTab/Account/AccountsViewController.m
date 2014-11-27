@@ -133,7 +133,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DLog(@"DELETE!!! %d", indexPath.row);
+    DLog(@"DELETE!!! %ld", indexPath.row);
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -152,7 +152,7 @@
         [self performSelectorInBackground:@selector(cancelAndremoveFromTabRecentsAllInfoByUser:) withObject:selectedUser];
         
         //Delete files os user in the system
-        NSString *userFolder = [NSString stringWithFormat:@"/%d",selectedUser.idUser];
+        NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)selectedUser.idUser];
         NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
         
         //NSString *userFolder = [NSString stringWithFormat:@"/%d",selectedUser.idUser];

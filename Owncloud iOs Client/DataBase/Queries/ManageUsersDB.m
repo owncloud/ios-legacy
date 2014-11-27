@@ -359,49 +359,49 @@
  * Method that remove user data in all tables 
  * @idUser -> id user
  */
-+(void) removeUserAndDataByIdUser:(int)idUser {
++(void) removeUserAndDataByIdUser:(NSInteger)idUser {
     
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"DELETE FROM users WHERE id = ?", [NSNumber numberWithInt:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from files users table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE user_id = ?", [NSNumber numberWithInt:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from files files table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM files_backup WHERE user_id = ?", [NSNumber numberWithInt:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM files_backup WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from files_backup backup table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM uploads_offline WHERE user_id = ?", [NSNumber numberWithInt:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM uploads_offline WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from uploads uploads_offline table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ?", [NSNumber numberWithInt:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
             DLog(@"Error delete info of shared table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInt:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
             DLog(@"Error delete info of cookies_storage table");
@@ -410,7 +410,7 @@
         
     }];
     
-    NSString *idString = [NSString stringWithFormat:@"%d", idUser];
+    NSString *idString = [NSString stringWithFormat:@"%ld", (long)idUser];
     if (![OCKeychain removeCredentialsById:idString]) {
         DLog(@"Error delete keychain credentials");
     }
