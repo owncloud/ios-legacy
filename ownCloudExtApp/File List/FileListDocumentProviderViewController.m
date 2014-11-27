@@ -22,17 +22,16 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 
 #pragma mark Load View Life
 
-- (void) viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+- (void) viewWillAppear:(BOOL)animated {
     
-    [self performSelector:@selector(delay) withObject:nil afterDelay:2.0];
-}
-
-- (void) delay {
-    DLog(@"Delay");
- 
-    [self.view.window layoutSubviews];
-    [self.view.window layoutIfNeeded];
+    //We need to catch the rotation notifications only in iPhone.
+    if (IS_IPHONE) {
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChange:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
+    }
+    
+    [super viewWillAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -124,6 +123,16 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     FileListDocumentProviderViewController *filesViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:file];
     
     [[self navigationController] pushViewController:filesViewController animated:YES];
+}
+
+#pragma mark - Rotation
+
+- (void)orientationChange:(NSNotification*)notification {
+    UIInterfaceOrientation orientation = (UIInterfaceOrientation)[[notification.userInfo objectForKey:UIApplicationStatusBarOrientationUserInfoKey] intValue];
+    
+    if(UIInterfaceOrientationIsPortrait(orientation)){
+        [self performSelector:@selector(refreshTheInterfaceInPortrait) withObject:nil afterDelay:0.0];
+    }
 }
 
 

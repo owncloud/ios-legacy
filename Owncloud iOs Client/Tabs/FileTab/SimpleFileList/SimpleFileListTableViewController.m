@@ -83,22 +83,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    //We need to catch the rotation notifications only in iPhone.
-    if (IS_IPHONE) {
-        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChange:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
-    }
-    
     [self reloadFolderByEtag];
-}
-    
-- (void)orientationChange:(NSNotification*)notification {
-    UIInterfaceOrientation orientation = (UIInterfaceOrientation)[[notification.userInfo objectForKey:UIApplicationStatusBarOrientationUserInfoKey] intValue];
-    
-    if(UIInterfaceOrientationIsPortrait(orientation)){
-        [self performSelector:@selector(refreshTheInterfaceInPortrait) withObject:nil afterDelay:0.0];
-    }
 }
 
 //We have to remove the status bar height in navBar and view after rotate
