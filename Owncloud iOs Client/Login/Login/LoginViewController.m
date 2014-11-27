@@ -1086,7 +1086,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    DLog(@"cell tapped number: %d, in section:%d", indexPath.row, indexPath.section);
+    DLog(@"cell tapped number: %ld, in section:%ld", (long)indexPath.row, (long)indexPath.section);
     
     //check if the constant k_hide_url_server is Yes or Not, depend of the branding
     if(k_hide_url_server) {
@@ -1989,7 +1989,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     [[AppDelegate sharedOCCommunication] readFolder:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         
         BOOL isSamlServer = NO;
 
@@ -2011,7 +2011,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         
         switch (response.statusCode) {
             case kOCErrorServerUnauthorized:
@@ -2113,7 +2113,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             }
         }
         
-        DLog(@"The directory List have: %d elements", directoryList.count);
+        DLog(@"The directory List have: %ld elements", (unsigned long)directoryList.count);
         
         DLog(@"Directoy list: %@", directoryList);
     

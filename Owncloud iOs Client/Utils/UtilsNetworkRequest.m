@@ -64,12 +64,12 @@
         
         DLog(@"error: %@", error);
         
-        DLog(@"error.code: %d", error.code);
+        DLog(@"error.code: %ld", (long)error.code);
         //Select the correct msg and action for this error
         
-        DLog(@"server error: %d", response.statusCode);
+        DLog(@"server error: %ld", (long)response.statusCode);
         
-        int code = response.statusCode;
+        NSInteger code = response.statusCode;
         
         if (code == 0) {
             //Network errors
