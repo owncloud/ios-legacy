@@ -83,7 +83,7 @@
  * @filePath -> new folder
  * @idFile -> id of the file
  */
-+ (void) setFilePath: (NSString * ) filePath byIdFile: (int) idFile;
++(void) setFilePath: (NSString * ) filePath byIdFile: (NSInteger) idFile;
 
 /*
  * Method to insert all the files of a folder

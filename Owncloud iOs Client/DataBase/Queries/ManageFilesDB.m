@@ -263,7 +263,7 @@
     }];
 }
 
-+(void) setFilePath: (NSString * ) filePath byIdFile: (int) idFile {
++(void) setFilePath: (NSString * ) filePath byIdFile: (NSInteger) idFile {
     
     DLog(@"NewFilePath: %@", filePath);
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
@@ -271,7 +271,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET file_path=? WHERE id = ?", filePath, [NSNumber numberWithInt:idFile]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET file_path=? WHERE id = ?", filePath, [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
             DLog(@"Error in setFilePath");
