@@ -164,7 +164,7 @@
         }
     }];
     
-    DLog(@"changes in progress view nº: %ld", progressTemp.tag);
+    DLog(@"changes in progress view nº: %ld", (long)progressTemp.tag);
     
     if (percent==1) {
         [_progressViewArray removeObjectIdenticalTo:progressTemp];

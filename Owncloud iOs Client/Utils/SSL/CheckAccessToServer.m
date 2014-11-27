@@ -121,7 +121,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    DLog(@"Error: %d - %@",[error code] , [error localizedDescription]);
+    DLog(@"Error: %ld - %@",(long)[error code] , [error localizedDescription]);
     
     //-1202 = self signed certificate
     if([error code] == -1202){

@@ -2062,7 +2062,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  *
  * @warning This method it's present also in AddAcountViewController and EditViewController
  */
--(void)createUserAndDataInTheSystemWithRequest:(NSArray *)items andCode:(int) requestCode {
+-(void)createUserAndDataInTheSystemWithRequest:(NSArray *)items andCode:(NSInteger) requestCode {
       
    // DLog(@"Request Did Fetch Directory Listing And Test Authetification");
     
