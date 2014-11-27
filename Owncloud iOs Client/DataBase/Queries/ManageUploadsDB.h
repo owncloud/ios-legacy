@@ -158,7 +158,7 @@
  * Method that return a upload offline dto by id
  *  @uploadOfflineId -> id of upload offline
  */
-+ (UploadsOfflineDto*)getUploadOfflineById:(int)uploadOfflineId;
++ (UploadsOfflineDto*)getUploadOfflineById:(NSInteger)uploadOfflineId;
 
 ///-----------------------------------
 /// @name Set task_identifier Number for Upload Offline

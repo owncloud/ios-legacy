@@ -219,9 +219,9 @@
  * Method that return a upload offline dto by id
  *  @uploadOfflineId -> id of upload offline
  */
-+ (UploadsOfflineDto*)getUploadOfflineById:(int)uploadOfflineId{
++ (UploadsOfflineDto*)getUploadOfflineById:(NSInteger)uploadOfflineId{
     
-    DLog(@"getUploadOfflineById: %d", uploadOfflineId);
+    DLog(@"getUploadOfflineById: %ld", (long)uploadOfflineId);
     
     __block UploadsOfflineDto *output = nil;
     
@@ -229,7 +229,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, origin_path, destiny_folder, upload_filename, estimate_length, user_id, is_last_upload_file_of_this_Array, chunk_position, chunk_unique_number, chunks_length, status, kind_of_error, is_internal_upload, is_not_necessary_check_if_exist, task_identifier, uploaded_date FROM uploads_offline WHERE id = ?", [NSNumber numberWithInt:uploadOfflineId]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, origin_path, destiny_folder, upload_filename, estimate_length, user_id, is_last_upload_file_of_this_Array, chunk_position, chunk_unique_number, chunks_length, status, kind_of_error, is_internal_upload, is_not_necessary_check_if_exist, task_identifier, uploaded_date FROM uploads_offline WHERE id = ?", [NSNumber numberWithInteger:uploadOfflineId]];
         
         while ([rs next]) {
             
