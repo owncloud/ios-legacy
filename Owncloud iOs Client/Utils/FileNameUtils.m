@@ -460,11 +460,11 @@
         [phrase appendString:word];
     }
     
-    int lenghtOfNAme = [phrase length];
+    NSUInteger lenghtOfNAme = [phrase length];
     
     //+ points
-    if (arrMutable.count>=2) {
-        int points=[arr count]-2;
+    if (arrMutable.count >= 2) {
+        NSInteger points=[arr count]-2;
         lenghtOfNAme=lenghtOfNAme+points;
     }
     
