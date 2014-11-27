@@ -297,9 +297,9 @@
                     
                     [self endLoading];
                     
-                    DLog(@"error.code: %d", error.code);
-                    DLog(@"server error: %d", response.statusCode);
-                    int code = response.statusCode;
+                    DLog(@"error.code: %ld", (long)error.code);
+                    DLog(@"server error: %ld", (long)response.statusCode);
+                    NSInteger code = response.statusCode;
                     
                     //Select the correct msg and action for this error
                     switch (code) {
@@ -348,9 +348,9 @@
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         [self endLoading];
         
-        DLog(@"error.code: %d", error.code);
-        DLog(@"server error: %d", response.statusCode);
-        int code = response.statusCode;
+        DLog(@"error.code: %ld", (long)error.code);
+        DLog(@"server error: %ld", (long)response.statusCode);
+        NSInteger code = response.statusCode;
         
         //Select the correct msg and action for this error
         switch (code) {

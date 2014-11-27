@@ -196,7 +196,7 @@
     //Sorted by share time
     _sharedLinkItems = [self getArraySortByShareDate:_sharedLinkItems];
     
-    DLog(@"_sharedLinkItems: %d", [_sharedLinkItems count]);
+    DLog(@"_sharedLinkItems: %lu", (unsigned long) [_sharedLinkItems count]);
     //Refresh the list of share items
     [_sharedTableView reloadData];
     
@@ -382,7 +382,7 @@
                 [_sharedTableView reloadData];
                 
                 DLog(@"error: %@", error);
-                DLog(@"Operation error: %d", response.statusCode);
+                DLog(@"Operation error: %ld", (long)response.statusCode);
                 
                 //Only if the user do refresh manually, same behaviour like in Foi
                 if (_refreshControl.refreshing) {
@@ -459,7 +459,7 @@
     int code = errorCodeFromServer;
     
     DLog(@"Error code from  web dav server: %d", code);
-    DLog(@"Error code from server: %d", error.code);
+    DLog(@"Error code from server: %ld", (long)error.code);
     
     [self stopPullRefresh];
     
@@ -685,7 +685,7 @@
 
         //Obtain the path where the folder will be created in the file system
         NSString *rootPath = [NSString stringWithFormat:@"%@", newFolder.filePath];
-        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%d/%@",[UtilsUrls getOwnCloudFilePath],app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         //Remove the "/"
         NSString *name = [newFolder.fileName substringToIndex:[newFolder.fileName length]-1];
         
