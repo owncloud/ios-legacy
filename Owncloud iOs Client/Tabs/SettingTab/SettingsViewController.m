@@ -179,11 +179,11 @@
     
     [UtilsFramework deleteAllCookies];
     
-    DLog(@"ID to delete user: %d", app.activeUser.idUser);
+    DLog(@"ID to delete user: %ld", (long)app.activeUser.idUser);
     
     //Delete files os user in the system
     
-    NSString *userFolder = [NSString stringWithFormat:@"/%d",app.activeUser.idUser];
+    NSString *userFolder = [NSString stringWithFormat:@"/%ld", (long)app.activeUser.idUser];
     
     //AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //NSString *path= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:userFolder];
@@ -337,7 +337,7 @@
 
 #pragma mark - Sections of TableView
 
--(UITableViewCell *) getSectionInfoBlock:(UITableViewCell *) cell byRow:(int) row {
+-(UITableViewCell *) getSectionInfoBlock:(UITableViewCell *) cell byRow:(NSInteger) row {
     switch (row) {
         case 0:
             if (k_show_help_option_on_settings) {
@@ -427,12 +427,12 @@
             cell.selectionStyle=UITableViewCellSelectionStyleBlue;
             cell.textLabel.text=NSLocalizedString(@"Storage", nil);
             
-            int percent = 0;
+            NSInteger percent = 0;
             if(_user.storage > 0) {
                 percent = (_user.storageOccupied * 100)/_user.storage;
             }
                         
-            cell.detailTextLabel.text=[NSString stringWithFormat:@"%d%% %@ %ldMB %@", percent, NSLocalizedString(@"of_storage", nil), _user.storage, NSLocalizedString(@"occupied_storage", nil)];
+            cell.detailTextLabel.text=[NSString stringWithFormat:@"%ld%% %@ %ldMB %@", (long)percent, NSLocalizedString(@"of_storage", nil), _user.storage, NSLocalizedString(@"occupied_storage", nil)];
             
             
             //[cell.detailTextLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15.0]];
@@ -454,7 +454,7 @@
     return cell;
 }
 
--(UITableViewCell *) getSectionAppPinBlock:(UITableViewCell *) cell byRow:(int) row {
+-(UITableViewCell *) getSectionAppPinBlock:(UITableViewCell *) cell byRow:(NSInteger) row {
     UIFont *itemFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
     cell.textLabel.font = itemFont;
     
@@ -475,7 +475,7 @@
     return cell;
 }
 
--(UITableViewCell *) getSectionManageAccountBlock:(UITableViewCell *) cell byRow:(int) row {
+-(UITableViewCell *) getSectionManageAccountBlock:(UITableViewCell *) cell byRow:(NSInteger) row {
     
    // UIFont *cellBoldFont = [UIFont boldSystemFontOfSize:16.0];
     UIFont *cellBoldFont = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
@@ -528,7 +528,7 @@
 #pragma mark - DidSelectRow Sections
 
 
--(void) didPressOnInfoBlock:(int) row {
+-(void) didPressOnInfoBlock:(NSInteger) row {
 
     switch (row) {
         case 0:
@@ -646,7 +646,7 @@
     }
 }
 
--(void) didPressOnManageAccountsBlock:(int) row {
+-(void) didPressOnManageAccountsBlock:(NSInteger) row {
     switch (row) {
         case 0:
             if(k_multiaccount_available) {
