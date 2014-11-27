@@ -396,7 +396,7 @@
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
             
             DLog(@"error: %@", error);
-            DLog(@"Operation error: %d", response.statusCode);
+            DLog(@"Operation error: %ld", (long)response.statusCode);
             [self manageServerErrors:response.statusCode and:error];
         
         }];
@@ -879,7 +879,7 @@
                 }
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                 DLog(@"error: %@", error);
-                DLog(@"Operation error: %d", response.statusCode);
+                DLog(@"Operation error: %ld", (long)response.statusCode);
                 [self manageServerErrors:response.statusCode and:error];
             } errorBeforeRequest:^(NSError *error) {
                 if (error.code == OCErrorForbidenCharacters) {
@@ -1763,7 +1763,7 @@
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         [self manageServerErrors:response.statusCode and:error];
     }];
 }
@@ -1974,7 +1974,7 @@
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         [self manageServerErrors:response.statusCode and:error];
         
     }];
@@ -2937,7 +2937,7 @@
  * @error -> NSError of NSURLConnection
  */
 
-- (void)manageServerErrors: (NSInteger *)errorCodeFromServer and:(NSError *)error {
+- (void)manageServerErrors: (NSInteger)errorCodeFromServer and:(NSError *)error {
     
     [self stopPullRefresh];
     [self endLoading];

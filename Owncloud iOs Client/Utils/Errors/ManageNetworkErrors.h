@@ -31,6 +31,6 @@
  * @errorHttp -> WebDav Server Error of NSURLResponse
  * @errorConnection -> NSError of NSURLConnection
  */
-- (void)manageErrorHttp: (NSInteger *)errorHttp andErrorConnection:(NSError *)errorConnection;
+- (void)manageErrorHttp: (NSInteger)errorHttp andErrorConnection:(NSError *)errorConnection;
 
 @end
