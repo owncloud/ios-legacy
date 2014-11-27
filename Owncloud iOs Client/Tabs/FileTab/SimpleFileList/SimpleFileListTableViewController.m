@@ -86,20 +86,6 @@
     [self reloadFolderByEtag];
 }
 
-//We have to remove the status bar height in navBar and view after rotate
-- (void) refreshTheInterfaceInPortrait {
-    
-    CGRect frameNavigationBar = self.navigationController.navigationBar.frame;
-    CGRect frameView = self.view.frame;
-    frameNavigationBar.origin.y -= 20;
-    frameView.origin.y -= 20;
-    frameView.size.height += 20;
-    
-    self.navigationController.navigationBar.frame = frameNavigationBar;
-    self.view.frame = frameView;
-
-}
-
 #pragma mark - Fill the arrays from Database
 
 - (void) fillTheArraysFromDatabase {
