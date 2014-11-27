@@ -100,7 +100,7 @@
 /*
  * Init Method to load the view from a nib with an array of files
  */
-- (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(int) fileIdToShowFiles andCurrentLocalFolder:(NSString *)currentLocalFoler
+- (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(NSInteger) fileIdToShowFiles andCurrentLocalFolder:(NSString *)currentLocalFoler
 {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];    
     //If is 0 is root folder
@@ -119,7 +119,7 @@
     _currentRemoteFolder = currentFolder;
     _currentLocalFolder = currentLocalFoler;
     DLog(@"self.fileIdToShowFiles: %lld", _fileIdToShowFiles.etag);
-    DLog(@"self.fileIdToShowFiles: %d", _fileIdToShowFiles.idFile);
+    DLog(@"self.fileIdToShowFiles: %ld", (long)_fileIdToShowFiles.idFile);
     
     _showLoadingAfterChangeUser = NO;
     _checkingEtag = NO;
@@ -134,7 +134,7 @@
         if([ManageFilesDB isExistRootFolderByUser:app.activeUser]) {
             DLog(@"Root folder exist");
             self.currentFileShowFilesOnTheServerToUpdateTheLocalFile = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
-            DLog(@"IdFile:%d etag: %lld", self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
+            DLog(@"IdFile:%ld etag: %lld", (long)self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
         } else {
             //We need the current folder refresh with the right etag
             DLog(@"Root folder not exist");  
@@ -145,7 +145,7 @@
         self.currentFileShowFilesOnTheServerToUpdateTheLocalFile = [ManageFilesDB getFileDtoByIdFile:fileIdToShowFiles];
     }
     
-    DLog(@"currentRemoteFolder: %@ and fileIdToShowFiles: %d", currentFolder, self.fileIdToShowFiles.idFile);
+    DLog(@"currentRemoteFolder: %@ and fileIdToShowFiles: %ld", currentFolder, (long)self.fileIdToShowFiles.idFile);
     self = [super initWithNibName:nibNameOrNil bundle:nil];
     return self;
 }
@@ -318,7 +318,7 @@
             DLog(@"Root folder exist");
             _currentFileShowFilesOnTheServerToUpdateTheLocalFile = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
             _fileIdToShowFiles = _currentFileShowFilesOnTheServerToUpdateTheLocalFile;
-            DLog(@"IdFile:%d etag: %lld", _currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, _currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
+            DLog(@"IdFile:%ld etag: %lld", (long)_currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, _currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
         } else {
             //We need the current folder refresh with the right etag
             DLog(@"Root folder not exist");
@@ -341,7 +341,7 @@
         _currentRemoteFolder = [NSString stringWithFormat: @"%@%@", currentUser.url, k_url_webdav_server];
         
         //We get the current folder to create the local tree
-        _currentLocalFolder = [NSString stringWithFormat:@"%@%d/", [UtilsUrls getOwnCloudFilePath],currentUser.idUser];
+        _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)currentUser.idUser];
         _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
         //Update de actual active user
         _mUser = currentUser;
@@ -371,7 +371,7 @@
         
         [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
             
-            DLog(@"Operation response code: %d", response.statusCode);
+            DLog(@"Operation response code: %ld", (long)response.statusCode);
             
             BOOL isSamlCredentialsError = NO;
             
@@ -405,7 +405,7 @@
         [self endLoading];
     }
     
-    DLog(@"self.fileIdToShowFiles: %d",self.fileIdToShowFiles.idFile);
+    DLog(@"self.fileIdToShowFiles: %ld",(long)self.fileIdToShowFiles.idFile);
     
     if(self.fileIdToShowFiles.isRootFolder) {
         
@@ -869,7 +869,7 @@
                 if (!isSamlCredentialsError) {
 
                     //Obtain the path where the folder will be created in the file system
-                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%d/%@",[UtilsUrls getOwnCloudFilePath],app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
                     DLog(@"Name of the folder: %@ to create in: %@",name, currentLocalFileToCreateFolder);
                     
@@ -1672,7 +1672,7 @@
  * @url -> folder path
  * @fileIdToShowFiles -> folder id
  */
--(void)navigateToUrl:(NSString *) url andFileId:(int)fileIdToShowFiles {
+-(void)navigateToUrl:(NSString *) url andFileId:(NSInteger)fileIdToShowFiles {
     [self endLoading];
     
     FilesViewController *filesViewController = [[FilesViewController alloc] initWithNibName:@"FilesViewController" onFolder:url andFileId:fileIdToShowFiles andCurrentLocalFolder:_currentLocalFolder];
@@ -1744,7 +1744,7 @@
     
     [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
@@ -1911,7 +1911,7 @@
  * Method to launch the method to init the refresh process with the server
  */
 - (void)refreshTableFromWebDav {
-    DLog(@"self.currentFileShowFilesOnTheServerToUpdateTheLocalFile: %d", self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile);
+    DLog(@"self.currentFileShowFilesOnTheServerToUpdateTheLocalFile: %ld", (long)self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile);
     
     [self performSelector:@selector(sendRequestToReloadTableView) withObject:nil];
     
@@ -1946,7 +1946,7 @@
     
     [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
@@ -2139,7 +2139,7 @@
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
             
             DLog(@"error: %@", error);
-            DLog(@"Operation error: %d", response.statusCode);
+            DLog(@"Operation error: %ld", (long)response.statusCode);
         }];
 
     } else if (app.activeUser.hasShareApiSupport == serverFunctionalityNotChecked) {
@@ -2535,7 +2535,7 @@
         
         //We get the current folder to create the local tree
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        NSString *localRootUrlString = [NSString stringWithFormat:@"%@%d/", [UtilsUrls getOwnCloudFilePath],_mUser.idUser];
+        NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath], (long)_mUser.idUser];
         
         self.selectFolderViewController.currentLocalFolder = localRootUrlString;
         self.selectFolderNavigation.delegate=self;
@@ -2899,7 +2899,7 @@
         }
     }
     
-    DLog(@"The directory List have: %d elements", directoryList.count);
+    DLog(@"The directory List have: %ld elements", (long)directoryList.count);
     
     DLog(@"Directoy list: %@", directoryList);
     
