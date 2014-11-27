@@ -2450,7 +2450,7 @@
         
     } else {
         
-        self.selectFolderViewController = [[SelectFolderViewController alloc]initWithNibName:@"SelectFolderViewController" bundle:nil];
+        self.selectFolderViewController = [[SelectFolderViewController alloc]initWithNibName:@"SelectFolderViewController" onFolder:self.fileIdToShowFiles];
         self.selectFolderViewController.toolBarLabelTxt = @"";
         
         self.selectFolderNavigation = [[SelectFolderNavigation alloc]initWithRootViewController:self.selectFolderViewController];
