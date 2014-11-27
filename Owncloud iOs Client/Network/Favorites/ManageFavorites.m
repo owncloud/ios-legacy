@@ -170,7 +170,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
             //Check if is necessary update each favorite
             [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
                 
-                DLog(@"Operation response: %d", response.statusCode);
+                DLog(@"Operation response: %ld", (long)response.statusCode);
                 
                 BOOL isSamlCredentialsError = NO;
                 
@@ -213,7 +213,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                             //Data to download
                             //Get the current local folder
                             AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                            NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%d/%@", [UtilsUrls getOwnCloudFilePath],user.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:updatedFile.filePath ofUserDto:user]];
+                            NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:updatedFile.filePath ofUserDto:user]];
                             currentLocalFolder = [currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                             
                             Download *download = [Download new];
@@ -241,7 +241,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                 
                 //Finish with this file
                 DLog(@"error: %@", error);
-                DLog(@"Operation error: %d", response.statusCode);
+                DLog(@"Operation error: %ld", (long)response.statusCode);
                 
                 dispatch_semaphore_signal(semaphore);
                 
