@@ -134,7 +134,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
     
-    [self performSelector:@selector(checkIfIdNecesaryShowPassCode) withObject:nil afterDelay:0.5];
+    [self performSelector:@selector(checkIfIsNecesaryShowPassCode) withObject:nil afterDelay:0.5];
     
     //Check if the server support shared api
     [self performSelector:@selector(checkIfServerSupportThings) withObject:nil afterDelay:0.0];
@@ -937,7 +937,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     //For iOS8 we need to change the checking to this method, for show as a first step the pincode screen
-    [self checkIfIdNecesaryShowPassCodeWillEnterForeground];
+    [self checkIfIsNecesaryShowPassCodeWillEnterForeground];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -1575,7 +1575,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 #pragma mark - Pass Code
 
-- (void)checkIfIdNecesaryShowPassCode {
+- (void)checkIfIsNecesaryShowPassCode {
     
     if ([ManageAppSettingsDB isPasscode]) {
         
@@ -1606,7 +1606,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-- (void)checkIfIdNecesaryShowPassCodeWillEnterForeground {
+- (void)checkIfIsNecesaryShowPassCodeWillEnterForeground {
     
     if ([ManageAppSettingsDB isPasscode]) {
         
