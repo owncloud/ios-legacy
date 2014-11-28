@@ -331,8 +331,8 @@
             current.status = [rs intForColumn:@"status"];
             current.uploadedDate = [rs longForColumn:@"uploaded_date"];
             current.kindOfError = [rs intForColumn:@"kind_of_error"];
-            current.isInternalUpload = [rs boolForColumnIndex:@"is_internal_upload"];
-            current.isNotNecessaryCheckIfExist = [rs boolForColumnIndex:@"is_not_necessary_check_if_exist"];
+            current.isInternalUpload = [rs boolForColumn:@"is_internal_upload"];
+            current.isNotNecessaryCheckIfExist = [rs boolForColumn:@"is_not_necessary_check_if_exist"];
             current.taskIdentifier = [rs intForColumn:@"task_identifier"];
 
             [output addObject:current];
@@ -372,8 +372,8 @@
             current.status = [rs intForColumn:@"status"];
             current.uploadedDate = [rs longForColumn:@"uploaded_date"];
             current.kindOfError = [rs intForColumn:@"kind_of_error"];
-            current.isInternalUpload = [rs boolForColumnIndex:@"is_internal_upload"];
-            current.isNotNecessaryCheckIfExist = [rs boolForColumnIndex:@"is_not_necessary_check_if_exist"];
+            current.isInternalUpload = [rs boolForColumn:@"is_internal_upload"];
+            current.isNotNecessaryCheckIfExist = [rs boolForColumn:@"is_not_necessary_check_if_exist"];
             current.taskIdentifier = [rs intForColumn:@"task_identifier"];
             
             [output addObject:current];

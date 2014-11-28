@@ -1755,7 +1755,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     currentUpload.uploadFileName = name;
     currentUpload.kindOfError = notAnError;
     
-    currentUpload.estimateLength = fileLength;
+    currentUpload.estimateLength = (long)fileLength;
     currentUpload.userId = _activeUser.idUser;
     currentUpload.isLastUploadFileOfThisArray = YES;
     currentUpload.status = waitingAddToUploadList;

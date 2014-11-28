@@ -371,10 +371,10 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         NSInteger totalProgressDownload = 0;
         NSString *progressString;
         
-        currentProgressDownload = progress.completedUnitCount;
+        currentProgressDownload = (NSInteger)progress.completedUnitCount;
         if (currentProgressDownload) {
             
-            totalProgressDownload = progress.totalUnitCount;
+            totalProgressDownload = (NSInteger)progress.totalUnitCount;
             
             if (totalProgressDownload/1024 == 0) {
                 progressString = [NSString stringWithFormat:@"%ld Bytes / %ld Bytes", (long)currentProgressDownload, (long)totalProgressDownload];

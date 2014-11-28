@@ -1122,7 +1122,7 @@
 
 + (BOOL) isGetFilesByDownloadState:(enumDownload)downloadState andByUser:(UserDto *) currentUser andFolder:(NSString *) folder {
     
-    __block BOOL *output = NO;
+    __block BOOL output = NO;
     DLog(@"getFilesByFileId:(int) fileId");
     
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
@@ -1161,7 +1161,7 @@
     DLog(@"ManageFiles -> idUser: %ld", (long)idUser);
     DLog(@"ManageFiles -> folder: %@", folder);
     
-    __block BOOL *output = NO;
+    __block BOOL output = NO;
     
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     
@@ -1174,7 +1174,7 @@
             tempIdFile = [rs intForColumn:@"id"];
             DLog(@"ManageFiles -> idfile: %ld",(long)tempIdFile);
             if (tempIdFile == idFile) {
-                output=YES;
+                output = YES;
             }
         }
         [rs close];

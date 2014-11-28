@@ -574,10 +574,10 @@
 //Only for ios 6
 - (BOOL)shouldAutorotate {
     
-    UIInterfaceOrientation orientation = [[UIDevice currentDevice] orientation];
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     
     if (IS_IPHONE){
-        return (orientation != UIInterfaceOrientationPortraitUpsideDown);
+        return (orientation != UIDeviceOrientationPortraitUpsideDown);
     } else {
         return YES;
     }
@@ -1897,7 +1897,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         //Do operations in background thread
-        NSInteger *folder = [idFolder integerValue];
+        NSInteger folder = [idFolder integerValue];
         
         //Launch the method to sync the favorites files with specific path
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];

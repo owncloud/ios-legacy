@@ -73,7 +73,7 @@
             
             current.idCookieStorage = [rs intForColumn:@"id"];
             current.cookie = [NSKeyedUnarchiver unarchiveObjectWithData:[rs dataForColumn:@"cookie"]];
-            current.userId = [rs stringForColumn:@"user_id"];
+            current.userId = [rs intForColumn:@"user_id"];
         
             [output addObject:current];
         }

@@ -106,15 +106,15 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
             NSUInteger offset = 0;
             NSUInteger chunkSize = 1024 * 1024;
             ALAssetRepresentation *rep = [myasset defaultRepresentation];
-            NSUInteger length = rep.size;
+            NSUInteger length = (NSUInteger)rep.size;
             
             DLog(@"rep size %lld", (rep.size/1024)/1024);
             DLog(@"rep size %lu", (unsigned long) (length/1024)/1024);
             
             if (length < (k_lenght_chunk *1024)) {
-                Byte *buffer = (Byte*)malloc(rep.size);
+                Byte *buffer = (Byte*)malloc(length);
                 NSUInteger k = [rep getBytes:buffer fromOffset: 0.0
-                                      length:rep.size error:nil];
+                                      length:length error:nil];
                 
                 NSData *adata = [NSData dataWithBytesNoCopy:buffer length:k freeWhenDone:YES];
                 [adata writeToFile:localPath atomically:YES];
@@ -343,7 +343,7 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
         [_delegate errorWhileUpload];
     }
     
-    [self performSelectorOnMainThread:@selector(showAlertViewErrorLogin:) withObject:string waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(showAlertView:) withObject:string waitUntilDone:YES];
     
 }
 

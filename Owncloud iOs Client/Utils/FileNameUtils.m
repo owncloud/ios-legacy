@@ -44,7 +44,7 @@
 
 
 + (NSInteger) checkTheTypeOfFile: (NSString*)fileName {
-    NSInteger *typeOfFile;
+    NSInteger typeOfFile;
     if ([self isImageSupportedThisFile:fileName]) {
         typeOfFile = imageFileType;
     } else {

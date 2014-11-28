@@ -240,7 +240,7 @@
             
             if ([temp.path isEqualToString:sharedDto.path]) {
                 row = idx;
-                stop = YES;
+                *stop = YES;
             }
         }];
         
@@ -454,11 +454,11 @@
  * @error -> NSError of NSURLConnection
  */
 
-- (void)manageServerErrors: (NSInteger *)errorCodeFromServer and:(NSError *)error{
+- (void)manageServerErrors: (NSInteger)errorCodeFromServer and:(NSError *)error{
     
-    int code = errorCodeFromServer;
+    NSInteger code = errorCodeFromServer;
     
-    DLog(@"Error code from  web dav server: %d", code);
+    DLog(@"Error code from  web dav server: %ld", (long)code);
     DLog(@"Error code from server: %ld", (long)error.code);
     
     [self stopPullRefresh];
