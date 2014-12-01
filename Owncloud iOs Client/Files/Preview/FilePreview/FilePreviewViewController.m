@@ -122,7 +122,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
+    [super viewWillDisappear:animated];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (app.isSharedToOwncloudPresent == NO) {
