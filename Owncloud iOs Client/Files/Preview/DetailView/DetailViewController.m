@@ -1300,11 +1300,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         //Copy of the original array
         NSArray *downs = [NSArray arrayWithArray:[appDelegate.downloadManager getDownloads]];
         Download *download;
-        BOOL delete;
+
         for (download in downs) {
             if ([download.fileDto.filePath isEqualToString:_file.filePath] && [download.fileDto.fileName isEqualToString:_file.fileName] && download.fileDto.userId == _file.userId) {
                 [download cancelDownload];
-                delete = YES;
                 _isDownloading = NO;
             }
         }
