@@ -17,7 +17,6 @@
 #import <netinet/in.h>
 #import <CFNetwork/CFNetwork.h>
 #import <SystemConfiguration/SystemConfiguration.h>
-#import "UploadUtils.h"
 #import "OCFrameworkConstants.h"
 #import "UtilsUrls.h"
 
@@ -25,12 +24,16 @@
 #import <openssl/bio.h>
 #import <openssl/err.h>
 #include <openssl/pem.h>
-#import "AppDelegate.h"
 #import "ManageAppSettingsDB.h"
+#import "UtilsDtos.h"
+
+#ifdef CONTAINER_APP
+#import "AppDelegate.h"
+#endif
 
 
 
-@implementation CheckAccessToServer 
+@implementation CheckAccessToServer
 
 
 @synthesize delegate = _delegate;
@@ -89,8 +92,10 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 
 -(void) isConnectionToTheServerByUrl:(NSString *) url {
     
+#ifdef CONTAINER_APP
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     app.urlServerRedirected = nil;
+#endif
     
     _urlStatusCheck = [NSString stringWithFormat:@"%@status.php", url];
     
@@ -126,12 +131,47 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     //-1202 = self signed certificate
     if([error code] == -1202){
         DLog(@"Error -1202");
-        
+
         if(self.delegate) {
+
+            #ifdef CONTAINER_APP
+            
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"invalid_ssl_cert", nil) delegate: self cancelButtonTitle:NSLocalizedString(@"no", nil) otherButtonTitles:NSLocalizedString(@"yes", nil), nil];
             [alert show];
             [alert release];
+            
+            #else
+            
+            UIAlertController *alert =   [UIAlertController
+                                          alertControllerWithTitle:@""
+                                          message:NSLocalizedString(@"invalid_ssl_cert", nil)
+                                          preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* no = [UIAlertAction
+                                 actionWithTitle:NSLocalizedString(@"no", nil)
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     
+                                 }];
+            
+            UIAlertAction* yes = [UIAlertAction
+                                  actionWithTitle:NSLocalizedString(@"yes", nil)
+                                  style:UIAlertActionStyleDefault
+                                  handler:^(UIAlertAction * action)
+                                  {
+                                      [self acceptCertificate];
+                                  }];
+            [alert addAction:no];
+            [alert addAction:yes];
+            
+            [self.viewControllerToShow presentViewController:alert animated:YES completion:nil];
+            
+            #endif
         }
+
+    
+
+        
     } else {
         if(self.delegate) {
             [self.delegate connectionToTheServer:NO];
@@ -261,34 +301,37 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     
     if (buttonIndex == 1) {
-        DLog(@"user pressed YES");
-        NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
-        
-        NSString *localCertificatesFolder = [NSString stringWithFormat:@"%@/Certificates/",documentsDirectory];
-        
-        
-        NSError * err = NULL;
-        NSFileManager * fm = [[NSFileManager alloc] init];
-        
-        NSDate *date = [NSDate date];
-        NSString *currentCertLocation = [NSString stringWithFormat:@"%@%f.der",localCertificatesFolder, [date timeIntervalSince1970]];
-        
-        DLog(@"currentCertLocation: %@", currentCertLocation);
-        
-        BOOL result = [fm moveItemAtPath:[NSString stringWithFormat:@"%@tmp.der",localCertificatesFolder] toPath:currentCertLocation error:&err];
-        if(!result) {
-            DLog(@"Error: %@", [err localizedDescription]);
-        } else {
-            [ManageAppSettingsDB insertCertificate:[NSString stringWithFormat:@"%f.der", [date timeIntervalSince1970]]];
-        }
-        [fm release];
-        
-        [self.delegate repeatTheCheckToTheServer];
-    
+        [self acceptCertificate];
     } else {
         DLog(@"user pressed CANCEL");
         [self.delegate badCertificateNoAcceptedByUser];
     }
+}
+
+- (void) acceptCertificate {
+    DLog(@"user pressed YES");
+    NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
+    
+    NSString *localCertificatesFolder = [NSString stringWithFormat:@"%@/Certificates/",documentsDirectory];
+    
+    
+    NSError * err = NULL;
+    NSFileManager * fm = [[NSFileManager alloc] init];
+    
+    NSDate *date = [NSDate date];
+    NSString *currentCertLocation = [NSString stringWithFormat:@"%@%f.der",localCertificatesFolder, [date timeIntervalSince1970]];
+    
+    DLog(@"currentCertLocation: %@", currentCertLocation);
+    
+    BOOL result = [fm moveItemAtPath:[NSString stringWithFormat:@"%@tmp.der",localCertificatesFolder] toPath:currentCertLocation error:&err];
+    if(!result) {
+        DLog(@"Error: %@", [err localizedDescription]);
+    } else {
+        [ManageAppSettingsDB insertCertificate:[NSString stringWithFormat:@"%f.der", [date timeIntervalSince1970]]];
+    }
+    [fm release];
+    
+    [self.delegate repeatTheCheckToTheServer];
 }
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response {
@@ -303,11 +346,10 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     if (responseURLString) {
         
         //We obtain the URL to make the uploads in background
+#ifdef CONTAINER_APP
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-       
-        app.urlServerRedirected = [UploadUtils getHttpAndDomainByURL:responseURLString];
-    
-        DLog(@"app.urlServerRedirected: %@", app.urlServerRedirected);
+        app.urlServerRedirected = [UtilsDtos getHttpAndDomainByURL:responseURLString];
+#endif
         
         NSLog(@"responseURLString: %@", responseURLString);
         NSLog(@"requestRedirect.HTTPMethod: %@", request.HTTPMethod);

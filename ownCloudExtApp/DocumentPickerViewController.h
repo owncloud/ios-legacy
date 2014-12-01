@@ -14,7 +14,21 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FMDatabaseQueue.h"
+
+@class SimpleFileListTableViewController;
+@class OCCommunication;
+@class UserDto;
 
 @interface DocumentPickerViewController : UIDocumentPickerExtensionViewController
+
++ (FMDatabaseQueue*)sharedDatabase;
++ (OCCommunication*)sharedOCCommunication;
+
+@property (weak, nonatomic) IBOutlet UILabel *labelErrorLogin;
+@property (weak, nonatomic) IBOutlet UIImageView *imageViewLogo;
+@property (weak, nonatomic) IBOutlet UIImageView *imageViewError;
+
+@property (nonatomic, strong) UserDto *user;
 
 @end

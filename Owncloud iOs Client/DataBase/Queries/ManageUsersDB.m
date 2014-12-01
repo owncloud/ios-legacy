@@ -16,10 +16,16 @@
 #import "ManageUsersDB.h"
 #import "FMDatabaseQueue.h"
 #import "FMDatabase.h"
-#import "AppDelegate.h"
 #import "UserDto.h"
+#import "UtilsUrls.h"
 #import "OCKeychain.h"
 #import "CredentialsDto.h"
+
+#ifdef CONTAINER_APP
+#import "AppDelegate.h"
+#else
+#import "DocumentPickerViewController.h"
+#endif
 
 @implementation ManageUsersDB
 
@@ -32,7 +38,14 @@
     
      DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount);
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
+    
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -66,7 +79,13 @@
     
     __block UserDto *output = nil;
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
@@ -88,6 +107,7 @@
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
             
             NSString *idString = [NSString stringWithFormat:@"%ld", (long)output.idUser];
+
             CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
             output.username = credDto.userName;
             output.password = credDto.password;
@@ -112,19 +132,22 @@
     if(user.password != nil) {
         
         NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
+
         if (![OCKeychain updatePasswordById:idString withNewPassword:user.password]) {
             DLog(@"Error update the password keychain");
         }
-
         
-        //Set the user password 
-        if (user.activeaccount==YES) {
+#ifdef CONTAINER_APP
+        //Set the user password
+        if (user.activeaccount == YES) {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            app.activeUser=user;
+            app.activeUser = user;
             
             [app eraseCredentials];
             [app eraseURLCache];
         }
+#endif
+
     }
 }
 
@@ -141,11 +164,16 @@
     
     output=[UserDto new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
-        
     
         while ([rs next]) {
             
@@ -157,8 +185,9 @@
             output.storage = [rs longForColumn:@"storage"];
             output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
-            
+
             NSString *idString = [NSString stringWithFormat:@"%ld", (long)output.idUser];
+
             CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
             output.username = credDto.userName;
             output.password = credDto.password;
@@ -178,8 +207,8 @@
  */
 + (BOOL) isExistUser: (UserDto *) userDto {
     
-    BOOL output = NO;
-        
+    __block BOOL output = NO;
+    
     NSArray *allUsers = [self getAllUsers];
     
     for (UserDto *user in allUsers) {
@@ -202,7 +231,13 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -224,6 +259,7 @@
             current.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
             
             NSString *idString = [NSString stringWithFormat:@"%ld", (long)current.idUser];
+
             CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
             current.username = credDto.userName;
             current.password = credDto.password;
@@ -252,7 +288,13 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -275,6 +317,7 @@
             current.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             
             DLog(@"id user: %ld", (long)current.idUser);
+
             DLog(@"url user: %@", current.url);
             DLog(@"username user: %@", current.username);
             DLog(@"password user: %@", current.password);
@@ -298,7 +341,13 @@
  */
 +(void) setActiveAccountByIdUser: (NSInteger) idUser {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -320,7 +369,13 @@
  */
 +(void) setAllUsersNoActive {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -340,7 +395,13 @@
  */
 +(void) setActiveAccountAutomatically {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -361,7 +422,13 @@
  */
 +(void) removeUserAndDataByIdUser:(NSInteger)idUser {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -421,7 +488,13 @@
  */
 +(void) updateStorageByUserDto:(UserDto *) user {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -445,11 +518,16 @@
     
     output=[UserDto new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support FROM users ORDER BY id DESC LIMIT 1"];
-        
         
         while ([rs next]) {
             
@@ -481,12 +559,19 @@
  */
 + (void) updateUserByUserDto:(UserDto *) user {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
         correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_cookies_support=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport],[NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.idUser]];
+
         
         if (!correctQuery) {
             DLog(@"Error updating a user");

@@ -479,10 +479,12 @@
     
     if (indexPath.section==2) {
         
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
         //We set the current name to not lost it on reload
         _auxFileName = _nameFileTextField.text;
         
-        SelectFolderViewController *sf = [[SelectFolderViewController alloc]initWithNibName:@"SelectFolderViewController" bundle:nil];
+        SelectFolderViewController *sf = [[SelectFolderViewController alloc] initWithNibName:@"SelectFolderViewController" onFolder:[ManageFilesDB getRootFileDtoByUser:app.activeUser]];
         sf.toolBarLabelTxt = @"";
         
         SelectFolderNavigation *navigation = [[SelectFolderNavigation alloc]initWithRootViewController:sf];
@@ -492,7 +494,6 @@
         sf.currentRemoteFolder=_remoteFolder;
         
         //We get the current folder to create the local tree
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser];
         
         sf.currentLocalFolder = localRootUrlString;

@@ -250,3 +250,6 @@
 //Favorites
 "favorite" = "Preferito";
 "unfavorite" = "No preferito";
+
+//Document provider
+"error_login_doc_provider" = "Unable to access to your account. Go to Owncloud app to configure it";

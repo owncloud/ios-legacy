@@ -15,6 +15,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class UserDto;
+
 @interface UtilsUrls : NSObject
 
 + (NSString *) getOwnCloudFilePath;
@@ -24,5 +26,11 @@
 
 //Method to skip a file to a iCloud backup
 + (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
+
+//We remove the part of the remote file path that is not necesary
++ (NSString *) getRemovedPartOfFilePathAnd:(UserDto *)mUserDto;
+
+//We generate de local path of the files dinamically
++ (NSString *)getLocalFolderByFilePath:(NSString*) filePath andFileName:(NSString*) fileName andUserDto:(UserDto *) mUser;
 
 @end

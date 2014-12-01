@@ -551,7 +551,7 @@
     //0.- Create the root folder on the data base
     if (![ManageFilesDB isExistRootFolderByUser:app.activeUser]) {
         DLog(@"Root folder not exist");
-        [FileListDBOperations createRootFolderAndGetFileDto];
+        [FileListDBOperations createRootFolderAndGetFileDtoByUser:app.activeUser];
     }
     
     //1.- Loop the shared path and get the not catched sub-paths

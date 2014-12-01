@@ -780,7 +780,7 @@
     if(selectedUpload.userId == app.activeUser.idUser){
         
         _selectedUploadToResolveTheConflict=selectedUpload;
-        SelectFolderViewController *sf = [[SelectFolderViewController alloc]initWithNibName:@"SelectFolderViewController"bundle:nil];
+        SelectFolderViewController *sf = [[SelectFolderViewController alloc] initWithNibName:@"SelectFolderViewController" onFolder:[ManageFilesDB getRootFileDtoByUser:app.activeUser]];
         
         //sf.toolBarLabelTxt = NSLocalizedString(@"upload_label", nil);
         sf.toolBarLabelTxt = @"";

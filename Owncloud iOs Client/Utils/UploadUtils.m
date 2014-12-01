@@ -116,7 +116,7 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     //Obtain the remotePath: https://s3.owncloud.com/owncloud/remote.php/webdav
     NSString *remoteFolder = [NSString stringWithFormat: @"%@%@", app.activeUser.url, k_url_webdav_server];
     //With the filePath obtain the folder name: A/
-    NSString *folderName= [UtilsDtos getDbBFolderPathFromFullFolderPath:file.filePath];
+    NSString *folderName= [UtilsDtos getDbBFolderPathFromFullFolderPath:file.filePath andUser:app.activeUser];
     //Obtain the complete path: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
     remoteFolder=[NSString stringWithFormat:@"%@%@",remoteFolder, folderName];
     DLog(@"remote folder: %@",remoteFolder);
@@ -146,7 +146,7 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
 
     //If app.urlServerRedirected is nil the server is not redirected
     if (app.urlServerRedirected) {
-        NSString *textToBeRemoved = [self getHttpAndDomainByURL:originalUrl];
+        NSString *textToBeRemoved = [UtilsDtos getHttpAndDomainByURL:originalUrl];
         NSString *textWithoutOriginalDomain = [originalUrl substringFromIndex:textToBeRemoved.length];
         
         output = [app.urlServerRedirected stringByAppendingString:textWithoutOriginalDomain];
@@ -156,26 +156,6 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     
     return output;
     
-}
-
-//-----------------------------------
-/// @name Get a domain by a URL
-///-----------------------------------
-
-/**
- * Method used to get only the domain and the protocol (http/https)
- *
- * @param NSString -> url
- *
- * @return NSString
- *
- */
-+ (NSString *) getHttpAndDomainByURL:(NSString *) url {
-    
-    NSArray *urlSplitted = [url componentsSeparatedByString:@"/"];
-    NSString *output = [NSString stringWithFormat:@"%@//%@", [urlSplitted objectAtIndex:0], [urlSplitted objectAtIndex:2]];
-    
-    return output;
 }
 
 //-----------------------------------

@@ -1789,10 +1789,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)refreshAfterUploadAllFiles:(NSString *) currentRemoteFolder {
     DLog(@"refreshAfterUploadAllFiles");
     
-    NSString *remoteUrlWithoutDomain = [UploadUtils getHttpAndDomainByURL:currentRemoteFolder];
+    NSString *remoteUrlWithoutDomain = [UtilsDtos getHttpAndDomainByURL:currentRemoteFolder];
     remoteUrlWithoutDomain = [currentRemoteFolder substringFromIndex:remoteUrlWithoutDomain.length];
     
-    NSString *currentFolderWithoutDomain = [UploadUtils getHttpAndDomainByURL:_presentFilesViewController.currentRemoteFolder];
+    NSString *currentFolderWithoutDomain = [UtilsDtos getHttpAndDomainByURL:_presentFilesViewController.currentRemoteFolder];
     currentFolderWithoutDomain = [_presentFilesViewController.currentRemoteFolder substringFromIndex:currentFolderWithoutDomain.length];
     
     //Only if is selected the first item: FileList.
@@ -2334,7 +2334,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self createAManageRequestUploadWithTheUploadOffline:fileForUpload];
     DLog(@"The file is on server");
     
-    currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath] andUser:_activeUser];
+    currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath andUser:self.activeUser] andUser:self.activeUser];
     
     if (currentFile.isDownload == overwriting) {
         [ManageFilesDB setFileIsDownloadState:currentFile.idFile andState:downloaded];

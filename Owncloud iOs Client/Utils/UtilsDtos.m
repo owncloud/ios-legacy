@@ -16,77 +16,13 @@
 #import "UtilsDtos.h"
 #import "constants.h"
 #import "UserDto.h"
-#import "AppDelegate.h"
 #import "OCFileDto.h"
-#import "UploadUtils.h"
 #import "UtilsUrls.h"
 
 @implementation UtilsDtos
 
-//We generate de local path of the files dinamically
-+(NSString *)getLocalFolderByFilePath:(NSString*) filePath andFileName:(NSString*) fileName andUserDto:(UserDto *) mUser {
-    
-    NSArray *listItems = [mUser.url componentsSeparatedByString:@"/"];;
-    NSString *urlWithoutAddress = @"";
-    for (int i = 3 ; i < [listItems count] ; i++) {
-        urlWithoutAddress = [NSString stringWithFormat:@"%@/%@", urlWithoutAddress, [listItems objectAtIndex:i]];
-    }
-    
-    urlWithoutAddress = [NSString stringWithFormat:@"%@%@",urlWithoutAddress, k_url_webdav_server];
-    
-    //DLog(@"urlWithoutAddress: %d", [urlWithoutAddress length]);
-    
-    urlWithoutAddress = [filePath substringFromIndex:[urlWithoutAddress length]];
-    
-    //NSString *newLocalFolder= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", mUser.idUser]];
-    NSString *newLocalFolder= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)mUser.idUser]];
-    
-    
-    
-    newLocalFolder = [NSString stringWithFormat:@"%@/%@%@", newLocalFolder,urlWithoutAddress,fileName];
-    
-    //We remove the http encoding
-    newLocalFolder = [newLocalFolder stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-    
-    //DLog(@"newLocalFolder: %@", newLocalFolder);
-    return newLocalFolder;
-}
-
-
-//We remove the part of the remote file path that is not necesary
-+(NSString *) getRemovedPartOfFilePathAnd:(UserDto *)mUserDto {
-    
-    NSArray *userUrlSplited = [mUserDto.url componentsSeparatedByString:@"/"];
-    NSString *partRemoved = @"";
-    
-    for(int i = 3 ; i < [userUrlSplited count] ; i++) {
-        partRemoved = [NSString stringWithFormat:@"%@/%@", partRemoved, [userUrlSplited objectAtIndex:i]];
-        //DLog(@"partRemoved: %@", partRemoved);
-    }
-    
-    //We remove the first and the last "/"
-    if ( [partRemoved length] > 0) {
-        partRemoved = [partRemoved substringFromIndex:1];
-    }
-    if ( [partRemoved length] > 0)
-        partRemoved = [partRemoved substringToIndex:[partRemoved length] - 1];
-    
-    
-    
-    if([partRemoved length] <= 0) {
-        partRemoved = [NSString stringWithFormat:@"/%@", k_url_webdav_server];
-    } else {
-        partRemoved = [NSString stringWithFormat:@"/%@/%@", partRemoved, k_url_webdav_server];
-    }
-    
-    return partRemoved;
-}
-
-
 //This method return the part of file path that is valid in the data base
-+(NSString *) getDbBFolderPathFromFullFolderPath:(NSString *) fullFilePath {
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
++(NSString *) getDbBFolderPathFromFullFolderPath:(NSString *) fullFilePath andUser:(UserDto *) user {
     
     NSString *output = @"";
     
@@ -97,12 +33,10 @@
     
     //0.- Catch the length  
     
-    //0.1 Catch the url of user
-    UserDto *currentUser = app.activeUser;
     //DLog(@"User url is:%@", currentUser.url);
     NSString *serverURL=@"";
     
-    NSArray *splitePath = [currentUser.url componentsSeparatedByString:@"/"];
+    NSArray *splitePath = [user.url componentsSeparatedByString:@"/"];
     
     for (int i = 0; i < [splitePath count]; i++) {
         if (i > 2) {
@@ -139,9 +73,7 @@
 }
 
 //This method return the part of file path that is valid in the data base
-+(NSString *) getDbBFilePathFromFullFilePath:(NSString *) fullFilePath {
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
++(NSString *) getDbBFilePathFromFullFilePath:(NSString *) fullFilePath andUser:(UserDto *) user {
     
     DLog(@"full file path: %@", fullFilePath);
     NSString *output = @"";
@@ -153,8 +85,7 @@
 
     //1.- Quit the part of the server
     NSUInteger serverLength=[[NSString stringWithFormat:@"%@", k_url_webdav_server]length];
-    UserDto *currentUser = app.activeUser;
-    NSUInteger userUrlLength= [currentUser.url length];
+    NSUInteger userUrlLength= [user.url length];
     
     fullFilePath= [fullFilePath substringFromIndex:(serverLength+userUrlLength)];
     
@@ -179,8 +110,7 @@
 
 
 //This method return de newfolderpath to find a folder object in DataBase
-+(NSString *) getDbFolderPathWithoutUTF8FromFilePath:(NSString *) fullFilePath {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
++(NSString *) getDbFolderPathWithoutUTF8FromFilePath:(NSString *) fullFilePath andUser:(UserDto *) user {
     
     DLog(@"full file path: %@", fullFilePath);
     NSString *output = @"";
@@ -192,8 +122,7 @@
     
     //1.- Quit the part of the server
     NSUInteger serverLength=[[NSString stringWithFormat:@"%@", k_url_webdav_server]length];
-    UserDto *currentUser = app.activeUser;
-    NSUInteger userUrlLength= [currentUser.url length];
+    NSUInteger userUrlLength= [user.url length];
     
     fullFilePath= [fullFilePath substringFromIndex:(serverLength+userUrlLength)];
     
@@ -319,17 +248,13 @@
     return output;
 }
 
-+(NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto {
++(NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user {
     /*
      /owncloud/remote.php/webdav/
      /remote.php/webdav/
     */
     
     NSString *output = @"";
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    UserDto *user = app.activeUser;
-    
     
     NSArray *splitedUrl = [user.url componentsSeparatedByString:@"/"];
 
@@ -357,11 +282,11 @@
     NSString *output = @"";
     
     //On uploads with redirections the remoteUrl could be have a different domain as mUser.url
-    NSString *remoteUrlWithoutDomain = [UploadUtils getHttpAndDomainByURL:remoteUrl];
+    NSString *remoteUrlWithoutDomain = [self getHttpAndDomainByURL:remoteUrl];
     remoteUrlWithoutDomain = [remoteUrl substringFromIndex:remoteUrlWithoutDomain.length];
     remoteUrl = remoteUrlWithoutDomain;
     
-    NSString *userUrlWithoutDomain = [UploadUtils getHttpAndDomainByURL:mUser.url];
+    NSString *userUrlWithoutDomain = [self getHttpAndDomainByURL:mUser.url];
     userUrlWithoutDomain = [mUser.url substringFromIndex:userUrlWithoutDomain.length];
     
     
@@ -511,7 +436,7 @@
     //if the path the receive is: /master/owncloud/remote.php/webdav/
     //we have to return: empty
     
-    NSString *removedPart = [self getRemovedPartOfFilePathAnd:user];
+    NSString *removedPart = [UtilsUrls getRemovedPartOfFilePathAnd:user];
     NSUInteger removedPartLength = [removedPart length];
     
     NSString *output = @"";
@@ -524,5 +449,25 @@
     return output;
 }
 
+
+//-----------------------------------
+/// @name Get a domain by a URL
+///-----------------------------------
+
+/**
+ * Method used to get only the domain and the protocol (http/https)
+ *
+ * @param NSString -> url
+ *
+ * @return NSString
+ *
+ */
++ (NSString *) getHttpAndDomainByURL:(NSString *) url {
+    
+    NSArray *urlSplitted = [url componentsSeparatedByString:@"/"];
+    NSString *output = [NSString stringWithFormat:@"%@//%@", [urlSplitted objectAtIndex:0], [urlSplitted objectAtIndex:2]];
+    
+    return output;
+}
 
 @end

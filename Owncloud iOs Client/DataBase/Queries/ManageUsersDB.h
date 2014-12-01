@@ -14,12 +14,13 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "FMDatabaseQueue.h"
+
 
 @class UserDto;
 
 
 @interface ManageUsersDB : NSObject
-
 
 /*
  * Method that add user into database

@@ -15,6 +15,7 @@
 #import "constants.h"
 #import "UIColor+Constants.h"
 #import "UtilsUrls.h"
+#import "ManageFilesDB.h"
 
 @interface ELCAlbumPickerController ()
 
@@ -242,7 +243,11 @@
  *
  */
 - (IBAction) selectFolderToUploadFiles:(id)sender  {
-    SelectFolderViewController *sf = [[SelectFolderViewController alloc]initWithNibName:@"SelectFolderViewController" bundle:nil];
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    SelectFolderViewController *sf = [[SelectFolderViewController alloc] initWithNibName:@"SelectFolderViewController" onFolder:[ManageFilesDB getRootFileDtoByUser:app.activeUser]];
+                                      
     //sf.toolBarLabelTxt = NSLocalizedString(@"upload_label", nil);
     sf.toolBarLabelTxt = @"";
     
@@ -251,9 +256,8 @@
     sf.currentRemoteFolder=self.currentRemoteFolder;
     
     //We get the current folder to create the local tree
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser];
-    
+
     sf.currentLocalFolder = localRootUrlString;
     
     navigation.delegate=self;

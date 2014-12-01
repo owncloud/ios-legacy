@@ -158,6 +158,8 @@
  */
 -(void) renameFileClicked:(NSString*)name {
     
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
     if (!_utilsNetworkRequest) {
         _utilsNetworkRequest = [UtilsNetworkRequest new];
         _utilsNetworkRequest.delegate = self;
@@ -178,19 +180,19 @@
         DLog(@"Original Name: %@", originalFileName);
         
         //Get the file database path of the item for the check with the server
-        fileDBPathToCheck  = [UtilsDtos getDbBFilePathFromFullFilePath:[NSString stringWithFormat:@"%@", self.currentRemoteFolder]];
+        fileDBPathToCheck  = [UtilsDtos getDbBFilePathFromFullFilePath:[NSString stringWithFormat:@"%@", self.currentRemoteFolder] andUser:app.activeUser];
         
         //Get the file database path of the item without utf8
-        fileDBPathToDestination  = [UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:[NSString stringWithFormat:@"%@", self.currentRemoteFolder]];
+        fileDBPathToDestination  = [UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:[NSString stringWithFormat:@"%@", self.currentRemoteFolder] andUser:app.activeUser];
         DLog(@"FilePath: %@", fileDBPathToCheck);
         DLog(@"FilePathWithoutUTF: %@", fileDBPathToDestination);
         
     } else {
         //Get the file database path of the item for the check with the server
-        fileDBPathToCheck  = [UtilsDtos getDbBFilePathFromFullFilePath:[NSString stringWithFormat:@"%@%@", self.currentRemoteFolder,self.selectedFileDto.fileName]];
+        fileDBPathToCheck  = [UtilsDtos getDbBFilePathFromFullFilePath:[NSString stringWithFormat:@"%@%@", self.currentRemoteFolder,self.selectedFileDto.fileName] andUser:app.activeUser];
         
         //Get the file database path of the item without utf8
-        fileDBPathToDestination  = [UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:[NSString stringWithFormat:@"%@%@", self.currentRemoteFolder,self.selectedFileDto.fileName]];
+        fileDBPathToDestination  = [UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:[NSString stringWithFormat:@"%@%@", self.currentRemoteFolder,self.selectedFileDto.fileName] andUser:app.activeUser];
         DLog(@"FilePath: %@", fileDBPathToCheck);
         DLog(@"FilePath: %@", fileDBPathToDestination);
         
@@ -209,8 +211,6 @@
     if ([_selectedFileDto isDirectory]) {
         pathToCheck = [NSString stringWithFormat:@"%@/", pathToCheck];
     }
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Check if the item already exists in the path
     [_utilsNetworkRequest checkIfTheFileExistsWithThisPath:pathToCheck andUser:app.activeUser];
@@ -298,7 +298,7 @@
         DLog(@"error.code: %ld", (long)error.code);
         DLog(@"server error: %ld", (long)response.statusCode);
         
-        [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error];
+        [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
         
     } errorBeforeRequest:^(NSError *error) {
         switch (error.code) {
@@ -390,6 +390,8 @@
 -(void) moveTheFileOrFolderOnTheDBAndFileSystem {
     if (self.selectedFileDto.isDirectory) {
         
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
         DLog(@"Change folder name");
         
         DLog(@"OldFilePath: %@", self.selectedFileDto.filePath);
@@ -402,7 +404,7 @@
         
         self.selectedFileDto=[ManageFilesDB getFileDtoByIdFile:self.selectedFileDto.idFile];
         
-        NSString *newFilePathOnDB = [UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath];
+        NSString *newFilePathOnDB = [UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser];
         
         [self renameFolderChildsWithFilePath:[NSString stringWithFormat:@"%@%@",newFilePathOnDB, self.selectedFileDto.fileName] ofFileId:self.selectedFileDto.idFile];
         
@@ -487,7 +489,7 @@
     //If is IPAD we update the fileDto in case that the current file is the same on preview
     if (!IS_IPHONE) {
         if (app.detailViewController.file.idFile == _selectedFileDto.idFile) {
-            app.detailViewController.file = [ManageFilesDB getFileDtoByFileName:[_mNewName encodeString:NSUTF8StringEncoding] andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath] andUser:app.activeUser];
+            app.detailViewController.file = [ManageFilesDB getFileDtoByFileName:[_mNewName encodeString:NSUTF8StringEncoding] andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
             app.detailViewController.titleLabel.text = [app.detailViewController.file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
         }
