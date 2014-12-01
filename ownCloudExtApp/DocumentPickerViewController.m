@@ -143,7 +143,7 @@
     KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
     vc.delegate = self;
     
-    OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
+    OCNavigationController *oc = [[OCNavigationController alloc]initWithRootViewController:vc];
     vc.mode = KKPasscodeModeEnter;
     
     UIViewController *rootController = [[UIViewController alloc]init];
@@ -151,15 +151,6 @@
     
     [self presentViewController:oc animated:NO completion:^{
     }];
-    
-    /*if (IS_IPHONE) {
-        
-        [rootController presentViewController:oc animated:YES completion:nil];
-    } else {
-        oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        oc.modalPresentationStyle = UIModalPresentationFormSheet;
-        [rootController presentViewController:oc animated:NO completion:nil];
-    }*/
 }
 
 #pragma mark - KKPasscodeViewControllerDelegate

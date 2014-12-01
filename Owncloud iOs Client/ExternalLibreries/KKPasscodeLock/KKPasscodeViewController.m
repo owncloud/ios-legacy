@@ -290,7 +290,6 @@
             
             _dimView.alpha = 1.0f;
             [appDelegate.window.rootViewController.view addSubview:_dimView];
-#else
             
 #endif
           /*  [UIView animateWithDuration:0.3f animations:^{
@@ -303,6 +302,13 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Set Passcode visible
     app.isPasscodeVisible = YES;
+#else
+    //We need to catch the rotation notifications only in iPhone.
+    if (IS_IPHONE) {
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChange:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
+    }
 #endif
 }
 
@@ -330,6 +336,8 @@
     app.splitViewController.hiddenPopoverController.popoverContentSize = CGSizeMake(320, [[UIScreen mainScreen] bounds].size.height);
     //Set Passcode not visible
     app.isPasscodeVisible = NO;
+#else
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 #endif
 }
 
@@ -945,6 +953,30 @@
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     return _shouldReleaseFirstResponser;
+}
+
+#pragma mark - Rotation
+
+- (void)orientationChange:(NSNotification*)notification {
+    UIInterfaceOrientation orientation = (UIInterfaceOrientation)[[notification.userInfo objectForKey:UIApplicationStatusBarOrientationUserInfoKey] intValue];
+    
+    if(UIInterfaceOrientationIsPortrait(orientation)){
+        [self performSelector:@selector(refreshTheInterfaceInPortrait) withObject:nil afterDelay:0.0];
+    }
+}
+
+//We have to remove the status bar height in navBar and view after rotate
+- (void) refreshTheInterfaceInPortrait {
+    
+    CGRect frameNavigationBar = self.navigationController.navigationBar.frame;
+    CGRect frameView = self.view.frame;
+    frameNavigationBar.origin.y -= 20;
+    frameView.origin.y -= 20;
+    frameView.size.height += 20;
+    
+    self.navigationController.navigationBar.frame = frameNavigationBar;
+    self.view.frame = frameView;
+    
 }
 
 #pragma mark -
