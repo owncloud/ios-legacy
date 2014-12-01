@@ -15,6 +15,9 @@
 
 #import <Foundation/Foundation.h>
 
+@class CustomCellFileAndDirectory;
+@class FileDto;
+
 @interface InfoFileUtils : NSObject
 
 ///-----------------------------------
@@ -35,5 +38,22 @@
  * @return NSString -> The searched date
  */
 + (NSString *)getTheDifferenceBetweenDateOfUploadAndNow:(NSDate *)date;
+
+///-----------------------------------
+/// @name setTheStatusIconOntheFile:onTheCell:
+///-----------------------------------
+
+/**
+ * This method set the status icon of the files and folders
+ - The general icons of the icons
+ - The general icons of the folder (shared by link, shared with user)
+ - The shared icon on the right of the file list
+ - The status icon of the files
+ *
+ * @param fileForSetTheStatusIcon -> FileDto, the file for set the status
+ * @param fileCell -> CustomCellFileAndDirectory, the cell where the file is located
+ * @param currentFolder -> FileDto, of the folder that contain the fileForSetTheStatusIcon
+ */
++ (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder;
 
 @end

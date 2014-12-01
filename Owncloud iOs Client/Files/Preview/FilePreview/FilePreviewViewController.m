@@ -525,7 +525,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         //Set the file as isNecessaryUpdate
         [ManageFilesDB setIsNecessaryUpdateOfTheFile:_file.idFile];
         //Update the file on memory
-        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
         //Do the request to get the shared items
         [self handleFile];
     }
@@ -976,8 +976,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  */
 - (IBAction)didPressFavoritesButton:(id)sender {
     //Update the file from the DB
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:appDelegate.activeUser];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (_file.isFavorite) {
         _file.isFavorite = NO;
@@ -994,7 +994,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     //Update the DB
     [ManageFilesDB updateTheFileID:_file.idFile asFavorite:_file.isFavorite];
-    [appDelegate.presentFilesViewController reloadTableFromDataBase];
+    [app.presentFilesViewController reloadTableFromDataBase];
     
     if (_file.isFavorite && _file.isDownload == downloaded) {
         [self checkIfThereIsANewFavoriteVersion];
@@ -1224,7 +1224,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
-            _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+            _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
             
             [self downloadTheFile];
         } else {
@@ -1316,7 +1316,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Update fileDto    
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (_file.idFile == fileDto.idFile) {
         
@@ -1516,7 +1516,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Update the _file with DB
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     NSString *path = (NSString*)[notification object];
     NSString *pathPreview = [UtilsDtos getRemoteUrlByFile:_file andUserDto:app.activeUser];
@@ -1536,7 +1536,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Update the preview file with the new information in DB
-    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     app.isOverwriteProcess = NO;
 }
 

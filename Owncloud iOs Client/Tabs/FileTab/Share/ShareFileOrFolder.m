@@ -204,7 +204,7 @@
     
     if (isFileDto) {
         //From fileDto
-        NSString *path = [NSString stringWithFormat:@"/%@", [UtilsDtos getDbBFolderPathFromFullFolderPath:_file.filePath]];
+        NSString *path = [NSString stringWithFormat:@"/%@", [UtilsDtos getDbBFolderPathFromFullFolderPath:_file.filePath andUser:app.activeUser]];
         filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
         
         NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:_file.sharedFileSource forUser:app.activeUser.idUser];

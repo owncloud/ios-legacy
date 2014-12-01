@@ -19,14 +19,12 @@
 
 @interface UtilsDtos : NSObject
 
-+(NSString *) getLocalFolderByFilePath:(NSString*) filePath andFileName:(NSString*) fileName andUserDto:(UserDto *) mUser;
-+(NSString *) getRemovedPartOfFilePathAnd:(UserDto *)mUserDto;
-+(NSString *) getDbBFilePathFromFullFilePath:(NSString *) fullFilePath;
-+(NSString *) getDbBFolderPathFromFullFolderPath:(NSString *) fullFilePath;
-+(NSString *) getDbFolderPathWithoutUTF8FromFilePath:(NSString *) fullFilePath;
++(NSString *) getDbBFilePathFromFullFilePath:(NSString *) fullFilePath andUser:(UserDto *) user;
++(NSString *) getDbBFolderPathFromFullFolderPath:(NSString *) fullFilePath andUser:(UserDto *) user;
++(NSString *) getDbFolderPathWithoutUTF8FromFilePath:(NSString *) fullFilePath andUser:(UserDto *) user;
 +(NSString *) getDbFolderPathFromFilePath:(NSString *) filePath;
 +(NSString *) getDbFolderNameFromFilePath:(NSString *) filePath;
-+(NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto;
++(NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user;
 +(NSString *) getFilePathByRemoteURL:(NSString *) remoteUrl andUserDto:(UserDto *) mUser;
 +(NSString *) getRemoteUrlByFile:(FileDto *) file andUserDto:(UserDto *) mUser;
 +(NSString *) getServerURLWithoutFolderByUserDto:(UserDto *)mUser;
@@ -85,6 +83,20 @@
  
  */
 + (NSString* )getDBFilePathOfFileDtoFilePath:(NSString*)path ofUserDto:(UserDto*)user;
+
+//-----------------------------------
+/// @name Get a domain by a URL
+///-----------------------------------
+
+/**
+ * Method used to get only the domain and the protocol (http/https)
+ *
+ * @param NSString -> url
+ *
+ * @return NSString
+ *
+ */
++ (NSString *) getHttpAndDomainByURL:(NSString *) url;
 
 
 @end

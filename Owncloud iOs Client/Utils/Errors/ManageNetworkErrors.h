@@ -15,6 +15,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class UserDto;
+
 @protocol ManageNetworkErrorsDelegate
 
 @optional
@@ -30,7 +32,8 @@
  * Method called when receive an error from server
  * @errorHttp -> WebDav Server Error of NSURLResponse
  * @errorConnection -> NSError of NSURLConnection
+ * @user -> UserDto
  */
-- (void)manageErrorHttp: (NSInteger *)errorHttp andErrorConnection:(NSError *)errorConnection;
+- (void)manageErrorHttp: (NSInteger *)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *) user;
 
 @end

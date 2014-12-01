@@ -22,6 +22,7 @@
 #import "ManageFilesDB.h"
 #import "UtilsNetworkRequest.h"
 #import "UtilsDtos.h"
+#import "UtilsUrls.h"
 #import "DetailViewController.h"
 #import "FileNameUtils.h"
 #import "UploadUtils.h"
@@ -619,12 +620,12 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     _isCanceled = YES;
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     //The user cancel a file which had been chosen for be overwritten
-    if(appDelegate.isOverwriteProcess==YES){
+    if(app.isOverwriteProcess==YES){
         DLog(@"Overwriten process active: Cancel a file");
-        NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder];
+        NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder andUser:app.activeUser];
         DLog(@"Local folder:%@",localFolder);
         
         FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:_currentUpload.uploadFileName andFilePath:localFolder andUser:_userUploading];
@@ -632,7 +633,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         
         //In iPad clean the view
         if (!IS_IPHONE){
-            [appDelegate.detailViewController presentWhiteView];
+            [app.detailViewController presentWhiteView];
             //Launch a notification for update the previewed file
             [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:_currentUpload.destinyFolder];
         }
@@ -643,7 +644,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [ManageUploadsDB deleteUploadOfflineByUploadOfflineDto:self.currentUpload];
     
     //Quit the upload from the uploadArray
-    [appDelegate.uploadArray removeObjectIdenticalTo:self];
+    [app.uploadArray removeObjectIdenticalTo:self];
     
     //Quit the operation from the operation queue
     if (self.operation) {
@@ -683,7 +684,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [self updateRecentsTab];
 
     //Clear cache and cookies
-    [appDelegate eraseURLCache];
+    [app eraseURLCache];
 }
 
 
@@ -804,7 +805,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath], overwrittenFile.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:app.activeUser], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -828,7 +829,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             //Change the filePath from the library to our format
             for (FileDto *currentFile in items) {
                 //Remove part of the item file path
-                NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:self.userUploading];
+                NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:self.userUploading];
                 if([currentFile.filePath length] >= [partToRemove length]){
                     currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
                 }

@@ -14,7 +14,7 @@
  */
 
 #import "ManageNetworkErrors.h"
-#import "AppDelegate.h"
+#import "UserDto.h"
 #import "CheckAccessToServer.h"
 #import "OCErrorMsg.h"
 
@@ -26,12 +26,10 @@
  * @errorConnection -> NSError of NSURLConnection
  */
 
-- (void)manageErrorHttp: (NSInteger *)errorHttp andErrorConnection:(NSError *)errorConnection {
+- (void)manageErrorHttp: (NSInteger *)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *) user {
     
     DLog(@"Error code from  web dav server: %d", (int) errorHttp);
     DLog(@"Error code from server: %d", errorConnection.code);
-
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Server connection error
     switch (errorConnection.code) {
@@ -40,7 +38,7 @@
             [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
             
             CheckAccessToServer *mCheckAccessToServer = [CheckAccessToServer new];
-            [mCheckAccessToServer isConnectionToTheServerByUrl:app.activeUser.url];
+            [mCheckAccessToServer isConnectionToTheServerByUrl:user.url];
             
             break;
         }
