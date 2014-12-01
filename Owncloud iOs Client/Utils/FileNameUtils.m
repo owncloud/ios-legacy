@@ -319,8 +319,8 @@
     if ([appName isEqualToString:@"ownCloud"]) {
         // After day 354 of the year, the usual ownCloud icon is replaced by another icon
         NSCalendar *gregorian =
-        [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-        NSUInteger dayOfYear = [gregorian ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:[NSDate date]];
+        [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSUInteger dayOfYear = [gregorian ordinalityOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitYear forDate:[NSDate date]];
         if (dayOfYear >= 354)
             imageName = @"ownCloud-xmas";
         
