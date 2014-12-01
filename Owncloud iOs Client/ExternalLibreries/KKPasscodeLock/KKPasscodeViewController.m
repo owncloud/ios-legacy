@@ -27,7 +27,11 @@
 #import <QuartzCore/QuartzCore.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import "ManageAppSettingsDB.h"
+#ifdef CONTAINER_APP
 #import "AppDelegate.h"
+#else
+#import "DocumentPickerViewController.h"
+#endif
 #import "MGSplitViewController.h"
 
 
@@ -267,10 +271,14 @@
 		}
         
         if (!_dimView) {
-           
+            
+#ifdef CONTAINER_APP
             id<UIApplicationDelegate> appDelegate = [[UIApplication sharedApplication] delegate];
             _dimView = [[UIView alloc] initWithFrame:appDelegate.window.rootViewController.view.bounds];
             _dimView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+           
+            
             
             
             //Change the background depend of the type of passcode
@@ -282,15 +290,20 @@
             
             _dimView.alpha = 1.0f;
             [appDelegate.window.rootViewController.view addSubview:_dimView];
+#else
+            
+#endif
           /*  [UIView animateWithDuration:0.3f animations:^{
                 self.dimView.alpha = 1.0f;
             }];*/
         }
 	}
     
+#ifdef CONTAINER_APP
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Set Passcode visible
     app.isPasscodeVisible = YES;
+#endif
 }
 
 
@@ -312,10 +325,12 @@
                              self.dimView = nil;
                          }];
     }
+#ifdef CONTAINER_APP
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     app.splitViewController.hiddenPopoverController.popoverContentSize = CGSizeMake(320, [[UIScreen mainScreen] bounds].size.height);
     //Set Passcode not visible
     app.isPasscodeVisible = NO;
+#endif
 }
 
 
@@ -324,8 +339,10 @@
     //In iPad
     if (!IS_IPHONE) {
         //Enable the popover
+#ifdef CONTAINER_APP
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         app.detailViewController.disablePopover = NO;
+#endif
     }
 }
 
@@ -339,6 +356,7 @@
             _dimView=nil;
         }
         
+#ifdef CONTAINER_APP
         id<UIApplicationDelegate> appDelegate = [[UIApplication sharedApplication] delegate];
         _dimView = [[UIView alloc] initWithFrame:appDelegate.window.rootViewController.view.bounds];
         _dimView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -352,6 +370,8 @@
         
         _dimView.alpha = 1.0f;
         [appDelegate.window.rootViewController.view addSubview:self.dimView];
+#endif
+        
     }
     
 }
