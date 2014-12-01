@@ -186,7 +186,7 @@
 }
 
 - (void)viewDidUnload {
-    [super viewDidLoad];
+    [super viewDidUnload];
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
 }
@@ -223,7 +223,7 @@
     
     
     NSDictionary *titleAttributes = @{NSForegroundColorAttributeName: [UIColor colorOfToolBarButtons],
-                                      NSShadowAttributeName: shadow,
+                                      NSShadowAttributeName:shadow,
                                       NSFontAttributeName: [UIFont systemFontOfSize:16.0]};
     
     
