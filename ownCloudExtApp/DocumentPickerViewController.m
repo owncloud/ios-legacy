@@ -27,6 +27,9 @@
 #import "OCKeychain.h"
 #import "CredentialsDto.h"
 #import "FileListDBOperations.h"
+#import "ManageAppSettingsDB.h"
+#import "KKPasscodeViewController.h"
+#import "OCPortraitNavigationViewController.h"
 
 @interface DocumentPickerViewController ()
 
@@ -49,8 +52,12 @@
 -(void)prepareForPresentationInMode:(UIDocumentPickerMode)mode {
     // TODO: present a view controller appropriate for picker mode here
     
-    [self showOwnCloudNavigationOrShowErrorLogin];
     
+    if ([ManageAppSettingsDB isPasscode]) {
+        [self showPassCode];
+    } else {
+        [self showOwnCloudNavigationOrShowErrorLogin];
+    }
 }
 
 - (void) showOwnCloudNavigationOrShowErrorLogin {
@@ -127,6 +134,44 @@
         
     }
     return sharedOCCommunication;
+}
+
+#pragma mark - Pass Code
+
+- (void)showPassCode {
+    
+    KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
+    vc.delegate = self;
+    
+    OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
+    vc.mode = KKPasscodeModeEnter;
+    
+    UIViewController *rootController = [[UIViewController alloc]init];
+    rootController.view.backgroundColor = [UIColor darkGrayColor];
+    
+    [self presentViewController:oc animated:NO completion:^{
+    }];
+    
+    /*if (IS_IPHONE) {
+        
+        [rootController presentViewController:oc animated:YES completion:nil];
+    } else {
+        oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        oc.modalPresentationStyle = UIModalPresentationFormSheet;
+        [rootController presentViewController:oc animated:NO completion:nil];
+    }*/
+}
+
+#pragma mark - KKPasscodeViewControllerDelegate
+
+- (void)didPasscodeEnteredCorrectly:(KKPasscodeViewController*)viewController{
+    DLog(@"Did pass code entered correctly");
+    
+    [self performSelector:@selector(showOwnCloudNavigationOrShowErrorLogin) withObject:nil afterDelay:0.1];
+}
+
+- (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController{
+    DLog(@"Did pass code entered incorrectly");
 }
 
 @end
