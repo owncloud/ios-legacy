@@ -478,6 +478,8 @@
 		59A9A72A196E8E3C0042FEAC /* UtilsCookies.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A9A729196E8E3C0042FEAC /* UtilsCookies.m */; };
 		59AE9EB21990FEC2003380A8 /* CheckHasShareSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 59AE9EB11990FEC2003380A8 /* CheckHasShareSupport.m */; };
 		59AF279E19920A1100359151 /* CheckHasCookiesSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 59AF279D19920A1100359151 /* CheckHasCookiesSupport.m */; };
+		59BF9B361A2C8BEA009D9CF0 /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */; };
+		59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 599D80B01A2338100071B66E /* FileListDocumentProviderViewController.m */; };
 		59C521F91A1B7C3A00C5EF76 /* ManageNetworkErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C9D323195C0EFB00400AE2 /* ManageNetworkErrors.m */; };
 		59C88E8F1A27335B00D83AB4 /* BackRootFolderIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F5E1A123B03003E7397 /* BackRootFolderIcon@3x.png */; };
 		59C88E901A27335B00D83AB4 /* doc_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354D61A14FD53000E7FE4 /* doc_icon@3x.png */; };
@@ -3164,6 +3166,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59BF9B361A2C8BEA009D9CF0 /* DocumentPickerViewController.m in Sources */,
+				59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */,
 				EAD0EBA317FAF811000005A1 /* OCELCAssetTablePicker.m in Sources */,
 				1324298915ADBB3700DF823E /* main.m in Sources */,
 				1324298D15ADBB3700DF823E /* AppDelegate.m in Sources */,
