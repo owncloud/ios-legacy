@@ -99,7 +99,7 @@
         [self.view addSubview:backgroundTableView];
         
         //and move other tableViews down so boxes are vertically centered
-        tableViewFrame.origin.y += 44.0;
+        //tableViewFrame.origin.y += 44.0;
     }
 	
 	_enterPasscodeTableView = [[UITableView alloc] initWithFrame:tableViewFrame style:UITableViewStyleGrouped];
