@@ -378,6 +378,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     static ALAssetsLibrary *library = nil;
     dispatch_once(&pred, ^{
         library = [[ALAssetsLibrary alloc] init];
+        
     });
     return library;
 }
