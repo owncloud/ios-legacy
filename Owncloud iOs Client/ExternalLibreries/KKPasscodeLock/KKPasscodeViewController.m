@@ -93,13 +93,20 @@
 	self.view.backgroundColor = [UIColor whiteColor];
     
     CGRect tableViewFrame = self.view.bounds;
-    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad && [[UIScreen mainScreen] bounds].size.height > 480) {
+    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
         // is running on device with 4" screen so add background tableView
         UITableView *backgroundTableView = [[UITableView alloc] initWithFrame:tableViewFrame style:UITableViewStyleGrouped];
         [self.view addSubview:backgroundTableView];
         
         //and move other tableViews down so boxes are vertically centered
-        //tableViewFrame.origin.y += 44.0;
+#ifdef CONTAINER_APP
+        if ([[UIScreen mainScreen] bounds].size.height > 480) {
+            tableViewFrame.origin.y += 44.0;
+        }
+#else
+        tableViewFrame.origin.y -= 44.0;
+#endif
+        
     }
 	
 	_enterPasscodeTableView = [[UITableView alloc] initWithFrame:tableViewFrame style:UITableViewStyleGrouped];
@@ -167,7 +174,8 @@
 	_boxes = [[NSMutableArray alloc] init];
 	
     // Need to make sure everything is visible in landscape mode on small devices.
-    self.isSmallLandscape = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && UIInterfaceOrientationIsLandscape(self.interfaceOrientation));
+    //self.isSmallLandscape = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && UIInterfaceOrientationIsLandscape(self.interfaceOrientation));
+    self.isSmallLandscape = NO;
     
     if (_mode == KKPasscodeModeSet) {
         
@@ -852,7 +860,10 @@
     }
     
     headerLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+    
+#ifdef CONTAINER_APP
     [headerView addSubview:headerLabel];
+#endif
 	
 	return headerView;
 }
@@ -977,6 +988,9 @@
     self.navigationController.navigationBar.frame = frameNavigationBar;
     self.view.frame = frameView;
     
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:self.isSmallLandscape ? 10.0f : 14.0f]};
+    CGSize size = [_failedAttemptsLabel.text sizeWithAttributes:attributes];
+    _failedAttemptsLabel.frame = _failedAttemptsView.frame = CGRectMake((self.view.bounds.size.width - (size.width + (self.isSmallLandscape ? 20.0f : 40.0f))) / 2, self.isSmallLandscape ? 75.0f : 150.0f, size.width + (self.isSmallLandscape ? 20.0f : 40.0f), size.height + (self.isSmallLandscape ? 5.0f : 10.0f));
 }
 
 #pragma mark -
