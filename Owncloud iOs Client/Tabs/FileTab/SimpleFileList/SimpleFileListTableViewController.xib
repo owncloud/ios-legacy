@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SimpleFileListTableViewController">
+            <connections>
+                <outlet property="tableView" destination="6MR-Xj-fa5" id="gTK-pG-vSA"/>
+                <outlet property="view" destination="M9E-sO-cdU" id="EVt-OE-buS"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="M9E-sO-cdU">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="6MR-Xj-fa5">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="Yth-HW-BG7"/>
+                        <outlet property="delegate" destination="-1" id="MEY-GX-wJc"/>
+                    </connections>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="6MR-Xj-fa5" secondAttribute="bottom" id="4NA-IA-u26"/>
+                <constraint firstItem="6MR-Xj-fa5" firstAttribute="top" secondItem="M9E-sO-cdU" secondAttribute="top" id="FbF-sO-Gqk"/>
+                <constraint firstItem="6MR-Xj-fa5" firstAttribute="leading" secondItem="M9E-sO-cdU" secondAttribute="leading" id="LDg-XX-bSW"/>
+                <constraint firstAttribute="trailing" secondItem="6MR-Xj-fa5" secondAttribute="trailing" id="XKG-bS-C3k"/>
+            </constraints>
+            <point key="canvasLocation" x="435" y="416"/>
+        </view>
+    </objects>
+</document>

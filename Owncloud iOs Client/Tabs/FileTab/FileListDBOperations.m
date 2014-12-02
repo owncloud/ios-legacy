@@ -16,8 +16,8 @@
 
 #import "FileListDBOperations.h"
 
-#import "AppDelegate.h"
 #import "ManageFilesDB.h"
+#import "UserDto.h"
 
 @implementation FileListDBOperations
 
@@ -60,14 +60,13 @@
  * Method that create the root folder and return this object
  * @FileDto -> FileDto object of root folder
  */
-+ (FileDto*)createRootFolderAndGetFileDto{
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
++ (FileDto*)createRootFolderAndGetFileDtoByUser:(UserDto *) user {
     
     FileDto *initialRootFolder = [[FileDto alloc] init];
     
     initialRootFolder.filePath = @"";
     initialRootFolder.fileName = @"";
-    initialRootFolder.userId = app.activeUser.idUser;
+    initialRootFolder.userId = user.idUser;
     initialRootFolder.isDirectory = YES;
     initialRootFolder.isDownload = notDownload;
     initialRootFolder.fileId = -1;
@@ -84,10 +83,10 @@
     [ManageFilesDB insertFile:initialRootFolder];
     
     //We have to update the current files (We have just to login and we have the first files on the DB with the id 0)
-    [ManageFilesDB updateFilesWithFileId:0 withNewFileId:[ManageFilesDB getRootFileDtoByUser:app.activeUser].idFile];
+    [ManageFilesDB updateFilesWithFileId:0 withNewFileId:[ManageFilesDB getRootFileDtoByUser:user].idFile];
     
 
-    initialRootFolder=[ManageFilesDB getRootFileDtoByUser:app.activeUser];
+    initialRootFolder=[ManageFilesDB getRootFileDtoByUser:user];
     
     return initialRootFolder;
     
@@ -97,7 +96,7 @@
  * Method that realice the refresh process
  *
  */
-+ (NSArray*)makeTheRefreshProcessWith:(NSMutableArray*)arrayFromServer inThisFolder:(int)idFolder{
++ (void)makeTheRefreshProcessWith:(NSMutableArray*)arrayFromServer inThisFolder:(NSInteger)idFolder{
     
     DLog(@"self.fileIdToShowFiles before refresh: %d", idFolder);
     
@@ -125,12 +124,6 @@
     [ManageFilesDB updateFilesFromBackup];
     //Read all backups favourites files and update the new registers with the favourite status
     [ManageFilesDB updateFavoriteFilesFromBackup];
-    
-    //Get from database all the files of the current folder (fileIdToShowFiles)
-    NSArray *currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:idFolder];
-    
-    return currentDirectoryArray;
-    
 }
 
 /*

@@ -250,3 +250,6 @@
 //Favorites
 "favorite" = "Favorite";
 "unfavorite" = "Unfavorite";
+
+//Document provider
+"error_login_doc_provider" = "Unable to access your account. Please use the ownCloud app to sign in first.";

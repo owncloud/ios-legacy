@@ -249,3 +249,6 @@
 //Favorites
 "favorite" = "Favori";
 "unfavorite" = "Non favori";
+
+//Document provider
+"error_login_doc_provider" = "Impossible d'accéder de nous. Se il vous plaît vous connecter à l'application ownCloud.";

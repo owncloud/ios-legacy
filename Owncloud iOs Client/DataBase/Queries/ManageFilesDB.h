@@ -28,6 +28,11 @@
  */
 + (NSMutableArray *) getFilesByFileIdForActiveUser:(int) fileId;
 
+/*
+ * Method that give all folders from a single folder
+ * @fileId -> id of the folder father and we want all his files and folders
+ */
++ (NSMutableArray *) getFoldersByFileIdForActiveUser:(int) fileId;
 
 ///-----------------------------------
 /// @name Get Files by idFile
@@ -37,6 +42,7 @@
  * Method that return an array of files, this files are sons of fileId
  *
  * @param fileId -> NSInteger
+
  *
  * @return list of files -> NSMutableArray
  *
@@ -278,7 +284,7 @@
  * @idFile -> id of the file to update the etag
  * @etag -> new etag
  */
-+ (void) updateEtagOfFileDtoByid:(int) idFile andNewEtag: (long long) etag;
++ (void) updateEtagOfFileDtoByid:(NSInteger) idFile andNewEtag: (long long) etag;
 
 /*
  * Method to update the etag of a file

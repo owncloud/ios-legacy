@@ -14,6 +14,7 @@
  */
 
 #import "FileDto.h"
+#import "OCFileDto.h"
 
 @implementation FileDto
 

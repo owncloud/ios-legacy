@@ -14,12 +14,13 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "FMDatabaseQueue.h"
+
 
 @class UserDto;
 
 
 @interface ManageUsersDB : NSObject
-
 
 /*
  * Method that add user into database
@@ -42,7 +43,7 @@
  * Method that return the user object of the idUser
  * @idUser -> id User.
  */
-+ (UserDto *) getUserByIdUser:(int) idUser;
++ (UserDto *) getUserByIdUser:(NSInteger) idUser;
 
 /*
  * Method that return if the user exist or not

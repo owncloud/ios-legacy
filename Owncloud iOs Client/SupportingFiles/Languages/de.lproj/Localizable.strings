@@ -250,3 +250,6 @@
 //Favorites
 "favorite" = "Favorisieren";
 "unfavorite" = "Favorit entfernen";
+
+//Document provider
+"error_login_doc_provider" = "Zugriff auf Konto nicht möglich. Bitte melden Sie sich über die ownCloud App an.";

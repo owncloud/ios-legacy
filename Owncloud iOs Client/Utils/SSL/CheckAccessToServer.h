@@ -37,6 +37,7 @@
 
 @property (nonatomic, weak) __weak id<CheckAccessToServerDelegate> delegate;
 @property (nonatomic, strong) NSString *urlStatusCheck;
+@property (nonatomic, strong) UIViewController *viewControllerToShow;
 
 
 @end

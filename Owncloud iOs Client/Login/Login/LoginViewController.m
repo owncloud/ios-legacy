@@ -32,6 +32,7 @@
 #import "OCNavigationController.h"
 #import "OCTabBarController.h"
 #import "UtilsDtos.h"
+#import "UtilsUrls.h"
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
 #import "UtilsFramework.h"
@@ -2107,7 +2108,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         //Change the filePath from the library to our format
         for (FileDto *currentFile in directoryList) {
             //Remove part of the item file path
-            NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:app.activeUser];
+            NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
             if([currentFile.filePath length] >= [partToRemove length]){
                 currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
             }
