@@ -252,4 +252,4 @@
 "unfavorite" = "Poista suosikeista";
 
 //Document provider
-"error_login_doc_provider" = "Unable to access to your account. Go to Owncloud app to configure it";
+"error_login_doc_provider" = "Pääse tilillesi. Ole hyvä, kirjaudu sisään ownCloud app.";
