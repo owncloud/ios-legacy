@@ -30,6 +30,7 @@
 #import "ManageAppSettingsDB.h"
 #import "KKPasscodeViewController.h"
 #import "OCPortraitNavigationViewController.h"
+#import "UtilsFramework.h"
 
 @interface DocumentPickerViewController ()
 
@@ -65,6 +66,8 @@
     self.user = [ManageUsersDB getActiveUser];
     
     if (self.user) {
+        
+        [UtilsFramework deleteAllCookies];
         
         FileDto *rootFolder = [ManageFilesDB getRootFileDtoByUser:self.user];
         
