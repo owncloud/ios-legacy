@@ -25,7 +25,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 - (void) viewWillAppear:(BOOL)animated {
     
     //We need to catch the rotation notifications only in iPhone.
-    if (IS_IPHONE) {
+    if (IS_IPHONE && self.isNecessaryAdjustThePositionAndTheSizeOfTheNavigationBar) {
         [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChange:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
