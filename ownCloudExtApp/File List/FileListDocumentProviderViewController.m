@@ -22,6 +22,7 @@
 #import "DocumentPickerCell.h"
 #import "EmptyCell.h"
 #import "InfoFileUtils.h"
+#import "FFCircularProgressView.h"
 
 NSString *userHasChangeNotification = @"userHasChangeNotification";
 
@@ -217,10 +218,16 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         
         fileCell = (DocumentPickerCell*)[InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder];
         
-        
         if (file.isDownload != downloaded && !file.isDirectory) {
             [fileCell.circularPV setHidden:NO];
-            [fileCell.circularPV setBackgroundColor:[UIColor purpleColor]];
+            
+            FFCircularProgressView *view = [[FFCircularProgressView alloc] initWithFrame:CGRectMake(1.0f, 1.0f, 33.0f, 33.0f)];
+            [fileCell.circularPV addSubview:view];
+            [fileCell.circularPV setHidden:NO];
+            
+          /*  CGRect titleFrame = fileCell.labelTitle.frame;
+            titleFrame.size.width = titleFrame.size.width - 35.0;
+            fileCell.labelTitle.frame = titleFrame;*/
             
         }else{
             [fileCell.circularPV setHidden:YES];
@@ -239,6 +246,8 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     }
     return cell;
 }
+
+
 
 #pragma mark - Check User
 
