@@ -75,6 +75,10 @@
         FileListDocumentProviderViewController *fileListTableViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:rootFolder];
         
         OCNavigationController *navigationViewController = [[OCNavigationController alloc] initWithRootViewController:fileListTableViewController];
+        
+        if (IS_IPHONE && [ManageAppSettingsDB isPasscode] && self.view.frame.size.height < self.view.frame.size.width) {
+            fileListTableViewController.isNecessaryAdjustThePositionAndTheSizeOfTheNavigationBar = YES;
+        }
 
         [self presentViewController:navigationViewController animated:NO completion:^{
             //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab

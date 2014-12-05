@@ -22,4 +22,6 @@
 //Notification to notify that the user has change
 extern NSString * userHasChangeNotification;
 
+@property BOOL isNecessaryAdjustThePositionAndTheSizeOfTheNavigationBar;
+
 @end
