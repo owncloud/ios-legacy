@@ -19,6 +19,9 @@
 #import "UserDto.h"
 #import "ManageUsersDB.h"
 #import "ManageFilesDB.h"
+#import "DocumentPickerCell.h"
+#import "EmptyCell.h"
+#import "InfoFileUtils.h"
 
 NSString *userHasChangeNotification = @"userHasChangeNotification";
 
@@ -91,6 +94,150 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     } else {
         [self showErrorUserHasChange];
     }
+}
+
+#pragma mark - UITableView DataSource methods
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UITableViewCell *cell;
+    
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    
+    
+    if ([self.currentDirectoryArray count] == 0) {
+        
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        
+        //If the _currentDirectoryArray doesn't have object will show a message
+        //Identifier
+        static NSString *CellIdentifier = @"EmptyCell";
+        EmptyCell *emptyFileCell = (EmptyCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        
+        if (emptyFileCell == nil) {
+            // Load the top-level objects from the custom cell XIB.
+            NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EmptyCell" owner:self options:nil];
+            // Grab a pointer to the first object (presumably the custom cell, as that's all the XIB should contain).
+            emptyFileCell = (EmptyCell *)[topLevelObjects objectAtIndex:0];
+        }
+        
+        //Autoresizing width when the iPhone is on landscape
+        if (IS_IPHONE) {
+            [emptyFileCell.textLabel setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        }
+        
+        NSString *message = NSLocalizedString(@"message_not_files", nil);
+        emptyFileCell.textLabel.text = message;
+        emptyFileCell.textLabel.textAlignment = NSTextAlignmentCenter;
+        //Disable the tap
+        emptyFileCell.userInteractionEnabled = NO;
+        cell = emptyFileCell;
+        emptyFileCell = nil;
+        
+    } else {
+        
+        static NSString *CellIdentifier = @"DocumentPickerCell";
+        
+        DocumentPickerCell *fileCell = (DocumentPickerCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        
+        if (fileCell == nil) {
+            NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"DocumentPickerCell" owner:self options:nil];
+            fileCell = (DocumentPickerCell *)[topLevelObjects objectAtIndex:0];
+        }
+        
+        fileCell.indexPath = indexPath;
+        
+        //Autoresizing width when the iphone is landscape. Not in iPad.
+        if (IS_IPHONE) {
+            [fileCell.labelTitle setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+            [fileCell.labelInfoFile setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        }
+        
+        
+        FileDto *file = (FileDto *)[[self.sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
+        
+        NSDate* date = [NSDate dateWithTimeIntervalSince1970:file.date];
+        NSString *fileDateString;
+        if (file.date > 0) {
+            fileDateString = [InfoFileUtils getTheDifferenceBetweenDateOfUploadAndNow:date];
+        } else {
+            fileDateString = @"";
+        }
+        
+        //Add a FileDownloadedIcon.png in the left of cell when the file is in device
+        if (![file isDirectory]) {
+            //Is file
+            //Font for file
+            UIFont *fileFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
+            fileCell.labelTitle.font = fileFont;
+            fileCell.labelTitle.text = [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
+            NSString *fileSizeString = @"";
+            //Obtain the file size from the data base
+            DLog(@"Size: %ld", file.size);
+            float lenghSize = file.size;
+            
+            //If size is <0 we do not have the size
+            if (file.size >= 0) {
+                if (file.size < 1024) {
+                    //Bytes
+                    fileSizeString = [NSString stringWithFormat:@"%.f B", lenghSize];
+                } else if ((file.size/1024) < 1024){
+                    //KB
+                    fileSizeString = [NSString stringWithFormat:@"%.1f KB", (lenghSize/1024)];
+                } else {
+                    //MB
+                    fileSizeString = [NSString stringWithFormat:@"%.1f MB", ((lenghSize/1024)/1024)];
+                }
+            }
+            
+            if(file.isNecessaryUpdate) {
+                fileCell.labelInfoFile.text = NSLocalizedString(@"this_file_is_older", nil);
+            } else {
+                if ([fileDateString isEqualToString:@""]) {
+                    fileCell.labelInfoFile.text = [NSString stringWithFormat:@"%@", fileSizeString];
+                } else {
+                    fileCell.labelInfoFile.text = [NSString stringWithFormat:@"%@, %@", fileDateString, fileSizeString];
+                }
+            }
+        } else {
+            //Is directory
+            //Font for folder
+            UIFont *fileFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
+            fileCell.labelTitle.font = fileFont;
+            
+            NSString *folderName = [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            //Quit the last character
+            folderName = [folderName substringToIndex:[folderName length]-1];
+            
+            //Put the namefileCell.labelTitle.text
+            fileCell.labelTitle.text = folderName;
+            fileCell.labelInfoFile.text = [NSString stringWithFormat:@"%@", fileDateString];
+        }
+        
+        fileCell = (DocumentPickerCell*)[InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder];
+        
+        
+        if (file.isDownload != downloaded && !file.isDirectory) {
+            [fileCell.circularPV setHidden:NO];
+            [fileCell.circularPV setBackgroundColor:[UIColor purpleColor]];
+            
+        }else{
+            [fileCell.circularPV setHidden:YES];
+        }
+        
+        //Custom cell for SWTableViewCell with right swipe options
+        fileCell.containingTableView = tableView;
+        [fileCell setCellHeight:fileCell.frame.size.height];
+        
+        fileCell.rightUtilityButtons = nil;
+        
+        //Selection style gray
+        fileCell.selectionStyle=UITableViewCellSelectionStyleGray;
+        
+        cell = fileCell;
+    }
+    return cell;
 }
 
 #pragma mark - Check User

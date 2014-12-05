@@ -10,4 +10,6 @@
 
 @interface DocumentPickerCell : CustomCellFileAndDirectory
 
+@property(nonatomic, weak) IBOutlet UIView *circularPV;
+
 @end

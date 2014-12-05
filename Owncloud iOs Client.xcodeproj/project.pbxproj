@@ -530,6 +530,10 @@
 		EA8667E918AA299000D3550D /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
 		EA8ADE601A31D759008D3612 /* DocumentPickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE5F1A31D759008D3612 /* DocumentPickerCell.m */; };
 		EA8ADE621A31D770008D3612 /* DocumentPickerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA8ADE611A31D770008D3612 /* DocumentPickerCell.xib */; };
+		EA8ADE681A31E9AB008D3612 /* FFCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE651A31E9AB008D3612 /* FFCircularProgressView.m */; };
+		EA8ADE691A31E9AB008D3612 /* FFCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE651A31E9AB008D3612 /* FFCircularProgressView.m */; };
+		EA8ADE6A1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE671A31E9AB008D3612 /* UIColor+iOS7.m */; };
+		EA8ADE6B1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE671A31E9AB008D3612 /* UIColor+iOS7.m */; };
 		EAABAB2A18585CD700909831 /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 		EAB0AB3919ED356A00764C31 /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */; };
 		EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB4619ED356A00764C31 /* FileProvider.m */; };
@@ -1144,6 +1148,10 @@
 		EA8ADE5E1A31D759008D3612 /* DocumentPickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DocumentPickerCell.h; path = Cells/DocumentPickerCell.h; sourceTree = "<group>"; };
 		EA8ADE5F1A31D759008D3612 /* DocumentPickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DocumentPickerCell.m; path = Cells/DocumentPickerCell.m; sourceTree = "<group>"; };
 		EA8ADE611A31D770008D3612 /* DocumentPickerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DocumentPickerCell.xib; path = Cells/DocumentPickerCell.xib; sourceTree = "<group>"; };
+		EA8ADE641A31E9AB008D3612 /* FFCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFCircularProgressView.h; path = ExternalLibreries/FFCircularProgressView/FFCircularProgressView.h; sourceTree = "<group>"; };
+		EA8ADE651A31E9AB008D3612 /* FFCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFCircularProgressView.m; path = ExternalLibreries/FFCircularProgressView/FFCircularProgressView.m; sourceTree = "<group>"; };
+		EA8ADE661A31E9AB008D3612 /* UIColor+iOS7.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+iOS7.h"; path = "ExternalLibreries/FFCircularProgressView/UIColor+iOS7.h"; sourceTree = "<group>"; };
+		EA8ADE671A31E9AB008D3612 /* UIColor+iOS7.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+iOS7.m"; path = "ExternalLibreries/FFCircularProgressView/UIColor+iOS7.m"; sourceTree = "<group>"; };
 		EAABAB2818585CD700909831 /* NSString+Encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Encoding.h"; path = "Utils/NSString+Encoding.h"; sourceTree = "<group>"; };
 		EAABAB2918585CD700909831 /* NSString+Encoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Encoding.m"; path = "Utils/NSString+Encoding.m"; sourceTree = "<group>"; };
 		EAB0AB3219ED356A00764C31 /* ownCloudExtApp.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ownCloudExtApp.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2083,6 +2091,7 @@
 		148DD5DD1778549700FB9977 /* ExternalLibreries */ = {
 			isa = PBXGroup;
 			children = (
+				EA8ADE631A31E99B008D3612 /* FFCircularProgressView */,
 				1498708E187D66CB000D9C49 /* CustomStatusBar */,
 				EABF69051891376D00A2217C /* SWTableViewCell */,
 				EA68968317F598EB0033B3C1 /* KKPasscodeLock */,
@@ -2391,6 +2400,17 @@
 				EA8ADE611A31D770008D3612 /* DocumentPickerCell.xib */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		EA8ADE631A31E99B008D3612 /* FFCircularProgressView */ = {
+			isa = PBXGroup;
+			children = (
+				EA8ADE641A31E9AB008D3612 /* FFCircularProgressView.h */,
+				EA8ADE651A31E9AB008D3612 /* FFCircularProgressView.m */,
+				EA8ADE661A31E9AB008D3612 /* UIColor+iOS7.h */,
+				EA8ADE671A31E9AB008D3612 /* UIColor+iOS7.m */,
+			);
+			name = FFCircularProgressView;
 			sourceTree = "<group>";
 		};
 		EA8F6BD4163E9C6500689CE7 /* Upload From Other App */ = {
@@ -3212,6 +3232,7 @@
 				148DD62517785D6900FB9977 /* DetailViewController.m in Sources */,
 				148DD62617785D6900FB9977 /* MainPopOverBarckground.m in Sources */,
 				EABF69171891379C00A2217C /* SWTableViewCell.m in Sources */,
+				EA8ADE681A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
 				148DD62A17785D9800FB9977 /* FilePreviewViewController.m in Sources */,
 				148DD62E17785DDE00FB9977 /* GalleryView.m in Sources */,
 				148DD63117785DE900FB9977 /* MediaViewController.m in Sources */,
@@ -3293,6 +3314,7 @@
 				EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */,
 				1428F678178422BE0092F42A /* UtilsDtos.m in Sources */,
 				1420C3AC178A9F5000C0455C /* LoginViewController.m in Sources */,
+				EA8ADE6A1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */,
 				13A9C667187FE91700C6EEE8 /* ShareFileOrFolder.m in Sources */,
 				EA42FA51180539E70006DB7C /* ImageUtils.m in Sources */,
 				EABF68D61889339200A2217C /* SharedViewController.m in Sources */,
@@ -3320,6 +3342,7 @@
 			files = (
 				59C521F91A1B7C3A00C5EF76 /* ManageNetworkErrors.m in Sources */,
 				599DDD511A19FBF8008725DE /* CredentialsDto.m in Sources */,
+				EA8ADE691A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
 				599DDD4F1A19FBD3008725DE /* OCKeychain.m in Sources */,
 				59A6F4ED1A1625C300345229 /* ManageAppSettingsDB.m in Sources */,
 				59A6F4E91A1612B700345229 /* CheckAccessToServer.m in Sources */,
@@ -3340,6 +3363,7 @@
 				590849F41A0A811000D3E842 /* SWTableViewCell.m in Sources */,
 				590849F51A0A811000D3E842 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				590849F61A0A811000D3E842 /* SWUtilityButtonView.m in Sources */,
+				EA8ADE6B1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */,
 				599D80B21A2338100071B66E /* FileListDocumentProviderViewController.m in Sources */,
 				590849EF1A0A7D6000D3E842 /* CustomCellFileAndDirectory.m in Sources */,
 				593C16D01A09008C006C20AF /* ManageFilesDB.m in Sources */,

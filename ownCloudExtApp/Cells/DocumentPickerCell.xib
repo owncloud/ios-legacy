@@ -56,6 +56,10 @@
                         <color key="textColor" white="0.50082687039999996" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="highlightedColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
+                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R0W-iY-F4b">
+                        <rect key="frame" x="166" y="10" width="35" height="35"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="ajA-jy-DvN" secondAttribute="trailing" constant="-2" id="A0g-9R-uL9"/>
