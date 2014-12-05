@@ -528,6 +528,8 @@
 		EA68969917F9AC860033B3C1 /* OCPortraitNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68969817F9AC860033B3C1 /* OCPortraitNavigationViewController.m */; };
 		EA707223199CC59E00CE7079 /* ManageDownloads.m in Sources */ = {isa = PBXBuildFile; fileRef = EA707222199CC59E00CE7079 /* ManageDownloads.m */; };
 		EA8667E918AA299000D3550D /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
+		EA8ADE601A31D759008D3612 /* DocumentPickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE5F1A31D759008D3612 /* DocumentPickerCell.m */; };
+		EA8ADE621A31D770008D3612 /* DocumentPickerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA8ADE611A31D770008D3612 /* DocumentPickerCell.xib */; };
 		EAABAB2A18585CD700909831 /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 		EAB0AB3919ED356A00764C31 /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */; };
 		EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB4619ED356A00764C31 /* FileProvider.m */; };
@@ -1139,6 +1141,9 @@
 		EA707221199CC59E00CE7079 /* ManageDownloads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageDownloads.h; path = "Owncloud iOs Client/Network/Downloads/ManageDownloads.h"; sourceTree = "<group>"; };
 		EA707222199CC59E00CE7079 /* ManageDownloads.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageDownloads.m; path = "Owncloud iOs Client/Network/Downloads/ManageDownloads.m"; sourceTree = "<group>"; };
 		EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "ownCloud iOS library.xcodeproj"; path = "OCCommunicationLib/OCCommunicationLib/ownCloud iOS library.xcodeproj"; sourceTree = "<group>"; };
+		EA8ADE5E1A31D759008D3612 /* DocumentPickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DocumentPickerCell.h; path = Cells/DocumentPickerCell.h; sourceTree = "<group>"; };
+		EA8ADE5F1A31D759008D3612 /* DocumentPickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DocumentPickerCell.m; path = Cells/DocumentPickerCell.m; sourceTree = "<group>"; };
+		EA8ADE611A31D770008D3612 /* DocumentPickerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DocumentPickerCell.xib; path = Cells/DocumentPickerCell.xib; sourceTree = "<group>"; };
 		EAABAB2818585CD700909831 /* NSString+Encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Encoding.h"; path = "Utils/NSString+Encoding.h"; sourceTree = "<group>"; };
 		EAABAB2918585CD700909831 /* NSString+Encoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Encoding.m"; path = "Utils/NSString+Encoding.m"; sourceTree = "<group>"; };
 		EAB0AB3219ED356A00764C31 /* ownCloudExtApp.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ownCloudExtApp.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2378,6 +2383,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		EA8ADE5C1A31D734008D3612 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				EA8ADE5E1A31D759008D3612 /* DocumentPickerCell.h */,
+				EA8ADE5F1A31D759008D3612 /* DocumentPickerCell.m */,
+				EA8ADE611A31D770008D3612 /* DocumentPickerCell.xib */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
 		EA8F6BD4163E9C6500689CE7 /* Upload From Other App */ = {
 			isa = PBXGroup;
 			children = (
@@ -2402,6 +2417,7 @@
 		EAB0AB3319ED356A00764C31 /* ownCloudExtApp */ = {
 			isa = PBXGroup;
 			children = (
+				EA8ADE5C1A31D734008D3612 /* Cells */,
 				EAB0AB3719ED356A00764C31 /* DocumentPickerViewController.h */,
 				EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */,
 				599D80A61A23367F0071B66E /* File List */,
@@ -3116,6 +3132,7 @@
 				59990A5C1A0BDB5000D3B842 /* spreadsheet_icon~ipad.png in Resources */,
 				59990A5D1A0BDB5000D3B842 /* sound_icon.png in Resources */,
 				59990A5E1A0BDB5000D3B842 /* sound_icon@2x.png in Resources */,
+				EA8ADE621A31D770008D3612 /* DocumentPickerCell.xib in Resources */,
 				59990A5F1A0BDB5000D3B842 /* sound_icon@2x~ipad.png in Resources */,
 				59990A601A0BDB5000D3B842 /* sound_icon~ipad.png in Resources */,
 				59990A611A0BDB5000D3B842 /* TABShares.png in Resources */,
@@ -3317,6 +3334,7 @@
 				59990A271A0BD74000D3B842 /* FileNameUtils.m in Sources */,
 				59990A251A0BD67A00D3B842 /* InfoFileUtils.m in Sources */,
 				590849F11A0A811000D3E842 /* NSMutableArray+SWUtilityButtons.m in Sources */,
+				EA8ADE601A31D759008D3612 /* DocumentPickerCell.m in Sources */,
 				590849F21A0A811000D3E842 /* SWCellScrollView.m in Sources */,
 				590849F31A0A811000D3E842 /* SWLongPressGestureRecognizer.m in Sources */,
 				590849F41A0A811000D3E842 /* SWTableViewCell.m in Sources */,
