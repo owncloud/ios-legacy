@@ -62,7 +62,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         
         // Custom initialization
         if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPhone) {
-            UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"cancel", nil) style:UIBarStyleDefault target:self action:@selector(cancelClicked:)];
+            UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"cancel", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancelClicked:)];
             
             self.navigationItem.leftBarButtonItem = cancelButton;
         }

@@ -247,7 +247,7 @@
     
     self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    DLog(@"self.selectedFileDto.id: %d", self.selectedFileDto.idFile);
+    DLog(@"self.selectedFileDto.id: %ld", (long) self.selectedFileDto.idFile);
     DLog(@"self.selectedFileDto.localFolder: %@", self.selectedFileDto.localFolder);
     
     
@@ -319,7 +319,7 @@
         DLog(@"MOVING THE FILE TO THE ROOT");
         DLog(@"Old path: %@", self.selectedFileDto.filePath);
         DLog(@"New path: %@", rootFilePath);
-        DLog(@"File for where id: %d", self.selectedFileDto.idFile);
+        DLog(@"File for where id: %ld", (long)self.selectedFileDto.idFile);
         
         
         [ManageFilesDB updatePath:self.selectedFileDto.filePath withNew:rootFilePath andFileId:[ManageFilesDB getRootFileDtoByUser:app.activeUser].idFile andSelectedFileId:self.selectedFileDto.idFile andChangedFileName:_destinyFilename];
@@ -342,13 +342,13 @@
         NSString *destinationFolderPath = @"";
         NSString *destinationFolderName = @"";
         
-        for (int i = ([selectedFolderPathSplitted count] -1) ; i < [selectedFolderPathSplitted count]; i++) {
+        for (NSInteger i = ([selectedFolderPathSplitted count] -1) ; i < [selectedFolderPathSplitted count]; i++) {
             
             destinationFolderName = [NSString stringWithFormat:@"%@/",[selectedFolderPathSplitted objectAtIndex:(i-1)]];
         }
         
-        DLog(@"newFilePath length: %d",[newFilePath length]);
-        DLog(@"foldername length: %d",[destinationFolderName length]);
+        DLog(@"newFilePath length: %lu",(unsigned long)[newFilePath length]);
+        DLog(@"foldername length: %lu",(unsigned long)[destinationFolderName length]);
         
         if ([newFilePath length]==[destinationFolderName length]) {
             //The path is in the root
@@ -368,8 +368,8 @@
         DLog(@"MOVING THE FOLDER TO OTHER FOLDER");
         DLog(@"Old path: %@", self.selectedFileDto.filePath);
         DLog(@"New path: %@", newFilePath);
-        DLog(@"New file_id: %d", destinationFolderDto.idFile);
-        DLog(@"File for where id: %d", self.selectedFileDto.idFile);
+        DLog(@"New file_id: %ld", (long)destinationFolderDto.idFile);
+        DLog(@"File for where id: %ld", (long)self.selectedFileDto.idFile);
         
         [ManageFilesDB updatePath:self.selectedFileDto.filePath withNew:newFilePath andFileId:destinationFolderDto.idFile andSelectedFileId:self.selectedFileDto.idFile andChangedFileName:_destinyFilename];
     }
@@ -402,7 +402,7 @@
     DLog(@"SubFolderPath: %@", subFolderPath);
     
     NSArray *listOfFoldersToUpdate = [ManageFilesDB getAllFoldersByBeginFilePath:oldFilePath];
-    DLog(@"listOfFoldersToUpdate: %d", [listOfFoldersToUpdate count]);
+    DLog(@"listOfFoldersToUpdate: %lu", (unsigned long)[listOfFoldersToUpdate count]);
     
     
     FileDto *folder;
@@ -441,7 +441,7 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //NSString *newLocalFolder= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", currentUser.idUser]];
-    NSString *newLocalFolder= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", app.activeUser.idUser]];
+    NSString *newLocalFolder= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)app.activeUser.idUser]];
     
     NSString *charactersToDelete = [NSString stringWithFormat:@"%@%@", app.activeUser.url, k_url_webdav_server];
     NSString *newStr = [self.destinationFolder substringWithRange:NSMakeRange([charactersToDelete length], [self.destinationFolder length]-[charactersToDelete length])];

@@ -58,6 +58,7 @@
 
 #pragma mark Load View Life
 
+
 - (void)viewDidLoad {
     
     [super viewDidLoad];
@@ -352,7 +353,7 @@
                 if (!isSamlCredentialsError) {
                 
                     //Obtain the path where the folder will be created in the file system
-                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%d/%@",[UtilsUrls getOwnCloudFilePath],app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
                     
                     DLog(@"Name of the folder: %@ to create in: %@",name, currentLocalFileToCreateFolder);
@@ -363,8 +364,10 @@
                 }
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                 DLog(@"error: %@", error);
-                DLog(@"Operation error: %d", response.statusCode);
+
+                DLog(@"Operation error: %ld", (long)response.statusCode);
                 [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:self.user];
+
             } errorBeforeRequest:^(NSError *error) {
                 if (error.code == OCErrorForbidenCharacters) {
                     [self endLoading];
@@ -563,6 +566,5 @@
     
     return cell;
 }
-
 
 @end

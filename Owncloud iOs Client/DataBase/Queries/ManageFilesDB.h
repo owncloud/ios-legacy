@@ -26,7 +26,7 @@
  * Method that give all files from a single folder
  * @fileId -> id of the folder father and we want all his files and folders
  */
-+ (NSMutableArray *) getFilesByFileIdForActiveUser:(int) fileId;
++ (NSMutableArray *) getFilesByFileIdForActiveUser:(NSInteger) fileId;
 
 /*
  * Method that give all folders from a single folder
@@ -54,7 +54,7 @@
  * Method that give the file with the idFile 
  * @idFile -> id of tha file that we want
  */
-+ (FileDto *) getFileDtoByIdFile:(int) idFile;
++ (FileDto *) getFileDtoByIdFile:(NSInteger) idFile ;
 
 /*
  * Method that give a file without the idFile but we know the name, the user and where is the file
@@ -75,7 +75,7 @@
  * @idFile -> id of the file
  * @downloadState -> new state
  */
-+ (void) setFileIsDownloadState: (int) idFile andState:(enumDownload)downloadState;
++(void) setFileIsDownloadState: (NSInteger) idFile andState:(enumDownload)downloadState ;
 
 /*
  * Method to change the download state of a file
@@ -89,20 +89,21 @@
  * @filePath -> new folder
  * @idFile -> id of the file
  */
-+ (void) setFilePath: (NSString * ) filePath byIdFile: (int) idFile;
++(void) setFilePath: (NSString * ) filePath byIdFile: (NSInteger) idFile;
 
 /*
  * Method to insert all the files of a folder
  * @listOfFiles -> List of all the files
  * @fileId -> id of the folder father
  */
-+ (void) insertManyFiles:(NSMutableArray *)listOfFiles andFileId:(int)fileId;
++(void) insertManyFiles:(NSMutableArray *)listOfFiles andFileId:(NSInteger)fileId;
 
 /*
  * Method to delete a file
  * @fileId -> id of the file to delete
  */
-+ (void) deleteFileByIdFileOfActiveUser: (int) idFile;
+
++(void) deleteFileByIdFileOfActiveUser:(NSInteger) idFile;
 
 ///-----------------------------------
 /// @name Delete File by idfile
@@ -115,19 +116,20 @@
  */
 +(void) deleteFileByIdFile:(NSInteger) idFile;
 
+
 #pragma mark - Methods to refresh folder
 
 /*
  * Method to delete all the files and folders from the folder that we want to refresh
  * @fileId -> id of the folder
  */
-+ (void) deleteFilesFromDBBeforeRefreshByFileId: (int) fileId;
++(void) deleteFilesFromDBBeforeRefreshByFileId: (NSInteger) fileId;
 
 /*
  * Method to backup the necessary files and folders to make a right refresh and keep the previous information (files downloads, subfolders and favourites)
  * @fileId -> id of the folder
  */
-+ (void) backupOfTheProcessingFilesAndFoldersByFileId:(int) fileId;
++ (void) backupOfTheProcessingFilesAndFoldersByFileId:(NSInteger) fileId;
 
 /*
  * Method to update the related files from the backup after refresh (related files = subfolders and files from those subfolders)
@@ -162,9 +164,9 @@
  * The only exception is that the field is not set to YES is the file is overwritten, in this
  * case the etag must be updated on the files DB: check the method updateFilesFromBackup
  *
- * @param idFile -> int, the file that want to update
+ * @param idFile -> NSInteger, the file that want to update
  */
-+(void) setUpdateIsNecessaryFromBackup:(int) idFile;
++(void) setUpdateIsNecessaryFromBackup:(NSInteger) idFile;
 
 
 ///-----------------------------------
@@ -176,7 +178,7 @@
  *
  * @param idFile -> int
  */
-+ (void) setIsNecessaryUpdateOfTheFile: (int) idFile;
++ (void) setIsNecessaryUpdateOfTheFile: (NSInteger) idFile;
 
 
 /*
@@ -248,7 +250,7 @@
  * @selectedFileId -> idFile of the file moved
  * @fileName -> name of the file moved
  */
-+ (void) updatePath:(NSString *) oldFilePath withNew:(NSString *) newFilePath andFileId:(int) fileId andSelectedFileId:(int) selectedFileId andChangedFileName:(NSString *) fileName;
++(void) updatePath:(NSString *) oldFilePath withNew:(NSString *) newFilePath andFileId:(NSInteger) fileId andSelectedFileId:(NSInteger) selectedFileId andChangedFileName:(NSString *) fileName;
 
 /*
  * Method to update the related files of a folder
@@ -284,6 +286,7 @@
  * @idFile -> id of the file to update the etag
  * @etag -> new etag
  */
+
 + (void) updateEtagOfFileDtoByid:(NSInteger) idFile andNewEtag: (long long) etag;
 
 /*
@@ -298,7 +301,7 @@
  * @oldFileId -> old fileId (usually 0 to update the root folder)
  * @fileId -> new fileId
  */
-+ (void) updateFilesWithFileId:(int) oldFileId withNewFileId:(int) fileId;
++ (void) updateFilesWithFileId:(NSInteger) oldFileId withNewFileId:(NSInteger) fileId;
 
 
 /*
@@ -306,7 +309,7 @@
  * @idFile -> file id to identify the file that we need change
  * @isNecessaryUpdate -> Boolean to set if we need to update or not
  */
-+ (void) setFile:(int)idFile isNecessaryUpdate:(BOOL)isNecessaryUpdate;
++ (void) setFile:(NSInteger)idFile isNecessaryUpdate:(BOOL)isNecessaryUpdate;
 
 
 /*
@@ -418,11 +421,11 @@
 /**
  * This method get all the file where the download status is equal to status
  *
- * @param int -> The download status
+ * @param NSInteger -> The download status
  *
  * @return NSMutableArray -> The array with the files
  */
-+ (NSMutableArray *) getFilesByDownloadStatus:(int) status;
++ (NSMutableArray *) getFilesByDownloadStatus:(NSInteger) status;
 
 
 
@@ -491,10 +494,10 @@
 /**
  * This method updates the favorite filed of the file
  *
- * @param idFile -> int
+ * @param idFile -> NSInteger
  * @param isFavorite -> BOOL
  */
-+ (void) updateTheFileID: (int)idFile asFavorite: (BOOL) isFavorite;
++ (void) updateTheFileID: (NSInteger)idFile asFavorite: (BOOL) isFavorite;
 
 ///-----------------------------------
 /// @name getAllFavoritesOfUserId:userId

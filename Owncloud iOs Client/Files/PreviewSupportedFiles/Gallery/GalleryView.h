@@ -43,7 +43,7 @@
 @property (nonatomic,strong) NSMutableArray *visiblePageScrollViewArray;
 @property (nonatomic,strong) NSString *currentLocalFolder;
 
-@property int currentNumberPage;
+@property NSInteger currentNumberPage;
 @property (nonatomic)BOOL isDoubleTap;
 @property (nonatomic)BOOL fullScreen;
 @property(nonatomic,weak) __weak id<GalleryViewDelegate> delegate;

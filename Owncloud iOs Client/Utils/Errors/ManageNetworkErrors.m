@@ -26,10 +26,10 @@
  * @errorConnection -> NSError of NSURLConnection
  */
 
-- (void)manageErrorHttp: (NSInteger *)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *) user {
+- (void)manageErrorHttp:(NSInteger)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *) user {
     
-    DLog(@"Error code from  web dav server: %d", (int) errorHttp);
-    DLog(@"Error code from server: %d", errorConnection.code);
+    DLog(@"Error code from  web dav server: %ld", (long) errorHttp);
+    DLog(@"Error code from server: %ld", (long)errorConnection.code);
     
     //Server connection error
     switch (errorConnection.code) {
@@ -44,7 +44,7 @@
         }
         default:
             //Web Dav Error Code
-            switch ((int) errorHttp) {
+            switch (errorHttp) {
                 case kOCErrorServerUnauthorized:
                     //Unauthorized (bad username or password)
                     [self.delegate errorLogin];

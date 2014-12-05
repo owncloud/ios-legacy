@@ -295,8 +295,8 @@
         
         [self endLoading];
         
-        DLog(@"error.code: %d", error.code);
-        DLog(@"server error: %d", response.statusCode);
+        DLog(@"error.code: %ld", (long)error.code);
+        DLog(@"server error: %ld", (long)response.statusCode);
         
         [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
         

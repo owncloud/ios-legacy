@@ -90,7 +90,7 @@
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel)];
 	[self.navigationItem setLeftBarButtonItem:cancelButton];
     
-    UIBarButtonItem *sendToButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"other_apps_send_to", nil) style:UIBarButtonSystemItemCancel target:self action:@selector(sendTo)];
+    UIBarButtonItem *sendToButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"other_apps_send_to", nil) style:UIBarButtonItemStyleDone target:self action:@selector(sendTo)];
     
 	[self.navigationItem setRightBarButtonItem:sendToButton];
     
@@ -208,7 +208,7 @@
     NSNumber * size = [attributes objectForKey: NSFileSize];
     NSUInteger length = [size integerValue];
     
-    DLog(@"Size is: %d", length);
+    DLog(@"Size is: %lu", (unsigned long)length);
     
     return length;    
 }
@@ -494,7 +494,7 @@
         sf.currentRemoteFolder=_remoteFolder;
         
         //We get the current folder to create the local tree
-        NSString *localRootUrlString = [NSString stringWithFormat:@"%@%d/", [UtilsUrls getOwnCloudFilePath],app.activeUser.idUser];
+        NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser];
         
         sf.currentLocalFolder = localRootUrlString;
         
@@ -540,14 +540,14 @@
         
         
         //Bytes
-        if (fileSize<1024) {
-            fileSizeString = [NSString stringWithFormat:@"%d Bytes", fileSize];
+        if (fileSize < 1024) {
+            fileSizeString = [NSString stringWithFormat:@"%lu Bytes", (unsigned long)fileSize];
         }else if ((fileSize/1024)<1048576){
             //KB
-            fileSizeString = [NSString stringWithFormat:@"%d KB", (fileSize/1024)];
+            fileSizeString = [NSString stringWithFormat:@"%lu KB", (unsigned long)(fileSize/1024)];
         }else{
             //MB
-            fileSizeString = [NSString stringWithFormat:@"%d MB", ((fileSize/1024)/1024)];
+            fileSizeString = [NSString stringWithFormat:@"%lu MB", (unsigned long)((fileSize/1024)/1024)];
         }
         
         //Image name by extension

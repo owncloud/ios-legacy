@@ -32,7 +32,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     s = s % 60;
     m = m % 60;
     
-    return [NSString stringWithFormat:@"%@%d:%0.2d:%0.2d", isLeft ? @"-" : @"", h,m,s];
+    return [NSString stringWithFormat:@"%@%ld:%0.2ld:%0.2ld", isLeft ? @"-" : @"", (long)h, (long)m, (long)s];
 }
 
 
