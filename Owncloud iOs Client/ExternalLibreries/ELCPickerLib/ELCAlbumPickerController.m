@@ -77,7 +77,9 @@
             if ([[sGroupPropertyName lowercaseString] isEqualToString:@"camera roll"] && nType == ALAssetsGroupSavedPhotos) {
                 [self.assetGroups insertObject:group atIndex:0];
             }
-            else {
+            else if(nType == ALAssetsGroupPhotoStream){
+                //Nothing
+            }else {
                 [self.assetGroups addObject:group];
             }
 
@@ -187,6 +189,7 @@
 }
 
 - (void)viewDidUnload {
+    [super viewDidUnload];
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
 }
@@ -223,7 +226,7 @@
     
     
     NSDictionary *titleAttributes = @{NSForegroundColorAttributeName: [UIColor colorOfToolBarButtons],
-                                      NSShadowAttributeName: shadow,
+                                      NSShadowAttributeName:shadow,
                                       NSFontAttributeName: [UIFont systemFontOfSize:16.0]};
     
     
@@ -255,8 +258,8 @@
     sf.currentRemoteFolder=self.currentRemoteFolder;
     
     //We get the current folder to create the local tree
-    NSString *localRootUrlString = [NSString stringWithFormat:@"%@%d/", [UtilsUrls getOwnCloudFilePath],app.activeUser.idUser];
-    
+    NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser];
+
     sf.currentLocalFolder = localRootUrlString;
     
     navigation.delegate=self;

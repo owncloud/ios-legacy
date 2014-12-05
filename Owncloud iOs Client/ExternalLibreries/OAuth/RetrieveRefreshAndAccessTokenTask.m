@@ -93,7 +93,7 @@
     {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*) response;
         if (dbService.isDebugLogEnabled) {
-            DLog(@"response1 = %i", [httpResponse statusCode]);
+            DLog(@"response1 = %ld", (long)[httpResponse statusCode]);
             DLog(@"response2 = %@", [httpResponse allHeaderFields]);
         }
     }

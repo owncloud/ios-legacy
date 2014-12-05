@@ -146,13 +146,13 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         } failureRequest:^(NSURLResponse *response, NSError *error) {
             
             DLog(@"Error: %@", error);
-            DLog(@"error.code: %d", error.code);
+            DLog(@"error.code: %ld", (long)error.code);
             
             if (!self.isForceCanceling) {
                 
                 [weakSelf setDownloadTaskIdentifierValid:NO];
                 NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-                DLog(@"Operation error: %d", httpResponse.statusCode);
+                DLog(@"Operation error: %ld", (long)httpResponse.statusCode);
                 
                 //Update the fileDto
                 _fileDto = [ManageFilesDB getFileDtoByIdFile:_fileDto.idFile];
@@ -273,8 +273,8 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                                                           
                                                       } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                                                           DLog(@"Error: %@", error);
-                                                          DLog(@"error.code: %d", error.code);
-                                                          DLog(@"response.statusCode: %d", response.statusCode);
+                                                          DLog(@"error.code: %ld", (long)error.code);
+                                                          DLog(@"response.statusCode: %ld", (long)response.statusCode);
                                                           //Update the fileDto
                                                           _fileDto = [ManageFilesDB getFileDtoByIdFile:_fileDto.idFile];
                                                           
@@ -372,15 +372,15 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         NSInteger totalProgressDownload = 0;
         NSString *progressString;
         
-        currentProgressDownload = progress.completedUnitCount;
+        currentProgressDownload = (NSInteger)progress.completedUnitCount;
         if (currentProgressDownload) {
             
-            totalProgressDownload = progress.totalUnitCount;
+            totalProgressDownload = (NSInteger)progress.totalUnitCount;
             
             if (totalProgressDownload/1024 == 0) {
                 progressString = [NSString stringWithFormat:@"%ld Bytes / %ld Bytes", (long)currentProgressDownload, (long)totalProgressDownload];
             }else{
-                progressString = [NSString stringWithFormat:@"%d KB / %d KB", currentProgressDownload/1024, totalProgressDownload/1024];
+                progressString = [NSString stringWithFormat:@"%ld KB / %ld KB", (long)(currentProgressDownload/1024), (long)(totalProgressDownload/1024)];
             }
         }
 
@@ -490,7 +490,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             DLog(@"Just downloaded");
             
         }else {
-            DLog(@"Cancel download: %d", _fileDto.idFile);
+            DLog(@"Cancel download: %ld", (long)_fileDto.idFile);
             //Set boolean to YES
             _isCancel=YES;
             
@@ -700,7 +700,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
@@ -734,7 +734,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                 }
             }
             
-            DLog(@"The directory List have: %d elements", items.count);
+            DLog(@"The directory List have: %lu elements", (unsigned long)items.count);
             
              //Check if there are almost one item in the array
             if (items.count >= 1) {
@@ -750,7 +750,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         //Remove this file of favorites sync process
         [weakSelf removeFileOfFavorites];
         

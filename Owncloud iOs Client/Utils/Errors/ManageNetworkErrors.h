@@ -34,6 +34,8 @@
  * @errorConnection -> NSError of NSURLConnection
  * @user -> UserDto
  */
-- (void)manageErrorHttp: (NSInteger *)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *) user;
+
+- (void)manageErrorHttp: (NSInteger)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *) user;
+
 
 @end

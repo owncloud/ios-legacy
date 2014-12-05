@@ -96,19 +96,20 @@
  * Method that realice the refresh process
  *
  */
+
 + (void)makeTheRefreshProcessWith:(NSMutableArray*)arrayFromServer inThisFolder:(NSInteger)idFolder{
-    
-    DLog(@"self.fileIdToShowFiles before refresh: %d", idFolder);
+
+    DLog(@"self.fileIdToShowFiles before refresh: %ld", (long)idFolder);
     
     [ManageFilesDB deleteFilesBackup];
     [ManageFilesDB backupOfTheProcessingFilesAndFoldersByFileId:idFolder];
     [ManageFilesDB deleteFilesFromDBBeforeRefreshByFileId:idFolder];
     
-    DLog(@"self.fileIdToShowFiles: %d", idFolder);
+    DLog(@"self.fileIdToShowFiles: %ld", (long)idFolder);
     
     FileDto *currentFolder = [ManageFilesDB getFileDtoByIdFile:idFolder];
     
-    DLog(@"idFile: %d", currentFolder.idFile);
+    DLog(@"idFile: %ld", (long)currentFolder.idFile);
     DLog(@"name: %@", currentFolder.fileName);
     
   //  NSMutableArray *directoryList = [[req getDirectoryList] mutableCopy];

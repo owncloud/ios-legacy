@@ -65,10 +65,6 @@ double rad2Deg(double radians)
 {
 	// Draw two appropriate corners, with cornerBackgroundColor behind them.
 	if (cornerRadius > 0) {
-		if (NO) { // just for debugging.
-			[[UIColor redColor] set];
-			UIRectFill(self.bounds);
-		}
 		
 		float maxX = CGRectGetMaxX(self.bounds);
 		float maxY = CGRectGetMaxY(self.bounds);

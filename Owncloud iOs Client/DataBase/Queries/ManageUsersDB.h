@@ -67,7 +67,7 @@
  * Method that set a user like a active account
  * @idUser -> id user
  */
-+(void) setActiveAccountByIdUser: (int) idUser;
++(void) setActiveAccountByIdUser: (NSInteger) idUser;
 
 /*
  * Method that set all acount as a no active.
@@ -84,7 +84,7 @@
  * Method that remove user data in all tables
  * @idUser -> id user
  */
-+(void) removeUserAndDataByIdUser:(int)idUser;
++(void) removeUserAndDataByIdUser:(NSInteger)idUser;
 
 /*
  * Method that set the user storage of a user

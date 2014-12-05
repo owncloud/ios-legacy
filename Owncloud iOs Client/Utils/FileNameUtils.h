@@ -17,13 +17,14 @@
 
 
 
-typedef enum {
+
+typedef NS_ENUM (NSInteger, kindOfFileEnum){
     imageFileType = 0,
     videoFileType = 1,
     audioFileType = 2,
     officeFileType = 3,
     otherFileType = 4,
-} kindOfFileEnum;
+};
 
 @interface FileNameUtils : NSObject
 

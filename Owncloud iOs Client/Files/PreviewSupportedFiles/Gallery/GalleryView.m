@@ -103,18 +103,18 @@
         NSInteger sections = sortedArray.count;
         NSArray *cells;
         FileDto *file;
-        for (int i=0; i<sections; i++) {
+        for (NSInteger i = 0; i<sections; i++) {
             
             cells=[sortedArray objectAtIndex:i];
             
-            for (int j=0; j<cells.count; j++) {
+            for (NSInteger j = 0; j<cells.count; j++) {
                 file = (FileDto *)[cells objectAtIndex:j];
                 //Know if the file is image
                 if (!file.isDirectory) {
                     if ([FileNameUtils isImageSupportedThisFile:file.fileName]==YES) {
                         
                         [_galleryArray addObject:file];
-                        DLog(@"file %@ isDownload: %d", file.fileName, file.isDownload);
+                        DLog(@"file %@ isDownload: %ld", file.fileName, (long)file.isDownload);
                     }
                 }
             }
@@ -147,11 +147,11 @@
         NSArray *cells;
         FileDto *file;
         
-        for (int i=0; i<sections; i++) {
+        for (NSInteger i = 0; i<sections; i++) {
             
             cells=[sortArray objectAtIndex:i];
             
-            for (int j=0; j<cells.count; j++) {
+            for (NSInteger j = 0; j<cells.count; j++) {
                 file = (FileDto *)[cells objectAtIndex:j];
                 //Know if the file is image
                 if (!file.isDirectory) {
@@ -215,7 +215,7 @@
  */
 - (void)updateTheCurrentLocalFolder{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    _currentLocalFolder = [NSString stringWithFormat:@"%@%d/%@", [UtilsUrls getOwnCloudFilePath],app.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:_file.filePath ofUserDto:app.activeUser]];
+    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:_file.filePath ofUserDto:app.activeUser]];
     _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
 }
@@ -232,8 +232,8 @@
     
     // Set up the array to hold the views for each page
     self.pageViews = [[NSMutableArray alloc] init];
-    for (int i = 0; i < [self.galleryArray count]; ++i) {
-        DLog(@"Adding %d", i);
+    for (NSInteger i = 0; i < [self.galleryArray count]; ++i) {
+        DLog(@"Adding %ld", (long)i);
         [self.pageViews addObject:[NSNull null]];
     }
     
@@ -264,14 +264,14 @@
  */
 -(void)setTheScrollInTheCorrectPosition{
     
-    int position = 0;
+    NSInteger position = 0;
     
     //Get the index of this file
-    for (int i = 0 ; i < [self.galleryArray count] ; i++) {
+    for (NSInteger i = 0 ; i < [self.galleryArray count] ; i++) {
         
         FileDto *currentFile = [self.galleryArray objectAtIndex:i];
         
-        DLog(@"%d == %d", currentFile.idFile, _file.idFile);
+        DLog(@"%ld == %ld", (long)currentFile.idFile, (long)_file.idFile);
         
         if ([currentFile.fileName isEqualToString:_file.fileName] &&
             [currentFile.filePath isEqualToString:_file.filePath]) {
@@ -361,13 +361,13 @@
         CGFloat pageWidth = self.scrollView.frame.size.width;
         NSInteger page = (NSInteger)floor((self.scrollView.contentOffset.x * 2.0f + pageWidth) / (pageWidth * 2.0f));
         
-        DLog(@"[self.visiblePageScrollViewArray count: %d", [self.visiblePageScrollViewArray count]);
+        DLog(@"[self.visiblePageScrollViewArray count: %lu", (unsigned long)[self.visiblePageScrollViewArray count]);
         
-        for (int i = 0 ; i < [self.visiblePageScrollViewArray count] ; i++) {
+        for (NSInteger i = 0 ; i < [self.visiblePageScrollViewArray count] ; i++) {
             
             UIScrollView *currentScroll = [self.visiblePageScrollViewArray objectAtIndex:i];
             
-            DLog(@"Page: %d Tag: %d", page, currentScroll.tag);
+            DLog(@"Page: %ld Tag: %ld", (long)page, (long)currentScroll.tag);
             
             if(page == currentScroll.tag) {
                 [currentScroll setZoomScale:3.0 animated:YES];
@@ -458,7 +458,7 @@
     
     
     //Update fileDto
-    _file=[ManageFilesDB getFileDtoByIdFile:_file.idFile];
+    _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
     
      [_loadingSpinner setHidden:YES];
     
@@ -663,14 +663,14 @@
         DLog(@"file: %@", _file.fileName);
         DLog(@"_path: %@", [UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] );
         
-        DLog(@"Count self.galleryArray: %d", [self.galleryArray count]);
+        DLog(@"Count self.galleryArray: %ld", (long)[self.galleryArray count]);
         
-        for(int i = 0; i < [self.galleryArray count] ; i++) {
+        for(NSInteger i = 0; i < [self.galleryArray count] ; i++) {
             FileDto *currentFile = [self.galleryArray objectAtIndex:i];
             
             currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath andUser:app.activeUser] andUser:app.activeUser];
             
-            DLog(@"Compare: %d - %d",currentFile.idFile, fileDto.idFile);
+            DLog(@"Compare: %ld - %ld",(long) currentFile.idFile, (long)fileDto.idFile);
             
             if(currentFile.idFile == fileDto.idFile && currentFile != nil) {
                 
@@ -679,7 +679,7 @@
             }
         }
         
-        if (_file.idFile==fileDto.idFile) {
+        if (_file.idFile == fileDto.idFile) {
             
             [_delegate stopNotificationUpdatingFile];
             
@@ -901,7 +901,7 @@
     CGFloat pageWidth = self.scrollView.frame.size.width;
     NSInteger page = (NSInteger)floor((self.scrollView.contentOffset.x * 2.0f + pageWidth) / (pageWidth * 2.0f));
     
-    DLog(@"Gallery size: %d - Page: %d", [self.galleryArray count], page);
+    DLog(@"Gallery size: %ld - Page: %ld", (long)[self.galleryArray count], (long)page);
     FileDto *currentFile = [self.galleryArray objectAtIndex:page];
     DLog(@"Image: %@", currentFile.fileName);
     
@@ -964,8 +964,8 @@
         
         DLog(@"File name before: %@", _file.fileName);
         
-        if (page==currentPage) {
-            DLog(@"PAGE: %d", page);
+        if (page == currentPage) {
+            DLog(@"PAGE: %ld", (long)page);
             _file = [self.galleryArray objectAtIndex:page];
         }
         

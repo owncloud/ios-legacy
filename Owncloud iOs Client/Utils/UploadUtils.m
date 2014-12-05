@@ -58,7 +58,7 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
 + (NSString *)makePathString:(NSString *)destinyFolder withUserUrl:(NSString *)userUrl{
     NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
     NSArray *splitedUrlFromServer = [userUrl componentsSeparatedByString:@"/"];
-    DLog(@"splitedUrlFromServer: %d", [splitedUrlFromServer count]);
+    DLog(@"splitedUrlFromServer: %lu", (unsigned long)[splitedUrlFromServer count]);
     
     NSString *utf8String;
     

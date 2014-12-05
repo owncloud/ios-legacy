@@ -378,6 +378,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     static ALAssetsLibrary *library = nil;
     dispatch_once(&pred, ^{
         library = [[ALAssetsLibrary alloc] init];
+        
     });
     return library;
 }
@@ -440,7 +441,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Check if we generate the interface from login screen or not
     if (isFromLogin) {
         //From login screen we create the user folder to haver multiuser
-        localSystemPath = [NSString stringWithFormat:@"%@%d/",[UtilsUrls getOwnCloudFilePath],_activeUser.idUser];
+        localSystemPath = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)_activeUser.idUser];
         //DLog(@"current: %@", localSystemPath);
         
         //If not exist we create
@@ -452,7 +453,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
     } else {
         //We get the current folder to create the local tree
-        localSystemPath = [NSString stringWithFormat:@"%@%d/", [UtilsUrls getOwnCloudFilePath],_activeUser.idUser];
+        localSystemPath = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)_activeUser.idUser];
         //DLog(@"localRootUrlString: %@", localSystemPath);
     }
 
@@ -734,7 +735,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 - (void) updateProgressView:(NSUInteger)num withPercent:(float)percent{
     
-    DLog(@"num: %d", num);
+    DLog(@"num: %lu", (unsigned long)num);
     DLog(@"percent: %fd", percent);
     
     [_recentViewController updateProgressView:num withPercent:percent];    
@@ -1073,11 +1074,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         for (NSURLSessionUploadTask *upload in uploadTasks) {
             
-            DLog(@"OC uplaod task identifier: %d", upload.taskIdentifier);
+            DLog(@"OC uplaod task identifier: %lu", (unsigned long)upload.taskIdentifier);
             
             for (UploadsOfflineDto *uploadDB in uploadsFromDB) {
                 
-                DLog(@"OC upload hash %d - Database hash %d", upload.taskIdentifier, uploadDB.taskIdentifier);
+                DLog(@"OC upload hash %ld - Database hash %ld", (long)upload.taskIdentifier, (long)uploadDB.taskIdentifier);
                 
                 if (upload.taskIdentifier == uploadDB.taskIdentifier) {
                     
@@ -1198,7 +1199,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     
                     //Local folder
                     NSString *localFolder = nil;
-                    localFolder = [NSString stringWithFormat:@"%@%d/%@", [UtilsUrls getOwnCloudFilePath], self.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:self.activeUser]];
+                    localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:self.activeUser]];
                     localFolder = [localFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                     
                     download.currentLocalFolder = localFolder;
@@ -1251,7 +1252,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             if (download.downloadTask.taskIdentifier == downloadTask.taskIdentifier && download.isFromBackground) {
                 
                 NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)downloadTask.response;
-                DLog(@"HTTP Error: %d", httpResponse.statusCode);
+                DLog(@"HTTP Error: %ld", (long)httpResponse.statusCode);
                 
                 if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
                     
@@ -1335,7 +1336,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 });
             }
         }
-        DLog(@"Download identifier %d", downloadTask.taskIdentifier);
+        DLog(@"Download identifier %lu", (unsigned long)downloadTask.taskIdentifier);
         DLog(@"Task progress: %lld of total: %lld", totalBytesWritten, totalBytesExpectedToWrite);
     }];
 }
@@ -1355,11 +1356,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     [[AppDelegate sharedOCCommunication] setTaskDidCompleteBlock:^(NSURLSession *session, NSURLSessionTask *task, NSError *error) {
         
-        DLog(@"TASK TERMINATED WITH IDENTIFIER: %d", task.taskIdentifier);
-        DLog(@"Error code: %d, and error descripcion: %@", error.code, error.description);
+        DLog(@"TASK TERMINATED WITH IDENTIFIER: %lu", (unsigned long)task.taskIdentifier);
+        DLog(@"Error code: %ld, and error descripcion: %@", (long)error.code, error.description);
         
         NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)task.response;
-        DLog(@"HTTP Error: %d", httpResponse.statusCode);
+        DLog(@"HTTP Error: %ld", (long)httpResponse.statusCode);
         
         NSMutableArray *uploadsFromDB = [NSMutableArray new];
         
@@ -1367,7 +1368,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [uploadsFromDB addObjectsFromArray:[ManageUploadsDB getUploadsByStatus:uploading]];
         
         
-        DLog(@"uploadsFromDB: %d", [uploadsFromDB count]);
+        DLog(@"uploadsFromDB: %lu", (unsigned long)[uploadsFromDB count]);
         
         for (UploadsOfflineDto *uploadOffline in uploadsFromDB) {
             
@@ -1406,16 +1407,16 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     
                 } else {
                     //Failure
-                    DLog(@"Error code: %d, and error descripcion: %@", error.code, error.description);
+                    DLog(@"Error code: %ld, and error descripcion: %@", (long)error.code, error.description);
                     
                     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
                     
                     DLog(@"Error: %@", error);
-                    DLog(@"error.code: %d", error.code);
+                    DLog(@"error.code: %ld", (long)error.code);
                     
                     if ([error code] != NSURLErrorCancelled) {
                         
-                        int errorToCheck = 0;
+                        NSInteger errorToCheck = 0;
                         
                         if (httpResponse.statusCode > 0) {
                             errorToCheck = httpResponse.statusCode;
@@ -1423,9 +1424,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                             errorToCheck = error.code;
                         }
                         
-                        DLog(@"errorToCheck:%d", errorToCheck);
-                        DLog(@"error.code:%d", error.code);
-                        DLog(@"httpResponse.statusCode:%d", httpResponse.statusCode);
+                        DLog(@"errorToCheck:%ld", (long)errorToCheck);
+                        DLog(@"error.code:%ld", (long)error.code);
+                        DLog(@"httpResponse.statusCode:%ld", (long)httpResponse.statusCode);
                         
                         //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
                         switch (errorToCheck) {
@@ -1492,11 +1493,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
     [[AppDelegate sharedOCCommunication] setTaskDidSendBodyDataBlock:^(NSURLSession *session, NSURLSessionTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
         
-        DLog(@"Task identifier: %d", task.taskIdentifier);
+        DLog(@"Task identifier: %lu", (unsigned long)task.taskIdentifier);
         
         DLog(@"Task progress: %lld  or %lld - of total: %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
         
-        DLog(@"uploadArray: %d", _uploadArray.count);
+        DLog(@"uploadArray: %lu", (unsigned long)_uploadArray.count);
         
         BOOL isTheTaskOnTheDB = NO;
         
@@ -1555,7 +1556,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler {
     NSLog(@"OC handle Events for Background URL Session");
     
-    DLog(@"_uploadArray: %d", [_uploadArray count]);
+    DLog(@"_uploadArray: %@", @(_uploadArray.count));
     
     [self doThingsThatShouldDoOnStart];
    
@@ -1755,7 +1756,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     currentUpload.uploadFileName = name;
     currentUpload.kindOfError = notAnError;
     
-    currentUpload.estimateLength = fileLength;
+    currentUpload.estimateLength = (long)fileLength;
     currentUpload.userId = _activeUser.idUser;
     currentUpload.isLastUploadFileOfThisArray = YES;
     currentUpload.status = waitingAddToUploadList;
@@ -2048,15 +2049,15 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //__block BOOL shouldBeContinue=NO;
     
-    DLog(@"id user: %d", idUser);
+    DLog(@"id user: %ld", (long)idUser);
     
     NSArray *currentUploadsTemp = [NSArray arrayWithArray:_uploadArray];
     
     [currentUploadsTemp enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        DLog(@"looping the item :%d of the global array", idx);
+        DLog(@"looping the item :%ld of the global array", (long)idx);
         
         currentManageUploadRequest = obj;
-        DLog(@"the status of the upload is: %d", currentManageUploadRequest.currentUpload.status);
+        DLog(@"the status of the upload is: %ld", (long)currentManageUploadRequest.currentUpload.status);
         if (currentManageUploadRequest.currentUpload.status == waitingForUpload ||
             currentManageUploadRequest.currentUpload.status == uploading) {
             DLog(@"this upload is waiting for upload");
@@ -2362,7 +2363,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Insert the specific data to recents view
     NSDate *uploadedDate = [NSDate dateWithTimeIntervalSince1970:currentUploadBackground.uploadedDate];
     currentManageUploadRequest.date = uploadedDate;
-    currentManageUploadRequest.currentUpload.uploadedDate = uploadedDate;
+    currentManageUploadRequest.currentUpload.uploadedDate = uploadedDate.timeIntervalSince1970;
     //Set uploadOffline
     currentManageUploadRequest.currentUpload = currentUploadBackground;
     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:currentUploadBackground.estimateLength];
@@ -2391,7 +2392,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void) updateTheDownloadState: (int) previousState to:(int) newState {
     //Obtain all the file with previous status
     NSMutableArray *listOfFiles = [ManageFilesDB getFilesByDownloadStatus:previousState];
-    DLog(@"There are: %d in the list of files", listOfFiles.count);
+    DLog(@"There are: %lu in the list of files", (unsigned long)listOfFiles.count);
     
     //First, check if there are
     if (listOfFiles.count > 0) {
@@ -2530,8 +2531,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //We get all the files that are with any error
         NSMutableArray *listOfUploadsFailed = [ManageUploadsDB getUploadsByStatus:errorUploading andByKindOfError:notAnError];
         NSMutableArray *listOfPendingToBeCheckFiles = [ManageUploadsDB getUploadsByStatus:pendingToBeCheck andByKindOfError:notAnError];
-        DLog(@"There are: %d in the list of uploads failed", listOfUploadsFailed.count);
-        DLog(@"There are: %d files in the list of pending to be check", listOfPendingToBeCheckFiles.count);
+        DLog(@"There are: %ld in the list of uploads failed", (long)listOfUploadsFailed.count);
+        DLog(@"There are: %ld files in the list of pending to be check", (long)listOfPendingToBeCheckFiles.count);
         
         //First, check if there are
         if (listOfUploadsFailed.count > 0) {
@@ -2594,7 +2595,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 - (void) removeFromTabRecentsAllInfoByUser:(UserDto *)user {
     
-    DLog(@"_uploadArray count: %d", [_uploadArray count]);
+    DLog(@"_uploadArray count: %ld", (long)[_uploadArray count]);
     
     NSMutableArray *arrayOfPositionsToDelete = [NSMutableArray new];
     

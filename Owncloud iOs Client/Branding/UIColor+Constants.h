@@ -87,10 +87,6 @@
 
 //Color of webview background
 + (UIColor*)colorOfWebViewBackground;
-//Color of navigation title
-+ (UIColor*)colorOfNavigationTitle;
-//Color of navigation bar buttons and items
-+ (UIColor*)colorOfNavigationItems;
 
 
 //DETAIL VIEW (iPAD)

@@ -203,7 +203,7 @@
         
     }];
     
-    DLog(@"Number of certificates: %d", [output count]);
+    DLog(@"Number of certificates: %lu", (unsigned long)[output count]);
     
     return output;
 }

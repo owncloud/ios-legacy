@@ -252,4 +252,4 @@
 "unfavorite" = "No-favorito";
 
 //Document provider
-"error_login_doc_provider" = "Unable to access to your account. Go to Owncloud app to configure it";
+"error_login_doc_provider" = "No ha sido posible acceder a us cuenta. Por favor, registrese en al aplicación de ownCloud.";

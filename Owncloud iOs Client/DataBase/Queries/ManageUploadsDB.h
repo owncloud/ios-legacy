@@ -57,16 +57,7 @@
 /*
  * Method to change the state of a UploadOffline
  */
-+(void) setStatus:(int) status andKindOfError:(int) kindOfError byUploadOffline:(UploadsOfflineDto *) currentUpload;
-
-
-/*
- * This method set the date of finished upload
- * @currentUpload --> object updated
- */
-
-+ (void) setDatebyUploadOffline:(UploadsOfflineDto *)currentUpload;
-
++(void) setStatus:(NSInteger) status andKindOfError:(NSInteger) kindOfError byUploadOffline:(UploadsOfflineDto *) currentUpload;
 
 
 /*
@@ -158,7 +149,7 @@
  * Method that return a upload offline dto by id
  *  @uploadOfflineId -> id of upload offline
  */
-+ (UploadsOfflineDto*)getUploadOfflineById:(int)uploadOfflineId;
++ (UploadsOfflineDto*)getUploadOfflineById:(NSInteger)uploadOfflineId;
 
 ///-----------------------------------
 /// @name Set task_identifier Number for Upload Offline

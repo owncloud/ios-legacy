@@ -61,7 +61,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     //Assing the file
     _file = file;
     
-    DLog(@"File to preview: %@ with File id: %d", self.file.fileName,file.idFile);
+    DLog(@"File to preview: %@ with File id: %ld", self.file.fileName, (long)file.idFile);
     
     
     self = [super initWithNibName:nibNameOrNil bundle:nil];
@@ -108,7 +108,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     //Get current local folder
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    _currentLocalFolder = [NSString stringWithFormat:@"%@%d/%@", [UtilsUrls getOwnCloudFilePath],app.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:_file.filePath ofUserDto:app.activeUser]];
+    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:_file.filePath ofUserDto:app.activeUser]];
     _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
    
@@ -122,7 +122,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
+    [super viewWillDisappear:animated];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (app.isSharedToOwncloudPresent == NO) {
@@ -434,8 +434,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             [self previewFile];
         }
         
-        DLog(@"ide file: %d",_file.idFile);
-        DLog(@"is Donwloaded: %d",_file.isDownload);
+        DLog(@"ide file: %ld",(long)_file.idFile);
+        DLog(@"is Donwloaded: %ld",(long)_file.isDownload);
         
         //Check if the file is in the device
         if (([_file isDownload] == notDownload) && _typeOfFile != otherFileType) {
@@ -778,7 +778,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  *
  */
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    return UIModalTransitionStyleCrossDissolve;
+    return UIStatusBarAnimationFade;
 }
 
 #pragma mark - Media player methods
@@ -1525,7 +1525,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         _file.isDownload = downloaded;
         [self handleFile];
     }
-    DLog(@"id file: %d",_file.idFile);
+    DLog(@"id file: %ld",(long)_file.idFile);
 }
 
 /*

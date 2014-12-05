@@ -44,7 +44,7 @@
 
 
 + (NSInteger) checkTheTypeOfFile: (NSString*)fileName {
-    NSInteger *typeOfFile;
+    NSInteger typeOfFile;
     if ([self isImageSupportedThisFile:fileName]) {
         typeOfFile = imageFileType;
     } else {
@@ -319,8 +319,8 @@
     if ([appName isEqualToString:@"ownCloud"]) {
         // After day 354 of the year, the usual ownCloud icon is replaced by another icon
         NSCalendar *gregorian =
-        [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-        NSUInteger dayOfYear = [gregorian ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:[NSDate date]];
+        [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSUInteger dayOfYear = [gregorian ordinalityOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitYear forDate:[NSDate date]];
         if (dayOfYear >= 354)
             imageName = @"ownCloud-xmas";
         
@@ -460,11 +460,11 @@
         [phrase appendString:word];
     }
     
-    int lenghtOfNAme = [phrase length];
+    NSUInteger lenghtOfNAme = [phrase length];
     
     //+ points
-    if (arrMutable.count>=2) {
-        int points=[arr count]-2;
+    if (arrMutable.count >= 2) {
+        NSInteger points=[arr count]-2;
         lenghtOfNAme=lenghtOfNAme+points;
     }
     
