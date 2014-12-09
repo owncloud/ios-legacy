@@ -58,18 +58,6 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     [self.view setFrame: CGRectMake(0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height)];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    [self.tableView deselectRowAtIndexPath: indexPath animated:YES];
-    
-    FileDto *file = (FileDto *)[[self.sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
-    
-    if (file.isDirectory) {
-        [self checkBeforeNavigationToFolder:file];
-    } else {
-        //TODO: here we should return the file to the document picker or download it
-    }
-}
 
 - (void) checkBeforeNavigationToFolder:(FileDto *) file {
     
@@ -94,6 +82,51 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         [self loadRemote:self.currentFolder andNavigateIfIsNecessary:NO];
     } else {
         [self showErrorUserHasChange];
+    }
+}
+
+#pragma mark - UITableView Delegate methods
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [self.tableView deselectRowAtIndexPath: indexPath animated:YES];
+    
+    FileDto *file = (FileDto *)[[self.sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
+    
+    if (file.isDirectory) {
+        [self checkBeforeNavigationToFolder:file];
+    } else {
+        
+        DocumentPickerCell *cell =  (DocumentPickerCell*) [tableView cellForRowAtIndexPath:indexPath];
+        
+        FFCircularProgressView *progresView = (FFCircularProgressView *) cell.circularPV;
+     
+        [progresView startSpinProgressBackgroundLayer];
+        
+        double delayInSeconds = 2.5;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
+            for (float i=0; i<1.1; i+=0.01F) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [progresView setProgress:i];
+                });
+                usleep(10000);
+            }
+            
+            double delayInSeconds = 2.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [progresView setProgress:0];
+            });
+        });
+        
+        delayInSeconds = 2;
+        popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [progresView stopSpinProgressBackgroundLayer];
+        });
+
+        
     }
 }
 
@@ -220,15 +253,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         
         if (file.isDownload != downloaded && !file.isDirectory) {
             [fileCell.circularPV setHidden:NO];
-            
-            FFCircularProgressView *view = [[FFCircularProgressView alloc] initWithFrame:CGRectMake(1.0f, 1.0f, 33.0f, 33.0f)];
-            [fileCell.circularPV addSubview:view];
-            [fileCell.circularPV setHidden:NO];
-            
-          /*  CGRect titleFrame = fileCell.labelTitle.frame;
-            titleFrame.size.width = titleFrame.size.width - 35.0;
-            fileCell.labelTitle.frame = titleFrame;*/
-            
+
         }else{
             [fileCell.circularPV setHidden:YES];
         }
