@@ -22,4 +22,7 @@
 //Notification to notify that the user has change
 extern NSString * userHasChangeNotification;
 
+@property (nonatomic) BOOL isLockedApperance;
+@property (nonatomic, strong) FileDto *selectedFile;
+
 @end

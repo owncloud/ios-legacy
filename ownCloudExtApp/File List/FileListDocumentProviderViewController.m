@@ -85,6 +85,67 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     }
 }
 
+- (void) startDownloadFile:(FileDto *)file withProgressView:(FFCircularProgressView *)progressView{
+    
+    self.selectedFile = file;
+    [self setLockedApperance:YES];
+    
+    
+    [progressView startSpinProgressBackgroundLayer];
+    
+    double delayInSeconds = 2.5;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
+        for (float i=0; i<1.1; i+=0.01F) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [progressView setProgress:i];
+            });
+            usleep(10000);
+        }
+        
+        double delayInSeconds = 1.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+           // [progressView setProgress:0];
+            //Finish or cancel download
+            [progressView setHidden:YES];
+            self.selectedFile.isDownload = downloaded;
+            self.selectedFile = nil;
+
+            [self setLockedApperance:NO];
+        });
+    });
+    
+    //Start the download.
+    delayInSeconds = 2;
+    popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [progressView stopSpinProgressBackgroundLayer];
+    });
+    
+
+}
+
+- (void) cancelCurrentDownloadFile:(FileDto *)file withProgressView:(FFCircularProgressView *)progressView{
+
+        file.isDownload = notDownload;
+        self.selectedFile = nil;
+    
+    
+       [self setLockedApperance:NO];
+        
+    
+}
+
+- (void) setLockedApperance:(BOOL) isLocked{
+
+    self.isLockedApperance = isLocked;
+    [self.navigationController.navigationBar setUserInteractionEnabled:!isLocked];
+    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+         
+    
+}
+
 #pragma mark - UITableView Delegate methods
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -99,34 +160,13 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         
         DocumentPickerCell *cell =  (DocumentPickerCell*) [tableView cellForRowAtIndexPath:indexPath];
         
-        FFCircularProgressView *progresView = (FFCircularProgressView *) cell.circularPV;
-     
-        [progresView startSpinProgressBackgroundLayer];
+        FFCircularProgressView *progressView = (FFCircularProgressView *) cell.circularPV;
         
-        double delayInSeconds = 2.5;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void){
-            for (float i=0; i<1.1; i+=0.01F) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [progresView setProgress:i];
-                });
-                usleep(10000);
-            }
-            
-            double delayInSeconds = 2.0;
-            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                [progresView setProgress:0];
-            });
-        });
-        
-        delayInSeconds = 2;
-        popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [progresView stopSpinProgressBackgroundLayer];
-        });
-
-        
+        if (self.selectedFile.idFile != file.idFile) {
+            [self startDownloadFile:file withProgressView:progressView];
+        }else{
+            [self cancelCurrentDownloadFile:file withProgressView:progressView];
+        }
     }
 }
 
@@ -198,6 +238,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
             fileDateString = @"";
         }
         
+        
         //Add a FileDownloadedIcon.png in the left of cell when the file is in device
         if (![file isDirectory]) {
             //Is file
@@ -205,6 +246,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
             UIFont *fileFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
             fileCell.labelTitle.font = fileFont;
             fileCell.labelTitle.text = [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
             
             NSString *fileSizeString = @"";
             //Obtain the file size from the data base
@@ -249,7 +291,30 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
             fileCell.labelInfoFile.text = [NSString stringWithFormat:@"%@", fileDateString];
         }
         
+        
         fileCell = (DocumentPickerCell*)[InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder];
+        
+        //Lock apperance
+        if (self.isLockedApperance && file.idFile != self.selectedFile.idFile) {
+            fileCell.userInteractionEnabled = NO;
+            fileCell.labelTitle.textColor = [UIColor lightGrayColor];
+            fileCell.labelInfoFile.textColor = [UIColor lightGrayColor];
+            fileCell.fileImageView.alpha = 0.5;
+            fileCell.imageDownloaded.alpha = 0.5;
+            fileCell.sharedByLinkImage.alpha = 0.5;
+            fileCell.sharedWithUsImage.alpha = 0.5;
+            fileCell.circularPV.alpha = 0.5;
+        }else{
+            fileCell.userInteractionEnabled = YES;
+            fileCell.labelTitle.textColor = [UIColor blackColor];
+            fileCell.labelInfoFile.textColor = [UIColor blackColor];
+            fileCell.fileImageView.alpha = 1.0;
+            fileCell.imageDownloaded.alpha = 1.0;
+            fileCell.sharedByLinkImage.alpha = 1.0;
+            fileCell.sharedWithUsImage.alpha = 1.0;
+            fileCell.circularPV.alpha = 1.0;
+
+        }
         
         if (file.isDownload != downloaded && !file.isDirectory) {
             [fileCell.circularPV setHidden:NO];
@@ -257,6 +322,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         }else{
             [fileCell.circularPV setHidden:YES];
         }
+        
         
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
