@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+
+[mobil-ios-app.localizablestrings]
+file_filter = Owncloud iOs Client/SupportingFiles/Languages/<lang>.lproj/Localizable.strings
+source_file = Owncloud iOs Client/SupportingFiles/Languages/en.lproj/Localizable.strings
+source_lang = en
+type = STRINGS
+
+
