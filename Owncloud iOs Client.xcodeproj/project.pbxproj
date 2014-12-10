@@ -557,6 +557,7 @@
 		EAC52E1616BAE65300C7341E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC52E1416BAE26E00C7341E /* AVFoundation.framework */; };
 		EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD036BF19053BEE003665CD /* ManageFavorites.m */; };
 		EAD0EBA317FAF811000005A1 /* OCELCAssetTablePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A9FCE717E9858C00FF48D7 /* OCELCAssetTablePicker.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -3367,6 +3368,7 @@
 				599D80B21A2338100071B66E /* FileListDocumentProviderViewController.m in Sources */,
 				590849EF1A0A7D6000D3E842 /* CustomCellFileAndDirectory.m in Sources */,
 				593C16D01A09008C006C20AF /* ManageFilesDB.m in Sources */,
+				EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */,
 				599E57351A08E62700744EC9 /* FileDto.m in Sources */,
 				599D99F81A026004008A9DB3 /* UserDto.m in Sources */,
 				599D99F71A025F24008A9DB3 /* ManageUsersDB.m in Sources */,
