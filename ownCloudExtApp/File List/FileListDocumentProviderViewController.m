@@ -101,99 +101,40 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 
 - (void) startDownloadFile:(FileDto *)file withProgressView:(FFCircularProgressView *)progressView{
     
+    if (!self.download) {
+        self.download = [DPDownload new];
+        self.download.delegate = self;
+    }
+    
+    self.download.currentLocalFolder = self.currentFolder.localFolder;
+    self.download.user = self.user;
+    
+    [self.download downloadFile:file withProgressView:progressView];
+    
     self.selectedFile = file;
     [self setLockedApperance:YES];
     
-    OCCommunication *sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
-    
-    NSArray *splitedUrl = [self.user.url componentsSeparatedByString:@"/"];
-    NSString *serverUrl = [NSString stringWithFormat:@"%@%@%@",[NSString stringWithFormat:@"%@/%@/%@",[splitedUrl objectAtIndex:0],[splitedUrl objectAtIndex:1],[splitedUrl objectAtIndex:2]], file.filePath, file.fileName];
-    
-    serverUrl = [serverUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    //get local path of server
-    __block NSString *localPath;
-    
-    NSString *temporalFileName;
-    NSString *deviceLocalPath;
-    
-    
-    if (file.isNecessaryUpdate) {
-        //Change the local name for a temporal one
-        temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        localPath = [NSString stringWithFormat:@"%@%@", self.currentFolder.localFolder, temporalFileName];
-    } else {
-        localPath = [NSString stringWithFormat:@"%@%@", self.currentFolder.localFolder, [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    }
-    
-    deviceLocalPath = localPath;
-    
-    if (!file.isNecessaryUpdate && (file.isDownload != overwriting)) {
-        //Change file status in Data Base to downloading
-        [ManageFilesDB setFileIsDownloadState:file.idFile andState:downloading];
-    } else if (file.isNecessaryUpdate) {
-        //Change file status in Data Base to updating
-        [ManageFilesDB setFileIsDownloadState:file.idFile andState:updating];
-    }
-
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [sharedCommunication setCredentialsWithCookie:self.user.password];
-    } else if (k_is_oauth_active) {
-        [sharedCommunication setCredentialsOauthWithToken:self.user.password];
-    } else {
-        [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
-    }
-    
-    
-    [progressView startSpinProgressBackgroundLayer];
-    
-    self.downloadOperation = [sharedCommunication downloadFile:serverUrl toDestiny:localPath withLIFOSystem:YES onCommunication:sharedCommunication progressDownload:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-        [progressView stopSpinProgressBackgroundLayer];
-        float percent = (float)totalBytesRead / totalBytesExpectedToRead;
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [progressView setProgress:percent];
-        });
-
-        
-    } successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
-        self.selectedFile.isDownload = downloaded;
-        [ManageFilesDB setFileIsDownloadState:file.idFile andState:downloaded];
-        
-        double delayInSeconds = 1.0;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-           
-            [progressView setHidden:YES];
-            self.selectedFile = nil;
-            
-            [self setLockedApperance:NO];
-        });
-        
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-        file.isDownload = notDownload;
-        [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
-        self.selectedFile = nil;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [progressView setProgress:0.0];
-        });
-        
-        
-        [self setLockedApperance:NO];
-
-        
-        
-    } shouldExecuteAsBackgroundTaskWithExpirationHandler:^{
-        [self cancelCurrentDownloadFile:file withProgressView:progressView];
-    }];
-    
-
 }
 
 - (void) cancelCurrentDownloadFile:(FileDto *)file withProgressView:(FFCircularProgressView *)progressView{
+    [self.download cancelDownload];
+
+}
+
+#pragma mark - DPDownload Delegate Methods
+
+- (void)downloadCompleted:(FileDto*)fileDto{
     
-    [self.downloadOperation cancel];
+    fileDto.isDownload = downloaded;
+    self.selectedFile = nil;
+    [self setLockedApperance:NO];
+}
+
+- (void)downloadFailed:(NSString*)string andFile:(FileDto*)fileDto{
+    
+    fileDto = notDownload;
+    self.selectedFile = nil;
+    [self setLockedApperance:NO];
 }
 
 
@@ -214,8 +155,11 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         FFCircularProgressView *progressView = (FFCircularProgressView *) cell.circularPV;
         
         if (self.selectedFile.idFile != file.idFile) {
+           
             [self startDownloadFile:file withProgressView:progressView];
+            
         }else{
+            
             [self cancelCurrentDownloadFile:file withProgressView:progressView];
         }
     }

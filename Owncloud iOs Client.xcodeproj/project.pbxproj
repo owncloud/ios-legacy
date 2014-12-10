@@ -558,6 +558,8 @@
 		EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD036BF19053BEE003665CD /* ManageFavorites.m */; };
 		EAD0EBA317FAF811000005A1 /* OCELCAssetTablePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A9FCE717E9858C00FF48D7 /* OCELCAssetTablePicker.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
+		EAD281BB1A38A2F900A00D54 /* DPDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD281BA1A38A2F900A00D54 /* DPDownload.m */; };
+		EAD281BC1A38BB2E00A00D54 /* DPDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD281BA1A38A2F900A00D54 /* DPDownload.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1193,6 +1195,8 @@
 		EAC52E1416BAE26E00C7341E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		EAD036BE19053BEE003665CD /* ManageFavorites.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageFavorites.h; path = Network/Favorites/ManageFavorites.h; sourceTree = "<group>"; };
 		EAD036BF19053BEE003665CD /* ManageFavorites.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageFavorites.m; path = Network/Favorites/ManageFavorites.m; sourceTree = "<group>"; };
+		EAD281B91A38A2F900A00D54 /* DPDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DPDownload.h; path = Network/DPDownload.h; sourceTree = "<group>"; };
+		EAD281BA1A38A2F900A00D54 /* DPDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DPDownload.m; path = Network/DPDownload.m; sourceTree = "<group>"; };
 		EAE005F0180EF03E0066E8D4 /* CheckSSOServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckSSOServer.h; path = Login/SSO/CheckSSOServer.h; sourceTree = "<group>"; };
 		EAE93A3A19D18E43002B9E15 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
@@ -2438,6 +2442,7 @@
 		EAB0AB3319ED356A00764C31 /* ownCloudExtApp */ = {
 			isa = PBXGroup;
 			children = (
+				EAD281B81A38A2BC00A00D54 /* Network */,
 				EA8ADE5C1A31D734008D3612 /* Cells */,
 				EAB0AB3719ED356A00764C31 /* DocumentPickerViewController.h */,
 				EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */,
@@ -2569,6 +2574,15 @@
 				EAD036BF19053BEE003665CD /* ManageFavorites.m */,
 			);
 			name = Favorites;
+			sourceTree = "<group>";
+		};
+		EAD281B81A38A2BC00A00D54 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				EAD281B91A38A2F900A00D54 /* DPDownload.h */,
+				EAD281BA1A38A2F900A00D54 /* DPDownload.m */,
+			);
+			name = Network;
 			sourceTree = "<group>";
 		};
 		EAE3FE0915D5566E00C08066 /* Download */ = {
@@ -3311,6 +3325,7 @@
 				1487F15B177C3392004A1A5A /* FMDatabaseQueue.m in Sources */,
 				1487F15C177C3392004A1A5A /* FMResultSet.m in Sources */,
 				14A50E9E18F3FC9100506E2B /* SelectedFolderCell.m in Sources */,
+				EAD281BC1A38BB2E00A00D54 /* DPDownload.m in Sources */,
 				1428F675178422AE0092F42A /* UploadsOfflineDto.m in Sources */,
 				EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */,
 				1428F678178422BE0092F42A /* UtilsDtos.m in Sources */,
@@ -3360,6 +3375,7 @@
 				590849F11A0A811000D3E842 /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				EA8ADE601A31D759008D3612 /* DocumentPickerCell.m in Sources */,
 				590849F21A0A811000D3E842 /* SWCellScrollView.m in Sources */,
+				EAD281BB1A38A2F900A00D54 /* DPDownload.m in Sources */,
 				590849F31A0A811000D3E842 /* SWLongPressGestureRecognizer.m in Sources */,
 				590849F41A0A811000D3E842 /* SWTableViewCell.m in Sources */,
 				590849F51A0A811000D3E842 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,

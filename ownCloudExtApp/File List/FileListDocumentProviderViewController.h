@@ -16,8 +16,9 @@
 
 #import <UIKit/UIKit.h>
 #import "SimpleFileListTableViewController.h"
+#import "DPDownload.h"
 
-@interface FileListDocumentProviderViewController : SimpleFileListTableViewController
+@interface FileListDocumentProviderViewController : SimpleFileListTableViewController <DPDownloadDelegate>
 
 //Notification to notify that the user has change
 extern NSString * userHasChangeNotification;
@@ -25,5 +26,6 @@ extern NSString * userHasChangeNotification;
 @property (nonatomic) BOOL isLockedApperance;
 @property (nonatomic, strong) FileDto *selectedFile;
 @property (nonatomic, strong) NSOperation *downloadOperation;
+@property (nonatomic, strong) DPDownload *download;
 
 @end
