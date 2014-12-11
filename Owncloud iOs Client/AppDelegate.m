@@ -154,35 +154,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeUploadsToWaitingForServerConnection) name:NotReachableNetworkForUploadsNotification object:nil];
     
     
-    //check if location is active
-    if ([CLLocationManager locationServicesEnabled]) {
-        
-        DLog(@"authorizationStatus: %d", [CLLocationManager authorizationStatus]);
-        
-       if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
-    
-           if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
-               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Service Disabled"
-                                                               message:@"Please go to Settings and turn on Location Service for this app to allow instant photo uploads."
-                                                              delegate:nil
-                                                     cancelButtonTitle:@"OK"
-                                                     otherButtonTitles:nil];
-               [alert show];
-           } else {
-               DLog(@"Location services not enabled");
-               [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
-               [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
-           }
-       }
+    [self checkIfLocationIsEnabled];
+
+    //Allow Notifications iOS8
+    if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)]){
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil]];
     }
-    //Activate location
-    //[[ManageLocation sharedSingleton] startSignificantChangeUpdates];
-    //[[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
-
-
     
     return YES;
 }
+
+
 
 ///-----------------------------------
 /// @name Set UINavBar Apperance for native mail
@@ -2854,6 +2836,31 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 }
 
 
+#pragma mark - Location
+
+-(void)checkIfLocationIsEnabled {
+    if ([CLLocationManager locationServicesEnabled]) {
+        
+        DLog(@"authorizationStatus: %d", [CLLocationManager authorizationStatus]);
+        
+        if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
+            
+            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Service Disabled"
+                                                                message:@"Please go to Settings and turn on Location Service for this app to allow instant photo uploads."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            } else {
+                DLog(@"Location services not enabled");
+                [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+                [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+            }
+        }
+    }
+    
+}
 
 
 @end
