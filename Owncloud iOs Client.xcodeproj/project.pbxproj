@@ -330,6 +330,8 @@
 		4030D8F51A16277100DB0871 /* file_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F21A16277100DB0871 /* file_icon.png */; };
 		4030D8F61A16277100DB0871 /* file_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F31A16277100DB0871 /* file_icon@2x.png */; };
 		4030D8F71A16277100DB0871 /* file_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F41A16277100DB0871 /* file_icon@3x.png */; };
+		404FDA241A36E5E5008AB4E1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */; };
+		404FDA281A36EA9D008AB4E1 /* ManageLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 404FDA271A36EA9D008AB4E1 /* ManageLocation.m */; };
 		40AB1F5B1A12392E003E7397 /* cancel_download_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F591A12392E003E7397 /* cancel_download_white@3x.png */; };
 		40AB1F5C1A12392E003E7397 /* cancel_download@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F5A1A12392E003E7397 /* cancel_download@3x.png */; };
 		40AB1F5F1A123B03003E7397 /* BackRootFolderIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F5E1A123B03003E7397 /* BackRootFolderIcon@3x.png */; };
@@ -1053,6 +1055,9 @@
 		4030D8F21A16277100DB0871 /* file_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_icon.png; sourceTree = "<group>"; };
 		4030D8F31A16277100DB0871 /* file_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@2x.png"; sourceTree = "<group>"; };
 		4030D8F41A16277100DB0871 /* file_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@3x.png"; sourceTree = "<group>"; };
+		404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		404FDA261A36EA9D008AB4E1 /* ManageLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageLocation.h; sourceTree = "<group>"; };
+		404FDA271A36EA9D008AB4E1 /* ManageLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageLocation.m; sourceTree = "<group>"; };
 		40AB1F591A12392E003E7397 /* cancel_download_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel_download_white@3x.png"; sourceTree = "<group>"; };
 		40AB1F5A1A12392E003E7397 /* cancel_download@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel_download@3x.png"; sourceTree = "<group>"; };
 		40AB1F5E1A123B03003E7397 /* BackRootFolderIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BackRootFolderIcon@3x.png"; sourceTree = "<group>"; };
@@ -1195,6 +1200,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				404FDA241A36E5E5008AB4E1 /* CoreLocation.framework in Frameworks */,
 				EA8667E918AA299000D3550D /* libownCloudiOS.a in Frameworks */,
 				EA68969317F59A090033B3C1 /* AudioToolbox.framework in Frameworks */,
 				EAC52E1616BAE65300C7341E /* AVFoundation.framework in Frameworks */,
@@ -1287,6 +1293,7 @@
 		1324297B15ADBB3700DF823E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */,
 				EA68969217F59A090033B3C1 /* AudioToolbox.framework */,
 				13824C0816034C2200A95EAD /* libcrypto.a */,
 				13824C0916034C2200A95EAD /* libssl.a */,
@@ -1323,6 +1330,7 @@
 				148DD5DD1778549700FB9977 /* ExternalLibreries */,
 				148DD61D17785D4200FB9977 /* Files */,
 				137AAF1715B0054F00A1A764 /* Login */,
+				404FDA251A36E60A008AB4E1 /* Location */,
 				148DD6661778625100FB9977 /* Network */,
 				1324298315ADBB3700DF823E /* Supporting Files */,
 				148DD689177865A900FB9977 /* Tabs */,
@@ -2193,6 +2201,15 @@
 				14B0083F18FD1B5B004CB06B /* EmptyCell.xib */,
 			);
 			name = EmptyCell;
+			sourceTree = "<group>";
+		};
+		404FDA251A36E60A008AB4E1 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				404FDA261A36EA9D008AB4E1 /* ManageLocation.h */,
+				404FDA271A36EA9D008AB4E1 /* ManageLocation.m */,
+			);
+			path = Location;
 			sourceTree = "<group>";
 		};
 		40FF873F19F8135C008B7C62 /* Keychain */ = {
@@ -3174,6 +3191,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				59BF9B361A2C8BEA009D9CF0 /* DocumentPickerViewController.m in Sources */,
+				404FDA281A36EA9D008AB4E1 /* ManageLocation.m in Sources */,
 				59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */,
 				EAD0EBA317FAF811000005A1 /* OCELCAssetTablePicker.m in Sources */,
 				1324298915ADBB3700DF823E /* main.m in Sources */,
