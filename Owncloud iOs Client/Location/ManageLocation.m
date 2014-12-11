@@ -27,12 +27,12 @@
         self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
         self.locationManager.pausesLocationUpdatesAutomatically = NO;
-        if(IS_IOS8){
+        if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]){
             [self.locationManager requestAlwaysAuthorization];
         }
             
         //self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        //self.locationManager.distanceFilter = 0; // meters
+       // self.locationManager.distanceFilter = 0; // meters
     }
     
    
@@ -48,33 +48,17 @@
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
 
-     /*  CLLocation* location = [locations lastObject];
+      CLLocation* location = [locations lastObject];
     
-    NSDate* eventDate = location.timestamp;
-    
-    NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
-    
-    if (abs(howRecent) < 15.0) {
-        
-        // If the event is recent, do something with it.
-        
-        DLog(@"latitude %+.6f, longitude %+.6f\n",
-              
-              location.coordinate.latitude,
-              
-              location.coordinate.longitude);
-        
-    }*/
-    
-   /* for(int i=0;i<locations.count;i++){
-        CLLocation * newLocation = [locations objectAtIndex:i];
-        CLLocationCoordinate2D theLocation = newLocation.coordinate;
-        CLLocationAccuracy theAccuracy = newLocation.horizontalAccuracy;
-        NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
-    }*/
+    DLog(@"latitude__ %+.6f, longitude__ %+.6f\n",
+         
+         location.coordinate.latitude,
+         
+         location.coordinate.longitude);
 
     
-    //do
+    //do something
+    
     [self presentNotification];
     
 }
@@ -87,6 +71,7 @@
 
 
 -(void)presentNotification{
+    DLog(@"notication method\n");
     UILocalNotification* localNotification = [[UILocalNotification alloc] init];
     localNotification.alertBody = @"Location updated!!";
     localNotification.alertAction = @"Background Location change";

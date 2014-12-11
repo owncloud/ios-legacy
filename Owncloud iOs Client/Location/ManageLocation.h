@@ -11,6 +11,7 @@
 
 @interface ManageLocation : NSObject <CLLocationManagerDelegate>
 
+
 @property CLLocationManager *locationManager;
 
 
