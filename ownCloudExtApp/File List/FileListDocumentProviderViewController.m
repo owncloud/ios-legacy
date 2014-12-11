@@ -117,6 +117,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 }
 
 - (void) cancelCurrentDownloadFile:(FileDto *)file withProgressView:(FFCircularProgressView *)progressView{
+    
     [self.download cancelDownload];
 
 }
@@ -135,8 +136,38 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     fileDto = notDownload;
     self.selectedFile = nil;
     [self setLockedApperance:NO];
+    
+    [self showErrorMessage:string];
 }
 
+- (void)downloadCancelled:(FileDto*)fileDto{
+    
+    fileDto = notDownload;
+    self.selectedFile = nil;
+    [self setLockedApperance:NO];
+    
+}
+
+- (void) showErrorMessage:(NSString *)string{
+    
+    UIAlertController *alert =   [UIAlertController
+                                  alertControllerWithTitle:string
+                                  message:@""
+                                  preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* okAction = [UIAlertAction
+                         actionWithTitle:NSLocalizedString(@"ok", nil)
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action)
+                         {
+                             
+                         }];
+    
+    [alert addAction:okAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+    
+    
+}
 
 #pragma mark - UITableView Delegate methods
 

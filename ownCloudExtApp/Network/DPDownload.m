@@ -1,4 +1,4 @@
-//
+ //
 //  DPDownload.m
 //  Owncloud iOs Client
 //
@@ -12,6 +12,7 @@
 #import "DocumentPickerViewController.h"
 #import "Customization.h"
 #import "ManageFilesDB.h"
+#import "OCErrorMsg.h"
 
 @implementation DPDownload
 
@@ -36,14 +37,12 @@
     //get local path of server
     __block NSString *localPath;
     
-    NSString *temporalFileName;
     NSString *deviceLocalPath;
-    
     
     if (file.isNecessaryUpdate) {
         //Change the local name for a temporal one
-        temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        localPath = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, temporalFileName];
+        self.temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        localPath = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, self.temporalFileName];
     } else {
         localPath = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     }
@@ -70,7 +69,7 @@
     
     [progressView startSpinProgressBackgroundLayer];
     
-    self.operation = [sharedCommunication downloadFile:serverUrl toDestiny:localPath withLIFOSystem:YES onCommunication:sharedCommunication progressDownload:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+    self.operation = [sharedCommunication downloadFile:serverUrl toDestiny:localPath withLIFOSystem:self.isLIFO onCommunication:sharedCommunication progressDownload:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
         [progressView stopSpinProgressBackgroundLayer];
         float percent = (float)totalBytesRead / totalBytesExpectedToRead;
         
@@ -80,8 +79,8 @@
         
         
     } successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+        [progressView stopSpinProgressBackgroundLayer];
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:downloaded];
-        
         double delayInSeconds = 1.0;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -91,11 +90,48 @@
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         [progressView stopSpinProgressBackgroundLayer];
-        [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [progressView setProgress:0.0];
-            [self.delegate downloadFailed:error.description andFile:file];
         });
+        
+        self.file = [ManageFilesDB getFileDtoByIdFile:self.file.idFile];
+        //Set not download or downloaded in database if the file is not on an overwritten process
+        if (self.file.isDownload != overwriting) {
+            if (self.file.isNecessaryUpdate) {
+                [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
+            } else {
+                [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:notDownload];
+            }
+        }
+        
+        if ([error code] == NSURLErrorCancelled) {
+            [self.delegate downloadCancelled:self.file];
+        }else{
+            
+            switch (response.statusCode) {
+                case kOCErrorServerUnauthorized:
+                    [self.delegate downloadFailed:NSLocalizedString(@"error_login_message", nil) andFile:self.file];
+            
+                    break;
+                case kOCErrorServerForbidden:
+                    [self.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:self.file];
+                    break;
+                case kOCErrorProxyAuth:
+                    [self.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:self.file];
+                    break;
+                case kOCErrorServerPathNotFound:
+                    [self.delegate downloadFailed:NSLocalizedString(@"download_file_exist", nil) andFile:self.file];
+                    break;
+                default:
+                    [self.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:self.file];
+                    break;
+            }
+        }
+        
+        //Erase cache and cookies
+        [self eraseURLCache];
+        
    
         
     } shouldExecuteAsBackgroundTaskWithExpirationHandler:^{
@@ -107,6 +143,70 @@
 - (void) cancelDownload{
     
     [self.operation cancel];
+}
+
+#pragma mark File Manager
+
+///-----------------------------------
+/// @name Delete File From Local Folder
+///-----------------------------------
+
+/**
+ * Method that delete a file from local folder.
+ * It's called when the download fails or the user cancel an updating process
+ */
+- (void) deleteFileFromLocalFolder{
+    //Delete file
+    NSString *fileToDelete;
+    if (self.file.isNecessaryUpdate) {
+        fileToDelete = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, self.temporalFileName];
+    } else {
+        fileToDelete = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, self.file.fileName];
+    }
+    NSError *error;
+    if([[NSFileManager defaultManager] removeItemAtPath:fileToDelete error:&error]) {
+        DLog(@"All ok");
+    } else {
+        DLog(@"Error: %@",[error localizedDescription]);
+    }
+}
+
+///-----------------------------------
+/// @name Update a file with the temporal one
+///-----------------------------------
+
+/**
+ * This method updates a file because there is a new version in the server
+ *
+ * @param file > (FileDto) the file to be updated
+ * @param temporalFile > (NSString) the path of the temporal file
+ */
+- (void) updateFile:(FileDto *)file withTemporalFile:(NSString *)temporalFile {
+    
+    //If the file has been updated
+    DLog(@"Temporal local path: %@", temporalFile);
+    DLog(@"Old local path: %@", file.localFolder);
+    
+    //Delete the old file
+   // DeleteFile *mDeleteFile = [[DeleteFile alloc] init];
+  //  [mDeleteFile deleteItemFromDeviceByFileDto:file];
+    
+    //Change the name of the new updated file
+    NSFileManager *filecopy=nil;
+    filecopy =[NSFileManager defaultManager];
+    NSError *error;
+    if(![filecopy moveItemAtPath:temporalFile toPath:file.localFolder error:&error]){
+        DLog(@"Error: %@",[error localizedDescription]);
+    }
+    else{
+        DLog(@"All ok");
+    }
+}
+
+- (void)eraseURLCache
+{
+    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
+    [[NSURLCache sharedURLCache] setDiskCapacity:0];
 }
 
 @end
