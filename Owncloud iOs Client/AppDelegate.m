@@ -52,6 +52,7 @@
 #import "CheckHasCookiesSupport.h"
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
+#import "ManageLocation.h"
 
 #define k_server_with_chunking 4.5 
 
@@ -152,6 +153,33 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Add observer for notifications about network not reachable in uploads
   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeUploadsToWaitingForServerConnection) name:NotReachableNetworkForUploadsNotification object:nil];
     
+    
+    //check if location is active
+    if ([CLLocationManager locationServicesEnabled]) {
+        
+        DLog(@"authorizationStatus: %d", [CLLocationManager authorizationStatus]);
+        
+       if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
+    
+           if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Service Disabled"
+                                                               message:@"Please go to Settings and turn on Location Service for this app to allow instant photo uploads."
+                                                              delegate:nil
+                                                     cancelButtonTitle:@"OK"
+                                                     otherButtonTitles:nil];
+               [alert show];
+           } else {
+               DLog(@"Location services not enabled");
+               [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+               [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+           }
+       }
+    }
+    //Activate location
+    //[[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+    //[[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+
+
     
     return YES;
 }
@@ -968,6 +996,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_presentFilesViewController.folderView) {
         [_presentFilesViewController.folderView dismissWithClickedButtonIndex:0 animated:NO];
     }
+    
+    //Activate location
+    [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+
 }
 
 
@@ -999,6 +1031,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
     //Update the Favorites Files
     [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
+    
+    //stop location
+    [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+    
     
 }
 
@@ -2816,5 +2852,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 	}
 	return sharedCheckHasCookiesSupport;
 }
+
+
+
 
 @end
