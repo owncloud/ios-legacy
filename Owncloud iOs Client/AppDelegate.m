@@ -2846,10 +2846,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
             
             if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Service Disabled"
-                                                                message:@"Please go to Settings and turn on Location Service for this app to allow instant photo uploads."
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
+                                                                message:NSLocalizedString(@"message_location_not_enabled", nil)
                                                                delegate:nil
-                                                      cancelButtonTitle:@"OK"
+                                                      cancelButtonTitle:@"ok"
                                                       otherButtonTitles:nil];
                 [alert show];
             } else {
