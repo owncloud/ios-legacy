@@ -253,3 +253,7 @@
 
 //Document provider
 "error_login_doc_provider" = "No ha sido posible acceder a us cuenta. Por favor, registrese en al aplicación de ownCloud.";
+
+//Location
+"location_not_enabled"="Localización desactivada";
+"message_location_not_enabled"="Por favor,  vaya a Ajustes y active la Localización para permitir subidas instantáneas de fotos.";

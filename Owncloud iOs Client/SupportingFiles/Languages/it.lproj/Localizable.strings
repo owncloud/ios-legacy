@@ -253,3 +253,7 @@
 
 //Document provider
 "error_login_doc_provider" = "Impossibile l'accesso di noi. Entra per applicazione ownCloud.";
+
+//Location
+"location_not_enabled"="Location Services disabled";
+"message_location_not_enabled"="Please go to Settings and turn on Location Services for this app to allow instant photo uploads.";

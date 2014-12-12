@@ -20,13 +20,9 @@
 
 @interface ManageLocation : NSObject <CLLocationManagerDelegate>
 
-
 @property CLLocationManager *locationManager;
 
-
 + (ManageLocation *) sharedSingleton;
--(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error;
--(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations;
 -(void)startSignificantChangeUpdates;
 -(void)stopSignificantChangeUpdates;
 

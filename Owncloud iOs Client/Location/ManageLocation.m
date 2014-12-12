@@ -38,11 +38,7 @@
         if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]){
             [self.locationManager requestAlwaysAuthorization];
         }
-            
-        //self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-       // self.locationManager.distanceFilter = 0; // meters
     }
-    
    
     [self.locationManager startMonitoringSignificantLocationChanges];
 }
@@ -50,7 +46,6 @@
 -(void)stopSignificantChangeUpdates {
     
     [self.locationManager stopMonitoringSignificantLocationChanges];
-    
 }
 
 
@@ -68,7 +63,6 @@
     //do something
     
     [self presentNotification];
-    
 }
 
 
@@ -84,10 +78,8 @@
     localNotification.alertBody = @"Location updated!!";
     localNotification.alertAction = @"Background Location change";
     
-    
     //On sound
     localNotification.soundName = UILocalNotificationDefaultSoundName;
-    
     
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
 }
