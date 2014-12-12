@@ -27,6 +27,9 @@
 #import "DocumentPickerViewController.h"
 #import "Customization.h"
 
+#define k_Alpha_locked_cell 0.5
+#define k_Alpha_normal_cell 1.0
+
 NSString *userHasChangeNotification = @"userHasChangeNotification";
 
 @interface FileListDocumentProviderViewController ()
@@ -116,7 +119,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     
 }
 
-- (void) cancelCurrentDownloadFile:(FileDto *)file withProgressView:(FFCircularProgressView *)progressView{
+- (void) cancelCurrentDownloadFile{
     
     [self.download cancelDownload];
 
@@ -196,8 +199,9 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
                 
             }else{
                 
-                [self cancelCurrentDownloadFile:file withProgressView:progressView];
+                 [self cancelCurrentDownloadFile];
             }
+
         }
     }
 }
@@ -209,7 +213,6 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     UITableViewCell *cell;
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    
     
     if ([self.currentDirectoryArray count] == 0) {
         
@@ -331,20 +334,20 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
             fileCell.userInteractionEnabled = NO;
             fileCell.labelTitle.textColor = [UIColor lightGrayColor];
             fileCell.labelInfoFile.textColor = [UIColor lightGrayColor];
-            fileCell.fileImageView.alpha = 0.5;
-            fileCell.imageDownloaded.alpha = 0.5;
-            fileCell.sharedByLinkImage.alpha = 0.5;
-            fileCell.sharedWithUsImage.alpha = 0.5;
-            fileCell.circularPV.alpha = 0.5;
+            fileCell.fileImageView.alpha = k_Alpha_locked_cell;
+            fileCell.imageDownloaded.alpha = k_Alpha_locked_cell;
+            fileCell.sharedByLinkImage.alpha = k_Alpha_locked_cell;
+            fileCell.sharedWithUsImage.alpha = k_Alpha_locked_cell;
+            fileCell.circularPV.alpha = k_Alpha_locked_cell;
         }else{
             fileCell.userInteractionEnabled = YES;
             fileCell.labelTitle.textColor = [UIColor blackColor];
             fileCell.labelInfoFile.textColor = [UIColor blackColor];
-            fileCell.fileImageView.alpha = 1.0;
-            fileCell.imageDownloaded.alpha = 1.0;
-            fileCell.sharedByLinkImage.alpha = 1.0;
-            fileCell.sharedWithUsImage.alpha = 1.0;
-            fileCell.circularPV.alpha = 1.0;
+            fileCell.fileImageView.alpha = k_Alpha_normal_cell;
+            fileCell.imageDownloaded.alpha = k_Alpha_normal_cell;
+            fileCell.sharedByLinkImage.alpha = k_Alpha_normal_cell;
+            fileCell.sharedWithUsImage.alpha = k_Alpha_normal_cell;
+            fileCell.circularPV.alpha = k_Alpha_normal_cell;
 
         }
         

@@ -18,9 +18,7 @@
 
 @optional
 - (void)downloadCompleted:(FileDto*)fileDto;
-
 - (void)downloadFailed:(NSString*)string andFile:(FileDto*)fileDto;
-
 - (void)downloadCancelled:(FileDto*)fileDto;
 @end
 
