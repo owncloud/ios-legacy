@@ -52,6 +52,7 @@
 #import "CheckHasCookiesSupport.h"
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
+#import "ManageLocation.h"
 
 #define k_server_with_chunking 4.5 
 
@@ -153,8 +154,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeUploadsToWaitingForServerConnection) name:NotReachableNetworkForUploadsNotification object:nil];
     
     
+    [self checkIfLocationIsEnabled];
+
+    //Allow Notifications iOS8
+    if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)]){
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil]];
+    }
+    
     return YES;
 }
+
+
 
 ///-----------------------------------
 /// @name Set UINavBar Apperance for native mail
@@ -968,6 +978,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_presentFilesViewController.folderView) {
         [_presentFilesViewController.folderView dismissWithClickedButtonIndex:0 animated:NO];
     }
+    
+    //Activate location
+    [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+
 }
 
 
@@ -999,6 +1013,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
     //Update the Favorites Files
     [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
+    
+    //stop location
+    [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+    
     
 }
 
@@ -2816,5 +2834,33 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 	}
 	return sharedCheckHasCookiesSupport;
 }
+
+
+#pragma mark - Location
+
+-(void)checkIfLocationIsEnabled {
+    if ([CLLocationManager locationServicesEnabled]) {
+        
+        DLog(@"authorizationStatus: %d", [CLLocationManager authorizationStatus]);
+        
+        if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
+            
+            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
+                                                                message:NSLocalizedString(@"message_location_not_enabled", nil)
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"ok"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            } else {
+                DLog(@"Location services not enabled");
+                [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+                [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+            }
+        }
+    }
+    
+}
+
 
 @end
