@@ -6,12 +6,20 @@
 //
 //
 
+/*
+ Copyright (C) 2014, ownCloud, Inc.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
+
+
 #import "ManageLocation.h"
 
 @implementation ManageLocation
 
-+ (ManageLocation *)sharedSingleton
-{
++ (ManageLocation *)sharedSingleton {
     static ManageLocation *sharedSingleton;
     @synchronized(self)
     {
@@ -39,14 +47,14 @@
     [self.locationManager startMonitoringSignificantLocationChanges];
 }
 
--(void)stopSignificantChangeUpdates{
+-(void)stopSignificantChangeUpdates {
     
     [self.locationManager stopMonitoringSignificantLocationChanges];
     
 }
 
 
--(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 
       CLLocation* location = [locations lastObject];
     
@@ -65,12 +73,12 @@
 
 
 
--(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
         DLog(@"Unable to start location manager. Error:%@", [error description]);
 }
 
 
--(void)presentNotification{
+-(void)presentNotification {
     DLog(@"notication method\n");
     UILocalNotification* localNotification = [[UILocalNotification alloc] init];
     localNotification.alertBody = @"Location updated!!";
