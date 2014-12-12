@@ -142,7 +142,10 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     self.selectedFile = nil;
     [self setLockedApperance:NO];
     
-    [self showErrorMessage:string];
+    if (![string isEqualToString:@""]) {
+        [self showErrorMessage:string];
+    }
+    
 }
 
 - (void)downloadCancelled:(FileDto*)fileDto{

@@ -34,10 +34,7 @@
     
     serverUrl = [serverUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    //get local path of server
-    __block NSString *localPath;
-    
-    NSString *deviceLocalPath;
+    __block NSString *localPath = nil;
     
     if (file.isNecessaryUpdate) {
         //Change the local name for a temporal one
@@ -47,7 +44,7 @@
         localPath = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     }
     
-    deviceLocalPath = localPath;
+    self.deviceLocalPath = localPath;
     
     if (!file.isNecessaryUpdate && (file.isDownload != overwriting)) {
         //Change file status in Data Base to downloading
@@ -66,7 +63,6 @@
         [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
     }
     
-    
     [progressView startSpinProgressBackgroundLayer];
     
     self.operation = [sharedCommunication downloadFile:serverUrl toDestiny:localPath withLIFOSystem:self.isLIFO onCommunication:sharedCommunication progressDownload:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
@@ -81,6 +77,7 @@
     } successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         [progressView stopSpinProgressBackgroundLayer];
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:downloaded];
+        
         double delayInSeconds = 1.0;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){

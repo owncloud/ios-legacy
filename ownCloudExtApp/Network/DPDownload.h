@@ -29,7 +29,8 @@
 @property(nonatomic, strong) FileDto *file;
 @property(nonatomic, strong) UserDto *user;
 @property(nonatomic, strong) NSString *currentLocalFolder;
-@property(nonatomic, strong) NSString * temporalFileName;
+@property(nonatomic, strong) NSString *temporalFileName;
+@property(nonatomic, strong) NSString *deviceLocalPath;
 @property (nonatomic) BOOL isLIFO;
 @property(nonatomic,weak) __weak id<DPDownloadDelegate> delegate;
 
