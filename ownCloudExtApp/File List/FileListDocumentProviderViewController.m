@@ -354,7 +354,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 
         }
         
-        if (file.isDownload != downloaded && !file.isDirectory) {
+        if ((file.isDownload != downloaded && !file.isDirectory) || (file.isNecessaryUpdate)) {
             [fileCell.circularPV setHidden:NO];
 
         }else{

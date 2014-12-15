@@ -32,6 +32,7 @@
 @property(nonatomic, strong) NSString *temporalFileName;
 @property(nonatomic, strong) NSString *deviceLocalPath;
 @property (nonatomic) BOOL isLIFO;
+@property (nonatomic) long long etagToUpdate;
 @property(nonatomic,weak) __weak id<DPDownloadDelegate> delegate;
 
 

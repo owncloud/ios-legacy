@@ -665,15 +665,17 @@
                 //Pass the items with OCFileDto to FileDto Array
                 NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
                 
-                FileDto *remoteFile = [directoryList objectAtIndex:0];
-                
-                DLog(@"remoteFile.etag: %lld", remoteFile.etag);
-                DLog(@"self.currentFolder: %lld", self.currentFolder.etag);
-                
-                if (remoteFile.etag != self.currentFolder.etag) {
-                    [self reloadCurrentFolder];
-                } else {
-                    DLog(@"It is the same etag");
+                if (directoryList.count > 0) {
+                    FileDto *remoteFile = [directoryList objectAtIndex:0];
+                    
+                    DLog(@"remoteFile.etag: %lld", remoteFile.etag);
+                    DLog(@"self.currentFolder: %lld", self.currentFolder.etag);
+                    
+                    if (remoteFile.etag != self.currentFolder.etag) {
+                        [self reloadCurrentFolder];
+                    } else {
+                        DLog(@"It is the same etag");
+                    }
                 }
                 
             }
