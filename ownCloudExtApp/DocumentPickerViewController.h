@@ -15,12 +15,13 @@
 
 #import <UIKit/UIKit.h>
 #import "FMDatabaseQueue.h"
+#import "FileListDocumentProviderViewController.h"
 
 @class SimpleFileListTableViewController;
 @class OCCommunication;
 @class UserDto;
 
-@interface DocumentPickerViewController : UIDocumentPickerExtensionViewController
+@interface DocumentPickerViewController : UIDocumentPickerExtensionViewController <FileListDocumentProviderViewControllerDelegate>
 
 + (FMDatabaseQueue*)sharedDatabase;
 + (OCCommunication*)sharedOCCommunication;

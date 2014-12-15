@@ -18,6 +18,12 @@
 #import "SimpleFileListTableViewController.h"
 #import "DPDownload.h"
 
+@protocol FileListDocumentProviderViewControllerDelegate
+
+@optional
+- (void) openFile:(FileDto*)fileDto;
+@end
+
 @interface FileListDocumentProviderViewController : SimpleFileListTableViewController <DPDownloadDelegate>
 
 //Notification to notify that the user has change
@@ -27,5 +33,7 @@ extern NSString * userHasChangeNotification;
 @property (nonatomic, strong) FileDto *selectedFile;
 @property (nonatomic, strong) NSOperation *downloadOperation;
 @property (nonatomic, strong) DPDownload *download;
+@property(nonatomic,weak) __weak id<FileListDocumentProviderViewControllerDelegate> delegate;
+
 
 @end

@@ -66,6 +66,7 @@
         }
         
         FileListDocumentProviderViewController *fileListTableViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:rootFolder];
+        fileListTableViewController.delegate = self;
         
         OCNavigationController *navigationViewController = [[OCNavigationController alloc] initWithRootViewController:fileListTableViewController];
 
@@ -127,6 +128,12 @@
         
     }
     return sharedOCCommunication;
+}
+
+#pragma mark - FileListDocumentProviderViewControllerDelegate
+
+- (void) openFile:(FileDto *)fileDto {
+    DLog(@"Open: %@", fileDto.fileName);
 }
 
 @end

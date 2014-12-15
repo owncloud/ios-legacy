@@ -129,6 +129,8 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     fileDto.isDownload = downloaded;
     self.selectedFile = nil;
     [self setLockedApperance:NO];
+    
+    [self.delegate openFile:fileDto];
 }
 
 - (void)downloadFailed:(NSString*)string andFile:(FileDto*)fileDto{
@@ -181,17 +183,21 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         [self checkBeforeNavigationToFolder:file];
     } else {
         
-        DocumentPickerCell *cell =  (DocumentPickerCell*) [tableView cellForRowAtIndexPath:indexPath];
-        
-        FFCircularProgressView *progressView = (FFCircularProgressView *) cell.circularPV;
-        
-        if (self.selectedFile.idFile != file.idFile) {
-           
-            [self startDownloadFile:file withProgressView:progressView];
+        if (file.isDownload == downloaded) {
+            [self.delegate openFile:file];
+        } else {
+            DocumentPickerCell *cell =  (DocumentPickerCell*) [tableView cellForRowAtIndexPath:indexPath];
             
-        }else{
+            FFCircularProgressView *progressView = (FFCircularProgressView *) cell.circularPV;
             
-            [self cancelCurrentDownloadFile:file withProgressView:progressView];
+            if (self.selectedFile.idFile != file.idFile) {
+                
+                [self startDownloadFile:file withProgressView:progressView];
+                
+            }else{
+                
+                [self cancelCurrentDownloadFile:file withProgressView:progressView];
+            }
         }
     }
 }
@@ -408,6 +414,8 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 - (void) navigateToFile:(FileDto *) file {
     //Method to be overwritten
     FileListDocumentProviderViewController *filesViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:file];
+    
+    filesViewController.delegate = self.delegate;
     
     [[self navigationController] pushViewController:filesViewController animated:YES];
 }
