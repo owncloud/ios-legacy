@@ -325,7 +325,15 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     if (_moviePlayer) {
         if (_moviePlayer.isFullScreen == NO) {
             //[nc manageBackgroundView:NO];
-            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, [[UIScreen mainScreen] bounds].size.width, ([[UIScreen mainScreen] bounds].size.height - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height));
+            UIScreen *screen = [UIScreen mainScreen];
+            CGSize screenSize = screen.bounds.size;
+            
+            if ([[UIScreen mainScreen] respondsToSelector:@selector(fixedCoordinateSpace)]) {
+                screenSize = [screen.coordinateSpace convertRect:screen.bounds toCoordinateSpace:screen.fixedCoordinateSpace].size;
+                _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.width, (screenSize.height - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height));
+            } else {
+                _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, [[UIScreen mainScreen] bounds].size.width, ([[UIScreen mainScreen] bounds].size.height - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height));
+            }
         } else {
             
             //[nc manageBackgroundView:YES];
@@ -337,7 +345,15 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 -(void)landscapeView{
     if (_moviePlayer) {
         if (_moviePlayer.isFullScreen == NO) {
-            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, [[UIScreen mainScreen] bounds].size.height, ([[UIScreen mainScreen] bounds].size.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape));
+            UIScreen *screen = [UIScreen mainScreen];
+            CGSize screenSize = screen.bounds.size;
+            
+            if ([[UIScreen mainScreen] respondsToSelector:@selector(fixedCoordinateSpace)]) {
+                screenSize = [screen.coordinateSpace convertRect:screen.bounds toCoordinateSpace:screen.fixedCoordinateSpace].size;
+                _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape));
+            } else {
+               _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape));
+            }
         } else {
             _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, [[UIScreen mainScreen] bounds].size.height, [[UIScreen mainScreen] bounds].size.width);
         }
