@@ -70,7 +70,7 @@
     [sharedCommunication readFile:path onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
         DLog(@"Operation response code: %ld", (long)response.statusCode);
-        BOOL isSamlCredentialsError=NO;
+        BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
         if (k_is_sso_active && redirectedServer) {
@@ -185,28 +185,51 @@
     } successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         [progressView stopSpinProgressBackgroundLayer];
         
-        if (self.file.isNecessaryUpdate) {
-            if (![self updateFile:self.file withTemporalFile:self.deviceLocalPath]) {
-                NSLog(@"Problem updating the file");
-            }else{
-                self.file.isNecessaryUpdate = NO;
-                [ManageFilesDB setFile:self.file.idFile isNecessaryUpdate:NO];
+        BOOL isSamlCredentialsError = NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                //Set not download or downloaded in database
+                if (self.file.isNecessaryUpdate) {
+                    [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
+                    
+                } else {
+                    [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:notDownload];
+                }
+                [self deleteFileFromLocalFolder];
+                [self.delegate downloadFailed:nil andFile:self.file];
             }
         }
         
-        [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
-        
-        if (!self.file.isNecessaryUpdate) {
-            //Set the store etag
-            [ManageFilesDB updateEtagOfFileDtoByid:self.file.idFile andNewEtag:self.etagToUpdate];
+        if (!isSamlCredentialsError) {
+            if (self.file.isNecessaryUpdate) {
+                if (![self updateFile:self.file withTemporalFile:self.deviceLocalPath]) {
+                    NSLog(@"Problem updating the file");
+                }else{
+                    self.file.isNecessaryUpdate = NO;
+                    [ManageFilesDB setFile:self.file.idFile isNecessaryUpdate:NO];
+                }
+            }
+            
+            [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
+            
+            if (!self.file.isNecessaryUpdate) {
+                //Set the store etag
+                [ManageFilesDB updateEtagOfFileDtoByid:self.file.idFile andNewEtag:self.etagToUpdate];
+            }
+            
+            double delayInSeconds = 1.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [progressView setHidden:YES];
+                [self.delegate downloadCompleted:self.file];
+            });
+           
         }
         
-        double delayInSeconds = 1.0;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [progressView setHidden:YES];
-            [self.delegate downloadCompleted:self.file];
-        });
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         [progressView stopSpinProgressBackgroundLayer];
