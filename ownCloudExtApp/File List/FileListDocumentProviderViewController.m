@@ -69,6 +69,8 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     
     self.isLockedApperance = isLocked;
     [self.navigationController.navigationBar setUserInteractionEnabled:!isLocked];
+    
+    [self performSelectorOnMainThread:@selector(fillTheArraysFromDatabase) withObject:nil waitUntilDone:NO];
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
 }
 
@@ -189,7 +191,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         [self checkBeforeNavigationToFolder:file];
     } else {
         
-        if (file.isDownload == downloaded) {
+        if (file.isNecessaryUpdate == NO && file.isDownload == downloaded) {
             [self.delegate openFile:file];
         } else {
             DocumentPickerCell *cell =  (DocumentPickerCell*) [tableView cellForRowAtIndexPath:indexPath];
@@ -197,11 +199,8 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
             FFCircularProgressView *progressView = (FFCircularProgressView *) cell.circularPV;
             
             if (self.selectedFile.idFile != file.idFile) {
-                
                 [self startDownloadFile:file withProgressView:progressView];
-                
             }else{
-                
                  [self cancelCurrentDownloadFile];
             }
 

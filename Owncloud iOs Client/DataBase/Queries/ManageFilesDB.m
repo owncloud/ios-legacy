@@ -1462,7 +1462,6 @@
 }
 
 + (void) setFile:(NSInteger)idFile isNecessaryUpdate:(BOOL)isNecessaryUpdate {
-    DLog(@"setFileIsDownloadState");
     FMDatabaseQueue *queue;
     
 #ifdef CONTAINER_APP

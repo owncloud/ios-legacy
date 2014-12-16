@@ -186,16 +186,20 @@
         [progressView stopSpinProgressBackgroundLayer];
         
         if (self.file.isNecessaryUpdate) {
-            //Delete the temporal file
             if (![self updateFile:self.file withTemporalFile:self.deviceLocalPath]) {
-                NSLog(@"Failed: updating file");
+                NSLog(@"Problem updating the file");
+            }else{
+                self.file.isNecessaryUpdate = NO;
+                [ManageFilesDB setFile:self.file.idFile isNecessaryUpdate:NO];
             }
         }
         
         [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
         
-        //Set the store etag
-        [ManageFilesDB updateEtagOfFileDtoByid:self.file.idFile andNewEtag:self.etagToUpdate];
+        if (!self.file.isNecessaryUpdate) {
+            //Set the store etag
+            [ManageFilesDB updateEtagOfFileDtoByid:self.file.idFile andNewEtag:self.etagToUpdate];
+        }
         
         double delayInSeconds = 1.0;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -228,6 +232,7 @@
 - (void) failureInDownloadProcessWithError:(NSError*)error andResponse:(NSHTTPURLResponse*)response{
     
     self.file = [ManageFilesDB getFileDtoByIdFile:self.file.idFile];
+    
     //Set not download or downloaded in database if the file is not on an overwritten process
     if (self.file.isDownload != overwriting) {
         if (self.file.isNecessaryUpdate) {
@@ -323,7 +328,6 @@
         updated = NO;
     }
    
-    
     //Change the name of the new updated file
     if(![fileManager moveItemAtPath:temporalFile toPath:file.localFolder error:&error]){
         DLog(@"Error: %@",[error localizedDescription]);
