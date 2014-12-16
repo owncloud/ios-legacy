@@ -14,7 +14,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "OCFileDto.h"
+
+@class OCFileDto;
 
 typedef enum {
     downloading = -1,

@@ -14,6 +14,10 @@
  */
 
 #import "InfoFileUtils.h"
+#import "FileDto.h"
+#import "constants.h"
+#import "CustomCellFileAndDirectory.h"
+#import "FileNameUtils.h"
 
 @implementation InfoFileUtils
 
@@ -114,6 +118,83 @@
         temp = [formatter stringFromDate:date];
     }
     return temp;
+}
+
+///-----------------------------------
+/// @name setTheStatusIconOntheFile:onTheCell:
+///-----------------------------------
+
+/**
+ * This method set the status icon of the files and folders
+ - The general icons of the icons
+ - The general icons of the folder (shared by link, shared with user)
+ - The shared icon on the right of the file list
+ - The status icon of the files
+ *
+ * @param fileForSetTheStatusIcon -> FileDto, the file for set the status
+ * @param fileCell -> CustomCellFileAndDirectory, the cell where the file is located
+ * @param currentFolder -> FileDto, of the folder that contain the fileForSetTheStatusIcon
+ */
++ (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder {
+    
+    if (fileForSetTheStatusIcon.isDirectory) {
+        //We only show the shared icon if the folder is shared and the father is not shared
+        if (([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) &&
+            ([currentFolder.permissions rangeOfString:k_permission_shared].location == NSNotFound) && (fileForSetTheStatusIcon.sharedFileSource > 0)) {
+            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
+        } else if (([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) &&
+                   ([currentFolder.permissions rangeOfString:k_permission_shared].location == NSNotFound)) {
+            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
+        } else if (fileForSetTheStatusIcon.sharedFileSource > 0) {
+            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
+        } else {
+            fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
+        }
+        fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+    } else {
+        NSString *imageFile= [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        fileCell.fileImageView.image=[UIImage imageNamed:imageFile];
+        
+        if (fileForSetTheStatusIcon.isFavorite) {
+            if(fileForSetTheStatusIcon.isDownload == downloaded && !fileForSetTheStatusIcon.isNecessaryUpdate) {
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
+            } else {
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
+            }
+        } else if (!fileForSetTheStatusIcon.isFavorite) {
+            if(fileForSetTheStatusIcon.isNecessaryUpdate || fileForSetTheStatusIcon.isDownload == updating) {
+                //File is in updating
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileUpdatedIcon"];
+            } else if (fileForSetTheStatusIcon.isDownload == downloaded) {
+                //File is in device
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadedIcon"];
+            } else if (fileForSetTheStatusIcon.isDownload == overwriting) {
+                //File is overwritten
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileOverwritingIcon"];
+            } else if (fileForSetTheStatusIcon.isDownload == downloading) {
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon"];
+            } else {
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+            }
+        }
+    }
+    
+    //Shared -> Shared Image (SharedType = 1|2|3) || UnShared (SharedType = 0) -> Empty image
+    if (fileForSetTheStatusIcon.sharedFileSource > 0) {
+        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
+    } else {
+        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
+    }
+    
+    //We only show the shared icon if the folder is shared and the father is not shared
+    if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound &&
+        [currentFolder.permissions rangeOfString:k_permission_shared].location == NSNotFound) {
+        fileCell.sharedWithUsImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
+    } else {
+        fileCell.sharedWithUsImage.image=[UIImage imageNamed:@""];
+    }
+    
+    return fileCell;
 }
 
 @end

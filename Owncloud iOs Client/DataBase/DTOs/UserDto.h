@@ -32,7 +32,7 @@ typedef enum {
 @property BOOL activeaccount;
 @property long storageOccupied;
 @property long storage;
-@property int hasShareApiSupport;
-@property int hasCookiesSupport;
+@property NSInteger hasShareApiSupport;
+@property NSInteger hasCookiesSupport;
 
 @end

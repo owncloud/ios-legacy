@@ -396,11 +396,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         _controllerManager = controller;
         _file = nil;
     } else {
-        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     }
     
     //Get the current local folder
-    _currentLocalFolder = [NSString stringWithFormat:@"%@%d/%@", [UtilsUrls getOwnCloudFilePath],app.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:myFile.filePath ofUserDto:app.activeUser]];
+    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:myFile.filePath ofUserDto:app.activeUser]];
     _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
     //Quit the title
@@ -520,7 +520,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         [self previewFile];
         _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
-        DLog(@"ide file: %d",_file.idFile);
+        DLog(@"ide file: %ld",(long)_file.idFile);
         
         //Check if the file is in the device
         if (([_file isDownload] == notDownload) && _typeOfFile != otherFileType) {
@@ -590,7 +590,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         //Set the file as isNecessaryUpdate
         [ManageFilesDB setIsNecessaryUpdateOfTheFile:_file.idFile];
         //Update the file on memory
-        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
         [self reloadFileList];
         [self manageTheSameFileOnThePreview];
     }
@@ -619,7 +619,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 - (void)openFile {
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (!_openWith) {
         _openWith = [[OpenWith alloc]init];
@@ -668,7 +668,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     _isUpdatingFile = isUpdatingProcess;
     //Update the file
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     //Quit the gallery view
     if (_galleryView) {
@@ -931,7 +931,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 - (void) showErrorOnIpadIfIsNecessaryCancelDownload {
     
-    DLog(@"isDownloading: %d", _file.isDownload);
+    DLog(@"isDownloading: %ld", (long)_file.isDownload);
     
     //Call showAlertView in main thread
     [self performSelectorOnMainThread:@selector(showAlertView:)
@@ -1144,8 +1144,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 - (IBAction)didPressFavoritesButton:(id)sender {
     //Update the file from the DB
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:appDelegate.activeUser];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (_file.isFavorite) {
         _file.isFavorite = NO;
@@ -1162,7 +1162,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     //Update the DB
     [ManageFilesDB updateTheFileID:_file.idFile asFavorite:_file.isFavorite];
-    [appDelegate.presentFilesViewController reloadTableFromDataBase];
+    [app.presentFilesViewController reloadTableFromDataBase];
     
     if (_file.isFavorite && _file.isDownload == downloaded) {
         [self checkIfThereIsANewFavoriteVersion];
@@ -1214,15 +1214,15 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         self.mDeleteFile.delegate = self;
         self.mDeleteFile.viewToShow = self.view;
         
-        DLog(@"idFile: %d", _file.idFile);
+        DLog(@"idFile: %ld", (long)_file.idFile);
         DLog(@"fileName: %@", _file.fileName);
         
-        AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         
         //Update the file
-        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:appDelegate.activeUser];
+        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
         
-        DLog(@"idFile: %d", _file.idFile);
+        DLog(@"idFile: %ld", (long)_file.idFile);
         
         [self.mDeleteFile askToDeleteFileByFileDto:self.file];
     }
@@ -1300,11 +1300,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         //Copy of the original array
         NSArray *downs = [NSArray arrayWithArray:[appDelegate.downloadManager getDownloads]];
         Download *download;
-        BOOL delete;
+
         for (download in downs) {
             if ([download.fileDto.filePath isEqualToString:_file.filePath] && [download.fileDto.fileName isEqualToString:_file.fileName] && download.fileDto.userId == _file.userId) {
                 [download cancelDownload];
-                delete = YES;
                 _isDownloading = NO;
             }
         }
@@ -1548,7 +1547,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
-            _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+            _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
             
             [self downloadTheFile];
             
@@ -1584,7 +1583,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 - (void)downloadTheFile {
     //0 = not download ; 1 = download ; -1 = downloading
     
-    DLog(@"The download state of the file is: %d", _file.isDownload);
+    DLog(@"The download state of the file is: %ld", (long)_file.isDownload);
     
     if ([_file isDownload]==notDownload || _file.isNecessaryUpdate) {
         //Phase 1.2. If the file isn't in the device, download the file
@@ -1667,7 +1666,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
    
     //Update fileDto
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     //Only if the file is the same
      if ([fileDto.localFolder isEqualToString: _file.localFolder]) {
@@ -1794,26 +1793,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     }];
     
 }
-
-/*
- * This method is called when the download fail because there are other request on server in progress.
- * Try the download other time
- *
- * This method is not in use yet.
- */
-/*- (void)downloadFailedOtherRequestOnServerWithFile:(FileDto*)fileDto{
- 
- _isDownloading = NO;
- _file = [ExecuteManager getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:[ExecuteManager getActiveUser]];
- 
- if (_file.idFile==fileDto.idFile) {
- DLog(@"Try to download the file other time");
- [_download fileToDownload:fileDto];
- }
- 
- 
- 
- }*/
 
 
 /*
@@ -2152,7 +2131,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Update the _file with DB
-    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     NSString *path = (NSString*)[notification object];
     NSString *pathPreview=[UtilsDtos getRemoteUrlByFile:_file andUserDto:app.activeUser];
@@ -2162,7 +2141,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         _file.isDownload=downloaded;
         _isOverwritedFile = YES;
         [self handleFile:_file fromController:_controllerManager];
-        DLog(@"id file: %d",_file.idFile);
+        DLog(@"id file: %ld", (long)_file.idFile);
     }    
 }
 
@@ -2186,7 +2165,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Update the preview file with the new information in DB
-    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     app.isOverwriteProcess = NO;
 }
 
@@ -2199,8 +2178,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Update the file with the new information in DB
-    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
-    DLog(@"file id: %d",_file.idFile);
+    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    DLog(@"file id: %ld",(long)_file.idFile);
+
     
     NSString *path = (NSString*)[notification object];
     NSString * pathPreview=[UtilsDtos getRemoteUrlByFile:_file andUserDto:app.activeUser];

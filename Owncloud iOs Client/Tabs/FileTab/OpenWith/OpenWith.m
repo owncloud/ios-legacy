@@ -52,26 +52,6 @@
     
     _file=file;
     
-    //Phase O. Know if the file is a image or a video or other
-    BOOL isVideo;
-    BOOL isImage;
-    
-    isVideo=NO;
-    isImage=NO;
-    
-    NSString *ext=[FileNameUtils getExtension:_file.fileName];
-    if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"GIF"] || [ext isEqualToString:@"TIFF"] || [ext isEqualToString:@"TIF"] || [ext isEqualToString:@"BMP"] || [ext isEqualToString:@"JPEG"])
-    {
-        isImage=YES;
-    
-    }
-    
-    if([ext isEqualToString:@"MOV"]|| [ext isEqualToString:@"MP4"] || [ext isEqualToString:@"M4V"] || [ext isEqualToString:@"3GP"]|| [ext isEqualToString:@"M4A"]){
-        
-        isVideo=YES;
-        
-    }
-    
     
     //Phase 1. Check if this file is in the device
     if ([_file isDownload] == notDownload) {        

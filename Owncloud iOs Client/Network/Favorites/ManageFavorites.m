@@ -158,7 +158,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
         
         //FileName full path
         NSString *serverPath = [NSString stringWithFormat:@"%@%@", user.url, k_url_webdav_server];
-        NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:file.filePath], file.fileName];
+        NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:file.filePath andUser:user], file.fileName];
         
         path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
@@ -170,7 +170,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
             //Check if is necessary update each favorite
             [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
                 
-                DLog(@"Operation response: %d", response.statusCode);
+                DLog(@"Operation response: %ld", (long)response.statusCode);
                 
                 BOOL isSamlCredentialsError = NO;
                 
@@ -192,7 +192,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                         FileDto *item = [directoryList objectAtIndex:0];
                         
                         //Update the file data
-                        FileDto *updatedFile = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath] andUser:user];
+                        FileDto *updatedFile = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:user] andUser:user];
                         
                         //Check if the etag has changed
                         if (((item.etag != updatedFile.etag && updatedFile.isDownload != downloading && updatedFile.isDownload != updating) || (updatedFile.isDownload == notDownload)) && updatedFile) {
@@ -213,7 +213,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                             //Data to download
                             //Get the current local folder
                             AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                            NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%d/%@", [UtilsUrls getOwnCloudFilePath],user.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:updatedFile.filePath ofUserDto:user]];
+                            NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:updatedFile.filePath ofUserDto:user]];
                             currentLocalFolder = [currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                             
                             Download *download = [Download new];
@@ -241,7 +241,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                 
                 //Finish with this file
                 DLog(@"error: %@", error);
-                DLog(@"Operation error: %d", response.statusCode);
+                DLog(@"Operation error: %ld", (long)response.statusCode);
                 
                 dispatch_semaphore_signal(semaphore);
                 
@@ -332,7 +332,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", app.activeUser.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:favoriteFile.filePath], favoriteFile.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:favoriteFile.filePath andUser:app.activeUser], favoriteFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -340,7 +340,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
@@ -356,13 +356,13 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
             //Change the filePath from the library to our format
             for (FileDto *currentFile in items) {
                 //Remove part of the item file path
-                NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:app.activeUser];
+                NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
                 if([currentFile.filePath length] >= [partToRemove length]){
                     currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
                 }
             }
             
-            DLog(@"The directory List have: %d elements", items.count);
+            DLog(@"The directory List have: %ld elements", (long)items.count);
             
             //Check if there are almost one item in the array
             if (items.count >= 1) {
@@ -378,7 +378,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         
         dispatch_semaphore_signal(semaphore);
     }];

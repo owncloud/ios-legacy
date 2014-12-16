@@ -22,6 +22,7 @@
 #import "ManageFilesDB.h"
 #import "UtilsNetworkRequest.h"
 #import "UtilsDtos.h"
+#import "UtilsUrls.h"
 #import "DetailViewController.h"
 #import "FileNameUtils.h"
 #import "UploadUtils.h"
@@ -253,9 +254,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             
-            DLog(@"response.statusCode: %d", httpResponse.statusCode);
+            DLog(@"response.statusCode: %ld", (long)httpResponse.statusCode);
             DLog(@"Error: %@", error);
-            DLog(@"error.code: %d", error.code);
+            DLog(@"error.code: %ld", (long)error.code);
             
             BOOL isSamlCredentialsError=NO;
             
@@ -450,9 +451,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             
-            DLog(@"response.statusCode: %d", response.statusCode);
+            DLog(@"response.statusCode: %ld", (long)response.statusCode);
             DLog(@"Error: %@", error);
-            DLog(@"error.code: %d", error.code);
+            DLog(@"error.code: %ld", (long)error.code);
             
             BOOL isSamlCredentialsError = NO;
             
@@ -570,7 +571,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         [self.delegate uploadAddedContinueWithNext];
     }
     
-    DLog(@"taskIdentifier: %d", _uploadTask.taskIdentifier);
+    DLog(@"taskIdentifier: %lu", (unsigned long)_uploadTask.taskIdentifier);
     
     if (_uploadTask) {
         [self setTaskIdentifier];
@@ -619,20 +620,20 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     _isCanceled = YES;
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     //The user cancel a file which had been chosen for be overwritten
-    if(appDelegate.isOverwriteProcess==YES){
+    if(app.isOverwriteProcess==YES){
         DLog(@"Overwriten process active: Cancel a file");
-        NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder];
+        NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder andUser:app.activeUser];
         DLog(@"Local folder:%@",localFolder);
         
         FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:_currentUpload.uploadFileName andFilePath:localFolder andUser:_userUploading];
-        DLog(@"id file: %d",deleteOverwriteFile.idFile);
+        DLog(@"id file: %ld",(long)deleteOverwriteFile.idFile);
         
         //In iPad clean the view
         if (!IS_IPHONE){
-            [appDelegate.detailViewController presentWhiteView];
+            [app.detailViewController presentWhiteView];
             //Launch a notification for update the previewed file
             [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:_currentUpload.destinyFolder];
         }
@@ -643,7 +644,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [ManageUploadsDB deleteUploadOfflineByUploadOfflineDto:self.currentUpload];
     
     //Quit the upload from the uploadArray
-    [appDelegate.uploadArray removeObjectIdenticalTo:self];
+    [app.uploadArray removeObjectIdenticalTo:self];
     
     //Quit the operation from the operation queue
     if (self.operation) {
@@ -683,7 +684,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [self updateRecentsTab];
 
     //Clear cache and cookies
-    [appDelegate eraseURLCache];
+    [app eraseURLCache];
 }
 
 
@@ -804,7 +805,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath], overwrittenFile.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:app.activeUser], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -812,7 +813,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
@@ -828,13 +829,13 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             //Change the filePath from the library to our format
             for (FileDto *currentFile in items) {
                 //Remove part of the item file path
-                NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:self.userUploading];
+                NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:self.userUploading];
                 if([currentFile.filePath length] >= [partToRemove length]){
                     currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
                 }
             }
             
-            DLog(@"The directory List have: %d elements", items.count);
+            DLog(@"The directory List have: %lu elements", (unsigned long)items.count);
             
             
             //Check if there are almost one item in the array
@@ -858,7 +859,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         
     }];
     //Erase cache and cookies

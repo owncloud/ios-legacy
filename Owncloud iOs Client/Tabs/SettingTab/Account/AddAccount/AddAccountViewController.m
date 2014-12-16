@@ -38,7 +38,7 @@
     if (self) {
         // Custom initialization
        if (!IS_IPHONE) {
-            UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"cancel", nil) style:UIBarStyleDefault target:self action:@selector(cancelClicked:)];
+            UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"cancel", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancelClicked:)];
             self.navigationItem.leftBarButtonItem = cancelButton;
         }
         

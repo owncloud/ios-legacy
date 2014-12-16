@@ -748,28 +748,31 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		self.bounds = self.superview.bounds;
 		[self setNeedsDisplay];
 	}
-	
-	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-	CGFloat radians = 0;
-	if (UIInterfaceOrientationIsLandscape(orientation)) {
-		if (orientation == UIInterfaceOrientationLandscapeLeft) { radians = -(CGFloat)M_PI_2; } 
-		else { radians = (CGFloat)M_PI_2; }
-		// Window coordinates differ!
-		self.bounds = CGRectMake(0, 0, self.bounds.size.height, self.bounds.size.width);
-	} else {
-		if (orientation == UIInterfaceOrientationPortraitUpsideDown) { radians = (CGFloat)M_PI; } 
-		else { radians = 0; }
-	}
-	rotationTransform = CGAffineTransformMakeRotation(radians);
-	
-	if (animated) {
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.3];
-	}
-	[self setTransform:rotationTransform];
-	if (animated) {
-		[UIView commitAnimations];
-	}
+
+#ifdef CONTAINER_APP
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    CGFloat radians = 0;
+    if (UIInterfaceOrientationIsLandscape(orientation)) {
+        if (orientation == UIInterfaceOrientationLandscapeLeft) { radians = -(CGFloat)M_PI_2; }
+        else { radians = (CGFloat)M_PI_2; }
+        // Window coordinates differ!
+        self.bounds = CGRectMake(0, 0, self.bounds.size.height, self.bounds.size.width);
+    } else {
+        if (orientation == UIInterfaceOrientationPortraitUpsideDown) { radians = (CGFloat)M_PI; }
+        else { radians = 0; }
+    }
+    rotationTransform = CGAffineTransformMakeRotation(radians);
+    
+    if (animated) {
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.3];
+    }
+    [self setTransform:rotationTransform];
+    if (animated) {
+        [UIView commitAnimations];
+    }
+#endif
+    
 }
 
 @end
