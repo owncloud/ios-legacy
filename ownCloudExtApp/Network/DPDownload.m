@@ -89,7 +89,7 @@
                 [progressView stopSpinProgressBackgroundLayer];
                 
                 [weakSelf deleteFileFromLocalFolder];
-                [weakSelf.delegate downloadFailed:nil andFile:weakSelf.file];
+                [weakSelf.delegate downloadFailed:NSLocalizedString(@"session_expired", nil) andFile:weakSelf.file];
             }
         }
         if(response.statusCode < kOCErrorServerUnauthorized && !isSamlCredentialsError) {
@@ -200,7 +200,7 @@
                     [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:notDownload];
                 }
                 [self deleteFileFromLocalFolder];
-                [self.delegate downloadFailed:nil andFile:self.file];
+                [self.delegate downloadFailed:NSLocalizedString(@"session_expired", nil) andFile:self.file];
             }
         }
         
