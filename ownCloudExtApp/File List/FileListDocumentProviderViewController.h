@@ -34,6 +34,6 @@ extern NSString * userHasChangeNotification;
 @property (nonatomic, strong) NSOperation *downloadOperation;
 @property (nonatomic, strong) DPDownload *download;
 @property(nonatomic,weak) __weak id<FileListDocumentProviderViewControllerDelegate> delegate;
-
+@property BOOL isNecessaryAdjustThePositionAndTheSizeOfTheNavigationBar;
 
 @end

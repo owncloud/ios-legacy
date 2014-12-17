@@ -27,6 +27,10 @@
 #import "OCKeychain.h"
 #import "CredentialsDto.h"
 #import "FileListDBOperations.h"
+#import "ManageAppSettingsDB.h"
+#import "KKPasscodeViewController.h"
+#import "OCPortraitNavigationViewController.h"
+#import "UtilsFramework.h"
 
 @interface DocumentPickerViewController ()
 
@@ -49,8 +53,12 @@
 -(void)prepareForPresentationInMode:(UIDocumentPickerMode)mode {
     // TODO: present a view controller appropriate for picker mode here
     
-    [self showOwnCloudNavigationOrShowErrorLogin];
     
+    if ([ManageAppSettingsDB isPasscode]) {
+        [self showPassCode];
+    } else {
+        [self showOwnCloudNavigationOrShowErrorLogin];
+    }
 }
 
 - (void) showOwnCloudNavigationOrShowErrorLogin {
@@ -58,6 +66,8 @@
     self.user = [ManageUsersDB getActiveUser];
     
     if (self.user) {
+        
+        [UtilsFramework deleteAllCookies];
         
         FileDto *rootFolder = [ManageFilesDB getRootFileDtoByUser:self.user];
         
@@ -69,6 +79,10 @@
         fileListTableViewController.delegate = self;
         
         OCNavigationController *navigationViewController = [[OCNavigationController alloc] initWithRootViewController:fileListTableViewController];
+        
+        if (IS_IPHONE && [ManageAppSettingsDB isPasscode] && self.view.frame.size.height < self.view.frame.size.width) {
+            fileListTableViewController.isNecessaryAdjustThePositionAndTheSizeOfTheNavigationBar = YES;
+        }
 
         [self presentViewController:navigationViewController animated:NO completion:^{
             //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
@@ -130,10 +144,41 @@
     return sharedOCCommunication;
 }
 
+
 #pragma mark - FileListDocumentProviderViewControllerDelegate
 
 - (void) openFile:(FileDto *)fileDto {
     DLog(@"Open: %@", fileDto.fileName);
+}
+
+#pragma mark - Pass Code
+
+- (void)showPassCode {
+    
+    KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
+    vc.delegate = self;
+    
+    OCNavigationController *oc = [[OCNavigationController alloc]initWithRootViewController:vc];
+    vc.mode = KKPasscodeModeEnter;
+    
+    UIViewController *rootController = [[UIViewController alloc]init];
+    rootController.view.backgroundColor = [UIColor darkGrayColor];
+    
+    [self presentViewController:oc animated:NO completion:^{
+    }];
+}
+
+#pragma mark - KKPasscodeViewControllerDelegate
+
+- (void)didPasscodeEnteredCorrectly:(KKPasscodeViewController*)viewController{
+    DLog(@"Did pass code entered correctly");
+    
+    [self performSelector:@selector(showOwnCloudNavigationOrShowErrorLogin) withObject:nil afterDelay:0.1];
+}
+
+- (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController{
+    DLog(@"Did pass code entered incorrectly");
+
 }
 
 @end

@@ -52,6 +52,7 @@
 #import "CheckHasCookiesSupport.h"
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
+#import "ManageLocation.h"
 
 #define k_server_with_chunking 4.5 
 
@@ -134,7 +135,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
     
-    [self performSelector:@selector(checkIfIdNecesaryShowPassCode) withObject:nil afterDelay:0.5];
+    [self performSelector:@selector(checkIfIsNecesaryShowPassCode) withObject:nil afterDelay:0.5];
     
     //Check if the server support shared api
     [self performSelector:@selector(checkIfServerSupportThings) withObject:nil afterDelay:0.0];
@@ -153,8 +154,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeUploadsToWaitingForServerConnection) name:NotReachableNetworkForUploadsNotification object:nil];
     
     
+    [self checkIfLocationIsEnabled];
+
+    //Allow Notifications iOS8
+    if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)]){
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil]];
+    }
+    
     return YES;
 }
+
+
 
 ///-----------------------------------
 /// @name Set UINavBar Apperance for native mail
@@ -938,7 +948,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     //For iOS8 we need to change the checking to this method, for show as a first step the pincode screen
-    [self checkIfIdNecesaryShowPassCodeWillEnterForeground];
+    [self checkIfIsNecesaryShowPassCodeWillEnterForeground];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -968,6 +978,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_presentFilesViewController.folderView) {
         [_presentFilesViewController.folderView dismissWithClickedButtonIndex:0 animated:NO];
     }
+    
+    //Activate location
+    [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+
 }
 
 
@@ -999,6 +1013,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
     //Update the Favorites Files
     [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
+    
+    //stop location
+    [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+    
     
 }
 
@@ -1576,7 +1594,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 #pragma mark - Pass Code
 
-- (void)checkIfIdNecesaryShowPassCode {
+- (void)checkIfIsNecesaryShowPassCode {
     
     if ([ManageAppSettingsDB isPasscode]) {
         
@@ -1607,7 +1625,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-- (void)checkIfIdNecesaryShowPassCodeWillEnterForeground {
+- (void)checkIfIsNecesaryShowPassCodeWillEnterForeground {
     
     if ([ManageAppSettingsDB isPasscode]) {
         
@@ -2816,5 +2834,33 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 	}
 	return sharedCheckHasCookiesSupport;
 }
+
+
+#pragma mark - Location
+
+-(void)checkIfLocationIsEnabled {
+    if ([CLLocationManager locationServicesEnabled]) {
+        
+        DLog(@"authorizationStatus: %d", [CLLocationManager authorizationStatus]);
+        
+        if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
+            
+            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
+                                                                message:NSLocalizedString(@"message_location_not_enabled", nil)
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"ok"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            } else {
+                DLog(@"Location services not enabled");
+                [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+                [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+            }
+        }
+    }
+    
+}
+
 
 @end

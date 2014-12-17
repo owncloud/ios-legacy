@@ -16,12 +16,16 @@
 #import <UIKit/UIKit.h>
 #import "FMDatabaseQueue.h"
 #import "FileListDocumentProviderViewController.h"
+#import "KKPasscodeViewController.h"
+
 
 @class SimpleFileListTableViewController;
 @class OCCommunication;
 @class UserDto;
 
-@interface DocumentPickerViewController : UIDocumentPickerExtensionViewController <FileListDocumentProviderViewControllerDelegate>
+
+@interface DocumentPickerViewController : UIDocumentPickerExtensionViewController <KKPasscodeViewControllerDelegate, FileListDocumentProviderViewControllerDelegate>
+
 
 + (FMDatabaseQueue*)sharedDatabase;
 + (OCCommunication*)sharedOCCommunication;

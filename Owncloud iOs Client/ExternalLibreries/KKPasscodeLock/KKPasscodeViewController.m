@@ -27,7 +27,11 @@
 #import <QuartzCore/QuartzCore.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import "ManageAppSettingsDB.h"
+#ifdef CONTAINER_APP
 #import "AppDelegate.h"
+#else
+#import "DocumentPickerViewController.h"
+#endif
 #import "MGSplitViewController.h"
 
 
@@ -89,13 +93,20 @@
 	self.view.backgroundColor = [UIColor whiteColor];
     
     CGRect tableViewFrame = self.view.bounds;
-    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad && [[UIScreen mainScreen] bounds].size.height > 480) {
+    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
         // is running on device with 4" screen so add background tableView
         UITableView *backgroundTableView = [[UITableView alloc] initWithFrame:tableViewFrame style:UITableViewStyleGrouped];
         [self.view addSubview:backgroundTableView];
         
         //and move other tableViews down so boxes are vertically centered
-        tableViewFrame.origin.y += 44.0;
+#ifdef CONTAINER_APP
+        if ([[UIScreen mainScreen] bounds].size.height > 480) {
+            tableViewFrame.origin.y += 44.0;
+        }
+#else
+        tableViewFrame.origin.y -= 44.0;
+#endif
+        
     }
 	
 	_enterPasscodeTableView = [[UITableView alloc] initWithFrame:tableViewFrame style:UITableViewStyleGrouped];
@@ -163,7 +174,8 @@
 	_boxes = [[NSMutableArray alloc] init];
 	
     // Need to make sure everything is visible in landscape mode on small devices.
-    self.isSmallLandscape = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && UIInterfaceOrientationIsLandscape(self.interfaceOrientation));
+    //self.isSmallLandscape = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && UIInterfaceOrientationIsLandscape(self.interfaceOrientation));
+    self.isSmallLandscape = NO;
     
     if (_mode == KKPasscodeModeSet) {
         
@@ -267,10 +279,14 @@
 		}
         
         if (!_dimView) {
-           
+            
+#ifdef CONTAINER_APP
             id<UIApplicationDelegate> appDelegate = [[UIApplication sharedApplication] delegate];
             _dimView = [[UIView alloc] initWithFrame:appDelegate.window.rootViewController.view.bounds];
             _dimView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+           
+            
             
             
             //Change the background depend of the type of passcode
@@ -282,15 +298,26 @@
             
             _dimView.alpha = 1.0f;
             [appDelegate.window.rootViewController.view addSubview:_dimView];
+            
+#endif
           /*  [UIView animateWithDuration:0.3f animations:^{
                 self.dimView.alpha = 1.0f;
             }];*/
         }
 	}
     
+#ifdef CONTAINER_APP
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Set Passcode visible
     app.isPasscodeVisible = YES;
+#else
+    //We need to catch the rotation notifications only in iPhone.
+    if (IS_IPHONE) {
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChange:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
+    }
+#endif
 }
 
 
@@ -312,10 +339,14 @@
                              self.dimView = nil;
                          }];
     }
+#ifdef CONTAINER_APP
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     app.splitViewController.hiddenPopoverController.popoverContentSize = CGSizeMake(320, [[UIScreen mainScreen] bounds].size.height);
     //Set Passcode not visible
     app.isPasscodeVisible = NO;
+#else
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+#endif
 }
 
 
@@ -324,8 +355,10 @@
     //In iPad
     if (!IS_IPHONE) {
         //Enable the popover
+#ifdef CONTAINER_APP
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         app.detailViewController.disablePopover = NO;
+#endif
     }
 }
 
@@ -339,6 +372,7 @@
             _dimView=nil;
         }
         
+#ifdef CONTAINER_APP
         id<UIApplicationDelegate> appDelegate = [[UIApplication sharedApplication] delegate];
         _dimView = [[UIView alloc] initWithFrame:appDelegate.window.rootViewController.view.bounds];
         _dimView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -352,6 +386,8 @@
         
         _dimView.alpha = 1.0f;
         [appDelegate.window.rootViewController.view addSubview:self.dimView];
+#endif
+        
     }
     
 }
@@ -824,7 +860,10 @@
     }
     
     headerLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+    
+#ifdef CONTAINER_APP
     [headerView addSubview:headerLabel];
+#endif
 	
 	return headerView;
 }
@@ -925,6 +964,33 @@
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     return _shouldReleaseFirstResponser;
+}
+
+#pragma mark - Rotation
+
+- (void)orientationChange:(NSNotification*)notification {
+    UIInterfaceOrientation orientation = (UIInterfaceOrientation)[[notification.userInfo objectForKey:UIApplicationStatusBarOrientationUserInfoKey] intValue];
+    
+    if(UIInterfaceOrientationIsPortrait(orientation)){
+        [self performSelector:@selector(refreshTheInterfaceInPortrait) withObject:nil afterDelay:0.0];
+    }
+}
+
+//We have to remove the status bar height in navBar and view after rotate
+- (void) refreshTheInterfaceInPortrait {
+    
+    CGRect frameNavigationBar = self.navigationController.navigationBar.frame;
+    CGRect frameView = self.view.frame;
+    frameNavigationBar.origin.y -= 20;
+    frameView.origin.y -= 20;
+    frameView.size.height += 20;
+    
+    self.navigationController.navigationBar.frame = frameNavigationBar;
+    self.view.frame = frameView;
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:self.isSmallLandscape ? 10.0f : 14.0f]};
+    CGSize size = [_failedAttemptsLabel.text sizeWithAttributes:attributes];
+    _failedAttemptsLabel.frame = _failedAttemptsView.frame = CGRectMake((self.view.bounds.size.width - (size.width + (self.isSmallLandscape ? 20.0f : 40.0f))) / 2, self.isSmallLandscape ? 75.0f : 150.0f, size.width + (self.isSmallLandscape ? 20.0f : 40.0f), size.height + (self.isSmallLandscape ? 5.0f : 10.0f));
 }
 
 #pragma mark -
