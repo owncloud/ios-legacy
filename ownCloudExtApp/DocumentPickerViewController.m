@@ -27,14 +27,11 @@
 #import "OCKeychain.h"
 #import "CredentialsDto.h"
 #import "FileListDBOperations.h"
-<<<<<<< HEAD
 #import "ManageAppSettingsDB.h"
 #import "KKPasscodeViewController.h"
 #import "OCPortraitNavigationViewController.h"
 #import "UtilsFramework.h"
-=======
 #import "constants.h"
->>>>>>> Working on how to share the file to the document picker
 
 @interface DocumentPickerViewController ()
 
