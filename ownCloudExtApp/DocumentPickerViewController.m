@@ -27,10 +27,14 @@
 #import "OCKeychain.h"
 #import "CredentialsDto.h"
 #import "FileListDBOperations.h"
+<<<<<<< HEAD
 #import "ManageAppSettingsDB.h"
 #import "KKPasscodeViewController.h"
 #import "OCPortraitNavigationViewController.h"
 #import "UtilsFramework.h"
+=======
+#import "constants.h"
+>>>>>>> Working on how to share the file to the document picker
 
 @interface DocumentPickerViewController ()
 
@@ -149,6 +153,19 @@
 
 - (void) openFile:(FileDto *)fileDto {
     DLog(@"Open: %@", fileDto.fileName);
+    
+    NSString *destination = [NSString stringWithFormat:@"%@/%@",self.documentStorageURL.path, fileDto.fileName];
+    [[NSFileManager defaultManager] removeItemAtPath:destination error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:fileDto.localFolder toPath:destination error:nil];
+    
+    NSURL *url = [self.documentStorageURL URLByAppendingPathComponent:fileDto.fileName];
+        
+    //NSURL *url = [NSURL fileURLWithPath:fileDto.localFolder];
+    
+    DLog(@"url: %@", url.absoluteString);
+    
+    [self dismissGrantingAccessToURL:url];
+    
 }
 
 #pragma mark - Pass Code
@@ -180,5 +197,12 @@
     DLog(@"Did pass code entered incorrectly");
 
 }
+
+/*
+- (NSURL *)documentStorageURL {
+    
+    NSString *path = [UtilsUrls getOwnCloudFilePath];
+    return [NSURL fileURLWithPath:path];
+}*/
 
 @end
