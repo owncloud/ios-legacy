@@ -7,9 +7,10 @@
 //
 
 #import "CustomCellFileAndDirectory.h"
+#import "FFCircularProgressView.h"
 
 @interface DocumentPickerCell : CustomCellFileAndDirectory
 
-@property(nonatomic, strong) IBOutlet UIView *circularPV;
+@property(nonatomic, strong) IBOutlet FFCircularProgressView *circularPV;
 
 @end
