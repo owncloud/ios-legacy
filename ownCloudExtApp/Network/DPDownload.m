@@ -6,6 +6,14 @@
 //
 //
 
+/*
+ Copyright (C) 2014, ownCloud, Inc.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
+
 #import "DPDownload.h"
 #import "FFCircularProgressView.h"
 #import "OCCommunication.h"
@@ -18,6 +26,25 @@
 #import "UtilsUrls.h"
 #import "FileNameUtils.h"
 
+#define k_progressView_delay_just_download 1.0
+#define k_progressView_delay_after_download 2.0
+
+@interface DPDownload ()
+
+@property(nonatomic, strong) NSOperation *operation;
+@property(nonatomic, strong) FileDto *file;
+@property(nonatomic, strong) UserDto *user;
+@property(nonatomic, strong) NSString *currentLocalFolder;
+@property(nonatomic, strong) NSString *temporalFileName;
+@property(nonatomic, strong) NSString *deviceLocalPath;
+@property(nonatomic, strong) FFCircularProgressView *progressView;
+@property (nonatomic) BOOL isLIFO;
+@property (nonatomic) BOOL isCancelTapped;
+@property (nonatomic) NSInteger state;
+@property (nonatomic) long long etagToUpdate;
+
+@end
+
 @implementation DPDownload
 
 - (id) init{
@@ -25,15 +52,20 @@
     self = [super init];
     if (self) {
         _isLIFO = YES;
+        _isCancelTapped = NO;
     }
     return self;
 }
 
-- (void) downloadFile:(FileDto *)file withProgressView:(FFCircularProgressView *)progressView{
+- (void) downloadFile:(FileDto *)file locatedInFolder:(NSString*)localFolder ofUser:(UserDto *)user withProgressView:(FFCircularProgressView *)progressView{
     
     self.file = file;
+    self.progressView = progressView;
+    self.currentLocalFolder = localFolder;
+    self.user = user;
+    self.state = downloadNotStarted;
     
-    [self updateThisEtagWithTheLastUsingProgressView:progressView];
+    [self updateThisEtagWithTheLast];
 }
 
 ///-----------------------------------
@@ -43,7 +75,7 @@
 /**
  * Method to set the last etag on this file on the DB
  */
-- (void) updateThisEtagWithTheLastUsingProgressView:(FFCircularProgressView *)progressView {
+- (void) updateThisEtagWithTheLast {
     
     OCCommunication *sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
     
@@ -65,7 +97,9 @@
     
     __weak typeof(self) weakSelf = self;
     
-     [progressView startSpinProgressBackgroundLayer];
+    [self.progressView startSpinProgressBackgroundLayer];
+    
+    self.state = downloadCheckingEtag;
     
     [sharedCommunication readFile:path onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
@@ -86,7 +120,7 @@
                     [ManageFilesDB setFileIsDownloadState:weakSelf.file.idFile andState:notDownload];
                 }
                 
-                [progressView stopSpinProgressBackgroundLayer];
+                [self.progressView stopSpinProgressBackgroundLayer];
                 
                 [weakSelf deleteFileFromLocalFolder];
                 [weakSelf.delegate downloadFailed:NSLocalizedString(@"session_expired", nil) andFile:weakSelf.file];
@@ -112,10 +146,14 @@
                 DLog(@"currentFileDto: %lld", currentFileDto.etag);
                 
                 self.etagToUpdate = currentFileDto.etag;
-                [self startDonwloadWithProgressView:progressView];
+                
+                if (!self.isCancelTapped) {
+                    [self startDownload];
+                }
+             
             }else{
                 
-                [progressView stopSpinProgressBackgroundLayer];
+                [self.progressView stopSpinProgressBackgroundLayer];
                 
                 [weakSelf deleteFileFromLocalFolder];
                 [weakSelf.delegate downloadFailed:nil andFile:weakSelf.file];
@@ -124,7 +162,7 @@
         }
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
-        [progressView stopSpinProgressBackgroundLayer];
+        [self.progressView stopSpinProgressBackgroundLayer];
         
         [self failureInDownloadProcessWithError:error andResponse:response];
         
@@ -133,8 +171,7 @@
 }
 
 
-
-- (void) startDonwloadWithProgressView:(FFCircularProgressView *)progressView{
+- (void) startDownload {
     
     OCCommunication *sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
     NSArray *splitedUrl = [self.user.url componentsSeparatedByString:@"/"];
@@ -171,19 +208,19 @@
         [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
     }
     
-   
+   self.state = downloadWorking;
     
     self.operation = [sharedCommunication downloadFile:serverUrl toDestiny:localPath withLIFOSystem:self.isLIFO onCommunication:sharedCommunication progressDownload:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-        [progressView stopSpinProgressBackgroundLayer];
+        [self.progressView stopSpinProgressBackgroundLayer];
         float percent = (float)totalBytesRead / totalBytesExpectedToRead;
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [progressView setProgress:percent];
+            [self.progressView setProgress:percent];
         });
         
         
     } successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
-        [progressView stopSpinProgressBackgroundLayer];
+        [self.progressView stopSpinProgressBackgroundLayer];
         
         BOOL isSamlCredentialsError = NO;
         
@@ -200,6 +237,7 @@
                     [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:notDownload];
                 }
                 [self deleteFileFromLocalFolder];
+                self.state = downloadFailed;
                 [self.delegate downloadFailed:NSLocalizedString(@"session_expired", nil) andFile:self.file];
             }
         }
@@ -221,26 +259,32 @@
                 [ManageFilesDB updateEtagOfFileDtoByid:self.file.idFile andNewEtag:self.etagToUpdate];
             }
             
-            double delayInSeconds = 1.0;
+            self.state = downloadComplete;
+            
+            double delayInSeconds = k_progressView_delay_just_download;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                [progressView setHidden:YES];
+                [self.progressView setHidden:YES];
                 [self.delegate downloadCompleted:self.file];
             });
-           
+            
+            delayInSeconds = k_progressView_delay_after_download;
+            popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [self.progressView setProgress:0.0];
+            });
         }
         
-        
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-        [progressView stopSpinProgressBackgroundLayer];
+        [self.progressView stopSpinProgressBackgroundLayer];
+        self.state = downloadFailed;
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [progressView setProgress:0.0];
+            [self.progressView setProgress:0.0];
         });
         
         [self failureInDownloadProcessWithError:error andResponse:response];
         
-   
     } shouldExecuteAsBackgroundTaskWithExpirationHandler:^{
        [self.delegate downloadFailed:@"" andFile:self.file];
     }];
@@ -249,7 +293,34 @@
 
 - (void) cancelDownload{
     
-    [self.operation cancel];
+    self.isCancelTapped = YES;
+    
+    switch (self.state) {
+        case downloadNotStarted:
+            [self.progressView stopSpinProgressBackgroundLayer];
+            [self.delegate downloadCancelled:self.file];
+            break;
+        
+        case downloadCheckingEtag:
+            [self.progressView stopSpinProgressBackgroundLayer];
+            [self.delegate downloadCancelled:self.file];
+            break;
+            
+        case downloadWorking:
+            [self.operation cancel];
+            break;
+            
+        case downloadComplete:
+            break;
+            
+        case downloadFailed:
+            break;
+            
+        default:
+            break;
+    }
+    
+   
 }
 
 - (void) failureInDownloadProcessWithError:(NSError*)error andResponse:(NSHTTPURLResponse*)response{

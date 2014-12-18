@@ -26,6 +26,7 @@
 #import "OCCommunication.h"
 #import "DocumentPickerViewController.h"
 #import "Customization.h"
+#import "UtilsDtos.h"
 
 #define k_Alpha_locked_cell 0.5
 #define k_Alpha_normal_cell 1.0
@@ -69,7 +70,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     
     self.isLockedApperance = isLocked;
     [self.navigationController.navigationBar setUserInteractionEnabled:!isLocked];
-    
+    [self.tableView setScrollEnabled:!isLocked];
     [self performSelectorOnMainThread:@selector(fillTheArraysFromDatabase) withObject:nil waitUntilDone:NO];
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
 }
@@ -106,15 +107,14 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 
 - (void) startDownloadFile:(FileDto *)file withProgressView:(FFCircularProgressView *)progressView{
     
-    if (!self.download) {
-        self.download = [DPDownload new];
-        self.download.delegate = self;
+    if (self.download) {
+        self.download = nil;
     }
     
-    self.download.currentLocalFolder = self.currentFolder.localFolder;
-    self.download.user = self.user;
-    
-    [self.download downloadFile:file withProgressView:progressView];
+    self.download = [DPDownload new];
+    self.download.delegate = self;
+  
+    [self.download downloadFile:file locatedInFolder:self.currentFolder.localFolder ofUser:self.user withProgressView:progressView];
     
     self.selectedFile = file;
     [self setLockedApperance:YES];
@@ -124,7 +124,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 - (void) cancelCurrentDownloadFile{
     
     [self.download cancelDownload];
-
+    
 }
 
 #pragma mark - DPDownload Delegate Methods
@@ -140,7 +140,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
 
 - (void)downloadFailed:(NSString*)string andFile:(FileDto*)fileDto{
     
-    fileDto = notDownload;
+    fileDto.isDownload = notDownload;
     self.selectedFile = nil;
     [self setLockedApperance:NO];
     
@@ -331,6 +331,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         
         fileCell = (DocumentPickerCell*)[InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder];
         
+        
         //Lock apperance
         if (self.isLockedApperance && file.idFile != self.selectedFile.idFile) {
             fileCell.userInteractionEnabled = NO;
@@ -368,7 +369,7 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         fileCell.rightUtilityButtons = nil;
         
         //Selection style gray
-        fileCell.selectionStyle=UITableViewCellSelectionStyleGray;
+        fileCell.selectionStyle = UITableViewCellSelectionStyleNone;
         
         cell = fileCell;
     }
