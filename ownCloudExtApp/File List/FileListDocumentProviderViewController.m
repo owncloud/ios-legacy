@@ -24,7 +24,6 @@
 #import "InfoFileUtils.h"
 #import "FFCircularProgressView.h"
 #import "OCCommunication.h"
-#import "DocumentPickerViewController.h"
 #import "Customization.h"
 #import "UtilsDtos.h"
 
@@ -32,6 +31,7 @@
 #define k_Alpha_normal_cell 1.0
 
 NSString *userHasChangeNotification = @"userHasChangeNotification";
+NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 @interface FileListDocumentProviderViewController ()
 
@@ -49,6 +49,8 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChange:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pickerIsClosing:) name:userHasCloseDocumentPicker object:nil];
     
     [super viewWillAppear:animated];
 }
@@ -121,10 +123,19 @@ NSString *userHasChangeNotification = @"userHasChangeNotification";
     
 }
 
+
+
 - (void) cancelCurrentDownloadFile{
     
     [self.download cancelDownload];
     
+}
+
+- (void)pickerIsClosing:(NSNotification*)notification {
+    
+    if (self.download.state != downloadNotStarted ) {
+        [self cancelCurrentDownloadFile];
+    }
 }
 
 #pragma mark - DPDownload Delegate Methods

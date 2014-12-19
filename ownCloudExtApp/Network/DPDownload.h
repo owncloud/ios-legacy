@@ -42,6 +42,7 @@ typedef NS_ENUM(NSInteger, downloadStateEnum) {
 
 @interface DPDownload : NSObject
 
+@property (nonatomic) NSInteger state;
 @property(nonatomic,weak) __weak id<DPDownloadDelegate> delegate;
 
 

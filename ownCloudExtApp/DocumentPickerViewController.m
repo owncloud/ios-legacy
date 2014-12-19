@@ -44,6 +44,14 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showOwnCloudNavigationOrShowErrorLogin) name:userHasChangeNotification object:nil];
 }
 
+- (void) viewWillDisappear:(BOOL)animated{
+   
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName: userHasCloseDocumentPicker object: nil];
+    
+}
+
 - (IBAction)openDocument:(id)sender {
     NSURL* documentURL = [self.documentStorageURL URLByAppendingPathComponent:@"Untitled.txt"];
     

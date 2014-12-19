@@ -27,7 +27,9 @@
 @interface FileListDocumentProviderViewController : SimpleFileListTableViewController <DPDownloadDelegate>
 
 //Notification to notify that the user has change
-extern NSString * userHasChangeNotification;
+extern NSString *userHasChangeNotification;
+
+extern NSString *userHasCloseDocumentPicker;
 
 @property (nonatomic) BOOL isLockedApperance;
 @property (nonatomic, strong) FileDto *selectedFile;

@@ -40,7 +40,6 @@
 @property(nonatomic, strong) FFCircularProgressView *progressView;
 @property (nonatomic) BOOL isLIFO;
 @property (nonatomic) BOOL isCancelTapped;
-@property (nonatomic) NSInteger state;
 @property (nonatomic) long long etagToUpdate;
 
 @end
@@ -53,6 +52,7 @@
     if (self) {
         _isLIFO = YES;
         _isCancelTapped = NO;
+        _state = downloadNotStarted;
     }
     return self;
 }
@@ -63,7 +63,6 @@
     self.progressView = progressView;
     self.currentLocalFolder = localFolder;
     self.user = user;
-    self.state = downloadNotStarted;
     
     [self updateThisEtagWithTheLast];
 }
