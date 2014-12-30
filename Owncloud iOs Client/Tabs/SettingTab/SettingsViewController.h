@@ -39,6 +39,7 @@ typedef enum {
 
 @property(nonatomic,strong)IBOutlet UITableView *settingsTableView;
 @property(nonatomic,strong)UISwitch *switchPasscode;
+@property(nonatomic,strong)UISwitch *switchInstantUpload;
 @property(nonatomic, strong)DetailViewController *detailViewController;
 @property(nonatomic, strong)UserDto *user;
 
@@ -53,6 +54,7 @@ typedef enum {
 @property (nonatomic) BOOL isMailComposeVisible;
 
 -(IBAction)changeSwitchPasscode:(id)sender;
+-(IBAction)changeSwitchInstantUpload:(id)sender;
 -(void)disconnectUser;
 //-(void)internazionaliceTheInitialInterface;
 

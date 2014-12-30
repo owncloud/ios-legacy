@@ -111,7 +111,11 @@
     
     //Set the passcode swith asking to database
    [_switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:NO];
-  
+    
+    //Set the instant upload swith asking to database
+    //[_switchInstantUpload setOn:[ManageAppSettingsDB isInstantUpload] animated:NO];
+    [_switchInstantUpload setOn:NO animated:NO];
+    
     _user = app.activeUser;
 
 }
@@ -171,6 +175,23 @@
         [app.splitViewController presentViewController:oc animated:YES completion:nil];
     }
 }
+
+///-----------------------------------
+/// @name Change Switch Instant Upload
+///-----------------------------------
+
+/**
+ * This method is calle que the pass code switch change
+ *
+ * @param id -> UISwitch sender
+ 
+ * @return IBAction
+ *
+ */
+-(IBAction)changeSwitchInstantUpload:(id)sender {
+    
+}
+
 
 -(void)disconnectUser {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -257,7 +278,7 @@
 
 // Asks the data source to return the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    return 4;
 }
 
 // Returns the table view managed by the controller object.
@@ -271,6 +292,8 @@
     } else if (section == 1){
         n = 1;
     } else if (section == 2){
+        n = 1;
+    } else if (section == 3){
         if (k_show_recommend_option_on_settings && k_show_imprint_option_on_settings && k_show_help_option_on_settings) {
             n = 4;
         } else if (!k_show_recommend_option_on_settings && !k_show_imprint_option_on_settings && !k_show_help_option_on_settings)  {
@@ -301,6 +324,8 @@
     } else if (indexPath.section==1) {
         [self getSectionAppPinBlock:cell byRow:indexPath.row];
     } else if (indexPath.section==2) {
+        [self getSectionAppInstantUpload:cell byRow:indexPath.row];
+    } else if (indexPath.section==3) {
         [self getSectionInfoBlock:cell byRow:indexPath.row];
     }
     
@@ -313,7 +338,7 @@
     UILabel *label = [[UILabel alloc] init];
     UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:13];
     
-    int sectionToShowFooter = 2;
+    int sectionToShowFooter = 3;
 
     if (section == sectionToShowFooter) {
         NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
@@ -475,6 +500,29 @@
     return cell;
 }
 
+-(UITableViewCell *) getSectionAppInstantUpload:(UITableViewCell *) cell byRow:(NSInteger) row {
+    UIFont *itemFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
+    cell.textLabel.font = itemFont;
+    
+    switch (row) {
+        case 0:
+            cell.textLabel.text=NSLocalizedString(@"title_instant_upload", nil);
+            _switchInstantUpload = [[UISwitch alloc] initWithFrame:CGRectZero];
+            cell.accessoryView = _switchInstantUpload;
+            //[_switchInstantUpload setOn:[ManageAppSettingsDB isInstantUpload] animated:YES];//TODO
+            [_switchInstantUpload setOn:NO animated:YES];
+
+            [_switchInstantUpload addTarget:self action:@selector(changeSwitchInstantUpload:) forControlEvents:UIControlEventValueChanged];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            
+            break;
+        default:
+            break;
+    }
+    
+    return cell;
+}
+
 -(UITableViewCell *) getSectionManageAccountBlock:(UITableViewCell *) cell byRow:(NSInteger) row {
     
    // UIFont *cellBoldFont = [UIFont boldSystemFontOfSize:16.0];
@@ -520,7 +568,7 @@
     
     if (indexPath.section==0) {
         [self didPressOnManageAccountsBlock:indexPath.row];
-    } else if (indexPath.section==2) {
+    } else if (indexPath.section==3) {
         [self didPressOnInfoBlock:indexPath.row];
     }
 }
