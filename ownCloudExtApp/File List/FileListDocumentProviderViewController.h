@@ -28,7 +28,6 @@
 
 //Notification to notify that the user has change
 extern NSString *userHasChangeNotification;
-
 extern NSString *userHasCloseDocumentPicker;
 
 @property (nonatomic) BOOL isLockedApperance;
@@ -37,5 +36,7 @@ extern NSString *userHasCloseDocumentPicker;
 @property (nonatomic, strong) DPDownload *download;
 @property(nonatomic,weak) __weak id<FileListDocumentProviderViewControllerDelegate> delegate;
 @property BOOL isNecessaryAdjustThePositionAndTheSizeOfTheNavigationBar;
+
+- (void) showErrorMessage:(NSString *)string;
 
 @end

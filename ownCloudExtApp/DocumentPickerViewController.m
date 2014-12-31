@@ -157,21 +157,37 @@
 #pragma mark - FileListDocumentProviderViewControllerDelegate
 
 - (void) openFile:(FileDto *)fileDto {
-    DLog(@"Open: %@", fileDto.fileName);
     
-    NSString *destination = [NSString stringWithFormat:@"%@/%@",self.documentStorageURL.path, fileDto.fileName];
-    [[NSFileManager defaultManager] removeItemAtPath:destination error:nil];
-    [[NSFileManager defaultManager] copyItemAtPath:fileDto.localFolder toPath:destination error:nil];
+    NSURL *originUrl = [NSURL fileURLWithPath:fileDto.localFolder];
+    NSString *fileName = [fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL *destinationUrl = [self.documentStorageURL URLByAppendingPathComponent:fileName];
+   
+    NSError *error = nil;
     
-    NSURL *url = [self.documentStorageURL URLByAppendingPathComponent:fileDto.fileName];
-        
-    //NSURL *url = [NSURL fileURLWithPath:fileDto.localFolder];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
+        if (![[NSFileManager defaultManager] removeItemAtURL:destinationUrl error:&error]) {
+            NSLog(@"Error removing file: %@", error);
+        }
+    }
     
-    DLog(@"url: %@", url.absoluteString);
+    if (![[NSFileManager defaultManager] copyItemAtURL:originUrl toURL:destinationUrl error:&error]) {
+        NSLog(@"Error copyng file: %@", error);
+    }
     
-    [self dismissGrantingAccessToURL:url];
     
+   if (!error) {
+       
+        [self dismissGrantingAccessToURL:destinationUrl];
+       
+    }else{
+
+        OCNavigationController *navigationController = (OCNavigationController*) self.presentedViewController;
+        FileListDocumentProviderViewController *fileListController = (FileListDocumentProviderViewController*) [navigationController.viewControllers objectAtIndex:0];
+        [fileListController showErrorMessage:NSLocalizedString(@"error_sending_file_to_document_picker", nil)];
+    }
 }
+
+
 
 #pragma mark - Pass Code
 
