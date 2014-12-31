@@ -142,4 +142,17 @@
  */
 + (void) updateDBVersion9To10;
 
+///-----------------------------------
+/// @name Update Database version with 9 version to 10
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter users table, added fields to instant uploads options
+ *
+ */
++ (void) updateDBVersion10To11;
+
+
 @end

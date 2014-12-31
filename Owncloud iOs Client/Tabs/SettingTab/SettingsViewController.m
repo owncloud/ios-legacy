@@ -33,6 +33,7 @@
 #import "ImageUtils.h"
 #import "UtilsFramework.h"
 #import "UtilsUrls.h"
+#import "ManageLocation.h"
 
 
 ///-----------------------------------
@@ -113,8 +114,7 @@
    [_switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:NO];
     
     //Set the instant upload swith asking to database
-    //[_switchInstantUpload setOn:[ManageAppSettingsDB isInstantUpload] animated:NO];
-    [_switchInstantUpload setOn:NO animated:NO];
+    [_switchInstantUpload setOn:[ManageAppSettingsDB isInstantUpload] animated:NO];
     
     _user = app.activeUser;
 
@@ -174,22 +174,6 @@
         
         [app.splitViewController presentViewController:oc animated:YES completion:nil];
     }
-}
-
-///-----------------------------------
-/// @name Change Switch Instant Upload
-///-----------------------------------
-
-/**
- * This method is calle que the pass code switch change
- *
- * @param id -> UISwitch sender
- 
- * @return IBAction
- *
- */
--(IBAction)changeSwitchInstantUpload:(id)sender {
-    
 }
 
 
@@ -509,9 +493,7 @@
             cell.textLabel.text=NSLocalizedString(@"title_instant_upload", nil);
             _switchInstantUpload = [[UISwitch alloc] initWithFrame:CGRectZero];
             cell.accessoryView = _switchInstantUpload;
-            //[_switchInstantUpload setOn:[ManageAppSettingsDB isInstantUpload] animated:YES];//TODO
-            [_switchInstantUpload setOn:NO animated:YES];
-
+            [_switchInstantUpload setOn:[ManageAppSettingsDB isInstantUpload] animated:YES];
             [_switchInstantUpload addTarget:self action:@selector(changeSwitchInstantUpload:) forControlEvents:UIControlEventValueChanged];
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             
@@ -1091,7 +1073,76 @@
     
 }
 
+- (void)didCancelInstantUploadTapped{
+    
+    //Refresh the switch
+    [_switchInstantUpload setOn:[ManageAppSettingsDB isInstantUpload] animated:NO];
+    
+}
+
+
+#pragma mark - Instant Upload, Location
+
+-(IBAction)changeSwitchInstantUpload:(id)sender {
+    
+    //k_path_instant_upload
+    //check is active
+    
+    if(![ManageAppSettingsDB isInstantUpload]) {
+        if([self checkIfLocationIsEnabled]){
+            [ManageAppSettingsDB updateInstantUpload:YES];
+            [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+            [self didCancelInstantUploadTapped];
+        }
+
+        //todo  switch off
+        [self didCancelInstantUploadTapped];
+    } else {
+        //Dissable mode
+        [ManageAppSettingsDB updateInstantUpload:NO];
+        [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+        
+    }
+    
+    
+}
+
+
+-(BOOL)checkIfLocationIsEnabled {
+    BOOL enabledLocation = NO;
+    if ([CLLocationManager locationServicesEnabled]) {
+        
+        DLog(@"authorizationStatus: %d", [CLLocationManager authorizationStatus]);
+        
+        if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
+            
+            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
+                                                                message:NSLocalizedString(@"message_location_not_enabled", nil)
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"ok"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            } else {
+                DLog(@"Location services not enabled");
+                [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+                //todo if select ok activate
+               // [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+            
+            }
+        } else {
+            enabledLocation = YES;
+        }
+    }
+    
+    return enabledLocation;
+    
+}
+
+
 @end
+
+
 
 
 

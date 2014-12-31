@@ -52,4 +52,8 @@
 +(NSMutableArray*) getAllCertificatesLocation;
 
 
++(BOOL)isInstantUpload;
+
++(void) updateInstantUpload: (BOOL) instantUpload;
+
 @end
