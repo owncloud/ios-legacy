@@ -174,8 +174,14 @@
         NSLog(@"Error copyng file: %@", error);
     }
     
+    NSNumber *fileSize = 0;
     
-   if (!error) {
+    if (!error) {
+        NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:destinationUrl.path error:nil];
+        fileSize = [attributes objectForKey:@"NSFileSize"];
+    }
+    
+   if (fileSize.integerValue > 0) {
        
         [self dismissGrantingAccessToURL:destinationUrl];
        
