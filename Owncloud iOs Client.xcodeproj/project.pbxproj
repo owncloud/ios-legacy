@@ -563,6 +563,9 @@
 		EAC3AC4015ED2B4E00B59805 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
 		EAC3AC4615ED2BD100B59805 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC4515ED2BD100B59805 /* libz.dylib */; };
 		EAC52E1616BAE65300C7341E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC52E1416BAE26E00C7341E /* AVFoundation.framework */; };
+		EAC5985A1A56A150003192B2 /* ProvidingFileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC598591A56A150003192B2 /* ProvidingFileDto.m */; };
+		EAC5985B1A56A150003192B2 /* ProvidingFileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC598591A56A150003192B2 /* ProvidingFileDto.m */; };
+		EAC5985C1A56A150003192B2 /* ProvidingFileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC598591A56A150003192B2 /* ProvidingFileDto.m */; };
 		EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD036BF19053BEE003665CD /* ManageFavorites.m */; };
 		EAD0EBA317FAF811000005A1 /* OCELCAssetTablePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A9FCE717E9858C00FF48D7 /* OCELCAssetTablePicker.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
@@ -1204,6 +1207,8 @@
 		EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		EAC3AC4515ED2BD100B59805 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		EAC52E1416BAE26E00C7341E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		EAC598581A56A150003192B2 /* ProvidingFileDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProvidingFileDto.h; path = DataBase/DTOs/ProvidingFileDto.h; sourceTree = "<group>"; };
+		EAC598591A56A150003192B2 /* ProvidingFileDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProvidingFileDto.m; path = DataBase/DTOs/ProvidingFileDto.m; sourceTree = "<group>"; };
 		EAD036BE19053BEE003665CD /* ManageFavorites.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageFavorites.h; path = Network/Favorites/ManageFavorites.h; sourceTree = "<group>"; };
 		EAD036BF19053BEE003665CD /* ManageFavorites.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageFavorites.m; path = Network/Favorites/ManageFavorites.m; sourceTree = "<group>"; };
 		EAD281B91A38A2F900A00D54 /* DPDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DPDownload.h; path = Network/DPDownload.h; sourceTree = "<group>"; };
@@ -1476,6 +1481,8 @@
 				40AC24D019FE725600582867 /* CredentialsDto.h */,
 				40AC24D119FE725600582867 /* CredentialsDto.m */,
 				59A9A724196E8A370042FEAC /* CookiesStorageDto.m */,
+				EAC598581A56A150003192B2 /* ProvidingFileDto.h */,
+				EAC598591A56A150003192B2 /* ProvidingFileDto.m */,
 			);
 			name = DTOs;
 			sourceTree = "<group>";
@@ -3258,6 +3265,7 @@
 				1493D8CF185702D70090FEFB /* CheckSSOServer.m in Sources */,
 				148DD5FD1778556500FB9977 /* MBProgressHUD.m in Sources */,
 				148DD6041778558500FB9977 /* MGSplitCornersView.m in Sources */,
+				EAC5985A1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
 				148DD6051778558500FB9977 /* MGSplitDividerView.m in Sources */,
 				148DD6061778558500FB9977 /* MGSplitViewController.m in Sources */,
 				148DD612177855B600FB9977 /* AuthenticationDbService.m in Sources */,
@@ -3425,6 +3433,7 @@
 				599D99F01A0256D9008A9DB3 /* FMDatabase.m in Sources */,
 				599D99EF1A0256AF008A9DB3 /* UtilsUrls.m in Sources */,
 				599D99EE1A02566B008A9DB3 /* FMDatabaseQueue.m in Sources */,
+				EAC5985B1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
 				EAB0AB3919ED356A00764C31 /* DocumentPickerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3433,6 +3442,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAC5985C1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
 				EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
