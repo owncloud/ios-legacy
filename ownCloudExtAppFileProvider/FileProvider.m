@@ -16,6 +16,8 @@
 #import "FileProvider.h"
 #import <UIKit/UIKit.h>
 
+
+
 @interface FileProvider ()
 
 @end
@@ -68,6 +70,8 @@
         error = [NSError errorWithDomain:NSPOSIXErrorDomain code:-1 userInfo:nil];
     }
     
+    NSLog(@"Provider identifier : %@", self.description);
+    
     if (completionHandler) {
         completionHandler(error);
     }
@@ -79,6 +83,11 @@
     
     // TODO: mark file at <url> as needing an update in the model; kick off update process
     NSLog(@"Item changed at URL %@", url);
+    
+   
+    
+    
+    
 }
 
 - (void)stopProvidingItemAtURL:(NSURL *)url {
