@@ -566,6 +566,9 @@
 		EAC5985A1A56A150003192B2 /* ProvidingFileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC598591A56A150003192B2 /* ProvidingFileDto.m */; };
 		EAC5985B1A56A150003192B2 /* ProvidingFileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC598591A56A150003192B2 /* ProvidingFileDto.m */; };
 		EAC5985C1A56A150003192B2 /* ProvidingFileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC598591A56A150003192B2 /* ProvidingFileDto.m */; };
+		EAC598601A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */; };
+		EAC598611A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */; };
+		EAC598621A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */; };
 		EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD036BF19053BEE003665CD /* ManageFavorites.m */; };
 		EAD0EBA317FAF811000005A1 /* OCELCAssetTablePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A9FCE717E9858C00FF48D7 /* OCELCAssetTablePicker.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
@@ -1209,6 +1212,8 @@
 		EAC52E1416BAE26E00C7341E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		EAC598581A56A150003192B2 /* ProvidingFileDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProvidingFileDto.h; path = DataBase/DTOs/ProvidingFileDto.h; sourceTree = "<group>"; };
 		EAC598591A56A150003192B2 /* ProvidingFileDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProvidingFileDto.m; path = DataBase/DTOs/ProvidingFileDto.m; sourceTree = "<group>"; };
+		EAC5985E1A56A486003192B2 /* ManageProvidingFilesDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageProvidingFilesDB.h; path = DataBase/Queries/ManageProvidingFilesDB.h; sourceTree = "<group>"; };
+		EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageProvidingFilesDB.m; path = DataBase/Queries/ManageProvidingFilesDB.m; sourceTree = "<group>"; };
 		EAD036BE19053BEE003665CD /* ManageFavorites.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageFavorites.h; path = Network/Favorites/ManageFavorites.h; sourceTree = "<group>"; };
 		EAD036BF19053BEE003665CD /* ManageFavorites.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageFavorites.m; path = Network/Favorites/ManageFavorites.m; sourceTree = "<group>"; };
 		EAD281B91A38A2F900A00D54 /* DPDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DPDownload.h; path = Network/DPDownload.h; sourceTree = "<group>"; };
@@ -2661,6 +2666,8 @@
 				EABE4BE2187D5AE6006DEC96 /* ManageSharesDB.m */,
 				59A9A71F196E89170042FEAC /* ManageCookiesStorageDB.h */,
 				59A9A720196E89170042FEAC /* ManageCookiesStorageDB.m */,
+				EAC5985E1A56A486003192B2 /* ManageProvidingFilesDB.h */,
+				EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */,
 			);
 			name = Queries;
 			sourceTree = "<group>";
@@ -3306,6 +3313,7 @@
 				13AD22B318311A26007E0F1A /* ManageUploadRequest.m in Sources */,
 				148DD69A1778664400FB9977 /* OverwriteFileOptions.m in Sources */,
 				148DD6A01778667000FB9977 /* RenameFile.m in Sources */,
+				EAC598601A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */,
 				148DD6A81778668A00FB9977 /* SelectFolderNavigation.m in Sources */,
 				EA68969117F599060033B3C1 /* KKPasscodeViewController.m in Sources */,
 				593F7CAA19EFDE96004136F7 /* UtilsUrls.m in Sources */,
@@ -3421,6 +3429,7 @@
 				EA8ADE6B1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */,
 				599D80B21A2338100071B66E /* FileListDocumentProviderViewController.m in Sources */,
 				590849EF1A0A7D6000D3E842 /* CustomCellFileAndDirectory.m in Sources */,
+				EAC598611A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */,
 				593C16D01A09008C006C20AF /* ManageFilesDB.m in Sources */,
 				EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */,
 				599E57351A08E62700744EC9 /* FileDto.m in Sources */,
@@ -3442,6 +3451,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAC598621A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */,
 				EAC5985C1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
 				EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */,
 			);
