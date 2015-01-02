@@ -79,6 +79,7 @@
     initialRootFolder.sharedFileSource = 0;
     initialRootFolder.permissions = @"";
     initialRootFolder.taskIdentifier = -1;
+    initialRootFolder.providingFileId = 0;
     
     [ManageFilesDB insertFile:initialRootFolder];
     

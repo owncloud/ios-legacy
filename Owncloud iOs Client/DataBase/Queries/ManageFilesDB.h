@@ -145,10 +145,10 @@
 /**
  * This method update the files DB with the datas located on the files_backup DB
  * 
- * If the file is overwritten we update the fileds: is_download, shared_file_source and
+ * If the file is overwritten we update the fileds: is_download, shared_file_source, providing_file_id and
  * is_overwritten
  *
- * If other case we update the fields: is_download, shared_file_source and is_overwritten
+ * If other case we update the fields: is_download, shared_file_source, providing_file_id and is_overwritten
  * AND etag
  */
 + (void) updateFilesFromBackup;
