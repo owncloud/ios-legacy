@@ -142,4 +142,16 @@
  */
 + (void) updateDBVersion9To10;
 
+///-----------------------------------
+/// @name Update Database version with 10 version to 11
+///-----------------------------------
+
+/*
+ Changes:
+ *
+ * Has been included a new field for store the providing_file_id of the file
+ */
+
++ (void) updateDBVersion10To11;
+
 @end

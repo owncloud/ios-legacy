@@ -1867,7 +1867,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [UtilsUrls getOwnCloudFilePath];
     
     //New version
-    static int dbVersion = k_DB_version_10;
+    static int dbVersion = k_DB_version_11;
     
     //This method make a new database
     [ManageDB createDataBase];
@@ -1891,6 +1891,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [self updateDBVersion7To8];
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
+                [ManageDB updateDBVersion10To11];
                 break;
             case k_DB_version_2:
                 [ManageDB updateDBVersion2To3];
@@ -1902,6 +1903,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [self updateDBVersion7To8];
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
+                [ManageDB updateDBVersion10To11];
                 break;
             case k_DB_version_3:
                 [ManageDB updateDBVersion3To4];
@@ -1911,6 +1913,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [self updateDBVersion7To8];
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
+                [ManageDB updateDBVersion10To11];
                 break;
             case k_DB_version_4:
                 [ManageDB updateDBVersion4To5];
@@ -1919,6 +1922,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [self updateDBVersion7To8];
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
+                [ManageDB updateDBVersion10To11];
                 break;
             case k_DB_version_5:
                 [ManageDB updateDBVersion5To6];
@@ -1926,24 +1930,32 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [self updateDBVersion7To8];
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
+                [ManageDB updateDBVersion10To11];
                 break;
             case k_DB_version_6:
                 [ManageDB updateDBVersion6To7];
                 [self updateDBVersion7To8];
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
+                [ManageDB updateDBVersion10To11];
                 break;
             case k_DB_version_7:
                 [self updateDBVersion7To8];
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
+                [ManageDB updateDBVersion10To11];
                 break;
             case k_DB_version_8:
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
+                [ManageDB updateDBVersion10To11];
                 break;
             case k_DB_version_9:
                 [ManageDB updateDBVersion9To10];
+                [ManageDB updateDBVersion10To11];
+                break;
+            case k_DB_version_10:
+                [ManageDB updateDBVersion10To11];
                 break;
         }
     }
