@@ -391,10 +391,12 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void) showErrorUserHasChange {
     //The user has change
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    NSString *mesagge = [NSLocalizedString(@"error_user_change_in_core_app", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
     
     UIAlertController *alert =   [UIAlertController
-                                  alertControllerWithTitle:@""
-                                  message:@"The user has change on the ownCloud App" //TODO: add a string error internationzalized
+                                  alertControllerWithTitle:mesagge
+                                  message:@""
                                   preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction* ok = [UIAlertAction
