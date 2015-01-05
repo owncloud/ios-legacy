@@ -196,6 +196,9 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     
     [self.tableView deselectRowAtIndexPath: indexPath animated:YES];
     
+    //Refresh the content with the data of the database
+    [self fillTheArraysFromDatabase];
+    
     FileDto *file = (FileDto *)[[self.sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
     
     if (file.isDirectory) {
