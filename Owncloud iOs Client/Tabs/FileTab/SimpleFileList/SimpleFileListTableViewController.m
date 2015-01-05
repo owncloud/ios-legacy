@@ -549,8 +549,8 @@
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
     
     UIAlertController *alert =   [UIAlertController
-                                  alertControllerWithTitle:@""
-                                  message:message
+                                  alertControllerWithTitle:message
+                                  message:@""
                                   preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction* ok = [UIAlertAction

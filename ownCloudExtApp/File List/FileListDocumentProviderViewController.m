@@ -156,7 +156,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     [self setLockedApperance:NO];
     
     if (![string isEqualToString:@""]) {
-        [self showErrorMessage:string];
+        [self showError:string];
     }
     
 }
@@ -169,26 +169,6 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     
 }
 
-- (void) showErrorMessage:(NSString *)string{
-    
-    UIAlertController *alert =   [UIAlertController
-                                  alertControllerWithTitle:string
-                                  message:@""
-                                  preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction* okAction = [UIAlertAction
-                         actionWithTitle:NSLocalizedString(@"ok", nil)
-                         style:UIAlertActionStyleDefault
-                         handler:^(UIAlertAction * action)
-                         {
-                             
-                         }];
-    
-    [alert addAction:okAction];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-    
-    
-}
 
 #pragma mark - UITableView Delegate methods
 
