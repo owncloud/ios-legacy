@@ -78,6 +78,9 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _isMailComposeVisible = NO;
+       
+        //Set the instant upload
+        [self initStateInstantUpload];
     }
     return self;
 }
@@ -112,10 +115,6 @@
     
     //Set the passcode swith asking to database
    [_switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:NO];
-    
-    //Set the instant upload
-    [self initStateInstantUpload];
-   // [_switchInstantUpload setOn:[ManageAppSettingsDB isInstantUpload] animated:NO];
     
     _user = app.activeUser;
 
@@ -1089,26 +1088,6 @@
 
     if(![ManageAppSettingsDB isInstantUpload]) {
        [self checkIfLocationIsEnabled];
-       /* if ([self checkIfLocationIsEnabled]){
-            [self switchInstantUploadTo:YES];
-            [ManageAppSettingsDB updateInstantUpload:YES];
-            [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
-        } else {
-             [ManageLocation sharedSingleton].delegate = self;
-            [self switchInstantUploadTo:NO];
-            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined ){
-            //if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
-                DLog(@"Location services not determined");
-                [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
-            } else {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
-                                                                message:NSLocalizedString(@"message_location_not_enabled", nil)
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"OK"
-                                                      otherButtonTitles:nil];
-                [alert show];
-            }
-        }*/
     } else {
         //Dissable mode
         [ManageAppSettingsDB updateInstantUpload:NO];
@@ -1116,21 +1095,6 @@
     }
 }
 
-/*
--(BOOL)checkIfLocationIsEnabled {
-    BOOL isLocationEnabled = NO;
-    
-    if ([CLLocationManager locationServicesEnabled]) {
-        
-        DLog(@"authorizationStatus: %d", [CLLocationManager authorizationStatus]);
-        
-        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-            isLocationEnabled = YES;
-        }
-    }
-    
-    return isLocationEnabled;
-}*/
 
 -(void)checkIfLocationIsEnabled {
     [ManageLocation sharedSingleton].delegate = self;
@@ -1148,7 +1112,8 @@
                 [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
                 
             }else {
-                
+                [ManageAppSettingsDB updateInstantUpload:NO];
+                [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
                                                             message:NSLocalizedString(@"message_location_not_enabled", nil)
                                                             delegate:nil
@@ -1160,9 +1125,10 @@
             [self switchInstantUploadTo:YES];
             [ManageAppSettingsDB updateInstantUpload:YES];
             [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
-            
         }
     } else {
+        [ManageAppSettingsDB updateInstantUpload:NO];
+        [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
                                                         message:NSLocalizedString(@"message_location_not_enabled", nil)
                                                         delegate:nil
@@ -1174,31 +1140,15 @@
 
 -(void)initStateInstantUpload{
     
+    [self switchInstantUploadTo:NO];
+    
     if([ManageAppSettingsDB isInstantUpload]) {
-        [self switchInstantUploadTo:YES];
-        [ManageAppSettingsDB updateInstantUpload:YES];
-        [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
-
-        /*if ([self checkIfLocationIsEnabled]){
-            [self switchInstantUploadTo:YES];
-            [ManageAppSettingsDB updateInstantUpload:YES];
-            [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
-        } else {
-            if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
-                [self switchInstantUploadTo:NO];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
-                                                            message:NSLocalizedString(@"message_location_not_enabled", nil)
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-                [alert show];
-            }
-        }*/
+        [self checkIfLocationIsEnabled];
     } else {
         //Dissable mode
         [self switchInstantUploadTo:NO];
-       // [ManageAppSettingsDB updateInstantUpload:NO];
-       // [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+        [ManageAppSettingsDB updateInstantUpload:NO];
+        [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
     }
 }
 
