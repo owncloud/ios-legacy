@@ -209,6 +209,8 @@
     
    self.state = downloadWorking;
     
+ 
+    
     self.operation = [sharedCommunication downloadFile:serverUrl toDestiny:localPath withLIFOSystem:self.isLIFO onCommunication:sharedCommunication progressDownload:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
         [self.progressView stopSpinProgressBackgroundLayer];
         float percent = (float)totalBytesRead / totalBytesExpectedToRead;
