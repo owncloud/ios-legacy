@@ -16,6 +16,7 @@
 
 
 #import "ManageLocation.h"
+#import "SettingsViewController.h"
 
 @implementation ManageLocation
 
@@ -23,8 +24,9 @@
     static ManageLocation *sharedSingleton;
     @synchronized(self)
     {
-        if (!sharedSingleton)
+        if (!sharedSingleton){
             sharedSingleton = [[ManageLocation alloc] init];
+        }
         return sharedSingleton;
     }
 }
@@ -38,6 +40,7 @@
         if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]){
             [self.locationManager requestAlwaysAuthorization];
         }
+        
     }
    
     [self.locationManager startMonitoringSignificantLocationChanges];
@@ -61,14 +64,27 @@
 
     
     //do something
+    // if([ManageAppSettingsDB isInstantUpload]) {
+         
+    // }
+    
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
+        
+    }
     
     [self presentNotification];
 }
 
+-(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
+    
+        [self.delegate statusAuthorizationLocationChanged];
+}
 
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
         DLog(@"Unable to start location manager. Error:%@", [error description]);
+     [self.delegate statusAuthorizationLocationChanged];
+    
 }
 
 

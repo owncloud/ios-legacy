@@ -18,9 +18,17 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+@protocol ManageLocationDelegate
+
+@optional
+- (void)statusAuthorizationLocationChanged;
+@end
+
 @interface ManageLocation : NSObject <CLLocationManagerDelegate>
 
 @property CLLocationManager *locationManager;
+@property BOOL firstChangeAuthorizationDone;
+@property(nonatomic,weak) __weak id<ManageLocationDelegate> delegate;
 
 + (ManageLocation *) sharedSingleton;
 -(void)startSignificantChangeUpdates;

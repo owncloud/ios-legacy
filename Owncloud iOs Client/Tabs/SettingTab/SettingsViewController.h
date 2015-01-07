@@ -20,6 +20,7 @@
 #import <MessageUI/MessageUI.h>
 #import "UserDto.h"
 #import "KKPasscodeViewController.h"
+#import "ManageLocation.h"
 
 typedef enum {
     help=0,
@@ -29,7 +30,7 @@ typedef enum {
     
 } enumInfoSetting;
 
-@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate>{
+@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, ManageLocationDelegate>{
 
     UISwitch *_switchPasscode;  
     UITableView *_settingsTableView;
