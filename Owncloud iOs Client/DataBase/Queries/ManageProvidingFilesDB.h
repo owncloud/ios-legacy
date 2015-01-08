@@ -28,5 +28,7 @@
 
 + (NSArray*) getAllProvidingFilesDtoOfUser:(NSInteger)userId;
 
++ (ProvidingFileDto *) getProvidingFileDtoUsingFileName:(NSString *)fileName;
+
 
 @end

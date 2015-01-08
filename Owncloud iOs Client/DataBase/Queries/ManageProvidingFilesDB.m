@@ -163,4 +163,40 @@
     return [NSArray arrayWithArray:tempArray];;
 }
 
++ (ProvidingFileDto *) getProvidingFileDtoUsingFileName:(NSString *)fileName{
+    
+    __block ProvidingFileDto *providerFileTemp = nil;
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, user_id FROM providing_files WHERE file_name = ?", fileName];
+        
+        while ([rs next]) {
+            
+            providerFileTemp = [ProvidingFileDto new];
+            
+            providerFileTemp.idProvidingFile = [rs intForColumn:@"id"];
+            providerFileTemp.filePath = [rs stringForColumn:@"file_path"];
+            providerFileTemp.fileName = [rs stringForColumn:@"file_name"];
+            providerFileTemp.userId = [rs intForColumn:@"user_id"];
+            
+        }
+        
+        [rs close];
+        
+    }];
+
+    
+    return providerFileTemp;
+    
+}
+
+
 @end

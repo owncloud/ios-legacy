@@ -15,7 +15,8 @@
 
 #import "FileProvider.h"
 #import <UIKit/UIKit.h>
-
+#import "ProvidingFileDto.h"
+#import "ManageProvidingFilesDB.h"
 
 
 @interface FileProvider ()
