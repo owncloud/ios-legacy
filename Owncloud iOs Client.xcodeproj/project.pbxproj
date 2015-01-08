@@ -517,6 +517,22 @@
 		59DA496619F7A4B600DD3619 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		59DA4F3C1A07A97100472639 /* DocumentPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 59DA4F3B1A07A97100472639 /* DocumentPickerViewController.xib */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
+		EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
+		EA1F62CE1A5EBC2A00D6346F /* UserDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F148177C315D004A1A5A /* UserDto.m */; };
+		EA1F62CF1A5EBCA800D6346F /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F155177C3392004A1A5A /* FMDatabaseQueue.m */; };
+		EA1F62D01A5EBCAE00D6346F /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F14F177C3392004A1A5A /* FMDatabase.m */; };
+		EA1F62D11A5EBD2000D6346F /* ProvidingFileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC598591A56A150003192B2 /* ProvidingFileDto.m */; };
+		EA1F62D21A5EBD2400D6346F /* ManageProvidingFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */; };
+		EA1F62D31A5EBDA100D6346F /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F157177C3392004A1A5A /* FMResultSet.m */; };
+		EA1F62D41A5EBDA700D6346F /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F153177C3392004A1A5A /* FMDatabasePool.m */; };
+		EA1F62D51A5EBDAA00D6346F /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F151177C3392004A1A5A /* FMDatabaseAdditions.m */; };
+		EA1F62D61A5EBDF900D6346F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 137F3B4715B9376D0009BB24 /* libsqlite3.0.dylib */; };
+		EA1F62D71A5EBF8500D6346F /* ManageFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13A177C2F73004A1A5A /* ManageFilesDB.m */; };
+		EA1F62D81A5EBFC700D6346F /* ManageUsersDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F140177C2FC1004A1A5A /* ManageUsersDB.m */; };
+		EA1F62D91A5EBFDF00D6346F /* OCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FF874219F81396008B7C62 /* OCKeychain.m */; };
+		EA1F62DA1A5EBFF100D6346F /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
+		EA1F62DD1A5EC08300D6346F /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
+		EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F146177C315D004A1A5A /* FileDto.m */; };
 		EA2678FF1876E4B8008678DE /* notSharedItem.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FB1876E4B8008678DE /* notSharedItem.png */; };
 		EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */; };
 		EA2B4FB017FAFF69001766BB /* company_empty_screen_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */; };
@@ -583,6 +599,13 @@
 			remoteInfo = "Owncloud iOs Client";
 		};
 		597A87961A013FD50071F2AF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = EA7CC896183E11E600B6A4B4;
+			remoteInfo = "ownCloud iOS library";
+		};
+		EA1F62DB1A5EC07E00D6346F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */;
 			proxyType = 1;
@@ -1276,6 +1299,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA1F62DD1A5EC08300D6346F /* libownCloudiOS.a in Frameworks */,
+				EA1F62D61A5EBDF900D6346F /* libsqlite3.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2744,6 +2769,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				EA1F62DC1A5EC07E00D6346F /* PBXTargetDependency */,
 			);
 			name = ownCloudExtAppFileProvider;
 			productName = ownCloudExtAppFileProvider;
@@ -3450,6 +3476,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */,
+				EA1F62D21A5EBD2400D6346F /* ManageProvidingFilesDB.m in Sources */,
+				EA1F62DA1A5EBFF100D6346F /* CredentialsDto.m in Sources */,
+				EA1F62CF1A5EBCA800D6346F /* FMDatabaseQueue.m in Sources */,
+				EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */,
+				EA1F62D11A5EBD2000D6346F /* ProvidingFileDto.m in Sources */,
+				EA1F62D41A5EBDA700D6346F /* FMDatabasePool.m in Sources */,
+				EA1F62CE1A5EBC2A00D6346F /* UserDto.m in Sources */,
+				EA1F62D01A5EBCAE00D6346F /* FMDatabase.m in Sources */,
+				EA1F62D81A5EBFC700D6346F /* ManageUsersDB.m in Sources */,
+				EA1F62D71A5EBF8500D6346F /* ManageFilesDB.m in Sources */,
+				EA1F62D91A5EBFDF00D6346F /* OCKeychain.m in Sources */,
+				EA1F62D31A5EBDA100D6346F /* FMResultSet.m in Sources */,
+				EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */,
+				EA1F62D51A5EBDAA00D6346F /* FMDatabaseAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3465,6 +3505,11 @@
 			isa = PBXTargetDependency;
 			name = "ownCloud iOS library";
 			targetProxy = 597A87961A013FD50071F2AF /* PBXContainerItemProxy */;
+		};
+		EA1F62DC1A5EC07E00D6346F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ownCloud iOS library";
+			targetProxy = EA1F62DB1A5EC07E00D6346F /* PBXContainerItemProxy */;
 		};
 		EA8667E618AA297F00D3550D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3732,6 +3777,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 					"DEBUG_MODE=1",
+					"FILE_PICKER=1",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;

@@ -14,7 +14,10 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FMDatabaseQueue.h"
 
 @interface FileProvider : NSFileProviderExtension
+
++ (FMDatabaseQueue*)sharedDatabase;
 
 @end

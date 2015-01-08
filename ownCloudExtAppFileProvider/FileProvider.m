@@ -17,6 +17,8 @@
 #import <UIKit/UIKit.h>
 #import "ProvidingFileDto.h"
 #import "ManageProvidingFilesDB.h"
+#import "FMDatabaseQueue.h"
+#import "UtilsUrls.h"
 
 
 @interface FileProvider ()
@@ -99,6 +101,26 @@
         [[NSFileManager defaultManager] removeItemAtURL:newURL error:NULL];
     }];
     [self providePlaceholderAtURL:url completionHandler:NULL];
+}
+
+#pragma mark - FMDataBase
++ (FMDatabaseQueue*)sharedDatabase
+{
+    
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:@"DB.sqlite"]];
+    
+    static FMDatabaseQueue* sharedDatabase = nil;
+    if (sharedDatabase == nil)
+    {
+        NSString *documentsDir = [UtilsUrls getOwnCloudFilePath];
+        NSString *dbPath = [documentsDir stringByAppendingPathComponent:@"DB.sqlite"];
+        
+        
+        //NSString* bundledDatabasePath = [[NSBundle mainBundle] pathForResource:@"DB" ofType:@"sqlite"];
+        sharedDatabase = [[FMDatabaseQueue alloc] initWithPath: dbPath];
+    }
+    
+    return sharedDatabase;
 }
 
 @end
