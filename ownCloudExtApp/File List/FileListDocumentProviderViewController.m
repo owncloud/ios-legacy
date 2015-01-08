@@ -127,7 +127,9 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void) cancelCurrentDownloadFile{
     
-    [self.download cancelDownload];
+    if (self.download) {
+        [self.download cancelDownload];
+    }
     
 }
 
@@ -189,7 +191,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
             
             FFCircularProgressView *progressView = (FFCircularProgressView *) cell.circularPV;
             
-            if (self.selectedFile.idFile != file.idFile) {
+            if (self.selectedFile.idFile != file.idFile && (file.isDownload == notDownload || file.isNecessaryUpdate)) {
                 [self startDownloadFile:file withProgressView:progressView];
             }else{
                  [self cancelCurrentDownloadFile];
@@ -345,7 +347,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
         }
         
-        if ((file.isDownload != downloaded && !file.isDirectory) || (file.isNecessaryUpdate)) {
+        if ((file.isDownload == notDownload && !file.isDirectory) || (file.isNecessaryUpdate)) {
             [fileCell.circularPV setHidden:NO];
 
         }else{
