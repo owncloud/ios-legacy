@@ -73,8 +73,8 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     self.isLockedApperance = isLocked;
     [self.navigationController.navigationBar setUserInteractionEnabled:!isLocked];
     [self.tableView setScrollEnabled:!isLocked];
-    [self performSelectorOnMainThread:@selector(fillTheArraysFromDatabase) withObject:nil waitUntilDone:NO];
-    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+    [self fillTheArraysFromDatabase];
+    [self.tableView reloadData];
 }
 
 
@@ -142,7 +142,6 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void)downloadCompleted:(FileDto*)fileDto{
     
-    fileDto.isDownload = downloaded;
     self.selectedFile = nil;
     [self setLockedApperance:NO];
     
@@ -151,7 +150,6 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void)downloadFailed:(NSString*)string andFile:(FileDto*)fileDto{
     
-    fileDto.isDownload = notDownload;
     self.selectedFile = nil;
     [self setLockedApperance:NO];
     
@@ -163,7 +161,6 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void)downloadCancelled:(FileDto*)fileDto{
     
-    fileDto = notDownload;
     self.selectedFile = nil;
     [self setLockedApperance:NO];
     
