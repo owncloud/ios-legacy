@@ -412,6 +412,12 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+
+- (void) showErrorMessage:(NSString *)string{
+    
+    [self showError:string];
+}
+
 #pragma mark - Navigation
 - (void) navigateToFile:(FileDto *) file {
     //Method to be overwritten
