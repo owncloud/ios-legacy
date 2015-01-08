@@ -52,8 +52,15 @@
 +(NSMutableArray*) getAllCertificatesLocation;
 
 
+/*
+ * Methods manage instant uploads photos
+ */
 +(BOOL)isInstantUpload;
++(void)updateInstantUpload:(BOOL)instantUpload;
++(void)updatePathInstantUpload:(NSString *)newValue;
++(void)updateDateInstantUpload:(long )newValue;
++(long)getDateInstantUpload;
++(void)updateOnlyWifiInstantUpload:(BOOL)newValue;
 
-+(void) updateInstantUpload: (BOOL) instantUpload;
 
 @end

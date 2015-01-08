@@ -1123,8 +1123,9 @@
             }
         } else {
             [self switchInstantUploadTo:YES];
-            [ManageAppSettingsDB updateInstantUpload:YES];
             [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+            [ManageAppSettingsDB updateInstantUpload:YES];
+            [ManageAppSettingsDB updateDateInstantUpload:[[NSDate date] timeIntervalSince1970]];
             [self uploadNewPhotos];
         }
     } else {
@@ -1167,6 +1168,8 @@
             if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
                 [self switchInstantUploadTo:YES];
                 [ManageAppSettingsDB updateInstantUpload:YES];
+                [ManageAppSettingsDB updateDateInstantUpload:[[NSDate date] timeIntervalSince1970]];
+                
             }
             
         } else if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){

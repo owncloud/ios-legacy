@@ -261,6 +261,55 @@
     
 }
 
++(void)updateDateInstantUpload:(long)newValue {
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE users SET date_instant_upload=? WHERE activeaccount=1", newValue];
+        
+        if (!correctQuery) {
+            DLog(@"Error updating path_instant_upload");
+        }
+    }];
+    
+}
+
++(long)getDateInstantUpload{
+    DLog(@"getDateInstantUpload");
+    
+    __block long output;
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT date_instant_upload FROM users  WHERE activeaccount=1"];
+        
+        while ([rs next]) {
+            
+            output = [rs longForColumn:@"date_instant_upload"];
+        }
+        
+    }];
+    
+    return output;
+    
+}
+
 +(void)updatePathInstantUpload:(NSString *)newValue {
     
     FMDatabaseQueue *queue;
@@ -283,6 +332,7 @@
     
 }
 
+
 +(void)updateOnlyWifiInstantUpload:(BOOL)newValue {
     
     FMDatabaseQueue *queue;
@@ -304,6 +354,8 @@
     }];
     
 }
+
+
 
 
 @end
