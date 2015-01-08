@@ -1125,6 +1125,7 @@
             [self switchInstantUploadTo:YES];
             [ManageAppSettingsDB updateInstantUpload:YES];
             [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+            [self uploadNewPhotos];
         }
     } else {
         [ManageAppSettingsDB updateInstantUpload:NO];
@@ -1144,12 +1145,17 @@
     
     if([ManageAppSettingsDB isInstantUpload]) {
         [self checkIfLocationIsEnabled];
+        
     } else {
         //Dissable mode
-        [self switchInstantUploadTo:NO];
+        //[self switchInstantUploadTo:NO];
         [ManageAppSettingsDB updateInstantUpload:NO];
         [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
     }
+}
+
+-(void)uploadNewPhotos{
+    
 }
 
 - (void)statusAuthorizationLocationChanged{

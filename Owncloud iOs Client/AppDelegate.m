@@ -161,7 +161,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil]];
     }
     
-    
     return YES;
 }
 

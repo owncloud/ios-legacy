@@ -36,7 +36,7 @@
         
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0 )"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0, 'date_instant_upload' LONG )"];
 
         
         if (!correctQuery) {
@@ -652,6 +652,10 @@
         correctQuery = [db executeUpdate:@"ALTER TABLE users ADD only_wifi_instant_upload BOOL NOT NULL DEFAULT 0"];
         if (!correctQuery) {
             DLog(@"Error update version 10 to 11 table users only_wifi_instant_upload");
+        }
+        correctQuery = [db executeUpdate:@"ALTER TABLE users ADD date_instant_upload LONG"];
+        if (!correctQuery) {
+            DLog(@"Error update version 10 to 11 table users date_instant_upload");
         }
         
 
