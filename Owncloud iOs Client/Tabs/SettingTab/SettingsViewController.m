@@ -1084,6 +1084,7 @@
 -(IBAction)changeSwitchInstantUpload:(id)sender {
     
     //k_path_instant_upload
+    [[ManageAsset sharedSingleton] initAssetLibrary];
     
     [self switchInstantUploadTo:NO];
 
@@ -1143,7 +1144,7 @@
 
 -(void)initStateInstantUpload{
     
-    //
+    
     
     [self switchInstantUploadTo:NO];
     
@@ -1171,7 +1172,8 @@
             if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
                 [self switchInstantUploadTo:YES];
                 [ManageAppSettingsDB updateInstantUpload:YES];
-                [ManageAppSettingsDB updateDateInstantUpload:[[NSDate date] timeIntervalSince1970]];
+                long dateInLong = [[NSDate date] timeIntervalSince1970];
+                [ManageAppSettingsDB updateDateInstantUpload:dateInLong];
                 
             }
             

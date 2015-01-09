@@ -15,11 +15,14 @@
 
 @property (nonatomic, retain) ALAssetsGroup *assetGroupCameraRoll;
 
-@property (nonatomic, retain) NSMutableArray *OCAssets;
+@property (nonatomic, retain) NSMutableArray *allAssetsCameraRoll;
 
--(void)initAssetLibrary;
-- (NSInteger)numberOfAssets;
-- (void)updateArrayAssets;
+@property (nonatomic, retain) NSArray *assetsNewToUpload;
+
++ (ManageAsset *) sharedSingleton;
+- (void)initAssetLibrary;
+//- (NSInteger)numberOfAssets;
+//- (void)updateArrayAssets;
 
 
 @end

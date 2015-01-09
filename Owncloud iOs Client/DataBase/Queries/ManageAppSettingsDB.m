@@ -274,7 +274,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET date_instant_upload=? WHERE activeaccount=1", newValue];
+        correctQuery = [db executeUpdate:@"UPDATE users SET date_instant_upload=? WHERE activeaccount=1", [NSNumber numberWithLong:newValue]];
         
         if (!correctQuery) {
             DLog(@"Error updating path_instant_upload");

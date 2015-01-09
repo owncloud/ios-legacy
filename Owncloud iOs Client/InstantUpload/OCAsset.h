@@ -14,5 +14,6 @@
 
 @property (nonatomic, retain) ALAsset *asset;
 
+- (id)initWithAsset:(ALAsset*)asset;
 
 @end
