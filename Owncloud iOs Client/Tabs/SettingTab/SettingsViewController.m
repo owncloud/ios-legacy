@@ -34,6 +34,7 @@
 #import "UtilsFramework.h"
 #import "UtilsUrls.h"
 #import "ManageLocation.h"
+#import "ManageAsset.h"
 
 
 ///-----------------------------------
@@ -1141,6 +1142,8 @@
 }
 
 -(void)initStateInstantUpload{
+    
+    //
     
     [self switchInstantUploadTo:NO];
     
