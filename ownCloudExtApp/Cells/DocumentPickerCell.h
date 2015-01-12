@@ -11,6 +11,6 @@
 
 @interface DocumentPickerCell : CustomCellFileAndDirectory
 
-@property(nonatomic, strong) IBOutlet FFCircularProgressView *circularPV;
+@property(nonatomic, weak) IBOutlet FFCircularProgressView *circularPV;
 
 @end
