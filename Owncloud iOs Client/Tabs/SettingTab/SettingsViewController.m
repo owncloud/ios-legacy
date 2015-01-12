@@ -1084,7 +1084,7 @@
 -(IBAction)changeSwitchInstantUpload:(id)sender {
     
     //k_path_instant_upload
-    [[ManageAsset sharedSingleton] initAssetLibrary];
+    
     
     [self switchInstantUploadTo:NO];
 
@@ -1150,6 +1150,7 @@
     
     if([ManageAppSettingsDB isInstantUpload]) {
         [self checkIfLocationIsEnabled];
+      //  [[ManageAsset sharedSingleton] initAssetLibrary];
         
     } else {
         //Dissable mode
