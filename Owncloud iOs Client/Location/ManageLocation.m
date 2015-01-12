@@ -17,6 +17,8 @@
 
 #import "ManageLocation.h"
 #import "SettingsViewController.h"
+#import "ManageAppSettingsDB.h"
+#import "ManageAsset.h"
 
 @implementation ManageLocation
 
@@ -68,8 +70,10 @@
          
     // }
     
-    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-        
+    if([ManageAppSettingsDB isInstantUpload]) {
+    //if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
+        [[ManageAsset sharedSingleton] initAssetLibrary];
+        //upload new photos
     }
     
     [self presentNotification];

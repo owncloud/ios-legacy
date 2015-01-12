@@ -82,6 +82,7 @@
        
         //Set the instant upload
         [self initStateInstantUpload];
+    
     }
     return self;
 }
@@ -96,6 +97,7 @@
     self.title=NSLocalizedString(@"settings", nil);
     
     [self.view setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
+
 }
 
 - (void)viewDidUnload
@@ -108,7 +110,6 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Relaunch the uploads that failed before
@@ -1128,7 +1129,7 @@
             [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
             [ManageAppSettingsDB updateInstantUpload:YES];
             [ManageAppSettingsDB updateDateInstantUpload:[[NSDate date] timeIntervalSince1970]];
-            [self uploadNewPhotos];
+            
         }
     } else {
         [ManageAppSettingsDB updateInstantUpload:NO];
@@ -1150,7 +1151,8 @@
     
     if([ManageAppSettingsDB isInstantUpload]) {
         [self checkIfLocationIsEnabled];
-      //  [[ManageAsset sharedSingleton] initAssetLibrary];
+        [[ManageAsset sharedSingleton] initAssetLibrary];
+        [self uploadNewPhotos];
         
     } else {
         //Dissable mode
@@ -1173,10 +1175,9 @@
             if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
                 [self switchInstantUploadTo:YES];
                 [ManageAppSettingsDB updateInstantUpload:YES];
-                long dateInLong = [[NSDate date] timeIntervalSince1970];
-                [ManageAppSettingsDB updateDateInstantUpload:dateInLong];
+                [ManageAppSettingsDB updateDateInstantUpload:[[NSDate date] timeIntervalSince1970]];
                 
-            }
+            }            
             
         } else if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){
             if([ManageAppSettingsDB isInstantUpload]) {

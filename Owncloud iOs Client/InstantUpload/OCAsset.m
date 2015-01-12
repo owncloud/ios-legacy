@@ -10,11 +10,15 @@
 
 @implementation OCAsset
 
+@synthesize date;
+
 - (id)initWithAsset:(ALAsset*)asset
 {
     self = [super init];
     if (self) {
         self.asset = asset;
+        self.date = [asset valueForProperty:ALAssetPropertyDate];
+        
        // _selected = NO;
     }
     

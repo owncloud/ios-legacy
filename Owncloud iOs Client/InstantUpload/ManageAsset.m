@@ -26,10 +26,8 @@
     
     ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
 
-    //check authorizationstatus camera roll? //todo localization 
-     ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
-    
-    if (status != ALAuthorizationStatusAuthorized) {
+    //check authorizationstatus camera roll? //todo localization
+    if ([ALAssetsLibrary authorizationStatus] != ALAuthorizationStatusAuthorized) {
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention" message:@"Please give this app permission to access your photo library in your settings app!" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
        [alert show];
@@ -77,25 +75,39 @@
 -(NSArray *) getArrayNewAssetFromGroup:(ALAssetsGroup *)group andDate:(NSDate *)dateStart{
     
     DLog(@"sort camera roll");
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                     message:@"launchGetAsset"
+                                                    delegate:nil
+                                           cancelButtonTitle:@"Ok"
+                                           otherButtonTitles:nil];
+    [alert show];
     
-    NSMutableArray * tmpAssetsNew;
+    NSMutableArray * tmpAssetsNew = [[NSMutableArray alloc] init];
     NSDate * startDate = [self getDateStartInstantUpload];
-
+    
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
     [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
         
         if(result == nil) {
+            dispatch_semaphore_signal(semaphore);
             return;
         }
         
-        //OCAsset *asset = [[OCAsset alloc] initWithAsset:result];
+        OCAsset *asset = [[OCAsset alloc] initWithAsset:result];
         
         //check dates
-        NSDate * assetDate = [result valueForProperty:ALAssetPropertyDate];        
-        if ([assetDate compare:startDate] == NSOrderedDescending) {
+         //asset. = [result valueForProperty:ALAssetPropertyDate];
+        if ([asset.date compare:startDate] == NSOrderedDescending) {
             //assetDate later than startDate
-            [tmpAssetsNew addObject:result];
+            [tmpAssetsNew addObject:asset];
         }
+        
     }];
+    
+    while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW))
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
+                                 beforeDate:[NSDate distantFuture]];
     
     
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];

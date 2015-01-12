@@ -13,6 +13,7 @@
 @interface OCAsset : NSObject
 
 @property (nonatomic, retain) ALAsset *asset;
+@property (nonatomic, weak) NSDate * date;
 
 - (id)initWithAsset:(ALAsset*)asset;
 
