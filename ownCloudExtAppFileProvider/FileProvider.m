@@ -95,11 +95,20 @@
     NSString *fileName = url.lastPathComponent;
     
     ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoUsingFileName:fileName];
-   
-    FileDto *file = [ManageFilesDB getFileDtoRelatedWithProvidingFileId:providingFile.idProvidingFile ofUser:providingFile.userId];
+    
+    
+    if (providingFile) {
+        FileDto *file = [ManageFilesDB getFileDtoRelatedWithProvidingFileId:providingFile.idProvidingFile ofUser:providingFile.userId];
+        
+        NSLog(@"File name %@", file.fileName);
+        
+        //For test, delete the ProvidingFile
+        [ManageProvidingFilesDB removeProvidingFileDtoById:providingFile.idProvidingFile];
+        
+        [ManageFilesDB updateFile:file.idFile withProvidingFile:0];
+    }
    
     
-    NSLog(@"File name %@", file.fileName);
     
     //Move file to a filesystem
     
