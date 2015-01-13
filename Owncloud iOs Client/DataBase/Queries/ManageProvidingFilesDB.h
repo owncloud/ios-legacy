@@ -22,11 +22,11 @@
 
 @interface ManageProvidingFilesDB : NSObject
 
-+ (ProvidingFileDto *) insertProvidingFileDtoNamed:(NSString *)fileName withPath:(NSString*)filePath ofUser:(NSInteger)userId;
++ (ProvidingFileDto *) insertProvidingFileDtoNamed:(NSString *)fileName withPath:(NSString*)filePath byUserId:(NSInteger)userId;
 
 + (BOOL) removeProvidingFileDtoById:(NSInteger)idProvidingFile;
 
-+ (NSArray*) getAllProvidingFilesDtoOfUser:(NSInteger)userId;
++ (NSArray*) getAllProvidingFilesDtoByUserId:(NSInteger)userId;
 
 + (ProvidingFileDto *) getProvidingFileDtoUsingFileName:(NSString *)fileName;
 

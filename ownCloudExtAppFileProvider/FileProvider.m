@@ -87,20 +87,28 @@
     // TODO: mark file at <url> as needing an update in the model; kick off update process
     NSLog(@"Item changed at URL %@", url);
     
-   
-    
-    
-    
+    //TODO: Here we have to init the upload of the file
 }
 
 - (void)stopProvidingItemAtURL:(NSURL *)url {
     // Called after the last claim to the file has been released. At this point, it is safe for the file provider to remove the content file.
     // Care should be taken that the corresponding placeholder file stays behind after the content file has been deleted.
     
+    [self removeItemByUrl:url];
+    
     [self.fileCoordinator coordinateWritingItemAtURL:url options:NSFileCoordinatorWritingForDeleting error:NULL byAccessor:^(NSURL *newURL) {
         [[NSFileManager defaultManager] removeItemAtURL:newURL error:NULL];
     }];
     [self providePlaceholderAtURL:url completionHandler:NULL];
+}
+
+- (void) removeItemByUrl:(NSURL *)url {
+    
+    NSString *editingFileName = [url lastPathComponent];
+    ProvidingFileDto *file = [ManageProvidingFilesDB getProvidingFileDtoUsingFileName:editingFileName];
+    [ManageProvidingFilesDB removeProvidingFileDtoById:file.idProvidingFile];
+    
+    //TODO: Remove the file from the system
 }
 
 #pragma mark - FMDataBase

@@ -33,6 +33,7 @@
 #import "OCPortraitNavigationViewController.h"
 #import "UtilsFramework.h"
 #import "constants.h"
+#import "ManageProvidingFilesDB.h"
 
 @interface DocumentPickerViewController ()
 
@@ -161,9 +162,20 @@
     
     NSURL *originUrl = [NSURL fileURLWithPath:fileDto.localFolder];
     NSString *fileName = [fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSURL *destinationUrl = [self.documentStorageURL URLByAppendingPathComponent:fileName];
-   
+    NSString *folder = [NSString stringWithFormat: @"file_%lld/", fileDto.etag];
+    NSURL *destinationUrl = [self.documentStorageURL URLByAppendingPathComponent:folder];
+    
     NSError *error = nil;
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:destinationUrl.path withIntermediateDirectories:NO attributes:nil error:&error];
+        DLog(@"Error: %@", [error localizedDescription]);
+    }
+    
+    destinationUrl = [destinationUrl URLByAppendingPathComponent:fileName];
+    
+    
+    
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
         if (![[NSFileManager defaultManager] removeItemAtURL:destinationUrl error:&error]) {
@@ -182,19 +194,17 @@
         fileSize = [attributes objectForKey:@"NSFileSize"];
     }
     
-   if (fileSize.integerValue > 0) {
-       
+    if (fileSize.integerValue > 0) {
+        
         [self dismissGrantingAccessToURL:destinationUrl];
-       
+        
     }else{
-
+        
         OCNavigationController *navigationController = (OCNavigationController*) self.presentedViewController;
         FileListDocumentProviderViewController *fileListController = (FileListDocumentProviderViewController*) [navigationController.viewControllers objectAtIndex:0];
         [fileListController showErrorMessage:NSLocalizedString(@"error_sending_file_to_document_picker", nil)];
     }
 }
-
-
 
 #pragma mark - Pass Code
 
@@ -229,7 +239,15 @@
 /*
 - (NSURL *)documentStorageURL {
     
-    NSString *path = [UtilsUrls getOwnCloudFilePath];
+    NSString *path = [self.documentStorageURL path];
+    path = [path stringByAppendingString:@"PEPE/"];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        NSError *error = nil;
+        [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:&error];
+        DLog(@"Error: %@", [error localizedDescription]);
+    }
+    
     return [NSURL fileURLWithPath:path];
 }*/
 

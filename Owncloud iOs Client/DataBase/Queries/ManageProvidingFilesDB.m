@@ -73,7 +73,7 @@
 }
 
 
-+ (ProvidingFileDto *) insertProvidingFileDtoNamed:(NSString *)fileName withPath:(NSString*)filePath ofUser:(NSInteger)userId{
++ (ProvidingFileDto *) insertProvidingFileDtoNamed:(NSString *)fileName withPath:(NSString*)filePath byUserId:(NSInteger)userId{
     
     FMDatabaseQueue *queue;
     

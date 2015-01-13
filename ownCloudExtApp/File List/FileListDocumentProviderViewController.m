@@ -26,6 +26,8 @@
 #import "OCCommunication.h"
 #import "Customization.h"
 #import "UtilsDtos.h"
+#import "ProvidingFileDto.h"
+#import "ManageProvidingFilesDB.h"
 
 #define k_Alpha_locked_cell 0.5
 #define k_Alpha_normal_cell 1.0
@@ -146,7 +148,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     self.selectedFile = nil;
     [self setLockedApperance:NO];
     
-    [self.delegate openFile:fileDto];
+    [self openFile:fileDto];
 }
 
 - (void)downloadFailed:(NSString*)string andFile:(FileDto*)fileDto{
@@ -203,7 +205,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     } else {
         
         if (file.isNecessaryUpdate == NO && file.isDownload == downloaded) {
-            [self.delegate openFile:file];
+            [self openFile:file];
         } else {
             DocumentPickerCell *cell =  (DocumentPickerCell*) [tableView cellForRowAtIndexPath:indexPath];
             
@@ -461,5 +463,11 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     
 }
 
+- (void) openFile:(FileDto *) file {
+        
+    [ManageProvidingFilesDB insertProvidingFileDtoNamed:file.fileName withPath:file.filePath byUserId:self.user.idUser];
+    
+    [self.delegate openFile:file];
+}
 
 @end
