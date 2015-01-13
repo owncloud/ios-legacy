@@ -525,6 +525,11 @@
 +(void) deleteAlleTagOfTheDirectoties;
 
 
+#pragma mark - Providing Files
+
++ (void) updateFile:(NSInteger)idFile withProvidingFile:(NSInteger)providingFileId;
+
++ (FileDto *) getFileDtoRelatedWithProvidingFileId:(NSInteger)providingFileId ofUser:(NSInteger)userId;
 
 
 

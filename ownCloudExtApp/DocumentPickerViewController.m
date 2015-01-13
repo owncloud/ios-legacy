@@ -33,6 +33,7 @@
 #import "OCPortraitNavigationViewController.h"
 #import "UtilsFramework.h"
 #import "constants.h"
+#import "ProvidingFileDto.h"
 #import "ManageProvidingFilesDB.h"
 
 @interface DocumentPickerViewController ()
@@ -194,8 +195,12 @@
         fileSize = [attributes objectForKey:@"NSFileSize"];
     }
     
-    if (fileSize.integerValue > 0) {
-        
+   if (fileSize.integerValue > 0) {
+       
+       ProvidingFileDto *providingFile = [ManageProvidingFilesDB insertProvidingFileDtoNamed:fileDto.fileName withPath:fileDto.localFolder byUserId:self.user.idUser];
+       
+       [ManageFilesDB updateFile:fileDto.fileId withProvidingFile:providingFile.idProvidingFile];
+       
         [self dismissGrantingAccessToURL:destinationUrl];
         
     }else{

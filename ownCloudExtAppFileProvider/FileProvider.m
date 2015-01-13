@@ -19,6 +19,8 @@
 #import "ManageProvidingFilesDB.h"
 #import "FMDatabaseQueue.h"
 #import "UtilsUrls.h"
+#import "ManageFilesDB.h"
+#import "FileDto.h"
 
 
 @interface FileProvider ()
@@ -86,8 +88,23 @@
     
     // TODO: mark file at <url> as needing an update in the model; kick off update process
     NSLog(@"Item changed at URL %@", url);
-    
+
     //TODO: Here we have to init the upload of the file
+
+    
+    NSString *fileName = url.lastPathComponent;
+    
+    ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoUsingFileName:fileName];
+   
+    FileDto *file = [ManageFilesDB getFileDtoRelatedWithProvidingFileId:providingFile.idProvidingFile ofUser:providingFile.userId];
+   
+    
+    NSLog(@"File name %@", file.fileName);
+    
+    //Move file to a filesystem
+    
+    //Create the offline upload
+
 }
 
 - (void)stopProvidingItemAtURL:(NSURL *)url {

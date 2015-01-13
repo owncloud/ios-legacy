@@ -2358,6 +2358,84 @@
     }];
 }
 
+#pragma mark - Providing Files
 
++ (void) updateFile:(NSInteger)idFile withProvidingFile:(NSInteger)providingFileId{
+   
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE files SET providing_file_id = ? WHERE id = ?", [NSNumber numberWithInteger:providingFileId], [NSNumber numberWithInteger:idFile]];
+        
+        if (!correctQuery) {
+            DLog(@"Error in update providing file");
+        }
+    }];
+
+    
+}
+
++ (FileDto *) getFileDtoRelatedWithProvidingFileId:(NSInteger)providingFileId ofUser:(NSInteger)userId{
+    
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
+    
+    __block FileDto *fileTemp = nil;
+    
+    //Get the user
+    UserDto *user = [ManageUsersDB getUserByIdUser:userId];
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE providing_file_id = ?", [NSNumber numberWithInteger:providingFileId]];
+        
+        while ([rs next]) {
+            
+            fileTemp = [FileDto new];
+            
+            fileTemp.idFile = [rs intForColumn:@"id"];
+            fileTemp.filePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:user],[rs stringForColumn:@"file_path"]];
+            fileTemp.fileName = [rs stringForColumn:@"file_name"];
+            fileTemp.isDirectory = [rs intForColumn:@"is_directory"];
+            fileTemp.userId = [rs intForColumn:@"user_id"];
+            fileTemp.isDownload = [rs intForColumn:@"is_download"];
+            fileTemp.size = [rs longForColumn:@"size"];
+            fileTemp.fileId = [rs intForColumn:@"file_id"];
+            fileTemp.date = [rs longForColumn:@"date"];
+            fileTemp.etag = [rs longLongIntForColumn:@"etag"];
+            fileTemp.isFavorite = [rs intForColumn:@"is_favorite"];
+            fileTemp.localFolder = [UtilsUrls getLocalFolderByFilePath:fileTemp.filePath andFileName:fileTemp.fileName andUserDto:user];
+            fileTemp.isNecessaryUpdate = [rs boolForColumn:@"is_necessary_update"];
+            fileTemp.sharedFileSource = [rs intForColumn:@"shared_file_source"];
+            fileTemp.permissions = [rs stringForColumn:@"permissions"];
+            fileTemp.taskIdentifier = [rs intForColumn:@"task_identifier"];
+            fileTemp.providingFileId = [rs intForColumn:@"providing_file_id"];
+        
+        }
+        
+        [rs close];
+    }];
+    
+
+    return fileTemp;
+    
+}
 
 @end

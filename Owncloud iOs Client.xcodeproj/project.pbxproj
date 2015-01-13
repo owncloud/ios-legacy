@@ -543,6 +543,7 @@
 		EA42FA54180565CB0006DB7C /* OCTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA53180565CB0006DB7C /* OCTabBarController.m */; };
 		EA42FA5A180C13710006DB7C /* cancel_download_white.png in Resources */ = {isa = PBXBuildFile; fileRef = EA42FA58180C13710006DB7C /* cancel_download_white.png */; };
 		EA42FA5B180C13710006DB7C /* cancel_download_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA42FA59180C13710006DB7C /* cancel_download_white@2x.png */; };
+		EA5FA47F1A6403A0000C1F80 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		EA68968D17F599060033B3C1 /* KKKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968517F599060033B3C1 /* KKKeychain.m */; };
 		EA68968E17F599060033B3C1 /* KKPasscodeLock.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */; };
 		EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968817F599060033B3C1 /* KKPasscodeLock.m */; };
@@ -3254,6 +3255,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA5FA47F1A6403A0000C1F80 /* Owncloud iOs Client.entitlements in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
