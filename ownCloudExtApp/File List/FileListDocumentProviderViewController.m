@@ -102,10 +102,13 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void) reloadCurrentFolder {
     //Check if the user is the same and does not change
-    if ([self isTheSameUserHereAndOnTheDatabase]) {
-        [self loadRemote:self.currentFolder andNavigateIfIsNecessary:NO];
-    } else {
-        [self showErrorUserHasChange];
+    
+    if (self.download.state != downloadWorking && self.download.state != downloadCheckingEtag) {
+        if ([self isTheSameUserHereAndOnTheDatabase]) {
+            [self loadRemote:self.currentFolder andNavigateIfIsNecessary:NO];
+        } else {
+            [self showErrorUserHasChange];
+        }
     }
 }
 
