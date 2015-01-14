@@ -59,7 +59,7 @@
 #endif
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, etag, is_favorite, is_necessary_update, shared_file_source, permissions, task_identifier FROM files WHERE file_id = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInt:fileId], [NSNumber numberWithInteger:mUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, etag, is_favorite, is_necessary_update, shared_file_source, permissions, task_identifier FROM files WHERE file_id = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:mUser.idUser]];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];
@@ -1462,7 +1462,6 @@
 }
 
 + (void) setFile:(NSInteger)idFile isNecessaryUpdate:(BOOL)isNecessaryUpdate {
-    DLog(@"setFileIsDownloadState");
     FMDatabaseQueue *queue;
     
 #ifdef CONTAINER_APP
