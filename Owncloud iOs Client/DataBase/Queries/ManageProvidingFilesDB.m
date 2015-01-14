@@ -137,7 +137,7 @@
 
 }
 
-+ (NSArray*) getAllProvidingFilesDtoOfUser:(NSInteger)userId{
++ (NSArray*) getAllProvidingFilesDto {
     
     __block NSMutableArray *tempArray = [NSMutableArray new];
     
@@ -173,7 +173,7 @@
     return [NSArray arrayWithArray:tempArray];;
 }
 
-+ (ProvidingFileDto *) getProvidingFileDtoUsingFileName:(NSString *)fileName{
++ (ProvidingFileDto *) getProvidingFileDtoByPath:(NSString *)filePath {
     
     __block ProvidingFileDto *providerFileTemp = nil;
     
@@ -188,7 +188,7 @@
 #endif
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, user_id FROM providing_files WHERE file_name = ?", fileName];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, user_id FROM providing_files WHERE file_path = ?", filePath];
         
         while ([rs next]) {
             

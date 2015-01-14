@@ -26,9 +26,9 @@
 
 + (BOOL) removeProvidingFileDtoById:(NSInteger)idProvidingFile;
 
-+ (NSArray*) getAllProvidingFilesDtoByUserId:(NSInteger)userId;
++ (NSArray*) getAllProvidingFilesDto;
 
-+ (ProvidingFileDto *) getProvidingFileDtoUsingFileName:(NSString *)fileName;
++ (ProvidingFileDto *) getProvidingFileDtoByPath:(NSString *)filePath;
 
 
 @end

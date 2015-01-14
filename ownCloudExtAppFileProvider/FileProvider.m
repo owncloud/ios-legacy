@@ -92,21 +92,7 @@
     //TODO: Here we have to init the upload of the file
 
     
-    NSString *fileName = [url.lastPathComponent stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoUsingFileName:fileName];
-    
-    
-    if (providingFile) {
-        FileDto *file = [ManageFilesDB getFileDtoRelatedWithProvidingFileId:providingFile.idProvidingFile ofUser:providingFile.userId];
-        
-        NSLog(@"File name %@", file.fileName);
-        
-        //For test, delete the ProvidingFile
-        [ManageProvidingFilesDB removeProvidingFileDtoById:providingFile.idProvidingFile];
-        
-        [ManageFilesDB updateFile:file.idFile withProvidingFile:0];
-    }
+    [self removeItemByUrl:url];
    
     
     
@@ -130,9 +116,22 @@
 
 - (void) removeItemByUrl:(NSURL *)url {
     
-    NSString *editingFileName = [url lastPathComponent];
-    ProvidingFileDto *file = [ManageProvidingFilesDB getProvidingFileDtoUsingFileName:editingFileName];
-    [ManageProvidingFilesDB removeProvidingFileDtoById:file.idProvidingFile];
+    NSArray *all = [ManageProvidingFilesDB getAllProvidingFilesDto];
+    
+    DLog(@"Path: %@", url.path);
+    
+    ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoByPath:url.path];
+    
+    if (providingFile) {
+        FileDto *file = [ManageFilesDB getFileDtoRelatedWithProvidingFileId:providingFile.idProvidingFile ofUser:providingFile.userId];
+        
+        NSLog(@"File name %@", file.fileName);
+        
+        //For test, delete the ProvidingFile
+        [ManageProvidingFilesDB removeProvidingFileDtoById:providingFile.idProvidingFile];
+        [ManageFilesDB updateFile:file.idFile withProvidingFile:0];
+    }
+    
     
     //TODO: Remove the file from the system
 }

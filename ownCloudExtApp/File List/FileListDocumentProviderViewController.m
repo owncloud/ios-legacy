@@ -157,7 +157,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     self.selectedFile = nil;
     [self setLockedApperance:NO];
     
-    [self openFile:fileDto];
+    [self.delegate openFile:fileDto];
 }
 
 - (void)downloadFailed:(NSString*)string andFile:(FileDto*)fileDto{
@@ -195,7 +195,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     } else {
         
         if (file.isNecessaryUpdate == NO && file.isDownload == downloaded) {
-            [self openFile:file];
+            [self.delegate openFile:file];
         } else {
             DocumentPickerCell *cell =  (DocumentPickerCell*) [tableView cellForRowAtIndexPath:indexPath];
             
@@ -459,13 +459,6 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     self.navigationController.navigationBar.frame = frameNavigationBar;
     self.view.frame = frameView;
     
-}
-
-- (void) openFile:(FileDto *) file {
-        
-    [ManageProvidingFilesDB insertProvidingFileDtoNamed:file.fileName withPath:file.filePath byUserId:self.user.idUser];
-    
-    [self.delegate openFile:file];
 }
 
 @end
