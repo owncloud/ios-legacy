@@ -486,7 +486,13 @@
             DLog(@"current: %@", current.fileName);
         }
         
-        [FileListDBOperations createAllFoldersByArrayOfFilesDto:listOfRemoteFilesAndFolders andLocalFolder:[UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:self.user]];
+          NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:self.user];
+        
+        if (file.isDirectory) {
+            path = [NSString stringWithFormat:@"%@/", [UtilsDtos getTheParentPathOfThePath:path]];
+        }
+        
+        [FileListDBOperations createAllFoldersByArrayOfFilesDto:listOfRemoteFilesAndFolders andLocalFolder:path];
 
     }
 }
@@ -549,8 +555,8 @@
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
     
     UIAlertController *alert =   [UIAlertController
-                                  alertControllerWithTitle:@""
-                                  message:message
+                                  alertControllerWithTitle:message
+                                  message:@""
                                   preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction* ok = [UIAlertAction

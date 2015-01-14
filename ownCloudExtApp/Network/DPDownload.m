@@ -94,7 +94,6 @@
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    __weak typeof(self) weakSelf = self;
     
     [self.progressView startSpinProgressBackgroundLayer];
     
@@ -113,16 +112,16 @@
                 DLog(@"error login updating the etag");
                 //Set not download or downloaded in database
                 if (self.file.isNecessaryUpdate) {
-                    [ManageFilesDB setFileIsDownloadState:weakSelf.file.idFile andState:downloaded];
+                    [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
                     
                 } else {
-                    [ManageFilesDB setFileIsDownloadState:weakSelf.file.idFile andState:notDownload];
+                    [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:notDownload];
                 }
                 
                 [self.progressView stopSpinProgressBackgroundLayer];
                 
-                [weakSelf deleteFileFromLocalFolder];
-                [weakSelf.delegate downloadFailed:NSLocalizedString(@"session_expired", nil) andFile:weakSelf.file];
+                [self deleteFileFromLocalFolder];
+                [self.delegate downloadFailed:NSLocalizedString(@"session_expired", nil) andFile:self.file];
             }
         }
         if(response.statusCode < kOCErrorServerUnauthorized && !isSamlCredentialsError) {
@@ -154,8 +153,8 @@
                 
                 [self.progressView stopSpinProgressBackgroundLayer];
                 
-                [weakSelf deleteFileFromLocalFolder];
-                [weakSelf.delegate downloadFailed:nil andFile:weakSelf.file];
+                [self deleteFileFromLocalFolder];
+                [self.delegate downloadFailed:nil andFile:self.file];
             }
             
         }
@@ -208,6 +207,8 @@
     }
     
    self.state = downloadWorking;
+    
+ 
     
     self.operation = [sharedCommunication downloadFile:serverUrl toDestiny:localPath withLIFOSystem:self.isLIFO onCommunication:sharedCommunication progressDownload:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
         [self.progressView stopSpinProgressBackgroundLayer];
@@ -335,10 +336,11 @@
         }
     }
     
-    if ([error code] == NSURLErrorCancelled) {
+    if (error.code == NSURLErrorCancelled) {
         [self.delegate downloadCancelled:self.file];
+    }else if (error.code == NSURLErrorUserCancelledAuthentication && !response){
+        [self.delegate downloadFailed:NSLocalizedString(@"error_connecting_with_server", nil) andFile:self.file];
     }else{
-        
         switch (response.statusCode) {
             case kOCErrorServerUnauthorized:
                 [self.delegate downloadFailed:NSLocalizedString(@"error_login_message", nil) andFile:self.file];

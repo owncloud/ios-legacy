@@ -65,8 +65,13 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void) viewDidAppear:(BOOL)animated {
     
+    [super viewDidAppear:animated];
+    
     //When we rotate while make the push of the view does not get resized
     [self.view setFrame: CGRectMake(0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height)];
+    
+    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+    
 }
 
 
@@ -75,7 +80,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     self.isLockedApperance = isLocked;
     [self.navigationController.navigationBar setUserInteractionEnabled:!isLocked];
     [self.tableView setScrollEnabled:!isLocked];
-    [self performSelectorOnMainThread:@selector(fillTheArraysFromDatabase) withObject:nil waitUntilDone:NO];
+    [self fillTheArraysFromDatabase];
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
 }
 
@@ -98,11 +103,14 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 }
 
 - (void) reloadCurrentFolder {
-    //Check if the user is the same and does not change
-    if ([self isTheSameUserHereAndOnTheDatabase]) {
-        [self loadRemote:self.currentFolder andNavigateIfIsNecessary:NO];
-    } else {
-        [self showErrorUserHasChange];
+   
+    if ((!self.download) || (self.download.state == downloadComplete || self.download.state == downloadFailed)) {
+         //Check if the user is the same and does not change
+        if ([self isTheSameUserHereAndOnTheDatabase]) {
+            [self loadRemote:self.currentFolder andNavigateIfIsNecessary:NO];
+        } else {
+            [self showErrorUserHasChange];
+        }
     }
 }
 
@@ -129,7 +137,9 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void) cancelCurrentDownloadFile{
     
-    [self.download cancelDownload];
+    if (self.download) {
+        [self.download cancelDownload];
+    }
     
 }
 
@@ -144,7 +154,6 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void)downloadCompleted:(FileDto*)fileDto{
     
-    fileDto.isDownload = downloaded;
     self.selectedFile = nil;
     [self setLockedApperance:NO];
     
@@ -153,50 +162,31 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void)downloadFailed:(NSString*)string andFile:(FileDto*)fileDto{
     
-    fileDto.isDownload = notDownload;
     self.selectedFile = nil;
     [self setLockedApperance:NO];
     
     if (![string isEqualToString:@""]) {
-        [self showErrorMessage:string];
+        [self showError:string];
     }
     
 }
 
 - (void)downloadCancelled:(FileDto*)fileDto{
     
-    fileDto = notDownload;
     self.selectedFile = nil;
     [self setLockedApperance:NO];
     
 }
 
-- (void) showErrorMessage:(NSString *)string{
-    
-    UIAlertController *alert =   [UIAlertController
-                                  alertControllerWithTitle:string
-                                  message:@""
-                                  preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction* okAction = [UIAlertAction
-                         actionWithTitle:NSLocalizedString(@"ok", nil)
-                         style:UIAlertActionStyleDefault
-                         handler:^(UIAlertAction * action)
-                         {
-                             
-                         }];
-    
-    [alert addAction:okAction];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-    
-    
-}
 
 #pragma mark - UITableView Delegate methods
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [self.tableView deselectRowAtIndexPath: indexPath animated:YES];
+    
+    //Refresh the content with the data of the database
+    [self fillTheArraysFromDatabase];
     
     FileDto *file = (FileDto *)[[self.sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
     
@@ -211,7 +201,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
             
             FFCircularProgressView *progressView = (FFCircularProgressView *) cell.circularPV;
             
-            if (self.selectedFile.idFile != file.idFile) {
+            if (self.selectedFile.idFile != file.idFile && (file.isDownload == notDownload || file.isNecessaryUpdate)) {
                 [self startDownloadFile:file withProgressView:progressView];
             }else{
                  [self cancelCurrentDownloadFile];
@@ -367,7 +357,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
         }
         
-        if ((file.isDownload != downloaded && !file.isDirectory) || (file.isNecessaryUpdate)) {
+        if ((file.isDownload == notDownload && !file.isDirectory) || (file.isNecessaryUpdate)) {
             [fileCell.circularPV setHidden:NO];
 
         }else{
@@ -410,10 +400,12 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void) showErrorUserHasChange {
     //The user has change
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    NSString *mesagge = [NSLocalizedString(@"error_user_change_in_core_app", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
     
     UIAlertController *alert =   [UIAlertController
-                                  alertControllerWithTitle:@""
-                                  message:@"The user has change on the ownCloud App" //TODO: add a string error internationzalized
+                                  alertControllerWithTitle:mesagge
+                                  message:@""
                                   preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction* ok = [UIAlertAction
@@ -427,6 +419,12 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     [alert addAction:ok];
     
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+
+- (void) showErrorMessage:(NSString *)string{
+    
+    [self showError:string];
 }
 
 #pragma mark - Navigation
