@@ -92,7 +92,7 @@
     //TODO: Here we have to init the upload of the file
 
     
-    NSString *fileName = url.lastPathComponent;
+    NSString *fileName = [url.lastPathComponent stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoUsingFileName:fileName];
     

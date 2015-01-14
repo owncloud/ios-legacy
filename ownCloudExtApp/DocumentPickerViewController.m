@@ -196,8 +196,10 @@
     }
     
    if (fileSize.integerValue > 0) {
-    
-       ProvidingFileDto *providingFile = [ManageProvidingFilesDB insertProvidingFileDtoNamed:fileDto.fileName withPath:fileDto.localFolder byUserId:self.user.idUser];
+
+
+       ProvidingFileDto *providingFile = [ManageProvidingFilesDB insertProvidingFileDtoNamed:fileName withPath:fileDto.localFolder byUserId:self.user.idUser];
+
        [ManageFilesDB updateFile:fileDto.idFile withProvidingFile:providingFile.idProvidingFile];
        
        [self dismissGrantingAccessToURL:destinationUrl];
