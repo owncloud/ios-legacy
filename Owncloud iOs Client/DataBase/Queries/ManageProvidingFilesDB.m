@@ -54,13 +54,12 @@
 #endif
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, user_id FROM providing_files ORDER BY id DESC LIMIT 1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, user_id FROM providing_files ORDER BY id DESC LIMIT 1"];
         
         while ([rs next]) {
             
             output.idProvidingFile = [rs intForColumn:@"id"];
             output.filePath = [rs stringForColumn:@"file_path"];
-            output.fileName = [rs stringForColumn:@"file_name"];
             output.userId = [rs intForColumn:@"user_id"];
             
         }
@@ -73,7 +72,7 @@
 }
 
 
-+ (ProvidingFileDto *) insertProvidingFileDtoNamed:(NSString *)fileName withPath:(NSString*)filePath byUserId:(NSInteger)userId{
++ (ProvidingFileDto *) insertProvidingFileDtoWithPath:(NSString*)filePath byUserId:(NSInteger)userId{
     
     FMDatabaseQueue *queue;
     
@@ -89,7 +88,7 @@
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         
-        correctQuery = [db executeUpdate:@"INSERT INTO providing_files(file_path, file_name, user_id) Values(?, ?, ?)", filePath, fileName, [NSNumber numberWithInteger:userId]];
+        correctQuery = [db executeUpdate:@"INSERT INTO providing_files(file_path, user_id) Values(?, ?)", filePath, [NSNumber numberWithInteger:userId]];
         
         if (!correctQuery) {
             DLog(@"Error added ProvidingFile");
@@ -152,7 +151,7 @@
 #endif
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, user_id FROM providing_files ORDER BY id DESC"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, user_id FROM providing_files ORDER BY id DESC"];
         
         while ([rs next]) {
             
@@ -160,7 +159,6 @@
             
             providerFileTemp.idProvidingFile = [rs intForColumn:@"id"];
             providerFileTemp.filePath = [rs stringForColumn:@"file_path"];
-            providerFileTemp.fileName = [rs stringForColumn:@"file_name"];
             providerFileTemp.userId = [rs intForColumn:@"user_id"];
             
             [tempArray addObject:providerFileTemp];
@@ -190,15 +188,13 @@
     
     [queue inDatabase:^(FMDatabase *db) {
 
-        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, user_id FROM providing_files WHERE file_path = ?", filePath];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, user_id FROM providing_files WHERE file_path = ?", filePath];
 
         while ([rs next]) {
             
             providerFileTemp = [ProvidingFileDto new];
-            
             providerFileTemp.idProvidingFile = [rs intForColumn:@"id"];
             providerFileTemp.filePath = [rs stringForColumn:@"file_path"];
-            providerFileTemp.fileName = [rs stringForColumn:@"file_name"];
             providerFileTemp.userId = [rs intForColumn:@"user_id"];
             
         }

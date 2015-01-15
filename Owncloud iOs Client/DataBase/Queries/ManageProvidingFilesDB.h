@@ -22,7 +22,7 @@
 
 @interface ManageProvidingFilesDB : NSObject
 
-+ (ProvidingFileDto *) insertProvidingFileDtoNamed:(NSString *)fileName withPath:(NSString*)filePath byUserId:(NSInteger)userId;
++ (ProvidingFileDto *) insertProvidingFileDtoWithPath:(NSString*)filePath byUserId:(NSInteger)userId;
 
 + (BOOL) removeProvidingFileDtoById:(NSInteger)idProvidingFile;
 

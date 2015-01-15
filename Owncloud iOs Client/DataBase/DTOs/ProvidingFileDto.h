@@ -20,7 +20,6 @@
 
 @property (nonatomic) NSInteger idProvidingFile;
 @property (nonatomic, copy) NSString *filePath;
-@property (nonatomic, copy) NSString *fileName;
 @property (nonatomic) NSInteger userId;
 
 @end

@@ -91,7 +91,7 @@
             DLog(@"Error in createDataBase table cookies_storage");
         }
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'providing_files' ('id' INTEGER PRIMARY KEY, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER)"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'providing_files' ('id' INTEGER PRIMARY KEY, 'file_path' VARCHAR, 'user_id' INTEGER)"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table cookies_storage");

@@ -197,7 +197,7 @@
     
    if (fileSize.integerValue > 0) {
 
-       ProvidingFileDto *providingFile = [ManageProvidingFilesDB insertProvidingFileDtoNamed:fileName withPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:destinationUrl.path] byUserId:self.user.idUser];
+       ProvidingFileDto *providingFile = [ManageProvidingFilesDB insertProvidingFileDtoWithPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:destinationUrl.path] byUserId:self.user.idUser];
        [ManageFilesDB updateFile:fileDto.idFile withProvidingFile:providingFile.idProvidingFile];
 
        [self dismissGrantingAccessToURL:destinationUrl];
