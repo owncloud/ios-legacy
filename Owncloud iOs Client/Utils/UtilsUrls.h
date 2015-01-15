@@ -33,4 +33,9 @@
 //We generate de local path of the files dinamically
 + (NSString *)getLocalFolderByFilePath:(NSString*) filePath andFileName:(NSString*) fileName andUserDto:(UserDto *) mUser;
 
+
+//Get the relative path of the document provider using an absolute path
++ (NSString *)getRelativePathForDocumentProviderUsingAboslutePath:(NSString *) abosolutePath;
+
+
 @end

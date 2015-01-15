@@ -91,11 +91,25 @@
 
     //TODO: Here we have to init the upload of the file
 
+    for (ProvidingFileDto *pFile in [ManageProvidingFilesDB getAllProvidingFilesDto]) {
+        DLog(@"pfile path: %@", pFile.filePath);
+    }
     
-    [self removeItemByUrl:url];
-   
+    NSString *path = [url.path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoByPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:path]];
     
     
+    if (providingFile) {
+        FileDto *file = [ManageFilesDB getFileDtoRelatedWithProvidingFileId:providingFile.idProvidingFile ofUser:providingFile.userId];
+        
+        NSLog(@"File name %@", file.fileName);
+        
+        [self removeItemByUrl:url];
+        
+    }
+
+
     //Move file to a filesystem
     
     //Create the offline upload
@@ -131,7 +145,6 @@
         [ManageProvidingFilesDB removeProvidingFileDtoById:providingFile.idProvidingFile];
         [ManageFilesDB updateFile:file.idFile withProvidingFile:0];
     }
-    
     
     //TODO: Remove the file from the system
 }

@@ -28,7 +28,9 @@
 
 + (NSArray*) getAllProvidingFilesDto;
 
+
 + (ProvidingFileDto *) getProvidingFileDtoByPath:(NSString *)filePath;
+
 
 
 @end

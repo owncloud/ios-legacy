@@ -173,8 +173,9 @@
     return [NSArray arrayWithArray:tempArray];;
 }
 
+
 + (ProvidingFileDto *) getProvidingFileDtoByPath:(NSString *)filePath {
-    
+
     __block ProvidingFileDto *providerFileTemp = nil;
     
     FMDatabaseQueue *queue;
@@ -188,8 +189,9 @@
 #endif
     
     [queue inDatabase:^(FMDatabase *db) {
+
         FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, user_id FROM providing_files WHERE file_path = ?", filePath];
-        
+
         while ([rs next]) {
             
             providerFileTemp = [ProvidingFileDto new];

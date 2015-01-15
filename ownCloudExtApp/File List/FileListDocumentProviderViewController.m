@@ -461,4 +461,9 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     
 }
 
+- (void) openFile:(FileDto *) file {
+    
+    [self.delegate openFile:file];
+}
+
 @end
