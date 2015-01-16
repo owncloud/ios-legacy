@@ -344,6 +344,7 @@
 		40AB1F691A123D0E003E7397 /* TABsettings@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F681A123D0E003E7397 /* TABsettings@3x.png */; };
 		40AB1F6B1A123D1B003E7397 /* TABShares@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F6A1A123D1B003E7397 /* TABShares@3x.png */; };
 		40AC24D219FE725600582867 /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
+		40D63AD51A65617B00AD3621 /* ManageUploadAssetsLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 40D63AD41A65617B00AD3621 /* ManageUploadAssetsLibrary.m */; };
 		40E354C51A14D671000E7FE4 /* ownCloud-xmas@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */; };
 		40E354C71A14D6A2000E7FE4 /* sharedItem@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C61A14D6A2000E7FE4 /* sharedItem@3x.png */; };
 		40E354C91A14D6B2000E7FE4 /* openWithTB@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C81A14D6B2000E7FE4 /* openWithTB@3x.png */; };
@@ -1077,6 +1078,8 @@
 		40AB1F6A1A123D1B003E7397 /* TABShares@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TABShares@3x.png"; sourceTree = "<group>"; };
 		40AC24D019FE725600582867 /* CredentialsDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CredentialsDto.h; path = DataBase/DTOs/CredentialsDto.h; sourceTree = "<group>"; };
 		40AC24D119FE725600582867 /* CredentialsDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CredentialsDto.m; path = DataBase/DTOs/CredentialsDto.m; sourceTree = "<group>"; };
+		40D63AD31A65617B00AD3621 /* ManageUploadAssetsLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageUploadAssetsLibrary.h; path = Network/Uploads/ManageUploadAssetsLibrary.h; sourceTree = "<group>"; };
+		40D63AD41A65617B00AD3621 /* ManageUploadAssetsLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageUploadAssetsLibrary.m; path = Network/Uploads/ManageUploadAssetsLibrary.m; sourceTree = "<group>"; };
 		40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ownCloud-xmas@3x.png"; sourceTree = "<group>"; };
 		40E354C61A14D6A2000E7FE4 /* sharedItem@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@3x.png"; sourceTree = "<group>"; };
 		40E354C81A14D6B2000E7FE4 /* openWithTB@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "openWithTB@3x.png"; sourceTree = "<group>"; };
@@ -2441,6 +2444,8 @@
 				148DD681177862B600FB9977 /* PrepareFilesToUpload.m */,
 				13AD22B118311A26007E0F1A /* ManageUploadRequest.h */,
 				13AD22B218311A26007E0F1A /* ManageUploadRequest.m */,
+				40D63AD31A65617B00AD3621 /* ManageUploadAssetsLibrary.h */,
+				40D63AD41A65617B00AD3621 /* ManageUploadAssetsLibrary.m */,
 			);
 			name = Uploads;
 			sourceTree = "<group>";
@@ -3325,6 +3330,7 @@
 				1428F675178422AE0092F42A /* UploadsOfflineDto.m in Sources */,
 				EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */,
 				1428F678178422BE0092F42A /* UtilsDtos.m in Sources */,
+				40D63AD51A65617B00AD3621 /* ManageUploadAssetsLibrary.m in Sources */,
 				1420C3AC178A9F5000C0455C /* LoginViewController.m in Sources */,
 				13A9C667187FE91700C6EEE8 /* ShareFileOrFolder.m in Sources */,
 				40A969E71A5EED410046A36C /* OCAsset.m in Sources */,

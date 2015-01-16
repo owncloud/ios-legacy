@@ -29,6 +29,9 @@
 #import "UploadUtils.h"
 #import "ManageUsersDB.h"
 #import "ManageUploadRequest.h"
+#import "OCAsset.h"
+#import "ManageAsset.h"
+
 
 //Notification to end and init loading screen
 NSString *EndLoadingFileListNotification = @"EndLoadingFileListNotification";
@@ -65,6 +68,35 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     [self.arrayOfRemoteurl removeObjectAtIndex:0];
 }
 
+/*
+ * This method close the loading view in main screen by local notification
+ */
+- (void)endLoadingInOtherThread {
+    
+    //Set global loading screen global flag to NO
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    app.isLoadingVisible = NO;
+    //Send notification to indicate to close the loading view
+    [[NSNotificationCenter defaultCenter] postNotificationName:EndLoadingFileListNotification object: nil];
+   
+}
+
+- (void)sendFileToUploadByUploadOfflineDto:(UploadsOfflineDto *) currentUpload {
+    
+    DLog(@"self.currentUpload: %@", currentUpload.uploadFileName);
+    DLog(@"isLast: %d", currentUpload.isLastUploadFileOfThisArray);
+    
+    ManageUploadRequest *currentManageUploadRequest = [ManageUploadRequest new];
+    currentManageUploadRequest.delegate = self;
+    currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:currentUpload.estimateLength];
+    
+    //currentManageUploadRequest.lenghtOfFile=[UploadUtils makeLengthString:currentUpload.estimateLength];
+    //currentManageUploadRequest.pathOfUpload=[UploadUtils makePathString:currentUpload.destinyFolder withUserUrl:[ManageUsersDB getUserByIdUser:currentUpload.userId].url];
+    
+    [currentManageUploadRequest addFileToUpload:currentUpload];
+    
+}
+
 - (void)uploadFileFromGallery:(NSDictionary *)info andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray
 {
     
@@ -85,19 +117,19 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
             NSString *assetPath = [assetURL absoluteString];
             DLog(@"assetPath :%@", assetPath);
             NSString *ext = [self getExtension:assetPath];
-           
+            
             currentFileName = [self getNameForFileFromGalleryByType:mediaType andExtension:ext andAssetNSURL:assetURL];
             
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             //NSString *uniquePath= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:_uploadFileName];
-                        
+            
             DLog(@"currentFileName: %@",currentFileName);
             DLog(@"remoteFolder: %@", remoteFolder);
             DLog(@"isLastUploadFileOfThisArray: %d", isLastUploadFileOfThisArray);
-                        
+            
             //Use a temporal name with a date identification
             NSString *temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [currentFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-
+            
             NSString *localPath= [[app getTempFolderForUploadFiles] stringByAppendingPathComponent:temporalFileName];
             
             //Divide the file in chunks of 1024KB, then create the file with all chunks
@@ -166,7 +198,7 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
             currentUpload.kindOfError = notAnError;
             currentUpload.isInternalUpload = YES;
             currentUpload.taskIdentifier = 0;
-
+            
             [self.listOfUploadOfflineToGenerateSQL addObject:currentUpload];
             
             if([self.listOfFilesToUpload count] > 0 && [self.arrayOfRemoteurl count] > 0) {
@@ -208,34 +240,164 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     [assetslibrary assetForURL:videoURL resultBlock:resultblock failureBlock:failureblock];
 }
 
-/*
- * This method close the loading view in main screen by local notification
- */
-- (void)endLoadingInOtherThread {
+#pragma mark - Upload camera assets
+
+- (void) addAssetsToUpload:(NSArray *) newAsssets andRemoteFolder:(NSString *) remoteFolder {
     
-    //Set global loading screen global flag to NO
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    app.isLoadingVisible = NO;
-    //Send notification to indicate to close the loading view
-    [[NSNotificationCenter defaultCenter] postNotificationName:EndLoadingFileListNotification object: nil];
-   
+    for (int i = 0 ; i < [newAsssets count] ; i++) {
+        
+        [self.listOfAssetsToUpload addObject:[newAsssets objectAtIndex:i]];
+        self.remoteInstantUploadFolder = remoteFolder;
+    }
+    
+    [self startWithTheNextAsset];
 }
 
-- (void)sendFileToUploadByUploadOfflineDto:(UploadsOfflineDto *) currentUpload {
+- (void) startWithTheNextAsset {
     
-    DLog(@"self.currentUpload: %@", currentUpload.uploadFileName);
-    DLog(@"isLast: %d", currentUpload.isLastUploadFileOfThisArray);
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    ManageUploadRequest *currentManageUploadRequest = [ManageUploadRequest new];
-    currentManageUploadRequest.delegate = self;
-    currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:currentUpload.estimateLength];
+    BOOL isLastUploadFileOfThisArray = NO;
     
-    //currentManageUploadRequest.lenghtOfFile=[UploadUtils makeLengthString:currentUpload.estimateLength];
-    //currentManageUploadRequest.pathOfUpload=[UploadUtils makePathString:currentUpload.destinyFolder withUserUrl:[ManageUsersDB getUserByIdUser:currentUpload.userId].url];
+    if ([self.listOfAssetsToUpload count] == 1) {
+        isLastUploadFileOfThisArray = YES;
+    }
     
-    [currentManageUploadRequest addFileToUpload:currentUpload];
+    [self uploadAssetFromGallery:[self.listOfAssetsToUpload objectAtIndex:0] andRemoteFolder:[self remoteInstantUploadFolder] andCurrentUser:appDelegate.activeUser andIsLastFile:isLastUploadFileOfThisArray];
+    
+    [self.listOfAssetsToUpload removeObjectAtIndex:0];
+}
+
+
+- (void) uploadAssetFromGallery:(OCAsset *) myAsset andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray{
+    DLog(@"uploadAssetFromGalleryToRemoteFolder");
+    
+    NSString *mediaType = [myAsset type];
+    
+    
+    @autoreleasepool {
+        
+        NSString *currentFileName = nil;
+        
+        //Get extension of video
+        //  NSURL *assetURL = [info objectForKey:@"UIImagePickerControllerReferenceURL"];
+        //  NSString *assetPath = [assetURL absoluteString];
+        DLog(@"assetPath :%@", [myAsset fullUrlString]);
+        NSString *ext = [self getExtension:[myAsset fullUrlString]];
+        
+        currentFileName = [self getNameForFileFromGalleryByType:mediaType andExtension:ext andAssetNSURL:[myAsset url]];
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        //NSString *uniquePath= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:_uploadFileName];
+        
+        DLog(@"currentFileName: %@",currentFileName);
+        DLog(@"remoteFolder: %@", remoteFolder);
+        DLog(@"isLastUploadFileOfThisArray: %d", isLastUploadFileOfThisArray);
+        
+        //Use a temporal name with a date identification
+        NSString *temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [currentFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        
+        NSString *localPath= [[app getTempFolderForUploadFiles] stringByAppendingPathComponent:temporalFileName];
+        
+        //Divide the file in chunks of 1024KB, then create the file with all chunks
+        
+        //Variables
+        NSUInteger offset = 0;
+        NSUInteger chunkSize = 1024 * 1024;
+        ALAssetRepresentation *rep = [myAsset rep];
+        NSUInteger length = (NSUInteger)rep.size;
+        
+        DLog(@"rep size %lld", (rep.size/1024)/1024);
+        DLog(@"rep size %lu", (unsigned long) (length/1024)/1024);
+        
+        if (length < (k_lenght_chunk *1024)) {
+            Byte *buffer = (Byte*)malloc(length);
+            NSUInteger k = [rep getBytes:buffer fromOffset: 0.0
+                                  length:length error:nil];
+            
+            NSData *adata = [NSData dataWithBytesNoCopy:buffer length:k freeWhenDone:YES];
+            [adata writeToFile:localPath atomically:YES];
+        }else{
+            
+            //Create file
+            NSFileManager *fm = [NSFileManager defaultManager];
+            [fm createFileAtPath:localPath contents:nil attributes:nil];
+            
+            
+            do {
+                Byte *buffer = (Byte*)malloc(chunkSize);
+                
+                //Store the chunk size
+                NSUInteger thisChunkSize = length - offset > chunkSize ? chunkSize : length - offset;
+                
+                //Write data
+                NSUInteger k = [rep getBytes:buffer fromOffset: offset length:thisChunkSize error:nil];
+                
+                NSData *adata = [NSData dataWithBytes:buffer length:k];
+                
+                DLog(@"Write buffer in file: %@", localPath);
+                NSFileHandle *fileHandle=[NSFileHandle fileHandleForWritingAtPath:localPath];
+                [fileHandle seekToEndOfFile];
+                [fileHandle writeData:adata];
+                [fileHandle closeFile];
+                
+                
+                //Avanced position
+                offset += thisChunkSize;
+                
+                //Free memory
+                free(buffer);
+                fileHandle=nil;
+                adata=nil;
+            } while (offset < length);
+        }
+        
+        UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
+        currentUpload.originPath = localPath;
+        currentUpload.destinyFolder = remoteFolder;
+        currentUpload.uploadFileName = currentFileName;
+        currentUpload.estimateLength = length;
+        currentUpload.userId = currentUser.idUser;
+        currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
+        currentUpload.status = waitingAddToUploadList;
+        currentUpload.chunksLength = k_lenght_chunk;
+        currentUpload.uploadedDate = 0;
+        currentUpload.kindOfError = notAnError;
+        currentUpload.isInternalUpload = YES;
+        currentUpload.taskIdentifier = 0;
+        
+        [self.listOfUploadOfflineToGenerateSQL addObject:currentUpload];
+        
+        if([self.listOfFilesToUpload count] > 0 && [self.arrayOfRemoteurl count] > 0) {
+            //We have more files to process
+            [self startWithTheNextFile];
+        } else {
+            
+            //We finish all the files of this block
+            DLog(@"self.listOfUploadOfflineToGenerateSQL: %lu", (unsigned long)[self.listOfUploadOfflineToGenerateSQL count]);
+            
+            //In this point we have all the files to upload in the Array
+            [ManageUploadsDB insertManyUploadsOffline:self.listOfUploadOfflineToGenerateSQL];
+            
+            //if is the last one we reset the array
+            self.listOfUploadOfflineToGenerateSQL = nil;
+            self.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
+            
+            self.positionOfCurrentUploadInArray = 0;
+            
+            [self performSelectorOnMainThread:@selector(endLoadingInOtherThread) withObject:nil waitUntilDone:YES];
+            
+            UploadsOfflineDto *currentFile = [ManageUploadsDB getNextUploadOfflineFileToUpload];
+            
+            //We begin with the first file of the array
+            if (currentFile) {
+                [self sendFileToUploadByUploadOfflineDto:currentFile];
+            }
+        }
+    }
     
 }
+
 
 #pragma mark - Filename Utils
 

@@ -22,6 +22,7 @@
 
 @optional
 - (void)statusAuthorizationLocationChanged;
+- (void)changedLocation;
 @end
 
 @interface ManageLocation : NSObject <CLLocationManagerDelegate>

@@ -11,30 +11,35 @@
 
 @implementation ManageAsset
 
-+ (ManageAsset *)sharedSingleton {
-    static ManageAsset *sharedSingleton;
-    @synchronized(self)
-    {
-        if (!sharedSingleton){
-            sharedSingleton = [[ManageAsset alloc] init];
-        }
-        return sharedSingleton;
-    }
+
+-(NSArray *)getCameraRollNewItems{
+ 
+    [self checkAssetsLibrary];
+    
+    return self.assetsCameraRollNewToUpload;
 }
 
--(void)initAssetLibrary{
+-(void)checkAssetsLibrary{
     
     ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
-
-    //check authorizationstatus camera roll? //todo localization
+    
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    
+    //check authorizationstatus camera roll
     if ([ALAssetsLibrary authorizationStatus] != ALAuthorizationStatusAuthorized) {
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention" message:@"Please give this app permission to access your photo library in your settings app!" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-       [alert show];
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                         message:[NSLocalizedString(@"no_access_to_gallery", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName]
+                                                        delegate:nil
+                                               cancelButtonTitle:@"Ok"
+                                               otherButtonTitles:nil];
+        [alert show];
     } else if ([ManageAppSettingsDB isInstantUpload]){
         
         NSDate * startDateInstantUpload = [self getDateStartInstantUpload];
 
+        dispatch_semaphore_t semaphoreGroup = dispatch_semaphore_create(0);
+        
         [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
                                  usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
                                      
@@ -48,8 +53,8 @@
                                      
                                      if ([[sGroupPropertyName lowercaseString] isEqualToString:@"camera roll"] && nType == ALAssetsGroupSavedPhotos) {
                                          self.assetGroupCameraRoll = group;
-                                         self.assetsNewToUpload = [self getArrayNewAssetFromGroup:group andDate:startDateInstantUpload];
-                                         
+                                         self.assetsCameraRollNewToUpload = [self getArrayNewAssetsFromGroup:group andDate:startDateInstantUpload];
+                                        dispatch_semaphore_signal(semaphoreGroup);
                                      }
                                      else if(nType == ALAssetsGroupPhotoStream){
                                          //Nothing
@@ -58,39 +63,42 @@
                                      }
                                      
                                  } failureBlock:^(NSError *error) {
-                                     //todo localization msg
                                      UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                                      message:NSLocalizedString(@"no_access_to_gallery", nil)
-                                                                                     delegate:nil
+                                                                            message:[NSLocalizedString(@"no_access_to_gallery", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName]
+                                                                            delegate:nil
                                                                             cancelButtonTitle:@"Ok"
                                                                             otherButtonTitles:nil];
                                      [alert show];
                                      
                                      DLog(@"A problem occured access camera roll %@", [error description]);
                                  }];
+        
+        while (dispatch_semaphore_wait(semaphoreGroup, DISPATCH_TIME_NOW))
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
+                                     beforeDate:[NSDate distantFuture]];
     }
 
 }
 
--(NSArray *) getArrayNewAssetFromGroup:(ALAssetsGroup *)group andDate:(NSDate *)dateStart{
+-(NSArray *) getArrayNewAssetsFromGroup:(ALAssetsGroup *)group andDate:(NSDate *)dateStart{
     
     DLog(@"sort camera roll");
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                     message:@"launchGetAsset"
-                                                    delegate:nil
-                                           cancelButtonTitle:@"Ok"
-                                           otherButtonTitles:nil];
-    [alert show];
+
     
     NSMutableArray * tmpAssetsNew = [[NSMutableArray alloc] init];
+    NSMutableArray * tmpAssetsNewImage = [[NSMutableArray alloc] init];
+
     NSDate * startDate = [self getDateStartInstantUpload];
-    
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    NSString *dateString = [NSDateFormatter localizedStringFromDate:startDate
+                                                          dateStyle:NSDateFormatterShortStyle
+                                                          timeStyle:NSDateFormatterFullStyle];
+   
+    dispatch_semaphore_t semaphoreAsset = dispatch_semaphore_create(0);
     
     [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
         
         if(result == nil) {
-            dispatch_semaphore_signal(semaphore);
+            dispatch_semaphore_signal(semaphoreAsset);
             return;
         }
         
@@ -101,11 +109,20 @@
         if ([asset.date compare:startDate] == NSOrderedDescending) {
             //assetDate later than startDate
             [tmpAssetsNew addObject:asset];
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                             message:dateString
+                                                            delegate:nil
+                                                   cancelButtonTitle:@"Ok"
+                                                   otherButtonTitles:nil];
+            [alert show];
+            DLog(@"asset URL is:%@",[result valueForProperty:ALAssetPropertyURLs]);
+            UIImage *image = [UIImage imageWithCGImage:[[result defaultRepresentation] fullResolutionImage]];
+            [tmpAssetsNewImage addObject:image];
         }
         
     }];
     
-    while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW))
+    while (dispatch_semaphore_wait(semaphoreAsset, DISPATCH_TIME_NOW))
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
                                  beforeDate:[NSDate distantFuture]];
     

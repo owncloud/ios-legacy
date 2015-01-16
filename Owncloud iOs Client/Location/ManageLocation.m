@@ -63,17 +63,10 @@
          location.coordinate.latitude,
          
          location.coordinate.longitude);
-
-    
-    //do something
-    // if([ManageAppSettingsDB isInstantUpload]) {
-         
-    // }
     
     if([ManageAppSettingsDB isInstantUpload]) {
-    //if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-        [[ManageAsset sharedSingleton] initAssetLibrary];
-        //upload new photos
+
+        [self.delegate changedLocation];
     }
     
     [self presentNotification];

@@ -64,6 +64,10 @@ extern NSString *InitLoadingFileListNotification;
 @property(nonatomic,strong) NSMutableArray *listOfUploadOfflineToGenerateSQL;
 @property(nonatomic) int positionOfCurrentUploadInArray;
 
+@property(nonatomic,strong) NSMutableArray *listOfAssetsToUpload;
+@property(nonatomic,strong) NSString * remoteInstantUploadFolder;
+
+
 /*
  * This method is called to add a list of files to the upload list
  */
@@ -73,5 +77,8 @@ extern NSString *InitLoadingFileListNotification;
  */
 - (void) sendFileToUploadByUploadOfflineDto:(UploadsOfflineDto *) currentUpload;
 
+
+
+- (void) addAssetsToUpload:(NSArray *) newAsssets andRemoteFolder:(NSString *) remoteFolderToUpload;
 
 @end

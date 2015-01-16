@@ -17,12 +17,9 @@
 
 @property (nonatomic, retain) NSMutableArray *allAssetsCameraRoll;
 
-@property (nonatomic, retain) NSArray *assetsNewToUpload;
+@property (nonatomic, retain) NSArray *assetsCameraRollNewToUpload;
 
-+ (ManageAsset *) sharedSingleton;
-- (void)initAssetLibrary;
-//- (NSInteger)numberOfAssets;
-//- (void)updateArrayAssets;
-
+-(NSArray *)getCameraRollNewItems;
+-(void)checkAssetsLibrary;
 
 @end

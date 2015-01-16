@@ -18,7 +18,13 @@
     if (self) {
         self.asset = asset;
         self.date = [asset valueForProperty:ALAssetPropertyDate];
-        
+        self.url = [asset valueForProperty:ALAssetPropertyURLs];
+        self.type = [asset valueForProperty:ALAssetPropertyType];
+        self.rep = [asset defaultRepresentation];
+        self.fullUrl = [self.rep url];
+        self.fullUrlString = [ [self.rep url] absoluteString];
+        self.filename = [self.rep filename];
+        //self.byteArraySize = asset.defaultRepresentation.size;
        // _selected = NO;
     }
     

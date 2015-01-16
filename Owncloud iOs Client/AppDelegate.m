@@ -53,6 +53,8 @@
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
 #import "ManageLocation.h"
+#import "ManageAsset.h"
+
 
 #define k_server_with_chunking 4.5 
 
@@ -1011,6 +1013,25 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Update the Favorites Files
     [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
     
+    
+ //TODO:check for instant
+    //check state instant upload
+    //_settingsViewController
+    
+   /*
+    [[ManageAsset alloc]initAssetLibrary];
+    
+    
+    //[[ManageAsset alloc] initAssetLibrary];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                     message:@"checkInstantUP"
+                                                    delegate:nil
+                                           cancelButtonTitle:@"Ok"
+                                           otherButtonTitles:nil];
+    [alert show];*/
+    
+    
+   
 }
 
 
@@ -1018,7 +1039,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    
+  
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
