@@ -16,7 +16,7 @@
  
     [self checkAssetsLibrary];
     
-    return self.assetsCameraRollNewToUpload;
+    return self.assetsNewToUpload;
 }
 
 -(void)checkAssetsLibrary{
@@ -25,16 +25,7 @@
     
     NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
     
-    //check authorizationstatus camera roll
-    if ([ALAssetsLibrary authorizationStatus] != ALAuthorizationStatusAuthorized) {
-        
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                         message:[NSLocalizedString(@"no_access_to_gallery", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName]
-                                                        delegate:nil
-                                               cancelButtonTitle:@"Ok"
-                                               otherButtonTitles:nil];
-        [alert show];
-    } else if ([ManageAppSettingsDB isInstantUpload]){
+    if ([ManageAppSettingsDB isInstantUpload]){
         
         NSDate * startDateInstantUpload = [self getDateStartInstantUpload];
 
@@ -44,22 +35,16 @@
                                  usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
                                      
                                      if (group == nil) {
+                                         dispatch_semaphore_signal(semaphoreGroup);
                                          return;
                                      }
                                      
-                                     // added fix for camera albums order
                                      NSString *sGroupPropertyName = (NSString *)[group valueForProperty:ALAssetsGroupPropertyName];
                                      NSUInteger nType = [[group valueForProperty:ALAssetsGroupPropertyType] intValue];
                                      
-                                     if ([[sGroupPropertyName lowercaseString] isEqualToString:@"camera roll"] && nType == ALAssetsGroupSavedPhotos) {
-                                         self.assetGroupCameraRoll = group;
-                                         self.assetsCameraRollNewToUpload = [self getArrayNewAssetsFromGroup:group andDate:startDateInstantUpload];
-                                        dispatch_semaphore_signal(semaphoreGroup);
-                                     }
-                                     else if(nType == ALAssetsGroupPhotoStream){
-                                         //Nothing
-                                     }else {
-                                         
+                                     if (nType == ALAssetsGroupSavedPhotos){
+                                         [self.assetGroups addObject:group];
+                                         [self.assetsNewToUpload addObjectsFromArray:[self getArrayNewAssetsFromGroup:group andDate:startDateInstantUpload]];
                                      }
                                      
                                  } failureBlock:^(NSError *error) {
@@ -71,6 +56,8 @@
                                      [alert show];
                                      
                                      DLog(@"A problem occured access camera roll %@", [error description]);
+                                     
+                                     dispatch_semaphore_signal(semaphoreGroup);
                                  }];
         
         while (dispatch_semaphore_wait(semaphoreGroup, DISPATCH_TIME_NOW))
@@ -82,11 +69,11 @@
 
 -(NSArray *) getArrayNewAssetsFromGroup:(ALAssetsGroup *)group andDate:(NSDate *)dateStart{
     
-    DLog(@"sort camera roll");
+    DLog(@"get new album assets");
 
     
     NSMutableArray * tmpAssetsNew = [[NSMutableArray alloc] init];
-    NSMutableArray * tmpAssetsNewImage = [[NSMutableArray alloc] init];
+    //NSMutableArray * tmpAssetsNewImage = [[NSMutableArray alloc] init];
 
     NSDate * startDate = [self getDateStartInstantUpload];
     NSString *dateString = [NSDateFormatter localizedStringFromDate:startDate
@@ -105,7 +92,6 @@
         OCAsset *asset = [[OCAsset alloc] initWithAsset:result];
         
         //check dates
-         //asset. = [result valueForProperty:ALAssetPropertyDate];
         if ([asset.date compare:startDate] == NSOrderedDescending) {
             //assetDate later than startDate
             [tmpAssetsNew addObject:asset];
@@ -116,8 +102,8 @@
                                                    otherButtonTitles:nil];
             [alert show];
             DLog(@"asset URL is:%@",[result valueForProperty:ALAssetPropertyURLs]);
-            UIImage *image = [UIImage imageWithCGImage:[[result defaultRepresentation] fullResolutionImage]];
-            [tmpAssetsNewImage addObject:image];
+          //  UIImage *image = [UIImage imageWithCGImage:[[result defaultRepresentation] fullResolutionImage]];
+          //  [tmpAssetsNewImage addObject:image];
         }
         
     }];

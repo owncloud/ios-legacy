@@ -13,11 +13,12 @@
 
 @interface ManageAsset : NSObject
 
-@property (nonatomic, retain) ALAssetsGroup *assetGroupCameraRoll;
+//@property (nonatomic, retain) ALAssetsGroup *assetGroupCameraRoll;
+@property (nonatomic, retain) NSMutableArray *assetGroups;
 
 @property (nonatomic, retain) NSMutableArray *allAssetsCameraRoll;
 
-@property (nonatomic, retain) NSArray *assetsCameraRollNewToUpload;
+@property (nonatomic, retain) NSMutableArray *assetsNewToUpload;
 
 -(NSArray *)getCameraRollNewItems;
 -(void)checkAssetsLibrary;

@@ -63,11 +63,9 @@
          location.coordinate.latitude,
          
          location.coordinate.longitude);
-    
-    if([ManageAppSettingsDB isInstantUpload]) {
 
-        [self.delegate changedLocation];
-    }
+    [self.delegate changedLocation];
+
     
     [self presentNotification];
 }

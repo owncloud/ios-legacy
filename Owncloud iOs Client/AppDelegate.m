@@ -1012,25 +1012,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
     //Update the Favorites Files
     [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
-    
-    
- //TODO:check for instant
-    //check state instant upload
-    //_settingsViewController
-    
-   /*
-    [[ManageAsset alloc]initAssetLibrary];
-    
-    
-    //[[ManageAsset alloc] initAssetLibrary];
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                     message:@"checkInstantUP"
-                                                    delegate:nil
-                                           cancelButtonTitle:@"Ok"
-                                           otherButtonTitles:nil];
-    [alert show];*/
-    
-    
    
 }
 
