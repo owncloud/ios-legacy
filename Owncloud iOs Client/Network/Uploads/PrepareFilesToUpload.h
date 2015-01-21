@@ -81,4 +81,5 @@ extern NSString *InitLoadingFileListNotification;
 
 - (void) addAssetsToUpload:(NSArray *) newAsssets andRemoteFolder:(NSString *) remoteFolderToUpload;
 
+
 @end

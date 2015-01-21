@@ -21,6 +21,7 @@
 
 -(void)checkAssetsLibrary{
     
+    self.assetsNewToUpload = [[NSMutableArray alloc] init];
     ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
     
     NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
@@ -113,7 +114,7 @@
                                  beforeDate:[NSDate distantFuture]];
     
     
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:YES];
     
     return [tmpAssetsNew sortedArrayUsingDescriptors:@[sort]];
 }

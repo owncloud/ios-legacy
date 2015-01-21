@@ -31,6 +31,7 @@
 #import "ManageUploadRequest.h"
 #import "OCAsset.h"
 #import "ManageAsset.h"
+#import "ManageAppSettingsDB.h"
 
 
 //Notification to end and init loading screen
@@ -231,7 +232,7 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     };
     ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror){
         DLog(@"Cannot get image - %@",[myerror localizedDescription]);
-        //
+        
     };
     
     NSURL *videoURL = [info objectForKey:UIImagePickerControllerReferenceURL];
@@ -244,10 +245,11 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
 
 - (void) addAssetsToUpload:(NSArray *) newAsssets andRemoteFolder:(NSString *) remoteFolder {
     
+    self.remoteInstantUploadFolder = remoteFolder;
+    
     for (int i = 0 ; i < [newAsssets count] ; i++) {
         
         [self.listOfAssetsToUpload addObject:[newAsssets objectAtIndex:i]];
-        self.remoteInstantUploadFolder = remoteFolder;
     }
     
     [self startWithTheNextAsset];
@@ -263,15 +265,29 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
         isLastUploadFileOfThisArray = YES;
     }
     
-    [self uploadAssetFromGallery:[self.listOfAssetsToUpload objectAtIndex:0] andRemoteFolder:[self remoteInstantUploadFolder] andCurrentUser:appDelegate.activeUser andIsLastFile:isLastUploadFileOfThisArray];
+    OCAsset *assetToUpload = [self.listOfAssetsToUpload objectAtIndex:0];
+[self.listOfAssetsToUpload removeObjectAtIndex:0];
+    [self uploadAssetFromGallery:assetToUpload andRemoteFolder:[self remoteInstantUploadFolder] andCurrentUser:appDelegate.activeUser andIsLastFile:isLastUploadFileOfThisArray];
     
-    [self.listOfAssetsToUpload removeObjectAtIndex:0];
+    
+    //update date last asset uploaded
+    
+   /* if ([assetToUpload.date compare:[NSDate dateWithTimeIntervalSince1970:[ManageAppSettingsDB getDateInstantUpload]]] == NSOrderedDescending) {
+        //assetDate later than startDate
+        [ManageAppSettingsDB updateDateInstantUpload:[assetToUpload.date timeIntervalSince1970]];
+    }*/
+    
+   // [self.listOfAssetsToUpload removeObjectAtIndex:0];
+
 }
 
 
 - (void) uploadAssetFromGallery:(OCAsset *) myAsset andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray{
     DLog(@"uploadAssetFromGalleryToRemoteFolder");
     
+    //TODO: const, check if exist folder
+    NSString *fullRemotePathToUpload = [[NSString alloc]initWithFormat:@"%@%@%@/",currentUser.url,k_url_webdav_server,remoteFolder];
+
     NSString *mediaType = [myAsset type];
     
     
@@ -285,13 +301,14 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
         DLog(@"assetPath :%@", [myAsset fullUrlString]);
         NSString *ext = [self getExtension:[myAsset fullUrlString]];
         
-        currentFileName = [self getNameForFileFromGalleryByType:mediaType andExtension:ext andAssetNSURL:[myAsset url]];
+        //currentFileName = myAsset.filename;
+        currentFileName = [self getNameForFileFromGalleryByType:mediaType andExtension:ext andAssetNSURL:[myAsset fullUrl]];
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         //NSString *uniquePath= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:_uploadFileName];
         
         DLog(@"currentFileName: %@",currentFileName);
-        DLog(@"remoteFolder: %@", remoteFolder);
+        DLog(@"remoteFolder: %@", fullRemotePathToUpload);
         DLog(@"isLastUploadFileOfThisArray: %d", isLastUploadFileOfThisArray);
         
         //Use a temporal name with a date identification
@@ -354,7 +371,7 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
         
         UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
         currentUpload.originPath = localPath;
-        currentUpload.destinyFolder = remoteFolder;
+        currentUpload.destinyFolder = fullRemotePathToUpload;
         currentUpload.uploadFileName = currentFileName;
         currentUpload.estimateLength = length;
         currentUpload.userId = currentUser.idUser;
@@ -368,9 +385,9 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
         
         [self.listOfUploadOfflineToGenerateSQL addObject:currentUpload];
         
-        if([self.listOfFilesToUpload count] > 0 && [self.arrayOfRemoteurl count] > 0) {
+        if([self.listOfAssetsToUpload count] > 0) {
             //We have more files to process
-            [self startWithTheNextFile];
+            [self startWithTheNextAsset];
         } else {
             
             //We finish all the files of this block

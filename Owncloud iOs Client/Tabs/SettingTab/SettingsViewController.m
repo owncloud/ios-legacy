@@ -1093,7 +1093,6 @@
     [self switchInstantUploadTo:NO];
 
     if(![ManageAppSettingsDB isInstantUpload]) {
-      // [self checkIfAccessToAssetsLibraryIsEnabled];
        [self checkIfLocationIsEnabled];
     } else {
         //Dissable mode
@@ -1137,8 +1136,7 @@
                 [ManageAppSettingsDB updateDateInstantUpload:[[NSDate date] timeIntervalSince1970]];
                 ManageAsset * manageAsset = [[ManageAsset alloc] init];
                 NSArray * newItemsToUpload = [manageAsset getCameraRollNewItems];
-            //TODO: const remote folder
-                [self initPrepareFiles:newItemsToUpload andRemoteFolder:@"remoteFolderInstantUpload"];
+                [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
             } else {
                 [ManageAppSettingsDB updateInstantUpload:NO];
                 [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
@@ -1165,12 +1163,6 @@
 
 
 -(void)initStateInstantUpload{
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                     message:@"checkinitsetting"
-                                                    delegate:nil
-                                           cancelButtonTitle:@"Ok"
-                                           otherButtonTitles:nil];
-    [alert show];
     
     [self switchInstantUploadTo:NO];
     
@@ -1179,7 +1171,6 @@
         
     } else {
         //Dissable mode
-        //[self switchInstantUploadTo:NO];
         [ManageAppSettingsDB updateInstantUpload:NO];
         [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
     }
@@ -1188,17 +1179,24 @@
 
 - (void) initPrepareFiles:(NSArray *) newAsssets andRemoteFolder: (NSString *) remoteFolder{
     
-    //AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //[app.prepareFiles addAssetsToUpload: newAsssets andRemoteFolder: remoteFolder];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    PrepareFilesToUpload *prepareFiles = [[PrepareFilesToUpload alloc]init];
-    [prepareFiles addAssetsToUpload:newAsssets andRemoteFolder:remoteFolder];
+    if(app.prepareFiles == nil) {
+        app.prepareFiles = [[PrepareFilesToUpload alloc] init];
+        app.prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
+        app.prepareFiles.listOfAssetsToUpload = [[NSMutableArray alloc] init];
+        app.prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
+        app.prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
+    }
+    app.prepareFiles.delegate = app;
+    app.prepareFiles.counterUploadFiles = 0;
+    app.uploadTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        // If you’re worried about exceeding 10 minutes, handle it here
+    }];
     
-    
-    //Init loading to prepare files to upload
-    // [self initLoading];
-    //Set global loading screen global flag to YES (only for iPad)
-    // app.isLoadingVisible = YES;
+    [app.prepareFiles addAssetsToUpload: newAsssets andRemoteFolder: remoteFolder];
+  
+   
 }
 
 #pragma mark - ManageLocationDelegate Method
@@ -1269,8 +1267,9 @@ if([ManageAppSettingsDB isInstantUpload]) {
             //upload new photos
             ManageAsset * manageAsset = [[ManageAsset alloc] init];
             newItemsToUpload = [manageAsset getCameraRollNewItems];
-            //TODO: const remote folder
-            [self initPrepareFiles:newItemsToUpload andRemoteFolder:@"remoteFolderInstantUpload"];
+            if (newItemsToUpload != nil) {
+                [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
+            }
             
         }
     } else {

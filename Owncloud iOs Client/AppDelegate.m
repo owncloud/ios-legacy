@@ -1751,6 +1751,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if(_prepareFiles == nil) {
         _prepareFiles = [[PrepareFilesToUpload alloc] init];
         _prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
+        _prepareFiles.listOfAssetsToUpload = [[NSMutableArray alloc] init];
         _prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
         _prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
         _prepareFiles.delegate = self;
@@ -2565,6 +2566,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             if (_prepareFiles == nil) {
                 _prepareFiles = [[PrepareFilesToUpload alloc] init];
                 _prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
+                _prepareFiles.listOfAssetsToUpload = [[NSMutableArray alloc] init];
                 _prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
                 _prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
                 _prepareFiles.delegate = self;

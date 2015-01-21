@@ -24,6 +24,7 @@
         self.fullUrl = [self.rep url];
         self.fullUrlString = [ [self.rep url] absoluteString];
         self.filename = [self.rep filename];
+        //self.length = (NSUInteger)self.rep.size;
         //self.byteArraySize = asset.defaultRepresentation.size;
        // _selected = NO;
     }

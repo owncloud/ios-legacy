@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSString * fullUrlString;
 @property (nonatomic, strong) NSString * type;
 @property ALAssetRepresentation* rep;
+//@property NSUInteger length;
 //@property int byteArraySize;
 
 - (id)initWithAsset:(ALAsset*)asset;
