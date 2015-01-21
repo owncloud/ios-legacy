@@ -110,7 +110,7 @@
         
         NSLog(@"File name %@", file.fileName);
         
-        [self moveFileOnTheFileSystemByOrigin:url.path andDestiny:file.localFolder];
+        [self copyFileOnTheFileSystemByOrigin:url.path andDestiny:file.localFolder];
         
         [self createUploadOfflineWithFile:file fromPath:url.path withUser:file.userId];
         
@@ -158,7 +158,7 @@
 }
 
 
--(void) moveFileOnTheFileSystemByOrigin:(NSString *) origin andDestiny:(NSString *) destiny {
+-(void) copyFileOnTheFileSystemByOrigin:(NSString *) origin andDestiny:(NSString *) destiny {
     
     DLog(@"origin: %@",origin);
     DLog(@"destiny: %@", destiny);
@@ -172,7 +172,8 @@
     NSURL *oldPath = [NSURL fileURLWithPath:origin];
     NSURL *newPath= [NSURL fileURLWithPath:destiny];
     
-    [filemgr moveItemAtURL: oldPath toURL: newPath error: nil];
+    [filemgr copyItemAtURL:oldPath toURL:newPath error:nil];
+    
 }
 
 
