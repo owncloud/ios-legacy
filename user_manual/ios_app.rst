@@ -12,7 +12,7 @@ some advantages over the Web interface:
 * Easily upload files from your device to ownCloud
 * Optional PIN for stronger security
 
-Getting the ownCloud Android App
+Getting the ownCloud iOS App
 --------------------------------
 
 Open Safari, or any Web browser, and point it to your ownCloud server. You 
