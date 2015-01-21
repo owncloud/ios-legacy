@@ -21,6 +21,11 @@
 #import "UtilsUrls.h"
 #import "ManageFilesDB.h"
 #import "FileDto.h"
+#import "UploadsOfflineDto.h"
+#import "UserDto.h"
+#import "ManageUsersDB.h"
+#import "constants.h"
+#import "ManageUploadsDB.h"
 
 
 @interface FileProvider ()
@@ -105,6 +110,10 @@
         
         NSLog(@"File name %@", file.fileName);
         
+        [self moveFileOnTheFileSystemByOrigin:url.path andDestiny:file.localFolder];
+        
+        [self createUploadOfflineWithFile:file fromPath:url.path withUser:file.userId];
+        
         [self removeItemByUrl:url];
         
     }
@@ -146,7 +155,54 @@
         [ManageFilesDB updateFile:file.idFile withProvidingFile:0];
     }
     
-    //TODO: Remove the file from the system
+}
+
+
+-(void) moveFileOnTheFileSystemByOrigin:(NSString *) origin andDestiny:(NSString *) destiny {
+    
+    DLog(@"origin: %@",origin);
+    DLog(@"destiny: %@", destiny);
+    
+    NSFileManager *filemgr;
+    
+    filemgr = [NSFileManager defaultManager];
+    
+    [filemgr removeItemAtPath:destiny error:nil];
+    
+    NSURL *oldPath = [NSURL fileURLWithPath:origin];
+    NSURL *newPath= [NSURL fileURLWithPath:destiny];
+    
+    [filemgr moveItemAtURL: oldPath toURL: newPath error: nil];
+}
+
+
+- (void) createUploadOfflineWithFile:(FileDto *) file fromPath:(NSString *)path withUser:(NSInteger)userId {
+    
+    UserDto *user = [ManageUsersDB getUserByIdUser:userId];
+    
+    NSString *remotePath = [NSString stringWithFormat: @"%@%@%@%@", user.url, k_url_webdav_server, file.filePath, file.fileName];
+    
+    long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
+    
+    UploadsOfflineDto *upload = [UploadsOfflineDto new];
+    
+
+    upload.originPath = file.localFolder;
+    upload.destinyFolder = remotePath;
+    upload.uploadFileName = file.fileName;
+    upload.kindOfError = notAnError;
+    
+    upload.estimateLength = (long)fileLength;
+    upload.userId = userId;
+    upload.isLastUploadFileOfThisArray = YES;
+    upload.status = pendingToBeCheck;
+    upload.chunksLength = k_lenght_chunk;
+    upload.isNotNecessaryCheckIfExist = YES;
+    upload.isInternalUpload = NO;
+    upload.taskIdentifier = 0;
+    
+    [ManageUploadsDB insertUpload:upload];
+    
 }
 
 #pragma mark - FMDataBase
