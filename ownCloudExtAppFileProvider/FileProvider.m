@@ -26,6 +26,7 @@
 #import "ManageUsersDB.h"
 #import "constants.h"
 #import "ManageUploadsDB.h"
+#import "UtilsDtos.h"
 
 
 @interface FileProvider ()
@@ -181,7 +182,7 @@
     
     UserDto *user = [ManageUsersDB getUserByIdUser:userId];
     
-    NSString *remotePath = [NSString stringWithFormat: @"%@%@%@%@", user.url, k_url_webdav_server, file.filePath, file.fileName];
+    NSString *remotePath = [NSString stringWithFormat: @"%@%@%@%@", user.url,k_url_webdav_server,[UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:user], file.fileName];
     
     long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
     
