@@ -724,7 +724,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             } else if (section==1) {
                 n=2;
             } else if (section==2) {
-                n=1;
+                n=2; //Modified
             }
         }
     }
@@ -852,6 +852,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                 
                 break;
                 
+            case  1:
+                cell =  [self configureCellToShowLinkByAccountCell:cell];
+                
+                break;
             default:
                 break;
         }
@@ -1019,6 +1023,19 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         cell.userInteractionEnabled = NO;
     }
+    return cell;
+}
+
+-(AccountCell *) configureCellToShowLinkByAccountCell:(AccountCell *) cell {
+    
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    cell.textLabel.text = [NSLocalizedString(@"help_link_login", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
+    cell.textLabel.textColor = [UIColor colorOfServerErrorText];
+    cell.backgroundColor = [UIColor clearColor];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
+
     return cell;
 }
 
