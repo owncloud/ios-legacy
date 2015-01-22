@@ -37,5 +37,7 @@
 //Get the relative path of the document provider using an absolute path
 + (NSString *)getRelativePathForDocumentProviderUsingAboslutePath:(NSString *) abosolutePath;
 
+//Get the path of the temp folder where there are the temp files for the uploads
++ (NSString *) getTempFolderForUploadFiles;
 
 @end

@@ -168,7 +168,9 @@
     
     filemgr = [NSFileManager defaultManager];
     
+ 
     [filemgr removeItemAtPath:destiny error:nil];
+    
     
     NSURL *oldPath = [NSURL fileURLWithPath:origin];
     NSURL *newPath= [NSURL fileURLWithPath:destiny];
@@ -182,14 +184,17 @@
     
     UserDto *user = [ManageUsersDB getUserByIdUser:userId];
     
-    NSString *remotePath = [NSString stringWithFormat: @"%@%@%@%@", user.url,k_url_webdav_server,[UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:user], file.fileName];
+    NSString *remotePath = [NSString stringWithFormat: @"%@%@%@", user.url, k_url_webdav_server,[UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:user]];
     
     long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
     
+    NSString *temp = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], file.fileName];
+    
+    [self copyFileOnTheFileSystemByOrigin:file.localFolder andDestiny:temp];
+    
     UploadsOfflineDto *upload = [UploadsOfflineDto new];
     
-
-    upload.originPath = file.localFolder;
+    upload.originPath = temp;
     upload.destinyFolder = remotePath;
     upload.uploadFileName = file.fileName;
     upload.kindOfError = notAnError;
@@ -197,11 +202,15 @@
     upload.estimateLength = (long)fileLength;
     upload.userId = userId;
     upload.isLastUploadFileOfThisArray = YES;
-    upload.status = pendingToBeCheck;
+    upload.status = generatedByDocumentProvider;
     upload.chunksLength = k_lenght_chunk;
     upload.isNotNecessaryCheckIfExist = YES;
     upload.isInternalUpload = NO;
     upload.taskIdentifier = 0;
+    
+    
+    //Set this file as an overwritten state
+    [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
     
     [ManageUploadsDB insertUpload:upload];
     

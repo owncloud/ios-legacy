@@ -259,9 +259,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         NSString *filePath;
         
         //We have a bug on iOS8 that can not upload a file on background from Documents/Inbox. So we move the file to the getTempFolderForUploadFiles
-        [[NSFileManager defaultManager]moveItemAtPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Inbox"] stringByAppendingPathComponent:fileName] toPath:[[self getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName] error:nil];
+        [[NSFileManager defaultManager]moveItemAtPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Inbox"] stringByAppendingPathComponent:fileName] toPath:[[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName] error:nil];
 
-        filePath = [[self getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
+        filePath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
         
         _filePathFromOtherApp=filePath;
         
@@ -348,6 +348,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     } else {
         
         [self performSelector:@selector(doThingsThatShouldDoOnStart) withObject:nil afterDelay:0.4];
+        
+        [self performSelector:@selector(launchUploadsOfflineFromDocumentProvider) withObject:nil afterDelay:0.3];
         
         self.mCheckAccessToServer = [[CheckAccessToServer alloc] init];
         self.mCheckAccessToServer.delegate = self;
@@ -1004,6 +1006,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [self doThingsThatShouldDoOnStart];
         _isExpirationTimeInUpload = NO;
     } else{
+        
+        [self launchUploadsOfflineFromDocumentProvider];
         
         [self relaunchUploadsFailedForced];
         
@@ -2008,26 +2012,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
 }
 
-#pragma mark - Manage directory tree
-
--(NSString *) getTempFolderForUploadFiles {
-    NSString * output = [NSString stringWithFormat:@"%@temp/",[UtilsUrls getOwnCloudFilePath]];
-    
-    
-    if(![[NSFileManager defaultManager] fileExistsAtPath:output]) {
-        NSError *error;
-        
-        if (![[NSFileManager defaultManager] createDirectoryAtPath:output
-                                       withIntermediateDirectories:NO
-                                                        attributes:nil
-                                                             error:&error])
-        {
-            DLog(@"Create directory error: %@", error);
-        }
-    }
-
-    return  output;
-}
 
 
 #pragma markt - LocalPath by version
@@ -2114,7 +2098,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [[ManageUploadsDB getUploadsByStatus:waitingForUpload] count] == 0 &&
         [[ManageUploadsDB getUploadsByStatus:uploading] count] == 0 && [[ManageUploadsDB getUploadsByStatus:pendingToBeCheck] count] == 0) {
         //If we do not have anything waiting to be upload we clean the folder
-        [[NSFileManager defaultManager] removeItemAtPath:[self getTempFolderForUploadFiles] error:&error];
+        [[NSFileManager defaultManager] removeItemAtPath:[UtilsUrls getTempFolderForUploadFiles] error:&error];
     }
 }
 
@@ -2569,6 +2553,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             //We update all the files with error to the status waitingAddToUploadList
             [ManageUploadsDB updateAllErrorUploadOfflineWithWaitingAddUploadList];
             
+            
             if (_prepareFiles == nil) {
                 _prepareFiles = [[PrepareFilesToUpload alloc] init];
                 _prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
@@ -2576,17 +2561,48 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 _prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
                 _prepareFiles.delegate = self;
             }
+            
             for (UploadsOfflineDto *upload in listOfUploadsFailed) {
                 upload.status=waitingAddToUploadList;
             }
+            
+            
+            
             [_prepareFiles sendFileToUploadByUploadOfflineDto:[listOfUploadsFailed objectAtIndex:0]];
         }
+        
 
         if (listOfPendingToBeCheckFiles.count > 0) {
             [self checkTheUploadFilesOnTheServer:listOfPendingToBeCheckFiles];
         }
+        
+        
     }
 
+}
+
+- (void) launchUploadsOfflineFromDocumentProvider{
+    
+    NSMutableArray *listOfFilesGeneratedByDocumentProvider = [ManageUploadsDB getUploadsByStatus:generatedByDocumentProvider andByKindOfError:notAnError];
+    
+    if (listOfFilesGeneratedByDocumentProvider.count > 0) {
+        [ManageUploadsDB updateUploadsGeneratedByDocumentProviertoToWaitingAddUploadList];
+        
+        if (_prepareFiles == nil) {
+            _prepareFiles = [[PrepareFilesToUpload alloc] init];
+            _prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
+            _prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
+            _prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
+            _prepareFiles.delegate = self;
+        }
+        
+        for (UploadsOfflineDto *upload in listOfFilesGeneratedByDocumentProvider) {
+            upload.status = waitingAddToUploadList;
+        }
+        
+        [_prepareFiles sendFileToUploadByUploadOfflineDto:[listOfFilesGeneratedByDocumentProvider objectAtIndex:0]];
+        
+    }
 }
 
 

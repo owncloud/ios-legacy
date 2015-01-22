@@ -169,8 +169,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 - (void)itemToUploadFromOtherAppWithName:(NSString*)name andPathName:(NSString*)pathName andRemoteFolder:(NSString*)remFolder andIsNotNeedCheck:(BOOL) isNotNecessaryCheckIfExist;
 
-//Method to return the path of temp files when we upload files
--(NSString *) getTempFolderForUploadFiles;
 
 /*
  * Method that inform if the filePath its playing in media player.

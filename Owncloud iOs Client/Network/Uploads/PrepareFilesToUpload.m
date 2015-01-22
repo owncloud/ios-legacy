@@ -29,6 +29,7 @@
 #import "UploadUtils.h"
 #import "ManageUsersDB.h"
 #import "ManageUploadRequest.h"
+#import "UtilsUrls.h"
 
 //Notification to end and init loading screen
 NSString *EndLoadingFileListNotification = @"EndLoadingFileListNotification";
@@ -98,7 +99,7 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
             //Use a temporal name with a date identification
             NSString *temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [currentFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
-            NSString *localPath= [[app getTempFolderForUploadFiles] stringByAppendingPathComponent:temporalFileName];
+            NSString *localPath= [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:temporalFileName];
             
             //Divide the file in chunks of 1024KB, then create the file with all chunks
             

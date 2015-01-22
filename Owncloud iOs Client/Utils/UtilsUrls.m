@@ -202,4 +202,23 @@
     return relativePath;
 }
 
++ (NSString *) getTempFolderForUploadFiles {
+    NSString * output = [NSString stringWithFormat:@"%@temp/",[UtilsUrls getOwnCloudFilePath]];
+    
+    
+    if(![[NSFileManager defaultManager] fileExistsAtPath:output]) {
+        NSError *error;
+        
+        if (![[NSFileManager defaultManager] createDirectoryAtPath:output
+                                       withIntermediateDirectories:NO
+                                                        attributes:nil
+                                                             error:&error])
+        {
+            DLog(@"Create directory error: %@", error);
+        }
+    }
+    
+    return  output;
+}
+
 @end
