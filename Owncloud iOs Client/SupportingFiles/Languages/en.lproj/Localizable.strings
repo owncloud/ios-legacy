@@ -42,6 +42,7 @@
 "authentification_not_valid" = "Can not authenticate against this server";
 "error_too_many_http_redirects" = "There has been an error when establishing the connection. Please, try it again.";
 "retry" = "Retry";
+"help_link_login" = "New to $appname?";
 
 //TabBarItems
 "settings"="Settings"; 
