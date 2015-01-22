@@ -1035,7 +1035,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         // Mac's native DigitalColor Meter reads exactly {R:143, G:143, B:143}.
         cell.textLabel.alpha = 0.439216f; // (1 - alpha) * 255 = 143
         
-        //cell.userInteractionEnabled = NO;
+        cell.userInteractionEnabled = NO;
     }
     return cell;
 }
