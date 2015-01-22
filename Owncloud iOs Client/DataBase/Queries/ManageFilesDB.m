@@ -805,10 +805,11 @@
             
             FileDto *currentFile = [listFilesToUpdate objectAtIndex:i];
             
-            correctQuery = [db executeUpdate:@"UPDATE files SET is_download = ?, etag = ?, shared_file_source = ?, providing_file_id = ? WHERE id = ?", [NSNumber numberWithInteger:currentFile.isDownload],[NSNumber numberWithLongLong:currentFile.etag] ,[NSNumber numberWithInteger:currentFile.sharedFileSource], [NSNumber numberWithInteger:currentFile.idFile], [NSNumber numberWithInteger:currentFile.providingFileId]];
-        }
-        if (!correctQuery) {
-            DLog(@"Error in updateDownloadedFilesFromBackup");
+            correctQuery = [db executeUpdate:@"UPDATE files SET is_download = ?, etag = ?, shared_file_source = ?, providing_file_id = ? WHERE id = ?", [NSNumber numberWithInteger:currentFile.isDownload],[NSNumber numberWithLongLong:currentFile.etag] ,[NSNumber numberWithInteger:currentFile.sharedFileSource], [NSNumber numberWithInteger:currentFile.providingFileId], [NSNumber numberWithInteger:currentFile.idFile]];
+        
+            if (!correctQuery) {
+                DLog(@"Error in updateDownloadedFilesFromBackup");
+            }
         }
     }];
 }
