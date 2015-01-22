@@ -428,11 +428,11 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 #pragma mark - Navigation
 - (void) navigateToFile:(FileDto *) file {
     //Method to be overwritten
-    FileListDocumentProviderViewController *filesViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:file];
+    _filesViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:file];
     
-    filesViewController.delegate = self.delegate;
+    _filesViewController.delegate = self.delegate;
     
-    [[self navigationController] pushViewController:filesViewController animated:YES];
+    [[self navigationController] pushViewController:_filesViewController animated:YES];
 }
 
 #pragma mark - Rotation

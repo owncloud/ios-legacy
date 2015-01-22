@@ -69,6 +69,7 @@
 @property(nonatomic, strong) NSString *toolBarLabelTxt;
 @property(nonatomic, strong) UIAlertView *folderView;
 @property(nonatomic, strong) UIAlertView *alert;
+@property(nonatomic, strong) SelectFolderViewController *selectFolderViewController;
 
 
 //Actions

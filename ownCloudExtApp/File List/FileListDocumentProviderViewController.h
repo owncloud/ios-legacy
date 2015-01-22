@@ -36,6 +36,7 @@ extern NSString *userHasCloseDocumentPicker;
 @property (nonatomic, strong) DPDownload *download;
 @property(nonatomic,weak) __weak id<FileListDocumentProviderViewControllerDelegate> delegate;
 @property BOOL isNecessaryAdjustThePositionAndTheSizeOfTheNavigationBar;
+@property (nonatomic, strong) FileListDocumentProviderViewController *filesViewController;
 
 - (void) showErrorMessage:(NSString *)string;
 

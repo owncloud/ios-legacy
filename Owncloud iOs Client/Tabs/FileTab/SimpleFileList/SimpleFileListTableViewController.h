@@ -126,6 +126,8 @@
 @property (nonatomic, strong) NSArray *sortedArray;
 //Flag to not launch the refresh in background (Etag) at the same time that we request the info manually from the server
 @property BOOL isRefreshInProgress;
+//Next List of files to navigate
+@property (nonatomic, strong) SimpleFileListTableViewController *simpleFilesViewController;
 
 //View for loading screen
 @property(nonatomic, strong) MBProgressHUD  *HUD;
