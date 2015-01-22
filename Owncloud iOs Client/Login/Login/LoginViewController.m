@@ -1035,7 +1035,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         // Mac's native DigitalColor Meter reads exactly {R:143, G:143, B:143}.
         cell.textLabel.alpha = 0.439216f; // (1 - alpha) * 255 = 143
         
-        cell.userInteractionEnabled = NO;
+        //cell.userInteractionEnabled = NO;
     }
     return cell;
 }
@@ -1131,7 +1131,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                         [self oAuthScreen];
                     } else if (k_is_sso_active) {
                         [self checkURLServerForSSO];
-                    } else{
+                    } else {
                         //login button
                         [self goTryToDoLogin];
                     }
@@ -1139,7 +1139,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                   
                 case 1:
                     //login button
-                    [self goTryToDoLogin];
+                    [self showHelpURLInSafari];
                     break;
                     
                 default:
@@ -1154,17 +1154,39 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                 break;
                 
             case 1:
-                //in oauth or saml is the login button
-                if(k_is_oauth_active) {
-                    [self oAuthScreen];
-                } else if (k_is_sso_active) {
-                    [self checkURLServerForSSO];
+                switch (indexPath.row) {
+                    case 0:
+                        //in oauth or saml is the login button
+                        if(k_is_oauth_active) {
+                            [self oAuthScreen];
+                        } else if (k_is_sso_active) {
+                            [self checkURLServerForSSO];
+                        }
+                        break;
+                    case 1:
+                        //login button
+                        [self showHelpURLInSafari];
+                        break;
+                        
+                    default:
+                        break;
                 }
                 break;
             
             case 2:
-                //in section 2 is the login button
-                [self goTryToDoLogin];
+                switch (indexPath.row) {
+                    case 0:
+                        //login button
+                        [self goTryToDoLogin];
+                        break;
+                    case 1:
+                        //login button
+                        [self showHelpURLInSafari];
+                        break;
+                        
+                    default:
+                        break;
+                }
                 break;
                 
             default:
@@ -2278,6 +2300,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     }else {
         isLoginButtonEnabled = NO;
     }
+}
+
+- (void) showHelpURLInSafari {
+    DLog(@"showHelpURLInSafari");
 }
 
 #pragma mark - SSL Certificates
