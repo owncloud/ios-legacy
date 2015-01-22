@@ -697,24 +697,26 @@
  */
 - (void)endLoading {
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //Check if the loading should be visible
-    if (app.isLoadingVisible==NO) {
-       // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
-        [_HUD removeFromSuperview];
-        self.view.userInteractionEnabled = YES;
-        self.navigationController.navigationBar.userInteractionEnabled = YES;
-        self.tabBarController.tabBar.userInteractionEnabled = YES;
-        [self.view.window setUserInteractionEnabled:YES];
-    }
-    
-    //Check if the app is wainting to show the upload from other app view
-    if (app.isFileFromOtherAppWaitting && app.isPasscodeVisible == NO) {
-        [app performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.3];
-    }
-    
-    if (!_rename.renameAlertView.isVisible) {
-        _rename = nil;
+    if (!_isLoadingForNavigate) {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        //Check if the loading should be visible
+        if (app.isLoadingVisible==NO) {
+            // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
+            [_HUD removeFromSuperview];
+            self.view.userInteractionEnabled = YES;
+            self.navigationController.navigationBar.userInteractionEnabled = YES;
+            self.tabBarController.tabBar.userInteractionEnabled = YES;
+            [self.view.window setUserInteractionEnabled:YES];
+        }
+        
+        //Check if the app is wainting to show the upload from other app view
+        if (app.isFileFromOtherAppWaitting && app.isPasscodeVisible == NO) {
+            [app performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.3];
+        }
+        
+        if (!_rename.renameAlertView.isVisible) {
+            _rename = nil;
+        }
     }
 }
 
@@ -1597,6 +1599,7 @@
  * @fileIdToShowFiles -> folder id
  */
 -(void)navigateToUrl:(NSString *) url andFileId:(NSInteger)fileIdToShowFiles {
+    _isLoadingForNavigate = NO;
     [self endLoading];
     
     FilesViewController *filesViewController = [[FilesViewController alloc] initWithNibName:@"FilesViewController" onFolder:url andFileId:fileIdToShowFiles andCurrentLocalFolder:_currentLocalFolder];
@@ -1651,6 +1654,8 @@
  */
 -(void) goToFolderWithoutCheck {
     
+    _isLoadingForNavigate = YES;
+    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Set the right credentials
@@ -1685,6 +1690,8 @@
            [self prepareForNavigationWithData:directoryList];
         }
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        
+        _isLoadingForNavigate = NO;
         
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
@@ -1734,9 +1741,10 @@
     //Reload data in the table
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
     
-    if([_currentDirectoryArray count] != 0) {
+    //TODO: Remove this to prevent duplicate files
+    /*if([_currentDirectoryArray count] != 0) {
         [self endLoading];
-    }
+    }*/
 }
 
 /*
@@ -1890,7 +1898,6 @@
             //Send the data to DB and refresh the table
             [self deleteOldDataFromDBBeforeRefresh:directoryList];
         } else {
-            [self endLoading];
             [self stopPullRefresh];
             _showLoadingAfterChangeUser = NO;
         }
@@ -1977,6 +1984,8 @@
         [_tableView reloadData];
         [self stopPullRefresh];
         _showLoadingAfterChangeUser = NO;
+
+        //TODO: Remove this to prevent duplicate files
         [self endLoading];
         
         [self performSelector:@selector(disableRefreshInProgress) withObject:nil afterDelay:0.5];

@@ -130,6 +130,8 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 @property (nonatomic) int numberOfFolders;
 @property (nonatomic) int numberOfFiles;
 
+@property (nonatomic) BOOL isLoadingForNavigate;
+
 
 // init method to load view from nib with an array of files
 - (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(NSInteger) fileIdToShowFiles andCurrentLocalFolder:(NSString *)currentLocalFoler;
