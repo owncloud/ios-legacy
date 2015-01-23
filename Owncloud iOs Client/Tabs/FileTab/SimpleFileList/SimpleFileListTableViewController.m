@@ -344,9 +344,9 @@
 
 - (void) navigateToFile:(FileDto *) file {
     //Method to be overwritten
-    SimpleFileListTableViewController *filesViewController = [[SimpleFileListTableViewController alloc] initWithNibName:@"SimpleFileListTableViewController" onFolder:file];
+    _simpleFilesViewController = [[SimpleFileListTableViewController alloc] initWithNibName:@"SimpleFileListTableViewController" onFolder:file];
     
-    [[self navigationController] pushViewController:filesViewController animated:YES];
+    [[self navigationController] pushViewController:_simpleFilesViewController animated:YES];
 }
 
 - (void) reloadCurrentFolder {
