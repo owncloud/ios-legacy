@@ -37,6 +37,7 @@
 #import "ManageAsset.h"
 #import "PrepareFilesToUpload.h"
 #import "ManageInstantUpload.h"
+#import "UploadUtils.h"
 
 
 
@@ -1166,6 +1167,14 @@
     
     [self switchInstantUploadTo:NO];
     
+    ALAssetsLibrary *assetLibrary = [UploadUtils defaultAssetsLibrary];
+    [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
+                                usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+                                    
+                                } failureBlock:^(NSError *error) {
+                                    
+                                }];
+
     if([ManageAppSettingsDB isInstantUpload]) {
         [self checkIfLocationIsEnabled];
         
@@ -1174,6 +1183,20 @@
         [ManageAppSettingsDB updateInstantUpload:NO];
         [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
     }
+//
+//    [ManageAppSettingsDB updateInstantUpload:YES];
+//    NSDate *yesterday = [NSDate dateWithTimeIntervalSinceNow: -(60.0f*60.0f*24.0f)];
+//    [ManageAppSettingsDB updateDateInstantUpload:[yesterday timeIntervalSince1970]];
+    
+   /*  ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
+    
+    [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
+usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+
+} failureBlock:^(NSError *error) {
+}];*/
+
+    
     
 }
 

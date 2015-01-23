@@ -19,10 +19,6 @@
     [app.prepareFiles addAssetsToUpload: newAsssets andRemoteFolder: remoteFolder];
     
     
-    //Init loading to prepare files to upload
-   // [self initLoading];
-    //Set global loading screen global flag to YES (only for iPad)
-   // app.isLoadingVisible = YES;
 }
 
 

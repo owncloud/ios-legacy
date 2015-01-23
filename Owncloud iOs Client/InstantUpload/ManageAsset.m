@@ -8,21 +8,22 @@
 
 #import "ManageAsset.h"
 #import "ManageAppSettingsDB.h"
+#import "UploadUtils.h"
 
 @implementation ManageAsset
 
 
--(NSArray *)getCameraRollNewItems{
+-(NSArray *)getCameraRollNewItems {
  
     [self checkAssetsLibrary];
     
     return self.assetsNewToUpload;
 }
 
--(void)checkAssetsLibrary{
+-(void)checkAssetsLibrary {
     
     self.assetsNewToUpload = [[NSMutableArray alloc] init];
-    ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
+    ALAssetsLibrary *assetLibrary = [UploadUtils defaultAssetsLibrary];
     
     NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
     
@@ -40,15 +41,16 @@
                                          return;
                                      }
                                      
-                                     NSString *sGroupPropertyName = (NSString *)[group valueForProperty:ALAssetsGroupPropertyName];
+                                    // NSString *sGroupPropertyName = (NSString *)[group valueForProperty:ALAssetsGroupPropertyName];
                                      NSUInteger nType = [[group valueForProperty:ALAssetsGroupPropertyType] intValue];
                                      
                                      if (nType == ALAssetsGroupSavedPhotos){
                                          [self.assetGroups addObject:group];
-                                         [self.assetsNewToUpload addObjectsFromArray:[self getArrayNewAssetsFromGroup:group andDate:startDateInstantUpload]];
+                                         self.assetsNewToUpload = [self getArrayNewAssetsFromGroup:group andDate:startDateInstantUpload];
                                      }
                                      
                                  } failureBlock:^(NSError *error) {
+                                     //TODO:change alert msgs
                                      UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
                                                                             message:[NSLocalizedString(@"no_access_to_gallery", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName]
                                                                             delegate:nil
@@ -65,6 +67,10 @@
             [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
                                      beforeDate:[NSDate distantFuture]];
     }
+  //  [NSThread sleepForTimeInterval:16.0f];
+//    for (OCAsset *current in self.assetsNewToUpload) {
+//        NSLog(@"1 Asset size: %lld", current.rep.size);
+//    }
 
 }
 
@@ -72,9 +78,7 @@
     
     DLog(@"get new album assets");
 
-    
     NSMutableArray * tmpAssetsNew = [[NSMutableArray alloc] init];
-    //NSMutableArray * tmpAssetsNewImage = [[NSMutableArray alloc] init];
 
     NSDate * startDate = [self getDateStartInstantUpload];
     NSString *dateString = [NSDateFormatter localizedStringFromDate:startDate
@@ -92,8 +96,11 @@
         
         OCAsset *asset = [[OCAsset alloc] initWithAsset:result];
         
-        //check dates
-        if ([asset.date compare:startDate] == NSOrderedDescending) {
+        DLog(@"Date Database: %ld", [ManageAppSettingsDB getDateInstantUpload]);
+        DLog(@"Date Asset: %ld", (long)[asset.date timeIntervalSince1970]);
+        
+        //check dates[
+        if ((long)[asset.date timeIntervalSince1970] > [ManageAppSettingsDB getDateInstantUpload]) {
             //assetDate later than startDate
             [tmpAssetsNew addObject:asset];
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
@@ -102,9 +109,9 @@
                                                    cancelButtonTitle:@"Ok"
                                                    otherButtonTitles:nil];
             [alert show];
-            DLog(@"asset URL is:%@",[result valueForProperty:ALAssetPropertyURLs]);
-          //  UIImage *image = [UIImage imageWithCGImage:[[result defaultRepresentation] fullResolutionImage]];
-          //  [tmpAssetsNewImage addObject:image];
+            
+            //  UIImage *image = [UIImage imageWithCGImage:[[result defaultRepresentation] fullResolutionImage]];
+            //  [tmpAssetsNewImage addObject:image];
         }
         
     }];

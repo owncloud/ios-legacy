@@ -22,6 +22,7 @@
 #import "KKPasscodeViewController.h"
 #import "ManageLocation.h"
 
+
 typedef enum {
     help=0,
     recommend = 1,
