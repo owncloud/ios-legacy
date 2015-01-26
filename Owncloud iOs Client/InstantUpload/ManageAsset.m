@@ -24,13 +24,9 @@
     
     self.assetsNewToUpload = [[NSMutableArray alloc] init];
     ALAssetsLibrary *assetLibrary = [UploadUtils defaultAssetsLibrary];
-    
-    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-    
+        
     if ([ManageAppSettingsDB isInstantUpload]){
         
-        NSDate * startDateInstantUpload = [self getDateStartInstantUpload];
-
         dispatch_semaphore_t semaphoreGroup = dispatch_semaphore_create(0);
         
         [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
@@ -41,18 +37,16 @@
                                          return;
                                      }
                                      
-                                    // NSString *sGroupPropertyName = (NSString *)[group valueForProperty:ALAssetsGroupPropertyName];
                                      NSUInteger nType = [[group valueForProperty:ALAssetsGroupPropertyType] intValue];
                                      
                                      if (nType == ALAssetsGroupSavedPhotos){
                                          [self.assetGroups addObject:group];
-                                         self.assetsNewToUpload = [self getArrayNewAssetsFromGroup:group andDate:startDateInstantUpload];
+                                         self.assetsNewToUpload = [self getArrayNewAssetsFromGroup:group];
                                      }
                                      
                                  } failureBlock:^(NSError *error) {
-                                     //TODO:change alert msgs
-                                     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                            message:[NSLocalizedString(@"no_access_to_gallery", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName]
+                                     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
+                                                                            message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
                                                                             delegate:nil
                                                                             cancelButtonTitle:@"Ok"
                                                                             otherButtonTitles:nil];
@@ -67,24 +61,15 @@
             [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
                                      beforeDate:[NSDate distantFuture]];
     }
-  //  [NSThread sleepForTimeInterval:16.0f];
-//    for (OCAsset *current in self.assetsNewToUpload) {
-//        NSLog(@"1 Asset size: %lld", current.rep.size);
-//    }
 
 }
 
--(NSArray *) getArrayNewAssetsFromGroup:(ALAssetsGroup *)group andDate:(NSDate *)dateStart{
+-(NSArray *) getArrayNewAssetsFromGroup:(ALAssetsGroup *)group {
     
     DLog(@"get new album assets");
 
     NSMutableArray * tmpAssetsNew = [[NSMutableArray alloc] init];
 
-    NSDate * startDate = [self getDateStartInstantUpload];
-    NSString *dateString = [NSDateFormatter localizedStringFromDate:startDate
-                                                          dateStyle:NSDateFormatterShortStyle
-                                                          timeStyle:NSDateFormatterFullStyle];
-   
     dispatch_semaphore_t semaphoreAsset = dispatch_semaphore_create(0);
     
     [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
@@ -99,19 +84,9 @@
         DLog(@"Date Database: %ld", [ManageAppSettingsDB getDateInstantUpload]);
         DLog(@"Date Asset: %ld", (long)[asset.date timeIntervalSince1970]);
         
-        //check dates[
         if ((long)[asset.date timeIntervalSince1970] > [ManageAppSettingsDB getDateInstantUpload]) {
             //assetDate later than startDate
             [tmpAssetsNew addObject:asset];
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                             message:dateString
-                                                            delegate:nil
-                                                   cancelButtonTitle:@"Ok"
-                                                   otherButtonTitles:nil];
-            [alert show];
-            
-            //  UIImage *image = [UIImage imageWithCGImage:[[result defaultRepresentation] fullResolutionImage]];
-            //  [tmpAssetsNewImage addObject:image];
         }
         
     }];
@@ -120,17 +95,10 @@
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
                                  beforeDate:[NSDate distantFuture]];
     
-    
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:YES];
     
     return [tmpAssetsNew sortedArrayUsingDescriptors:@[sort]];
 }
 
--(NSDate *) getDateStartInstantUpload{
-    
-    NSDate* dateStart = [NSDate dateWithTimeIntervalSince1970:[ManageAppSettingsDB getDateInstantUpload]];
-    
-    return dateStart;
-}
 
 @end

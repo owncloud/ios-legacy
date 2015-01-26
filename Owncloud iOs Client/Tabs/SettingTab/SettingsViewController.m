@@ -1134,16 +1134,16 @@
                 [self switchInstantUploadTo:YES];
                 [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
                 [ManageAppSettingsDB updateInstantUpload:YES];
-                [ManageAppSettingsDB updateDateInstantUpload:[[NSDate date] timeIntervalSince1970]];
                 ManageAsset * manageAsset = [[ManageAsset alloc] init];
                 NSArray * newItemsToUpload = [manageAsset getCameraRollNewItems];
-                [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
+                if (newItemsToUpload != nil && [newItemsToUpload count] != 0) {
+                    [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
+                }
             } else {
                 [ManageAppSettingsDB updateInstantUpload:NO];
                 [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
-                NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-                UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                 message:[NSLocalizedString(@"no_access_to_gallery", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName]
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
+                                                                 message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
                                                                 delegate:nil
                                                        cancelButtonTitle:@"Ok"
                                                        otherButtonTitles:nil];
@@ -1167,14 +1167,6 @@
     
     [self switchInstantUploadTo:NO];
     
-    ALAssetsLibrary *assetLibrary = [UploadUtils defaultAssetsLibrary];
-    [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
-                                usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-                                    
-                                } failureBlock:^(NSError *error) {
-                                    
-                                }];
-
     if([ManageAppSettingsDB isInstantUpload]) {
         [self checkIfLocationIsEnabled];
         
@@ -1183,20 +1175,6 @@
         [ManageAppSettingsDB updateInstantUpload:NO];
         [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
     }
-//
-//    [ManageAppSettingsDB updateInstantUpload:YES];
-//    NSDate *yesterday = [NSDate dateWithTimeIntervalSinceNow: -(60.0f*60.0f*24.0f)];
-//    [ManageAppSettingsDB updateDateInstantUpload:[yesterday timeIntervalSince1970]];
-    
-   /*  ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
-    
-    [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
-usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-
-} failureBlock:^(NSError *error) {
-}];*/
-
-    
     
 }
 
@@ -1225,7 +1203,6 @@ usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
 #pragma mark - ManageLocationDelegate Method
 
 - (void)statusAuthorizationLocationChanged{
-   // if ([CLLocationManager locationServicesEnabled]) {
 
       if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){
         
@@ -1237,13 +1214,22 @@ usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
                     [ManageAppSettingsDB updateInstantUpload:YES];
                     [ManageAppSettingsDB updateDateInstantUpload:[[NSDate date] timeIntervalSince1970]];
                 } else {
-                    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                     message:[NSLocalizedString(@"no_access_to_gallery", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName]
+
+                    ALAssetsLibrary *assetLibrary = [UploadUtils defaultAssetsLibrary];
+                    [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
+                                                usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+                                                    
+                                                } failureBlock:^(NSError *error) {
+                                                    
+                                                }];
+                    
+                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
+                                                                     message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
                                                                     delegate:nil
                                                            cancelButtonTitle:@"Ok"
                                                            otherButtonTitles:nil];
                     [alert show];
+
                 }
                                      
             }            
@@ -1268,37 +1254,30 @@ usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
         }
      }
 
- //   } else {
- //       if([ManageAppSettingsDB isInstantUpload]) {
- //         [ManageAppSettingsDB updateInstantUpload:NO];
- //           [self switchInstantUploadTo:NO];
- //           [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
- //       }
- //   }
 }
 
 
 -(void) changedLocation{
     
-NSArray * newItemsToUpload = [[NSArray alloc]init];
-
-if([ManageAppSettingsDB isInstantUpload]) {
+    NSArray * newItemsToUpload = [[NSArray alloc]init];
     
-    if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
-        //check location
-        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-            //upload new photos
-            ManageAsset * manageAsset = [[ManageAsset alloc] init];
-            newItemsToUpload = [manageAsset getCameraRollNewItems];
-            if (newItemsToUpload != nil) {
-                [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
+    if([ManageAppSettingsDB isInstantUpload]) {
+        
+        if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
+            //check location
+            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
+                //upload new photos
+                ManageAsset * manageAsset = [[ManageAsset alloc] init];
+                newItemsToUpload = [manageAsset getCameraRollNewItems];
+                if (newItemsToUpload != nil && [newItemsToUpload count] != 0) {
+                    [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
+                }
+                
             }
-            
+        } else {
+            [ManageAppSettingsDB updateInstantUpload:NO];
         }
-    } else {
-        [ManageAppSettingsDB updateInstantUpload:NO];
     }
-}
 
 }
 

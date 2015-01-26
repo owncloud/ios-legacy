@@ -243,13 +243,13 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
 
 #pragma mark - Upload camera assets
 
-- (void) addAssetsToUpload:(NSArray *) newAsssets andRemoteFolder:(NSString *) remoteFolder {
+- (void) addAssetsToUpload:(NSArray *) assetsToUpload andRemoteFolder:(NSString *) remoteFolder {
     
     self.remoteInstantUploadFolder = remoteFolder;
     
-    for (int i = 0 ; i < [newAsssets count] ; i++) {
+    for (int i = 0 ; i < [assetsToUpload count] ; i++) {
         
-        [self.listOfAssetsToUpload addObject:[newAsssets objectAtIndex:i]];
+        [self.listOfAssetsToUpload addObject:[assetsToUpload objectAtIndex:i]];
     }
     
     [self startWithTheNextAsset];
@@ -274,22 +274,22 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
 }
 
 
-- (void) uploadAssetFromGallery:(OCAsset *) myAsset andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray{
+- (void) uploadAssetFromGallery:(OCAsset *) assetToUpload andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray{
     DLog(@"uploadAssetFromGalleryToRemoteFolder");
     
     //TODO: const, check if exist folder
     NSString *fullRemotePathToUpload = [[NSString alloc]initWithFormat:@"%@%@%@/",currentUser.url,k_url_webdav_server,remoteFolder];
 
-    NSString *mediaType = [myAsset type];
+    NSString *mediaType = [assetToUpload type];
     
     
     NSString *currentFileName = nil;
     
     //Get extension
-    DLog(@"assetPath :%@", [myAsset fullUrlString]);
-    NSString *ext = [self getExtension:[myAsset fullUrlString]];
+    DLog(@"assetPath :%@", [assetToUpload fullUrlString]);
+    NSString *ext = [self getExtension:[assetToUpload fullUrlString]];
     
-    currentFileName = [self getNameForFileFromGalleryByType:mediaType andExtension:ext andAssetNSURL:[myAsset fullUrl]];
+    currentFileName = [self getNameForFileFromGalleryByType:mediaType andExtension:ext andAssetNSURL:[assetToUpload fullUrl]];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     DLog(@"currentFileName: %@",currentFileName);
@@ -300,20 +300,19 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     NSString *temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [currentFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     NSString *localPath = [[app getTempFolderForUploadFiles] stringByAppendingPathComponent:temporalFileName];
+    DLog(@"localPath: %@", localPath);
     
     //Divide the file in chunks of 1024KB, then create the file with all chunks
     
     //Variables
     NSUInteger offset = 0;
     NSUInteger chunkSize = 1024 * 1024;
-    //NSUInteger length = [myAsset length];
-    NSUInteger length = (NSUInteger)[ [myAsset asset] defaultRepresentation].size;
-    //DLog(@"rep size %lld", (rep.size/1024)/1024);
+    NSUInteger length = (NSUInteger)[ [assetToUpload asset] defaultRepresentation].size;
     DLog(@"rep size %lu", (unsigned long) (length/1024)/1024);
     
     if (length < (k_lenght_chunk *1024)) {
         Byte *buffer = (Byte*)malloc(length);
-        NSUInteger k = [[myAsset rep] getBytes:buffer fromOffset: 0.0
+        NSUInteger k = [[assetToUpload rep] getBytes:buffer fromOffset: 0.0
                                         length:length error:nil];
         
         NSData *adata = [NSData dataWithBytesNoCopy:buffer length:k freeWhenDone:YES];
@@ -332,7 +331,7 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
             NSUInteger thisChunkSize = length - offset > chunkSize ? chunkSize : length - offset;
             
             //Write data
-            NSUInteger k = [[myAsset rep] getBytes:buffer fromOffset: offset length:thisChunkSize error:nil];
+            NSUInteger k = [[assetToUpload rep] getBytes:buffer fromOffset: offset length:thisChunkSize error:nil];
             
             NSData *adata = [NSData dataWithBytes:buffer length:k];
             
@@ -352,14 +351,12 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
             adata=nil;
         } while (offset < length);
     }
-    //        DLog(@"localPath: %@", localPath);
-    //
+    
     //        if ([[NSFileManager defaultManager] fileExistsAtPath:localPath isDirectory:NO]) {
     //            DLog(@"The file exist!");
     //        } else {
     //            DLog(@"The NOT file exist!");
     //        }
-    //        unsigned long long size = [[NSFileManager defaultManager] attributesOfItemAtPath:localPath error:nil].fileSize;
     
     UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
     currentUpload.originPath = localPath;
@@ -374,16 +371,17 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     currentUpload.kindOfError = notAnError;
     currentUpload.isInternalUpload = YES;
     currentUpload.taskIdentifier = 0;
+
     
     [self.listOfUploadOfflineToGenerateSQL addObject:currentUpload];
     
     DLog(@"Date Database: %ld", [ManageAppSettingsDB getDateInstantUpload]);
-    DLog(@"Date Asset: %ld", (long)[myAsset.date timeIntervalSince1970]);
+    DLog(@"Date Asset: %ld", (long)[assetToUpload.date timeIntervalSince1970]);
     
     //update date last asset uploaded
-    if ((long)[myAsset.date timeIntervalSince1970] > [ManageAppSettingsDB getDateInstantUpload]) {
+    if ((long)[assetToUpload.date timeIntervalSince1970] > [ManageAppSettingsDB getDateInstantUpload]) {
         //assetDate later than startDate
-        [ManageAppSettingsDB updateDateInstantUpload:[myAsset.date timeIntervalSince1970]];
+        [ManageAppSettingsDB updateDateInstantUpload:[assetToUpload.date timeIntervalSince1970]];
     }
     
     if([self.listOfAssetsToUpload count] > 0) {
