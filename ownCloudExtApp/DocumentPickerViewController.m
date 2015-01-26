@@ -35,6 +35,7 @@
 #import "constants.h"
 #import "ProvidingFileDto.h"
 #import "ManageProvidingFilesDB.h"
+#import "NSString+Encoding.h"
 
 @interface DocumentPickerViewController ()
 
@@ -162,7 +163,6 @@
 - (void) openFile:(FileDto *)fileDto {
     
     NSURL *originUrl = [NSURL fileURLWithPath:fileDto.localFolder];
-    NSString *fileName = [fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *folder = [NSString stringWithFormat: @"file_%lld/", fileDto.etag];
     NSURL *destinationUrl = [self.documentStorageURL URLByAppendingPathComponent:folder];
     
@@ -173,9 +173,7 @@
         DLog(@"Error: %@", [error localizedDescription]);
     }
     
-    destinationUrl = [destinationUrl URLByAppendingPathComponent:fileName];
-    
-    
+    destinationUrl = [destinationUrl URLByAppendingPathComponent:fileDto.fileName];
     
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
@@ -196,10 +194,10 @@
     }
     
    if (fileSize.integerValue > 0) {
-
+       
        ProvidingFileDto *providingFile = [ManageProvidingFilesDB insertProvidingFileDtoWithPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:destinationUrl.path] byUserId:self.user.idUser];
        [ManageFilesDB updateFile:fileDto.idFile withProvidingFile:providingFile.idProvidingFile];
-
+       
        [self dismissGrantingAccessToURL:destinationUrl];
         
     }else{

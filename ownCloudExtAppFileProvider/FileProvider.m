@@ -27,6 +27,7 @@
 #import "constants.h"
 #import "ManageUploadsDB.h"
 #import "UtilsDtos.h"
+#import "NSString+Encoding.h"
 
 
 @interface FileProvider ()
@@ -91,19 +92,16 @@
 
 - (void)itemChangedAtURL:(NSURL *)url {
     // Called at some point after the file has changed; the provider may then trigger an upload
-    
-    // TODO: mark file at <url> as needing an update in the model; kick off update process
     NSLog(@"Item changed at URL %@", url);
 
-    //TODO: Here we have to init the upload of the file
+    NSMutableArray *array = [NSMutableArray new];
 
     for (ProvidingFileDto *pFile in [ManageProvidingFilesDB getAllProvidingFilesDto]) {
         DLog(@"pfile path: %@", pFile.filePath);
+        [array addObject:pFile];
     }
     
-    NSString *path = [url.path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoByPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:path]];
+    ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoByPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:url.path]];
     
     
     if (providingFile) {
@@ -119,10 +117,6 @@
         
     }
 
-
-    //Move file to a filesystem
-    
-    //Create the offline upload
 
 }
 
@@ -159,7 +153,7 @@
 }
 
 
--(void) copyFileOnTheFileSystemByOrigin:(NSString *) origin andDestiny:(NSString *) destiny {
+- (void) copyFileOnTheFileSystemByOrigin:(NSString *) origin andDestiny:(NSString *) destiny {
     
     DLog(@"origin: %@",origin);
     DLog(@"destiny: %@", destiny);

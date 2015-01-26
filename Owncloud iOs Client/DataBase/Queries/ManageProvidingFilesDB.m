@@ -186,6 +186,7 @@
     queue = [FileProvider sharedDatabase];
 #endif
     
+    
     [queue inDatabase:^(FMDatabase *db) {
 
         FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, user_id FROM providing_files WHERE file_path = ?", filePath];

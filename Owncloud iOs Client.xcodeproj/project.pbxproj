@@ -594,6 +594,7 @@
 		EAE80E261A6D317C0061BD86 /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
 		EAE80E271A6D31810061BD86 /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
 		EAE80E281A6D31980061BD86 /* UploadsOfflineDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F674178422AE0092F42A /* UploadsOfflineDto.m */; };
+		EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -3498,6 +3499,7 @@
 				EAE80E261A6D317C0061BD86 /* ManageUploadsDB.m in Sources */,
 				EA1F62D71A5EBF8500D6346F /* ManageFilesDB.m in Sources */,
 				EA1F62D91A5EBFDF00D6346F /* OCKeychain.m in Sources */,
+				EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */,
 				EA1F62D31A5EBDA100D6346F /* FMResultSet.m in Sources */,
 				EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */,
 				EA1F62D51A5EBDAA00D6346F /* FMDatabaseAdditions.m in Sources */,
