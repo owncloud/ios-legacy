@@ -42,6 +42,7 @@
 "authentification_not_valid" = "Autentikointi palvelimen kanssa ei onnistu";
 "error_too_many_http_redirects" = "Yhteyttä muodostaessa tapahtui virhe. Yritä uudelleen.";
 "retry" = "Yritä uudelleen";
+"help_link_login" = "New to $appname?";
 
 //TabBarItems
 "settings"="Asetukset";

@@ -700,13 +700,13 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             if (section==0) {
                 n=0;
             } else if (section==1) {
-                n=1;
+                n=2; //Modified
             }
         } else {
             if (section==0) {
                 n=2;
             } else if (section==1) {
-                n=1;
+                n=2; //Modified
             }
         }
     } else {
@@ -714,7 +714,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             if (section==0) {
                 n=1;
             } else if (section==1) {
-                n=1;
+                n=2; //Modified
             } else if (section==2) {
                 n=0;
             }
@@ -724,7 +724,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             } else if (section==1) {
                 n=2;
             } else if (section==2) {
-                n=1;
+                n=2; //Modified
             }
         }
     }
@@ -767,6 +767,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                         self.urlTextField.delegate = self;
                         DLog(@"5- self.auxUrlForReloadTable: %@", self.auxUrlForReloadTable);
                         self.urlTextField.text = self.auxUrlForReloadTable;
+                        
+                        break;
+                    case  1:
+                        cell =  [self configureCellToShowLinkByAccountCell:cell];
                         
                         break;
                         
@@ -814,6 +818,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                         
                         break;
                         
+                    case  1:
+                        cell =  [self configureCellToShowLinkByAccountCell:cell];
+                        
+                        break;
+                        
                     default:
                         break;
                 }
@@ -822,6 +831,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                 switch (indexPath.row) {
                     case 0:
                         cell = [self configureCellToLoginByAccountCell:cell];
+                        
+                        break;
+                        
+                    case  1:
+                        cell =  [self configureCellToShowLinkByAccountCell:cell];
                         
                         break;
                         
@@ -852,6 +866,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                 
                 break;
                 
+            case  1:
+                cell =  [self configureCellToShowLinkByAccountCell:cell];
+                
+                break;
             default:
                 break;
         }
@@ -1022,6 +1040,19 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     return cell;
 }
 
+-(AccountCell *) configureCellToShowLinkByAccountCell:(AccountCell *) cell {
+    
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    cell.textLabel.text = [NSLocalizedString(@"help_link_login", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
+    cell.textLabel.textColor = [UIColor colorOfServerErrorText];
+    cell.backgroundColor = [UIColor clearColor];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
+
+    return cell;
+}
+
 -(CGFloat)tableView:(UITableView*)tableView heightForFooterInSection:(NSInteger)section
 {
     if (section==0) {
@@ -1100,7 +1131,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                         [self oAuthScreen];
                     } else if (k_is_sso_active) {
                         [self checkURLServerForSSO];
-                    } else{
+                    } else {
                         //login button
                         [self goTryToDoLogin];
                     }
@@ -1108,7 +1139,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                   
                 case 1:
                     //login button
-                    [self goTryToDoLogin];
+                    [self showHelpURLInSafari];
                     break;
                     
                 default:
@@ -1123,17 +1154,39 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                 break;
                 
             case 1:
-                //in oauth or saml is the login button
-                if(k_is_oauth_active) {
-                    [self oAuthScreen];
-                } else if (k_is_sso_active) {
-                    [self checkURLServerForSSO];
+                switch (indexPath.row) {
+                    case 0:
+                        //in oauth or saml is the login button
+                        if(k_is_oauth_active) {
+                            [self oAuthScreen];
+                        } else if (k_is_sso_active) {
+                            [self checkURLServerForSSO];
+                        }
+                        break;
+                    case 1:
+                        //login button
+                        [self showHelpURLInSafari];
+                        break;
+                        
+                    default:
+                        break;
                 }
                 break;
             
             case 2:
-                //in section 2 is the login button
-                [self goTryToDoLogin];
+                switch (indexPath.row) {
+                    case 0:
+                        //login button
+                        [self goTryToDoLogin];
+                        break;
+                    case 1:
+                        //login button
+                        [self showHelpURLInSafari];
+                        break;
+                        
+                    default:
+                        break;
+                }
                 break;
                 
             default:
@@ -2246,6 +2299,16 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         }
     }else {
         isLoginButtonEnabled = NO;
+    }
+}
+
+- (void) showHelpURLInSafari {
+    DLog(@"showHelpURLInSafari");
+    
+    NSURL *url = [NSURL URLWithString:k_url_link_on_login];
+    
+    if (![[UIApplication sharedApplication] openURL:url]) {
+        DLog(@"Failed to open url: %@", [url description]);
     }
 }
 

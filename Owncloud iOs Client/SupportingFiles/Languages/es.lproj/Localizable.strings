@@ -42,6 +42,7 @@
 "authentification_not_valid" = "No puedes identificarte contra este servidor";
 "error_too_many_http_redirects" = "Se ha producido un error al intentar acceder. Por favor intentelo de nuevo.";
 "retry" = "Reintentar";
+"help_link_login" = "¿Nuevo en $appname?";
 
 //TabBarItems
 "settings"="Ajustes"; 
