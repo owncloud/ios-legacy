@@ -21,6 +21,7 @@
 #import <Foundation/Foundation.h>
 #import "UserDto.h"
 #import "ManageUploadRequest.h"
+#import "OCAsset.h"
 
 //Notification to init and end loading screen in main view
 extern NSString *EndLoadingFileListNotification;
@@ -41,7 +42,7 @@ extern NSString *InitLoadingFileListNotification;
 
 
 
-@interface PrepareFilesToUpload : NSObject <ManageUploadRequestDelegate> {
+@interface PrepareFilesToUpload : NSObject <ManageUploadRequestDelegate, UtilsNetworkRequestDelegate> {
     
     /*
      *Delegate
@@ -65,7 +66,10 @@ extern NSString *InitLoadingFileListNotification;
 @property(nonatomic) int positionOfCurrentUploadInArray;
 
 @property(nonatomic,strong) NSMutableArray *listOfAssetsToUpload;
-@property(nonatomic,strong) NSString * remoteInstantUploadFolder;
+@property(nonatomic,strong) NSString * nameRemoteInstantUploadFolder;
+@property(nonatomic,strong) NSString * pathRemoteInstantUpload;
+
+@property (nonatomic, strong) UtilsNetworkRequest *utilsNetworkRequest;
 
 
 /*

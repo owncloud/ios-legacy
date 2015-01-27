@@ -36,7 +36,6 @@
 #import "ManageLocation.h"
 #import "ManageAsset.h"
 #import "PrepareFilesToUpload.h"
-#import "ManageInstantUpload.h"
 #import "UploadUtils.h"
 
 

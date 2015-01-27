@@ -32,6 +32,11 @@
 #import "OCAsset.h"
 #import "ManageAsset.h"
 #import "ManageAppSettingsDB.h"
+#import "UtilsNetworkRequest.h"
+#import "constants.h"
+#import "Customization.h"
+#import "UtilsUrls.h"
+#import "OCCommunication.h"
 
 
 //Notification to end and init loading screen
@@ -103,8 +108,6 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     
     DLog(@"uploadFileFromGallery");
     
-    
-    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
     //Hardik Comment: condition changed instead of "public.image" to "ALAssetTypePhoto"
     
     ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset){
@@ -113,13 +116,11 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
             
             NSString *currentFileName = nil;
             
-            //Get extension of video
             NSURL *assetURL = [info objectForKey:@"UIImagePickerControllerReferenceURL"];
             NSString *assetPath = [assetURL absoluteString];
             DLog(@"assetPath :%@", assetPath);
-            NSString *ext = [self getExtension:assetPath];
             
-            currentFileName = [self getNameForFileFromGalleryByType:mediaType andExtension:ext andAssetNSURL:assetURL];
+            currentFileName = [self getComposeNameFromAsset:myasset];
             
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             //NSString *uniquePath= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:_uploadFileName];
@@ -241,11 +242,11 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     [assetslibrary assetForURL:videoURL resultBlock:resultblock failureBlock:failureblock];
 }
 
-#pragma mark - Upload camera assets
+#pragma mark - Upload camera assets, instant upload
 
 - (void) addAssetsToUpload:(NSArray *) assetsToUpload andRemoteFolder:(NSString *) remoteFolder {
     
-    self.remoteInstantUploadFolder = remoteFolder;
+    self.nameRemoteInstantUploadFolder = remoteFolder;
     
     for (int i = 0 ; i < [assetsToUpload count] ; i++) {
         
@@ -257,43 +258,34 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
 
 - (void) startWithTheNextAsset {
     
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    BOOL isLastUploadFileOfThisArray = NO;
+    self.pathRemoteInstantUpload = [[NSString alloc]initWithFormat:@"%@%@%@/",app.activeUser.url,k_url_webdav_server,[self nameRemoteInstantUploadFolder]];
+    DLog(@"remoteFolder: %@", self.pathRemoteInstantUpload);
     
-    if ([self.listOfAssetsToUpload count] == 1) {
-        isLastUploadFileOfThisArray = YES;
+    if (!_utilsNetworkRequest) {
+        _utilsNetworkRequest = [UtilsNetworkRequest new];
+        _utilsNetworkRequest.delegate = self;
     }
     
-    OCAsset *assetToUpload = [self.listOfAssetsToUpload objectAtIndex:0];
+    //Check if the directory already exists
+    [_utilsNetworkRequest checkIfTheFileExistsWithThisPath:self.pathRemoteInstantUpload andUser:app.activeUser];
     
-    [self.listOfAssetsToUpload removeObjectAtIndex:0];
-    
-    [self uploadAssetFromGallery:assetToUpload andRemoteFolder:[self remoteInstantUploadFolder] andCurrentUser:appDelegate.activeUser andIsLastFile:isLastUploadFileOfThisArray];
-
 }
 
 
 - (void) uploadAssetFromGallery:(OCAsset *) assetToUpload andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray{
     DLog(@"uploadAssetFromGalleryToRemoteFolder");
     
-    //TODO: const, check if exist folder
-    NSString *fullRemotePathToUpload = [[NSString alloc]initWithFormat:@"%@%@%@/",currentUser.url,k_url_webdav_server,remoteFolder];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
 
-    NSString *mediaType = [assetToUpload type];
-    
-    
     NSString *currentFileName = nil;
     
-    //Get extension
     DLog(@"assetPath :%@", [assetToUpload fullUrlString]);
-    NSString *ext = [self getExtension:[assetToUpload fullUrlString]];
     
-    currentFileName = [self getNameForFileFromGalleryByType:mediaType andExtension:ext andAssetNSURL:[assetToUpload fullUrl]];
+    currentFileName = [self getComposeNameFromAsset:[assetToUpload asset]];
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     DLog(@"currentFileName: %@",currentFileName);
-    DLog(@"remoteFolder: %@", fullRemotePathToUpload);
     DLog(@"isLastUploadFileOfThisArray: %d", isLastUploadFileOfThisArray);
     
     //Use a temporal name with a date identification
@@ -352,15 +344,9 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
         } while (offset < length);
     }
     
-    //        if ([[NSFileManager defaultManager] fileExistsAtPath:localPath isDirectory:NO]) {
-    //            DLog(@"The file exist!");
-    //        } else {
-    //            DLog(@"The NOT file exist!");
-    //        }
-    
     UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
     currentUpload.originPath = localPath;
-    currentUpload.destinyFolder = fullRemotePathToUpload;
+    currentUpload.destinyFolder = remoteFolder;
     currentUpload.uploadFileName = currentFileName;
     currentUpload.estimateLength = length;
     currentUpload.userId = currentUser.idUser;
@@ -372,7 +358,6 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     currentUpload.isInternalUpload = YES;
     currentUpload.taskIdentifier = 0;
 
-    
     [self.listOfUploadOfflineToGenerateSQL addObject:currentUpload];
     
     DLog(@"Date Database: %ld", [ManageAppSettingsDB getDateInstantUpload]);
@@ -413,58 +398,127 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     
 }
 
+-(void)uploadNextAsset {
+  
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    BOOL isLastUploadFileOfThisArray = NO;
+    
+    if ([self.listOfAssetsToUpload count] == 1) {
+        isLastUploadFileOfThisArray = YES;
+    }
+    
+    OCAsset *assetToUpload = [self.listOfAssetsToUpload objectAtIndex:0];
+    
+    [self.listOfAssetsToUpload removeObjectAtIndex:0];
+    
+    [self uploadAssetFromGallery:assetToUpload andRemoteFolder:self.pathRemoteInstantUpload andCurrentUser:app.activeUser andIsLastFile:isLastUploadFileOfThisArray];
+ 
+}
+
+
+#pragma mark - UtilsNetworkRequestDelegate
+
+/*
+ * Method that is use with the information of the server to know if the
+ * file is in the path of server or not.
+ * @isExist --> YES/NO information of the server
+ */
+- (void) theFileIsInThePathResponse:(NSInteger) response {
+    
+    if(response != isInThePath) {
+       //create folder
+        [self newFolder:self.pathRemoteInstantUpload];
+    } else {
+        [self uploadNextAsset];
+    }
+}
+
+#pragma mark - Create folder on server
+
+-(void) newFolder:(NSString*) pathRemoteFolder {
+    
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+            //Set the right credentials
+            if (k_is_sso_active) {
+                [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
+            } else if (k_is_oauth_active) {
+                [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
+            } else {
+                [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
+            }
+    
+            [[AppDelegate sharedOCCommunication] createFolder:pathRemoteFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+                DLog(@"Folder created");
+                BOOL isSamlCredentialsError = NO;
+                
+                //Check the login error in shibboleth
+                if (k_is_sso_active && redirectedServer) {
+                    //Check if there are fragmens of saml in url, in this case there are a credential error
+                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                }
+                if (!isSamlCredentialsError) {
+                    [self uploadNextAsset];
+                }
+                
+                
+                
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+                DLog(@"error: %@", error);
+                DLog(@"Operation error: %ld", (long)response.statusCode);
+                
+            } errorBeforeRequest:^(NSError *error) {
+                if (error.code == OCErrorForbidenCharacters) {
+                    DLog(@"The folder have problematic characters");
+                } else {
+                    DLog(@"The folder have problems under controlled");
+                }
+                
+            }
+            ];
+
+}
+
 
 #pragma mark - Filename Utils
 
 /*
  Method to generate the name of the file depending if it is a video or an image
  */
-- (NSString *)getNameForFileFromGalleryByType:(NSString *) mediaType andExtension:(NSString *) ext andAssetNSURL:(NSURL *) assetURL {
-    __block NSString *output = @"";
-    __block NSString* dateString;
-    __block NSString *fileName = nil;
-    __block NSString *appleID = nil;
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    [library assetForURL:assetURL
-             resultBlock:^(ALAsset *asset) {
-                 
-                 //Get the creation date of the file
-                 NSDate *date = [asset valueForProperty:ALAssetPropertyDate];
-                 NSDateFormatter* df = [[NSDateFormatter alloc] init];
-                 [df setDateFormat:@"yyyy-MM-dd-HH-mm-ss"];
-                 df.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-                 dateString = [df stringFromDate:date];
-                 DLog(@"DateString: %@", dateString);
-                 
-                 //Get the name of the file from the device gallery
-                 NSString *completeFileName = asset.defaultRepresentation.filename;
-                 DLog(@"FileName: %@", completeFileName);
-                 NSMutableArray *arr =[[NSMutableArray alloc] initWithArray: [completeFileName componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"."]]];
-                 [arr removeLastObject];
-                 fileName = [arr firstObject];
-                 
-                 arr =[[NSMutableArray alloc] initWithArray: [fileName componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]]];
-                 appleID = [arr lastObject];
-                 
-                 dispatch_semaphore_signal(semaphore);
-             }
-            failureBlock:^(NSError *error) {
-                DLog(@"Failed to get the date creation");
-            }];
+-(NSString *)getComposeNameFromAsset:(ALAsset *)asset{
     
-    while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) { [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:30.0]];
+    NSString *output = @"";
+    NSString *fileName = nil;
+    NSString *appleID = nil;
+    NSString *mediaType = [asset valueForProperty:ALAssetPropertyType];
+    NSDate *date = [asset valueForProperty:ALAssetPropertyDate];
+    NSDateFormatter* df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"yyyy-MM-dd-HH-mm-ss"];
+    df.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    NSString* dateString; dateString = [df stringFromDate:date];
+    DLog(@"DateString: %@", dateString);
+    
+    NSString *assetPath = asset.defaultRepresentation.url.absoluteString;
+    NSString *ext = [self getExtension:assetPath];
+    NSString *completeFileName = asset.defaultRepresentation.filename;
+    DLog(@"FileName: %@", completeFileName);
+    NSMutableArray *arr =[[NSMutableArray alloc] initWithArray: [completeFileName componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"."]]];
+    [arr removeLastObject];
+    fileName = [arr firstObject];
+    
+    arr =[[NSMutableArray alloc] initWithArray: [fileName componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]]];
+    appleID = [arr lastObject];
+    
+    if ([mediaType isEqualToString:@"ALAssetTypePhoto"]) {
+        output = [NSString stringWithFormat:@"Photo-%@_%@.%@", dateString, appleID, ext];
+    } else {
+        output = [NSString stringWithFormat:@"Video-%@.%@", dateString, ext];
     }
-
-     if ([mediaType isEqualToString:@"ALAssetTypePhoto"]) {
-         output = [NSString stringWithFormat:@"Photo-%@_%@.%@", dateString, appleID, ext];
-     } else {
-         output = [NSString stringWithFormat:@"Video-%@.%@", dateString, ext];
-     }
-
+    
     return output;
+    
 }
-
 
 /*
  * Method to obtain the extension of the file in upper case
