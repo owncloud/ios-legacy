@@ -94,15 +94,7 @@
     // Called at some point after the file has changed; the provider may then trigger an upload
     NSLog(@"Item changed at URL %@", url);
 
-    NSMutableArray *array = [NSMutableArray new];
-
-    for (ProvidingFileDto *pFile in [ManageProvidingFilesDB getAllProvidingFilesDto]) {
-        DLog(@"pfile path: %@", pFile.filePath);
-        [array addObject:pFile];
-    }
-    
     ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoByPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:url.path]];
-    
     
     if (providingFile) {
         FileDto *file = [ManageFilesDB getFileDtoRelatedWithProvidingFileId:providingFile.idProvidingFile ofUser:providingFile.userId];
@@ -117,37 +109,33 @@
         
     }
 
-
 }
 
 - (void)stopProvidingItemAtURL:(NSURL *)url {
     // Called after the last claim to the file has been released. At this point, it is safe for the file provider to remove the content file.
     // Care should be taken that the corresponding placeholder file stays behind after the content file has been deleted.
     
-    [self removeItemByUrl:url];
-    
     [self.fileCoordinator coordinateWritingItemAtURL:url options:NSFileCoordinatorWritingForDeleting error:NULL byAccessor:^(NSURL *newURL) {
         [[NSFileManager defaultManager] removeItemAtURL:newURL error:NULL];
     }];
+    
     [self providePlaceholderAtURL:url completionHandler:NULL];
 }
 
+
 - (void) removeItemByUrl:(NSURL *)url {
     
-    NSArray *all = [ManageProvidingFilesDB getAllProvidingFilesDto];
-    
-    DLog(@"Path: %@", url.path);
-    
-    ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoByPath:url.path];
+    ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoByPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:url.path]];
     
     if (providingFile) {
         FileDto *file = [ManageFilesDB getFileDtoRelatedWithProvidingFileId:providingFile.idProvidingFile ofUser:providingFile.userId];
         
-        NSLog(@"File name %@", file.fileName);
         
-        //For test, delete the ProvidingFile
         [ManageProvidingFilesDB removeProvidingFileDtoById:providingFile.idProvidingFile];
         [ManageFilesDB updateFile:file.idFile withProvidingFile:0];
+        
+        //TODO: For the moment we go to remove the file when the user finish to edit a file because the "stopProvidingItemAtURL" is not called never.
+        [[NSFileManager defaultManager] removeItemAtURL:url error:NULL];
     }
     
 }
@@ -155,16 +143,9 @@
 
 - (void) copyFileOnTheFileSystemByOrigin:(NSString *) origin andDestiny:(NSString *) destiny {
     
-    DLog(@"origin: %@",origin);
-    DLog(@"destiny: %@", destiny);
-    
-    NSFileManager *filemgr;
-    
-    filemgr = [NSFileManager defaultManager];
-    
+    NSFileManager *filemgr = [NSFileManager defaultManager];
  
     [filemgr removeItemAtPath:destiny error:nil];
-    
     
     NSURL *oldPath = [NSURL fileURLWithPath:origin];
     NSURL *newPath= [NSURL fileURLWithPath:destiny];
@@ -211,23 +192,24 @@
 }
 
 #pragma mark - FMDataBase
+
 + (FMDatabaseQueue*)sharedDatabase
 {
+     static FMDatabaseQueue* sharedDatabase = nil;
     
-    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:@"DB.sqlite"]];
-    
-    static FMDatabaseQueue* sharedDatabase = nil;
-    if (sharedDatabase == nil)
-    {
-        NSString *documentsDir = [UtilsUrls getOwnCloudFilePath];
-        NSString *dbPath = [documentsDir stringByAppendingPathComponent:@"DB.sqlite"];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:@"DB.sqlite"]]) {
         
-        
-        //NSString* bundledDatabasePath = [[NSBundle mainBundle] pathForResource:@"DB" ofType:@"sqlite"];
-        sharedDatabase = [[FMDatabaseQueue alloc] initWithPath: dbPath];
+        if (sharedDatabase == nil)
+        {
+            NSString *documentsDir = [UtilsUrls getOwnCloudFilePath];
+            NSString *dbPath = [documentsDir stringByAppendingPathComponent:@"DB.sqlite"];
+            
+            sharedDatabase = [[FMDatabaseQueue alloc] initWithPath: dbPath];
+        }
     }
     
     return sharedDatabase;
+    
 }
 
 @end
