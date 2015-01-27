@@ -2583,6 +2583,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 }
 
+/*
+ * Method called when the app starts or when back for the background.
+ * This method pust the files modified by the document provider to upload.
+ */
 - (void) launchUploadsOfflineFromDocumentProvider{
     
     NSMutableArray *listOfFilesGeneratedByDocumentProvider = [ManageUploadsDB getUploadsByStatus:generatedByDocumentProvider andByKindOfError:notAnError];

@@ -135,7 +135,8 @@
         [ManageFilesDB updateFile:file.idFile withProvidingFile:0];
         
         //TODO: For the moment we go to remove the file when the user finish to edit a file because the "stopProvidingItemAtURL" is not called never.
-        [[NSFileManager defaultManager] removeItemAtURL:url error:NULL];
+        NSString *folderPath = [url.path stringByDeletingLastPathComponent];
+        [[NSFileManager defaultManager] removeItemAtPath:folderPath error:nil];
     }
     
 }
@@ -173,7 +174,6 @@
     upload.destinyFolder = remotePath;
     upload.uploadFileName = file.fileName;
     upload.kindOfError = notAnError;
-    
     upload.estimateLength = (long)fileLength;
     upload.userId = userId;
     upload.isLastUploadFileOfThisArray = YES;
