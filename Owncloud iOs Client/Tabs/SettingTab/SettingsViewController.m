@@ -1085,10 +1085,37 @@
      [_switchInstantUpload setOn:value animated:NO];
 }
 
+-(void)setPropertiesInstantUploadToState:(BOOL)stateInstantUpload{
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    if (app.activeUser.username==nil) {
+        app.activeUser=[ManageUsersDB getActiveUser];
+    }
+    
+    if (stateInstantUpload) {
+        [self switchInstantUploadTo:YES];
+        app.activeUser.instant_upload = YES;
+        [ManageAppSettingsDB updateInstantUpload:YES];
+    } else {
+        [self switchInstantUploadTo:NO];
+        app.activeUser.instant_upload = NO;
+        [ManageAppSettingsDB updateInstantUpload:NO];
+        [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+    }
+}
+
+-(void)setDateInstantUpload{
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    if (app.activeUser.username==nil) {
+        app.activeUser=[ManageUsersDB getActiveUser];
+    }
+    
+    long dateInstantUpload = [[NSDate date] timeIntervalSince1970];
+    app.activeUser.date_instant_upload = dateInstantUpload;
+    [ManageAppSettingsDB updateDateInstantUpload:dateInstantUpload];
+}
+
 -(IBAction)changeSwitchInstantUpload:(id)sender {
-    
-    //k_path_instant_upload
-    
     
     [self switchInstantUploadTo:NO];
 
@@ -1096,23 +1123,20 @@
        [self checkIfLocationIsEnabled];
     } else {
         //Dissable mode
-        [ManageAppSettingsDB updateInstantUpload:NO];
-        [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+        [self setPropertiesInstantUploadToState:NO];
     }
 }
 
 
 -(void)checkIfLocationIsEnabled {
     [ManageLocation sharedSingleton].delegate = self;
-
-
+    
     if ([CLLocationManager locationServicesEnabled]) {
         
         DLog(@"authorizationStatus: %d", [CLLocationManager authorizationStatus]);
         
         if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
             
-           // if (!([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted)) {
             if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined ) {
                 
                 DLog(@"Location services not determined");
@@ -1120,7 +1144,6 @@
                 
             }else {
                 [ManageAppSettingsDB updateInstantUpload:NO];
-                [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
                                                             message:NSLocalizedString(@"message_location_not_enabled", nil)
                                                             delegate:nil
@@ -1130,17 +1153,19 @@
             }
         } else {
             if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
-                [self switchInstantUploadTo:YES];
+                if(![ManageAppSettingsDB isInstantUpload]) {
+                    [self setDateInstantUpload];
+                }
+                
+                [self setPropertiesInstantUploadToState:YES];
                 [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
-                [ManageAppSettingsDB updateInstantUpload:YES];
                 ManageAsset * manageAsset = [[ManageAsset alloc] init];
                 NSArray * newItemsToUpload = [manageAsset getCameraRollNewItems];
                 if (newItemsToUpload != nil && [newItemsToUpload count] != 0) {
                     [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
                 }
             } else {
-                [ManageAppSettingsDB updateInstantUpload:NO];
-                [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+                [self setPropertiesInstantUploadToState:NO];
                 UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
                                                                  message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
                                                                 delegate:nil
@@ -1150,8 +1175,7 @@
             }
         }
     } else {
-        [ManageAppSettingsDB updateInstantUpload:NO];
-        [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+        [self setPropertiesInstantUploadToState:NO];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
                                                         message:NSLocalizedString(@"message_location_not_enabled", nil)
                                                         delegate:nil
@@ -1171,8 +1195,7 @@
         
     } else {
         //Dissable mode
-        [ManageAppSettingsDB updateInstantUpload:NO];
-        [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+        [self setPropertiesInstantUploadToState:NO];
     }
     
 }
@@ -1209,9 +1232,8 @@
             //activated only when user allow location first alert
             if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
                 if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
-                    [self switchInstantUploadTo:YES];
-                    [ManageAppSettingsDB updateInstantUpload:YES];
-                    [ManageAppSettingsDB updateDateInstantUpload:[[NSDate date] timeIntervalSince1970]];
+                    [self setPropertiesInstantUploadToState:YES];
+                    [self setDateInstantUpload];
                 } else {
 
                     ALAssetsLibrary *assetLibrary = [UploadUtils defaultAssetsLibrary];
@@ -1235,9 +1257,8 @@
             
         } else if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){
             if([ManageAppSettingsDB isInstantUpload]) {
-                [ManageAppSettingsDB updateInstantUpload:NO];
-                [self switchInstantUploadTo:NO];
-                [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+                [self setPropertiesInstantUploadToState:NO];
+
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
                                                       message:NSLocalizedString(@"message_location_not_enabled", nil)
                                                       delegate:nil
@@ -1271,10 +1292,9 @@
                 if (newItemsToUpload != nil && [newItemsToUpload count] != 0) {
                     [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
                 }
-                
             }
         } else {
-            [ManageAppSettingsDB updateInstantUpload:NO];
+            [self setPropertiesInstantUploadToState:NO];
         }
     }
 
