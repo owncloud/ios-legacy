@@ -135,7 +135,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
     
-    [self performSelector:@selector(checkIfIsNecesaryShowPassCode) withObject:nil afterDelay:0.5];
+    [self checkIfIsNecesaryShowPassCode];
     
     //Check if the server support shared api
     [self performSelector:@selector(checkIfServerSupportThings) withObject:nil afterDelay:0.0];
