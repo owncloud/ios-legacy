@@ -334,7 +334,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if(_activeUser.username == nil) {
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        [self.window setBackgroundColor:[UIColor whiteColor]];
         
         if (IS_IPHONE) {
             self.loginViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPhone" bundle:nil];
@@ -417,8 +416,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-    [self.window setBackgroundColor:[UIColor whiteColor]];
     
     self.window.rootViewController = self.loginWindowViewController;
     [self.window makeKeyAndVisible];
