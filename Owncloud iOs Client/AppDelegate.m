@@ -467,8 +467,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //DLog(@"localRootUrlString: %@", localSystemPath);
     }
 
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [self.window setBackgroundColor:[UIColor whiteColor]];
+    if (!self.window) {
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    }
     
     //if ocTabBarController exist remove all of them
     if (_ocTabBarController) {
