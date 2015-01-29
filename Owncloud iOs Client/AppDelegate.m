@@ -2106,7 +2106,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     if ([[ManageUploadsDB getUploadsByStatus:errorUploading] count] == 0 &&
         [[ManageUploadsDB getUploadsByStatus:waitingForUpload] count] == 0 &&
-        [[ManageUploadsDB getUploadsByStatus:uploading] count] == 0 && [[ManageUploadsDB getUploadsByStatus:pendingToBeCheck] count] == 0) {
+        [[ManageUploadsDB getUploadsByStatus:uploading] count] == 0 &&
+        [[ManageUploadsDB getUploadsByStatus:pendingToBeCheck] count] == 0 &&
+        _uploadFromOtherAppViewController == nil) {
         //If we do not have anything waiting to be upload we clean the folder
         [[NSFileManager defaultManager] removeItemAtPath:[self getTempFolderForUploadFiles] error:&error];
     }

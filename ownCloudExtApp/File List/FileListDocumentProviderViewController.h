@@ -16,12 +16,28 @@
 
 #import <UIKit/UIKit.h>
 #import "SimpleFileListTableViewController.h"
+#import "DPDownload.h"
 
-@interface FileListDocumentProviderViewController : SimpleFileListTableViewController
+@protocol FileListDocumentProviderViewControllerDelegate
+
+@optional
+- (void) openFile:(FileDto*)fileDto;
+@end
+
+@interface FileListDocumentProviderViewController : SimpleFileListTableViewController <DPDownloadDelegate>
 
 //Notification to notify that the user has change
-extern NSString * userHasChangeNotification;
+extern NSString *userHasChangeNotification;
+extern NSString *userHasCloseDocumentPicker;
 
+@property (nonatomic) BOOL isLockedApperance;
+@property (nonatomic, strong) FileDto *selectedFile;
+@property (nonatomic, strong) NSOperation *downloadOperation;
+@property (nonatomic, strong) DPDownload *download;
+@property(nonatomic,weak) __weak id<FileListDocumentProviderViewControllerDelegate> delegate;
 @property BOOL isNecessaryAdjustThePositionAndTheSizeOfTheNavigationBar;
+@property (nonatomic, strong) FileListDocumentProviderViewController *filesViewController;
+
+- (void) showErrorMessage:(NSString *)string;
 
 @end

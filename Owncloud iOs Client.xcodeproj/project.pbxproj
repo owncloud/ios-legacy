@@ -538,6 +538,12 @@
 		EA68969917F9AC860033B3C1 /* OCPortraitNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68969817F9AC860033B3C1 /* OCPortraitNavigationViewController.m */; };
 		EA707223199CC59E00CE7079 /* ManageDownloads.m in Sources */ = {isa = PBXBuildFile; fileRef = EA707222199CC59E00CE7079 /* ManageDownloads.m */; };
 		EA8667E918AA299000D3550D /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
+		EA8ADE601A31D759008D3612 /* DocumentPickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE5F1A31D759008D3612 /* DocumentPickerCell.m */; };
+		EA8ADE621A31D770008D3612 /* DocumentPickerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA8ADE611A31D770008D3612 /* DocumentPickerCell.xib */; };
+		EA8ADE681A31E9AB008D3612 /* FFCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE651A31E9AB008D3612 /* FFCircularProgressView.m */; };
+		EA8ADE691A31E9AB008D3612 /* FFCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE651A31E9AB008D3612 /* FFCircularProgressView.m */; };
+		EA8ADE6A1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE671A31E9AB008D3612 /* UIColor+iOS7.m */; };
+		EA8ADE6B1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE671A31E9AB008D3612 /* UIColor+iOS7.m */; };
 		EAABAB2A18585CD700909831 /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 		EAB0AB3919ED356A00764C31 /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */; };
 		EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB4619ED356A00764C31 /* FileProvider.m */; };
@@ -561,6 +567,9 @@
 		EAC52E1616BAE65300C7341E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC52E1416BAE26E00C7341E /* AVFoundation.framework */; };
 		EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD036BF19053BEE003665CD /* ManageFavorites.m */; };
 		EAD0EBA317FAF811000005A1 /* OCELCAssetTablePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A9FCE717E9858C00FF48D7 /* OCELCAssetTablePicker.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
+		EAD281BB1A38A2F900A00D54 /* DPDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD281BA1A38A2F900A00D54 /* DPDownload.m */; };
+		EAD281BC1A38BB2E00A00D54 /* DPDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD281BA1A38A2F900A00D54 /* DPDownload.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1156,6 +1165,13 @@
 		EA707221199CC59E00CE7079 /* ManageDownloads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageDownloads.h; path = "Owncloud iOs Client/Network/Downloads/ManageDownloads.h"; sourceTree = "<group>"; };
 		EA707222199CC59E00CE7079 /* ManageDownloads.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageDownloads.m; path = "Owncloud iOs Client/Network/Downloads/ManageDownloads.m"; sourceTree = "<group>"; };
 		EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "ownCloud iOS library.xcodeproj"; path = "OCCommunicationLib/OCCommunicationLib/ownCloud iOS library.xcodeproj"; sourceTree = "<group>"; };
+		EA8ADE5E1A31D759008D3612 /* DocumentPickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DocumentPickerCell.h; path = Cells/DocumentPickerCell.h; sourceTree = "<group>"; };
+		EA8ADE5F1A31D759008D3612 /* DocumentPickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DocumentPickerCell.m; path = Cells/DocumentPickerCell.m; sourceTree = "<group>"; };
+		EA8ADE611A31D770008D3612 /* DocumentPickerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DocumentPickerCell.xib; path = Cells/DocumentPickerCell.xib; sourceTree = "<group>"; };
+		EA8ADE641A31E9AB008D3612 /* FFCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFCircularProgressView.h; path = ExternalLibreries/FFCircularProgressView/FFCircularProgressView.h; sourceTree = "<group>"; };
+		EA8ADE651A31E9AB008D3612 /* FFCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFCircularProgressView.m; path = ExternalLibreries/FFCircularProgressView/FFCircularProgressView.m; sourceTree = "<group>"; };
+		EA8ADE661A31E9AB008D3612 /* UIColor+iOS7.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+iOS7.h"; path = "ExternalLibreries/FFCircularProgressView/UIColor+iOS7.h"; sourceTree = "<group>"; };
+		EA8ADE671A31E9AB008D3612 /* UIColor+iOS7.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+iOS7.m"; path = "ExternalLibreries/FFCircularProgressView/UIColor+iOS7.m"; sourceTree = "<group>"; };
 		EAABAB2818585CD700909831 /* NSString+Encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Encoding.h"; path = "Utils/NSString+Encoding.h"; sourceTree = "<group>"; };
 		EAABAB2918585CD700909831 /* NSString+Encoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Encoding.m"; path = "Utils/NSString+Encoding.m"; sourceTree = "<group>"; };
 		EAB0AB3219ED356A00764C31 /* ownCloudExtApp.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ownCloudExtApp.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1196,6 +1212,8 @@
 		EAC52E1416BAE26E00C7341E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		EAD036BE19053BEE003665CD /* ManageFavorites.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageFavorites.h; path = Network/Favorites/ManageFavorites.h; sourceTree = "<group>"; };
 		EAD036BF19053BEE003665CD /* ManageFavorites.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageFavorites.m; path = Network/Favorites/ManageFavorites.m; sourceTree = "<group>"; };
+		EAD281B91A38A2F900A00D54 /* DPDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DPDownload.h; path = Network/DPDownload.h; sourceTree = "<group>"; };
+		EAD281BA1A38A2F900A00D54 /* DPDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DPDownload.m; path = Network/DPDownload.m; sourceTree = "<group>"; };
 		EAE005F0180EF03E0066E8D4 /* CheckSSOServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckSSOServer.h; path = Login/SSO/CheckSSOServer.h; sourceTree = "<group>"; };
 		EAE93A3A19D18E43002B9E15 /* fi */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
@@ -2099,6 +2117,7 @@
 		148DD5DD1778549700FB9977 /* ExternalLibreries */ = {
 			isa = PBXGroup;
 			children = (
+				EA8ADE631A31E99B008D3612 /* FFCircularProgressView */,
 				1498708E187D66CB000D9C49 /* CustomStatusBar */,
 				EABF69051891376D00A2217C /* SWTableViewCell */,
 				EA68968317F598EB0033B3C1 /* KKPasscodeLock */,
@@ -2419,6 +2438,27 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		EA8ADE5C1A31D734008D3612 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				EA8ADE5E1A31D759008D3612 /* DocumentPickerCell.h */,
+				EA8ADE5F1A31D759008D3612 /* DocumentPickerCell.m */,
+				EA8ADE611A31D770008D3612 /* DocumentPickerCell.xib */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		EA8ADE631A31E99B008D3612 /* FFCircularProgressView */ = {
+			isa = PBXGroup;
+			children = (
+				EA8ADE641A31E9AB008D3612 /* FFCircularProgressView.h */,
+				EA8ADE651A31E9AB008D3612 /* FFCircularProgressView.m */,
+				EA8ADE661A31E9AB008D3612 /* UIColor+iOS7.h */,
+				EA8ADE671A31E9AB008D3612 /* UIColor+iOS7.m */,
+			);
+			name = FFCircularProgressView;
+			sourceTree = "<group>";
+		};
 		EA8F6BD4163E9C6500689CE7 /* Upload From Other App */ = {
 			isa = PBXGroup;
 			children = (
@@ -2443,6 +2483,8 @@
 		EAB0AB3319ED356A00764C31 /* ownCloudExtApp */ = {
 			isa = PBXGroup;
 			children = (
+				EAD281B81A38A2BC00A00D54 /* Network */,
+				EA8ADE5C1A31D734008D3612 /* Cells */,
 				EAB0AB3719ED356A00764C31 /* DocumentPickerViewController.h */,
 				EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */,
 				599D80A61A23367F0071B66E /* File List */,
@@ -2573,6 +2615,15 @@
 				EAD036BF19053BEE003665CD /* ManageFavorites.m */,
 			);
 			name = Favorites;
+			sourceTree = "<group>";
+		};
+		EAD281B81A38A2BC00A00D54 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				EAD281B91A38A2F900A00D54 /* DPDownload.h */,
+				EAD281BA1A38A2F900A00D54 /* DPDownload.m */,
+			);
+			name = Network;
 			sourceTree = "<group>";
 		};
 		EAE3FE0915D5566E00C08066 /* Download */ = {
@@ -2744,7 +2795,7 @@
 								enabled = 1;
 							};
 							com.apple.Keychain = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -3158,6 +3209,7 @@
 				59990A5C1A0BDB5000D3B842 /* spreadsheet_icon~ipad.png in Resources */,
 				59990A5D1A0BDB5000D3B842 /* sound_icon.png in Resources */,
 				59990A5E1A0BDB5000D3B842 /* sound_icon@2x.png in Resources */,
+				EA8ADE621A31D770008D3612 /* DocumentPickerCell.xib in Resources */,
 				59990A5F1A0BDB5000D3B842 /* sound_icon@2x~ipad.png in Resources */,
 				59990A601A0BDB5000D3B842 /* sound_icon~ipad.png in Resources */,
 				59990A611A0BDB5000D3B842 /* TABShares.png in Resources */,
@@ -3239,6 +3291,7 @@
 				40A969E41A5EEAC80046A36C /* ManageAsset.m in Sources */,
 				148DD62617785D6900FB9977 /* MainPopOverBarckground.m in Sources */,
 				EABF69171891379C00A2217C /* SWTableViewCell.m in Sources */,
+				EA8ADE681A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
 				148DD62A17785D9800FB9977 /* FilePreviewViewController.m in Sources */,
 				148DD62E17785DDE00FB9977 /* GalleryView.m in Sources */,
 				148DD63117785DE900FB9977 /* MediaViewController.m in Sources */,
@@ -3316,10 +3369,12 @@
 				1487F15B177C3392004A1A5A /* FMDatabaseQueue.m in Sources */,
 				1487F15C177C3392004A1A5A /* FMResultSet.m in Sources */,
 				14A50E9E18F3FC9100506E2B /* SelectedFolderCell.m in Sources */,
+				EAD281BC1A38BB2E00A00D54 /* DPDownload.m in Sources */,
 				1428F675178422AE0092F42A /* UploadsOfflineDto.m in Sources */,
 				EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */,
 				1428F678178422BE0092F42A /* UtilsDtos.m in Sources */,
 				1420C3AC178A9F5000C0455C /* LoginViewController.m in Sources */,
+				EA8ADE6A1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */,
 				13A9C667187FE91700C6EEE8 /* ShareFileOrFolder.m in Sources */,
 				40A969E71A5EED410046A36C /* OCAsset.m in Sources */,
 				EA42FA51180539E70006DB7C /* ImageUtils.m in Sources */,
@@ -3353,6 +3408,7 @@
 				59C3AC1D1A287DE3005433A1 /* KKPasscodeViewController.m in Sources */,
 				59C521F91A1B7C3A00C5EF76 /* ManageNetworkErrors.m in Sources */,
 				599DDD511A19FBF8008725DE /* CredentialsDto.m in Sources */,
+				EA8ADE691A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
 				599DDD4F1A19FBD3008725DE /* OCKeychain.m in Sources */,
 				59A6F4ED1A1625C300345229 /* ManageAppSettingsDB.m in Sources */,
 				59A6F4E91A1612B700345229 /* CheckAccessToServer.m in Sources */,
@@ -3367,14 +3423,18 @@
 				59990A271A0BD74000D3B842 /* FileNameUtils.m in Sources */,
 				59990A251A0BD67A00D3B842 /* InfoFileUtils.m in Sources */,
 				590849F11A0A811000D3E842 /* NSMutableArray+SWUtilityButtons.m in Sources */,
+				EA8ADE601A31D759008D3612 /* DocumentPickerCell.m in Sources */,
 				590849F21A0A811000D3E842 /* SWCellScrollView.m in Sources */,
+				EAD281BB1A38A2F900A00D54 /* DPDownload.m in Sources */,
 				590849F31A0A811000D3E842 /* SWLongPressGestureRecognizer.m in Sources */,
 				590849F41A0A811000D3E842 /* SWTableViewCell.m in Sources */,
 				590849F51A0A811000D3E842 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				590849F61A0A811000D3E842 /* SWUtilityButtonView.m in Sources */,
+				EA8ADE6B1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */,
 				599D80B21A2338100071B66E /* FileListDocumentProviderViewController.m in Sources */,
 				590849EF1A0A7D6000D3E842 /* CustomCellFileAndDirectory.m in Sources */,
 				593C16D01A09008C006C20AF /* ManageFilesDB.m in Sources */,
+				EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */,
 				599E57351A08E62700744EC9 /* FileDto.m in Sources */,
 				599D99F81A026004008A9DB3 /* UserDto.m in Sources */,
 				599D99F71A025F24008A9DB3 /* ManageUsersDB.m in Sources */,

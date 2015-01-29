@@ -62,18 +62,14 @@
 - (void)startProvidingItemAtURL:(NSURL *)url completionHandler:(void (^)(NSError *))completionHandler {
     // Should ensure that the actual file is in the position returned by URLForItemWithIdentifier:, then call the completion handler
     NSError* error = nil;
-    __block NSError* fileError = nil;
+   
+    if (![[NSFileManager defaultManager] fileExistsAtPath:url.path])
+    {
+        error = [NSError errorWithDomain:NSPOSIXErrorDomain code:-1 userInfo:nil];
+    }
     
-    NSData * fileData = [NSData data];
-    // TODO: get the contents of file at <url> from model
-    
-    [self.fileCoordinator coordinateWritingItemAtURL:url options:0 error:&error byAccessor:^(NSURL *newURL) {
-        [fileData writeToURL:newURL options:0 error:&fileError];
-    }];
-    if (error!=nil) {
+    if (completionHandler) {
         completionHandler(error);
-    } else {
-        completionHandler(fileError);
     }
 }
 

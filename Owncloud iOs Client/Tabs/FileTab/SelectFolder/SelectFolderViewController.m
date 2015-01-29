@@ -97,7 +97,7 @@
 }
 
 - (void) fillTheArraysFromDatabase {
-    self.currentDirectoryArray = [ManageFilesDB getFoldersByFileIdForActiveUser: (int)self.currentFolder.idFile];
+    self.currentDirectoryArray = [ManageFilesDB getFoldersByFileIdForActiveUser: (NSInteger)self.currentFolder.idFile];
     self.sortedArray = [self partitionObjects:self.currentDirectoryArray collationStringSelector:@selector(fileName)];
 }
 
@@ -416,10 +416,10 @@
 
 - (void) navigateToFile:(FileDto *) file {
     //Method to be overwritten
-    SelectFolderViewController *filesViewController = [[SelectFolderViewController alloc] initWithNibName:@"SelectFolderViewController" onFolder:file];
-    filesViewController.parent = self.parent;
+    _selectFolderViewController = [[SelectFolderViewController alloc] initWithNibName:@"SelectFolderViewController" onFolder:file];
+    _selectFolderViewController.parent = self.parent;
     
-    [self.parent pushViewController:filesViewController animated:YES];
+    [self.parent pushViewController:_selectFolderViewController animated:YES];
 }
 
 #pragma mark - UIAlertViewDelegate

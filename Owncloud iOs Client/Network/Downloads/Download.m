@@ -71,7 +71,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
     _fileDto=file;
     
-    //Obtain the etag
+    //Get the etag
     [self updateThisEtagWithTheLast];
 }
 

@@ -31,6 +31,7 @@
 #import "KKPasscodeViewController.h"
 #import "OCPortraitNavigationViewController.h"
 #import "UtilsFramework.h"
+#import "constants.h"
 
 @interface DocumentPickerViewController ()
 
@@ -41,6 +42,14 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showOwnCloudNavigationOrShowErrorLogin) name:userHasChangeNotification object:nil];
+}
+
+- (void) viewWillDisappear:(BOOL)animated{
+   
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName: userHasCloseDocumentPicker object: nil];
+    
 }
 
 - (IBAction)openDocument:(id)sender {
@@ -76,6 +85,7 @@
         }
         
         FileListDocumentProviderViewController *fileListTableViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:rootFolder];
+        fileListTableViewController.delegate = self;
         
         OCNavigationController *navigationViewController = [[OCNavigationController alloc] initWithRootViewController:fileListTableViewController];
         
@@ -143,6 +153,48 @@
     return sharedOCCommunication;
 }
 
+
+#pragma mark - FileListDocumentProviderViewControllerDelegate
+
+- (void) openFile:(FileDto *)fileDto {
+    
+    NSURL *originUrl = [NSURL fileURLWithPath:fileDto.localFolder];
+    NSString *fileName = [fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL *destinationUrl = [self.documentStorageURL URLByAppendingPathComponent:fileName];
+   
+    NSError *error = nil;
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
+        if (![[NSFileManager defaultManager] removeItemAtURL:destinationUrl error:&error]) {
+            NSLog(@"Error removing file: %@", error);
+        }
+    }
+    
+    if (![[NSFileManager defaultManager] copyItemAtURL:originUrl toURL:destinationUrl error:&error]) {
+        NSLog(@"Error copyng file: %@", error);
+    }
+    
+    NSNumber *fileSize = 0;
+    
+    if (!error) {
+        NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:destinationUrl.path error:nil];
+        fileSize = [attributes objectForKey:@"NSFileSize"];
+    }
+    
+   if (fileSize.integerValue > 0) {
+       
+        [self dismissGrantingAccessToURL:destinationUrl];
+       
+    }else{
+
+        OCNavigationController *navigationController = (OCNavigationController*) self.presentedViewController;
+        FileListDocumentProviderViewController *fileListController = (FileListDocumentProviderViewController*) [navigationController.viewControllers objectAtIndex:0];
+        [fileListController showErrorMessage:NSLocalizedString(@"error_sending_file_to_document_picker", nil)];
+    }
+}
+
+
+
 #pragma mark - Pass Code
 
 - (void)showPassCode {
@@ -170,6 +222,14 @@
 
 - (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController{
     DLog(@"Did pass code entered incorrectly");
+
 }
+
+/*
+- (NSURL *)documentStorageURL {
+    
+    NSString *path = [UtilsUrls getOwnCloudFilePath];
+    return [NSURL fileURLWithPath:path];
+}*/
 
 @end
