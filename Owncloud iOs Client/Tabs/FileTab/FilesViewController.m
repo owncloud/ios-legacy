@@ -347,7 +347,11 @@
         _mUser = currentUser;
         //Update the table footer
         [self setTheLabelOnTheTableFooter];
-        [self initLoading];
+        
+        if ([[ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile] count] == 0) {
+            [self initLoading];
+        }
+        
         //Reload table from DB
         [self reloadTableFromDataBase];
         
