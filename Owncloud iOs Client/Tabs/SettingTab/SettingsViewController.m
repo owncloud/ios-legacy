@@ -1192,7 +1192,6 @@
     
     if([ManageAppSettingsDB isInstantUpload]) {
         [self checkIfLocationIsEnabled];
-        
     } else {
         //Dissable mode
         [self setPropertiesInstantUploadToState:NO];
@@ -1235,7 +1234,6 @@
                     [self setPropertiesInstantUploadToState:YES];
                     [self setDateInstantUpload];
                 } else {
-
                     ALAssetsLibrary *assetLibrary = [UploadUtils defaultAssetsLibrary];
                     [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
                                                 usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
@@ -1245,16 +1243,13 @@
                                                 }];
                     
                     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
-                                                                     message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
-                                                                    delegate:nil
+                                                           message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
+                                                           delegate:nil
                                                            cancelButtonTitle:@"Ok"
                                                            otherButtonTitles:nil];
                     [alert show];
-
                 }
-                                     
-            }            
-            
+            }
         } else if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){
             if([ManageAppSettingsDB isInstantUpload]) {
                 [self setPropertiesInstantUploadToState:NO];
@@ -1268,7 +1263,6 @@
             }
         }
         
-    
         if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
             [ManageLocation sharedSingleton].firstChangeAuthorizationDone = YES;
         }

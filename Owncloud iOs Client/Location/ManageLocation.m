@@ -44,7 +44,7 @@
         }
         
     }
-   
+    
     [self.locationManager startMonitoringSignificantLocationChanges];
 }
 
@@ -54,27 +54,23 @@
 }
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-
-      CLLocation* location = [locations lastObject];
     
-    DLog(@"latitude__ %+.6f, longitude__ %+.6f\n",
-         
-         location.coordinate.latitude,
-         
-         location.coordinate.longitude);
-
+    CLLocation* location = [locations lastObject];
+    
+    DLog(@"latitude__ %+.6f, longitude__ %+.6f\n",location.coordinate.latitude, location.coordinate.longitude);
+    
     [self.delegate changedLocation];
-
+    
 }
 
 -(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
     
-        [self.delegate statusAuthorizationLocationChanged];
+    [self.delegate statusAuthorizationLocationChanged];
 }
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-        DLog(@"Unable to start location manager. Error:%@", [error description]);
-     [self.delegate statusAuthorizationLocationChanged];
+    DLog(@"Unable to start location manager. Error:%@", [error description]);
+    [self.delegate statusAuthorizationLocationChanged];
     
 }
 
