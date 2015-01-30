@@ -66,7 +66,8 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     [super viewDidAppear:animated];
     
     //When we rotate while make the push of the view does not get resized
-    [self.view setFrame: CGRectMake(0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height)];
+    [self.navigationController.view setFrame: CGRectMake(0, 0, self.view.window.frame.size.width, self.view.window.frame.size.height)];
+
     
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
     
