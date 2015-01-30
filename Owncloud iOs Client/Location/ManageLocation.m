@@ -53,7 +53,6 @@
     [self.locationManager stopMonitoringSignificantLocationChanges];
 }
 
-
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 
       CLLocation* location = [locations lastObject];
@@ -66,8 +65,6 @@
 
     [self.delegate changedLocation];
 
-    
-    [self presentNotification];
 }
 
 -(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
@@ -75,24 +72,10 @@
         [self.delegate statusAuthorizationLocationChanged];
 }
 
-
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
         DLog(@"Unable to start location manager. Error:%@", [error description]);
      [self.delegate statusAuthorizationLocationChanged];
     
-}
-
-
--(void)presentNotification {
-    DLog(@"notication method\n");
-    UILocalNotification* localNotification = [[UILocalNotification alloc] init];
-    localNotification.alertBody = @"Location updated!!";
-    localNotification.alertAction = @"Background Location change";
-    
-    //On sound
-    localNotification.soundName = UILocalNotificationDefaultSoundName;
-    
-    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
 }
 
 @end

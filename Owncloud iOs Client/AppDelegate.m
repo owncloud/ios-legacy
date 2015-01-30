@@ -155,13 +155,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Add observer for notifications about network not reachable in uploads
   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeUploadsToWaitingForServerConnection) name:NotReachableNetworkForUploadsNotification object:nil];
     
-    
-   /*  [self checkIfLocationIsEnabled];
-*/
    //Allow Notifications iOS8
-    if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)]){
+  /*  if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)]){
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil]];
     }
+   */
     
     return YES;
 }
