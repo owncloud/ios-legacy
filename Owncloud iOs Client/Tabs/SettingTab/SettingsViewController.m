@@ -1226,7 +1226,17 @@
 - (void)statusAuthorizationLocationChanged{
 
       if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){
-        
+          
+          if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
+              ALAssetsLibrary *assetLibrary = [UploadUtils defaultAssetsLibrary];
+              [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
+                                      usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+                                          
+                                      } failureBlock:^(NSError *error) {
+                                          
+                                      }];
+          }
+
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
             //activated only when user allow location first alert
             if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
@@ -1234,14 +1244,6 @@
                     [self setPropertiesInstantUploadToState:YES];
                     [self setDateInstantUpload];
                 } else {
-                    ALAssetsLibrary *assetLibrary = [UploadUtils defaultAssetsLibrary];
-                    [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
-                                                usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-                                                    
-                                                } failureBlock:^(NSError *error) {
-                                                    
-                                                }];
-                    
                     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
                                                            message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
                                                            delegate:nil
