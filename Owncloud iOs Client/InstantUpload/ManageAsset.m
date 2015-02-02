@@ -84,9 +84,12 @@
         DLog(@"Date Database: %ld", [ManageAppSettingsDB getDateInstantUpload]);
         DLog(@"Date Asset: %ld", (long)[asset.date timeIntervalSince1970]);
         
-        if ((long)[asset.date timeIntervalSince1970] > [ManageAppSettingsDB getDateInstantUpload]) {
-            //assetDate later than startDate
-            [tmpAssetsNew addObject:asset];
+        NSString *assetType=[result valueForProperty:ALAssetPropertyType];
+        if ([assetType isEqualToString:@"ALAssetTypePhoto"]) {
+            if ((long)[asset.date timeIntervalSince1970] > [ManageAppSettingsDB getDateInstantUpload]) {
+                //assetDate later than startDate
+                [tmpAssetsNew addObject:asset];
+            }
         }
         
     }];
