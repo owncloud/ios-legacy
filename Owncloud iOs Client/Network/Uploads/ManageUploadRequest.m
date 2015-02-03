@@ -31,6 +31,7 @@
 #import "constants.h"
 #import "UtilsDtos.h"
 #import "OCURLSessionManager.h"
+#import "ManageAppSettingsDB.h"
 
 NSString *fileDeleteInAOverwriteProcess=@"fileDeleteInAOverwriteProcess";
 NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
@@ -93,6 +94,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 }
 
 #pragma mark - UtilsNetworkRequestDelegate
+
 -(void) theFileIsInThePathResponse:(NSInteger)response {
     
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -125,7 +127,17 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             break;
             
         case isNotInThePath:
-            [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+        {
+            NSString *folderInstantUpload = [self.currentUpload.destinyFolder lastPathComponent];
+            
+            if ([ManageAppSettingsDB isInstantUpload] && [folderInstantUpload isEqualToString:k_path_instant_upload]) {
+                //create folder instant upload
+                [self newFolder:_currentUpload.destinyFolder];
+            } else {
+                [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+            }
+           
+        }
             break;
             
         case errorSSL:
@@ -149,6 +161,67 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         default:
             break;
     }
+}
+
+#pragma mark - Create folder on server
+
+-(void) newFolder:(NSString*) pathRemoteFolder {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
+    }
+    
+    [[AppDelegate sharedOCCommunication] createFolder:pathRemoteFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+        DLog(@"Folder created");
+        BOOL isSamlCredentialsError = NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+        }
+        if (!isSamlCredentialsError) {
+            
+            //Upload ready, continue
+            [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+
+        }
+        
+        
+        
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+
+        //Web Dav Error Code
+        switch (response.statusCode) {
+            case kOCErrorServerMethodNotPermitted:
+                //405 Method not permitted "not_possible_create_folder"
+                 [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+                break;
+            default:
+                //"not_possible_connect_to_server"
+                break;
+        }
+
+        DLog(@"error: %@", error);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
+        
+    } errorBeforeRequest:^(NSError *error) {
+        if (error.code == OCErrorForbidenCharacters) {
+            DLog(@"The folder have problematic characters");
+        } else {
+            DLog(@"The folder have problems under controlled");
+        }
+        
+    }
+     ];
+    
 }
 
 

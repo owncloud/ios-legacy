@@ -21,7 +21,6 @@
 @property (nonatomic, strong) NSString *type;
 @property (nonatomic, strong) ALAssetRepresentation *rep;
 @property NSUInteger length;
-//@property int byteArraySize;
 
 - (id)initWithAsset:(ALAsset*)asset;
 

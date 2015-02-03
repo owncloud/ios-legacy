@@ -42,7 +42,7 @@ extern NSString *InitLoadingFileListNotification;
 
 
 
-@interface PrepareFilesToUpload : NSObject <ManageUploadRequestDelegate, UtilsNetworkRequestDelegate> {
+@interface PrepareFilesToUpload : NSObject <ManageUploadRequestDelegate> {
     
     /*
      *Delegate

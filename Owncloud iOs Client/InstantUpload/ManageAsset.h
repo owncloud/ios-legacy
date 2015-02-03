@@ -13,7 +13,6 @@
 
 @interface ManageAsset : NSObject
 
-//@property (nonatomic, retain) ALAssetsGroup *assetGroupCameraRoll;
 @property (nonatomic, retain) NSMutableArray *assetGroups;
 
 @property (nonatomic, retain) NSMutableArray *allAssetsCameraRoll;

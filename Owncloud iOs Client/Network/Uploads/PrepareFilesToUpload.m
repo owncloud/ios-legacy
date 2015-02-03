@@ -262,15 +262,19 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     
     self.pathRemoteInstantUpload = [[NSString alloc]initWithFormat:@"%@%@%@/",app.activeUser.url,k_url_webdav_server,[self nameRemoteInstantUploadFolder]];
     DLog(@"remoteFolder: %@", self.pathRemoteInstantUpload);
+
+    BOOL isLastUploadFileOfThisArray = NO;
     
-    if (!_utilsNetworkRequest) {
-        _utilsNetworkRequest = [UtilsNetworkRequest new];
-        _utilsNetworkRequest.delegate = self;
+    if ([self.listOfAssetsToUpload count] == 1) {
+        isLastUploadFileOfThisArray = YES;
     }
     
-    //Check if the directory already exists
-    [_utilsNetworkRequest checkIfTheFileExistsWithThisPath:self.pathRemoteInstantUpload andUser:app.activeUser];
+    OCAsset *assetToUpload = [self.listOfAssetsToUpload objectAtIndex:0];
     
+    [self.listOfAssetsToUpload removeObjectAtIndex:0];
+
+    [self uploadAssetFromGallery:assetToUpload andRemoteFolder:self.pathRemoteInstantUpload andCurrentUser:app.activeUser andIsLastFile:isLastUploadFileOfThisArray];
+
 }
 
 
@@ -396,88 +400,6 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
         }
     }
     
-}
-
--(void)uploadNextAsset {
-  
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    BOOL isLastUploadFileOfThisArray = NO;
-    
-    if ([self.listOfAssetsToUpload count] == 1) {
-        isLastUploadFileOfThisArray = YES;
-    }
-    
-    OCAsset *assetToUpload = [self.listOfAssetsToUpload objectAtIndex:0];
-    
-    [self.listOfAssetsToUpload removeObjectAtIndex:0];
-    
-    [self uploadAssetFromGallery:assetToUpload andRemoteFolder:self.pathRemoteInstantUpload andCurrentUser:app.activeUser andIsLastFile:isLastUploadFileOfThisArray];
- 
-}
-
-
-#pragma mark - UtilsNetworkRequestDelegate
-
-/*
- * Method that is use with the information of the server to know if the
- * file is in the path of server or not.
- * @isExist --> YES/NO information of the server
- */
-- (void) theFileIsInThePathResponse:(NSInteger) response {
-    
-    if(response != isInThePath) {
-       //create folder
-        [self newFolder:self.pathRemoteInstantUpload];
-    } else {
-        [self uploadNextAsset];
-    }
-}
-
-#pragma mark - Create folder on server
-
--(void) newFolder:(NSString*) pathRemoteFolder {
-    
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-            //Set the right credentials
-            if (k_is_sso_active) {
-                [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
-            } else if (k_is_oauth_active) {
-                [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
-            } else {
-                [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-            }
-    
-            [[AppDelegate sharedOCCommunication] createFolder:pathRemoteFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
-                DLog(@"Folder created");
-                BOOL isSamlCredentialsError = NO;
-                
-                //Check the login error in shibboleth
-                if (k_is_sso_active && redirectedServer) {
-                    //Check if there are fragmens of saml in url, in this case there are a credential error
-                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-                }
-                if (!isSamlCredentialsError) {
-                    [self uploadNextAsset];
-                }
-                
-                
-                
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-                DLog(@"error: %@", error);
-                DLog(@"Operation error: %ld", (long)response.statusCode);
-                
-            } errorBeforeRequest:^(NSError *error) {
-                if (error.code == OCErrorForbidenCharacters) {
-                    DLog(@"The folder have problematic characters");
-                } else {
-                    DLog(@"The folder have problems under controlled");
-                }
-                
-            }
-            ];
-
 }
 
 
