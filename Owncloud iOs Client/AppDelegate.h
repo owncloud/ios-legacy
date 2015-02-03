@@ -161,7 +161,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 //Method that cancel download of the detail view in iPad.
 - (void)cancelDonwloadInDetailView;
 
-
 - (void)errorLogin;
 
 /*

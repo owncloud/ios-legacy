@@ -34,6 +34,7 @@
 //Notification to end and init loading screen
 NSString *EndLoadingFileListNotification = @"EndLoadingFileListNotification";
 NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
+NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseNotification";
 
 
 @implementation PrepareFilesToUpload
@@ -212,7 +213,7 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
 /*
  * This method close the loading view in main screen by local notification
  */
-- (void)endLoadingInOtherThread {
+- (void)endLoadingInFileList {
     
     //Set global loading screen global flag to NO
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -220,6 +221,28 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     //Send notification to indicate to close the loading view
     [[NSNotificationCenter defaultCenter] postNotificationName:EndLoadingFileListNotification object: nil];
    
+}
+
+/*
+ * This method close the loading view in main screen by local notification
+ */
+- (void)initLoadingInFileList {
+    
+    //Set global loading screen global flag to NO
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    app.isLoadingVisible = YES;
+    //Send notification to indicate to close the loading view
+    [[NSNotificationCenter defaultCenter] postNotificationName:InitLoadingFileListNotification object: nil];
+    
+}
+
+/*
+ * This method close the loading view in main screen by local notification
+ */
+- (void)reloadFromDataBaseInFileList {
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:ReloadFileListFromDataBaseNotification object: nil];
+    
 }
 
 - (void)sendFileToUploadByUploadOfflineDto:(UploadsOfflineDto *) currentUpload {
@@ -385,6 +408,16 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
         [self sendFileToUploadByUploadOfflineDto:currentFile];
     }
 
+}
+
+/*
+* Method to be sure that the loading of the file list is finish
+*/
+- (void) overwriteCompleted{
+    
+    [self initLoadingInFileList];
+    [self reloadFromDataBaseInFileList];
+    [self endLoadingInFileList];
 }
 
 @end

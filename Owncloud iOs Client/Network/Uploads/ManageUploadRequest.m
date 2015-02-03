@@ -852,8 +852,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 //Launch a notification for update the file previewed
                 [[NSNotificationCenter defaultCenter] postNotificationName:uploadOverwriteFileNotification object:nil];
              
-                //Update the file list state
-                [app reloadTableFromDataBase];
+                
+                [self.delegate overwriteCompleted];
             }
         }
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
