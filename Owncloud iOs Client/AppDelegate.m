@@ -137,7 +137,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
     
-    [self performSelector:@selector(checkIfIsNecesaryShowPassCode) withObject:nil afterDelay:0.5];
+    [self checkIfIsNecesaryShowPassCode];
     
     //Check if the server support shared api
     [self performSelector:@selector(checkIfServerSupportThings) withObject:nil afterDelay:0.0];
@@ -334,7 +334,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if(_activeUser.username == nil) {
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        [self.window setBackgroundColor:[UIColor whiteColor]];
         
         if (IS_IPHONE) {
             self.loginViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPhone" bundle:nil];
@@ -418,8 +417,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    [self.window setBackgroundColor:[UIColor whiteColor]];
-    
     self.window.rootViewController = self.loginWindowViewController;
     [self.window makeKeyAndVisible];
 }
@@ -467,8 +464,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //DLog(@"localRootUrlString: %@", localSystemPath);
     }
 
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [self.window setBackgroundColor:[UIColor whiteColor]];
+    if (!self.window) {
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    }
     
     //if ocTabBarController exist remove all of them
     if (_ocTabBarController) {
