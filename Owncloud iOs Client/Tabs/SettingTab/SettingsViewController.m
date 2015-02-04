@@ -1142,14 +1142,23 @@
                 DLog(@"Location services not determined");
                 [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
                 
-            }else {
-                [ManageAppSettingsDB updateInstantUpload:NO];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
-                                                            message:NSLocalizedString(@"message_location_not_enabled", nil)
-                                                            delegate:nil
-                                                            cancelButtonTitle:@"OK"
-                                                            otherButtonTitles:nil];
-                [alert show];
+            } else {
+                if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
+                    [ManageAppSettingsDB updateInstantUpload:NO];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
+                                                                    message:NSLocalizedString(@"message_location_not_enabled", nil)
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil];
+                    [alert show];
+                } else {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_and_location_not_enabled", nil)
+                                                                    message:NSLocalizedString(@"message_access_photos_and_location_not_enabled", nil)
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil];
+                    [alert show];
+                }
             }
         } else {
             if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
@@ -1176,12 +1185,21 @@
         }
     } else {
         [self setPropertiesInstantUploadToState:NO];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
-                                                        message:NSLocalizedString(@"message_location_not_enabled", nil)
-                                                        delegate:nil
-                                                        cancelButtonTitle:@"OK"
-                                                        otherButtonTitles:nil];
-        [alert show];
+        if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
+                                                            message:NSLocalizedString(@"message_location_not_enabled", nil)
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_and_location_not_enabled", nil)
+                                                            message:NSLocalizedString(@"message_access_photos_and_location_not_enabled", nil)
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
     }
 }
 
@@ -1225,51 +1243,64 @@
 
 - (void)statusAuthorizationLocationChanged{
 
-      if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){
-          
-          if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
-              ALAssetsLibrary *assetLibrary = [UploadUtils defaultAssetsLibrary];
-              [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
-                                      usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-                                          
-                                      } failureBlock:^(NSError *error) {
-                                          
-                                      }];
-          }
-
+    if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){
+        
+        if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
+            ALAssetsLibrary *assetLibrary = [UploadUtils defaultAssetsLibrary];
+            [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
+                                        usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+                                            
+                                        } failureBlock:^(NSError *error) {
+                                            
+                                        }];
+        }
+        
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-            //activated only when user allow location first alert
-            if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
-                if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
+            
+            if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
+                
+                if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
+                    //activated only when user allow location first alert
                     [self setPropertiesInstantUploadToState:YES];
                     [self setDateInstantUpload];
                 } else {
-                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
-                                                           message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
-                                                           delegate:nil
-                                                           cancelButtonTitle:@"Ok"
-                                                           otherButtonTitles:nil];
-                    [alert show];
+                    [self setPropertiesInstantUploadToState:NO];
                 }
+            } else {
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
+                                                                 message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
+                                                                delegate:nil
+                                                       cancelButtonTitle:@"Ok"
+                                                       otherButtonTitles:nil];
+                [alert show];
             }
         } else if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){
             if([ManageAppSettingsDB isInstantUpload]) {
                 [self setPropertiesInstantUploadToState:NO];
-
+            
+            if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
-                                                      message:NSLocalizedString(@"message_location_not_enabled", nil)
-                                                      delegate:nil
+                                                                message:NSLocalizedString(@"message_location_not_enabled", nil)
+                                                               delegate:nil
                                                       cancelButtonTitle:@"OK"
                                                       otherButtonTitles:nil];
                 [alert show];
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_and_location_not_enabled", nil)
+                                                                message:NSLocalizedString(@"message_access_photos_and_location_not_enabled", nil)
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            }
             }
         }
         
         if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
             [ManageLocation sharedSingleton].firstChangeAuthorizationDone = YES;
         }
-     }
-
+    }
+    
 }
 
 
