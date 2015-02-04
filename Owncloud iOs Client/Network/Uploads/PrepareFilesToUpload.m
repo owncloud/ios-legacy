@@ -90,9 +90,6 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
            
             currentFileName = [self getNameForFileFromGalleryByType:mediaType andExtension:ext andAssetNSURL:assetURL];
             
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            //NSString *uniquePath= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:_uploadFileName];
-                        
             DLog(@"currentFileName: %@",currentFileName);
             DLog(@"remoteFolder: %@", remoteFolder);
             DLog(@"isLastUploadFileOfThisArray: %d", isLastUploadFileOfThisArray);
