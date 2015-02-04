@@ -1242,7 +1242,7 @@
 #pragma mark - ManageLocationDelegate Method
 
 - (void)statusAuthorizationLocationChanged{
-
+    
     if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){
         
         if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
@@ -1277,22 +1277,22 @@
         } else if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){
             if([ManageAppSettingsDB isInstantUpload]) {
                 [self setPropertiesInstantUploadToState:NO];
-            
-            if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
-                                                                message:NSLocalizedString(@"message_location_not_enabled", nil)
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"OK"
-                                                      otherButtonTitles:nil];
-                [alert show];
-            } else {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_and_location_not_enabled", nil)
-                                                                message:NSLocalizedString(@"message_access_photos_and_location_not_enabled", nil)
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"OK"
-                                                      otherButtonTitles:nil];
-                [alert show];
-            }
+                
+                if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
+                                                                    message:NSLocalizedString(@"message_location_not_enabled", nil)
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil];
+                    [alert show];
+                } else {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_and_location_not_enabled", nil)
+                                                                    message:NSLocalizedString(@"message_access_photos_and_location_not_enabled", nil)
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil];
+                    [alert show];
+                }
             }
         }
         
