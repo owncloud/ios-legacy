@@ -188,7 +188,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                 
                 self.positionOfCurrentUploadInArray = 0;
                 
-                [self performSelectorOnMainThread:@selector(endLoadingInOtherThread) withObject:nil waitUntilDone:YES];
+                [self performSelectorOnMainThread:@selector(endLoadingInFileList) withObject:nil waitUntilDone:YES];
                 
                 UploadsOfflineDto *currentFile = [ManageUploadsDB getNextUploadOfflineFileToUpload];
                 
