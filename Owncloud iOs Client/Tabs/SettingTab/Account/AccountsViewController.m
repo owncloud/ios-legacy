@@ -186,6 +186,8 @@
             [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
         } else {
             
+            self.tableView.editing = NO;
+            
             AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
             //[appDelegate dismissPopover];
