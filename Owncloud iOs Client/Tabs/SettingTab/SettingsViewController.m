@@ -1095,11 +1095,11 @@
     if (stateInstantUpload) {
         [self switchInstantUploadTo:YES];
         app.activeUser.instant_upload = YES;
-        [ManageAppSettingsDB updateInstantUpload:YES];
+        [ManageAppSettingsDB updateInstantUploadTo:YES];
     } else {
         [self switchInstantUploadTo:NO];
         app.activeUser.instant_upload = NO;
-        [ManageAppSettingsDB updateInstantUpload:NO];
+        [ManageAppSettingsDB updateInstantUploadTo:NO];
         [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
     }
 }
@@ -1144,7 +1144,7 @@
                 
             } else {
                 if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
-                    [ManageAppSettingsDB updateInstantUpload:NO];
+                    [ManageAppSettingsDB updateInstantUploadTo:NO];
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
                                                                     message:NSLocalizedString(@"message_location_not_enabled", nil)
                                                                    delegate:nil

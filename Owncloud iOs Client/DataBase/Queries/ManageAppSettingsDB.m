@@ -239,7 +239,7 @@
     
 }
 
-+(void)updateInstantUpload:(BOOL)newValue {
++(void)updateInstantUploadTo:(BOOL)newValue {
     
     FMDatabaseQueue *queue;
     
@@ -310,6 +310,15 @@
     
     return output;
     
+}
+
++(void)updateInstantUploadAllUser {
+    if ([self isInstantUpload]) {
+        [self updateInstantUploadTo:YES];
+        [self updateDateInstantUpload:[self getDateInstantUpload]];
+    } else {
+        [self updateInstantUploadTo:NO];
+    }
 }
 
 +(void)updatePathInstantUpload:(NSString *)newValue {
