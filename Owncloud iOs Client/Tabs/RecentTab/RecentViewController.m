@@ -1008,7 +1008,7 @@
     [ManageUploadsDB updateErrorConflictFilesSetOverwrite:YES forUploadOffline: _selectedUploadToResolveTheConflict];
     
     //A overwrite process is in progress
-    app.isOverwriteProcess=YES;
+    app.isOverwriteProcess = YES;
     
     //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
     //The folder Name: A/

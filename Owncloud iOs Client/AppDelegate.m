@@ -2608,6 +2608,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             upload.status = waitingAddToUploadList;
         }
         
+        self.isOverwriteProcess = YES;
+        
         [_prepareFiles sendFileToUploadByUploadOfflineDto:[listOfFilesGeneratedByDocumentProvider objectAtIndex:0]];
         
     }

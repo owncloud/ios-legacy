@@ -623,7 +623,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     //The user cancel a file which had been chosen for be overwritten
-    if(app.isOverwriteProcess==YES){
+    if(app.isOverwriteProcess == YES){
         DLog(@"Overwriten process active: Cancel a file");
         NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder andUser:app.activeUser];
         DLog(@"Local folder:%@",localFolder);
