@@ -113,6 +113,8 @@
         if (IS_IPHONE) {
             //Present  view from rect
             canOpen = [_documentInteractionController presentOptionsMenuFromRect:CGRectMake(100, 100, 200, 400) inView:_parentView animated:YES];
+            
+           // canOpen = [_documentInteractionController presentOpenInMenuFromRect:CGRectMake(100, 100, 200, 400) inView:_parentView animated:YES];
         }else{
             
             if (_isTheParentViewACell) {
