@@ -179,7 +179,7 @@
     upload.isLastUploadFileOfThisArray = YES;
     upload.status = generatedByDocumentProvider;
     upload.chunksLength = k_lenght_chunk;
-    upload.isNotNecessaryCheckIfExist = YES;
+    upload.isNotNecessaryCheckIfExist = NO;
     upload.isInternalUpload = NO;
     upload.taskIdentifier = 0;
     
