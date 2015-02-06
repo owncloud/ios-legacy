@@ -841,7 +841,7 @@
     //Get the update of the user
     UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
     
-    if ((k_is_sso_active && selectedUpload.userId) != (app.activeUser.idUser)) {
+    if (k_is_sso_active || selectedUpload.userId != (app.activeUser.idUser)) {
         NSString *userName = userSelected.username;
         //if SAML is enabled replace the percent of the samlusername by utf8
         if (k_is_sso_active) {
