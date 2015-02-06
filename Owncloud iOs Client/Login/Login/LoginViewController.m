@@ -1046,7 +1046,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
     cell.textLabel.text = [NSLocalizedString(@"help_link_login", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
-    cell.textLabel.textColor = [UIColor colorOfServerErrorText];
+    cell.textLabel.textColor = [UIColor colorOfLoginText];
     cell.backgroundColor = [UIColor clearColor];
     
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
