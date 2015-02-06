@@ -26,7 +26,7 @@
 #define k_hide_url_server NO
 
 //Set a default url server. It must be obligaroy if we hide the url server (#define k_hide_url_server YES)
-#define k_default_url_server @""
+#define k_default_url_server @"https://va-owncloud-shibbolet/oc-shib"
 
 //Show multiaccount or disconnect
 #define k_multiaccount_available YES
@@ -41,7 +41,7 @@
 #define k_is_oauth_active NO
 
 //Have SAML active
-#define k_is_sso_active NO
+#define k_is_sso_active YES
 
 //OAuth server
 #define k_oauth_login @""
