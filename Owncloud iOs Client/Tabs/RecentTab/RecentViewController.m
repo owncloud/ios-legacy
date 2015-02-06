@@ -985,6 +985,16 @@
 - (void) setNewNameToSaveFile:(NSString *)name {
     DLog(@"setNewNameToSaveFile: %@", name);
     
+    //Get the file related with the upload file if exist and remove the download
+    UserDto *user = [ManageUsersDB getUserByIdUser:self.selectedUploadToResolveTheConflict.userId];
+    
+    NSString *folderName=[UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",self.selectedUploadToResolveTheConflict.destinyFolder,self.selectedUploadToResolveTheConflict.uploadFileName] andUserDto:user];
+    FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.selectedUploadToResolveTheConflict.uploadFileName andFilePath:folderName andUser:user];
+    
+    if (uploadFile) {
+        [ManageFilesDB setFileIsDownloadState:uploadFile.idFile andState:notDownload];
+    }
+    
     _selectedUploadToResolveTheConflict.uploadFileName = name;
     
     [ManageUploadsDB updateErrorConflictFilesSetNewName:[name encodeString:NSUTF8StringEncoding] forUploadOffline:_selectedUploadToResolveTheConflict];
