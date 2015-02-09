@@ -275,6 +275,10 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 
                 if ([error code] != NSURLErrorCancelled) {
                     
+                    if(appDelegate.isOverwriteProcess == YES){
+                        [self finishOverwriteProcess];
+                    }
+                    
                     //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
                     switch (httpResponse.statusCode) {
                         case kOCErrorServerUnauthorized:
@@ -472,6 +476,10 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 
                 if ([error code] != NSURLErrorCancelled) {
                     
+                    if(appDelegate.isOverwriteProcess == YES){
+                        [self finishOverwriteProcess];
+                    }
+                    
                     //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
                     switch (response.statusCode) {
                         case kOCErrorServerUnauthorized:
@@ -613,6 +621,27 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
 }
 
+- (void)finishOverwriteProcess{
+    
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    DLog(@"Overwriten process active: Cancel a file");
+    NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder andUser:self.userUploading];
+    DLog(@"Local folder:%@",localFolder);
+    
+    FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:_currentUpload.uploadFileName andFilePath:localFolder andUser:_userUploading];
+    DLog(@"id file: %ld",(long)deleteOverwriteFile.idFile);
+    
+    //In iPad clean the view
+    if (!IS_IPHONE){
+        [app.detailViewController presentWhiteView];
+        //Launch a notification for update the previewed file
+        [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:_currentUpload.destinyFolder];
+    }
+    
+    [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:notDownload];
+
+}
+
 - (void) cancelUpload {
     DLog(@"CANCEL UPLOAD");
     _isCanceled = YES;
@@ -622,21 +651,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     //The user cancel a file which had been chosen for be overwritten
     if(app.isOverwriteProcess == YES){
-        DLog(@"Overwriten process active: Cancel a file");
-        NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder andUser:self.userUploading];
-        DLog(@"Local folder:%@",localFolder);
-        
-        FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:_currentUpload.uploadFileName andFilePath:localFolder andUser:_userUploading];
-        DLog(@"id file: %ld",(long)deleteOverwriteFile.idFile);
-        
-        //In iPad clean the view
-        if (!IS_IPHONE){
-            [app.detailViewController presentWhiteView];
-            //Launch a notification for update the previewed file
-            [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:_currentUpload.destinyFolder];
-        }
-        
-        [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:notDownload];
+        [self finishOverwriteProcess];
     }
     
     [ManageUploadsDB deleteUploadOfflineByUploadOfflineDto:self.currentUpload];
