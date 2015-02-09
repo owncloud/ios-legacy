@@ -51,7 +51,7 @@
             currentFile.size = [rs longForColumn:@"size"];
             currentFile.fileId = [rs intForColumn:@"file_id"];
             currentFile.date = [rs longForColumn:@"date"];
-            currentFile.etag = [rs longLongIntForColumn:@"etag"];
+            currentFile.etag = [rs stringForColumn:@"etag"];
             currentFile.isFavorite = [rs intForColumn:@"is_favorite"];
             currentFile.localFolder = [UtilsDtos getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:mUser];
             currentFile.isNecessaryUpdate = [rs boolForColumn:@"is_necessary_update"];
@@ -101,7 +101,7 @@
             currentFile.size = [rs longForColumn:@"size"];
             currentFile.fileId = [rs intForColumn:@"file_id"];
             currentFile.date = [rs longForColumn:@"date"];
-            currentFile.etag = [rs longLongIntForColumn:@"etag"];
+            currentFile.etag = [rs stringForColumn:@"etag"];
             currentFile.isFavorite = [rs intForColumn:@"is_favorite"];
             currentFile.localFolder = @"";
             currentFile.isNecessaryUpdate = [rs boolForColumn:@"is_necessary_update"];
@@ -146,7 +146,7 @@
             output.date = [rs longForColumn:@"date"];
             output.isFavorite = [rs intForColumn:@"is_favorite"];
             output.localFolder = [UtilsDtos getLocalFolderByFilePath:output.filePath andFileName:output.fileName andUserDto:mUser];
-            output.etag = [rs longLongIntForColumn:@"etag"];
+            output.etag = [rs stringForColumn:@"etag"];
             output.isRootFolder = [rs intForColumn:@"is_root_folder"];
             output.isNecessaryUpdate = [rs intForColumn:@"is_necessary_update"];
             output.sharedFileSource = [rs intForColumn:@"shared_file_source"];
@@ -183,7 +183,7 @@
             output.date = [rs longForColumn:@"date"];
             output.isFavorite = [rs intForColumn:@"is_favorite"];
             output.localFolder = [UtilsDtos getLocalFolderByFilePath:output.filePath andFileName:output.fileName andUserDto:user];
-            output.etag = [rs longLongIntForColumn:@"etag"];
+            output.etag = [rs stringForColumn:@"etag"];
             output.isRootFolder = [rs intForColumn:@"is_root_folder"];
             output.isNecessaryUpdate = [rs intForColumn:@"is_necessary_update"];
             output.sharedFileSource = [rs intForColumn:@"shared_file_source"];
@@ -302,7 +302,7 @@
                 
                 //to jump the first becouse it is not necesary (is the same directory) and the other if is to insert 450 by 450
                 if(numberOfInsertEachTime == 0) {
-                    sql = [NSString stringWithFormat:@"INSERT INTO files SELECT null as id, '%@' as 'file_path','%@' as 'file_name', %d as 'user_id', %d as 'is_directory',%d as 'is_download', %d as 'file_id', %@ as 'size', %@ as 'date', %d as 'is_favorite',%lld as 'etag', %d as 'is_root_folder', %d as 'is_necessary_update', %d as 'shared_file_source', '%@' as 'permissions', %d as 'task_identifier'",
+                    sql = [NSString stringWithFormat:@"INSERT INTO files SELECT null as id, '%@' as 'file_path','%@' as 'file_name', %d as 'user_id', %d as 'is_directory',%d as 'is_download', %d as 'file_id', %@ as 'size', %@ as 'date', %d as 'is_favorite',%@ as 'etag', %d as 'is_root_folder', %d as 'is_necessary_update', %d as 'shared_file_source', '%@' as 'permissions', %d as 'task_identifier'",
                            current.filePath,
                            current.fileName,
                            current.userId,
@@ -321,7 +321,7 @@
                     
                     //DLog(@"sql!!!: %@", sql);
                 } else {
-                    sql = [NSString stringWithFormat:@"%@ UNION SELECT null, '%@','%@',%d,%d,%d,%d,%@,%@,%d,%lld,%d,%d,%d,'%@',%d",
+                    sql = [NSString stringWithFormat:@"%@ UNION SELECT null, '%@','%@',%d,%d,%d,%d,%@,%@,%d,%@,%d,%d,%d,'%@',%d",
                            sql,
                            current.filePath,
                            current.fileName,
@@ -477,11 +477,11 @@
             
             currentFile.idFile = [rs intForColumn:@"id"];
             currentFile.fileId = [rs intForColumn:@"file_id"];
-            currentFile.etag = [rs longLongIntForColumn:@"etag"];
+            currentFile.etag = [rs stringForColumn:@"etag"];
             
             DLog(@"currentFile.idFile: %d", currentFile.idFile);
             DLog(@"currentFile.fileId %d", currentFile.fileId);
-            DLog(@"currentFile.etag %lld", currentFile.etag);
+            DLog(@"currentFile.etag %@", currentFile.etag);
             
             [listFilesToUpdate addObject:currentFile];
         }
@@ -496,7 +496,7 @@
 
             FileDto *currentFile = [listFilesToUpdate objectAtIndex:i];
             
-            correctQuery = [db executeUpdate:@"UPDATE files SET id = ?, etag = ? WHERE id = ?", [NSNumber numberWithInt:currentFile.fileId], [NSNumber numberWithLongLong: currentFile.etag], [NSNumber numberWithInt:currentFile.idFile]];
+            correctQuery = [db executeUpdate:@"UPDATE files SET id = ?, etag = ? WHERE id = ?", [NSNumber numberWithInt:currentFile.fileId], currentFile.etag, [NSNumber numberWithInt:currentFile.idFile]];
         }
         
         if (!correctQuery) {
@@ -532,7 +532,7 @@
             
             FileDto *currentFile = [[FileDto alloc] init];
             currentFile.idFile = [rs intForColumn:@"f.id"];
-            currentFile.etag = [rs longLongIntForColumn:@"b.etag"];
+            currentFile.etag = [rs stringForColumn:@"b.etag"];
             currentFile.isNecessaryUpdate = [rs boolForColumn:@"b.is_necessary_update"];
             currentFile.isDownload = [rs intForColumn:@"b.is_download"];
             currentFile.sharedFileSource = [rs intForColumn:@"b.shared_file_source"];
@@ -541,7 +541,7 @@
             
             DLog(@"files share source = %d", currentFile.sharedFileSource);
             DLog(@"currentFile.idFile: %d", currentFile.idFile);
-            DLog(@"currentFile.idFile: %lld", currentFile.etag);
+            DLog(@"currentFile.idFile: %@", currentFile.etag);
             
             [listFilesToUpdate addObject:currentFile];
         }
@@ -557,7 +557,7 @@
             
             FileDto *currentFile = [listFilesToUpdate objectAtIndex:i];
             
-            correctQuery = [db executeUpdate:@"UPDATE files SET is_download = ?, etag = ?, shared_file_source = ? WHERE id = ?", [NSNumber numberWithInt:currentFile.isDownload],[NSNumber numberWithLongLong:currentFile.etag] ,[NSNumber numberWithInt:currentFile.sharedFileSource], [NSNumber numberWithInt:currentFile.idFile]];
+            correctQuery = [db executeUpdate:@"UPDATE files SET is_download = ?, etag = ?, shared_file_source = ? WHERE id = ?", [NSNumber numberWithInt:currentFile.isDownload], currentFile.etag ,[NSNumber numberWithInt:currentFile.sharedFileSource], [NSNumber numberWithInt:currentFile.idFile]];
         }
         if (!correctQuery) {
             DLog(@"Error in updateDownloadedFilesFromBackup");
@@ -594,7 +594,7 @@
             FileDto *currentFile = [[FileDto alloc] init];
             
             currentFile.fileName = [rs stringForColumn:@"file_name"];
-            currentFile.etag = [rs longLongIntForColumn:@"etag"];
+            currentFile.etag = [rs stringForColumn:@"etag"];
             currentFile.isDownload = [rs intForColumn:@"is_download"];
             
             DLog(@"currentFile.idFile: %d", currentFile.idFile);
@@ -607,8 +607,8 @@
     //2-Save the files that have different etag from files_backup DB
     for (FileDto *currentBackup in listFilesFromFilesBackup) {
         for (FileDto *currentFile in listFilesFromFiles) {
-            if ((currentBackup.etag != currentFile.etag) && [currentBackup.fileName isEqualToString:currentFile.fileName]) {
-                if (currentBackup.etag != 0) {
+            if ((![currentBackup.etag isEqual: currentFile.etag]) && [currentBackup.fileName isEqualToString:currentFile.fileName]) {
+                if (![currentBackup.etag isEqual:@""]) {
                     currentFile.isDownload = currentBackup.isDownload;
                     [listFilesToUpdate addObject:currentFile];
                 }
@@ -851,7 +851,7 @@
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT COUNT(*) as NUM FROM files WHERE etag = ? AND user_id = ?", [NSNumber numberWithLongLong:fileDto.etag], [NSNumber numberWithInt:fileDto.userId]];
+        FMResultSet *rs = [db executeQuery:@"SELECT COUNT(*) as NUM FROM files WHERE etag = ? AND user_id = ?", fileDto.etag, [NSNumber numberWithInt:fileDto.userId]];
         while ([rs next]) {
             size = [rs intForColumn:@"NUM"];
         }
@@ -1005,7 +1005,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"INSERT INTO files(file_path, file_name, is_directory,user_id, is_download, size, file_id, date, is_favorite, etag, is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier) Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", fileDto.filePath, fileDto.fileName, [NSNumber numberWithBool:fileDto.isDirectory], [NSNumber numberWithInt:fileDto.userId], [NSNumber numberWithInt:fileDto.isDownload], [NSNumber numberWithLong:fileDto.size], [NSNumber numberWithInt:fileDto.fileId], [NSNumber numberWithLong:fileDto.date], [NSNumber numberWithBool:fileDto.isFavorite], [NSNumber numberWithLongLong:fileDto.etag], [NSNumber numberWithBool:fileDto.isRootFolder], [NSNumber numberWithBool:fileDto.isNecessaryUpdate], [NSNumber numberWithInteger:fileDto.sharedFileSource], fileDto.permissions, [NSNumber numberWithInteger:fileDto.taskIdentifier]];
+        correctQuery = [db executeUpdate:@"INSERT INTO files(file_path, file_name, is_directory,user_id, is_download, size, file_id, date, is_favorite, etag, is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier) Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", fileDto.filePath, fileDto.fileName, [NSNumber numberWithBool:fileDto.isDirectory], [NSNumber numberWithInt:fileDto.userId], [NSNumber numberWithInt:fileDto.isDownload], [NSNumber numberWithLong:fileDto.size], [NSNumber numberWithInt:fileDto.fileId], [NSNumber numberWithLong:fileDto.date], [NSNumber numberWithBool:fileDto.isFavorite], fileDto.etag, [NSNumber numberWithBool:fileDto.isRootFolder], [NSNumber numberWithBool:fileDto.isNecessaryUpdate], [NSNumber numberWithInteger:fileDto.sharedFileSource], fileDto.permissions, [NSNumber numberWithInteger:fileDto.taskIdentifier]];
                         
         if (!correctQuery) {
             DLog(@"Error in insertFile");
@@ -1038,7 +1038,7 @@
             output.date = [rs longForColumn:@"date"];
             output.isFavorite = [rs intForColumn:@"is_favorite"];
             output.localFolder = [UtilsDtos getLocalFolderByFilePath:output.filePath andFileName:output.fileName andUserDto:currentUser];
-            output.etag = [rs longLongIntForColumn:@"etag"];
+            output.etag = [rs stringForColumn:@"etag"];
             output.isRootFolder = [rs intForColumn:@"is_root_folder"];
             output.isNecessaryUpdate = [rs intForColumn:@"is_necessary_update"];
             output.sharedFileSource = [rs intForColumn:@"shared_file_source"];
@@ -1052,14 +1052,14 @@
     return output;
 }
 
-+(void) updateEtagOfFileDtoByid:(int) idFile andNewEtag: (long long)etag {
++(void) updateEtagOfFileDtoByid:(int) idFile andNewEtag: (NSString *) etag {
     
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET etag=? WHERE id = ?", [NSNumber numberWithLongLong:etag], [NSNumber numberWithInt:idFile]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET etag = ? WHERE id = ?", etag, [NSNumber numberWithInt:idFile]];
         
         if (!correctQuery) {
             DLog(@"Error in updatePathwithNewPath");
@@ -1070,13 +1070,13 @@
 
 
 
-+(void) updateEtagOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withNewEtag: (long long)etag {
++(void) updateEtagOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withNewEtag: (NSString *)etag {
     
     FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET etag=? WHERE file_path = ? AND file_name=? AND user_id = ?", [NSNumber numberWithLongLong:etag], filePath, fileName, [NSNumber numberWithInt:aciveUser.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET etag = ? WHERE file_path = ? AND file_name=? AND user_id = ?", etag, filePath, fileName, [NSNumber numberWithInt:aciveUser.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error in updatePathwithNewPath");
@@ -1364,7 +1364,7 @@
             currentFile.size = [rs longForColumn:@"size"];
             currentFile.fileId = [rs intForColumn:@"file_id"];
             currentFile.date = [rs longForColumn:@"date"];
-            currentFile.etag = [rs longLongIntForColumn:@"etag"];
+            currentFile.etag = [rs stringForColumn:@"etag"];
             currentFile.isFavorite = [rs intForColumn:@"is_favorite"];
             currentFile.localFolder = [UtilsDtos getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:mUser];
             currentFile.isNecessaryUpdate = [rs boolForColumn:@"is_necessary_update"];
@@ -1470,7 +1470,7 @@
                 output.date = [rs longForColumn:@"date"];
                 output.isFavorite = [rs intForColumn:@"is_favorite"];
                 output.localFolder = [UtilsDtos getLocalFolderByFilePath:output.filePath andFileName:output.fileName andUserDto:mUser];
-                output.etag = [rs longLongIntForColumn:@"etag"];
+                output.etag = [rs stringForColumn:@"etag"];
                 output.isRootFolder = [rs intForColumn:@"is_root_folder"];
                 output.isNecessaryUpdate = [rs intForColumn:@"is_necessary_update"];
                 output.sharedFileSource = [rs intForColumn:@"shared_file_source"];
@@ -1615,7 +1615,7 @@
             currentFile.size = [rs longForColumn:@"size"];
             currentFile.fileId = [rs intForColumn:@"file_id"];
             currentFile.date = [rs longForColumn:@"date"];
-            currentFile.etag = [rs longLongIntForColumn:@"etag"];
+            currentFile.etag = [rs stringForColumn:@"etag"];
             currentFile.isFavorite = [rs intForColumn:@"is_favorite"];
             currentFile.localFolder = [UtilsDtos getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:mUser];
             currentFile.isNecessaryUpdate = [rs boolForColumn:@"is_necessary_update"];
@@ -1683,7 +1683,7 @@
                 currentFile.size = [rs longForColumn:@"size"];
                 currentFile.fileId = [rs intForColumn:@"file_id"];
                 currentFile.date = [rs longForColumn:@"date"];
-                currentFile.etag = [rs longLongIntForColumn:@"etag"];
+                currentFile.etag = [rs stringForColumn:@"etag"];
                 currentFile.isFavorite = [rs intForColumn:@"is_favorite"];
                 currentFile.localFolder = [UtilsDtos getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:mUser];
                 currentFile.isNecessaryUpdate = [rs boolForColumn:@"is_necessary_update"];
@@ -1720,7 +1720,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET etag = 0 WHERE is_directory = 1"];
+        correctQuery = [db executeUpdate:@"UPDATE files SET etag = \"\" WHERE is_directory = 1"];
         
         if (!correctQuery) {
             DLog(@"Error in deleteAlleTagOfTheDirectoties");
