@@ -368,7 +368,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
             if (items.count >= 1) {
                 DLog(@"Directoy list: %@", items);
                 FileDto *currentFileDto = [items objectAtIndex:0];
-                DLog(@"currentFileDto: %lld", currentFileDto.etag);
+                DLog(@"currentFileDto: %@", currentFileDto.etag);
                 if (![currentFileDto.etag isEqual: favoriteFile.etag]) {
                     isNewVersion = YES;
                 }
