@@ -623,7 +623,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     //The user cancel a file which had been chosen for be overwritten
     if(app.isOverwriteProcess == YES){
         DLog(@"Overwriten process active: Cancel a file");
-        NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder andUser:app.activeUser];
+        NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder andUser:self.userUploading];
         DLog(@"Local folder:%@",localFolder);
         
         FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:_currentUpload.uploadFileName andFilePath:localFolder andUser:_userUploading];
@@ -824,7 +824,6 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 //Check etag in overwrite file to update with the new one.
 
 - (void) updateTheEtagOfTheFile: (FileDto *) overwrittenFile {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Set the right credentials
     if (k_is_sso_active) {
@@ -837,7 +836,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:app.activeUser], overwrittenFile.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -902,8 +901,6 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 
 - (void) checkTheEtagInTheServerOfTheFile:(FileDto *) overwrittenFile {
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
     //Set the right credentials
     if (k_is_sso_active) {
         [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:self.userUploading.password];
@@ -915,7 +912,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:app.activeUser], overwrittenFile.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
