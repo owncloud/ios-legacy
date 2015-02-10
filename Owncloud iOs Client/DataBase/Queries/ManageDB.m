@@ -719,7 +719,7 @@
         
         NSNumber *currentNumber = [listOfEtags objectAtIndex:i];
         
-        NSString *currentHexEtag = [NSString stringWithFormat:@"0x%llX", [currentNumber longLongValue]];
+        NSString *currentHexEtag = [NSString stringWithFormat:@"%llX", [currentNumber longLongValue]];
         [ManageFilesDB updateEtagOfFileDtoByid:[listOfIds objectAtIndex:i] andNewEtag:currentHexEtag];
     }
 
