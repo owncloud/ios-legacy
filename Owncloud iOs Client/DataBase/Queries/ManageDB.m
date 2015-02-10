@@ -43,13 +43,13 @@
             DLog(@"Error in createDataBase table users");
         }
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR, 'is_root_folder' BOOL NOT NULL DEFAULT 0, 'is_necessary_update' BOOL NOT NULL DEFAULT 0, 'shared_file_source' INTEGER NOT NULL DEFAULT 0, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER NOT NULL DEFAULT -1)"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL NOT NULL DEFAULT 0, 'is_necessary_update' BOOL NOT NULL DEFAULT 0, 'shared_file_source' INTEGER NOT NULL DEFAULT 0, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER NOT NULL DEFAULT -1)"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table files");
         }
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files_backup' ('id' INTEGER, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR, 'is_root_folder' BOOL, 'is_necessary_update' BOOL, 'shared_file_source' INTEGER, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER)"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files_backup' ('id' INTEGER, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL, 'is_necessary_update' BOOL, 'shared_file_source' INTEGER, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER)"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table files_backup");
@@ -622,6 +622,104 @@
         
     }];
     
+}
+
+///-----------------------------------
+/// @name Update Database version with 10 version to 11
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Use the ETAG as a string.To do that we have to remove the current etag and convert all the etags to HEX from long (decimal).
+ *
+ */
++ (void) updateDBVersion10To11 {
+    
+    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    
+    NSMutableArray *listOfIds = [NSMutableArray new];
+    NSMutableArray *listOfEtags = [NSMutableArray new];
+    
+    
+    //1. Obtain the list of etags to be updated
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE is_download = 1 OR is_download = 2 OR is_download = 3 OR is_favorite = 1"];
+        while ([rs next]) {
+
+            [listOfIds addObject:[NSNumber numberWithInt:[rs intForColumn:@"id"]]];
+            [listOfEtags addObject:[NSNumber numberWithLongLong:[rs longLongIntForColumn:@"etag"]]];
+    
+        }
+        [rs close];
+    }];
+    
+    //2. Create change the etag from long to varchar
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        //2.1.- Create a backup files table
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files_backup_etag' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL NOT NULL DEFAULT 0, 'is_necessary_update' BOOL NOT NULL DEFAULT 0, 'shared_file_source' INTEGER NOT NULL DEFAULT 0, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER NOT NULL DEFAULT -1)"];
+        
+        if (!correctQuery) {
+            DLog(@"Error in createDataBase table users_backup");
+        }
+        
+        //2.2.- Copy the information from old table to temporal table
+        correctQuery = [db executeUpdate:@"INSERT INTO files_backup_etag SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, is_necessary_update, shared_file_source, permissions, task_identifier FROM files"];
+        if (!correctQuery) {
+            DLog(@"Error in insertUsers in users_backup");
+        }
+        
+        //2.3.- Delete the old table
+        correctQuery = [db executeUpdate:@"DROP TABLE files"];
+        if (!correctQuery) {
+            DLog(@"Error in delete users table");
+        }
+        
+        //2.4. Create new table files
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL NOT NULL DEFAULT 0, 'is_necessary_update' BOOL NOT NULL DEFAULT 0, 'shared_file_source' INTEGER NOT NULL DEFAULT 0, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER NOT NULL DEFAULT -1)"];
+        if (!correctQuery) {
+            DLog(@"Error in createDataBase table users");
+        }
+        
+        //2.5.- Copy the information from backup files table to new files table
+        correctQuery = [db executeUpdate:@"INSERT INTO files SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, is_necessary_update, shared_file_source, permissions, task_identifier FROM files_backup_etag"];
+        if (!correctQuery) {
+            DLog(@"Error in insertUsers in new users table");
+        }
+        
+        //2.6.- Drop backup users table
+        correctQuery = [db executeUpdate:@"DROP TABLE files_backup_etag"];
+        if (!correctQuery) {
+            DLog(@"Error in delete users_backup table");
+        }
+    }];
+    
+    //3. Drop the files backup table and create the new one. The data on that table it is not important
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        //2.3.- Delete the old table
+        correctQuery = [db executeUpdate:@"DROP TABLE files_backup"];
+        if (!correctQuery) {
+            DLog(@"Error in delete users table");
+        }
+        
+        //2.4. Create new table files
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files_backup' ('id' INTEGER, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL, 'is_necessary_update' BOOL, 'shared_file_source' INTEGER, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER)"];
+        if (!correctQuery) {
+            DLog(@"Error in createDataBase table users");
+        }
+        
+    }];
+    
+    //4. Put again the etag in Hex format
+    for (int i = 0; i < [listOfEtags count]; i++) {
+        NSString *currentHexEtag = [NSString stringWithFormat:@"0x%lX", (unsigned long)[listOfEtags objectAtIndex:i]];
+        [ManageFilesDB updateEtagOfFileDtoByid:[listOfIds objectAtIndex:i] andNewEtag:currentHexEtag];
+    }
+
 }
 
 

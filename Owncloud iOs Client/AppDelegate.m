@@ -1849,7 +1849,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [UtilsUrls getOwnCloudFilePath];
     
     //New version
-    static int dbVersion = k_DB_version_10;
+    static int dbVersion = k_DB_version_11;
     
     //This method make a new database
     [ManageDB createDataBase];
@@ -1926,6 +1926,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 break;
             case k_DB_version_9:
                 [ManageDB updateDBVersion9To10];
+                break;
+            case k_DB_version_10:
+                [ManageDB updateDBVersion10To11];
                 break;
         }
     }

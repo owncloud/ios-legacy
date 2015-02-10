@@ -142,4 +142,16 @@
  */
 + (void) updateDBVersion9To10;
 
+///-----------------------------------
+/// @name Update Database version with 10 version to 11
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Use the ETAG as a string.To do that we have to remove the current etag and convert all the etags to HEX from long (decimal).
+ *
+ */
++ (void) updateDBVersion10To11;
+
 @end
