@@ -666,7 +666,7 @@
         }
         
         //2.2.- Copy the information from old table to temporal table
-        correctQuery = [db executeUpdate:@"INSERT INTO files_backup_etag SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, is_necessary_update, shared_file_source, permissions, task_identifier FROM files"];
+        correctQuery = [db executeUpdate:@"INSERT INTO files_backup_etag SELECT id, file_path, file_name, user_id, is_directory, is_download, file_id, size, date, is_favorite, '', is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier FROM files"];
         if (!correctQuery) {
             DLog(@"Error in insertfiles in files_backup_etag");
         }
@@ -684,7 +684,7 @@
         }
         
         //2.5.- Copy the information from backup files table to new files table
-        correctQuery = [db executeUpdate:@"INSERT INTO files SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, is_necessary_update, shared_file_source, permissions, task_identifier FROM files_backup_etag"];
+        correctQuery = [db executeUpdate:@"INSERT INTO files SELECT id, file_path, file_name, user_id, is_directory, is_download, file_id, size, date, is_favorite, '', is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier FROM files_backup_etag"];
         if (!correctQuery) {
             DLog(@"Error in insert files in new files table");
         }
