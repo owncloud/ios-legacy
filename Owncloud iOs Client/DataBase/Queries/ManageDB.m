@@ -662,37 +662,37 @@
         correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files_backup_etag' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL NOT NULL DEFAULT 0, 'is_necessary_update' BOOL NOT NULL DEFAULT 0, 'shared_file_source' INTEGER NOT NULL DEFAULT 0, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER NOT NULL DEFAULT -1)"];
         
         if (!correctQuery) {
-            DLog(@"Error in createDataBase table users_backup");
+            DLog(@"Error in createDataBase table files_backup_etag");
         }
         
         //2.2.- Copy the information from old table to temporal table
         correctQuery = [db executeUpdate:@"INSERT INTO files_backup_etag SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, is_necessary_update, shared_file_source, permissions, task_identifier FROM files"];
         if (!correctQuery) {
-            DLog(@"Error in insertUsers in users_backup");
+            DLog(@"Error in insertfiles in files_backup_etag");
         }
         
         //2.3.- Delete the old table
         correctQuery = [db executeUpdate:@"DROP TABLE files"];
         if (!correctQuery) {
-            DLog(@"Error in delete users table");
+            DLog(@"Error in delete files table");
         }
         
         //2.4. Create new table files
         correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL NOT NULL DEFAULT 0, 'is_necessary_update' BOOL NOT NULL DEFAULT 0, 'shared_file_source' INTEGER NOT NULL DEFAULT 0, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER NOT NULL DEFAULT -1)"];
         if (!correctQuery) {
-            DLog(@"Error in createDataBase table users");
+            DLog(@"Error in createDataBase table files");
         }
         
         //2.5.- Copy the information from backup files table to new files table
         correctQuery = [db executeUpdate:@"INSERT INTO files SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, is_necessary_update, shared_file_source, permissions, task_identifier FROM files_backup_etag"];
         if (!correctQuery) {
-            DLog(@"Error in insertUsers in new users table");
+            DLog(@"Error in insert files in new files table");
         }
         
         //2.6.- Drop backup users table
         correctQuery = [db executeUpdate:@"DROP TABLE files_backup_etag"];
         if (!correctQuery) {
-            DLog(@"Error in delete users_backup table");
+            DLog(@"Error in delete files_backup_etag table");
         }
     }];
     
@@ -703,13 +703,13 @@
         //2.3.- Delete the old table
         correctQuery = [db executeUpdate:@"DROP TABLE files_backup"];
         if (!correctQuery) {
-            DLog(@"Error in delete users table");
+            DLog(@"Error in delete files_backup table");
         }
         
         //2.4. Create new table files
         correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files_backup' ('id' INTEGER, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL, 'is_necessary_update' BOOL, 'shared_file_source' INTEGER, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER)"];
         if (!correctQuery) {
-            DLog(@"Error in createDataBase table users");
+            DLog(@"Error in createDataBase table files_backup");
         }
         
     }];
