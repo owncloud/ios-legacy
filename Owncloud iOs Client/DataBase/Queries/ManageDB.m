@@ -717,10 +717,11 @@
     //4. Put again the etag in Hex format
     for (int i = 0; i < [listOfEtags count]; i++) {
         
-        NSNumber *currentNumber = [listOfEtags objectAtIndex:i];
+        NSNumber *currentEtag = [listOfEtags objectAtIndex:i];
+        NSNumber *currentId = [listOfIds objectAtIndex:i];
         
-        NSString *currentHexEtag = [NSString stringWithFormat:@"%llX", [currentNumber longLongValue]];
-        [ManageFilesDB updateEtagOfFileDtoByid:[listOfIds objectAtIndex:i] andNewEtag:currentHexEtag];
+        NSString *currentHexEtag = [NSString stringWithFormat:@"%llX", [currentEtag longLongValue]];
+        [ManageFilesDB updateEtagOfFileDtoByid:[currentId intValue] andNewEtag:currentHexEtag];
     }
 
 }
