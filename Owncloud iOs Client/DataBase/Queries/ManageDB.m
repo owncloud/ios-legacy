@@ -721,6 +721,7 @@
         NSNumber *currentId = [listOfIds objectAtIndex:i];
         
         NSString *currentHexEtag = [NSString stringWithFormat:@"%llX", [currentEtag longLongValue]];
+        currentHexEtag = [currentHexEtag lowercaseString];
         [ManageFilesDB updateEtagOfFileDtoByid:[currentId intValue] andNewEtag:currentHexEtag];
     }
 
