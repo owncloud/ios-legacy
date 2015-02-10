@@ -302,7 +302,7 @@
                 
                 //to jump the first becouse it is not necesary (is the same directory) and the other if is to insert 450 by 450
                 if(numberOfInsertEachTime == 0) {
-                    sql = [NSString stringWithFormat:@"INSERT INTO files SELECT null as id, '%@' as 'file_path','%@' as 'file_name', %d as 'user_id', %d as 'is_directory',%d as 'is_download', %d as 'file_id', %@ as 'size', %@ as 'date', %d as 'is_favorite',%@ as 'etag', %d as 'is_root_folder', %d as 'is_necessary_update', %d as 'shared_file_source', '%@' as 'permissions', %d as 'task_identifier'",
+                    sql = [NSString stringWithFormat:@"INSERT INTO files SELECT null as id, '%@' as 'file_path','%@' as 'file_name', %d as 'user_id', %d as 'is_directory',%d as 'is_download', %d as 'file_id', %@ as 'size', %@ as 'date', %d as 'is_favorite','%@' as 'etag', %d as 'is_root_folder', %d as 'is_necessary_update', %d as 'shared_file_source', '%@' as 'permissions', %d as 'task_identifier'",
                            current.filePath,
                            current.fileName,
                            current.userId,
@@ -321,7 +321,7 @@
                     
                     //DLog(@"sql!!!: %@", sql);
                 } else {
-                    sql = [NSString stringWithFormat:@"%@ UNION SELECT null, '%@','%@',%d,%d,%d,%d,%@,%@,%d,%@,%d,%d,%d,'%@',%d",
+                    sql = [NSString stringWithFormat:@"%@ UNION SELECT null, '%@','%@',%d,%d,%d,%d,%@,%@,%d,'%@',%d,%d,%d,'%@',%d",
                            sql,
                            current.filePath,
                            current.fileName,
