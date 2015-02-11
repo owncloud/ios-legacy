@@ -64,7 +64,11 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
+      <IDERemoteRunnable
+         RemotePath = "/var/mobile/Containers/Bundle/Application/7DD9596B-1381-4F88-9F5C-A130B17DEEF6/Documents.app"
+         BundleIdentifier = "/var/mobile/Containers/Bundle/Application/7DD9596B-1381-4F88-9F5C-A130B17DEEF6/Documents.app">
+      </IDERemoteRunnable>
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1324297715ADBB3700DF823E"
@@ -72,7 +76,7 @@
             BlueprintName = "Owncloud iOs Client"
             ReferencedContainer = "container:Owncloud iOs Client.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

@@ -29,10 +29,12 @@
 #import "UploadUtils.h"
 #import "ManageUsersDB.h"
 #import "ManageUploadRequest.h"
+#import "UtilsUrls.h"
 
 //Notification to end and init loading screen
 NSString *EndLoadingFileListNotification = @"EndLoadingFileListNotification";
 NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
+NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseNotification";
 
 
 @implementation PrepareFilesToUpload
@@ -88,9 +90,6 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
            
             currentFileName = [self getNameForFileFromGalleryByType:mediaType andExtension:ext andAssetNSURL:assetURL];
             
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            //NSString *uniquePath= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:_uploadFileName];
-                        
             DLog(@"currentFileName: %@",currentFileName);
             DLog(@"remoteFolder: %@", remoteFolder);
             DLog(@"isLastUploadFileOfThisArray: %d", isLastUploadFileOfThisArray);
@@ -98,7 +97,7 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
             //Use a temporal name with a date identification
             NSString *temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [currentFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
-            NSString *localPath= [[app getTempFolderForUploadFiles] stringByAppendingPathComponent:temporalFileName];
+            NSString *localPath= [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:temporalFileName];
             
             //Divide the file in chunks of 1024KB, then create the file with all chunks
             
@@ -186,7 +185,7 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
                 
                 self.positionOfCurrentUploadInArray = 0;
                 
-                [self performSelectorOnMainThread:@selector(endLoadingInOtherThread) withObject:nil waitUntilDone:YES];
+                [self performSelectorOnMainThread:@selector(endLoadingInFileList) withObject:nil waitUntilDone:YES];
                 
                 UploadsOfflineDto *currentFile = [ManageUploadsDB getNextUploadOfflineFileToUpload];
                 
@@ -211,7 +210,7 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
 /*
  * This method close the loading view in main screen by local notification
  */
-- (void)endLoadingInOtherThread {
+- (void)endLoadingInFileList {
     
     //Set global loading screen global flag to NO
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -219,6 +218,28 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     //Send notification to indicate to close the loading view
     [[NSNotificationCenter defaultCenter] postNotificationName:EndLoadingFileListNotification object: nil];
    
+}
+
+/*
+ * This method close the loading view in main screen by local notification
+ */
+- (void)initLoadingInFileList {
+    
+    //Set global loading screen global flag to NO
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    app.isLoadingVisible = YES;
+    //Send notification to indicate to close the loading view
+    [[NSNotificationCenter defaultCenter] postNotificationName:InitLoadingFileListNotification object: nil];
+    
+}
+
+/*
+ * This method close the loading view in main screen by local notification
+ */
+- (void)reloadFromDataBaseInFileList {
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:ReloadFileListFromDataBaseNotification object: nil];
+    
 }
 
 - (void)sendFileToUploadByUploadOfflineDto:(UploadsOfflineDto *) currentUpload {
@@ -384,6 +405,16 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
         [self sendFileToUploadByUploadOfflineDto:currentFile];
     }
 
+}
+
+/*
+* Method to be sure that the loading of the file list is finish
+*/
+- (void) overwriteCompleted{
+    
+    [self initLoadingInFileList];
+    [self reloadFromDataBaseInFileList];
+    [self endLoadingInFileList];
 }
 
 @end

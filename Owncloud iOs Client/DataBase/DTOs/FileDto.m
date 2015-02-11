@@ -46,6 +46,7 @@
         _permissions = ocFileDto.permissions;
         _taskIdentifier = -1;
         _sharedFileSource = 0;
+        _providingFileId = 0;
         
     }
     return self;
