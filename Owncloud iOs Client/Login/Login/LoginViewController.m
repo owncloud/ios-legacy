@@ -700,13 +700,21 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             if (section==0) {
                 n=0;
             } else if (section==1) {
-                n=2; //Modified
+                if (k_is_shown_help_link_on_login) {
+                    n=2;
+                } else {
+                    n=1;
+                }
             }
         } else {
             if (section==0) {
                 n=2;
             } else if (section==1) {
-                n=2; //Modified
+                if (k_is_shown_help_link_on_login) {
+                    n=2;
+                } else {
+                    n=1;
+                }
             }
         }
     } else {
@@ -714,7 +722,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             if (section==0) {
                 n=1;
             } else if (section==1) {
-                n=2; //Modified
+                if (k_is_shown_help_link_on_login) {
+                    n=2;
+                } else {
+                    n=1;
+                }
             } else if (section==2) {
                 n=0;
             }
@@ -724,7 +736,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             } else if (section==1) {
                 n=2;
             } else if (section==2) {
-                n=2; //Modified
+                if (k_is_shown_help_link_on_login) {
+                    n=2;
+                } else {
+                    n=1;
+                }
             }
         }
     }
