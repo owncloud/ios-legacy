@@ -1148,14 +1148,14 @@
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
                                                                     message:NSLocalizedString(@"message_location_not_enabled", nil)
                                                                    delegate:nil
-                                                          cancelButtonTitle:@"OK"
+                                                          cancelButtonTitle:NSLocalizedString(@"ok", nil)
                                                           otherButtonTitles:nil];
                     [alert show];
                 } else {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_and_location_not_enabled", nil)
                                                                     message:NSLocalizedString(@"message_access_photos_and_location_not_enabled", nil)
                                                                    delegate:nil
-                                                          cancelButtonTitle:@"OK"
+                                                          cancelButtonTitle:NSLocalizedString(@"ok", nil)
                                                           otherButtonTitles:nil];
                     [alert show];
                 }
@@ -1178,7 +1178,7 @@
                 UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
                                                                  message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
                                                                 delegate:nil
-                                                       cancelButtonTitle:@"Ok"
+                                                       cancelButtonTitle:NSLocalizedString(@"ok", nil)
                                                        otherButtonTitles:nil];
                 [alert show];
             }
@@ -1189,14 +1189,14 @@
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
                                                             message:NSLocalizedString(@"message_location_not_enabled", nil)
                                                            delegate:nil
-                                                  cancelButtonTitle:@"OK"
+                                                  cancelButtonTitle:NSLocalizedString(@"ok", nil)
                                                   otherButtonTitles:nil];
             [alert show];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_and_location_not_enabled", nil)
                                                             message:NSLocalizedString(@"message_access_photos_and_location_not_enabled", nil)
                                                            delegate:nil
-                                                  cancelButtonTitle:@"OK"
+                                                  cancelButtonTitle:NSLocalizedString(@"ok", nil)
                                                   otherButtonTitles:nil];
             [alert show];
         }
@@ -1270,7 +1270,7 @@
                 UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
                                                                  message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
                                                                 delegate:nil
-                                                       cancelButtonTitle:@"Ok"
+                                                       cancelButtonTitle:NSLocalizedString(@"ok", nil)
                                                        otherButtonTitles:nil];
                 [alert show];
             }
@@ -1282,14 +1282,14 @@
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
                                                                     message:NSLocalizedString(@"message_location_not_enabled", nil)
                                                                    delegate:nil
-                                                          cancelButtonTitle:@"OK"
+                                                          cancelButtonTitle:NSLocalizedString(@"ok", nil)
                                                           otherButtonTitles:nil];
                     [alert show];
                 } else {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_and_location_not_enabled", nil)
                                                                     message:NSLocalizedString(@"message_access_photos_and_location_not_enabled", nil)
                                                                    delegate:nil
-                                                          cancelButtonTitle:@"OK"
+                                                          cancelButtonTitle:NSLocalizedString(@"ok", nil)
                                                           otherButtonTitles:nil];
                     [alert show];
                 }

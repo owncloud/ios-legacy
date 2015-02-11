@@ -96,9 +96,6 @@ NSString *InitLoadingFileListNotification = @"InitLoadingFileListNotification";
     currentManageUploadRequest.delegate = self;
     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:currentUpload.estimateLength];
     
-    //currentManageUploadRequest.lenghtOfFile=[UploadUtils makeLengthString:currentUpload.estimateLength];
-    //currentManageUploadRequest.pathOfUpload=[UploadUtils makePathString:currentUpload.destinyFolder withUserUrl:[ManageUsersDB getUserByIdUser:currentUpload.userId].url];
-    
     [currentManageUploadRequest addFileToUpload:currentUpload];
     
 }

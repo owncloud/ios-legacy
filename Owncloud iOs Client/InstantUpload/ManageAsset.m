@@ -48,7 +48,7 @@
                                      UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
                                                                             message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
                                                                             delegate:nil
-                                                                            cancelButtonTitle:@"Ok"
+                                                                            cancelButtonTitle:NSLocalizedString(@"ok", nil)
                                                                             otherButtonTitles:nil];
                                      [alert show];
                                      
