@@ -665,7 +665,7 @@
         newFolder.size = 0;
         newFolder.date = 0;
         newFolder.isFavorite = 0;
-        newFolder.etag = 0;
+        newFolder.etag = @"";
         newFolder.isRootFolder = NO;
         newFolder.isNecessaryUpdate = NO;
         newFolder.sharedFileSource = 0;
@@ -704,7 +704,7 @@
     newFile.size = -1;
     newFile.date = 0;
     newFile.isFavorite = 0;
-    newFile.etag = 0;
+    newFile.etag = @"";
     newFile.isRootFolder = NO;
     newFile.isNecessaryUpdate = NO;
     newFile.sharedFileSource = sharedDto.fileSource;

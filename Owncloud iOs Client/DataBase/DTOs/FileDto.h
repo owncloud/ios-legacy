@@ -33,7 +33,7 @@ typedef enum {
 @property BOOL isDirectory;
 @property long size;
 @property long date;
-@property long long etag;
+@property (nonatomic, copy) NSString *etag;
 @property NSInteger idFile;
 @property NSInteger userId;
 @property BOOL needRefresh;

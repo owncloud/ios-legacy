@@ -195,7 +195,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                         FileDto *updatedFile = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath] andUser:user];
                         
                         //Check if the etag has changed
-                        if (((item.etag != updatedFile.etag && updatedFile.isDownload != downloading && updatedFile.isDownload != updating) || (updatedFile.isDownload == notDownload)) && updatedFile) {
+                        if (((![item.etag isEqual: updatedFile.etag] && updatedFile.isDownload != downloading && updatedFile.isDownload != updating) || (updatedFile.isDownload == notDownload)) && updatedFile) {
                             
                             //Update the info of the file
                             if (updatedFile.isDownload == downloaded) {
@@ -368,8 +368,8 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
             if (items.count >= 1) {
                 DLog(@"Directoy list: %@", items);
                 FileDto *currentFileDto = [items objectAtIndex:0];
-                DLog(@"currentFileDto: %lld", currentFileDto.etag);
-                if (currentFileDto.etag != favoriteFile.etag) {
+                DLog(@"currentFileDto: %@", currentFileDto.etag);
+                if (![currentFileDto.etag isEqual: favoriteFile.etag]) {
                     isNewVersion = YES;
                 }
             }

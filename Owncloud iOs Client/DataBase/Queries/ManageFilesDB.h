@@ -278,14 +278,14 @@
  * @idFile -> id of the file to update the etag
  * @etag -> new etag
  */
-+ (void) updateEtagOfFileDtoByid:(int) idFile andNewEtag: (long long) etag;
++ (void) updateEtagOfFileDtoByid:(int) idFile andNewEtag: (NSString *) etag;
 
 /*
  * Method to update the etag of a file
  * @FileDto
  * @etag -> new etag
  */
-+(void) updateEtagOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withNewEtag: (long long)etag;
++(void) updateEtagOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withNewEtag: (NSString *)etag;
 
 /*
  * Method to update the fileId with a new fileId. We use it to update the files of the root folder
