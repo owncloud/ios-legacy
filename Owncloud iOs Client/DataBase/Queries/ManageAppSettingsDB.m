@@ -252,7 +252,6 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        //correctQuery = [db executeUpdate:@"UPDATE users SET instant_upload=? WHERE activeaccount=1", [NSNumber numberWithBool:newValue]];
         correctQuery = [db executeUpdate:@"UPDATE users SET instant_upload=? ", [NSNumber numberWithBool:newValue]];
         
         if (!correctQuery) {
@@ -275,7 +274,6 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        //correctQuery = [db executeUpdate:@"UPDATE users SET date_instant_upload=? WHERE activeaccount=1", [NSNumber numberWithLong:newValue]];
         correctQuery = [db executeUpdate:@"UPDATE users SET date_instant_upload=?", [NSNumber numberWithLong:newValue]];
 
         if (!correctQuery) {
@@ -334,7 +332,6 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        //correctQuery = [db executeUpdate:@"UPDATE users SET path_instant_upload=? WHERE activeaccount=1", newValue];
         correctQuery = [db executeUpdate:@"UPDATE users SET path_instant_upload=?", newValue];
 
         if (!correctQuery) {
@@ -358,7 +355,6 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        //correctQuery = [db executeUpdate:@"UPDATE users SET only_wifi_instant_upload=? WHERE activeaccount=1",[NSNumber numberWithBool:newValue] ];
         correctQuery = [db executeUpdate:@"UPDATE users SET only_wifi_instant_upload=?",[NSNumber numberWithBool:newValue] ];
 
         if (!correctQuery) {

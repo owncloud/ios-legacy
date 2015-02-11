@@ -143,7 +143,7 @@
 + (void) updateDBVersion9To10;
 
 ///-----------------------------------
-/// @name Update Database version with 9 version to 10
+/// @name Update Database version with 10 version to 11
 ///-----------------------------------
 
 /**
