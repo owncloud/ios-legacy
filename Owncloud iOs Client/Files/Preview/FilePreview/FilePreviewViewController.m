@@ -567,11 +567,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 - (void)openFile{
     
-    //Openwith
-  /*  _openWith = [[OpenWith alloc]init];
-    _openWith.parentView = self.view;
-    [_openWith openWithFile:_file];*/
-    
     NSURL *url = [NSURL fileURLWithPath:self.file.localFolder];
     
     UIActivityViewController *activity = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:nil];
@@ -581,8 +576,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     self.navigationController.navigationBar.UserInteractionEnabled = YES;
     _toolBar.UserInteractionEnabled = YES;
     
-
-  
 }
 
 
