@@ -26,6 +26,8 @@
 #import "OCCommunication.h"
 #import "Customization.h"
 #import "UtilsDtos.h"
+#import "ProvidingFileDto.h"
+#import "ManageProvidingFilesDB.h"
 
 #define k_Alpha_locked_cell 0.5
 #define k_Alpha_normal_cell 1.0
@@ -460,5 +462,9 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     
 }
 
+- (void) openFile:(FileDto *) file {
+    
+    [self.delegate openFile:file];
+}
 
 @end

@@ -149,7 +149,8 @@
 /**
  * Changes:
  *
- * Alter users table, added fields to instant uploads options
+ * Alter users table, added new fields to instant uploads options
+ * Alter files and files_backup tables, added new field for store the providing_file_id of the file
  *
  */
 + (void) updateDBVersion10To11;

@@ -671,6 +671,7 @@
         newFolder.sharedFileSource = 0;
         newFolder.permissions = @"";
         newFolder.taskIdentifier = -1;
+        newFolder.providingFileId = 0;
         
         //Insert in the DataBase
         [ManageFilesDB insertFile:newFolder];
@@ -710,6 +711,7 @@
     newFile.sharedFileSource = sharedDto.fileSource;
     newFile.permissions = @"";
     newFile.taskIdentifier = -1;
+    newFile.providingFileId = 0;
     
     //Insert in the DataBase
     [ManageFilesDB insertFile:newFile];

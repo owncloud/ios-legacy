@@ -26,6 +26,7 @@
 //Notification to init and end loading screen in main view
 extern NSString *EndLoadingFileListNotification;
 extern NSString *InitLoadingFileListNotification;
+extern NSString *ReloadFileListFromDataBaseNotification;
 
 
 @protocol PrepareFilesToUploadDelegate

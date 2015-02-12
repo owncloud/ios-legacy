@@ -739,9 +739,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unBlockViewWhileFileIsDownloading) name:IpadFilePreviewViewControllerFileFinishDownloadNotification object:nil];
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unBlockViewWhileFileIsDownloading) name:IpadFinishDownloadStateWhenApplicationDidEnterBackground object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectCellWithThisFile:) name:IpadSelectRowInFileListNotification object:nil];
-    //Add a observer to the end and init loading
+    //Add a observer to the end loading, init loading and reloadTableFromDataBase
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endLoading) name:EndLoadingFileListNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initLoading) name:InitLoadingFileListNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFromDataBase) name:ReloadFileListFromDataBaseNotification object:nil];
     
     //Add an observer for know when the LoginViewController rotate
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willRotateToInterfaceOrientation:duration:) name:loginViewControllerRotate object:nil];

@@ -519,6 +519,22 @@
 		59DA496619F7A4B600DD3619 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		59DA4F3C1A07A97100472639 /* DocumentPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 59DA4F3B1A07A97100472639 /* DocumentPickerViewController.xib */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
+		EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
+		EA1F62CE1A5EBC2A00D6346F /* UserDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F148177C315D004A1A5A /* UserDto.m */; };
+		EA1F62CF1A5EBCA800D6346F /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F155177C3392004A1A5A /* FMDatabaseQueue.m */; };
+		EA1F62D01A5EBCAE00D6346F /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F14F177C3392004A1A5A /* FMDatabase.m */; };
+		EA1F62D11A5EBD2000D6346F /* ProvidingFileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC598591A56A150003192B2 /* ProvidingFileDto.m */; };
+		EA1F62D21A5EBD2400D6346F /* ManageProvidingFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */; };
+		EA1F62D31A5EBDA100D6346F /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F157177C3392004A1A5A /* FMResultSet.m */; };
+		EA1F62D41A5EBDA700D6346F /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F153177C3392004A1A5A /* FMDatabasePool.m */; };
+		EA1F62D51A5EBDAA00D6346F /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F151177C3392004A1A5A /* FMDatabaseAdditions.m */; };
+		EA1F62D61A5EBDF900D6346F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 137F3B4715B9376D0009BB24 /* libsqlite3.0.dylib */; };
+		EA1F62D71A5EBF8500D6346F /* ManageFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13A177C2F73004A1A5A /* ManageFilesDB.m */; };
+		EA1F62D81A5EBFC700D6346F /* ManageUsersDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F140177C2FC1004A1A5A /* ManageUsersDB.m */; };
+		EA1F62D91A5EBFDF00D6346F /* OCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FF874219F81396008B7C62 /* OCKeychain.m */; };
+		EA1F62DA1A5EBFF100D6346F /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
+		EA1F62DD1A5EC08300D6346F /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
+		EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F146177C315D004A1A5A /* FileDto.m */; };
 		EA2678FF1876E4B8008678DE /* notSharedItem.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FB1876E4B8008678DE /* notSharedItem.png */; };
 		EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */; };
 		EA2B4FB017FAFF69001766BB /* company_empty_screen_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */; };
@@ -529,6 +545,8 @@
 		EA42FA54180565CB0006DB7C /* OCTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA53180565CB0006DB7C /* OCTabBarController.m */; };
 		EA42FA5A180C13710006DB7C /* cancel_download_white.png in Resources */ = {isa = PBXBuildFile; fileRef = EA42FA58180C13710006DB7C /* cancel_download_white.png */; };
 		EA42FA5B180C13710006DB7C /* cancel_download_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA42FA59180C13710006DB7C /* cancel_download_white@2x.png */; };
+		EA5FA47F1A6403A0000C1F80 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
+		EA6462841A6F98F300991913 /* UtilsDtos.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F677178422BE0092F42A /* UtilsDtos.m */; };
 		EA68968D17F599060033B3C1 /* KKKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968517F599060033B3C1 /* KKKeychain.m */; };
 		EA68968E17F599060033B3C1 /* KKPasscodeLock.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */; };
 		EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968817F599060033B3C1 /* KKPasscodeLock.m */; };
@@ -565,11 +583,20 @@
 		EAC3AC4015ED2B4E00B59805 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
 		EAC3AC4615ED2BD100B59805 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC4515ED2BD100B59805 /* libz.dylib */; };
 		EAC52E1616BAE65300C7341E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC52E1416BAE26E00C7341E /* AVFoundation.framework */; };
+		EAC5985A1A56A150003192B2 /* ProvidingFileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC598591A56A150003192B2 /* ProvidingFileDto.m */; };
+		EAC5985B1A56A150003192B2 /* ProvidingFileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC598591A56A150003192B2 /* ProvidingFileDto.m */; };
+		EAC598601A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */; };
+		EAC598611A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */; };
 		EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD036BF19053BEE003665CD /* ManageFavorites.m */; };
 		EAD0EBA317FAF811000005A1 /* OCELCAssetTablePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A9FCE717E9858C00FF48D7 /* OCELCAssetTablePicker.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 		EAD281BB1A38A2F900A00D54 /* DPDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD281BA1A38A2F900A00D54 /* DPDownload.m */; };
 		EAD281BC1A38BB2E00A00D54 /* DPDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD281BA1A38A2F900A00D54 /* DPDownload.m */; };
+		EAE80E241A6CFDE50061BD86 /* UploadsOfflineDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F674178422AE0092F42A /* UploadsOfflineDto.m */; };
+		EAE80E261A6D317C0061BD86 /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
+		EAE80E271A6D31810061BD86 /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
+		EAE80E281A6D31980061BD86 /* UploadsOfflineDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F674178422AE0092F42A /* UploadsOfflineDto.m */; };
+		EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -581,6 +608,13 @@
 			remoteInfo = "Owncloud iOs Client";
 		};
 		597A87961A013FD50071F2AF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = EA7CC896183E11E600B6A4B4;
+			remoteInfo = "ownCloud iOS library";
+		};
+		EA1F62DB1A5EC07E00D6346F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */;
 			proxyType = 1;
@@ -1210,6 +1244,10 @@
 		EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		EAC3AC4515ED2BD100B59805 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		EAC52E1416BAE26E00C7341E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		EAC598581A56A150003192B2 /* ProvidingFileDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProvidingFileDto.h; path = DataBase/DTOs/ProvidingFileDto.h; sourceTree = "<group>"; };
+		EAC598591A56A150003192B2 /* ProvidingFileDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProvidingFileDto.m; path = DataBase/DTOs/ProvidingFileDto.m; sourceTree = "<group>"; };
+		EAC5985E1A56A486003192B2 /* ManageProvidingFilesDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageProvidingFilesDB.h; path = DataBase/Queries/ManageProvidingFilesDB.h; sourceTree = "<group>"; };
+		EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageProvidingFilesDB.m; path = DataBase/Queries/ManageProvidingFilesDB.m; sourceTree = "<group>"; };
 		EAD036BE19053BEE003665CD /* ManageFavorites.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageFavorites.h; path = Network/Favorites/ManageFavorites.h; sourceTree = "<group>"; };
 		EAD036BF19053BEE003665CD /* ManageFavorites.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageFavorites.m; path = Network/Favorites/ManageFavorites.m; sourceTree = "<group>"; };
 		EAD281B91A38A2F900A00D54 /* DPDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DPDownload.h; path = Network/DPDownload.h; sourceTree = "<group>"; };
@@ -1274,6 +1312,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA1F62DD1A5EC08300D6346F /* libownCloudiOS.a in Frameworks */,
+				EA1F62D61A5EBDF900D6346F /* libsqlite3.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1483,6 +1523,8 @@
 				40AC24D019FE725600582867 /* CredentialsDto.h */,
 				40AC24D119FE725600582867 /* CredentialsDto.m */,
 				59A9A724196E8A370042FEAC /* CookiesStorageDto.m */,
+				EAC598581A56A150003192B2 /* ProvidingFileDto.h */,
+				EAC598591A56A150003192B2 /* ProvidingFileDto.m */,
 			);
 			name = DTOs;
 			sourceTree = "<group>";
@@ -2672,6 +2714,8 @@
 				EABE4BE2187D5AE6006DEC96 /* ManageSharesDB.m */,
 				59A9A71F196E89170042FEAC /* ManageCookiesStorageDB.h */,
 				59A9A720196E89170042FEAC /* ManageCookiesStorageDB.m */,
+				EAC5985E1A56A486003192B2 /* ManageProvidingFilesDB.h */,
+				EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */,
 			);
 			name = Queries;
 			sourceTree = "<group>";
@@ -2750,6 +2794,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				EA1F62DC1A5EC07E00D6346F /* PBXTargetDependency */,
 			);
 			name = ownCloudExtAppFileProvider;
 			productName = ownCloudExtAppFileProvider;
@@ -3234,6 +3279,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA5FA47F1A6403A0000C1F80 /* Owncloud iOs Client.entitlements in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3276,6 +3322,7 @@
 				1493D8CF185702D70090FEFB /* CheckSSOServer.m in Sources */,
 				148DD5FD1778556500FB9977 /* MBProgressHUD.m in Sources */,
 				148DD6041778558500FB9977 /* MGSplitCornersView.m in Sources */,
+				EAC5985A1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
 				148DD6051778558500FB9977 /* MGSplitDividerView.m in Sources */,
 				148DD6061778558500FB9977 /* MGSplitViewController.m in Sources */,
 				148DD612177855B600FB9977 /* AuthenticationDbService.m in Sources */,
@@ -3317,6 +3364,7 @@
 				13AD22B318311A26007E0F1A /* ManageUploadRequest.m in Sources */,
 				148DD69A1778664400FB9977 /* OverwriteFileOptions.m in Sources */,
 				148DD6A01778667000FB9977 /* RenameFile.m in Sources */,
+				EAC598601A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */,
 				148DD6A81778668A00FB9977 /* SelectFolderNavigation.m in Sources */,
 				EA68969117F599060033B3C1 /* KKPasscodeViewController.m in Sources */,
 				593F7CAA19EFDE96004136F7 /* UtilsUrls.m in Sources */,
@@ -3404,10 +3452,12 @@
 				59C3AC1F1A287E3B005433A1 /* OCPortraitNavigationViewController.m in Sources */,
 				59C3AC1A1A287DE3005433A1 /* KKKeychain.m in Sources */,
 				59C3AC1B1A287DE3005433A1 /* KKPasscodeLock.m in Sources */,
+				EAE80E271A6D31810061BD86 /* ManageUploadsDB.m in Sources */,
 				59C3AC1C1A287DE3005433A1 /* KKPasscodeSettingsViewController.m in Sources */,
 				59C3AC1D1A287DE3005433A1 /* KKPasscodeViewController.m in Sources */,
 				59C521F91A1B7C3A00C5EF76 /* ManageNetworkErrors.m in Sources */,
 				599DDD511A19FBF8008725DE /* CredentialsDto.m in Sources */,
+				EAE80E281A6D31980061BD86 /* UploadsOfflineDto.m in Sources */,
 				EA8ADE691A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
 				599DDD4F1A19FBD3008725DE /* OCKeychain.m in Sources */,
 				59A6F4ED1A1625C300345229 /* ManageAppSettingsDB.m in Sources */,
@@ -3433,6 +3483,7 @@
 				EA8ADE6B1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */,
 				599D80B21A2338100071B66E /* FileListDocumentProviderViewController.m in Sources */,
 				590849EF1A0A7D6000D3E842 /* CustomCellFileAndDirectory.m in Sources */,
+				EAC598611A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */,
 				593C16D01A09008C006C20AF /* ManageFilesDB.m in Sources */,
 				EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */,
 				599E57351A08E62700744EC9 /* FileDto.m in Sources */,
@@ -3445,6 +3496,7 @@
 				599D99F01A0256D9008A9DB3 /* FMDatabase.m in Sources */,
 				599D99EF1A0256AF008A9DB3 /* UtilsUrls.m in Sources */,
 				599D99EE1A02566B008A9DB3 /* FMDatabaseQueue.m in Sources */,
+				EAC5985B1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
 				EAB0AB3919ED356A00764C31 /* DocumentPickerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3453,7 +3505,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAE80E241A6CFDE50061BD86 /* UploadsOfflineDto.m in Sources */,
 				EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */,
+				EA1F62D21A5EBD2400D6346F /* ManageProvidingFilesDB.m in Sources */,
+				EA1F62DA1A5EBFF100D6346F /* CredentialsDto.m in Sources */,
+				EA1F62CF1A5EBCA800D6346F /* FMDatabaseQueue.m in Sources */,
+				EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */,
+				EA1F62D11A5EBD2000D6346F /* ProvidingFileDto.m in Sources */,
+				EA1F62D41A5EBDA700D6346F /* FMDatabasePool.m in Sources */,
+				EA1F62CE1A5EBC2A00D6346F /* UserDto.m in Sources */,
+				EA1F62D01A5EBCAE00D6346F /* FMDatabase.m in Sources */,
+				EA1F62D81A5EBFC700D6346F /* ManageUsersDB.m in Sources */,
+				EAE80E261A6D317C0061BD86 /* ManageUploadsDB.m in Sources */,
+				EA1F62D71A5EBF8500D6346F /* ManageFilesDB.m in Sources */,
+				EA1F62D91A5EBFDF00D6346F /* OCKeychain.m in Sources */,
+				EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */,
+				EA1F62D31A5EBDA100D6346F /* FMResultSet.m in Sources */,
+				EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */,
+				EA1F62D51A5EBDAA00D6346F /* FMDatabaseAdditions.m in Sources */,
+				EA6462841A6F98F300991913 /* UtilsDtos.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3469,6 +3539,11 @@
 			isa = PBXTargetDependency;
 			name = "ownCloud iOS library";
 			targetProxy = 597A87961A013FD50071F2AF /* PBXContainerItemProxy */;
+		};
+		EA1F62DC1A5EC07E00D6346F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ownCloud iOS library";
+			targetProxy = EA1F62DB1A5EC07E00D6346F /* PBXContainerItemProxy */;
 		};
 		EA8667E618AA297F00D3550D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3736,6 +3811,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 					"DEBUG_MODE=1",
+					"FILE_PICKER=1",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
