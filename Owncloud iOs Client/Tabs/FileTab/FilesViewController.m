@@ -2234,7 +2234,7 @@
     _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:file.idFile];
     
     //Phase 0. Know if the file is in the device
-    if ([_selectedFileDto isDownload]==notDownload) {
+    if ([_selectedFileDto isDownload] == notDownload) {
         
         //Phase 1. Init openWith
         _openWith = [[OpenWith alloc]init];
@@ -2288,7 +2288,7 @@
         //Phase 4. Download
         [_openWith downloadAndOpenWithFile:_selectedFileDto];
         
-    } else if ([_selectedFileDto isDownload]==downloading) {
+    } else if ([_selectedFileDto isDownload] == downloading) {
         
         //if the file is downloading alert the user
         _alert = nil;
@@ -2296,7 +2296,6 @@
         [_alert show];
         
     } else {
-        
         //Open the file
         _openWith = [OpenWith new];
         
@@ -2307,9 +2306,10 @@
             //We use _selectedIndexPath to identify the position where we have to put the arrow of the popover
             if (_selectedIndexPath) {
                 cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
-                _openWith.parentView=_tableView;
+                _openWith.parentView =_tableView;
                 _openWith.cellFrame = cell.frame;
                 _openWith.isTheParentViewACell = YES;
+                
             } else {
                  _openWith.parentView=self.tabBarController.view;
             }

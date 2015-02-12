@@ -567,10 +567,10 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 - (void)openFile{
     
-    NSURL *url = [NSURL fileURLWithPath:self.file.localFolder];
-    
-    UIActivityViewController *activity = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:nil];
-    [self presentViewController:activity animated:YES completion:NULL];
+    //Openwith
+    self.openWith = [[OpenWith alloc]init];
+    self.openWith.parentView = self.view;
+    [self.openWith openWithFile:self.file];
     
     //Enable back button
     self.navigationController.navigationBar.UserInteractionEnabled = YES;

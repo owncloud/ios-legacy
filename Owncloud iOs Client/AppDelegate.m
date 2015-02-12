@@ -1666,7 +1666,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //Close the openWith option in FileViewController
     if (_presentFilesViewController.openWith) {
-        [_presentFilesViewController.openWith.documentInteractionController dismissMenuAnimated:NO];
+        [_presentFilesViewController.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
     }
     //Close the delete option in FilesViewController
     if (_presentFilesViewController.mDeleteFile.popupQuery) {

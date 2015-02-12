@@ -16,6 +16,7 @@
 #import <UIKit/UIKit.h>
 #import "FileDto.h"
 #import "Download.h"
+#import "OpenWith.h"
 #import "DeleteFile.h"
 #import "MediaViewController.h"
 #import "OfficeFileView.h"
@@ -57,6 +58,7 @@ extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 
 //Features objects
 @property(nonatomic, strong) DeleteFile *mDeleteFile;
+@property(nonatomic) OpenWith *openWith;
 @property(nonatomic, strong) ShareFileOrFolder *mShareFileOrFolder;
 
 //Local folder
