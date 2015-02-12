@@ -20,6 +20,8 @@
 #import <MessageUI/MessageUI.h>
 #import "UserDto.h"
 #import "KKPasscodeViewController.h"
+#import "ManageLocation.h"
+
 
 typedef enum {
     help=0,
@@ -29,7 +31,7 @@ typedef enum {
     
 } enumInfoSetting;
 
-@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate>{
+@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, ManageLocationDelegate>{
 
     UISwitch *_switchPasscode;  
     UITableView *_settingsTableView;
@@ -39,6 +41,7 @@ typedef enum {
 
 @property(nonatomic,strong)IBOutlet UITableView *settingsTableView;
 @property(nonatomic,strong)UISwitch *switchPasscode;
+@property(nonatomic,strong)UISwitch *switchInstantUpload;
 @property(nonatomic, strong)DetailViewController *detailViewController;
 @property(nonatomic, strong)UserDto *user;
 
@@ -53,6 +56,7 @@ typedef enum {
 @property (nonatomic) BOOL isMailComposeVisible;
 
 -(IBAction)changeSwitchPasscode:(id)sender;
+-(IBAction)changeSwitchInstantUpload:(id)sender;
 -(void)disconnectUser;
 //-(void)internazionaliceTheInitialInterface;
 

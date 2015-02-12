@@ -53,6 +53,8 @@
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
 #import "ManageLocation.h"
+#import "ManageAsset.h"
+
 
 #define k_server_with_chunking 4.5 
 
@@ -153,13 +155,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Add observer for notifications about network not reachable in uploads
   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeUploadsToWaitingForServerConnection) name:NotReachableNetworkForUploadsNotification object:nil];
     
-    
-    [self checkIfLocationIsEnabled];
-
-    //Allow Notifications iOS8
-    if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)]){
+   //Allow Notifications iOS8
+  /*  if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)]){
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil]];
     }
+   */
     
     return YES;
 }
@@ -978,9 +978,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_presentFilesViewController.folderView) {
         [_presentFilesViewController.folderView dismissWithClickedButtonIndex:0 animated:NO];
     }
-    
-    //Activate location
-    [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
 
 }
 
@@ -1015,11 +1012,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
     //Update the Favorites Files
     [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
-    
-    //stop location
-    [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
-    
-    
+   
 }
 
 
@@ -1027,7 +1020,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    
+  
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -1758,6 +1751,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if(_prepareFiles == nil) {
         _prepareFiles = [[PrepareFilesToUpload alloc] init];
         _prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
+        _prepareFiles.listOfAssetsToUpload = [[NSMutableArray alloc] init];
         _prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
         _prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
         _prepareFiles.delegate = self;
@@ -2559,6 +2553,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             if (_prepareFiles == nil) {
                 _prepareFiles = [[PrepareFilesToUpload alloc] init];
                 _prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
+                _prepareFiles.listOfAssetsToUpload = [[NSMutableArray alloc] init];
                 _prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
                 _prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
                 _prepareFiles.delegate = self;

@@ -146,12 +146,14 @@
 /// @name Update Database version with 10 version to 11
 ///-----------------------------------
 
-/*
- Changes:
+/**
+ * Changes:
  *
- * Has been included a new field for store the providing_file_id of the file
+ * Alter users table, added new fields to instant uploads options
+ * Alter files and files_backup tables, added new field for store the providing_file_id of the file
+ *
  */
-
 + (void) updateDBVersion10To11;
+
 
 @end

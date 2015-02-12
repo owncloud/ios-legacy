@@ -21,6 +21,7 @@
 #import <Foundation/Foundation.h>
 #import "UserDto.h"
 #import "ManageUploadRequest.h"
+#import "OCAsset.h"
 
 //Notification to init and end loading screen in main view
 extern NSString *EndLoadingFileListNotification;
@@ -65,6 +66,13 @@ extern NSString *ReloadFileListFromDataBaseNotification;
 @property(nonatomic,strong) NSMutableArray *listOfUploadOfflineToGenerateSQL;
 @property(nonatomic) int positionOfCurrentUploadInArray;
 
+@property(nonatomic,strong) NSMutableArray *listOfAssetsToUpload;
+@property(nonatomic,strong) NSString * nameRemoteInstantUploadFolder;
+@property(nonatomic,strong) NSString * pathRemoteInstantUpload;
+
+@property (nonatomic, strong) UtilsNetworkRequest *utilsNetworkRequest;
+
+
 /*
  * This method is called to add a list of files to the upload list
  */
@@ -73,6 +81,10 @@ extern NSString *ReloadFileListFromDataBaseNotification;
  *This method is called to begin the upload transaction. Is called after finish an upload
  */
 - (void) sendFileToUploadByUploadOfflineDto:(UploadsOfflineDto *) currentUpload;
+
+
+
+- (void) addAssetsToUpload:(NSArray *) newAsssets andRemoteFolder:(NSString *) remoteFolderToUpload;
 
 
 @end

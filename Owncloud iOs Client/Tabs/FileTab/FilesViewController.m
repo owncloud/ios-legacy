@@ -1131,6 +1131,7 @@
         if(app.prepareFiles == nil) {
             app.prepareFiles = [[PrepareFilesToUpload alloc] init];
             app.prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
+            app.prepareFiles.listOfAssetsToUpload = [[NSMutableArray alloc] init];
             app.prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
             app.prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
         }
