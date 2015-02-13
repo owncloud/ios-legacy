@@ -2849,9 +2849,9 @@
     if ([directoryList count] > 0) {
         FileDto *currentFileDto = [directoryList objectAtIndex:0];
         
-        DLog(@"currentFileDto: %lld - %lld", _currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag ,currentFileDto.etag);
+        DLog(@"currentFileDto: %@ - %@", _currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag ,currentFileDto.etag);
         
-        if(_currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag != currentFileDto.etag) {
+        if(![_currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag isEqual:currentFileDto.etag]) {
             
             DLog(@"The etag it's not the same, need refresh");
             
