@@ -103,16 +103,17 @@
             [app.ocTabBarController presentViewController:self.activityView animated:YES completion:nil];
         } else {
             
-            if (_isTheParentViewACell && IS_PORTRAIT) {
-                self.activityView.popoverPresentationController.sourceView = app.detailViewController.view;
-                [app.detailViewController presentViewController:self.activityView animated:YES completion:nil];
-            }else{
+            if (self.activityPopoverController) {
+                [self.activityPopoverController setContentViewController:self.activityView];
+            } else {
+                self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:self.activityView];
+            }
+            
+            if (_isTheParentViewACell && IS_PORTRAIT && IS_IOS8) {
+              
+                [self.activityPopoverController presentPopoverFromRect:CGRectMake(app.detailViewController.view.frame.size.width/2, app.detailViewController.view.frame.size.width/2, 100, 100) inView:app.detailViewController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
                 
-                if (self.activityPopoverController) {
-                    [self.activityPopoverController setContentViewController:self.activityView];
-                } else {
-                    self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:self.activityView];
-                }
+            }else{
                 
                 if (_isTheParentViewACell) {
                     //Present view from cell from file list

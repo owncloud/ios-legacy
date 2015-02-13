@@ -592,6 +592,10 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
+    if (self.openWith && !IS_IPHONE) {
+        [self.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
+    }
+    
     if (self.plusActionSheet) {
         [self.plusActionSheet dismissWithClickedButtonIndex:2 animated:NO];
     }
