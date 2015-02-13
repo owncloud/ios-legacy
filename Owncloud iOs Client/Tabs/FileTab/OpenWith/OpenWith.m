@@ -102,30 +102,30 @@
         if (IS_IPHONE) {
             [app.ocTabBarController presentViewController:self.activityView animated:YES completion:nil];
         } else {
-
-            if (self.activityPopoverController) {
-                [self.activityPopoverController setContentViewController:self.activityView];
-            } else {
-                self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:self.activityView];
-            }
             
-            if (_isTheParentViewACell) {
-                //Present view from cell from file list
+            if (_isTheParentViewACell && IS_PORTRAIT) {
+                self.activityView.popoverPresentationController.sourceView = app.detailViewController.view;
+                [app.detailViewController presentViewController:self.activityView animated:YES completion:nil];
+            }else{
                 
-                if (IS_PORTRAIT) {
-                    [app.detailViewController presentViewController:self.activityView animated:YES completion:nil];
-                }else{
-                    [self.activityPopoverController presentPopoverFromRect:_cellFrame inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+                if (self.activityPopoverController) {
+                    [self.activityPopoverController setContentViewController:self.activityView];
+                } else {
+                    self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:self.activityView];
                 }
- 
                 
-            } else if (_parentButton) {
-                //Present view from bar button item
-                [self.activityPopoverController presentPopoverFromBarButtonItem:_parentButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-                
-            } else {
-                //Present  view from rect
-                [self.activityPopoverController presentPopoverFromRect:CGRectMake(100, 100, 200, 400) inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+                if (_isTheParentViewACell) {
+                    //Present view from cell from file list
+                    [self.activityPopoverController presentPopoverFromRect:_cellFrame inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+                    
+                } else if (_parentButton) {
+                    //Present view from bar button item
+                    [self.activityPopoverController presentPopoverFromBarButtonItem:_parentButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                    
+                } else {
+                    //Present  view from rect
+                    [self.activityPopoverController presentPopoverFromRect:CGRectMake(100, 100, 200, 400) inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+                }
             }
         }
     }
