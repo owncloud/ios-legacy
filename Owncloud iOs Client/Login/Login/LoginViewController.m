@@ -1180,8 +1180,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                         }
                         break;
                     case 1:
-                        //login button
-                        [self showHelpURLInSafari];
                         break;
                         
                     default:
