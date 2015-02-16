@@ -73,12 +73,13 @@
     initialRootFolder.size = 0;
     initialRootFolder.date = 0;
     initialRootFolder.isFavorite = NO;
-    initialRootFolder.etag = 0;
+    initialRootFolder.etag = @"";
     initialRootFolder.isRootFolder = YES;
     initialRootFolder.isNecessaryUpdate = NO;
     initialRootFolder.sharedFileSource = 0;
     initialRootFolder.permissions = @"";
     initialRootFolder.taskIdentifier = -1;
+    initialRootFolder.providingFileId = 0;
     
     [ManageFilesDB insertFile:initialRootFolder];
     

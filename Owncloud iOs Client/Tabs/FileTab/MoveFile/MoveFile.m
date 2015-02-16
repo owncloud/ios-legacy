@@ -461,8 +461,8 @@
     
     [filemgr removeItemAtPath:destiny error:nil];
     
-    NSURL *oldPath = [NSURL fileURLWithPath:origin];
-    NSURL *newPath= [NSURL fileURLWithPath:destiny];
+    NSURL *oldPath = [NSURL URLWithString:[origin stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSURL *newPath= [NSURL URLWithString:[destiny stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     [filemgr moveItemAtURL: oldPath toURL: newPath error: nil];
 }
@@ -521,7 +521,7 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //A overwrite process is in progress
-    app.isOverwriteProcess=YES;
+    app.isOverwriteProcess = YES;
     
     //Obtain the file that the user wants overwrite
     FileDto *file = nil;

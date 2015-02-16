@@ -153,7 +153,7 @@
 //We generate de local path of the files dinamically
 +(NSString *)getLocalFolderByFilePath:(NSString*) filePath andFileName:(NSString*) fileName andUserDto:(UserDto *) mUser {
     
-    NSArray *listItems = [mUser.url componentsSeparatedByString:@"/"];;
+    NSArray *listItems = [mUser.url componentsSeparatedByString:@"/"];
     NSString *urlWithoutAddress = @"";
     for (int i = 3 ; i < [listItems count] ; i++) {
         urlWithoutAddress = [NSString stringWithFormat:@"%@/%@", urlWithoutAddress, [listItems objectAtIndex:i]];
@@ -177,6 +177,48 @@
     
     //DLog(@"newLocalFolder: %@", newLocalFolder);
     return newLocalFolder;
+}
+
+//Get the relative path of the document provider using an absolute path
++ (NSString *)getRelativePathForDocumentProviderUsingAboslutePath:(NSString *) abosolutePath{
+    
+    __block NSString *relativePath;
+    
+    NSArray *listItems = [abosolutePath componentsSeparatedByString:@"/"];
+    
+    [listItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        NSString *part = (NSString*) obj;
+        
+        if (idx == listItems.count - 2) {
+            relativePath = part;
+            *stop = YES;
+        }
+        
+    }];
+    
+    relativePath = [NSString stringWithFormat:@"/%@/%@",relativePath,abosolutePath.lastPathComponent];
+    
+    return relativePath;
+}
+
++ (NSString *) getTempFolderForUploadFiles {
+    NSString * output = [NSString stringWithFormat:@"%@temp/",[UtilsUrls getOwnCloudFilePath]];
+    
+    
+    if(![[NSFileManager defaultManager] fileExistsAtPath:output]) {
+        NSError *error;
+        
+        if (![[NSFileManager defaultManager] createDirectoryAtPath:output
+                                       withIntermediateDirectories:NO
+                                                        attributes:nil
+                                                             error:&error])
+        {
+            DLog(@"Create directory error: %@", error);
+        }
+    }
+    
+    return  output;
 }
 
 @end

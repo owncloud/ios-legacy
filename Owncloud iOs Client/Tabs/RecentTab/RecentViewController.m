@@ -841,7 +841,7 @@
     //Get the update of the user
     UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
     
-    if ((k_is_sso_active && selectedUpload.userId) != (app.activeUser.idUser)) {
+    if (selectedUpload.userId != (app.activeUser.idUser)) {
         NSString *userName = userSelected.username;
         //if SAML is enabled replace the percent of the samlusername by utf8
         if (k_is_sso_active) {
@@ -985,6 +985,16 @@
 - (void) setNewNameToSaveFile:(NSString *)name {
     DLog(@"setNewNameToSaveFile: %@", name);
     
+    //Get the file related with the upload file if exist and remove the download
+    UserDto *user = [ManageUsersDB getUserByIdUser:self.selectedUploadToResolveTheConflict.userId];
+    
+    NSString *folderName=[UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",self.selectedUploadToResolveTheConflict.destinyFolder,self.selectedUploadToResolveTheConflict.uploadFileName] andUserDto:user];
+    FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.selectedUploadToResolveTheConflict.uploadFileName andFilePath:folderName andUser:user];
+    
+    if (uploadFile) {
+        [ManageFilesDB setFileIsDownloadState:uploadFile.idFile andState:notDownload];
+    }
+    
     _selectedUploadToResolveTheConflict.uploadFileName = name;
     
     [ManageUploadsDB updateErrorConflictFilesSetNewName:[name encodeString:NSUTF8StringEncoding] forUploadOffline:_selectedUploadToResolveTheConflict];
@@ -1008,7 +1018,7 @@
     [ManageUploadsDB updateErrorConflictFilesSetOverwrite:YES forUploadOffline: _selectedUploadToResolveTheConflict];
     
     //A overwrite process is in progress
-    app.isOverwriteProcess=YES;
+    app.isOverwriteProcess = YES;
     
     //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
     //The folder Name: A/

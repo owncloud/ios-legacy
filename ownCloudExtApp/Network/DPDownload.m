@@ -31,16 +31,16 @@
 
 @interface DPDownload ()
 
-@property(nonatomic, strong) NSOperation *operation;
-@property(nonatomic, strong) FileDto *file;
-@property(nonatomic, strong) UserDto *user;
-@property(nonatomic, strong) NSString *currentLocalFolder;
-@property(nonatomic, strong) NSString *temporalFileName;
-@property(nonatomic, strong) NSString *deviceLocalPath;
-@property(nonatomic, strong) FFCircularProgressView *progressView;
+@property (nonatomic, strong) NSOperation *operation;
+@property (nonatomic, strong) FileDto *file;
+@property (nonatomic, strong) UserDto *user;
+@property (nonatomic, strong) NSString *currentLocalFolder;
+@property (nonatomic, strong) NSString *temporalFileName;
+@property (nonatomic, strong) NSString *deviceLocalPath;
+@property (nonatomic, strong) FFCircularProgressView *progressView;
 @property (nonatomic) BOOL isLIFO;
 @property (nonatomic) BOOL isCancelTapped;
-@property (nonatomic) long long etagToUpdate;
+@property (nonatomic, strong) NSString *etagToUpdate;
 
 @end
 
@@ -141,7 +141,7 @@
             if (items.count >= 1) {
                 DLog(@"Directoy list: %@", items);
                 FileDto *currentFileDto = [items objectAtIndex:0];
-                DLog(@"currentFileDto: %lld", currentFileDto.etag);
+                DLog(@"currentFileDto: %@", currentFileDto.etag);
                 
                 self.etagToUpdate = currentFileDto.etag;
                 

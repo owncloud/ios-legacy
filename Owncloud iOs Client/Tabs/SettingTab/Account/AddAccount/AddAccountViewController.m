@@ -24,6 +24,7 @@
 #import "UtilsFramework.h"
 #import "AppDelegate.h"
 #import "ManageCookiesStorageDB.h"
+#import "ManageAppSettingsDB.h"
 
 @interface AddAccountViewController ()
 
@@ -178,6 +179,8 @@
             
         } else {
             [ManageUsersDB insertUser:userDto];
+            
+            [ManageAppSettingsDB updateInstantUploadAllUser];
             
             //Return the cookies to the previous user
             userDto = [ManageUsersDB getLastUserInserted];

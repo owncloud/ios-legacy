@@ -23,7 +23,8 @@ typedef enum {
     uploading=2,
     uploaded=3,
     errorUploading = 4,
-    pendingToBeCheck = 5
+    pendingToBeCheck = 5,
+    generatedByDocumentProvider = 6
 } enumUpload;
 
 typedef enum {

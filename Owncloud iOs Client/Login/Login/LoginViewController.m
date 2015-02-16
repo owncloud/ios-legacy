@@ -701,13 +701,21 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             if (section==0) {
                 n=0;
             } else if (section==1) {
-                n=2; //Modified
+                if (k_is_shown_help_link_on_login) {
+                    n=2;
+                } else {
+                    n=1;
+                }
             }
         } else {
             if (section==0) {
                 n=2;
             } else if (section==1) {
-                n=2; //Modified
+                if (k_is_shown_help_link_on_login) {
+                    n=2;
+                } else {
+                    n=1;
+                }
             }
         }
     } else {
@@ -715,7 +723,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             if (section==0) {
                 n=1;
             } else if (section==1) {
-                n=2; //Modified
+                if (k_is_shown_help_link_on_login) {
+                    n=2;
+                } else {
+                    n=1;
+                }
             } else if (section==2) {
                 n=0;
             }
@@ -725,7 +737,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             } else if (section==1) {
                 n=2;
             } else if (section==2) {
-                n=2; //Modified
+                if (k_is_shown_help_link_on_login) {
+                    n=2;
+                } else {
+                    n=1;
+                }
             }
         }
     }
@@ -1046,7 +1062,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
     cell.textLabel.text = [NSLocalizedString(@"help_link_login", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
-    cell.textLabel.textColor = [UIColor colorOfServerErrorText];
+    cell.textLabel.textColor = [UIColor colorOfLoginText];
     cell.backgroundColor = [UIColor clearColor];
     
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -1165,8 +1181,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                         }
                         break;
                     case 1:
-                        //login button
-                        [self showHelpURLInSafari];
                         break;
                         
                     default:

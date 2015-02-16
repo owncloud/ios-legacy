@@ -209,6 +209,160 @@
 }
 
 
+#pragma mark - Instant Upload
+
++(BOOL)isInstantUpload {
+    
+    __block BOOL output = NO;
+ 
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        FMResultSet *rs = [db executeQuery:@"SELECT instant_upload FROM users WHERE activeaccount=1"];
+        
+        while ([rs next]) {
+            
+            output =[rs intForColumn:@"instant_upload"];
+            
+        }
+        
+    }];
+    
+    return output;
+    
+}
+
++(void)updateInstantUploadTo:(BOOL)newValue {
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE users SET instant_upload=? ", [NSNumber numberWithBool:newValue]];
+        
+        if (!correctQuery) {
+            DLog(@"Error updating instant_upload");
+        }
+    }];
+    
+}
+
++(void)updateDateInstantUpload:(long)newValue {
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE users SET date_instant_upload=?", [NSNumber numberWithLong:newValue]];
+
+        if (!correctQuery) {
+            DLog(@"Error updating path_instant_upload");
+        }
+    }];
+    
+}
+
++(long)getDateInstantUpload{
+    DLog(@"getDateInstantUpload");
+    
+    __block long output;
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT date_instant_upload FROM users  WHERE activeaccount=1"];
+        
+        while ([rs next]) {
+            
+            output = [rs longForColumn:@"date_instant_upload"];
+        }
+        
+    }];
+    
+    return output;
+    
+}
+
++(void)updateInstantUploadAllUser {
+    if ([self isInstantUpload]) {
+        [self updateInstantUploadTo:YES];
+        [self updateDateInstantUpload:[self getDateInstantUpload]];
+    } else {
+        [self updateInstantUploadTo:NO];
+    }
+}
+
++(void)updatePathInstantUpload:(NSString *)newValue {
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE users SET path_instant_upload=?", newValue];
+
+        if (!correctQuery) {
+            DLog(@"Error updating path_instant_upload");
+        }
+    }];
+    
+}
+
+
++(void)updateOnlyWifiInstantUpload:(BOOL)newValue {
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#else
+    queue = [DocumentPickerViewController sharedDatabase];
+#endif
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE users SET only_wifi_instant_upload=?",[NSNumber numberWithBool:newValue] ];
+
+        if (!correctQuery) {
+            DLog(@"Error updating only_wifi_instant_upload");
+        }
+    }];
+    
+}
 
 
 
