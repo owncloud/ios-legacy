@@ -95,6 +95,12 @@
         
         if (self.activityView) {
             [self.activityView dismissViewControllerAnimated:YES completion:nil];
+            self.activityView = nil;
+        }
+        
+        if (self.activityPopoverController) {
+            [self.activityPopoverController dismissPopoverAnimated:YES];
+            self.activityPopoverController = nil;
         }
         
         self.activityView = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:nil];

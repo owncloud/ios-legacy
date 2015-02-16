@@ -897,7 +897,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     _titleLabel.text=@"";
     
-    [_openWith.activityView dismissViewControllerAnimated:YES completion:nil];
+    [_openWith.activityPopoverController dismissPopoverAnimated:YES];
     [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:YES];
     
     //Quit the movie player and clean memory
@@ -1127,7 +1127,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     DLog(@"Share button clicked");
     
     if (_openWith && _openWith.activityView) {
-        [_openWith.activityView dismissViewControllerAnimated:YES completion:nil];
+        [_openWith.activityPopoverController dismissPopoverAnimated:YES];
     }
     
     _mShareFileOrFolder = [ShareFileOrFolder new];
@@ -1983,6 +1983,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     if (_mShareFileOrFolder && _mShareFileOrFolder.activityPopoverController) {
         [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
+    }
+    
+    if (_openWith) {
+        [_openWith.activityPopoverController dismissPopoverAnimated:NO];
     }
 }
 
