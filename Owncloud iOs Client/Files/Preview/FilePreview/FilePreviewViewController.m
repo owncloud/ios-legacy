@@ -37,6 +37,9 @@
 #import "ManageFavorites.h"
 #import "UtilsUrls.h"
 
+#import "ReaderDocument.h"
+#import "ReaderViewController.h"
+
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 
@@ -583,20 +586,61 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  */
 - (void)openFileOffice{
     
-    if (_file.localFolder != nil) {
+    NSString *ext = [FileNameUtils getExtension:_file.fileName];
+    
+    if ([ext isEqualToString:@"PDF"]) {
         
-        if (!_officeView) {
+        ReaderDocument *document = [ReaderDocument withDocumentFilePath:_file.localFolder password:@""];
+        
+        if (document != nil) // Must have a valid ReaderDocument object in order to proceed with things
+        {
+            ReaderViewController *readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
+            
+            readerViewController.delegate = nil; // Set the ReaderViewController delegate to self
+            
+#if (DEMO_VIEW_CONTROLLER_PUSH == TRUE)
+            
+            [self.navigationController pushViewController:readerViewController animated:YES];
+            
+#else // present in a modal view controller
+            
+            //readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            //readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+            
             CGRect frame = self.view.frame;
             frame.size.height = frame.size.height-_toolBar.frame.size.height;
             frame.origin.y = 0;
-            _officeView=[[OfficeFileView alloc]initWithFrame:frame];
+            
+            [readerViewController.view setFrame:frame];
+            
+            [self.view addSubview:readerViewController.view];
+            
+            //[self presentViewController:readerViewController animated:YES completion:NULL];
+            //[[self navigationController] pushViewController:readerViewController animated:YES];
+            
+#endif // DEMO_VIEW_CONTROLLER_PUSH
+        }
+        else // Log an error so that we know that something went wrong
+        {
+            NSLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, _file.localFolder, @"");
         }
         
-        [_officeView openOfficeFileWithPath:_file.localFolder andFileName:_file.fileName];
-
-        [self.view addSubview:_officeView.webView];
-        if (_file.isNecessaryUpdate) {
-            [self.view bringSubviewToFront:_updatingFileView];
+    } else {
+        if (_file.localFolder != nil) {
+            
+            if (!_officeView) {
+                CGRect frame = self.view.frame;
+                frame.size.height = frame.size.height-_toolBar.frame.size.height;
+                frame.origin.y = 0;
+                _officeView=[[OfficeFileView alloc]initWithFrame:frame];
+            }
+            
+            [_officeView openOfficeFileWithPath:_file.localFolder andFileName:_file.fileName];
+            
+            [self.view addSubview:_officeView.webView];
+            if (_file.isNecessaryUpdate) {
+                [self.view bringSubviewToFront:_updatingFileView];
+            }
         }
     }
     
