@@ -78,7 +78,7 @@ extern NSString * fileWasDownloadNotification;
 
 
 //etag
-@property long long etagToUpdate;
+@property(nonatomic,strong) NSString *etagToUpdate;
 
 //know if download has started
 @property (nonatomic) BOOL isExecuting;
