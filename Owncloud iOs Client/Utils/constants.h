@@ -67,3 +67,6 @@
 #define k_txt_files_font_size_ipad @"20" 
 #define k_txt_files_font_family @"Sans-Serif"
 
+//Path instant upload
+#define k_path_instant_upload @"InstantUpload"
+

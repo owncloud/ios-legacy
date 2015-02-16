@@ -521,7 +521,7 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //A overwrite process is in progress
-    app.isOverwriteProcess=YES;
+    app.isOverwriteProcess = YES;
     
     //Obtain the file that the user wants overwrite
     FileDto *file = nil;

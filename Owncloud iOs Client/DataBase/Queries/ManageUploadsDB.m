@@ -16,8 +16,15 @@
 #import "ManageUploadsDB.h"
 #import "FMDatabaseQueue.h"
 #import "FMDatabase.h"
-#import "AppDelegate.h"
 #import "UploadsOfflineDto.h"
+
+#ifdef CONTAINER_APP
+#import "AppDelegate.h"
+#elif FILE_PICKER
+#import "DocumentPickerViewController.h"
+#else
+#import "FileProvider.h"
+#endif
 
 @implementation ManageUploadsDB
 
@@ -27,7 +34,15 @@
  */
 +(void) insertUpload:(UploadsOfflineDto *) upload {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -46,7 +61,15 @@
  */
 +(void) updateUploadOfflineStatusByUploadOfflineDto:(UploadsOfflineDto *) upload {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -65,7 +88,15 @@
  */
 +(void) deleteUploadOfflineByUploadOfflineDto:(UploadsOfflineDto *) upload {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -85,7 +116,15 @@
  */
 +(void) cleanTableUploadsOfflineTheFinishedUploads {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -105,7 +144,15 @@
  */
 +(void) saveInUploadsOfflineTableTheFirst:(NSUInteger)uploads{
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -131,7 +178,15 @@
  */
 +(void) insertManyUploadsOffline:(NSMutableArray *) listOfUploadOffline {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         
@@ -176,7 +231,15 @@
     
     __block UploadsOfflineDto *output = nil;
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -221,7 +284,15 @@
     
     __block UploadsOfflineDto *output = nil;
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -262,7 +333,15 @@
     
     DLog(@"setStatus: %ld andKindOfError: %ld currentUpload: %@", (long)status, (long)kindOfError, currentUpload.uploadFileName);
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -282,7 +361,16 @@
  */
 
 + (void) setDatebyUploadOffline:(UploadsOfflineDto *)currentUpload{
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -306,7 +394,15 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -347,7 +443,15 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -394,7 +498,15 @@
     __block BOOL isFiles=NO;
     __block int files=0;
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -425,7 +537,15 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -461,7 +581,15 @@
 
 + (void)updateAllErrorUploadOfflineWithWaitingAddUploadList {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -475,10 +603,44 @@
     }];
 }
 
++ (void) updateUploadsGeneratedByDocumentProviertoToWaitingAddUploadList {
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=? WHERE status = ?", [NSNumber numberWithInt:waitingAddToUploadList], [NSNumber numberWithInt:generatedByDocumentProvider]];
+        
+        if (!correctQuery) {
+            DLog(@"Error in setState");
+        }
+        
+    }];
+    
+}
+
 + (void) updateNotFinalizeUploadsBackgroundBy:(NSArray *) uploadsArray {
     
     for (UploadsOfflineDto *current in uploadsArray) {
-        FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        
+        FMDatabaseQueue *queue;
+        
+#ifdef CONTAINER_APP
+        queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+        queue = [DocumentPickerViewController sharedDatabase];
+#else
+        queue = [FileProvider sharedDatabase];
+#endif
         
         [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             BOOL correctQuery=NO;
@@ -497,7 +659,16 @@
 + (void) updateNotFinalizeUploadsOfflineBy:(NSArray *) uploadsArray {
     
     for (UploadsOfflineDto *current in uploadsArray) {
-        FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        
+        FMDatabaseQueue *queue;
+        
+#ifdef CONTAINER_APP
+        queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+        queue = [DocumentPickerViewController sharedDatabase];
+#else
+        queue = [FileProvider sharedDatabase];
+#endif
         
         [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             BOOL correctQuery=NO;
@@ -520,7 +691,15 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -564,7 +743,15 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -608,7 +795,15 @@
  */
 + (void) updateErrorCredentialFiles:(NSInteger) userId {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -628,7 +823,15 @@
  */
 + (void) updateErrorFolderNotFoundFilesSetNewDestinyFolder:(NSString *) folder forUploadOffline:(UploadsOfflineDto *) selectedUpload  {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -650,7 +853,15 @@
     
     DLog(@"name: %@",name);
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -670,7 +881,15 @@
  */
 + (void) updateErrorConflictFilesSetOverwrite:(BOOL) isNotNecessaryCheckIfExist forUploadOffline:(UploadsOfflineDto *) selectedUpload {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -690,7 +909,15 @@
  */
 + (void) updateAllUploadsWithNotNecessaryCheck {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -717,7 +944,15 @@
  */
 + (void) setTaskIdentifier:(NSInteger)taskIdentifier forUploadOffline:(UploadsOfflineDto *)upload{
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;

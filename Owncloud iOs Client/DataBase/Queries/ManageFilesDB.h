@@ -145,10 +145,10 @@
 /**
  * This method update the files DB with the datas located on the files_backup DB
  * 
- * If the file is overwritten we update the fileds: is_download, shared_file_source and
+ * If the file is overwritten we update the fileds: is_download, shared_file_source, providing_file_id and
  * is_overwritten
  *
- * If other case we update the fields: is_download, shared_file_source and is_overwritten
+ * If other case we update the fields: is_download, shared_file_source, providing_file_id and is_overwritten
  * AND etag
  */
 + (void) updateFilesFromBackup;
@@ -286,15 +286,14 @@
  * @idFile -> id of the file to update the etag
  * @etag -> new etag
  */
-
-+ (void) updateEtagOfFileDtoByid:(NSInteger) idFile andNewEtag: (long long) etag;
++ (void) updateEtagOfFileDtoByid:(NSInteger) idFile andNewEtag: (NSString *) etag;
 
 /*
  * Method to update the etag of a file
  * @FileDto
  * @etag -> new etag
  */
-+(void) updateEtagOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withNewEtag: (long long)etag;
++(void) updateEtagOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withNewEtag: (NSString *)etag;
 
 /*
  * Method to update the fileId with a new fileId. We use it to update the files of the root folder
@@ -525,6 +524,11 @@
 +(void) deleteAlleTagOfTheDirectoties;
 
 
+#pragma mark - Providing Files
+
++ (void) updateFile:(NSInteger)idFile withProvidingFile:(NSInteger)providingFileId;
+
++ (FileDto *) getFileDtoRelatedWithProvidingFileId:(NSInteger)providingFileId ofUser:(NSInteger)userId;
 
 
 

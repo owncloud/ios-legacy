@@ -971,7 +971,7 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //A overwrite process is in progress
-    app.isOverwriteProcess=YES;
+    app.isOverwriteProcess = YES;
     
     //Get the name in the correct encoding
     NSString *name=[_nameFileTextField.text encodeString:NSUTF8StringEncoding];

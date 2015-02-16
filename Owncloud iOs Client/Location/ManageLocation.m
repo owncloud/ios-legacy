@@ -16,6 +16,9 @@
 
 
 #import "ManageLocation.h"
+#import "SettingsViewController.h"
+#import "ManageAppSettingsDB.h"
+#import "ManageAsset.h"
 
 @implementation ManageLocation
 
@@ -23,8 +26,9 @@
     static ManageLocation *sharedSingleton;
     @synchronized(self)
     {
-        if (!sharedSingleton)
+        if (!sharedSingleton){
             sharedSingleton = [[ManageLocation alloc] init];
+        }
         return sharedSingleton;
     }
 }
@@ -38,8 +42,9 @@
         if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]){
             [self.locationManager requestAlwaysAuthorization];
         }
+        
     }
-   
+    
     [self.locationManager startMonitoringSignificantLocationChanges];
 }
 
@@ -48,40 +53,25 @@
     [self.locationManager stopMonitoringSignificantLocationChanges];
 }
 
-
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-
-      CLLocation* location = [locations lastObject];
     
-    DLog(@"latitude__ %+.6f, longitude__ %+.6f\n",
-         
-         location.coordinate.latitude,
-         
-         location.coordinate.longitude);
-
+    CLLocation* location = [locations lastObject];
     
-    //do something
+    DLog(@"latitude__ %+.6f, longitude__ %+.6f\n",location.coordinate.latitude, location.coordinate.longitude);
     
-    [self presentNotification];
+    [self.delegate changedLocation];
+    
 }
 
-
+-(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
+    
+    [self.delegate statusAuthorizationLocationChanged];
+}
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-        DLog(@"Unable to start location manager. Error:%@", [error description]);
-}
-
-
--(void)presentNotification {
-    DLog(@"notication method\n");
-    UILocalNotification* localNotification = [[UILocalNotification alloc] init];
-    localNotification.alertBody = @"Location updated!!";
-    localNotification.alertAction = @"Background Location change";
+    DLog(@"Unable to start location manager. Error:%@", [error description]);
+    [self.delegate statusAuthorizationLocationChanged];
     
-    //On sound
-    localNotification.soundName = UILocalNotificationDefaultSoundName;
-    
-    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
 }
 
 @end
