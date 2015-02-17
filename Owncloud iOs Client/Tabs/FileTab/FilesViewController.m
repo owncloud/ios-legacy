@@ -2449,9 +2449,9 @@
     }
     
     //Update fileDto
-    _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:_selectedFileDto.idFile];
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if ([_selectedFileDto isDownload]==downloading) {
+    if ([_selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
         _alert = nil;
         _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
