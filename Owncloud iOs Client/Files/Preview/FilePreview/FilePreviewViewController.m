@@ -342,9 +342,11 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             }
             _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.width, screenSize.height);
         }
+    } else if (_readerPDFViewController) {
+        
     }
 }
- 
+
 -(void)landscapeView{
     if (_moviePlayer) {
         UIScreen *mainScreen = [UIScreen mainScreen];
@@ -363,6 +365,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.height, screenSize.width);
 
         }
+    } else if (_readerPDFViewController) {
+        
     }
 }
 
@@ -388,6 +392,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     if (_galleryView) {
         [_galleryView prepareScrollViewBeforeTheRotation];
+    } else if (_readerPDFViewController) {
+        [_readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
     
     if (toInterfaceOrientation  == UIInterfaceOrientationPortrait) {
@@ -400,7 +406,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 }
 
 -(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    
+
     if (_galleryView) {
         if (_galleryView.fullScreen) {
             CGRect frame = self.view.frame;           
@@ -412,8 +418,16 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             _toolBar.hidden = NO;
         }        
          [_galleryView adjustTheScrollViewAfterTheRotation];
+    } else if (_readerPDFViewController) {
+        [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
     } else {
         _toolBar.hidden = NO;
+    }
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    if (_readerPDFViewController) {
+        [_readerPDFViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     }
 }
 
@@ -591,13 +605,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     if ([ext isEqualToString:@"PDF"]) {
         
-        _document = [ReaderDocument withDocumentFilePath:_file.localFolder password:@""];
+        _documentPDF = [ReaderDocument withDocumentFilePath:_file.localFolder password:@""];
         
-        if (_document != nil) // Must have a valid ReaderDocument object in order to proceed with things
+        if (_documentPDF != nil) // Must have a valid ReaderDocument object in order to proceed with things
         {
-            _readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_document];
+            _readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:_documentPDF];
             
-            _readerViewController.delegate = nil; // Set the ReaderViewController delegate to self
+            _readerPDFViewController.delegate = nil; // Set the ReaderViewController delegate to self
             
 #if (DEMO_VIEW_CONTROLLER_PUSH == TRUE)
             
@@ -612,9 +626,9 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             frame.size.height = frame.size.height-_toolBar.frame.size.height;
             frame.origin.y = 0;
             
-            [_readerViewController.view setFrame:frame];
+            [_readerPDFViewController.view setFrame:frame];
             
-            [self.view addSubview:_readerViewController.view];
+            [self.view addSubview:_readerPDFViewController.view];
             
             //[self presentViewController:readerViewController animated:YES completion:NULL];
             //[[self navigationController] pushViewController:readerViewController animated:YES];

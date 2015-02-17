@@ -86,8 +86,8 @@ extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 @property(nonatomic) CGRect transitionFrame;
 
 //VFR Pdf reader
-@property(nonatomic, strong) ReaderDocument *document;
-@property(nonatomic, strong) ReaderViewController *readerViewController;
+@property(nonatomic, strong) ReaderDocument *documentPDF;
+@property(nonatomic, strong) ReaderViewController *readerPDFViewController;
 
 
 
