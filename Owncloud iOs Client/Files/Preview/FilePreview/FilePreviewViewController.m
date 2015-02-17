@@ -607,20 +607,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
         _documentPDF = [ReaderDocument withDocumentFilePath:_file.localFolder password:@""];
         
-        if (_documentPDF != nil) // Must have a valid ReaderDocument object in order to proceed with things
-        {
+        if (_documentPDF != nil) {
             _readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:_documentPDF];
-            
-            _readerPDFViewController.delegate = nil; // Set the ReaderViewController delegate to self
-            
-#if (DEMO_VIEW_CONTROLLER_PUSH == TRUE)
-            
-            [self.navigationController pushViewController:readerViewController animated:YES];
-            
-#else // present in a modal view controller
-            
-            //readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-            //readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
             
             CGRect frame = self.view.frame;
             frame.size.height = frame.size.height-_toolBar.frame.size.height;
@@ -630,14 +618,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             
             [self.view addSubview:_readerPDFViewController.view];
             
-            //[self presentViewController:readerViewController animated:YES completion:NULL];
-            //[[self navigationController] pushViewController:readerViewController animated:YES];
-            
-#endif // DEMO_VIEW_CONTROLLER_PUSH
-        }
-        else // Log an error so that we know that something went wrong
-        {
-            NSLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, _file.localFolder, @"");
+        } else {
+            DLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, _file.localFolder, @"");
         }
         
     } else {
