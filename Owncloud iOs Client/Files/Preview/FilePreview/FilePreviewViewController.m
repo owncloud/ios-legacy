@@ -512,7 +512,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
                 if (_typeOfFile == videoFileType || _typeOfFile == audioFileType) {
                     [self performSelectorOnMainThread:@selector(playMediaFile) withObject:nil waitUntilDone:YES];
                 } else if (_typeOfFile == officeFileType) {
-                    [self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
+                    [self performSelector:@selector(openFileOffice) withObject:nil afterDelay:0.1];
+                    //[self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
                 } else {
                     [self cleanView];
                 }
@@ -590,13 +591,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     if ([ext isEqualToString:@"PDF"]) {
         
-        ReaderDocument *document = [ReaderDocument withDocumentFilePath:_file.localFolder password:@""];
+        _document = [ReaderDocument withDocumentFilePath:_file.localFolder password:@""];
         
-        if (document != nil) // Must have a valid ReaderDocument object in order to proceed with things
+        if (_document != nil) // Must have a valid ReaderDocument object in order to proceed with things
         {
-            ReaderViewController *readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
+            _readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_document];
             
-            readerViewController.delegate = nil; // Set the ReaderViewController delegate to self
+            _readerViewController.delegate = nil; // Set the ReaderViewController delegate to self
             
 #if (DEMO_VIEW_CONTROLLER_PUSH == TRUE)
             
@@ -611,9 +612,9 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             frame.size.height = frame.size.height-_toolBar.frame.size.height;
             frame.origin.y = 0;
             
-            [readerViewController.view setFrame:frame];
+            [_readerViewController.view setFrame:frame];
             
-            [self.view addSubview:readerViewController.view];
+            [self.view addSubview:_readerViewController.view];
             
             //[self presentViewController:readerViewController animated:YES completion:NULL];
             //[[self navigationController] pushViewController:readerViewController animated:YES];

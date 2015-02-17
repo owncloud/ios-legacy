@@ -363,7 +363,7 @@
 	pagebarRect.origin.y = (self.view.bounds.size.height - pagebarRect.size.height);
 	mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect document:document]; // ReaderMainPagebar
 	mainPagebar.delegate = self; // ReaderMainPagebarDelegate
-	//[self.view addSubview:mainPagebar];
+	[self.view addSubview:mainPagebar];
 
 	if (fakeStatusBar != nil) [self.view addSubview:fakeStatusBar]; // Add status bar background view
 
