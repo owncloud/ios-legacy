@@ -76,7 +76,7 @@
                         <action selector="didPressCancelButton:" destination="-1" eventType="touchUpInside" id="100"/>
                     </connections>
                 </button>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="85">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="85">
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
@@ -170,6 +170,7 @@
                 <constraint firstItem="82" firstAttribute="top" secondItem="80" secondAttribute="bottom" constant="28" id="7bH-w7-UjE"/>
                 <constraint firstAttribute="centerX" secondItem="85" secondAttribute="centerX" constant="-6" id="C2r-2t-fGS"/>
                 <constraint firstAttribute="bottom" secondItem="112" secondAttribute="bottom" id="E2n-qO-LdM"/>
+                <constraint firstAttribute="trailing" secondItem="112" secondAttribute="trailing" id="EHU-vL-9dS"/>
                 <constraint firstItem="63" firstAttribute="bottom" secondItem="112" secondAttribute="top" id="Eae-NX-uQV"/>
                 <constraint firstAttribute="centerX" secondItem="RhM-9d-K2q" secondAttribute="centerX" id="FdE-Oh-T1r"/>
                 <constraint firstAttribute="centerY" secondItem="83" secondAttribute="centerY" constant="-83" id="HPt-0F-QbD"/>
@@ -182,6 +183,7 @@
                 <constraint firstAttribute="trailing" secondItem="1eq-mt-JYf" secondAttribute="trailing" constant="210" id="dtc-mg-Qfz"/>
                 <constraint firstAttribute="trailing" secondItem="63" secondAttribute="trailing" id="eqJ-iI-DfF"/>
                 <constraint firstAttribute="centerY" secondItem="85" secondAttribute="centerY" constant="-120" id="fcI-W2-MVH"/>
+                <constraint firstItem="112" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="hxn-MC-y5B"/>
                 <constraint firstItem="BV7-Lz-cFn" firstAttribute="top" secondItem="8" secondAttribute="top" constant="10" id="jWd-pP-iNs"/>
                 <constraint firstItem="1eq-mt-JYf" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="62" id="nEk-l1-bFG"/>
                 <constraint firstItem="63" firstAttribute="top" secondItem="8" secondAttribute="top" id="vKc-nP-atq"/>

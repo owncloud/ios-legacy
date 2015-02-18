@@ -601,49 +601,53 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  */
 - (void)openFileOffice{
     
-    NSString *ext = [FileNameUtils getExtension:_file.fileName];
-    
-    if ([ext isEqualToString:@"PDF"]) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *ext = [FileNameUtils getExtension:_file.fileName];
         
-        _documentPDF = [ReaderDocument withDocumentFilePath:_file.localFolder password:@""];
-        
-        if (_documentPDF != nil) {
-            _readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:_documentPDF];
+        if ([ext isEqualToString:@"PDF"]) {
             
-            CGRect frame = self.view.frame;
-            frame.size.height = frame.size.height-_toolBar.frame.size.height;
-            frame.origin.y = 0;
+            _documentPDF = [ReaderDocument withDocumentFilePath:_file.localFolder password:@""];
             
-            [_readerPDFViewController.view setFrame:frame];
-            
-            [self.view addSubview:_readerPDFViewController.view];
-            
-        } else {
-            DLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, _file.localFolder, @"");
-        }
-        
-    } else {
-        if (_file.localFolder != nil) {
-            
-            if (!_officeView) {
+            if (_documentPDF != nil) {
+                _readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:_documentPDF];
+                
                 CGRect frame = self.view.frame;
                 frame.size.height = frame.size.height-_toolBar.frame.size.height;
                 frame.origin.y = 0;
-                _officeView=[[OfficeFileView alloc]initWithFrame:frame];
+                
+                [_readerPDFViewController.view setFrame:frame];
+                
+                [self.view addSubview:_readerPDFViewController.view];
+                
+            } else {
+                DLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, _file.localFolder, @"");
             }
             
-            [_officeView openOfficeFileWithPath:_file.localFolder andFileName:_file.fileName];
-            
-            [self.view addSubview:_officeView.webView];
-            if (_file.isNecessaryUpdate) {
-                [self.view bringSubviewToFront:_updatingFileView];
+        } else {
+            if (_file.localFolder != nil) {
+                
+                if (!_officeView) {
+                    CGRect frame = self.view.frame;
+                    frame.size.height = frame.size.height-_toolBar.frame.size.height;
+                    frame.origin.y = 0;
+                    _officeView=[[OfficeFileView alloc]initWithFrame:frame];
+                }
+                
+                [_officeView openOfficeFileWithPath:_file.localFolder andFileName:_file.fileName];
+                
+                [self.view addSubview:_officeView.webView];
+                if (_file.isNecessaryUpdate) {
+                    [self.view bringSubviewToFront:_updatingFileView];
+                }
             }
         }
-    }
+        
+        //Enable back button
+        self.navigationController.navigationBar.UserInteractionEnabled = YES;
+        _toolBar.UserInteractionEnabled = YES;
+    });
     
-    //Enable back button
-    self.navigationController.navigationBar.UserInteractionEnabled = YES;
-    _toolBar.UserInteractionEnabled = YES;
+    
 }
 
 

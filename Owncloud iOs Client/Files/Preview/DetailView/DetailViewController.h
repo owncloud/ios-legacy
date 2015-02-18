@@ -26,6 +26,9 @@
 #import "CWStatusBarNotification.h"
 #import "ShareFileOrFolder.h"
 
+@class ReaderDocument;
+@class ReaderViewController;
+
 typedef enum {
     noManagerController = 0,
     fileListManagerController = 1,
@@ -130,7 +133,9 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 //Flag to check if the cancel was clicked before launch automatically the favorite download
 @property(nonatomic) BOOL isCancelDownloadClicked;
 
-
+//VFR Pdf reader
+@property(nonatomic, strong) ReaderDocument *documentPDF;
+@property(nonatomic, strong) ReaderViewController *readerPDFViewController;
 
 ///-----------------------------------
 /// @name Handle File
