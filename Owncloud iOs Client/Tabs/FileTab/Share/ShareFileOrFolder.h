@@ -80,4 +80,6 @@
  */
 - (void) clickOnShareLinkFromFileDto:(BOOL)isFileDto;
 
+
+-(void)doRequestSharedLinkWithPath: (NSString *)filePath andPassword: (NSString *)password;
 @end

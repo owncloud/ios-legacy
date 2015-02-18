@@ -331,7 +331,11 @@
                                     [_delegate errorLogin];
                                     break;
                                 case kOCErrorServerForbidden:
-                                    [self showError:NSLocalizedString(@"error_not_permission", nil)];
+                                    //share maybe enabled
+                                    //TODO:show password enter pop up
+                                    [self showError:NSLocalizedString(@"shared_link_protected", nil)];
+                                    //TODO:get from user the password
+                                    [self doRequestSharedLinkWithPath:filePath andPassword:@"1234"];
                                     break;
                                 case kOCErrorServerTimeout:
                                     [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
@@ -396,6 +400,28 @@
         }
     }];
 }
+
+
+-(void)doRequestSharedLinkWithPath: (NSString *)path andPassword: (NSString *)password{
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
+    //Checking the Shared files and folders
+    [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:path andPassword:password onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
+        //TODO:if sucess update db and show link
+        //Ok we have the token but we also need all the information of the file in order to populate the database
+        [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+        
+        [self endLoading];
+        
+        //Present
+        [self presentShareActionSheetForToken:token];
+        
+        } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        
+     }];
+   
+}
+
 
 ///-----------------------------------
 /// @name endLoading
