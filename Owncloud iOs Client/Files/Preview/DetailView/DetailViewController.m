@@ -619,14 +619,15 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 - (void)openFile {
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    self.file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if (!_openWith) {
-        _openWith = [[OpenWith alloc]init];
+    
+    if (!self.openWith) {
+        self.openWith = [[OpenWith alloc]init];
     }
-    //Openwith
-    _openWith.parentButton=_openButtonBar;
-    [_openWith openWithFile:_file];
+    
+    self.openWith.parentButton=_openButtonBar;
+    [self.openWith openWithFile:self.file];
     
     _isViewBlocked = NO;
 }
@@ -896,7 +897,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     _titleLabel.text=@"";
     
-    [_openWith.documentInteractionController dismissMenuAnimated:YES];
+    [_openWith.activityPopoverController dismissPopoverAnimated:YES];
     [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:YES];
     
     //Quit the movie player and clean memory
@@ -1125,8 +1126,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 - (IBAction)didPressShareLinkButton:(id)sender {
     DLog(@"Share button clicked");
     
-    if (_openWith && _openWith.documentInteractionController) {
-        [_openWith.documentInteractionController dismissMenuAnimated:YES];
+    if (_openWith && _openWith.activityView) {
+        [_openWith.activityPopoverController dismissPopoverAnimated:YES];
     }
     
     _mShareFileOrFolder = [ShareFileOrFolder new];
@@ -1982,6 +1983,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     if (_mShareFileOrFolder && _mShareFileOrFolder.activityPopoverController) {
         [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
+    }
+    
+    if (_openWith) {
+        [_openWith.activityPopoverController dismissPopoverAnimated:NO];
     }
 }
 

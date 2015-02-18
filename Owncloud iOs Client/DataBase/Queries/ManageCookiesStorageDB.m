@@ -41,7 +41,7 @@
         correctQuery = [db executeUpdate:@"INSERT INTO cookies_storage (cookie, user_id) Values (?,?)", [NSKeyedArchiver archivedDataWithRootObject:cookie.cookie], [NSNumber numberWithInteger:cookie.userId]];
         
         if (!correctQuery) {
-            DLog(@"Error insert upload offline object");
+            DLog(@"Error insert cookie");
         }
     }];
 }

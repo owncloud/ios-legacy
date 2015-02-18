@@ -47,9 +47,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO uploads_offline (origin_path, destiny_folder, upload_filename, estimate_length, user_id, is_last_upload_file_of_this_Array, chunk_position, chunk_unique_number, chunks_length, status,kind_of_error,is_internal_upload,is_not_necessary_check_if_exist, task_identifier) Values('%@', '%@', '%@',%ld, %ld, %d, %ld, %ld, %ld, %ld, %ld, %d, %d, %ld)", upload.originPath,upload.destinyFolder,upload.uploadFileName, upload.estimateLength, (long)upload.userId, upload.isLastUploadFileOfThisArray, (long)upload.chunkPosition, (long)upload.chunkUniqueNumber, upload.chunksLength,(long)upload.status, (long)upload.kindOfError, upload.isInternalUpload, upload.isNotNecessaryCheckIfExist, (long)upload.taskIdentifier];
-
-        correctQuery = [db executeUpdate:sqlString];
+        correctQuery = [db executeUpdate:@"INSERT INTO uploads_offline (origin_path, destiny_folder, upload_filename, estimate_length, user_id, is_last_upload_file_of_this_Array, chunk_position, chunk_unique_number, chunks_length, status,kind_of_error,is_internal_upload,is_not_necessary_check_if_exist, task_identifier) Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", upload.originPath,upload.destinyFolder,upload.uploadFileName, [NSNumber numberWithLong:upload.estimateLength], [NSNumber numberWithInteger:upload.userId], [NSNumber numberWithBool:upload.isLastUploadFileOfThisArray], [NSNumber numberWithInteger: upload.chunkPosition], [NSNumber numberWithInteger:upload.chunkUniqueNumber], [NSNumber numberWithLong:upload.chunksLength], [NSNumber numberWithInteger:upload.status], [NSNumber numberWithInteger:upload.kindOfError], [NSNumber numberWithBool:upload.isInternalUpload], [NSNumber numberWithBool:upload.isNotNecessaryCheckIfExist], [NSNumber numberWithInteger:upload.taskIdentifier]];
         
         if (!correctQuery) {
             DLog(@"Error insert upload offline object");

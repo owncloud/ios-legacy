@@ -740,7 +740,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             if (items.count >= 1) {
                 DLog(@"Directoy list: %@", items);
                 FileDto *currentFileDto = [items objectAtIndex:0];
-                DLog(@"currentFileDto: %lld", currentFileDto.etag);
+                DLog(@"currentFileDto: %@", currentFileDto.etag);
                 
                 _etagToUpdate = currentFileDto.etag;
                 [self processToDownloadTheFile];
