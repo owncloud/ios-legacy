@@ -2040,7 +2040,16 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             }
         }
     } else if (_readerPDFViewController) {
+        
+        CGRect frame = _mainScrollView.frame;
+        frame.origin.x = 0;
+        frame.origin.y = 0;
+        frame.size.width = 767;
+        
+        [_readerPDFViewController updateTheScrollView:frame];
+        [_readerPDFViewController updateContentViews];
         [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+        [_readerPDFViewController showDocument];
     }
 }
 
