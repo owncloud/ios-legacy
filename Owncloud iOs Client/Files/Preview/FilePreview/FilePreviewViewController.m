@@ -601,7 +601,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  */
 - (void)openFileOffice{
     
-    dispatch_async(dispatch_get_main_queue(), ^{
         NSString *ext = [FileNameUtils getExtension:_file.fileName];
         
         if ([ext isEqualToString:@"PDF"]) {
@@ -645,9 +644,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         //Enable back button
         self.navigationController.navigationBar.UserInteractionEnabled = YES;
         _toolBar.UserInteractionEnabled = YES;
-    });
-    
-    
+
 }
 
 

@@ -579,8 +579,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             if (_typeOfFile == videoFileType || _typeOfFile == audioFileType) {
                 [self performSelectorOnMainThread:@selector(playMediaFile) withObject:nil waitUntilDone:YES];
             } else if (_typeOfFile == officeFileType) {
-                [self performSelector:@selector(openFileOffice) withObject:nil afterDelay:2.0];
-                //[self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
+                //[self performSelector:@selector(openFileOffice) withObject:nil afterDelay:2.0];
+                [self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
             } else {
                 [self cleanViewWithoutBlock];
             }
@@ -2013,7 +2013,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     if (_galleryView) {
         [_galleryView prepareScrollViewBeforeTheRotation];
     } else if (_readerPDFViewController) {
-        //[_readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+        [_readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
     
     if (_mShareFileOrFolder && _mShareFileOrFolder.activityPopoverController) {
@@ -2040,7 +2040,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             }
         }
     } else if (_readerPDFViewController) {
-        //[_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+        [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
 }
 
@@ -2048,7 +2048,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
     DLog(@"did rotate");
     if (_readerPDFViewController) {
-        //[_readerPDFViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+        [_readerPDFViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     }
 
     [self showPopover];
