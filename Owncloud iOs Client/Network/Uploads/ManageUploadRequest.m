@@ -960,7 +960,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             if (items.count >= 1) {
                 DLog(@"Directoy list: %@", items);
                 FileDto *currentFileDto = [items objectAtIndex:0];
-                DLog(@"currentFileDto: %lld", currentFileDto.etag);
+                DLog(@"currentFileDto: %@", currentFileDto.etag);
                 //Update the etag
                 NSString *folderName=[UtilsDtos getDBFilePathOfFileDtoFilePath:overwrittenFile.filePath ofUserDto:self.userUploading];
                 [ManageFilesDB updateEtagOfFileDtoByFileName:overwrittenFile.fileName andFilePath:folderName andActiveUser:self.userUploading withNewEtag:currentFileDto.etag];
@@ -1036,15 +1036,15 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             if (items.count >= 1) {
                 DLog(@"Directoy list: %@", items);
                 FileDto *currentFileDto = [items objectAtIndex:0];
-                DLog(@"currentFileDto: %lld", currentFileDto.etag);
+                DLog(@"currentFileDto: %@", currentFileDto.etag);
                 
                 //Check the etag
-                if (overwrittenFile.etag != currentFileDto.etag) {
-                    [self changeTheStatusToErrorFileExist];
-                }else{
-                    //Overwrite
-                   [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+                if (![overwrittenFile.etag isEqualToString:currentFileDto.etag]) {
+                     [self changeTheStatusToErrorFileExist];
+                } else{
+                    [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
                 }
+                
             }else{
                 [ManageUploadsDB setStatus:errorUploading andKindOfError:notAnError byUploadOffline:_currentUpload];
             }
