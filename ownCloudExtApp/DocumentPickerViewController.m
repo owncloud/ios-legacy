@@ -186,14 +186,16 @@
         NSLog(@"Error copyng file: %@", error);
     }
     
-    NSNumber *fileSize = 0;
+    NSDictionary *attributes = nil;
     
     if (!error) {
-        NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:destinationUrl.path error:nil];
-        fileSize = [attributes objectForKey:@"NSFileSize"];
+        attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:destinationUrl.path error:&error];
+         NSLog(@"Error getting the artributtes of the file: %@", error);
     }
     
-   if (fileSize.integerValue > 0) {
+    
+    //Some error in the process to send the file to the document picker.
+   if (attributes && !error) {
        
        ProvidingFileDto *providingFile = [ManageProvidingFilesDB insertProvidingFileDtoWithPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:destinationUrl.path] byUserId:self.user.idUser];
        [ManageFilesDB updateFile:fileDto.idFile withProvidingFile:providingFile.idProvidingFile];
