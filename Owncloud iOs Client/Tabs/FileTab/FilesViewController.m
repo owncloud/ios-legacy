@@ -2057,7 +2057,13 @@
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                     //Do operations in background thread
                     
-                    //Get shared items of a specific folder
+                    //Workaround to find the _fileIdToShowFiles because some times there are problems with the changes active user, and this method is launched before the viewwillappear
+                    NSString *pathActiveUser =[ManageFilesDB getRootFileDtoByUser:app.activeUser].filePath;
+                    if ([_fileIdToShowFiles.filePath rangeOfString:pathActiveUser].location == NSNotFound) {
+                        _fileIdToShowFiles = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
+                        DLog(@"Changing between accounts, update _fileIdToShowFiles with root path with the active user");
+                    }
+                    
                     NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsDtos getDBFilePathOfFileDtoFilePath:_fileIdToShowFiles.filePath ofUserDto:app.activeUser], _fileIdToShowFiles.fileName]];
                     
                     //1. We remove the removed shared from the Files table of the current folder
