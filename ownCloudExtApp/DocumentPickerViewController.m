@@ -163,7 +163,7 @@
 - (void) openFile:(FileDto *)fileDto {
     
     NSURL *originUrl = [NSURL fileURLWithPath:fileDto.localFolder];
-    NSString *folder = [NSString stringWithFormat: @"file_%lld/", fileDto.etag];
+    NSString *folder = [NSString stringWithFormat: @"file_%@/", fileDto.etag];
     NSURL *destinationUrl = [self.documentStorageURL URLByAppendingPathComponent:folder];
     
     NSError *error = nil;
