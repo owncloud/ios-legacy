@@ -539,6 +539,7 @@
 		EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */; };
 		EA2B4FB017FAFF69001766BB /* company_empty_screen_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */; };
 		EA2B4FB217FC2CCE001766BB /* company_empty_screen_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FB117FC2CCE001766BB /* company_empty_screen_ipad@2x.png */; };
+		EA42197C1A94BADB0081D400 /* TestSwiftClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA42197B1A94BADB0081D400 /* TestSwiftClass.swift */; };
 		EA42FA4B18041E2F0006DB7C /* PassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4A18041E2F0006DB7C /* PassthroughView.m */; };
 		EA42FA4E1804217D0006DB7C /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA42FA51180539E70006DB7C /* ImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA50180539E70006DB7C /* ImageUtils.m */; };
@@ -1174,6 +1175,8 @@
 		EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notSharedItem@2x.png"; sourceTree = "<group>"; };
 		EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = company_empty_screen_ipad.png; sourceTree = "<group>"; };
 		EA2B4FB117FC2CCE001766BB /* company_empty_screen_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "company_empty_screen_ipad@2x.png"; sourceTree = "<group>"; };
+		EA42197B1A94BADB0081D400 /* TestSwiftClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSwiftClass.swift; sourceTree = "<group>"; };
+		EA42197F1A94F6850081D400 /* Owncloud iOs Client-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Owncloud iOs Client-Bridging-Header.h"; sourceTree = "<group>"; };
 		EA42FA4918041E2F0006DB7C /* PassthroughView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PassthroughView.h; path = Tabs/FileTab/PassthroughView.h; sourceTree = "<group>"; };
 		EA42FA4A18041E2F0006DB7C /* PassthroughView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PassthroughView.m; path = Tabs/FileTab/PassthroughView.m; sourceTree = "<group>"; };
 		EA42FA4C1804217D0006DB7C /* OCToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCToolBar.h; path = Tabs/FileTab/OCToolBar.h; sourceTree = "<group>"; };
@@ -1400,6 +1403,8 @@
 				1324298315ADBB3700DF823E /* Supporting Files */,
 				148DD689177865A900FB9977 /* Tabs */,
 				137F615615E36334001F460C /* Utils */,
+				EA42197B1A94BADB0081D400 /* TestSwiftClass.swift */,
+				EA42197F1A94F6850081D400 /* Owncloud iOs Client-Bridging-Header.h */,
 			);
 			path = "Owncloud iOs Client";
 			sourceTree = "<group>";
@@ -3367,6 +3372,7 @@
 				EAC598601A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */,
 				148DD6A81778668A00FB9977 /* SelectFolderNavigation.m in Sources */,
 				EA68969117F599060033B3C1 /* KKPasscodeViewController.m in Sources */,
+				EA42197C1A94BADB0081D400 /* TestSwiftClass.swift in Sources */,
 				593F7CAA19EFDE96004136F7 /* UtilsUrls.m in Sources */,
 				EA42FA4E1804217D0006DB7C /* OCToolBar.m in Sources */,
 				148DD6A91778668A00FB9977 /* SelectFolderViewController.m in Sources */,
@@ -3683,11 +3689,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = "Owncloud iOs Client/Owncloud iOs Client.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
+				DEFINES_MODULE = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -3706,6 +3715,7 @@
 				);
 				INFOPLIST_FILE = "Owncloud iOs Client/Owncloud iOs Client-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3715,6 +3725,9 @@
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3724,11 +3737,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = "Owncloud iOs Client/Owncloud iOs Client.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
+				DEFINES_MODULE = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -3741,6 +3757,7 @@
 				);
 				INFOPLIST_FILE = "Owncloud iOs Client/Owncloud iOs Client-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3750,6 +3767,8 @@
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};

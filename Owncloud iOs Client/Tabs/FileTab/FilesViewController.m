@@ -56,6 +56,10 @@
 #import "MGSplitViewController.h"
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
+#import "Owncloud_iOs_Client-Swift.h"
+
+
+
 
 
 //Constant for iOS7
@@ -118,8 +122,8 @@
     
     _currentRemoteFolder = currentFolder;
     _currentLocalFolder = currentLocalFoler;
-    DLog(@"self.fileIdToShowFiles: %lld", _fileIdToShowFiles.etag);
-    DLog(@"self.fileIdToShowFiles: %ld", (long)_fileIdToShowFiles.idFile);
+   // DLog(@"self.fileIdToShowFiles: %lld", _fileIdToShowFiles.etag);
+  //  DLog(@"self.fileIdToShowFiles: %ld", (long)_fileIdToShowFiles.idFile);
     
     _showLoadingAfterChangeUser = NO;
     _checkingEtag = NO;
@@ -154,6 +158,7 @@
 
 - (void)viewDidLoad 
 {
+    
     [super viewDidLoad];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -2408,8 +2413,19 @@
  */
 - (void)didSelectRenameOption {
     
+    //Only for test proposes
+    TestSwiftClass *swiftAlertView = [[TestSwiftClass alloc]init];
+  //  [swiftAlertView showAlertView];
+
+    [swiftAlertView showAlertController:self];
+    
+   // [swiftAlertView showAlertViewWithText:@"Temp Folder"];
+    
+    
+    
+    
     //Update fileDto
-    _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:_selectedFileDto.idFile];
+   /* _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:_selectedFileDto.idFile];
     
     if ([_selectedFileDto isDownload]==downloading) {
         //if the file is downloading alert the user
@@ -2431,7 +2447,7 @@
         _rename.currentLocalFolder=_currentLocalFolder;
         _rename.mUser = _mUser;
         [_rename showRenameFile:_selectedFileDto];
-    }
+    }*/
 }
 
 
