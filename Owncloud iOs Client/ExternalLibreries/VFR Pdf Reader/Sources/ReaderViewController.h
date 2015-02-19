@@ -43,8 +43,6 @@
 
 - (instancetype)initWithReaderDocument:(ReaderDocument *)object;
 
-- (void) updateTheScrollView:(CGRect) frame;
 - (void) updateContentViews;
-- (void)showDocument;
 
 @end

@@ -487,12 +487,11 @@
 	ignoreDidScroll = NO;
 }
 
-- (void) updateTheScrollView:(CGRect) frame {
-    [theScrollView setFrame:frame];
-}
-
 - (void) updateContentViews {
-    [self updateContentViews:theScrollView];
+    
+    if (currentPage > 0) {
+        [self updateContentViews:theScrollView];
+    }
 }
 
 - (void)didReceiveMemoryWarning

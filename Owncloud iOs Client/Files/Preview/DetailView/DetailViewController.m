@@ -295,6 +295,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         }
     } else if (_readerPDFViewController) {
         _readerPDFViewController.view.frame = _mainScrollView.frame;
+        [_readerPDFViewController updateContentViews];
     }
 }
 
@@ -349,6 +350,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             }
         } else if (_readerPDFViewController) {
             _readerPDFViewController.view.frame = _mainScrollView.frame;
+            [_readerPDFViewController updateContentViews];
         }
         
     } else {
@@ -373,8 +375,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             CGRect frame = _mainScrollView.frame;
             _moviePlayer.moviePlayer.view.frame = frame;
         } else if (_readerPDFViewController) {
+            
             CGRect frame = _mainScrollView.frame;
-            [_readerPDFViewController.view setFrame:frame];
+            
+            _readerPDFViewController.view.frame = frame;
+            [_readerPDFViewController updateContentViews];
         }
     }
 }
@@ -2041,15 +2046,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         }
     } else if (_readerPDFViewController) {
         
-        CGRect frame = _mainScrollView.frame;
-        frame.origin.x = 0;
-        frame.origin.y = 0;
-        frame.size.width = 767;
         
-        [_readerPDFViewController updateTheScrollView:frame];
-        [_readerPDFViewController updateContentViews];
         [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
-        [_readerPDFViewController showDocument];
+        
     }
 }
 
