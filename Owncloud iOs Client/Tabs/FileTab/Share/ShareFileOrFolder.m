@@ -331,11 +331,8 @@
                                     [_delegate errorLogin];
                                     break;
                                 case kOCErrorServerForbidden:
-                                    //share maybe enabled
-                                    //TODO:show password enter pop up
-                                    [self showError:NSLocalizedString(@"shared_link_protected", nil)];
-                                    //TODO:get from user the password
-                                    [self doRequestSharedLinkWithPath:filePath andPassword:@"1234"];
+                                    //Share whith password maybe enabled, ask for password and try to do the request again with it
+                                    [self showAlertEnterPassword];
                                     break;
                                 case kOCErrorServerTimeout:
                                     [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
@@ -402,12 +399,17 @@
 }
 
 
+///-----------------------------------------------
+/// @name doRequestSharedLinkWithPath:andPassword
+///-----------------------------------------------
+
 -(void)doRequestSharedLinkWithPath: (NSString *)path andPassword: (NSString *)password{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+   // [_delegate initLoading];
 
     //Checking the Shared files and folders
     [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:path andPassword:password onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
-        //TODO:if sucess update db and show link
+        
         //Ok we have the token but we also need all the information of the file in order to populate the database
         [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
         
@@ -417,7 +419,50 @@
         [self presentShareActionSheetForToken:token];
         
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-        
+            
+            [self endLoading];
+            DLog(@"error.code: %ld", (long)error.code);
+            DLog(@"server error: %ld", (long)response.statusCode);
+            NSInteger code = response.statusCode;
+            //Select the correct msg and action for this error
+            switch (code) {
+                    //Switch with response https
+                case kOCErrorServerPathNotFound:
+                    [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
+                    break;
+                case kOCErrorServerUnauthorized:
+                    [_delegate errorLogin];
+                    break;
+                case kOCErrorServerForbidden:
+                    [self showError:NSLocalizedString(@"error_not_permission", nil)];
+                    break;
+                case kOCErrorServerTimeout:
+                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                    break;
+                default:
+                    //Switch with API response errors
+                    switch (error.code) {
+                            //Switch with response https
+                        case kOCErrorServerPathNotFound:
+                            [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
+                            break;
+                        case kOCErrorServerUnauthorized:
+                            [_delegate errorLogin];
+                            break;
+                        case kOCErrorServerForbidden:
+                            [self showError:NSLocalizedString(@"error_not_permission", nil)];
+                            break;
+                        case kOCErrorServerTimeout:
+                            [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                            break;
+                        default:
+                            //Switch with API response errors
+                            [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                            break;
+                    }
+                    break;
+            }
+
      }];
    
 }
@@ -558,6 +603,34 @@
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:message
                                                     message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
     [alert show];
+}
+
+
+- (void)showAlertEnterPassword {
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil)
+                                                    message:NSLocalizedString(@"shared_link_protected_message", nil)
+                                                   delegate:self
+                                          cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                                          otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
+    alert.tag = 2;
+    alert.alertViewStyle = UIAlertViewStyleSecureTextInput;
+    [alert show];
+    
+}
+
+#pragma mark - UIAlertViewDelegate
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    UITextField * passwordTextField = [alertView textFieldAtIndex:0];
+    DLog(@"alerttextfiled - %@",passwordTextField.text);
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    NSString *filePath = @"";
+    NSString *path = [NSString stringWithFormat:@"/%@", [UtilsDtos getDbBFolderPathFromFullFolderPath:_file.filePath andUser:app.activeUser]];
+    filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
+    
+    [self doRequestSharedLinkWithPath:filePath andPassword:passwordTextField.text];
 }
 
 @end

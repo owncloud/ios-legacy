@@ -25,7 +25,7 @@
 - (void)errorLogin;
 @end
 
-@interface ShareFileOrFolder : NSObject <UIActionSheetDelegate>
+@interface ShareFileOrFolder : NSObject <UIActionSheetDelegate,UITextFieldDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, assign) FileDto *file;
 @property (nonatomic, assign) OCSharedDto *shareDto;
