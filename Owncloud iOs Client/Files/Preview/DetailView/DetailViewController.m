@@ -654,43 +654,43 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void)openFileOffice{
     
-    if (_file.localFolder!=nil) {
+    if (self.file.localFolder!=nil) {
         
-        NSString *ext = [FileNameUtils getExtension:_file.fileName];
+        NSString *ext = [FileNameUtils getExtension:self.file.fileName];
         
         if ([ext isEqualToString:@"PDF"]) {
             
-            _documentPDF = [ReaderDocument withDocumentFilePath:_file.localFolder password:@""];
+            self.documentPDF = [ReaderDocument withDocumentFilePath:self.file.localFolder password:@""];
             
-            if (_documentPDF != nil) {
-                _readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:_documentPDF];
+            if (self.documentPDF != nil) {
+                self.readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:self.documentPDF];
                 
                 //CGRect frame = _mainScrollView.frame;
                 //[_readerPDFViewController.view setFrame:frame];
                 
-                [self.view addSubview:_readerPDFViewController.view];
+                [self.view addSubview:self.readerPDFViewController.view];
                 
                 [self configureView];
                 
             } else {
-                DLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, _file.localFolder, @"");
+                DLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, self.file.localFolder, @"");
             }
             
         } else {
-            if (!_officeView) {
+            if (!self.officeView) {
                 CGRect frame = _mainScrollView.frame;
-                _officeView=[[OfficeFileView alloc]initWithFrame:frame];
+                self.officeView=[[OfficeFileView alloc]initWithFrame:frame];
             } else {
-                [_officeView.webView removeFromSuperview];
+                [self.officeView.webView removeFromSuperview];
             }
-            _officeView.delegate = self;
-            [_officeView openOfficeFileWithPath:_file.localFolder andFileName:_file.fileName];
+            self.officeView.delegate = self;
+            [self.officeView openOfficeFileWithPath:self.file.localFolder andFileName:self.file.fileName];
             
-            [self.view addSubview:_officeView.webView];
+            [self.view addSubview:self.officeView.webView];
         }
         
     }
-    _isViewBlocked = NO;
+    self.isViewBlocked = NO;
 }
 
 
@@ -900,27 +900,33 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 - (void) removeThePreviousViews {
     //Quit the player if exist
-    if (_moviePlayer) {
-        [_moviePlayer.moviePlayer.view removeFromSuperview];
+    if (self.moviePlayer) {
+        [self.moviePlayer.moviePlayer.view removeFromSuperview];
     }
     
     //Quit the office view
-    if (_officeView) {
-        [_officeView.webView removeFromSuperview];
-        _officeView = nil;
+    if (self.officeView) {
+        [self.officeView.webView removeFromSuperview];
+        self.officeView = nil;
     }
     
     //Quit the gallery view
-    if (_galleryView) {
-        [_galleryView.scrollView removeFromSuperview];
-        _galleryView = nil;
+    if (self.galleryView) {
+        [self.galleryView.scrollView removeFromSuperview];
+        self.galleryView = nil;
+    }
+    
+    if (self.readerPDFViewController) {
+        [self.readerPDFViewController.view removeFromSuperview];
+        self.readerPDFViewController = nil;
+        self.documentPDF = nil;
     }
 }
 
 /*
  * Method that presents a white page without option buttons
  */
-- (void)presentWhiteView{
+- (void)presentWhiteView {
     
     _progressView.hidden=YES;
     _cancelButton.hidden=YES;
@@ -938,22 +944,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [_openWith.documentInteractionController dismissMenuAnimated:YES];
     [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:YES];
     
-    //Quit the movie player and clean memory
-    if (_moviePlayer) {
-        [_moviePlayer.moviePlayer.view removeFromSuperview];
-    }
-    
-    //Quit the office view and clean memory
-    if (_officeView) {
-        [_officeView.webView removeFromSuperview];
-        _officeView=nil;
-    }
-    
-    //Quit the gallery view and clean memory
-    if (_galleryView) {
-        [_galleryView.scrollView removeFromSuperview];
-        _galleryView=nil;
-    }
+    [self removeThePreviousViews];
     
     _isFileCharged=NO;
     _file=nil;
@@ -1024,8 +1015,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  * Method called from FilesViewController after that unselect a cell and
  * present a white view in detailView
  */
-- (void) unselectCurrentFile
-{
+- (void) unselectCurrentFile {
     DLog(@"unselectCurrentFile");
     
     self.file=[ManageFilesDB getFileDtoByIdFile:self.file.idFile];
