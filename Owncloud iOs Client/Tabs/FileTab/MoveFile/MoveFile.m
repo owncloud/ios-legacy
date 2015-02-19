@@ -461,10 +461,13 @@
     
     [filemgr removeItemAtPath:destiny error:nil];
     
-    NSURL *oldPath = [NSURL URLWithString:[origin stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    NSURL *newPath= [NSURL URLWithString:[destiny stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSError *error;
     
-    [filemgr moveItemAtURL: oldPath toURL: newPath error: nil];
+    [filemgr moveItemAtPath:origin toPath:destiny error:&error];
+    
+    if (error) {
+        DLog(@"Error: %@", error);
+    }
 }
 
 #pragma mark - Delete Folder

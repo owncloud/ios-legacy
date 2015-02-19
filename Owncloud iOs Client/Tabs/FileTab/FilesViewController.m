@@ -592,6 +592,10 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
+    if (self.openWith && !IS_IPHONE) {
+        [self.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
+    }
+    
     if (self.plusActionSheet) {
         [self.plusActionSheet dismissWithClickedButtonIndex:2 animated:NO];
     }
@@ -2053,7 +2057,13 @@
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                     //Do operations in background thread
                     
-                    //Get shared items of a specific folder
+                    //Workaround to find the _fileIdToShowFiles because some times there are problems with the changes active user, and this method is launched before the viewwillappear
+                    NSString *pathActiveUser =[ManageFilesDB getRootFileDtoByUser:app.activeUser].filePath;
+                    if ([_fileIdToShowFiles.filePath rangeOfString:pathActiveUser].location == NSNotFound) {
+                        _fileIdToShowFiles = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
+                        DLog(@"Changing between accounts, update _fileIdToShowFiles with root path with the active user");
+                    }
+                    
                     NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsDtos getDBFilePathOfFileDtoFilePath:_fileIdToShowFiles.filePath ofUserDto:app.activeUser], _fileIdToShowFiles.fileName]];
                     
                     //1. We remove the removed shared from the Files table of the current folder
@@ -2236,7 +2246,7 @@
     _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:file.idFile];
     
     //Phase 0. Know if the file is in the device
-    if ([_selectedFileDto isDownload]==notDownload) {
+    if ([_selectedFileDto isDownload] == notDownload) {
         
         //Phase 1. Init openWith
         _openWith = [[OpenWith alloc]init];
@@ -2290,7 +2300,7 @@
         //Phase 4. Download
         [_openWith downloadAndOpenWithFile:_selectedFileDto];
         
-    } else if ([_selectedFileDto isDownload]==downloading) {
+    } else if ([_selectedFileDto isDownload] == downloading) {
         
         //if the file is downloading alert the user
         _alert = nil;
@@ -2298,7 +2308,6 @@
         [_alert show];
         
     } else {
-        
         //Open the file
         _openWith = [OpenWith new];
         
@@ -2309,9 +2318,10 @@
             //We use _selectedIndexPath to identify the position where we have to put the arrow of the popover
             if (_selectedIndexPath) {
                 cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
-                _openWith.parentView=_tableView;
+                _openWith.parentView =_tableView;
                 _openWith.cellFrame = cell.frame;
                 _openWith.isTheParentViewACell = YES;
+                
             } else {
                  _openWith.parentView=self.tabBarController.view;
             }
@@ -2353,19 +2363,19 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //Update fileDto
-    _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:_selectedFileDto.idFile];
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if ([_selectedFileDto isDownload]==downloading) {
+    if ([self.selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
-        _alert = nil;
-        _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-        [_alert show];
+        self.alert = nil;
+        self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [self.alert show];
         
-    } else if ([_selectedFileDto isDirectory]&& [DownloadUtils thereAreDownloadingFilesOnTheFolder: _selectedFileDto]) {
+    } else if ([self.selectedFileDto isDirectory]&& [DownloadUtils thereAreDownloadingFilesOnTheFolder: self.selectedFileDto]) {
         //if the user are downloading files from the server
-        _alert = nil;
-        _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-        [_alert show];
+        self.alert = nil;
+        self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [self.alert show];
         
     } else {
         
@@ -2391,7 +2401,7 @@
 #pragma mark - DeleteDelegate
 
 - (void) removeSelectedIndexPath {
-    _selectedCell = nil;
+    self.selectedCell = nil;
 }
 
 #pragma mark - Rename option
@@ -2403,30 +2413,31 @@
  * over the selected file
  */
 - (void)didSelectRenameOption {
+     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //Update fileDto
-    _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:_selectedFileDto.idFile];
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if ([_selectedFileDto isDownload]==downloading) {
+    if ([_selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
-        _alert = nil;
-        _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-        [_alert show];
+        self.alert = nil;
+        self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [self.alert show];
         
-    } else if ([_selectedFileDto isDirectory] && [DownloadUtils thereAreDownloadingFilesOnTheFolder: _selectedFileDto]) {
+    } else if ([self.selectedFileDto isDirectory] && [DownloadUtils thereAreDownloadingFilesOnTheFolder: self.selectedFileDto]) {
         //if the user are downloading files from the server
-        _alert = nil;
-        _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-        [_alert show];
+        self.alert = nil;
+        self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [self.alert show];
         
     } else {
-        _rename = [[RenameFile alloc] init];
-        _rename.delegate = self;
-        _rename.currentRemoteFolder = _currentRemoteFolder;
-        _rename.currentDirectoryArray = _currentDirectoryArray;
-        _rename.currentLocalFolder=_currentLocalFolder;
-        _rename.mUser = _mUser;
-        [_rename showRenameFile:_selectedFileDto];
+        self.rename = [[RenameFile alloc] init];
+        self.rename.delegate = self;
+        self.rename.currentRemoteFolder = self.currentRemoteFolder;
+        self.rename.currentDirectoryArray = self.currentDirectoryArray;
+        self.rename.currentLocalFolder= self.currentLocalFolder;
+        self.rename.mUser = self.mUser;
+        [self.rename showRenameFile:self.selectedFileDto];
     }
 }
 
@@ -2449,9 +2460,9 @@
     }
     
     //Update fileDto
-    _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:_selectedFileDto.idFile];
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if ([_selectedFileDto isDownload]==downloading) {
+    if ([_selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
         _alert = nil;
         _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];

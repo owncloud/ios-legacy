@@ -31,37 +31,20 @@
 @end
 
 
-@interface OpenWith : NSObject <UIDocumentInteractionControllerDelegate, DownloadDelegate>{
-    FileDto *_file;
-    __weak id<OpenWithDelegate> delegate;
-    UIView *_parentView;
-    UIBarButtonItem *_parentButton;
-    UIDocumentInteractionController *_documentInteractionController;
-    Download *_download;
-    
-    //Background task
-   // UIBackgroundTaskIdentifier downloadTask;
-    
-    NSString *_currentLocalFolder;
-    
-   
-    
-    
-    
-}
+@interface OpenWith : NSObject <UIDocumentInteractionControllerDelegate, DownloadDelegate>
 
 @property(nonatomic, strong) FileDto *file;
 @property(nonatomic,weak) __weak id<OpenWithDelegate> delegate; 
 @property(nonatomic, strong) UIView *parentView;
+@property(nonatomic, strong) UIActivityViewController *activityView;
 @property(nonatomic, strong) UIBarButtonItem *parentButton;
-@property(nonatomic, strong) UIDocumentInteractionController *documentInteractionController;
 @property(nonatomic, strong) Download *download;
 @property(nonatomic, strong) NSString *currentLocalFolder;
 //this bool is to indicate if the parent view is a cell
 @property(nonatomic)  BOOL isTheParentViewACell;
 //this CGRect is to pass the cell frame of the file list
 @property(nonatomic) CGRect cellFrame;
-
+@property (nonatomic, strong) UIPopoverController *activityPopoverController;
 
 
 - (void) downloadAndOpenWithFile: (FileDto *) file;
