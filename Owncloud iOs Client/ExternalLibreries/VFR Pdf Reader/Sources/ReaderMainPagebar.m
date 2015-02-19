@@ -132,10 +132,8 @@
 	if (page != pageNumberLabel.tag) // Only if page number changed
 	{
 		NSInteger pages = [document.pageCount integerValue]; // Total pages
-
-		NSString *format = NSLocalizedString(@"%i of %i", @"format"); // Format
-
-		NSString *number = [[NSString alloc] initWithFormat:format, (int)page, (int)pages];
+        
+        NSString *number = [NSString stringWithFormat:@"%d %@ %d", (int)page, NSLocalizedString(@"page_of_pages", nil),(int)pages ];
 
 		pageNumberLabel.text = number; // Update the page number label text
 
