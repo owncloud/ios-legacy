@@ -40,6 +40,8 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:user.username andPassword:user.password];
     }
     
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    
     //FileName full path
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     DLog(@"Path to check: %@", path);

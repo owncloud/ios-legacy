@@ -273,6 +273,8 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    
     [[AppDelegate sharedOCCommunication] moveFileOrFolder:originalURLString toDestiny:newURLString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         DLog(@"Great, the item is renamed");
         

@@ -863,6 +863,8 @@
                 [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
             }
             
+             [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+            
             NSString *pathOfNewFolder = [NSString stringWithFormat:@"%@%@",[_currentRemoteFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding], name ];
             
             [[AppDelegate sharedOCCommunication] createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
@@ -1677,6 +1679,8 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
+     [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    
     NSString *path = _nextRemoteFolder;
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -1883,6 +1887,8 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    
     NSString *path = _currentRemoteFolder;
      path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -2032,7 +2038,9 @@
         } else {
             [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
         }
-                
+        
+        [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+        
         NSString *path = [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileIdToShowFiles.filePath andUser:app.activeUser];
         path = [path stringByAppendingString:_fileIdToShowFiles.fileName];
         path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

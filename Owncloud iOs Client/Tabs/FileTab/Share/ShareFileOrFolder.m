@@ -229,6 +229,8 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    
     __block OCSharedDto *blockShareDto = _shareDto;
     
     [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:_shareDto.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared) {
@@ -267,6 +269,8 @@
                 } else {
                     [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
                 }
+                
+                [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
                 
                 //Checking the Shared files and folders
                 [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
@@ -464,6 +468,8 @@
     } else {
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
     
     [[AppDelegate sharedOCCommunication] unShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:sharedByLink.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
