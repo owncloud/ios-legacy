@@ -17,6 +17,7 @@
 #import "ImpressumViewController.h"
 #import "AppDelegate.h"
 #import "UIColor+Constants.h"
+#import "Customization.h"
 
 @interface ImpressumViewController ()
 
@@ -63,7 +64,11 @@
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Impressum" ofType:@"rtf"];
     
     NSURL *targetURL = [NSURL fileURLWithPath:path];
-    NSURLRequest *request = [NSURLRequest requestWithURL:targetURL];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:targetURL];
+    
+    //Add the user agent
+    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
+    
     [_previewWebView loadRequest:request];
     
 }

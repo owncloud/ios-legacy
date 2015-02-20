@@ -120,7 +120,11 @@
     [self clearAllCookies];
     
     NSURL *url = [NSURL URLWithString:connectURL];
-    NSURLRequest* request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:40.0];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:k_timeout_upload];
+    
+    //Add the user agent
+    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
+    
     [UtilsFramework deleteAllCookies];
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
@@ -138,7 +142,10 @@
     _ownCloudServerUrlString = connectURL;
     
     NSURL *url = [NSURL URLWithString:connectURL];
-    NSURLRequest* request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:40.0];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:k_timeout_upload];
+    
+    //Add the user agent
+    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
     
     _webView.delegate = self;
     [_webView setScalesPageToFit:YES];

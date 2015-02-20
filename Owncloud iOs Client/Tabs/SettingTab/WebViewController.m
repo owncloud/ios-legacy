@@ -15,6 +15,7 @@
 
 #import "WebViewController.h"
 #import "AppDelegate.h"
+#import "Customization.h"
 
 @interface WebViewController ()
 
@@ -70,7 +71,10 @@
     
     DLog(@"Open Link");
     NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    
+    //Add the user agent
+    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
     
     // [_previewWebView loadHTMLString:@"<html><head></head><body></body></html>" baseURL:nil];
   //  [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];

@@ -45,6 +45,9 @@
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:40.0];
     [request setHTTPShouldHandleCookies:NO];
     
+    //Add the user agent
+    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
+    
     // Create url connection and fire request
     [NSURLConnection connectionWithRequest:request delegate:self];
     
