@@ -1013,6 +1013,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Update the Favorites Files
     [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
    
+    //Refresh the list of files from the database
+    if (_activeUser && self.presentFilesViewController) {
+        [_presentFilesViewController reloadTableFromDataBase];
+    }
 }
 
 
