@@ -874,6 +874,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     }
 }
 
+
 /*
  * Method that store the date of upload is completed
  */
@@ -1040,7 +1041,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 
                 //Check the etag
                 if (![overwrittenFile.etag isEqualToString:currentFileDto.etag]) {
-                     [self changeTheStatusToErrorFileExist];
+                    [self changeTheStatusToErrorFileExist];
+                    
                 } else{
                     [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
                 }

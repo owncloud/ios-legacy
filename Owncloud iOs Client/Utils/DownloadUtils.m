@@ -45,4 +45,15 @@
 }
 
 
+
++ (void) removeDownloadFileWithPath:(NSString *)path{
+
+    if (path) {
+         NSError *error = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+        DLog(@"Error deleted downloaded file: %@", error);
+    }
+  
+}
+
 @end
