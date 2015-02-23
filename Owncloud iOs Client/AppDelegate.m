@@ -1858,15 +1858,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) initDataBase {
     
-    
-    /*Reset keychain items when db need to be updated or when db first init after app has been removed and reinstalled */
-    NSMutableArray * users = [ManageUsersDB getAllUsers];
-    if (![users count]) {
-        //delete all keychain items
-        [OCKeychain resetKeychain];
-    }
-    
-    [UtilsUrls getOwnCloudFilePath];
+    CredentialsDto *credDto = [OCKeychain getCredentialsById:@"1"];
+    DLog(@"User: %@", credDto.userName);
+    DLog(@"Password: %@", credDto.password);
     
     //New version
     static int dbVersion = k_DB_version_12;
@@ -1977,6 +1971,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
     //Insert DB version
     [ManageDB insertVersionToDataBase:dbVersion];
+    
+    /*Reset keychain items when db need to be updated or when db first init after app has been removed and reinstalled */
+    NSMutableArray * users = [ManageUsersDB getAllUsers];
+    if (![users count]) {
+        //delete all keychain items
+        [OCKeychain resetKeychain];
+    }
 }
 
 - (void) errorLogin {
