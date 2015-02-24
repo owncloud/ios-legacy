@@ -674,8 +674,8 @@
                 if (directoryList.count > 0) {
                     FileDto *remoteFile = [directoryList objectAtIndex:0];
                     
-                    DLog(@"remoteFile.etag: %lld", remoteFile.etag);
-                    DLog(@"self.currentFolder: %lld", self.currentFolder.etag);
+                    DLog(@"remoteFile.etag: %@", remoteFile.etag);
+                    DLog(@"self.currentFolder: %@", self.currentFolder.etag);
                     
                     if (remoteFile.etag != self.currentFolder.etag) {
                         [self reloadCurrentFolder];

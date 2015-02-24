@@ -364,7 +364,7 @@
                 }
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                 DLog(@"error: %@", error);
-
+                [self endLoading];
                 DLog(@"Operation error: %ld", (long)response.statusCode);
                 [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:self.user];
 
