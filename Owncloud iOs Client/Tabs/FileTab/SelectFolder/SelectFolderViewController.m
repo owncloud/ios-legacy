@@ -292,7 +292,7 @@
         fileDto = [_currentDirectoryArray objectAtIndex:i];       
         
         //DLog(@"%@", fileDto.fileName);
-        dicName=fileDto.fileName;      
+        dicName=[fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];
         
         if([string isEqualToString:dicName])
         {
