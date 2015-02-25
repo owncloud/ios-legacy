@@ -554,26 +554,37 @@
 - (void)showError:(NSString *) message {
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
     
-    UIAlertController *alert =   [UIAlertController
-                                  alertControllerWithTitle:message
-                                  message:@""
-                                  preferredStyle:UIAlertControllerStyleAlert];
+    if (IS_IOS7) {
+        
+#ifdef CONTAINER_APP
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:message message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        [alertView show];
+#endif
+        
+    }else{
+        
+        UIAlertController *alert =   [UIAlertController
+                                      alertControllerWithTitle:message
+                                      message:@""
+                                      preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* ok = [UIAlertAction
+                             actionWithTitle:NSLocalizedString(@"ok", nil)
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        [alert addAction:ok];
+        
+        [self presentViewController:alert animated:YES completion:nil];
+    }
     
-    UIAlertAction* ok = [UIAlertAction
-                         actionWithTitle:NSLocalizedString(@"ok", nil)
-                         style:UIAlertActionStyleDefault
-                         handler:^(UIAlertAction * action)
-                         {
-                             
-                         }];
-    [alert addAction:ok];
-    
-    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void) errorLogin {
     if (k_is_sso_active) {
-        [self showError:NSLocalizedString(@"session_expired", nil)];
+       [self showError:NSLocalizedString(@"session_expired", nil)];
     } else {
        [self showError:NSLocalizedString(@"error_login_message", nil)];
     }
