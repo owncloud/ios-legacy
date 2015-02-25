@@ -1042,6 +1042,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 //Check the etag
                 if (![overwrittenFile.etag isEqualToString:currentFileDto.etag]) {
                     [self changeTheStatusToErrorFileExist];
+                    [ManageFilesDB setFileIsDownloadState:overwrittenFile.idFile andState:downloaded];
+                    //Only for refresh file list
+                    [self.delegate overwriteCompleted];
                     
                 } else{
                     [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
