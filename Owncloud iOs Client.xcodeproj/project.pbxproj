@@ -485,6 +485,8 @@
 		59BF9B2D1A2C5A5B009D9CF0 /* KKPasscodeLock.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */; };
 		59BF9B361A2C8BEA009D9CF0 /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */; };
 		59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 599D80B01A2338100071B66E /* FileListDocumentProviderViewController.m */; };
+		59C0F2B21A963670007FE71B /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 59C0F2B01A963670007FE71B /* iTunesArtwork */; };
+		59C0F2B31A963670007FE71B /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = 59C0F2B11A963670007FE71B /* iTunesArtwork@2x */; };
 		59C3AC1A1A287DE3005433A1 /* KKKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968517F599060033B3C1 /* KKKeychain.m */; };
 		59C3AC1B1A287DE3005433A1 /* KKPasscodeLock.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968817F599060033B3C1 /* KKPasscodeLock.m */; };
 		59C3AC1C1A287DE3005433A1 /* KKPasscodeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968A17F599060033B3C1 /* KKPasscodeSettingsViewController.m */; };
@@ -1161,6 +1163,8 @@
 		59AE9EB11990FEC2003380A8 /* CheckHasShareSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckHasShareSupport.m; path = "Network/Server Version Checks/CheckHasShareSupport.m"; sourceTree = "<group>"; };
 		59AF279C19920A1100359151 /* CheckHasCookiesSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckHasCookiesSupport.h; path = "Network/Server Version Checks/CheckHasCookiesSupport.h"; sourceTree = "<group>"; };
 		59AF279D19920A1100359151 /* CheckHasCookiesSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckHasCookiesSupport.m; path = "Network/Server Version Checks/CheckHasCookiesSupport.m"; sourceTree = "<group>"; };
+		59C0F2B01A963670007FE71B /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
+		59C0F2B11A963670007FE71B /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
 		59C9D322195C0EFB00400AE2 /* ManageNetworkErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageNetworkErrors.h; path = Utils/Errors/ManageNetworkErrors.h; sourceTree = "<group>"; };
 		59C9D323195C0EFB00400AE2 /* ManageNetworkErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageNetworkErrors.m; path = Utils/Errors/ManageNetworkErrors.m; sourceTree = "<group>"; };
 		59D717DE1959755600075E02 /* folder-shared.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "folder-shared.png"; sourceTree = "<group>"; };
@@ -1385,6 +1389,8 @@
 		1324298215ADBB3700DF823E /* Owncloud iOs Client */ = {
 			isa = PBXGroup;
 			children = (
+				59C0F2B01A963670007FE71B /* iTunesArtwork */,
+				59C0F2B11A963670007FE71B /* iTunesArtwork@2x */,
 				593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */,
 				1324298B15ADBB3700DF823E /* AppDelegate.h */,
 				1324298C15ADBB3700DF823E /* AppDelegate.m */,
@@ -2983,6 +2989,7 @@
 				1487F22B177C35AA004A1A5A /* image_icon~ipad.png in Resources */,
 				4030D8ED1A16204000DB0871 /* zip_icon@3x.png in Resources */,
 				14A7F7A918ED578E009AF347 /* spreadsheet_icon@2x.png in Resources */,
+				59C0F2B31A963670007FE71B /* iTunesArtwork@2x in Resources */,
 				1487F22C177C35AA004A1A5A /* movie_icon.png in Resources */,
 				14A6115A19346D0000AECA34 /* sharedItemSwipe@2x.png in Resources */,
 				1487F22D177C35AA004A1A5A /* movie_icon@2x.png in Resources */,
@@ -3082,6 +3089,7 @@
 				1487F270177C35AA004A1A5A /* Button.png in Resources */,
 				1487F271177C35AA004A1A5A /* Button@2x.png in Resources */,
 				1487F272177C35AA004A1A5A /* gradImage.png in Resources */,
+				59C0F2B21A963670007FE71B /* iTunesArtwork in Resources */,
 				14A7F7A818ED578E009AF347 /* spreadsheet_icon.png in Resources */,
 				1487F273177C35AA004A1A5A /* password.png in Resources */,
 				1487F274177C35AA004A1A5A /* password@2x.png in Resources */,
@@ -3682,7 +3690,7 @@
 		132429C015ADBB3800DF823E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = "Owncloud iOs Client/Owncloud iOs Client.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -3723,7 +3731,7 @@
 		132429C115ADBB3800DF823E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = "Owncloud iOs Client/Owncloud iOs Client.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -3735,6 +3743,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "CONTAINER_APP=1";
 				HEADER_SEARCH_PATHS = (
 					"include/**",
 					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
@@ -3865,6 +3874,7 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "FILE_PICKER=1";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
