@@ -486,14 +486,9 @@
             DLog(@"current: %@", current.fileName);
         }
         
-          NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:self.user];
-        
-        if (file.isDirectory) {
-            path = [NSString stringWithFormat:@"%@/", [UtilsDtos getTheParentPathOfThePath:path]];
-        }
+        NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:self.user];
         
         [FileListDBOperations createAllFoldersByArrayOfFilesDto:listOfRemoteFilesAndFolders andLocalFolder:path];
-
     }
 }
 
