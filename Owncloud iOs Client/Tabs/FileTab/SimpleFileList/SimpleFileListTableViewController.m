@@ -557,6 +557,7 @@
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:message message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
         [alertView show];
 #endif
+        [self showEditAccount];
         
     }else{
         
@@ -570,14 +571,16 @@
                              style:UIAlertActionStyleDefault
                              handler:^(UIAlertAction * action)
                              {
-                                 
+                                 [self showEditAccount];
                              }];
         [alert addAction:ok];
         
         [self presentViewController:alert animated:YES completion:nil];
     }
-    
+   
+}
 
+- (void) showEditAccount {
 #ifdef CONTAINER_APP
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -594,15 +597,16 @@
         if (IS_IOS8) {
             [appDelegate.detailViewController.popoverController dismissPopoverAnimated:YES];
         }
-         
+        
         OCNavigationController *navController = nil;
         navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
     }
 
+    
 #endif
-   
+
 }
 
 - (void) errorLogin {
