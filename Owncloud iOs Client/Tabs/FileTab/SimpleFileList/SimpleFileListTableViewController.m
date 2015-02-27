@@ -35,6 +35,8 @@
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
+#import "EditAccountViewController.h"
+#import "OCNavigationController.h"
 #else
 #import "DocumentPickerViewController.h"
 #endif
@@ -575,6 +577,32 @@
         [self presentViewController:alert animated:YES completion:nil];
     }
     
+
+#ifdef CONTAINER_APP
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    //Edit Account
+    EditAccountViewController *resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
+    [resolvedCredentialError setBarForCancelForLoadingFromModal];
+    
+    if (IS_IPHONE) {
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
+    } else {
+        
+        if (IS_IOS8) {
+            [appDelegate.detailViewController.popoverController dismissPopoverAnimated:YES];
+        }
+         
+        OCNavigationController *navController = nil;
+        navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
+    }
+
+#endif
+   
 }
 
 - (void) errorLogin {
