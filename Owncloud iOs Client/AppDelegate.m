@@ -161,6 +161,18 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
    */
     
+    
+    //Ugly solution for erase the persistent cache across launches
+    
+    NSInteger memory = 500; //500 MB
+    
+    NSUInteger cacheSizeMemory = memory*1024*1024;
+    NSUInteger cacheSizeDisk = memory*1024*1024;
+    NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:cacheSizeMemory diskCapacity:cacheSizeDisk diskPath:@"nsurlcache"];
+    [NSURLCache setSharedURLCache:sharedCache];
+    sleep(1); //Important sleep. Very ugly but neccesarry.
+    
+    
     return YES;
 }
 
