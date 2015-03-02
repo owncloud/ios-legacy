@@ -631,8 +631,14 @@
             NSString *filePath = @"";
             NSString *path = [NSString stringWithFormat:@"/%@", [UtilsDtos getDbBFolderPathFromFullFolderPath:_file.filePath andUser:app.activeUser]];
             filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
-            
-            [self doRequestSharedLinkWithPath:filePath andPassword:passwordTextField.text];
+            NSString *passwordText = passwordTextField.text;
+            NSString *encodePassword = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
+                                                                                                             NULL,
+                                                                                                             (CFStringRef)passwordText,
+                                                                                                             NULL,
+                                                                                                             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                             kCFStringEncodingUTF8 ));
+            [self doRequestSharedLinkWithPath:filePath andPassword:encodePassword];
 
         }
     }
