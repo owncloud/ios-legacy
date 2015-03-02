@@ -556,11 +556,11 @@
 #ifdef CONTAINER_APP
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:message message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
         [alertView show];
-#endif
+        
         [self showEditAccount];
+#endif
         
     }else{
-        
         UIAlertController *alert =   [UIAlertController
                                       alertControllerWithTitle:message
                                       message:@""
@@ -571,13 +571,12 @@
                              style:UIAlertActionStyleDefault
                              handler:^(UIAlertAction * action)
                              {
-                                 [self showEditAccount];
+                                    [self showEditAccount];
                              }];
         [alert addAction:ok];
         
         [self presentViewController:alert animated:YES completion:nil];
     }
-   
 }
 
 - (void) showEditAccount {
@@ -604,7 +603,6 @@
         [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
     }
 
-    
 #endif
 
 }
