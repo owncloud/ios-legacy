@@ -121,5 +121,5 @@
 #define k_is_text_status_bar_white NO
 
 //Show the help link on login
-#define k_is_shown_help_link_on_login NO
+#define k_is_shown_help_link_on_login YES
 #define k_url_link_on_login @"https://owncloud.com/mobile/new"
