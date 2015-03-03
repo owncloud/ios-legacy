@@ -16,8 +16,15 @@
 #import "ManageUploadsDB.h"
 #import "FMDatabaseQueue.h"
 #import "FMDatabase.h"
-#import "AppDelegate.h"
 #import "UploadsOfflineDto.h"
+
+#ifdef CONTAINER_APP
+#import "AppDelegate.h"
+#elif FILE_PICKER
+#import "DocumentPickerViewController.h"
+#else
+#import "FileProvider.h"
+#endif
 
 @implementation ManageUploadsDB
 
@@ -27,14 +34,20 @@
  */
 +(void) insertUpload:(UploadsOfflineDto *) upload {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        NSString *sqlString = [NSString stringWithFormat:@"INSERT INTO uploads_offline (origin_path, destiny_folder, upload_filename, estimate_length, user_id, is_last_upload_file_of_this_Array, chunk_position, chunk_unique_number, chunks_length, status,kind_of_error,is_internal_upload,is_not_necessary_check_if_exist, task_identifier) Values('%@', '%@', '%@',%ld, %d, %d, %d, %d, %ld, %d, %d, %d, %d, %d)", upload.originPath,upload.destinyFolder,upload.uploadFileName, upload.estimateLength, upload.userId, upload.isLastUploadFileOfThisArray, upload.chunkPosition, upload.chunkUniqueNumber, upload.chunksLength,upload.status, upload.kindOfError, upload.isInternalUpload, upload.isNotNecessaryCheckIfExist, upload.taskIdentifier];
-
-        correctQuery = [db executeUpdate:sqlString];
+        correctQuery = [db executeUpdate:@"INSERT INTO uploads_offline (origin_path, destiny_folder, upload_filename, estimate_length, user_id, is_last_upload_file_of_this_Array, chunk_position, chunk_unique_number, chunks_length, status,kind_of_error,is_internal_upload,is_not_necessary_check_if_exist, task_identifier) Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", upload.originPath,upload.destinyFolder,upload.uploadFileName, [NSNumber numberWithLong:upload.estimateLength], [NSNumber numberWithInteger:upload.userId], [NSNumber numberWithBool:upload.isLastUploadFileOfThisArray], [NSNumber numberWithInteger: upload.chunkPosition], [NSNumber numberWithInteger:upload.chunkUniqueNumber], [NSNumber numberWithLong:upload.chunksLength], [NSNumber numberWithInteger:upload.status], [NSNumber numberWithInteger:upload.kindOfError], [NSNumber numberWithBool:upload.isInternalUpload], [NSNumber numberWithBool:upload.isNotNecessaryCheckIfExist], [NSNumber numberWithInteger:upload.taskIdentifier]];
         
         if (!correctQuery) {
             DLog(@"Error insert upload offline object");
@@ -48,7 +61,15 @@
  */
 +(void) updateUploadOfflineStatusByUploadOfflineDto:(UploadsOfflineDto *) upload {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -67,7 +88,15 @@
  */
 +(void) deleteUploadOfflineByUploadOfflineDto:(UploadsOfflineDto *) upload {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -87,7 +116,15 @@
  */
 +(void) cleanTableUploadsOfflineTheFinishedUploads {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -107,7 +144,15 @@
  */
 +(void) saveInUploadsOfflineTableTheFirst:(NSUInteger)uploads{
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -133,7 +178,15 @@
  */
 +(void) insertManyUploadsOffline:(NSMutableArray *) listOfUploadOffline {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         
@@ -144,25 +197,23 @@
             
             UploadsOfflineDto *current = [listOfUploadOffline objectAtIndex:i];
             
-            correctQuery = [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO uploads_offline SELECT null as id, '%@' as 'origin_path','%@' as 'destiny_folder', '%@' as 'upload_filename', %ld as 'estimate_length',%d as 'user_id', %d as 'is_last_upload_file_of_this_Array', %d as 'chunk_position', %d as 'chunk_unique_number',%ld as 'chunks_length', %d as 'status',%ld as 'uploaded_date', %d as 'kind_of_error', %d as 'is_internal_upload', %d as 'is_not_necessary_check_if_exist', %d as 'task_identifier'",
+            correctQuery = [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO uploads_offline SELECT null as id, '%@' as 'origin_path','%@' as 'destiny_folder', '%@' as 'upload_filename', %ld as 'estimate_length',%ld as 'user_id', %d as 'is_last_upload_file_of_this_Array', %ld as 'chunk_position', %ld as 'chunk_unique_number',%ld as 'chunks_length', %ld as 'status',%ld as 'uploaded_date', %ld as 'kind_of_error', %d as 'is_internal_upload', %d as 'is_not_necessary_check_if_exist', %ld as 'task_identifier'",
                                               current.originPath,
                                               current.destinyFolder,
                                               current.uploadFileName,
                                               current.estimateLength,
-                                              current.userId,
+                                              (long)current.userId,
                                               current.isLastUploadFileOfThisArray,
-                                              current.chunkPosition,
-                                              current.chunkUniqueNumber,
+                                              (long)current.chunkPosition,
+                                              (long)current.chunkUniqueNumber,
                                               current.chunksLength,
-                                              current.status,
+                                              (long)current.status,
                                               current.uploadedDate,
-                                              current.kindOfError,
+                                              (long)current.kindOfError,
                                               current.isInternalUpload,
                                               current.isNotNecessaryCheckIfExist,
-                                              current.taskIdentifier]];
+                                              (long)current.taskIdentifier]];
         }
-        
-        
         
         if (!correctQuery) {
             DLog(@"Error in insertManyUploadsOffline");
@@ -180,7 +231,15 @@
     
     __block UploadsOfflineDto *output = nil;
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -219,17 +278,25 @@
  * Method that return a upload offline dto by id
  *  @uploadOfflineId -> id of upload offline
  */
-+ (UploadsOfflineDto*)getUploadOfflineById:(int)uploadOfflineId{
++ (UploadsOfflineDto*)getUploadOfflineById:(NSInteger)uploadOfflineId{
     
-    DLog(@"getUploadOfflineById: %d", uploadOfflineId);
+    DLog(@"getUploadOfflineById: %ld", (long)uploadOfflineId);
     
     __block UploadsOfflineDto *output = nil;
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, origin_path, destiny_folder, upload_filename, estimate_length, user_id, is_last_upload_file_of_this_Array, chunk_position, chunk_unique_number, chunks_length, status, kind_of_error, is_internal_upload, is_not_necessary_check_if_exist, task_identifier, uploaded_date FROM uploads_offline WHERE id = ?", [NSNumber numberWithInt:uploadOfflineId]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, origin_path, destiny_folder, upload_filename, estimate_length, user_id, is_last_upload_file_of_this_Array, chunk_position, chunk_unique_number, chunks_length, status, kind_of_error, is_internal_upload, is_not_necessary_check_if_exist, task_identifier, uploaded_date FROM uploads_offline WHERE id = ?", [NSNumber numberWithInteger:uploadOfflineId]];
         
         while ([rs next]) {
             
@@ -262,16 +329,24 @@
     
 }
 
-+(void) setStatus:(int) status andKindOfError:(int) kindOfError byUploadOffline:(UploadsOfflineDto *) currentUpload {
++(void) setStatus:(NSInteger) status andKindOfError:(NSInteger) kindOfError byUploadOffline:(UploadsOfflineDto *) currentUpload {
     
-    DLog(@"setStatus: %d andKindOfError: %d currentUpload: %@", status, kindOfError, currentUpload.uploadFileName);
+    DLog(@"setStatus: %ld andKindOfError: %ld currentUpload: %@", (long)status, (long)kindOfError, currentUpload.uploadFileName);
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=?, kind_of_error = ? WHERE id = ?", [NSNumber numberWithInt:status], [NSNumber numberWithInt:kindOfError], [NSNumber numberWithInt:currentUpload.idUploadsOffline]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=?, kind_of_error = ? WHERE id = ?", [NSNumber numberWithInteger:status], [NSNumber numberWithInteger:kindOfError], [NSNumber numberWithInteger:currentUpload.idUploadsOffline]];
         
         if (!correctQuery) {
             DLog(@"Error in setState");
@@ -286,13 +361,22 @@
  */
 
 + (void) setDatebyUploadOffline:(UploadsOfflineDto *)currentUpload{
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
 
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET uploaded_date=? WHERE id = ?", [NSNumber numberWithLong:currentUpload.uploadedDate], [NSNumber numberWithInt:currentUpload.idUploadsOffline]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET uploaded_date=? WHERE id = ?", [NSNumber numberWithLong:currentUpload.uploadedDate], [NSNumber numberWithInteger:currentUpload.idUploadsOffline]];
         
         if (!correctQuery) {
             DLog(@"Error in set date");
@@ -310,7 +394,15 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -333,8 +425,8 @@
             current.status = [rs intForColumn:@"status"];
             current.uploadedDate = [rs longForColumn:@"uploaded_date"];
             current.kindOfError = [rs intForColumn:@"kind_of_error"];
-            current.isInternalUpload = [rs boolForColumnIndex:@"is_internal_upload"];
-            current.isNotNecessaryCheckIfExist = [rs boolForColumnIndex:@"is_not_necessary_check_if_exist"];
+            current.isInternalUpload = [rs boolForColumn:@"is_internal_upload"];
+            current.isNotNecessaryCheckIfExist = [rs boolForColumn:@"is_not_necessary_check_if_exist"];
             current.taskIdentifier = [rs intForColumn:@"task_identifier"];
 
             [output addObject:current];
@@ -351,7 +443,15 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -374,8 +474,8 @@
             current.status = [rs intForColumn:@"status"];
             current.uploadedDate = [rs longForColumn:@"uploaded_date"];
             current.kindOfError = [rs intForColumn:@"kind_of_error"];
-            current.isInternalUpload = [rs boolForColumnIndex:@"is_internal_upload"];
-            current.isNotNecessaryCheckIfExist = [rs boolForColumnIndex:@"is_not_necessary_check_if_exist"];
+            current.isInternalUpload = [rs boolForColumn:@"is_internal_upload"];
+            current.isNotNecessaryCheckIfExist = [rs boolForColumn:@"is_not_necessary_check_if_exist"];
             current.taskIdentifier = [rs intForColumn:@"task_identifier"];
             
             [output addObject:current];
@@ -398,7 +498,15 @@
     __block BOOL isFiles=NO;
     __block int files=0;
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -429,7 +537,15 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -465,7 +581,15 @@
 
 + (void)updateAllErrorUploadOfflineWithWaitingAddUploadList {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -479,15 +603,49 @@
     }];
 }
 
++ (void) updateUploadsGeneratedByDocumentProviertoToWaitingAddUploadList {
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=? WHERE status = ?", [NSNumber numberWithInt:waitingAddToUploadList], [NSNumber numberWithInt:generatedByDocumentProvider]];
+        
+        if (!correctQuery) {
+            DLog(@"Error in setState");
+        }
+        
+    }];
+    
+}
+
 + (void) updateNotFinalizeUploadsBackgroundBy:(NSArray *) uploadsArray {
     
     for (UploadsOfflineDto *current in uploadsArray) {
-        FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        
+        FMDatabaseQueue *queue;
+        
+#ifdef CONTAINER_APP
+        queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+        queue = [DocumentPickerViewController sharedDatabase];
+#else
+        queue = [FileProvider sharedDatabase];
+#endif
         
         [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             BOOL correctQuery=NO;
             
-            correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=? WHERE status != ? AND status != ? AND status !=? AND kind_of_error = ? AND id = ?", [NSNumber numberWithInt:errorUploading], [NSNumber numberWithInt:uploaded],[NSNumber numberWithInt:uploading],[NSNumber numberWithInt:waitingForUpload], [NSNumber numberWithInt:notAnError], [NSNumber numberWithInt:current.idUploadsOffline]];
+            correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=? WHERE status != ? AND status != ? AND status !=? AND kind_of_error = ? AND id = ?", [NSNumber numberWithInt:errorUploading], [NSNumber numberWithInt:uploaded],[NSNumber numberWithInt:uploading],[NSNumber numberWithInt:waitingForUpload], [NSNumber numberWithInt:notAnError], [NSNumber numberWithInteger:current.idUploadsOffline]];
             
             if (!correctQuery) {
                 DLog(@"Error in setState");
@@ -501,12 +659,21 @@
 + (void) updateNotFinalizeUploadsOfflineBy:(NSArray *) uploadsArray {
     
     for (UploadsOfflineDto *current in uploadsArray) {
-        FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        
+        FMDatabaseQueue *queue;
+        
+#ifdef CONTAINER_APP
+        queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+        queue = [DocumentPickerViewController sharedDatabase];
+#else
+        queue = [FileProvider sharedDatabase];
+#endif
         
         [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             BOOL correctQuery=NO;
             
-            correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=? WHERE status != ? AND kind_of_error = ? AND id = ?", [NSNumber numberWithInt:errorUploading], [NSNumber numberWithInt:uploaded], [NSNumber numberWithInt:notAnError], [NSNumber numberWithInt:current.idUploadsOffline]];
+            correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET status=? WHERE status != ? AND kind_of_error = ? AND id = ?", [NSNumber numberWithInt:errorUploading], [NSNumber numberWithInteger:uploaded], [NSNumber numberWithInt:notAnError], [NSNumber numberWithInteger:current.idUploadsOffline]];
             
             if (!correctQuery) {
                 DLog(@"Error in setState");
@@ -524,7 +691,15 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -568,7 +743,15 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -612,12 +795,20 @@
  */
 + (void) updateErrorCredentialFiles:(NSInteger) userId {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=? WHERE kind_of_error = ? AND user_id = ?", [NSNumber numberWithInt:notAnError], [NSNumber numberWithInt:errorCredentials], [NSNumber numberWithInt:userId]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=? WHERE kind_of_error = ? AND user_id = ?", [NSNumber numberWithInt:notAnError], [NSNumber numberWithInteger:errorCredentials], [NSNumber numberWithInteger:userId]];
         
         if (!correctQuery) {
             DLog(@"Error in setState");
@@ -632,12 +823,20 @@
  */
 + (void) updateErrorFolderNotFoundFilesSetNewDestinyFolder:(NSString *) folder forUploadOffline:(UploadsOfflineDto *) selectedUpload  {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=?, destiny_folder=?  WHERE id = ?", [NSNumber numberWithInt:notAnError], folder, [NSNumber numberWithInt:selectedUpload.idUploadsOffline]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=?, destiny_folder=?  WHERE id = ?", [NSNumber numberWithInteger:notAnError], folder, [NSNumber numberWithInteger:selectedUpload.idUploadsOffline]];
         
         if (!correctQuery) {
             DLog(@"Error in setState");
@@ -654,12 +853,20 @@
     
     DLog(@"name: %@",name);
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=?, upload_filename = ? WHERE id = ?", [NSNumber numberWithInt:notAnError], name, [NSNumber numberWithInt:selectedUpload.idUploadsOffline]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=?, upload_filename = ? WHERE id = ?", [NSNumber numberWithInteger:notAnError], name, [NSNumber numberWithInteger:selectedUpload.idUploadsOffline]];
         
         if (!correctQuery) {
             DLog(@"Error in setState");
@@ -674,13 +881,21 @@
  */
 + (void) updateErrorConflictFilesSetOverwrite:(BOOL) isNotNecessaryCheckIfExist forUploadOffline:(UploadsOfflineDto *) selectedUpload {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
         //We do not need set anything on the DB about overwrite only on the UploadOfflineDto
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=?, is_not_necessary_check_if_exist = ? WHERE id = ?", [NSNumber numberWithInt:notAnError], [NSNumber numberWithBool:isNotNecessaryCheckIfExist], [NSNumber numberWithInt:selectedUpload.idUploadsOffline]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=?, is_not_necessary_check_if_exist = ? WHERE id = ?", [NSNumber numberWithInteger:notAnError], [NSNumber numberWithBool:isNotNecessaryCheckIfExist], [NSNumber numberWithInteger:selectedUpload.idUploadsOffline]];
         
         if (!correctQuery) {
             DLog(@"Error in setState");
@@ -694,7 +909,15 @@
  */
 + (void) updateAllUploadsWithNotNecessaryCheck {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -721,12 +944,20 @@
  */
 + (void) setTaskIdentifier:(NSInteger)taskIdentifier forUploadOffline:(UploadsOfflineDto *)upload{
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET task_identifier = ? WHERE id = ?", [NSNumber numberWithInteger:taskIdentifier], [NSNumber numberWithInt:upload.idUploadsOffline]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET task_identifier = ? WHERE id = ?", [NSNumber numberWithInteger:taskIdentifier], [NSNumber numberWithInteger:upload.idUploadsOffline]];
         
         if (!correctQuery) {
             DLog(@"Error in set task_identifier");

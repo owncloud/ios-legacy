@@ -32,6 +32,7 @@ extern NSString *uploadOverwriteFileNotification;
 - (void) uploadFailedForLoginError:(NSString*)string;
 - (void) uploadLostConnectionWithServer:(NSString*)string;
 - (void) uploadAddedContinueWithNext;
+- (void) overwriteCompleted;
 
 @end
 

@@ -14,6 +14,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @class FileDto;
 @class UploadsOfflineDto;
@@ -39,9 +40,9 @@ extern NSString * PreviewFileNotification;
 
 + (NSString *) getUrlWithRedirectionByOriginalURL:(NSString *) originalUrl;
 
-+ (NSString *) getHttpAndDomainByURL:(NSString *) url;
-
 + (FileDto *) getFileDtoByUploadOffline:(UploadsOfflineDto *) uploadsOfflineDto;
+
++ (ALAssetsLibrary *)defaultAssetsLibrary;
 
 @end
 

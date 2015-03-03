@@ -19,6 +19,7 @@
 #import "UserDto.h"
 #import "AppDelegate.h"
 #import "UtilsDtos.h"
+#import "UtilsUrls.h"
 #import "Customization.h"
 #import "ManageFilesDB.h"
 #import "constants.h"
@@ -67,10 +68,10 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Get file object
-    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath] andUser:app.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
     _fileDto=file;
     
-    //Obtain the etag
+    //Get the etag
     [self updateThisEtagWithTheLast];
 }
 
@@ -145,13 +146,13 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         } failureRequest:^(NSURLResponse *response, NSError *error) {
             
             DLog(@"Error: %@", error);
-            DLog(@"error.code: %d", error.code);
+            DLog(@"error.code: %ld", (long)error.code);
             
             if (!self.isForceCanceling) {
                 
                 [weakSelf setDownloadTaskIdentifierValid:NO];
                 NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-                DLog(@"Operation error: %d", httpResponse.statusCode);
+                DLog(@"Operation error: %ld", (long)httpResponse.statusCode);
                 
                 //Update the fileDto
                 _fileDto = [ManageFilesDB getFileDtoByIdFile:_fileDto.idFile];
@@ -272,8 +273,8 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                                                           
                                                       } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                                                           DLog(@"Error: %@", error);
-                                                          DLog(@"error.code: %d", error.code);
-                                                          DLog(@"response.statusCode: %d", response.statusCode);
+                                                          DLog(@"error.code: %ld", (long)error.code);
+                                                          DLog(@"response.statusCode: %ld", (long)response.statusCode);
                                                           //Update the fileDto
                                                           _fileDto = [ManageFilesDB getFileDtoByIdFile:_fileDto.idFile];
                                                           
@@ -371,15 +372,15 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         NSInteger totalProgressDownload = 0;
         NSString *progressString;
         
-        currentProgressDownload = progress.completedUnitCount;
+        currentProgressDownload = (NSInteger)progress.completedUnitCount;
         if (currentProgressDownload) {
             
-            totalProgressDownload = progress.totalUnitCount;
+            totalProgressDownload = (NSInteger)progress.totalUnitCount;
             
             if (totalProgressDownload/1024 == 0) {
                 progressString = [NSString stringWithFormat:@"%ld Bytes / %ld Bytes", (long)currentProgressDownload, (long)totalProgressDownload];
             }else{
-                progressString = [NSString stringWithFormat:@"%d KB / %d KB", currentProgressDownload/1024, totalProgressDownload/1024];
+                progressString = [NSString stringWithFormat:@"%ld KB / %ld KB", (long)(currentProgressDownload/1024), (long)(totalProgressDownload/1024)];
             }
         }
 
@@ -424,7 +425,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     }
     
     //Update the datas of the new file
-    _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath] andUser:app.activeUser];
+    _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     //Set file status like downloaded in Data Base
     [ManageFilesDB setFileIsDownloadState:_fileDto.idFile andState:downloaded];
@@ -482,14 +483,14 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         //Get FileDto
-        _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath] andUser:app.activeUser];
+        _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
         
         //If is downloaded or not
         if ([_fileDto isDownload] == downloaded && !_fileDto.isNecessaryUpdate) {
             DLog(@"Just downloaded");
             
         }else {
-            DLog(@"Cancel download: %d", _fileDto.idFile);
+            DLog(@"Cancel download: %ld", (long)_fileDto.idFile);
             //Set boolean to YES
             _isCancel=YES;
             
@@ -691,7 +692,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", app.activeUser.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileDto.filePath], _fileDto.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileDto.filePath andUser:app.activeUser], _fileDto.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -699,7 +700,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
@@ -727,13 +728,13 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             //Change the filePath from the library to our format
             for (FileDto *currentFile in items) {
                 //Remove part of the item file path
-                NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:app.activeUser];
+                NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
                 if([currentFile.filePath length] >= [partToRemove length]){
                     currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
                 }
             }
             
-            DLog(@"The directory List have: %d elements", items.count);
+            DLog(@"The directory List have: %lu elements", (unsigned long)items.count);
             
              //Check if there are almost one item in the array
             if (items.count >= 1) {
@@ -749,7 +750,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         //Remove this file of favorites sync process
         [weakSelf removeFileOfFavorites];
         

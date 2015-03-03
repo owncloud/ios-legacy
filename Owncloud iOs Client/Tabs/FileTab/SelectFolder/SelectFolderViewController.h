@@ -19,14 +19,14 @@
 #import "MBProgressHUD.h"
 #import "FileDto.h"
 #import "OCToolBar.h"
+#import "SimpleFileListTableViewController.h"
 
 
-@interface SelectFolderViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, CheckAccessToServerDelegate, UIAlertViewDelegate, UITextFieldDelegate>{
+@interface SelectFolderViewController : SimpleFileListTableViewController <CheckAccessToServerDelegate, UIAlertViewDelegate, UITextFieldDelegate>{
     
     //Inteface
     UIBarButtonItem *_createButton;
     UIBarButtonItem *_chooseButton;
-    UITableView *_folderTableView;
     UILabel *_toolBarLabel;
     OCToolBar *_toolBar;
     
@@ -55,10 +55,8 @@
 
 @property (nonatomic, strong) IBOutlet UIBarButtonItem *createButton;
 @property (nonatomic, strong) IBOutlet UIBarButtonItem *chooseButton;
-@property (nonatomic, strong) IBOutlet UITableView *folderTableView;
 @property (nonatomic, strong) IBOutlet UILabel *toolBarLabel;
 @property (nonatomic, strong) IBOutlet OCToolBar *toolBar;
-@property(nonatomic, strong) UserDto *mUser;
 @property(nonatomic, retain) CheckAccessToServer *mCheckAccessToServer;
 @property(nonatomic, strong) FileDto *selectedFileDto;
 @property (nonatomic, weak) id parent;
@@ -71,9 +69,8 @@
 @property(nonatomic, strong) NSString *toolBarLabelTxt;
 @property(nonatomic, strong) UIAlertView *folderView;
 @property(nonatomic, strong) UIAlertView *alert;
+@property(nonatomic, strong) SelectFolderViewController *selectFolderViewController;
 
-//Custom init
-- (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(int) fileIdToShowFiles andCurrentLocalFolder:(NSString *) currentLocalFoler;
 
 //Actions
 - (IBAction)chooseFolder;

@@ -70,9 +70,9 @@
     {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*) response; 
         if (dbService.isDebugLogEnabled) {
-            DLog(@"http statuscode = %i", [httpResponse statusCode]);
+            DLog(@"http statuscode = %ld", (long)[httpResponse statusCode]);
         }
-        int statusCode = [httpResponse statusCode];
+        NSInteger statusCode = [httpResponse statusCode];
         if (statusCode != 200) {
             [connection cancel];
             if (dbService.isTraceLogEnabled) {

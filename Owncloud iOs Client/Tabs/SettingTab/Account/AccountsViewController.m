@@ -133,7 +133,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DLog(@"DELETE!!! %d", indexPath.row);
+    DLog(@"DELETE!!! %ld", (long)indexPath.row);
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -152,7 +152,7 @@
         [self performSelectorInBackground:@selector(cancelAndremoveFromTabRecentsAllInfoByUser:) withObject:selectedUser];
         
         //Delete files os user in the system
-        NSString *userFolder = [NSString stringWithFormat:@"/%d",selectedUser.idUser];
+        NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)selectedUser.idUser];
         NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
         
         //NSString *userFolder = [NSString stringWithFormat:@"/%d",selectedUser.idUser];
@@ -185,6 +185,8 @@
         if([self.listUsers count] > 0) {
             [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
         } else {
+            
+            self.tableView.editing = NO;
             
             AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
@@ -407,7 +409,7 @@
     
 }
 
--(void)activeAccountByPosition:(int)position {
+-(void)activeAccountByPosition:(NSInteger)position {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:position];
@@ -448,7 +450,7 @@
         
         //We get the current folder to create the local tree
         //we create the user folder to haver multiuser
-        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%d/",[UtilsUrls getOwnCloudFilePath],selectedUser.idUser];
+        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)selectedUser.idUser];
         DLog(@"current: %@", currentLocalFileToCreateFolder);
         
         if (![[NSFileManager defaultManager] fileExistsAtPath:currentLocalFileToCreateFolder]) {

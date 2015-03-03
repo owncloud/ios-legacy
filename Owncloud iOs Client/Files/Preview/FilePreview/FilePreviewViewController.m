@@ -61,7 +61,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     //Assing the file
     _file = file;
     
-    DLog(@"File to preview: %@ with File id: %d", self.file.fileName,file.idFile);
+    DLog(@"File to preview: %@ with File id: %ld", self.file.fileName, (long)file.idFile);
     
     
     self = [super initWithNibName:nibNameOrNil bundle:nil];
@@ -108,7 +108,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     //Get current local folder
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    _currentLocalFolder = [NSString stringWithFormat:@"%@%d/%@", [UtilsUrls getOwnCloudFilePath],app.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:_file.filePath ofUserDto:app.activeUser]];
+    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:_file.filePath ofUserDto:app.activeUser]];
     _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
    
@@ -122,7 +122,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
+    [super viewWillDisappear:animated];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (app.isSharedToOwncloudPresent == NO) {
@@ -323,23 +323,42 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 -(void)potraitView{
     if (_moviePlayer) {
+        UIScreen *screen = [UIScreen mainScreen];
+        CGSize screenSize = screen.bounds.size;
+        
         if (_moviePlayer.isFullScreen == NO) {
             //[nc manageBackgroundView:NO];
-            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, [[UIScreen mainScreen] bounds].size.width, ([[UIScreen mainScreen] bounds].size.height - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height));
+            if ([screen respondsToSelector:@selector(fixedCoordinateSpace)]) {
+                screenSize = [screen.coordinateSpace convertRect:screen.bounds toCoordinateSpace:screen.fixedCoordinateSpace].size;
+            }
+            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.width, (screenSize.height - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height));
         } else {
-            
             //[nc manageBackgroundView:YES];
-            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height);
+            if ([screen respondsToSelector:@selector(fixedCoordinateSpace)]) {
+                screenSize = [screen.coordinateSpace convertRect:screen.bounds toCoordinateSpace:screen.fixedCoordinateSpace].size;
+            }
+            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.width, screenSize.height);
         }
     }
 }
  
 -(void)landscapeView{
     if (_moviePlayer) {
+        UIScreen *mainScreen = [UIScreen mainScreen];
+        CGSize screenSize = mainScreen.bounds.size;
+
         if (_moviePlayer.isFullScreen == NO) {
-            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, [[UIScreen mainScreen] bounds].size.height, ([[UIScreen mainScreen] bounds].size.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape));
+            if ([mainScreen respondsToSelector:@selector(fixedCoordinateSpace)]) {
+                screenSize = [mainScreen.coordinateSpace convertRect:mainScreen.bounds toCoordinateSpace:mainScreen.fixedCoordinateSpace].size;
+            }
+            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape));
+            
         } else {
-            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, [[UIScreen mainScreen] bounds].size.height, [[UIScreen mainScreen] bounds].size.width);
+            if ([mainScreen respondsToSelector:@selector(fixedCoordinateSpace)]) {
+                screenSize = [mainScreen.coordinateSpace convertRect:mainScreen.bounds toCoordinateSpace:mainScreen.fixedCoordinateSpace].size;
+            }
+            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.height, screenSize.width);
+
         }
     }
 }
@@ -434,8 +453,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             [self previewFile];
         }
         
-        DLog(@"ide file: %d",_file.idFile);
-        DLog(@"is Donwloaded: %d",_file.isDownload);
+        DLog(@"ide file: %ld",(long)_file.idFile);
+        DLog(@"is Donwloaded: %ld",(long)_file.isDownload);
         
         //Check if the file is in the device
         if (([_file isDownload] == notDownload) && _typeOfFile != otherFileType) {
@@ -525,7 +544,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         //Set the file as isNecessaryUpdate
         [ManageFilesDB setIsNecessaryUpdateOfTheFile:_file.idFile];
         //Update the file on memory
-        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
         //Do the request to get the shared items
         [self handleFile];
     }
@@ -549,13 +568,14 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 - (void)openFile{
     
     //Openwith
-    _openWith = [[OpenWith alloc]init];
-    _openWith.parentView = self.view;
-    [_openWith openWithFile:_file];
+    self.openWith = [[OpenWith alloc]init];
+    self.openWith.parentView = self.view;
+    [self.openWith openWithFile:self.file];
     
     //Enable back button
     self.navigationController.navigationBar.UserInteractionEnabled = YES;
     _toolBar.UserInteractionEnabled = YES;
+    
 }
 
 
@@ -778,7 +798,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  *
  */
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
-    return UIModalTransitionStyleCrossDissolve;
+    return UIStatusBarAnimationFade;
 }
 
 #pragma mark - Media player methods
@@ -976,8 +996,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  */
 - (IBAction)didPressFavoritesButton:(id)sender {
     //Update the file from the DB
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:appDelegate.activeUser];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (_file.isFavorite) {
         _file.isFavorite = NO;
@@ -994,7 +1014,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     //Update the DB
     [ManageFilesDB updateTheFileID:_file.idFile asFavorite:_file.isFavorite];
-    [appDelegate.presentFilesViewController reloadTableFromDataBase];
+    [app.presentFilesViewController reloadTableFromDataBase];
     
     if (_file.isFavorite && _file.isDownload == downloaded) {
         [self checkIfThereIsANewFavoriteVersion];
@@ -1224,7 +1244,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
-            _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+            _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
             
             [self downloadTheFile];
         } else {
@@ -1316,7 +1336,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Update fileDto    
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (_file.idFile == fileDto.idFile) {
         
@@ -1516,7 +1536,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Update the _file with DB
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     NSString *path = (NSString*)[notification object];
     NSString *pathPreview = [UtilsDtos getRemoteUrlByFile:_file andUserDto:app.activeUser];
@@ -1525,7 +1545,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         _file.isDownload = downloaded;
         [self handleFile];
     }
-    DLog(@"id file: %d",_file.idFile);
+    DLog(@"id file: %ld",(long)_file.idFile);
 }
 
 /*
@@ -1536,7 +1556,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Update the preview file with the new information in DB
-    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath] andUser:app.activeUser];
+    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     app.isOverwriteProcess = NO;
 }
 

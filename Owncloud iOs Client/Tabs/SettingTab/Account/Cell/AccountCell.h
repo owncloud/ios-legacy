@@ -18,7 +18,7 @@
 @protocol AccountCellDelegate
 
 @optional
-- (void)activeAccountByPosition:(int) position;
+- (void)activeAccountByPosition:(NSInteger) position;
 @end
 
 @interface AccountCell : UITableViewCell

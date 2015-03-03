@@ -14,7 +14,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "OCFileDto.h"
+
+@class OCFileDto;
 
 typedef enum {
     downloading = -1,
@@ -46,6 +47,7 @@ typedef enum {
 @property NSInteger sharedFileSource;
 @property (nonatomic, copy) NSString *permissions;
 @property NSInteger taskIdentifier;
+@property (nonatomic) NSInteger providingFileId;
 
 - (id)initWithOCFileDto:(OCFileDto*)ocFileDto;
 

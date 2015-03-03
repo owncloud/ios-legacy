@@ -36,20 +36,20 @@
         
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0)"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0, 'date_instant_upload' LONG )"];
 
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table users");
         }
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL NOT NULL DEFAULT 0, 'is_necessary_update' BOOL NOT NULL DEFAULT 0, 'shared_file_source' INTEGER NOT NULL DEFAULT 0, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER NOT NULL DEFAULT -1)"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL NOT NULL DEFAULT 0, 'is_necessary_update' BOOL NOT NULL DEFAULT 0, 'shared_file_source' INTEGER NOT NULL DEFAULT 0, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER NOT NULL DEFAULT -1, 'providing_file_id' INTEGER NOT NULL DEFAULT 0)"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table files");
         }
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files_backup' ('id' INTEGER, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL, 'is_necessary_update' BOOL, 'shared_file_source' INTEGER, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER)"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files_backup' ('id' INTEGER, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL, 'is_necessary_update' BOOL, 'shared_file_source' INTEGER, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER, 'providing_file_id' INTEGER NOT NULL DEFAULT 0)"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table files_backup");
@@ -86,6 +86,12 @@
         }
 
         correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'cookies_storage' ('id' INTEGER PRIMARY KEY, 'cookie' BLOB, 'user_id' INTEGER)"];
+        
+        if (!correctQuery) {
+            DLog(@"Error in createDataBase table cookies_storage");
+        }
+        
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'providing_files' ('id' INTEGER PRIMARY KEY, 'file_path' VARCHAR, 'user_id' INTEGER)"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table cookies_storage");
@@ -566,8 +572,7 @@
     NSArray *currentUsers = [NSArray arrayWithArray:[ManageUsersDB getAllOldUsersUntilVersion10]];
     
     for (UserDto *user in currentUsers) {
-
-         NSString *idString = [NSString stringWithFormat:@"%d", user.idUser];
+         NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
         if (![OCKeychain setCredentialsById:idString withUsername:user.username andPassword:user.password]){
             DLog(@"Failed setting credentials");
         }
@@ -726,6 +731,59 @@
     }
 
 }
+
+
+///-----------------------------------
+/// @name Update Database version with 11 version to 12
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter users table, added new fields to instant uploads options
+ * Alter files and files_backup tables, added new field for store the providing_file_id of the file
+ *
+ */
++ (void) updateDBVersion11To12{
+    
+    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        //Instant uploads
+        correctQuery = [db executeUpdate:@"ALTER TABLE users ADD instant_upload BOOL NOT NULL DEFAULT 0"];
+        if (!correctQuery) {
+            DLog(@"Error update version 11 to 12 table users instant_upload");
+        }
+        correctQuery = [db executeUpdate:@"ALTER TABLE users ADD path_instant_upload VARCHAR"];
+        if (!correctQuery) {
+            DLog(@"Error update version 11 to 12 table users path_instant_upload");
+        }
+        correctQuery = [db executeUpdate:@"ALTER TABLE users ADD only_wifi_instant_upload BOOL NOT NULL DEFAULT 0"];
+        if (!correctQuery) {
+            DLog(@"Error update version 11 to 12 table users only_wifi_instant_upload");
+        }
+        correctQuery = [db executeUpdate:@"ALTER TABLE users ADD date_instant_upload LONG"];
+        if (!correctQuery) {
+            DLog(@"Error update version 11 to 12 table users date_instant_upload");
+        }
+        
+        //Document provider
+        correctQuery = [db executeUpdate:@"ALTER TABLE files ADD providing_file_id INTEGER NOT NULL DEFAULT 0"];
+        if (!correctQuery) {
+            DLog(@"Error update version 11 to 12 adding providing_file_id field to files table");
+        }
+        
+        correctQuery = [db executeUpdate:@"ALTER TABLE files_backup ADD providing_file_id INTEGER NOT NULL DEFAULT 0"];
+        if (!correctQuery) {
+            DLog(@"Error update version 11 to 12 adding providing_file_id field to files_backup table");
+        }
+        
+    }];
+    
+}
+
 
 
 @end

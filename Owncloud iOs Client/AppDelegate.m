@@ -52,6 +52,9 @@
 #import "CheckHasCookiesSupport.h"
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
+#import "ManageLocation.h"
+#import "ManageAsset.h"
+
 
 #define k_server_with_chunking 4.5 
 
@@ -134,7 +137,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
     
-    [self performSelector:@selector(checkIfIdNecesaryShowPassCode) withObject:nil afterDelay:0.5];
+    [self checkIfIsNecesaryShowPassCode];
     
     //Check if the server support shared api
     [self performSelector:@selector(checkIfServerSupportThings) withObject:nil afterDelay:0.0];
@@ -152,9 +155,28 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Add observer for notifications about network not reachable in uploads
   // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeUploadsToWaitingForServerConnection) name:NotReachableNetworkForUploadsNotification object:nil];
     
+   //Allow Notifications iOS8
+  /*  if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)]){
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil]];
+    }
+   */
+    
+    
+    //Ugly solution for erase the persistent cache across launches
+    
+    NSInteger memory = 4; //4 MB
+    
+    NSUInteger cacheSizeMemory = memory*1024*1024;
+    NSUInteger cacheSizeDisk = memory*1024*1024;
+    NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:cacheSizeMemory diskCapacity:cacheSizeDisk diskPath:@"nsurlcache"];
+    [NSURLCache setSharedURLCache:sharedCache];
+    sleep(1); //Important sleep. Very ugly but neccesarry.
+    
     
     return YES;
 }
+
+
 
 ///-----------------------------------
 /// @name Set UINavBar Apperance for native mail
@@ -249,9 +271,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         NSString *filePath;
         
         //We have a bug on iOS8 that can not upload a file on background from Documents/Inbox. So we move the file to the getTempFolderForUploadFiles
-        [[NSFileManager defaultManager]moveItemAtPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Inbox"] stringByAppendingPathComponent:fileName] toPath:[[self getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName] error:nil];
+        [[NSFileManager defaultManager]moveItemAtPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Inbox"] stringByAppendingPathComponent:fileName] toPath:[[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName] error:nil];
 
-        filePath = [[self getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
+        filePath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
         
         _filePathFromOtherApp=filePath;
         
@@ -324,7 +346,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if(_activeUser.username == nil) {
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        [self.window setBackgroundColor:[UIColor whiteColor]];
         
         if (IS_IPHONE) {
             self.loginViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPhone" bundle:nil];
@@ -338,6 +359,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     } else {
         
         [self performSelector:@selector(doThingsThatShouldDoOnStart) withObject:nil afterDelay:0.4];
+        
+        [self performSelector:@selector(launchUploadsOfflineFromDocumentProvider) withObject:nil afterDelay:0.3];
         
         self.mCheckAccessToServer = [[CheckAccessToServer alloc] init];
         self.mCheckAccessToServer.delegate = self;
@@ -408,8 +431,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    [self.window setBackgroundColor:[UIColor whiteColor]];
-    
     self.window.rootViewController = self.loginWindowViewController;
     [self.window makeKeyAndVisible];
 }
@@ -441,7 +462,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Check if we generate the interface from login screen or not
     if (isFromLogin) {
         //From login screen we create the user folder to haver multiuser
-        localSystemPath = [NSString stringWithFormat:@"%@%d/",[UtilsUrls getOwnCloudFilePath],_activeUser.idUser];
+        localSystemPath = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)_activeUser.idUser];
         //DLog(@"current: %@", localSystemPath);
         
         //If not exist we create
@@ -453,12 +474,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
     } else {
         //We get the current folder to create the local tree
-        localSystemPath = [NSString stringWithFormat:@"%@%d/", [UtilsUrls getOwnCloudFilePath],_activeUser.idUser];
+        localSystemPath = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)_activeUser.idUser];
         //DLog(@"localRootUrlString: %@", localSystemPath);
     }
 
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [self.window setBackgroundColor:[UIColor whiteColor]];
+    if (!self.window) {
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    }
     
     //if ocTabBarController exist remove all of them
     if (_ocTabBarController) {
@@ -735,7 +757,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 - (void) updateProgressView:(NSUInteger)num withPercent:(float)percent{
     
-    DLog(@"num: %d", num);
+    DLog(@"num: %lu", (unsigned long)num);
     DLog(@"percent: %fd", percent);
     
     [_recentViewController updateProgressView:num withPercent:percent];    
@@ -938,7 +960,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     //For iOS8 we need to change the checking to this method, for show as a first step the pincode screen
-    [self checkIfIdNecesaryShowPassCodeWillEnterForeground];
+    [self checkIfIsNecesaryShowPassCodeWillEnterForeground];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -968,6 +990,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_presentFilesViewController.folderView) {
         [_presentFilesViewController.folderView dismissWithClickedButtonIndex:0 animated:NO];
     }
+
 }
 
 
@@ -991,6 +1014,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         _isExpirationTimeInUpload = NO;
     } else{
         
+        [self launchUploadsOfflineFromDocumentProvider];
+        
         [self relaunchUploadsFailedForced];
         
         //Refresh the tab
@@ -999,7 +1024,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
     //Update the Favorites Files
     [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
-    
+   
+    //Refresh the list of files from the database
+    if (_activeUser && self.presentFilesViewController) {
+        [_presentFilesViewController reloadTableFromDataBase];
+    }
 }
 
 
@@ -1007,7 +1036,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    
+  
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -1074,11 +1103,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         for (NSURLSessionUploadTask *upload in uploadTasks) {
             
-            DLog(@"OC uplaod task identifier: %d", upload.taskIdentifier);
+            DLog(@"OC uplaod task identifier: %lu", (unsigned long)upload.taskIdentifier);
             
             for (UploadsOfflineDto *uploadDB in uploadsFromDB) {
                 
-                DLog(@"OC upload hash %d - Database hash %d", upload.taskIdentifier, uploadDB.taskIdentifier);
+                DLog(@"OC upload hash %ld - Database hash %ld", (long)upload.taskIdentifier, (long)uploadDB.taskIdentifier);
                 
                 if (upload.taskIdentifier == uploadDB.taskIdentifier) {
                     
@@ -1199,7 +1228,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     
                     //Local folder
                     NSString *localFolder = nil;
-                    localFolder = [NSString stringWithFormat:@"%@%d/%@", [UtilsUrls getOwnCloudFilePath], self.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:self.activeUser]];
+                    localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:self.activeUser]];
                     localFolder = [localFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                     
                     download.currentLocalFolder = localFolder;
@@ -1252,7 +1281,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             if (download.downloadTask.taskIdentifier == downloadTask.taskIdentifier && download.isFromBackground) {
                 
                 NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)downloadTask.response;
-                DLog(@"HTTP Error: %d", httpResponse.statusCode);
+                DLog(@"HTTP Error: %ld", (long)httpResponse.statusCode);
                 
                 if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
                     
@@ -1336,7 +1365,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 });
             }
         }
-        DLog(@"Download identifier %d", downloadTask.taskIdentifier);
+        DLog(@"Download identifier %lu", (unsigned long)downloadTask.taskIdentifier);
         DLog(@"Task progress: %lld of total: %lld", totalBytesWritten, totalBytesExpectedToWrite);
     }];
 }
@@ -1356,11 +1385,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     [[AppDelegate sharedOCCommunication] setTaskDidCompleteBlock:^(NSURLSession *session, NSURLSessionTask *task, NSError *error) {
         
-        DLog(@"TASK TERMINATED WITH IDENTIFIER: %d", task.taskIdentifier);
-        DLog(@"Error code: %d, and error descripcion: %@", error.code, error.description);
+        DLog(@"TASK TERMINATED WITH IDENTIFIER: %lu", (unsigned long)task.taskIdentifier);
+        DLog(@"Error code: %ld, and error descripcion: %@", (long)error.code, error.description);
         
         NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)task.response;
-        DLog(@"HTTP Error: %d", httpResponse.statusCode);
+        DLog(@"HTTP Error: %ld", (long)httpResponse.statusCode);
         
         NSMutableArray *uploadsFromDB = [NSMutableArray new];
         
@@ -1368,7 +1397,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [uploadsFromDB addObjectsFromArray:[ManageUploadsDB getUploadsByStatus:uploading]];
         
         
-        DLog(@"uploadsFromDB: %d", [uploadsFromDB count]);
+        DLog(@"uploadsFromDB: %lu", (unsigned long)[uploadsFromDB count]);
         
         for (UploadsOfflineDto *uploadOffline in uploadsFromDB) {
             
@@ -1407,16 +1436,16 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     
                 } else {
                     //Failure
-                    DLog(@"Error code: %d, and error descripcion: %@", error.code, error.description);
+                    DLog(@"Error code: %ld, and error descripcion: %@", (long)error.code, error.description);
                     
                     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
                     
                     DLog(@"Error: %@", error);
-                    DLog(@"error.code: %d", error.code);
+                    DLog(@"error.code: %ld", (long)error.code);
                     
                     if ([error code] != NSURLErrorCancelled) {
                         
-                        int errorToCheck = 0;
+                        NSInteger errorToCheck = 0;
                         
                         if (httpResponse.statusCode > 0) {
                             errorToCheck = httpResponse.statusCode;
@@ -1424,9 +1453,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                             errorToCheck = error.code;
                         }
                         
-                        DLog(@"errorToCheck:%d", errorToCheck);
-                        DLog(@"error.code:%d", error.code);
-                        DLog(@"httpResponse.statusCode:%d", httpResponse.statusCode);
+                        DLog(@"errorToCheck:%ld", (long)errorToCheck);
+                        DLog(@"error.code:%ld", (long)error.code);
+                        DLog(@"httpResponse.statusCode:%ld", (long)httpResponse.statusCode);
                         
                         //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
                         switch (errorToCheck) {
@@ -1493,11 +1522,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
     [[AppDelegate sharedOCCommunication] setTaskDidSendBodyDataBlock:^(NSURLSession *session, NSURLSessionTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
         
-        DLog(@"Task identifier: %d", task.taskIdentifier);
+        DLog(@"Task identifier: %lu", (unsigned long)task.taskIdentifier);
         
         DLog(@"Task progress: %lld  or %lld - of total: %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
         
-        DLog(@"uploadArray: %d", _uploadArray.count);
+        DLog(@"uploadArray: %lu", (unsigned long)_uploadArray.count);
         
         BOOL isTheTaskOnTheDB = NO;
         
@@ -1556,7 +1585,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler {
     NSLog(@"OC handle Events for Background URL Session");
     
-    DLog(@"_uploadArray: %d", [_uploadArray count]);
+    DLog(@"_uploadArray: %@", @(_uploadArray.count));
     
     [self doThingsThatShouldDoOnStart];
    
@@ -1576,7 +1605,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 #pragma mark - Pass Code
 
-- (void)checkIfIdNecesaryShowPassCode {
+- (void)checkIfIsNecesaryShowPassCode {
     
     if ([ManageAppSettingsDB isPasscode]) {
         
@@ -1607,7 +1636,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-- (void)checkIfIdNecesaryShowPassCodeWillEnterForeground {
+- (void)checkIfIsNecesaryShowPassCodeWillEnterForeground {
     
     if ([ManageAppSettingsDB isPasscode]) {
         
@@ -1650,7 +1679,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //Close the openWith option in FileViewController
     if (_presentFilesViewController.openWith) {
-        [_presentFilesViewController.openWith.documentInteractionController dismissMenuAnimated:NO];
+        [_presentFilesViewController.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
     }
     //Close the delete option in FilesViewController
     if (_presentFilesViewController.mDeleteFile.popupQuery) {
@@ -1738,6 +1767,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if(_prepareFiles == nil) {
         _prepareFiles = [[PrepareFilesToUpload alloc] init];
         _prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
+        _prepareFiles.listOfAssetsToUpload = [[NSMutableArray alloc] init];
         _prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
         _prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
         _prepareFiles.delegate = self;
@@ -1756,7 +1786,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     currentUpload.uploadFileName = name;
     currentUpload.kindOfError = notAnError;
     
-    currentUpload.estimateLength = fileLength;
+    currentUpload.estimateLength = (long)fileLength;
     currentUpload.userId = _activeUser.idUser;
     currentUpload.isLastUploadFileOfThisArray = YES;
     currentUpload.status = waitingAddToUploadList;
@@ -1790,10 +1820,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)refreshAfterUploadAllFiles:(NSString *) currentRemoteFolder {
     DLog(@"refreshAfterUploadAllFiles");
     
-    NSString *remoteUrlWithoutDomain = [UploadUtils getHttpAndDomainByURL:currentRemoteFolder];
+    NSString *remoteUrlWithoutDomain = [UtilsDtos getHttpAndDomainByURL:currentRemoteFolder];
     remoteUrlWithoutDomain = [currentRemoteFolder substringFromIndex:remoteUrlWithoutDomain.length];
     
-    NSString *currentFolderWithoutDomain = [UploadUtils getHttpAndDomainByURL:_presentFilesViewController.currentRemoteFolder];
+    NSString *currentFolderWithoutDomain = [UtilsDtos getHttpAndDomainByURL:_presentFilesViewController.currentRemoteFolder];
     currentFolderWithoutDomain = [_presentFilesViewController.currentRemoteFolder substringFromIndex:currentFolderWithoutDomain.length];
     
     //Only if is selected the first item: FileList.
@@ -1817,6 +1847,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [_presentFilesViewController reloadTableFromDataBase];
 }
 
+
+
 - (void)errorWhileUpload{
     
     //End of the background task
@@ -1838,18 +1870,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) initDataBase {
     
-    
-    /*Reset keychain items when db need to be updated or when db first init after app has been removed and reinstalled */
-    NSMutableArray * users = [ManageUsersDB getAllUsers];
-    if (![users count]) {
-        //delete all keychain items
-        [OCKeychain resetKeychain];
-    }
-    
-    [UtilsUrls getOwnCloudFilePath];
+    CredentialsDto *credDto = [OCKeychain getCredentialsById:@"1"];
+    DLog(@"User: %@", credDto.userName);
+    DLog(@"Password: %@", credDto.password);
     
     //New version
-    static int dbVersion = k_DB_version_11;
+    static int dbVersion = k_DB_version_12;
     
     //This method make a new database
     [ManageDB createDataBase];
@@ -1874,6 +1900,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_2:
                 [ManageDB updateDBVersion2To3];
@@ -1886,6 +1913,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_3:
                 [ManageDB updateDBVersion3To4];
@@ -1896,6 +1924,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_4:
                 [ManageDB updateDBVersion4To5];
@@ -1905,6 +1934,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_5:
                 [ManageDB updateDBVersion5To6];
@@ -1913,6 +1943,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_6:
                 [ManageDB updateDBVersion6To7];
@@ -1920,30 +1951,45 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_7:
                 [self updateDBVersion7To8];
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_8:
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_9:
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_10:
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
+                break;
+            case k_DB_version_11:
+                [ManageDB updateDBVersion11To12];
                 break;
         }
     }
 
     //Insert DB version
     [ManageDB insertVersionToDataBase:dbVersion];
+    
+    /*Reset keychain items when db need to be updated or when db first init after app has been removed and reinstalled */
+    NSMutableArray * users = [ManageUsersDB getAllUsers];
+    if (![users count]) {
+        //delete all keychain items
+        [OCKeychain resetKeychain];
+    }
 }
 
 - (void) errorLogin {
@@ -1990,26 +2036,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
 }
 
-#pragma mark - Manage directory tree
-
--(NSString *) getTempFolderForUploadFiles {
-    NSString * output = [NSString stringWithFormat:@"%@temp/",[UtilsUrls getOwnCloudFilePath]];
-    
-    
-    if(![[NSFileManager defaultManager] fileExistsAtPath:output]) {
-        NSError *error;
-        
-        if (![[NSFileManager defaultManager] createDirectoryAtPath:output
-                                       withIntermediateDirectories:NO
-                                                        attributes:nil
-                                                             error:&error])
-        {
-            DLog(@"Create directory error: %@", error);
-        }
-    }
-
-    return  output;
-}
 
 
 #pragma markt - LocalPath by version
@@ -2061,15 +2087,15 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //__block BOOL shouldBeContinue=NO;
     
-    DLog(@"id user: %d", idUser);
+    DLog(@"id user: %ld", (long)idUser);
     
     NSArray *currentUploadsTemp = [NSArray arrayWithArray:_uploadArray];
     
     [currentUploadsTemp enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        DLog(@"looping the item :%d of the global array", idx);
+        DLog(@"looping the item :%ld of the global array", (long)idx);
         
         currentManageUploadRequest = obj;
-        DLog(@"the status of the upload is: %d", currentManageUploadRequest.currentUpload.status);
+        DLog(@"the status of the upload is: %ld", (long)currentManageUploadRequest.currentUpload.status);
         if (currentManageUploadRequest.currentUpload.status == waitingForUpload ||
             currentManageUploadRequest.currentUpload.status == uploading) {
             DLog(@"this upload is waiting for upload");
@@ -2094,9 +2120,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     if ([[ManageUploadsDB getUploadsByStatus:errorUploading] count] == 0 &&
         [[ManageUploadsDB getUploadsByStatus:waitingForUpload] count] == 0 &&
-        [[ManageUploadsDB getUploadsByStatus:uploading] count] == 0 && [[ManageUploadsDB getUploadsByStatus:pendingToBeCheck] count] == 0) {
+        [[ManageUploadsDB getUploadsByStatus:uploading] count] == 0 &&
+        [[ManageUploadsDB getUploadsByStatus:pendingToBeCheck] count] == 0 &&
+        _uploadFromOtherAppViewController == nil) {
         //If we do not have anything waiting to be upload we clean the folder
-        [[NSFileManager defaultManager] removeItemAtPath:[self getTempFolderForUploadFiles] error:&error];
+        [[NSFileManager defaultManager] removeItemAtPath:[UtilsUrls getTempFolderForUploadFiles] error:&error];
     }
 }
 
@@ -2347,7 +2375,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self createAManageRequestUploadWithTheUploadOffline:fileForUpload];
     DLog(@"The file is on server");
     
-    currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath] andUser:_activeUser];
+    currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath andUser:self.activeUser] andUser:self.activeUser];
     
     if (currentFile.isDownload == overwriting) {
         [ManageFilesDB setFileIsDownloadState:currentFile.idFile andState:downloaded];
@@ -2375,7 +2403,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Insert the specific data to recents view
     NSDate *uploadedDate = [NSDate dateWithTimeIntervalSince1970:currentUploadBackground.uploadedDate];
     currentManageUploadRequest.date = uploadedDate;
-    currentManageUploadRequest.currentUpload.uploadedDate = uploadedDate;
+    currentManageUploadRequest.currentUpload.uploadedDate = uploadedDate.timeIntervalSince1970;
     //Set uploadOffline
     currentManageUploadRequest.currentUpload = currentUploadBackground;
     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:currentUploadBackground.estimateLength];
@@ -2404,7 +2432,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void) updateTheDownloadState: (int) previousState to:(int) newState {
     //Obtain all the file with previous status
     NSMutableArray *listOfFiles = [ManageFilesDB getFilesByDownloadStatus:previousState];
-    DLog(@"There are: %d in the list of files", listOfFiles.count);
+    DLog(@"There are: %lu in the list of files", (unsigned long)listOfFiles.count);
     
     //First, check if there are
     if (listOfFiles.count > 0) {
@@ -2543,32 +2571,71 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //We get all the files that are with any error
         NSMutableArray *listOfUploadsFailed = [ManageUploadsDB getUploadsByStatus:errorUploading andByKindOfError:notAnError];
         NSMutableArray *listOfPendingToBeCheckFiles = [ManageUploadsDB getUploadsByStatus:pendingToBeCheck andByKindOfError:notAnError];
-        DLog(@"There are: %d in the list of uploads failed", listOfUploadsFailed.count);
-        DLog(@"There are: %d files in the list of pending to be check", listOfPendingToBeCheckFiles.count);
+        DLog(@"There are: %ld in the list of uploads failed", (long)listOfUploadsFailed.count);
+        DLog(@"There are: %ld files in the list of pending to be check", (long)listOfPendingToBeCheckFiles.count);
         
         //First, check if there are
         if (listOfUploadsFailed.count > 0) {
             //We update all the files with error to the status waitingAddToUploadList
             [ManageUploadsDB updateAllErrorUploadOfflineWithWaitingAddUploadList];
             
+            
             if (_prepareFiles == nil) {
                 _prepareFiles = [[PrepareFilesToUpload alloc] init];
                 _prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
+                _prepareFiles.listOfAssetsToUpload = [[NSMutableArray alloc] init];
                 _prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
                 _prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
                 _prepareFiles.delegate = self;
             }
+            
             for (UploadsOfflineDto *upload in listOfUploadsFailed) {
                 upload.status=waitingAddToUploadList;
             }
+            
+            
+            
             [_prepareFiles sendFileToUploadByUploadOfflineDto:[listOfUploadsFailed objectAtIndex:0]];
         }
+        
 
         if (listOfPendingToBeCheckFiles.count > 0) {
             [self checkTheUploadFilesOnTheServer:listOfPendingToBeCheckFiles];
         }
+        
+        
     }
 
+}
+
+/*
+ * Method called when the app starts or when back for the background.
+ * This method pust the files modified by the document provider to upload.
+ */
+- (void) launchUploadsOfflineFromDocumentProvider{
+    
+    NSMutableArray *listOfFilesGeneratedByDocumentProvider = [ManageUploadsDB getUploadsByStatus:generatedByDocumentProvider andByKindOfError:notAnError];
+    
+    if (listOfFilesGeneratedByDocumentProvider.count > 0) {
+        [ManageUploadsDB updateUploadsGeneratedByDocumentProviertoToWaitingAddUploadList];
+        
+        if (_prepareFiles == nil) {
+            _prepareFiles = [[PrepareFilesToUpload alloc] init];
+            _prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
+            _prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
+            _prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
+            _prepareFiles.delegate = self;
+        }
+        
+        for (UploadsOfflineDto *upload in listOfFilesGeneratedByDocumentProvider) {
+            upload.status = waitingAddToUploadList;
+        }
+        
+        self.isOverwriteProcess = YES;
+        
+        [_prepareFiles sendFileToUploadByUploadOfflineDto:[listOfFilesGeneratedByDocumentProvider objectAtIndex:0]];
+        
+    }
 }
 
 
@@ -2607,7 +2674,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 - (void) removeFromTabRecentsAllInfoByUser:(UserDto *)user {
     
-    DLog(@"_uploadArray count: %d", [_uploadArray count]);
+    DLog(@"_uploadArray count: %ld", (long)[_uploadArray count]);
     
     NSMutableArray *arrayOfPositionsToDelete = [NSMutableArray new];
     
@@ -2828,5 +2895,33 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 	}
 	return sharedCheckHasCookiesSupport;
 }
+
+
+#pragma mark - Location
+
+-(void)checkIfLocationIsEnabled {
+    if ([CLLocationManager locationServicesEnabled]) {
+        
+        DLog(@"authorizationStatus: %d", [CLLocationManager authorizationStatus]);
+        
+        if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
+            
+            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
+                                                                message:NSLocalizedString(@"message_location_not_enabled", nil)
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"ok"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            } else {
+                DLog(@"Location services not enabled");
+                [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
+                [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
+            }
+        }
+    }
+    
+}
+
 
 @end

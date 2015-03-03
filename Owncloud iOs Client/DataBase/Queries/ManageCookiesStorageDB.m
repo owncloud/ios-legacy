@@ -41,7 +41,7 @@
         correctQuery = [db executeUpdate:@"INSERT INTO cookies_storage (cookie, user_id) Values (?,?)", [NSKeyedArchiver archivedDataWithRootObject:cookie.cookie], [NSNumber numberWithInteger:cookie.userId]];
         
         if (!correctQuery) {
-            DLog(@"Error insert upload offline object");
+            DLog(@"Error insert cookie");
         }
     }];
 }
@@ -65,7 +65,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, cookie, user_id FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInt:user.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, cookie, user_id FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
         
         while ([rs next]) {
             
@@ -73,7 +73,7 @@
             
             current.idCookieStorage = [rs intForColumn:@"id"];
             current.cookie = [NSKeyedUnarchiver unarchiveObjectWithData:[rs dataForColumn:@"cookie"]];
-            current.userId = [rs stringForColumn:@"user_id"];
+            current.userId = [rs intForColumn:@"user_id"];
         
             [output addObject:current];
         }

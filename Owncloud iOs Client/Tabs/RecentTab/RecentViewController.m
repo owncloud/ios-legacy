@@ -36,6 +36,7 @@
 #import "InfoFileUtils.h"
 #import "EmptyCell.h"
 #import "UtilsTableView.h"
+#import "DownloadUtils.h"
 
 
 @interface RecentViewController ()
@@ -164,12 +165,12 @@
         }
     }];
     
-    DLog(@"changes in progress view nº: %d", progressTemp.tag);
+    DLog(@"changes in progress view nº: %ld", (long)progressTemp.tag);
     
     if (percent==1) {
         [_progressViewArray removeObjectIdenticalTo:progressTemp];
-        DLog(@"remove the progress view nº: %d", progressTemp.tag);
-        DLog(@"after remove there are: %d", _progressViewArray.count);
+        DLog(@"remove the progress view nº: %ld", (long)progressTemp.tag);
+        DLog(@"after remove there are: %lu", (unsigned long)_progressViewArray.count);
     }
 }
 
@@ -225,7 +226,7 @@
         
         //Add array in dict
         for (UploadsOfflineDto *temp in uploadsOfflineArray) {
-            [uploadsOfflineDict setObject:temp forKey:[NSNumber numberWithInt:temp.idUploadsOffline]];
+            [uploadsOfflineDict setObject:temp forKey:[NSNumber numberWithInteger:temp.idUploadsOffline]];
         }
         
         //Make a loop for all objects of uploadsArray.
@@ -242,9 +243,9 @@
                 [currentUploadsTemp addObject:currentManageUploadRequest];
                 
                 //Check if the dictionary contains the upload offline key
-                if ([[uploadsOfflineDict allKeys] containsObject:[NSNumber numberWithInt:currentManageUploadRequest.currentUpload.idUploadsOffline]]) {
+                if ([[uploadsOfflineDict allKeys] containsObject:[NSNumber numberWithInteger:currentManageUploadRequest.currentUpload.idUploadsOffline]]) {
                     //Update the upload offline data
-                    currentManageUploadRequest.currentUpload = [uploadsOfflineDict objectForKey:[NSNumber numberWithInt:currentManageUploadRequest.currentUpload.idUploadsOffline]];
+                    currentManageUploadRequest.currentUpload = [uploadsOfflineDict objectForKey:[NSNumber numberWithInteger:currentManageUploadRequest.currentUpload.idUploadsOffline]];
                 }
             }
             
@@ -282,10 +283,10 @@
        _recentsUploads = [recentsUploadsTemp sortedArrayUsingDescriptors:recentUploadsSortDescriptors];
         
         
-        DLog(@"Uploads array: %d", [appDelegate.uploadArray count]);
-        DLog(@"Current normal uploads: %d", [_currentsUploads count]);
-        DLog(@"Failed uploads: %d", [_failedUploads count]);
-        DLog(@"Recent normal uploads: %d", [_recentsUploads count]);
+        DLog(@"Uploads array: %lu", (unsigned long)[appDelegate.uploadArray count]);
+        DLog(@"Current normal uploads: %lu", (unsigned long)[_currentsUploads count]);
+        DLog(@"Failed uploads: %lu", (unsigned long)[_failedUploads count]);
+        DLog(@"Recent normal uploads: %lu", (unsigned long)[_recentsUploads count]);
         
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -304,11 +305,11 @@
  */
 - (IBAction)cancelUploadTapped:(UIButton*)button{
     
-    DLog(@"indexPath row value: %d", button.tag);
+    DLog(@"indexPath row value: %ld", (long)button.tag);
     
     //Add control to know if the current file exist or not in the array
     BOOL existItem = NO;
-    int numberOfCurrentsItems = _currentsUploads.count;
+    NSInteger numberOfCurrentsItems = _currentsUploads.count;
     if (button.tag < numberOfCurrentsItems) {
         existItem=YES;
     }
@@ -333,7 +334,7 @@
 // Returns the table view managed by the controller object.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    int n=0;
+    NSInteger n=0;
     
     //Current uploads
     if (section==0) {
@@ -428,7 +429,7 @@
             uploadCell.progressView.progress=currentManageUploadRequest.transferProgress;
             currentManageUploadRequest.progressTag=uploadCell.progressView.tag;
             
-            DLog(@"no chunks upload status is: %d", currentManageUploadRequest.currentUpload.status);
+            DLog(@"no chunks upload status is: %ld", (long)currentManageUploadRequest.currentUpload.status);
             
             switch (currentManageUploadRequest.currentUpload.status) {
                 case errorUploading:
@@ -458,7 +459,7 @@
                     break;
             }
             
-            DLog(@"there are: %d progress view", _progressViewArray.count);
+            DLog(@"there are: %lu progress view", (unsigned long)_progressViewArray.count);
             
             if (isUploading) {
                 //Check if exist the same _progressView and add or replace the new
@@ -482,7 +483,7 @@
             DLog(@"_current upload hasn't this object");
         }
         
-        DLog(@"there are: %d progress view", _progressViewArray.count);
+        DLog(@"there are: %lu progress view", (unsigned long)_progressViewArray.count);
         
         cell=uploadCell;
         uploadCell=nil;
@@ -711,14 +712,14 @@
 
 // Tells the delegate that the specified row is now selected.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    DLog(@"Tap the row number: %d", indexPath.row);
+    DLog(@"Tap the row number: %ld", (long)indexPath.row);
     
     //Failed section
     if(indexPath.section==1){
         
         //Add control to know if the failed file exist or not
         BOOL existItem = NO;
-        int numberOfFailedItems = _failedUploads.count;
+        NSInteger numberOfFailedItems = _failedUploads.count;
         if (indexPath.row<numberOfFailedItems) {
             existItem=YES;
         }
@@ -774,13 +775,13 @@
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    DLog(@"user: %d", app.activeUser.idUser);
-    DLog(@"user: %d", selectedUpload.userId);
+    DLog(@"user: %ld", (long)app.activeUser.idUser);
+    DLog(@"user: %ld", (long)selectedUpload.userId);
     
     if(selectedUpload.userId == app.activeUser.idUser){
         
         _selectedUploadToResolveTheConflict=selectedUpload;
-        SelectFolderViewController *sf = [[SelectFolderViewController alloc]initWithNibName:@"SelectFolderViewController"bundle:nil];
+        SelectFolderViewController *sf = [[SelectFolderViewController alloc] initWithNibName:@"SelectFolderViewController" onFolder:[ManageFilesDB getRootFileDtoByUser:app.activeUser]];
         
         //sf.toolBarLabelTxt = NSLocalizedString(@"upload_label", nil);
         sf.toolBarLabelTxt = @"";
@@ -841,7 +842,7 @@
     //Get the update of the user
     UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
     
-    if (k_is_sso_active && selectedUpload.userId != app.activeUser.idUser) {
+    if (selectedUpload.userId != (app.activeUser.idUser)) {
         NSString *userName = userSelected.username;
         //if SAML is enabled replace the percent of the samlusername by utf8
         if (k_is_sso_active) {
@@ -955,8 +956,8 @@
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    DLog(@"user: %d", app.activeUser.idUser);
-    DLog(@"user: %d", selectedUpload.userId);
+    DLog(@"user: %ld", (long)app.activeUser.idUser);
+    DLog(@"user: %ld", (long)selectedUpload.userId);
     
     if(selectedUpload.userId == app.activeUser.idUser){
         
@@ -980,10 +981,22 @@
     }
 }
 
+
 #pragma mark - OverwriteFileOptionsDelegate
 
 - (void) setNewNameToSaveFile:(NSString *)name {
     DLog(@"setNewNameToSaveFile: %@", name);
+    
+    //Get the file related with the upload file if exist and remove the download
+    UserDto *user = [ManageUsersDB getUserByIdUser:self.selectedUploadToResolveTheConflict.userId];
+    
+    NSString *folderName=[UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",self.selectedUploadToResolveTheConflict.destinyFolder,self.selectedUploadToResolveTheConflict.uploadFileName] andUserDto:user];
+    FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.selectedUploadToResolveTheConflict.uploadFileName andFilePath:folderName andUser:user];
+    
+    if (uploadFile) {
+        [ManageFilesDB setFileIsDownloadState:uploadFile.idFile andState:notDownload];
+        [DownloadUtils removeDownloadFileWithPath:uploadFile.localFolder];
+    }
     
     _selectedUploadToResolveTheConflict.uploadFileName = name;
     
@@ -1008,7 +1021,7 @@
     [ManageUploadsDB updateErrorConflictFilesSetOverwrite:YES forUploadOffline: _selectedUploadToResolveTheConflict];
     
     //A overwrite process is in progress
-    app.isOverwriteProcess=YES;
+    app.isOverwriteProcess = YES;
     
     //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
     //The folder Name: A/

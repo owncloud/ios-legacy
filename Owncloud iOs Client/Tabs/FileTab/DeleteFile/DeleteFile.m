@@ -64,7 +64,7 @@
             //Obtains the complete path of the folder
             NSString *pathFolder= [NSString stringWithFormat:@"%@%@",_file.filePath,_file.fileName];
             //Remove: /owncloud/remote.php/webdav/ to the pathFolder
-            pathFolder =[UtilsDtos getDbBFolderPathFromFullFolderPath:pathFolder];
+            pathFolder =[UtilsDtos getDbBFolderPathFromFullFolderPath:pathFolder andUser:app.activeUser];
             //Obtains the number of the downloaded files in DB which filepath contains the folder that the user want delete
             _isFilesDownloadedInFolder=[ManageFilesDB isGetFilesByDownloadState:downloaded andByUser:app.activeUser andFolder:pathFolder];
         }
@@ -167,7 +167,7 @@
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         NSString *pathFolder= [NSString stringWithFormat:@"%@%@",_file.filePath,_file.fileName];
         //Remove: /owncloud/remote.php/webdav/ to the pathFolder
-        pathFolder =[UtilsDtos getDbBFolderPathFromFullFolderPath:pathFolder];
+        pathFolder =[UtilsDtos getDbBFolderPathFromFullFolderPath:pathFolder andUser:app.activeUser];
         [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
         DLog(@"path: %@",pathFolder);
         
@@ -207,7 +207,7 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath] andUser:app.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     DLog(@"FilePath: %@", file.filePath);
     
@@ -331,9 +331,9 @@
         
     } failureRquest:^(NSHTTPURLResponse *response, NSError *error) {
         
-        DLog(@"error: %@ with code: %d", error, error.code);
+        DLog(@"error: %@ with code: %ld", error, (long)error.code);
         
-        [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error];
+        [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
     }];
 }
 
@@ -356,7 +356,7 @@
             //Obtains the complete path of the folder
             NSString *pathFolder= [NSString stringWithFormat:@"%@%@",_file.filePath,_file.fileName];
             //Remove: /owncloud/remote.php/webdav/ to the pathFolder
-            pathFolder =[UtilsDtos getDbBFolderPathFromFullFolderPath:pathFolder];
+            pathFolder =[UtilsDtos getDbBFolderPathFromFullFolderPath:pathFolder andUser:app.activeUser];
             //Check if the id file is in the files into this folder
             DLog(@"path folder: %@", pathFolder);
             

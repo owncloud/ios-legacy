@@ -100,7 +100,7 @@
 /*
  * Init Method to load the view from a nib with an array of files
  */
-- (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(int) fileIdToShowFiles andCurrentLocalFolder:(NSString *)currentLocalFoler
+- (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(NSInteger) fileIdToShowFiles andCurrentLocalFolder:(NSString *)currentLocalFoler
 {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];    
     //If is 0 is root folder
@@ -119,7 +119,7 @@
     _currentRemoteFolder = currentFolder;
     _currentLocalFolder = currentLocalFoler;
     DLog(@"self.fileIdToShowFiles: %lld", _fileIdToShowFiles.etag);
-    DLog(@"self.fileIdToShowFiles: %d", _fileIdToShowFiles.idFile);
+    DLog(@"self.fileIdToShowFiles: %ld", (long)_fileIdToShowFiles.idFile);
     
     _showLoadingAfterChangeUser = NO;
     _checkingEtag = NO;
@@ -134,18 +134,18 @@
         if([ManageFilesDB isExistRootFolderByUser:app.activeUser]) {
             DLog(@"Root folder exist");
             self.currentFileShowFilesOnTheServerToUpdateTheLocalFile = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
-            DLog(@"IdFile:%d etag: %lld", self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
+            DLog(@"IdFile:%ld etag: %lld", (long)self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
         } else {
             //We need the current folder refresh with the right etag
             DLog(@"Root folder not exist");  
-            self.fileIdToShowFiles = [FileListDBOperations createRootFolderAndGetFileDto];
+            self.fileIdToShowFiles = [FileListDBOperations createRootFolderAndGetFileDtoByUser:app.activeUser];
             self.currentFileShowFilesOnTheServerToUpdateTheLocalFile = self.fileIdToShowFiles;
         }
     } else {
         self.currentFileShowFilesOnTheServerToUpdateTheLocalFile = [ManageFilesDB getFileDtoByIdFile:fileIdToShowFiles];
     }
     
-    DLog(@"currentRemoteFolder: %@ and fileIdToShowFiles: %d", currentFolder, self.fileIdToShowFiles.idFile);
+    DLog(@"currentRemoteFolder: %@ and fileIdToShowFiles: %ld", currentFolder, (long)self.fileIdToShowFiles.idFile);
     self = [super initWithNibName:nibNameOrNil bundle:nil];
     return self;
 }
@@ -318,13 +318,13 @@
             DLog(@"Root folder exist");
             _currentFileShowFilesOnTheServerToUpdateTheLocalFile = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
             _fileIdToShowFiles = _currentFileShowFilesOnTheServerToUpdateTheLocalFile;
-            DLog(@"IdFile:%d etag: %lld", _currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, _currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
+            DLog(@"IdFile:%ld etag: %lld", (long)_currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, _currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
         } else {
             //We need the current folder refresh with the right etag
             DLog(@"Root folder not exist");
             
             //[self createRootFolder];
-            _fileIdToShowFiles = [FileListDBOperations createRootFolderAndGetFileDto];
+            _fileIdToShowFiles = [FileListDBOperations createRootFolderAndGetFileDtoByUser:app.activeUser];
             _currentFileShowFilesOnTheServerToUpdateTheLocalFile = _fileIdToShowFiles;
         }
         
@@ -341,13 +341,17 @@
         _currentRemoteFolder = [NSString stringWithFormat: @"%@%@", currentUser.url, k_url_webdav_server];
         
         //We get the current folder to create the local tree
-        _currentLocalFolder = [NSString stringWithFormat:@"%@%d/", [UtilsUrls getOwnCloudFilePath],currentUser.idUser];
+        _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)currentUser.idUser];
         _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
         //Update de actual active user
         _mUser = currentUser;
         //Update the table footer
         [self setTheLabelOnTheTableFooter];
-        [self initLoading];
+        
+        if ([[ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile] count] == 0) {
+            [self initLoading];
+        }
+        
         //Reload table from DB
         [self reloadTableFromDataBase];
         
@@ -371,7 +375,7 @@
         
         [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
             
-            DLog(@"Operation response code: %d", response.statusCode);
+            DLog(@"Operation response code: %ld", (long)response.statusCode);
             
             BOOL isSamlCredentialsError = NO;
             
@@ -396,7 +400,7 @@
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
             
             DLog(@"error: %@", error);
-            DLog(@"Operation error: %d", response.statusCode);
+            DLog(@"Operation error: %ld", (long)response.statusCode);
             [self manageServerErrors:response.statusCode and:error];
         
         }];
@@ -405,7 +409,7 @@
         [self endLoading];
     }
     
-    DLog(@"self.fileIdToShowFiles: %d",self.fileIdToShowFiles.idFile);
+    DLog(@"self.fileIdToShowFiles: %ld",(long)self.fileIdToShowFiles.idFile);
     
     if(self.fileIdToShowFiles.isRootFolder) {
         
@@ -574,10 +578,10 @@
 //Only for ios 6
 - (BOOL)shouldAutorotate {
     
-    UIInterfaceOrientation orientation = [[UIDevice currentDevice] orientation];
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     
     if (IS_IPHONE){
-        return (orientation != UIInterfaceOrientationPortraitUpsideDown);
+        return (orientation != UIDeviceOrientationPortraitUpsideDown);
     } else {
         return YES;
     }
@@ -587,6 +591,10 @@
 
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
+    if (self.openWith && !IS_IPHONE) {
+        [self.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
+    }
     
     if (self.plusActionSheet) {
         [self.plusActionSheet dismissWithClickedButtonIndex:2 animated:NO];
@@ -697,24 +705,26 @@
  */
 - (void)endLoading {
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //Check if the loading should be visible
-    if (app.isLoadingVisible==NO) {
-       // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
-        [_HUD removeFromSuperview];
-        self.view.userInteractionEnabled = YES;
-        self.navigationController.navigationBar.userInteractionEnabled = YES;
-        self.tabBarController.tabBar.userInteractionEnabled = YES;
-        [self.view.window setUserInteractionEnabled:YES];
-    }
-    
-    //Check if the app is wainting to show the upload from other app view
-    if (app.isFileFromOtherAppWaitting && app.isPasscodeVisible == NO) {
-        [app performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.3];
-    }
-    
-    if (!_rename.renameAlertView.isVisible) {
-        _rename = nil;
+    if (!_isLoadingForNavigate) {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        //Check if the loading should be visible
+        if (app.isLoadingVisible==NO) {
+            // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
+            [_HUD removeFromSuperview];
+            self.view.userInteractionEnabled = YES;
+            self.navigationController.navigationBar.userInteractionEnabled = YES;
+            self.tabBarController.tabBar.userInteractionEnabled = YES;
+            [self.view.window setUserInteractionEnabled:YES];
+        }
+        
+        //Check if the app is wainting to show the upload from other app view
+        if (app.isFileFromOtherAppWaitting && app.isPasscodeVisible == NO) {
+            [app performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.3];
+        }
+        
+        if (!_rename.renameAlertView.isVisible) {
+            _rename = nil;
+        }
     }
 }
 
@@ -733,9 +743,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unBlockViewWhileFileIsDownloading) name:IpadFilePreviewViewControllerFileFinishDownloadNotification object:nil];
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unBlockViewWhileFileIsDownloading) name:IpadFinishDownloadStateWhenApplicationDidEnterBackground object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectCellWithThisFile:) name:IpadSelectRowInFileListNotification object:nil];
-    //Add a observer to the end and init loading
+    //Add a observer to the end loading, init loading and reloadTableFromDataBase
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endLoading) name:EndLoadingFileListNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initLoading) name:InitLoadingFileListNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFromDataBase) name:ReloadFileListFromDataBaseNotification object:nil];
     
     //Add an observer for know when the LoginViewController rotate
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willRotateToInterfaceOrientation:duration:) name:loginViewControllerRotate object:nil];
@@ -841,7 +852,7 @@
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
             NSString *newURL = [NSString stringWithFormat:@"%@%@",self.currentRemoteFolder,[name encodeString:NSUTF8StringEncoding]];
-            NSString *rootPath = [UtilsDtos getDbBFilePathFromFullFilePath:newURL];
+            NSString *rootPath = [UtilsDtos getDbBFilePathFromFullFilePath:newURL andUser:app.activeUser];
             
             //Set the right credentials
             if (k_is_sso_active) {
@@ -869,7 +880,7 @@
                 if (!isSamlCredentialsError) {
 
                     //Obtain the path where the folder will be created in the file system
-                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%d/%@",[UtilsUrls getOwnCloudFilePath],app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
                     DLog(@"Name of the folder: %@ to create in: %@",name, currentLocalFileToCreateFolder);
                     
@@ -879,7 +890,7 @@
                 }
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                 DLog(@"error: %@", error);
-                DLog(@"Operation error: %d", response.statusCode);
+                DLog(@"Operation error: %ld", (long)response.statusCode);
                 [self manageServerErrors:response.statusCode and:error];
             } errorBeforeRequest:^(NSError *error) {
                 if (error.code == OCErrorForbidenCharacters) {
@@ -1124,6 +1135,7 @@
         if(app.prepareFiles == nil) {
             app.prepareFiles = [[PrepareFilesToUpload alloc] init];
             app.prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
+            app.prepareFiles.listOfAssetsToUpload = [[NSMutableArray alloc] init];
             app.prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
             app.prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
         }
@@ -1185,7 +1197,7 @@
     // If the selected cell is showing the SwipeMenu, we don´t navigate further
     FileDto *selectedFile = (FileDto *)[[_sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
     
-    selectedFile = [ManageFilesDB getFileDtoByFileName:selectedFile.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:selectedFile.filePath] andUser:app.activeUser];
+    selectedFile = [ManageFilesDB getFileDtoByFileName:selectedFile.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:selectedFile.filePath andUser:app.activeUser] andUser:app.activeUser];
     _selectedFileDto = selectedFile;
     
     if (IS_IPHONE){
@@ -1340,7 +1352,7 @@
             fileCell.labelInfoFile.text = [NSString stringWithFormat:@"%@", fileDateString];
         }
         
-        [self setTheStatusIconOntheFile:file onTheCell:fileCell];
+        fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.fileIdToShowFiles];
         
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
@@ -1464,82 +1476,6 @@
     return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index];
 }
 
-
-///-----------------------------------
-/// @name setTheStatusIconOntheFile:onTheCell:
-///-----------------------------------
-
-/**
- * This method set the status icon of the files and folders
-    - The general icons of the icons
-    - The general icons of the folder (shared by link, shared with user)
-    - The shared icon on the right of the file list
-    - The status icon of the files
- *
- * @param fileForSetTheStatusIcon -> FileDto, the file for set the status
- * @param fileCell -> CustomCellFileAndDirectory, the cell where the file is located
- */
-- (void) setTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell {
-    
-    if (fileForSetTheStatusIcon.isDirectory) {
-        //We only show the shared icon if the folder is shared and the father is not shared
-        if (([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) &&
-            ([_fileIdToShowFiles.permissions rangeOfString:k_permission_shared].location == NSNotFound) && (fileForSetTheStatusIcon.sharedFileSource > 0)) {
-            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
-        } else if (([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) &&
-                   ([_fileIdToShowFiles.permissions rangeOfString:k_permission_shared].location == NSNotFound)) {
-            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
-        } else if (fileForSetTheStatusIcon.sharedFileSource > 0) {
-            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
-        } else {
-            fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
-        }
-        fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
-    } else {
-        NSString *imageFile= [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        fileCell.fileImageView.image=[UIImage imageNamed:imageFile];
-        
-        if (fileForSetTheStatusIcon.isFavorite) {
-            if(fileForSetTheStatusIcon.isDownload == downloaded && !fileForSetTheStatusIcon.isNecessaryUpdate) {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
-            } else {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
-            }
-        } else if (!fileForSetTheStatusIcon.isFavorite) {
-            if(fileForSetTheStatusIcon.isNecessaryUpdate || fileForSetTheStatusIcon.isDownload == updating) {
-                //File is in updating
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileUpdatedIcon"];
-            } else if (fileForSetTheStatusIcon.isDownload == downloaded) {
-                //File is in device
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadedIcon"];
-            } else if (fileForSetTheStatusIcon.isDownload == overwriting) {
-                //File is overwritten
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileOverwritingIcon"];
-            } else if (fileForSetTheStatusIcon.isDownload == downloading) {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon"];
-            } else {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
-            }
-        }
-    }
-    
-    //Shared -> Shared Image (SharedType = 1|2|3) || UnShared (SharedType = 0) -> Empty image
-    if (fileForSetTheStatusIcon.sharedFileSource > 0) {
-        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
-    } else {
-        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
-    }
-    
-    //We only show the shared icon if the folder is shared and the father is not shared
-    if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound &&
-        [_fileIdToShowFiles.permissions rangeOfString:k_permission_shared].location == NSNotFound) {
-        fileCell.sharedWithUsImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
-    } else {
-        fileCell.sharedWithUsImage.image=[UIImage imageNamed:@""];
-    }
-}
-
-
 ///-----------------------------------
 /// @name setTheLabelOnTheTableFooter
 ///-----------------------------------
@@ -1609,14 +1545,14 @@
    // DLog(@"name: %@", _selectedFileDto.fileName);
    // DLog(@"self.nextRemoteFolder: %@", _nextRemoteFolder);
     
-    _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath] andUser:app.activeUser];
+    _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     NSMutableArray *directoryList = [NSMutableArray arrayWithArray:requestArray];
     
     //Change the filePath from the library to our format
     for (FileDto *currentFile in directoryList) {
         //Remove part of the item file path
-        NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:app.activeUser];
+        NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
         if([currentFile.filePath length] >= [partToRemove length]){
             currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
         }
@@ -1672,7 +1608,8 @@
  * @url -> folder path
  * @fileIdToShowFiles -> folder id
  */
--(void)navigateToUrl:(NSString *) url andFileId:(int)fileIdToShowFiles {
+-(void)navigateToUrl:(NSString *) url andFileId:(NSInteger)fileIdToShowFiles {
+    _isLoadingForNavigate = NO;
     [self endLoading];
     
     FilesViewController *filesViewController = [[FilesViewController alloc] initWithNibName:@"FilesViewController" onFolder:url andFileId:fileIdToShowFiles andCurrentLocalFolder:_currentLocalFolder];
@@ -1727,6 +1664,8 @@
  */
 -(void) goToFolderWithoutCheck {
     
+    _isLoadingForNavigate = YES;
+    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Set the right credentials
@@ -1744,7 +1683,7 @@
     
     [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
@@ -1762,8 +1701,10 @@
         }
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
+        _isLoadingForNavigate = NO;
+        
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         [self manageServerErrors:response.statusCode and:error];
     }];
 }
@@ -1778,8 +1719,8 @@
     FileDto *file = [notification object];
     
     //Update the filesDto
-    _fileIdToShowFiles = [ManageFilesDB getFileDtoByFileName:_fileIdToShowFiles.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_fileIdToShowFiles.filePath] andUser:app.activeUser];
-    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath] andUser:app.activeUser];
+    _fileIdToShowFiles = [ManageFilesDB getFileDtoByFileName:_fileIdToShowFiles.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser] andUser:app.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (file.fileId == _fileIdToShowFiles.idFile) {
         [self reloadTableFromDataBase];
@@ -1810,9 +1751,10 @@
     //Reload data in the table
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
     
-    if([_currentDirectoryArray count] != 0) {
+    //TODO: Remove this to prevent duplicate files
+    /*if([_currentDirectoryArray count] != 0) {
         [self endLoading];
-    }
+    }*/
 }
 
 /*
@@ -1897,7 +1839,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         //Do operations in background thread
-        NSInteger *folder = [idFolder integerValue];
+        NSInteger folder = [idFolder integerValue];
         
         //Launch the method to sync the favorites files with specific path
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -1911,7 +1853,7 @@
  * Method to launch the method to init the refresh process with the server
  */
 - (void)refreshTableFromWebDav {
-    DLog(@"self.currentFileShowFilesOnTheServerToUpdateTheLocalFile: %d", self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile);
+    DLog(@"self.currentFileShowFilesOnTheServerToUpdateTheLocalFile: %ld", (long)self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile);
     
     [self performSelector:@selector(sendRequestToReloadTableView) withObject:nil];
     
@@ -1946,7 +1888,7 @@
     
     [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
@@ -1966,7 +1908,6 @@
             //Send the data to DB and refresh the table
             [self deleteOldDataFromDBBeforeRefresh:directoryList];
         } else {
-            [self endLoading];
             [self stopPullRefresh];
             _showLoadingAfterChangeUser = NO;
         }
@@ -1974,7 +1915,7 @@
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
         [self manageServerErrors:response.statusCode and:error];
         
     }];
@@ -1999,8 +1940,6 @@
  */
 -(void)deleteOldDataFromDBBeforeRefresh:(NSArray *) requestArray {
     
-    // if(req.responseStatusCode != 401) {
-    
     //We update the current folder with the new etag
     [ManageFilesDB updateEtagOfFileDtoByid:_currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile andNewEtag: _currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag];
     
@@ -2011,11 +1950,10 @@
         
         NSMutableArray *directoryList = [NSMutableArray arrayWithArray:requestArray];
         
-        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         //Change the filePath from the library to our format
         for (FileDto *currentFile in directoryList) {
             //Remove part of the item file path
-            NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:app.activeUser];
+            NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
             if([currentFile.filePath length] >= [partToRemove length]){
                 currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
             }
@@ -2037,7 +1975,10 @@
             }
         }
         
-        _currentDirectoryArray = [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:_fileIdToShowFiles.idFile];
+        [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:_fileIdToShowFiles.idFile];
+        
+        //Get from database all the files of the current folder (fileIdToShowFiles)
+        _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
         
         [FileListDBOperations createAllFoldersByArrayOfFilesDto:_currentDirectoryArray andLocalFolder:_currentLocalFolder];
         
@@ -2053,6 +1994,8 @@
         [_tableView reloadData];
         [self stopPullRefresh];
         _showLoadingAfterChangeUser = NO;
+
+        //TODO: Remove this to prevent duplicate files
         [self endLoading];
         
         [self performSelector:@selector(disableRefreshInProgress) withObject:nil afterDelay:0.5];
@@ -2090,7 +2033,7 @@
             [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
         }
                 
-        NSString *path = [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileIdToShowFiles.filePath];
+        NSString *path = [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileIdToShowFiles.filePath andUser:app.activeUser];
         path = [path stringByAppendingString:_fileIdToShowFiles.fileName];
         path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
@@ -2114,7 +2057,17 @@
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                     //Do operations in background thread
                     
-                    //Get shared items of a specific folder
+                    //Workaround to find the _fileIdToShowFiles because some times there are problems with the changes active user, and this method is launched before the viewwillappear
+                    if (app.activeUser) {
+                        FileDto *rootFileDto = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
+                        NSString *pathActiveUser = rootFileDto.filePath;
+                       
+                        if ([_fileIdToShowFiles.filePath rangeOfString:pathActiveUser].location == NSNotFound) {
+                            _fileIdToShowFiles = rootFileDto;
+                            DLog(@"Changing between accounts, update _fileIdToShowFiles with root path with the active user");
+                        }
+                    }
+                    
                     NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsDtos getDBFilePathOfFileDtoFilePath:_fileIdToShowFiles.filePath ofUserDto:app.activeUser], _fileIdToShowFiles.fileName]];
                     
                     //1. We remove the removed shared from the Files table of the current folder
@@ -2139,7 +2092,7 @@
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
             
             DLog(@"error: %@", error);
-            DLog(@"Operation error: %d", response.statusCode);
+            DLog(@"Operation error: %ld", (long)response.statusCode);
         }];
 
     } else if (app.activeUser.hasShareApiSupport == serverFunctionalityNotChecked) {
@@ -2297,7 +2250,7 @@
     _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:file.idFile];
     
     //Phase 0. Know if the file is in the device
-    if ([_selectedFileDto isDownload]==notDownload) {
+    if ([_selectedFileDto isDownload] == notDownload) {
         
         //Phase 1. Init openWith
         _openWith = [[OpenWith alloc]init];
@@ -2351,7 +2304,7 @@
         //Phase 4. Download
         [_openWith downloadAndOpenWithFile:_selectedFileDto];
         
-    } else if ([_selectedFileDto isDownload]==downloading) {
+    } else if ([_selectedFileDto isDownload] == downloading) {
         
         //if the file is downloading alert the user
         _alert = nil;
@@ -2359,7 +2312,6 @@
         [_alert show];
         
     } else {
-        
         //Open the file
         _openWith = [OpenWith new];
         
@@ -2370,9 +2322,10 @@
             //We use _selectedIndexPath to identify the position where we have to put the arrow of the popover
             if (_selectedIndexPath) {
                 cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
-                _openWith.parentView=_tableView;
+                _openWith.parentView =_tableView;
                 _openWith.cellFrame = cell.frame;
                 _openWith.isTheParentViewACell = YES;
+                
             } else {
                  _openWith.parentView=self.tabBarController.view;
             }
@@ -2414,19 +2367,19 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //Update fileDto
-    _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:_selectedFileDto.idFile];
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if ([_selectedFileDto isDownload]==downloading) {
+    if ([self.selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
-        _alert = nil;
-        _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-        [_alert show];
+        self.alert = nil;
+        self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [self.alert show];
         
-    } else if ([_selectedFileDto isDirectory]&& [DownloadUtils thereAreDownloadingFilesOnTheFolder: _selectedFileDto]) {
+    } else if ([self.selectedFileDto isDirectory]&& [DownloadUtils thereAreDownloadingFilesOnTheFolder: self.selectedFileDto]) {
         //if the user are downloading files from the server
-        _alert = nil;
-        _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-        [_alert show];
+        self.alert = nil;
+        self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [self.alert show];
         
     } else {
         
@@ -2452,7 +2405,7 @@
 #pragma mark - DeleteDelegate
 
 - (void) removeSelectedIndexPath {
-    _selectedCell = nil;
+    self.selectedCell = nil;
 }
 
 #pragma mark - Rename option
@@ -2464,30 +2417,31 @@
  * over the selected file
  */
 - (void)didSelectRenameOption {
+     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //Update fileDto
-    _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:_selectedFileDto.idFile];
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if ([_selectedFileDto isDownload]==downloading) {
+    if ([_selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
-        _alert = nil;
-        _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-        [_alert show];
+        self.alert = nil;
+        self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [self.alert show];
         
-    } else if ([_selectedFileDto isDirectory] && [DownloadUtils thereAreDownloadingFilesOnTheFolder: _selectedFileDto]) {
+    } else if ([self.selectedFileDto isDirectory] && [DownloadUtils thereAreDownloadingFilesOnTheFolder: self.selectedFileDto]) {
         //if the user are downloading files from the server
-        _alert = nil;
-        _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-        [_alert show];
+        self.alert = nil;
+        self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [self.alert show];
         
     } else {
-        _rename = [[RenameFile alloc] init];
-        _rename.delegate = self;
-        _rename.currentRemoteFolder = _currentRemoteFolder;
-        _rename.currentDirectoryArray = _currentDirectoryArray;
-        _rename.currentLocalFolder=_currentLocalFolder;
-        _rename.mUser = _mUser;
-        [_rename showRenameFile:_selectedFileDto];
+        self.rename = [[RenameFile alloc] init];
+        self.rename.delegate = self;
+        self.rename.currentRemoteFolder = self.currentRemoteFolder;
+        self.rename.currentDirectoryArray = self.currentDirectoryArray;
+        self.rename.currentLocalFolder= self.currentLocalFolder;
+        self.rename.mUser = self.mUser;
+        [self.rename showRenameFile:self.selectedFileDto];
     }
 }
 
@@ -2510,9 +2464,9 @@
     }
     
     //Update fileDto
-    _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:_selectedFileDto.idFile];
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if ([_selectedFileDto isDownload]==downloading) {
+    if ([_selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
         _alert = nil;
         _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
@@ -2526,7 +2480,7 @@
         
     } else {
         
-        self.selectFolderViewController = [[SelectFolderViewController alloc]initWithNibName:@"SelectFolderViewController" bundle:nil];
+        self.selectFolderViewController = [[SelectFolderViewController alloc]initWithNibName:@"SelectFolderViewController" onFolder:[ManageFilesDB getRootFileDtoByUser:app.activeUser]];
         self.selectFolderViewController.toolBarLabelTxt = @"";
         
         self.selectFolderNavigation = [[SelectFolderNavigation alloc]initWithRootViewController:self.selectFolderViewController];
@@ -2535,7 +2489,7 @@
         
         //We get the current folder to create the local tree
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        NSString *localRootUrlString = [NSString stringWithFormat:@"%@%d/", [UtilsUrls getOwnCloudFilePath],_mUser.idUser];
+        NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath], (long)_mUser.idUser];
         
         self.selectFolderViewController.currentLocalFolder = localRootUrlString;
         self.selectFolderNavigation.delegate=self;
@@ -2610,8 +2564,8 @@
 
 - (void) setFavoriteOrUnfavorite {
     //Update the file from the DB
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath] andUser:appDelegate.activeUser];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (_selectedFileDto.isFavorite) {
         _selectedFileDto.isFavorite = NO;
@@ -2647,7 +2601,7 @@
         //Set the file as isNecessaryUpdate
         [ManageFilesDB setIsNecessaryUpdateOfTheFile:_selectedFileDto.idFile];
         //Update the file on memory
-        _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath] andUser:app.activeUser];
+        _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
         //Do the request to get the shared items
         [self downloadTheFile];
         
@@ -2893,13 +2847,13 @@
     //Change the filePath from the library to our format
     for (FileDto *currentFile in directoryList) {
         //Remove part of the item file path
-        NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:app.activeUser];
+        NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
         if([currentFile.filePath length] >= [partToRemove length]){
             currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
         }
     }
     
-    DLog(@"The directory List have: %d elements", directoryList.count);
+    DLog(@"The directory List have: %ld elements", (long)directoryList.count);
     
     DLog(@"Directoy list: %@", directoryList);
     
@@ -2937,12 +2891,13 @@
  * @error -> NSError of NSURLConnection
  */
 
-- (void)manageServerErrors: (NSInteger *)errorCodeFromServer and:(NSError *)error {
+- (void)manageServerErrors: (NSInteger)errorCodeFromServer and:(NSError *)error {
     
     [self stopPullRefresh];
     [self endLoading];
-    
-    [_manageNetworkErrors manageErrorHttp:errorCodeFromServer andErrorConnection:error];
+
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [_manageNetworkErrors manageErrorHttp:errorCodeFromServer andErrorConnection:error andUser:app.activeUser];
 }
 
 /*

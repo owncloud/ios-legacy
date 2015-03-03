@@ -22,6 +22,7 @@
 #import "ManageFilesDB.h"
 #import "UtilsNetworkRequest.h"
 #import "UtilsDtos.h"
+#import "UtilsUrls.h"
 #import "DetailViewController.h"
 #import "FileNameUtils.h"
 #import "UploadUtils.h"
@@ -30,6 +31,7 @@
 #import "constants.h"
 #import "UtilsDtos.h"
 #import "OCURLSessionManager.h"
+#import "ManageAppSettingsDB.h"
 
 NSString *fileDeleteInAOverwriteProcess=@"fileDeleteInAOverwriteProcess";
 NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
@@ -91,7 +93,17 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     }
 }
 
+//Get the file dto related with the upload ofline if exist
+- (FileDto *) getFileDtoOfTheUploadOffline{
+    
+    NSString *folderName=[UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",self.currentUpload.destinyFolder,self.currentUpload.uploadFileName] andUserDto:self.userUploading];
+    FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.currentUpload.uploadFileName andFilePath:folderName andUser:self.userUploading];
+    
+    return uploadFile;
+}
+
 #pragma mark - UtilsNetworkRequestDelegate
+
 -(void) theFileIsInThePathResponse:(NSInteger)response {
     
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -99,32 +111,30 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     switch (response) {
         case isInThePath:
         {
-            _currentUpload.status = errorUploading;
-            _currentUpload.kindOfError = errorFileExist;
+            //Get the file of the Upload.
+            FileDto *uploadFile = [self getFileDtoOfTheUploadOffline];
             
-            AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-            
-            //If we have the same file on the recentView we remove the old upload
-            NSArray *uploadArrayCopy = [NSArray arrayWithArray:appDelegate.uploadArray];
-            
-            [uploadArrayCopy enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                ManageUploadRequest *currentArrayUpload = (ManageUploadRequest*)obj;
-                if (currentArrayUpload.currentUpload.idUploadsOffline == _currentUpload.idUploadsOffline) {
-                    [appDelegate.uploadArray removeObjectAtIndex:idx];
-                    *stop = YES;
-                }
-            }];
-            
-            [ManageUploadsDB setStatus:errorUploading andKindOfError:errorFileExist byUploadOffline:_currentUpload];
-            
-            [appDelegate.uploadArray addObject:self];
-            
-            [self updateRecentsTab];
+            if (uploadFile.isDownload == overwriting) {
+                //Read the file of the server to check if the etag has changed
+                [self checkTheEtagInTheServerOfTheFile:uploadFile];
+            }else{
+                [self changeTheStatusToErrorFileExist];
+            }
         }
             break;
             
         case isNotInThePath:
-            [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+        {
+            NSString *folderInstantUpload = [self.currentUpload.destinyFolder lastPathComponent];
+            
+            if ([ManageAppSettingsDB isInstantUpload] && [folderInstantUpload isEqualToString:k_path_instant_upload]) {
+                //create folder instant upload
+                [self newFolder:_currentUpload.destinyFolder];
+            } else {
+                [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+            }
+           
+        }
             break;
             
         case errorSSL:
@@ -148,6 +158,67 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         default:
             break;
     }
+}
+
+#pragma mark - Create folder on server
+
+-(void) newFolder:(NSString*) pathRemoteFolder {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
+    }
+    
+    [[AppDelegate sharedOCCommunication] createFolder:pathRemoteFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+        DLog(@"Folder created");
+        BOOL isSamlCredentialsError = NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+        }
+        if (!isSamlCredentialsError) {
+            
+            //Upload ready, continue
+            [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+
+        }
+        
+        
+        
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+
+        //Web Dav Error Code
+        switch (response.statusCode) {
+            case kOCErrorServerMethodNotPermitted:
+                //405 Method not permitted "not_possible_create_folder"
+                 [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+                break;
+            default:
+                //"not_possible_connect_to_server"
+                break;
+        }
+
+        DLog(@"error: %@", error);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
+        
+    } errorBeforeRequest:^(NSError *error) {
+        if (error.code == OCErrorForbidenCharacters) {
+            DLog(@"The folder have problematic characters");
+        } else {
+            DLog(@"The folder have problems under controlled");
+        }
+        
+    }
+     ];
+    
 }
 
 
@@ -236,14 +307,14 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
                 //The folder Name: A/
                 
-                NSString *folderName=[UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",weakSelf.currentUpload.destinyFolder,weakSelf.currentUpload.uploadFileName] andUserDto:self.userUploading];
-                FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:weakSelf.currentUpload.uploadFileName andFilePath:folderName andUser:self.userUploading];
+                FileDto *uploadFile = [self getFileDtoOfTheUploadOffline];
                 
                 if (uploadFile.isDownload == overwriting) {
                     //Update the etag
                     [self updateTheEtagOfTheFile:uploadFile];
                 }
                 
+               
            }
             
             
@@ -253,9 +324,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             
-            DLog(@"response.statusCode: %d", httpResponse.statusCode);
+            DLog(@"response.statusCode: %ld", (long)httpResponse.statusCode);
             DLog(@"Error: %@", error);
-            DLog(@"error.code: %d", error.code);
+            DLog(@"error.code: %ld", (long)error.code);
             
             BOOL isSamlCredentialsError=NO;
             
@@ -275,6 +346,10 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             if (!isSamlCredentialsError) {
                 
                 if ([error code] != NSURLErrorCancelled) {
+                    
+                    if(appDelegate.isOverwriteProcess == YES){
+                        [self finishOverwriteProcess];
+                    }
                     
                     //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
                     switch (httpResponse.statusCode) {
@@ -435,13 +510,13 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 
                 //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
                 //The folder Name: A/
-                NSString *folderName=[UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",weakSelf.currentUpload.destinyFolder,weakSelf.currentUpload.uploadFileName] andUserDto:self.userUploading];
-                FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:weakSelf.currentUpload.uploadFileName andFilePath:folderName andUser:self.userUploading];
+                FileDto *uploadFile = [self getFileDtoOfTheUploadOffline];
                 
                 if (uploadFile.isDownload == overwriting) {
                     //Update the etag
                     [self updateTheEtagOfTheFile:uploadFile];
                 }
+                
                 [_operation finalize];
                 _operation = nil;
             }
@@ -450,9 +525,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             
-            DLog(@"response.statusCode: %d", response.statusCode);
+            DLog(@"response.statusCode: %ld", (long)response.statusCode);
             DLog(@"Error: %@", error);
-            DLog(@"error.code: %d", error.code);
+            DLog(@"error.code: %ld", (long)error.code);
             
             BOOL isSamlCredentialsError = NO;
             
@@ -472,6 +547,10 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             if (!isSamlCredentialsError) {
                 
                 if ([error code] != NSURLErrorCancelled) {
+                    
+                    if(appDelegate.isOverwriteProcess == YES){
+                        [self finishOverwriteProcess];
+                    }
                     
                     //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
                     switch (response.statusCode) {
@@ -570,7 +649,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         [self.delegate uploadAddedContinueWithNext];
     }
     
-    DLog(@"taskIdentifier: %d", _uploadTask.taskIdentifier);
+    DLog(@"taskIdentifier: %lu", (unsigned long)_uploadTask.taskIdentifier);
     
     if (_uploadTask) {
         [self setTaskIdentifier];
@@ -614,36 +693,43 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
 }
 
+- (void)finishOverwriteProcess{
+    
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    DLog(@"Overwriten process active: Cancel a file");
+    NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder andUser:self.userUploading];
+    DLog(@"Local folder:%@",localFolder);
+    
+    FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:_currentUpload.uploadFileName andFilePath:localFolder andUser:_userUploading];
+    DLog(@"id file: %ld",(long)deleteOverwriteFile.idFile);
+    
+    //In iPad clean the view
+    if (!IS_IPHONE){
+        [app.detailViewController presentWhiteView];
+        //Launch a notification for update the previewed file
+        [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:_currentUpload.destinyFolder];
+    }
+    
+    [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:notDownload];
+
+}
+
 - (void) cancelUpload {
     DLog(@"CANCEL UPLOAD");
     _isCanceled = YES;
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     //The user cancel a file which had been chosen for be overwritten
-    if(appDelegate.isOverwriteProcess==YES){
-        DLog(@"Overwriten process active: Cancel a file");
-        NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder];
-        DLog(@"Local folder:%@",localFolder);
-        
-        FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:_currentUpload.uploadFileName andFilePath:localFolder andUser:_userUploading];
-        DLog(@"id file: %d",deleteOverwriteFile.idFile);
-        
-        //In iPad clean the view
-        if (!IS_IPHONE){
-            [appDelegate.detailViewController presentWhiteView];
-            //Launch a notification for update the previewed file
-            [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:_currentUpload.destinyFolder];
-        }
-        
-        [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:notDownload];
+    if(app.isOverwriteProcess == YES){
+        [self finishOverwriteProcess];
     }
     
     [ManageUploadsDB deleteUploadOfflineByUploadOfflineDto:self.currentUpload];
     
     //Quit the upload from the uploadArray
-    [appDelegate.uploadArray removeObjectIdenticalTo:self];
+    [app.uploadArray removeObjectIdenticalTo:self];
     
     //Quit the operation from the operation queue
     if (self.operation) {
@@ -683,7 +769,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [self updateRecentsTab];
 
     //Clear cache and cookies
-    [appDelegate eraseURLCache];
+    [app eraseURLCache];
 }
 
 
@@ -734,6 +820,37 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
 }
 
+/*
+ * This method change the satuso fo this upload to fail for file exist in the server
+ * It's used in the overwrite process when we detect that exist a diferent version of the file
+ * on the server side.
+ */
+- (void) changeTheStatusToErrorFileExist {
+    
+    _currentUpload.status = errorUploading;
+    _currentUpload.kindOfError = errorFileExist;
+    
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    //If we have the same file on the recentView we remove the old upload
+    NSArray *uploadArrayCopy = [NSArray arrayWithArray:appDelegate.uploadArray];
+    
+    [uploadArrayCopy enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ManageUploadRequest *currentArrayUpload = (ManageUploadRequest*)obj;
+        if (currentArrayUpload.currentUpload.idUploadsOffline == _currentUpload.idUploadsOffline) {
+            [appDelegate.uploadArray removeObjectAtIndex:idx];
+            *stop = YES;
+        }
+    }];
+    
+    [ManageUploadsDB setStatus:errorUploading andKindOfError:errorFileExist byUploadOffline:_currentUpload];
+    
+    [appDelegate.uploadArray addObject:self];
+    
+    [self updateRecentsTab];
+
+}
+
 
 #pragma mark - Utils
 
@@ -756,6 +873,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         [[NSFileManager defaultManager] removeItemAtPath:self.currentUpload.originPath error:&error];
     }
 }
+
 
 /*
  * Method that store the date of upload is completed
@@ -788,10 +906,12 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 
 
 
-#pragma mark - Update the uploaded file etag
+
+#pragma mark - Etag support
+
+//Check etag in overwrite file to update with the new one.
 
 - (void) updateTheEtagOfTheFile: (FileDto *) overwrittenFile {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Set the right credentials
     if (k_is_sso_active) {
@@ -804,7 +924,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath], overwrittenFile.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -812,7 +932,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
-        DLog(@"Operation response code: %d", response.statusCode);
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
@@ -828,20 +948,20 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             //Change the filePath from the library to our format
             for (FileDto *currentFile in items) {
                 //Remove part of the item file path
-                NSString *partToRemove = [UtilsDtos getRemovedPartOfFilePathAnd:self.userUploading];
+                NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:self.userUploading];
                 if([currentFile.filePath length] >= [partToRemove length]){
                     currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
                 }
             }
             
-            DLog(@"The directory List have: %d elements", items.count);
+            DLog(@"The directory List have: %lu elements", (unsigned long)items.count);
             
             
             //Check if there are almost one item in the array
             if (items.count >= 1) {
                 DLog(@"Directoy list: %@", items);
                 FileDto *currentFileDto = [items objectAtIndex:0];
-                DLog(@"currentFileDto: %lld", currentFileDto.etag);
+                DLog(@"currentFileDto: %@", currentFileDto.etag);
                 //Update the etag
                 NSString *folderName=[UtilsDtos getDBFilePathOfFileDtoFilePath:overwrittenFile.filePath ofUserDto:self.userUploading];
                 [ManageFilesDB updateEtagOfFileDtoByFileName:overwrittenFile.fileName andFilePath:folderName andActiveUser:self.userUploading withNewEtag:currentFileDto.etag];
@@ -851,14 +971,96 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 //Launch a notification for update the file previewed
                 [[NSNotificationCenter defaultCenter] postNotificationName:uploadOverwriteFileNotification object:nil];
              
-                //Update the file list state
-                [app reloadTableFromDataBase];
+                
+                [self.delegate overwriteCompleted];
             }
         }
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
-        DLog(@"Operation error: %d", response.statusCode);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
+        
+    }];
+    //Erase cache and cookies
+    [weakSelf eraseURLCache];
+}
+
+// Check the etag in the case that in the server has changed
+
+- (void) checkTheEtagInTheServerOfTheFile:(FileDto *) overwrittenFile {
+    
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:self.userUploading.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:self.userUploading.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:self.userUploading.username andPassword:self.userUploading.password];
+    }
+    
+    //FileName full path
+    NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
+    
+    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    __weak typeof(self) weakSelf = self;
+    
+    [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+        
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                DLog(@"error login checking the etag");
+                [ManageUploadsDB setStatus:errorUploading andKindOfError:notAnError byUploadOffline:_currentUpload];
+            }
+        }
+        if(response.statusCode < kOCErrorServerUnauthorized && !isSamlCredentialsError) {
+            
+            //Change the filePath from the library to our format
+            for (FileDto *currentFile in items) {
+                //Remove part of the item file path
+                NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:self.userUploading];
+                if([currentFile.filePath length] >= [partToRemove length]){
+                    currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
+                }
+            }
+            
+            DLog(@"The directory List have: %lu elements", (unsigned long)items.count);
+            
+            //Check if there are almost one item in the array
+            if (items.count >= 1) {
+                DLog(@"Directoy list: %@", items);
+                FileDto *currentFileDto = [items objectAtIndex:0];
+                DLog(@"currentFileDto: %@", currentFileDto.etag);
+                
+                //Check the etag
+                if (![overwrittenFile.etag isEqualToString:currentFileDto.etag]) {
+                    [self changeTheStatusToErrorFileExist];
+                    [ManageFilesDB setFileIsDownloadState:overwrittenFile.idFile andState:downloaded];
+                    //Only for refresh file list
+                    [self.delegate overwriteCompleted];
+                    
+                } else{
+                    [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+                }
+                
+            }else{
+                [ManageUploadsDB setStatus:errorUploading andKindOfError:notAnError byUploadOffline:_currentUpload];
+            }
+        }else{
+            [ManageUploadsDB setStatus:errorUploading andKindOfError:notAnError byUploadOffline:_currentUpload];
+        }
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        
+        DLog(@"error: %@", error);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
+        [ManageUploadsDB setStatus:errorUploading andKindOfError:notAnError byUploadOffline:_currentUpload];
         
     }];
     //Erase cache and cookies

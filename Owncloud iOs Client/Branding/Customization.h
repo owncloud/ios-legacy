@@ -15,7 +15,7 @@
 
 
 //app year
-#define k_year 2014
+#define k_year 2015
 
 //URLs Setting
 #define k_help_url @"http://owncloud.com/mobile/help"
@@ -121,5 +121,5 @@
 #define k_is_text_status_bar_white NO
 
 //Show the help link on login
-#define k_is_shown_help_link_on_login NO
+#define k_is_shown_help_link_on_login YES
 #define k_url_link_on_login @"https://owncloud.com/mobile/new"

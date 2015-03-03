@@ -39,6 +39,7 @@
 #define k_DB_version_9 9
 #define k_DB_version_10 10
 #define k_DB_version_11 11
+#define k_DB_version_12 12
 
 @class MGSplitViewController;
 @class FilesViewController;
@@ -161,7 +162,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 //Method that cancel download of the detail view in iPad.
 - (void)cancelDonwloadInDetailView;
 
-
 - (void)errorLogin;
 
 /*
@@ -169,8 +169,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 - (void)itemToUploadFromOtherAppWithName:(NSString*)name andPathName:(NSString*)pathName andRemoteFolder:(NSString*)remFolder andIsNotNeedCheck:(BOOL) isNotNecessaryCheckIfExist;
 
-//Method to return the path of temp files when we upload files
--(NSString *) getTempFolderForUploadFiles;
 
 /*
  * Method that inform if the filePath its playing in media player.

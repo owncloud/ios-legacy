@@ -21,6 +21,8 @@
 #import <Foundation/Foundation.h>
 #import "FileDto.h"
 
+@class UserDto;
+
 @interface FileListDBOperations : NSObject
 
 /*
@@ -34,14 +36,14 @@
  * Method that create the root folder
  * @FileDto -> FileDto object of root folder
  */
-+ (FileDto*)createRootFolderAndGetFileDto;
++ (FileDto*)createRootFolderAndGetFileDtoByUser:(UserDto *) user;
 
 
 /*
  * Method that realice the refresh process
  *
  */
-+ (NSArray*)makeTheRefreshProcessWith:(NSMutableArray*)arrayFromServer inThisFolder:(int)idFolder;
++ (void)makeTheRefreshProcessWith:(NSMutableArray*)arrayFromServer inThisFolder:(NSInteger)idFolder;
 
 
 /*

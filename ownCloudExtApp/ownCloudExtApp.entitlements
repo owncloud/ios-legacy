@@ -6,5 +6,9 @@
 	<array>
 		<string>group.com.owncloud.iOSmobileapp</string>
 	</array>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)group.com.owncloud.iOSmobileapp</string>
+	</array>
 </dict>
 </plist>

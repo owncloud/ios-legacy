@@ -14,12 +14,13 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "FMDatabaseQueue.h"
+
 
 @class UserDto;
 
 
 @interface ManageUsersDB : NSObject
-
 
 /*
  * Method that add user into database
@@ -42,7 +43,7 @@
  * Method that return the user object of the idUser
  * @idUser -> id User.
  */
-+ (UserDto *) getUserByIdUser:(int) idUser;
++ (UserDto *) getUserByIdUser:(NSInteger) idUser;
 
 /*
  * Method that return if the user exist or not
@@ -66,7 +67,7 @@
  * Method that set a user like a active account
  * @idUser -> id user
  */
-+(void) setActiveAccountByIdUser: (int) idUser;
++(void) setActiveAccountByIdUser: (NSInteger) idUser;
 
 /*
  * Method that set all acount as a no active.
@@ -83,7 +84,7 @@
  * Method that remove user data in all tables
  * @idUser -> id user
  */
-+(void) removeUserAndDataByIdUser:(int)idUser;
++(void) removeUserAndDataByIdUser:(NSInteger)idUser;
 
 /*
  * Method that set the user storage of a user
