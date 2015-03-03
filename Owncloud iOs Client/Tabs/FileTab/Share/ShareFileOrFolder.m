@@ -615,7 +615,6 @@
     _shareProtectedAlertView.tag = 600;
     _shareProtectedAlertView.alertViewStyle = UIAlertViewStyleSecureTextInput;
     [_shareProtectedAlertView show];
-    
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -641,6 +640,19 @@
             [self doRequestSharedLinkWithPath:filePath andPassword:encodePassword];
 
         }
+    }
+}
+
+- (void)didPresentAlertView:(UIAlertView *)alertView{
+    
+    if (alertView.tag == 600) {
+        if (IS_IPHONE) {
+            if (!IS_PORTRAIT) {
+                UITextField *txtField = [alertView textFieldAtIndex:0];
+                [txtField resignFirstResponder];
+            }
+        }
+        
     }
 }
 
