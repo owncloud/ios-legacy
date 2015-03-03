@@ -613,14 +613,14 @@
 
 - (void)showAlertEnterPassword {
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil)
+    _shareProtectedAlertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil)
                                                     message:NSLocalizedString(@"shared_link_protected_message", nil)
                                                    delegate:self
                                           cancelButtonTitle:NSLocalizedString(@"cancel", nil)
                                           otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
-    alert.tag = 100;
-    alert.alertViewStyle = UIAlertViewStyleSecureTextInput;
-    [alert show];
+    _shareProtectedAlertView.tag = 600;
+    _shareProtectedAlertView.alertViewStyle = UIAlertViewStyleSecureTextInput;
+    [_shareProtectedAlertView show];
     
 }
 
@@ -628,7 +628,7 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     
-    if (alertView.tag == 100) {
+    if (alertView.tag == 600) {
         //alert share link enter password
         if (buttonIndex != 0) {
             

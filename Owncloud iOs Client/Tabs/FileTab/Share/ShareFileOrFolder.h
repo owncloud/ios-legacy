@@ -42,6 +42,9 @@
 //This view is to show the Popover with the share link options
 @property (nonatomic, strong) UIView *parentView;
 
+@property(nonatomic, strong) UIAlertView *shareProtectedAlertView;
+
+
 - (void) showShareActionSheetForFile:(FileDto *) file;
 
 ///-----------------------------------
