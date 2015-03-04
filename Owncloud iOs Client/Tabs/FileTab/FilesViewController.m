@@ -2066,10 +2066,14 @@
                     //Do operations in background thread
                     
                     //Workaround to find the _fileIdToShowFiles because some times there are problems with the changes active user, and this method is launched before the viewwillappear
-                    NSString *pathActiveUser =[ManageFilesDB getRootFileDtoByUser:app.activeUser].filePath;
-                    if ([_fileIdToShowFiles.filePath rangeOfString:pathActiveUser].location == NSNotFound) {
-                        _fileIdToShowFiles = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
-                        DLog(@"Changing between accounts, update _fileIdToShowFiles with root path with the active user");
+                    if (app.activeUser) {
+                        FileDto *rootFileDto = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
+                        NSString *pathActiveUser = rootFileDto.filePath;
+                       
+                        if ([_fileIdToShowFiles.filePath rangeOfString:pathActiveUser].location == NSNotFound) {
+                            _fileIdToShowFiles = rootFileDto;
+                            DLog(@"Changing between accounts, update _fileIdToShowFiles with root path with the active user");
+                        }
                     }
                     
                     NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsDtos getDBFilePathOfFileDtoFilePath:_fileIdToShowFiles.filePath ofUserDto:app.activeUser], _fileIdToShowFiles.fileName]];

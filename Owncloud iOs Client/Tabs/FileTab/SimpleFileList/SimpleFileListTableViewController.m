@@ -35,6 +35,8 @@
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
+#import "EditAccountViewController.h"
+#import "OCNavigationController.h"
 #else
 #import "DocumentPickerViewController.h"
 #endif
@@ -488,14 +490,9 @@
             DLog(@"current: %@", current.fileName);
         }
         
-          NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:self.user];
-        
-        if (file.isDirectory) {
-            path = [NSString stringWithFormat:@"%@/", [UtilsDtos getTheParentPathOfThePath:path]];
-        }
+        NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:self.user];
         
         [FileListDBOperations createAllFoldersByArrayOfFilesDto:listOfRemoteFilesAndFolders andLocalFolder:path];
-
     }
 }
 
@@ -556,26 +553,65 @@
 - (void)showError:(NSString *) message {
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
     
-    UIAlertController *alert =   [UIAlertController
-                                  alertControllerWithTitle:message
-                                  message:@""
-                                  preferredStyle:UIAlertControllerStyleAlert];
+    if (IS_IOS7) {
+        
+#ifdef CONTAINER_APP
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:message message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        [alertView show];
+        
+        [self showEditAccount];
+#endif
+        
+    }else{
+        UIAlertController *alert =   [UIAlertController
+                                      alertControllerWithTitle:message
+                                      message:@""
+                                      preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* ok = [UIAlertAction
+                             actionWithTitle:NSLocalizedString(@"ok", nil)
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                    [self showEditAccount];
+                             }];
+        [alert addAction:ok];
+        
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+}
+
+- (void) showEditAccount {
+#ifdef CONTAINER_APP
     
-    UIAlertAction* ok = [UIAlertAction
-                         actionWithTitle:NSLocalizedString(@"ok", nil)
-                         style:UIAlertActionStyleDefault
-                         handler:^(UIAlertAction * action)
-                         {
-                             
-                         }];
-    [alert addAction:ok];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    [self presentViewController:alert animated:YES completion:nil];
+    //Edit Account
+    EditAccountViewController *resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
+    [resolvedCredentialError setBarForCancelForLoadingFromModal];
+    
+    if (IS_IPHONE) {
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
+    } else {
+        
+        if (IS_IOS8) {
+            [appDelegate.detailViewController.popoverController dismissPopoverAnimated:YES];
+        }
+        
+        OCNavigationController *navController = nil;
+        navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
+    }
+
+#endif
+
 }
 
 - (void) errorLogin {
     if (k_is_sso_active) {
-        [self showError:NSLocalizedString(@"session_expired", nil)];
+       [self showError:NSLocalizedString(@"session_expired", nil)];
     } else {
        [self showError:NSLocalizedString(@"error_login_message", nil)];
     }
@@ -678,8 +714,8 @@
                 if (directoryList.count > 0) {
                     FileDto *remoteFile = [directoryList objectAtIndex:0];
                     
-                    DLog(@"remoteFile.etag: %lld", remoteFile.etag);
-                    DLog(@"self.currentFolder: %lld", self.currentFolder.etag);
+                    DLog(@"remoteFile.etag: %@", remoteFile.etag);
+                    DLog(@"self.currentFolder: %@", self.currentFolder.etag);
                     
                     if (remoteFile.etag != self.currentFolder.etag) {
                         [self reloadCurrentFolder];

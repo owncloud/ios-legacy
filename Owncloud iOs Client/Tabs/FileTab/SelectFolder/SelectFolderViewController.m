@@ -292,7 +292,7 @@
         fileDto = [_currentDirectoryArray objectAtIndex:i];       
         
         //DLog(@"%@", fileDto.fileName);
-        dicName=fileDto.fileName;      
+        dicName=[fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];
         
         if([string isEqualToString:dicName])
         {
@@ -366,7 +366,7 @@
                 }
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                 DLog(@"error: %@", error);
-
+                [self endLoading];
                 DLog(@"Operation error: %ld", (long)response.statusCode);
                 [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:self.user];
 
