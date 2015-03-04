@@ -550,6 +550,9 @@
 		EA42FA5B180C13710006DB7C /* cancel_download_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA42FA59180C13710006DB7C /* cancel_download_white@2x.png */; };
 		EA5FA47F1A6403A0000C1F80 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		EA6462841A6F98F300991913 /* UtilsDtos.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F677178422BE0092F42A /* UtilsDtos.m */; };
+		EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6606991AA767F800BA2C65 /* ShareViewController.swift */; };
+		EA66069C1AA767F800BA2C65 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA66069B1AA767F800BA2C65 /* MainInterface.storyboard */; };
+		EA66069F1AA767F800BA2C65 /* OC Share Sheet.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EA6606951AA767F700BA2C65 /* OC Share Sheet.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EA68968D17F599060033B3C1 /* KKKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968517F599060033B3C1 /* KKKeychain.m */; };
 		EA68968E17F599060033B3C1 /* KKPasscodeLock.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */; };
 		EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968817F599060033B3C1 /* KKPasscodeLock.m */; };
@@ -624,6 +627,13 @@
 			remoteGlobalIDString = EA7CC896183E11E600B6A4B4;
 			remoteInfo = "ownCloud iOS library";
 		};
+		EA66069D1AA767F800BA2C65 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1324296F15ADBB3700DF823E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA6606941AA767F700BA2C65;
+			remoteInfo = "OC Share Sheet";
+		};
 		EA8667E018AA291C00D3550D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */;
@@ -684,6 +694,7 @@
 			files = (
 				EAB0AB4A19ED356A00764C31 /* ownCloudExtAppFileProvider.appex in Embed App Extensions */,
 				EAB0AB4F19ED356A00764C31 /* ownCloudExtApp.appex in Embed App Extensions */,
+				EA66069F1AA767F800BA2C65 /* OC Share Sheet.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1191,6 +1202,10 @@
 		EA42FA53180565CB0006DB7C /* OCTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCTabBarController.m; path = Tabs/FileTab/OCTabBarController.m; sourceTree = "<group>"; };
 		EA42FA58180C13710006DB7C /* cancel_download_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cancel_download_white.png; sourceTree = "<group>"; };
 		EA42FA59180C13710006DB7C /* cancel_download_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel_download_white@2x.png"; sourceTree = "<group>"; };
+		EA6606951AA767F700BA2C65 /* OC Share Sheet.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "OC Share Sheet.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA6606981AA767F800BA2C65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EA6606991AA767F800BA2C65 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		EA66069B1AA767F800BA2C65 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		EA68968417F599060033B3C1 /* KKKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KKKeychain.h; path = ExternalLibreries/KKPasscodeLock/KKKeychain.h; sourceTree = "<group>"; };
 		EA68968517F599060033B3C1 /* KKKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KKKeychain.m; path = ExternalLibreries/KKPasscodeLock/KKKeychain.m; sourceTree = "<group>"; };
 		EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = KKPasscodeLock.bundle; path = ExternalLibreries/KKPasscodeLock/KKPasscodeLock.bundle; sourceTree = "<group>"; };
@@ -1303,6 +1318,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EA6606921AA767F700BA2C65 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EAB0AB2F19ED356A00764C31 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1345,6 +1367,7 @@
 				132429B415ADBB3800DF823E /* Owncloud iOs ClientTests */,
 				EAB0AB3319ED356A00764C31 /* ownCloudExtApp */,
 				EAB0AB4119ED356A00764C31 /* ownCloudExtAppFileProvider */,
+				EA6606961AA767F800BA2C65 /* OC Share Sheet */,
 				1324297B15ADBB3700DF823E /* Frameworks */,
 				1324297915ADBB3700DF823E /* Products */,
 			);
@@ -1357,6 +1380,7 @@
 				132429AD15ADBB3800DF823E /* Owncloud iOs ClientTests.xctest */,
 				EAB0AB3219ED356A00764C31 /* ownCloudExtApp.appex */,
 				EAB0AB4019ED356A00764C31 /* ownCloudExtAppFileProvider.appex */,
+				EA6606951AA767F700BA2C65 /* OC Share Sheet.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2466,6 +2490,24 @@
 			name = DetailView;
 			sourceTree = "<group>";
 		};
+		EA6606961AA767F800BA2C65 /* OC Share Sheet */ = {
+			isa = PBXGroup;
+			children = (
+				EA6606991AA767F800BA2C65 /* ShareViewController.swift */,
+				EA66069B1AA767F800BA2C65 /* MainInterface.storyboard */,
+				EA6606971AA767F800BA2C65 /* Supporting Files */,
+			);
+			path = "OC Share Sheet";
+			sourceTree = "<group>";
+		};
+		EA6606971AA767F800BA2C65 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EA6606981AA767F800BA2C65 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		EA68968317F598EB0033B3C1 /* KKPasscodeLock */ = {
 			isa = PBXGroup;
 			children = (
@@ -2751,6 +2793,7 @@
 				EAB0AB4C19ED356A00764C31 /* PBXTargetDependency */,
 				EAB0AB4E19ED356A00764C31 /* PBXTargetDependency */,
 				EAB0AB5119ED356A00764C31 /* PBXTargetDependency */,
+				EA66069E1AA767F800BA2C65 /* PBXTargetDependency */,
 			);
 			name = "Owncloud iOs Client";
 			productName = "Owncloud iOs Client";
@@ -2775,6 +2818,23 @@
 			productName = "Owncloud iOs ClientTests";
 			productReference = 132429AD15ADBB3800DF823E /* Owncloud iOs ClientTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		EA6606941AA767F700BA2C65 /* OC Share Sheet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA6606A31AA767F800BA2C65 /* Build configuration list for PBXNativeTarget "OC Share Sheet" */;
+			buildPhases = (
+				EA6606911AA767F700BA2C65 /* Sources */,
+				EA6606921AA767F700BA2C65 /* Frameworks */,
+				EA6606931AA767F700BA2C65 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OC Share Sheet";
+			productName = "OC Share Sheet";
+			productReference = EA6606951AA767F700BA2C65 /* OC Share Sheet.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		EAB0AB3119ED356A00764C31 /* ownCloudExtApp */ = {
 			isa = PBXNativeTarget;
@@ -2831,6 +2891,10 @@
 							};
 						};
 					};
+					EA6606941AA767F700BA2C65 = {
+						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = 9B5WD74GWJ;
+					};
 					EAB0AB3119ED356A00764C31 = {
 						CreatedOnToolsVersion = 6.0.1;
 						DevelopmentTeam = 9B5WD74GWJ;
@@ -2884,6 +2948,7 @@
 				132429AC15ADBB3800DF823E /* Owncloud iOs ClientTests */,
 				EAB0AB3119ED356A00764C31 /* ownCloudExtApp */,
 				EAB0AB3F19ED356A00764C31 /* ownCloudExtAppFileProvider */,
+				EA6606941AA767F700BA2C65 /* OC Share Sheet */,
 			);
 		};
 /* End PBXProject section */
@@ -3182,6 +3247,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EA6606931AA767F700BA2C65 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA66069C1AA767F800BA2C65 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EAB0AB3019ED356A00764C31 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3459,6 +3532,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EA6606911AA767F700BA2C65 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EAB0AB2E19ED356A00764C31 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3558,6 +3639,11 @@
 			isa = PBXTargetDependency;
 			name = "ownCloud iOS library";
 			targetProxy = EA1F62DB1A5EC07E00D6346F /* PBXContainerItemProxy */;
+		};
+		EA66069E1AA767F800BA2C65 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EA6606941AA767F700BA2C65 /* OC Share Sheet */;
+			targetProxy = EA66069D1AA767F800BA2C65 /* PBXContainerItemProxy */;
 		};
 		EA8667E618AA297F00D3550D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3811,6 +3897,54 @@
 			};
 			name = Release;
 		};
+		EA6606A01AA767F800BA2C65 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "OC Share Sheet/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		EA6606A11AA767F800BA2C65 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "OC Share Sheet/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		EAB0AB5219ED356A00764C31 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4036,6 +4170,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		EA6606A31AA767F800BA2C65 /* Build configuration list for PBXNativeTarget "OC Share Sheet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA6606A01AA767F800BA2C65 /* Debug */,
+				EA6606A11AA767F800BA2C65 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		EAB0AB5719ED356A00764C31 /* Build configuration list for PBXNativeTarget "ownCloudExtAppFileProvider" */ = {
 			isa = XCConfigurationList;
