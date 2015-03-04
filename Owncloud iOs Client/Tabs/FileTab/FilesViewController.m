@@ -2062,7 +2062,17 @@
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                     //Do operations in background thread
                     
-                    //Get shared items of a specific folder
+                    //Workaround to find the _fileIdToShowFiles because some times there are problems with the changes active user, and this method is launched before the viewwillappear
+                    if (app.activeUser) {
+                        FileDto *rootFileDto = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
+                        NSString *pathActiveUser = rootFileDto.filePath;
+                       
+                        if ([_fileIdToShowFiles.filePath rangeOfString:pathActiveUser].location == NSNotFound) {
+                            _fileIdToShowFiles = rootFileDto;
+                            DLog(@"Changing between accounts, update _fileIdToShowFiles with root path with the active user");
+                        }
+                    }
+                    
                     NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsDtos getDBFilePathOfFileDtoFilePath:_fileIdToShowFiles.filePath ofUserDto:app.activeUser], _fileIdToShowFiles.fileName]];
                     
                     //1. We remove the removed shared from the Files table of the current folder
@@ -2362,19 +2372,19 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //Update fileDto
-    _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:_selectedFileDto.idFile];
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if ([_selectedFileDto isDownload]==downloading) {
+    if ([self.selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
-        _alert = nil;
-        _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-        [_alert show];
+        self.alert = nil;
+        self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [self.alert show];
         
-    } else if ([_selectedFileDto isDirectory]&& [DownloadUtils thereAreDownloadingFilesOnTheFolder: _selectedFileDto]) {
+    } else if ([self.selectedFileDto isDirectory]&& [DownloadUtils thereAreDownloadingFilesOnTheFolder: self.selectedFileDto]) {
         //if the user are downloading files from the server
-        _alert = nil;
-        _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-        [_alert show];
+        self.alert = nil;
+        self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [self.alert show];
         
     } else {
         
@@ -2400,7 +2410,7 @@
 #pragma mark - DeleteDelegate
 
 - (void) removeSelectedIndexPath {
-    _selectedCell = nil;
+    self.selectedCell = nil;
 }
 
 #pragma mark - Rename option
@@ -2412,44 +2422,34 @@
  * over the selected file
  */
 - (void)didSelectRenameOption {
-    
-    //Only for test proposes
-    TestSwiftClass *swiftAlertView = [[TestSwiftClass alloc]init];
-  //  [swiftAlertView showAlertView];
-
-    [swiftAlertView showAlertController:self];
-    
-   // [swiftAlertView showAlertViewWithText:@"Temp Folder"];
-    
-    
-    
+     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //Update fileDto
-   /* _selectedFileDto=[ManageFilesDB getFileDtoByIdFile:_selectedFileDto.idFile];
+  self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if ([_selectedFileDto isDownload]==downloading) {
+    if ([_selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
-        _alert = nil;
-        _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-        [_alert show];
+        self.alert = nil;
+        self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [self.alert show];
         
-    } else if ([_selectedFileDto isDirectory] && [DownloadUtils thereAreDownloadingFilesOnTheFolder: _selectedFileDto]) {
+    } else if ([self.selectedFileDto isDirectory] && [DownloadUtils thereAreDownloadingFilesOnTheFolder: self.selectedFileDto]) {
         //if the user are downloading files from the server
-        _alert = nil;
-        _alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-        [_alert show];
+        self.alert = nil;
+        self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [self.alert show];
         
     } else {
-        _rename = [[RenameFile alloc] init];
-        _rename.delegate = self;
-        _rename.currentRemoteFolder = _currentRemoteFolder;
-        _rename.currentDirectoryArray = _currentDirectoryArray;
-        _rename.currentLocalFolder=_currentLocalFolder;
-        _rename.mUser = _mUser;
-        [_rename showRenameFile:_selectedFileDto];
-    }*/
+        self.rename = [[RenameFile alloc] init];
+        self.rename.delegate = self;
+        self.rename.currentRemoteFolder = self.currentRemoteFolder;
+        self.rename.currentDirectoryArray = self.currentDirectoryArray;
+        self.rename.currentLocalFolder= self.currentLocalFolder;
+        self.rename.mUser = self.mUser;
+        [self.rename showRenameFile:self.selectedFileDto];
+    }
+    
 }
-
 
 #pragma mark - Move option
 
