@@ -25,7 +25,7 @@
 - (void)errorLogin;
 @end
 
-@interface ShareFileOrFolder : NSObject <UIActionSheetDelegate>
+@interface ShareFileOrFolder : NSObject <UIActionSheetDelegate,UITextFieldDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, assign) FileDto *file;
 @property (nonatomic, assign) OCSharedDto *shareDto;
@@ -41,6 +41,9 @@
 @property (nonatomic, strong) UIBarButtonItem *parentButton;
 //This view is to show the Popover with the share link options
 @property (nonatomic, strong) UIView *parentView;
+
+@property(nonatomic, strong) UIAlertView *shareProtectedAlertView;
+
 
 - (void) showShareActionSheetForFile:(FileDto *) file;
 
@@ -80,4 +83,6 @@
  */
 - (void) clickOnShareLinkFromFileDto:(BOOL)isFileDto;
 
+
+-(void)doRequestSharedLinkWithPath: (NSString *)filePath andPassword: (NSString *)password;
 @end
