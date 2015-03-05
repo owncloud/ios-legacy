@@ -8,24 +8,104 @@
 
 import UIKit
 import Social
+import MobileCoreServices
 
-class ShareViewController: SLComposeServiceViewController {
-
-    override func isContentValid() -> Bool {
-        // Do validation of contentText and/or NSExtensionContext attachments here
-        return true
-    }
-
-    override func didSelectPost() {
-        // This is called after the user selects Post. Do the upload of contentText and/or NSExtensionContext attachments.
+class ShareViewController: UIViewController {
     
-        // Inform the host that we're done, so it un-blocks its UI. Note: Alternatively you could call super's -didSelectPost, which will similarly complete the extension context.
-        self.extensionContext!.completeRequestReturningItems([], completionHandler: nil)
-    }
+    @IBOutlet weak var navigationBar: UINavigationBar?
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var numberOfImages: UILabel?
+    
 
-    override func configurationItems() -> [AnyObject]! {
-        // To add configuration options via table cells at the bottom of the sheet, return an array of SLComposeSheetConfigurationItem here.
-        return NSArray()
+    override func viewDidLoad() {
+        
+        self.createBarButtonsOfNavigationBar()
+        
+        self.loadImages()
+        
+    }
+    
+    func loadImages() {
+        
+        if let inputItems : [NSExtensionItem] = self.extensionContext?.inputItems as? [NSExtensionItem] {
+            for item : NSExtensionItem in inputItems {
+                if let attachments = item.attachments as? [NSItemProvider] {
+                    
+                    if attachments.isEmpty {
+                        self.extensionContext?.completeRequestReturningItems(nil, completionHandler: nil)
+                        return
+                    }
+                    
+                    for current: NSItemProvider in attachments{
+                       
+                        if current.hasItemConformingToTypeIdentifier(kUTTypeImage as String){
+                            
+                            current.loadItemForTypeIdentifier(kUTTypeImage, options: nil, completionHandler: {(item: NSSecureCoding!, error: NSError!) -> Void in
+                               
+                                if error == nil {
+                                    
+                                    let url = item as NSURL
+                                    let imageData = NSData(contentsOfURL: url)
+                                    
+                                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                        self.imageView.image = UIImage(data: imageData!)
+                                        self.numberOfImages?.text = "Did you select: \(inputItems.count) images"
+                                        
+                                        
+                                    })
+                                    
+                                   
+                                } else {
+                                    println("ERROR: \(error)")
+                                }
+                                
+                
+                             
+                                
+                            })
+                            
+                        }else if current.hasItemConformingToTypeIdentifier(kUTTypeAudiovisualContent as String){
+                            
+                            current.loadItemForTypeIdentifier(kUTTypeAudiovisualContent, options: nil, completionHandler: {(item: NSSecureCoding!, error: NSError!) -> Void in
+                                
+                                if error == nil {
+                                    
+                                    self.numberOfImages?.text = "Did you select: \(inputItems.count) videos"
+                                    
+                                }
+                            })
+                        }
+                        
+                    }
+                
+                }
+            }
+        }
+    
+    
+        
+    }
+    
+    
+    func createBarButtonsOfNavigationBar(){
+        
+        let rightBarButton = UIBarButtonItem (title:"Done", style: .Plain, target: self, action:"cancelView:")
+        let leftBarButton = UIBarButtonItem (title:"Cancel", style: .Plain, target: self, action:"cancelView:")
+        let navigationItem = UINavigationItem (title: "ownCloud")
+        
+        navigationItem.leftBarButtonItem = leftBarButton
+        navigationItem.rightBarButtonItem = rightBarButton
+        navigationItem.hidesBackButton = true
+        
+        self.navigationBar?.pushNavigationItem(navigationItem, animated: false)
+        
+    }
+    
+    
+    func cancelView((barButtonItem: UIBarButtonItem) ) {
+        self.dismissViewControllerAnimated(true, completion: { () -> Void in
+            //TODO: Delete here the temporal cache files if needed
+        })
     }
 
 }

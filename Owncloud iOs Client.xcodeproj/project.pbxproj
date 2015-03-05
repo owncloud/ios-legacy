@@ -1206,6 +1206,7 @@
 		EA6606981AA767F800BA2C65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EA6606991AA767F800BA2C65 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		EA66069B1AA767F800BA2C65 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
+		EA6606A41AA7764900BA2C65 /* OC Share Sheet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "OC Share Sheet.entitlements"; sourceTree = "<group>"; };
 		EA68968417F599060033B3C1 /* KKKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KKKeychain.h; path = ExternalLibreries/KKPasscodeLock/KKKeychain.h; sourceTree = "<group>"; };
 		EA68968517F599060033B3C1 /* KKKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KKKeychain.m; path = ExternalLibreries/KKPasscodeLock/KKKeychain.m; sourceTree = "<group>"; };
 		EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = KKPasscodeLock.bundle; path = ExternalLibreries/KKPasscodeLock/KKPasscodeLock.bundle; sourceTree = "<group>"; };
@@ -2493,6 +2494,7 @@
 		EA6606961AA767F800BA2C65 /* OC Share Sheet */ = {
 			isa = PBXGroup;
 			children = (
+				EA6606A41AA7764900BA2C65 /* OC Share Sheet.entitlements */,
 				EA6606991AA767F800BA2C65 /* ShareViewController.swift */,
 				EA66069B1AA767F800BA2C65 /* MainInterface.storyboard */,
 				EA6606971AA767F800BA2C65 /* Supporting Files */,
@@ -2894,6 +2896,11 @@
 					EA6606941AA767F700BA2C65 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = 9B5WD74GWJ;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					EAB0AB3119ED356A00764C31 = {
 						CreatedOnToolsVersion = 6.0.1;
@@ -3905,6 +3912,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_ENTITLEMENTS = "OC Share Sheet/OC Share Sheet.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -3918,6 +3926,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -3931,6 +3940,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_ENTITLEMENTS = "OC Share Sheet/OC Share Sheet.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -3941,6 +3951,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
