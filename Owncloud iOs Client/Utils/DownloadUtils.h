@@ -30,4 +30,16 @@
 + (BOOL) thereAreDownloadingFilesOnTheFolder: (FileDto *) selectedFolder;
 
 
+///-----------------------------------
+/// @name removeDownloadFileWithPath
+///-----------------------------------
+
+/**
+ * This method removed a downloaded file from the files system.
+ *
+ * @param path -> local path of the file.
+ */
++ (void) removeDownloadFileWithPath:(NSString *)path;
+
+
 @end

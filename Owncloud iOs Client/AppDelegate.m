@@ -161,6 +161,18 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
    */
     
+    
+    //Ugly solution for erase the persistent cache across launches
+    
+    NSInteger memory = 4; //4 MB
+    
+    NSUInteger cacheSizeMemory = memory*1024*1024;
+    NSUInteger cacheSizeDisk = memory*1024*1024;
+    NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:cacheSizeMemory diskCapacity:cacheSizeDisk diskPath:@"nsurlcache"];
+    [NSURLCache setSharedURLCache:sharedCache];
+    sleep(1); //Important sleep. Very ugly but neccesarry.
+    
+    
     return YES;
 }
 
@@ -1017,6 +1029,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Update the Favorites Files
     [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
    
+    //Refresh the list of files from the database
+    if (_activeUser && self.presentFilesViewController) {
+        [_presentFilesViewController reloadTableFromDataBase];
+    }
 }
 
 
@@ -1858,18 +1874,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) initDataBase {
     
-    
-    /*Reset keychain items when db need to be updated or when db first init after app has been removed and reinstalled */
-    NSMutableArray * users = [ManageUsersDB getAllUsers];
-    if (![users count]) {
-        //delete all keychain items
-        [OCKeychain resetKeychain];
-    }
-    
-    [UtilsUrls getOwnCloudFilePath];
+    CredentialsDto *credDto = [OCKeychain getCredentialsById:@"1"];
+    DLog(@"User: %@", credDto.userName);
+    DLog(@"Password: %@", credDto.password);
     
     //New version
-    static int dbVersion = k_DB_version_11;
+    static int dbVersion = k_DB_version_12;
     
     //This method make a new database
     [ManageDB createDataBase];
@@ -1894,6 +1904,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_2:
                 [ManageDB updateDBVersion2To3];
@@ -1906,6 +1917,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_3:
                 [ManageDB updateDBVersion3To4];
@@ -1916,6 +1928,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_4:
                 [ManageDB updateDBVersion4To5];
@@ -1925,6 +1938,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_5:
                 [ManageDB updateDBVersion5To6];
@@ -1933,6 +1947,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_6:
                 [ManageDB updateDBVersion6To7];
@@ -1940,30 +1955,45 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_7:
                 [self updateDBVersion7To8];
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_8:
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_9:
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
                 break;
             case k_DB_version_10:
                 [ManageDB updateDBVersion10To11];
+                [ManageDB updateDBVersion11To12];
+                break;
+            case k_DB_version_11:
+                [ManageDB updateDBVersion11To12];
                 break;
         }
     }
 
     //Insert DB version
     [ManageDB insertVersionToDataBase:dbVersion];
+    
+    /*Reset keychain items when db need to be updated or when db first init after app has been removed and reinstalled */
+    NSMutableArray * users = [ManageUsersDB getAllUsers];
+    if (![users count]) {
+        //delete all keychain items
+        [OCKeychain resetKeychain];
+    }
 }
 
 - (void) errorLogin {
