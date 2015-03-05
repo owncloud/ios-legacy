@@ -29,34 +29,41 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PsF-YJ-8hS">
-                                <rect key="frame" x="0.0" y="113" width="600" height="487"/>
-                            </imageView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="6bg-ed-mfL">
+                                <rect key="frame" x="16" y="112" width="568" height="488"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="j1y-V4-xli" id="cqC-oT-nbV"/>
+                                    <outlet property="delegate" destination="j1y-V4-xli" id="WE4-Xb-ohZ"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="4re-lq-CPD" firstAttribute="top" secondItem="zpY-Wh-Wn4" secondAttribute="bottom" constant="11" id="2rx-iQ-Wzj"/>
                             <constraint firstAttribute="trailingMargin" secondItem="4re-lq-CPD" secondAttribute="trailing" constant="30" id="2uK-zQ-esM"/>
                             <constraint firstItem="zpY-Wh-Wn4" firstAttribute="leading" secondItem="wbc-yd-nQP" secondAttribute="leadingMargin" constant="-16" id="30n-wx-QmD"/>
-                            <constraint firstItem="d5i-Ba-RvD" firstAttribute="top" secondItem="PsF-YJ-8hS" secondAttribute="bottom" id="3dx-vU-TR8"/>
+                            <constraint firstItem="6bg-ed-mfL" firstAttribute="top" secondItem="wbc-yd-nQP" secondAttribute="topMargin" constant="112" id="5Qx-HX-4rG"/>
                             <constraint firstItem="4re-lq-CPD" firstAttribute="leading" secondItem="wbc-yd-nQP" secondAttribute="leadingMargin" constant="30" id="Efl-a8-nWY"/>
+                            <constraint firstItem="6bg-ed-mfL" firstAttribute="top" secondItem="4re-lq-CPD" secondAttribute="bottom" constant="8" id="HXK-6e-aOn"/>
+                            <constraint firstItem="6bg-ed-mfL" firstAttribute="leading" secondItem="wbc-yd-nQP" secondAttribute="leadingMargin" id="IdJ-1Q-A6O"/>
                             <constraint firstAttribute="trailingMargin" secondItem="zpY-Wh-Wn4" secondAttribute="trailing" constant="-16" id="Iyx-Eb-3bb"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="PsF-YJ-8hS" secondAttribute="trailing" constant="-16" id="aQ5-yI-yus"/>
-                            <constraint firstItem="PsF-YJ-8hS" firstAttribute="top" secondItem="wbc-yd-nQP" secondAttribute="topMargin" constant="113" id="bc1-72-gno"/>
+                            <constraint firstItem="6bg-ed-mfL" firstAttribute="trailing" secondItem="wbc-yd-nQP" secondAttribute="trailingMargin" id="f2w-KQ-TPL"/>
                             <constraint firstItem="zpY-Wh-Wn4" firstAttribute="top" secondItem="wbc-yd-nQP" secondAttribute="topMargin" constant="20" id="fAQ-7B-OY8"/>
                             <constraint firstItem="4re-lq-CPD" firstAttribute="top" secondItem="zpY-Wh-Wn4" secondAttribute="bottom" constant="13" id="neM-zS-QJs"/>
-                            <constraint firstItem="PsF-YJ-8hS" firstAttribute="leading" secondItem="wbc-yd-nQP" secondAttribute="leadingMargin" constant="-16" id="vhR-9q-IbY"/>
+                            <constraint firstItem="d5i-Ba-RvD" firstAttribute="top" secondItem="6bg-ed-mfL" secondAttribute="bottom" constant="8" id="wqc-ZR-jug"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="neM-zS-QJs"/>
+                                <exclude reference="HXK-6e-aOn"/>
                             </mask>
                         </variation>
                     </view>
                     <connections>
-                        <outlet property="imageView" destination="PsF-YJ-8hS" id="bkd-0B-XpT"/>
                         <outlet property="navigationBar" destination="zpY-Wh-Wn4" id="Itw-eA-7n2"/>
                         <outlet property="numberOfImages" destination="4re-lq-CPD" id="4ek-bM-FN2"/>
+                        <outlet property="shareTable" destination="6bg-ed-mfL" id="tzz-SO-m9D"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CEy-Cv-SGf" userLabel="First Responder" sceneMemberID="firstResponder"/>
