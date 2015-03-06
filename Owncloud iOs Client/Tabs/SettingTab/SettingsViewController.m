@@ -330,7 +330,7 @@
     int sectionToShowFooter = 3;
 
     if (section == sectionToShowFooter) {
-        NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+        NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
         label.text = [NSString stringWithFormat:@"%@ %d    iOS %@", appName, k_year, appVersion];
         label.font = appFont; //[UIFont systemFontOfSize:13.0];
