@@ -1932,6 +1932,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     [[AppDelegate sharedOCCommunication] setCredentialsWithUser:userName andPassword:password];
     
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    
     [[AppDelegate sharedOCCommunication] checkServer:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
         BOOL isInvalid = NO;
@@ -2054,6 +2056,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     } else {
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:userName andPassword:password];
     }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
     
     [[AppDelegate sharedOCCommunication] readFolder:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         

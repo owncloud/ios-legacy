@@ -374,6 +374,8 @@
         [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
     }
     
+    [sharedCommunication setUserAgent:k_user_agent];
+    
     NSString *remotePath = [UtilsDtos getRemoteUrlByFile:file andUserDto:self.user];
     remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -685,6 +687,8 @@
         } else {
             [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
         }
+        
+        [sharedCommunication setUserAgent:k_user_agent];
         
         NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
         remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

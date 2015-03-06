@@ -86,7 +86,8 @@
     } else {
         [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
     }
-
+    
+    [sharedCommunication setUserAgent:k_user_agent];
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.user.url, k_url_webdav_server];
@@ -205,6 +206,8 @@
     } else {
         [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
     }
+    
+     [sharedCommunication setUserAgent:k_user_agent];
     
    self.state = downloadWorking;
     

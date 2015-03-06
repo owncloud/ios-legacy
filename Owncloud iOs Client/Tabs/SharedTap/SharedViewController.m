@@ -328,6 +328,8 @@
                 [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
             }
             
+            [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+            
             //Checking the Shared files and folders
             [[AppDelegate sharedOCCommunication] readSharedByServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
                 //SAML checking

@@ -175,6 +175,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    
     [[AppDelegate sharedOCCommunication] createFolder:pathRemoteFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         DLog(@"Folder created");
         BOOL isSamlCredentialsError = NO;
@@ -241,6 +243,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     } else {
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:_userUploading.username andPassword:_userUploading.password];
     }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
     
     NSString *urlClean = [NSString stringWithFormat:@"%@%@", _currentUpload.destinyFolder, _currentUpload.uploadFileName];
     urlClean = [urlClean stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -922,6 +926,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:self.userUploading.username andPassword:self.userUploading.password];
     }
     
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
@@ -997,6 +1003,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     } else {
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:self.userUploading.username andPassword:self.userUploading.password];
     }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
