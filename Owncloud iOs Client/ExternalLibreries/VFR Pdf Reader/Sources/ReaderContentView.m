@@ -89,10 +89,7 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 
 			if ([@"8.0" compare:iosVersion options:NSNumericSearch] != NSOrderedDescending) // 8.0 and up
 			{
-				if ([@"8.1.1" compare:iosVersion options:NSNumericSearch] == NSOrderedDescending) // Below 8.1.1
-				{
-					g_BugFixWidthInset = 2.0f * [[UIScreen mainScreen] scale]; // Reduce width of content view
-				}
+                g_BugFixWidthInset = 2.0f * [[UIScreen mainScreen] scale]; // Reduce width of content view
 			}
 		}
 	}
