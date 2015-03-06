@@ -15,6 +15,7 @@ class ShareViewController: UIViewController, UITableViewDelegate {
     @IBOutlet weak var navigationBar: UINavigationBar?
     @IBOutlet weak var shareTable: UITableView?
     var filesSelected: [NSURL] = []
+    var images: [UIImage] = []
    //@IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var numberOfImages: UILabel?
     
@@ -23,7 +24,14 @@ class ShareViewController: UIViewController, UITableViewDelegate {
         
         self.createBarButtonsOfNavigationBar()
         
-         self.shareTable!.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+         self.shareTable!.registerClass(FileSelectedCell.self, forCellReuseIdentifier: "cell")
+        
+        let blurEffect = UIBlurEffect(style: .Light)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        self.shareTable?.backgroundView = blurEffectView
+        
+        //if you want translucent vibrant table view separator lines
+        //self.shareTable?.separatorEffect = UIVibrancyEffect(forBlurEffect: blurEffect)
         
         self.loadImages()
         
@@ -40,38 +48,36 @@ class ShareViewController: UIViewController, UITableViewDelegate {
                         return
                     }
                     
-                    for current: NSItemProvider in attachments{
-                       
+                    for (index, current) in (enumerate(attachments)){
+                        
+                    
+                        
                         if current.hasItemConformingToTypeIdentifier(kUTTypeImage as String){
                             
                             current.loadItemForTypeIdentifier(kUTTypeImage, options: nil, completionHandler: {(item: NSSecureCoding!, error: NSError!) -> Void in
-                               
+                                
                                 if error == nil {
                                     
                                     let url = item as NSURL
-                    
+                                    
                                     self.filesSelected.append(url)
                                     
-                                    self.printFileSelected()
-                                    
-                                   // let imageData = NSData(contentsOfURL: url)
-                                    
-                        
-                                    
-                                 //   dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                                        //self.imageView.image = UIImage(data: imageData!)
-                                        //self.numberOfImages?.text = "Did you select: \(inputItems.count) images"
-                                       
+                                    if index+1 == attachments.count{
                                         
-                                 //   })
+                                        self.printFileSelected()
+                                    }
                                     
-                                   
+                                    // let imageData = NSData(contentsOfURL: url)
+                                    
+                                    //   dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                    //self.imageView.image = UIImage(data: imageData!)
+                                    //self.numberOfImages?.text = "Did you select: \(inputItems.count) images"
+                                    
+                                    //   })
+                                    
                                 } else {
                                     println("ERROR: \(error)")
                                 }
-                                
-                
-                             
                                 
                             })
                             
@@ -81,16 +87,14 @@ class ShareViewController: UIViewController, UITableViewDelegate {
                                 
                                 if error == nil {
                                     
-                                   // self.numberOfImages?.text = "Did you select: \(inputItems.count) videos"
-                                    
-                
+                                    // self.numberOfImages?.text = "Did you select: \(inputItems.count) videos"
                                     
                                 }
                             })
                         }
-                        
+ 
                     }
-                
+
                 }
             }
         }
@@ -108,13 +112,36 @@ class ShareViewController: UIViewController, UITableViewDelegate {
                 
                 println("Selecte file: \(url.path)")
                 
+                let imageData = NSData(contentsOfURL: url)
+                
+                let image = UIImage(data: imageData!)
+                //338, 140
+               // let size: CGSize = CGSize(width: 338, height: 140)
+                
+              //  let imgResiz: UIImage = self.imageResize(image!, sizeChange: size)
+                
+                self.images.append(image!)
+                
+                
             }
             
             self.numberOfImages?.text = "Did you select: \(self.filesSelected.count) images"
-            
+ 
             self.shareTable?.reloadData()
             
         }
+    }
+    
+    func imageResize (imageObj:UIImage, sizeChange:CGSize)-> UIImage{
+        
+        let hasAlpha = false
+        let scale: CGFloat = 0.0 // Automatically use scale factor of main screen
+        
+        UIGraphicsBeginImageContextWithOptions(sizeChange, !hasAlpha, scale)
+        imageObj.drawInRect(CGRect(origin: CGPointZero, size: sizeChange))
+        
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        return scaledImage
     }
     
     func createBarButtonsOfNavigationBar(){
@@ -138,6 +165,8 @@ class ShareViewController: UIViewController, UITableViewDelegate {
         })
     }
     
+    
+    
    
     
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
@@ -147,11 +176,31 @@ class ShareViewController: UIViewController, UITableViewDelegate {
     
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell!
     {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as UITableViewCell
+       // let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as FileSelectedCell
+        
+        let identifier = "FileSelectedCell"
+        var cell: FileSelectedCell! = tableView.dequeueReusableCellWithIdentifier(identifier ,forIndexPath: indexPath) as FileSelectedCell
         
         let url = self.filesSelected[indexPath.row] as NSURL
         
-        cell.textLabel?.text = url.path
+        let row = indexPath.row
+        
+        if row <= images.count{
+            
+             cell.imageForBlur?.image = images[indexPath.row];
+             cell.imageForBlur? = BlurImageView(blurEffectStyle: .Light)
+            
+             cell.imageForFile?.image = images[indexPath.row];
+        }
+        
+        cell.title?.text = url.path?.lastPathComponent
+        
+        if let size = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as? Int{
+            
+            cell.size?.text = "\(size) bytes"
+            
+        }
+        
         return cell
     }
     

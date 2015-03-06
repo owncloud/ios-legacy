@@ -553,6 +553,9 @@
 		EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6606991AA767F800BA2C65 /* ShareViewController.swift */; };
 		EA66069C1AA767F800BA2C65 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA66069B1AA767F800BA2C65 /* MainInterface.storyboard */; };
 		EA66069F1AA767F800BA2C65 /* OC Share Sheet.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EA6606951AA767F700BA2C65 /* OC Share Sheet.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EA6606A81AA87B4E00BA2C65 /* FileSelectedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6606A61AA87B4E00BA2C65 /* FileSelectedCell.swift */; };
+		EA6606A91AA87B4E00BA2C65 /* FileSelectedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA6606A71AA87B4E00BA2C65 /* FileSelectedCell.xib */; };
+		EA6606AE1AA884D400BA2C65 /* BlurImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6606AD1AA884D400BA2C65 /* BlurImageView.swift */; };
 		EA68968D17F599060033B3C1 /* KKKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968517F599060033B3C1 /* KKKeychain.m */; };
 		EA68968E17F599060033B3C1 /* KKPasscodeLock.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */; };
 		EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968817F599060033B3C1 /* KKPasscodeLock.m */; };
@@ -1207,6 +1210,9 @@
 		EA6606991AA767F800BA2C65 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		EA66069B1AA767F800BA2C65 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		EA6606A41AA7764900BA2C65 /* OC Share Sheet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "OC Share Sheet.entitlements"; sourceTree = "<group>"; };
+		EA6606A61AA87B4E00BA2C65 /* FileSelectedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileSelectedCell.swift; path = Cells/FileSelectedCell.swift; sourceTree = "<group>"; };
+		EA6606A71AA87B4E00BA2C65 /* FileSelectedCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FileSelectedCell.xib; path = Cells/FileSelectedCell.xib; sourceTree = "<group>"; };
+		EA6606AD1AA884D400BA2C65 /* BlurImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurImageView.swift; sourceTree = "<group>"; };
 		EA68968417F599060033B3C1 /* KKKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KKKeychain.h; path = ExternalLibreries/KKPasscodeLock/KKKeychain.h; sourceTree = "<group>"; };
 		EA68968517F599060033B3C1 /* KKKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KKKeychain.m; path = ExternalLibreries/KKPasscodeLock/KKKeychain.m; sourceTree = "<group>"; };
 		EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = KKPasscodeLock.bundle; path = ExternalLibreries/KKPasscodeLock/KKPasscodeLock.bundle; sourceTree = "<group>"; };
@@ -2494,10 +2500,12 @@
 		EA6606961AA767F800BA2C65 /* OC Share Sheet */ = {
 			isa = PBXGroup;
 			children = (
+				EA6606A51AA87B0800BA2C65 /* Cells */,
 				EA6606A41AA7764900BA2C65 /* OC Share Sheet.entitlements */,
 				EA6606991AA767F800BA2C65 /* ShareViewController.swift */,
 				EA66069B1AA767F800BA2C65 /* MainInterface.storyboard */,
 				EA6606971AA767F800BA2C65 /* Supporting Files */,
+				EA6606AD1AA884D400BA2C65 /* BlurImageView.swift */,
 			);
 			path = "OC Share Sheet";
 			sourceTree = "<group>";
@@ -2508,6 +2516,15 @@
 				EA6606981AA767F800BA2C65 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EA6606A51AA87B0800BA2C65 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				EA6606A61AA87B4E00BA2C65 /* FileSelectedCell.swift */,
+				EA6606A71AA87B4E00BA2C65 /* FileSelectedCell.xib */,
+			);
+			name = Cells;
 			sourceTree = "<group>";
 		};
 		EA68968317F598EB0033B3C1 /* KKPasscodeLock */ = {
@@ -3258,6 +3275,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA6606A91AA87B4E00BA2C65 /* FileSelectedCell.xib in Resources */,
 				EA66069C1AA767F800BA2C65 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3543,6 +3561,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA6606AE1AA884D400BA2C65 /* BlurImageView.swift in Sources */,
+				EA6606A81AA87B4E00BA2C65 /* FileSelectedCell.swift in Sources */,
 				EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4189,6 +4209,7 @@
 				EA6606A11AA767F800BA2C65 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EAB0AB5719ED356A00764C31 /* Build configuration list for PBXNativeTarget "ownCloudExtAppFileProvider" */ = {
 			isa = XCConfigurationList;
