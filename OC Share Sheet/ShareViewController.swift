@@ -16,7 +16,6 @@ class ShareViewController: UIViewController, UITableViewDelegate {
     @IBOutlet weak var shareTable: UITableView?
     var filesSelected: [NSURL] = []
     var images: [UIImage] = []
-   //@IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var numberOfImages: UILabel?
     
 
@@ -176,7 +175,7 @@ class ShareViewController: UIViewController, UITableViewDelegate {
     
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell!
     {
-       // let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as FileSelectedCell
+       
         
         let identifier = "FileSelectedCell"
         var cell: FileSelectedCell! = tableView.dequeueReusableCellWithIdentifier(identifier ,forIndexPath: indexPath) as FileSelectedCell
@@ -185,12 +184,24 @@ class ShareViewController: UIViewController, UITableViewDelegate {
         
         let row = indexPath.row
         
+         // cell.backgroundCustomView?.backgroundColor = UIColor(red: 198/255.0, green: 217/255.0, blue: 227/255.0, alpha: 1.0)
+         // cell.backgroundCustomView?.backgroundColor = UIColor(red: 94/255.0, green: 130/255.0, blue: 147/255.0, alpha: 1.0)
+          cell.backgroundCustomView?.backgroundColor = UIColor(red: 29/255.0, green: 45/255.0, blue: 68/255.0, alpha: 1.0)
+        
+        
         if row <= images.count{
+         
+            cell.imageForFile?.image = images[indexPath.row];
             
-             cell.imageForBlur?.image = images[indexPath.row];
-             cell.imageForBlur? = BlurImageView(blurEffectStyle: .Light)
+            //Custom circle image and border
+            let cornerRadius = cell.imageForFile!.frame.size.width / 2
             
-             cell.imageForFile?.image = images[indexPath.row];
+            cell.imageForFile?.layer.cornerRadius = cornerRadius
+            cell.imageForFile?.clipsToBounds = true
+            
+            cell.imageForFile?.layer.borderWidth = 3.0
+            cell.imageForFile?.layer.borderColor = UIColor.whiteColor().CGColor
+       
         }
         
         cell.title?.text = url.path?.lastPathComponent
