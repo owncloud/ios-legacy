@@ -13,6 +13,7 @@ class FileSelectedCell: UITableViewCell {
     @IBOutlet weak var title: UILabel?
     @IBOutlet weak var size: UILabel?
     @IBOutlet weak var backgroundCustomView: UIView?
+    @IBOutlet weak var roundCustomView: UIView?
     @IBOutlet weak var imageForFile: UIImageView?
 
     override func awakeFromNib() {

@@ -14,9 +14,14 @@ class ShareViewController: UIViewController, UITableViewDelegate {
     
     @IBOutlet weak var navigationBar: UINavigationBar?
     @IBOutlet weak var shareTable: UITableView?
+    @IBOutlet weak var numberOfImages: UILabel?
+    
     var filesSelected: [NSURL] = []
     var images: [UIImage] = []
-    @IBOutlet weak var numberOfImages: UILabel?
+   
+    
+    let customRowColor = UIColor(red: 29/255.0, green: 45/255.0, blue: 68/255.0, alpha: 1.0)
+    let customRowBorderColor = UIColor.whiteColor()
     
 
     override func viewDidLoad() {
@@ -175,41 +180,37 @@ class ShareViewController: UIViewController, UITableViewDelegate {
     
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell!
     {
-       
-        
         let identifier = "FileSelectedCell"
         var cell: FileSelectedCell! = tableView.dequeueReusableCellWithIdentifier(identifier ,forIndexPath: indexPath) as FileSelectedCell
         
-        let url = self.filesSelected[indexPath.row] as NSURL
-        
         let row = indexPath.row
+        let url = self.filesSelected[row] as NSURL
         
-         // cell.backgroundCustomView?.backgroundColor = UIColor(red: 198/255.0, green: 217/255.0, blue: 227/255.0, alpha: 1.0)
-         // cell.backgroundCustomView?.backgroundColor = UIColor(red: 94/255.0, green: 130/255.0, blue: 147/255.0, alpha: 1.0)
-          cell.backgroundCustomView?.backgroundColor = UIColor(red: 29/255.0, green: 45/255.0, blue: 68/255.0, alpha: 1.0)
         
+        cell.backgroundCustomView?.backgroundColor = customRowColor
+        
+        //Custom circle image and border
+        let cornerRadius = cell.imageForFile!.frame.size.width / 2
+        cell.imageForFile?.layer.cornerRadius = cornerRadius
+        cell.imageForFile?.clipsToBounds = true
+        cell.imageForFile?.layer.borderWidth = 3.0
+        cell.imageForFile?.layer.borderColor = customRowBorderColor.CGColor
+        
+        //Cusotm circle view in
+        cell.roundCustomView?.backgroundColor = customRowColor
+        cell.roundCustomView?.layer.cornerRadius = cornerRadius
+        cell.roundCustomView?.clipsToBounds = true
         
         if row <= images.count{
-         
             cell.imageForFile?.image = images[indexPath.row];
-            
-            //Custom circle image and border
-            let cornerRadius = cell.imageForFile!.frame.size.width / 2
-            
-            cell.imageForFile?.layer.cornerRadius = cornerRadius
-            cell.imageForFile?.clipsToBounds = true
-            
-            cell.imageForFile?.layer.borderWidth = 3.0
-            cell.imageForFile?.layer.borderColor = UIColor.whiteColor().CGColor
-       
         }
         
         cell.title?.text = url.path?.lastPathComponent
         
         if let size = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as? Int{
-            
             cell.size?.text = "\(size) bytes"
-            
+        }else{
+            cell.size?.text = ""
         }
         
         return cell
