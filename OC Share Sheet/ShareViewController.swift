@@ -10,7 +10,7 @@ import UIKit
 import Social
 import MobileCoreServices
 
-class ShareViewController: UIViewController, UITableViewDelegate {
+@objc class ShareViewController: UIViewController, UITableViewDelegate {
     
     @IBOutlet weak var navigationBar: UINavigationBar?
     @IBOutlet weak var shareTable: UITableView?
@@ -19,133 +19,17 @@ class ShareViewController: UIViewController, UITableViewDelegate {
     var filesSelected: [NSURL] = []
     var images: [UIImage] = []
    
-    
-    let customRowColor = UIColor(red: 29/255.0, green: 45/255.0, blue: 68/255.0, alpha: 1.0)
-    let customRowBorderColor = UIColor.whiteColor()
-    
+    let customRowColor = UIColor.colorOfNavigationBar()
+    let customRowBorderColor = UIColor.colorOfNavigationTitle()
 
     override func viewDidLoad() {
         
         self.createBarButtonsOfNavigationBar()
         
-         self.shareTable!.registerClass(FileSelectedCell.self, forCellReuseIdentifier: "cell")
+        self.shareTable!.registerClass(FileSelectedCell.self, forCellReuseIdentifier: "cell")
         
-        let blurEffect = UIBlurEffect(style: .Light)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        self.shareTable?.backgroundView = blurEffectView
+        self.loadFiles()
         
-        //if you want translucent vibrant table view separator lines
-        //self.shareTable?.separatorEffect = UIVibrancyEffect(forBlurEffect: blurEffect)
-        
-        self.loadImages()
-        
-    }
-    
-    func loadImages() {
-        
-        if let inputItems : [NSExtensionItem] = self.extensionContext?.inputItems as? [NSExtensionItem] {
-            for item : NSExtensionItem in inputItems {
-                if let attachments = item.attachments as? [NSItemProvider] {
-                    
-                    if attachments.isEmpty {
-                        self.extensionContext?.completeRequestReturningItems(nil, completionHandler: nil)
-                        return
-                    }
-                    
-                    for (index, current) in (enumerate(attachments)){
-                        
-                    
-                        
-                        if current.hasItemConformingToTypeIdentifier(kUTTypeImage as String){
-                            
-                            current.loadItemForTypeIdentifier(kUTTypeImage, options: nil, completionHandler: {(item: NSSecureCoding!, error: NSError!) -> Void in
-                                
-                                if error == nil {
-                                    
-                                    let url = item as NSURL
-                                    
-                                    self.filesSelected.append(url)
-                                    
-                                    if index+1 == attachments.count{
-                                        
-                                        self.printFileSelected()
-                                    }
-                                    
-                                    // let imageData = NSData(contentsOfURL: url)
-                                    
-                                    //   dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                                    //self.imageView.image = UIImage(data: imageData!)
-                                    //self.numberOfImages?.text = "Did you select: \(inputItems.count) images"
-                                    
-                                    //   })
-                                    
-                                } else {
-                                    println("ERROR: \(error)")
-                                }
-                                
-                            })
-                            
-                        }else if current.hasItemConformingToTypeIdentifier(kUTTypeAudiovisualContent as String){
-                            
-                            current.loadItemForTypeIdentifier(kUTTypeAudiovisualContent, options: nil, completionHandler: {(item: NSSecureCoding!, error: NSError!) -> Void in
-                                
-                                if error == nil {
-                                    
-                                    // self.numberOfImages?.text = "Did you select: \(inputItems.count) videos"
-                                    
-                                }
-                            })
-                        }
- 
-                    }
-
-                }
-            }
-        }
-    
-    
-        
-    }
-    
-    
-    func printFileSelected (){
-        
-        if self.filesSelected.count > 0{
-            
-            for url : NSURL in self.filesSelected{
-                
-                println("Selecte file: \(url.path)")
-                
-                let imageData = NSData(contentsOfURL: url)
-                
-                let image = UIImage(data: imageData!)
-                //338, 140
-               // let size: CGSize = CGSize(width: 338, height: 140)
-                
-              //  let imgResiz: UIImage = self.imageResize(image!, sizeChange: size)
-                
-                self.images.append(image!)
-                
-                
-            }
-            
-            self.numberOfImages?.text = "Did you select: \(self.filesSelected.count) images"
- 
-            self.shareTable?.reloadData()
-            
-        }
-    }
-    
-    func imageResize (imageObj:UIImage, sizeChange:CGSize)-> UIImage{
-        
-        let hasAlpha = false
-        let scale: CGFloat = 0.0 // Automatically use scale factor of main screen
-        
-        UIGraphicsBeginImageContextWithOptions(sizeChange, !hasAlpha, scale)
-        imageObj.drawInRect(CGRect(origin: CGPointZero, size: sizeChange))
-        
-        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
-        return scaledImage
     }
     
     func createBarButtonsOfNavigationBar(){
@@ -170,8 +54,79 @@ class ShareViewController: UIViewController, UITableViewDelegate {
     }
     
     
+    func loadFiles() {
+        
+        if let inputItems : [NSExtensionItem] = self.extensionContext?.inputItems as? [NSExtensionItem] {
+            for item : NSExtensionItem in inputItems {
+                if let attachments = item.attachments as? [NSItemProvider] {
+                    
+                    if attachments.isEmpty {
+                        self.extensionContext?.completeRequestReturningItems(nil, completionHandler: nil)
+                        return
+                    }
+                    
+                    for (index, current) in (enumerate(attachments)){
+
+                        //Items are images
+                        if current.hasItemConformingToTypeIdentifier(kUTTypeItem as String){
+                            
+                            current.loadItemForTypeIdentifier(kUTTypeItem, options: nil, completionHandler: {(item: NSSecureCoding!, error: NSError!) -> Void in
+                                
+                                if error == nil {
+                                    
+                                    let url = item as NSURL
+                                    
+                                    self.filesSelected.append(url)
+                                    
+                                    if index+1 == attachments.count{
+                                        
+                                        self.showFilesSelected()
+                                    }
+                                    
+                                } else {
+                                    println("ERROR: \(error)")
+                                }
+                                
+                            })
+                        
+                        }
+                    }
+                }
+            }
+        }
+    }
     
-   
+    
+    func showFilesSelected (){
+        
+        if self.filesSelected.count > 0{
+            
+            for url : NSURL in self.filesSelected{
+                
+                //Check the type of the file
+                
+                let ext = FileNameUtils.getExtension(url.lastPathComponent)
+                let type = FileNameUtils.checkTheTypeOfFile(ext)
+                
+                println("Selecte file: \(url.path)")
+                
+                if type == kindOfFileEnum.imageFileType.rawValue{
+                    let imageData = NSData(contentsOfURL: url)
+                    let image = UIImage(data: imageData!)
+                    self.images.append(image!)
+                }
+            }
+            
+            self.shareTable?.reloadData()
+            
+        }else{
+            //Error any file selected
+        }
+    }
+    
+    
+    //MARK: TableView Delegate and Datasource methods
+    
     
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
     {
@@ -186,8 +141,8 @@ class ShareViewController: UIViewController, UITableViewDelegate {
         let row = indexPath.row
         let url = self.filesSelected[row] as NSURL
         
-        
         cell.backgroundCustomView?.backgroundColor = customRowColor
+        cell.selectionStyle = UITableViewCellSelectionStyle.None
         
         //Custom circle image and border
         let cornerRadius = cell.imageForFile!.frame.size.width / 2
@@ -201,8 +156,20 @@ class ShareViewController: UIViewController, UITableViewDelegate {
         cell.roundCustomView?.layer.cornerRadius = cornerRadius
         cell.roundCustomView?.clipsToBounds = true
         
-        if row <= images.count{
-            cell.imageForFile?.image = images[indexPath.row];
+        
+        //Choose the correct icon if the file is not an image
+        let ext = FileNameUtils.getExtension(url.lastPathComponent)
+        let type = FileNameUtils.checkTheTypeOfFile(ext)
+        
+        if type == kindOfFileEnum.imageFileType.rawValue && row <= images.count{
+            
+           cell.imageForFile?.image = images[indexPath.row];
+            
+        }else{
+            
+            let image = UIImage(named: FileNameUtils.getTheNameOfTheImagePreviewOfFileName(url.lastPathComponent))
+            cell.imageForFile?.image = image
+            cell.imageForFile?.backgroundColor = UIColor.whiteColor()
         }
         
         cell.title?.text = url.path?.lastPathComponent

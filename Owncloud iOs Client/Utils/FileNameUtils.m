@@ -297,7 +297,7 @@
     NSString *samlFragment2 = @"saml";
     if((urlString && [urlString rangeOfString:samlFragment1 options:NSCaseInsensitiveSearch].location != NSNotFound)||(urlString && [urlString rangeOfString:samlFragment2 options:NSCaseInsensitiveSearch].location != NSNotFound)) {
         //shibboleth key is in the request url
-        DLog(@"shibboleth fragment is in the request url");
+        NSLog(@"shibboleth fragment is in the request url");
         isSaml=YES;
     }
     
