@@ -18,6 +18,7 @@ import MobileCoreServices
     @IBOutlet weak var shareTable: UITableView?
     @IBOutlet weak var numberOfImages: UILabel?
     @IBOutlet weak var navBarTopLayoutConstraint: NSLayoutConstraint?
+    @IBOutlet weak var destinyFolderButton: UIBarButtonItem?
     
     var filesSelected: [NSURL] = []
     var images: [UIImage] = []
@@ -70,6 +71,10 @@ import MobileCoreServices
         self.extensionContext?.completeRequestReturningItems(nil, completionHandler: nil)
         return
        
+    }
+    
+    @IBAction func destinyFolderButtonTapped(sender: UIBarButtonItem) {
+        println("destiny folder tapped")
     }
     
     
