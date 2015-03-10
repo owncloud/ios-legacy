@@ -10,6 +10,8 @@ import UIKit
 import Social
 import MobileCoreServices
 
+
+
 @objc class ShareViewController: UIViewController, UITableViewDelegate {
     
     @IBOutlet weak var navigationBar: UINavigationBar?
@@ -21,6 +23,10 @@ import MobileCoreServices
    
     let customRowColor = UIColor.colorOfNavigationBar()
     let customRowBorderColor = UIColor.colorOfNavigationTitle()
+    
+    let witdhFormSheet: CGFloat = 540.0
+    let heighFromSheet: CGFloat = 620.0
+    
 
     override func viewDidLoad() {
         
@@ -32,6 +38,16 @@ import MobileCoreServices
         
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad{
+            self.view.superview?.bounds = CGRectMake(0, 0, witdhFormSheet, heighFromSheet)
+        }
+        
+    }
+    
+   
     func createBarButtonsOfNavigationBar(){
         
         let rightBarButton = UIBarButtonItem (title:"Done", style: .Plain, target: self, action:"cancelView")
@@ -90,7 +106,7 @@ import MobileCoreServices
                                 
                             })
                         
-                        }
+                        } 
                     }
                 }
             }
