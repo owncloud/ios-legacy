@@ -292,7 +292,7 @@
         fileDto = [_currentDirectoryArray objectAtIndex:i];       
         
         //DLog(@"%@", fileDto.fileName);
-        dicName=fileDto.fileName;      
+        dicName=[fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];
         
         if([string isEqualToString:dicName])
         {
@@ -336,6 +336,8 @@
                 [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
             }
             
+            [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+            
             NSString *pathOfNewFolder = [newURL stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
             [[AppDelegate sharedOCCommunication] createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
@@ -364,7 +366,7 @@
                 }
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                 DLog(@"error: %@", error);
-
+                [self endLoading];
                 DLog(@"Operation error: %ld", (long)response.statusCode);
                 [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:self.user];
 

@@ -863,6 +863,8 @@
                 [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
             }
             
+             [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+            
             NSString *pathOfNewFolder = [NSString stringWithFormat:@"%@%@",[_currentRemoteFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding], name ];
             
             [[AppDelegate sharedOCCommunication] createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
@@ -1677,6 +1679,8 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
+     [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    
     NSString *path = _nextRemoteFolder;
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -1883,6 +1887,8 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    
     NSString *path = _currentRemoteFolder;
      path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -2032,7 +2038,9 @@
         } else {
             [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
         }
-                
+        
+        [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+        
         NSString *path = [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileIdToShowFiles.filePath andUser:app.activeUser];
         path = [path stringByAppendingString:_fileIdToShowFiles.fileName];
         path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -2058,10 +2066,14 @@
                     //Do operations in background thread
                     
                     //Workaround to find the _fileIdToShowFiles because some times there are problems with the changes active user, and this method is launched before the viewwillappear
-                    NSString *pathActiveUser =[ManageFilesDB getRootFileDtoByUser:app.activeUser].filePath;
-                    if ([_fileIdToShowFiles.filePath rangeOfString:pathActiveUser].location == NSNotFound) {
-                        _fileIdToShowFiles = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
-                        DLog(@"Changing between accounts, update _fileIdToShowFiles with root path with the active user");
+                    if (app.activeUser) {
+                        FileDto *rootFileDto = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
+                        NSString *pathActiveUser = rootFileDto.filePath;
+                       
+                        if ([_fileIdToShowFiles.filePath rangeOfString:pathActiveUser].location == NSNotFound) {
+                            _fileIdToShowFiles = rootFileDto;
+                            DLog(@"Changing between accounts, update _fileIdToShowFiles with root path with the active user");
+                        }
                     }
                     
                     NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsDtos getDBFilePathOfFileDtoFilePath:_fileIdToShowFiles.filePath ofUserDto:app.activeUser], _fileIdToShowFiles.fileName]];

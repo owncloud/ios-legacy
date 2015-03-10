@@ -36,6 +36,7 @@
 #import "InfoFileUtils.h"
 #import "EmptyCell.h"
 #import "UtilsTableView.h"
+#import "DownloadUtils.h"
 
 
 @interface RecentViewController ()
@@ -980,6 +981,7 @@
     }
 }
 
+
 #pragma mark - OverwriteFileOptionsDelegate
 
 - (void) setNewNameToSaveFile:(NSString *)name {
@@ -993,6 +995,7 @@
     
     if (uploadFile) {
         [ManageFilesDB setFileIsDownloadState:uploadFile.idFile andState:notDownload];
+        [DownloadUtils removeDownloadFileWithPath:uploadFile.localFolder];
     }
     
     _selectedUploadToResolveTheConflict.uploadFileName = name;

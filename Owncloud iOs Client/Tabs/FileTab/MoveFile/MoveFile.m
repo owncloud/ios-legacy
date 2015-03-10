@@ -138,6 +138,7 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
+    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
     
     [[AppDelegate sharedOCCommunication] moveFileOrFolder:originFile toDestiny:destinyFile onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         DLog(@"Great, the item is moved");
@@ -363,7 +364,7 @@
         
         
         FileDto *destinationFolderDto = [ManageFilesDB getFolderByFilePath:destinationFolderPath andFileName:destinationFolderName];
-        
+        self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
         
         DLog(@"MOVING THE FOLDER TO OTHER FOLDER");
         DLog(@"Old path: %@", self.selectedFileDto.filePath);
