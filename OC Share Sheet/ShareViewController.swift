@@ -34,8 +34,8 @@ import MobileCoreServices
     
     func createBarButtonsOfNavigationBar(){
         
-        let rightBarButton = UIBarButtonItem (title:"Done", style: .Plain, target: self, action:"cancelView:")
-        let leftBarButton = UIBarButtonItem (title:"Cancel", style: .Plain, target: self, action:"cancelView:")
+        let rightBarButton = UIBarButtonItem (title:"Done", style: .Plain, target: self, action:"cancelView")
+        let leftBarButton = UIBarButtonItem (title:"Cancel", style: .Plain, target: self, action:"cancelView")
         let navigationItem = UINavigationItem (title: "ownCloud")
         
         navigationItem.leftBarButtonItem = leftBarButton
@@ -47,10 +47,11 @@ import MobileCoreServices
     }
     
     
-    func cancelView((barButtonItem: UIBarButtonItem) ) {
-        self.dismissViewControllerAnimated(true, completion: { () -> Void in
-            //TODO: Delete here the temporal cache files if needed
-        })
+    func cancelView() {
+       
+        self.extensionContext?.completeRequestReturningItems(nil, completionHandler: nil)
+        return
+       
     }
     
     
@@ -67,7 +68,7 @@ import MobileCoreServices
                     
                     for (index, current) in (enumerate(attachments)){
 
-                        //Items are images
+                        //Items
                         if current.hasItemConformingToTypeIdentifier(kUTTypeItem as String){
                             
                             current.loadItemForTypeIdentifier(kUTTypeItem, options: nil, completionHandler: {(item: NSSecureCoding!, error: NSError!) -> Void in
@@ -162,17 +163,18 @@ import MobileCoreServices
         let type = FileNameUtils.checkTheTypeOfFile(ext)
         
         if type == kindOfFileEnum.imageFileType.rawValue && row <= images.count{
-            
+           //Image
            cell.imageForFile?.image = images[indexPath.row];
             
         }else{
-            
+            //Not image
             let image = UIImage(named: FileNameUtils.getTheNameOfTheImagePreviewOfFileName(url.lastPathComponent))
             cell.imageForFile?.image = image
             cell.imageForFile?.backgroundColor = UIColor.whiteColor()
         }
         
         cell.title?.text = url.path?.lastPathComponent
+        
         
         if let size = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as? Int{
             cell.size?.text = "\(size) bytes"
