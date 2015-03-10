@@ -17,6 +17,7 @@ import MobileCoreServices
     @IBOutlet weak var navigationBar: UINavigationBar?
     @IBOutlet weak var shareTable: UITableView?
     @IBOutlet weak var numberOfImages: UILabel?
+    @IBOutlet weak var navBarTopLayoutConstraint: NSLayoutConstraint?
     
     var filesSelected: [NSURL] = []
     var images: [UIImage] = []
@@ -25,7 +26,7 @@ import MobileCoreServices
     let customRowBorderColor = UIColor.colorOfNavigationTitle()
     
     let witdhFormSheet: CGFloat = 540.0
-    let heighFromSheet: CGFloat = 620.0
+    let heighFormSheet: CGFloat = 620.0
     
 
     override func viewDidLoad() {
@@ -42,7 +43,8 @@ import MobileCoreServices
         super.viewWillLayoutSubviews()
         
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad{
-            self.view.superview?.bounds = CGRectMake(0, 0, witdhFormSheet, heighFromSheet)
+            self.navBarTopLayoutConstraint?.constant = 0.0
+            self.view.superview?.bounds = CGRectMake(0, 0, witdhFormSheet, heighFormSheet)
         }
         
     }
