@@ -37,6 +37,9 @@
 #import "ManageFavorites.h"
 #import "UtilsUrls.h"
 
+#import "ReaderDocument.h"
+#import "ReaderViewController.h"
+
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 
@@ -341,7 +344,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         }
     }
 }
- 
+
 -(void)landscapeView{
     if (_moviePlayer) {
         UIScreen *mainScreen = [UIScreen mainScreen];
@@ -385,6 +388,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     if (_galleryView) {
         [_galleryView prepareScrollViewBeforeTheRotation];
+    } else if (_readerPDFViewController) {
+        [_readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
     
     if (toInterfaceOrientation  == UIInterfaceOrientationPortrait) {
@@ -397,7 +402,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 }
 
 -(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    
+
     if (_galleryView) {
         if (_galleryView.fullScreen) {
             CGRect frame = self.view.frame;           
@@ -409,8 +414,16 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             _toolBar.hidden = NO;
         }        
          [_galleryView adjustTheScrollViewAfterTheRotation];
+    } else if (_readerPDFViewController) {
+        [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
     } else {
         _toolBar.hidden = NO;
+    }
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    if (_readerPDFViewController) {
+        [_readerPDFViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     }
 }
 
@@ -509,7 +522,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
                 if (_typeOfFile == videoFileType || _typeOfFile == audioFileType) {
                     [self performSelectorOnMainThread:@selector(playMediaFile) withObject:nil waitUntilDone:YES];
                 } else if (_typeOfFile == officeFileType) {
-                    [self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
+                    [self performSelector:@selector(openFileOffice) withObject:nil afterDelay:0.1];
+                    //[self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
                 } else {
                     [self cleanView];
                 }
@@ -584,26 +598,50 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  */
 - (void)openFileOffice{
     
-    if (_file.localFolder != nil) {
+        NSString *ext = [FileNameUtils getExtension:_file.fileName];
         
-        if (!_officeView) {
-            CGRect frame = self.view.frame;
-            frame.size.height = frame.size.height-_toolBar.frame.size.height;
-            frame.origin.y = 0;
-            _officeView=[[OfficeFileView alloc]initWithFrame:frame];
+        if ([ext isEqualToString:@"PDF"]) {
+            
+            _documentPDF = [ReaderDocument withDocumentFilePath:_file.localFolder password:@""];
+            
+            if (_documentPDF != nil) {
+                _readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:_documentPDF];
+                
+                CGRect frame = self.view.frame;
+                frame.size.height = frame.size.height-_toolBar.frame.size.height;
+                frame.origin.y = 0;
+                
+                [_readerPDFViewController.view setFrame:frame];
+                
+                [self.view addSubview:_readerPDFViewController.view];
+                
+            } else {
+                DLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, _file.localFolder, @"");
+            }
+            
+        } else {
+            if (_file.localFolder != nil) {
+                
+                if (!_officeView) {
+                    CGRect frame = self.view.frame;
+                    frame.size.height = frame.size.height-_toolBar.frame.size.height;
+                    frame.origin.y = 0;
+                    _officeView=[[OfficeFileView alloc]initWithFrame:frame];
+                }
+                
+                [_officeView openOfficeFileWithPath:_file.localFolder andFileName:_file.fileName];
+                
+                [self.view addSubview:_officeView.webView];
+                if (_file.isNecessaryUpdate) {
+                    [self.view bringSubviewToFront:_updatingFileView];
+                }
+            }
         }
         
-        [_officeView openOfficeFileWithPath:_file.localFolder andFileName:_file.fileName];
+        //Enable back button
+        self.navigationController.navigationBar.UserInteractionEnabled = YES;
+        _toolBar.UserInteractionEnabled = YES;
 
-        [self.view addSubview:_officeView.webView];
-        if (_file.isNecessaryUpdate) {
-            [self.view bringSubviewToFront:_updatingFileView];
-        }
-    }
-    
-    //Enable back button
-    self.navigationController.navigationBar.UserInteractionEnabled = YES;
-    _toolBar.UserInteractionEnabled = YES;
 }
 
 

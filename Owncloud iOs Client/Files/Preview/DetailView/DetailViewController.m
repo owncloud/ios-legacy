@@ -38,6 +38,9 @@
 #import "SettingsViewController.h"
 #import "UtilsUrls.h"
 
+#import "ReaderDocument.h"
+#import "ReaderViewController.h"
+
 
 NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
 NSString * IpadFilePreviewViewControllerFileWasDownloadNotification = @"IpadFilePreviewViewControllerFileWasDownloadNotification";
@@ -283,13 +286,16 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     //Configure size of movie player dinamically
     if (_moviePlayer) {
         if (_moviePlayer.isFullScreen==NO) {
-            _moviePlayer.moviePlayer.view.frame= _mainScrollView.frame;
+            _moviePlayer.moviePlayer.view.frame = _mainScrollView.frame;
         } else {
             CGRect fullScreenFrame = _mainScrollView.frame;
             fullScreenFrame.size.height = _mainScrollView.frame.size.height + toolbar.frame.size.height;
             fullScreenFrame.origin.y = toolbar.frame.origin.y;
             _moviePlayer.moviePlayer.view.frame= fullScreenFrame;
         }
+    } else if (_readerPDFViewController) {
+        _readerPDFViewController.view.frame = _mainScrollView.frame;
+        [_readerPDFViewController updateContentViews];
     }
 }
 
@@ -342,6 +348,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
                 fullScreenFrame.origin.y = toolbar.frame.origin.y;
                 _moviePlayer.moviePlayer.view.frame= fullScreenFrame;
             }
+        } else if (_readerPDFViewController) {
+            _readerPDFViewController.view.frame = _mainScrollView.frame;
+            [_readerPDFViewController updateContentViews];
         }
         
     } else {
@@ -363,7 +372,14 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [toolbar setItems:items animated:YES];
         
         if (_moviePlayer) {
-            _moviePlayer.moviePlayer.view.frame= _mainScrollView.frame;
+            CGRect frame = _mainScrollView.frame;
+            _moviePlayer.moviePlayer.view.frame = frame;
+        } else if (_readerPDFViewController) {
+            
+            CGRect frame = _mainScrollView.frame;
+            
+            _readerPDFViewController.view.frame = frame;
+            [_readerPDFViewController updateContentViews];
         }
     }
 }
@@ -568,6 +584,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             if (_typeOfFile == videoFileType || _typeOfFile == audioFileType) {
                 [self performSelectorOnMainThread:@selector(playMediaFile) withObject:nil waitUntilDone:YES];
             } else if (_typeOfFile == officeFileType) {
+                //[self performSelector:@selector(openFileOffice) withObject:nil afterDelay:2.0];
                 [self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
             } else {
                 [self cleanViewWithoutBlock];
@@ -638,21 +655,39 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void)openFileOffice{
     
-    if (_file.localFolder!=nil) {
+    if (self.file.localFolder!=nil) {
         
-        if (!_officeView) {
-            CGRect frame = _mainScrollView.frame;
-            _officeView=[[OfficeFileView alloc]initWithFrame:frame];
+        NSString *ext = [FileNameUtils getExtension:self.file.fileName];
+        
+        if ([ext isEqualToString:@"PDF"]) {
+            
+            self.documentPDF = [ReaderDocument withDocumentFilePath:self.file.localFolder password:@""];
+            
+            if (self.documentPDF != nil) {
+                self.readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:self.documentPDF];
+          
+                [self.view addSubview:self.readerPDFViewController.view];
+                [self configureView];
+                
+            } else {
+                DLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, self.file.localFolder, @"");
+            }
+            
         } else {
-            [_officeView.webView removeFromSuperview];
+            if (!self.officeView) {
+                CGRect frame = _mainScrollView.frame;
+                self.officeView=[[OfficeFileView alloc]initWithFrame:frame];
+            } else {
+                [self.officeView.webView removeFromSuperview];
+            }
+            self.officeView.delegate = self;
+            [self.officeView openOfficeFileWithPath:self.file.localFolder andFileName:self.file.fileName];
+            
+            [self.view addSubview:self.officeView.webView];
         }
-        _officeView.delegate = self;
-        [_officeView openOfficeFileWithPath:_file.localFolder andFileName:_file.fileName];
-        
-        [self.view addSubview:_officeView.webView];
         
     }
-    _isViewBlocked = NO;
+    self.isViewBlocked = NO;
 }
 
 
@@ -862,27 +897,33 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 - (void) removeThePreviousViews {
     //Quit the player if exist
-    if (_moviePlayer) {
-        [_moviePlayer.moviePlayer.view removeFromSuperview];
+    if (self.moviePlayer) {
+        [self.moviePlayer.moviePlayer.view removeFromSuperview];
     }
     
     //Quit the office view
-    if (_officeView) {
-        [_officeView.webView removeFromSuperview];
-        _officeView = nil;
+    if (self.officeView) {
+        [self.officeView.webView removeFromSuperview];
+        self.officeView = nil;
     }
     
     //Quit the gallery view
-    if (_galleryView) {
-        [_galleryView.scrollView removeFromSuperview];
-        _galleryView = nil;
+    if (self.galleryView) {
+        [self.galleryView.scrollView removeFromSuperview];
+        self.galleryView = nil;
+    }
+    
+    if (self.readerPDFViewController) {
+        [self.readerPDFViewController.view removeFromSuperview];
+        self.readerPDFViewController = nil;
+        self.documentPDF = nil;
     }
 }
 
 /*
  * Method that presents a white page without option buttons
  */
-- (void)presentWhiteView{
+- (void)presentWhiteView {
     
     _progressView.hidden=YES;
     _cancelButton.hidden=YES;
@@ -900,22 +941,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [_openWith.activityPopoverController dismissPopoverAnimated:YES];
     [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:YES];
     
-    //Quit the movie player and clean memory
-    if (_moviePlayer) {
-        [_moviePlayer.moviePlayer.view removeFromSuperview];
-    }
-    
-    //Quit the office view and clean memory
-    if (_officeView) {
-        [_officeView.webView removeFromSuperview];
-        _officeView=nil;
-    }
-    
-    //Quit the gallery view and clean memory
-    if (_galleryView) {
-        [_galleryView.scrollView removeFromSuperview];
-        _galleryView=nil;
-    }
+    [self removeThePreviousViews];
     
     _isFileCharged=NO;
     _file=nil;
@@ -986,8 +1012,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  * Method called from FilesViewController after that unselect a cell and
  * present a white view in detailView
  */
-- (void) unselectCurrentFile
-{
+- (void) unselectCurrentFile {
     DLog(@"unselectCurrentFile");
     
     self.file=[ManageFilesDB getFileDtoByIdFile:self.file.idFile];
@@ -1981,10 +2006,14 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [_galleryView prepareScrollViewBeforeTheRotation];
     }
     
+    if (_readerPDFViewController) {
+        [_readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    }
+    
     if (_mShareFileOrFolder && _mShareFileOrFolder.activityPopoverController) {
         [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
     }
-    
+
     if (_openWith) {
         [_openWith.activityPopoverController dismissPopoverAnimated:NO];
     }
@@ -2006,12 +2035,20 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
                 }
             }
         }
+    } else if (_readerPDFViewController) {
+        
+        
+        [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+        
     }
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
 
     DLog(@"did rotate");
+    if (_readerPDFViewController) {
+        [_readerPDFViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    }
 
     [self showPopover];
 }

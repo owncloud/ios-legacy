@@ -26,6 +26,9 @@
 #import "CWStatusBarNotification.h"
 #import "ShareFileOrFolder.h"
 
+@class ReaderDocument;
+@class ReaderViewController;
+
 extern NSString * iPhoneCleanPreviewNotification;
 extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 
@@ -82,7 +85,9 @@ extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 //Fullscreen option for the Gallery
 @property(nonatomic) CGRect transitionFrame;
 
-
+//VFR Pdf reader
+@property(nonatomic, strong) ReaderDocument *documentPDF;
+@property(nonatomic, strong) ReaderViewController *readerPDFViewController;
 
 
 
