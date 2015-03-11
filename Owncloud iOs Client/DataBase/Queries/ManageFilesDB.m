@@ -26,6 +26,8 @@
 #import "AppDelegate.h"
 #elif FILE_PICKER
 #import "DocumentPickerViewController.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
 #else
 #import "FileProvider.h"
 #endif
@@ -49,7 +51,7 @@
 #endif
     __block NSMutableArray *output = [NSMutableArray new];
 
-    DLog(@"getFilesByFileId: %ld",(long)fileId);
+    NSLog(@"getFilesByFileId: %ld",(long)fileId);
 
     FMDatabaseQueue *queue;
     
@@ -57,6 +59,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -116,6 +120,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -177,6 +183,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -220,7 +228,7 @@
     
     UserDto *mUser = [ManageUsersDB getActiveUser];
     
-    DLog(@"getFileByIdFile: %ld", (long)idFile);
+    NSLog(@"getFileByIdFile: %ld", (long)idFile);
     
     FMDatabaseQueue *queue;
     
@@ -228,6 +236,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -275,6 +285,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -314,7 +326,7 @@
 
 +(NSMutableArray *) getAllFoldersByBeginFilePath:(NSString *) beginFilePath {
     
-    DLog(@"getAllFoldersByBeginFilePath");
+    NSLog(@"getAllFoldersByBeginFilePath");
     
     //To the like SQL nedd a % charcter in the sintaxis
     beginFilePath = [NSString stringWithFormat:@"%@%%", beginFilePath];
@@ -336,6 +348,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -360,13 +374,15 @@
 
 +(void) setFileIsDownloadState: (NSInteger) idFile andState:(enumDownload)downloadState {
     
-    DLog(@"setFileIsDownloadState");
+    NSLog(@"setFileIsDownloadState");
     FMDatabaseQueue *queue;
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -377,7 +393,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_download=? WHERE id = ?", [NSNumber numberWithInt:downloadState], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in setFileIsDownloadState");
+            NSLog(@"Error in setFileIsDownloadState");
         }
         
     }];
@@ -386,13 +402,15 @@
 
 +(void) updateDownloadStateOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withState:(enumDownload)downloadState {
     
-    DLog(@"setFileIsDownloadState");
+    NSLog(@"setFileIsDownloadState");
     FMDatabaseQueue *queue;
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -403,7 +421,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_download=? WHERE file_path = ? AND file_name=? AND user_id = ?", [NSNumber numberWithInt:downloadState], filePath, fileName, [NSNumber numberWithInteger:aciveUser.idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error in setFileIsDownloadState");
+            NSLog(@"Error in setFileIsDownloadState");
         }
         
     }];
@@ -411,13 +429,15 @@
 
 +(void) setFilePath: (NSString * ) filePath byIdFile: (NSInteger) idFile {
     
-    DLog(@"NewFilePath: %@", filePath);
+    NSLog(@"NewFilePath: %@", filePath);
     FMDatabaseQueue *queue;
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -428,7 +448,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_path=? WHERE id = ?", filePath, [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in setFilePath");
+            NSLog(@"Error in setFilePath");
         }
         
     }];
@@ -480,7 +500,7 @@
                            (long)current.taskIdentifier,
                            (long)current.providingFileId];
 
-                    //DLog(@"sql!!!: %@", sql);
+                    //NSLog(@"sql!!!: %@", sql);
                 } else {
                     sql = [NSString stringWithFormat:@"%@ UNION SELECT null, '%@','%@',%ld,%d,%ld,%ld,%@,%@,%d,'%@',%d,%d,%ld,'%@',%ld,%ld",
                            sql,
@@ -505,7 +525,7 @@
                 
                 numberOfInsertEachTime++;
                 
-                //DLog(@"sql: %@", sql);
+                //NSLog(@"sql: %@", sql);
                 
                 
                 if(numberOfInsertEachTime > 450) {
@@ -526,6 +546,8 @@
         queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
         queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+        queue = [Managers sharedDatabase];
 #else
         queue = [FileProvider sharedDatabase];
 #endif
@@ -539,7 +561,7 @@
             }
             
             if (!correctQuery) {
-                DLog(@"Error in insertManyFiles");
+                NSLog(@"Error in insertManyFiles");
             }
             
         }];
@@ -565,6 +587,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -575,7 +599,7 @@
         correctQuery = [db executeUpdate:@"DELETE FROM files WHERE id = ? AND user_id = ?",[NSNumber numberWithInteger:idFile], [NSNumber numberWithInteger:mUser.idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error in deleteFileByIdFile");
+            NSLog(@"Error in deleteFileByIdFile");
         }
         
     }];
@@ -598,6 +622,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -608,7 +634,7 @@
         correctQuery = [db executeUpdate:@"DELETE FROM files WHERE id = ?",[NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in deleteFileByIdFile");
+            NSLog(@"Error in deleteFileByIdFile");
         }
         
     }];
@@ -616,7 +642,7 @@
 
 +(void) deleteFilesFromDBBeforeRefreshByFileId: (NSInteger) fileId {
     
-    DLog(@"deleteFilesFromDBBeforeRefreshByFileId");
+    NSLog(@"deleteFilesFromDBBeforeRefreshByFileId");
     
     UserDto *mUser;
     
@@ -633,6 +659,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -643,7 +671,7 @@
         correctQuery = [db executeUpdate:@"DELETE FROM files WHERE file_id = ? AND user_id = ?", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:mUser.idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error in deleteFilesFromDBBeforeRefreshByFileId");
+            NSLog(@"Error in deleteFilesFromDBBeforeRefreshByFileId");
         }
         
     }];
@@ -666,6 +694,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -676,7 +706,7 @@
         correctQuery = [db executeUpdate:@"INSERT INTO files_backup SELECT * FROM files WHERE user_id =? and file_id=? and (is_download != 0 or is_directory = 1 or is_favorite = 1 or shared_file_source != 0 or providing_file_id != 0)", [NSNumber numberWithInteger:mUser.idUser], [NSNumber numberWithInteger:fileId]];
         
         if (!correctQuery) {
-            DLog(@"Error in backupFoldersDownloadedFavoritesByFileId");
+            NSLog(@"Error in backupFoldersDownloadedFavoritesByFileId");
         }
     }];
 }
@@ -700,6 +730,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -714,9 +746,9 @@
             currentFile.fileId = [rs intForColumn:@"file_id"];
             currentFile.etag = [rs stringForColumn:@"etag"];
             
-            DLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
-            DLog(@"currentFile.fileId %ld", (long)currentFile.fileId);
-            DLog(@"currentFile.etag %@", currentFile.etag);
+            NSLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
+            NSLog(@"currentFile.fileId %ld", (long)currentFile.fileId);
+            NSLog(@"currentFile.etag %@", currentFile.etag);
             
             [listFilesToUpdate addObject:currentFile];
         }
@@ -735,7 +767,7 @@
         }
         
         if (!correctQuery) {
-            DLog(@"Error in updateRelatedFilesFromBackup");
+            NSLog(@"Error in updateRelatedFilesFromBackup");
         }
     }];
 }
@@ -765,6 +797,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -784,16 +818,16 @@
             currentFile.providingFileId = [rs intForColumn:@"b.providing_file_id"];
             
             
-            DLog(@"files share source = %ld", (long)currentFile.sharedFileSource);
-            DLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
-            DLog(@"currentFile.etag: %@", currentFile.etag);
+            NSLog(@"files share source = %ld", (long)currentFile.sharedFileSource);
+            NSLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
+            NSLog(@"currentFile.etag: %@", currentFile.etag);
             
             [listFilesToUpdate addObject:currentFile];
         }
         [rs close];
     }];
     
-    DLog(@"Size list: %lu", (unsigned long)[listFilesToUpdate count]);
+    NSLog(@"Size list: %lu", (unsigned long)[listFilesToUpdate count]);
 
     //2 - Update the files DB with the selected datas from the files_backup DB
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -806,7 +840,7 @@
             correctQuery = [db executeUpdate:@"UPDATE files SET is_download = ?, etag = ?, shared_file_source = ?, providing_file_id = ? WHERE id = ?", [NSNumber numberWithInteger:currentFile.isDownload],currentFile.etag ,[NSNumber numberWithInteger:currentFile.sharedFileSource], [NSNumber numberWithInteger:currentFile.providingFileId], [NSNumber numberWithInteger:currentFile.idFile]];
         
             if (!correctQuery) {
-                DLog(@"Error in updateDownloadedFilesFromBackup");
+                NSLog(@"Error in updateDownloadedFilesFromBackup");
             }
         }
     }];
@@ -838,6 +872,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -852,7 +888,7 @@
             currentFile.etag = [rs stringForColumn:@"etag"];
             currentFile.isDownload = [rs intForColumn:@"is_download"];
             
-            DLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
+            NSLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
 
             
             [listFilesFromFilesBackup addObject:currentFile];
@@ -872,7 +908,7 @@
         }
     }
 
-    DLog(@"Size list: %lu", (unsigned long)[listFilesToUpdate count]);
+    NSLog(@"Size list: %lu", (unsigned long)[listFilesToUpdate count]);
 
     //3-Set all the files that need update less the overwritten ones
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -886,7 +922,7 @@
             }
         }
         if (!correctQuery) {
-            DLog(@"Error in setUpdateIsNecessaryFromBackup");
+            NSLog(@"Error in setUpdateIsNecessaryFromBackup");
         }
     }];
     
@@ -907,13 +943,15 @@
  * @param idFile -> int
  */
 + (void) setIsNecessaryUpdateOfTheFile: (NSInteger) idFile {
-    DLog(@"setIsNecessaryUpdateOfTheFile");
+    NSLog(@"setIsNecessaryUpdateOfTheFile");
     FMDatabaseQueue *queue;
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -924,7 +962,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_necessary_update = 1 WHERE id = ?", [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in update the field setIsNecessaryUpdateOfTheFile");
+            NSLog(@"Error in update the field setIsNecessaryUpdateOfTheFile");
         }
     }];
 }
@@ -964,7 +1002,7 @@
 
 +(void) deleteAllFilesAndFoldersThatNotExistOnServerFromBackup {
     
-    DLog(@"deleteAllFilesAndFoldersThatNotExistOnServerFromBackup");
+    NSLog(@"deleteAllFilesAndFoldersThatNotExistOnServerFromBackup");
     
     UserDto *mUser;
     
@@ -983,6 +1021,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1012,11 +1052,11 @@
         
         currentFile.localFolder = [UtilsUrls getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:mUser];
         
-        DLog(@"File download to delete");
+        NSLog(@"File download to delete");
         NSError *error;
         
-        DLog(@"FileName: %@", currentFile.fileName);
-        DLog(@"Delete: %@", currentFile.localFolder);
+        NSLog(@"FileName: %@", currentFile.fileName);
+        NSLog(@"Delete: %@", currentFile.localFolder);
         
         //if file is directory
         if (currentFile.isDirectory) {
@@ -1026,9 +1066,9 @@
         
         // Attempt to delete the file at filePath2
         if ([fileMgr removeItemAtPath:currentFile.localFolder error:&error] != YES) {
-            DLog(@"Unable to delete file: %@", [error localizedDescription]);
+            NSLog(@"Unable to delete file: %@", [error localizedDescription]);
         } else {
-            DLog(@"Deleted");
+            NSLog(@"Deleted");
         }
     }
 }
@@ -1045,6 +1085,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1073,7 +1115,7 @@
         }
         
         if (!correctQuery) {
-            DLog(@"Error in updateFavoriteFilesFromBackup");
+            NSLog(@"Error in updateFavoriteFilesFromBackup");
         }
     }];
 }
@@ -1086,6 +1128,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1096,7 +1140,7 @@
         correctQuery = [db executeUpdate:@"DELETE FROM files_backup"];
         
         if (!correctQuery) {
-            DLog(@"Error in deleteFilesBackup");
+            NSLog(@"Error in deleteFilesBackup");
         }
         
     }];
@@ -1110,6 +1154,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1120,7 +1166,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_name=? WHERE id = ?", mNewName, [NSNumber numberWithInteger:file.idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in renameFileByFileDto");
+            NSLog(@"Error in renameFileByFileDto");
         }
         
     }];
@@ -1136,6 +1182,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1146,7 +1194,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_name=? WHERE id = ?", mNewName, [NSNumber numberWithInteger:file.idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in renameFolderByFileDto");
+            NSLog(@"Error in renameFolderByFileDto");
         }
         
     }];
@@ -1157,7 +1205,7 @@
     __block int size = 0;
     
     BOOL output = NO;
-    DLog(@"File path: %@",fileDto.fileName);
+    NSLog(@"File path: %@",fileDto.fileName);
     
     FMDatabaseQueue *queue;
     
@@ -1165,6 +1213,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1186,7 +1236,7 @@
 
 +(void) deleteFileByFilePath: (NSString *) filePathToDelete andFileName: (NSString*)fileName {
     
-    DLog(@"deleteFileByFilePath: %@ filePathToDelete andFileName: %@", filePathToDelete, fileName);
+    NSLog(@"deleteFileByFilePath: %@ filePathToDelete andFileName: %@", filePathToDelete, fileName);
     
     UserDto *mUser;
     
@@ -1203,6 +1253,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1213,7 +1265,7 @@
         correctQuery = [db executeUpdate:@"DELETE FROM files WHERE file_path = ? AND file_name = ? AND user_id = ?",filePathToDelete, fileName, [NSNumber numberWithInteger:mUser.idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error in deleteFileByFilePath");
+            NSLog(@"Error in deleteFileByFilePath");
         }
     }];
 }
@@ -1237,6 +1289,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1275,6 +1329,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1285,7 +1341,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_path=?, file_id=?, file_name=? WHERE id = ?", [NSString stringWithFormat:@"%@",newFilePath], [NSNumber numberWithInteger:folderDto.idFile], changedFileName, [NSNumber numberWithInteger:selectedFile.idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in updateFolderOfFileDtoByNewFilePath");
+            NSLog(@"Error in updateFolderOfFileDtoByNewFilePath");
         }
         
     }];
@@ -1308,6 +1364,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1318,7 +1376,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_path=?, file_id=?, file_name=? WHERE user_id = ? AND id = ?", newFilePath, [NSNumber numberWithInteger:fileId], fileName, [NSNumber numberWithInteger:mUser.idUser], [NSNumber numberWithInteger:selectedFileId]];
                 
         if (!correctQuery) {
-            DLog(@"Error in updateFolderOfFileDtoByNewFilePath");
+            NSLog(@"Error in updateFolderOfFileDtoByNewFilePath");
         }
         
     }];
@@ -1341,6 +1399,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1351,7 +1411,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_path=? WHERE user_id = ? AND id=?", newFilePath, [NSNumber numberWithInteger:mUser.idUser], [NSNumber numberWithInteger:selectedFile.idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in updatePathwithNewPath");
+            NSLog(@"Error in updatePathwithNewPath");
         }
         
     }];
@@ -1370,6 +1430,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1397,6 +1459,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1407,7 +1471,7 @@
         correctQuery = [db executeUpdate:@"INSERT INTO files(file_path, file_name, is_directory,user_id, is_download, size, file_id, date, is_favorite, etag, is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier, providing_file_id) Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", fileDto.filePath, fileDto.fileName, [NSNumber numberWithBool:fileDto.isDirectory], [NSNumber numberWithInteger:fileDto.userId], [NSNumber numberWithInteger:fileDto.isDownload], [NSNumber numberWithLong:fileDto.size], [NSNumber numberWithInteger:fileDto.fileId], [NSNumber numberWithLong:fileDto.date], [NSNumber numberWithBool:fileDto.isFavorite], fileDto.etag, [NSNumber numberWithBool:fileDto.isRootFolder], [NSNumber numberWithBool:fileDto.isNecessaryUpdate], [NSNumber numberWithInteger:fileDto.sharedFileSource], fileDto.permissions, [NSNumber numberWithInteger:fileDto.taskIdentifier], [NSNumber numberWithInteger:fileDto.providingFileId]];
                         
         if (!correctQuery) {
-            DLog(@"Error in insertFile");
+            NSLog(@"Error in insertFile");
         }
     }];
 }
@@ -1422,6 +1486,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1467,6 +1533,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1477,7 +1545,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET etag=? WHERE id = ?", etag, [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in updatePathwithNewPath");
+            NSLog(@"Error in updatePathwithNewPath");
         }
         
     }];
@@ -1493,6 +1561,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1503,7 +1573,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET etag=? WHERE file_path = ? AND file_name=? AND user_id = ?", etag, filePath, fileName, [NSNumber numberWithInteger:aciveUser.idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error in updatePathwithNewPath");
+            NSLog(@"Error in updatePathwithNewPath");
         }
     }];
 }
@@ -1525,6 +1595,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1535,7 +1607,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_id=? WHERE file_id = ? AND user_id = ?", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:oldFileId], [NSNumber numberWithInteger:mUser.idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error in updatePathwithNewPath");
+            NSLog(@"Error in updatePathwithNewPath");
         }
         
     }];
@@ -1548,6 +1620,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1558,7 +1632,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_necessary_update=? WHERE id = ?", [NSNumber numberWithInt:isNecessaryUpdate], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in setFile:idFile isNecessaryUpdate:isNecessaryUpdate");
+            NSLog(@"Error in setFile:idFile isNecessaryUpdate:isNecessaryUpdate");
         }
         
     }];
@@ -1568,7 +1642,7 @@
 + (BOOL) isGetFilesByDownloadState:(enumDownload)downloadState andByUser:(UserDto *) currentUser andFolder:(NSString *) folder {
     
     __block BOOL output = NO;
-    DLog(@"getFilesByFileId:(int) fileId");
+    NSLog(@"getFilesByFileId:(int) fileId");
     
     FMDatabaseQueue *queue;
     
@@ -1576,6 +1650,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1610,10 +1686,10 @@
  */
 + (BOOL) isThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)idUser intoThisFolder:(NSString *)folder{
     
-    DLog(@"ManageFiles -> idFile: %ld", (long)idFile);
-    DLog(@"ManageFiles -> idUser: %ld", (long)idUser);
+    NSLog(@"ManageFiles -> idFile: %ld", (long)idFile);
+    NSLog(@"ManageFiles -> idUser: %ld", (long)idUser);
 
-    DLog(@"ManageFiles -> folder: %@", folder);
+    NSLog(@"ManageFiles -> folder: %@", folder);
     
     __block BOOL output = NO;
     
@@ -1623,6 +1699,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1634,7 +1712,7 @@
         while ([rs next]) {
             NSInteger tempIdFile = 0;
             tempIdFile = [rs intForColumn:@"id"];
-            DLog(@"ManageFiles -> idfile: %ld",(long)tempIdFile);
+            NSLog(@"ManageFiles -> idfile: %ld",(long)tempIdFile);
 
             if (tempIdFile == idFile) {
                 output = YES;
@@ -1656,6 +1734,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1666,7 +1746,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_download = ?, is_necessary_update = ? WHERE user_id = ? AND file_path LIKE ? ", [NSNumber numberWithInteger:downloadState],[NSNumber numberWithInt:isNecessaryUpdate], [NSNumber numberWithInteger:currentUser.idUser], [NSString stringWithFormat:@"%@%%", folder]];
         
         if (!correctQuery) {
-            DLog(@"Error in updateFilesByUserAndFolder");
+            NSLog(@"Error in updateFilesByUserAndFolder");
         }
         
     }];
@@ -1696,6 +1776,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1706,7 +1788,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = ? WHERE id = ? AND user_id= ?", [NSNumber numberWithInteger:value], [NSNumber numberWithInteger:idFile],[NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error in update share file source");
+            NSLog(@"Error in update share file source");
         }
         
     }];
@@ -1729,6 +1811,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1739,7 +1823,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = 0 WHERE user_id= ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error in update share file source");
+            NSLog(@"Error in update share file source");
         }
         
     }];
@@ -1766,6 +1850,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1781,7 +1867,7 @@
         [rs close];
     }];
 
-    DLog(@"listOfFileSource: %lu", (unsigned long)[listOfFileSource count]);
+    NSLog(@"listOfFileSource: %lu", (unsigned long)[listOfFileSource count]);
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=YES;
@@ -1796,7 +1882,7 @@
         }
         
         if (!correctQuery) {
-            DLog(@"Error in updateDownloadedFilesFromBackup");
+            NSLog(@"Error in updateDownloadedFilesFromBackup");
         }
         
     }];
@@ -1837,7 +1923,7 @@
  */
 + (NSMutableArray *) getFilesByDownloadStatus:(NSInteger) status {
     __block NSMutableArray *output = [NSMutableArray new];
-    DLog(@"getFilesByDownloadStatus: %ld",(long)status);
+    NSLog(@"getFilesByDownloadStatus: %ld",(long)status);
     
     UserDto *mUser;
     
@@ -1854,6 +1940,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1911,6 +1999,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1921,18 +2011,22 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = 0 WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error in update share file source");
+            NSLog(@"Error in update share file source");
         }
     }];
     
     /*for (OCSharedDto *current in listOfRemoved) {
         FMDatabaseQueue *queue;
     
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+     #ifdef CONTAINER_APP
+     queue = [AppDelegate sharedDatabase];
+     #elif FILE_PICKER
+     queue = [DocumentPickerViewController sharedDatabase];
+     #elif SHARE_IN
+     queue = [Managers sharedDatabase];
+     #else
+     queue = [FileProvider sharedDatabase];
+     #endif
         
         [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             BOOL correctQuery=NO;
@@ -1940,7 +2034,7 @@
             correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = 0 WHERE shared_file_source = ?", [NSNumber numberWithInt:current.fileSource]];
             
             if (!correctQuery) {
-                DLog(@"Error in update share file source");
+                NSLog(@"Error in update share file source");
             }
         }];
     }*/
@@ -1977,6 +2071,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1991,7 +2087,7 @@
             
             comparePath = [NSString stringWithFormat:@"/%@%@", [rs stringForColumn:@"file_path"], [rs stringForColumn:@"file_name"]];
             
-            //DLog(@"path = %@ comparePath = %@", path, comparePath);
+            //NSLog(@"path = %@ comparePath = %@", path, comparePath);
             
             if ([comparePath isEqualToString:path]) {
                 
@@ -2055,6 +2151,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -2071,7 +2169,7 @@
             
             comparePath = [NSString stringWithFormat:@"%@%@", [rs stringForColumn:@"file_path"], [rs stringForColumn:@"file_name"]];
             
-            // DLog(@"path is: %@ - compare path is: %@", path, comparePath);
+            // NSLog(@"path is: %@ - compare path is: %@", path, comparePath);
             
             if ([path isEqualToString:comparePath]) {
                 isExist = YES;
@@ -2103,6 +2201,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -2113,7 +2213,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = 0 WHERE file_id = ?", [NSNumber numberWithInteger:folder.idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in update share file source");
+            NSLog(@"Error in update share file source");
         }
     }];
 }
@@ -2131,13 +2231,15 @@
  * @param isFavorite -> BOOL
  */
 + (void) updateTheFileID: (NSInteger)idFile asFavorite: (BOOL) isFavorite {
-    DLog(@"updateTheFavoriteFile");
+    NSLog(@"updateTheFavoriteFile");
     FMDatabaseQueue *queue;
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -2148,7 +2250,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_favorite = ? WHERE id = ?", [NSNumber numberWithInt:isFavorite], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in update favorite file source");
+            NSLog(@"Error in update favorite file source");
         }
     }];
 }
@@ -2173,6 +2275,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -2240,6 +2344,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -2258,7 +2364,7 @@
             
             comparePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:mUser],[rs stringForColumn:@"file_path"]];
             
-            DLog(@"path = %@ comparePath = %@", path, comparePath);
+            NSLog(@"path = %@ comparePath = %@", path, comparePath);
             
             if ([comparePath isEqualToString:path]) {
                 
@@ -2312,6 +2418,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -2322,7 +2430,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET etag = \"\" WHERE is_directory = 1"];
         
         if (!correctQuery) {
-            DLog(@"Error in deleteAlleTagOfTheDirectoties");
+            NSLog(@"Error in deleteAlleTagOfTheDirectoties");
         }
     }];
 }
@@ -2341,6 +2449,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -2351,7 +2461,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET task_identifier = ? WHERE id = ?", [NSNumber numberWithInteger:taskIdentifier], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in update task identifier file source");
+            NSLog(@"Error in update task identifier file source");
         }
     }];
 }
@@ -2366,6 +2476,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -2376,7 +2488,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET providing_file_id = ? WHERE id = ?", [NSNumber numberWithInteger:providingFileId], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in update providing file");
+            NSLog(@"Error in update providing file");
         }
     }];
 
@@ -2392,6 +2504,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif

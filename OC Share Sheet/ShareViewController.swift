@@ -30,7 +30,6 @@ import MobileCoreServices
     let heighFormSheet: CGFloat = 620.0
     
     
-    
 
     override func viewDidLoad() {
         
@@ -80,9 +79,9 @@ import MobileCoreServices
         
         let activeUser = ManageUsersDB.getActiveUser()
         
-       /* let rootFileDto = ManageFilesDB.getRootFileDtoByUser(activeUser)
+        let rootFileDto = ManageFilesDB.getRootFileDtoByUser(activeUser)
         
-        let selectFolderViewController = SelectFolderViewController(nibName: "SelectFolderViewController", onFolder: rootFileDto)*/
+     //   let selectFolderViewController = SelectFolderViewController(nibName: "SelectFolderViewController", onFolder: rootFileDto)
         
         let controller = UIViewController()
         controller.view.backgroundColor = UIColor.greenColor()
