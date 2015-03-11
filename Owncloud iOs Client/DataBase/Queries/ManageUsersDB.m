@@ -21,10 +21,13 @@
 #import "OCKeychain.h"
 #import "CredentialsDto.h"
 
+
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
 #elif FILE_PICKER
 #import "DocumentPickerViewController.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
 #else
 #import "FileProvider.h"
 #endif
@@ -38,7 +41,7 @@
  */
 +(void) insertUser:(UserDto *)userDto {
     
-     DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount);
+     NSLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount);
     
     FMDatabaseQueue *queue;
     
@@ -46,6 +49,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -57,7 +62,7 @@
         correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_cookies_support) Values(?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport]];
         
         if (!correctQuery) {
-            DLog(@"Error in insertUser");
+            NSLog(@"Error in insertUser");
         }
         
     }];
@@ -67,7 +72,7 @@
     NSString *idString = [NSString stringWithFormat:@"%ld", (long)lastUser.idUser];
     
     if (![OCKeychain setCredentialsById:idString withUsername:userDto.username andPassword:userDto.password]) {
-        DLog(@"Failed setting credentials");
+        NSLog(@"Failed setting credentials");
     }
     
    
@@ -79,7 +84,7 @@
  */
 + (UserDto *) getActiveUser {
     
-    DLog(@"getActiveUser");
+    NSLog(@"getActiveUser");
     
     __block UserDto *output = nil;
     
@@ -89,6 +94,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -96,7 +103,7 @@
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
         
-        DLog(@"RSColumnt count: %d", rs.columnCount);
+        NSLog(@"RSColumnt count: %d", rs.columnCount);
         
         
         while ([rs next]) {
@@ -145,7 +152,7 @@
         NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
 
         if (![OCKeychain updatePasswordById:idString withNewPassword:user.password]) {
-            DLog(@"Error update the password keychain");
+            NSLog(@"Error update the password keychain");
         }
         
 #ifdef CONTAINER_APP
@@ -169,7 +176,7 @@
  */
 + (UserDto *) getUserByIdUser:(NSInteger) idUser {
     
-    DLog(@"getUserByIdUser:(int) idUser");
+    NSLog(@"getUserByIdUser:(int) idUser");
     
     __block UserDto *output = nil;
     
@@ -181,6 +188,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -245,7 +254,7 @@
  */
 + (NSMutableArray *) getAllUsers {
     
-    DLog(@"getAllUsers");
+    NSLog(@"getAllUsers");
     
     __block NSMutableArray *output = [NSMutableArray new];
     
@@ -255,6 +264,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -309,7 +320,7 @@
  */
 + (NSMutableArray *) getAllOldUsersUntilVersion10 {
     
-    DLog(@"getAllUsers");
+    NSLog(@"getAllUsers");
     
     __block NSMutableArray *output = [NSMutableArray new];
     
@@ -319,6 +330,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -343,11 +356,11 @@
             current.storage = [rs longForColumn:@"storage"];
             current.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             
-            DLog(@"id user: %ld", (long)current.idUser);
+            NSLog(@"id user: %ld", (long)current.idUser);
 
-            DLog(@"url user: %@", current.url);
-            DLog(@"username user: %@", current.username);
-            DLog(@"password user: %@", current.password);
+            NSLog(@"url user: %@", current.url);
+            NSLog(@"username user: %@", current.username);
+            NSLog(@"password user: %@", current.password);
             
             
             [output addObject:current];
@@ -374,6 +387,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -384,7 +399,7 @@
         correctQuery = [db executeUpdate:@"UPDATE users SET activeaccount=1 WHERE id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error setting the active account");
+            NSLog(@"Error setting the active account");
         }
         
     }];
@@ -404,6 +419,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -414,7 +431,7 @@
         correctQuery = [db executeUpdate:@"UPDATE users SET activeaccount=0"];
         
         if (!correctQuery) {
-            DLog(@"Error setting no active all acounts");
+            NSLog(@"Error setting no active all acounts");
         }
         
     }];
@@ -432,6 +449,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -442,7 +461,7 @@
         correctQuery = [db executeUpdate:@"UPDATE users SET activeaccount=1 WHERE id = (SELECT id FROM users ORDER BY id limit 1)"];
         
         if (!correctQuery) {
-            DLog(@"Error setting on account active automatically");
+            NSLog(@"Error setting on account active automatically");
         }
         
     }];
@@ -461,6 +480,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -471,42 +492,42 @@
         correctQuery = [db executeUpdate:@"DELETE FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error delete files from files users table");
+            NSLog(@"Error delete files from files users table");
             
         }
         
         correctQuery = [db executeUpdate:@"DELETE FROM files WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error delete files from files files table");
+            NSLog(@"Error delete files from files files table");
             
         }
         
         correctQuery = [db executeUpdate:@"DELETE FROM files_backup WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error delete files from files_backup backup table");
+            NSLog(@"Error delete files from files_backup backup table");
             
         }
         
         correctQuery = [db executeUpdate:@"DELETE FROM uploads_offline WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error delete files from uploads uploads_offline table");
+            NSLog(@"Error delete files from uploads uploads_offline table");
             
         }
         
         correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error delete info of shared table");
+            NSLog(@"Error delete info of shared table");
             
         }
         
         correctQuery = [db executeUpdate:@"DELETE FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error delete info of cookies_storage table");
+            NSLog(@"Error delete info of cookies_storage table");
             
         }
         
@@ -514,7 +535,8 @@
     
     NSString *idString = [NSString stringWithFormat:@"%ld", (long)idUser];
     if (![OCKeychain removeCredentialsById:idString]) {
-        DLog(@"Error delete keychain credentials");
+        NSLog(@"Error delete keychain credentials");
+        
     }
 }
 
@@ -529,6 +551,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -539,7 +563,7 @@
         correctQuery = [db executeUpdate:@"UPDATE users SET storage_occupied=?, storage=? WHERE id = ?", [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
-            DLog(@"Error updating storage of user");
+            NSLog(@"Error updating storage of user");
         }
     
     }];
@@ -561,6 +585,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -609,6 +635,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -620,12 +648,13 @@
 
         
         if (!correctQuery) {
-            DLog(@"Error updating a user");
+            NSLog(@"Error updating a user");
         }
         
     }];
     
 }
+
 
 
 @end

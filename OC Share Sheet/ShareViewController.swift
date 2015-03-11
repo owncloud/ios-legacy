@@ -29,6 +29,8 @@ import MobileCoreServices
     let witdhFormSheet: CGFloat = 540.0
     let heighFormSheet: CGFloat = 620.0
     
+    
+    
 
     override func viewDidLoad() {
         
@@ -75,6 +77,21 @@ import MobileCoreServices
     
     @IBAction func destinyFolderButtonTapped(sender: UIBarButtonItem) {
         println("destiny folder tapped")
+        
+        let activeUser = ManageUsersDB.getActiveUser()
+        
+       /* let rootFileDto = ManageFilesDB.getRootFileDtoByUser(activeUser)
+        
+        let selectFolderViewController = SelectFolderViewController(nibName: "SelectFolderViewController", onFolder: rootFileDto)*/
+        
+        let controller = UIViewController()
+        controller.view.backgroundColor = UIColor.greenColor()
+        
+        let navigation = UINavigationController(rootViewController: controller)
+        
+        self.presentViewController(navigation, animated: true) { () -> Void in
+            println("select folder presented")
+        }
     }
     
     
