@@ -342,8 +342,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             }
             _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.width, screenSize.height);
         }
-    } else if (_readerPDFViewController) {
-        
     }
 }
 
@@ -365,8 +363,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.height, screenSize.width);
 
         }
-    } else if (_readerPDFViewController) {
-        
     }
 }
 
