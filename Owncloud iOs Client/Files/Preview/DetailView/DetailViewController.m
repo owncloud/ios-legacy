@@ -665,12 +665,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             if (self.documentPDF != nil) {
                 self.readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:self.documentPDF];
-                
-                //CGRect frame = _mainScrollView.frame;
-                //[_readerPDFViewController.view setFrame:frame];
-                
+          
                 [self.view addSubview:self.readerPDFViewController.view];
-                
                 [self configureView];
                 
             } else {
