@@ -12,4 +12,5 @@
 #import "SelectFolderViewController.h"
 #import "FMDatabaseQueue.h"
 #import "FMDatabase.h"
+#import "OCCommunication.h"
 

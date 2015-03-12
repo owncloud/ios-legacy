@@ -12,9 +12,9 @@ class Managers: NSObject {
     
     //MARK: FMDataBase
     
-   class func sharedDatabase()->FMDatabaseQueue{
+    class func sharedDatabase()->FMDatabaseQueue{
         
-        var sharedDatabase: FMDatabaseQueue?
+         var sharedDatabase: FMDatabaseQueue?
         
         let path = UtilsUrls.getOwnCloudFilePath().stringByAppendingPathComponent("DB.sqlite")
         
@@ -33,8 +33,27 @@ class Managers: NSObject {
         
         return sharedDatabase!
     }
+    
+    class func sharedOCCommunication() -> OCCommunication{
+        
+        var communication: OCCommunication?
+        
+        if communication == nil{
+            
+            communication = OCCommunication()
+            
+        }
+        
+        return communication!
+        
+    }
 
+  
     
 }
+
+
+
+
 
 

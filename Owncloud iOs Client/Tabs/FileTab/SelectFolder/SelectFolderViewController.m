@@ -19,7 +19,16 @@
 #import "SelectFolderNavigation.h"
 #import "UIColor+Constants.h"
 #import "NSString+Encoding.h"
+
+
 #import "constants.h"
+
+#ifdef SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
+#else
+#import "AppDelegate.h"
+#endif
+
 #import "AppDelegate.h"
 #import "UIColor+Constants.h"
 #import "FileNameUtils.h"
@@ -265,6 +274,9 @@
  */
 - (IBAction)showCreateFolder{
     
+    
+#ifdef CONTAINER_APP
+    
     _folderView = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"create_folder", nil) message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) otherButtonTitles:NSLocalizedString(@"save", nil), nil];
     _folderView.alertViewStyle = UIAlertViewStylePlainTextInput;
     [_folderView textFieldAtIndex:0].delegate = self;
@@ -272,6 +284,42 @@
     [[_folderView textFieldAtIndex:0] setAutocapitalizationType:UITextAutocapitalizationTypeNone];
     
     [_folderView show];
+    
+#else
+    
+    UIAlertController *alert =   [UIAlertController
+                                  alertControllerWithTitle:NSLocalizedString(@"create_folder", nil)
+                                  message:nil
+                                  preferredStyle:UIAlertViewStylePlainTextInput];
+    UIAlertAction* cancel = [UIAlertAction
+                         actionWithTitle:NSLocalizedString(@"cancel", nil)
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action)
+                         {
+                             
+                         }];
+    
+    UIAlertAction* save = [UIAlertAction
+                          actionWithTitle:NSLocalizedString(@"save", nil)
+                          style:UIAlertActionStyleDefault
+                          handler:^(UIAlertAction * action)
+                          {
+                              NSString* result = [[_folderView textFieldAtIndex:0].text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                              [self initLoading];
+                              [self performSelector:@selector(newFolderSaveClicked:) withObject:result];
+                              
+                          }];
+    [alert addAction:cancel];
+    [alert addAction:save];
+    
+   ///////****** Hay que añadir los textfields y sus metodos de guardado *****//////
+    
+    [self presentViewController:alert animated:YES completion:nil];
+    
+#endif
+    
+
+
 }
 
 /*
@@ -320,25 +368,35 @@
         //Check if exist a folder with the same name
         if ([self checkForSameName:name] == NO) {
             
+            OCCommunication *communication = nil;
+            UserDto *activeUser = nil;
+            
+#ifdef SHARE_IN
+            communication = [Managers sharedOCCommunication];
+            activeUser = [ManageUsersDB getActiveUser];
+#else
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            communication = [AppDelegate sharedOCCommunication];
+            activeUser = app.activeUser;
+#endif
             
             NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
             
             NSString *newURL = [NSString stringWithFormat:@"%@%@",remotePath,[name encodeString:NSUTF8StringEncoding]];
-            NSString *rootPath = [UtilsDtos getDbBFilePathFromFullFilePath:newURL andUser:app.activeUser];
+            NSString *rootPath = [UtilsDtos getDbBFilePathFromFullFilePath:newURL andUser:activeUser];
             
             //Set the right credentials
             if (k_is_sso_active) {
-                [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
+                [communication setCredentialsWithCookie:activeUser.password];
             } else if (k_is_oauth_active) {
-                [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
+                [communication setCredentialsOauthWithToken:activeUser.password];
             } else {
-                [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
+                [communication setCredentialsWithUser:activeUser.username andPassword:activeUser.password];
             }
             
             NSString *pathOfNewFolder = [newURL stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
-            [[AppDelegate sharedOCCommunication] createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+            [communication createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
                 DLog(@"Folder created");
                 BOOL isSamlCredentialsError=NO;
                 
@@ -353,7 +411,7 @@
                 if (!isSamlCredentialsError) {
                 
                     //Obtain the path where the folder will be created in the file system
-                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
                     
                     DLog(@"Name of the folder: %@ to create in: %@",name, currentLocalFileToCreateFolder);
@@ -372,36 +430,24 @@
                 if (error.code == OCErrorForbidenCharacters) {
                     [self endLoading];
                     DLog(@"The folder have problematic characters");
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbiden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-                    [alert show];
+                    
+                    [self showError:NSLocalizedString(@"forbiden_characters", nil)];
+                    
                 }
             }];
         } else {
             [self endLoading];
             DLog(@"Exist a folder with the same name");
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"folder_exist", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-            [alert show];
+            [self showError:NSLocalizedString(@"folder_exist", nil)];
+            
         }
     } else {
         [self endLoading];
         DLog(@"The folder have problematic characters");
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbiden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [alert show];
+        [self showError:NSLocalizedString(@"forbiden_characters", nil)];
     }
 }
 
-
-/*
- * Show the standar message of the error connection.
- */
-- (void)showErrorConnectionPopUp{
-    _alert = nil;
-    _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_possible_connect_to_server", nil)
-                                                    message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-    [_alert show];
-
-    
-}
 
 #pragma mark - UITableViewDelegate 
 

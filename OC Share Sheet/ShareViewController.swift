@@ -81,7 +81,7 @@ import MobileCoreServices
         
         let rootFileDto = ManageFilesDB.getRootFileDtoByUser(activeUser)
         
-     //   let selectFolderViewController = SelectFolderViewController(nibName: "SelectFolderViewController", onFolder: rootFileDto)
+        let selectFolderViewController = SelectFolderViewController(nibName: "SelectFolderViewController", onFolder: rootFileDto)
         
         let controller = UIViewController()
         controller.view.backgroundColor = UIColor.greenColor()
