@@ -56,14 +56,13 @@ import MobileCoreServices
         
         let rightBarButton = UIBarButtonItem (title:"Done", style: .Plain, target: self, action:"cancelView")
         let leftBarButton = UIBarButtonItem (title:"Cancel", style: .Plain, target: self, action:"cancelView")
-        let navigationItem = UINavigationItem (title: "ownCloud")
         
-        navigationItem.leftBarButtonItem = leftBarButton
-        navigationItem.rightBarButtonItem = rightBarButton
-        navigationItem.hidesBackButton = true
+        self.navigationItem.title = "ownCloud"
         
-        self.navigationBar?.pushNavigationItem(navigationItem, animated: false)
-        
+        self.navigationItem.leftBarButtonItem = leftBarButton
+        self.navigationItem.rightBarButtonItem = rightBarButton
+        self.navigationItem.hidesBackButton = true
+
     }
     
     
