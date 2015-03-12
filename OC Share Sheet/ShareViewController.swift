@@ -83,7 +83,11 @@ import MobileCoreServices
         
         let selectFolderViewController = SelectFolderViewController(nibName: "SelectFolderViewController", onFolder: rootFileDto)
         
-        let navigation = UINavigationController(rootViewController: selectFolderViewController)
+        let navigation = SelectFolderNavigation(rootViewController: selectFolderViewController)
+        
+        navigation.delegate = self
+        
+        selectFolderViewController.parent = navigation;
         
         self.presentViewController(navigation, animated: true) { () -> Void in
             println("select folder presented")
@@ -230,5 +234,19 @@ import MobileCoreServices
     {
         println("row = %d",indexPath.row)
     }
+    
+    //MARK: Select Folder Selected Delegate Methods
+    
+    func folderSelected(folder: NSString){
+        
+        println("Folder selected \(folder)")
+    }
+    
+    func cancelFolderSelected(){
+        
+        println("Cancel folder selected")
+        
+    }
+    
 
 }

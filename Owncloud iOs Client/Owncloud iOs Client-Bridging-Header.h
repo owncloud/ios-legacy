@@ -10,6 +10,7 @@
 #import "UserDto.h"
 #import "ManageUsersDB.h"
 #import "SelectFolderViewController.h"
+#import "SelectFolderNavigation.h"
 #import "FMDatabaseQueue.h"
 #import "FMDatabase.h"
 #import "OCCommunication.h"
