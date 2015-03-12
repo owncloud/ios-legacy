@@ -34,6 +34,8 @@ class Managers: NSObject {
         return sharedDatabase!
     }
     
+       //MARK: OCCommunication
+    
     class func sharedOCCommunication() -> OCCommunication{
         
         var communication: OCCommunication?

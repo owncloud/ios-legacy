@@ -17,7 +17,6 @@ import MobileCoreServices
     @IBOutlet weak var navigationBar: UINavigationBar?
     @IBOutlet weak var shareTable: UITableView?
     @IBOutlet weak var numberOfImages: UILabel?
-    @IBOutlet weak var navBarTopLayoutConstraint: NSLayoutConstraint?
     @IBOutlet weak var destinyFolderButton: UIBarButtonItem?
     
     var filesSelected: [NSURL] = []
@@ -30,7 +29,6 @@ import MobileCoreServices
     let heighFormSheet: CGFloat = 620.0
     
     
-
     override func viewDidLoad() {
         
         self.createBarButtonsOfNavigationBar()
@@ -45,13 +43,12 @@ import MobileCoreServices
         super.viewWillLayoutSubviews()
         
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad{
-            self.navBarTopLayoutConstraint?.constant = 0.0
-            self.view.superview?.bounds = CGRectMake(0, 0, witdhFormSheet, heighFormSheet)
+            
+            self.navigationController?.view.bounds = CGRectMake(0, 0, witdhFormSheet, heighFormSheet)
         }
         
     }
     
-   
     func createBarButtonsOfNavigationBar(){
         
         let rightBarButton = UIBarButtonItem (title:"Done", style: .Plain, target: self, action:"cancelView")
