@@ -16,7 +16,6 @@ import AVFoundation
     
     @IBOutlet weak var navigationBar: UINavigationBar?
     @IBOutlet weak var shareTable: UITableView?
-    @IBOutlet weak var numberOfImages: UILabel?
     @IBOutlet weak var destinyFolderButton: UIBarButtonItem?
     @IBOutlet weak var constraintTopTableView: NSLayoutConstraint?
     
@@ -58,12 +57,14 @@ import AVFoundation
         let leftBarButton = UIBarButtonItem (title:NSLocalizedString("cancel", comment: ""), style: .Plain, target: self, action:"cancelView")
         
         self.navigationItem.title = k_app_name
+
         
         self.navigationItem.leftBarButtonItem = leftBarButton
         self.navigationItem.rightBarButtonItem = rightBarButton
         self.navigationItem.hidesBackButton = true
         
         self.changeTheDestinyFolderWith(k_app_name)
+
 
     }
     
@@ -372,7 +373,7 @@ import AVFoundation
         let name:NSString = folder.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
         let user = ManageUsersDB.getActiveUser()
         let folderPath = UtilsDtos.getDbBFilePathFromFullFilePath(name, andUser: user)
-        
+
         self.changeTheDestinyFolderWith(folderPath.lastPathComponent)
         
     }
