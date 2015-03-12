@@ -275,7 +275,16 @@
     UIAlertController *alert =   [UIAlertController
                                   alertControllerWithTitle:NSLocalizedString(@"create_folder", nil)
                                   message:nil
-                                  preferredStyle:UIAlertViewStylePlainTextInput];
+                                  preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *textField)
+     {
+         textField.delegate = self;
+         [textField setAutocorrectionType:UITextAutocorrectionTypeNo];
+         [textField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+     }];
+    
+    
     UIAlertAction* cancel = [UIAlertAction
                          actionWithTitle:NSLocalizedString(@"cancel", nil)
                          style:UIAlertActionStyleDefault
@@ -289,22 +298,22 @@
                           style:UIAlertActionStyleDefault
                           handler:^(UIAlertAction * action)
                           {
-                              NSString* result = [[_folderView textFieldAtIndex:0].text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                              UITextField *textField = [alert.textFields objectAtIndex:0];
+                              
+                              NSString* result = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                               [self initLoading];
                               [self performSelector:@selector(newFolderSaveClicked:) withObject:result];
                               
                           }];
+    
+    
     [alert addAction:cancel];
     [alert addAction:save];
-    
-   //TODO: This option in not finished yet for Share in extension ///////******  *****//////
     
     [self presentViewController:alert animated:YES completion:nil];
     
 #endif
     
-
-
 }
 
 /*
