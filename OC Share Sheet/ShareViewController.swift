@@ -83,10 +83,7 @@ import MobileCoreServices
         
         let selectFolderViewController = SelectFolderViewController(nibName: "SelectFolderViewController", onFolder: rootFileDto)
         
-        let controller = UIViewController()
-        controller.view.backgroundColor = UIColor.greenColor()
-        
-        let navigation = UINavigationController(rootViewController: controller)
+        let navigation = UINavigationController(rootViewController: selectFolderViewController)
         
         self.presentViewController(navigation, animated: true) { () -> Void in
             println("select folder presented")

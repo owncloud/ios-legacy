@@ -618,6 +618,16 @@
 		EAE80E261A6D317C0061BD86 /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
 		EAE80E271A6D31810061BD86 /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
 		EAE80E281A6D31980061BD86 /* UploadsOfflineDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F674178422AE0092F42A /* UploadsOfflineDto.m */; };
+		EAEDC08B1AB19498004836EB /* FileListDBOperations.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6AD177866A400FB9977 /* FileListDBOperations.m */; };
+		EAEDC08D1AB194C3004836EB /* PassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4A18041E2F0006DB7C /* PassthroughView.m */; };
+		EAEDC08E1AB194F8004836EB /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5FC1778556500FB9977 /* MBProgressHUD.m */; };
+		EAEDC08F1AB19513004836EB /* ManageNetworkErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C9D323195C0EFB00400AE2 /* ManageNetworkErrors.m */; };
+		EAEDC0901AB19643004836EB /* SimpleFileListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 599D80A01A23366D0071B66E /* SimpleFileListTableViewController.m */; };
+		EAEDC0911AB196B0004836EB /* InfoFileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 14AB382D18C8E35200B34697 /* InfoFileUtils.m */; };
+		EAEDC0921AB196C6004836EB /* EmptyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B0083E18FD1B5B004CB06B /* EmptyCell.m */; };
+		EAEDC0931AB197A0004836EB /* SelectFolderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6A51778668A00FB9977 /* SelectFolderViewController.xib */; };
+		EAEDC0941AB197D1004836EB /* SelectedFolderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14A50E9D18F3FC9100506E2B /* SelectedFolderCell.xib */; };
+		EAEDC0951AB19869004836EB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 145EA7CA17786FAC0087CDDB /* Localizable.strings */; };
 		EAF721191AADCC73009F5596 /* pdf_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F18E177C35AA004A1A5A /* pdf_icon.png */; };
 		EAF7211A1AADCC9B009F5596 /* BackRootFolderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F176177C35AA004A1A5A /* BackRootFolderIcon.png */; };
 		EAF7211B1AADCC9B009F5596 /* BackRootFolderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F177177C35AA004A1A5A /* BackRootFolderIcon@2x.png */; };
@@ -3438,6 +3448,7 @@
 				EAF721461AADCC9B009F5596 /* pdf_icon@3x.png in Resources */,
 				EAF721571AADCC9B009F5596 /* sound_icon.png in Resources */,
 				EAF721651AADCC9B009F5596 /* TABsettings.png in Resources */,
+				EAEDC0941AB197D1004836EB /* SelectedFolderCell.xib in Resources */,
 				EAF7214C1AADCC9B009F5596 /* presentation_icon@3x.png in Resources */,
 				EAF7213D1AADCC9B009F5596 /* image_icon@3x.png in Resources */,
 				EAF721201AADCC9B009F5596 /* doc_icon~ipad.png in Resources */,
@@ -3447,6 +3458,7 @@
 				EAF721231AADCC9B009F5596 /* file_icon@2x.png in Resources */,
 				EAF721601AADCC9B009F5596 /* TABfiles@2x.png in Resources */,
 				EAF7215C1AADCC9B009F5596 /* TABShares.png in Resources */,
+				EAEDC0931AB197A0004836EB /* SelectFolderViewController.xib in Resources */,
 				EAF7215D1AADCC9B009F5596 /* TABShares@2x.png in Resources */,
 				EAF721621AADCC9B009F5596 /* TABrecents.png in Resources */,
 				EAF7212A1AADCC9B009F5596 /* FileDownloadingIcon@2x.png in Resources */,
@@ -3488,6 +3500,7 @@
 				EAF721581AADCC9B009F5596 /* sound_icon@2x.png in Resources */,
 				EAF721491AADCC9B009F5596 /* popover_arrow.png in Resources */,
 				EAF7211F1AADCC9B009F5596 /* doc_icon@3x.png in Resources */,
+				EAEDC0951AB19869004836EB /* Localizable.strings in Resources */,
 				EAF721301AADCC9B009F5596 /* FileUpdatedIcon@2x.png in Resources */,
 				EAF721291AADCC9B009F5596 /* FileDownloadingIcon.png in Resources */,
 				EAF7211D1AADCC9B009F5596 /* doc_icon.png in Resources */,
@@ -3780,9 +3793,16 @@
 				EAF721821AAF3402009F5596 /* CredentialsDto.m in Sources */,
 				EAC6E5F91AB0985200CCF8C4 /* UINavigationController+KeyboardDismiss.m in Sources */,
 				EAF7216F1AADE7EE009F5596 /* UIColor+Constants.m in Sources */,
+				EAEDC08D1AB194C3004836EB /* PassthroughView.m in Sources */,
+				EAEDC08F1AB19513004836EB /* ManageNetworkErrors.m in Sources */,
 				EAC6E5FD1AB0A41200CCF8C4 /* ImageUtils.m in Sources */,
 				EAF721841AAF3C5C009F5596 /* FMResultSet.m in Sources */,
+				EAEDC0911AB196B0004836EB /* InfoFileUtils.m in Sources */,
+				EAEDC08B1AB19498004836EB /* FileListDBOperations.m in Sources */,
+				EAEDC0901AB19643004836EB /* SimpleFileListTableViewController.m in Sources */,
 				EAF7217B1AAF200A009F5596 /* FileDto.m in Sources */,
+				EAEDC0921AB196C6004836EB /* EmptyCell.m in Sources */,
+				EAEDC08E1AB194F8004836EB /* MBProgressHUD.m in Sources */,
 				EAC6E5FC1AB0987D00CCF8C4 /* NSString+Encoding.m in Sources */,
 				EAF721811AAF33F8009F5596 /* OCKeychain.m in Sources */,
 				EAC6E5F71AB097B800CCF8C4 /* ManageAppSettingsDB.m in Sources */,

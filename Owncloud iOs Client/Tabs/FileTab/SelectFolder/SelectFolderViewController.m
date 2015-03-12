@@ -86,7 +86,8 @@
     _toolBarLabel.textColor=[UIColor colorOfNavigationTitle];
     
     //Set the observers of the notifications
-    [self setNotificationForCommunicationBetweenViews];
+     [self setNotificationForCommunicationBetweenViews];
+   
 
 }
 
@@ -134,7 +135,11 @@
  * between diferent views
  */
 - (void) setNotificationForCommunicationBetweenViews {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closeAlertView) name:CloseAlertViewWhenApplicationDidEnterBackground object:nil];
+#ifdef CONTAINER_APP
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closeAlertView) name:CloseAlertViewWhenApplicationDidEnterBackground object:nil];
+#else
+#endif
+   
 }
 
 ///-----------------------------------
@@ -204,33 +209,13 @@
  */
 - (void) configTheBottomLabelIfIsGermanLanguageInIPhone{
     
-    if (IS_PORTRAIT) {
-        
-        if (IS_IPHONE) {
-            
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            NSArray *languages = [defaults objectForKey:@"AppleLanguages"];
-            NSString *currentLanguage = [languages objectAtIndex:0];
-            
-            if ([currentLanguage isEqualToString:@"de"]) {
-                [_toolBarLabel setFont:[UIFont boldSystemFontOfSize:11.0]];
-            }
-        }
-        
-    }else{
-        
-        if (IS_IPHONE) {
-            
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            NSArray *languages = [defaults objectForKey:@"AppleLanguages"];
-            NSString *currentLanguage = [languages objectAtIndex:0];
-            
-            if ([currentLanguage isEqualToString:@"de"]) {
-                [_toolBarLabel setFont:[UIFont boldSystemFontOfSize:18.0]];
-            }
-        }
-    }
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray *languages = [defaults objectForKey:@"AppleLanguages"];
+    NSString *currentLanguage = [languages objectAtIndex:0];
     
+    if ([currentLanguage isEqualToString:@"de"]) {
+        [_toolBarLabel setFont:[UIFont boldSystemFontOfSize:18.0]];
+    }
 }
 
 
@@ -312,7 +297,7 @@
     [alert addAction:cancel];
     [alert addAction:save];
     
-   ///////****** Hay que añadir los textfields y sus metodos de guardado *****//////
+   //TODO: This option in not finished yet for Share in extension ///////******  *****//////
     
     [self presentViewController:alert animated:YES completion:nil];
     
@@ -396,7 +381,7 @@
             
             NSString *pathOfNewFolder = [newURL stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
-            [communication createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+            [communication createFolder:pathOfNewFolder onCommunication:communication successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
                 DLog(@"Folder created");
                 BOOL isSamlCredentialsError=NO;
                 
