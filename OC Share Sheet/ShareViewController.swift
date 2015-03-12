@@ -21,6 +21,7 @@ import MobileCoreServices
     
     var filesSelected: [NSURL] = []
     var images: [UIImage] = []
+    var currentRemotePath: NSString?
    
     let customRowColor = UIColor.colorOfNavigationBar()
     let customRowBorderColor = UIColor.colorOfNavigationTitle()
@@ -31,7 +32,7 @@ import MobileCoreServices
     
     override func viewDidLoad() {
         
-        self.createBarButtonsOfNavigationBar()
+        self.createCustomInterface()
         
         self.shareTable!.registerClass(FileSelectedCell.self, forCellReuseIdentifier: "cell")
         
@@ -40,6 +41,7 @@ import MobileCoreServices
     }
     
     override func viewWillLayoutSubviews() {
+        
         super.viewWillLayoutSubviews()
         
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad{
@@ -49,7 +51,9 @@ import MobileCoreServices
         
     }
     
-    func createBarButtonsOfNavigationBar(){
+    func createCustomInterface(){
+        
+        //TODO: Change ownCloud for the name of the branding customer
         
         let rightBarButton = UIBarButtonItem (title:"Done", style: .Plain, target: self, action:"cancelView")
         let leftBarButton = UIBarButtonItem (title:"Cancel", style: .Plain, target: self, action:"cancelView")
@@ -59,7 +63,18 @@ import MobileCoreServices
         self.navigationItem.leftBarButtonItem = leftBarButton
         self.navigationItem.rightBarButtonItem = rightBarButton
         self.navigationItem.hidesBackButton = true
+        
+        self.changeTheDestinyFolderWith("ownCloud")
 
+    }
+    
+    func changeTheDestinyFolderWith(folder: String){
+        
+        let location = NSLocalizedString("location", comment: "comment")
+        let destiny = "\(location) \(folder)"
+        
+        self.destinyFolderButton?.title = destiny
+        
     }
     
     
@@ -164,7 +179,6 @@ import MobileCoreServices
     
     //MARK: TableView Delegate and Datasource methods
     
-    
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
     {
         return self.filesSelected.count
@@ -236,6 +250,13 @@ import MobileCoreServices
     func folderSelected(folder: NSString){
         
         println("Folder selected \(folder)")
+        
+        self.currentRemotePath = folder
+        
+        let name:NSString = folder.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
+        
+        self.changeTheDestinyFolderWith(name.lastPathComponent)
+        
     }
     
     func cancelFolderSelected(){
