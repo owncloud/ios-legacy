@@ -9,7 +9,7 @@
 import UIKit
 import Social
 import MobileCoreServices
-
+import AVFoundation
 
 
 @objc class ShareViewController: UIViewController, UITableViewDelegate {
@@ -166,17 +166,37 @@ import MobileCoreServices
                     let imageData = NSData(contentsOfURL: url)
                     let image = UIImage(data: imageData!)
                     self.images.append(image!)
+                } else if type == kindOfFileEnum.videoFileType.rawValue {
+                    println("Video Selected")
+                    
+                    let asset = AVURLAsset (URL: url, options: nil)
+                    let imageGenerator = AVAssetImageGenerator (asset: asset)
+                    imageGenerator.appliesPreferredTrackTransform = true
+                    let time = CMTimeMakeWithSeconds(0.0, 600)
+                
+                    let imageRef = imageGenerator.copyCGImageAtTime(time, actualTime: nil, error: nil)
+                    let image = UIImage (CGImage: imageRef)
+                    
+                    self.images.append(image!)
                 }
             }
             
-            self.shareTable?.reloadData()
+            
+            // Delay 2 seconds
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.001 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+                
+                func reloadDatabase () {
+                    self.shareTable?.reloadData()
+                }
+                
+                reloadDatabase()
+            }
             
         }else{
             //Error any file selected
         }
     }
-    
-    
+        
     //MARK: TableView Delegate and Datasource methods
     
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
@@ -212,7 +232,7 @@ import MobileCoreServices
         let ext = FileNameUtils.getExtension(url.lastPathComponent)
         let type = FileNameUtils.checkTheTypeOfFile(ext)
         
-        if type == kindOfFileEnum.imageFileType.rawValue && row <= images.count{
+        if (type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue) && row < images.count{
            //Image
            cell.imageForFile?.image = images[indexPath.row];
             
