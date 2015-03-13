@@ -26,10 +26,22 @@
 	<dict>
 		<key>NSExtensionAttributes</key>
 		<dict>
+			<key>NSExtensionPointVersion</key>
+			<string>1.0</string>
+			<key>NSExtensionPointName</key>
+			<string>com.apple.share-services</string>
 			<key>NSExtensionActivationRule</key>
 			<dict>
+				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
+				<integer>5</integer>
+				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
+				<integer>5</integer>
+				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
+				<integer>5</integer>
 				<key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
 				<string>5</string>
+				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
+				<integer>0</integer>
 			</dict>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
