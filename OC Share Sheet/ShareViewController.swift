@@ -245,9 +245,15 @@ import AVFoundation
         
         cell.title?.text = url.path?.lastPathComponent
         
+        let fileSizeInBytes = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as? Double;
         
-        if let size = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as? Int{
-            cell.size?.text = "\(size) bytes"
+        
+        if fileSizeInBytes > 0 {
+            let formattedFileSize = NSByteCountFormatter.stringFromByteCount(
+                Int64(fileSizeInBytes!),
+                countStyle: NSByteCountFormatterCountStyle.File
+            )
+            cell.size?.text = "\(formattedFileSize)"
         }else{
             cell.size?.text = ""
         }
