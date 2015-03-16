@@ -55,7 +55,7 @@ import AVFoundation
         
         //TODO: Change ownCloud for the name of the branding customer
         
-        let rightBarButton = UIBarButtonItem (title:"Done", style: .Plain, target: self, action:"cancelView")
+        let rightBarButton = UIBarButtonItem (title:"Done", style: .Plain, target: self, action:"sendTheFilesToOwnCloud")
         let leftBarButton = UIBarButtonItem (title:"Cancel", style: .Plain, target: self, action:"cancelView")
         
         self.navigationItem.title = "ownCloud"
@@ -83,6 +83,74 @@ import AVFoundation
         self.extensionContext?.completeRequestReturningItems(nil, completionHandler: nil)
         return
        
+    }
+    
+    func sendTheFilesToOwnCloud() {
+        println("sendTheFilesToOwnCloud")
+        
+        let user = ManageUsersDB.getActiveUser()
+        
+        for url : NSURL in self.filesSelected {
+            
+            println("Url: \(url.path)")
+            
+            let remotePath = "\(user.url)\(k_url_webdav_server)"
+            
+            println("remotePath: \(remotePath)")
+            
+            let ext = FileNameUtils.getExtension(url.lastPathComponent)
+            let type = FileNameUtils.checkTheTypeOfFile(ext)
+            
+            if type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue {
+            
+                let fileName = FileNameUtils .getComposeNameFromPath(url.path)
+                
+                println("path: \(fileName)")
+                
+            } else {
+                
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+           /*
+            NSString *remotePath = [NSString stringWithFormat: @"%@%@%@", user.url, k_url_webdav_server,[UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:user]];
+            
+            long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
+            
+            NSString *temp = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], file.fileName];
+            
+            [self copyFileOnTheFileSystemByOrigin:file.localFolder andDestiny:temp];
+            
+            UploadsOfflineDto *upload = [UploadsOfflineDto new];
+            
+            upload.originPath = temp;
+            upload.destinyFolder = remotePath;
+            upload.uploadFileName = file.fileName;
+            upload.kindOfError = notAnError;
+            upload.estimateLength = (long)fileLength;
+            upload.userId = userId;
+            upload.isLastUploadFileOfThisArray = YES;
+            upload.status = generatedByDocumentProvider;
+            upload.chunksLength = k_lenght_chunk;
+            upload.isNotNecessaryCheckIfExist = NO;
+            upload.isInternalUpload = NO;
+            upload.taskIdentifier = 0;
+            
+            
+            //Set this file as an overwritten state
+            [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
+            
+            [ManageUploadsDB insertUpload:upload];
+            */
+            
+        }
     }
     
     @IBAction func destinyFolderButtonTapped(sender: UIBarButtonItem) {
@@ -196,7 +264,7 @@ import AVFoundation
             //Error any file selected
         }
     }
-        
+    
     //MARK: TableView Delegate and Datasource methods
     
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
