@@ -92,31 +92,28 @@ import AVFoundation
         
         for url : NSURL in self.filesSelected {
             
-            println("Url: \(url.path)")
-            
-            let remotePath = "\(user.url)\(k_url_webdav_server)"
-            
-            println("remotePath: \(remotePath)")
-            
+            //1º Get the future name of the file
+
             let ext = FileNameUtils.getExtension(url.lastPathComponent)
             let type = FileNameUtils.checkTheTypeOfFile(ext)
+
+            var fileName:String
             
             if type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue {
             
-                let fileName = FileNameUtils .getComposeNameFromPath(url.path)
-                
-                println("path: \(fileName)")
+                fileName = FileNameUtils.getComposeNameFromPath(url.path)
                 
             } else {
-                
+                fileName = url.path!.lastPathComponent
             }
             
+            println("path: \(fileName)")
             
+            //2º Copy the file to the tmp folder
+            let destinyFilePath = UtilsUrls.getTempFolderForUploadFiles() + fileName
+            NSFileManager.defaultManager().copyItemAtPath(url.path!, toPath: destinyFilePath, error: nil)
             
-            
-            
-            
-            
+            //3º Cre
             
             
            /*
