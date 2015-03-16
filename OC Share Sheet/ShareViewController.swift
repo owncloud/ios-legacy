@@ -107,13 +107,13 @@ import AVFoundation
                 fileName = url.path!.lastPathComponent
             }
             
-            println("path: \(fileName)")
-            
             //2º Copy the file to the tmp folder
-            let destinyFilePath = UtilsUrls.getTempFolderForUploadFiles() + fileName
+            var destinyFilePath = UtilsUrls.getTempFolderForUploadFiles()
+            destinyFilePath = destinyFilePath + fileName
+            
             NSFileManager.defaultManager().copyItemAtPath(url.path!, toPath: destinyFilePath, error: nil)
             
-            //3º Cre
+            //3º Crete the upload objects
             
             
            /*
