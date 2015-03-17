@@ -26,6 +26,7 @@
 #include <openssl/pem.h>
 #import "ManageAppSettingsDB.h"
 #import "UtilsDtos.h"
+#import "Customization.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -63,7 +64,11 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     
     NSLog(@"URL Status: |%@|", _urlStatusCheck);
     
-    NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:0 timeoutInterval:k_timeout_webdav];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:0 timeoutInterval:k_timeout_webdav];
+    
+    //Add the user agent
+    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
+    
     NSURLResponse* response=nil;
     NSError* error=nil;
     NSData* data=[NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
@@ -101,7 +106,11 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     
     NSLog(@"URL Status: |%@|", _urlStatusCheck);
     
-    NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:0 timeoutInterval:k_timeout_webdav];
+    
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:0 timeoutInterval:k_timeout_webdav];
+    
+    //Add the user agent
+    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
     
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     

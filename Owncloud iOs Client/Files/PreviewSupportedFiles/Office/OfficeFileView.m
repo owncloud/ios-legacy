@@ -17,6 +17,7 @@
 #import "UIColor+Constants.h"
 #import "FileNameUtils.h"
 #import "constants.h"
+#import "Customization.h"
 
 @interface OfficeFileView ()
 
@@ -173,7 +174,10 @@
     _isDocument=NO;
     
     NSURL *url = [NSURL URLWithString:path];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    
+    //Add the user agent
+    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
     
     [self configureWebView];
     
