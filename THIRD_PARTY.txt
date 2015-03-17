@@ -110,11 +110,17 @@ The third party software included and used by this project is:
 	Original license document included at Utils/Image Scale/LICENSE.
    	See http://vocaro.com/trevor/blog/2009/10/12/resize-a-uiimage-the-right-way/
 
- * 	ownCloud iOS Library
+ * 	ownCloud iOS Library v 1.1.1
    	Copyright (c) 2014 ownCloud Inc. (http://www.owncloud.org/)
    	Licensed under MIT License.
    	Placed at OCCommunicationLib
 	Original license document included at OCCommunicationLib/LICENSE.
    	See https://github.com/owncloud/ios-library
+   	
+* 	VFR Pdf Reader
+	Copyright (c) 2011-2014 Julius Oklamcak. All rights reserved.
+   	Placed at ExternalLibreries/VFR Pdf Reader
+	Original license document included at ExternalLibreries/VFR Pdf Reader/LICENSE.
+   	See https://github.com/vfr/Reader
 
 
