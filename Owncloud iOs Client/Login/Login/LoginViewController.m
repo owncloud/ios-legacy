@@ -2426,11 +2426,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             
             //Check if the splitViewController exist
            if (appDelegate.splitViewController) {
-                 [appDelegate.splitViewController.detailViewController presentViewController:navController animated:YES completion:nil];
+                 [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
             } else {
                 [self presentViewController:navController animated:YES completion:nil];
             }
-            
+             
            
         } else {
             //iPhone

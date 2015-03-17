@@ -17,7 +17,6 @@
 #import "SettingsViewController.h"
 #import "RecentViewController.h"
 #import "CheckAccessToServer.h"
-#import "MGSplitViewController.h"
 #import "DetailViewController.h"
 #import "constants.h"
 #import "LoginViewController.h"
@@ -422,11 +421,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //[self presentModalViewController:_loginWindowViewController animated:NO];
     
-    //Set splitViewController to nil
-    if (_splitViewController) {
-        [_splitViewController.hiddenPopoverController dismissPopoverAnimated:NO];
-        _splitViewController=nil;
-    }
+  
     
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -568,19 +563,16 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //iPad
         
         //Create a splitViewController (Split container to show two view in the same time)
-        self.splitViewController=[[MGSplitViewController alloc]init];
+        self.splitViewController=[UISplitViewController new];
         
         //Create the detailViewController (Detail View of the split)
         self.detailViewController=[[DetailViewController alloc]initWithNibName:@"DetailView" bundle:nil];
         
         //Assign tabBarController like a master view
-        [self.splitViewController setMasterViewController:_ocTabBarController];
-        [self.splitViewController setDetailViewController:_detailViewController];
         
+        self.splitViewController.viewControllers = [NSArray arrayWithObjects:self.ocTabBarController, self.detailViewController, nil];
+        self.splitViewController.delegate = self.detailViewController;
         
-        _detailViewController = (DetailViewController *) _detailViewController;
-        _detailViewController.splitController=_splitViewController;
-        _splitViewController.delegate=_detailViewController;
         
         // Add the split view controller's view to the window and display.
         self.window.rootViewController=_splitViewController;
@@ -737,11 +729,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
 }
 
--(void)dismissPopover {
-    [self.splitViewController.masterViewController removeFromParentViewController];
-    [self.splitViewController.detailViewController removeFromParentViewController];
-    [self.splitViewController removeFromParentViewController];
-}
 
 - (void)presentWithView{
     [self.detailViewController presentWhiteView];
@@ -2026,10 +2013,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
             [_ocTabBarController presentViewController:navController animated:YES completion:nil];
         } else {
-            
-            if (IS_IOS8) {
-                [self.detailViewController.popoverController dismissPopoverAnimated:YES];
-            }
             
             OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
             navController.modalPresentationStyle = UIModalPresentationFormSheet;

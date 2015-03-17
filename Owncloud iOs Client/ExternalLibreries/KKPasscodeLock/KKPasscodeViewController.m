@@ -341,7 +341,6 @@
     }
 #ifdef CONTAINER_APP
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    app.splitViewController.hiddenPopoverController.popoverContentSize = CGSizeMake(320, [[UIScreen mainScreen] bounds].size.height);
     //Set Passcode not visible
     app.isPasscodeVisible = NO;
 #else

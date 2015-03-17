@@ -1073,9 +1073,6 @@
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         if (IS_IOS8) {
-            
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-            
             [self.plusActionSheet showInView:app.splitViewController.view];
         } else {
             [self.plusActionSheet showInView:app.detailViewController.view];
