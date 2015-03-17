@@ -21,7 +21,7 @@ import AVFoundation
     
     var filesSelected: [NSURL] = []
     var images: [UIImage] = []
-    var currentRemotePath: NSString?
+    var currentRemotePath: String!
    
     let customRowColor = UIColor.colorOfNavigationBar()
     let customRowBorderColor = UIColor.colorOfNavigationTitle()
@@ -97,7 +97,7 @@ import AVFoundation
             let ext = FileNameUtils.getExtension(url.lastPathComponent)
             let type = FileNameUtils.checkTheTypeOfFile(ext)
 
-            var fileName:String
+            var fileName:String!
             
             if type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue {
             
@@ -108,45 +108,43 @@ import AVFoundation
             }
             
             //2º Copy the file to the tmp folder
-            var destinyFilePath = UtilsUrls.getTempFolderForUploadFiles()
-            destinyFilePath = destinyFilePath + fileName
+            var destinyMovedFilePath = UtilsUrls.getTempFolderForUploadFiles()
+            destinyMovedFilePath = destinyMovedFilePath + fileName
             
-            NSFileManager.defaultManager().copyItemAtPath(url.path!, toPath: destinyFilePath, error: nil)
+            NSFileManager.defaultManager().copyItemAtPath(url.path!, toPath: destinyMovedFilePath, error: nil)
+            
+            if currentRemotePath == nil {
+                currentRemotePath = ManageFilesDB.getRootFileDtoByUser(user).filePath;
+            }
             
             //3º Crete the upload objects
+            let remotePath = user.url + k_url_webdav_server + UtilsDtos.getDbBFilePathFromFullFilePath(currentRemotePath+fileName, andUser: user)
+            println("remotePath: \(remotePath)")
             
+            let fileLength = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as Int
+            println("fileLength: \(fileLength)")
             
-           /*
-            NSString *remotePath = [NSString stringWithFormat: @"%@%@%@", user.url, k_url_webdav_server,[UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:user]];
+            var upload = UploadsOfflineDto.alloc()
             
-            long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
+            upload.originPath = destinyMovedFilePath
+            upload.destinyFolder = remotePath
+            upload.uploadFileName = fileName
+            upload.kindOfError = enumKindOfError.notAnError.rawValue
+            upload.estimateLength = fileLength
+            upload.userId = user.idUser
+            upload.isLastUploadFileOfThisArray = true
+            upload.status = enumUpload.generatedByDocumentProvider.rawValue
+            upload.chunksLength = Int(k_lenght_chunk)
+            upload.isNotNecessaryCheckIfExist = false
+            upload.isInternalUpload = false
+            upload.taskIdentifier = 0
             
-            NSString *temp = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], file.fileName];
+            ManageUploadsDB.insertUpload(upload)
             
-            [self copyFileOnTheFileSystemByOrigin:file.localFolder andDestiny:temp];
+            //let url: NSURL? = NSURL(string: "owncloud://")
+            //self.extensionContext?.openURL(url!, completionHandler: nil)
             
-            UploadsOfflineDto *upload = [UploadsOfflineDto new];
-            
-            upload.originPath = temp;
-            upload.destinyFolder = remotePath;
-            upload.uploadFileName = file.fileName;
-            upload.kindOfError = notAnError;
-            upload.estimateLength = (long)fileLength;
-            upload.userId = userId;
-            upload.isLastUploadFileOfThisArray = YES;
-            upload.status = generatedByDocumentProvider;
-            upload.chunksLength = k_lenght_chunk;
-            upload.isNotNecessaryCheckIfExist = NO;
-            upload.isInternalUpload = NO;
-            upload.taskIdentifier = 0;
-            
-            
-            //Set this file as an overwritten state
-            [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
-            
-            [ManageUploadsDB insertUpload:upload];
-            */
-            
+            cancelView()
         }
     }
     
@@ -310,7 +308,7 @@ import AVFoundation
         
         cell.title?.text = url.path?.lastPathComponent
         
-        let fileSizeInBytes = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as? Double;
+        let fileSizeInBytes = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as? Double
         
         
         if fileSizeInBytes > 0 {

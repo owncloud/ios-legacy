@@ -493,6 +493,8 @@
 		59C3AC1D1A287DE3005433A1 /* KKPasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968C17F599060033B3C1 /* KKPasscodeViewController.m */; };
 		59C3AC1F1A287E3B005433A1 /* OCPortraitNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68969817F9AC860033B3C1 /* OCPortraitNavigationViewController.m */; };
 		59C521F91A1B7C3A00C5EF76 /* ManageNetworkErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C9D323195C0EFB00400AE2 /* ManageNetworkErrors.m */; };
+		59C762321AB85B5900A64C1F /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
+		59C762341AB85B7C00A64C1F /* UploadsOfflineDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F674178422AE0092F42A /* UploadsOfflineDto.m */; };
 		59C88E8F1A27335B00D83AB4 /* BackRootFolderIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F5E1A123B03003E7397 /* BackRootFolderIcon@3x.png */; };
 		59C88E901A27335B00D83AB4 /* doc_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354D61A14FD53000E7FE4 /* doc_icon@3x.png */; };
 		59C88E911A27335B00D83AB4 /* file_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F21A16277100DB0871 /* file_icon.png */; };
@@ -3814,6 +3816,7 @@
 				EAF7217F1AAF2E5B009F5596 /* FMDatabase.m in Sources */,
 				EAF721741AAF1A13009F5596 /* UserDto.m in Sources */,
 				EAC6E5F61AB0917400CCF8C4 /* CheckAccessToServer.m in Sources */,
+				59C762321AB85B5900A64C1F /* ManageUploadsDB.m in Sources */,
 				EA6606AE1AA884D400BA2C65 /* BlurImageView.swift in Sources */,
 				EAF721831AAF340D009F5596 /* ManageUsersDB.m in Sources */,
 				EA6606A81AA87B4E00BA2C65 /* FileSelectedCell.swift in Sources */,
@@ -3822,6 +3825,7 @@
 				EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */,
 				EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */,
 				EAF7217D1AAF2E0D009F5596 /* Managers.swift in Sources */,
+				59C762341AB85B7C00A64C1F /* UploadsOfflineDto.m in Sources */,
 				EAF7217E1AAF2E49009F5596 /* FMDatabaseQueue.m in Sources */,
 				EAC6E5FB1AB0986D00CCF8C4 /* SelectedFolderCell.m in Sources */,
 				EAC6E5FA1AB0985B00CCF8C4 /* SelectFolderNavigation.m in Sources */,

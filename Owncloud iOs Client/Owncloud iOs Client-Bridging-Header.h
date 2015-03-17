@@ -17,3 +17,5 @@
 #import "constants.h"
 #import "UtilsDtos.h"
 #import "FileNameUtils.h"
+#import "UploadsOfflineDto.h"
+#import "ManageUploadsDB.h"
