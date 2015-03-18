@@ -67,8 +67,13 @@ import AVFoundation
     
     func changeTheDestinyFolderWith(folder: String){
         
+        var nameFolder = folder
         let location = NSLocalizedString("location", comment: "comment")
-        let destiny = "\(location) \(folder)"
+        if folder == "webdav" {
+            nameFolder = k_app_name
+        }
+        
+        let destiny = "\(location) \(nameFolder)"
         
         self.destinyFolderButton?.title = destiny
         
