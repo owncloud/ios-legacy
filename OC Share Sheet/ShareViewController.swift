@@ -44,8 +44,9 @@ import AVFoundation
         
         super.viewWillLayoutSubviews()
         
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad{
-            
+        println("isFirstTimeOpen: \(isFirstTimeOpen)")
+        
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
             self.navigationController?.view.bounds = CGRectMake(0, 0, witdhFormSheet, heighFormSheet)
         }
         
@@ -165,6 +166,7 @@ import AVFoundation
             let navigation = SelectFolderNavigation(rootViewController: selectFolderViewController)
             
             navigation.delegate = self
+            navigation.modalPresentationStyle = UIModalPresentationStyle.FormSheet
             
             selectFolderViewController.parent = navigation;
             

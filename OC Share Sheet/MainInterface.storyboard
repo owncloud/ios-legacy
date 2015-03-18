@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="yQd-yC-53O">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="yQd-yC-53O">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -9,6 +9,7 @@
         <scene sceneID="ueh-Ta-TQZ">
             <objects>
                 <navigationController id="yQd-yC-53O" customClass="OCNavigationController" sceneMemberID="viewController">
+                    <nil key="simulatedStatusBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Qr0-yX-mDZ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -138,6 +139,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="DwO-O2-rAX"/>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="destinyFolderButton" destination="Dpo-t5-Knx" id="9p8-c0-Ocm"/>
                         <outlet property="shareTable" destination="6bg-ed-mfL" id="tzz-SO-m9D"/>
