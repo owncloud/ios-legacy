@@ -44,8 +44,6 @@ import AVFoundation
         
         super.viewWillLayoutSubviews()
         
-        println("isFirstTimeOpen: \(isFirstTimeOpen)")
-        
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
             self.navigationController?.view.bounds = CGRectMake(0, 0, witdhFormSheet, heighFormSheet)
         }
@@ -54,18 +52,16 @@ import AVFoundation
     
     func createCustomInterface(){
         
-        //TODO: Change ownCloud for the name of the branding customer
-        
         let rightBarButton = UIBarButtonItem (title:NSLocalizedString("upload_label", comment: ""), style: .Plain, target: self, action:"sendTheFilesToOwnCloud")
         let leftBarButton = UIBarButtonItem (title:NSLocalizedString("cancel", comment: ""), style: .Plain, target: self, action:"cancelView")
         
-        self.navigationItem.title = "ownCloud"
+        self.navigationItem.title = k_app_name
         
         self.navigationItem.leftBarButtonItem = leftBarButton
         self.navigationItem.rightBarButtonItem = rightBarButton
         self.navigationItem.hidesBackButton = true
         
-        self.changeTheDestinyFolderWith("ownCloud")
+        self.changeTheDestinyFolderWith(k_app_name)
 
     }
     
