@@ -55,8 +55,8 @@ import AVFoundation
         
         //TODO: Change ownCloud for the name of the branding customer
         
-        let rightBarButton = UIBarButtonItem (title:"Done", style: .Plain, target: self, action:"sendTheFilesToOwnCloud")
-        let leftBarButton = UIBarButtonItem (title:"Cancel", style: .Plain, target: self, action:"cancelView")
+        let rightBarButton = UIBarButtonItem (title:NSLocalizedString("upload_label", comment: ""), style: .Plain, target: self, action:"sendTheFilesToOwnCloud")
+        let leftBarButton = UIBarButtonItem (title:NSLocalizedString("cancel", comment: ""), style: .Plain, target: self, action:"cancelView")
         
         self.navigationItem.title = "ownCloud"
         
@@ -90,61 +90,65 @@ import AVFoundation
         
         let user = ManageUsersDB.getActiveUser()
         
-        for url : NSURL in self.filesSelected {
-            
-            //1º Get the future name of the file
-
-            let ext = FileNameUtils.getExtension(url.lastPathComponent)
-            let type = FileNameUtils.checkTheTypeOfFile(ext)
-
-            var fileName:String!
-            
-            if type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue {
-            
-                fileName = FileNameUtils.getComposeNameFromPath(url.path)
+        if user != nil {
+            for url : NSURL in self.filesSelected {
                 
-            } else {
-                fileName = url.path!.lastPathComponent
+                //1º Get the future name of the file
+                
+                let ext = FileNameUtils.getExtension(url.lastPathComponent)
+                let type = FileNameUtils.checkTheTypeOfFile(ext)
+                
+                var fileName:String!
+                
+                if type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue {
+                    
+                    fileName = FileNameUtils.getComposeNameFromPath(url.path)
+                    
+                } else {
+                    fileName = url.path!.lastPathComponent
+                }
+                
+                //2º Copy the file to the tmp folder
+                var destinyMovedFilePath = UtilsUrls.getTempFolderForUploadFiles()
+                destinyMovedFilePath = destinyMovedFilePath + fileName
+                
+                NSFileManager.defaultManager().copyItemAtPath(url.path!, toPath: destinyMovedFilePath, error: nil)
+                
+                if currentRemotePath == nil {
+                    currentRemotePath = ManageFilesDB.getRootFileDtoByUser(user).filePath;
+                }
+                
+                //3º Crete the upload objects
+                let remotePath = user.url + k_url_webdav_server + UtilsDtos.getDbBFilePathFromFullFilePath(currentRemotePath+fileName, andUser: user)
+                println("remotePath: \(remotePath)")
+                
+                let fileLength = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as Int
+                println("fileLength: \(fileLength)")
+                
+                var upload = UploadsOfflineDto.alloc()
+                
+                upload.originPath = destinyMovedFilePath
+                upload.destinyFolder = remotePath
+                upload.uploadFileName = fileName
+                upload.kindOfError = enumKindOfError.notAnError.rawValue
+                upload.estimateLength = fileLength
+                upload.userId = user.idUser
+                upload.isLastUploadFileOfThisArray = true
+                upload.status = enumUpload.generatedByDocumentProvider.rawValue
+                upload.chunksLength = Int(k_lenght_chunk)
+                upload.isNotNecessaryCheckIfExist = false
+                upload.isInternalUpload = false
+                upload.taskIdentifier = 0
+                
+                ManageUploadsDB.insertUpload(upload)
+                
+                //let url: NSURL? = NSURL(string: "owncloud://")
+                //self.extensionContext?.openURL(url!, completionHandler: nil)
+                
+                cancelView()
             }
-            
-            //2º Copy the file to the tmp folder
-            var destinyMovedFilePath = UtilsUrls.getTempFolderForUploadFiles()
-            destinyMovedFilePath = destinyMovedFilePath + fileName
-            
-            NSFileManager.defaultManager().copyItemAtPath(url.path!, toPath: destinyMovedFilePath, error: nil)
-            
-            if currentRemotePath == nil {
-                currentRemotePath = ManageFilesDB.getRootFileDtoByUser(user).filePath;
-            }
-            
-            //3º Crete the upload objects
-            let remotePath = user.url + k_url_webdav_server + UtilsDtos.getDbBFilePathFromFullFilePath(currentRemotePath+fileName, andUser: user)
-            println("remotePath: \(remotePath)")
-            
-            let fileLength = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as Int
-            println("fileLength: \(fileLength)")
-            
-            var upload = UploadsOfflineDto.alloc()
-            
-            upload.originPath = destinyMovedFilePath
-            upload.destinyFolder = remotePath
-            upload.uploadFileName = fileName
-            upload.kindOfError = enumKindOfError.notAnError.rawValue
-            upload.estimateLength = fileLength
-            upload.userId = user.idUser
-            upload.isLastUploadFileOfThisArray = true
-            upload.status = enumUpload.generatedByDocumentProvider.rawValue
-            upload.chunksLength = Int(k_lenght_chunk)
-            upload.isNotNecessaryCheckIfExist = false
-            upload.isInternalUpload = false
-            upload.taskIdentifier = 0
-            
-            ManageUploadsDB.insertUpload(upload)
-            
-            //let url: NSURL? = NSURL(string: "owncloud://")
-            //self.extensionContext?.openURL(url!, completionHandler: nil)
-            
-            cancelView()
+        } else {
+            showErrorUserNotExist()
         }
     }
     
@@ -153,18 +157,22 @@ import AVFoundation
         
         let activeUser = ManageUsersDB.getActiveUser()
         
-        let rootFileDto = ManageFilesDB.getRootFileDtoByUser(activeUser)
-        
-        let selectFolderViewController = SelectFolderViewController(nibName: "SelectFolderViewController", onFolder: rootFileDto)
-        
-        let navigation = SelectFolderNavigation(rootViewController: selectFolderViewController)
-        
-        navigation.delegate = self
-        
-        selectFolderViewController.parent = navigation;
-        
-        self.presentViewController(navigation, animated: true) { () -> Void in
-            println("select folder presented")
+        if activeUser != nil {
+            let rootFileDto = ManageFilesDB.getRootFileDtoByUser(activeUser)
+            
+            let selectFolderViewController = SelectFolderViewController(nibName: "SelectFolderViewController", onFolder: rootFileDto)
+            
+            let navigation = SelectFolderNavigation(rootViewController: selectFolderViewController)
+            
+            navigation.delegate = self
+            
+            selectFolderViewController.parent = navigation;
+            
+            self.presentViewController(navigation, animated: true) { () -> Void in
+                println("select folder presented")
+            }
+        } else {
+            showErrorUserNotExist()
         }
     }
     
@@ -354,5 +362,21 @@ import AVFoundation
         
     }
     
+    func showErrorUserNotExist() {
+        var alert = UIAlertController(title: NSLocalizedString("error_login_doc_provider", comment: ""), message: "", preferredStyle: UIAlertControllerStyle.Alert)
+        //alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .Default, handler: { action in
+            switch action.style{
+            case .Default:
+                self.cancelView()
+            case .Cancel:
+                println("cancel")
+            case .Destructive:
+                println("destructive")
+            }
+        }))
+        
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
 
 }
