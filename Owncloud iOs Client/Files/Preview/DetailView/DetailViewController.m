@@ -16,7 +16,6 @@
 #import "DetailViewController.h"
 
 #import "AppDelegate.h"
-#import "MainPopOverBarckground.h"
 #import "UIColor+Constants.h"
 #import "constants.h"
 #import "EditAccountViewController.h"
@@ -37,7 +36,6 @@
 #import "ManageFavorites.h"
 #import "SettingsViewController.h"
 #import "UtilsUrls.h"
-
 #import "ReaderDocument.h"
 #import "ReaderViewController.h"
 
@@ -61,7 +59,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 @implementation DetailViewController
 
-@synthesize splitController, popoverController, toolbar;
+@synthesize  toolbar;
 
 
 #pragma mark - Load view methods
@@ -99,8 +97,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
    
     self.edgesForExtendedLayout = UIRectCornerAllCorners;
     
-    //Bar items. Set to botom in iOS 7
-    [_toggleItem setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
+    //Bar items. Set buttons
     [_openButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     [_favoriteButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     [_shareLinkButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
@@ -126,8 +123,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    //Show popover when the screen is loaded
-    [self showPopover];
 }
 
 
@@ -140,81 +135,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self configureView];
 }
 
-/*
- * Method that show or not show popover in this cases:
- * Automatic show popover in potrait view
- * Not show popover in landscape view
- * Not show popover in potrait view when the app receive a file from other app.
- * Not show popover in potrait or landscape extend if the player is in full screen option.
- */
--(void) showPopover {
-    
-    DLog(@"show popover");
-    
-    UIInterfaceOrientation currentOrientation;
-    currentOrientation=[[UIApplication sharedApplication] statusBarOrientation];
-    BOOL isPotrait = UIDeviceOrientationIsPortrait(currentOrientation);
-    BOOL disableAutomaticPopover=NO;
-    //If is player in fullscreen running not show popover automatic
-    if (_moviePlayer) {
-        if (_moviePlayer.isFullScreen) {
-            disableAutomaticPopover=YES;
-        }
-    }
-    
-    if (_disablePopover) {
-        disableAutomaticPopover=YES;
-    }
-    
-    //Disable automatic popover if the player is in full screen
-    if (disableAutomaticPopover==NO) {
-        
-        if (isPotrait==YES) {
-            
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            
-            //Method that show popover automatic if app dont show from other app
-            if (appDelegate.isSharedToOwncloudPresent == NO && appDelegate.isPasscodeVisible == NO && appDelegate.isSharedToOwncloudPresent == NO && appDelegate.settingsViewController.isMailComposeVisible == NO) {
-
-                if (self.popoverController!=nil && self.view.window != nil) {
-                    DLog(@"Popover exist");
-                    UIBarButtonItem *item = [toolbar.items objectAtIndex:0];
-                    [self.popoverController presentPopoverFromBarButtonItem:item permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-                }
-            } else {
-                if ([self.popoverController isPopoverVisible]) {
-                    [self.popoverController dismissPopoverAnimated:NO];
-                }
-            }
-        } else {
-            
-            //Method that show popover automatic
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            if (appDelegate.isSharedToOwncloudPresent == NO && _isExtending == NO) {
-                if (self.popoverController!=nil && self.view.window != nil) {
-                    DLog(@"Popover exist");
-                    UIBarButtonItem *item = [toolbar.items objectAtIndex:0];
-                    [self.popoverController presentPopoverFromBarButtonItem:item permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-                }
-            } else {
-                _isExtending = NO;
-                if ([popoverController isPopoverVisible]) {
-                    [popoverController dismissPopoverAnimated:NO];
-                }
-            }
-        }
-    }
-}
-
-/*
- *Method taht close popover if this is visible
- */
--(void)closePopover{
-    
-    if (popoverController.isPopoverVisible) {
-        [popoverController dismissPopoverAnimated:NO];
-    }
-}
 
 - (void)configureView
 {
@@ -259,7 +179,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     //Configure toolBar
     NSMutableArray *items = [[toolbar items] mutableCopy];
-    [items removeObject:_toggleItem];
     
     if (_isFileCharged==YES) {
         [items insertObject:_spaceBar atIndex:1];
@@ -297,6 +216,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         _readerPDFViewController.view.frame = _mainScrollView.frame;
         [_readerPDFViewController updateContentViews];
     }
+    
+    
 }
 
 /*
@@ -304,16 +225,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 - (void)landscapeView{
     
-    //Configure toolBar
-    UIImage *image;
-    if ([splitController isShowingMaster]) {
-        image = [UIImage imageNamed:@"arrow_button.png"];
-    } else {
-        image = [UIImage imageNamed:@"conarrow_button.png"];
-    }
-    
-    _toggleItem.image=image;
-    _toggleItem.style=UIBarButtonItemStylePlain;
     
     //Diferents configures of tool bar depends if the detail view is extend or not.
     if (_isExtend==YES) {
@@ -322,17 +233,16 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         UIBarButtonItem *popoverItem = [items objectAtIndex:0];
         [items removeAllObjects];
         [items insertObject:popoverItem atIndex:0];
-        [items insertObject:_toggleItem atIndex:1];
-        [items insertObject:_spaceBar atIndex:2];
+        [items insertObject:_spaceBar atIndex:1];
         
         if (_isFileCharged==YES) {
-            [items insertObject:_openButtonBar atIndex:3];
-            [items insertObject:_spaceBar1 atIndex:4];
-            [items insertObject:_favoriteButtonBar atIndex:5];
-            [items insertObject:_spaceBar2 atIndex:6];
-            [items insertObject:_shareLinkButtonBar atIndex:7];
-            [items insertObject:_spaceBar3 atIndex:8];
-            [items insertObject:_deleteButtonBar atIndex:9];
+            [items insertObject:_openButtonBar atIndex:2];
+            [items insertObject:_spaceBar1 atIndex:3];
+            [items insertObject:_favoriteButtonBar atIndex:4];
+            [items insertObject:_spaceBar2 atIndex:5];
+            [items insertObject:_shareLinkButtonBar atIndex:6];
+            [items insertObject:_spaceBar3 atIndex:7];
+            [items insertObject:_deleteButtonBar atIndex:8];
         }
         
         [toolbar setItems:items animated:YES];
@@ -357,17 +267,16 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         //Landscape normal mode
         NSMutableArray *items = [[toolbar items] mutableCopy];
         [items removeAllObjects];
-        [items insertObject:_toggleItem atIndex:0];
-        [items insertObject:_spaceBar atIndex:1];
+        [items insertObject:_spaceBar atIndex:0];
         
         if (_isFileCharged==YES) {
-            [items insertObject:_openButtonBar atIndex:2];
-            [items insertObject:_spaceBar1 atIndex:3];
-            [items insertObject:_favoriteButtonBar atIndex:4];
-            [items insertObject:_spaceBar2 atIndex:5];
-            [items insertObject:_shareLinkButtonBar atIndex:6];
-            [items insertObject:_spaceBar3 atIndex:7];
-            [items insertObject:_deleteButtonBar atIndex:8];
+            [items insertObject:_openButtonBar atIndex:1];
+            [items insertObject:_spaceBar1 atIndex:2];
+            [items insertObject:_favoriteButtonBar atIndex:3];
+            [items insertObject:_spaceBar2 atIndex:4];
+            [items insertObject:_shareLinkButtonBar atIndex:5];
+            [items insertObject:_spaceBar3 atIndex:6];
+            [items insertObject:_deleteButtonBar atIndex:7];
         }
         [toolbar setItems:items animated:YES];
         
@@ -798,15 +707,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self unselectCurrentFile];
     [self reloadFileList];
     
-    UIInterfaceOrientation currentOrientation;
-    currentOrientation=[[UIApplication sharedApplication] statusBarOrientation];
-    BOOL isPotrait = UIDeviceOrientationIsPortrait(currentOrientation);
-    
-    if ((self.popoverController!=nil && self.view.window != nil && isPotrait)||(self.popoverController!=nil && self.view.window != nil && !isPotrait && _isExtend)) {
-        DLog(@"Popover exist");
-        UIBarButtonItem *item = [toolbar.items objectAtIndex:0];
-        [self.popoverController presentPopoverFromBarButtonItem:item permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    }
 }
 
 - (void)reloadTableAfterDonwload{
@@ -1346,32 +1246,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 
 - (void)playMediaFile{
-    //Control if the popover is open
-    if ([self.popoverController isPopoverVisible]==YES) {
-        [self.popoverController dismissPopoverAnimated:NO];
-    }
-    
-    //This code is for the streaming case, but not works yet.
-    
-    /* UserDto *activeUser = [ExecuteManager getActiveUser];
-     NSArray *splitedUrl = [activeUser.url componentsSeparatedByString:@"/"];
-     
-     NSString *serverUrl = [NSString stringWithFormat:@"%@%@%@",[NSString stringWithFormat:@"%@/%@/%@",[splitedUrl objectAtIndex:0],[splitedUrl objectAtIndex:1],[splitedUrl objectAtIndex:2]], _file.filePath, _file.fileName];
-     
-     DLog(@"remote url: %@", serverUrl);
-     
-     NSURL *url = [NSURL URLWithString:serverUrl];
-     
-     NSURLCredential *cred= [NSURLCredential credentialWithUser:activeUser.username password:activeUser.password persistence:NSURLCredentialPersistenceForSession];
-     
-     NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc]
-     initWithHost: @"192.168.1.162/owncloud/"
-     port: 8080
-     protocol: @"http"
-     realm: serverUrl
-     authenticationMethod: NSURLAuthenticationMethodDefault];
-     
-     [[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential: cred forProtectionSpace: protectionSpace];*/
     
     BOOL needNewPlayer = NO;
     if (_file != nil) {
@@ -1465,7 +1339,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     if (isFullScreenPlayer) {
         if (isLandscape && !_isExtend) {
-            [self toggleMasterView:nil];
             [toolbar setHidden:YES];
             [self configureView];
         } else {
@@ -1475,7 +1348,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     } else {
         
         if (isLandscape && !_isExtend) {
-            [self toggleMasterView:nil];
             [toolbar setHidden:NO];
             [self configureView];
         } else {
@@ -1838,151 +1710,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 }
 
 
-#pragma mark - Split view support
-
-
-- (void)splitViewController:(MGSplitViewController*)svc
-	 willHideViewController:(UIViewController *)aViewController
-		  withBarButtonItem:(UIBarButtonItem*)barButtonItem
-	   forPopoverController: (UIPopoverController*)pc
-{
-	DLog(@"%@", NSStringFromSelector(_cmd));
-    DLog(@"Create popover button");
-   	
-	if (barButtonItem) {
-		NSMutableArray *items = [[toolbar items] mutableCopy];
-       
-        [barButtonItem setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
-
-		[items insertObject:barButtonItem atIndex:0];
-		[toolbar setItems:items animated:YES];
-	}
-    
-     pc.popoverBackgroundViewClass=[MainPopOverBarckground class];
-  
-    //Present popover
-    self.popoverController = pc;
-}
-
-
-// Called when the view is shown again in the split view, invalidating the button and popover controller.
-- (void)splitViewController:(MGSplitViewController*)svc
-	 willShowViewController:(UIViewController *)aViewController
-  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
-	DLog(@"%@", NSStringFromSelector(_cmd));
-	
-	if (_isExtend==NO) {
-        
-        if (barButtonItem) {
-            NSMutableArray *items = [[toolbar items] mutableCopy];
-            [items removeObject:barButtonItem];
-            [toolbar setItems:items animated:YES];
-            //[items release];
-        }
-        self.popoverController = nil;
-    }
-}
-
-
-- (void)splitViewController:(MGSplitViewController*)svc
-		  popoverController:(UIPopoverController*)pc
-  willPresentViewController:(UIViewController *)aViewController {
-	DLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-
-- (void)splitViewController:(MGSplitViewController*)svc willChangeSplitOrientationToVertical:(BOOL)isVertical {
-	DLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-
-- (void)splitViewController:(MGSplitViewController*)svc willMoveSplitToPosition:(float)position {
-	DLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-
-- (float)splitViewController:(MGSplitViewController *)svc constrainSplitPosition:(float)proposedPosition splitViewSize:(CGSize)viewSize {
-	DLog(@"%@", NSStringFromSelector(_cmd));
-	return proposedPosition;
-}
-
-
-#pragma mark -
-#pragma mark Actions
-
-/*
- * MGSplitViewMethod that extend the detail view and
- * configure all of interface objects are in the view.
- */
-
-- (IBAction)toggleMasterView:(id)sender {
-    //If is galleryView chraged prepared the scroll view
-    if (_galleryView) {
-        [_galleryView prepareScrollViewBeforeTheRotation];
-    }
-    
-    [splitController removeThePopover];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.01 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        
-        //Tell to splitController to extend the detailview
-        [splitController toggleMasterView:sender];
-        
-        
-        //Change the global flag
-        if (_isExtend==NO) {
-            //Set the constraint
-            _leftMarginTitleLabelConstraint.constant = 92;
-            _isExtend = YES;
-        } else {
-            //Set the constraint
-            _leftMarginTitleLabelConstraint.constant = 62;
-            _isExtend = NO;
-        }
-        
-        //Managed the objects of landscape view.
-        [self landscapeView];
-        
-        //If galleryView charged indicated adjust the scroll view
-        if (_galleryView) {
-            _isExtending = YES;
-            [self adjustGalleryScrollView];
-        }
-
-        
-    });
-    
-    
-}
-
-/*
- * Not used method
- */
-
-
-- (IBAction)toggleVertical:(id)sender {
-	[splitController toggleSplitOrientation:self];
-	[self configureView];
-}
-
-/*
- * Not used method
- */
-- (IBAction)toggleDividerStyle:(id)sender {
-	MGSplitViewDividerStyle newStyle = ((splitController.dividerStyle == MGSplitViewDividerStyleThin) ? MGSplitViewDividerStylePaneSplitter : MGSplitViewDividerStyleThin);
-	[splitController setDividerStyle:newStyle animated:YES];
-	[self configureView];
-}
-
-/*
- * Not used method
- */
-- (IBAction)toggleMasterBeforeDetail:(id)sender {
-	[splitController toggleMasterBeforeDetail:sender];
-	[self configureView];
-}
-
-
 #pragma mark -
 #pragma mark Rotation support
 
@@ -2031,12 +1758,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         if (_moviePlayer.isFullScreen) {
             if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
                 if (_isExtend==NO) {
-                    [self toggleMasterView:nil];
+                   
                 }
             }
         }
     } else if (_readerPDFViewController) {
-        
         
         [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
         
@@ -2050,7 +1776,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [_readerPDFViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     }
 
-    [self showPopover];
 }
 
 #pragma mark - iOS 8 rotation method.
@@ -2131,20 +1856,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:appDelegate.activeUser];
             [viewController setBarForCancelForLoadingFromModal];
             
-            
-            if (IS_IPHONE) {
-                OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-                [self.navigationController presentViewController:navController animated:YES completion:nil];
-            } else {
-                
-                if (IS_IOS8) {
-                    [self.popoverController dismissPopoverAnimated:YES];
-                }
-                
-                OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-                navController.modalPresentationStyle = UIModalPresentationFormSheet;
-                [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
-            }
+            OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+            navController.modalPresentationStyle = UIModalPresentationFormSheet;
+            [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
         }
     }
 }
@@ -2260,7 +1974,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 
 
-
 ///-----------------------------------
 /// @name Stop notification in status bar
 ///-----------------------------------
@@ -2275,7 +1988,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     _updatingFileView.hidden = YES;
     _titleLabel.hidden = NO;
 }
-
 
 
 
@@ -2319,5 +2031,15 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             break;
     }
 }
+
+#pragma mark - UISplitViewDelegateMethods
+
+- (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation{
+    
+    return NO;
+}
+
+
+
 
 @end

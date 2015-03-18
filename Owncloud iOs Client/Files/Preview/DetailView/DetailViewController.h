@@ -14,7 +14,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "MGSplitViewController.h"
 #import "FileDto.h"
 #import "Download.h"
 #import "OpenWith.h"
@@ -57,9 +56,6 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
     IBOutlet UIBarButtonItem *_deleteButtonBar;
     IBOutlet UIImageView *_companyImageView;
     
-    //SplitView attributes
-    MGSplitViewController *splitController;
-    UIPopoverController *popoverController;
     OCToolBar *toolbar;
     
     //Autolayout constraints
@@ -84,7 +80,6 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 @property (nonatomic, strong) IBOutlet UIProgressView *progressView;
 @property (nonatomic, strong) IBOutlet UIButton *cancelButton;
 @property (nonatomic, strong) IBOutlet UILabel *progressLabel;
-@property (nonatomic, strong) IBOutlet UIBarButtonItem *toggleItem;
 
 //View for show the updating progress bar
 @property (nonatomic, strong) IBOutlet UIView *updatingFileView;
@@ -108,9 +103,7 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 //The title of the link when the detail view it's used for a help page for example
 @property (nonatomic, strong) NSString *linkTitle;
-//SplitView attributes
-@property (nonatomic, strong) MGSplitViewController *splitController;
-@property (nonatomic, retain) UIPopoverController *popoverController;
+
 @property (nonatomic, strong) IBOutlet UIToolbar *toolbar;
 //ScrolView in DetailView.xib to copy the frame to scroll view of GalleryView
 @property(nonatomic, strong) IBOutlet UIScrollView *mainScrollView;
@@ -225,11 +218,6 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 - (void)adjustGalleryScrollView;
 
 /*
- * Method that showPopover if is in portrait mode or extended mode
- */
-- (void)showPopover;
-
-/*
  * Method that close popover
  */
 -(void)closePopover;
@@ -239,14 +227,6 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 */
 - (void)showErrorOnIpadIfIsNecessaryCancelDownload;
 
-/*
- * MGSplitViewController methods.
- * Only we use "toogleMasterView" to expand the detail view in landscape
- */
-- (IBAction)toggleMasterView:(id)sender;
-- (IBAction)toggleVertical:(id)sender;
-- (IBAction)toggleDividerStyle:(id)sender;
-- (IBAction)toggleMasterBeforeDetail:(id)sender;
 
 /*
  * Method that manage the error login, show a pop up and then 

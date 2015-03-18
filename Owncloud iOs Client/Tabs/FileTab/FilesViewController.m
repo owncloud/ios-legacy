@@ -243,16 +243,12 @@
     if (app.isNewUser) {
         //We are changing of user
         //Show the file list in the correct place
-        if (IS_IOS7 || IS_IOS8){
-            if (app.detailViewController.popoverController.isPopoverVisible){
-                [_tableView setContentOffset:CGPointMake(0,-k_navigation_bar_height) animated:animated];
-            } else if (IS_IPHONE && !IS_PORTRAIT) {
-                [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height_in_iphone_landscape + k_status_bar_height)) animated:animated];
-            } else {
-                [_tableView setContentOffset:CGPointMake(0,-(k_status_bar_height + k_navigation_bar_height)) animated:animated];
-            }
+        if (!IS_IPHONE){
+            [_tableView setContentOffset:CGPointMake(0,-k_navigation_bar_height) animated:animated];
+        } else if (IS_IPHONE && !IS_PORTRAIT) {
+            [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height_in_iphone_landscape + k_status_bar_height)) animated:animated];
         } else {
-            [_tableView setContentOffset:CGPointMake(0,0) animated:animated];
+            [_tableView setContentOffset:CGPointMake(0,-(k_status_bar_height + k_navigation_bar_height)) animated:animated];
         }
         app.isNewUser = NO;
     }
@@ -302,7 +298,7 @@
         //Show the file list in the correct place
         //Only for iOS 7
         if (IS_IOS7){
-            if (app.detailViewController.popoverController.isPopoverVisible){
+            if (!IS_IPHONE){
                 [_tableView setContentOffset:CGPointMake(0,-k_navigation_bar_height) animated:animated];
             } else if (IS_IPHONE && !IS_PORTRAIT) {
                 [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height_in_iphone_landscape + k_status_bar_height)) animated:animated];
@@ -318,7 +314,7 @@
             DLog(@"Root folder exist");
             _currentFileShowFilesOnTheServerToUpdateTheLocalFile = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
             _fileIdToShowFiles = _currentFileShowFilesOnTheServerToUpdateTheLocalFile;
-            DLog(@"IdFile:%ld etag: %lld", (long)_currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, _currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
+            DLog(@"IdFile:%ld etag: %@", (long)_currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, _currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
         } else {
             //We need the current folder refresh with the right etag
             DLog(@"Root folder not exist");
@@ -2398,10 +2394,6 @@
             self.mDeleteFile.viewToShow = app.detailViewController.view;
         }
         
-        if (app.detailViewController.popoverController.isPopoverVisible){
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
-        
         [self.mDeleteFile askToDeleteFileByFileDto:_selectedFileDto];
         
     }
@@ -2515,9 +2507,6 @@
                 //Remove all the views in the main screen for the iOS8 bug
                 if (self.moreActionSheet) {
                     [self.moreActionSheet dismissWithClickedButtonIndex:0 animated:YES];
-                }
-                if (app.detailViewController.popoverController.isPopoverVisible){
-                    [app.detailViewController.popoverController dismissPopoverAnimated:YES];
                 }
             }
             [app.detailViewController presentViewController:self.selectFolderNavigation animated:YES completion:nil];
@@ -2974,10 +2963,6 @@
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
         
-        if (IS_IOS8) {
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
-        
         OCNavigationController *navController = nil;
         navController = [[OCNavigationController alloc] initWithRootViewController:_resolvedCredentialError];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -3167,8 +3152,6 @@
         }else {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             if (IS_IOS8) {
-                [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-                
                 [self.moreActionSheet showInView:app.splitViewController.view];
             } else {
                 [self.moreActionSheet showInView:app.detailViewController.view];
@@ -3192,8 +3175,6 @@
         }else {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             if (IS_IOS8) {
-                [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-                
                 [self.moreActionSheet showInView:app.splitViewController.view];
             } else {
                 [self.moreActionSheet showInView:app.detailViewController.view];

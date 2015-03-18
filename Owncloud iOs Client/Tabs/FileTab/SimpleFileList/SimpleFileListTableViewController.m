@@ -594,11 +594,7 @@
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
-        
-        if (IS_IOS8) {
-            [appDelegate.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
-        
+
         OCNavigationController *navController = nil;
         navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;

@@ -29,7 +29,6 @@
                 <outlet property="progressLabel" destination="85" id="86"/>
                 <outlet property="progressView" destination="82" id="89"/>
                 <outlet property="titleLabel" destination="1eq-mt-JYf" id="WLW-Lz-7kY"/>
-                <outlet property="toggleItem" destination="67" id="68"/>
                 <outlet property="toolbar" destination="63" id="65"/>
                 <outlet property="updatingCancelButton" destination="SvH-e8-BmT" id="Z5m-co-vxq"/>
                 <outlet property="updatingFileProgressView" destination="E9s-I7-wvl" id="VzP-Ep-yFV"/>
@@ -87,11 +86,6 @@
                         <constraint firstAttribute="height" constant="64" id="BcG-k4-umR"/>
                     </constraints>
                     <items>
-                        <barButtonItem image="arrow_button.png" style="plain" id="67">
-                            <connections>
-                                <action selector="toggleMasterView:" destination="-1" id="69"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="105"/>
                         <barButtonItem image="openWithTB.png" style="plain" id="90">
                             <connections>
@@ -189,7 +183,6 @@
         </view>
     </objects>
     <resources>
-        <image name="arrow_button.png" width="25" height="25"/>
         <image name="cancel_download.png" width="25" height="25"/>
         <image name="cancel_download_white.png" width="25" height="25"/>
         <image name="company_empty_screen_ipad.png" width="512" height="279"/>
