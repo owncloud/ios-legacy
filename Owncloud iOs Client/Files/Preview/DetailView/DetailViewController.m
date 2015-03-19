@@ -1727,6 +1727,32 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
+    if (IS_IOS7) {
+        [self customWillRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    }
+    
+}
+
+-(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    if (IS_IOS7) {
+       [self customWillAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    }
+ 
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    
+    if (IS_IOS7) {
+        [self customDidRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    }
+
+}
+
+#pragma mark - Interface Rotations
+
+- (void) customWillRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
     DLog(@"Will rotate");
     
     if (_galleryView) {
@@ -1740,25 +1766,25 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     if (_mShareFileOrFolder && _mShareFileOrFolder.activityPopoverController) {
         [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
     }
-
+    
     if (_openWith) {
         [_openWith.activityPopoverController dismissPopoverAnimated:NO];
     }
+    
 }
 
--(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-
-    [_mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:YES];
-
+-(void) customWillAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
     DLog(@"will Animate Rotation");
     
-    //If its in potrait view rotate to landscape view and if the player in full screnn
+    [_mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:YES];
+    
     //Extend the splitview to see in full screen also in landscape.
     if (_moviePlayer) {
         if (_moviePlayer.isFullScreen) {
             if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-                if (_isExtend==NO) {
-                   
+                if (_isExtend == NO) {
+                    
                 }
             }
         }
@@ -1767,15 +1793,17 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
         
     }
+    
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-
+- (void)customDidRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    
     DLog(@"did rotate");
+    
     if (_readerPDFViewController) {
         [_readerPDFViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     }
-
+    
 }
 
 #pragma mark - iOS 8 rotation method.
@@ -1787,19 +1815,18 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     NSTimeInterval duration = 0.5;
     
     // willRotateToInterfaceOrientation code goes here
-    [self willRotateToInterfaceOrientation:orientation duration:duration];
+    [self customWillRotateToInterfaceOrientation:orientation duration:duration];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         // willAnimateRotationToInterfaceOrientation code goes here
-        [self willAnimateRotationToInterfaceOrientation:orientation duration:duration];
+        [self customWillAnimateRotationToInterfaceOrientation:orientation duration:duration];
         
         
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        // didRotateFromInterfaceOrientation goes here (nothing for now)
-        [self didRotateFromInterfaceOrientation:orientation];
+        // didRotateFromInterfaceOrientation goes here
+        [self customDidRotateFromInterfaceOrientation:orientation];
         
     }];
-    
     
     [super viewWillTransitionToSize: size withTransitionCoordinator: coordinator];
 }
