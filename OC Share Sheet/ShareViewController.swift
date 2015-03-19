@@ -69,16 +69,14 @@ import AVFoundation
         
         var nameFolder = folder
         let location = NSLocalizedString("location", comment: "comment")
-        if folder == "webdav" {
+        if folder.isEmpty {
             nameFolder = k_app_name
         }
         
         let destiny = "\(location) \(nameFolder)"
         
         self.destinyFolderButton?.title = destiny
-        
     }
-    
     
     func cancelView() {
        
@@ -352,10 +350,11 @@ import AVFoundation
         println("Folder selected \(folder)")
         
         self.currentRemotePath = folder
-        
         let name:NSString = folder.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
+        let user = ManageUsersDB.getActiveUser()
+        let folderPath = UtilsDtos.getDbBFilePathFromFullFilePath(name, andUser: user)
         
-        self.changeTheDestinyFolderWith(name.lastPathComponent)
+        self.changeTheDestinyFolderWith(folderPath.lastPathComponent)
         
     }
     
