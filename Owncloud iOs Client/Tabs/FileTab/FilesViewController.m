@@ -118,7 +118,7 @@
     
     _currentRemoteFolder = currentFolder;
     _currentLocalFolder = currentLocalFoler;
-    DLog(@"self.fileIdToShowFiles: %lld", _fileIdToShowFiles.etag);
+    DLog(@"self.fileIdToShowFiles: %@", _fileIdToShowFiles.etag);
     DLog(@"self.fileIdToShowFiles: %ld", (long)_fileIdToShowFiles.idFile);
     
     _showLoadingAfterChangeUser = NO;
@@ -134,7 +134,7 @@
         if([ManageFilesDB isExistRootFolderByUser:app.activeUser]) {
             DLog(@"Root folder exist");
             self.currentFileShowFilesOnTheServerToUpdateTheLocalFile = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
-            DLog(@"IdFile:%ld etag: %lld", (long)self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
+            DLog(@"IdFile:%ld etag: %@", (long)self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
         } else {
             //We need the current folder refresh with the right etag
             DLog(@"Root folder not exist");  

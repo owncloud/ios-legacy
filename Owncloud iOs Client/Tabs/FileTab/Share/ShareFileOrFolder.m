@@ -225,7 +225,7 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
     
-    __block OCSharedDto *blockShareDto = _shareDto;
+     __block OCSharedDto *blockShareDto = _shareDto;
     
     [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:_shareDto.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared) {
         
