@@ -170,6 +170,16 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     }
 }
 
+- (CGRect) getTheCorrectSize{
+    
+    CGRect originFrame = self.mainScrollView.frame;
+    CGRect sizeFrame = self.view.bounds;
+    
+    CGRect correctFrame = CGRectMake(originFrame.origin.x, originFrame.origin.y, sizeFrame.size.width, sizeFrame.size.height);
+    
+    return correctFrame;
+}
+
 #pragma mark - Portrait/Landscape screen
 
 /*
@@ -584,12 +594,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
         } else {
             if (!self.officeView) {
-                CGRect originFrame = self.mainScrollView.frame;
-                CGRect sizeFrame = self.view.bounds;
-                
-                CGRect correctFrame = CGRectMake(originFrame.origin.x, originFrame.origin.y, sizeFrame.size.width, sizeFrame.size.height);
-                
-                self.officeView=[[OfficeFileView alloc]initWithFrame:correctFrame];
+                self.officeView = [[OfficeFileView alloc]initWithFrame:[self getTheCorrectSize]];
             } else {
                 [self.officeView.webView removeFromSuperview];
             }
@@ -654,8 +659,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self presentWhiteView];
     
     if (!_officeView) {
-        CGRect frame = self.mainScrollView.frame;
-        _officeView=[[OfficeFileView alloc]initWithFrame:frame];
+        _officeView = [[OfficeFileView alloc]initWithFrame:[self getTheCorrectSize]];
         _officeView.delegate = self;
     } else {
         [_officeView.webView removeFromSuperview];
@@ -829,26 +833,26 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 - (void)presentWhiteView {
     
-    _progressView.hidden=YES;
-    _cancelButton.hidden=YES;
-    _progressLabel.hidden=YES;
-    _progressLabel.text=@"";
-    _progressView.progress=0.0;
-    _mainScrollView.hidden=YES;
-    _previewImageView.hidden=YES;
+    _progressView.hidden = YES;
+    _cancelButton.hidden = YES;
+    _progressLabel.hidden = YES;
+    _progressLabel.text = @"";
+    _progressView.progress = 0.0;
+    _mainScrollView.hidden = YES;
+    _previewImageView.hidden = YES;
     
-    _companyImageView.hidden=NO;
+    _companyImageView.hidden = NO;
     self.view.backgroundColor = [UIColor colorOfBackgroundDetailViewiPad];
     
-    _titleLabel.text=@"";
+    _titleLabel.text = @"";
     
     [_openWith.activityPopoverController dismissPopoverAnimated:YES];
     [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:YES];
     
     [self removeThePreviousViews];
     
-    _isFileCharged=NO;
-    _file=nil;
+    _isFileCharged = NO;
+    _file = nil;
     
     [self configureView];
     
