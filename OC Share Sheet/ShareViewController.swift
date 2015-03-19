@@ -46,6 +46,7 @@ import AVFoundation
         
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
             self.navigationController?.view.bounds = CGRectMake(0, 0, witdhFormSheet, heighFormSheet)
+            //self.preferredContentSize = CGSizeMake(witdhFormSheet, heighFormSheet);
         }
         
     }

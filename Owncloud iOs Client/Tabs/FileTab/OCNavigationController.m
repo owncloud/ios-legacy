@@ -101,8 +101,11 @@
     if (!isShow) {
         
         CGRect bgFrame = self.navigationBar.bounds;
+#ifdef SHARE_IN
+#else
         bgFrame.origin.y -= 20.0;
         bgFrame.size.height += 20.0;
+#endif
         _backgroundView = [[PassthroughView alloc] initWithFrame:bgFrame];
         _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _backgroundView.backgroundColor = [UIColor colorOfNavigationBar];
