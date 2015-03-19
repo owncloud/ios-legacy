@@ -73,7 +73,14 @@ import AVFoundation
         if folder.isEmpty {
             nameFolder = k_app_name
         }
-        
+
+        if (countElements(nameFolder) > 20) {
+            nameFolder =  nameFolder.substringWithRange(Range<String.Index>(start:nameFolder.startIndex, end: advance(nameFolder.startIndex, 20)))
+            nameFolder += "..."
+        }
+
+        println("nameFolder: \(nameFolder)")
+
         let destiny = "\(location) \(nameFolder)"
         
         self.destinyFolderButton?.title = destiny
