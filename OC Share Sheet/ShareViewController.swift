@@ -141,12 +141,22 @@ import AVFoundation
                 upload.taskIdentifier = 0
                 
                 ManageUploadsDB.insertUpload(upload)
-                
-                //let url: NSURL? = NSURL(string: "owncloud://")
-                //self.extensionContext?.openURL(url!, completionHandler: nil)
-                
-                cancelView()
             }
+            
+            var webView = UIWebView()
+            webView.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+            
+            let urlString = "owncloud://"
+            let content = "<head><meta http-equiv='refresh' content='0; URL=\(urlString)'></head>"
+            webView.loadHTMLString(content, baseURL: nil)
+            self.view.addSubview(webView)
+            
+            // Delay 2 seconds
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+                webView.removeFromSuperview()
+                self.cancelView()
+            }
+            
         } else {
             showErrorUserNotExist()
         }
