@@ -138,13 +138,14 @@
                             <constraint firstItem="d5i-Ba-RvD" firstAttribute="top" secondItem="gad-k1-Oh8" secondAttribute="bottom" id="n1F-h4-Uxd"/>
                             <constraint firstItem="gad-k1-Oh8" firstAttribute="top" secondItem="6bg-ed-mfL" secondAttribute="bottom" id="qEs-cg-DMH"/>
                             <constraint firstItem="gad-k1-Oh8" firstAttribute="leadingMargin" secondItem="wbc-yd-nQP" secondAttribute="leadingMargin" constant="-16" id="qnK-zI-jNY"/>
-                            <constraint firstItem="6bg-ed-mfL" firstAttribute="top" secondItem="8bI-gs-bmD" secondAttribute="bottom" constant="-20" id="sKS-dx-tS9"/>
+                            <constraint firstItem="6bg-ed-mfL" firstAttribute="top" secondItem="8bI-gs-bmD" secondAttribute="bottom" id="sKS-dx-tS9"/>
                             <constraint firstItem="gad-k1-Oh8" firstAttribute="top" secondItem="6bg-ed-mfL" secondAttribute="bottom" id="xUM-bt-esX"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="DwO-O2-rAX"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
+                        <outlet property="constraintTopTableView" destination="sKS-dx-tS9" id="Cps-IG-Eih"/>
                         <outlet property="destinyFolderButton" destination="Dpo-t5-Knx" id="9p8-c0-Ocm"/>
                         <outlet property="shareTable" destination="6bg-ed-mfL" id="tzz-SO-m9D"/>
                     </connections>

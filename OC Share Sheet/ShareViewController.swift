@@ -18,6 +18,7 @@ import AVFoundation
     @IBOutlet weak var shareTable: UITableView?
     @IBOutlet weak var numberOfImages: UILabel?
     @IBOutlet weak var destinyFolderButton: UIBarButtonItem?
+    @IBOutlet weak var constraintTopTableView: NSLayoutConstraint?
     
     var filesSelected: [NSURL] = []
     var images: [UIImage] = []
@@ -46,7 +47,7 @@ import AVFoundation
         
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
             self.navigationController?.view.bounds = CGRectMake(0, 0, witdhFormSheet, heighFormSheet)
-            //self.preferredContentSize = CGSizeMake(witdhFormSheet, heighFormSheet);
+            self.constraintTopTableView?.constant = -20
         }
         
     }
