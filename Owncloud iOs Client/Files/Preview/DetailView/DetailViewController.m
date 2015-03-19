@@ -584,8 +584,12 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
         } else {
             if (!self.officeView) {
-                CGRect frame = _mainScrollView.frame;
-                self.officeView=[[OfficeFileView alloc]initWithFrame:frame];
+                CGRect originFrame = self.mainScrollView.frame;
+                CGRect sizeFrame = self.view.bounds;
+                
+                CGRect correctFrame = CGRectMake(originFrame.origin.x, originFrame.origin.y, sizeFrame.size.width, sizeFrame.size.height);
+                
+                self.officeView=[[OfficeFileView alloc]initWithFrame:correctFrame];
             } else {
                 [self.officeView.webView removeFromSuperview];
             }
