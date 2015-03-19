@@ -50,12 +50,6 @@
             self.shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:NSLocalizedString(@"unshare_link", nil) otherButtonTitles:NSLocalizedString(@"share_link_long_press", nil), nil];
             
             if (!IS_IPHONE){
-                
-                AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                if (app.detailViewController.popoverController.isPopoverVisible){
-                    [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-                }
-                
                 [self.shareActionSheet showInView:_viewToShow];
             } else {
                 
