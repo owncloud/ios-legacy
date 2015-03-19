@@ -102,6 +102,10 @@
         
         CGRect bgFrame = self.navigationBar.bounds;
 #ifdef SHARE_IN
+        if (IS_IPHONE) {
+            bgFrame.origin.y -= 20.0;
+            bgFrame.size.height += 20.0;
+        }
 #else
         bgFrame.origin.y -= 20.0;
         bgFrame.size.height += 20.0;
