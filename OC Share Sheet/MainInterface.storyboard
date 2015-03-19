@@ -35,7 +35,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gad-k1-Oh8" customClass="OCToolBar">
-                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <rect key="frame" x="-16" y="556" width="616" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="rZR-ep-syc"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="ski-H2-N9g"/>
                                     <barButtonItem title="Item" id="Dpo-t5-Knx">
@@ -128,13 +131,14 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="gad-k1-Oh8" secondAttribute="trailing" constant="-16" id="Ogc-Ss-sTA"/>
+                            <constraint firstItem="d5i-Ba-RvD" firstAttribute="top" secondItem="gad-k1-Oh8" secondAttribute="bottom" id="ZbI-py-8av"/>
                             <constraint firstItem="6bg-ed-mfL" firstAttribute="leading" secondItem="wbc-yd-nQP" secondAttribute="leadingMargin" constant="-16" id="aoW-xE-g2g"/>
                             <constraint firstAttribute="trailingMargin" secondItem="6bg-ed-mfL" secondAttribute="trailing" constant="-16" id="fyA-0H-E9s"/>
-                            <constraint firstItem="gad-k1-Oh8" firstAttribute="leading" secondItem="wbc-yd-nQP" secondAttribute="leadingMargin" constant="-16" id="gJt-yc-mba"/>
                             <constraint firstItem="d5i-Ba-RvD" firstAttribute="top" secondItem="gad-k1-Oh8" secondAttribute="bottom" id="n1F-h4-Uxd"/>
                             <constraint firstItem="gad-k1-Oh8" firstAttribute="top" secondItem="6bg-ed-mfL" secondAttribute="bottom" id="qEs-cg-DMH"/>
+                            <constraint firstItem="gad-k1-Oh8" firstAttribute="leadingMargin" secondItem="wbc-yd-nQP" secondAttribute="leadingMargin" constant="-16" id="qnK-zI-jNY"/>
                             <constraint firstItem="6bg-ed-mfL" firstAttribute="top" secondItem="8bI-gs-bmD" secondAttribute="bottom" constant="-20" id="sKS-dx-tS9"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="gad-k1-Oh8" secondAttribute="trailing" constant="-16" id="taP-fg-KGq"/>
                             <constraint firstItem="gad-k1-Oh8" firstAttribute="top" secondItem="6bg-ed-mfL" secondAttribute="bottom" id="xUM-bt-esX"/>
                         </constraints>
                     </view>
