@@ -1033,7 +1033,7 @@
     } else {
         
         self.elcPicker.modalPresentationStyle = UIModalPresentationFormSheet;
-        
+       
         if (IS_IOS8) {
             [app.detailViewController presentViewController:self.elcPicker animated:YES completion:nil];
         } else {
@@ -2147,7 +2147,7 @@
 
 #pragma mark - UIActionSheetDelegate
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
     
     //Upload, create folder, cancel options (+ menu)
     if (actionSheet.tag==100) {
