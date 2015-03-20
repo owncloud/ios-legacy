@@ -175,7 +175,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     CGRect originFrame = self.mainScrollView.frame;
     CGRect sizeFrame = self.view.bounds;
     
-    CGRect correctFrame = CGRectMake(originFrame.origin.x, originFrame.origin.y, sizeFrame.size.width, sizeFrame.size.height);
+    CGRect correctFrame = CGRectMake(originFrame.origin.x, originFrame.origin.y, sizeFrame.size.width, (sizeFrame.size.height - originFrame.origin.y));
     
     return correctFrame;
 }
@@ -214,8 +214,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     //Configure size of movie player dinamically
     if (_moviePlayer) {
-        if (_moviePlayer.isFullScreen==NO) {
-            _moviePlayer.moviePlayer.view.frame = _mainScrollView.frame;
+        if (_moviePlayer.isFullScreen == NO) {
+            _moviePlayer.moviePlayer.view.frame = [self getTheCorrectSize];
         } else {
             CGRect fullScreenFrame = _mainScrollView.frame;
             fullScreenFrame.size.height = _mainScrollView.frame.size.height + toolbar.frame.size.height;
@@ -237,7 +237,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     
     //Diferents configures of tool bar depends if the detail view is extend or not.
-    if (_isExtend==YES) {
+    if (_isExtend == YES) {
         
         NSMutableArray *items = [[toolbar items] mutableCopy];
         UIBarButtonItem *popoverItem = [items objectAtIndex:0];
@@ -260,16 +260,16 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         //Configure size of movie player dinamically
         if (_moviePlayer) {
-            if (_moviePlayer.isFullScreen==NO) {
-                _moviePlayer.moviePlayer.view.frame= _mainScrollView.frame;
+            if (_moviePlayer.isFullScreen == NO) {
+                _moviePlayer.moviePlayer.view.frame = [self getTheCorrectSize];
             } else {
                 CGRect fullScreenFrame = _mainScrollView.frame;
                 fullScreenFrame.size.height = _mainScrollView.frame.size.height + toolbar.frame.size.height;
                 fullScreenFrame.origin.y = toolbar.frame.origin.y;
-                _moviePlayer.moviePlayer.view.frame= fullScreenFrame;
+                _moviePlayer.moviePlayer.view.frame = fullScreenFrame;
             }
         } else if (_readerPDFViewController) {
-            _readerPDFViewController.view.frame = _mainScrollView.frame;
+            _readerPDFViewController.view.frame = [self getTheCorrectSize];
             [_readerPDFViewController updateContentViews];
         }
         
@@ -279,7 +279,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [items removeAllObjects];
         [items insertObject:_spaceBar atIndex:0];
         
-        if (_isFileCharged==YES) {
+        if (_isFileCharged == YES) {
             [items insertObject:_openButtonBar atIndex:1];
             [items insertObject:_spaceBar1 atIndex:2];
             [items insertObject:_favoriteButtonBar atIndex:3];
@@ -291,13 +291,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [toolbar setItems:items animated:YES];
         
         if (_moviePlayer) {
-            CGRect frame = _mainScrollView.frame;
-            _moviePlayer.moviePlayer.view.frame = frame;
+            _moviePlayer.moviePlayer.view.frame = [self getTheCorrectSize];
         } else if (_readerPDFViewController) {
-            
-            CGRect frame = _mainScrollView.frame;
-            
-            _readerPDFViewController.view.frame = frame;
+            _readerPDFViewController.view.frame = [self getTheCorrectSize];
             [_readerPDFViewController updateContentViews];
         }
     }
@@ -537,9 +533,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 
 - (void)previewFile {
-    _companyImageView.hidden=YES;
+    _companyImageView.hidden = YES;
     self.view.backgroundColor = [UIColor whiteColor];
-    _previewImageView.hidden=NO;
+    _previewImageView.hidden = NO;
     
     //Get the image preview name
     NSString *filePreviewName = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:_file.fileName];
@@ -955,7 +951,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     
     if (!_galleryView) {
-        _galleryView=[[GalleryView alloc]initWithFrame:_mainScrollView.frame];
+        _galleryView=[[GalleryView alloc]initWithFrame:[self getTheCorrectSize]];
         //Pass the current file
         _galleryView.file=_file;
         _galleryView.delegate=self;
@@ -1306,11 +1302,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
              name:MPMoviePlayerPlaybackDidFinishNotification
              object:nil];      */
             
-            _moviePlayer.moviePlayer.controlStyle=MPMovieControlStyleNone;
+            _moviePlayer.moviePlayer.controlStyle = MPMovieControlStyleNone;
             
             [_moviePlayer.moviePlayer setFullscreen:NO];
             
-            _moviePlayer.moviePlayer.shouldAutoplay=NO;
+            _moviePlayer.moviePlayer.shouldAutoplay = NO;
             
             [self configureView];
             
@@ -1802,6 +1798,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
     }
     
+    if (self.galleryView) {
+        [self adjustGalleryScrollView];
+    }
+    
 }
 
 - (void)customDidRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
@@ -1847,7 +1847,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self configureView];
     
     if (_galleryView) {
-        [_galleryView.scrollView setFrame:_mainScrollView.frame];
+        [_galleryView.scrollView setFrame:[self getTheCorrectSize]];
         [_galleryView adjustTheScrollViewAfterTheRotation];
     }
 }

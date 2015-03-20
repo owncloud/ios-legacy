@@ -873,7 +873,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             [_mediaPlayer.moviePlayer stop];
             [_mediaPlayer finalizePlayer];
             [_mediaPlayer.view removeFromSuperview];
-            _mediaPlayer=nil;
+            _mediaPlayer = nil;
         }
     }
 }
