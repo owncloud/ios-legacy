@@ -191,14 +191,14 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     NSMutableArray *items = [[toolbar items] mutableCopy];
     
     if (_isFileCharged==YES) {
-        [items insertObject:_spaceBar atIndex:1];
-        [items insertObject:_openButtonBar atIndex:2];
-        [items insertObject:_spaceBar1 atIndex:3];
-        [items insertObject:_favoriteButtonBar atIndex:4];
-        [items insertObject:_spaceBar2 atIndex:5];
-        [items insertObject:_shareLinkButtonBar atIndex:6];
-        [items insertObject:_spaceBar3 atIndex:7];
-        [items insertObject:_deleteButtonBar atIndex:8];
+        [items insertObject:_spaceBar atIndex:0];
+        [items insertObject:_openButtonBar atIndex:1];
+        [items insertObject:_spaceBar1 atIndex:2];
+        [items insertObject:_favoriteButtonBar atIndex:3];
+        [items insertObject:_spaceBar2 atIndex:4];
+        [items insertObject:_shareLinkButtonBar atIndex:5];
+        [items insertObject:_spaceBar3 atIndex:6];
+        [items insertObject:_deleteButtonBar atIndex:7];
     } else {
         [items removeObject:_spaceBar];
         [items removeObject:_openButtonBar];
