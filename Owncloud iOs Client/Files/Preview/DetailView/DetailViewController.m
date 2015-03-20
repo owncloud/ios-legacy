@@ -223,7 +223,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             _moviePlayer.moviePlayer.view.frame= fullScreenFrame;
         }
     } else if (_readerPDFViewController) {
-        _readerPDFViewController.view.frame = _mainScrollView.frame;
+        _readerPDFViewController.view.frame = [self getTheCorrectSize];
         [_readerPDFViewController updateContentViews];
     }
     
