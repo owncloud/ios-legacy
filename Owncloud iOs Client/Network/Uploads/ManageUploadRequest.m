@@ -32,6 +32,7 @@
 #import "UtilsDtos.h"
 #import "OCURLSessionManager.h"
 #import "ManageAppSettingsDB.h"
+#import "UtilsCookies.h"
 
 NSString *fileDeleteInAOverwriteProcess=@"fileDeleteInAOverwriteProcess";
 NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
@@ -773,7 +774,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [self updateRecentsTab];
 
     //Clear cache and cookies
-    [app eraseURLCache];
+    [UtilsCookies eraseURLCache];
 }
 
 
@@ -988,7 +989,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         
     }];
     //Erase cache and cookies
-    [weakSelf eraseURLCache];
+    [UtilsCookies eraseURLCache];
 }
 
 // Check the etag in the case that in the server has changed
@@ -1072,23 +1073,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         
     }];
     //Erase cache and cookies
-    [weakSelf eraseURLCache];
+    [UtilsCookies eraseURLCache];
 }
-
-
-///-----------------------------------
-/// @name Erase URL Cache
-///-----------------------------------
-
-/**
- * Method that clear the URL cache
- *
- */
-- (void)eraseURLCache
-{
-    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
-    [[NSURLCache sharedURLCache] setDiskCapacity:0];
-}
-
 
 @end

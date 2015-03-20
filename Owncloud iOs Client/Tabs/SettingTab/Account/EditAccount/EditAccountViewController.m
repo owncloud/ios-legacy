@@ -232,13 +232,15 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
  * Overwrite method of LoginViewController to check the username after continue the login process
  */
 - (void)setCookieForSSO:(NSString *) cookieString andSamlUserName:(NSString*)samlUserName {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    NSString *connectURL =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
+    
+    [ManageCookiesStorageDB deleteCookiesByUser:[ManageUsersDB getActiveUser]];
+    [UtilsCookies eraseCredentialsWithURL:connectURL];
+    [UtilsCookies eraseURLCache];
     
     //We check if the user that we are editing is the same that we are using
     if ([_selectedUser.username isEqualToString:samlUserName]) {
-        
-        [ManageCookiesStorageDB deleteCookiesByUser:[ManageUsersDB getActiveUser]];
-        [self eraseCredentials];
-        [self eraseURLCache];
         
         _usernameTextField = [UITextField new];
         _usernameTextField.text = samlUserName;
@@ -248,53 +250,9 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         [self goTryToDoLogin];
     } else {
         
-        [ManageCookiesStorageDB deleteCookiesByUser:[ManageUsersDB getActiveUser]];
-        [self eraseCredentials];
-        [self eraseURLCache];
-        
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"credentials_different_user", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
         [alertView show];
     }
-}
-
-#pragma mark - Delete cache HTTP
-
-- (void)eraseCredentials
-{
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    NSString *connectURL =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
-    
-    NSURLCredentialStorage *credentialsStorage = [NSURLCredentialStorage sharedCredentialStorage];
-    NSDictionary *allCredentials = [credentialsStorage allCredentials];
-    
-    if ([allCredentials count] > 0)
-    {
-        for (NSURLProtectionSpace *protectionSpace in allCredentials)
-        {
-            DLog(@"Protetion espace: %@", [protectionSpace host]);
-            
-            if ([[protectionSpace host] isEqualToString:connectURL])
-            {
-                DLog(@"Credentials erase");
-                NSDictionary *credentials = [credentialsStorage credentialsForProtectionSpace:protectionSpace];
-                for (NSString *credentialKey in credentials)
-                {
-                    [credentialsStorage removeCredential:[credentials objectForKey:credentialKey] forProtectionSpace:protectionSpace];
-                }
-            }
-        }
-    }
-}
-
-- (void)eraseURLCache
-{
-    //  NSURL *loginUrl = [NSURL URLWithString:self.connectString];
-    //  NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc]initWithURL:loginUrl];
-    // [NSMutableURLRequest requestWithURL:loginUrl];
-    //  [[NSURLCache sharedURLCache] removeCachedResponseForRequest:urlRequest];
-    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
-    [[NSURLCache sharedURLCache] setDiskCapacity:0];
 }
 
 ///-----------------------------------

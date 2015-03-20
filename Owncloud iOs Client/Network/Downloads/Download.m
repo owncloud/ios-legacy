@@ -29,6 +29,7 @@
 #import "ManageFavorites.h"
 #import "FilesViewController.h"
 #import "UploadUtils.h"
+#import "UtilsCookies.h"
 
 #define k_task_identifier_invalid -1
 
@@ -202,7 +203,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                 }
                 
                 //Erase cache and cookies
-                [weakSelf eraseURLCache];
+                [UtilsCookies eraseURLCache];
         
             }
   
@@ -317,7 +318,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                                                           }
                                                           
                                                           //Erase cache and cookies
-                                                          [weakSelf eraseURLCache];
+                                                          [UtilsCookies eraseURLCache];
                                                           
                                                       } shouldExecuteAsBackgroundTaskWithExpirationHandler:^{
                                                           //Cancel download
@@ -509,7 +510,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             }
             
             //Clear the chache and cookies
-            [self eraseURLCache];
+            [UtilsCookies eraseURLCache];
             
             //Set not download in database            
             if (!_fileDto.isNecessaryUpdate) {
@@ -555,22 +556,6 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
 }
 
-#pragma mark - Delete cache of URL
-
-
-///-----------------------------------
-/// @name Erase URL Cache
-///-----------------------------------
-
-/**
- * Method that clear the URL cache
- *
- */
-- (void)eraseURLCache
-{
-    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
-    [[NSURLCache sharedURLCache] setDiskCapacity:0];
-}
 
 #pragma mark Global Download Array Manager
 
@@ -801,7 +786,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             }
         }
         //Erase cache
-        [weakSelf eraseURLCache];
+        [UtilsCookies eraseURLCache];
     }];
 }
 

@@ -198,18 +198,11 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 - (void) doThingsThatShouldDoOnStart;
 
 /*
- * Methods to clear network cache
- */
-- (void) eraseURLCache;
-- (void) eraseCredentials;
-
-/*
  * Method relaunch the upload failed if exist
  * This method has a timeout
  *@isForced -> If YES the timeout is 0 secs
  */
 - (void) relaunchUploadsFailed:(BOOL)isForced;
-
 
 /*
  * Method that relaunch upload failed without timeout
