@@ -32,6 +32,8 @@
 			<string>com.apple.share-services</string>
 			<key>NSExtensionActivationRule</key>
 			<dict>
+				<key>NSExtensionActivationSupportsText</key>
+				<integer>5</integer>
 				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
 				<integer>5</integer>
 				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
@@ -39,7 +41,7 @@
 				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
 				<integer>5</integer>
 				<key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
-				<string>5</string>
+				<integer>5</integer>
 				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
 				<integer>0</integer>
 			</dict>
