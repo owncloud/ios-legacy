@@ -33,15 +33,15 @@
 			<key>NSExtensionActivationRule</key>
 			<dict>
 				<key>NSExtensionActivationSupportsText</key>
-				<integer>5</integer>
+				<integer>3</integer>
 				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
-				<integer>5</integer>
+				<integer>3</integer>
 				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
-				<integer>5</integer>
+				<integer>20</integer>
 				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
-				<integer>5</integer>
+				<integer>3</integer>
 				<key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
-				<integer>5</integer>
+				<integer>20</integer>
 				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
 				<integer>0</integer>
 			</dict>
