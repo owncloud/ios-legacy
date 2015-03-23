@@ -58,6 +58,6 @@ typedef enum {
 -(IBAction)changeSwitchPasscode:(id)sender;
 -(IBAction)changeSwitchInstantUpload:(id)sender;
 -(void)disconnectUser;
-//-(void)internazionaliceTheInitialInterface;
+-(void)initStateInstantUpload;
 
 @end

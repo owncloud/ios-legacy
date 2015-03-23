@@ -1003,6 +1003,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 {
     DLog(@"applicationWillEnterForeground");
     
+    [self.settingsViewController initStateInstantUpload];
+    
     if (_activeUser.username==nil) {
         _activeUser=[ManageUsersDB getActiveUser];
     }
