@@ -493,8 +493,6 @@
 		59C3AC1D1A287DE3005433A1 /* KKPasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968C17F599060033B3C1 /* KKPasscodeViewController.m */; };
 		59C3AC1F1A287E3B005433A1 /* OCPortraitNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68969817F9AC860033B3C1 /* OCPortraitNavigationViewController.m */; };
 		59C521F91A1B7C3A00C5EF76 /* ManageNetworkErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C9D323195C0EFB00400AE2 /* ManageNetworkErrors.m */; };
-		59C762321AB85B5900A64C1F /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
-		59C762341AB85B7C00A64C1F /* UploadsOfflineDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F674178422AE0092F42A /* UploadsOfflineDto.m */; };
 		59C71D121A9216AE00F66166 /* CGPDFDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C71CEB1A9216AE00F66166 /* CGPDFDocument.m */; };
 		59C71D131A9216AE00F66166 /* ReaderConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C71CED1A9216AE00F66166 /* ReaderConstants.m */; };
 		59C71D141A9216AE00F66166 /* ReaderContentPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C71CEF1A9216AE00F66166 /* ReaderContentPage.m */; };
@@ -516,6 +514,8 @@
 		59C71D241A9216AE00F66166 /* ThumbsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C71D0F1A9216AE00F66166 /* ThumbsViewController.m */; };
 		59C71D251A9216AE00F66166 /* UIXToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C71D111A9216AE00F66166 /* UIXToolbarView.m */; };
 		59C71D281A921A5100F66166 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59C71D271A921A5100F66166 /* ImageIO.framework */; };
+		59C762321AB85B5900A64C1F /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
+		59C762341AB85B7C00A64C1F /* UploadsOfflineDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F674178422AE0092F42A /* UploadsOfflineDto.m */; };
 		59C88E8F1A27335B00D83AB4 /* BackRootFolderIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F5E1A123B03003E7397 /* BackRootFolderIcon@3x.png */; };
 		59C88E901A27335B00D83AB4 /* doc_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354D61A14FD53000E7FE4 /* doc_icon@3x.png */; };
 		59C88E911A27335B00D83AB4 /* file_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F21A16277100DB0871 /* file_icon.png */; };
@@ -579,7 +579,6 @@
 		EA66069F1AA767F800BA2C65 /* OC Share Sheet.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EA6606951AA767F700BA2C65 /* OC Share Sheet.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EA6606A81AA87B4E00BA2C65 /* FileSelectedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6606A61AA87B4E00BA2C65 /* FileSelectedCell.swift */; };
 		EA6606A91AA87B4E00BA2C65 /* FileSelectedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA6606A71AA87B4E00BA2C65 /* FileSelectedCell.xib */; };
-		EA6606AE1AA884D400BA2C65 /* BlurImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6606AD1AA884D400BA2C65 /* BlurImageView.swift */; };
 		EA68968D17F599060033B3C1 /* KKKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968517F599060033B3C1 /* KKKeychain.m */; };
 		EA68968E17F599060033B3C1 /* KKPasscodeLock.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */; };
 		EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968817F599060033B3C1 /* KKPasscodeLock.m */; };
@@ -1407,7 +1406,6 @@
 		EA6606A41AA7764900BA2C65 /* OC Share Sheet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "OC Share Sheet.entitlements"; sourceTree = "<group>"; };
 		EA6606A61AA87B4E00BA2C65 /* FileSelectedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileSelectedCell.swift; path = Cells/FileSelectedCell.swift; sourceTree = "<group>"; };
 		EA6606A71AA87B4E00BA2C65 /* FileSelectedCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FileSelectedCell.xib; path = Cells/FileSelectedCell.xib; sourceTree = "<group>"; };
-		EA6606AD1AA884D400BA2C65 /* BlurImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurImageView.swift; sourceTree = "<group>"; };
 		EA68968417F599060033B3C1 /* KKKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KKKeychain.h; path = ExternalLibreries/KKPasscodeLock/KKKeychain.h; sourceTree = "<group>"; };
 		EA68968517F599060033B3C1 /* KKKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KKKeychain.m; path = ExternalLibreries/KKPasscodeLock/KKKeychain.m; sourceTree = "<group>"; };
 		EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = KKPasscodeLock.bundle; path = ExternalLibreries/KKPasscodeLock/KKPasscodeLock.bundle; sourceTree = "<group>"; };
@@ -2764,7 +2762,6 @@
 				EA6606991AA767F800BA2C65 /* ShareViewController.swift */,
 				EA66069B1AA767F800BA2C65 /* MainInterface.storyboard */,
 				EA6606971AA767F800BA2C65 /* Supporting Files */,
-				EA6606AD1AA884D400BA2C65 /* BlurImageView.swift */,
 				EAF7217C1AAF2E0D009F5596 /* Managers.swift */,
 			);
 			path = "OC Share Sheet";
@@ -3958,7 +3955,6 @@
 				EAF721741AAF1A13009F5596 /* UserDto.m in Sources */,
 				EAC6E5F61AB0917400CCF8C4 /* CheckAccessToServer.m in Sources */,
 				59C762321AB85B5900A64C1F /* ManageUploadsDB.m in Sources */,
-				EA6606AE1AA884D400BA2C65 /* BlurImageView.swift in Sources */,
 				EAF721831AAF340D009F5596 /* ManageUsersDB.m in Sources */,
 				EA6606A81AA87B4E00BA2C65 /* FileSelectedCell.swift in Sources */,
 				EAC6E5FE1AB0A41900CCF8C4 /* OCNavigationController.m in Sources */,
