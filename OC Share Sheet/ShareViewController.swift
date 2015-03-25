@@ -351,8 +351,9 @@ import AVFoundation
         cell.imageForFile?.clipsToBounds = true
         cell.imageForFile?.layer.borderWidth = 3.0
         cell.imageForFile?.layer.borderColor = customRowBorderColor.CGColor
+        cell.imageForFile?.backgroundColor = UIColor.whiteColor()
         
-        //Cusotm circle view in
+        //Custom circle view in
         cell.roundCustomView?.backgroundColor = customRowColor
         cell.roundCustomView?.layer.cornerRadius = cornerRadius
         cell.roundCustomView?.clipsToBounds = true
