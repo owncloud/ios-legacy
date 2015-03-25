@@ -110,19 +110,22 @@ import AVFoundation
                 
                 var fileName:String!
                 
+                var urlOriginalPath :String = url.path!.stringByDeletingLastPathComponent
+                var destinyMovedFilePath :String = UtilsUrls.getTempFolderForUploadFiles()
+                
+                fileName = url.path!.lastPathComponent
                 if type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue {
                     
-                    fileName = FileNameUtils.getComposeNameFromPath(url.path)
-                    
-                } else {
-                    fileName = url.path!.lastPathComponent
+                    if  urlOriginalPath != dropLast(destinyMovedFilePath) {
+                        fileName = FileNameUtils.getComposeNameFromPath(url.path)
+                    }
                 }
                 
                 //2º Copy the file to the tmp folder
-                var destinyMovedFilePath = UtilsUrls.getTempFolderForUploadFiles()
                 destinyMovedFilePath = destinyMovedFilePath + fileName
-                
-                NSFileManager.defaultManager().copyItemAtPath(url.path!, toPath: destinyMovedFilePath, error: nil)
+                if destinyMovedFilePath.stringByDeletingLastPathComponent != urlOriginalPath {
+                    NSFileManager.defaultManager().copyItemAtPath(url.path!, toPath: destinyMovedFilePath, error: nil)
+                }
                 
                 if currentRemotePath == nil {
                     currentRemotePath = ManageFilesDB.getRootFileDtoByUser(user).filePath;
@@ -208,7 +211,7 @@ import AVFoundation
                         self.extensionContext?.completeRequestReturningItems(nil, completionHandler: nil)
                         return
                     }
-                    
+
                     for (index, current) in (enumerate(attachments)){
 
                         //Items
@@ -218,13 +221,48 @@ import AVFoundation
                                 
                                 if error == nil {
                                     
-                                    let url = item as NSURL
+                                    println("item: \(item)")
                                     
-                                    self.filesSelected.append(url)
-                                    
-                                    if index+1 == attachments.count{
+                                    if let url = item as? NSURL{
                                         
-                                        self.showFilesSelected()
+                                        self.filesSelected.append(url)
+                                        
+                                        if index+1 == attachments.count{
+                                            
+                                            self.showFilesSelected()
+                                        }
+                                    }
+                                    
+                                    if let image = item as? NSData{
+                                        
+                                        println("data")
+                                        
+                                        println("item: \(item)")
+                                        
+                                        let description = current.description
+                               
+                                        var fullNameArr = description.componentsSeparatedByString("\"")
+                                        var fileExtArr = fullNameArr[1].componentsSeparatedByString(".")
+                                        var ext = (fileExtArr[fileExtArr.count-1]).uppercaseString
+                                        let dateFormatter = NSDateFormatter()
+                                        dateFormatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
+                                        var fileName = "Photo_email_\(dateFormatter.stringFromDate(NSDate())).\(ext)"
+                                        
+                                        //2º Copy the file to the tmp folder
+                                        var destinyMovedFilePath = UtilsUrls.getTempFolderForUploadFiles()
+                                        destinyMovedFilePath = destinyMovedFilePath + fileName
+                                        
+                                        NSFileManager.defaultManager().createFileAtPath(destinyMovedFilePath,contents:image, attributes:nil)
+                                        
+                                        let url = NSURL(fileURLWithPath: destinyMovedFilePath)
+                                        
+                                        self.filesSelected.append(url!)
+                                        
+                                        if index+1 == attachments.count{
+                                            
+                                            self.showFilesSelected()
+                                        }
+
                                     }
                                     
                                 } else {
