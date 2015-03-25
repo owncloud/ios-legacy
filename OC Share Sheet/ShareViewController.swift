@@ -363,18 +363,23 @@ import AVFoundation
         let ext = FileNameUtils.getExtension(url.lastPathComponent)
         let type = FileNameUtils.checkTheTypeOfFile(ext)
         
+        
+        
+        
         if (type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue) && row < images.count{
-           //Image
-           cell.imageForFile?.image = images[indexPath.row];
-            
+            //Image
+            cell.imageForFile?.image = images[indexPath.row];
+            let fileName = FileNameUtils.getComposeNameFromPath(url.path)
+            cell.title?.text = fileName
         }else{
             //Not image
             let image = UIImage(named: FileNameUtils.getTheNameOfTheImagePreviewOfFileName(url.lastPathComponent))
             cell.imageForFile?.image = image
             cell.imageForFile?.backgroundColor = UIColor.whiteColor()
+            cell.title?.text = url.path?.lastPathComponent
         }
         
-        cell.title?.text = url.path?.lastPathComponent
+        
         
         let fileSizeInBytes = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as? Double
         
