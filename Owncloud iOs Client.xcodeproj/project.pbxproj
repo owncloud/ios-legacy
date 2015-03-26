@@ -752,6 +752,7 @@
 		EAF721861AB027F4009F5596 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		EAF721871AB03DB9009F5596 /* ManageFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13A177C2F73004A1A5A /* ManageFilesDB.m */; };
 		EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
+		EAFE20A81AC4617D00BB888E /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1478,6 +1479,7 @@
 		EAE93A3A19D18E43002B9E15 /* fi */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
 		EAF7217C1AAF2E0D009F5596 /* Managers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Managers.swift; sourceTree = "<group>"; };
+		EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2763,6 +2765,7 @@
 				EA66069B1AA767F800BA2C65 /* MainInterface.storyboard */,
 				EA6606971AA767F800BA2C65 /* Supporting Files */,
 				EAF7217C1AAF2E0D009F5596 /* Managers.swift */,
+				EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */,
 			);
 			path = "OC Share Sheet";
 			sourceTree = "<group>";
@@ -3936,6 +3939,7 @@
 				EAF7216F1AADE7EE009F5596 /* UIColor+Constants.m in Sources */,
 				EAEDC08D1AB194C3004836EB /* PassthroughView.m in Sources */,
 				EAEDC08F1AB19513004836EB /* ManageNetworkErrors.m in Sources */,
+				EAFE20A81AC4617D00BB888E /* UIImage+Resize.swift in Sources */,
 				EAC6E5FD1AB0A41200CCF8C4 /* ImageUtils.m in Sources */,
 				EAF721841AAF3C5C009F5596 /* FMResultSet.m in Sources */,
 				EAEDC0911AB196B0004836EB /* InfoFileUtils.m in Sources */,

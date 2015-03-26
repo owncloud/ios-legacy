@@ -29,6 +29,9 @@ import AVFoundation
     let witdhFormSheet: CGFloat = 540.0
     let heighFormSheet: CGFloat = 620.0
     
+    let witdhImageSize: CGFloat = 150.0
+    let heighImageSize: CGFloat = 150.0
+    
     
     override func viewDidLoad() {
         
@@ -281,9 +284,10 @@ import AVFoundation
     
     func showFilesSelected (){
         
+        
         if self.filesSelected.count > 0{
             
-            for url : NSURL in self.filesSelected{
+            for (index, url: NSURL) in (enumerate(self.filesSelected)){
                 
                 //Check the type of the file
                 
@@ -292,10 +296,11 @@ import AVFoundation
                 
                 println("Selecte file: \(url.path)")
                 
+                var image: UIImage?
+                
                 if type == kindOfFileEnum.imageFileType.rawValue{
-                    let imageData = NSData(contentsOfURL: url)
-                    let image = UIImage(data: imageData!)
-                    self.images.append(image!)
+                    image = UIImage(contentsOfFile: url.path!)
+                   
                 } else if type == kindOfFileEnum.videoFileType.rawValue {
                     println("Video Selected")
                     
@@ -305,21 +310,26 @@ import AVFoundation
                     let time = CMTimeMakeWithSeconds(0.0, 600)
                 
                     let imageRef = imageGenerator.copyCGImageAtTime(time, actualTime: nil, error: nil)
-                    let image = UIImage (CGImage: imageRef)
+                    image = UIImage (CGImage: imageRef)
+
+                }
+                
+                if image != nil{
                     
-                    self.images.append(image!)
+                    var resizedImage:UIImage?
+                    
+                    image?.resize(CGSizeMake(witdhImageSize, heighImageSize), completionHandler: { (resizedImage, data) -> () in
+                        
+                        self.images.append(resizedImage)
+                        
+                        if index+1 == self.filesSelected.count{
+                            
+                            self.shareTable?.reloadData()
+                        }
+                        
+                    })
                 }
-            }
-            
-            
-            // Delay 2 seconds
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.001 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
-                
-                func reloadDatabase () {
-                    self.shareTable?.reloadData()
-                }
-                
-                reloadDatabase()
+ 
             }
             
         }else{
