@@ -368,8 +368,11 @@ import AVFoundation
         
         if (type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue) && row < images.count{
             //Image
+            var fileName: NSString = url.path!.lastPathComponent
             cell.imageForFile?.image = images[indexPath.row];
-            let fileName = FileNameUtils.getComposeNameFromPath(url.path)
+            if  !fileName.containsString("Photo_email") {
+                fileName = FileNameUtils.getComposeNameFromPath(url.path)
+            }
             cell.title?.text = fileName
         }else{
             //Not image
