@@ -99,11 +99,15 @@ import AVFoundation
     }
     
     func sendTheFilesToOwnCloud() {
+        
         println("sendTheFilesToOwnCloud")
         
         let user = ManageUsersDB.getActiveUser()
         
         if user != nil {
+            
+            var hasSomethingToUpload: Bool = false
+            
             for url : NSURL in self.filesSelected {
                 
                 //1º Get the future name of the file
@@ -124,57 +128,72 @@ import AVFoundation
                     }
                 }
                 
-                //2º Copy the file to the tmp folder
-                destinyMovedFilePath = destinyMovedFilePath + fileName
-                if destinyMovedFilePath.stringByDeletingLastPathComponent != urlOriginalPath {
-                    NSFileManager.defaultManager().copyItemAtPath(url.path!, toPath: destinyMovedFilePath, error: nil)
+                //2º Check filename 
+                if !FileNameUtils.isForbidenCharactersInFileName(fileName){
+                    
+                    //2º Copy the file to the tmp folder
+                    destinyMovedFilePath = destinyMovedFilePath + fileName
+                    if destinyMovedFilePath.stringByDeletingLastPathComponent != urlOriginalPath {
+                        NSFileManager.defaultManager().copyItemAtPath(url.path!, toPath: destinyMovedFilePath, error: nil)
+                    }
+                    
+                    if currentRemotePath == nil {
+                        currentRemotePath = ManageFilesDB.getRootFileDtoByUser(user).filePath;
+                    }
+                    
+                    //3º Crete the upload objects
+                    let remotePath = user.url + k_url_webdav_server + UtilsDtos.getDbBFilePathFromFullFilePath(currentRemotePath+fileName, andUser: user)
+                    println("remotePath: \(remotePath)")
+                    
+                    let fileLength = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as Int
+                    println("fileLength: \(fileLength)")
+                    
+                    var upload = UploadsOfflineDto.alloc()
+                    
+                    upload.originPath = destinyMovedFilePath
+                    upload.destinyFolder = remotePath
+                    upload.uploadFileName = fileName
+                    upload.kindOfError = enumKindOfError.notAnError.rawValue
+                    upload.estimateLength = fileLength
+                    upload.userId = user.idUser
+                    upload.isLastUploadFileOfThisArray = true
+                    upload.status = enumUpload.generatedByDocumentProvider.rawValue
+                    upload.chunksLength = Int(k_lenght_chunk)
+                    upload.isNotNecessaryCheckIfExist = false
+                    upload.isInternalUpload = false
+                    upload.taskIdentifier = 0
+                    
+                    ManageUploadsDB.insertUpload(upload)
+                    
+                    hasSomethingToUpload = true
+                    
+                }else{
+                
+                    showAlertView(NSLocalizedString("forbiden_characters", comment: ""))
+                    
                 }
                 
-                if currentRemotePath == nil {
-                    currentRemotePath = ManageFilesDB.getRootFileDtoByUser(user).filePath;
-                }
-                
-                //3º Crete the upload objects
-                let remotePath = user.url + k_url_webdav_server + UtilsDtos.getDbBFilePathFromFullFilePath(currentRemotePath+fileName, andUser: user)
-                println("remotePath: \(remotePath)")
-                
-                let fileLength = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as Int
-                println("fileLength: \(fileLength)")
-                
-                var upload = UploadsOfflineDto.alloc()
-                
-                upload.originPath = destinyMovedFilePath
-                upload.destinyFolder = remotePath
-                upload.uploadFileName = fileName
-                upload.kindOfError = enumKindOfError.notAnError.rawValue
-                upload.estimateLength = fileLength
-                upload.userId = user.idUser
-                upload.isLastUploadFileOfThisArray = true
-                upload.status = enumUpload.generatedByDocumentProvider.rawValue
-                upload.chunksLength = Int(k_lenght_chunk)
-                upload.isNotNecessaryCheckIfExist = false
-                upload.isInternalUpload = false
-                upload.taskIdentifier = 0
-                
-                ManageUploadsDB.insertUpload(upload)
             }
             
-            var webView = UIWebView()
-            webView.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
-            
-            let urlString = "owncloud://"
-            let content = "<head><meta http-equiv='refresh' content='0; URL=\(urlString)'></head>"
-            webView.loadHTMLString(content, baseURL: nil)
-            self.view.addSubview(webView)
-            
-            // Delay 2 seconds
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
-                webView.removeFromSuperview()
-                self.cancelView()
+            if hasSomethingToUpload == true{
+                
+                var webView = UIWebView()
+                webView.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+                
+                let urlString = "owncloud://"
+                let content = "<head><meta http-equiv='refresh' content='0; URL=\(urlString)'></head>"
+                webView.loadHTMLString(content, baseURL: nil)
+                self.view.addSubview(webView)
+                
+                // Delay 2 seconds
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+                    webView.removeFromSuperview()
+                    self.cancelView()
+                }
             }
             
         } else {
-            showErrorUserNotExist()
+            showAlertView(NSLocalizedString("error_login_doc_provider", comment: ""))
         }
     }
     
@@ -199,7 +218,7 @@ import AVFoundation
                 println("select folder presented")
             }
         } else {
-            showErrorUserNotExist()
+            showAlertView(NSLocalizedString("error_login_doc_provider", comment: ""))
         }
     }
     
@@ -373,9 +392,6 @@ import AVFoundation
         let ext = FileNameUtils.getExtension(url.lastPathComponent)
         let type = FileNameUtils.checkTheTypeOfFile(ext)
         
-        
-        
-        
         if (type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue) && row < images.count{
             //Image
             var fileName: NSString = url.path!.lastPathComponent
@@ -392,8 +408,7 @@ import AVFoundation
             cell.title?.text = url.path?.lastPathComponent
         }
         
-        
-        
+
         let fileSizeInBytes = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as? Double
         
         
@@ -441,9 +456,10 @@ import AVFoundation
         
     }
     
-    func showErrorUserNotExist() {
-        var alert = UIAlertController(title: NSLocalizedString("error_login_doc_provider", comment: ""), message: "", preferredStyle: UIAlertControllerStyle.Alert)
-        //alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
+    func showAlertView(title: String) {
+        
+        var alert = UIAlertController(title: title, message: "", preferredStyle: UIAlertControllerStyle.Alert)
+        
         alert.addAction(UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .Default, handler: { action in
             switch action.style{
             case .Default:
