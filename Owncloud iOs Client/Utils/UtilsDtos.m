@@ -78,9 +78,9 @@
     DLog(@"full file path: %@", fullFilePath);
     NSString *output = @"";
     
-    //if the path the receive is: /owncloud/remote.php/webdav/Fotos11/perico2.txt
+    //if the path the receive is: http:\//domain/owncloud/remote.php/webdav/Fotos11/perico2.txt
     //we have to return: Fotos11/
-    //if the path the receive is: /owncloud/remote.php/webdav/Fotos11/AA/perico2.txt
+    //if the path the receive is: http:\//domain/owncloud/remote.php/webdav/Fotos11/AA/perico2.txt
     //we have to return: Fotos11/AA/
 
     //1.- Quit the part of the server

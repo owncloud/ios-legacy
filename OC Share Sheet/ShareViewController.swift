@@ -138,12 +138,11 @@ import AVFoundation
                     }
                     
                     if currentRemotePath == nil {
-                        currentRemotePath = ManageFilesDB.getRootFileDtoByUser(user).filePath;
+                        currentRemotePath = user.url + k_url_webdav_server
                     }
                     
                     //3º Crete the upload objects
-                    let remotePath = user.url + k_url_webdav_server + UtilsDtos.getDbBFilePathFromFullFilePath(currentRemotePath+fileName, andUser: user)
-                    println("remotePath: \(remotePath)")
+                    println("remotePath: \(currentRemotePath)")
                     
                     let fileLength = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as Int
                     println("fileLength: \(fileLength)")
@@ -151,7 +150,7 @@ import AVFoundation
                     var upload = UploadsOfflineDto.alloc()
                     
                     upload.originPath = destinyMovedFilePath
-                    upload.destinyFolder = remotePath
+                    upload.destinyFolder = currentRemotePath
                     upload.uploadFileName = fileName
                     upload.kindOfError = enumKindOfError.notAnError.rawValue
                     upload.estimateLength = fileLength
@@ -242,10 +241,9 @@ import AVFoundation
                             current.loadItemForTypeIdentifier(kUTTypeItem, options: nil, completionHandler: {(item: NSSecureCoding!, error: NSError!) -> Void in
                                 
                                 if error == nil {
-                                    
-                                    println("item: \(item)")
-                                    
                                     if let url = item as? NSURL{
+                                        
+                                        println("item as url: \(item)")
                                         
                                         self.filesSelected.append(url)
                                         
@@ -257,9 +255,7 @@ import AVFoundation
                                     
                                     if let image = item as? NSData{
                                         
-                                        println("data")
-                                        
-                                        println("item: \(item)")
+                                        println("item as NSdata")
                                         
                                         let description = current.description
                                
