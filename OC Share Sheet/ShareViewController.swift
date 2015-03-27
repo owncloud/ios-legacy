@@ -388,10 +388,12 @@ import AVFoundation
         let ext = FileNameUtils.getExtension(url.lastPathComponent)
         let type = FileNameUtils.checkTheTypeOfFile(ext)
         
-        if (type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue) && row < images.count{
+        if (type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue){
             //Image
             var fileName: NSString = url.path!.lastPathComponent
-            cell.imageForFile?.image = images[indexPath.row];
+            if row < images.count {
+                cell.imageForFile?.image = images[indexPath.row];
+            }
             if  !fileName.containsString("Photo_email") {
                 cell.title?.text = FileNameUtils.getComposeNameFromPath(url.path)
             } else {
