@@ -393,9 +393,10 @@ import AVFoundation
             var fileName: NSString = url.path!.lastPathComponent
             cell.imageForFile?.image = images[indexPath.row];
             if  !fileName.containsString("Photo_email") {
-                fileName = FileNameUtils.getComposeNameFromPath(url.path)
+                cell.title?.text = FileNameUtils.getComposeNameFromPath(url.path)
+            } else {
+                cell.title?.text = fileName
             }
-            cell.title?.text = fileName
         }else{
             //Not image
             let image = UIImage(named: FileNameUtils.getTheNameOfTheImagePreviewOfFileName(url.lastPathComponent))
