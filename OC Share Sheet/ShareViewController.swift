@@ -35,19 +35,20 @@ import AVFoundation
     
     override func viewDidLoad() {
         
+        var delay = 0.1
+        
         if ManageAppSettingsDB.isPasscode(){
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
                 self.showPasscode()
                
             }
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
-                self.showShareIn()
-            }
+            delay = delay * 2
             
-           
-        }else{
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
             self.showShareIn()
         }
  
