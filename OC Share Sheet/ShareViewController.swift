@@ -12,7 +12,7 @@ import MobileCoreServices
 import AVFoundation
 
 
-@objc class ShareViewController: UIViewController, UITableViewDelegate {
+@objc class ShareViewController: UIViewController, UITableViewDelegate, KKPasscodeViewControllerDelegate {
     
     @IBOutlet weak var navigationBar: UINavigationBar?
     @IBOutlet weak var shareTable: UITableView?
@@ -35,14 +35,24 @@ import AVFoundation
     
     override func viewDidLoad() {
         
-        self.createCustomInterface()
-        
-        self.shareTable!.registerClass(FileSelectedCell.self, forCellReuseIdentifier: "cell")
-        
-        self.loadFiles()
-        
+        if ManageAppSettingsDB.isPasscode(){
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+                self.showPasscode()
+               
+            }
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+                self.showShareIn()
+            }
+            
+           
+        }else{
+            self.showShareIn()
+        }
+ 
     }
-    
+
     override func viewWillLayoutSubviews() {
         
         super.viewWillLayoutSubviews()
@@ -51,6 +61,32 @@ import AVFoundation
             self.navigationController?.view.bounds = CGRectMake(0, 0, witdhFormSheet, heighFormSheet)
             self.constraintTopTableView?.constant = -20
         }
+        
+    }
+    
+    func showPasscode() {
+        
+        let passcodeView = KKPasscodeViewController(nibName: nil, bundle: nil)
+        passcodeView.delegate = self
+        passcodeView.mode = UInt(KKPasscodeModeEnter)
+        
+        let ocNavController = OCNavigationController(rootViewController: passcodeView)
+        ocNavController.modalPresentationStyle = UIModalPresentationStyle.FormSheet
+        
+        self.presentViewController(ocNavController, animated: false) { () -> Void in
+            println("Passcode presented")
+        }
+        
+        
+    }
+    
+    func showShareIn() {
+        
+        self.createCustomInterface()
+        
+        self.shareTable!.registerClass(FileSelectedCell.self, forCellReuseIdentifier: "cell")
+        
+        self.loadFiles()
         
     }
     
@@ -472,5 +508,18 @@ import AVFoundation
         
         self.presentViewController(alert, animated: true, completion: nil)
     }
+    
+    //MARK: KKPasscodeViewControllerDelegate
+    
+    func didPasscodeEnteredCorrectly(viewController: KKPasscodeViewController!) {
+        println("Did passcode entered correctly")
+    }
+    
+   
+    func didPasscodeEnteredIncorrectly(viewController: KKPasscodeViewController!) {
+        println("Did passcode entered incorrectly")
+    }
 
 }
+
+

@@ -19,3 +19,5 @@
 #import "FileNameUtils.h"
 #import "UploadsOfflineDto.h"
 #import "ManageUploadsDB.h"
+#import "KKPasscodeViewController.h"
+#import "ManageAppSettingsDB.h"
