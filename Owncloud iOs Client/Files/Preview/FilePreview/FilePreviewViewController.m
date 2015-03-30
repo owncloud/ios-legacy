@@ -584,7 +584,10 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     //Openwith
     self.openWith = [[OpenWith alloc]init];
     self.openWith.parentView = self.view;
+    self.openWith.parentButton = [self.toolBar.items objectAtIndex:0];
     [self.openWith openWithFile:self.file];
+    
+
     
     //Enable back button
     self.navigationController.navigationBar.UserInteractionEnabled = YES;
