@@ -138,4 +138,19 @@
     return UIStatusBarStyleLightContent;
 }
 
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+#ifdef SHARE_IN
+    if (IS_IPHONE && fromInterfaceOrientation != UIInterfaceOrientationPortrait) {
+        
+        CGRect frame = self.navigationBar.frame;
+        
+        self.navigationBar.frame = CGRectMake(0, 20, frame.size.width, frame.size.height);
+       
+    }
+#endif
+}
+
+
+
 @end
