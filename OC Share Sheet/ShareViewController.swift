@@ -334,6 +334,19 @@ import AVFoundation
     }
     
     
+    func reloadListWithDelay(){
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+            
+            func reloadDatabase () {
+                self.shareTable?.reloadData()
+            }
+            
+            reloadDatabase()
+        }
+    }
+    
+    
     func showFilesSelected (){
         
         
@@ -376,10 +389,18 @@ import AVFoundation
                         
                         if index+1 == self.filesSelected.count{
                             
-                            self.shareTable?.reloadData()
+                            self.reloadListWithDelay()
                         }
                         
                     })
+                    
+                }else{
+                    
+                    if index+1 == self.filesSelected.count{
+                        
+                     self.reloadListWithDelay()
+                        
+                    }
                 }
  
             }
