@@ -17,6 +17,7 @@
 #import "Customization.h"
 
 
+
 @implementation FileNameUtils
 
 
@@ -495,9 +496,10 @@
     NSString* dateString; dateString = [df stringFromDate:date];
     DLog(@"DateString: %@", dateString);
     
-    NSString *assetPath = asset.defaultRepresentation.url.absoluteString;
-    NSString *ext = [self getExtension:assetPath];
     NSString *completeFileName = asset.defaultRepresentation.filename;
+    
+    NSString *ext = [self getExtension:completeFileName];
+
     DLog(@"FileName: %@", completeFileName);
     NSMutableArray *arr =[[NSMutableArray alloc] initWithArray: [completeFileName componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"."]]];
     [arr removeLastObject];
