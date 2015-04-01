@@ -342,6 +342,8 @@
             current.only_wifi_instant_upload = [rs intForColumn:@"only_wifi_instant_upload"];
             current.date_instant_upload = [rs longForColumn:@"date_instant_upload"];
             
+            [output addObject:current];
+            
         }
         
         [rs close];
