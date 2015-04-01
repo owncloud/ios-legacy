@@ -159,6 +159,42 @@
 
 }
 
++ (BOOL)updateKeychainForUseLockPropertyForUser:(NSString *)idUser{
+    
+    BOOL output = NO;
+    
+    NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
+    
+    [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
+    [keychainItem setObject:(__bridge id)(kSecAttrAccessibleWhenUnlocked) forKey:(__bridge id)kSecAttrAccessible];
+    [keychainItem setObject:idUser forKey:(__bridge id)kSecAttrAccount];
+    [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
+    
+    OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
+    
+    if(stsExist != errSecSuccess) {
+        DLog(@"Unable to update item with id =%@ ",idUser);
+        
+    }else {
+        
+        NSMutableDictionary *attrToUpdate = [NSMutableDictionary dictionary];
+        
+        [attrToUpdate setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
+        
+        OSStatus stsUpd = SecItemUpdate((__bridge CFDictionaryRef)(keychainItem), (__bridge CFDictionaryRef)(attrToUpdate));
+        
+        DLog(@"(updateLockProperty)Error Code: %d", (int)stsUpd);
+        
+        if (stsUpd == errSecSuccess) {
+            output = YES;
+        }
+        
+    }
+    
+    return output;
+    
+}
+
 +(BOOL)resetKeychain{
     
     BOOL output = NO;
