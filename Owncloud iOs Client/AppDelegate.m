@@ -53,6 +53,7 @@
 #import "OCKeychain.h"
 #import "ManageLocation.h"
 #import "ManageAsset.h"
+#import "OCSplitViewController.h"
 
 
 #define k_server_with_chunking 4.5 
@@ -563,10 +564,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //iPad
         
         //Create a splitViewController (Split container to show two view in the same time)
-        self.splitViewController=[UISplitViewController new];
+        self.splitViewController = [OCSplitViewController new];
         
         //Create the detailViewController (Detail View of the split)
-        self.detailViewController=[[DetailViewController alloc]initWithNibName:@"DetailView" bundle:nil];
+        self.detailViewController = [[DetailViewController alloc]initWithNibName:@"DetailView" bundle:nil];
         
         //Assign tabBarController like a master view
         
@@ -575,7 +576,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         
         // Add the split view controller's view to the window and display.
-        self.window.rootViewController=_splitViewController;
+        self.window.rootViewController = _splitViewController;
         [_window makeKeyAndVisible];
          _ocTabBarController.selectedIndex = 0;
         
