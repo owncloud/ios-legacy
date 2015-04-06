@@ -53,7 +53,6 @@
 #import "DownloadUtils.h"
 #import "UploadUtils.h"
 #import "ManageNetworkErrors.h"
-#import "MGSplitViewController.h"
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
 

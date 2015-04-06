@@ -32,7 +32,7 @@
 #else
 #import "DocumentPickerViewController.h"
 #endif
-#import "MGSplitViewController.h"
+
 
 
 @interface KKPasscodeViewController ()
