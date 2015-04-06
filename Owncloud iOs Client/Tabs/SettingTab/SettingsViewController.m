@@ -296,16 +296,6 @@
         if (k_show_imprint_option_on_settings) {
             n = n + 1;
         }
-        
-//        if (k_show_recommend_option_on_settings && k_show_imprint_option_on_settings && k_show_help_option_on_settings) {
-//            n = 4;
-//        } else if (!k_show_recommend_option_on_settings && !k_show_imprint_option_on_settings && !k_show_help_option_on_settings)  {
-//            n = 1;
-//        } else if ((!k_show_recommend_option_on_settings && k_show_imprint_option_on_settings && k_show_help_option_on_settings) || (k_show_recommend_option_on_settings && !k_show_imprint_option_on_settings && k_show_help_option_on_settings) || (k_show_recommend_option_on_settings && k_show_imprint_option_on_settings && !k_show_help_option_on_settings)) {
-//            n = 3;
-//        } else {
-//            n = 2;
-//        }
     }
     
     return n;
