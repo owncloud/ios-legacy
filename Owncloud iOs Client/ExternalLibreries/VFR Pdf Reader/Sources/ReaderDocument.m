@@ -152,7 +152,8 @@
 {
 	ReaderDocument *document = nil; // ReaderDocument object
 
-	document = [ReaderDocument unarchiveFromFileName:filePath password:phrase];
+    //Code commented because we have a bug if we update the PDF with a new one
+	//document = [ReaderDocument unarchiveFromFileName:filePath password:phrase];
 
 	if (document == nil) // Unarchive failed so create a new ReaderDocument object
 	{
