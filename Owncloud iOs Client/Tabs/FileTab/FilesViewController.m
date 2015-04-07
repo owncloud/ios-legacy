@@ -1986,6 +1986,8 @@
             }
         }
         
+        self.fileIdToShowFiles = [ManageFilesDB getFileDtoByFileName:self.fileIdToShowFiles.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.fileIdToShowFiles.filePath andUser:app.activeUser] andUser:app.activeUser];
+        
         [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:_fileIdToShowFiles.idFile];
         
         //Get from database all the files of the current folder (fileIdToShowFiles)
