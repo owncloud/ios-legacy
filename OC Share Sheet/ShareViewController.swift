@@ -145,7 +145,7 @@ import AVFoundation
             
             var hasSomethingToUpload: Bool = false
             
-            for url : NSURL in self.filesSelected {
+           for (index, url : NSURL) in (enumerate(self.filesSelected)){
                 
                 //1º Get the future name of the file
                 
@@ -192,13 +192,20 @@ import AVFoundation
                     upload.kindOfError = enumKindOfError.notAnError.rawValue
                     upload.estimateLength = fileLength
                     upload.userId = user.idUser
-                    upload.isLastUploadFileOfThisArray = true
                     upload.status = enumUpload.generatedByDocumentProvider.rawValue
                     upload.chunksLength = Int(k_lenght_chunk)
                     upload.isNotNecessaryCheckIfExist = false
                     upload.isInternalUpload = false
                     upload.taskIdentifier = 0
                     
+                    if index + 1 == self.filesSelected.count{
+                        upload.isLastUploadFileOfThisArray = true
+                        
+                    }else{
+                        upload.isLastUploadFileOfThisArray = false
+                    }
+                    
+
                     ManageUploadsDB.insertUpload(upload)
                     
                     hasSomethingToUpload = true

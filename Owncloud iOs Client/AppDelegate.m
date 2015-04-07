@@ -2632,6 +2632,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             _prepareFiles.delegate = self;
         }
         
+      
         for (UploadsOfflineDto *upload in listOfFilesGeneratedByDocumentProvider) {
             upload.status = waitingAddToUploadList;
         }
@@ -2640,6 +2641,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         [_prepareFiles sendFileToUploadByUploadOfflineDto:[listOfFilesGeneratedByDocumentProvider objectAtIndex:0]];
         
+ 
     }
 }
 
