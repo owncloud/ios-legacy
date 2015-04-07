@@ -580,25 +580,32 @@
         case 0:
             if (k_show_help_option_on_settings) {
                 [self setContentOfRow:help];
-            } else if (k_show_recommend_option_on_settings && !k_show_help_option_on_settings) {
+            } else if (k_show_recommend_option_on_settings) {
                 [self setContentOfRow:recommend];
-            } else {
+            } else if (k_show_feedback_option_on_settings) {
                 [self setContentOfRow:feedback];
+            } else if (k_show_imprint_option_on_settings) {
+                [self setContentOfRow:impress];
             }
             break;
         case 1:
-            if ((!k_show_imprint_option_on_settings || k_show_imprint_option_on_settings) && k_show_recommend_option_on_settings && k_show_help_option_on_settings) {
+            if (k_show_help_option_on_settings && k_show_recommend_option_on_settings) {
                 [self setContentOfRow:recommend];
+            } else if ((k_show_help_option_on_settings && !k_show_recommend_option_on_settings) ||
+                       (!k_show_help_option_on_settings && k_show_recommend_option_on_settings)){
+                if (k_show_feedback_option_on_settings) {
+                    [self setContentOfRow:feedback];
+                } else if (k_show_imprint_option_on_settings){
+                   [self setContentOfRow:impress];
+                }
             } else if (!k_show_help_option_on_settings && !k_show_recommend_option_on_settings) {
                 [self setContentOfRow:impress];
-            } else {
-                [self setContentOfRow:feedback];
             }
             break;
         case 2:
-            if ((!k_show_imprint_option_on_settings || k_show_imprint_option_on_settings) && k_show_recommend_option_on_settings && k_show_help_option_on_settings) {
+            if (k_show_help_option_on_settings && k_show_recommend_option_on_settings && k_show_feedback_option_on_settings) {
                 [self setContentOfRow:feedback];
-            } else {
+            } else if (!k_show_help_option_on_settings || !k_show_recommend_option_on_settings || !k_show_feedback_option_on_settings) {
                 [self setContentOfRow:impress];
             }
             break;
