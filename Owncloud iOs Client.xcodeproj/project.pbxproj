@@ -577,6 +577,14 @@
 		EA4B8E1C1AC92DCC004F335E /* KKPasscodeLock.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968817F599060033B3C1 /* KKPasscodeLock.m */; };
 		EA4B8E1D1AC92DCF004F335E /* KKPasscodeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968A17F599060033B3C1 /* KKPasscodeSettingsViewController.m */; };
 		EA4B8E1E1AC92FCC004F335E /* KKPasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968C17F599060033B3C1 /* KKPasscodeViewController.m */; };
+		EA4914711AC0346100BECF0B /* TTOpenInAppActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4914691AC0346100BECF0B /* TTOpenInAppActivity.m */; };
+		EA4914721AC0346100BECF0B /* TTOpenInAppActivity.png in Resources */ = {isa = PBXBuildFile; fileRef = EA49146A1AC0346100BECF0B /* TTOpenInAppActivity.png */; };
+		EA4914731AC0346100BECF0B /* TTOpenInAppActivity@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA49146B1AC0346100BECF0B /* TTOpenInAppActivity@2x.png */; };
+		EA4914741AC0346100BECF0B /* TTOpenInAppActivity7.png in Resources */ = {isa = PBXBuildFile; fileRef = EA49146C1AC0346100BECF0B /* TTOpenInAppActivity7.png */; };
+		EA4914751AC0346100BECF0B /* TTOpenInAppActivity7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA49146D1AC0346100BECF0B /* TTOpenInAppActivity7@2x.png */; };
+		EA4914761AC0346100BECF0B /* TTOpenInAppActivity8.png in Resources */ = {isa = PBXBuildFile; fileRef = EA49146E1AC0346100BECF0B /* TTOpenInAppActivity8.png */; };
+		EA4914771AC0346100BECF0B /* TTOpenInAppActivity8@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA49146F1AC0346100BECF0B /* TTOpenInAppActivity8@2x.png */; };
+		EA4914781AC0346100BECF0B /* TTOpenInAppActivity8@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA4914701AC0346100BECF0B /* TTOpenInAppActivity8@3x.png */; };
 		EA5FA47F1A6403A0000C1F80 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		EA6462841A6F98F300991913 /* UtilsDtos.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F677178422BE0092F42A /* UtilsDtos.m */; };
 		EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6606991AA767F800BA2C65 /* ShareViewController.swift */; };
@@ -1412,6 +1420,15 @@
 		EA6606A41AA7764900BA2C65 /* OC Share Sheet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "OC Share Sheet.entitlements"; sourceTree = "<group>"; };
 		EA6606A61AA87B4E00BA2C65 /* FileSelectedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileSelectedCell.swift; path = Cells/FileSelectedCell.swift; sourceTree = "<group>"; };
 		EA6606A71AA87B4E00BA2C65 /* FileSelectedCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FileSelectedCell.xib; path = Cells/FileSelectedCell.xib; sourceTree = "<group>"; };
+		EA4914681AC0346100BECF0B /* TTOpenInAppActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TTOpenInAppActivity.h; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity.h; sourceTree = "<group>"; };
+		EA4914691AC0346100BECF0B /* TTOpenInAppActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TTOpenInAppActivity.m; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity.m; sourceTree = "<group>"; };
+		EA49146A1AC0346100BECF0B /* TTOpenInAppActivity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TTOpenInAppActivity.png; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity.png; sourceTree = "<group>"; };
+		EA49146B1AC0346100BECF0B /* TTOpenInAppActivity@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity@2x.png"; path = "ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity@2x.png"; sourceTree = "<group>"; };
+		EA49146C1AC0346100BECF0B /* TTOpenInAppActivity7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TTOpenInAppActivity7.png; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity7.png; sourceTree = "<group>"; };
+		EA49146D1AC0346100BECF0B /* TTOpenInAppActivity7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity7@2x.png"; path = "ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity7@2x.png"; sourceTree = "<group>"; };
+		EA49146E1AC0346100BECF0B /* TTOpenInAppActivity8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TTOpenInAppActivity8.png; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8.png; sourceTree = "<group>"; };
+		EA49146F1AC0346100BECF0B /* TTOpenInAppActivity8@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity8@2x.png"; path = "ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8@2x.png"; sourceTree = "<group>"; };
+		EA4914701AC0346100BECF0B /* TTOpenInAppActivity8@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity8@3x.png"; path = "ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8@3x.png"; sourceTree = "<group>"; };
 		EA68968417F599060033B3C1 /* KKKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KKKeychain.h; path = ExternalLibreries/KKPasscodeLock/KKKeychain.h; sourceTree = "<group>"; };
 		EA68968517F599060033B3C1 /* KKKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KKKeychain.m; path = ExternalLibreries/KKPasscodeLock/KKKeychain.m; sourceTree = "<group>"; };
 		EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = KKPasscodeLock.bundle; path = ExternalLibreries/KKPasscodeLock/KKPasscodeLock.bundle; sourceTree = "<group>"; };
@@ -2408,6 +2425,7 @@
 		148DD5DD1778549700FB9977 /* ExternalLibreries */ = {
 			isa = PBXGroup;
 			children = (
+				EA4914661AC0344800BECF0B /* TTOpenInAppActivity */,
 				EA8ADE631A31E99B008D3612 /* FFCircularProgressView */,
 				1498708E187D66CB000D9C49 /* CustomStatusBar */,
 				EABF69051891376D00A2217C /* SWTableViewCell */,
@@ -2733,6 +2751,22 @@
 				148DD6941778663100FB9977 /* OpenWith.m */,
 			);
 			name = "Open With";
+			sourceTree = "<group>";
+		};
+		EA4914661AC0344800BECF0B /* TTOpenInAppActivity */ = {
+			isa = PBXGroup;
+			children = (
+				EA4914681AC0346100BECF0B /* TTOpenInAppActivity.h */,
+				EA4914691AC0346100BECF0B /* TTOpenInAppActivity.m */,
+				EA49146A1AC0346100BECF0B /* TTOpenInAppActivity.png */,
+				EA49146B1AC0346100BECF0B /* TTOpenInAppActivity@2x.png */,
+				EA49146C1AC0346100BECF0B /* TTOpenInAppActivity7.png */,
+				EA49146D1AC0346100BECF0B /* TTOpenInAppActivity7@2x.png */,
+				EA49146E1AC0346100BECF0B /* TTOpenInAppActivity8.png */,
+				EA49146F1AC0346100BECF0B /* TTOpenInAppActivity8@2x.png */,
+				EA4914701AC0346100BECF0B /* TTOpenInAppActivity8@3x.png */,
+			);
+			name = TTOpenInAppActivity;
 			sourceTree = "<group>";
 		};
 		EA599630160872E200173E09 /* MGSplitViewController */ = {
@@ -3309,6 +3343,7 @@
 				148DD6E917786A1400FB9977 /* SettingsViewController.xib in Resources */,
 				EABF68E31889595100A2217C /* ShareLinkCell.xib in Resources */,
 				148DD6EB17786A1400FB9977 /* WebViewController.xib in Resources */,
+				EA4914741AC0346100BECF0B /* TTOpenInAppActivity7.png in Resources */,
 				145EA7D117786FAC0087CDDB /* Localizable.strings in Resources */,
 				13A5ADB418883C77000EB617 /* CopyLinkShareipad@2x.png in Resources */,
 				145EA7D217786FAC0087CDDB /* InfoPlist.strings in Resources */,
@@ -3395,6 +3430,7 @@
 				400904DA1A02B49600E3DD15 /* MainAppIcon_29-29@3x.png in Resources */,
 				1487F247177C35AA004A1A5A /* NonRevealPasswordIcon@2x.png in Resources */,
 				1487F248177C35AA004A1A5A /* NonSecureConnectionIcon.png in Resources */,
+				EA4914721AC0346100BECF0B /* TTOpenInAppActivity.png in Resources */,
 				1487F249177C35AA004A1A5A /* NonSecureConnectionIcon@2x.png in Resources */,
 				1487F24A177C35AA004A1A5A /* ReconnectIcon.png in Resources */,
 				1487F24B177C35AA004A1A5A /* ReconnectIcon@2x.png in Resources */,
@@ -3432,6 +3468,7 @@
 				1487F25D177C35AA004A1A5A /* conarrow_button@2x.png in Resources */,
 				14A7F7AE18ED5C06009AF347 /* folder_icon@2x~ipad.png in Resources */,
 				1487F264177C35AA004A1A5A /* TSAlertViewBackground.png in Resources */,
+				EA4914751AC0346100BECF0B /* TTOpenInAppActivity7@2x.png in Resources */,
 				1487F265177C35AA004A1A5A /* TSAlertViewBackground2.png in Resources */,
 				14A7F7AB18ED578E009AF347 /* spreadsheet_icon~ipad.png in Resources */,
 				1487F266177C35AA004A1A5A /* TSAlertViewButtonBackground.png in Resources */,
@@ -3489,6 +3526,7 @@
 				1487F28F177C35AA004A1A5A /* deleteBlack.png in Resources */,
 				1487F290177C35AA004A1A5A /* deleteBlack@2x.png in Resources */,
 				1487F291177C35AA004A1A5A /* renameBlack.png in Resources */,
+				EA4914761AC0346100BECF0B /* TTOpenInAppActivity8.png in Resources */,
 				1487F292177C35AA004A1A5A /* renameBlack@2x.png in Resources */,
 				1487F293177C35AA004A1A5A /* movieOverlay.png in Resources */,
 				1487F294177C35AA004A1A5A /* movieOverlay@2x.png in Resources */,
@@ -3510,7 +3548,9 @@
 				4030D8EF1A1626CC00DB0871 /* file_icon@2x~ipad.png in Resources */,
 				4030D8F71A16277100DB0871 /* file_icon@3x.png in Resources */,
 				1420C3AA178A9F5000C0455C /* LoginViewController_iPad.xib in Resources */,
+				EA4914771AC0346100BECF0B /* TTOpenInAppActivity8@2x.png in Resources */,
 				1420C3AB178A9F5000C0455C /* LoginViewController_iPhone.xib in Resources */,
+				EA4914781AC0346100BECF0B /* TTOpenInAppActivity8@3x.png in Resources */,
 				14A7F7AA18ED578E009AF347 /* spreadsheet_icon@2x~ipad.png in Resources */,
 				14CB98AA19657B7700F6FF4E /* folder-public@2x.png in Resources */,
 				4016E5C51A0CE9410022163C /* MainAppIcon_76_76@3x.png in Resources */,
@@ -3518,6 +3558,7 @@
 				1339D935178D5DA900002156 /* genericFile_icon_error@2x.png in Resources */,
 				1339D936178D5DA900002156 /* genericFile_icon_error.png in Resources */,
 				593D531E17BF701800191846 /* SSOViewController.xib in Resources */,
+				EA4914731AC0346100BECF0B /* TTOpenInAppActivity@2x.png in Resources */,
 				13AA2C9B17D8AFCB00DB5E11 /* tabBar.png in Resources */,
 				149D98C1195AAD54005E0C73 /* fileSharedByLink.png in Resources */,
 				13AA2C9C17D8AFCB00DB5E11 /* tabBar@2x.png in Resources */,
@@ -3882,6 +3923,7 @@
 				148DD6F617786BDA00FB9977 /* UIImage+Alpha.m in Sources */,
 				148DD6F717786BDA00FB9977 /* UIImage+Resize.m in Sources */,
 				148DD6F817786BDA00FB9977 /* UIImage+RoundedCorner.m in Sources */,
+				EA4914711AC0346100BECF0B /* TTOpenInAppActivity.m in Sources */,
 				1467037519372ACC00087289 /* DownloadUtils.m in Sources */,
 				599D80A21A23366D0071B66E /* SimpleFileListTableViewController.m in Sources */,
 				148DD6FE17786BF200FB9977 /* FileNameUtils.m in Sources */,

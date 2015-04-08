@@ -20,6 +20,7 @@
 #import "FileNameUtils.h"
 #import "AppDelegate.h"
 #import "DetailViewController.h"
+#import "TTOpenInAppActivity.h"
 
 
 
@@ -93,6 +94,16 @@
         //Pass path to url
         NSURL *url = [NSURL fileURLWithPath:file.localFolder];
         
+        TTOpenInAppActivity *openInAppActivity;
+        
+        if (_isTheParentViewACell) {
+            openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.parentView andRect:_cellFrame];
+            
+        }else{
+            openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.parentView andBarButtonItem:self.parentButton];
+        }
+
+        
         if (self.activityView) {
             [self.activityView dismissViewControllerAnimated:YES completion:nil];
             self.activityView = nil;
@@ -103,9 +114,12 @@
             self.activityPopoverController = nil;
         }
         
-        self.activityView = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:nil];
+        self.activityView = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:@[openInAppActivity]];
         
         if (IS_IPHONE) {
+            
+            openInAppActivity.superViewController = self.activityView;
+            
             [app.ocTabBarController presentViewController:self.activityView animated:YES completion:nil];
         } else {
             
@@ -114,6 +128,8 @@
             } else {
                 self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:self.activityView];
             }
+            
+            openInAppActivity.superViewController = self.activityPopoverController;
             
             if (_isTheParentViewACell && IS_PORTRAIT && IS_IOS8) {
               
