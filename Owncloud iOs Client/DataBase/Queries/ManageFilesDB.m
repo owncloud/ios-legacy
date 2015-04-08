@@ -51,7 +51,7 @@
 #endif
     __block NSMutableArray *output = [NSMutableArray new];
 
-    NSLog(@"getFilesByFileId: %ld",(long)fileId);
+    DLog(@"getFilesByFileId: %ld",(long)fileId);
 
     FMDatabaseQueue *queue;
     
@@ -228,7 +228,7 @@
     
     UserDto *mUser = [ManageUsersDB getActiveUser];
     
-    NSLog(@"getFileByIdFile: %ld", (long)idFile);
+    DLog(@"getFileByIdFile: %ld", (long)idFile);
     
     FMDatabaseQueue *queue;
     
@@ -326,7 +326,7 @@
 
 +(NSMutableArray *) getAllFoldersByBeginFilePath:(NSString *) beginFilePath {
     
-    NSLog(@"getAllFoldersByBeginFilePath");
+    DLog(@"getAllFoldersByBeginFilePath");
     
     //To the like SQL nedd a % charcter in the sintaxis
     beginFilePath = [NSString stringWithFormat:@"%@%%", beginFilePath];
@@ -374,7 +374,7 @@
 
 +(void) setFileIsDownloadState: (NSInteger) idFile andState:(enumDownload)downloadState {
     
-    NSLog(@"setFileIsDownloadState");
+    DLog(@"setFileIsDownloadState");
     FMDatabaseQueue *queue;
     
 #ifdef CONTAINER_APP
@@ -393,7 +393,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_download=? WHERE id = ?", [NSNumber numberWithInt:downloadState], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in setFileIsDownloadState");
+            DLog(@"Error in setFileIsDownloadState");
         }
         
     }];
@@ -402,7 +402,7 @@
 
 +(void) updateDownloadStateOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withState:(enumDownload)downloadState {
     
-    NSLog(@"setFileIsDownloadState");
+    DLog(@"setFileIsDownloadState");
     FMDatabaseQueue *queue;
     
 #ifdef CONTAINER_APP
@@ -421,7 +421,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_download=? WHERE file_path = ? AND file_name=? AND user_id = ?", [NSNumber numberWithInt:downloadState], filePath, fileName, [NSNumber numberWithInteger:aciveUser.idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error in setFileIsDownloadState");
+            DLog(@"Error in setFileIsDownloadState");
         }
         
     }];
@@ -429,7 +429,7 @@
 
 +(void) setFilePath: (NSString * ) filePath byIdFile: (NSInteger) idFile {
     
-    NSLog(@"NewFilePath: %@", filePath);
+    DLog(@"NewFilePath: %@", filePath);
     FMDatabaseQueue *queue;
     
 #ifdef CONTAINER_APP
@@ -448,7 +448,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_path=? WHERE id = ?", filePath, [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in setFilePath");
+            DLog(@"Error in setFilePath");
         }
         
     }];
@@ -500,7 +500,7 @@
                            (long)current.taskIdentifier,
                            (long)current.providingFileId];
 
-                    //NSLog(@"sql!!!: %@", sql);
+                    //DLog(@"sql!!!: %@", sql);
                 } else {
                     sql = [NSString stringWithFormat:@"%@ UNION SELECT null, '%@','%@',%ld,%d,%ld,%ld,%@,%@,%d,'%@',%d,%d,%ld,'%@',%ld,%ld",
                            sql,
@@ -525,7 +525,7 @@
                 
                 numberOfInsertEachTime++;
                 
-                //NSLog(@"sql: %@", sql);
+                //DLog(@"sql: %@", sql);
                 
                 
                 if(numberOfInsertEachTime > 450) {
@@ -561,7 +561,7 @@
             }
             
             if (!correctQuery) {
-                NSLog(@"Error in insertManyFiles");
+                DLog(@"Error in insertManyFiles");
             }
             
         }];
@@ -599,7 +599,7 @@
         correctQuery = [db executeUpdate:@"DELETE FROM files WHERE id = ? AND user_id = ?",[NSNumber numberWithInteger:idFile], [NSNumber numberWithInteger:mUser.idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error in deleteFileByIdFile");
+            DLog(@"Error in deleteFileByIdFile");
         }
         
     }];
@@ -634,7 +634,7 @@
         correctQuery = [db executeUpdate:@"DELETE FROM files WHERE id = ?",[NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in deleteFileByIdFile");
+            DLog(@"Error in deleteFileByIdFile");
         }
         
     }];
@@ -642,7 +642,7 @@
 
 +(void) deleteFilesFromDBBeforeRefreshByFileId: (NSInteger) fileId {
     
-    NSLog(@"deleteFilesFromDBBeforeRefreshByFileId");
+    DLog(@"deleteFilesFromDBBeforeRefreshByFileId");
     
     UserDto *mUser;
     
@@ -671,7 +671,7 @@
         correctQuery = [db executeUpdate:@"DELETE FROM files WHERE file_id = ? AND user_id = ?", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:mUser.idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error in deleteFilesFromDBBeforeRefreshByFileId");
+            DLog(@"Error in deleteFilesFromDBBeforeRefreshByFileId");
         }
         
     }];
@@ -706,7 +706,7 @@
         correctQuery = [db executeUpdate:@"INSERT INTO files_backup SELECT * FROM files WHERE user_id =? and file_id=? and (is_download != 0 or is_directory = 1 or is_favorite = 1 or shared_file_source != 0 or providing_file_id != 0)", [NSNumber numberWithInteger:mUser.idUser], [NSNumber numberWithInteger:fileId]];
         
         if (!correctQuery) {
-            NSLog(@"Error in backupFoldersDownloadedFavoritesByFileId");
+            DLog(@"Error in backupFoldersDownloadedFavoritesByFileId");
         }
     }];
 }
@@ -746,9 +746,9 @@
             currentFile.fileId = [rs intForColumn:@"file_id"];
             currentFile.etag = [rs stringForColumn:@"etag"];
             
-            NSLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
-            NSLog(@"currentFile.fileId %ld", (long)currentFile.fileId);
-            NSLog(@"currentFile.etag %@", currentFile.etag);
+            DLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
+            DLog(@"currentFile.fileId %ld", (long)currentFile.fileId);
+            DLog(@"currentFile.etag %@", currentFile.etag);
             
             [listFilesToUpdate addObject:currentFile];
         }
@@ -767,7 +767,7 @@
         }
         
         if (!correctQuery) {
-            NSLog(@"Error in updateRelatedFilesFromBackup");
+            DLog(@"Error in updateRelatedFilesFromBackup");
         }
     }];
 }
@@ -818,16 +818,16 @@
             currentFile.providingFileId = [rs intForColumn:@"b.providing_file_id"];
             
             
-            NSLog(@"files share source = %ld", (long)currentFile.sharedFileSource);
-            NSLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
-            NSLog(@"currentFile.etag: %@", currentFile.etag);
+            DLog(@"files share source = %ld", (long)currentFile.sharedFileSource);
+            DLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
+            DLog(@"currentFile.etag: %@", currentFile.etag);
             
             [listFilesToUpdate addObject:currentFile];
         }
         [rs close];
     }];
     
-    NSLog(@"Size list: %lu", (unsigned long)[listFilesToUpdate count]);
+    DLog(@"Size list: %lu", (unsigned long)[listFilesToUpdate count]);
 
     //2 - Update the files DB with the selected datas from the files_backup DB
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -840,7 +840,7 @@
             correctQuery = [db executeUpdate:@"UPDATE files SET is_download = ?, etag = ?, shared_file_source = ?, providing_file_id = ? WHERE id = ?", [NSNumber numberWithInteger:currentFile.isDownload],currentFile.etag ,[NSNumber numberWithInteger:currentFile.sharedFileSource], [NSNumber numberWithInteger:currentFile.providingFileId], [NSNumber numberWithInteger:currentFile.idFile]];
         
             if (!correctQuery) {
-                NSLog(@"Error in updateDownloadedFilesFromBackup");
+                DLog(@"Error in updateDownloadedFilesFromBackup");
             }
         }
     }];
@@ -888,7 +888,7 @@
             currentFile.etag = [rs stringForColumn:@"etag"];
             currentFile.isDownload = [rs intForColumn:@"is_download"];
             
-            NSLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
+            DLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
 
             
             [listFilesFromFilesBackup addObject:currentFile];
@@ -908,7 +908,7 @@
         }
     }
 
-    NSLog(@"Size list: %lu", (unsigned long)[listFilesToUpdate count]);
+    DLog(@"Size list: %lu", (unsigned long)[listFilesToUpdate count]);
 
     //3-Set all the files that need update less the overwritten ones
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -922,7 +922,7 @@
             }
         }
         if (!correctQuery) {
-            NSLog(@"Error in setUpdateIsNecessaryFromBackup");
+            DLog(@"Error in setUpdateIsNecessaryFromBackup");
         }
     }];
     
@@ -943,7 +943,7 @@
  * @param idFile -> int
  */
 + (void) setIsNecessaryUpdateOfTheFile: (NSInteger) idFile {
-    NSLog(@"setIsNecessaryUpdateOfTheFile");
+    DLog(@"setIsNecessaryUpdateOfTheFile");
     FMDatabaseQueue *queue;
     
 #ifdef CONTAINER_APP
@@ -962,7 +962,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_necessary_update = 1 WHERE id = ?", [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in update the field setIsNecessaryUpdateOfTheFile");
+            DLog(@"Error in update the field setIsNecessaryUpdateOfTheFile");
         }
     }];
 }
@@ -1002,7 +1002,7 @@
 
 +(void) deleteAllFilesAndFoldersThatNotExistOnServerFromBackup {
     
-    NSLog(@"deleteAllFilesAndFoldersThatNotExistOnServerFromBackup");
+    DLog(@"deleteAllFilesAndFoldersThatNotExistOnServerFromBackup");
     
     UserDto *mUser;
     
@@ -1052,11 +1052,11 @@
         
         currentFile.localFolder = [UtilsUrls getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:mUser];
         
-        NSLog(@"File download to delete");
+        DLog(@"File download to delete");
         NSError *error;
         
-        NSLog(@"FileName: %@", currentFile.fileName);
-        NSLog(@"Delete: %@", currentFile.localFolder);
+        DLog(@"FileName: %@", currentFile.fileName);
+        DLog(@"Delete: %@", currentFile.localFolder);
         
         //if file is directory
         if (currentFile.isDirectory) {
@@ -1066,9 +1066,9 @@
         
         // Attempt to delete the file at filePath2
         if ([fileMgr removeItemAtPath:currentFile.localFolder error:&error] != YES) {
-            NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+            DLog(@"Unable to delete file: %@", [error localizedDescription]);
         } else {
-            NSLog(@"Deleted");
+            DLog(@"Deleted");
         }
     }
 }
@@ -1115,7 +1115,7 @@
         }
         
         if (!correctQuery) {
-            NSLog(@"Error in updateFavoriteFilesFromBackup");
+            DLog(@"Error in updateFavoriteFilesFromBackup");
         }
     }];
 }
@@ -1140,7 +1140,7 @@
         correctQuery = [db executeUpdate:@"DELETE FROM files_backup"];
         
         if (!correctQuery) {
-            NSLog(@"Error in deleteFilesBackup");
+            DLog(@"Error in deleteFilesBackup");
         }
         
     }];
@@ -1166,7 +1166,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_name=? WHERE id = ?", mNewName, [NSNumber numberWithInteger:file.idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in renameFileByFileDto");
+            DLog(@"Error in renameFileByFileDto");
         }
         
     }];
@@ -1194,7 +1194,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_name=? WHERE id = ?", mNewName, [NSNumber numberWithInteger:file.idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in renameFolderByFileDto");
+            DLog(@"Error in renameFolderByFileDto");
         }
         
     }];
@@ -1205,7 +1205,7 @@
     __block int size = 0;
     
     BOOL output = NO;
-    NSLog(@"File path: %@",fileDto.fileName);
+    DLog(@"File path: %@",fileDto.fileName);
     
     FMDatabaseQueue *queue;
     
@@ -1236,7 +1236,7 @@
 
 +(void) deleteFileByFilePath: (NSString *) filePathToDelete andFileName: (NSString*)fileName {
     
-    NSLog(@"deleteFileByFilePath: %@ filePathToDelete andFileName: %@", filePathToDelete, fileName);
+    DLog(@"deleteFileByFilePath: %@ filePathToDelete andFileName: %@", filePathToDelete, fileName);
     
     UserDto *mUser;
     
@@ -1265,7 +1265,7 @@
         correctQuery = [db executeUpdate:@"DELETE FROM files WHERE file_path = ? AND file_name = ? AND user_id = ?",filePathToDelete, fileName, [NSNumber numberWithInteger:mUser.idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error in deleteFileByFilePath");
+            DLog(@"Error in deleteFileByFilePath");
         }
     }];
 }
@@ -1341,7 +1341,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_path=?, file_id=?, file_name=? WHERE id = ?", [NSString stringWithFormat:@"%@",newFilePath], [NSNumber numberWithInteger:folderDto.idFile], changedFileName, [NSNumber numberWithInteger:selectedFile.idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in updateFolderOfFileDtoByNewFilePath");
+            DLog(@"Error in updateFolderOfFileDtoByNewFilePath");
         }
         
     }];
@@ -1376,7 +1376,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_path=?, file_id=?, file_name=? WHERE user_id = ? AND id = ?", newFilePath, [NSNumber numberWithInteger:fileId], fileName, [NSNumber numberWithInteger:mUser.idUser], [NSNumber numberWithInteger:selectedFileId]];
                 
         if (!correctQuery) {
-            NSLog(@"Error in updateFolderOfFileDtoByNewFilePath");
+            DLog(@"Error in updateFolderOfFileDtoByNewFilePath");
         }
         
     }];
@@ -1411,7 +1411,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_path=? WHERE user_id = ? AND id=?", newFilePath, [NSNumber numberWithInteger:mUser.idUser], [NSNumber numberWithInteger:selectedFile.idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in updatePathwithNewPath");
+            DLog(@"Error in updatePathwithNewPath");
         }
         
     }];
@@ -1471,7 +1471,7 @@
         correctQuery = [db executeUpdate:@"INSERT INTO files(file_path, file_name, is_directory,user_id, is_download, size, file_id, date, is_favorite, etag, is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier, providing_file_id) Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", fileDto.filePath, fileDto.fileName, [NSNumber numberWithBool:fileDto.isDirectory], [NSNumber numberWithInteger:fileDto.userId], [NSNumber numberWithInteger:fileDto.isDownload], [NSNumber numberWithLong:fileDto.size], [NSNumber numberWithInteger:fileDto.fileId], [NSNumber numberWithLong:fileDto.date], [NSNumber numberWithBool:fileDto.isFavorite], fileDto.etag, [NSNumber numberWithBool:fileDto.isRootFolder], [NSNumber numberWithBool:fileDto.isNecessaryUpdate], [NSNumber numberWithInteger:fileDto.sharedFileSource], fileDto.permissions, [NSNumber numberWithInteger:fileDto.taskIdentifier], [NSNumber numberWithInteger:fileDto.providingFileId]];
                         
         if (!correctQuery) {
-            NSLog(@"Error in insertFile");
+            DLog(@"Error in insertFile");
         }
     }];
 }
@@ -1545,7 +1545,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET etag=? WHERE id = ?", etag, [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in updatePathwithNewPath");
+            DLog(@"Error in updatePathwithNewPath");
         }
         
     }];
@@ -1573,7 +1573,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET etag=? WHERE file_path = ? AND file_name=? AND user_id = ?", etag, filePath, fileName, [NSNumber numberWithInteger:aciveUser.idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error in updatePathwithNewPath");
+            DLog(@"Error in updatePathwithNewPath");
         }
     }];
 }
@@ -1607,7 +1607,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET file_id=? WHERE file_id = ? AND user_id = ?", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:oldFileId], [NSNumber numberWithInteger:mUser.idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error in updatePathwithNewPath");
+            DLog(@"Error in updatePathwithNewPath");
         }
         
     }];
@@ -1632,7 +1632,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_necessary_update=? WHERE id = ?", [NSNumber numberWithInt:isNecessaryUpdate], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in setFile:idFile isNecessaryUpdate:isNecessaryUpdate");
+            DLog(@"Error in setFile:idFile isNecessaryUpdate:isNecessaryUpdate");
         }
         
     }];
@@ -1642,7 +1642,7 @@
 + (BOOL) isGetFilesByDownloadState:(enumDownload)downloadState andByUser:(UserDto *) currentUser andFolder:(NSString *) folder {
     
     __block BOOL output = NO;
-    NSLog(@"getFilesByFileId:(int) fileId");
+    DLog(@"getFilesByFileId:(int) fileId");
     
     FMDatabaseQueue *queue;
     
@@ -1686,10 +1686,10 @@
  */
 + (BOOL) isThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)idUser intoThisFolder:(NSString *)folder{
     
-    NSLog(@"ManageFiles -> idFile: %ld", (long)idFile);
-    NSLog(@"ManageFiles -> idUser: %ld", (long)idUser);
+    DLog(@"ManageFiles -> idFile: %ld", (long)idFile);
+    DLog(@"ManageFiles -> idUser: %ld", (long)idUser);
 
-    NSLog(@"ManageFiles -> folder: %@", folder);
+    DLog(@"ManageFiles -> folder: %@", folder);
     
     __block BOOL output = NO;
     
@@ -1712,7 +1712,7 @@
         while ([rs next]) {
             NSInteger tempIdFile = 0;
             tempIdFile = [rs intForColumn:@"id"];
-            NSLog(@"ManageFiles -> idfile: %ld",(long)tempIdFile);
+            DLog(@"ManageFiles -> idfile: %ld",(long)tempIdFile);
 
             if (tempIdFile == idFile) {
                 output = YES;
@@ -1746,7 +1746,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_download = ?, is_necessary_update = ? WHERE user_id = ? AND file_path LIKE ? ", [NSNumber numberWithInteger:downloadState],[NSNumber numberWithInt:isNecessaryUpdate], [NSNumber numberWithInteger:currentUser.idUser], [NSString stringWithFormat:@"%@%%", folder]];
         
         if (!correctQuery) {
-            NSLog(@"Error in updateFilesByUserAndFolder");
+            DLog(@"Error in updateFilesByUserAndFolder");
         }
         
     }];
@@ -1788,7 +1788,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = ? WHERE id = ? AND user_id= ?", [NSNumber numberWithInteger:value], [NSNumber numberWithInteger:idFile],[NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error in update share file source");
+            DLog(@"Error in update share file source");
         }
         
     }];
@@ -1823,7 +1823,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = 0 WHERE user_id= ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error in update share file source");
+            DLog(@"Error in update share file source");
         }
         
     }];
@@ -1867,7 +1867,7 @@
         [rs close];
     }];
 
-    NSLog(@"listOfFileSource: %lu", (unsigned long)[listOfFileSource count]);
+    DLog(@"listOfFileSource: %lu", (unsigned long)[listOfFileSource count]);
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=YES;
@@ -1882,7 +1882,7 @@
         }
         
         if (!correctQuery) {
-            NSLog(@"Error in updateDownloadedFilesFromBackup");
+            DLog(@"Error in updateDownloadedFilesFromBackup");
         }
         
     }];
@@ -1923,7 +1923,7 @@
  */
 + (NSMutableArray *) getFilesByDownloadStatus:(NSInteger) status {
     __block NSMutableArray *output = [NSMutableArray new];
-    NSLog(@"getFilesByDownloadStatus: %ld",(long)status);
+    DLog(@"getFilesByDownloadStatus: %ld",(long)status);
     
     UserDto *mUser;
     
@@ -2011,7 +2011,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = 0 WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error in update share file source");
+            DLog(@"Error in update share file source");
         }
     }];
     
@@ -2034,7 +2034,7 @@
             correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = 0 WHERE shared_file_source = ?", [NSNumber numberWithInt:current.fileSource]];
             
             if (!correctQuery) {
-                NSLog(@"Error in update share file source");
+                DLog(@"Error in update share file source");
             }
         }];
     }*/
@@ -2087,7 +2087,7 @@
             
             comparePath = [NSString stringWithFormat:@"/%@%@", [rs stringForColumn:@"file_path"], [rs stringForColumn:@"file_name"]];
             
-            //NSLog(@"path = %@ comparePath = %@", path, comparePath);
+            //DLog(@"path = %@ comparePath = %@", path, comparePath);
             
             if ([comparePath isEqualToString:path]) {
                 
@@ -2169,7 +2169,7 @@
             
             comparePath = [NSString stringWithFormat:@"%@%@", [rs stringForColumn:@"file_path"], [rs stringForColumn:@"file_name"]];
             
-            // NSLog(@"path is: %@ - compare path is: %@", path, comparePath);
+            // DLog(@"path is: %@ - compare path is: %@", path, comparePath);
             
             if ([path isEqualToString:comparePath]) {
                 isExist = YES;
@@ -2213,7 +2213,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = 0 WHERE file_id = ?", [NSNumber numberWithInteger:folder.idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in update share file source");
+            DLog(@"Error in update share file source");
         }
     }];
 }
@@ -2231,7 +2231,7 @@
  * @param isFavorite -> BOOL
  */
 + (void) updateTheFileID: (NSInteger)idFile asFavorite: (BOOL) isFavorite {
-    NSLog(@"updateTheFavoriteFile");
+    DLog(@"updateTheFavoriteFile");
     FMDatabaseQueue *queue;
     
 #ifdef CONTAINER_APP
@@ -2250,7 +2250,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_favorite = ? WHERE id = ?", [NSNumber numberWithInt:isFavorite], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in update favorite file source");
+            DLog(@"Error in update favorite file source");
         }
     }];
 }
@@ -2364,7 +2364,7 @@
             
             comparePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:mUser],[rs stringForColumn:@"file_path"]];
             
-            NSLog(@"path = %@ comparePath = %@", path, comparePath);
+            DLog(@"path = %@ comparePath = %@", path, comparePath);
             
             if ([comparePath isEqualToString:path]) {
                 
@@ -2430,7 +2430,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET etag = \"\" WHERE is_directory = 1"];
         
         if (!correctQuery) {
-            NSLog(@"Error in deleteAlleTagOfTheDirectoties");
+            DLog(@"Error in deleteAlleTagOfTheDirectoties");
         }
     }];
 }
@@ -2461,7 +2461,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET task_identifier = ? WHERE id = ?", [NSNumber numberWithInteger:taskIdentifier], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in update task identifier file source");
+            DLog(@"Error in update task identifier file source");
         }
     }];
 }
@@ -2488,7 +2488,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET providing_file_id = ? WHERE id = ?", [NSNumber numberWithInteger:providingFileId], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            NSLog(@"Error in update providing file");
+            DLog(@"Error in update providing file");
         }
     }];
 

@@ -41,7 +41,7 @@
  */
 +(void) insertUser:(UserDto *)userDto {
     
-     NSLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount);
+     DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount);
     
     FMDatabaseQueue *queue;
     
@@ -62,7 +62,7 @@
         correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_cookies_support) Values(?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport]];
         
         if (!correctQuery) {
-            NSLog(@"Error in insertUser");
+            DLog(@"Error in insertUser");
         }
         
     }];
@@ -72,7 +72,7 @@
     NSString *idString = [NSString stringWithFormat:@"%ld", (long)lastUser.idUser];
     
     if (![OCKeychain setCredentialsById:idString withUsername:userDto.username andPassword:userDto.password]) {
-        NSLog(@"Failed setting credentials");
+        DLog(@"Failed setting credentials");
     }
     
    
@@ -84,7 +84,7 @@
  */
 + (UserDto *) getActiveUser {
     
-    NSLog(@"getActiveUser");
+    DLog(@"getActiveUser");
     
     __block UserDto *output = nil;
     
@@ -103,7 +103,7 @@
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
         
-        NSLog(@"RSColumnt count: %d", rs.columnCount);
+        DLog(@"RSColumnt count: %d", rs.columnCount);
         
         
         while ([rs next]) {
@@ -152,7 +152,7 @@
         NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
 
         if (![OCKeychain updatePasswordById:idString withNewPassword:user.password]) {
-            NSLog(@"Error update the password keychain");
+            DLog(@"Error update the password keychain");
         }
         
 #ifdef CONTAINER_APP
@@ -176,7 +176,7 @@
  */
 + (UserDto *) getUserByIdUser:(NSInteger) idUser {
     
-    NSLog(@"getUserByIdUser:(int) idUser");
+    DLog(@"getUserByIdUser:(int) idUser");
     
     __block UserDto *output = nil;
     
@@ -254,7 +254,7 @@
  */
 + (NSMutableArray *) getAllUsers {
     
-    NSLog(@"getAllUsers");
+    DLog(@"getAllUsers");
     
     __block NSMutableArray *output = [NSMutableArray new];
     
@@ -320,7 +320,7 @@
  */
 + (NSMutableArray *) getAllOldUsersUntilVersion10 {
     
-    NSLog(@"getAllUsers");
+    DLog(@"getAllUsers");
     
     __block NSMutableArray *output = [NSMutableArray new];
     
@@ -356,11 +356,11 @@
             current.storage = [rs longForColumn:@"storage"];
             current.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             
-            NSLog(@"id user: %ld", (long)current.idUser);
+            DLog(@"id user: %ld", (long)current.idUser);
 
-            NSLog(@"url user: %@", current.url);
-            NSLog(@"username user: %@", current.username);
-            NSLog(@"password user: %@", current.password);
+            DLog(@"url user: %@", current.url);
+            DLog(@"username user: %@", current.username);
+            DLog(@"password user: %@", current.password);
             
             
             [output addObject:current];
@@ -399,7 +399,7 @@
         correctQuery = [db executeUpdate:@"UPDATE users SET activeaccount=1 WHERE id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error setting the active account");
+            DLog(@"Error setting the active account");
         }
         
     }];
@@ -431,7 +431,7 @@
         correctQuery = [db executeUpdate:@"UPDATE users SET activeaccount=0"];
         
         if (!correctQuery) {
-            NSLog(@"Error setting no active all acounts");
+            DLog(@"Error setting no active all acounts");
         }
         
     }];
@@ -461,7 +461,7 @@
         correctQuery = [db executeUpdate:@"UPDATE users SET activeaccount=1 WHERE id = (SELECT id FROM users ORDER BY id limit 1)"];
         
         if (!correctQuery) {
-            NSLog(@"Error setting on account active automatically");
+            DLog(@"Error setting on account active automatically");
         }
         
     }];
@@ -492,42 +492,42 @@
         correctQuery = [db executeUpdate:@"DELETE FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error delete files from files users table");
+            DLog(@"Error delete files from files users table");
             
         }
         
         correctQuery = [db executeUpdate:@"DELETE FROM files WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error delete files from files files table");
+            DLog(@"Error delete files from files files table");
             
         }
         
         correctQuery = [db executeUpdate:@"DELETE FROM files_backup WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error delete files from files_backup backup table");
+            DLog(@"Error delete files from files_backup backup table");
             
         }
         
         correctQuery = [db executeUpdate:@"DELETE FROM uploads_offline WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error delete files from uploads uploads_offline table");
+            DLog(@"Error delete files from uploads uploads_offline table");
             
         }
         
         correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error delete info of shared table");
+            DLog(@"Error delete info of shared table");
             
         }
         
         correctQuery = [db executeUpdate:@"DELETE FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error delete info of cookies_storage table");
+            DLog(@"Error delete info of cookies_storage table");
             
         }
         
@@ -535,7 +535,7 @@
     
     NSString *idString = [NSString stringWithFormat:@"%ld", (long)idUser];
     if (![OCKeychain removeCredentialsById:idString]) {
-        NSLog(@"Error delete keychain credentials");
+        DLog(@"Error delete keychain credentials");
         
     }
 }
@@ -563,7 +563,7 @@
         correctQuery = [db executeUpdate:@"UPDATE users SET storage_occupied=?, storage=? WHERE id = ?", [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
-            NSLog(@"Error updating storage of user");
+            DLog(@"Error updating storage of user");
         }
     
     }];
@@ -648,7 +648,7 @@
 
         
         if (!correctQuery) {
-            NSLog(@"Error updating a user");
+            DLog(@"Error updating a user");
         }
         
     }];
