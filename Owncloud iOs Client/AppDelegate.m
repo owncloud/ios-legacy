@@ -234,31 +234,32 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 DLog(@"Response type = code");
             }
             NSArray *param_s = [text componentsSeparatedByString:@"?"];
-            NSString *param_1 = [param_s objectAtIndex:1];
             
-            NSMutableDictionary *result = [NSMutableDictionary dictionary];
-            NSArray *parameters = [param_1 componentsSeparatedByString:@"&"];
-            for (NSString *parameter in parameters)
-            {
-                NSArray *parts = [parameter componentsSeparatedByString:@"="];
-                NSString *key = [[parts objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                if ([parts count] > 1)
+            if (param_s.count > 1) {
+                NSString *param_1 = [param_s objectAtIndex:1];
+                
+                NSMutableDictionary *result = [NSMutableDictionary dictionary];
+                NSArray *parameters = [param_1 componentsSeparatedByString:@"&"];
+                for (NSString *parameter in parameters)
                 {
-                    id value = [[parts objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                    [result setObject:value forKey:key];
+                    NSArray *parts = [parameter componentsSeparatedByString:@"="];
+                    NSString *key = [[parts objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                    if ([parts count] > 1)
+                    {
+                        id value = [[parts objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                        [result setObject:value forKey:key];
+                    }
                 }
+                if (dbService.isDebugLogEnabled) {
+                    DLog(@"code = %@", [result objectForKey:@"code"]);
+                    self.oauthToken = [result objectForKey:@"code"];
+                }
+                AuthenticationDbService * dbService = [AuthenticationDbService sharedInstance];
+                [dbService setAuthorizationCode:[result objectForKey:@"code"]];
+                
+                RetrieveRefreshAndAccessTokenTask *task = [[RetrieveRefreshAndAccessTokenTask alloc] init];
+                [task executeRetrieveTask];
             }
-            if (dbService.isDebugLogEnabled) {
-                DLog(@"code = %@", [result objectForKey:@"code"]);
-                self.oauthToken = [result objectForKey:@"code"];
-            }
-            AuthenticationDbService * dbService = [AuthenticationDbService sharedInstance];
-            [dbService setAuthorizationCode:[result objectForKey:@"code"]];
-            
-            //[self prueba];
-            RetrieveRefreshAndAccessTokenTask *task = [[RetrieveRefreshAndAccessTokenTask alloc] init];
-            [task executeRetrieveTask];
-            
         }
     } else {
         DLog(@"URL from %@ application", sourceApplication);
@@ -2643,6 +2644,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             _prepareFiles.delegate = self;
         }
         
+      
         for (UploadsOfflineDto *upload in listOfFilesGeneratedByDocumentProvider) {
             upload.status = waitingAddToUploadList;
         }
@@ -2651,6 +2653,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         [_prepareFiles sendFileToUploadByUploadOfflineDto:[listOfFilesGeneratedByDocumentProvider objectAtIndex:0]];
         
+ 
     }
 }
 

@@ -37,6 +37,7 @@
 #import "Customization.h"
 #import "UtilsUrls.h"
 #import "OCCommunication.h"
+#import "FileNameUtils.h"
 
 //Notification to end and init loading screen
 NSString *EndLoadingFileListNotification = @"EndLoadingFileListNotification";
@@ -104,11 +105,8 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             NSString *assetPath = [assetURL absoluteString];
             DLog(@"assetPath :%@", assetPath);
             
-            currentFileName = [self getComposeNameFromAsset:myasset];
-            
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            //NSString *uniquePath= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:_uploadFileName];
-            
+            currentFileName = [FileNameUtils getComposeNameFromAsset:myasset];
+         
             DLog(@"currentFileName: %@",currentFileName);
             DLog(@"remoteFolder: %@", remoteFolder);
             DLog(@"isLastUploadFileOfThisArray: %d", isLastUploadFileOfThisArray);
@@ -269,7 +267,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     
     DLog(@"assetPath :%@", [assetToUpload fullUrlString]);
     
-    currentFileName = [self getComposeNameFromAsset:[assetToUpload asset]];
+    currentFileName = [FileNameUtils getComposeNameFromAsset:[assetToUpload asset]];
     
     DLog(@"currentFileName: %@",currentFileName);
     DLog(@"isLastUploadFileOfThisArray: %d", isLastUploadFileOfThisArray);
@@ -381,46 +379,6 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             [self sendFileToUploadByUploadOfflineDto:currentFile];
         }
     }
-    
-}
-
-
-#pragma mark - Filename Utils
-
-/*
- Method to generate the name of the file depending if it is a video or an image
- */
--(NSString *)getComposeNameFromAsset:(ALAsset *)asset{
-    
-    NSString *output = @"";
-    NSString *fileName = nil;
-    NSString *appleID = nil;
-    NSString *mediaType = [asset valueForProperty:ALAssetPropertyType];
-    NSDate *date = [asset valueForProperty:ALAssetPropertyDate];
-    NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"yyyy-MM-dd-HH-mm-ss"];
-    df.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-    NSString* dateString; dateString = [df stringFromDate:date];
-    DLog(@"DateString: %@", dateString);
-    
-    NSString *assetPath = asset.defaultRepresentation.url.absoluteString;
-    NSString *ext = [self getExtension:assetPath];
-    NSString *completeFileName = asset.defaultRepresentation.filename;
-    DLog(@"FileName: %@", completeFileName);
-    NSMutableArray *arr =[[NSMutableArray alloc] initWithArray: [completeFileName componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"."]]];
-    [arr removeLastObject];
-    fileName = [arr firstObject];
-    
-    arr =[[NSMutableArray alloc] initWithArray: [fileName componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]]];
-    appleID = [arr lastObject];
-    
-    if ([mediaType isEqualToString:@"ALAssetTypePhoto"]) {
-        output = [NSString stringWithFormat:@"Photo-%@_%@.%@", dateString, appleID, ext];
-    } else {
-        output = [NSString stringWithFormat:@"Video-%@.%@", dateString, ext];
-    }
-    
-    return output;
     
 }
 
