@@ -120,7 +120,7 @@ import AVFoundation
             nameFolder = k_app_name
         }
 
-        if (countElements(nameFolder) > 20) {
+        if (count(nameFolder) > 20) {
             nameFolder =  nameFolder.substringWithRange(Range<String.Index>(start:nameFolder.startIndex, end: advance(nameFolder.startIndex, 20)))
             nameFolder += "..."
         }
@@ -185,7 +185,7 @@ import AVFoundation
                     //3º Crete the upload objects
                     println("remotePath: \(currentRemotePath)")
                     
-                    let fileLength = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as Int
+                    let fileLength = NSFileManager.defaultManager().attributesOfItemAtPath(url.path!, error: nil)![NSFileSize] as! Int
                     println("fileLength: \(fileLength)")
                     
                     var upload = UploadsOfflineDto.alloc()
@@ -286,7 +286,7 @@ import AVFoundation
                         //Items
                         if current.hasItemConformingToTypeIdentifier(kUTTypeItem as String){
                             
-                            current.loadItemForTypeIdentifier(kUTTypeItem, options: nil, completionHandler: {(item: NSSecureCoding!, error: NSError!) -> Void in
+                            current.loadItemForTypeIdentifier(kUTTypeItem as String, options: nil, completionHandler: {(item: NSSecureCoding!, error: NSError!) -> Void in
                                 
                                 if error == nil {
                                     if let url = item as? NSURL{
@@ -431,7 +431,7 @@ import AVFoundation
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell!
     {
         let identifier = "FileSelectedCell"
-        var cell: FileSelectedCell! = tableView.dequeueReusableCellWithIdentifier(identifier ,forIndexPath: indexPath) as FileSelectedCell
+        var cell: FileSelectedCell! = tableView.dequeueReusableCellWithIdentifier(identifier ,forIndexPath: indexPath) as! FileSelectedCell
         
         let row = indexPath.row
         let url = self.filesSelected[row] as NSURL
@@ -456,7 +456,7 @@ import AVFoundation
             if  !fileName.containsString("Photo_email") {
                 cell.title?.text = FileNameUtils.getComposeNameFromPath(url.path)
             } else {
-                cell.title?.text = fileName
+                cell.title?.text = fileName as String
             }
         }else{
             //Not image
@@ -499,10 +499,10 @@ import AVFoundation
         
         println("Folder selected \(folder)")
         
-        self.currentRemotePath = folder
+        self.currentRemotePath = folder as String
         let name:NSString = folder.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
         let user = ManageUsersDB.getActiveUser()
-        let folderPath = UtilsDtos.getDbBFilePathFromFullFilePath(name, andUser: user)
+        let folderPath = UtilsDtos.getDbBFilePathFromFullFilePath(name as String, andUser: user)
 
         self.changeTheDestinyFolderWith(folderPath.lastPathComponent)
         
