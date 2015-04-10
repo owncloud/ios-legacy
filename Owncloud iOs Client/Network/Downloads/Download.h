@@ -90,6 +90,8 @@ extern NSString * fileWasDownloadNotification;
 
 @property(nonatomic) BOOL isForceCanceling;
 
+@property(nonatomic, strong) NSProgress *progressValueGlobal;
+
 ///-----------------------------------
 /// @name File to Download
 ///-----------------------------------
