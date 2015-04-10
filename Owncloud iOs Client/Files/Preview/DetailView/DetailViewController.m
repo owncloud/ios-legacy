@@ -83,7 +83,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     _isExtend=NO;
     _isExtending=NO;
     _isFileCharged=NO;
-    _disablePopover=NO;
     _isOverwritedFile=NO;
     _isUpdatingFile = NO;
     _controllerManager = noManagerController;

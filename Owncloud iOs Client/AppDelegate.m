@@ -327,7 +327,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         uploadFromOtherAppNavigationController.modalTransitionStyle=UIModalTransitionStyleCoverVertical;
         uploadFromOtherAppNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;
         [_splitViewController dismissViewControllerAnimated:NO completion:nil];
-        [self.detailViewController closePopover];
         [_splitViewController presentViewController:uploadFromOtherAppNavigationController animated:YES completion:nil];
 
     }
@@ -1657,11 +1656,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
         } else {
             //is ipad
-            _detailViewController.disablePopover=YES;
-            [_detailViewController closePopover];
             [_splitViewController dismissViewControllerAnimated:NO completion:nil];
 
-            
            // oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
             oc.modalPresentationStyle = UIModalPresentationFormSheet;
             

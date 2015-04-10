@@ -114,7 +114,6 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 @property(nonatomic) BOOL isViewBlocked;
 @property(nonatomic) BOOL isExtending;
 @property(nonatomic) BOOL isDownloading;
-@property(nonatomic) BOOL disablePopover;
 @property(nonatomic) BOOL isFileCharged;
 @property(nonatomic) BOOL isExtend;
 //Flag for know the overwrited file
@@ -217,10 +216,7 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
  */
 - (void)adjustGalleryScrollView;
 
-/*
- * Method that close popover
- */
--(void)closePopover;
+
 
 /*
  * Method that show a pop up error from other class

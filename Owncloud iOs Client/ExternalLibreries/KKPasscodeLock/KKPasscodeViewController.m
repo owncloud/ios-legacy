@@ -347,14 +347,6 @@
 
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    //In iPad
-    if (!IS_IPHONE) {
-        //Enable the popover
-#ifdef CONTAINER_APP
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        app.detailViewController.disablePopover = NO;
-#endif
-    }
 }
 
 
