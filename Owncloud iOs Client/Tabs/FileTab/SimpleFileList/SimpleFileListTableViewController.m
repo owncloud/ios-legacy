@@ -37,6 +37,8 @@
 #import "AppDelegate.h"
 #import "EditAccountViewController.h"
 #import "OCNavigationController.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
 #else
 #import "DocumentPickerViewController.h"
 #endif
@@ -361,6 +363,8 @@
     
 #ifdef CONTAINER_APP
     sharedCommunication = [AppDelegate sharedOCCommunication];
+#elif SHARE_IN
+    sharedCommunication = [Managers sharedOCCommunication];
 #else
     sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
 #endif
@@ -670,6 +674,8 @@
     
 #ifdef CONTAINER_APP
     sharedCommunication = [AppDelegate sharedOCCommunication];
+#elif SHARE_IN
+    sharedCommunication = [Managers sharedOCCommunication];
 #else
     sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
 #endif

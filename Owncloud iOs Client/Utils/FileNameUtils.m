@@ -17,6 +17,7 @@
 #import "Customization.h"
 
 
+
 @implementation FileNameUtils
 
 
@@ -297,7 +298,7 @@
     NSString *samlFragment2 = @"saml";
     if((urlString && [urlString rangeOfString:samlFragment1 options:NSCaseInsensitiveSearch].location != NSNotFound)||(urlString && [urlString rangeOfString:samlFragment2 options:NSCaseInsensitiveSearch].location != NSNotFound)) {
         //shibboleth key is in the request url
-        DLog(@"shibboleth fragment is in the request url");
+        NSLog(@"shibboleth fragment is in the request url");
         isSaml=YES;
     }
     
@@ -477,5 +478,83 @@
     [textFieldToMark setSelectedTextRange:selectionRange];
 }
 
+#pragma mark - Filename Utils
+
+/*
+ Method to generate the name of the file depending if it is a video or an image
+ */
++ (NSString *)getComposeNameFromAsset:(ALAsset *)asset{
+    
+    NSString *output = @"";
+    NSString *fileName = nil;
+    NSString *appleID = nil;
+    NSString *mediaType = [asset valueForProperty:ALAssetPropertyType];
+    NSDate *date = [asset valueForProperty:ALAssetPropertyDate];
+    NSDateFormatter* df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"yyyy-MM-dd-HH-mm-ss"];
+    df.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    NSString* dateString; dateString = [df stringFromDate:date];
+    DLog(@"DateString: %@", dateString);
+    
+    NSString *completeFileName = asset.defaultRepresentation.filename;
+    
+    NSString *ext = [self getExtension:completeFileName];
+
+    DLog(@"FileName: %@", completeFileName);
+    NSMutableArray *arr =[[NSMutableArray alloc] initWithArray: [completeFileName componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"."]]];
+    [arr removeLastObject];
+    fileName = [arr firstObject];
+    
+    arr =[[NSMutableArray alloc] initWithArray: [fileName componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]]];
+    appleID = [arr lastObject];
+    
+    if ([mediaType isEqualToString:@"ALAssetTypePhoto"]) {
+        output = [NSString stringWithFormat:@"Photo-%@_%@.%@", dateString, appleID, ext];
+    } else {
+        output = [NSString stringWithFormat:@"Video-%@.%@", dateString, ext];
+    }
+    
+    return output;
+    
+}
+
+/*
+ Method to generate the name of the file depending if it is a video or an image
+ */
++ (NSString *)getComposeNameFromPath:(NSString *) path {
+    
+    NSString *output = @"";
+    NSString *fileName = nil;
+    NSString *appleID = nil;
+    
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    
+    
+    NSDate *date = fileAttributes.fileCreationDate;
+    NSDateFormatter* df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"yyyy-MM-dd-HH-mm-ss"];
+    df.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    NSString* dateString; dateString = [df stringFromDate:date];
+    DLog(@"DateString: %@", dateString);
+    
+    NSString *ext = [self getExtension:path];
+    NSMutableArray *arr =[[NSMutableArray alloc] initWithArray: [[path lastPathComponent] componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"."]]];
+    [arr removeLastObject];
+    fileName = [arr firstObject];
+    
+    arr =[[NSMutableArray alloc] initWithArray: [fileName componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"_"]]];
+    appleID = [arr lastObject];
+    
+    if ([FileNameUtils checkTheTypeOfFile:path.lastPathComponent] == imageFileType) {
+        output = [NSString stringWithFormat:@"Photo-%@_%@.%@", dateString, appleID, ext];
+    } else if ([FileNameUtils checkTheTypeOfFile:path.lastPathComponent] == videoFileType) {
+        output = [NSString stringWithFormat:@"Video-%@.%@", dateString, ext];
+    } else {
+        output = [NSString stringWithFormat:@"File-%@.%@", dateString, ext];
+    }
+    
+    return output;
+    
+}
 
 @end

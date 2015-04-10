@@ -29,11 +29,7 @@
 #import "ManageAppSettingsDB.h"
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
-#else
-#import "DocumentPickerViewController.h"
 #endif
-
-
 
 @interface KKPasscodeViewController ()
 

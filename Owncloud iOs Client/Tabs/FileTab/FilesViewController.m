@@ -55,6 +55,10 @@
 #import "ManageNetworkErrors.h"
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
+#import "Owncloud_iOs_Client-Swift.h"
+
+
+
 
 
 //Constant for iOS7
@@ -117,8 +121,9 @@
     
     _currentRemoteFolder = currentFolder;
     _currentLocalFolder = currentLocalFoler;
-    DLog(@"self.fileIdToShowFiles: %@", _fileIdToShowFiles.etag);
-    DLog(@"self.fileIdToShowFiles: %ld", (long)_fileIdToShowFiles.idFile);
+
+   // DLog(@"self.fileIdToShowFiles: %lld", _fileIdToShowFiles.etag);
+  //  DLog(@"self.fileIdToShowFiles: %ld", (long)_fileIdToShowFiles.idFile);
     
     _showLoadingAfterChangeUser = NO;
     _checkingEtag = NO;
@@ -153,6 +158,7 @@
 
 - (void)viewDidLoad 
 {
+    
     [super viewDidLoad];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -1973,6 +1979,8 @@
             }
         }
         
+        self.fileIdToShowFiles = [ManageFilesDB getFileDtoByFileName:self.fileIdToShowFiles.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.fileIdToShowFiles.filePath andUser:app.activeUser] andUser:app.activeUser];
+        
         [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:_fileIdToShowFiles.idFile];
         
         //Get from database all the files of the current folder (fileIdToShowFiles)
@@ -2416,7 +2424,7 @@
      AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //Update fileDto
-    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+  self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if ([_selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
@@ -2439,8 +2447,8 @@
         self.rename.mUser = self.mUser;
         [self.rename showRenameFile:self.selectedFileDto];
     }
+    
 }
-
 
 #pragma mark - Move option
 
