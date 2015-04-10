@@ -221,7 +221,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             fullScreenFrame.origin.y = toolbar.frame.origin.y;
             _moviePlayer.moviePlayer.view.frame= fullScreenFrame;
         }
-    } else if (_readerPDFViewController) {
+    }
+    
+    if (_readerPDFViewController) {
         _readerPDFViewController.view.frame = [self getTheCorrectSize];
         [_readerPDFViewController updateContentViews];
     }
@@ -267,7 +269,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
                 fullScreenFrame.origin.y = toolbar.frame.origin.y;
                 _moviePlayer.moviePlayer.view.frame = fullScreenFrame;
             }
-        } else if (_readerPDFViewController) {
+        }
+        
+        if (_readerPDFViewController) {
             _readerPDFViewController.view.frame = [self getTheCorrectSize];
             [_readerPDFViewController updateContentViews];
         }
@@ -291,7 +295,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         if (_moviePlayer) {
             _moviePlayer.moviePlayer.view.frame = [self getTheCorrectSize];
-        } else if (_readerPDFViewController) {
+        }
+        
+        if (_readerPDFViewController) {
             _readerPDFViewController.view.frame = [self getTheCorrectSize];
             [_readerPDFViewController updateContentViews];
         }
@@ -1791,7 +1797,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
                 }
             }
         }
-    } else if (_readerPDFViewController) {
+    }
+    
+    if (_readerPDFViewController) {
         
         [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
         
