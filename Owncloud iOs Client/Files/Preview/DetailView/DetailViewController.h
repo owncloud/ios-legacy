@@ -129,6 +129,9 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 @property(nonatomic, strong) ReaderDocument *documentPDF;
 @property(nonatomic, strong) ReaderViewController *readerPDFViewController;
 
+//Full Screen Support
+@property(nonatomic) BOOL hideMaster;
+
 ///-----------------------------------
 /// @name Handle File
 ///-----------------------------------

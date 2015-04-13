@@ -85,6 +85,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     _isFileCharged=NO;
     _isOverwritedFile=NO;
     _isUpdatingFile = NO;
+    self.hideMaster = NO;
     _controllerManager = noManagerController;
     
     //Init notificacion in status bar
@@ -118,6 +119,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     //Set notifications for communication betweenViews
     [self setNotificationForCommunicationBetweenViews];
+    
+    //Add gesture for the full screen support
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(hideMasterView)];
+    singleTap.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:singleTap];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -2076,9 +2082,139 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 #pragma mark - UISplitViewDelegateMethods
 
+- (void) hideMasterView{
+    
+   [self toggleHideMaster:^{
+        [self configureView];
+    }];
+    
+   // self.hideMaster = !self.hideMaster;
+    
+   /* if (self.hideMaster) {
+        
+    
+        
+        [UIView animateWithDuration:1.0 animations:^{
+            self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible ;
+        } completion:^(BOOL finished) {
+            self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryHidden;
+        }];
+        
+    }else{
+        
+        [UIView animateWithDuration:1.0 animations:^{
+            self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryHidden;
+        } completion:^(BOOL finished) {
+            self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+        }];
+
+    }*/
+    
+  /*  self.hideMaster = !self.hideMaster;
+    
+   [self.splitViewController.view setNeedsLayout];
+   self.splitViewController.delegate = nil;
+    self.splitViewController.delegate = self;
+    
+  [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
+    
+    [self configureView];*/
+    
+    
+ 
+    
+    
+}
+
+-(void)toggleHideMaster:(void(^)(void))completionBlock {
+    
+    
+    [UIView animateWithDuration:0.2f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        
+        self.hideMaster = !self.hideMaster;
+        
+        [self.splitViewController.view setNeedsLayout];
+        self.splitViewController.delegate = nil;
+        self.splitViewController.delegate = self;
+        
+        [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
+        
+        
+    } completion:^(BOOL finished) {
+        if (finished)
+        {
+            if (completionBlock)
+            {
+                completionBlock();
+            }
+        }
+    }];
+    
+    
+    // Adjust the detailView frame to hide/show the masterview
+  /*  [UIView animateWithDuration:0.3f
+                          delay:0.0f
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^(void)
+     {
+         CGRect selfFrame = self.splitViewController.view.frame;
+         
+
+         // Get the width of the master view controller - so we know how far to animate.
+         CGFloat deltaWidth = 320.0;
+         
+         if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
+         {
+             if (!self.hideMaster)
+             {
+                 selfFrame.size.width += deltaWidth;
+                 selfFrame.origin.x -= deltaWidth;
+             }
+             else
+             {
+                 selfFrame.size.width -= deltaWidth;
+                 selfFrame.origin.x += deltaWidth;
+             }
+         }
+         else
+         {
+             if(!self.hideMaster)
+             {
+                 selfFrame.size.height += deltaWidth;
+                 if (self.splitViewController.interfaceOrientation == UIInterfaceOrientationLandscapeRight)
+                 {
+                     selfFrame.origin.y -= deltaWidth;
+                 }
+             }
+             else
+             {
+                 selfFrame.size.height -= deltaWidth;
+                 if (self.splitViewController.interfaceOrientation == UIInterfaceOrientationLandscapeRight)
+                 {
+                     selfFrame.origin.y += deltaWidth;
+                 }
+             }
+         }
+         
+         [self.splitViewController.view setFrame:selfFrame];
+         
+     }completion:^(BOOL finished){
+         if (finished)
+         {
+             self.hideMaster = !self.hideMaster;
+             
+             if (completionBlock)
+             {
+                 completionBlock();
+             }
+         }
+     }];*/
+    
+}
+
 - (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation{
     
-    return NO;
+    return self.hideMaster;
 }
 
 
