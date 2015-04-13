@@ -868,7 +868,7 @@
                 [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
             }
             
-             [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+             [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
             
             NSString *pathOfNewFolder = [NSString stringWithFormat:@"%@%@",[_currentRemoteFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding], name ];
             
@@ -1684,7 +1684,7 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-     [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     NSString *path = _nextRemoteFolder;
     
@@ -1892,7 +1892,7 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     NSString *path = _currentRemoteFolder;
      path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -2046,7 +2046,7 @@
             [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
         }
         
-        [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+        [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
         
         NSString *path = [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileIdToShowFiles.filePath andUser:app.activeUser];
         path = [path stringByAppendingString:_fileIdToShowFiles.fileName];

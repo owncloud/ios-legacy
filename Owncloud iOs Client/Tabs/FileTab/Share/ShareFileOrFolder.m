@@ -27,6 +27,7 @@
 #import "Customization.h"
 #import "FileNameUtils.h"
 #import "CheckHasShareSupport.h"
+#import "UtilsUrls.h"
 
 
 @implementation ShareFileOrFolder
@@ -229,7 +230,7 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     __block OCSharedDto *blockShareDto = _shareDto;
     
@@ -270,7 +271,7 @@
                     [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
                 }
                 
-                [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+                [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
                 
                 //Checking the Shared files and folders
                 [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
@@ -545,7 +546,7 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     [[AppDelegate sharedOCCommunication] unShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:sharedByLink.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         

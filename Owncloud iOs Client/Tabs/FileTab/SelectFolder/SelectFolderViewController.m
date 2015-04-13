@@ -368,12 +368,12 @@
 #ifdef SHARE_IN
             communication = [Managers sharedOCCommunication];
             activeUser = [ManageUsersDB getActiveUser];
-            [[Managers sharedOCCommunication] setUserAgent:k_user_agent];
+            [[Managers sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
 #else
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             communication = [AppDelegate sharedOCCommunication];
             activeUser = app.activeUser;
-            [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+            [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
 #endif
             
             NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
