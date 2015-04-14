@@ -1015,7 +1015,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     _mShareFileOrFolder = [ShareFileOrFolder new];
     _mShareFileOrFolder.delegate = self;
-    _mShareFileOrFolder.viewToShow = self.view;
+    _mShareFileOrFolder.viewToShow = self.splitViewController.view;
     _mShareFileOrFolder.parentButton = _shareLinkButtonBar;
     
     _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];

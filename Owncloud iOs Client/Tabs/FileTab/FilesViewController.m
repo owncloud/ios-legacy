@@ -2628,13 +2628,12 @@
     
     //If is iPad get the selected cell
     if (!IS_IPHONE) {
-        UITableViewCell *cell;
         
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        self.mShareFileOrFolder.viewToShow = app.detailViewController.view;
+        self.mShareFileOrFolder.viewToShow = self.splitViewController.view;
         
         //We use _selectedIndexPath to identify the position where we have to put the arrow of the popover
         if (_selectedIndexPath) {
+            UITableViewCell *cell;
             cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
             self.mShareFileOrFolder.cellFrame = cell.frame;
             self.mShareFileOrFolder.parentView = _tableView;
@@ -2663,8 +2662,7 @@
     
     _moveFile = [[MoveFile alloc] init];
     if(!IS_IPHONE) {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        _moveFile.viewToShow = app.detailViewController.view;
+        _moveFile.viewToShow = self.splitViewController.view;
     } else {
         _moveFile.viewToShow = self.view;
     }
