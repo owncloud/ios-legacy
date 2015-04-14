@@ -187,9 +187,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 -(void)potraitView{
     
     //Configure toolBar
-    NSMutableArray *items = [[toolbar items] mutableCopy];
+    NSMutableArray *items = [NSMutableArray new];
     
-    if (_isFileCharged==YES) {
+    if (self.isFileCharged) {
+        
         [items insertObject:_spaceBar atIndex:0];
         [items insertObject:_openButtonBar atIndex:1];
         [items insertObject:_spaceBar1 atIndex:2];
@@ -198,15 +199,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [items insertObject:_shareLinkButtonBar atIndex:5];
         [items insertObject:_spaceBar3 atIndex:6];
         [items insertObject:_deleteButtonBar atIndex:7];
-    } else {
-        [items removeObject:_spaceBar];
-        [items removeObject:_openButtonBar];
-        [items removeObject:_spaceBar1];
-        [items removeObject:_favoriteButtonBar];
-        [items removeObject:_spaceBar2];
-        [items removeObject:_shareLinkButtonBar];
-        [items removeObject:_spaceBar3];
-        [items removeObject:_deleteButtonBar];
     }
     
     [toolbar setItems:items animated:YES];
@@ -236,72 +228,29 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 - (void)landscapeView{
     
+    NSMutableArray *items = [NSMutableArray new];
+    [items insertObject:_spaceBar atIndex:0];
     
-    //Diferents configures of tool bar depends if the detail view is extend or not.
-    if (_isExtend == YES) {
-        
-        NSMutableArray *items = [[toolbar items] mutableCopy];
-        UIBarButtonItem *popoverItem = [items objectAtIndex:0];
-        [items removeAllObjects];
-        [items insertObject:popoverItem atIndex:0];
-        [items insertObject:_spaceBar atIndex:1];
-        
-        if (_isFileCharged==YES) {
-            [items insertObject:_openButtonBar atIndex:2];
-            [items insertObject:_spaceBar1 atIndex:3];
-            [items insertObject:_favoriteButtonBar atIndex:4];
-            [items insertObject:_spaceBar2 atIndex:5];
-            [items insertObject:_shareLinkButtonBar atIndex:6];
-            [items insertObject:_spaceBar3 atIndex:7];
-            [items insertObject:_deleteButtonBar atIndex:8];
-        }
-        
-        [toolbar setItems:items animated:YES];
-        
-        
-        //Configure size of movie player dinamically
-        if (_moviePlayer) {
-            if (_moviePlayer.isFullScreen == NO) {
-                _moviePlayer.moviePlayer.view.frame = [self getTheCorrectSize];
-            } else {
-                CGRect fullScreenFrame = _mainScrollView.frame;
-                fullScreenFrame.size.height = _mainScrollView.frame.size.height + toolbar.frame.size.height;
-                fullScreenFrame.origin.y = toolbar.frame.origin.y;
-                _moviePlayer.moviePlayer.view.frame = fullScreenFrame;
-            }
-        }
-        
-        if (_readerPDFViewController) {
-            _readerPDFViewController.view.frame = [self getTheCorrectSize];
-            [_readerPDFViewController updateContentViews];
-        }
-        
-    } else {
-        //Landscape normal mode
-        NSMutableArray *items = [[toolbar items] mutableCopy];
-        [items removeAllObjects];
-        [items insertObject:_spaceBar atIndex:0];
-        
-        if (_isFileCharged == YES) {
-            [items insertObject:_openButtonBar atIndex:1];
-            [items insertObject:_spaceBar1 atIndex:2];
-            [items insertObject:_favoriteButtonBar atIndex:3];
-            [items insertObject:_spaceBar2 atIndex:4];
-            [items insertObject:_shareLinkButtonBar atIndex:5];
-            [items insertObject:_spaceBar3 atIndex:6];
-            [items insertObject:_deleteButtonBar atIndex:7];
-        }
-        [toolbar setItems:items animated:YES];
-        
-        if (_moviePlayer) {
-            _moviePlayer.moviePlayer.view.frame = [self getTheCorrectSize];
-        }
-        
-        if (_readerPDFViewController) {
-            _readerPDFViewController.view.frame = [self getTheCorrectSize];
-            [_readerPDFViewController updateContentViews];
-        }
+    if (self.isFileCharged ) {
+        [items insertObject:_openButtonBar atIndex:1];
+        [items insertObject:_spaceBar1 atIndex:2];
+        [items insertObject:_favoriteButtonBar atIndex:3];
+        [items insertObject:_spaceBar2 atIndex:4];
+        [items insertObject:_shareLinkButtonBar atIndex:5];
+        [items insertObject:_spaceBar3 atIndex:6];
+        [items insertObject:_deleteButtonBar atIndex:7];
     }
+    [toolbar setItems:items animated:YES];
+    
+    if (_moviePlayer) {
+        _moviePlayer.moviePlayer.view.frame = [self getTheCorrectSize];
+    }
+    
+    if (_readerPDFViewController) {
+        _readerPDFViewController.view.frame = [self getTheCorrectSize];
+        [_readerPDFViewController updateContentViews];
+    }
+    
 }
 
 #pragma mark - Handle file methods
