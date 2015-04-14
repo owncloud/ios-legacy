@@ -14,7 +14,9 @@
  */
 
 #import <Foundation/Foundation.h>
-
+#import <UIKit/UIKit.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import "OCAsset.h"
 
 
 
@@ -167,5 +169,21 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
  * @param alertView -> UIAlertView
  */
 + (void)markFileNameOnAlertView: (UITextField *) textFieldToMark;
+
+///-----------------------------------
+/// @name getComposeNameFromAsset
+///-----------------------------------
+/*
+ Method to generate the name of the file depending if it is a video or an image
+ */
++ (NSString *)getComposeNameFromAsset:(ALAsset *)asset;
+
+///-----------------------------------
+/// @name getComposeNameFromPath
+///-----------------------------------
+/*
+ Method to generate the name of the file depending if it is a video or an image
+ */
++ (NSString *)getComposeNameFromPath:(NSString *) path;
 
 @end

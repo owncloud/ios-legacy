@@ -21,10 +21,13 @@
 #import "OCKeychain.h"
 #import "CredentialsDto.h"
 
+
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
 #elif FILE_PICKER
 #import "DocumentPickerViewController.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
 #else
 #import "FileProvider.h"
 #endif
@@ -46,6 +49,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -89,6 +94,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -181,6 +188,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -255,6 +264,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -372,6 +383,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -427,6 +440,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -457,6 +472,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -485,6 +502,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -514,6 +533,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -568,6 +589,7 @@
     NSString *idString = [NSString stringWithFormat:@"%ld", (long)idUser];
     if (![OCKeychain removeCredentialsById:idString]) {
         DLog(@"Error delete keychain credentials");
+        
     }
 }
 
@@ -582,6 +604,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -614,6 +638,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -662,6 +688,8 @@
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -679,6 +707,7 @@
     }];
     
 }
+
 
 
 @end
