@@ -320,11 +320,13 @@
     __block NSMutableArray *output = [NSMutableArray new];
     
     FMDatabaseQueue *queue;
-    
+
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [FileProvider sharedDatabase];
 #endif
