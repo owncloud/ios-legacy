@@ -71,7 +71,10 @@
     
     CFDictionaryRef result = nil;
     
+    DLog(@"keychainItem: %@", keychainItem);
+    
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, (CFTypeRef *)&result);
+    
     
     DLog(@"(getCredentials)Error Code %d", (int)stsExist);
 

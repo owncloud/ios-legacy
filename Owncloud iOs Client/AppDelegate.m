@@ -862,6 +862,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [fileManager removeItemAtPath:inboxFolder error:&error];
 }
 
+
+- (void) initInstantUploads{
+    
+    [self.settingsViewController initStateInstantUpload];
+}
+
 #pragma mark - Manage media player
 
 /*
@@ -1012,11 +1018,14 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 
 
+
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     DLog(@"applicationWillEnterForeground");
     
-    [self.settingsViewController initStateInstantUpload];
+    [self performSelector:@selector(initInstantUploads) withObject:nil afterDelay:4.0];
+    
+   
     
     if (_activeUser.username==nil) {
         _activeUser=[ManageUsersDB getActiveUser];
