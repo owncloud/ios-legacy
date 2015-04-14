@@ -313,6 +313,59 @@
     return output;
 }
 
++ (NSMutableArray *) getAllUsersWithOutCredentialInfo{
+    
+    DLog(@"getAllUsers");
+    
+    __block NSMutableArray *output = [NSMutableArray new];
+    
+    FMDatabaseQueue *queue;
+    
+#ifdef CONTAINER_APP
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
+#else
+    queue = [FileProvider sharedDatabase];
+#endif
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users ORDER BY id ASC"];
+        
+        UserDto *current = nil;
+        
+        while ([rs next]) {
+            
+            current = [UserDto new];
+            
+            current.idUser= [rs intForColumn:@"id"];
+            current.url = [rs stringForColumn:@"url"];
+            current.ssl = [rs intForColumn:@"ssl"];
+            current.activeaccount = [rs intForColumn:@"activeaccount"];
+            current.storageOccupied = [rs longForColumn:@"storage_occupied"];
+            current.storage = [rs longForColumn:@"storage"];
+            current.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
+            current.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            
+            current.instant_upload = [rs intForColumn:@"instant_upload"];
+            current.path_instant_upload = [rs stringForColumn:@"path_instant_upload"];
+            current.only_wifi_instant_upload = [rs intForColumn:@"only_wifi_instant_upload"];
+            current.date_instant_upload = [rs longForColumn:@"date_instant_upload"];
+            
+            [output addObject:current];
+            
+        }
+        
+        [rs close];
+        
+    }];
+    
+    
+    return output;
+
+}
+
 /*
  * Method that return an array with all users. 
  * This method is only used with the old structure of the table used until version 9

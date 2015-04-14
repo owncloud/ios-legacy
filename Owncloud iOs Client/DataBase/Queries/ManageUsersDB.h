@@ -57,6 +57,11 @@
 + (NSMutableArray *) getAllUsers;
 
 /*
+ * Method that return an array with all users without credentials info
+ */
++ (NSMutableArray *) getAllUsersWithOutCredentialInfo;
+
+/*
  * Method that return an array with all users.
  * This method is only used with the old structure of the table used until version 9
  * And is only used in the update database method

@@ -84,7 +84,7 @@
         _isMailComposeVisible = NO;
        
         //Set the instant upload
-        [self initStateInstantUpload];
+        [self performSelector:@selector(initStateInstantUpload) withObject:nil afterDelay:4.0];
     
     }
     return self;
