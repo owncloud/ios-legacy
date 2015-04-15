@@ -64,14 +64,17 @@
 //show logo or name on title of file list
 #define k_show_logo_on_title_file_list YES
 
-//Show impressum
-#define k_show_imprint_option_on_settings NO
+//Show help
+#define k_show_help_option_on_settings YES
 
 //Show social
 #define k_show_recommend_option_on_settings YES
 
-//Show help
-#define k_show_help_option_on_settings YES
+//Show feedback
+#define k_show_feedback_option_on_settings YES
+
+//Show impressum
+#define k_show_imprint_option_on_settings NO
 
 //Buy more storage company name
 #define k_company_name_buy_more_storage @""
