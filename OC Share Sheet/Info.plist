@@ -26,14 +26,10 @@
 	<dict>
 		<key>NSExtensionAttributes</key>
 		<dict>
-			<key>NSExtensionPointVersion</key>
-			<string>1.0</string>
-			<key>NSExtensionPointName</key>
-			<string>com.apple.share-services</string>
 			<key>NSExtensionActivationRule</key>
 			<dict>
 				<key>NSExtensionActivationSupportsText</key>
-				<integer>3</integer>
+				<true/>
 				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
 				<integer>3</integer>
 				<key>NSExtensionActivationSupportsImageWithMaxCount</key>

@@ -260,6 +260,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         
         _uploadTask = [[AppDelegate sharedOCCommunication] uploadFileSession:_currentUpload.originPath toDestiny:urlClean onCommunication:[AppDelegate sharedOCCommunication] withProgress:&progressValue successRequest:^(NSURLResponse *response, NSString *redirectedServer) {
             
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
+            
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             
             DLog(@"File uploaded");
@@ -323,6 +325,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             
         } failureRequest:^(NSURLResponse *response, NSString *redirectedServer, NSError *error) {
+            
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
             
             NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
             
@@ -393,6 +397,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 
             }            
         } failureBeforeRequest:^(NSError *error) {
+            
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
+            
             switch (error.code) {
                 case OCErrorFileToUploadDoesNotExist: {
                     //TODO: create a state to control if the file does not exist
@@ -423,13 +430,12 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         
         }];
         
-        // Observe fractionCompleted using KVO
-        [progressValue addObserver:self
-                        forKeyPath:@"fractionCompleted"
-                           options:NSKeyValueObservingOptionNew
-                           context:NULL];
-
+        self.progressValueGlobal = progressValue;
+        progressValue = nil;
         
+        // Observe fractionCompleted using KVO
+        [self.progressValueGlobal addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew context:NULL];
+
     } else {
         
         //Create the block of NSOperation to upload.
