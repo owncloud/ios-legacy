@@ -130,7 +130,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     __weak typeof(self) weakSelf = self;
     
@@ -695,7 +695,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", app.activeUser.url, k_url_webdav_server];

@@ -17,6 +17,7 @@
 #import "constants.h"
 #import "UserDto.h"
 #import <UIKit/UIKit.h>
+#import "Customization.h"
 
 @implementation UtilsUrls
 
@@ -220,6 +221,14 @@
     }
     
     return  output;
+}
+
+
++ (NSString *) getUserAgent {
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *userAgentWithAppVersion = [NSString stringWithFormat:@"%@%@",k_user_agent,appVersion];
+    
+    return userAgentWithAppVersion;
 }
 
 @end

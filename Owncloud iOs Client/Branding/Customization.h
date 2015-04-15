@@ -128,4 +128,4 @@
 #define k_url_link_on_login @"https://owncloud.com/mobile/new"
 
 //User-Agent
-#define k_user_agent @"iOS-ownCloud"
+#define k_user_agent @"Mozilla/5.0 (iOS) ownCloud-iOS/"

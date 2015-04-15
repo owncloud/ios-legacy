@@ -16,6 +16,7 @@
 #import "WebViewController.h"
 #import "AppDelegate.h"
 #import "Customization.h"
+#import "UtilsUrls.h"
 
 @interface WebViewController ()
 
@@ -74,7 +75,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
     //Add the user agent
-    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
+    [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
     
     // [_previewWebView loadHTMLString:@"<html><head></head><body></body></html>" baseURL:nil];
   //  [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];

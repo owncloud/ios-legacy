@@ -18,6 +18,7 @@
 #import "AppDelegate.h"
 #import "UIColor+Constants.h"
 #import "Customization.h"
+#import "UtilsUrls.h"
 
 @interface ImpressumViewController ()
 
@@ -67,7 +68,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:targetURL];
     
     //Add the user agent
-    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
+    [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
     
     [_previewWebView loadRequest:request];
     

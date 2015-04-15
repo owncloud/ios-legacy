@@ -40,4 +40,6 @@
 //Get the path of the temp folder where there are the temp files for the uploads
 + (NSString *) getTempFolderForUploadFiles;
 
++ (NSString *) getUserAgent;
+
 @end
