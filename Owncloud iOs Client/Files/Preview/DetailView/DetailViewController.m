@@ -1988,7 +1988,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  * Add loading screen and block the view
  */
 - (void) initLoading {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.splitViewController.view animated:YES];
     [hud bringSubviewToFront:self.view];
     
     hud.labelText = NSLocalizedString(@"loading", nil);
@@ -2000,7 +2000,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 }
 
 - (void) endLoading {
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [MBProgressHUD hideHUDForView:self.splitViewController.view animated:YES];
     self.view.userInteractionEnabled = YES;
     self.navigationController.navigationBar.userInteractionEnabled = YES;
     self.tabBarController.tabBar.userInteractionEnabled = YES;

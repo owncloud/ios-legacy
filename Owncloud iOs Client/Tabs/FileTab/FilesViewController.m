@@ -634,13 +634,7 @@
     if(_moveFile.overWritteOption) {
         [_moveFile.overWritteOption.overwriteOptionsActionSheet dismissWithClickedButtonIndex:0 animated:NO];
     }
-    if (!IS_IPHONE && IS_IOS7) {
-        if (_resolvedCredentialError) {
-            [_resolvedCredentialError dismissViewControllerAnimated:NO completion:nil];
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            app.isErrorLoginShown = NO;
-        }
-    }
+    
     //Close the openWith option in FileViewController
     if (!IS_IPHONE && self.mShareFileOrFolder && self.mShareFileOrFolder.activityPopoverController) {
         [self.mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
@@ -683,7 +677,6 @@
         [app.splitViewController.view.window addSubview:_HUD];
     }
     
-    //MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     _HUD.labelText = NSLocalizedString(@"loading", nil);
     
     if (IS_IPHONE) {
