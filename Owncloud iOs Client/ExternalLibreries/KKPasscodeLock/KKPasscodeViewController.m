@@ -31,7 +31,6 @@
 #import "AppDelegate.h"
 #endif
 
-
 @interface KKPasscodeViewController ()
 
 @property(nonatomic,assign) BOOL isSmallLandscape;
@@ -338,7 +337,6 @@
     }
 #ifdef CONTAINER_APP
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    app.splitViewController.hiddenPopoverController.popoverContentSize = CGSizeMake(320, [[UIScreen mainScreen] bounds].size.height);
     //Set Passcode not visible
     app.isPasscodeVisible = NO;
 #else
@@ -349,14 +347,6 @@
 
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    //In iPad
-    if (!IS_IPHONE) {
-        //Enable the popover
-#ifdef CONTAINER_APP
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        app.detailViewController.disablePopover = NO;
-#endif
-    }
 }
 
 

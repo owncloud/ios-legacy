@@ -190,9 +190,6 @@
             
             AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
-            //[appDelegate dismissPopover];
-            
-            //appDelegate.downloadsArray=[[NSMutableArray alloc]init];
             [appDelegate.downloadManager cancelDownloads];
             appDelegate.uploadArray=[[NSMutableArray alloc]init];
             [appDelegate updateRecents];
@@ -346,10 +343,6 @@
     } else {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
-        if (IS_IOS8) {
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
-        
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
@@ -397,10 +390,6 @@
         viewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:viewController animated:YES];
     } else {
-        
-        if (IS_IOS8) {
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
         
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;

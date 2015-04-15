@@ -101,7 +101,7 @@
     if (!_webView) {
         _webView = [[UIWebView alloc] initWithFrame:self.frame];
     }
-    _webView.autoresizingMask=UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
 /*
@@ -182,7 +182,7 @@
     [self configureWebView];
     
     [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
-    _webView.hidden=NO;
+    _webView.hidden  = NO;
     _webView.delegate = self;
     
     [_webView loadRequest:request];
@@ -199,12 +199,12 @@
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     DLog(@"Office webview loading started");
     
-    if (_activity==nil) {
-        _activity=[[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        _activity.center=CGPointMake(_webView.center.x, _webView.center.y);
+    if (_activity == nil) {
+        _activity = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _activity.center = CGPointMake(_webView.frame.size.width/2, _webView.frame.size.height/2);
         [_webView addSubview:_activity];
     }
-    _activity.center=CGPointMake(_webView.center.x, _webView.center.y);
+    _activity.center = CGPointMake(_webView.frame.size.width/2, _webView.frame.size.height/2);
     [_activity startAnimating];
 }
 
@@ -215,7 +215,7 @@
     [_webView setHidden:NO];
     [_webView setScalesPageToFit:YES];
     
-    if (_isDocument==NO) {
+    if (_isDocument == NO) {
         [_delegate finishLinkLoad];        
     }
 }

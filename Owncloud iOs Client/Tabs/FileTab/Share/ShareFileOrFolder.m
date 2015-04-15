@@ -50,12 +50,6 @@
             self.shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:NSLocalizedString(@"unshare_link", nil) otherButtonTitles:NSLocalizedString(@"share_link_long_press", nil), nil];
             
             if (!IS_IPHONE){
-                
-                AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                if (app.detailViewController.popoverController.isPopoverVisible){
-                    [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-                }
-                
                 [self.shareActionSheet showInView:_viewToShow];
             } else {
                 
@@ -231,7 +225,7 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
     
-    __block OCSharedDto *blockShareDto = _shareDto;
+     __block OCSharedDto *blockShareDto = _shareDto;
     
     [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:_shareDto.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared) {
         

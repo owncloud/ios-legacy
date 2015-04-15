@@ -172,11 +172,6 @@
         //is ipad
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         oc.modalPresentationStyle = UIModalPresentationFormSheet;
-        
-        if (IS_IOS8) {
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
-        
         [app.splitViewController presentViewController:oc animated:YES completion:nil];
     }
 }
@@ -675,10 +670,9 @@
                 if (IS_IPHONE) {
                     [self.popupQuery showInView:[self.view window]];
                 }else {
-                    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                    
                     if (IS_IOS8) {
-                        [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-                        
+                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
                         [self.popupQuery showInView:app.splitViewController.view];
                     } else {
                         [self.popupQuery showInView:[self.view window]];
@@ -778,8 +772,6 @@
         if (!IS_IPHONE)
         {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-            
             [app.detailViewController presentViewController:self.twitter animated:YES completion:^{
                 self.isMailComposeVisible = YES;
             }];
@@ -835,8 +827,6 @@
         if (!IS_IPHONE)
         {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-            
             [app.detailViewController presentViewController:self.facebook animated:YES completion:^{
                 self.isMailComposeVisible = YES;
             }];
@@ -922,7 +912,6 @@
             self.mailer.modalPresentationStyle = UIModalPresentationFormSheet;
             
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
             [app.detailViewController presentViewController:self.mailer animated:YES completion:^{
                 self.isMailComposeVisible = YES;
             }];
@@ -973,7 +962,6 @@
             self.mailer.modalPresentationStyle = UIModalPresentationFormSheet;
             
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
             [app.detailViewController presentViewController:self.mailer animated:YES completion:^{
                 self.isMailComposeVisible = YES;
             }];

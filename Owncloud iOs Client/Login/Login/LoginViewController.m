@@ -2421,21 +2421,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             //iPad
             navController.modalTransitionStyle=UIModalTransitionStyleCoverVertical;
             navController.modalPresentationStyle = UIModalPresentationFormSheet;
-            
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            
-            //Check if the splitViewController exist
-           if (appDelegate.splitViewController) {
-                 [appDelegate.splitViewController.detailViewController presentViewController:navController animated:YES completion:nil];
-            } else {
-                [self presentViewController:navController animated:YES completion:nil];
-            }
-            
-           
-        } else {
-            //iPhone
-            [self presentViewController:navController animated:YES completion:nil];
         }
+        
+        [self presentViewController:navController animated:YES completion:nil];
     });
     
 }
