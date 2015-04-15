@@ -516,7 +516,6 @@
     _HUD.delegate = self;
     [self.view.window addSubview:_HUD];
     
-    //MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     _HUD.labelText = NSLocalizedString(@"loading", nil);
     
     if (IS_IPHONE) {
