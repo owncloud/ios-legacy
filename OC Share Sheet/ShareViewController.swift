@@ -427,11 +427,6 @@ import AVFoundation
         
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         
-        //Little image border
-        cell.imageForFile?.layer.borderWidth = 3.0
-        cell.imageForFile?.layer.borderColor = UIColor.whiteColor().CGColor
-        cell.imageForFile?.backgroundColor = UIColor.whiteColor()
-        
         //Choose the correct icon if the file is not an image
         let ext = FileNameUtils.getExtension(url.lastPathComponent)
         let type = FileNameUtils.checkTheTypeOfFile(ext)
