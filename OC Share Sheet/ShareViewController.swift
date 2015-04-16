@@ -30,9 +30,6 @@ import AVFoundation
     var images: [UIImage] = []
     var currentRemotePath: String!
    
-    let customRowColor = UIColor.colorOfNavigationBar()
-    let customRowBorderColor = UIColor.colorOfNavigationTitle()
-    
     let witdhFormSheet: CGFloat = 540.0
     let heighFormSheet: CGFloat = 620.0
     
@@ -428,22 +425,12 @@ import AVFoundation
         let row = indexPath.row
         let url = self.filesSelected[row] as NSURL
         
-        cell.backgroundCustomView?.backgroundColor = customRowColor
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         
-        //Custom circle image and border
-        let cornerRadius = cell.imageForFile!.frame.size.width / 2
-        cell.imageForFile?.layer.cornerRadius = cornerRadius
-        cell.imageForFile?.clipsToBounds = true
+        //Little image border
         cell.imageForFile?.layer.borderWidth = 3.0
-        cell.imageForFile?.layer.borderColor = customRowBorderColor.CGColor
+        cell.imageForFile?.layer.borderColor = UIColor.whiteColor().CGColor
         cell.imageForFile?.backgroundColor = UIColor.whiteColor()
-        
-        //Custom circle view in
-        cell.roundCustomView?.backgroundColor = customRowColor
-        cell.roundCustomView?.layer.cornerRadius = cornerRadius
-        cell.roundCustomView?.clipsToBounds = true
-        
         
         //Choose the correct icon if the file is not an image
         let ext = FileNameUtils.getExtension(url.lastPathComponent)
