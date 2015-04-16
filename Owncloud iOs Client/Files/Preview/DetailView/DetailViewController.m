@@ -38,6 +38,7 @@
 #import "UtilsUrls.h"
 #import "ReaderDocument.h"
 #import "ReaderViewController.h"
+#import "OCSplitViewController.h"
 
 
 NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
@@ -106,7 +107,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [_deleteButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     
     //Set Constraints
-    _toolBarHeightConstraint.constant=64;
+   // _toolBarHeightConstraint.constant=64;
     _topMarginTitleLabelConstraint.constant=32;
     _progressViewHeightConstraint.constant=2;
     _fileTypeCenterHeightConstraint.constant=-40;
@@ -2031,16 +2032,17 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     }
 }
 
-#pragma mark - UISplitViewDelegateMethods
+#pragma mark - Transitions Methods for extend the detail view
 
 - (void) hideMasterView{
     
-  /*  if (self.hideMaster) {
+    if (self.hideMaster) {
+        
+        [self modifyTheAlphaOfMasterView];
         
         [self.splitViewController.view setNeedsLayout];
         self.splitViewController.delegate = nil;
         self.splitViewController.delegate = self;
-        
         
         
         CGRect selfFrame = self.splitViewController.view.frame;
@@ -2066,23 +2068,22 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         [self.splitViewController.view setFrame:selfFrame];
         
-        
-        
         self.hideMaster = !self.hideMaster;
         
         [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
         
+        [self toggleHideMaster:^{
+            
+        }];
+
+        
         [self shouldHideToolBar:self.hideMaster complete:^{
             
-        
-            
-            [self toggleHideMaster:^{
-                
-                [self configureView];
-            }];
-          
         }];
-       
+        
+        
+        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.01];
+        [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.3];
         
     }else{
         
@@ -2090,51 +2091,51 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         [self toggleHideMaster:^{
             
-            [self shouldHideToolBar:self.hideMaster complete:^{
-                
-               [self.splitViewController.view setNeedsLayout];
-                self.splitViewController.delegate = nil;
-                self.splitViewController.delegate = self;
-                
-                
-                
-                CGRect selfFrame = self.splitViewController.view.frame;
-                
-                CGFloat deltaWidth = 320.0;
-                
-                if (IS_IOS8) {
-                    
-                    selfFrame.size.width -= deltaWidth;
-                    selfFrame.origin.x += deltaWidth;
-                    
-                }else{
-                    
-                    if (IS_PORTRAIT) {
-                        selfFrame.size.width -= deltaWidth;
-                        selfFrame.origin.x += deltaWidth;
-                    }else{
-                        selfFrame.size.height -= deltaWidth;
-                        selfFrame.origin.y += deltaWidth;
-                    }
-                    
-                }
-                
-                [self.splitViewController.view setFrame:selfFrame];
-                
-                [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
-                
-              //  [self configureView];
-                
-               
-            }];
             
         }];
         
-    }*/
-    
-    [self testHideToolBar];
-    
+        [self shouldHideToolBar:self.hideMaster complete:^{
+            
+            [self.splitViewController.view setNeedsLayout];
+            self.splitViewController.delegate = nil;
+            self.splitViewController.delegate = self;
+            
+            CGRect selfFrame = self.splitViewController.view.frame;
+            
+            CGFloat deltaWidth = 320.0;
+            
+            if (IS_IOS8) {
+                
+                selfFrame.size.width -= deltaWidth;
+                selfFrame.origin.x += deltaWidth;
+                
+            }else{
+                
+                if (IS_PORTRAIT) {
+                    selfFrame.size.width -= deltaWidth;
+                    selfFrame.origin.x += deltaWidth;
+                }else{
+                    selfFrame.size.height -= deltaWidth;
+                    selfFrame.origin.y += deltaWidth;
+                }
+                
+            }
+            
+            [self.splitViewController.view setFrame:selfFrame];
+            
+            [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
+            
+           [self modifyTheAlphaOfMasterView];
+        }];
+        
+        
+        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.01];
+        [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.3];
+        
+    }
+   
 }
+
 
 -(void)toggleHideMaster:(void(^)(void))completionBlock {
     
@@ -2204,22 +2205,55 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
 }
 
-- (void) testHideToolBar{
+- (void) modifyTheAlphaOfMasterView{
     
-  //  [self.view setNeedsLayout];
-   // [self.toolbar setNeedsUpdateConstraints];
-   // [self.toolbar updateConstraintsIfNeeded];
-
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    OCNavigationController *ocNav = (OCNavigationController *)[app.ocTabBarController.viewControllers objectAtIndex:0];
     
-    _toolBarHeightConstraint.constant = 0;
+    if (self.hideMaster) {
+        ocNav.view.alpha = 1.0;
+    }else{
+        ocNav.view.alpha = 0.0;
+    }
     
-    [UIView animateWithDuration:2.0 animations:^{
-         [self.view layoutIfNeeded];
-    }];
+    
 }
+
+- (void) configureViewWithAnimation{
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        [self configureView];
+    }];
+    
+}
+
+- (void) updateStatusBar{
+    
+    OCSplitViewController *splitView = (OCSplitViewController *)self.splitViewController;
+    splitView.isStatusBarHidden = self.hideMaster;
+    [splitView setNeedsStatusBarAppearanceUpdate];
+}
+
 
 - (void) shouldHideToolBar:(BOOL) isHidden complete:(void(^)(void))completionBlock{
     
+    CGFloat deltaHeigh = 64.0;
+    
+    if (isHidden) {
+        toolBarTopMargin.constant = -deltaHeigh;
+        _topMarginUpdatingFileProgressView.constant = -deltaHeigh;
+        _topMarginTitleLabelConstraint.constant = -deltaHeigh;
+        toolBarHeight.constant = -deltaHeigh;
+        _toolBarHeightConstraint.constant = -deltaHeigh;
+    }else{
+        toolBarTopMargin.constant = 0;
+        _topMarginUpdatingFileProgressView.constant = 10;
+        _topMarginTitleLabelConstraint.constant = 32;
+        toolBarHeight.constant = 0;
+        _toolBarHeightConstraint.constant = 64;
+    }
+    
+     self.toolbar.alpha = 1.0;
     
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         CGRect toolFrame = self.toolbar.frame;
@@ -2227,7 +2261,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         CGFloat deltaHeigh = 64.0;
         
-        if (isHidden) {
+        if (self.hideMaster) {
             toolFrame.origin.y -= deltaHeigh;
             scrollFrame.origin.y -= deltaHeigh;
             scrollFrame.size.height += deltaHeigh;
@@ -2238,18 +2272,19 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             scrollFrame.size.height -= deltaHeigh;
         }
         
-       
-        
         [self.toolbar setFrame:toolFrame];
-       // [self.mainScrollView setFrame:scrollFrame];
+        [self.mainScrollView setFrame:scrollFrame];
+        
+        [self.view layoutIfNeeded];
+
+        [self configureView];
+        
     } completion:^(BOOL finished) {
        
         if (finished)
         {
             if (isHidden) {
-              //  self.toolbar.alpha = 0.0;
-            }else{
-              //  self.toolbar.alpha = 1.0;
+                self.toolbar.alpha = 0.0;
             }
             
             if (completionBlock)
@@ -2262,6 +2297,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
 }
 
+#pragma mark - UISplitViewDelegateMethods
 
 - (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation{
     

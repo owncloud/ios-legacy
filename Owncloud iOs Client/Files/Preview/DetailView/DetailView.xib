@@ -18,7 +18,7 @@
                 <outlet property="_spaceBar1" destination="VYt-rC-1eC" id="Zxh-gN-XQS"/>
                 <outlet property="_spaceBar2" destination="98" id="mCo-DK-9Mz"/>
                 <outlet property="_spaceBar3" destination="PHm-EO-a4h" id="jRS-lG-1Wb"/>
-                <outlet property="_toolBarHeightConstraint" destination="BcG-k4-umR" id="7hT-3q-qGf"/>
+                <outlet property="_toolBarHeightConstraint" destination="Qgy-82-b7E" id="B6M-lP-nCw"/>
                 <outlet property="_topMarginTitleLabelConstraint" destination="5IR-2P-Sff" id="fwj-Eu-QOE"/>
                 <outlet property="_topMarginUpdatingButton" destination="z7s-hh-G4S" id="0xg-eK-9Sw"/>
                 <outlet property="_topMarginUpdatingFileProgressView" destination="jWd-pP-iNs" id="CjL-8s-l9K"/>
@@ -29,6 +29,7 @@
                 <outlet property="progressLabel" destination="85" id="86"/>
                 <outlet property="progressView" destination="82" id="89"/>
                 <outlet property="titleLabel" destination="1eq-mt-JYf" id="WLW-Lz-7kY"/>
+                <outlet property="toolBarTopMargin" destination="wvX-GC-a9Z" id="SeH-e7-f6n"/>
                 <outlet property="toolbar" destination="63" id="65"/>
                 <outlet property="updatingCancelButton" destination="SvH-e8-BmT" id="Z5m-co-vxq"/>
                 <outlet property="updatingFileProgressView" destination="E9s-I7-wvl" id="VzP-Ep-yFV"/>
@@ -83,7 +84,7 @@
                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="63" customClass="OCToolBar">
                     <rect key="frame" x="0.0" y="0.0" width="768" height="64"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="64" id="BcG-k4-umR"/>
+                        <constraint firstAttribute="height" constant="64" id="Qgy-82-b7E"/>
                     </constraints>
                     <items>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="105"/>
@@ -112,13 +113,6 @@
                         </barButtonItem>
                     </items>
                 </toolbar>
-                <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="112">
-                    <rect key="frame" x="0.0" y="64" width="768" height="960"/>
-                    <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="0.0"/>
-                    <connections>
-                        <outlet property="delegate" destination="-1" id="122"/>
-                    </connections>
-                </scrollView>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1eq-mt-JYf">
                     <rect key="frame" x="62" y="32" width="496" height="22"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="18"/>
@@ -151,10 +145,19 @@
                         <constraint firstItem="SvH-e8-BmT" firstAttribute="top" secondItem="BV7-Lz-cFn" secondAttribute="top" constant="20" id="z7s-hh-G4S"/>
                     </constraints>
                 </view>
+                <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="112">
+                    <rect key="frame" x="0.0" y="64" width="768" height="960"/>
+                    <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="0.0"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="122"/>
+                    </connections>
+                </scrollView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="centerY" secondItem="RhM-9d-K2q" secondAttribute="centerY" id="0NL-xL-u5i"/>
+                <constraint firstAttribute="trailing" secondItem="63" secondAttribute="trailing" id="1e3-ov-4hM"/>
+                <constraint firstItem="63" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="1tP-NB-mJ5"/>
                 <constraint firstItem="112" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="26q-qR-A3X"/>
                 <constraint firstItem="85" firstAttribute="top" secondItem="82" secondAttribute="bottom" constant="25" id="3PW-AE-3Hz"/>
                 <constraint firstAttribute="centerY" secondItem="80" secondAttribute="centerY" constant="10" id="3Sq-kx-drL"/>
@@ -166,23 +169,18 @@
                 <constraint firstAttribute="trailing" secondItem="112" secondAttribute="trailing" id="BhR-id-DyS"/>
                 <constraint firstAttribute="centerX" secondItem="85" secondAttribute="centerX" constant="-6" id="C2r-2t-fGS"/>
                 <constraint firstAttribute="bottom" secondItem="112" secondAttribute="bottom" id="E2n-qO-LdM"/>
-                <constraint firstItem="63" firstAttribute="bottom" secondItem="112" secondAttribute="top" id="Eae-NX-uQV"/>
                 <constraint firstAttribute="centerX" secondItem="RhM-9d-K2q" secondAttribute="centerX" id="FdE-Oh-T1r"/>
                 <constraint firstAttribute="centerY" secondItem="83" secondAttribute="centerY" constant="-83" id="HPt-0F-QbD"/>
-                <constraint firstAttribute="bottom" secondItem="112" secondAttribute="bottom" id="M2n-Bi-t6s"/>
                 <constraint firstAttribute="centerX" secondItem="80" secondAttribute="centerX" id="O3M-bq-gO3"/>
                 <constraint firstItem="80" firstAttribute="centerX" secondItem="112" secondAttribute="centerX" id="R4W-5S-H3h"/>
-                <constraint firstItem="63" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="RhZ-6z-9Bm"/>
-                <constraint firstItem="63" firstAttribute="leading" secondItem="112" secondAttribute="leading" id="ScZ-Ia-1BV"/>
                 <constraint firstAttribute="centerX" secondItem="82" secondAttribute="centerX" constant="4" id="TbT-rI-qb9"/>
                 <constraint firstItem="BV7-Lz-cFn" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="62" id="Vsl-8p-I3W"/>
+                <constraint firstItem="112" firstAttribute="top" secondItem="63" secondAttribute="bottom" id="Wo6-z4-XgU"/>
                 <constraint firstAttribute="trailing" secondItem="1eq-mt-JYf" secondAttribute="trailing" constant="210" id="dtc-mg-Qfz"/>
-                <constraint firstAttribute="trailing" secondItem="63" secondAttribute="trailing" id="eqJ-iI-DfF"/>
-                <constraint firstItem="112" firstAttribute="top" secondItem="63" secondAttribute="bottom" id="erS-Uj-8FF"/>
                 <constraint firstAttribute="centerY" secondItem="85" secondAttribute="centerY" constant="-120" id="fcI-W2-MVH"/>
                 <constraint firstItem="BV7-Lz-cFn" firstAttribute="top" secondItem="8" secondAttribute="top" constant="10" id="jWd-pP-iNs"/>
                 <constraint firstItem="1eq-mt-JYf" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="62" id="nEk-l1-bFG"/>
-                <constraint firstItem="63" firstAttribute="top" secondItem="8" secondAttribute="top" id="vKc-nP-atq"/>
+                <constraint firstItem="63" firstAttribute="top" secondItem="8" secondAttribute="top" id="wvX-GC-a9Z"/>
             </constraints>
         </view>
     </objects>

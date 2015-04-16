@@ -69,6 +69,9 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
     IBOutlet NSLayoutConstraint *_topMarginUpdatingView;
     IBOutlet NSLayoutConstraint *_topMarginUpdatingButton;
     
+    IBOutlet NSLayoutConstraint *toolBarTopMargin;
+    IBOutlet NSLayoutConstraint *toolBarHeight;
+    
     NSString *nameFileToUpdate; 
     
 }
