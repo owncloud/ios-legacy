@@ -2035,7 +2035,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void) hideMasterView{
     
-    if (self.hideMaster) {
+  /*  if (self.hideMaster) {
         
         [self.splitViewController.view setNeedsLayout];
         self.splitViewController.delegate = nil;
@@ -2072,54 +2072,67 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
         
-        [self toggleHideMaster:^{
+        [self shouldHideToolBar:self.hideMaster complete:^{
             
-            [self configureView];
+        
+            
+            [self toggleHideMaster:^{
+                
+                [self configureView];
+            }];
+          
         }];
-
+       
         
     }else{
         
         self.hideMaster = !self.hideMaster;
         
         [self toggleHideMaster:^{
-        
-            [self.splitViewController.view setNeedsLayout];
-            self.splitViewController.delegate = nil;
-            self.splitViewController.delegate = self;
             
-      
+            [self shouldHideToolBar:self.hideMaster complete:^{
                 
-            CGRect selfFrame = self.splitViewController.view.frame;
-            
-            CGFloat deltaWidth = 320.0;
-            
-            if (IS_IOS8) {
+               [self.splitViewController.view setNeedsLayout];
+                self.splitViewController.delegate = nil;
+                self.splitViewController.delegate = self;
                 
-                selfFrame.size.width -= deltaWidth;
-                selfFrame.origin.x += deltaWidth;
                 
-            }else{
                 
-                if (IS_PORTRAIT) {
+                CGRect selfFrame = self.splitViewController.view.frame;
+                
+                CGFloat deltaWidth = 320.0;
+                
+                if (IS_IOS8) {
+                    
                     selfFrame.size.width -= deltaWidth;
                     selfFrame.origin.x += deltaWidth;
+                    
                 }else{
-                    selfFrame.size.height -= deltaWidth;
-                    selfFrame.origin.y += deltaWidth;
+                    
+                    if (IS_PORTRAIT) {
+                        selfFrame.size.width -= deltaWidth;
+                        selfFrame.origin.x += deltaWidth;
+                    }else{
+                        selfFrame.size.height -= deltaWidth;
+                        selfFrame.origin.y += deltaWidth;
+                    }
+                    
                 }
                 
-            }
-            
-            [self.splitViewController.view setFrame:selfFrame];
-            
-            [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
-            
-            [self configureView];
+                [self.splitViewController.view setFrame:selfFrame];
+                
+                [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
+                
+              //  [self configureView];
+                
+               
+            }];
             
         }];
         
-    }
+    }*/
+    
+    [self testHideToolBar];
     
 }
 
@@ -2132,7 +2145,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^(void)
      {
-         [self shouldHideToolBar:self.hideMaster];
          
          CGRect selfFrame = self.splitViewController.view.frame;
          
@@ -2192,39 +2204,61 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
 }
 
-- (void) shouldHideToolBar:(BOOL) isHidden{
+- (void) testHideToolBar{
+    
+  //  [self.view setNeedsLayout];
+   // [self.toolbar setNeedsUpdateConstraints];
+   // [self.toolbar updateConstraintsIfNeeded];
+
+    
+    _toolBarHeightConstraint.constant = 0;
+    
+    [UIView animateWithDuration:2.0 animations:^{
+         [self.view layoutIfNeeded];
+    }];
+}
+
+- (void) shouldHideToolBar:(BOOL) isHidden complete:(void(^)(void))completionBlock{
     
     
-    [UIView animateWithDuration:0.3 animations:^{
-        
+    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         CGRect toolFrame = self.toolbar.frame;
         CGRect scrollFrame = self.mainScrollView.frame;
         
-        CGFloat deltaHeigh = self.toolbar.frame.size.height;
+        CGFloat deltaHeigh = 64.0;
         
         if (isHidden) {
             toolFrame.origin.y -= deltaHeigh;
             scrollFrame.origin.y -= deltaHeigh;
+            scrollFrame.size.height += deltaHeigh;
             
         }else{
             toolFrame.origin.y += deltaHeigh;
             scrollFrame.origin.y += deltaHeigh;
+            scrollFrame.size.height -= deltaHeigh;
         }
         
+       
+        
         [self.toolbar setFrame:toolFrame];
-        [self.mainScrollView setFrame:scrollFrame];
-        
+       // [self.mainScrollView setFrame:scrollFrame];
     } completion:^(BOOL finished) {
-        
-        if (isHidden) {
-            self.toolbar.alpha = 0.0;
-        }else{
-            self.toolbar.alpha = 1.0;
+       
+        if (finished)
+        {
+            if (isHidden) {
+              //  self.toolbar.alpha = 0.0;
+            }else{
+              //  self.toolbar.alpha = 1.0;
+            }
+            
+            if (completionBlock)
+            {
+                completionBlock();
+            }
         }
         
     }];
-    
-    
     
 }
 
