@@ -52,6 +52,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 @interface DetailViewController ()
 
+@property (nonatomic, strong) UITapGestureRecognizer *singleTap;
+
 - (void)configureView;
 
 @end
@@ -121,9 +123,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self setNotificationForCommunicationBetweenViews];
     
     //Add gesture for the full screen support
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(hideMasterView)];
-    singleTap.numberOfTapsRequired = 1;
-    [self.view addGestureRecognizer:singleTap];
+    self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(hideMasterView)];
+    self.singleTap.numberOfTapsRequired = 1;
+    [self.mainScrollView addGestureRecognizer:self.singleTap];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -145,10 +147,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 {
     DLog(@"Detail Configure view");
     
-    UIInterfaceOrientation currentOrientation;
-    currentOrientation=[[UIApplication sharedApplication] statusBarOrientation];
-    BOOL isPotrait = UIDeviceOrientationIsPortrait(currentOrientation);
-    
     //Set the content offset of the gallery view scroll view.
     if (_galleryView) {
         [_mainScrollView setContentOffset:_mainScrollView.contentOffset animated:YES];
@@ -168,7 +166,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self putTheFavoriteStatus];
     
     //Managed potrait or landscape orientation screen
-    if (isPotrait) {
+    if (IS_PORTRAIT) {
         [self potraitView];
     } else {
         [self landscapeView];
@@ -540,6 +538,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             if (self.documentPDF != nil) {
                 self.readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:self.documentPDF];
+                
+                [self.readerPDFViewController.view addGestureRecognizer:self.singleTap];
           
                 [self.view addSubview:self.readerPDFViewController.view];
                 [self configureView];
@@ -556,6 +556,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             }
             self.officeView.delegate = self;
             [self.officeView openOfficeFileWithPath:self.file.localFolder andFileName:self.file.fileName];
+            
+            [self.officeView addGestureRecognizer:self.singleTap];
             
             [self.view addSubview:self.officeView.webView];
         }
@@ -2033,88 +2035,112 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void) hideMasterView{
     
-   [self toggleHideMaster:^{
-        [self configureView];
-    }];
-    
-   // self.hideMaster = !self.hideMaster;
-    
-   /* if (self.hideMaster) {
+    if (self.hideMaster) {
         
-    
+        [self.splitViewController.view setNeedsLayout];
+        self.splitViewController.delegate = nil;
+        self.splitViewController.delegate = self;
         
-        [UIView animateWithDuration:1.0 animations:^{
-            self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible ;
-        } completion:^(BOOL finished) {
-            self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryHidden;
+        
+        
+        CGRect selfFrame = self.splitViewController.view.frame;
+        
+        CGFloat deltaWidth = 320.0;
+        
+        if (IS_IOS8) {
+            
+            selfFrame.size.width += deltaWidth;
+            selfFrame.origin.x -= deltaWidth;
+            
+        }else{
+            
+            if (IS_PORTRAIT) {
+                selfFrame.size.width += deltaWidth;
+                selfFrame.origin.x -= deltaWidth;
+            }else{
+                selfFrame.size.height += deltaWidth;
+                selfFrame.origin.y -= deltaWidth;
+            }
+            
+        }
+        
+        [self.splitViewController.view setFrame:selfFrame];
+        
+        
+        
+        self.hideMaster = !self.hideMaster;
+        
+        [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
+        
+        [self toggleHideMaster:^{
+            
+            [self configureView];
         }];
+
         
     }else{
         
-        [UIView animateWithDuration:1.0 animations:^{
-            self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryHidden;
-        } completion:^(BOOL finished) {
-            self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+        self.hideMaster = !self.hideMaster;
+        
+        [self toggleHideMaster:^{
+        
+            [self.splitViewController.view setNeedsLayout];
+            self.splitViewController.delegate = nil;
+            self.splitViewController.delegate = self;
+            
+      
+                
+            CGRect selfFrame = self.splitViewController.view.frame;
+            
+            CGFloat deltaWidth = 320.0;
+            
+            if (IS_IOS8) {
+                
+                selfFrame.size.width -= deltaWidth;
+                selfFrame.origin.x += deltaWidth;
+                
+            }else{
+                
+                if (IS_PORTRAIT) {
+                    selfFrame.size.width -= deltaWidth;
+                    selfFrame.origin.x += deltaWidth;
+                }else{
+                    selfFrame.size.height -= deltaWidth;
+                    selfFrame.origin.y += deltaWidth;
+                }
+                
+            }
+            
+            [self.splitViewController.view setFrame:selfFrame];
+            
+            [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
+            
+            [self configureView];
+            
         }];
-
-    }*/
-    
-  /*  self.hideMaster = !self.hideMaster;
-    
-   [self.splitViewController.view setNeedsLayout];
-   self.splitViewController.delegate = nil;
-    self.splitViewController.delegate = self;
-    
-  [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
-    
-    [self configureView];*/
-    
-    
- 
-    
+        
+    }
     
 }
 
 -(void)toggleHideMaster:(void(^)(void))completionBlock {
     
     
-    [UIView animateWithDuration:0.2f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        
-        self.hideMaster = !self.hideMaster;
-        
-        [self.splitViewController.view setNeedsLayout];
-        self.splitViewController.delegate = nil;
-        self.splitViewController.delegate = self;
-        
-        [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
-        
-        
-    } completion:^(BOOL finished) {
-        if (finished)
-        {
-            if (completionBlock)
-            {
-                completionBlock();
-            }
-        }
-    }];
-    
-    
     // Adjust the detailView frame to hide/show the masterview
-  /*  [UIView animateWithDuration:0.3f
+    [UIView animateWithDuration:0.3f
                           delay:0.0f
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^(void)
      {
+         [self shouldHideToolBar:self.hideMaster];
+         
          CGRect selfFrame = self.splitViewController.view.frame;
          
-
-         // Get the width of the master view controller - so we know how far to animate.
          CGFloat deltaWidth = 320.0;
          
-         if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-         {
-             if (!self.hideMaster)
+         if (IS_IOS8) {
+             
+             if (self.hideMaster)
              {
                  selfFrame.size.width += deltaWidth;
                  selfFrame.origin.x -= deltaWidth;
@@ -2124,25 +2150,31 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
                  selfFrame.size.width -= deltaWidth;
                  selfFrame.origin.x += deltaWidth;
              }
-         }
-         else
-         {
-             if(!self.hideMaster)
+
+         }else{
+             
+             if (self.hideMaster)
              {
-                 selfFrame.size.height += deltaWidth;
-                 if (self.splitViewController.interfaceOrientation == UIInterfaceOrientationLandscapeRight)
-                 {
+                 if (IS_PORTRAIT) {
+                     selfFrame.size.width += deltaWidth;
+                     selfFrame.origin.x -= deltaWidth;
+                 }else{
+                     selfFrame.size.height += deltaWidth;
                      selfFrame.origin.y -= deltaWidth;
                  }
+ 
              }
              else
              {
-                 selfFrame.size.height -= deltaWidth;
-                 if (self.splitViewController.interfaceOrientation == UIInterfaceOrientationLandscapeRight)
-                 {
+                 if (IS_PORTRAIT) {
+                     selfFrame.size.width -= deltaWidth;
+                     selfFrame.origin.x += deltaWidth;
+                 }else{
+                     selfFrame.size.height -= deltaWidth;
                      selfFrame.origin.y += deltaWidth;
                  }
              }
+
          }
          
          [self.splitViewController.view setFrame:selfFrame];
@@ -2150,16 +2182,52 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
      }completion:^(BOOL finished){
          if (finished)
          {
-             self.hideMaster = !self.hideMaster;
              
              if (completionBlock)
              {
                  completionBlock();
              }
          }
-     }];*/
+     }];
     
 }
+
+- (void) shouldHideToolBar:(BOOL) isHidden{
+    
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        CGRect toolFrame = self.toolbar.frame;
+        CGRect scrollFrame = self.mainScrollView.frame;
+        
+        CGFloat deltaHeigh = self.toolbar.frame.size.height;
+        
+        if (isHidden) {
+            toolFrame.origin.y -= deltaHeigh;
+            scrollFrame.origin.y -= deltaHeigh;
+            
+        }else{
+            toolFrame.origin.y += deltaHeigh;
+            scrollFrame.origin.y += deltaHeigh;
+        }
+        
+        [self.toolbar setFrame:toolFrame];
+        [self.mainScrollView setFrame:scrollFrame];
+        
+    } completion:^(BOOL finished) {
+        
+        if (isHidden) {
+            self.toolbar.alpha = 0.0;
+        }else{
+            self.toolbar.alpha = 1.0;
+        }
+        
+    }];
+    
+    
+    
+}
+
 
 - (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation{
     
