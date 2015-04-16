@@ -205,9 +205,6 @@
 		148DD5DB177851E700FB9977 /* UploadRecentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5D5177851E700FB9977 /* UploadRecentCell.m */; };
 		148DD5DC177851E700FB9977 /* UploadRecentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD5D6177851E700FB9977 /* UploadRecentCell.xib */; };
 		148DD5FD1778556500FB9977 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5FC1778556500FB9977 /* MBProgressHUD.m */; };
-		148DD6041778558500FB9977 /* MGSplitCornersView.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5FF1778558500FB9977 /* MGSplitCornersView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		148DD6051778558500FB9977 /* MGSplitDividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6011778558500FB9977 /* MGSplitDividerView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		148DD6061778558500FB9977 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6031778558500FB9977 /* MGSplitViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		148DD612177855B600FB9977 /* AuthenticationDbService.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD609177855B600FB9977 /* AuthenticationDbService.m */; };
 		148DD613177855B600FB9977 /* AuthenticationResponseTypeCodeTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD60B177855B600FB9977 /* AuthenticationResponseTypeCodeTask.m */; };
 		148DD614177855B600FB9977 /* RetrieveAccessTokenTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD60D177855B600FB9977 /* RetrieveAccessTokenTask.m */; };
@@ -216,7 +213,6 @@
 		148DD619177855D900FB9977 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD618177855D900FB9977 /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		148DD62417785D6900FB9977 /* DetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD61F17785D6900FB9977 /* DetailView.xib */; };
 		148DD62517785D6900FB9977 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD62117785D6900FB9977 /* DetailViewController.m */; };
-		148DD62617785D6900FB9977 /* MainPopOverBarckground.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD62317785D6900FB9977 /* MainPopOverBarckground.m */; };
 		148DD62A17785D9800FB9977 /* FilePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD62817785D9800FB9977 /* FilePreviewViewController.m */; };
 		148DD62B17785D9800FB9977 /* FilePreviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD62917785D9800FB9977 /* FilePreviewViewController.xib */; };
 		148DD62E17785DDE00FB9977 /* GalleryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD62D17785DDE00FB9977 /* GalleryView.m */; };
@@ -649,6 +645,7 @@
 		EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 		EAD281BB1A38A2F900A00D54 /* DPDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD281BA1A38A2F900A00D54 /* DPDownload.m */; };
 		EAD281BC1A38BB2E00A00D54 /* DPDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD281BA1A38A2F900A00D54 /* DPDownload.m */; };
+		EAD774F31AD2B01E0007C4DB /* OCSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD774F21AD2B01E0007C4DB /* OCSplitViewController.m */; };
 		EAE80E241A6CFDE50061BD86 /* UploadsOfflineDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F674178422AE0092F42A /* UploadsOfflineDto.m */; };
 		EAE80E261A6D317C0061BD86 /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
 		EAE80E271A6D31810061BD86 /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
@@ -1113,12 +1110,6 @@
 		148DD5D6177851E700FB9977 /* UploadRecentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = UploadRecentCell.xib; path = Cells/UploadCell/UploadRecentCell.xib; sourceTree = "<group>"; };
 		148DD5FB1778556500FB9977 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = ExternalLibreries/LoadingScreen/MBProgressHUD.h; sourceTree = "<group>"; };
 		148DD5FC1778556500FB9977 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = ExternalLibreries/LoadingScreen/MBProgressHUD.m; sourceTree = "<group>"; };
-		148DD5FE1778558500FB9977 /* MGSplitCornersView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGSplitCornersView.h; path = ExternalLibreries/MGSplitViewController/MGSplitCornersView.h; sourceTree = "<group>"; };
-		148DD5FF1778558500FB9977 /* MGSplitCornersView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGSplitCornersView.m; path = ExternalLibreries/MGSplitViewController/MGSplitCornersView.m; sourceTree = "<group>"; };
-		148DD6001778558500FB9977 /* MGSplitDividerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGSplitDividerView.h; path = ExternalLibreries/MGSplitViewController/MGSplitDividerView.h; sourceTree = "<group>"; };
-		148DD6011778558500FB9977 /* MGSplitDividerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGSplitDividerView.m; path = ExternalLibreries/MGSplitViewController/MGSplitDividerView.m; sourceTree = "<group>"; };
-		148DD6021778558500FB9977 /* MGSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGSplitViewController.h; path = ExternalLibreries/MGSplitViewController/MGSplitViewController.h; sourceTree = "<group>"; };
-		148DD6031778558500FB9977 /* MGSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGSplitViewController.m; path = ExternalLibreries/MGSplitViewController/MGSplitViewController.m; sourceTree = "<group>"; };
 		148DD608177855B600FB9977 /* AuthenticationDbService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthenticationDbService.h; path = ExternalLibreries/OAuth/AuthenticationDbService.h; sourceTree = "<group>"; };
 		148DD609177855B600FB9977 /* AuthenticationDbService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthenticationDbService.m; path = ExternalLibreries/OAuth/AuthenticationDbService.m; sourceTree = "<group>"; };
 		148DD60A177855B600FB9977 /* AuthenticationResponseTypeCodeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthenticationResponseTypeCodeTask.h; path = ExternalLibreries/OAuth/AuthenticationResponseTypeCodeTask.h; sourceTree = "<group>"; };
@@ -1134,8 +1125,6 @@
 		148DD61F17785D6900FB9977 /* DetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DetailView.xib; path = Files/Preview/DetailView/DetailView.xib; sourceTree = "<group>"; };
 		148DD62017785D6900FB9977 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DetailViewController.h; path = Files/Preview/DetailView/DetailViewController.h; sourceTree = "<group>"; };
 		148DD62117785D6900FB9977 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DetailViewController.m; path = Files/Preview/DetailView/DetailViewController.m; sourceTree = "<group>"; };
-		148DD62217785D6900FB9977 /* MainPopOverBarckground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainPopOverBarckground.h; path = Files/Preview/DetailView/MainPopOverBarckground.h; sourceTree = "<group>"; };
-		148DD62317785D6900FB9977 /* MainPopOverBarckground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainPopOverBarckground.m; path = Files/Preview/DetailView/MainPopOverBarckground.m; sourceTree = "<group>"; };
 		148DD62717785D9800FB9977 /* FilePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FilePreviewViewController.h; path = Files/Preview/FilePreview/FilePreviewViewController.h; sourceTree = "<group>"; };
 		148DD62817785D9800FB9977 /* FilePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FilePreviewViewController.m; path = Files/Preview/FilePreview/FilePreviewViewController.m; sourceTree = "<group>"; };
 		148DD62917785D9800FB9977 /* FilePreviewViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FilePreviewViewController.xib; path = Files/Preview/FilePreview/FilePreviewViewController.xib; sourceTree = "<group>"; };
@@ -1495,6 +1484,8 @@
 		EAD036BF19053BEE003665CD /* ManageFavorites.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageFavorites.m; path = Network/Favorites/ManageFavorites.m; sourceTree = "<group>"; };
 		EAD281B91A38A2F900A00D54 /* DPDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DPDownload.h; path = Network/DPDownload.h; sourceTree = "<group>"; };
 		EAD281BA1A38A2F900A00D54 /* DPDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DPDownload.m; path = Network/DPDownload.m; sourceTree = "<group>"; };
+		EAD774F11AD2B01E0007C4DB /* OCSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCSplitViewController.h; sourceTree = "<group>"; };
+		EAD774F21AD2B01E0007C4DB /* OCSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCSplitViewController.m; sourceTree = "<group>"; };
 		EAE005F0180EF03E0066E8D4 /* CheckSSOServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckSSOServer.h; path = Login/SSO/CheckSSOServer.h; sourceTree = "<group>"; };
 		EAE93A3A19D18E43002B9E15 /* fi */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
@@ -1709,6 +1700,8 @@
 				EA42FA4D1804217D0006DB7C /* OCToolBar.m */,
 				EA1787AA17E33BB9005171AB /* OCNavigationController.h */,
 				EA1787AB17E33BB9005171AB /* OCNavigationController.m */,
+				EAD774F11AD2B01E0007C4DB /* OCSplitViewController.h */,
+				EAD774F21AD2B01E0007C4DB /* OCSplitViewController.m */,
 				EA42FA4918041E2F0006DB7C /* PassthroughView.h */,
 				EA42FA4A18041E2F0006DB7C /* PassthroughView.m */,
 				EA68969717F9AC860033B3C1 /* OCPortraitNavigationViewController.h */,
@@ -2429,7 +2422,6 @@
 				EA68968317F598EB0033B3C1 /* KKPasscodeLock */,
 				13A9FCDD17E9857300FF48D7 /* ELCPickerLib */,
 				148DD5FA177854D900FB9977 /* LoadingScreen */,
-				EA599630160872E200173E09 /* MGSplitViewController */,
 				148DD6071778559D00FB9977 /* OAuth */,
 				595333F81A1DF26000C57ED5 /* UIAlertViewWithBlocks */,
 				EAC3AC3B15ED2A4F00B59805 /* Reachability */,
@@ -2785,8 +2777,6 @@
 				148DD61F17785D6900FB9977 /* DetailView.xib */,
 				148DD62017785D6900FB9977 /* DetailViewController.h */,
 				148DD62117785D6900FB9977 /* DetailViewController.m */,
-				148DD62217785D6900FB9977 /* MainPopOverBarckground.h */,
-				148DD62317785D6900FB9977 /* MainPopOverBarckground.m */,
 				130170D515DA7A1100883E4D /* FilePreview */,
 			);
 			name = DetailView;
@@ -3831,11 +3821,8 @@
 				59A6B65719458F6E000B107D /* OCURLSessionManager.m in Sources */,
 				1493D8CF185702D70090FEFB /* CheckSSOServer.m in Sources */,
 				148DD5FD1778556500FB9977 /* MBProgressHUD.m in Sources */,
-				148DD6041778558500FB9977 /* MGSplitCornersView.m in Sources */,
 				EAC5985A1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
-				148DD6051778558500FB9977 /* MGSplitDividerView.m in Sources */,
 				59C71D161A9216AE00F66166 /* ReaderContentView.m in Sources */,
-				148DD6061778558500FB9977 /* MGSplitViewController.m in Sources */,
 				148DD612177855B600FB9977 /* AuthenticationDbService.m in Sources */,
 				59C71D1C1A9216AE00F66166 /* ReaderThumbFetch.m in Sources */,
 				EA42FA54180565CB0006DB7C /* OCTabBarController.m in Sources */,
@@ -3845,11 +3832,11 @@
 				59C71D171A9216AE00F66166 /* ReaderDocument.m in Sources */,
 				148DD615177855B600FB9977 /* RetrieveDataResponseTypeCodeTask.m in Sources */,
 				148DD616177855B600FB9977 /* RetrieveRefreshAndAccessTokenTask.m in Sources */,
+				EAD774F31AD2B01E0007C4DB /* OCSplitViewController.m in Sources */,
 				EA68968D17F599060033B3C1 /* KKKeychain.m in Sources */,
 				148DD619177855D900FB9977 /* Reachability.m in Sources */,
 				148DD62517785D6900FB9977 /* DetailViewController.m in Sources */,
 				40A969E41A5EEAC80046A36C /* ManageAsset.m in Sources */,
-				148DD62617785D6900FB9977 /* MainPopOverBarckground.m in Sources */,
 				EABF69171891379C00A2217C /* SWTableViewCell.m in Sources */,
 				EA8ADE681A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
 				148DD62A17785D9800FB9977 /* FilePreviewViewController.m in Sources */,
@@ -4394,7 +4381,7 @@
 				CODE_SIGN_ENTITLEMENTS = "OC Share Sheet/OC Share Sheet.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -4438,7 +4425,7 @@
 				CODE_SIGN_ENTITLEMENTS = "OC Share Sheet/OC Share Sheet.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "SHARE_IN=1";

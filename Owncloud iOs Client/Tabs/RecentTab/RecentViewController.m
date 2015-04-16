@@ -866,10 +866,6 @@
             [self.navigationController presentViewController:navController animated:YES completion:nil];
         } else {
             
-            if (IS_IOS8) {
-                [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-            }
-            
             OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
             navController.modalPresentationStyle = UIModalPresentationFormSheet;
             [app.splitViewController presentViewController:navController animated:YES completion:nil];
@@ -915,9 +911,6 @@
             if (IS_IPHONE) {
                 _overWritteOption.viewToShow = self.view;
             } else {
-                if (IS_IOS8) {
-                    [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-                }
                 _overWritteOption.viewToShow = app.splitViewController.view;
             }
             _overWritteOption.delegate = self;

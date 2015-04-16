@@ -378,7 +378,7 @@
         [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
     }
     
-    [sharedCommunication setUserAgent:k_user_agent];
+    [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
     
     NSString *remotePath = [UtilsDtos getRemoteUrlByFile:file andUserDto:self.user];
     remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -516,7 +516,6 @@
     _HUD.delegate = self;
     [self.view.window addSubview:_HUD];
     
-    //MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     _HUD.labelText = NSLocalizedString(@"loading", nil);
     
     if (IS_IPHONE) {
@@ -598,11 +597,7 @@
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
-        
-        if (IS_IOS8) {
-            [appDelegate.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
-        
+
         OCNavigationController *navController = nil;
         navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -694,7 +689,7 @@
             [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
         }
         
-        [sharedCommunication setUserAgent:k_user_agent];
+        [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
         
         NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
         remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

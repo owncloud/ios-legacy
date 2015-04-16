@@ -28,7 +28,13 @@
 		<dict>
 			<key>NSExtensionActivationRule</key>
 			<dict>
-				<key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
+				<key>NSExtensionActivationSupportsText</key>
+				<true/>
+				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
+				<integer>3</integer>
+				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
+                <integer>20</integer>
+                <key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
 				<integer>20</integer>
 				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
 				<integer>3</integer>
