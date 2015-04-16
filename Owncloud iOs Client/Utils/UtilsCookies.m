@@ -70,10 +70,6 @@
 
 + (void)eraseCredentialsWithURL:(NSString *)connectURL
 {
-    //AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    //NSString *connectURL =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
-    
     NSURLCredentialStorage *credentialsStorage = [NSURLCredentialStorage sharedCredentialStorage];
     NSDictionary *allCredentials = [credentialsStorage allCredentials];
     
@@ -98,10 +94,6 @@
 
 + (void)eraseURLCache
 {
-    //  NSURL *loginUrl = [NSURL URLWithString:self.connectString];
-    //  NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc]initWithURL:loginUrl];
-    // [NSMutableURLRequest requestWithURL:loginUrl];
-    //  [[NSURLCache sharedURLCache] removeCachedResponseForRequest:urlRequest];
     [[NSURLCache sharedURLCache] setMemoryCapacity:0];
     [[NSURLCache sharedURLCache] setDiskCapacity:0];
 }
