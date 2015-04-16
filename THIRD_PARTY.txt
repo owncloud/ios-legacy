@@ -83,13 +83,6 @@ The third party software included and used by this project is:
 	Original license document included at ExternalLibreries/LoadingScreen/LICENSE.
    	See https://github.com/jdg/MBProgressHUD
 
- * 	Includes a modified version of MGSplitViewController
-   	Original MGSplitViewController copyright (c) 2010 Matt Legend Gemmell.
-	Licensed under Matt Legend Gemmell / Instinctive Code Source Code License,
-   	Placed at ExternalLibreries/MGSplitViewController.
-	Original license document included at ExternalLibreries/MGSplitViewController/LICENSE.
-   	See https://github.com/mattgemmell/MGSplitViewController
-
  * 	OAuth - SURFnetConextIOSClient 
    	Copyright (c) 2012 SURFnet bv, The Netherlands
    	Licensed under Apache License, Version 2.0.
@@ -129,4 +122,11 @@ The third party software included and used by this project is:
    	Placed at OCCommunicationLib
 	Original license document included at OCCommunicationLib/LICENSE.
    	See https://github.com/owncloud/ios-library
+   	
+ * 	TTOpenInAppActivity
+   	Copyright (c) 2012-2014 Tobias Tiemerding
+   	Licensed under MIT License.
+   	Placed at ExternalLibreries/TTOpenInAppActivity.
+	Original license document included at ExternalLibreries/TTOpenInAppActivity/LICENSE.
+   	See https://github.com/honkmaster/TTOpenInAppActivity
 

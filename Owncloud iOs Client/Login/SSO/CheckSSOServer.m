@@ -16,6 +16,7 @@
 #import "CheckSSOServer.h"
 #import "Customization.h"
 #import "FileNameUtils.h"
+#import "UtilsUrls.h"
 
 
 #define k_redirected_code_1 301
@@ -46,7 +47,7 @@
     [request setHTTPShouldHandleCookies:NO];
     
     //Add the user agent
-    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
+    [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
     
     // Create url connection and fire request
     [NSURLConnection connectionWithRequest:request delegate:self];

@@ -16,6 +16,8 @@
 #import "UtilsUrls.h"
 #import "constants.h"
 #import "UserDto.h"
+#import <UIKit/UIKit.h>
+#import "Customization.h"
 
 @implementation UtilsUrls
 
@@ -40,7 +42,7 @@
                                                    attributes:attr
                                                         error:&error];
         if (error) {
-            DLog(@"Error creating directory path: %@", [error localizedDescription]);
+            NSLog(@"Error creating directory path: %@", [error localizedDescription]);
         } else {
             [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:output]];
         }
@@ -110,7 +112,7 @@
         success = [URL setResourceValue: [NSNumber numberWithBool: YES]
                                  forKey: NSURLIsExcludedFromBackupKey error: &error];
         if(!success){
-            DLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+            NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
         }
         
         return success;
@@ -129,7 +131,7 @@
     
     for(int i = 3 ; i < [userUrlSplited count] ; i++) {
         partRemoved = [NSString stringWithFormat:@"%@/%@", partRemoved, [userUrlSplited objectAtIndex:i]];
-        //DLog(@"partRemoved: %@", partRemoved);
+        //NSLog(@"partRemoved: %@", partRemoved);
     }
     
     //We remove the first and the last "/"
@@ -161,7 +163,7 @@
     
     urlWithoutAddress = [NSString stringWithFormat:@"%@%@",urlWithoutAddress, k_url_webdav_server];
     
-    //DLog(@"urlWithoutAddress: %d", [urlWithoutAddress length]);
+    //NSLog(@"urlWithoutAddress: %d", [urlWithoutAddress length]);
     
     urlWithoutAddress = [filePath substringFromIndex:[urlWithoutAddress length]];
     
@@ -175,7 +177,7 @@
     //We remove the http encoding
     newLocalFolder = [newLocalFolder stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
     
-    //DLog(@"newLocalFolder: %@", newLocalFolder);
+    //NSLog(@"newLocalFolder: %@", newLocalFolder);
     return newLocalFolder;
 }
 
@@ -214,11 +216,19 @@
                                                         attributes:nil
                                                              error:&error])
         {
-            DLog(@"Create directory error: %@", error);
+            NSLog(@"Create directory error: %@", error);
         }
     }
     
     return  output;
+}
+
+
++ (NSString *) getUserAgent {
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *userAgentWithAppVersion = [NSString stringWithFormat:@"%@%@",k_user_agent,appVersion];
+    
+    return userAgentWithAppVersion;
 }
 
 @end

@@ -131,7 +131,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     __weak typeof(self) weakSelf = self;
     
@@ -141,11 +141,15 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         
         _downloadTask = [[AppDelegate sharedOCCommunication] downloadFileSession:serverUrl  toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] withProgress:&progressValue successRequest:^(NSURLResponse *response, NSURL *filePath) {
             
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
+            
             //Finalized the download
             [weakSelf updateDataDownload];
             [weakSelf setDownloadTaskIdentifierValid:NO];
             
         } failureRequest:^(NSURLResponse *response, NSError *error) {
+            
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
             
             DLog(@"Error: %@", error);
             DLog(@"error.code: %ld", (long)error.code);
@@ -209,11 +213,11 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
   
         }];
         
+        self.progressValueGlobal = progressValue;
+        progressValue = nil;
+        
         // Observe fractionCompleted using KVO
-        [progressValue addObserver:self
-                        forKeyPath:@"fractionCompleted"
-                           options:NSKeyValueObservingOptionNew
-                           context:NULL];
+        [self.progressValueGlobal addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew context:NULL];
         
         
     } else {
@@ -676,7 +680,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", app.activeUser.url, k_url_webdav_server];

@@ -20,9 +20,12 @@
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
 #else
 #import "DocumentPickerViewController.h"
 #endif
+
 
 @implementation ManageAppSettingsDB
 
@@ -39,6 +42,8 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [DocumentPickerViewController sharedDatabase];
 #endif
@@ -71,6 +76,8 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [DocumentPickerViewController sharedDatabase];
 #endif
@@ -100,6 +107,8 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [DocumentPickerViewController sharedDatabase];
 #endif
@@ -128,6 +137,8 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [DocumentPickerViewController sharedDatabase];
 #endif
@@ -154,6 +165,8 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [DocumentPickerViewController sharedDatabase];
 #endif
@@ -188,6 +201,8 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [DocumentPickerViewController sharedDatabase];
 #endif
@@ -219,6 +234,8 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [DocumentPickerViewController sharedDatabase];
 #endif
@@ -245,6 +262,8 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [DocumentPickerViewController sharedDatabase];
 #endif
@@ -267,6 +286,8 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [DocumentPickerViewController sharedDatabase];
 #endif
@@ -292,6 +313,8 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [DocumentPickerViewController sharedDatabase];
 #endif
@@ -325,6 +348,8 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [DocumentPickerViewController sharedDatabase];
 #endif
@@ -348,6 +373,8 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif SHARE_IN
+    queue = [Managers sharedDatabase];
 #else
     queue = [DocumentPickerViewController sharedDatabase];
 #endif

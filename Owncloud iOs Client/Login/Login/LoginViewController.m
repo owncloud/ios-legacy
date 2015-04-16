@@ -1932,7 +1932,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     [[AppDelegate sharedOCCommunication] setCredentialsWithUser:userName andPassword:password];
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     [[AppDelegate sharedOCCommunication] checkServer:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
@@ -2057,7 +2057,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:userName andPassword:password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     [[AppDelegate sharedOCCommunication] readFolder:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
@@ -2384,21 +2384,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             //iPad
             navController.modalTransitionStyle=UIModalTransitionStyleCoverVertical;
             navController.modalPresentationStyle = UIModalPresentationFormSheet;
-            
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            
-            //Check if the splitViewController exist
-           if (appDelegate.splitViewController) {
-                 [appDelegate.splitViewController.detailViewController presentViewController:navController animated:YES completion:nil];
-            } else {
-                [self presentViewController:navController animated:YES completion:nil];
-            }
-            
-           
-        } else {
-            //iPhone
-            [self presentViewController:navController animated:YES completion:nil];
         }
+        
+        [self presentViewController:navController animated:YES completion:nil];
     });
     
 }
