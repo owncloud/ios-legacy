@@ -138,7 +138,7 @@
         if([ManageFilesDB isExistRootFolderByUser:app.activeUser]) {
             DLog(@"Root folder exist");
             self.currentFileShowFilesOnTheServerToUpdateTheLocalFile = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
-            DLog(@"IdFile:%ld etag: %lld", (long)self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
+            DLog(@"IdFile:%ld etag: %@", (long)self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
         } else {
             //We need the current folder refresh with the right etag
             DLog(@"Root folder not exist");  
@@ -323,7 +323,7 @@
             DLog(@"Root folder exist");
             _currentFileShowFilesOnTheServerToUpdateTheLocalFile = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
             _fileIdToShowFiles = _currentFileShowFilesOnTheServerToUpdateTheLocalFile;
-            DLog(@"IdFile:%ld etag: %lld", (long)_currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, _currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
+            DLog(@"IdFile:%ld etag: %@", (long)_currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile, _currentFileShowFilesOnTheServerToUpdateTheLocalFile.etag);
         } else {
             //We need the current folder refresh with the right etag
             DLog(@"Root folder not exist");
