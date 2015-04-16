@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>OC Share Sheet</string>
+	<string>ownCloud</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -33,14 +33,24 @@
 				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
 				<integer>3</integer>
 				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
+                <integer>20</integer>
+                <key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
 				<integer>20</integer>
 				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
 				<integer>3</integer>
-				<key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
+				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
 				<integer>20</integer>
+				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
+				<integer>3</integer>
+				<key>NSExtensionActivationSupportsText</key>
+				<integer>3</integer>
 				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
 				<integer>0</integer>
 			</dict>
+			<key>NSExtensionPointName</key>
+			<string>com.apple.share-services</string>
+			<key>NSExtensionPointVersion</key>
+			<string>1.0</string>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
 		<string>MainInterface</string>
