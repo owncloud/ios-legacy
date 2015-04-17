@@ -17,6 +17,7 @@
 #import "constants.h"
 #import "UserDto.h"
 #import <UIKit/UIKit.h>
+#import "AppDelegate.h"
 
 @implementation UtilsUrls
 
@@ -125,7 +126,21 @@
 //We remove the part of the remote file path that is not necesary
 +(NSString *) getRemovedPartOfFilePathAnd:(UserDto *)mUserDto {
     
-    NSArray *userUrlSplited = [mUserDto.url componentsSeparatedByString:@"/"];
+    NSArray *userUrlSplited = nil;
+    
+#ifdef CONTAINER_APP
+    //TODO:change with method in db to get urlServerRedirect
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    if (app.urlServerRedirected) {
+        userUrlSplited = [app.urlServerRedirected componentsSeparatedByString:@"/"];
+    } else {
+        userUrlSplited = [mUserDto.url componentsSeparatedByString:@"/"];
+
+    }
+#else
+    userUrlSplited = [mUserDto.url componentsSeparatedByString:@"/"];
+#endif
+    
     NSString *partRemoved = @"";
     
     for(int i = 3 ; i < [userUrlSplited count] ; i++) {
@@ -137,9 +152,9 @@
     if ( [partRemoved length] > 0) {
         partRemoved = [partRemoved substringFromIndex:1];
     }
-    if ( [partRemoved length] > 0)
+    if ( [partRemoved length] > 0) {
         partRemoved = [partRemoved substringToIndex:[partRemoved length] - 1];
-    
+    }
     
     
     if([partRemoved length] <= 0) {

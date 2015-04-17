@@ -354,10 +354,14 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     
     if (responseURLString) {
         
+
         //We obtain the URL to make the uploads in background
 #ifdef CONTAINER_APP
+        //TODO:save urlServerRedirect in DB, move to utils
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        app.urlServerRedirected = [responseURLString stringByDeletingPathExtension];
+        NSURL *url = [[NSURL alloc] initWithString:responseURLString];
+        NSURL * urlByRemovingLastComponent = [url URLByDeletingLastPathComponent];
+        app.urlServerRedirected = [urlByRemovingLastComponent absoluteString];
 
         //app.urlServerRedirected = [UtilsDtos getHttpAndDomainByURL:responseURLString];
 #endif
