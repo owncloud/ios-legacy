@@ -124,9 +124,20 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self setNotificationForCommunicationBetweenViews];
     
     //Add gesture for the full screen support
-    self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(hideMasterView)];
+    self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideMasterView)];
     self.singleTap.numberOfTapsRequired = 1;
+    self.singleTap.numberOfTouchesRequired = 1;
+    self.singleTap.delegate = self;
+    
     [self.mainScrollView addGestureRecognizer:self.singleTap];
+    
+    [self.splitViewController setPresentsWithGesture:NO];
+    
+}
+
+- (void) nothing{
+    
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -1157,7 +1168,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 }
 
 
-
 ///-----------------------------------
 /// @name Action of updating cancel button
 ///-----------------------------------
@@ -1902,7 +1912,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 }
 
 
-
 - (void) receiveTestNotification:(NSNotification *) notification
 {
     if ([notification.name isEqualToString:@"TestNotification"])
@@ -2304,7 +2313,22 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     return self.hideMaster;
 }
 
+#pragma mark - UIGestureRecognizerDelegate methods
 
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (self.readerPDFViewController) {
+        if ([touch.view isDescendantOfView:self.readerPDFViewController.mainPagebar]) {
+            return NO;
+        }
+    }
+    return YES;
+}
 
 
 @end

@@ -26,6 +26,7 @@
 #import <UIKit/UIKit.h>
 
 #import "ReaderDocument.h"
+#import "ReaderMainPagebar.h"
 
 @class ReaderViewController;
 
@@ -39,10 +40,12 @@
 
 @interface ReaderViewController : UIViewController
 
+@property (nonatomic, strong) ReaderMainPagebar *mainPagebar;
 @property (nonatomic, weak, readwrite) id <ReaderViewControllerDelegate> delegate;
 
 - (instancetype)initWithReaderDocument:(ReaderDocument *)object;
 
 - (void) updateContentViews;
+
 
 @end

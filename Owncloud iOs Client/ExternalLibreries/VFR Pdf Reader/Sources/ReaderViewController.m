@@ -46,8 +46,6 @@
 
 	ReaderMainToolbar *mainToolbar;
 
-	ReaderMainPagebar *mainPagebar;
-
 	NSMutableDictionary *contentViews;
 
 	UIUserInterfaceIdiom userInterfaceIdiom;
@@ -122,7 +120,7 @@
 
 	[mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
 
-	[mainPagebar updatePagebar]; // Update page bar
+	[_mainPagebar updatePagebar]; // Update page bar
 }
 
 - (void)addContentView:(UIScrollView *)scrollView page:(NSInteger)page
@@ -223,7 +221,7 @@
 
 		[mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
 
-		[mainPagebar updatePagebar]; // Update page bar
+		[_mainPagebar updatePagebar]; // Update page bar
 	}
 }
 
@@ -251,7 +249,7 @@
 
 		[mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
 
-		[mainPagebar updatePagebar]; // Update page bar
+		[_mainPagebar updatePagebar]; // Update page bar
 	}
 }
 
@@ -361,25 +359,30 @@
 
 	CGRect pagebarRect = self.view.bounds; pagebarRect.size.height = PAGEBAR_HEIGHT;
 	pagebarRect.origin.y = (self.view.bounds.size.height - pagebarRect.size.height);
-	mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect document:document]; // ReaderMainPagebar
-	mainPagebar.delegate = self; // ReaderMainPagebarDelegate
-	[self.view addSubview:mainPagebar];
+	_mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect document:document]; // ReaderMainPagebar
+	_mainPagebar.delegate = self; // ReaderMainPagebarDelegate
+   [self.view addSubview:_mainPagebar];
 
+    
 	if (fakeStatusBar != nil) [self.view addSubview:fakeStatusBar]; // Add status bar background view
-
-	UITapGestureRecognizer *singleTapOne = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-	singleTapOne.numberOfTouchesRequired = 1; singleTapOne.numberOfTapsRequired = 1; singleTapOne.delegate = self;
-	[self.view addGestureRecognizer:singleTapOne];
-
-	UITapGestureRecognizer *doubleTapOne = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
-	doubleTapOne.numberOfTouchesRequired = 1; doubleTapOne.numberOfTapsRequired = 2; doubleTapOne.delegate = self;
-	[self.view addGestureRecognizer:doubleTapOne];
-
-	UITapGestureRecognizer *doubleTapTwo = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
-	doubleTapTwo.numberOfTouchesRequired = 2; doubleTapTwo.numberOfTapsRequired = 2; doubleTapTwo.delegate = self;
-	[self.view addGestureRecognizer:doubleTapTwo];
-
-	[singleTapOne requireGestureRecognizerToFail:doubleTapOne]; // Single tap requires double tap to fail
+    
+    UITapGestureRecognizer *singleTapOne = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+    singleTapOne.numberOfTouchesRequired = 1; singleTapOne.numberOfTapsRequired = 1; singleTapOne.delegate = self;
+    [self.view addGestureRecognizer:singleTapOne];  
+    
+    if (IS_IPHONE) {
+        
+        UITapGestureRecognizer *doubleTapOne = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+        doubleTapOne.numberOfTouchesRequired = 1; doubleTapOne.numberOfTapsRequired = 2; doubleTapOne.delegate = self;
+        [self.view addGestureRecognizer:doubleTapOne];
+        
+        UITapGestureRecognizer *doubleTapTwo = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+        doubleTapTwo.numberOfTouchesRequired = 2; doubleTapTwo.numberOfTapsRequired = 2; doubleTapTwo.delegate = self;
+        [self.view addGestureRecognizer:doubleTapTwo];
+        
+        
+        [singleTapOne requireGestureRecognizerToFail:doubleTapOne]; // Single tap requires double tap to fail
+    }
 
 	contentViews = [NSMutableDictionary new]; lastHideTime = [NSDate date];
 
@@ -441,7 +444,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	mainToolbar = nil; mainPagebar = nil;
+	mainToolbar = nil; _mainPagebar = nil;
 
 	theScrollView = nil; contentViews = nil; lastHideTime = nil;
 
@@ -612,9 +615,9 @@
 			{
 				if ([lastHideTime timeIntervalSinceNow] < -0.75) // Delay since hide
 				{
-					if ((mainToolbar.alpha < 1.0f) || (mainPagebar.alpha < 1.0f)) // Hidden
+					if ((mainToolbar.alpha < 1.0f) || (_mainPagebar.alpha < 1.0f)) // Hidden
 					{
-						[mainToolbar showToolbar]; [mainPagebar showPagebar]; // Show
+						[mainToolbar showToolbar]; [_mainPagebar showPagebar]; // Show
 					}
 				}
 			}
@@ -696,7 +699,7 @@
 
 - (void)contentView:(ReaderContentView *)contentView touchesBegan:(NSSet *)touches
 {
-	if ((mainToolbar.alpha > 0.0f) || (mainPagebar.alpha > 0.0f))
+	if ((mainToolbar.alpha > 0.0f) || (_mainPagebar.alpha > 0.0f))
 	{
 		if (touches.count == 1) // Single touches only
 		{
@@ -709,7 +712,7 @@
 			if (CGRectContainsPoint(areaRect, point) == false) return;
 		}
 
-		[mainToolbar hideToolbar]; [mainPagebar hidePagebar]; // Hide
+		[mainToolbar hideToolbar]; [_mainPagebar hidePagebar]; // Hide
 
 		lastHideTime = [NSDate date]; // Set last hide time
 	}

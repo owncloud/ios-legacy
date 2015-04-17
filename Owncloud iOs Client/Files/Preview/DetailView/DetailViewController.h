@@ -43,7 +43,7 @@ extern NSString * IpadCleanPreviewNotification;
 extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, ShareFileOrFolderDelegate, UIAlertViewDelegate> {
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, ShareFileOrFolderDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate> {
     
     //Bar buttons
     IBOutlet UIBarButtonItem *_spaceBar;
