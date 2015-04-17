@@ -75,6 +75,8 @@ import AVFoundation
         passcodeView.delegate = self
         passcodeView.mode = UInt(KKPasscodeModeEnter)
         
+        passcodeView.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: Selector("cancelView"))
+        
         let ocNavController = OCNavigationController(rootViewController: passcodeView)
         ocNavController.modalPresentationStyle = UIModalPresentationStyle.FormSheet
         
@@ -222,21 +224,8 @@ import AVFoundation
                 
             }
             
-            if hasSomethingToUpload == true{
-                
-                var webView = UIWebView()
-                webView.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
-                
-                let urlString = "owncloud://"
-                let content = "<head><meta http-equiv='refresh' content='0; URL=\(urlString)'></head>"
-                webView.loadHTMLString(content, baseURL: nil)
-                self.view.addSubview(webView)
-                
-                // Delay 2 seconds
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
-                    webView.removeFromSuperview()
-                    self.cancelView()
-                }
+            if hasSomethingToUpload == true {
+                self.cancelView()
             }
             
         } else {
@@ -437,11 +426,6 @@ import AVFoundation
         let url = self.filesSelected[row] as NSURL
         
         cell.selectionStyle = UITableViewCellSelectionStyle.None
-        
-        //Little image border
-        cell.imageForFile?.layer.borderWidth = 3.0
-        cell.imageForFile?.layer.borderColor = UIColor.whiteColor().CGColor
-        cell.imageForFile?.backgroundColor = UIColor.whiteColor()
         
         //Choose the correct icon if the file is not an image
         let ext = FileNameUtils.getExtension(url.lastPathComponent)

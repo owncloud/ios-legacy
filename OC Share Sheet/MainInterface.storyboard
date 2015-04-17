@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="yQd-yC-53O">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="yQd-yC-53O">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -68,20 +68,20 @@
                                                                 <constraint firstAttribute="height" constant="90" id="nrr-Dj-L4e"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rzu-rB-SXM">
-                                                            <rect key="frame" x="100" y="50" width="440" height="20"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Label" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rzu-rB-SXM">
+                                                            <rect key="frame" x="100" y="51" width="472" height="19"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fxo-QZ-KZW">
-                                                            <rect key="frame" x="100" y="20" width="440" height="20"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fxo-QZ-KZW">
+                                                            <rect key="frame" x="100" y="20" width="472" height="21"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="fxo-QZ-KZW" secondAttribute="trailing" constant="32" id="Ev8-jh-rtH"/>
+                                                        <constraint firstAttribute="trailing" secondItem="fxo-QZ-KZW" secondAttribute="trailing" id="Ev8-jh-rtH"/>
                                                         <constraint firstItem="Rzu-rB-SXM" firstAttribute="top" secondItem="fxo-QZ-KZW" secondAttribute="bottom" constant="10" id="RRo-Un-kMo"/>
                                                         <constraint firstItem="fxo-QZ-KZW" firstAttribute="leading" secondItem="uUd-uU-CDa" secondAttribute="trailing" constant="10" id="SaK-s2-UQg"/>
                                                         <constraint firstAttribute="bottom" secondItem="Rzu-rB-SXM" secondAttribute="bottom" constant="20" id="VPg-K6-sjj"/>
@@ -89,7 +89,7 @@
                                                         <constraint firstItem="fxo-QZ-KZW" firstAttribute="top" secondItem="gbd-Lz-hZi" secondAttribute="top" constant="20" id="ahC-aV-Kai"/>
                                                         <constraint firstItem="uUd-uU-CDa" firstAttribute="leading" secondItem="gbd-Lz-hZi" secondAttribute="leading" id="ajQ-Dc-qNx"/>
                                                         <constraint firstAttribute="bottom" secondItem="uUd-uU-CDa" secondAttribute="bottom" id="gqL-GM-uj0"/>
-                                                        <constraint firstAttribute="trailing" secondItem="Rzu-rB-SXM" secondAttribute="trailing" constant="32" id="mVG-EY-oV5"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Rzu-rB-SXM" secondAttribute="trailing" id="mVG-EY-oV5"/>
                                                         <constraint firstItem="uUd-uU-CDa" firstAttribute="top" secondItem="gbd-Lz-hZi" secondAttribute="top" id="u5e-dI-hsO"/>
                                                     </constraints>
                                                 </view>
