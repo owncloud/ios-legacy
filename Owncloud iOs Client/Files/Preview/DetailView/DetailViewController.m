@@ -234,6 +234,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     if (_readerPDFViewController) {
         _readerPDFViewController.view.frame = [self getTheCorrectSize];
         [_readerPDFViewController updateContentViews];
+        
     }
     
     
@@ -265,6 +266,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     if (_readerPDFViewController) {
         _readerPDFViewController.view.frame = [self getTheCorrectSize];
         [_readerPDFViewController updateContentViews];
+
     }
     
 }

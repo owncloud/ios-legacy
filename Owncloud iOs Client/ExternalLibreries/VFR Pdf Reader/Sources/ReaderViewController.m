@@ -63,6 +63,8 @@
 	NSDate *lastHideTime;
 
 	BOOL ignoreDidScroll;
+    
+    NSTimer *mainPageBarTimer;
 }
 
 #pragma mark - Constants
@@ -361,8 +363,11 @@
 	pagebarRect.origin.y = (self.view.bounds.size.height - pagebarRect.size.height);
 	_mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect document:document]; // ReaderMainPagebar
 	_mainPagebar.delegate = self; // ReaderMainPagebarDelegate
-   [self.view addSubview:_mainPagebar];
-
+    [self.view addSubview:_mainPagebar];
+    
+    if (!IS_IPHONE) {
+        [self maintainMainPageBarForATime];
+    }
     
 	if (fakeStatusBar != nil) [self.view addSubview:fakeStatusBar]; // Add status bar background view
     
@@ -412,6 +417,10 @@
 	{
 		[self performSelector:@selector(showDocument) withObject:nil afterDelay:0.0];
 	}
+    
+   
+    
+    
 
 #if (READER_DISABLE_IDLE == TRUE) // Option
 
@@ -496,6 +505,9 @@
         [self updateContentViews:theScrollView];
     }
 }
+
+
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -617,7 +629,10 @@
 				{
 					if ((mainToolbar.alpha < 1.0f) || (_mainPagebar.alpha < 1.0f)) // Hidden
 					{
-						[mainToolbar showToolbar]; [_mainPagebar showPagebar]; // Show
+                        if (IS_IPHONE) {
+                            [mainToolbar showToolbar]; [_mainPagebar showPagebar]; // Show
+                        }
+ 
 					}
 				}
 			}
@@ -631,7 +646,7 @@
 
 		if (CGRectContainsPoint(nextPageRect, point) == true) // page++
 		{
-			[self incrementPageNumber]; return;
+			[self incrementPageNumber];return;
 		}
 
 		CGRect prevPageRect = viewRect;
@@ -639,7 +654,7 @@
 
 		if (CGRectContainsPoint(prevPageRect, point) == true) // page--
 		{
-			[self decrementPageNumber]; return;
+			[self decrementPageNumber];return;
 		}
 	}
 }
@@ -712,10 +727,56 @@
 			if (CGRectContainsPoint(areaRect, point) == false) return;
 		}
 
-		[mainToolbar hideToolbar]; [_mainPagebar hidePagebar]; // Hide
+		[mainToolbar hideToolbar]; //Hide
+        
+        if (IS_IPHONE) {
+            [_mainPagebar hidePagebar];
+        }
 
 		lastHideTime = [NSDate date]; // Set last hide time
 	}
+    
+    if (!IS_IPHONE) {
+        [self showMainPageBar];
+    }
+}
+
+#pragma mark - Main Page Bar Show/Hide timer
+
+- (void) showMainPageBar{
+    
+    [self.mainPagebar showPagebar];
+    
+    [self maintainMainPageBarForATime];
+    
+}
+
+- (void)maintainMainPageBarForATime{
+    
+    if (mainPageBarTimer) {
+        [self cancelMainPageBarTimer];
+    }
+    
+    mainPageBarTimer = [NSTimer scheduledTimerWithTimeInterval:4.0f
+                                                 target:self
+                                               selector:@selector(hideMainPageBar)
+                                               userInfo:nil
+                                                repeats:NO];
+    
+}
+
+- (void) hideMainPageBar{
+    
+    [self cancelMainPageBarTimer];
+    
+    [self.mainPagebar hidePagebar];
+}
+
+- (void) cancelMainPageBarTimer{
+    
+    [mainPageBarTimer invalidate];
+    mainPageBarTimer = nil;
+    
 }
 
 #pragma mark - ReaderMainToolbarDelegate methods
