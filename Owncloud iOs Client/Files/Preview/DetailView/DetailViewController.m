@@ -236,8 +236,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [_readerPDFViewController updateContentViews];
         
     }
-    
-    
+      
 }
 
 /*
@@ -571,7 +570,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             self.officeView.delegate = self;
             [self.officeView openOfficeFileWithPath:self.file.localFolder andFileName:self.file.fileName];
             
-            [self.officeView addGestureRecognizer:self.singleTap];
+            [self.officeView.webView addGestureRecognizer:self.singleTap];
             
             [self.view addSubview:self.officeView.webView];
         }
