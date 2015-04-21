@@ -36,7 +36,7 @@
     //DLog(@"User url is:%@", currentUser.url);
     NSString *serverURL=@"";
     
-    NSArray *splitePath = [user.url componentsSeparatedByString:@"/"];
+    NSArray *splitePath = [[UtilsUrls getFullRemoteServerPath:user] componentsSeparatedByString:@"/"];
     
     for (int i = 0; i < [splitePath count]; i++) {
         if (i > 2) {
@@ -85,7 +85,7 @@
 
     //1.- Quit the part of the server
     NSUInteger serverLength=[[NSString stringWithFormat:@"%@", k_url_webdav_server]length];
-    NSUInteger userUrlLength= [user.url length];
+    NSUInteger userUrlLength= [[UtilsUrls getFullRemoteServerPath:user] length];
     
     fullFilePath= [fullFilePath substringFromIndex:(serverLength+userUrlLength)];
     
@@ -122,7 +122,7 @@
     
     //1.- Quit the part of the server
     NSUInteger serverLength=[[NSString stringWithFormat:@"%@", k_url_webdav_server]length];
-    NSUInteger userUrlLength= [user.url length];
+    NSUInteger userUrlLength= [[UtilsUrls getFullRemoteServerPath:user] length];
     
     fullFilePath= [fullFilePath substringFromIndex:(serverLength+userUrlLength)];
     
@@ -254,24 +254,33 @@
      /remote.php/webdav/
     */
     
-    NSString *output = @"";
+//    NSString *output = @"";
+//    
+//    NSArray *splitedUrl = [user.url componentsSeparatedByString:@"/"];
+//
+//    for (int i = 3; i < [splitedUrl count] ; i++) {
+//        output = [NSString stringWithFormat:@"%@/%@", output ,[splitedUrl objectAtIndex:i]];
+//    }
+//    
+//    output = [NSString stringWithFormat:@"%@%@", output, k_url_webdav_server];
+//    
+//    //DLog(@"filePathOnFileDto: %@", filePathOnFileDto);
+//    //DLog(@"DB FilePath to remove: %@", output);
+//    
+//    if([filePathOnFileDto length] >= [output length]) {
+//        output = [filePathOnFileDto substringFromIndex: [output length]];
+//    }
+//    
+//    return  output;
     
-    NSArray *splitedUrl = [user.url componentsSeparatedByString:@"/"];
-
-    for (int i = 3; i < [splitedUrl count] ; i++) {
-        output = [NSString stringWithFormat:@"%@/%@", output ,[splitedUrl objectAtIndex:i]];
+    NSString *shortenedPath =@"";
+    
+    NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:user];
+    if([filePathOnFileDto length] >= [partToRemove length]){
+        shortenedPath = [filePathOnFileDto substringFromIndex:[partToRemove length]];
     }
     
-    output = [NSString stringWithFormat:@"%@%@", output, k_url_webdav_server];
-    
-    //DLog(@"filePathOnFileDto: %@", filePathOnFileDto);
-    //DLog(@"DB FilePath to remove: %@", output);
-    
-    if([filePathOnFileDto length] >= [output length]) {
-        output = [filePathOnFileDto substringFromIndex: [output length]];
-    }
-    
-    return  output;
+    return shortenedPath;
 }
 
 +(NSString *) getFilePathByRemoteURL:(NSString *) remoteUrl andUserDto:(UserDto *) mUser {

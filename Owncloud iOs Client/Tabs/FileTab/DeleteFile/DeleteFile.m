@@ -26,6 +26,7 @@
 #import "DetailViewController.h"
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
+#import "UtilsUrls.h"
 
 
 @implementation DeleteFile
@@ -262,7 +263,7 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    NSArray *splitedUrl = [app.activeUser.url componentsSeparatedByString:@"/"];
+    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:app.activeUser] componentsSeparatedByString:@"/"];
     NSString *pathToDelete = [NSString stringWithFormat:@"%@//%@%@%@", [splitedUrl objectAtIndex:0], [splitedUrl objectAtIndex:2], file.filePath,file.fileName];
     pathToDelete = [pathToDelete stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -377,7 +378,7 @@
 - (NSString *)filePath {
     NSString *localUrl = [NSString stringWithFormat:@"%@%@", _currentLocalFolder, _file.fileName];
     DLog(@"Current Local Folder: %@", _currentLocalFolder);
-    DLog(@"File Name: %@", _file);
+    DLog(@"File Name: %@", _file.fileName);
     DLog(@"Local URL: %@", localUrl);
     return localUrl;
 }

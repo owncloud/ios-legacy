@@ -87,10 +87,10 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Get url path of server
-    NSArray *splitedUrl = [app.activeUser.url componentsSeparatedByString:@"/"];
+    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:app.activeUser] componentsSeparatedByString:@"/"];
     NSString *serverUrl = [NSString stringWithFormat:@"%@%@%@",[NSString stringWithFormat:@"%@/%@/%@",[splitedUrl objectAtIndex:0],[splitedUrl objectAtIndex:1],[splitedUrl objectAtIndex:2]], _fileDto.filePath, _fileDto.fileName];
     
-    serverUrl = [UploadUtils getUrlWithRedirectionByOriginalURL:serverUrl];
+   // serverUrl = [UploadUtils getUrlWithRedirectionByOriginalURL:serverUrl];
     
     serverUrl = [serverUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -694,7 +694,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", app.activeUser.url, k_url_webdav_server];
+    NSString *serverPath = [UtilsUrls getFullRemoteWebDavPath:app.activeUser];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileDto.filePath andUser:app.activeUser], _fileDto.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

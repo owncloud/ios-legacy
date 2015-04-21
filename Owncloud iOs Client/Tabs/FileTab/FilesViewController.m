@@ -1122,7 +1122,7 @@
     NSArray *info = [args objectForKey:@"info"];
     NSString *remoteURLToUpload = [args objectForKey:@"remoteURLToUpload"];
     
-    remoteURLToUpload = [UploadUtils getUrlWithRedirectionByOriginalURL:remoteURLToUpload];
+    //remoteURLToUpload = [UploadUtils getUrlWithRedirectionByOriginalURL:remoteURLToUpload];
     
     /*
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1639,7 +1639,11 @@
     
     NSMutableArray *allFiles = [ManageFilesDB getFilesByFileIdForActiveUser:selectedFile.idFile];
     
-    NSArray *splitedUrl = [_mUser.url componentsSeparatedByString:@"/"];
+    //TODO:Refactor other utils methods
+    
+   // NSArray *splitedUrl = [_mUser.url componentsSeparatedByString:@"/"];
+    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:_mUser] componentsSeparatedByString:@"/"];
+
     _nextRemoteFolder = [NSString stringWithFormat:@"%@//%@%@", [splitedUrl objectAtIndex:0], [splitedUrl objectAtIndex:2], [NSString stringWithFormat:@"%@%@",selectedFile.filePath, selectedFile.fileName]];
     
     //if no files we ask for it else go to the next folder

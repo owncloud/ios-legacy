@@ -460,7 +460,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     _activeUser=[ManageUsersDB getActiveUser];
     
-    NSString *wevDavString = [NSString stringWithFormat: @"%@%@", _activeUser.url,k_url_webdav_server];
+    NSString *wevDavString = [UtilsUrls getFullRemoteWebDavPath:_activeUser];
     NSString *localSystemPath = nil;
     
     //Check if we generate the interface from login screen or not

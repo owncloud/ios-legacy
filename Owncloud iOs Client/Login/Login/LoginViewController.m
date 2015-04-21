@@ -2179,6 +2179,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         //Change the filePath from the library to our format
         for (FileDto *currentFile in directoryList) {
             //Remove part of the item file path
+            //TODO:Refactor with new method getRemoteFilePathWithoutServerPathComponents
+            //currentFile.filePath = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:currentFile.filePath andUser:app.activeUser];
             NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
             if([currentFile.filePath length] >= [partToRemove length]){
                 currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];

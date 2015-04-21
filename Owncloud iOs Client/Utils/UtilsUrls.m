@@ -123,53 +123,62 @@
     
 }
 
+///-----------------------------------
+/// @name getRemovedPartOfFilePathAnd
+///-----------------------------------
+/**
+ * Return the part of the path to be removed
+ *
+ * @param mUserDto -> user dto
+ *
+ *  http:\/\/domain\/sub1\/sub2\/remote.php\/webdav\/
+ * @return  partToRemove -> \/sub1\/sub2\/remote.php\/webdav
+ */
 //We remove the part of the remote file path that is not necesary
 +(NSString *) getRemovedPartOfFilePathAnd:(UserDto *)mUserDto {
     
-    NSArray *userUrlSplited = nil;
+    NSArray *userUrlSplited = [[self getFullRemoteServerPath:mUserDto] componentsSeparatedByString:@"/"];
     
-#ifdef CONTAINER_APP
-    //TODO:change with method in db to get urlServerRedirect
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    if (app.urlServerRedirected) {
-        userUrlSplited = [app.urlServerRedirected componentsSeparatedByString:@"/"];
-    } else {
-        userUrlSplited = [mUserDto.url componentsSeparatedByString:@"/"];
-
-    }
-#else
-    userUrlSplited = [mUserDto.url componentsSeparatedByString:@"/"];
-#endif
-    
-    NSString *partRemoved = @"";
+    NSString *partToRemove = @"";
     
     for(int i = 3 ; i < [userUrlSplited count] ; i++) {
-        partRemoved = [NSString stringWithFormat:@"%@/%@", partRemoved, [userUrlSplited objectAtIndex:i]];
+        partToRemove = [NSString stringWithFormat:@"%@/%@", partToRemove, [userUrlSplited objectAtIndex:i]];
         //NSLog(@"partRemoved: %@", partRemoved);
     }
     
     //We remove the first and the last "/"
-    if ( [partRemoved length] > 0) {
-        partRemoved = [partRemoved substringFromIndex:1];
+    if ( [partToRemove length] > 0) {
+        partToRemove = [partToRemove substringFromIndex:1];
     }
-    if ( [partRemoved length] > 0) {
-        partRemoved = [partRemoved substringToIndex:[partRemoved length] - 1];
+    if ( [partToRemove length] > 0) {
+        partToRemove = [partToRemove substringToIndex:[partToRemove length] - 1];
     }
     
     
-    if([partRemoved length] <= 0) {
-        partRemoved = [NSString stringWithFormat:@"/%@", k_url_webdav_server];
+    if([partToRemove length] <= 0) {
+        partToRemove = [NSString stringWithFormat:@"/%@", k_url_webdav_server];
     } else {
-        partRemoved = [NSString stringWithFormat:@"/%@/%@", partRemoved, k_url_webdav_server];
+        partToRemove = [NSString stringWithFormat:@"/%@/%@", partToRemove, k_url_webdav_server];
     }
     
-    return partRemoved;
+    return partToRemove;
 }
 
+///-----------------------------------
+/// @name getLocalFolderByFilePath
+///-----------------------------------
+/**
+ * Return the file path without
+ *
+ * @param filePath -> \/sub1\/sub2\/remote.php\/webdav\/Documents
+ * @param user -> user dto
+ *
+ * @return  shortenedPath -> \/Documents
+ */
 //We generate de local path of the files dinamically
 +(NSString *)getLocalFolderByFilePath:(NSString*) filePath andFileName:(NSString*) fileName andUserDto:(UserDto *) mUser {
     
-    NSArray *listItems = [mUser.url componentsSeparatedByString:@"/"];
+    NSArray *listItems = [[UtilsUrls getFullRemoteServerPath:mUser] componentsSeparatedByString:@"/"];
     NSString *urlWithoutAddress = @"";
     for (int i = 3 ; i < [listItems count] ; i++) {
         urlWithoutAddress = [NSString stringWithFormat:@"%@/%@", urlWithoutAddress, [listItems objectAtIndex:i]];
@@ -180,6 +189,7 @@
     //NSLog(@"urlWithoutAddress: %d", [urlWithoutAddress length]);
     
     urlWithoutAddress = [filePath substringFromIndex:[urlWithoutAddress length]];
+    
     
     //NSString *newLocalFolder= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", mUser.idUser]];
     NSString *newLocalFolder= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", (int)mUser.idUser]];
@@ -235,6 +245,81 @@
     }
     
     return  output;
+}
+
+///-----------------------------------
+/// @name getRemoteFilePathWithoutServerPathComponents
+///-----------------------------------
+/**
+ * Return the file path without
+ *
+ * @param filePath -> http:\/\/domain\/sub1\/sub2\/remote.php\/webdav\/Documents
+ * @param user -> user dto
+ *
+ * @return  shortenedPath -> \/Documents
+ */
++(NSString *) getRemoteFilePathWithoutServerPathComponentsFromPath:(NSString *)filePath andUser:(UserDto *)mUserDto {
+    NSString *shortenedPath =@"";
+//    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+//    app.activeUser=[ManageUsersDB getActiveUser];
+//    
+//    NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
+    NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:mUserDto];
+    if([filePath length] >= [partToRemove length]){
+        shortenedPath = [filePath substringFromIndex:[partToRemove length]];
+    }
+    
+    return shortenedPath;
+}
+
+
+///-----------------------------------
+/// @name getFullRemoteServerPath
+///-----------------------------------
+/**
+ * Return the full server path
+ *
+ * @param mUserDto -> user dto
+ *
+ * @return  fullPath -> http:\/\/domain\/sub1\/sub2\/...
+ */
++(NSString *) getFullRemoteServerPath:(UserDto *)mUserDto {
+    
+    NSString *fullPath= nil;
+    
+#ifdef CONTAINER_APP
+    //TODO:change with method in db to get urlServerRedirect
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    if (app.urlServerRedirected) {
+        fullPath = app.urlServerRedirected;
+    } else {
+        fullPath = mUserDto.url;
+    }
+#else
+    fullPath = mUserDto.url;
+#endif
+    
+    return fullPath;
+}
+
+
+///-----------------------------------
+/// @name getFullRemoteWebDavPath
+///-----------------------------------
+/**
+ * Return the full server path with webdav components
+ *
+ * @param mUserDto -> user dto
+ *
+ * @return  fullPath -> http:\/\/domain\/sub1\/sub2\/remote.php\/webdav\/
+ */
++(NSString *) getFullRemoteWebDavPath:(UserDto *)mUserDto {
+    
+    NSString *fullWevDavPath= nil;
+    
+    fullWevDavPath = [NSString stringWithFormat: @"%@%@", [self getFullRemoteServerPath:mUserDto],k_url_webdav_server];
+    
+    return fullWevDavPath;
 }
 
 @end

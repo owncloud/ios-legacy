@@ -40,4 +40,10 @@
 //Get the path of the temp folder where there are the temp files for the uploads
 + (NSString *) getTempFolderForUploadFiles;
 
++(NSString *) getRemoteFilePathWithoutServerPathComponentsFromPath:(NSString *)filePath andUser:(UserDto *)user;
+
++(NSString *) getFullRemoteServerPath:(UserDto *)mUserDto;
+
++(NSString *) getFullRemoteWebDavPath:(UserDto *)mUserDto;
+
 @end
