@@ -260,10 +260,7 @@
  */
 +(NSString *) getRemoteFilePathWithoutServerPathComponentsFromPath:(NSString *)filePath andUser:(UserDto *)mUserDto {
     NSString *shortenedPath =@"";
-//    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-//    app.activeUser=[ManageUsersDB getActiveUser];
-//    
-//    NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
+
     NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:mUserDto];
     if([filePath length] >= [partToRemove length]){
         shortenedPath = [filePath substringFromIndex:[partToRemove length]];

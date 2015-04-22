@@ -254,25 +254,6 @@
      /remote.php/webdav/
     */
     
-//    NSString *output = @"";
-//    
-//    NSArray *splitedUrl = [user.url componentsSeparatedByString:@"/"];
-//
-//    for (int i = 3; i < [splitedUrl count] ; i++) {
-//        output = [NSString stringWithFormat:@"%@/%@", output ,[splitedUrl objectAtIndex:i]];
-//    }
-//    
-//    output = [NSString stringWithFormat:@"%@%@", output, k_url_webdav_server];
-//    
-//    //DLog(@"filePathOnFileDto: %@", filePathOnFileDto);
-//    //DLog(@"DB FilePath to remove: %@", output);
-//    
-//    if([filePathOnFileDto length] >= [output length]) {
-//        output = [filePathOnFileDto substringFromIndex: [output length]];
-//    }
-//    
-//    return  output;
-    
     NSString *shortenedPath =@"";
     
     NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:user];
