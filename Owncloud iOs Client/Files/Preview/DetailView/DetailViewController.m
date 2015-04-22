@@ -135,10 +135,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
 }
 
-- (void) nothing{
-    
-    
-}
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -160,7 +156,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     DLog(@"Detail Configure view");
     
     //Set the content offset of the gallery view scroll view.
-    if (_galleryView) {
+   if (self.galleryView) {
         [_mainScrollView setContentOffset:_mainScrollView.contentOffset animated:YES];
         [_galleryView.scrollView setContentOffset:_mainScrollView.contentOffset animated:YES];
     }
@@ -236,7 +232,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [_readerPDFViewController updateContentViews];
         
     }
-      
+    
 }
 
 /*
@@ -935,7 +931,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         //Init the main scroll view of gallery
         [_galleryView initScrollView];
         //Run the gallery
-        [_galleryView initGallery];        
+        [_galleryView initGallery];
+        
+        [_galleryView.scrollView addGestureRecognizer:self.singleTap];
         
     }
     //Add Gallery to the preview
@@ -1830,6 +1828,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 
 
+
 #pragma mark - Error login delegate method
 
 - (void)errorLogin {
@@ -2046,6 +2045,12 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void) hideMasterView{
     
+    if (self.galleryView) {
+         [self.galleryView prepareScrollViewBeforeTheRotation];
+    }
+    
+   [self performSelector:@selector(adjustGalleryDuringTransition) withObject:nil afterDelay:0.01];
+     
     if (self.hideMaster) {
         
         [self modifyTheAlphaOfMasterView];
@@ -2083,17 +2088,18 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
         
         [self toggleHideMaster:^{
-            
+ 
         }];
-
         
         [self shouldHideToolBar:self.hideMaster complete:^{
             
+            
         }];
         
-        
-        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.01];
         [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.3];
+        
+        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.0];
+      
         
     }else{
         
@@ -2135,15 +2141,56 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
             
-           [self modifyTheAlphaOfMasterView];
-        }];
+            [self modifyTheAlphaOfMasterView];
+            
+            
+            }];
         
-        
-        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.01];
         [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.3];
+        
+        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.0];
         
     }
    
+}
+
+
+- (CGRect) getFutureSizeForTransition{
+    
+    CGRect futureFrame;
+    
+    if (self.hideMaster) {
+        //Full Screen
+        futureFrame = self.view.window.bounds;
+        
+    }else{
+        if (IS_PORTRAIT) {
+            futureFrame = CGRectMake(0, 64, 459.5, 960.0);
+        }else{
+            futureFrame = CGRectMake(0, 64, 768.0, 1024.0);
+        }
+    }
+    
+    return futureFrame;
+}
+
+- (void) adjustGalleryDuringTransition{
+    
+    if (self.galleryView) {
+        
+        self.galleryView.scrollView.frame = [self getFutureSizeForTransition];
+        [self.galleryView adjustTheScrollViewAfterTheRotation];
+    }
+}
+
+- (void) adjustGalleryAfterTransition{
+    
+    if (self.galleryView) {
+        
+        [self.galleryView.scrollView setFrame:[self getTheCorrectSize]];
+        [self.galleryView adjustTheScrollViewAfterTheRotation];
+    }
+    
 }
 
 
@@ -2202,6 +2249,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
          
          [self.splitViewController.view setFrame:selfFrame];
          
+         
      }completion:^(BOOL finished){
          if (finished)
          {
@@ -2232,9 +2280,19 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 - (void) configureViewWithAnimation{
     
     [UIView animateWithDuration:0.3 animations:^{
-        [self configureView];
+        
+        if (self.galleryView) {
+            [self configureView];
+            
+            [self.galleryView.scrollView setFrame:[self getTheCorrectSize]];
+            [self.galleryView adjustTheScrollViewAfterTheRotation];
+            
+        }else{
+            [self configureView];
+        }
+        
     }];
-    
+
 }
 
 - (void) updateStatusBar{
@@ -2286,8 +2344,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [self.mainScrollView setFrame:scrollFrame];
         
         [self.view layoutIfNeeded];
-
-        [self configureView];
+        
+        //[self configureView];
+ 
         
     } completion:^(BOOL finished) {
        

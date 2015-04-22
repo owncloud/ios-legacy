@@ -97,5 +97,8 @@
  */
 - (void)updateImagesArrayWithNewArray:(NSArray*) sortArray;
 
+-(void)showFullScreen;
+- (void)exitFullScreen;
+
 
 @end

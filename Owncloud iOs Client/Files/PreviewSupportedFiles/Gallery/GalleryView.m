@@ -53,7 +53,7 @@
 - (void)prepareScrollViewBeforeTheRotation{
     
     // First, determine which page is currently visible
-      CGFloat pageWidth = self.scrollView.frame.size.width;
+     CGFloat pageWidth = self.scrollView.frame.size.width;
      NSInteger page = (NSInteger)floor((self.scrollView.contentOffset.x * 2.0f + pageWidth) / (pageWidth * 2.0f));
      
      //We set the current page before rotate to return to this page
@@ -311,14 +311,20 @@
 
 
 -(void)showFullScreen{
-    _fullScreen=YES;
-    [_delegate setFullScreenGallery:_fullScreen];
+    _fullScreen = YES;
+    
+    if (IS_IPHONE) {
+        [_delegate setFullScreenGallery:_fullScreen];
+    }
     [self setupTheContentOfScrollAfterFullScreen];
 }
 
 - (void)exitFullScreen{
-    _fullScreen=NO;
-    [_delegate setFullScreenGallery:_fullScreen];
+    _fullScreen = NO;
+    
+    if (IS_IPHONE) {
+         [_delegate setFullScreenGallery:_fullScreen];
+    }
     [self setupTheContentOfScrollAfterFullScreen];
 }
 
