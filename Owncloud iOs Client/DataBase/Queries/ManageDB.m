@@ -785,5 +785,30 @@
 }
 
 
+///-----------------------------------
+/// @name Update Database version with 12 version to 13
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter users table, added new field to redirected url
+ */
++ (void) updateDBVersion12To13{
+    
+    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+
+        correctQuery = [db executeUpdate:@"ALTER TABLE users ADD url_redirected VARCHAR"];
+        if (!correctQuery) {
+            DLog(@"Error update version 12 to 13 table users url_redirected");
+        }
+        
+    }];
+    
+}
+
 
 @end

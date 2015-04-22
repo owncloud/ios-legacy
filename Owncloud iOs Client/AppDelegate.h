@@ -40,6 +40,7 @@
 #define k_DB_version_10 10
 #define k_DB_version_11 11
 #define k_DB_version_12 12
+#define k_DB_version_13 13
 
 @class MGSplitViewController;
 @class FilesViewController;
