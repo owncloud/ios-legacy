@@ -156,10 +156,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     DLog(@"Detail Configure view");
     
     //Set the content offset of the gallery view scroll view.
-   if (self.galleryView) {
+  /* if (self.galleryView) {
         [_mainScrollView setContentOffset:_mainScrollView.contentOffset animated:YES];
         [_galleryView.scrollView setContentOffset:_mainScrollView.contentOffset animated:YES];
-    }
+    }*/
     
     //TitleLabel
     if (_file) {
@@ -2049,7 +2049,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
          [self.galleryView prepareScrollViewBeforeTheRotation];
     }
     
-   [self performSelector:@selector(adjustGalleryDuringTransition) withObject:nil afterDelay:0.01];
+    
      
     if (self.hideMaster) {
         
@@ -2096,9 +2096,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
         }];
         
-        [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.3];
+        [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.1];
         
-        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.0];
+        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.00];
       
         
     }else{
@@ -2106,7 +2106,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         self.hideMaster = !self.hideMaster;
         
         [self toggleHideMaster:^{
-            
+            [self.galleryView adjustTheScrollViewAfterTheRotation];
             
         }];
         
@@ -2146,9 +2146,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             }];
         
-        [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.3];
+        [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.1];
         
-        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.0];
+        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.00];
         
     }
    
@@ -2176,17 +2176,20 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void) adjustGalleryDuringTransition{
     
-    if (self.galleryView) {
+  /* if (self.galleryView) {
         
-        self.galleryView.scrollView.frame = [self getFutureSizeForTransition];
-        [self.galleryView adjustTheScrollViewAfterTheRotation];
-    }
+        [UIView animateWithDuration:0.3 animations:^{
+            self.galleryView.scrollView.frame = [self getFutureSizeForTransition];
+            [self.galleryView adjustTheScrollViewAfterTheRotation];
+        }];
+        
+       
+    }*/
 }
 
 - (void) adjustGalleryAfterTransition{
     
     if (self.galleryView) {
-        
         [self.galleryView.scrollView setFrame:[self getTheCorrectSize]];
         [self.galleryView adjustTheScrollViewAfterTheRotation];
     }
@@ -2282,7 +2285,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [UIView animateWithDuration:0.3 animations:^{
         
         if (self.galleryView) {
-            [self configureView];
+         //   [self configureView];
             
             [self.galleryView.scrollView setFrame:[self getTheCorrectSize]];
             [self.galleryView adjustTheScrollViewAfterTheRotation];

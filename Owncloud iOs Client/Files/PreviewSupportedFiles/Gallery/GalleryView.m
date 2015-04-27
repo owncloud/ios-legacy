@@ -39,6 +39,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        _galleryIsChangingSize = NO;
     }
     return self;
 }
@@ -51,6 +52,8 @@
  * This method shoud be call in the willRotateToInterfaceOrientation parent view controller method
  */
 - (void)prepareScrollViewBeforeTheRotation{
+    
+    self.galleryIsChangingSize = YES;
     
     // First, determine which page is currently visible
      CGFloat pageWidth = self.scrollView.frame.size.width;
@@ -86,6 +89,8 @@
     CGPoint centerPoint = CGPointMake(CGRectGetMidX(self.scrollView.bounds),
                                       CGRectGetMidY(self.scrollView.bounds));
     [self view:_loadingSpinner setCenter:centerPoint];
+    
+    self.galleryIsChangingSize = NO;
 }
 
 #pragma mark - Init Gallery Methods
@@ -817,64 +822,68 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     
-    [self loadVisiblePages];
-   
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    // First, determine which page is currently visible
-    CGFloat pageWidth = self.scrollView.frame.size.width;
-    NSInteger page = (NSInteger)floor((self.scrollView.contentOffset.x * 2.0f + pageWidth) / (pageWidth * 2.0f));
-    
-    FileDto *tempFile = [_galleryArray objectAtIndex:page];
-    FileDto *currentFile = [ManageFilesDB getFileDtoByFileName:tempFile.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:tempFile.filePath andUser:app.activeUser] andUser:app.activeUser];
-    
-    
-    //Check if the currentFile is nil (for example when the user has rename this file)
-    if (!currentFile) {
-        currentFile = [ManageFilesDB getFileDtoByIdFile:tempFile.idFile];
-        if (currentFile) {
-            [_galleryArray replaceObjectAtIndex:page withObject:currentFile];
+    if (!self.galleryIsChangingSize) {
+        
+        [self loadVisiblePages];
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        // First, determine which page is currently visible
+        CGFloat pageWidth = self.scrollView.frame.size.width;
+        
+        NSInteger page = (NSInteger)floor((self.scrollView.contentOffset.x * 2.0f + pageWidth) / (pageWidth * 2.0f));
+        
+        FileDto *tempFile = [_galleryArray objectAtIndex:page];
+        FileDto *currentFile = [ManageFilesDB getFileDtoByFileName:tempFile.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:tempFile.filePath andUser:app.activeUser] andUser:app.activeUser];
+        
+        
+        //Check if the currentFile is nil (for example when the user has rename this file)
+        if (!currentFile) {
+            currentFile = [ManageFilesDB getFileDtoByIdFile:tempFile.idFile];
+            if (currentFile) {
+                [_galleryArray replaceObjectAtIndex:page withObject:currentFile];
+            }
         }
-    }
-    
-    //Indicate the current file select to delegate class
-    if (currentFile) {
-        _file=currentFile;
-    }else{
-        _file=tempFile;
-    }
-    
-    
-    [_delegate selectThisFile:_file];
-    
-    if (_file.isDownload == updating) {
-        [self putUpdateProgressInNavBar];
-    }
-    
-    
-    if (currentFile.isDownload==notDownload) {
+        
         //Indicate the current file select to delegate class
-        _file=currentFile;
-        [self downloadTheFile];
-    } else if (currentFile.isDownload==downloading || currentFile.isDownload == updating) {
-       
-        //Get download of current file
-        Download *download = [self getDownloadOfCurrentFile];
-        
-        //Check to know if it's in progress
-        if ((download && [download.operation isExecuting]) || (download && download.downloadTask && download.downloadTask.state == NSURLSessionTaskStateRunning) ) {
-            [self contiueDownloadIfTheFileisDownloading];
+        if (currentFile) {
+            _file=currentFile;
         }else{
-            [self restartTheDownload];
+            _file=tempFile;
         }
         
-      /*  CGPoint centerPoint = CGPointMake(CGRectGetMidX(self.scrollView.bounds),
-                                          CGRectGetMidY(self.scrollView.bounds));
-        [self view:_loadingSpinner setCenter:centerPoint];
-        _loadingSpinner.hidden=NO;*/
+        
+        [_delegate selectThisFile:_file];
+        
+        if (_file.isDownload == updating) {
+            [self putUpdateProgressInNavBar];
+        }
+        
+        
+        if (currentFile.isDownload==notDownload) {
+            //Indicate the current file select to delegate class
+            _file=currentFile;
+            [self downloadTheFile];
+        } else if (currentFile.isDownload==downloading || currentFile.isDownload == updating) {
+            
+            //Get download of current file
+            Download *download = [self getDownloadOfCurrentFile];
+            
+            //Check to know if it's in progress
+            if ((download && [download.operation isExecuting]) || (download && download.downloadTask && download.downloadTask.state == NSURLSessionTaskStateRunning) ) {
+                [self contiueDownloadIfTheFileisDownloading];
+            }else{
+                [self restartTheDownload];
+            }
+            
+            /*  CGPoint centerPoint = CGPointMake(CGRectGetMidX(self.scrollView.bounds),
+             CGRectGetMidY(self.scrollView.bounds));
+             [self view:_loadingSpinner setCenter:centerPoint];
+             _loadingSpinner.hidden=NO;*/
+        }
+
     }
-    
-    
+ 
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)sv
