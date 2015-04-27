@@ -20,6 +20,8 @@
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
 #import "CredentialsDto.h"
+#import "UtilsCookies.h"
+#import "constants.h"
 
 
 #ifdef CONTAINER_APP
@@ -163,8 +165,10 @@
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             app.activeUser = user;
             
-            [app eraseCredentials];
-            [app eraseURLCache];
+            NSString *connectURL =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
+
+            [UtilsCookies eraseCredentialsWithURL:connectURL];
+            [UtilsCookies eraseURLCache];
         }
 #endif
 

@@ -17,7 +17,6 @@
 #import "SettingsViewController.h"
 #import "RecentViewController.h"
 #import "CheckAccessToServer.h"
-#import "MGSplitViewController.h"
 #import "DetailViewController.h"
 #import "constants.h"
 #import "LoginViewController.h"
@@ -54,6 +53,7 @@
 #import "OCKeychain.h"
 #import "ManageLocation.h"
 #import "ManageAsset.h"
+#import "OCSplitViewController.h"
 
 
 #define k_server_with_chunking 4.5 
@@ -330,7 +330,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         uploadFromOtherAppNavigationController.modalTransitionStyle=UIModalTransitionStyleCoverVertical;
         uploadFromOtherAppNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;
         [_splitViewController dismissViewControllerAnimated:NO completion:nil];
-        [self.detailViewController closePopover];
         [_splitViewController presentViewController:uploadFromOtherAppNavigationController animated:YES completion:nil];
 
     }
@@ -426,11 +425,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //[self presentModalViewController:_loginWindowViewController animated:NO];
     
-    //Set splitViewController to nil
-    if (_splitViewController) {
-        [_splitViewController.hiddenPopoverController dismissPopoverAnimated:NO];
-        _splitViewController=nil;
-    }
+  
     
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -572,22 +567,19 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //iPad
         
         //Create a splitViewController (Split container to show two view in the same time)
-        self.splitViewController=[[MGSplitViewController alloc]init];
+        self.splitViewController = [OCSplitViewController new];
         
         //Create the detailViewController (Detail View of the split)
-        self.detailViewController=[[DetailViewController alloc]initWithNibName:@"DetailView" bundle:nil];
+        self.detailViewController = [[DetailViewController alloc]initWithNibName:@"DetailView" bundle:nil];
         
         //Assign tabBarController like a master view
-        [self.splitViewController setMasterViewController:_ocTabBarController];
-        [self.splitViewController setDetailViewController:_detailViewController];
         
+        self.splitViewController.viewControllers = [NSArray arrayWithObjects:self.ocTabBarController, self.detailViewController, nil];
+        self.splitViewController.delegate = self.detailViewController;
         
-        _detailViewController = (DetailViewController *) _detailViewController;
-        _detailViewController.splitController=_splitViewController;
-        _splitViewController.delegate=_detailViewController;
         
         // Add the split view controller's view to the window and display.
-        self.window.rootViewController=_splitViewController;
+        self.window.rootViewController = _splitViewController;
         [_window makeKeyAndVisible];
          _ocTabBarController.selectedIndex = 0;
         
@@ -751,11 +743,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
 }
 
--(void)dismissPopover {
-    [self.splitViewController.masterViewController removeFromParentViewController];
-    [self.splitViewController.detailViewController removeFromParentViewController];
-    [self.splitViewController removeFromParentViewController];
-}
 
 - (void)presentWithView{
     [self.detailViewController presentWhiteView];
@@ -906,7 +893,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             [_mediaPlayer.moviePlayer stop];
             [_mediaPlayer finalizePlayer];
             [_mediaPlayer.view removeFromSuperview];
-            _mediaPlayer=nil;
+            _mediaPlayer = nil;
         }
     }
 }
@@ -1681,11 +1668,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
         } else {
             //is ipad
-            _detailViewController.disablePopover=YES;
-            [_detailViewController closePopover];
             [_splitViewController dismissViewControllerAnimated:NO completion:nil];
 
-            
            // oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
             oc.modalPresentationStyle = UIModalPresentationFormSheet;
             
@@ -2066,10 +2050,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             [_ocTabBarController presentViewController:navController animated:YES completion:nil];
         } else {
             
-            if (IS_IOS8) {
-                [self.detailViewController.popoverController dismissPopoverAnimated:YES];
-            }
-            
             OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
             navController.modalPresentationStyle = UIModalPresentationFormSheet;
             [self.splitViewController presentViewController:navController animated:YES completion:nil];
@@ -2171,45 +2151,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-#pragma mark - Delete cache HTTP
-
-- (void)eraseCredentials
-{
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    NSString *connectURL =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
-    
-    NSURLCredentialStorage *credentialsStorage = [NSURLCredentialStorage sharedCredentialStorage];
-    NSDictionary *allCredentials = [credentialsStorage allCredentials];
-    
-    if ([allCredentials count] > 0)
-    {
-        for (NSURLProtectionSpace *protectionSpace in allCredentials)
-        {
-            DLog(@"Protetion espace: %@", [protectionSpace host]);
-            
-            if ([[protectionSpace host] isEqualToString:connectURL])
-            {
-                DLog(@"Credentials erase");
-                NSDictionary *credentials = [credentialsStorage credentialsForProtectionSpace:protectionSpace];
-                for (NSString *credentialKey in credentials)
-                {
-                    [credentialsStorage removeCredential:[credentials objectForKey:credentialKey] forProtectionSpace:protectionSpace];
-                }
-            }
-        }
-    }
-}
-
-- (void)eraseURLCache
-{
-    //  NSURL *loginUrl = [NSURL URLWithString:self.connectString];
-    //  NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc]initWithURL:loginUrl];
-    // [NSMutableURLRequest requestWithURL:loginUrl];
-    //  [[NSURLCache sharedURLCache] removeCachedResponseForRequest:urlRequest];
-    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
-    [[NSURLCache sharedURLCache] setDiskCapacity:0];
-}
 
 
 /*

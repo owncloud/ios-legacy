@@ -108,8 +108,10 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
  */
 - (void) initHudView{
  
+     self.moviePlayer.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
     //Bounds
-    CGRect bounds = self.moviePlayer.view.bounds;
+    CGRect bounds = self.moviePlayer.view.frame;
     CGFloat width = bounds.size.width;
     CGFloat height = bounds.size.height;
     
@@ -117,8 +119,8 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     _thumbnailView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, width, height)];
     _thumbnailView.autoresizingMask= UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _thumbnailView.contentMode = UIViewContentModeScaleAspectFit;
-    _thumbnailView.userInteractionEnabled=NO;
-    _thumbnailView.backgroundColor=[UIColor clearColor];
+    _thumbnailView.userInteractionEnabled = NO;
+    _thumbnailView.backgroundColor = [UIColor clearColor];
     _thumbnailView.hidden=YES;
     
     [self.moviePlayer.view addSubview:_thumbnailView];

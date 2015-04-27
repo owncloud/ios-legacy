@@ -190,9 +190,6 @@
             
             AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
-            //[appDelegate dismissPopover];
-            
-            //appDelegate.downloadsArray=[[NSMutableArray alloc]init];
             [appDelegate.downloadManager cancelDownloads];
             appDelegate.uploadArray=[[NSMutableArray alloc]init];
             [appDelegate updateRecents];
@@ -346,10 +343,6 @@
     } else {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
-        if (IS_IOS8) {
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
-        
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
@@ -398,10 +391,6 @@
         [self.navigationController pushViewController:viewController animated:YES];
     } else {
         
-        if (IS_IOS8) {
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
-        
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
@@ -443,7 +432,7 @@
         //Check if the server is Chunk
         [self performSelectorInBackground:@selector(checkShareItemsInAppDelegate) withObject:nil];
         
-        [self eraseURLCache];
+        [UtilsCookies eraseURLCache];
         
         self.listUsers = [ManageUsersDB getAllUsers];
         [self.tableView reloadData];
@@ -460,46 +449,6 @@
         }
         app.isNewUser = YES;
     }
-}
-
-#pragma mark - Delete cache HTTP
-
-- (void)eraseCredentials
-{
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    NSString *connectURL =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
-    
-    NSURLCredentialStorage *credentialsStorage = [NSURLCredentialStorage sharedCredentialStorage];
-    NSDictionary *allCredentials = [credentialsStorage allCredentials];
-    
-    if ([allCredentials count] > 0)
-    {
-        for (NSURLProtectionSpace *protectionSpace in allCredentials)
-        {
-            DLog(@"Protetion espace: %@", [protectionSpace host]);
-            
-            if ([[protectionSpace host] isEqualToString:connectURL])
-            {
-                DLog(@"Credentials erase");
-                NSDictionary *credentials = [credentialsStorage credentialsForProtectionSpace:protectionSpace];
-                for (NSString *credentialKey in credentials)
-                {
-                    [credentialsStorage removeCredential:[credentials objectForKey:credentialKey] forProtectionSpace:protectionSpace];
-                }
-            }
-        }
-    }
-}
-
-- (void)eraseURLCache
-{
-    //  NSURL *loginUrl = [NSURL URLWithString:self.connectString];
-    //  NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc]initWithURL:loginUrl];
-    // [NSMutableURLRequest requestWithURL:loginUrl];
-    //  [[NSURLCache sharedURLCache] removeCachedResponseForRequest:urlRequest];
-    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
-    [[NSURLCache sharedURLCache] setDiskCapacity:0];
 }
 
 

@@ -29,6 +29,7 @@
 #import "ManageFavorites.h"
 #import "FilesViewController.h"
 #import "UploadUtils.h"
+#import "UtilsCookies.h"
 
 #define k_task_identifier_invalid -1
 
@@ -130,7 +131,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     __weak typeof(self) weakSelf = self;
     
@@ -140,11 +141,15 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         
         _downloadTask = [[AppDelegate sharedOCCommunication] downloadFileSession:serverUrl  toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] withProgress:&progressValue successRequest:^(NSURLResponse *response, NSURL *filePath) {
             
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
+            
             //Finalized the download
             [weakSelf updateDataDownload];
             [weakSelf setDownloadTaskIdentifierValid:NO];
             
         } failureRequest:^(NSURLResponse *response, NSError *error) {
+            
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
             
             DLog(@"Error: %@", error);
             DLog(@"error.code: %ld", (long)error.code);
@@ -202,17 +207,17 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                 }
                 
                 //Erase cache and cookies
-                [weakSelf eraseURLCache];
+                [UtilsCookies eraseURLCache];
         
             }
   
         }];
         
+        self.progressValueGlobal = progressValue;
+        progressValue = nil;
+        
         // Observe fractionCompleted using KVO
-        [progressValue addObserver:self
-                        forKeyPath:@"fractionCompleted"
-                           options:NSKeyValueObservingOptionNew
-                           context:NULL];
+        [self.progressValueGlobal addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew context:NULL];
         
         
     } else {
@@ -317,7 +322,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                                                           }
                                                           
                                                           //Erase cache and cookies
-                                                          [weakSelf eraseURLCache];
+                                                          [UtilsCookies eraseURLCache];
                                                           
                                                       } shouldExecuteAsBackgroundTaskWithExpirationHandler:^{
                                                           //Cancel download
@@ -509,7 +514,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             }
             
             //Clear the chache and cookies
-            [self eraseURLCache];
+            [UtilsCookies eraseURLCache];
             
             //Set not download in database            
             if (!_fileDto.isNecessaryUpdate) {
@@ -555,22 +560,6 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
 }
 
-#pragma mark - Delete cache of URL
-
-
-///-----------------------------------
-/// @name Erase URL Cache
-///-----------------------------------
-
-/**
- * Method that clear the URL cache
- *
- */
-- (void)eraseURLCache
-{
-    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
-    [[NSURLCache sharedURLCache] setDiskCapacity:0];
-}
 
 #pragma mark Global Download Array Manager
 
@@ -691,7 +680,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
     NSString *serverPath = [UtilsUrls getFullRemoteWebDavPath:app.activeUser];
@@ -801,7 +790,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             }
         }
         //Erase cache
-        [weakSelf eraseURLCache];
+        [UtilsCookies eraseURLCache];
     }];
 }
 

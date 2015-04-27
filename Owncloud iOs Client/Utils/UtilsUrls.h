@@ -46,4 +46,6 @@
 
 +(NSString *) getFullRemoteWebDavPath:(UserDto *)mUserDto;
 
++ (NSString *) getUserAgent;
+
 @end

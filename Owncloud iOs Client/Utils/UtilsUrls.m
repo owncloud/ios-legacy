@@ -17,8 +17,9 @@
 #import "constants.h"
 #import "UserDto.h"
 #import <UIKit/UIKit.h>
-#import "AppDelegate.h"
 #import "ManageUsersDB.h"
+#import "Customization.h"
+
 
 @implementation UtilsUrls
 
@@ -248,6 +249,7 @@
     return  output;
 }
 
+
 ///-----------------------------------
 /// @name getRemoteFilePathWithoutServerPathComponents
 ///-----------------------------------
@@ -315,6 +317,15 @@
     fullWevDavPath = [NSString stringWithFormat: @"%@%@", [self getFullRemoteServerPath:mUserDto],k_url_webdav_server];
     
     return fullWevDavPath;
+
+}
+
++ (NSString *) getUserAgent {
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *userAgentWithAppVersion = [NSString stringWithFormat:@"%@%@",k_user_agent,appVersion];
+    
+    return userAgentWithAppVersion;
+
 }
 
 @end

@@ -53,7 +53,6 @@
 #import "DownloadUtils.h"
 #import "UploadUtils.h"
 #import "ManageNetworkErrors.h"
-#import "MGSplitViewController.h"
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
 #import "Owncloud_iOs_Client-Swift.h"
@@ -122,6 +121,7 @@
     
     _currentRemoteFolder = currentFolder;
     _currentLocalFolder = currentLocalFoler;
+
    // DLog(@"self.fileIdToShowFiles: %lld", _fileIdToShowFiles.etag);
   //  DLog(@"self.fileIdToShowFiles: %ld", (long)_fileIdToShowFiles.idFile);
     
@@ -248,16 +248,12 @@
     if (app.isNewUser) {
         //We are changing of user
         //Show the file list in the correct place
-        if (IS_IOS7 || IS_IOS8){
-            if (app.detailViewController.popoverController.isPopoverVisible){
-                [_tableView setContentOffset:CGPointMake(0,-k_navigation_bar_height) animated:animated];
-            } else if (IS_IPHONE && !IS_PORTRAIT) {
-                [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height_in_iphone_landscape + k_status_bar_height)) animated:animated];
-            } else {
-                [_tableView setContentOffset:CGPointMake(0,-(k_status_bar_height + k_navigation_bar_height)) animated:animated];
-            }
+        if (!IS_IPHONE){
+            [_tableView setContentOffset:CGPointMake(0,-k_navigation_bar_height) animated:animated];
+        } else if (IS_IPHONE && !IS_PORTRAIT) {
+            [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height_in_iphone_landscape + k_status_bar_height)) animated:animated];
         } else {
-            [_tableView setContentOffset:CGPointMake(0,0) animated:animated];
+            [_tableView setContentOffset:CGPointMake(0,-(k_status_bar_height + k_navigation_bar_height)) animated:animated];
         }
         app.isNewUser = NO;
     }
@@ -307,7 +303,7 @@
         //Show the file list in the correct place
         //Only for iOS 7
         if (IS_IOS7){
-            if (app.detailViewController.popoverController.isPopoverVisible){
+            if (!IS_IPHONE){
                 [_tableView setContentOffset:CGPointMake(0,-k_navigation_bar_height) animated:animated];
             } else if (IS_IPHONE && !IS_PORTRAIT) {
                 [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height_in_iphone_landscape + k_status_bar_height)) animated:animated];
@@ -638,13 +634,7 @@
     if(_moveFile.overWritteOption) {
         [_moveFile.overWritteOption.overwriteOptionsActionSheet dismissWithClickedButtonIndex:0 animated:NO];
     }
-    if (!IS_IPHONE && IS_IOS7) {
-        if (_resolvedCredentialError) {
-            [_resolvedCredentialError dismissViewControllerAnimated:NO completion:nil];
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            app.isErrorLoginShown = NO;
-        }
-    }
+    
     //Close the openWith option in FileViewController
     if (!IS_IPHONE && self.mShareFileOrFolder && self.mShareFileOrFolder.activityPopoverController) {
         [self.mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
@@ -687,7 +677,6 @@
         [app.splitViewController.view.window addSubview:_HUD];
     }
     
-    //MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     _HUD.labelText = NSLocalizedString(@"loading", nil);
     
     if (IS_IPHONE) {
@@ -868,7 +857,7 @@
                 [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
             }
             
-             [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+             [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
             
             NSString *pathOfNewFolder = [NSString stringWithFormat:@"%@%@",[_currentRemoteFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding], name ];
             
@@ -1042,7 +1031,7 @@
     } else {
         
         self.elcPicker.modalPresentationStyle = UIModalPresentationFormSheet;
-        
+       
         if (IS_IOS8) {
             [app.detailViewController presentViewController:self.elcPicker animated:YES completion:nil];
         } else {
@@ -1078,9 +1067,6 @@
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         if (IS_IOS8) {
-            
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-            
             [self.plusActionSheet showInView:app.splitViewController.view];
         } else {
             [self.plusActionSheet showInView:app.detailViewController.view];
@@ -1688,7 +1674,7 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-     [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     NSString *path = _nextRemoteFolder;
     
@@ -1896,7 +1882,7 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     NSString *path = _currentRemoteFolder;
      path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -2050,7 +2036,7 @@
             [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
         }
         
-        [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+        [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
         
         NSString *path = [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileIdToShowFiles.filePath andUser:app.activeUser];
         path = [path stringByAppendingString:_fileIdToShowFiles.fileName];
@@ -2165,7 +2151,7 @@
 
 #pragma mark - UIActionSheetDelegate
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
     
     //Upload, create folder, cancel options (+ menu)
     if (actionSheet.tag==100) {
@@ -2412,10 +2398,6 @@
             self.mDeleteFile.viewToShow = app.detailViewController.view;
         }
         
-        if (app.detailViewController.popoverController.isPopoverVisible){
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
-        
         [self.mDeleteFile askToDeleteFileByFileDto:_selectedFileDto];
         
     }
@@ -2530,9 +2512,6 @@
                 if (self.moreActionSheet) {
                     [self.moreActionSheet dismissWithClickedButtonIndex:0 animated:YES];
                 }
-                if (app.detailViewController.popoverController.isPopoverVisible){
-                    [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-                }
             }
             [app.detailViewController presentViewController:self.selectFolderNavigation animated:YES completion:nil];
         }
@@ -2646,13 +2625,12 @@
     
     //If is iPad get the selected cell
     if (!IS_IPHONE) {
-        UITableViewCell *cell;
         
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        self.mShareFileOrFolder.viewToShow = app.detailViewController.view;
+        self.mShareFileOrFolder.viewToShow = self.splitViewController.view;
         
         //We use _selectedIndexPath to identify the position where we have to put the arrow of the popover
         if (_selectedIndexPath) {
+            UITableViewCell *cell;
             cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
             self.mShareFileOrFolder.cellFrame = cell.frame;
             self.mShareFileOrFolder.parentView = _tableView;
@@ -2681,8 +2659,7 @@
     
     _moveFile = [[MoveFile alloc] init];
     if(!IS_IPHONE) {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        _moveFile.viewToShow = app.detailViewController.view;
+        _moveFile.viewToShow = self.splitViewController.view;
     } else {
         _moveFile.viewToShow = self.view;
     }
@@ -2988,10 +2965,6 @@
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
         
-        if (IS_IOS8) {
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
-        
         OCNavigationController *navController = nil;
         navController = [[OCNavigationController alloc] initWithRootViewController:_resolvedCredentialError];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -3181,8 +3154,6 @@
         }else {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             if (IS_IOS8) {
-                [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-                
                 [self.moreActionSheet showInView:app.splitViewController.view];
             } else {
                 [self.moreActionSheet showInView:app.detailViewController.view];
@@ -3206,8 +3177,6 @@
         }else {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             if (IS_IOS8) {
-                [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-                
                 [self.moreActionSheet showInView:app.splitViewController.view];
             } else {
                 [self.moreActionSheet showInView:app.detailViewController.view];
