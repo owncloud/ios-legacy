@@ -730,10 +730,12 @@
     
 #ifdef CONTAINER_APP
     queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
     queue = [Managers sharedDatabase];
 #else
-    queue = [DocumentPickerViewController sharedDatabase];
+    queue = [FileProvider sharedDatabase];
 #endif
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -756,11 +758,13 @@
         FMDatabaseQueue *queue;
         
 #ifdef CONTAINER_APP
-        queue = [AppDelegate sharedDatabase];
+    queue = [AppDelegate sharedDatabase];
+#elif FILE_PICKER
+    queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-        queue = [Managers sharedDatabase];
+    queue = [Managers sharedDatabase];
 #else
-        queue = [DocumentPickerViewController sharedDatabase];
+    queue = [FileProvider sharedDatabase];
 #endif
         
         [queue inDatabase:^(FMDatabase *db) {
