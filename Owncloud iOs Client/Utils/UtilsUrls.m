@@ -18,6 +18,7 @@
 #import "UserDto.h"
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
+#import "ManageUsersDB.h"
 
 @implementation UtilsUrls
 
@@ -282,20 +283,17 @@
  */
 +(NSString *) getFullRemoteServerPath:(UserDto *)mUserDto {
     
-    NSString *fullPath= nil;
+    NSString *fullPath = nil;
     
-#ifdef CONTAINER_APP
-    //TODO:change with method in db to get urlServerRedirect
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    if (app.urlServerRedirected) {
-        fullPath = app.urlServerRedirected;
+    UserDto *user = [ManageUsersDB getActiveUser];
+    NSString *urlServerRedirected = [ManageUsersDB getUrlRedirectedByUserDto:user];
+    //If urlServerRedirected is nil the server is not redirected
+    if (urlServerRedirected) {
+        fullPath = urlServerRedirected;
     } else {
         fullPath = mUserDto.url;
     }
-#else
-    fullPath = mUserDto.url;
-#endif
-    
+
     return fullPath;
 }
 
@@ -312,7 +310,7 @@
  */
 +(NSString *) getFullRemoteWebDavPath:(UserDto *)mUserDto {
     
-    NSString *fullWevDavPath= nil;
+    NSString *fullWevDavPath = nil;
     
     fullWevDavPath = [NSString stringWithFormat: @"%@%@", [self getFullRemoteServerPath:mUserDto],k_url_webdav_server];
     

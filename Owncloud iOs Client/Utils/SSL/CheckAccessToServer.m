@@ -27,6 +27,7 @@
 #import "ManageAppSettingsDB.h"
 #import "UtilsDtos.h"
 #import "Customization.h"
+#import "ManageUsersDB.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -97,10 +98,10 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 
 -(void) isConnectionToTheServerByUrl:(NSString *) url {
     
-#ifdef CONTAINER_APP
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    app.urlServerRedirected = nil;
-#endif
+    //We obtain the URL to make the uploads in background, urlServerRedirected
+    UserDto *user = [ManageUsersDB getActiveUser];
+    [ManageUsersDB updateUrlRedirected:nil byUserDto:user];
+
     
     _urlStatusCheck = [NSString stringWithFormat:@"%@status.php", url];
     
@@ -351,20 +352,13 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     //Server path of redirected server
     NSString *responseURLString = [dict objectForKey:@"Location"];
     
-    
     if (responseURLString) {
         
-
-        //We obtain the URL to make the uploads in background
-#ifdef CONTAINER_APP
-        //TODO:save urlServerRedirect in DB, move to utils
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        //We obtain the URL to make the uploads in background, urlServerRedirected
+        UserDto *user = [ManageUsersDB getActiveUser];
         NSURL *url = [[NSURL alloc] initWithString:responseURLString];
         NSURL * urlByRemovingLastComponent = [url URLByDeletingLastPathComponent];
-        app.urlServerRedirected = [urlByRemovingLastComponent absoluteString];
-
-        //app.urlServerRedirected = [UtilsDtos getHttpAndDomainByURL:responseURLString];
-#endif
+        [ManageUsersDB updateUrlRedirected:[urlByRemovingLastComponent absoluteString] byUserDto:user];
         
         NSLog(@"responseURLString: %@", responseURLString);
         NSLog(@"requestRedirect.HTTPMethod: %@", request.HTTPMethod);

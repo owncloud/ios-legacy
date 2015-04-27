@@ -23,6 +23,7 @@
 #import "UtilsDtos.h"
 #import "UploadsOfflineDto.h"
 #import "ManageFilesDB.h"
+#import "ManageUsersDB.h"
 
 NSString * PreviewFileNotification=@"PreviewFileNotification";
 
@@ -142,14 +143,15 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     
     NSString *output = originalUrl;
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-
-    //If app.urlServerRedirected is nil the server is not redirected
-    if (app.urlServerRedirected) {
+   // AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    UserDto *user = [ManageUsersDB getActiveUser];
+    NSString *urlServerRedirected = [ManageUsersDB getUrlRedirectedByUserDto:user];
+    //If urlServerRedirected is nil the server is not redirected
+    if (urlServerRedirected) {
         NSString *textToBeRemoved = [UtilsDtos getHttpAndDomainByURL:originalUrl];
         NSString *textWithoutOriginalDomain = [originalUrl substringFromIndex:textToBeRemoved.length];
         
-        output = [app.urlServerRedirected stringByAppendingString:textWithoutOriginalDomain];
+        output = [urlServerRedirected stringByAppendingString:textWithoutOriginalDomain];
 
     }
     
