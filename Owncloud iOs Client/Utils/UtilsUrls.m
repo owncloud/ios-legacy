@@ -287,11 +287,9 @@
     
     NSString *fullPath = nil;
     
-    UserDto *user = [ManageUsersDB getActiveUser];
-    NSString *urlServerRedirected = [ManageUsersDB getUrlRedirectedByUserDto:user];
     //If urlServerRedirected is nil the server is not redirected
-    if (urlServerRedirected) {
-        fullPath = urlServerRedirected;
+    if (mUserDto.url_redirected) {
+        fullPath = mUserDto.url_redirected;
     } else {
         fullPath = mUserDto.url;
     }

@@ -99,8 +99,12 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 -(void) isConnectionToTheServerByUrl:(NSString *) url {
     
     //We obtain the URL to make the uploads in background, urlServerRedirected
-    UserDto *user = [ManageUsersDB getActiveUser];
-    [ManageUsersDB updateUrlRedirected:nil byUserDto:user];
+   // UserDto *user = [ManageUsersDB getActiveUser];
+    //[ManageUsersDB updateUrlRedirected:nil byUserDto:user];
+#ifdef CONTAINER_APP
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    app.urlServerRedirected = nil;
+#endif
 
     
     _urlStatusCheck = [NSString stringWithFormat:@"%@status.php", url];
@@ -355,10 +359,17 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     if (responseURLString) {
         
         //We obtain the URL to make the uploads in background, urlServerRedirected
-        UserDto *user = [ManageUsersDB getActiveUser];
+//        UserDto *user = [ManageUsersDB getActiveUser];
+//        NSURL *url = [[NSURL alloc] initWithString:responseURLString];
+//        NSURL * urlByRemovingLastComponent = [url URLByDeletingLastPathComponent];
+//        [ManageUsersDB updateUrlRedirected:[urlByRemovingLastComponent absoluteString] byUserDto:user];
+        
+#ifdef CONTAINER_APP
         NSURL *url = [[NSURL alloc] initWithString:responseURLString];
         NSURL * urlByRemovingLastComponent = [url URLByDeletingLastPathComponent];
-        [ManageUsersDB updateUrlRedirected:[urlByRemovingLastComponent absoluteString] byUserDto:user];
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        app.urlServerRedirected = [urlByRemovingLastComponent absoluteString];
+#endif
         
         NSLog(@"responseURLString: %@", responseURLString);
         NSLog(@"requestRedirect.HTTPMethod: %@", request.HTTPMethod);

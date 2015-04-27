@@ -2161,6 +2161,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         //DLog(@"URL FINAL: %@", userDto.url);
         
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        
         NSString *userNameUTF8=self.usernameTextField.text;
         NSString *passwordUTF8=self.passwordTextField.text;
         
@@ -2168,10 +2170,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         userDto.password = passwordUTF8;
         userDto.ssl = isHttps;
         userDto.activeaccount = YES;
+        userDto.url_redirected = app.urlServerRedirected;
         
         [ManageUsersDB insertUser:userDto];
         
-        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         app.activeUser=[ManageUsersDB getActiveUser];
         
         NSMutableArray *directoryList = [NSMutableArray arrayWithArray:items];

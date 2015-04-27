@@ -43,7 +43,7 @@
  */
 +(void) insertUser:(UserDto *)userDto {
     
-     DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount);
+     DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d / urlRedirected:%@ ", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount, userDto.url_redirected);
     
     FMDatabaseQueue *queue;
     
@@ -61,7 +61,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_cookies_support) Values(?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport]];
+        correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_cookies_support, url_redirected) Values(?, ?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport], userDto.url_redirected];
         
         if (!correctQuery) {
             DLog(@"Error in insertUser");
