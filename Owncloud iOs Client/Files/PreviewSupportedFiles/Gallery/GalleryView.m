@@ -803,6 +803,7 @@
     offset.x = (pagingScrollViewFrame.size.width * index);
     offset.y = 0;
     
+    
     DLog(@"offset.x: %f", offset.x);
     
     return offset;

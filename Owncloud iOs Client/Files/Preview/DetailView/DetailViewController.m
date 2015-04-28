@@ -2176,6 +2176,16 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 - (void) showTheGalleryView{
     
     if (self.galleryView) {
+        
+        CGRect frame;
+        
+        if (self.hideMaster) {
+            frame = self.view.window.bounds;
+        }else{
+            frame = [self getTheCorrectSize];
+        }
+
+        [self.galleryView.scrollView setFrame:frame];
         [self.galleryView adjustTheScrollViewAfterTheRotation];
         self.mainScrollView.backgroundColor = [UIColor clearColor];
         self.view.backgroundColor = [UIColor whiteColor];
@@ -2348,9 +2358,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         [self.view layoutIfNeeded];
         
-        if (self.galleryView) {
-            [self.galleryView.scrollView setFrame:[self getTheCorrectSize]];
-        }
+        
         
         [self configureView];
  
@@ -2365,7 +2373,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             if (completionBlock)
             {
-
                 completionBlock();
             }
         }
