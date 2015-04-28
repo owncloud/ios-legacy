@@ -2045,12 +2045,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void) hideMasterView{
     
-    if (self.galleryView) {
-         [self.galleryView prepareScrollViewBeforeTheRotation];
-    }
-    
-    
-     
     if (self.hideMaster) {
         
         [self modifyTheAlphaOfMasterView];
@@ -2087,28 +2081,37 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
         
+        if (self.galleryView) {
+            [self hideTheGalleryView];
+        }
+        
         [self toggleHideMaster:^{
- 
+            
         }];
         
         [self shouldHideToolBar:self.hideMaster complete:^{
-            
-            
+            if (self.galleryView) {
+                [self showTheGalleryView];
+            }
         }];
         
-        [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.1];
+        [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.3];
         
-        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.00];
+        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.31];
       
         
     }else{
         
         self.hideMaster = !self.hideMaster;
         
+        if (self.galleryView) {
+            [self hideTheGalleryView];
+        }
+        
         [self toggleHideMaster:^{
-            [self.galleryView adjustTheScrollViewAfterTheRotation];
             
         }];
+        
         
         [self shouldHideToolBar:self.hideMaster complete:^{
             
@@ -2143,17 +2146,43 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             [self modifyTheAlphaOfMasterView];
             
+            if (self.galleryView) {
+                [self showTheGalleryView];
+            }
             
             }];
         
-        [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.1];
+        [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.3];
         
-        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.00];
+        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.31];
         
     }
    
 }
 
+- (void) hideTheGalleryView{
+    
+    if (self.galleryView) {
+        [self.galleryView prepareScrollViewBeforeTheRotation];
+        
+        self.mainScrollView.backgroundColor = [UIColor blackColor];
+        self.view.backgroundColor = [UIColor blackColor];
+        self.mainScrollView.hidden = NO;
+        self.galleryView.scrollView.alpha = 0.0;
+    }
+    
+}
+
+- (void) showTheGalleryView{
+    
+    if (self.galleryView) {
+        [self.galleryView adjustTheScrollViewAfterTheRotation];
+        self.mainScrollView.backgroundColor = [UIColor clearColor];
+        self.view.backgroundColor = [UIColor whiteColor];
+        self.galleryView.scrollView.alpha = 1.0;
+        self.mainScrollView.hidden = YES;
+    }
+}
 
 - (CGRect) getFutureSizeForTransition{
     
@@ -2174,31 +2203,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     return futureFrame;
 }
 
-- (void) adjustGalleryDuringTransition{
-    
-  /* if (self.galleryView) {
-        
-        [UIView animateWithDuration:0.3 animations:^{
-            self.galleryView.scrollView.frame = [self getFutureSizeForTransition];
-            [self.galleryView adjustTheScrollViewAfterTheRotation];
-        }];
-        
-       
-    }*/
-}
-
-- (void) adjustGalleryAfterTransition{
-    
-    if (self.galleryView) {
-        [self.galleryView.scrollView setFrame:[self getTheCorrectSize]];
-        [self.galleryView adjustTheScrollViewAfterTheRotation];
-    }
-    
-}
-
 
 -(void)toggleHideMaster:(void(^)(void))completionBlock {
-    
     
     // Adjust the detailView frame to hide/show the masterview
     [UIView animateWithDuration:0.3f
@@ -2284,13 +2290,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     [UIView animateWithDuration:0.3 animations:^{
         
-        if (self.galleryView) {
-         //   [self configureView];
-            
-            [self.galleryView.scrollView setFrame:[self getTheCorrectSize]];
-            [self.galleryView adjustTheScrollViewAfterTheRotation];
-            
-        }else{
+        if (!self.galleryView) {
             [self configureView];
         }
         
@@ -2348,7 +2348,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         [self.view layoutIfNeeded];
         
-        //[self configureView];
+        if (self.galleryView) {
+            [self.galleryView.scrollView setFrame:[self getTheCorrectSize]];
+        }
+        
+        [self configureView];
  
         
     } completion:^(BOOL finished) {
@@ -2361,6 +2365,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             if (completionBlock)
             {
+
                 completionBlock();
             }
         }
