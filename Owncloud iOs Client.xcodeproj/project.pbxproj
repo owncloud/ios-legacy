@@ -539,6 +539,11 @@
 		59D774CE1910EE0F004322BA /* UtilsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 59D774CD1910EE0F004322BA /* UtilsTableView.m */; };
 		59DA496619F7A4B600DD3619 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		59DA4F3C1A07A97100472639 /* DocumentPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 59DA4F3B1A07A97100472639 /* DocumentPickerViewController.xib */; };
+		59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
+		59E20C7B1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
+		59E20C7C1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
+		59E20C7E1AEFB45900554D7E /* ManageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F137177C2F48004A1A5A /* ManageDB.m */; };
+		59E20C7F1AEFB45900554D7E /* ManageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F137177C2F48004A1A5A /* ManageDB.m */; };
 		EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
 		EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
@@ -1383,6 +1388,8 @@
 		59D774CC1910EE0F004322BA /* UtilsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsTableView.h; path = Utils/UtilsTableView.h; sourceTree = "<group>"; };
 		59D774CD1910EE0F004322BA /* UtilsTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsTableView.m; path = Utils/UtilsTableView.m; sourceTree = "<group>"; };
 		59DA4F3B1A07A97100472639 /* DocumentPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentPickerViewController.xib; sourceTree = "<group>"; };
+		59E20C781AEFAA8E00554D7E /* InitializeDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializeDatabase.h; path = DataBase/Queries/InitializeDatabase.h; sourceTree = "<group>"; };
+		59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InitializeDatabase.m; path = DataBase/Queries/InitializeDatabase.m; sourceTree = "<group>"; };
 		EA1787AA17E33BB9005171AB /* OCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCNavigationController.h; path = Tabs/FileTab/OCNavigationController.h; sourceTree = "<group>"; };
 		EA1787AB17E33BB9005171AB /* OCNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCNavigationController.m; path = Tabs/FileTab/OCNavigationController.m; sourceTree = "<group>"; };
 		EA2678FB1876E4B8008678DE /* notSharedItem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notSharedItem.png; sourceTree = "<group>"; };
@@ -1762,6 +1769,8 @@
 				EAF028C317744CC20035084D /* Queries */,
 				137E486115B6A7B700628EB1 /* DTOs */,
 				137E485715B6A3A400628EB1 /* DB.sqlite */,
+				59E20C781AEFAA8E00554D7E /* InitializeDatabase.h */,
+				59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */,
 			);
 			name = Database;
 			sourceTree = "<group>";
@@ -3812,6 +3821,7 @@
 				59C71D161A9216AE00F66166 /* ReaderContentView.m in Sources */,
 				148DD612177855B600FB9977 /* AuthenticationDbService.m in Sources */,
 				59C71D1C1A9216AE00F66166 /* ReaderThumbFetch.m in Sources */,
+				59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */,
 				EA42FA54180565CB0006DB7C /* OCTabBarController.m in Sources */,
 				148DD613177855B600FB9977 /* AuthenticationResponseTypeCodeTask.m in Sources */,
 				13A9FCEE17E9858C00FF48D7 /* ELCAsset.m in Sources */,
@@ -3955,6 +3965,7 @@
 				EAF721821AAF3402009F5596 /* CredentialsDto.m in Sources */,
 				EAC6E5F91AB0985200CCF8C4 /* UINavigationController+KeyboardDismiss.m in Sources */,
 				EAF7216F1AADE7EE009F5596 /* UIColor+Constants.m in Sources */,
+				59E20C7C1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */,
 				EAEDC08D1AB194C3004836EB /* PassthroughView.m in Sources */,
 				EAEDC08F1AB19513004836EB /* ManageNetworkErrors.m in Sources */,
 				EAFE20A81AC4617D00BB888E /* UIImage+Resize.swift in Sources */,
@@ -3969,6 +3980,7 @@
 				EAEDC08E1AB194F8004836EB /* MBProgressHUD.m in Sources */,
 				EAC6E5FC1AB0987D00CCF8C4 /* NSString+Encoding.m in Sources */,
 				EAF721811AAF33F8009F5596 /* OCKeychain.m in Sources */,
+				59E20C7F1AEFB45900554D7E /* ManageDB.m in Sources */,
 				EAC6E5F71AB097B800CCF8C4 /* ManageAppSettingsDB.m in Sources */,
 				EAC6E5F81AB097F500CCF8C4 /* UtilsDtos.m in Sources */,
 				EAF721851AAF3C86009F5596 /* UtilsUrls.m in Sources */,
@@ -3999,6 +4011,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59E20C7E1AEFB45900554D7E /* ManageDB.m in Sources */,
 				59C3AC1F1A287E3B005433A1 /* OCPortraitNavigationViewController.m in Sources */,
 				59C3AC1A1A287DE3005433A1 /* KKKeychain.m in Sources */,
 				59C3AC1B1A287DE3005433A1 /* KKPasscodeLock.m in Sources */,
@@ -4031,6 +4044,7 @@
 				590849F51A0A811000D3E842 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				590849F61A0A811000D3E842 /* SWUtilityButtonView.m in Sources */,
 				EA8ADE6B1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */,
+				59E20C7B1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */,
 				599D80B21A2338100071B66E /* FileListDocumentProviderViewController.m in Sources */,
 				590849EF1A0A7D6000D3E842 /* CustomCellFileAndDirectory.m in Sources */,
 				EAC598611A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */,

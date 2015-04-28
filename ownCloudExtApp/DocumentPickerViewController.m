@@ -36,6 +36,7 @@
 #import "ProvidingFileDto.h"
 #import "ManageProvidingFilesDB.h"
 #import "NSString+Encoding.h"
+#import "InitializeDatabase.h"
 
 @interface DocumentPickerViewController ()
 
@@ -66,6 +67,7 @@
 -(void)prepareForPresentationInMode:(UIDocumentPickerMode)mode {
     // TODO: present a view controller appropriate for picker mode here
     
+    [InitializeDatabase initDataBase];
     
     if ([ManageAppSettingsDB isPasscode]) {
         [self showPassCode];
