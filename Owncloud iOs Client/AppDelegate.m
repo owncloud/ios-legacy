@@ -1138,7 +1138,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadDB.estimateLength];
                     currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadDB.userId];
                     
-                    currentManageUploadRequest.pathOfUpload = [UploadUtils makePathString:uploadDB.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+                    currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadDB.destinyFolder andUser:currentManageUploadRequest.userUploading];
                     
                     currentManageUploadRequest.uploadTask = upload;
                     currentManageUploadRequest.isFromBackground = YES;
@@ -2393,7 +2393,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:currentUploadBackground.estimateLength];
     currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:currentUploadBackground.userId];
     
-    currentManageUploadRequest.pathOfUpload = [UploadUtils makePathString:currentUploadBackground.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+    currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:currentUploadBackground.destinyFolder andUser:currentManageUploadRequest.userUploading];
     
     currentManageUploadRequest.isFromBackground = YES;
     
@@ -2453,7 +2453,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:current.estimateLength];
         currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:current.userId];
         
-        currentManageUploadRequest.pathOfUpload = [UploadUtils makePathString:current.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+        currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:current.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
         //Add the object to the uploadArray without duplicates
         [self addToTheUploadArrayWithoutDuplicatesTheFile:currentManageUploadRequest];
@@ -2484,11 +2484,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         NSDate *uploadedDate = [NSDate dateWithTimeIntervalSince1970:uploadOffline.uploadedDate];
         currentManageUploadRequest.date = uploadedDate;
         //Set uploadOffline
-        currentManageUploadRequest.currentUpload=uploadOffline;
-        currentManageUploadRequest.lenghtOfFile=[UploadUtils makeLengthString:uploadOffline.estimateLength];
+        currentManageUploadRequest.currentUpload = uploadOffline;
+        currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadOffline.estimateLength];
         currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadOffline.userId];
         
-        currentManageUploadRequest.pathOfUpload=[UploadUtils makePathString:uploadOffline.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+        currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadOffline.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
         //Add the object to the array
         [self addToTheUploadArrayWithoutDuplicatesTheFile:currentManageUploadRequest];
@@ -2512,11 +2512,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         NSDate *uploadedDate = [NSDate dateWithTimeIntervalSince1970:uploadOffline.uploadedDate];
         currentManageUploadRequest.date = uploadedDate;
         //Set uploadOffline
-        currentManageUploadRequest.currentUpload=uploadOffline;
-        currentManageUploadRequest.lenghtOfFile=[UploadUtils makeLengthString:uploadOffline.estimateLength];
+        currentManageUploadRequest.currentUpload = uploadOffline;
+        currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadOffline.estimateLength];
         currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadOffline.userId];
         
-        currentManageUploadRequest.pathOfUpload=[UploadUtils makePathString:uploadOffline.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+        currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadOffline.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
         //Add the object to the array
         [self addToTheUploadArrayWithoutDuplicatesTheFile:currentManageUploadRequest];

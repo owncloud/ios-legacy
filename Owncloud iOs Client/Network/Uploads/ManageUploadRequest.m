@@ -97,7 +97,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 //Get the file dto related with the upload ofline if exist
 - (FileDto *) getFileDtoOfTheUploadOffline{
     
-    NSString *folderName=[UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",self.currentUpload.destinyFolder,self.currentUpload.uploadFileName] andUserDto:self.userUploading];
+    NSString *folderName = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:self.currentUpload.destinyFolder andUser:self.userUploading];
     FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.currentUpload.uploadFileName andFilePath:folderName andUser:self.userUploading];
     
     return uploadFile;
@@ -295,8 +295,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 DLog(@"Transfer complete, next file if exists");
                 
                 [weakSelf storeDateOfUpload];
-                weakSelf.pathOfUpload = [UploadUtils makePathString:weakSelf.currentUpload.destinyFolder withUserUrl:weakSelf.userUploading.url];
-                
+                weakSelf.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:weakSelf.currentUpload.destinyFolder andUser:weakSelf.userUploading];
                 
                 [ManageUploadsDB setDatebyUploadOffline:weakSelf.currentUpload];
                 
@@ -503,8 +502,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 DLog(@"Transfer complete, next file if exists");
                 
                 [weakSelf storeDateOfUpload];
-                weakSelf.pathOfUpload = [UploadUtils makePathString:weakSelf.currentUpload.destinyFolder withUserUrl:weakSelf.userUploading.url];
-                
+                weakSelf.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:weakSelf.currentUpload.destinyFolder andUser:weakSelf.userUploading];
                 
                 [ManageUploadsDB setDatebyUploadOffline:weakSelf.currentUpload];
                 

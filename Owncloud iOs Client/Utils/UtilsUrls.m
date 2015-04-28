@@ -133,8 +133,8 @@
  *
  * @param mUserDto -> user dto
  *
- *  http:\/\/domain\/sub1\/sub2\/remote.php\/webdav\/
- * @return  partToRemove -> \/sub1\/sub2\/remote.php\/webdav
+ *  http://domain/sub1/sub2/remote.php/webdav/
+ * @return  partToRemove -> /sub1/sub2/remote.php/webdav
  */
 //We remove the part of the remote file path that is not necesary
 +(NSString *) getRemovedPartOfFilePathAnd:(UserDto *)mUserDto {
@@ -172,10 +172,12 @@
 /**
  * Return the file path without
  *
- * @param filePath -> \/sub1\/sub2\/remote.php\/webdav\/Documents
- * @param user -> user dto
+ * @param filePath -> /sub1/sub2/remote.php/webdav/
+                      /(subfolders)/k_url_wevdav_server/
+ * @param filename -> (subfolders_file)/
+ * @param mUser -> user dto
  *
- * @return  shortenedPath -> \/Documents
+ * @return newLocalFolder -> full local path
  */
 //We generate de local path of the files dinamically
 +(NSString *)getLocalFolderByFilePath:(NSString*) filePath andFileName:(NSString*) fileName andUserDto:(UserDto *) mUser {
@@ -256,15 +258,17 @@
 /**
  * Return the file path without
  *
- * @param filePath -> http:\/\/domain\/sub1\/sub2\/remote.php\/webdav\/Documents
+ * @param filePath -> http://domain/sub1/sub2/remote.php/webdav/Documents/
+ *                 -> http://domain/sub1/sub2/remote.php/webdav/
  * @param user -> user dto
  *
- * @return  shortenedPath -> \/Documents
+ * @return  shortenedPath -> Documents/
+ *                        ->
  */
 +(NSString *) getRemoteFilePathWithoutServerPathComponentsFromPath:(NSString *)filePath andUser:(UserDto *)mUserDto {
-    NSString *shortenedPath =@"";
+    NSString *shortenedPath = @"";
 
-    NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:mUserDto];
+    NSString *partToRemove = [NSString stringWithFormat:@"%@%@",[self getFullRemoteServerPath:mUserDto],k_url_webdav_server];
     if([filePath length] >= [partToRemove length]){
         shortenedPath = [filePath substringFromIndex:[partToRemove length]];
     }
@@ -281,7 +285,7 @@
  *
  * @param mUserDto -> user dto
  *
- * @return  fullPath -> http:\/\/domain\/sub1\/sub2\/...
+ * @return  fullPath -> http://domain/sub1/sub2/...
  */
 +(NSString *) getFullRemoteServerPath:(UserDto *)mUserDto {
     
@@ -306,7 +310,9 @@
  *
  * @param mUserDto -> user dto
  *
- * @return  fullPath -> http:\/\/domain\/sub1\/sub2\/remote.php\/webdav\/
+ * @return  fullPath -> http://domain/(subfolders)/k_url_webdav_server/
+ *                      http://domain/sub1/sub2/remote.php/webdav/
+ *
  */
 +(NSString *) getFullRemoteWebDavPath:(UserDto *)mUserDto {
     
@@ -326,4 +332,28 @@
 
 }
 
+
+///-----------------------------------
+/// @name getPathWithAppName
+///-----------------------------------
+/**
+ * Return the appName with the path file components
+ *
+ * @param destinyPath -> http://domain/sub1/sub2/remote.php/webdav/Documents/...
+ *                    -> http://domain/sub1/sub2/remote.php/webdav/
+ *                       http://domain/(subfolders)/k_url_webdav_Server/(subfolders)/
+ * @param user -> user dto
+ *
+ * @return  pathWithAppName -> appName/Documents/...
+ *                          -> appName/
+ */
++ (NSString *)getPathWithAppNameByDestinyPath:(NSString *)destinyPath andUser:(UserDto *)mUserDto {
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+
+    NSString *pathFile = [self getRemoteFilePathWithoutServerPathComponentsFromPath:destinyPath andUser:mUserDto];
+    NSString *pathWithAppName = [NSString stringWithFormat:@"%@/%@",appName,pathFile];
+    
+    return pathWithAppName;
+    
+}
 @end

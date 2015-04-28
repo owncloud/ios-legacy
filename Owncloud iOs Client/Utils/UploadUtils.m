@@ -53,40 +53,6 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     return temp;
 }
 
-/*
- * Method that make the path string
- */
-+ (NSString *)makePathString:(NSString *)destinyFolder withUserUrl:(NSString *)userUrl{
-    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-    NSArray *splitedUrlFromServer = [userUrl componentsSeparatedByString:@"/"];
-    DLog(@"splitedUrlFromServer: %lu", (unsigned long)[splitedUrlFromServer count]);
-    
-    NSString *utf8String;
-    
-    utf8String = [destinyFolder stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];
-    
-    NSString *tempString= appName;
-    NSString *temp;
-    NSArray *splitedUrl = [utf8String componentsSeparatedByString:@"/"];
-    
-    for (int i=0;i<[splitedUrl count]; i++) {
-        
-        if (i>[splitedUrlFromServer count]) {
-            temp=[NSString stringWithFormat:@"/%@", [splitedUrl objectAtIndex:i]];
-            DLog(@"Temp paht string: %@", temp);
-            tempString=[tempString stringByAppendingString:temp];
-        }
-    }
-    
-    if ([tempString isEqualToString:@""] || [tempString isEqualToString:@"/"]) {
-        tempString=appName;
-    }
-    
-    
-    return tempString;
-    
-}
-
 
 /*
  *Method that updates a downloaded file when the user overwrites this file
@@ -127,38 +93,38 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     [[NSNotificationCenter defaultCenter] postNotificationName:PreviewFileNotification object:pathFile];
 }
 
-//-----------------------------------
-/// @name Get an URL with the Redirected
-///-----------------------------------
-
-/**
- * Method to modify a URL changing the domain and the protocol (http/https) with the urlServerRedirected if it is not nil
- *
- * @param NSString -> originalUrl
- *
- * @return NSString
- *
- */
-+ (NSString *) getUrlWithRedirectionByOriginalURL:(NSString *) originalUrl {
-    
-    NSString *output = originalUrl;
-    
-   // AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    UserDto *user = [ManageUsersDB getActiveUser];
-    NSString *urlServerRedirected = [ManageUsersDB getUrlRedirectedByUserDto:user];
-    //If urlServerRedirected is nil the server is not redirected
-    if (urlServerRedirected) {
-        NSString *textToBeRemoved = [UtilsDtos getHttpAndDomainByURL:originalUrl];
-        NSString *textWithoutOriginalDomain = [originalUrl substringFromIndex:textToBeRemoved.length];
-        
-        output = [urlServerRedirected stringByAppendingString:textWithoutOriginalDomain];
-
-    }
-    
-    
-    return output;
-    
-}
+////-----------------------------------
+///// @name Get an URL with the Redirected
+/////-----------------------------------
+//
+///**
+// * Method to modify a URL changing the domain and the protocol (http/https) with the urlServerRedirected if it is not nil
+// *
+// * @param NSString -> originalUrl
+// *
+// * @return NSString
+// *
+// */
+//+ (NSString *) getUrlWithRedirectionByOriginalURL:(NSString *) originalUrl {
+//    
+//    NSString *output = originalUrl;
+//    
+//   // AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//    UserDto *user = [ManageUsersDB getActiveUser];
+//    NSString *urlServerRedirected = [ManageUsersDB getUrlRedirectedByUserDto:user];
+//    //If urlServerRedirected is nil the server is not redirected
+//    if (urlServerRedirected) {
+//        NSString *textToBeRemoved = [UtilsDtos getHttpAndDomainByURL:originalUrl];
+//        NSString *textWithoutOriginalDomain = [originalUrl substringFromIndex:textToBeRemoved.length];
+//        
+//        output = [urlServerRedirected stringByAppendingString:textWithoutOriginalDomain];
+//
+//    }
+//    
+//    
+//    return output;
+//    
+//}
 
 //-----------------------------------
 /// @name Get a fileDto by the UploadOffline
