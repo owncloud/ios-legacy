@@ -2170,7 +2170,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         userDto.password = passwordUTF8;
         userDto.ssl = isHttps;
         userDto.activeaccount = YES;
-        userDto.url_redirected = app.urlServerRedirected;
+        userDto.urlRedirected = app.urlServerRedirected;
         
         [ManageUsersDB insertUser:userDto];
         

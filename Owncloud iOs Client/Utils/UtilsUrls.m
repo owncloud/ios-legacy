@@ -292,8 +292,8 @@
     NSString *fullPath = nil;
     
     //If urlServerRedirected is nil the server is not redirected
-    if (mUserDto.url_redirected) {
-        fullPath = mUserDto.url_redirected;
+    if (mUserDto.urlRedirected) {
+        fullPath = mUserDto.urlRedirected;
     } else {
         fullPath = mUserDto.url;
     }

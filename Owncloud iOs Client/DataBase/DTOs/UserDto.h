@@ -38,6 +38,6 @@ typedef enum {
 @property (nonatomic, copy) NSString *path_instant_upload;
 @property BOOL only_wifi_instant_upload;
 @property long date_instant_upload;
-@property (nonatomic, copy) NSString *url_redirected;
+@property (nonatomic, copy) NSString *urlRedirected;
 
 @end

@@ -43,7 +43,7 @@
  */
 +(void) insertUser:(UserDto *)userDto {
     
-     DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d / urlRedirected:%@ ", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount, userDto.url_redirected);
+     DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d / urlRedirected:%@ ", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount, userDto.urlRedirected);
     
     FMDatabaseQueue *queue;
     
@@ -61,7 +61,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_cookies_support, url_redirected) Values(?, ?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport], userDto.url_redirected];
+        correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_cookies_support, url_redirected) Values(?, ?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport], userDto.urlRedirected];
         
         if (!correctQuery) {
             DLog(@"Error in insertUser");
@@ -126,7 +126,7 @@
             output.only_wifi_instant_upload = [rs intForColumn:@"only_wifi_instant_upload"];
             output.date_instant_upload = [rs longForColumn:@"date_instant_upload"];
             
-            output.url_redirected = [rs stringForColumn:@"url_redirected"];
+            output.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
             NSString *idString = [NSString stringWithFormat:@"%ld", (long)output.idUser];
 
@@ -219,7 +219,7 @@
             output.only_wifi_instant_upload = [rs intForColumn:@"only_wifi_instant_upload"];
             output.date_instant_upload = [rs longForColumn:@"date_instant_upload"];
             
-            output.url_redirected = [rs stringForColumn:@"url_redirected"];
+            output.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
             NSString *idString = [NSString stringWithFormat:@"%ld", (long)output.idUser];
 
@@ -302,7 +302,7 @@
             current.only_wifi_instant_upload = [rs intForColumn:@"only_wifi_instant_upload"];
             current.date_instant_upload = [rs longForColumn:@"date_instant_upload"];
             
-            current.url_redirected = [rs stringForColumn:@"url_redirected"];
+            current.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
             NSString *idString = [NSString stringWithFormat:@"%ld", (long)current.idUser];
 
@@ -365,7 +365,7 @@
             current.only_wifi_instant_upload = [rs intForColumn:@"only_wifi_instant_upload"];
             current.date_instant_upload = [rs longForColumn:@"date_instant_upload"];
             
-            current.url_redirected = [rs stringForColumn:@"url_redirected"];
+            current.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
             [output addObject:current];
             
@@ -677,7 +677,7 @@
             output.only_wifi_instant_upload = [rs intForColumn:@"only_wifi_instant_upload"];
             output.date_instant_upload = [rs longForColumn:@"date_instant_upload"];
             
-            output.url_redirected = [rs stringForColumn:@"url_redirected"];
+            output.urlRedirected = [rs stringForColumn:@"url_redirected"];
         }
         
         [rs close];
@@ -713,7 +713,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_cookies_support=?, instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, date_instant_upload=?, url_redirected=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport],[NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithBool:user.instant_upload], user.path_instant_upload, [NSNumber numberWithBool:user.only_wifi_instant_upload], [NSNumber numberWithLong:user.date_instant_upload], user.url_redirected, [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_cookies_support=?, instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, date_instant_upload=?, url_redirected=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport],[NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithBool:user.instant_upload], user.path_instant_upload, [NSNumber numberWithBool:user.only_wifi_instant_upload], [NSNumber numberWithLong:user.date_instant_upload], user.urlRedirected, [NSNumber numberWithInteger:user.idUser]];
 
         
         if (!correctQuery) {
