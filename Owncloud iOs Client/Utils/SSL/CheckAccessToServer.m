@@ -98,9 +98,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 
 -(void) isConnectionToTheServerByUrl:(NSString *) url {
     
-    //We obtain the URL to make the uploads in background, urlServerRedirected
-   // UserDto *user = [ManageUsersDB getActiveUser];
-    //[ManageUsersDB updateUrlRedirected:nil byUserDto:user];
+    //We obtain the urlServerRedirected to make the uploads in background
 #ifdef CONTAINER_APP
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     app.urlServerRedirected = nil;
@@ -358,19 +356,21 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     
     if (responseURLString) {
         
-        //We obtain the URL to make the uploads in background, urlServerRedirected
-//        UserDto *user = [ManageUsersDB getActiveUser];
-//        NSURL *url = [[NSURL alloc] initWithString:responseURLString];
-//        NSURL * urlByRemovingLastComponent = [url URLByDeletingLastPathComponent];
-//        [ManageUsersDB updateUrlRedirected:[urlByRemovingLastComponent absoluteString] byUserDto:user];
-        
-#ifdef CONTAINER_APP
+        //We obtain the urlServerRedirected to make the uploads in background 
         NSURL *url = [[NSURL alloc] initWithString:responseURLString];
         NSURL * urlByRemovingLastComponent = [url URLByDeletingLastPathComponent];
+        
+#ifdef CONTAINER_APP
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         app.urlServerRedirected = [urlByRemovingLastComponent absoluteString];
-#endif
         
+//        if (app.activeUser) {
+//            [ManageUsersDB updateUrlRedirected:[urlByRemovingLastComponent absoluteString] byUserDto:app.activeUser];
+//        }
+#else
+       // [ManageUsersDB updateUrlRedirected:[urlByRemovingLastComponent absoluteString] byUserDto:[ManageUsersDB getActiveUser]];
+#endif
+       
         NSLog(@"responseURLString: %@", responseURLString);
         NSLog(@"requestRedirect.HTTPMethod: %@", request.HTTPMethod);
         
