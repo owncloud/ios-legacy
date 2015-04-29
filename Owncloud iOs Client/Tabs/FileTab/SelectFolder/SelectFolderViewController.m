@@ -379,7 +379,8 @@
             NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
             
             NSString *newURL = [NSString stringWithFormat:@"%@%@",remotePath,[name encodeString:NSUTF8StringEncoding]];
-            NSString *rootPath = [UtilsDtos getDbBFilePathFromFullFilePath:newURL andUser:activeUser];
+            NSString *rootPath = [UtilsDtos getDbBFilePathFromFullFilePath:newURL andUser:activeUser];//
+            //TODO replace with method utilsurls getRemoteFilePathWithoutServerPathComponentsFromPath
             
             //Set the right credentials
             if (k_is_sso_active) {

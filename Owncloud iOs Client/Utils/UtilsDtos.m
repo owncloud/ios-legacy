@@ -301,10 +301,12 @@
     return output;
 }
 
+
+
 +(NSString *) getServerURLWithoutFolderByUserDto:(UserDto *)mUser {
     
     NSString *output = @"";
-    NSArray *userUrlSplited = [mUser.url componentsSeparatedByString:@"/"];
+    NSArray *userUrlSplited = [[UtilsUrls getFullRemoteServerPath:mUser] componentsSeparatedByString:@"/"];
     
     output = [NSString stringWithFormat:@"%@//%@", [userUrlSplited objectAtIndex:0], [userUrlSplited objectAtIndex:2]];
     

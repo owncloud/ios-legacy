@@ -437,15 +437,13 @@
 
 - (NSString *)getDestinyLocalFolder {
     
-    
     //Delete files os user in the system
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //NSString *newLocalFolder= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", currentUser.idUser]];
     NSString *newLocalFolder= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)app.activeUser.idUser]];
     
-    NSString *charactersToDelete = [NSString stringWithFormat:@"%@%@", app.activeUser.url, k_url_webdav_server];
-    NSString *newStr = [self.destinationFolder substringWithRange:NSMakeRange([charactersToDelete length], [self.destinationFolder length]-[charactersToDelete length])];
+    NSString *newStr = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:self.destinationFolder andUser:app.activeUser];
     newLocalFolder = [NSString stringWithFormat:@"%@/%@%@", newLocalFolder,[newStr stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding],[_destinyFilename stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     return newLocalFolder;

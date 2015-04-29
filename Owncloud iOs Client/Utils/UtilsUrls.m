@@ -256,7 +256,7 @@
 /// @name getRemoteFilePathWithoutServerPathComponents
 ///-----------------------------------
 /**
- * Return the file path without
+ * Return the part of file path that is valid in the data base
  *
  * @param filePath -> http://domain/sub1/sub2/remote.php/webdav/Documents/
  *                 -> http://domain/sub1/sub2/remote.php/webdav/
