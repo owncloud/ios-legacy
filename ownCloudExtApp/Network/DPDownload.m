@@ -25,6 +25,7 @@
 #import "UtilsDtos.h"
 #import "UtilsUrls.h"
 #import "FileNameUtils.h"
+#import "UtilsUrls.h"
 
 #define k_progressView_delay_just_download 1.0
 #define k_progressView_delay_after_download 2.0
@@ -90,7 +91,7 @@
     [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.user.url, k_url_webdav_server];
+    NSString *serverPath = [UtilsUrls getFullRemoteWebDavPath:self.user];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:self.file.filePath andUser:self.user], self.file.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

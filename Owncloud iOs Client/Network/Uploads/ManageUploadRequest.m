@@ -934,7 +934,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
+    NSString *serverPath = [UtilsUrls getFullRemoteWebDavPath:self.userUploading];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -1012,7 +1012,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
+    NSString *serverPath = [UtilsUrls getFullRemoteWebDavPath:self.userUploading];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

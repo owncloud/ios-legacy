@@ -339,7 +339,7 @@
             [self.navigationController popToRootViewControllerAnimated:animated];
         }
         
-        _currentRemoteFolder = [NSString stringWithFormat: @"%@%@", currentUser.url, k_url_webdav_server];
+        _currentRemoteFolder = [UtilsUrls getFullRemoteWebDavPath:currentUser];
         
         //We get the current folder to create the local tree
         _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)currentUser.idUser];
@@ -1627,7 +1627,6 @@
     
     //TODO:Refactor other utils methods
     
-   // NSArray *splitedUrl = [_mUser.url componentsSeparatedByString:@"/"];
     NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:_mUser] componentsSeparatedByString:@"/"];
 
     _nextRemoteFolder = [NSString stringWithFormat:@"%@//%@%@", [splitedUrl objectAtIndex:0], [splitedUrl objectAtIndex:2], [NSString stringWithFormat:@"%@%@",selectedFile.filePath, selectedFile.fileName]];

@@ -157,7 +157,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     for (FileDto *file in favoritesFiles) {
         
         //FileName full path
-        NSString *serverPath = [NSString stringWithFormat:@"%@%@", user.url, k_url_webdav_server];
+        NSString *serverPath = [UtilsUrls getFullRemoteWebDavPath:user];
         NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:file.filePath andUser:user], file.fileName];
         
         path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -333,7 +333,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", app.activeUser.url, k_url_webdav_server];
+    NSString *serverPath = [UtilsUrls getFullRemoteWebDavPath:app.activeUser];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:favoriteFile.filePath andUser:app.activeUser], favoriteFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
