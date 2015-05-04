@@ -147,7 +147,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //Update favorites files if there are active user
     if (_activeUser) {
-        [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
+        [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
     }
     
     //Needed to use on background tasks
@@ -715,12 +715,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) launchProcessToSyncAllFavorites {
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        //Do operations in background thread
-        [[AppDelegate sharedManageFavorites]syncAllFavoritesOfUser:_activeUser.idUser];
-        
-    });
-    
+    //Do operations in background thread
+    [[AppDelegate sharedManageFavorites]syncAllFavoritesOfUser:_activeUser.idUser];
     
 }
 
@@ -1039,7 +1035,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 
     //Update the Favorites Files
-    [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
+    [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
    
     //Refresh the list of files from the database
     if (_activeUser && self.presentFilesViewController) {
