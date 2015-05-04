@@ -174,7 +174,7 @@
 - (void) startDownload {
     
     OCCommunication *sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
-    NSArray *splitedUrl = [self.user.url componentsSeparatedByString:@"/"];
+    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:self.user] componentsSeparatedByString:@"/"];
     NSString *serverUrl = [NSString stringWithFormat:@"%@%@%@",[NSString stringWithFormat:@"%@/%@/%@",[splitedUrl objectAtIndex:0],[splitedUrl objectAtIndex:1],[splitedUrl objectAtIndex:2]], self.file.filePath, self.file.fileName];
     
     serverUrl = [serverUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

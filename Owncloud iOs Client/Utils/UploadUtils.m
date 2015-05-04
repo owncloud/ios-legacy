@@ -114,7 +114,7 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
 //    NSString *urlServerRedirected = [ManageUsersDB getUrlRedirectedByUserDto:user];
 //    //If urlServerRedirected is nil the server is not redirected
 //    if (urlServerRedirected) {
-//        NSString *textToBeRemoved = [UtilsDtos getHttpAndDomainByURL:originalUrl];
+//        NSString *textToBeRemoved = [UtilsUrls getHttpAndDomainByURL:originalUrl];
 //        NSString *textWithoutOriginalDomain = [originalUrl substringFromIndex:textToBeRemoved.length];
 //        
 //        output = [urlServerRedirected stringByAppendingString:textWithoutOriginalDomain];

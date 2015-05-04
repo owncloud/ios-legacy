@@ -52,6 +52,20 @@
 
 + (NSString *) getUrlServerWithoutHttpOrHttps:(NSString*) url;
 
+//-----------------------------------
+/// @name Get a domain by a URL
+///-----------------------------------
+
+/**
+ * Method used to get only the domain and the protocol (http/https)
+ *
+ * @param NSString -> url
+ *
+ * @return NSString
+ *
+ */
++ (NSString *) getHttpAndDomainByURL:(NSString *) url;
+
 + (NSString *) getUserAgent;
 
 @end

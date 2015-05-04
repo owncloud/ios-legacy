@@ -1833,10 +1833,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)refreshAfterUploadAllFiles:(NSString *) currentRemoteFolder {
     DLog(@"refreshAfterUploadAllFiles");
     
-    NSString *remoteUrlWithoutDomain = [UtilsDtos getHttpAndDomainByURL:currentRemoteFolder];
+    NSString *remoteUrlWithoutDomain = [UtilsUrls getHttpAndDomainByURL:currentRemoteFolder];
     remoteUrlWithoutDomain = [currentRemoteFolder substringFromIndex:remoteUrlWithoutDomain.length];
     
-    NSString *currentFolderWithoutDomain = [UtilsDtos getHttpAndDomainByURL:_presentFilesViewController.currentRemoteFolder];
+    NSString *currentFolderWithoutDomain = [UtilsUrls getHttpAndDomainByURL:_presentFilesViewController.currentRemoteFolder];
     currentFolderWithoutDomain = [_presentFilesViewController.currentRemoteFolder substringFromIndex:currentFolderWithoutDomain.length];
     
     //Only if is selected the first item: FileList.

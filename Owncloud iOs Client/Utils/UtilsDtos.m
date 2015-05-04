@@ -425,24 +425,4 @@
 }
 
 
-//-----------------------------------
-/// @name Get a domain by a URL
-///-----------------------------------
-
-/**
- * Method used to get only the domain and the protocol (http/https)
- *
- * @param NSString -> url -->http://domain/(subfolders)/k_url_webdav_server/
- *
- * @return NSString domain --> http://domain
- *
- */
-+ (NSString *) getHttpAndDomainByURL:(NSString *) url {
-    
-    NSArray *urlSplitted = [url componentsSeparatedByString:@"/"];
-    NSString *output = [NSString stringWithFormat:@"%@//%@", [urlSplitted objectAtIndex:0], [urlSplitted objectAtIndex:2]];
-    
-    return output;
-}
-
 @end
