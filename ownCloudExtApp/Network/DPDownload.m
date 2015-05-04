@@ -91,7 +91,7 @@
     [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [UtilsUrls getFullRemoteWebDavPath:self.user];
+    NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:self.user];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:self.file.filePath andUser:self.user], self.file.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

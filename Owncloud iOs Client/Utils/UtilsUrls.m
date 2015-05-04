@@ -315,7 +315,7 @@
  *                      http://domain/sub1/sub2/remote.php/webdav/
  *
  */
-+(NSString *) getFullRemoteWebDavPath:(UserDto *)mUserDto {
++ (NSString *) getFullRemoteServerPathWithWebDav:(UserDto *)mUserDto {
     
     NSString *fullWevDavPath = nil;
     
@@ -377,4 +377,39 @@
     return pathFile;
     
 }
+
+
+///-----------------------------------
+/// @name getFullRemoteServerPathWithoutProtocolByUserDto
+///-----------------------------------
+/**
+ * Return the full server path without protocol
+ *
+ * @param mUserDto -> user dto
+ *
+ * @return  serverString -> domainName/(subfoldersServer)/
+ */
++ (NSString *) getFullRemoteServerPathWithoutProtocol:(UserDto *)mUserDto {
+    
+    NSMutableString *serverString = [NSMutableString new];
+    
+    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:mUserDto] componentsSeparatedByString:@"/"];
+    
+    NSString *sentence;
+    for (int i=0; i<[splitedUrl count]; i++) {
+        
+        if (i==0 || i==1) {
+            //Nothing
+        }else if (i==2){
+            sentence = [NSString stringWithFormat:@"%@", [splitedUrl objectAtIndex:i]];
+            [serverString appendString:sentence];
+        }else{
+            sentence = [NSString stringWithFormat:@"/%@", [splitedUrl objectAtIndex:i]];
+            [serverString appendString:sentence];
+        }
+    }
+    
+    return serverString;
+}
+
 @end

@@ -248,11 +248,21 @@
     return output;
 }
 
+//----------------------------------------------
+/// @name getFilePathOnDBFromFilePathOnFileDto
+///---------------------------------------------
+/**
+ * Method used to get only the path in db from fileDtoPath
+ *
+ * @param filePathOnFileDto -> root folder -> /(subfoldersServer)/k_url_webdav_server/
+ *                          -> subfolders  -> /(subfoldersServer)/k_url_webdav_server/(subfoldersDB)
+ * @param user
+ *
+ * @return shortenedPath -> root folder -> @""
+ *                       -> subfolders  -> @"(subfoldersDB)/"
+ *
+ */
 +(NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user {
-    /*
-     /owncloud/remote.php/webdav/
-     /remote.php/webdav/
-    */
     
     NSString *shortenedPath =@"";
     
@@ -449,9 +459,9 @@
 /**
  * Method used to get only the domain and the protocol (http/https)
  *
- * @param NSString -> url
+ * @param NSString -> url -->http://domain/(subfolders)/k_url_webdav_server/
  *
- * @return NSString
+ * @return NSString domain --> http://domain
  *
  */
 + (NSString *) getHttpAndDomainByURL:(NSString *) url {

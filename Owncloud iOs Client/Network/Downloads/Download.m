@@ -683,7 +683,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [UtilsUrls getFullRemoteWebDavPath:app.activeUser];
+    NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileDto.filePath andUser:app.activeUser], _fileDto.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

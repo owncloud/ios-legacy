@@ -111,27 +111,9 @@
     
     _userName = app.activeUser.username;
     
-   NSString *urlString = app.activeUser.url;
-   NSArray *splitedUrl = [urlString componentsSeparatedByString:@"/"];
-   NSMutableString *serverString = [NSMutableString new];
-   NSString *sentence;
-   for (int i=0; i<[splitedUrl count]; i++) {
-       
-       if (i==0 || i==1) {
-            //Nothing
-        }else if (i==2){
-            sentence = [NSString stringWithFormat:@"%@", [splitedUrl objectAtIndex:i]];
-            [serverString appendString:sentence];
-        }else{
-            sentence = [NSString stringWithFormat:@"/%@", [splitedUrl objectAtIndex:i]];
-            [serverString appendString:sentence];
-        }
-   }
+    _serverName = [UtilsUrls getFullRemoteServerPathWithoutProtocol:app.activeUser];
     
-  //  NSString *fileName = [NSString stringWithFormat:@"%@",[splitedUrl objectAtIndex:([splitedUrl count]-1)]];
-    _serverName = serverString;
-    
-    _remoteFolder = [NSString stringWithFormat: @"%@%@", app.activeUser.url, k_url_webdav_server];
+    _remoteFolder = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     
     NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
     _folderName=appName;

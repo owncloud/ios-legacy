@@ -339,7 +339,7 @@
             [self.navigationController popToRootViewControllerAnimated:animated];
         }
         
-        _currentRemoteFolder = [UtilsUrls getFullRemoteWebDavPath:currentUser];
+        _currentRemoteFolder = [UtilsUrls getFullRemoteServerPathWithWebDav:currentUser];
         
         //We get the current folder to create the local tree
         _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)currentUser.idUser];
