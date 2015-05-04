@@ -74,19 +74,17 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     //Enable toolBar
     [toolbar setUserInteractionEnabled:YES];
     
-    
     //Init global atributes
-    _progressView.progress=0.0;
-    _progressView.hidden=YES;
-    _cancelButton.hidden=YES;
-    _progressLabel.hidden=YES;
-    _previewImageView.hidden=YES;
-    _isDownloading=NO;
-    _isViewBlocked=NO;
-    _isExtend=NO;
-    _isExtending=NO;
-    _isFileCharged=NO;
-    _isOverwritedFile=NO;
+    _progressView.progress = 0.0;
+    _progressView.hidden = YES;
+    _cancelButton.hidden = YES;
+    _progressLabel.hidden = YES;
+    _previewImageView.hidden = YES;
+    _isDownloading = NO;
+    _isViewBlocked = NO;
+    self.isSizeChanging = NO;
+    _isFileCharged = NO;
+    _isOverwritedFile = NO;
     _isUpdatingFile = NO;
     self.hideMaster = NO;
     _controllerManager = noManagerController;
@@ -156,10 +154,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     DLog(@"Detail Configure view");
     
     //Set the content offset of the gallery view scroll view.
-  /* if (self.galleryView) {
+   if (self.galleryView) {
         [_mainScrollView setContentOffset:_mainScrollView.contentOffset animated:YES];
         [_galleryView.scrollView setContentOffset:_mainScrollView.contentOffset animated:YES];
-    }*/
+    }
     
     //TitleLabel
     if (_file) {
@@ -1313,7 +1311,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     currentOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     BOOL isLandscape = UIDeviceOrientationIsLandscape(currentOrientation);
     
-    if (isFullScreenPlayer) {
+   /* if (isFullScreenPlayer) {
         if (isLandscape && !_isExtend) {
             [toolbar setHidden:YES];
             [self configureView];
@@ -1330,7 +1328,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             [toolbar setHidden:NO];
             [self configureView];
         }
-    }
+    }*/
 }
 
 #pragma mark - Download Methods
@@ -1731,7 +1729,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     DLog(@"Will rotate");
     
-    if (_galleryView) {
+    if (_galleryView && self.isSizeChanging == NO) {
         [_galleryView prepareScrollViewBeforeTheRotation];
     }
     
@@ -1759,9 +1757,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     if (_moviePlayer) {
         if (_moviePlayer.isFullScreen) {
             if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-                if (_isExtend == NO) {
+               /* if (_isExtend == NO) {
                     
-                }
+                }*/
             }
         }
     }
@@ -2045,6 +2043,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void) hideMasterView{
     
+    self.isSizeChanging = YES;
+    
     if (self.hideMaster) {
         
         [self modifyTheAlphaOfMasterView];
@@ -2091,13 +2091,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         [self shouldHideToolBar:self.hideMaster complete:^{
             if (self.galleryView) {
-                [self showTheGalleryView];
+               [self showTheGalleryView];
             }
         }];
-        
-        [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.3];
-        
-        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.31];
       
         
     }else{
@@ -2152,11 +2148,15 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             }];
         
-        [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.3];
-        
-        [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.31];
-        
     }
+    
+    [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.0];
+    
+    [self performSelector:@selector(configureViewWithAnimation) withObject:nil afterDelay:0.31];
+    
+    [self performSelector:@selector(finishTransitionProcess) withObject:nil afterDelay:0.4];
+    
+   
    
 }
 
@@ -2180,7 +2180,19 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         CGRect frame;
         
         if (self.hideMaster) {
-            frame = self.view.window.bounds;
+            
+            if (IS_IOS8) {
+                 frame = self.view.window.bounds;
+            }else{
+                
+                if (IS_PORTRAIT) {
+                    frame = self.view.window.bounds;
+                }else{
+                    frame = CGRectMake(0.0, 0.0, self.view.window.bounds.size.height, self.view.window.bounds.size.width);
+                }
+
+            }
+ 
         }else{
             frame = [self getTheCorrectSize];
         }
@@ -2192,25 +2204,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         self.galleryView.scrollView.alpha = 1.0;
         self.mainScrollView.hidden = YES;
     }
-}
-
-- (CGRect) getFutureSizeForTransition{
-    
-    CGRect futureFrame;
-    
-    if (self.hideMaster) {
-        //Full Screen
-        futureFrame = self.view.window.bounds;
-        
-    }else{
-        if (IS_PORTRAIT) {
-            futureFrame = CGRectMake(0, 64, 459.5, 960.0);
-        }else{
-            futureFrame = CGRectMake(0, 64, 768.0, 1024.0);
-        }
-    }
-    
-    return futureFrame;
 }
 
 
@@ -2292,8 +2285,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     }else{
         ocNav.view.alpha = 0.0;
     }
-    
-    
 }
 
 - (void) configureViewWithAnimation{
@@ -2303,9 +2294,13 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         if (!self.galleryView) {
             [self configureView];
         }
-        
     }];
 
+}
+
+- (void) finishTransitionProcess{
+    
+     self.isSizeChanging = NO;
 }
 
 - (void) updateStatusBar{
@@ -2357,8 +2352,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [self.mainScrollView setFrame:scrollFrame];
         
         [self.view layoutIfNeeded];
-        
-        
         
         [self configureView];
  

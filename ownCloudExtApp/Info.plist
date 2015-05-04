@@ -35,10 +35,10 @@
 				<string>public.content</string>
 			</array>
 		</dict>
-		<key>NSExtensionPrincipalClass</key>
-		<string>DocumentPickerViewController</string>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.fileprovider-ui</string>
+		<key>NSExtensionPrincipalClass</key>
+		<string>DocumentPickerViewController</string>
 	</dict>
 </dict>
 </plist>

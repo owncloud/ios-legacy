@@ -115,10 +115,10 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 //Flags
 @property(nonatomic) BOOL isViewBlocked;
-@property(nonatomic) BOOL isExtending;
+@property(nonatomic) BOOL isSizeChanging;
 @property(nonatomic) BOOL isDownloading;
 @property(nonatomic) BOOL isFileCharged;
-@property(nonatomic) BOOL isExtend;
+
 //Flag for know the overwrited file
 @property (nonatomic) BOOL isOverwritedFile;
 //Flag for know the updating process

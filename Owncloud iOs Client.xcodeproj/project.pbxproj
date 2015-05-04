@@ -2758,19 +2758,6 @@
 			name = TTOpenInAppActivity;
 			sourceTree = "<group>";
 		};
-		EA599630160872E200173E09 /* MGSplitViewController */ = {
-			isa = PBXGroup;
-			children = (
-				148DD5FE1778558500FB9977 /* MGSplitCornersView.h */,
-				148DD5FF1778558500FB9977 /* MGSplitCornersView.m */,
-				148DD6001778558500FB9977 /* MGSplitDividerView.h */,
-				148DD6011778558500FB9977 /* MGSplitDividerView.m */,
-				148DD6021778558500FB9977 /* MGSplitViewController.h */,
-				148DD6031778558500FB9977 /* MGSplitViewController.m */,
-			);
-			name = MGSplitViewController;
-			sourceTree = "<group>";
-		};
 		EA59963F160874FC00173E09 /* DetailView */ = {
 			isa = PBXGroup;
 			children = (
