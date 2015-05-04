@@ -92,10 +92,6 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
  */
 + (BOOL)isForbidenCharactersInFileName:(NSString*)fileName;
 
-/*Method to remove the first http or https from an url
- *@url -> url from the server
- */
-+ (NSString*) getUrlServerWithoutHttpOrHttps:(NSString*) url;
 
 /*
  * This method check and url and look for a saml fragment

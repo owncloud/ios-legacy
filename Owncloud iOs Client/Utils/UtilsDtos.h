@@ -25,7 +25,6 @@
 +(NSString *) getDbFolderPathFromFilePath:(NSString *) filePath;
 +(NSString *) getDbFolderNameFromFilePath:(NSString *) filePath;
 +(NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user;
-+(NSString *) getFilePathByRemoteURL:(NSString *) remoteUrl andUserDto:(UserDto *) mUser;
 +(NSString *) getRemoteUrlByFile:(FileDto *) file andUserDto:(UserDto *) mUser;
 +(NSString *) getServerURLWithoutFolderByUserDto:(UserDto *)mUser;
 

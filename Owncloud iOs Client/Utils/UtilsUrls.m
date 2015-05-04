@@ -378,38 +378,51 @@
     
 }
 
-
 ///-----------------------------------
 /// @name getFullRemoteServerPathWithoutProtocolByUserDto
 ///-----------------------------------
 /**
- * Return the full server path without protocol
+ * Return the full server path without protocol, (remove the first http or https from an user remote url)
  *
  * @param mUserDto -> user dto
  *
- * @return  serverString -> domainName/(subfoldersServer)/
+ * @return  remoteUrl -> domainName/(subfoldersServer)/
  */
 + (NSString *) getFullRemoteServerPathWithoutProtocol:(UserDto *)mUserDto {
     
-    NSMutableString *serverString = [NSMutableString new];
+    NSString *remoteUrl = [UtilsUrls getUrlServerWithoutHttpOrHttps:[UtilsUrls getFullRemoteServerPath:mUserDto]];
     
-    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:mUserDto] componentsSeparatedByString:@"/"];
+    return remoteUrl;
+}
+
+
++ (NSString *) getUrlServerWithoutHttpOrHttps:(NSString*) url {
+
+    //    NSMutableString *url = [NSMutableString new];
+    //
+    //    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:mUserDto] componentsSeparatedByString:@"/"];
+    //
+    //    NSString *sentence;
+    //    for (int i=0; i<[splitedUrl count]; i++) {
+    //
+    //        if (i==0 || i==1) {
+    //            //Nothing
+    //        }else if (i==2){
+    //            sentence = [NSString stringWithFormat:@"%@", [splitedUrl objectAtIndex:i]];
+    //            [url appendString:sentence];
+    //        }else{
+    //            sentence = [NSString stringWithFormat:@"/%@", [splitedUrl objectAtIndex:i]];
+    //            [url appendString:sentence];
+    //        }
+    //    }
     
-    NSString *sentence;
-    for (int i=0; i<[splitedUrl count]; i++) {
-        
-        if (i==0 || i==1) {
-            //Nothing
-        }else if (i==2){
-            sentence = [NSString stringWithFormat:@"%@", [splitedUrl objectAtIndex:i]];
-            [serverString appendString:sentence];
-        }else{
-            sentence = [NSString stringWithFormat:@"/%@", [splitedUrl objectAtIndex:i]];
-            [serverString appendString:sentence];
-        }
+    if ([[url lowercaseString] hasPrefix:@"http://"]) {
+        url = [url substringFromIndex:7];
+    } else if ([[url lowercaseString] hasPrefix:@"https://"]) {
+        url = [url substringFromIndex:8];
     }
-    
-    return serverString;
+
+    return url;
 }
 
 @end

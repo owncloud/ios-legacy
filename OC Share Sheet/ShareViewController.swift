@@ -181,7 +181,7 @@ import AVFoundation
                     }
                     
                     if currentRemotePath == nil {
-                        currentRemotePath = user.url + k_url_webdav_server
+                        currentRemotePath = UtilsUrls.getFullRemoteServerPathWithWebDav(user)
                     }
                     
                     //3º Crete the upload objects

@@ -274,33 +274,6 @@
     return shortenedPath;
 }
 
-+(NSString *) getFilePathByRemoteURL:(NSString *) remoteUrl andUserDto:(UserDto *) mUser {
-    
-    //remoteUrl: https://beta.owncloud.com/owncloud/remote.php/webdav/Photo-08-04-13-02-33-45-0.PNG
-    //FilePath: /owncloud/remote.php/webdav/
-    
-    NSString *output = @"";
-    
-    //On uploads with redirections the remoteUrl could be have a different domain as mUser.url
-    NSString *remoteUrlWithoutDomain = [self getHttpAndDomainByURL:remoteUrl];
-    remoteUrlWithoutDomain = [remoteUrl substringFromIndex:remoteUrlWithoutDomain.length];
-    remoteUrl = remoteUrlWithoutDomain;
-    
-    NSString *userUrlWithoutDomain = [self getHttpAndDomainByURL:mUser.url];
-    userUrlWithoutDomain = [mUser.url substringFromIndex:userUrlWithoutDomain.length];
-    
-    
-    NSArray *splitedUrl = [remoteUrl componentsSeparatedByString:@"/"];
-    NSString *fileName = [NSString stringWithFormat:@"%@",[splitedUrl objectAtIndex:([splitedUrl count]-1)]];
-    
-    if ( [remoteUrl length] > [fileName length]) {
-        output = [remoteUrl substringToIndex:[remoteUrl length] - [fileName length]];
-    }
-        
-    output = [output substringFromIndex:[userUrlWithoutDomain length] + [k_url_webdav_server length]];
-    
-    return output;
-}
 
 +(NSString *) getRemoteUrlByFile:(FileDto *) file andUserDto:(UserDto *) mUser {
     

@@ -50,6 +50,8 @@
 
 + (NSString *) getFullRemoteServerPathWithoutProtocol:(UserDto *)mUserDto;
 
++ (NSString *) getUrlServerWithoutHttpOrHttps:(NSString*) url;
+
 + (NSString *) getUserAgent;
 
 @end

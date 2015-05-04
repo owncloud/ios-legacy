@@ -957,7 +957,7 @@
     //The _remoteFolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
     //The nameFileTextField: FileType.pdf
     //The folder Name: A/
-    NSString *folderName = [UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",_remoteFolder,_nameFileTextField.text] andUserDto:app.activeUser];
+    NSString *folderName = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:_remoteFolder andUser:app.activeUser];
     
     //Obtain the file that the user wants overwrite
     FileDto *file = nil;
