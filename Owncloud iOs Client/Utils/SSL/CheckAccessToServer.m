@@ -104,6 +104,13 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     app.urlServerRedirected = nil;
 #endif
 
+    self.urlUserToCheck = url;
+    UserDto *activeUser = [ManageUsersDB getActiveUser];
+    if (activeUser) {
+        if ([activeUser.url isEqualToString:self.urlUserToCheck]) {
+            [ManageUsersDB updateUrlRedirected:nil byUserDto:activeUser];
+        }
+    }
     
     _urlStatusCheck = [NSString stringWithFormat:@"%@status.php", url];
     
@@ -363,14 +370,15 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 #ifdef CONTAINER_APP
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         app.urlServerRedirected = [urlByRemovingLastComponent absoluteString];
-        
-//        if (app.activeUser) {
-//            [ManageUsersDB updateUrlRedirected:[urlByRemovingLastComponent absoluteString] byUserDto:app.activeUser];
-//        }
-#else
-       // [ManageUsersDB updateUrlRedirected:[urlByRemovingLastComponent absoluteString] byUserDto:[ManageUsersDB getActiveUser]];
 #endif
-       
+
+        UserDto *activeUser = [ManageUsersDB getActiveUser];
+        if (activeUser) {
+            if ([activeUser.url isEqualToString:self.urlUserToCheck]) {
+                [ManageUsersDB updateUrlRedirected:[urlByRemovingLastComponent absoluteString] byUserDto:activeUser];
+            }
+        }
+
         NSLog(@"responseURLString: %@", responseURLString);
         NSLog(@"requestRedirect.HTTPMethod: %@", request.HTTPMethod);
         

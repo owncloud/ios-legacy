@@ -725,6 +725,7 @@
 }
 
 +(void)updateUrlRedirected:(NSString *)newValue byUserDto:(UserDto *)user {
+    DLog(@"Updated url redirected");
     
     FMDatabaseQueue *queue;
     
