@@ -366,25 +366,6 @@
     
 }
 
-/////-----------------------------------
-///// @name getFullPathForFileDto
-/////-----------------------------------
-///**
-// * Return the appName with the path file components
-// *
-// * @param fileDto ->
-// * @param mUserDto -> user dto
-// *
-// * @return  pathFile ->  http://domain/sub1/sub2/remote.php/webdav/Documents/new.txt
-// *                   ->
-// */
-//+ (NSString *)getFullPathForFileDto:(FileDto *)fileDto byUserDto:(UserDto *)mUserDto {
-//    
-//     NSString *pathFile = @"";
-//    
-//    return pathFile;
-//    
-//}
 
 ///-----------------------------------
 /// @name getFullRemoteServerPathWithoutProtocol

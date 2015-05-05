@@ -90,9 +90,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     //Get url path of server
     NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:app.activeUser] componentsSeparatedByString:@"/"];
     NSString *serverUrl = [NSString stringWithFormat:@"%@%@%@",[NSString stringWithFormat:@"%@/%@/%@",[splitedUrl objectAtIndex:0],[splitedUrl objectAtIndex:1],[splitedUrl objectAtIndex:2]], _fileDto.filePath, _fileDto.fileName];
-    
-   // serverUrl = [UploadUtils getUrlWithRedirectionByOriginalURL:serverUrl];
-    
+        
     serverUrl = [serverUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     //get local path of server

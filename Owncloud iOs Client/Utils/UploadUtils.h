@@ -33,8 +33,6 @@ extern NSString * PreviewFileNotification;
  */
 +(void) updateOverwritenFile:(FileDto *)file FromPath:(NSString *)path;
 
-//+ (NSString *) getUrlWithRedirectionByOriginalURL:(NSString *) originalUrl;
-
 + (FileDto *) getFileDtoByUploadOffline:(UploadsOfflineDto *) uploadsOfflineDto;
 
 + (ALAssetsLibrary *)defaultAssetsLibrary;

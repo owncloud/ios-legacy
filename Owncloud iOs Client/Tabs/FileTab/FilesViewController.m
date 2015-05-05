@@ -1107,9 +1107,7 @@
     
     NSArray *info = [args objectForKey:@"info"];
     NSString *remoteURLToUpload = [args objectForKey:@"remoteURLToUpload"];
-    
-    //remoteURLToUpload = [UploadUtils getUrlWithRedirectionByOriginalURL:remoteURLToUpload];
-    
+        
     /*
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)

@@ -94,38 +94,6 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     [[NSNotificationCenter defaultCenter] postNotificationName:PreviewFileNotification object:pathFile];
 }
 
-////-----------------------------------
-///// @name Get an URL with the Redirected
-/////-----------------------------------
-//
-///**
-// * Method to modify a URL changing the domain and the protocol (http/https) with the urlServerRedirected if it is not nil
-// *
-// * @param NSString -> originalUrl
-// *
-// * @return NSString
-// *
-// */
-//+ (NSString *) getUrlWithRedirectionByOriginalURL:(NSString *) originalUrl {
-//    
-//    NSString *output = originalUrl;
-//    
-//   // AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-//    UserDto *user = [ManageUsersDB getActiveUser];
-//    NSString *urlServerRedirected = [ManageUsersDB getUrlRedirectedByUserDto:user];
-//    //If urlServerRedirected is nil the server is not redirected
-//    if (urlServerRedirected) {
-//        NSString *textToBeRemoved = [UtilsUrls getHttpAndDomainByURL:originalUrl];
-//        NSString *textWithoutOriginalDomain = [originalUrl substringFromIndex:textToBeRemoved.length];
-//        
-//        output = [urlServerRedirected stringByAppendingString:textWithoutOriginalDomain];
-//
-//    }
-//    
-//    
-//    return output;
-//    
-//}
 
 //-----------------------------------
 /// @name Get a fileDto by the UploadOffline
