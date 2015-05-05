@@ -44,6 +44,8 @@
 
 + (NSString *) getFullRemoteServerPath:(UserDto *)mUserDto;
 
++ (NSString *) getRemoteServerPathWithoutFolders:(UserDto *)mUser;
+
 + (NSString *) getFullRemoteServerPathWithWebDav:(UserDto *)mUserDto;
 
 + (NSString *) getPathWithAppNameByDestinyPath:(NSString *)destinyPath andUser:(UserDto *)mUserDto;

@@ -26,7 +26,6 @@
 +(NSString *) getDbFolderNameFromFilePath:(NSString *) filePath;
 +(NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user;
 +(NSString *) getRemoteUrlByFile:(FileDto *) file andUserDto:(UserDto *) mUser;
-+(NSString *) getServerURLWithoutFolderByUserDto:(UserDto *)mUser;
 
 ///-----------------------------------
 /// @name Pass OCFileDto Array to FileDto Array

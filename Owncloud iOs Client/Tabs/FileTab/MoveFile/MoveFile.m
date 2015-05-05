@@ -53,7 +53,7 @@
     NSString *originPath = [_selectedFileDto.filePath stringByAppendingString:_selectedFileDto.fileName];
     //Remove the first character / to not duplicate it on the stringByAppendingString
     originPath = [originPath substringFromIndex:1];
-    originPath = [NSString stringWithFormat:@"%@/%@", [UtilsDtos getServerURLWithoutFolderByUserDto:app.activeUser], originPath];
+    originPath = [NSString stringWithFormat:@"%@/%@", [UtilsUrls getRemoteServerPathWithoutFolders:app.activeUser], originPath];
     
     DLog(@"destinyPath: %@", destinyPath);
     DLog(@"originPath: %@", originPath);

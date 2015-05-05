@@ -266,7 +266,7 @@
  * @return  shortenedPath -> Documents/
  *                        ->
  */
-+(NSString *) getRemoteFilePathWithoutServerPathComponentsFromPath:(NSString *)filePath andUser:(UserDto *)mUserDto {
++ (NSString *) getRemoteFilePathWithoutServerPathComponentsFromPath:(NSString *)filePath andUser:(UserDto *)mUserDto {
     NSString *shortenedPath = @"";
 
     NSString *partToRemove = [NSString stringWithFormat:@"%@%@",[self getFullRemoteServerPath:mUserDto],k_url_webdav_server];
@@ -288,7 +288,7 @@
  *
  * @return  fullPath -> http://domain/sub1/sub2/...
  */
-+(NSString *) getFullRemoteServerPath:(UserDto *)mUserDto {
++ (NSString *) getFullRemoteServerPath:(UserDto *)mUserDto {
     
     NSString *fullPath = nil;
     
@@ -302,6 +302,22 @@
     return fullPath;
 }
 
+///-----------------------------------------
+/// @name getRemoteServerPathWithoutFolders
+///-----------------------------------------
+/**
+ * Return remote server domain
+ *
+ * @param mUserDto -> user dto
+ *
+ * @return  serverDomain -> http://domain
+ */
++ (NSString *) getRemoteServerPathWithoutFolders:(UserDto *)mUser {
+    
+    NSString *serverDomain = [UtilsUrls getHttpAndDomainByURL:[UtilsUrls getFullRemoteServerPath:mUser]];
+    
+    return serverDomain;
+}
 
 ///-----------------------------------
 /// @name getFullRemoteWebDavPath
@@ -322,14 +338,6 @@
     fullWevDavPath = [NSString stringWithFormat: @"%@%@", [self getFullRemoteServerPath:mUserDto],k_url_webdav_server];
     
     return fullWevDavPath;
-
-}
-
-+ (NSString *) getUserAgent {
-    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *userAgentWithAppVersion = [NSString stringWithFormat:@"%@%@",k_user_agent,appVersion];
-    
-    return userAgentWithAppVersion;
 
 }
 
@@ -358,25 +366,25 @@
     
 }
 
-///-----------------------------------
-/// @name getFullPathForFileDto
-///-----------------------------------
-/**
- * Return the appName with the path file components
- *
- * @param fileDto ->
- * @param mUserDto -> user dto
- *
- * @return  pathFile ->  http://domain/sub1/sub2/remote.php/webdav/Documents/new.txt
- *                   ->
- */
-+ (NSString *)getFullPathForFileDto:(FileDto *)fileDto byUserDto:(UserDto *)mUserDto {
-    
-     NSString *pathFile = @"";
-    
-    return pathFile;
-    
-}
+/////-----------------------------------
+///// @name getFullPathForFileDto
+/////-----------------------------------
+///**
+// * Return the appName with the path file components
+// *
+// * @param fileDto ->
+// * @param mUserDto -> user dto
+// *
+// * @return  pathFile ->  http://domain/sub1/sub2/remote.php/webdav/Documents/new.txt
+// *                   ->
+// */
+//+ (NSString *)getFullPathForFileDto:(FileDto *)fileDto byUserDto:(UserDto *)mUserDto {
+//    
+//     NSString *pathFile = @"";
+//    
+//    return pathFile;
+//    
+//}
 
 ///-----------------------------------
 /// @name getFullRemoteServerPathWithoutProtocol
@@ -446,6 +454,13 @@
 }
 
 
++ (NSString *) getUserAgent {
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *userAgentWithAppVersion = [NSString stringWithFormat:@"%@%@",k_user_agent,appVersion];
+    
+    return userAgentWithAppVersion;
+    
+}
 
 
 @end

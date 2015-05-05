@@ -277,7 +277,7 @@
 
 +(NSString *) getRemoteUrlByFile:(FileDto *) file andUserDto:(UserDto *) mUser {
     
-    NSString *output = [NSString stringWithFormat:@"%@%@%@",[self getServerURLWithoutFolderByUserDto:mUser],file.filePath,file.fileName];
+    NSString *output = [NSString stringWithFormat:@"%@%@%@",[UtilsUrls getRemoteServerPathWithoutFolders:mUser],file.filePath,file.fileName];
     
     DLog(@"output: %@", output);
     
@@ -286,15 +286,7 @@
 
 
 
-+(NSString *) getServerURLWithoutFolderByUserDto:(UserDto *)mUser {
-    
-    NSString *output = @"";
-    NSArray *userUrlSplited = [[UtilsUrls getFullRemoteServerPath:mUser] componentsSeparatedByString:@"/"];
-    
-    output = [NSString stringWithFormat:@"%@//%@", [userUrlSplited objectAtIndex:0], [userUrlSplited objectAtIndex:2]];
-    
-    return output;
-}
+
 
 ///-----------------------------------
 /// @name Pass OCFileDto Array to FileDto Array
