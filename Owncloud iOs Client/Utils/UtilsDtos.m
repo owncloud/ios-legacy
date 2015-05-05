@@ -258,20 +258,20 @@
  *                          -> subfolders  -> /(subfoldersServer)/k_url_webdav_server/(subfoldersDB)
  * @param user
  *
- * @return shortenedPath -> root folder -> @""
- *                       -> subfolders  -> @"(subfoldersDB)/"
+ * @return pathOnDB -> root folder -> @""
+ *                  -> subfolders  -> @"(subfoldersDB)/"
  *
  */
 +(NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user {
     
-    NSString *shortenedPath =@"";
+    NSString *pathOnDB =@"";
     
     NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:user];
     if([filePathOnFileDto length] >= [partToRemove length]){
-        shortenedPath = [filePathOnFileDto substringFromIndex:[partToRemove length]];
+        pathOnDB = [filePathOnFileDto substringFromIndex:[partToRemove length]];
     }
     
-    return shortenedPath;
+    return pathOnDB;
 }
 
 

@@ -2178,15 +2178,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         NSMutableArray *directoryList = [NSMutableArray arrayWithArray:items];
         
-        //Change the filePath from the library to our format
+        //Change the filePath from the library to our db format
         for (FileDto *currentFile in directoryList) {
-            //Remove part of the item file path
-            //TODO:Refactor with new method getRemoteFilePathWithoutServerPathComponents
-            //currentFile.filePath = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:currentFile.filePath andUser:app.activeUser];
-            NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
-            if([currentFile.filePath length] >= [partToRemove length]){
-                currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
-            }
+            currentFile.filePath = [UtilsDtos getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath andUser:app.activeUser];
         }
         
         DLog(@"The directory List have: %ld elements", (unsigned long)directoryList.count);
