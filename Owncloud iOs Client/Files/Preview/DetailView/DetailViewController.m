@@ -213,16 +213,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     [toolbar setItems:items animated:YES];
     
-    //Configure size of movie player dinamically
-    if (_moviePlayer) {
-        if (_moviePlayer.isFullScreen == NO) {
-            _moviePlayer.moviePlayer.view.frame = [self getTheCorrectSize];
-        } else {
-            CGRect fullScreenFrame = _mainScrollView.frame;
-            fullScreenFrame.size.height = _mainScrollView.frame.size.height + toolbar.frame.size.height;
-            fullScreenFrame.origin.y = toolbar.frame.origin.y;
-            _moviePlayer.moviePlayer.view.frame= fullScreenFrame;
-        }
+    if (self.moviePlayer) {
+        self.moviePlayer.view.frame = [self getTheCorrectSize];
     }
     
     if (_readerPDFViewController) {
@@ -253,7 +245,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [toolbar setItems:items animated:YES];
     
     if (_moviePlayer) {
-        _moviePlayer.moviePlayer.view.frame = [self getTheCorrectSize];
+        self.moviePlayer.view.frame = [self getTheCorrectSize];
     }
     
     if (_readerPDFViewController) {
@@ -771,7 +763,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 - (void) removeThePreviousViews {
     //Quit the player if exist
     if (self.moviePlayer) {
-        [self.moviePlayer.moviePlayer.view removeFromSuperview];
+        [self.moviePlayer.view removeFromSuperview];
     }
     
     //Quit the office view
@@ -917,7 +909,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     _isFileCharged=YES;
     
     [self configureView];
-    
     
     if (!_galleryView) {
         _galleryView=[[GalleryView alloc]initWithFrame:[self getTheCorrectSize]];
@@ -1223,20 +1214,17 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     BOOL needNewPlayer = NO;
     if (_file != nil) {
-        if (_moviePlayer) {
+        if (self.moviePlayer) {
             DLog(@"Movie urlString: %@", _moviePlayer.urlString);
             DLog(@"File local folder: %@", _file.localFolder);
-            if ([_moviePlayer.urlString isEqualToString:_file.localFolder]) {
+            if ([self.moviePlayer.urlString isEqualToString:self.file.localFolder]) {
                 needNewPlayer = NO;
             } else {
-                [_moviePlayer removeNotificationObservation];
-                [_moviePlayer.moviePlayer stop];
-                [_moviePlayer finalizePlayer];
-                [_moviePlayer.moviePlayer.view removeFromSuperview];
-                _moviePlayer = nil;
-                /* [[NSNotificationCenter defaultCenter] removeObserver:self
-                 name:MPMoviePlayerPlaybackDidFinishNotification
-                 object:nil];*/
+                [self.moviePlayer removeNotificationObservation];
+                [self.moviePlayer.moviePlayer stop];
+                [self.moviePlayer finalizePlayer];
+                [self.moviePlayer.view removeFromSuperview];
+                self.moviePlayer = nil;
                 needNewPlayer = YES;
             }
         } else {
@@ -1257,78 +1245,43 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
                 }
             }
             
-            NSURL *url = [NSURL fileURLWithPath:_file.localFolder];
+            NSURL *url = [NSURL fileURLWithPath:self.file.localFolder];
             
-            _moviePlayer = [[MediaViewController alloc]initWithContentURL:url];
-            _moviePlayer.delegate = self;
-            _moviePlayer.urlString = _file.localFolder;
+            self.moviePlayer = [[MediaViewController alloc]initWithContentURL:url];
+
+            self.moviePlayer.view.frame = [self getTheCorrectSize];
+            
+            self.moviePlayer.urlString = self.file.localFolder;
+            
             //if is audio file tell the controller the file is music
-            _moviePlayer.isMusic=YES;
+            self.moviePlayer.isMusic = YES;
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-            appDelegate.mediaPlayer = _moviePlayer;
+            appDelegate.mediaPlayer = self.moviePlayer;
             
-            /* [[NSNotificationCenter defaultCenter] addObserver:self
-             selector:@selector(moviePlayBackDidFinish:)
-             name:MPMoviePlayerPlaybackDidFinishNotification
-             object:nil];      */
+            self.moviePlayer.moviePlayer.controlStyle = MPMovieControlStyleNone;
             
-            _moviePlayer.moviePlayer.controlStyle = MPMovieControlStyleNone;
+            [self.moviePlayer.moviePlayer setFullscreen:NO];
             
-            [_moviePlayer.moviePlayer setFullscreen:NO];
+            self.moviePlayer.moviePlayer.shouldAutoplay = NO;
             
-            _moviePlayer.moviePlayer.shouldAutoplay = NO;
+            [self.moviePlayer initHudView];
             
-            [self configureView];
+            [self.moviePlayer.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
+            [self.moviePlayer.moviePlayer prepareToPlay];
             
-            [_moviePlayer initHudView];
+            [self.moviePlayer.view addGestureRecognizer:self.singleTap];
             
-            [_moviePlayer.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
-            [_moviePlayer.moviePlayer prepareToPlay];
+            [self.view addSubview:self.moviePlayer.view];
             
-            [self.view addSubview:_moviePlayer.moviePlayer.view];
-            
-            [_moviePlayer playFile];
-            
-            
+            [self.moviePlayer playFile];
             
         } else {
             
-            [self.view addSubview:_moviePlayer.moviePlayer.view];
+            [self.moviePlayer.view addGestureRecognizer:self.singleTap];
+            
+            [self.view addSubview:self.moviePlayer.view];
         }
     }
-}
-
-
-#pragma mark - Media player delegate methods
-
-/*
- * Delegate method of media player that receive when the user tap the full screen button
- * @isFullScreenPlayer -> Boolean variable that indicate if the user tap over the fullscreen button
- */
-- (void)fullScreenPlayer:(BOOL)isFullScreenPlayer{
-    
-    UIInterfaceOrientation currentOrientation;
-    currentOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    BOOL isLandscape = UIDeviceOrientationIsLandscape(currentOrientation);
-    
-   /* if (isFullScreenPlayer) {
-        if (isLandscape && !_isExtend) {
-            [toolbar setHidden:YES];
-            [self configureView];
-        } else {
-            [toolbar setHidden:YES];
-            [self configureView];
-        }
-    } else {
-        
-        if (isLandscape && !_isExtend) {
-            [toolbar setHidden:NO];
-            [self configureView];
-        } else {
-            [toolbar setHidden:NO];
-            [self configureView];
-        }
-    }*/
 }
 
 #pragma mark - Download Methods
@@ -1553,11 +1506,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
 
         //Quit the player if exist
-        if (_moviePlayer) {
-            [_moviePlayer.moviePlayer stop];
-            [_moviePlayer finalizePlayer];
-            [_moviePlayer.moviePlayer.view removeFromSuperview];
-            _moviePlayer = nil;
+        if (self.moviePlayer) {
+            [self.moviePlayer.moviePlayer stop];
+            [self.moviePlayer finalizePlayer];
+            [self.moviePlayer.view removeFromSuperview];
+            self.moviePlayer = nil;
         }
         
         //Depend if the file is an image or other "openimage" or "openfile"
@@ -1678,11 +1631,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 }
 
 
-- (void)tapCloudButton{
-    
-    DLog(@"Tap Cloud Button");
-}
-
 
 #pragma mark -
 #pragma mark Rotation support
@@ -1753,21 +1701,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     [_mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:YES];
     
-    //Extend the splitview to see in full screen also in landscape.
-    if (_moviePlayer) {
-        if (_moviePlayer.isFullScreen) {
-            if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-               /* if (_isExtend == NO) {
-                    
-                }*/
-            }
-        }
-    }
-    
     if (_readerPDFViewController) {
-        
         [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
-        
     }
     
     if (self.galleryView) {
