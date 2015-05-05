@@ -249,7 +249,6 @@
     
     NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:app.activeUser] componentsSeparatedByString:@"/"];
     NSString *newURLString = [NSString stringWithFormat:@"%@%@%@", [UtilsUrls getFullRemoteServerPath:app.activeUser] , k_url_webdav_server, self.destinationFile];
-    // NSString *newURLString = [NSString stringWithFormat:@"%@", self.destinationFile];
     NSString *originalURLString = [NSString stringWithFormat:@"%@//%@%@", [splitedUrl objectAtIndex:0], [splitedUrl objectAtIndex:2],[NSString stringWithFormat:@"%@%@",self.selectedFileDto.filePath, self.selectedFileDto.fileName]];
     
     originalURLString = [originalURLString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
