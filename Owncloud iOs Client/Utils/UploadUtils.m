@@ -24,6 +24,7 @@
 #import "UploadsOfflineDto.h"
 #import "ManageFilesDB.h"
 #import "ManageUsersDB.h"
+#import "UtilsUrls.h"
 
 NSString * PreviewFileNotification=@"PreviewFileNotification";
 
@@ -81,7 +82,7 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Obtain the remotePath: https://s3.owncloud.com/owncloud/remote.php/webdav
-    NSString *remoteFolder = [NSString stringWithFormat: @"%@%@", app.activeUser.url, k_url_webdav_server];
+    NSString *remoteFolder = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     //With the filePath obtain the folder name: A/
     NSString *folderName= [UtilsDtos getDbBFolderPathFromFullFolderPath:file.filePath andUser:app.activeUser];
     //Obtain the complete path: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
@@ -143,7 +144,7 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
 + (FileDto *) getFileDtoByUploadOffline:(UploadsOfflineDto *) uploadsOfflineDto {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    NSString *partToRemoveOfPah = [app.activeUser.url stringByAppendingString:k_url_webdav_server];
+    NSString *partToRemoveOfPah = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     
     NSString *filePath = [uploadsOfflineDto.destinyFolder substringFromIndex:partToRemoveOfPah.length];
     
