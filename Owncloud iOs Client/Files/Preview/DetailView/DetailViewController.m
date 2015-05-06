@@ -127,8 +127,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     self.singleTap.numberOfTouchesRequired = 1;
     self.singleTap.delegate = self;
     
-    [self.mainScrollView addGestureRecognizer:self.singleTap];
-    
     [self.splitViewController setPresentsWithGesture:NO];
     
 }
