@@ -1917,7 +1917,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     if (self.hideMaster) {
         
-        [self modifyTheAlphaOfMasterView];
+        [self convertMasterViewInvisible:NO];
         
         [self.splitViewController.view setNeedsLayout];
         self.splitViewController.delegate = nil;
@@ -1997,7 +1997,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
             
-            [self modifyTheAlphaOfMasterView];
+            [self convertMasterViewInvisible:YES];
             
             [self showContainerView];
             
@@ -2218,15 +2218,18 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
 }
 
-- (void) modifyTheAlphaOfMasterView{
+- (void) convertMasterViewInvisible:(BOOL)isInvisible{
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    OCNavigationController *ocNav = (OCNavigationController *)[app.ocTabBarController.viewControllers objectAtIndex:0];
+    OCTabBarController *tabBar = [app.splitViewController.viewControllers objectAtIndex:0];
+    UIViewController *viewController = tabBar.selectedViewController;
     
-    if (self.hideMaster) {
-        ocNav.view.alpha = 1.0;
+    if (isInvisible) {
+        viewController.view.alpha = 0.0;
+        tabBar.view.alpha = 0.0;
     }else{
-        ocNav.view.alpha = 0.0;
+        viewController.view.alpha = 1.0;
+        tabBar.view.alpha = 1.0;
     }
 }
 
