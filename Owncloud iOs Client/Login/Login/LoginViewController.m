@@ -1903,8 +1903,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     //Update connect string
     [self updateConnectString];
     
-    [self eraseURLCache];
-    [self eraseCredentials];
+    [UtilsCookies eraseURLCache];
+    [UtilsCookies eraseCredentialsWithURL:self.connectString];
     
     [self performSelector:@selector(connectToServer) withObject:nil afterDelay:0.5];
 }
@@ -1932,7 +1932,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     [[AppDelegate sharedOCCommunication] setCredentialsWithUser:userName andPassword:password];
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     [[AppDelegate sharedOCCommunication] checkServer:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
@@ -2057,7 +2057,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:userName andPassword:password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     [[AppDelegate sharedOCCommunication] readFolder:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
@@ -2233,43 +2233,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     [UtilsCookies setOnSystemStorageCookiesByUser:app.activeUser];
     //3- We delete the cookies of the active user on the databse because it could change and it is not necessary keep them there
     [ManageCookiesStorageDB deleteCookiesByUser:app.activeUser];
-}
-
-#pragma mark - Delete HTTP cache
-
-- (void)eraseCredentials
-{
-    NSString *urlString = self.connectString;
-    NSURLCredentialStorage *credentialsStorage = [NSURLCredentialStorage sharedCredentialStorage];
-    NSDictionary *allCredentials = [credentialsStorage allCredentials];
-    
-    if ([allCredentials count] > 0)
-    {
-        for (NSURLProtectionSpace *protectionSpace in allCredentials)
-        {
-            DLog(@"Protetion espace: %@", [protectionSpace host]);
-            
-            if ([[protectionSpace host] isEqualToString:urlString])
-            {
-                DLog(@"Credentials erase");
-                NSDictionary *credentials = [credentialsStorage credentialsForProtectionSpace:protectionSpace];
-                for (NSString *credentialKey in credentials)
-                {
-                    [credentialsStorage removeCredential:[credentials objectForKey:credentialKey] forProtectionSpace:protectionSpace];
-                }
-            }
-        }
-    }
-}
-
-- (void)eraseURLCache
-{
-    //  NSURL *loginUrl = [NSURL URLWithString:self.connectString];
-    //  NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc]initWithURL:loginUrl];
-    // [NSMutableURLRequest requestWithURL:loginUrl];
-    //  [[NSURLCache sharedURLCache] removeCachedResponseForRequest:urlRequest];
-    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
-    [[NSURLCache sharedURLCache] setDiskCapacity:0];
 }
 
 #pragma marK - Action Buttons

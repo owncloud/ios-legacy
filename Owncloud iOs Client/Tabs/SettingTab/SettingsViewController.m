@@ -84,7 +84,7 @@
         _isMailComposeVisible = NO;
        
         //Set the instant upload
-        [self initStateInstantUpload];
+        [self performSelector:@selector(initStateInstantUpload) withObject:nil afterDelay:4.0];
     
     }
     return self;
@@ -278,14 +278,18 @@
     } else if (section == 2){
         n = 1;
     } else if (section == 3){
-        if (k_show_recommend_option_on_settings && k_show_imprint_option_on_settings && k_show_help_option_on_settings) {
-            n = 4;
-        } else if (!k_show_recommend_option_on_settings && !k_show_imprint_option_on_settings && !k_show_help_option_on_settings)  {
-            n = 1;
-        } else if ((!k_show_recommend_option_on_settings && k_show_imprint_option_on_settings && k_show_help_option_on_settings) || (k_show_recommend_option_on_settings && !k_show_imprint_option_on_settings && k_show_help_option_on_settings) || (k_show_recommend_option_on_settings && k_show_imprint_option_on_settings && !k_show_help_option_on_settings)) {
-            n = 3;
-        } else {
-            n = 2;
+        n = 0;
+        if (k_show_help_option_on_settings) {
+            n = n + 1;
+        }
+        if (k_show_recommend_option_on_settings) {
+            n = n + 1;
+        }
+        if (k_show_feedback_option_on_settings) {
+            n = n + 1;
+        }
+        if (k_show_imprint_option_on_settings) {
+            n = n + 1;
         }
     }
     
@@ -351,25 +355,32 @@
         case 0:
             if (k_show_help_option_on_settings) {
                 [self setTitleOfRow:help inCell:cell];
-            } else if (k_show_recommend_option_on_settings && !k_show_help_option_on_settings) {
+            } else if (k_show_recommend_option_on_settings) {
                 [self setTitleOfRow:recommend inCell:cell];
-            } else {
+            } else if (k_show_feedback_option_on_settings) {
                 [self setTitleOfRow:feedback inCell:cell];
+            } else if (k_show_imprint_option_on_settings) {
+                [self setTitleOfRow:impress inCell:cell];
             }
             break;
         case 1:
-            if ((!k_show_imprint_option_on_settings || k_show_imprint_option_on_settings) && k_show_recommend_option_on_settings && k_show_help_option_on_settings) {
-                [self setTitleOfRow:recommend inCell:cell];
+            if (k_show_help_option_on_settings && k_show_recommend_option_on_settings) {
+                 [self setTitleOfRow:recommend inCell:cell];
+            } else if ((k_show_help_option_on_settings && !k_show_recommend_option_on_settings) ||
+                        (!k_show_help_option_on_settings && k_show_recommend_option_on_settings)){
+                if (k_show_feedback_option_on_settings) {
+                    [self setTitleOfRow:feedback inCell:cell];
+                } else if (k_show_imprint_option_on_settings){
+                    [self setTitleOfRow:impress inCell:cell];
+                }
             } else if (!k_show_help_option_on_settings && !k_show_recommend_option_on_settings) {
-                [self setTitleOfRow:impress inCell:cell];
-            } else {
-                [self setTitleOfRow:feedback inCell:cell];
+                 [self setTitleOfRow:impress inCell:cell];
             }
             break;
         case 2:
-            if ((!k_show_imprint_option_on_settings || k_show_imprint_option_on_settings) && k_show_recommend_option_on_settings && k_show_help_option_on_settings) {
+            if (k_show_help_option_on_settings && k_show_recommend_option_on_settings && k_show_feedback_option_on_settings) {
                 [self setTitleOfRow:feedback inCell:cell];
-            } else {
+            } else if (!k_show_help_option_on_settings || !k_show_recommend_option_on_settings || !k_show_feedback_option_on_settings) {
                 [self setTitleOfRow:impress inCell:cell];
             }
             break;
@@ -564,25 +575,32 @@
         case 0:
             if (k_show_help_option_on_settings) {
                 [self setContentOfRow:help];
-            } else if (k_show_recommend_option_on_settings && !k_show_help_option_on_settings) {
+            } else if (k_show_recommend_option_on_settings) {
                 [self setContentOfRow:recommend];
-            } else {
+            } else if (k_show_feedback_option_on_settings) {
                 [self setContentOfRow:feedback];
+            } else if (k_show_imprint_option_on_settings) {
+                [self setContentOfRow:impress];
             }
             break;
         case 1:
-            if ((!k_show_imprint_option_on_settings || k_show_imprint_option_on_settings) && k_show_recommend_option_on_settings && k_show_help_option_on_settings) {
+            if (k_show_help_option_on_settings && k_show_recommend_option_on_settings) {
                 [self setContentOfRow:recommend];
+            } else if ((k_show_help_option_on_settings && !k_show_recommend_option_on_settings) ||
+                       (!k_show_help_option_on_settings && k_show_recommend_option_on_settings)){
+                if (k_show_feedback_option_on_settings) {
+                    [self setContentOfRow:feedback];
+                } else if (k_show_imprint_option_on_settings){
+                   [self setContentOfRow:impress];
+                }
             } else if (!k_show_help_option_on_settings && !k_show_recommend_option_on_settings) {
                 [self setContentOfRow:impress];
-            } else {
-                [self setContentOfRow:feedback];
             }
             break;
         case 2:
-            if ((!k_show_imprint_option_on_settings || k_show_imprint_option_on_settings) && k_show_recommend_option_on_settings && k_show_help_option_on_settings) {
+            if (k_show_help_option_on_settings && k_show_recommend_option_on_settings && k_show_feedback_option_on_settings) {
                 [self setContentOfRow:feedback];
-            } else {
+            } else if (!k_show_help_option_on_settings || !k_show_recommend_option_on_settings || !k_show_feedback_option_on_settings) {
                 [self setContentOfRow:impress];
             }
             break;

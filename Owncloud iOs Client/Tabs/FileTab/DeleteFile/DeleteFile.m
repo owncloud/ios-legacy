@@ -26,6 +26,7 @@
 #import "DetailViewController.h"
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
+#import "UtilsUrls.h"
 
 
 @implementation DeleteFile
@@ -288,7 +289,7 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     [[AppDelegate sharedOCCommunication] deleteFileOrFolder:pathToDelete onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer){
         

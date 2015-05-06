@@ -30,9 +30,6 @@ import AVFoundation
     var images: [UIImage] = []
     var currentRemotePath: String!
    
-    let customRowColor = UIColor.colorOfNavigationBar()
-    let customRowBorderColor = UIColor.colorOfNavigationTitle()
-    
     let witdhFormSheet: CGFloat = 540.0
     let heighFormSheet: CGFloat = 620.0
     
@@ -77,6 +74,8 @@ import AVFoundation
         let passcodeView = KKPasscodeViewController(nibName: nil, bundle: nil)
         passcodeView.delegate = self
         passcodeView.mode = UInt(KKPasscodeModeEnter)
+        
+        passcodeView.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: Selector("cancelView"))
         
         let ocNavController = OCNavigationController(rootViewController: passcodeView)
         ocNavController.modalPresentationStyle = UIModalPresentationStyle.FormSheet
@@ -225,21 +224,8 @@ import AVFoundation
                 
             }
             
-            if hasSomethingToUpload == true{
-                
-                var webView = UIWebView()
-                webView.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
-                
-                let urlString = "owncloud://"
-                let content = "<head><meta http-equiv='refresh' content='0; URL=\(urlString)'></head>"
-                webView.loadHTMLString(content, baseURL: nil)
-                self.view.addSubview(webView)
-                
-                // Delay 2 seconds
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
-                    webView.removeFromSuperview()
-                    self.cancelView()
-                }
+            if hasSomethingToUpload == true {
+                self.cancelView()
             }
             
         } else {
@@ -439,22 +425,7 @@ import AVFoundation
         let row = indexPath.row
         let url = self.filesSelected[row] as NSURL
         
-        cell.backgroundCustomView?.backgroundColor = customRowColor
         cell.selectionStyle = UITableViewCellSelectionStyle.None
-        
-        //Custom circle image and border
-        let cornerRadius = cell.imageForFile!.frame.size.width / 2
-        cell.imageForFile?.layer.cornerRadius = cornerRadius
-        cell.imageForFile?.clipsToBounds = true
-        cell.imageForFile?.layer.borderWidth = 3.0
-        cell.imageForFile?.layer.borderColor = customRowBorderColor.CGColor
-        cell.imageForFile?.backgroundColor = UIColor.whiteColor()
-        
-        //Custom circle view in
-        cell.roundCustomView?.backgroundColor = customRowColor
-        cell.roundCustomView?.layer.cornerRadius = cornerRadius
-        cell.roundCustomView?.clipsToBounds = true
-        
         
         //Choose the correct icon if the file is not an image
         let ext = FileNameUtils.getExtension(url.lastPathComponent)

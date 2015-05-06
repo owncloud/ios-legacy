@@ -18,6 +18,7 @@
 #import "FileNameUtils.h"
 #import "constants.h"
 #import "Customization.h"
+#import "UtilsUrls.h"
 
 @interface OfficeFileView ()
 
@@ -177,7 +178,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
     //Add the user agent
-    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
+    [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
     
     [self configureWebView];
     
