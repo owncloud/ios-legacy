@@ -42,6 +42,8 @@
 
 @property (nonatomic, strong) ReaderMainPagebar *mainPagebar;
 @property (nonatomic, weak, readwrite) id <ReaderViewControllerDelegate> delegate;
+//Added in order to control the Container screen size changing
+@property (nonatomic) BOOL isChangingSize;
 
 - (instancetype)initWithReaderDocument:(ReaderDocument *)object;
 

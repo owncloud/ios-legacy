@@ -204,27 +204,32 @@
 
 - (void)handleScrollViewDidEnd:(UIScrollView *)scrollView
 {
-	CGFloat viewWidth = scrollView.bounds.size.width; // Scroll view width
-
-	CGFloat contentOffsetX = scrollView.contentOffset.x; // Content offset X
-
-	NSInteger page = (contentOffsetX / viewWidth); page++; // Page number
-
-	if (page != currentPage) // Only if on different page
-	{
-		currentPage = page; document.pageNumber = [NSNumber numberWithInteger:page];
-
-		[contentViews enumerateKeysAndObjectsUsingBlock: // Enumerate content views
-			^(NSNumber *key, ReaderContentView *contentView, BOOL *stop)
-			{
-				if ([key integerValue] != page) [contentView zoomResetAnimated:NO];
-			}
-		];
-
-		[mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
-
-		[_mainPagebar updatePagebar]; // Update page bar
-	}
+    if (!self.isChangingSize) {
+        
+        CGFloat viewWidth = scrollView.bounds.size.width; // Scroll view width
+        
+        CGFloat contentOffsetX = scrollView.contentOffset.x; // Content offset X
+        
+        NSInteger page = (contentOffsetX / viewWidth); page++; // Page number
+        
+        if (page != currentPage) // Only if on different page
+        {
+            currentPage = page; document.pageNumber = [NSNumber numberWithInteger:page];
+            
+            [contentViews enumerateKeysAndObjectsUsingBlock: // Enumerate content views
+             ^(NSNumber *key, ReaderContentView *contentView, BOOL *stop)
+             {
+                 if ([key integerValue] != page) [contentView zoomResetAnimated:NO];
+             }
+             ];
+            
+            [mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
+            
+            [_mainPagebar updatePagebar]; // Update page bar
+        }
+    }
+ 
+	
 }
 
 - (void)showDocumentPage:(NSInteger)page
@@ -323,6 +328,8 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+    
+    self.isChangingSize = NO;
 
 	assert(document != nil); // Must have a valid ReaderDocument
 
@@ -554,7 +561,7 @@
 
 		contentOffset.x -= theScrollView.bounds.size.width; // View X--
 
-		[theScrollView setContentOffset:contentOffset animated:YES];
+		[theScrollView setContentOffset:contentOffset animated:!self.isChangingSize];
 	}
 }
 
@@ -566,7 +573,7 @@
 
 		contentOffset.x += theScrollView.bounds.size.width; // View X++
 
-		[theScrollView setContentOffset:contentOffset animated:YES];
+		[theScrollView setContentOffset:contentOffset animated:!self.isChangingSize];
 	}
 }
 
