@@ -567,6 +567,7 @@
 		EA42FA54180565CB0006DB7C /* OCTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA53180565CB0006DB7C /* OCTabBarController.m */; };
 		EA42FA5A180C13710006DB7C /* cancel_download_white.png in Resources */ = {isa = PBXBuildFile; fileRef = EA42FA58180C13710006DB7C /* cancel_download_white.png */; };
 		EA42FA5B180C13710006DB7C /* cancel_download_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA42FA59180C13710006DB7C /* cancel_download_white@2x.png */; };
+		EA4340F21AFCB47E00CBCBBE /* ManageAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4340F11AFCB47E00CBCBBE /* ManageAccounts.m */; };
 		EA4914711AC0346100BECF0B /* TTOpenInAppActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4914691AC0346100BECF0B /* TTOpenInAppActivity.m */; };
 		EA4914721AC0346100BECF0B /* TTOpenInAppActivity.png in Resources */ = {isa = PBXBuildFile; fileRef = EA49146A1AC0346100BECF0B /* TTOpenInAppActivity.png */; };
 		EA4914731AC0346100BECF0B /* TTOpenInAppActivity@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA49146B1AC0346100BECF0B /* TTOpenInAppActivity@2x.png */; };
@@ -1400,6 +1401,8 @@
 		EA42FA53180565CB0006DB7C /* OCTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCTabBarController.m; path = Tabs/FileTab/OCTabBarController.m; sourceTree = "<group>"; };
 		EA42FA58180C13710006DB7C /* cancel_download_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cancel_download_white.png; sourceTree = "<group>"; };
 		EA42FA59180C13710006DB7C /* cancel_download_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel_download_white@2x.png"; sourceTree = "<group>"; };
+		EA4340F01AFCB47E00CBCBBE /* ManageAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageAccounts.h; sourceTree = "<group>"; };
+		EA4340F11AFCB47E00CBCBBE /* ManageAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageAccounts.m; sourceTree = "<group>"; };
 		EA4914681AC0346100BECF0B /* TTOpenInAppActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TTOpenInAppActivity.h; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity.h; sourceTree = "<group>"; };
 		EA4914691AC0346100BECF0B /* TTOpenInAppActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TTOpenInAppActivity.m; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity.m; sourceTree = "<group>"; };
 		EA49146A1AC0346100BECF0B /* TTOpenInAppActivity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TTOpenInAppActivity.png; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity.png; sourceTree = "<group>"; };
@@ -1986,6 +1989,8 @@
 				13C4DEF71636736800638B1D /* Add Account */,
 				13C4DEF81636737300638B1D /* Cell */,
 				13C4DEF61636736200638B1D /* Edit Account */,
+				EA4340F01AFCB47E00CBCBBE /* ManageAccounts.h */,
+				EA4340F11AFCB47E00CBCBBE /* ManageAccounts.m */,
 			);
 			name = Accounts;
 			sourceTree = "<group>";
@@ -3790,6 +3795,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA4340F21AFCB47E00CBCBBE /* ManageAccounts.m in Sources */,
 				59BF9B361A2C8BEA009D9CF0 /* DocumentPickerViewController.m in Sources */,
 				404FDA281A36EA9D008AB4E1 /* ManageLocation.m in Sources */,
 				59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */,

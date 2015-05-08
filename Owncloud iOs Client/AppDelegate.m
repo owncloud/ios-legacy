@@ -423,11 +423,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         _loginWindowViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPad" bundle:[NSBundle mainBundle]];
     }
     
-    //[self presentModalViewController:_loginWindowViewController animated:NO];
-    
-  
-    
-    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     self.window.rootViewController = self.loginWindowViewController;
