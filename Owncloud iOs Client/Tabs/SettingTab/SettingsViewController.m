@@ -878,18 +878,13 @@
         //Delete the tables of this user
         [ManageUsersDB removeUserAndDataByIdUser: selectedUser.idUser];
         
-        //[self cancelUploadsByUser:(UserDto *) selectedUser];
-        
         [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:selectedUser];
         
         //Delete files os user in the system
         NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)selectedUser.idUser];
         NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
         
-        //NSString *userFolder = [NSString stringWithFormat:@"/%d",selectedUser.idUser];
-        //NSString *path= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:userFolder];
-        
-        
+
         NSError *error;
         [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
         
@@ -905,7 +900,7 @@
             [self setCookiesOfActiveAccount];
             
             //If ipad, clean the detail view
-            if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            if (!IS_IPHONE) {
                 AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
                 [app presentWithView];
             }
@@ -925,10 +920,9 @@
             appDelegate.uploadArray=[[NSMutableArray alloc]init];
             [appDelegate updateRecents];
             [appDelegate restartAppAfterDeleteAllAccounts];
-            
         }
         
-        //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }

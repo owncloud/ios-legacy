@@ -244,9 +244,6 @@
 		148DD6C21778697100FB9977 /* AccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6C01778697100FB9977 /* AccountCell.xib */; };
 		148DD6C61778698300FB9977 /* EditAccountViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6C31778698300FB9977 /* EditAccountViewController_iPhone.xib */; };
 		148DD6C71778698300FB9977 /* EditAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6C51778698300FB9977 /* EditAccountViewController.m */; };
-		148DD6CC1778699700FB9977 /* AccountsViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6C81778699700FB9977 /* AccountsViewController_iPad.xib */; };
-		148DD6CD1778699700FB9977 /* AccountsViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6C91778699700FB9977 /* AccountsViewController_iPhone.xib */; };
-		148DD6CE1778699700FB9977 /* AccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6CB1778699700FB9977 /* AccountsViewController.m */; };
 		148DD6D8177869C800FB9977 /* Impressum.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6D4177869C800FB9977 /* Impressum.rtf */; };
 		148DD6D9177869C800FB9977 /* ImpressumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6D6177869C800FB9977 /* ImpressumViewController.m */; };
 		148DD6DA177869C800FB9977 /* ImpressumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6D7177869C800FB9977 /* ImpressumViewController.xib */; };
@@ -567,7 +564,6 @@
 		EA42FA54180565CB0006DB7C /* OCTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA53180565CB0006DB7C /* OCTabBarController.m */; };
 		EA42FA5A180C13710006DB7C /* cancel_download_white.png in Resources */ = {isa = PBXBuildFile; fileRef = EA42FA58180C13710006DB7C /* cancel_download_white.png */; };
 		EA42FA5B180C13710006DB7C /* cancel_download_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA42FA59180C13710006DB7C /* cancel_download_white@2x.png */; };
-		EA4340F21AFCB47E00CBCBBE /* ManageAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4340F11AFCB47E00CBCBBE /* ManageAccounts.m */; };
 		EA4914711AC0346100BECF0B /* TTOpenInAppActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4914691AC0346100BECF0B /* TTOpenInAppActivity.m */; };
 		EA4914721AC0346100BECF0B /* TTOpenInAppActivity.png in Resources */ = {isa = PBXBuildFile; fileRef = EA49146A1AC0346100BECF0B /* TTOpenInAppActivity.png */; };
 		EA4914731AC0346100BECF0B /* TTOpenInAppActivity@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA49146B1AC0346100BECF0B /* TTOpenInAppActivity@2x.png */; };
@@ -1179,10 +1175,6 @@
 		148DD6C31778698300FB9977 /* EditAccountViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EditAccountViewController_iPhone.xib; path = Tabs/SettingTab/Account/EditAccount/EditAccountViewController_iPhone.xib; sourceTree = "<group>"; };
 		148DD6C41778698300FB9977 /* EditAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditAccountViewController.h; path = Tabs/SettingTab/Account/EditAccount/EditAccountViewController.h; sourceTree = "<group>"; };
 		148DD6C51778698300FB9977 /* EditAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditAccountViewController.m; path = Tabs/SettingTab/Account/EditAccount/EditAccountViewController.m; sourceTree = "<group>"; };
-		148DD6C81778699700FB9977 /* AccountsViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AccountsViewController_iPad.xib; path = Tabs/SettingTab/Account/AccountsViewController_iPad.xib; sourceTree = "<group>"; };
-		148DD6C91778699700FB9977 /* AccountsViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AccountsViewController_iPhone.xib; path = Tabs/SettingTab/Account/AccountsViewController_iPhone.xib; sourceTree = "<group>"; };
-		148DD6CA1778699700FB9977 /* AccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountsViewController.h; path = Tabs/SettingTab/Account/AccountsViewController.h; sourceTree = "<group>"; };
-		148DD6CB1778699700FB9977 /* AccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountsViewController.m; path = Tabs/SettingTab/Account/AccountsViewController.m; sourceTree = "<group>"; };
 		148DD6D4177869C800FB9977 /* Impressum.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Impressum.rtf; path = Tabs/SettingTab/Imprint/Impressum.rtf; sourceTree = "<group>"; };
 		148DD6D5177869C800FB9977 /* ImpressumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImpressumViewController.h; path = Tabs/SettingTab/Imprint/ImpressumViewController.h; sourceTree = "<group>"; };
 		148DD6D6177869C800FB9977 /* ImpressumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImpressumViewController.m; path = Tabs/SettingTab/Imprint/ImpressumViewController.m; sourceTree = "<group>"; };
@@ -1401,8 +1393,6 @@
 		EA42FA53180565CB0006DB7C /* OCTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCTabBarController.m; path = Tabs/FileTab/OCTabBarController.m; sourceTree = "<group>"; };
 		EA42FA58180C13710006DB7C /* cancel_download_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cancel_download_white.png; sourceTree = "<group>"; };
 		EA42FA59180C13710006DB7C /* cancel_download_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel_download_white@2x.png"; sourceTree = "<group>"; };
-		EA4340F01AFCB47E00CBCBBE /* ManageAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageAccounts.h; sourceTree = "<group>"; };
-		EA4340F11AFCB47E00CBCBBE /* ManageAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageAccounts.m; sourceTree = "<group>"; };
 		EA4914681AC0346100BECF0B /* TTOpenInAppActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TTOpenInAppActivity.h; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity.h; sourceTree = "<group>"; };
 		EA4914691AC0346100BECF0B /* TTOpenInAppActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TTOpenInAppActivity.m; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity.m; sourceTree = "<group>"; };
 		EA49146A1AC0346100BECF0B /* TTOpenInAppActivity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TTOpenInAppActivity.png; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity.png; sourceTree = "<group>"; };
@@ -1982,15 +1972,9 @@
 		13C4DEF51636735800638B1D /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
-				148DD6C81778699700FB9977 /* AccountsViewController_iPad.xib */,
-				148DD6C91778699700FB9977 /* AccountsViewController_iPhone.xib */,
-				148DD6CA1778699700FB9977 /* AccountsViewController.h */,
-				148DD6CB1778699700FB9977 /* AccountsViewController.m */,
 				13C4DEF71636736800638B1D /* Add Account */,
 				13C4DEF81636737300638B1D /* Cell */,
 				13C4DEF61636736200638B1D /* Edit Account */,
-				EA4340F01AFCB47E00CBCBBE /* ManageAccounts.h */,
-				EA4340F11AFCB47E00CBCBBE /* ManageAccounts.m */,
 			);
 			name = Accounts;
 			sourceTree = "<group>";
@@ -3315,8 +3299,6 @@
 				EABF68F2188FC2FA00A2217C /* TABShares.png in Resources */,
 				148DD6C21778697100FB9977 /* AccountCell.xib in Resources */,
 				148DD6C61778698300FB9977 /* EditAccountViewController_iPhone.xib in Resources */,
-				148DD6CC1778699700FB9977 /* AccountsViewController_iPad.xib in Resources */,
-				148DD6CD1778699700FB9977 /* AccountsViewController_iPhone.xib in Resources */,
 				148DD6D8177869C800FB9977 /* Impressum.rtf in Resources */,
 				148DD6DA177869C800FB9977 /* ImpressumViewController.xib in Resources */,
 				148DD6E917786A1400FB9977 /* SettingsViewController.xib in Resources */,
@@ -3795,7 +3777,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EA4340F21AFCB47E00CBCBBE /* ManageAccounts.m in Sources */,
 				59BF9B361A2C8BEA009D9CF0 /* DocumentPickerViewController.m in Sources */,
 				404FDA281A36EA9D008AB4E1 /* ManageLocation.m in Sources */,
 				59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */,
@@ -3887,7 +3868,6 @@
 				59C71D121A9216AE00F66166 /* CGPDFDocument.m in Sources */,
 				EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */,
 				59AE9EB21990FEC2003380A8 /* CheckHasShareSupport.m in Sources */,
-				148DD6CE1778699700FB9977 /* AccountsViewController.m in Sources */,
 				EABF69191891379C00A2217C /* SWUtilityButtonView.m in Sources */,
 				148DD6D9177869C800FB9977 /* ImpressumViewController.m in Sources */,
 				148DD6E817786A1400FB9977 /* SettingsViewController.m in Sources */,
