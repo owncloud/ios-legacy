@@ -483,11 +483,8 @@
  
  AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
  [appDelegate checkIfServerSupportThings];
+    
 }
-
-
-
-
 
 #pragma mark - AddAccountDelegate
 

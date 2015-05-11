@@ -880,7 +880,7 @@
         
         //[self cancelUploadsByUser:(UserDto *) selectedUser];
         
-        [self performSelectorInBackground:@selector(cancelAndremoveFromTabRecentsAllInfoByUser:) withObject:selectedUser];
+        [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:selectedUser];
         
         //Delete files os user in the system
         NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)selectedUser.idUser];
@@ -932,35 +932,6 @@
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }
-}
-
-
-#pragma mark - Resizing Label
-
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (tableView.editing) {
-        
-        AccountCell *cell = (AccountCell *) [self.settingsTableView cellForRowAtIndexPath:indexPath];
-        
-        [cell.urlServer setFrame:CGRectMake(52, 20, 150, 21)];
-        cell.urlServer.lineBreakMode = NSLineBreakByTruncatingTail;
-        
-        return UITableViewCellEditingStyleDelete;
-    }
-    else {
-        // do your thing
-        return UITableViewCellEditingStyleDelete;
-    }
-}
-
--(void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    AccountCell *cell = (AccountCell *) [self.settingsTableView cellForRowAtIndexPath:indexPath];
-    
-    [cell.urlServer setFrame:CGRectMake(52, 20, 204, 21)];
-    cell.urlServer.lineBreakMode = NSLineBreakByTruncatingTail;
-    
 }
 
 
@@ -1220,7 +1191,7 @@
 }
 
 ///-----------------------------------
-/// @name cancelAndremoveFromTabRecentsAllInfoByUser
+/// @name cancelAndRemoveFromTabRecentsAllInfoByUser
 ///-----------------------------------
 
 /**
@@ -1230,7 +1201,7 @@
  *
  */
 
-- (void) cancelAndremoveFromTabRecentsAllInfoByUser:(UserDto *) selectedUser {
+- (void) cancelAndRemoveFromTabRecentsAllInfoByUser:(UserDto *) selectedUser {
     
     //1- - We cancell all the downloads
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
