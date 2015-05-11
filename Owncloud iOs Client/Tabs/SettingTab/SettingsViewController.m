@@ -102,8 +102,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-   // DLog(@"Hello in settings view");
     
     self.title = NSLocalizedString(@"settings", nil);
     
@@ -115,7 +113,6 @@
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-    
     self.edgesForExtendedLayout = UIRectCornerAllCorners;
 }
 
@@ -142,6 +139,11 @@
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+}
+
+-(void)viewWillLayoutSubviews
+{
+    [self.settingsTableView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -269,7 +271,7 @@
     if (k_multiaccount_available) {
         sections = 5;
      } else {
-         sections = 4;
+        sections = 4;
      }
     return sections;
 }
@@ -281,7 +283,12 @@
     
     switch (section) {
         case 0:
-            n = self.listUsers.count;
+            
+            if (k_multiaccount_available) {
+                n = self.listUsers.count;
+            }else{
+                n = 1;
+            }
             break;
             
         case 1:
@@ -297,20 +304,17 @@
             if (k_multiaccount_available) {
                n = 1;
             }else{
-                if (k_multiaccount_available) {
-                    
-                    if (k_show_help_option_on_settings) {
-                        n = n + 1;
-                    }
-                    if (k_show_recommend_option_on_settings) {
-                        n = n + 1;
-                    }
-                    if (k_show_feedback_option_on_settings) {
-                        n = n + 1;
-                    }
-                    if (k_show_imprint_option_on_settings) {
-                        n = n + 1;
-                    }
+                if (k_show_help_option_on_settings) {
+                    n = n + 1;
+                }
+                if (k_show_recommend_option_on_settings) {
+                    n = n + 1;
+                }
+                if (k_show_feedback_option_on_settings) {
+                    n = n + 1;
+                }
+                if (k_show_imprint_option_on_settings) {
+                    n = n + 1;
                 }
             }
 
@@ -354,7 +358,11 @@
     
     switch (indexPath.section) {
         case 0:
-            cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
+            if (k_multiaccount_available) {
+                cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
+            }else{
+                cell = [self getSectionDisconnectButton:cell byRow:indexPath.row];
+            }
             break;
             
         case 1:
@@ -763,6 +771,28 @@
     return addAccountCell;
 }
 
+- (UITableViewCell *) getSectionDisconnectButton:(UITableViewCell *) cell byRow:(NSInteger) row {
+    
+    
+    static NSString *CellIdentifier = @"DisconnectCell";
+    
+    UITableViewCell *disconnectCell;
+    
+    disconnectCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    
+    UIFont *cellBoldFont = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
+    
+    disconnectCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    disconnectCell.textLabel.font = cellBoldFont;
+    disconnectCell.textLabel.textAlignment = NSTextAlignmentCenter;
+    disconnectCell.editing = NO;
+    disconnectCell.textLabel.text = NSLocalizedString(@"disconnect_button", nil);
+    disconnectCell.backgroundColor = [UIColor colorOfBackgroundButtonOnList];
+    disconnectCell.textLabel.textColor = [UIColor colorOfTextButtonOnList];
+    
+    return disconnectCell;
+}
+
 
 
 #pragma mark - UITableView delegate
@@ -774,12 +804,11 @@
     
     switch (indexPath.section) {
         case 0:
-            //Select account
-           // [self didPressOnManageAccountsBlock:indexPath.row];
-            
-            [self didPressOnAccountIndexPath:indexPath];
-            
-            
+            if (k_multiaccount_available) {
+                [self didPressOnAccountIndexPath:indexPath];
+            }else{
+                [self disconnectUser];
+            }
             break;
             
         case 1:
@@ -823,6 +852,117 @@
     }
     
 }
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return NO if you do not want the specified item to be editable.
+    if(indexPath.section > 0) {
+        return NO;
+    }
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    DLog(@"DELETE!!! %ld", (long)indexPath.row);
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
+        
+        //Cancel downloads of the active user
+        if (selectedUser.idUser == app.activeUser.idUser) {
+            [self cancelAllDownloadsOfActiveUser];
+        }
+        
+        //Delete the tables of this user
+        [ManageUsersDB removeUserAndDataByIdUser: selectedUser.idUser];
+        
+        //[self cancelUploadsByUser:(UserDto *) selectedUser];
+        
+        [self performSelectorInBackground:@selector(cancelAndremoveFromTabRecentsAllInfoByUser:) withObject:selectedUser];
+        
+        //Delete files os user in the system
+        NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)selectedUser.idUser];
+        NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
+        
+        //NSString *userFolder = [NSString stringWithFormat:@"/%d",selectedUser.idUser];
+        //NSString *path= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:userFolder];
+        
+        
+        NSError *error;
+        [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+        
+        
+        //if previeus account is active we active the first by iduser
+        if(selectedUser.activeaccount) {
+            
+            [ManageUsersDB setActiveAccountAutomatically];
+            
+            //Update in appDelegate the active user
+            app.activeUser = [ManageUsersDB getActiveUser];
+            
+            [self setCookiesOfActiveAccount];
+            
+            //If ipad, clean the detail view
+            if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                [app presentWithView];
+            }
+        }
+        
+        self.listUsers = [ManageUsersDB getAllUsers];
+        
+        if([self.listUsers count] > 0) {
+            [self.settingsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+        } else {
+            
+            self.settingsTableView.editing = NO;
+            
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            
+            [appDelegate.downloadManager cancelDownloads];
+            appDelegate.uploadArray=[[NSMutableArray alloc]init];
+            [appDelegate updateRecents];
+            [appDelegate restartAppAfterDeleteAllAccounts];
+            
+        }
+        
+        //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+    }
+}
+
+
+#pragma mark - Resizing Label
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (tableView.editing) {
+        
+        AccountCell *cell = (AccountCell *) [self.settingsTableView cellForRowAtIndexPath:indexPath];
+        
+        [cell.urlServer setFrame:CGRectMake(52, 20, 150, 21)];
+        cell.urlServer.lineBreakMode = NSLineBreakByTruncatingTail;
+        
+        return UITableViewCellEditingStyleDelete;
+    }
+    else {
+        // do your thing
+        return UITableViewCellEditingStyleDelete;
+    }
+}
+
+-(void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    AccountCell *cell = (AccountCell *) [self.settingsTableView cellForRowAtIndexPath:indexPath];
+    
+    [cell.urlServer setFrame:CGRectMake(52, 20, 204, 21)];
+    cell.urlServer.lineBreakMode = NSLineBreakByTruncatingTail;
+    
+}
+
 
 #pragma mark - DidSelectRow Sections
 
@@ -1046,6 +1186,82 @@
         }
         app.isNewUser = YES;
     }
+}
+
+#pragma mark - AddAccountDelegate
+
+- (void) refreshTable {
+    self.listUsers = [ManageUsersDB getAllUsers];
+    [self.settingsTableView reloadData];
+}
+
+
+#pragma mark - Manage Accounts Methods
+
+//-----------------------------------
+/// @name setCookiesOfActiveAccount
+///-----------------------------------
+
+/**
+ * Method to delete the current cookies and add the cookies of the active account
+ *
+ * @warning we have to take in account that the cookies of the active account must to be in the database
+ */
+- (void) setCookiesOfActiveAccount {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    //1- Delete the current cookies because we delete the current active user
+    [UtilsFramework deleteAllCookies];
+    //2- We restore the previous cookies of the active user on the System cookies storage
+    [UtilsCookies setOnSystemStorageCookiesByUser:app.activeUser];
+    //3- We delete the cookies of the active user on the databse because it could change and it is not necessary keep them there
+    [ManageCookiesStorageDB deleteCookiesByUser:app.activeUser];
+}
+
+///-----------------------------------
+/// @name cancelAndremoveFromTabRecentsAllInfoByUser
+///-----------------------------------
+
+/**
+ * This method cancel the uploads of a deleted user and after that remove all the other files from Recents Tab
+ *
+ * @param UserDto
+ *
+ */
+
+- (void) cancelAndremoveFromTabRecentsAllInfoByUser:(UserDto *) selectedUser {
+    
+    //1- - We cancell all the downloads
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    //Create an array with the data of all uploads
+    __block NSArray *uploadsArray = [NSArray arrayWithArray:appDelegate.uploadArray];
+    
+    //Var to use the current ManageUploadRequest
+    __block ManageUploadRequest *currentManageUploadRequest = nil;
+    
+    
+    //Make a loop for all objects of uploadsArray.
+    [uploadsArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        currentManageUploadRequest = obj;
+        
+        if (currentManageUploadRequest.userUploading.idUser == selectedUser.idUser) {
+            [currentManageUploadRequest cancelUpload];
+        }
+        
+        //2- Clean the recent view
+        if ([uploadsArray count] == idx) {
+            
+            DLog(@"All canceled. Now we clean the view");
+            
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            
+            //Remove from Recents tab all the info of this user
+            [app removeFromTabRecentsAllInfoByUser:selectedUser];
+        }
+    }];
+    
 }
 
 
