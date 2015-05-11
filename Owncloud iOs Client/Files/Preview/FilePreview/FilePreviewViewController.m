@@ -551,17 +551,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  * This method checks if there is on a favorite file a new version on the server
  */
 - (void) checkIfThereIsANewFavoriteVersion {
-    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    //Set if there is a new version of a favorite file and it's not checked
     
-    if([[AppDelegate sharedManageFavorites] thereIsANewVersionAvailableOfThisFile:_file]) {
-        //Set the file as isNecessaryUpdate
-        [ManageFilesDB setIsNecessaryUpdateOfTheFile:_file.idFile];
-        //Update the file on memory
-        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
-        //Do the request to get the shared items
-        [self handleFile];
+    if (!self.manageFavorites) {
+        self.manageFavorites = [ManageFavorites new];
+        self.manageFavorites.delegate = self;
     }
+    
+    [self.manageFavorites thereIsANewVersionAvailableOfThisFile:self.file];
 }
 
 /*
@@ -1599,6 +1595,25 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     //Update the preview file with the new information in DB
     _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     app.isOverwriteProcess = NO;
+}
+
+#pragma mark - ManageFavoritesDelegate
+
+- (void) fileHaveNewVersion:(BOOL)isNewVersionAvailable {
+    
+    if(isNewVersionAvailable) {
+        
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        //Set if there is a new version of a favorite file and it's not checked
+        
+        //Set the file as isNecessaryUpdate
+        [ManageFilesDB setIsNecessaryUpdateOfTheFile:_file.idFile];
+        //Update the file on memory
+        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+        //Do the request to get the shared items
+        [self handleFile];
+    }
+    
 }
 
 @end

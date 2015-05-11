@@ -24,6 +24,7 @@
 #import "OCToolBar.h"
 #import "CWStatusBarNotification.h"
 #import "ShareFileOrFolder.h"
+#import "ManageFavorites.h"
 
 @class ReaderDocument;
 @class ReaderViewController;
@@ -43,7 +44,7 @@ extern NSString * IpadCleanPreviewNotification;
 extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, ShareFileOrFolderDelegate, UIAlertViewDelegate> {
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, ShareFileOrFolderDelegate, UIAlertViewDelegate, ManageFavoritesDelegate> {
     
     //Bar buttons
     IBOutlet UIBarButtonItem *_spaceBar;
@@ -128,6 +129,9 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 //VFR Pdf reader
 @property(nonatomic, strong) ReaderDocument *documentPDF;
 @property(nonatomic, strong) ReaderViewController *readerPDFViewController;
+
+//Favorites
+@property(nonatomic, strong) ManageFavorites *manageFavorites;
 
 ///-----------------------------------
 /// @name Handle File

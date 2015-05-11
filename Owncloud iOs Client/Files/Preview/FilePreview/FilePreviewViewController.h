@@ -25,6 +25,7 @@
 #import "OCToolBar.h"
 #import "CWStatusBarNotification.h"
 #import "ShareFileOrFolder.h"
+#import "ManageFavorites.h"
 
 @class ReaderDocument;
 @class ReaderViewController;
@@ -33,7 +34,7 @@ extern NSString * iPhoneCleanPreviewNotification;
 extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 
 
-@interface FilePreviewViewController : UIViewController <UIAlertViewDelegate, DeleteFileDelegate, CheckAccessToServerDelegate, DownloadDelegate, MediaViewControllerDelegate, GalleryViewDelegate, ShareFileOrFolderDelegate>
+@interface FilePreviewViewController : UIViewController <UIAlertViewDelegate, DeleteFileDelegate, CheckAccessToServerDelegate, DownloadDelegate, MediaViewControllerDelegate, GalleryViewDelegate, ShareFileOrFolderDelegate, ManageFavoritesDelegate>
 {
     //Autolayout attributes
     IBOutlet NSLayoutConstraint *_progressViewHeightConstraint;
@@ -89,7 +90,8 @@ extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 @property(nonatomic, strong) ReaderDocument *documentPDF;
 @property(nonatomic, strong) ReaderViewController *readerPDFViewController;
 
-
+//Favorites
+@property(nonatomic, strong) ManageFavorites *manageFavorites;
 
 /*
  * Init method

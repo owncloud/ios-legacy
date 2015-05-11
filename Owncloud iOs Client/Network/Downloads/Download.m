@@ -581,8 +581,8 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
  */
 - (void)removeDownloadOfGlobalArray{
     //Remove this objetc to a main class "AppDelegate"
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.downloadManager removeDownload:self];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [app.downloadManager removeDownload:self];
 }
 
 #pragma mark - Favorites 
@@ -591,8 +591,8 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
  * Remove _fileDto of the sync process
  */
 - (void) removeFileOfFavorites{
-    
-    [[AppDelegate sharedManageFavorites] removeOfSyncProcessFile:_fileDto];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [app.manageFavorites removeOfSyncProcessFile:_fileDto];
 }
 
 #pragma mark - FilesViewController callBacks
