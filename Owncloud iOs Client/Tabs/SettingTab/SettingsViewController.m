@@ -38,6 +38,9 @@
 #import "PrepareFilesToUpload.h"
 #import "UploadUtils.h"
 
+#import "UtilsCookies.h"
+#import "ManageCookiesStorageDB.h"
+
 #define k_padding_normal_section 20.0
 #define k_padding_under_section 5.0
 
@@ -714,7 +717,7 @@
     }
     
     accountCell.delegate = self;
-    [accountCell.activeButton setTag:0];
+    [accountCell.activeButton setTag:row];
     
     accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
     accountCell.userName.text = ((UserDto *) [self.listUsers objectAtIndex:row]).username;
@@ -762,8 +765,6 @@
 
 
 
-
-
 #pragma mark - UITableView delegate
 
 // Tells the delegate that the specified row is now selected.
@@ -771,11 +772,56 @@
 {   
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (indexPath.section == 0) {
-        [self didPressOnManageAccountsBlock:indexPath.row];
-    } else if (indexPath.section == 3) {
-        [self didPressOnInfoBlock:indexPath.row];
+    switch (indexPath.section) {
+        case 0:
+            //Select account
+           // [self didPressOnManageAccountsBlock:indexPath.row];
+            
+            [self didPressOnAccountIndexPath:indexPath];
+            
+            
+            break;
+            
+        case 1:
+            if (k_multiaccount_available) {
+                [self didPressOnAddAccountButton];
+            }
+            break;
+            
+        case 3:
+            if (!k_multiaccount_available) {
+                [self didPressOnInfoBlock:indexPath.row];
+            }
+            break;
+            
+        case 4:
+            if (k_multiaccount_available) {
+                [self didPressOnInfoBlock:indexPath.row];
+            }
+            break;
+            
+        default:
+            break;
     }
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
+    
+    //Edit Account
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:(UserDto *)[self.listUsers objectAtIndex:indexPath.row]];
+    
+    if (IS_IPHONE)
+    {
+        viewController.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:navController animated:YES completion:nil];
+    }
+    
 }
 
 #pragma mark - DidSelectRow Sections
@@ -860,7 +906,6 @@
             
         case recommend:
         {
-            DLog(@"");
             
             if (IS_IPHONE && (!IS_PORTRAIT)) {
                 
@@ -916,6 +961,107 @@
         default:
             break;
     }
+}
+
+- (void) didPressOnAddAccountButton{
+   
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    //Add Account
+    AddAccountViewController *viewController = [[AddAccountViewController alloc]initWithNibName:@"AddAccountViewController_iPhone" bundle:nil];
+    viewController.delegate = self;
+    
+    if (IS_IPHONE)
+    {
+        viewController.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else {
+        
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:navController animated:YES completion:nil];
+    }
+
+}
+
+- (void) didPressOnAccountIndexPath:(NSIndexPath*)indexPath {
+    
+    [self cancelAllDownloadsOfActiveUser];
+    
+    //Method to change the account
+    AccountCell *cell = (AccountCell *) [self.settingsTableView cellForRowAtIndexPath:indexPath];
+    [cell activeAccount:nil];
+}
+
+#pragma mark - AccountCell Delegate Methods
+
+-(void)activeAccountByPosition:(NSInteger)position {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:position];
+    
+    if (app.activeUser.idUser != selectedUser.idUser) {
+        //Cancel downloads of the previous user
+        [self cancelAllDownloadsOfActiveUser];
+        
+        //If ipad, clean the detail view
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            [app presentWithView];
+        }
+        
+        [ManageUsersDB setAllUsersNoActive];
+        [ManageUsersDB setActiveAccountByIdUser:selectedUser.idUser];
+        selectedUser.activeaccount = YES;
+        
+        //Restore the cookies of the future activeUser
+        //1- Storage the new cookies on the Database
+        [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
+        //2- Clean the cookies storage
+        [UtilsFramework deleteAllCookies];
+        //3- We restore the previous cookies of the active user on the System cookies storage
+        [UtilsCookies setOnSystemStorageCookiesByUser:selectedUser];
+        //4- We delete the cookies of the active user on the databse because it could change and it is not necessary keep them there
+        [ManageCookiesStorageDB deleteCookiesByUser:selectedUser];
+        
+        //Change the active user in appDelegate global variable
+        app.activeUser = selectedUser;
+        
+        //Check if the server is Chunk
+        [self performSelectorInBackground:@selector(checkShareItemsInAppDelegate) withObject:nil];
+        
+        [UtilsCookies eraseURLCache];
+        
+        self.listUsers = [ManageUsersDB getAllUsers];
+        [self.settingsTableView reloadData];
+        
+        //We get the current folder to create the local tree
+        //we create the user folder to haver multiuser
+        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)selectedUser.idUser];
+        DLog(@"current: %@", currentLocalFileToCreateFolder);
+        
+        if (![[NSFileManager defaultManager] fileExistsAtPath:currentLocalFileToCreateFolder]) {
+            NSError *error = nil;
+            [[NSFileManager defaultManager] createDirectoryAtPath:currentLocalFileToCreateFolder withIntermediateDirectories:NO attributes:nil error:&error];
+            DLog(@"Error: %@", [error localizedDescription]);
+        }
+        app.isNewUser = YES;
+    }
+}
+
+
+#pragma mark - Utils
+
+- (void) cancelAllDownloadsOfActiveUser {
+    //Cancel downloads in ipad
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    [appDelegate.downloadManager cancelDownloads];
+}
+
+#pragma mark - Check Server version in order to use chunks to upload or not
+- (void)checkShareItemsInAppDelegate{
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate checkIfServerSupportThings];
 }
 
 #pragma mark - UIActionSheetDelegate
