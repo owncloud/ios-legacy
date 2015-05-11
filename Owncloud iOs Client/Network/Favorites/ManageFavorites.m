@@ -158,7 +158,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
         
         //FileName full path
         NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:user];
-        NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:file.filePath andUser:user], file.fileName];
+        NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:user], file.fileName];
         
         path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
@@ -192,7 +192,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                         FileDto *item = [directoryList objectAtIndex:0];
                         
                         //Update the file data
-                        FileDto *updatedFile = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:user] andUser:user];
+                        FileDto *updatedFile = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:user] andUser:user];
                         
                         //Check if the etag has changed
                         if (((![item.etag isEqual: updatedFile.etag] && updatedFile.isDownload != downloading && updatedFile.isDownload != updating) || (updatedFile.isDownload == notDownload)) && updatedFile) {
@@ -213,7 +213,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                             //Data to download
                             //Get the current local folder
                             AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                            NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:updatedFile.filePath ofUserDto:user]];
+                            NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:updatedFile.filePath andUser:user]];
                             currentLocalFolder = [currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                             
                             Download *download = [Download new];
@@ -334,7 +334,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     
     //FileName full path
     NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:favoriteFile.filePath andUser:app.activeUser], favoriteFile.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:favoriteFile.filePath andUser:app.activeUser], favoriteFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     

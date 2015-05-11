@@ -1244,7 +1244,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     
                     //Local folder
                     NSString *localFolder = nil;
-                    localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:self.activeUser]];
+                    localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.idUser, [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:self.activeUser]];
                     localFolder = [localFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                     
                     download.currentLocalFolder = localFolder;
@@ -2359,7 +2359,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self createAManageRequestUploadWithTheUploadOffline:fileForUpload];
     DLog(@"The file is on server");
     
-    currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath andUser:self.activeUser] andUser:self.activeUser];
+    currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath andUser:self.activeUser] andUser:self.activeUser];
     
     if (currentFile.isDownload == overwriting) {
         [ManageFilesDB setFileIsDownloadState:currentFile.idFile andState:downloaded];

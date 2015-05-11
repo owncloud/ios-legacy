@@ -21,133 +21,6 @@
 
 @implementation UtilsDtos
 
-//This method return the part of file path that is valid in the data base
-+(NSString *) getDbBFolderPathFromFullFolderPath:(NSString *) fullFilePath andUser:(UserDto *) user {
-    
-    NSString *output = @"";
-    
-    //if the path the receive is:  /owncloud/remote.php/webdav/Fotos11/
-    //we have to return: Fotos11/
-    //if the path the receive is: /owncloud/remote.php/webdav/Fotos11/AA/
-    //we have to return: Fotos11/AA/
-    
-    //0.- Catch the length  
-    
-    //DLog(@"User url is:%@", currentUser.url);
-    NSString *serverURL=@"";
-    
-    NSArray *splitePath = [[UtilsUrls getFullRemoteServerPath:user] componentsSeparatedByString:@"/"];
-    
-    for (int i = 0; i < [splitePath count]; i++) {
-        if (i > 2) {
-            serverURL = [NSString stringWithFormat:@"%@%@", serverURL, [splitePath objectAtIndex:i]];
-        }
-        //If the address of the server is like: daily.owncloud.com/master/owncloud/remote.php/webdav/
-        if ([splitePath count] > 4) {
-            if (i > 2 && i < [splitePath count]-2) {
-                serverURL = [NSString stringWithFormat:@"%@/",serverURL];
-            }
-        }
-    }
-    
-    DLog(@"Server URL is: %@", serverURL);
-    
-    NSUInteger serverLength;
-    
-    if ([serverURL isEqualToString:@""]) {
-       serverLength = [[NSString stringWithFormat:@"%@", k_url_webdav_server]length];
-       serverLength++;
-    }else{
-       serverLength = [[NSString stringWithFormat:@"/%@/%@",serverURL, k_url_webdav_server]length];
-    }
-    
-   // NSUInteger serverLength=[[NSString stringWithFormat:@"/owncloud/%@", k_url_webdav_server]length];
-   // NSUInteger userUrlLength= [currentUser.url length];
-    
-    //1.- Quit the part of the server
-    output= [fullFilePath substringFromIndex:(serverLength)];
-    
-  //  DLog(@"Path folder for database: %@", output);
-    
-    return output;
-}
-
-//This method return the part of file path that is valid in the data base
-+(NSString *) getDbBFilePathFromFullFilePath:(NSString *) fullFilePath andUser:(UserDto *) user {
-    
-    DLog(@"full file path: %@", fullFilePath);
-    NSString *output = @"";
-    
-    //if the path the receive is: http:\//domain/owncloud/remote.php/webdav/Fotos11/perico2.txt
-    //we have to return: Fotos11/
-    //if the path the receive is: http:\//domain/owncloud/remote.php/webdav/Fotos11/AA/perico2.txt
-    //we have to return: Fotos11/AA/
-
-    //1.- Quit the part of the server
-    NSUInteger serverLength=[[NSString stringWithFormat:@"%@", k_url_webdav_server]length];
-    NSUInteger userUrlLength= [[UtilsUrls getFullRemoteServerPath:user] length];
-    
-    fullFilePath= [fullFilePath substringFromIndex:(serverLength+userUrlLength)];
-    
-    //2.- Quit the name
-    NSArray *splitePath = [fullFilePath componentsSeparatedByString:@"/"];
-    
-    for (int i = 0; i < [splitePath count]; i++) {
-        
-        if (i != [splitePath count]-1) {
-            
-            output = [NSString stringWithFormat:@"%@%@/", output, [splitePath objectAtIndex:i]];
-        }
-    }
-    
-  //  DLog(@"output before the substring: %@", output);
-    
-    //output=[output substringFromIndex:1];
-    
-    
-    return output;
-}
-
-
-//This method return de newfolderpath to find a folder object in DataBase
-+(NSString *) getDbFolderPathWithoutUTF8FromFilePath:(NSString *) fullFilePath andUser:(UserDto *) user {
-    
-    DLog(@"full file path: %@", fullFilePath);
-    NSString *output = @"";
-    
-    //if the path the receive is: /owncloud/remote.php/webdav/Fotos11/perico2.txt
-    //we have to return: Fotos11/
-    //if the path the receive is: /owncloud/remote.php/webdav/Fotos11/AA/perico2.txt
-    //we have to return: Fotos11/AA/
-    
-    //1.- Quit the part of the server
-    NSUInteger serverLength=[[NSString stringWithFormat:@"%@", k_url_webdav_server]length];
-    NSUInteger userUrlLength= [[UtilsUrls getFullRemoteServerPath:user] length];
-    
-    fullFilePath= [fullFilePath substringFromIndex:(serverLength+userUrlLength)];
-    
-    //2.- Quit the name
-    NSArray *splitePath = [fullFilePath componentsSeparatedByString:@"/"];
-    
-    
-    NSString *stringWithoutUTF;
-    
-    for (int i = 0; i < [splitePath count]; i++) {
-        
-        if (i != [splitePath count]-1) {
-            stringWithoutUTF = [splitePath objectAtIndex:i];
-            output = [NSString stringWithFormat:@"%@%@/", output, stringWithoutUTF];
-        }
-    }
-    
-    //  DLog(@"output before the substring: %@", output);
-    
-    //output=[output substringFromIndex:1];
-    
-    
-    return output;
-}
-
 //This method return de newfolderpath to find a folder object in DataBase
 +(NSString *) getDbFolderPathFromFilePath:(NSString *) filePath {
     NSString *output = @"";
@@ -248,32 +121,6 @@
     return output;
 }
 
-//----------------------------------------------
-/// @name getFilePathOnDBFromFilePathOnFileDto
-///---------------------------------------------
-/**
- * Method used to get only the path in db from fileDtoPath
- *
- * @param filePathOnFileDto -> root folder -> /(subfoldersServer)/k_url_webdav_server/
- *                          -> subfolders  -> /(subfoldersServer)/k_url_webdav_server/(subfoldersDB)
- * @param user
- *
- * @return pathOnDB -> root folder -> @""
- *                  -> subfolders  -> @"(subfoldersDB)/"
- *
- */
-+(NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user {
-    
-    NSString *pathOnDB =@"";
-    
-    NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:user];
-    if([filePathOnFileDto length] >= [partToRemove length]){
-        pathOnDB = [filePathOnFileDto substringFromIndex:[partToRemove length]];
-    }
-    
-    return pathOnDB;
-}
-
 
 +(NSString *) getRemoteUrlByFile:(FileDto *) file andUserDto:(UserDto *) mUser {
     
@@ -283,9 +130,6 @@
     
     return output;
 }
-
-
-
 
 
 ///-----------------------------------
@@ -378,43 +222,7 @@
     
 }
 
-///-----------------------------------
-/// @name Get DataBase file_path of fileDto.filePath
-///-----------------------------------
 
-/**
- * This method get the real data in the database using the data of the FileDto.
- *
- * Ex: /master/owncloud/remote.php/webdav/music/ --> "music"
- *
- * Ex: /master/owncloud/remote.php/webdav/ --> ""
- *
- * @param path -> NSString
- * 
- * @param user -> UserDto
- *
- * @return NSString
- *
-
- */
-+ (NSString* )getDBFilePathOfFileDtoFilePath:(NSString*)path ofUserDto:(UserDto*)user{
-    //if the path the receive is: /master/owncloud/remote.php/webdav/music
-    //we have to return: music
-    //if the path the receive is: /master/owncloud/remote.php/webdav/
-    //we have to return: empty
-    
-    NSString *removedPart = [UtilsUrls getRemovedPartOfFilePathAnd:user];
-    NSUInteger removedPartLength = [removedPart length];
-    
-    NSString *output = @"";
-    
-    //Quit removed part
-    output= [path substringFromIndex:(removedPartLength)];
-    
-    DLog(@"filePath: %@", output);
-    
-    return output;
-}
 
 
 @end

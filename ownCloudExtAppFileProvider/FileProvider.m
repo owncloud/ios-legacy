@@ -160,7 +160,7 @@
     
     UserDto *user = [ManageUsersDB getUserByIdUser:userId];
     
-    NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:user],[UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:user]];
+    NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:user],[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:user]];
     
     long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
     

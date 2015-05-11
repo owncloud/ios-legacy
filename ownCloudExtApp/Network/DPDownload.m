@@ -92,7 +92,7 @@
     
     //FileName full path
     NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:self.user];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:self.file.filePath andUser:self.user], self.file.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:self.file.filePath andUser:self.user], self.file.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -414,7 +414,7 @@
     DLog(@"Old local path: %@", file.localFolder);
     
     //Update the file
-    self.file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:self.user] andUser:self.user];
+    self.file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:self.user] andUser:self.user];
     
     //Delete the old file
     NSFileManager *fileManager=nil;

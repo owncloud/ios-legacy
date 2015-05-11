@@ -435,6 +435,32 @@
 }
 
 
+//----------------------------------------------
+/// @name getFilePathOnDBFromFilePathOnFileDto
+///---------------------------------------------
+/**
+ * Method used to get only the path in db from fileDtoPath
+ *
+ * @param filePathOnFileDto -> root folder -> /(subfoldersServer)/k_url_webdav_server/
+ *                          -> subfolders  -> /(subfoldersServer)/k_url_webdav_server/(subfoldersDB)
+ * @param user
+ *
+ * @return pathOnDB -> root folder -> @""
+ *                  -> subfolders  -> @"(subfoldersDB)/"
+ *
+ */
++ (NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user {
+    
+    NSString *pathOnDB =@"";
+    
+    NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:user];
+    if([filePathOnFileDto length] >= [partToRemove length]){
+        pathOnDB = [filePathOnFileDto substringFromIndex:[partToRemove length]];
+    }
+    
+    return pathOnDB;
+}
+
 + (NSString *) getUserAgent {
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *userAgentWithAppVersion = [NSString stringWithFormat:@"%@%@",k_user_agent,appVersion];

@@ -84,7 +84,7 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     //Obtain the remotePath: https://s3.owncloud.com/owncloud/remote.php/webdav
     NSString *remoteFolder = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     //With the filePath obtain the folder name: A/
-    NSString *folderName= [UtilsDtos getDbBFolderPathFromFullFolderPath:file.filePath andUser:app.activeUser];
+    NSString *folderName= [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:app.activeUser];
     //Obtain the complete path: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
     remoteFolder=[NSString stringWithFormat:@"%@%@",remoteFolder, folderName];
     DLog(@"remote folder: %@",remoteFolder);

@@ -68,6 +68,8 @@
  */
 + (NSString *) getHttpAndDomainByURL:(NSString *) url;
 
++ (NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user;
+
 + (NSString *) getUserAgent;
 
 @end

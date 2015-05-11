@@ -228,7 +228,7 @@
         
         FileDto *fileDto = (FileDto*)[notification object];
         
-        NSString *path = [UtilsDtos getDBFilePathOfFileDtoFilePath:fileDto.filePath ofUserDto:app.activeUser];
+        NSString *path = [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:fileDto.filePath andUser:app.activeUser];
         
         path = [NSString stringWithFormat:@"/%@%@", path, fileDto.fileName];
         OCSharedDto *sharedDto = [ManageSharesDB getSharedEqualWithFileDtoPath:path];
@@ -609,7 +609,7 @@
    [ManageFilesDB updateEtagOfFileDtoByid:parentDto.idFile andNewEtag:0];
     
     //Update the final file Path to create the File
-    finalFilePath = [NSString stringWithFormat:@"%@%@", [UtilsDtos getDBFilePathOfFileDtoFilePath:parentDto.filePath ofUserDto:app.activeUser], parentDto.fileName];
+    finalFilePath = [NSString stringWithFormat:@"%@%@", [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:parentDto.filePath andUser:app.activeUser], parentDto.fileName];
     
     //Loop the not catched sub-paths in order to create this in DB and File System
     for (NSString *subPath in notCatchedPaths) {
