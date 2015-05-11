@@ -21,7 +21,6 @@
 #import "WebViewController.h"
 #import "UIColor+Constants.h"
 #import "constants.h"
-#import "AccountsViewController.h"
 #import "AppDelegate.h"
 #import "constants.h"
 #import "ImpressumViewController.h"
@@ -37,7 +36,6 @@
 #import "ManageAsset.h"
 #import "PrepareFilesToUpload.h"
 #import "UploadUtils.h"
-
 #import "UtilsCookies.h"
 #import "ManageCookiesStorageDB.h"
 
@@ -221,12 +219,6 @@
     [app restartAppAfterDeleteAllAccounts];
 }
 
--(void)goToAccounts {
-    
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
-    AccountsViewController *viewController = [[AccountsViewController alloc]initWithNibName:@"AccountsViewController_iPhone" bundle:nil];
-    [self.navigationController pushViewController:viewController animated:YES];
-}
 
 -(void)goImprint {
    
@@ -1048,20 +1040,6 @@
             break;
         case impress:
             [self goImprint];
-            break;
-        default:
-            break;
-    }
-}
-
--(void) didPressOnManageAccountsBlock:(NSInteger) row {
-    switch (row) {
-        case 0:
-            if(k_multiaccount_available) {
-                [self goToAccounts];
-            } else {
-                [self disconnectUser];
-            }
             break;
         default:
             break;
