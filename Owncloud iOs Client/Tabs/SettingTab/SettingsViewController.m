@@ -257,7 +257,15 @@
 
 // Asks the data source to return the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 4;
+    
+    NSInteger sections = 0;
+    
+    if (k_multiaccount_available) {
+        sections = 5;
+     } else {
+         sections = 4;
+     }
+    return sections;
 }
 
 // Returns the table view managed by the controller object.
@@ -265,27 +273,64 @@
 {
     NSInteger n = 0;
     
-    
-    if (section == 0) {
-        n = self.listUsers.count;
-    } else if (section == 1){
-        n = 1;
-    } else if (section == 2){
-        n = 1;
-    } else if (section == 3){
-        n = 0;
-        if (k_show_help_option_on_settings) {
-            n = n + 1;
-        }
-        if (k_show_recommend_option_on_settings) {
-            n = n + 1;
-        }
-        if (k_show_feedback_option_on_settings) {
-            n = n + 1;
-        }
-        if (k_show_imprint_option_on_settings) {
-            n = n + 1;
-        }
+    switch (section) {
+        case 0:
+            n = self.listUsers.count;
+            break;
+            
+        case 1:
+            n = 1;
+            break;
+            
+        case 2:
+            n = 1;
+            break;
+            
+        case 3:
+            
+            if (k_multiaccount_available) {
+               n = 1;
+            }else{
+                if (k_multiaccount_available) {
+                    
+                    if (k_show_help_option_on_settings) {
+                        n = n + 1;
+                    }
+                    if (k_show_recommend_option_on_settings) {
+                        n = n + 1;
+                    }
+                    if (k_show_feedback_option_on_settings) {
+                        n = n + 1;
+                    }
+                    if (k_show_imprint_option_on_settings) {
+                        n = n + 1;
+                    }
+                }
+            }
+
+            break;
+            
+        case 4:
+            n = 0;
+            if (k_multiaccount_available) {
+               
+                if (k_show_help_option_on_settings) {
+                    n = n + 1;
+                }
+                if (k_show_recommend_option_on_settings) {
+                    n = n + 1;
+                }
+                if (k_show_feedback_option_on_settings) {
+                    n = n + 1;
+                }
+                if (k_show_imprint_option_on_settings) {
+                    n = n + 1;
+                }
+            }
+            break;
+            
+        default:
+            break;
     }
     
     return n;
@@ -301,15 +346,48 @@
     
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     
-    if (indexPath.section == 0) {
-        cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
-    } else if (indexPath.section==1) {
-        [self getSectionAppPinBlock:cell byRow:indexPath.row];
-    } else if (indexPath.section==2) {
-        [self getSectionAppInstantUpload:cell byRow:indexPath.row];
-    } else if (indexPath.section==3) {
-        [self getSectionInfoBlock:cell byRow:indexPath.row];
+    switch (indexPath.section) {
+        case 0:
+            cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
+            break;
+            
+        case 1:
+            if (k_multiaccount_available) {
+               cell = [self getSectionAddAccountButton:cell byRow:indexPath.row];
+            }else{
+                [self getSectionAppPinBlock:cell byRow:indexPath.row];
+            }
+            break;
+            
+        case 2:
+            if (k_multiaccount_available) {
+                [self getSectionAppPinBlock:cell byRow:indexPath.row];
+            }else{
+                [self getSectionAppInstantUpload:cell byRow:indexPath.row];
+            }
+            break;
+            
+        case 3:
+            if (k_multiaccount_available) {
+                [self getSectionAppInstantUpload:cell byRow:indexPath.row];
+            }else{
+                [self getSectionInfoBlock:cell byRow:indexPath.row];
+            }
+            break;
+            
+        case 4:
+            if (k_multiaccount_available) {
+                [self getSectionInfoBlock:cell byRow:indexPath.row];
+            }else{
+                //Nothing
+            }
+            
+            break;
+            
+        default:
+            break;
     }
+    
     
     return cell;
 }
@@ -517,7 +595,7 @@
     return cell;
 }
 
--(AccountCell *) getSectionManageAccountBlock:(UITableViewCell *) cell byRow:(NSInteger) row {
+- (AccountCell *) getSectionManageAccountBlock:(UITableViewCell *) cell byRow:(NSInteger) row {
     
     static NSString *CellIdentifier = @"AccountCell";
     
@@ -559,28 +637,31 @@
     
     return accountCell;
     
-   //  UIFont *cellBoldFont = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
-    
-  /*  switch (row) {
-        case 0:
-            cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-            cell.textLabel.font = cellBoldFont;
-            cell.textLabel.textAlignment = NSTextAlignmentCenter;
-            if (k_multiaccount_available) {
-                cell.textLabel.text=NSLocalizedString(@"manage_accounts", nil);
-            } else {
-                cell.textLabel.text=NSLocalizedString(@"disconnect_button", nil);
-            }
-            
-            [cell setBackgroundColor:[UIColor colorOfBackgroundButtonOnList]];
-            cell.textLabel.textColor = [UIColor colorOfTextButtonOnList];
-            
-            break;
-        default:
-            break;
-    }*/
-   
 }
+
+- (UITableViewCell *) getSectionAddAccountButton:(UITableViewCell *) cell byRow:(NSInteger) row {
+    
+    static NSString *CellIdentifier = @"AddAccountCell";
+    
+    UITableViewCell *addAccountCell;
+    
+    addAccountCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    
+    UIFont *cellBoldFont = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
+    
+    addAccountCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    addAccountCell.textLabel.font = cellBoldFont;
+    addAccountCell.textLabel.textAlignment = NSTextAlignmentCenter;
+    addAccountCell.editing = NO;
+    addAccountCell.textLabel.text = NSLocalizedString(@"add_new_account", nil);
+    addAccountCell.backgroundColor = [UIColor colorOfBackgroundButtonOnList];
+    addAccountCell.textLabel.textColor = [UIColor colorOfTextButtonOnList];
+    
+    return addAccountCell;
+}
+
+
+
 
 
 #pragma mark - UITableView delegate
