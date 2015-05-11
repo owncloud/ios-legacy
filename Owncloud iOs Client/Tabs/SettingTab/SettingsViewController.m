@@ -38,6 +38,9 @@
 #import "PrepareFilesToUpload.h"
 #import "UploadUtils.h"
 
+#define k_padding_normal_section 20.0
+#define k_padding_under_section 5.0
+
 
 
 ///-----------------------------------
@@ -398,13 +401,17 @@
     UILabel *label = [[UILabel alloc] init];
     UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:13];
     
-    int sectionToShowFooter = 3;
+    NSInteger sectionToShowFooter = 3;
+    
+    if (k_multiaccount_available) {
+        sectionToShowFooter = 4;
+    }
 
     if (section == sectionToShowFooter) {
         NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
         label.text = [NSString stringWithFormat:@"%@ %d    iOS %@", appName, k_year, appVersion];
-        label.font = appFont; //[UIFont systemFontOfSize:13.0];
+        label.font = appFont;
         label.textColor = [UIColor grayColor];
         label.backgroundColor = [UIColor clearColor];
         label.textAlignment = NSTextAlignmentCenter;
@@ -415,10 +422,103 @@
     return label;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    return 20;
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    
+    CGFloat height = 0;
+    
+    switch (section) {
+        case 0:
+            height = k_padding_normal_section * 2;
+            break;
+            
+        case 1:
+            if (k_multiaccount_available) {
+                height = k_padding_under_section;
+            }else{
+                height = k_padding_normal_section;
+            }
+            break;
+            
+        default:
+            height = k_padding_normal_section;
+            break;
+    }
+    
+    return height;
 }
 
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    
+    CGFloat height = 0;
+    
+    switch (section) {
+        case 0:
+            if (k_multiaccount_available) {
+                height = k_padding_under_section;
+            }else{
+                height = k_padding_normal_section;
+            }
+            break;
+            
+        default:
+            height = k_padding_normal_section;
+            break;
+    }
+    
+    return height;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    
+    NSString *title = nil;
+    
+    switch (section) {
+        case 0:
+            title = NSLocalizedString(@"manage_accounts", nil);
+            break;
+            
+        case 1:
+            
+            if (!k_multiaccount_available) {
+                title = NSLocalizedString(@"title_app_pin", nil);
+            }
+            
+            break;
+            
+        case 2:
+            
+            if (k_multiaccount_available) {
+                title = NSLocalizedString(@"title_app_pin", nil);
+            }else{
+                title = NSLocalizedString(@"title_instant_upload", nil);
+            }
+            
+            break;
+            
+        case 3:
+            
+            if (k_multiaccount_available) {
+                title = NSLocalizedString(@"title_instant_upload", nil);
+            }else{
+                title = @"More";//NSLocalizedString(@"title_instant_upload", nil);
+            }
+            
+            break;
+            
+        case 4:
+            if (k_multiaccount_available) {
+                title = @"More";//NSLocalizedString(@"title_instant_upload", nil);
+            }
+    
+            break;
+            
+        default:
+            break;
+    }
+    
+    return title;
+}
 
 #pragma mark - Sections of TableView
 
