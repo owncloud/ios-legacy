@@ -27,4 +27,9 @@
     return UIStatusBarStyleLightContent;
 }
 
+- (BOOL)prefersStatusBarHidden
+{
+    return self.isStatusBarHidden;
+}
+
 @end

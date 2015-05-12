@@ -19,4 +19,6 @@
 
 @interface OCSplitViewController : UISplitViewController
 
+@property (nonatomic) BOOL isStatusBarHidden;
+
 @end

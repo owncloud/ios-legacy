@@ -21,40 +21,13 @@
 - (void)fullScreenPlayer:(BOOL)isFullScreenPlayer;
 @end
 
-@interface MediaViewController : MPMoviePlayerViewController<UIGestureRecognizerDelegate>{
-    
-    //UI objects
-    UIView  *_bottomHUD;
-    UISlider *_progressSlider;
-    UIButton *_playButton;
-    UILabel *_leftLabel;
-	UILabel *_progressLabel;
-    UIButton *_fullScreenButton;
-    UIImageView *_thumbnailView;   
-    //Flags
-    BOOL _isPlaying;
-    BOOL _isFullScreen;
-    BOOL _hiddenHUD;
-    BOOL _isMusic;
-    
-    //Timer to the player
-    NSTimer *_playbackTimer;
-    NSTimer *_HUDTimer;
-    
-    //Path of the media file
-    NSString *_urlString;
-    
-    //GestureRecognize
-    UITapGestureRecognizer *_oneTap;
-    
-    __weak id<MediaViewControllerDelegate> _delegate;
-}
+@interface MediaViewController : MPMoviePlayerViewController<UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIView *bottomHUD;
 @property (nonatomic, strong) UISlider *progressSlider;
 @property (nonatomic, strong) UIButton *playButton;
 @property (nonatomic, strong) UIButton *fullScreenButton;
-@property (nonatomic, strong) UILabel *leftLabel;
+@property (nonatomic, strong) UILabel *rightLabel;
 @property (nonatomic, strong) UILabel *progressLabel;
 @property (nonatomic, strong) UIImageView *thumbnailView;
 @property (nonatomic) BOOL isPlaying;
