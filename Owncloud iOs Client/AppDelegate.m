@@ -569,6 +569,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //Create a splitViewController (Split container to show two view in the same time)
         self.splitViewController = [OCSplitViewController new];
         
+        self.splitViewController.view.backgroundColor = [UIColor blackColor];
+        
         //Create the detailViewController (Detail View of the split)
         self.detailViewController = [[DetailViewController alloc]initWithNibName:@"DetailView" bundle:nil];
         
