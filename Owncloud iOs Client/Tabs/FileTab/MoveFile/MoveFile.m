@@ -116,8 +116,8 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    NSString *originFile = [UtilsDtos getRemoteUrlByFile:_selectedFileDto andUserDto:app.activeUser];
-    NSString *destinyFile = [NSString stringWithFormat:@"%@%@",_destinationFolder, _destinyFilename];
+    NSString *originFile = [UtilsUrls getFullRemoteServerFilePathByFile:self.selectedFileDto andUser:app.activeUser];
+    NSString *destinyFile = [NSString stringWithFormat:@"%@%@",self.destinationFolder, self.destinyFilename];
     
     //We remove the URL Encoding
     originFile = [originFile stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

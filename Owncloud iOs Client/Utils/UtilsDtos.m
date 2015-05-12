@@ -122,16 +122,6 @@
 }
 
 
-+(NSString *) getRemoteUrlByFile:(FileDto *) file andUserDto:(UserDto *) mUser {
-    
-    NSString *output = [NSString stringWithFormat:@"%@%@%@",[UtilsUrls getRemoteServerPathWithoutFolders:mUser],file.filePath,file.fileName];
-    
-    DLog(@"output: %@", output);
-    
-    return output;
-}
-
-
 ///-----------------------------------
 /// @name Pass OCFileDto Array to FileDto Array
 ///-----------------------------------

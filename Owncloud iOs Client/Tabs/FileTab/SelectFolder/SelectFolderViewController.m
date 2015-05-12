@@ -246,7 +246,7 @@
     
     [self dismissViewControllerAnimated:YES completion:nil];
     
-    NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
+    NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:self.currentFolder andUser:self.user];
     
     [(SelectFolderNavigation*)self.parent selectFolder:remotePath];
 
@@ -376,7 +376,7 @@
             [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
 #endif
             
-            NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
+            NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:self.currentFolder andUser:self.user];
             
             NSString *newURL = [NSString stringWithFormat:@"%@%@",remotePath,[name encodeString:NSUTF8StringEncoding]];
             NSString *rootPath = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:newURL andUser:activeUser];

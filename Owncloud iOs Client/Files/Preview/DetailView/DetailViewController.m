@@ -1881,7 +1881,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     NSString *path = (NSString*)[notification object];
-    NSString *pathPreview=[UtilsDtos getRemoteUrlByFile:_file andUserDto:app.activeUser];
+    NSString *pathPreview = [UtilsUrls getFullRemoteServerFilePathByFile:self.file andUser:app.activeUser];
     
     if ([path isEqualToString:pathPreview]) {
         DLog(@"The file is the same, update the preview");
@@ -1930,7 +1930,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
     
     NSString *path = (NSString*)[notification object];
-    NSString * pathPreview=[UtilsDtos getRemoteUrlByFile:_file andUserDto:app.activeUser];
+    NSString *pathPreview = [UtilsUrls getFullRemoteServerFilePathByFile:self.file andUser:app.activeUser];
     
     //If the cancel file is the same that the previewed file, clean the view
     if ([path isEqualToString:pathPreview]) {

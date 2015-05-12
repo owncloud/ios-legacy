@@ -461,6 +461,28 @@
     return pathOnDB;
 }
 
+//----------------------------------------------
+/// @name getFullRemoteServerFilePathByFile
+///---------------------------------------------
+/**
+ * Method used to get only the path in db from fileDtoPath
+ *
+ * @param file -> fileDto
+ *
+ * @param user -> userDto
+ *
+ * @return fullFilePath ->subfolders  -> http://domain/(subfoldersServer)/k_url_webdav_server/(subfoldersDB)/(filename)
+ *
+ */
++ (NSString *)getFullRemoteServerFilePathByFile:(FileDto *) file andUser:(UserDto *) user {
+    
+    NSString *fullFilePath = [NSString stringWithFormat:@"%@%@%@",[UtilsUrls getRemoteServerPathWithoutFolders:user],file.filePath,file.fileName];
+    
+    DLog(@"fullFilePath: %@", fullFilePath);
+    
+    return fullFilePath;
+}
+
 + (NSString *) getUserAgent {
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *userAgentWithAppVersion = [NSString stringWithFormat:@"%@%@",k_user_agent,appVersion];

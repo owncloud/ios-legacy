@@ -723,14 +723,14 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  * Delegate method that change the file selected from gallery
  */
 - (void)selectThisFile:(FileDto*)file{
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    NSString *nextFile = [UtilsDtos getRemoteUrlByFile:file andUserDto:appDelegate.activeUser];
-    NSString *fileInGallery = [UtilsDtos getRemoteUrlByFile:_file andUserDto:appDelegate.activeUser];
+    NSString *nextFile = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:app.activeUser];
+    NSString *fileInGallery = [UtilsUrls getFullRemoteServerFilePathByFile:self.file andUser:app.activeUser];
     //If file is not the same that the previewed file, change the title
     if (![fileInGallery isEqualToString:nextFile]) {
-        _file = file;
-        [self putTitleInNavBarByName:_file.fileName];
+        self.file = file;
+        [self putTitleInNavBarByName:self.file.fileName];
         [self putTheFavoriteStatus];
     }
 }
@@ -1580,7 +1580,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     NSString *path = (NSString*)[notification object];
-    NSString *pathPreview = [UtilsDtos getRemoteUrlByFile:_file andUserDto:app.activeUser];
+    NSString *pathPreview = [UtilsUrls getFullRemoteServerFilePathByFile:self.file andUser:app.activeUser];
     if ([path isEqualToString:pathPreview]) {
         DLog(@"The file is the same, update the preview");
         _file.isDownload = downloaded;

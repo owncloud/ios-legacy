@@ -16,6 +16,7 @@
 #import <Foundation/Foundation.h>
 
 @class UserDto;
+@class FileDto;
 
 @interface UtilsUrls : NSObject
 
@@ -69,6 +70,8 @@
 + (NSString *) getHttpAndDomainByURL:(NSString *) url;
 
 + (NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user;
+
++ (NSString *) getFullRemoteServerFilePathByFile:(FileDto *) file andUser:(UserDto *) user;
 
 + (NSString *) getUserAgent;
 
