@@ -97,7 +97,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 //Get the file dto related with the upload ofline if exist
 - (FileDto *) getFileDtoOfTheUploadOffline{
     
-    NSString *folderName = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:self.currentUpload.destinyFolder andUser:self.userUploading];
+    NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:self.currentUpload.destinyFolder andUser:self.userUploading];
     FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.currentUpload.uploadFileName andFilePath:folderName andUser:self.userUploading];
     
     return uploadFile;
@@ -706,7 +706,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     DLog(@"Overwriten process active: Cancel a file");
-    NSString *localFolder=[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:self.currentUpload.destinyFolder andUser:self.userUploading];
+    NSString *localFolder=[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.currentUpload.destinyFolder andUser:self.userUploading];
     DLog(@"Local folder:%@",localFolder);
     
     FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:self.currentUpload.uploadFileName andFilePath:localFolder andUser:self.userUploading];
@@ -935,7 +935,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     //FileName full path
     NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:self.userUploading];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -974,7 +974,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 FileDto *currentFileDto = [items objectAtIndex:0];
                 DLog(@"currentFileDto: %@", currentFileDto.etag);
                 //Update the etag
-                NSString *folderName=[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading];
+                NSString *folderName=[UtilsUrls getFilePathOnDBByFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading];
                 [ManageFilesDB updateEtagOfFileDtoByFileName:overwrittenFile.fileName andFilePath:folderName andActiveUser:self.userUploading withNewEtag:currentFileDto.etag];
                 //Set file status like downloaded in Data Base
                 [ManageFilesDB updateDownloadStateOfFileDtoByFileName:overwrittenFile.fileName andFilePath:folderName andActiveUser:self.userUploading withState:downloaded];
@@ -1013,7 +1013,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     //FileName full path
     NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:self.userUploading];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     

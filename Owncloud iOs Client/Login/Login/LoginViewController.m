@@ -2180,7 +2180,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         //Change the filePath from the library to our db format
         for (FileDto *currentFile in directoryList) {
-            currentFile.filePath = [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath andUser:app.activeUser];
+            currentFile.filePath = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:app.activeUser];
         }
         
         DLog(@"The directory List have: %ld elements", (unsigned long)directoryList.count);

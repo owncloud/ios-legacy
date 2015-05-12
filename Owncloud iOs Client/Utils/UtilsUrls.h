@@ -41,7 +41,7 @@
 //Get the path of the temp folder where there are the temp files for the uploads
 + (NSString *) getTempFolderForUploadFiles;
 
-+ (NSString *) getRemoteFilePathWithoutServerPathComponentsFromPath:(NSString *)filePath andUser:(UserDto *)mUserDto;
++ (NSString *) getFilePathOnDBByFullPath:(NSString *)filePath andUser:(UserDto *)mUserDto;
 
 + (NSString *) getFullRemoteServerPath:(UserDto *)mUserDto;
 
@@ -69,7 +69,7 @@
  */
 + (NSString *) getHttpAndDomainByURL:(NSString *) url;
 
-+ (NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user;
++ (NSString *) getFilePathOnDBByFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user;
 
 + (NSString *) getFullRemoteServerFilePathByFile:(FileDto *) file andUser:(UserDto *) user;
 

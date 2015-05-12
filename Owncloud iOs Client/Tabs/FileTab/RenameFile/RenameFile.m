@@ -175,7 +175,7 @@
     NSString *fileDBPathToDestination;
     
     //Get the file database path of the item without utf8
-    fileDBPathToDestination  = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:self.currentRemoteFolder andUser:app.activeUser];
+    fileDBPathToDestination  = [UtilsUrls getFilePathOnDBByFullPath:self.currentRemoteFolder andUser:app.activeUser];
     DLog(@"FilePath: %@", fileDBPathToCheck);
     DLog(@"FilePath: %@", fileDBPathToDestination);
     
@@ -185,12 +185,12 @@
 //        DLog(@"Original Name: %@", originalFileName);
         
         //Get the file database path of the item for the check with the server
-        fileDBPathToCheck  = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:[NSString stringWithFormat:@"%@", self.currentRemoteFolder] andUser:app.activeUser];
+        fileDBPathToCheck  = [UtilsUrls getFilePathOnDBByFullPath:[NSString stringWithFormat:@"%@", self.currentRemoteFolder] andUser:app.activeUser];
         
 
     } else {
         //Get the file database path of the item for the check with the server
-        fileDBPathToCheck  = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:[NSString stringWithFormat:@"%@%@", self.currentRemoteFolder,self.selectedFileDto.fileName] andUser:app.activeUser];
+        fileDBPathToCheck  = [UtilsUrls getFilePathOnDBByFullPath:[NSString stringWithFormat:@"%@%@", self.currentRemoteFolder,self.selectedFileDto.fileName] andUser:app.activeUser];
         
 
         
@@ -403,7 +403,7 @@
         
         self.selectedFileDto=[ManageFilesDB getFileDtoByIdFile:self.selectedFileDto.idFile];
         
-        NSString *newFilePathOnDB = [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser];
+        NSString *newFilePathOnDB = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser];
         
         [self renameFolderChildsWithFilePath:[NSString stringWithFormat:@"%@%@",newFilePathOnDB, self.selectedFileDto.fileName] ofFileId:self.selectedFileDto.idFile];
         
@@ -488,7 +488,7 @@
     //If is IPAD we update the fileDto in case that the current file is the same on preview
     if (!IS_IPHONE) {
         if (app.detailViewController.file.idFile == _selectedFileDto.idFile) {
-            app.detailViewController.file = [ManageFilesDB getFileDtoByFileName:[_mNewName encodeString:NSUTF8StringEncoding] andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+            app.detailViewController.file = [ManageFilesDB getFileDtoByFileName:[_mNewName encodeString:NSUTF8StringEncoding] andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
             app.detailViewController.titleLabel.text = [app.detailViewController.file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
         }

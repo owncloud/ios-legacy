@@ -983,7 +983,7 @@
     //Get the file related with the upload file if exist and remove the download
     UserDto *user = [ManageUsersDB getUserByIdUser:self.selectedUploadToResolveTheConflict.userId];
     
-    NSString *folderName = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:_selectedUploadToResolveTheConflict.destinyFolder andUser:user];
+    NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:_selectedUploadToResolveTheConflict.destinyFolder andUser:user];
 
     FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.selectedUploadToResolveTheConflict.uploadFileName andFilePath:folderName andUser:user];
     
@@ -1019,7 +1019,7 @@
     
     //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
     //The folder Name: A/
-    NSString *folderName = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:_selectedUploadToResolveTheConflict.destinyFolder andUser:app.activeUser];
+    NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:_selectedUploadToResolveTheConflict.destinyFolder andUser:app.activeUser];
     
     //Obtain the file that the user wants overwrite    
     FileDto *file = nil;

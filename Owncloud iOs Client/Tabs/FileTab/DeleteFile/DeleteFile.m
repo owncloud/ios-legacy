@@ -63,7 +63,7 @@
             DLog(@"Delete a folder");
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             //Remove: /owncloud/remote.php/webdav/ to the pathFolder
-            NSString *pathFolder = [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser];
+            NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
             //Obtains the number of the downloaded files in DB which filepath contains the folder that the user want delete
             _isFilesDownloadedInFolder=[ManageFilesDB isGetFilesByDownloadState:downloaded andByUser:app.activeUser andFolder:_file.filePath];
         }
@@ -164,7 +164,7 @@
     if (_isFilesDownloadedInFolder == YES) {
         //If the item deleted is a directory update the is_download state to notDownload in the files contains in the folder for deleted
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        NSString *pathFolder = [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser];
+        NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
         [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
         DLog(@"path: %@",pathFolder);
         
@@ -204,7 +204,7 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     DLog(@"FilePath: %@", file.filePath);
     
@@ -353,7 +353,7 @@
         if (_isFilesDownloadedInFolder) {
             
             //Obtains the complete path of the folder
-            NSString *pathFolder = [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser];
+            NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
             //Check if the id file is in the files into this folder
             DLog(@"path folder: %@", pathFolder);
             

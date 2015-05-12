@@ -857,7 +857,7 @@
             [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
             
             NSString *newURL = [NSString stringWithFormat:@"%@%@",self.currentRemoteFolder,[name encodeString:NSUTF8StringEncoding]];
-            NSString *rootPath = [UtilsUrls getRemoteFilePathWithoutServerPathComponentsFromPath:newURL andUser:app.activeUser];
+            NSString *rootPath = [UtilsUrls getFilePathOnDBByFullPath:newURL andUser:app.activeUser];
             
             NSString *pathOfNewFolder = [NSString stringWithFormat:@"%@%@",[self.currentRemoteFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding], name ];
             
@@ -1188,7 +1188,7 @@
     // If the selected cell is showing the SwipeMenu, we don´t navigate further
     FileDto *selectedFile = (FileDto *)[[_sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
     
-    selectedFile = [ManageFilesDB getFileDtoByFileName:selectedFile.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:selectedFile.filePath andUser:app.activeUser] andUser:app.activeUser];
+    selectedFile = [ManageFilesDB getFileDtoByFileName:selectedFile.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:selectedFile.filePath andUser:app.activeUser] andUser:app.activeUser];
     _selectedFileDto = selectedFile;
     
     if (IS_IPHONE){
@@ -1536,7 +1536,7 @@
    // DLog(@"name: %@", _selectedFileDto.fileName);
    // DLog(@"self.nextRemoteFolder: %@", _nextRemoteFolder);
     
-    _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     NSMutableArray *directoryList = [NSMutableArray arrayWithArray:requestArray];
     
@@ -1715,8 +1715,8 @@
     FileDto *file = [notification object];
     
     //Update the filesDto
-    _fileIdToShowFiles = [ManageFilesDB getFileDtoByFileName:_fileIdToShowFiles.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser] andUser:app.activeUser];
-    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _fileIdToShowFiles = [ManageFilesDB getFileDtoByFileName:_fileIdToShowFiles.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser] andUser:app.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (file.fileId == _fileIdToShowFiles.idFile) {
         [self reloadTableFromDataBase];
@@ -1950,7 +1950,7 @@
         
         //Change the filePath from the library to our db format
         for (FileDto *currentFile in directoryList) {
-            currentFile.filePath = [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath andUser:app.activeUser];
+            currentFile.filePath = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:app.activeUser];
         }
         
         // DLog(@"The directory List have: %d elements", directoryList.count);
@@ -1969,7 +1969,7 @@
             }
         }
         
-        self.fileIdToShowFiles = [ManageFilesDB getFileDtoByFileName:self.fileIdToShowFiles.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:self.fileIdToShowFiles.filePath andUser:app.activeUser] andUser:app.activeUser];
+        self.fileIdToShowFiles = [ManageFilesDB getFileDtoByFileName:self.fileIdToShowFiles.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.fileIdToShowFiles.filePath andUser:app.activeUser] andUser:app.activeUser];
         
         [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:_fileIdToShowFiles.idFile];
         
@@ -2031,7 +2031,7 @@
         
         [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
         
-        NSString *path = [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser];
+        NSString *path = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser];
         path = [path stringByAppendingString:_fileIdToShowFiles.fileName];
         path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
@@ -2066,7 +2066,7 @@
                         }
                     }
                     
-                    NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser], _fileIdToShowFiles.fileName]];
+                    NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser], _fileIdToShowFiles.fileName]];
                     
                     //1. We remove the removed shared from the Files table of the current folder
                     [ManageFilesDB setUnShareFilesOfFolder:_fileIdToShowFiles];
@@ -2365,7 +2365,7 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //Update fileDto
-    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if ([self.selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
@@ -2414,7 +2414,7 @@
      AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //Update fileDto
-  self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+  self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if ([_selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
@@ -2458,7 +2458,7 @@
     }
     
     //Update fileDto
-    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if ([_selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
@@ -2556,7 +2556,7 @@
 - (void) setFavoriteOrUnfavorite {
     //Update the file from the DB
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (_selectedFileDto.isFavorite) {
         _selectedFileDto.isFavorite = NO;
@@ -2592,7 +2592,7 @@
         //Set the file as isNecessaryUpdate
         [ManageFilesDB setIsNecessaryUpdateOfTheFile:_selectedFileDto.idFile];
         //Update the file on memory
-        _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+        _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
         //Do the request to get the shared items
         [self downloadTheFile];
         

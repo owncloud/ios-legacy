@@ -215,7 +215,7 @@
  */
 - (void)updateTheCurrentLocalFolder{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
+    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
     _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
 }
@@ -584,7 +584,7 @@
             
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
-            _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+            _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
             
             [self downloadTheFile];
             
@@ -658,17 +658,17 @@
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
-        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
         
         DLog(@"file: %@", _file.fileName);
-        DLog(@"_path: %@", [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] );
+        DLog(@"_path: %@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] );
         
         DLog(@"Count self.galleryArray: %ld", (long)[self.galleryArray count]);
         
         for(NSInteger i = 0; i < [self.galleryArray count] ; i++) {
             FileDto *currentFile = [self.galleryArray objectAtIndex:i];
             
-            currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath andUser:app.activeUser] andUser:app.activeUser];
+            currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:app.activeUser] andUser:app.activeUser];
             
             DLog(@"Compare: %ld - %ld",(long) currentFile.idFile, (long)fileDto.idFile);
             
@@ -820,7 +820,7 @@
     NSInteger page = (NSInteger)floor((self.scrollView.contentOffset.x * 2.0f + pageWidth) / (pageWidth * 2.0f));
     
     FileDto *tempFile = [_galleryArray objectAtIndex:page];
-    FileDto *currentFile = [ManageFilesDB getFileDtoByFileName:tempFile.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:tempFile.filePath andUser:app.activeUser] andUser:app.activeUser];
+    FileDto *currentFile = [ManageFilesDB getFileDtoByFileName:tempFile.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:tempFile.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     
     //Check if the currentFile is nil (for example when the user has rename this file)
@@ -972,7 +972,7 @@
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         FileDto *theFile = [self.galleryArray objectAtIndex:page];
-        theFile = [ManageFilesDB getFileDtoByFileName:theFile.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:theFile.filePath andUser:app.activeUser] andUser:app.activeUser];
+        theFile = [ManageFilesDB getFileDtoByFileName:theFile.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:theFile.filePath andUser:app.activeUser] andUser:app.activeUser];
         
         //  DLog(@"File name after: %@", _file.fileName);
         

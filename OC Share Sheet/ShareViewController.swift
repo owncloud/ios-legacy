@@ -486,7 +486,7 @@ import AVFoundation
         self.currentRemotePath = folder as String
         let name:NSString = folder.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
         let user = ManageUsersDB.getActiveUser()
-        let folderPath = UtilsUrls.getRemoteFilePathWithoutServerPathComponentsFromPath(name as String, andUser: user)
+        let folderPath = UtilsUrls.getFilePathOnDBByFullPath(name as String, andUser: user)
 
         self.changeTheDestinyFolderWith(folderPath.lastPathComponent)
         

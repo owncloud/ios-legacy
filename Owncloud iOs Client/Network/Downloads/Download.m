@@ -69,7 +69,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Get file object
-    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
     _fileDto=file;
     
     //Get the etag
@@ -429,7 +429,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     }
     
     //Update the datas of the new file
-    _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     //Set file status like downloaded in Data Base
     [ManageFilesDB setFileIsDownloadState:_fileDto.idFile andState:downloaded];
@@ -487,7 +487,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         //Get FileDto
-        _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+        _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
         
         //If is downloaded or not
         if ([_fileDto isDownload] == downloaded && !_fileDto.isNecessaryUpdate) {
@@ -682,7 +682,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     //FileName full path
     NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser], _fileDto.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser], _fileDto.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
