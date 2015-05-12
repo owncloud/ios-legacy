@@ -478,13 +478,13 @@
     
     switch (section) {
         case 0:
-            title = NSLocalizedString(@"manage_accounts", nil);
+            title = NSLocalizedString(@"accounts_section", nil);
             break;
             
         case 1:
             
             if (!k_multiaccount_available) {
-                title = NSLocalizedString(@"title_app_pin", nil);
+                title = NSLocalizedString(@"security_section", nil);
             }
             
             break;
@@ -492,9 +492,9 @@
         case 2:
             
             if (k_multiaccount_available) {
-                title = NSLocalizedString(@"title_app_pin", nil);
+                title = NSLocalizedString(@"security_section", nil);
             }else{
-                title = NSLocalizedString(@"title_instant_upload", nil);
+                title = NSLocalizedString(@"instant_updloads_section", nil);
             }
             
             break;
@@ -502,16 +502,16 @@
         case 3:
             
             if (k_multiaccount_available) {
-                title = NSLocalizedString(@"title_instant_upload", nil);
+                title = NSLocalizedString(@"instant_updloads_section", nil);
             }else{
-                title = @"More";//NSLocalizedString(@"title_instant_upload", nil);
+                title = NSLocalizedString(@"more_section", nil);
             }
             
             break;
             
         case 4:
             if (k_multiaccount_available) {
-                title = @"More";//NSLocalizedString(@"title_instant_upload", nil);
+                title = NSLocalizedString(@"more_section", nil);
             }
     
             break;
