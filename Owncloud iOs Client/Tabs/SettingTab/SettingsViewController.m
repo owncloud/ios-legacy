@@ -595,24 +595,36 @@
             cell.selectionStyle = UITableViewCellSelectionStyleBlue;
             cell.textLabel.text = NSLocalizedString(@"help", nil);
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            
+            //Add accesibility label for Automation
+            [self.switchInstantUpload setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Help_Cell", nil)];
             break;
             
         case recommend:
             cell.selectionStyle = UITableViewCellSelectionStyleBlue;
             cell.textLabel.text = NSLocalizedString(@"recommend_to_friend", nil);
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            
+            //Add accesibility label for Automation
+            [self.switchInstantUpload setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Recommend_Cell", nil)];
             break;
             
         case feedback:
             cell.selectionStyle = UITableViewCellSelectionStyleBlue;
             cell.textLabel.text = NSLocalizedString(@"send_feedback", nil);
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            
+            //Add accesibility label for Automation
+            [self.switchInstantUpload setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Send_Feedback_Cell", nil)];
             break;
             
         case impress:
             cell.selectionStyle = UITableViewCellSelectionStyleBlue;
             cell.textLabel.text = NSLocalizedString(@"imprint_button", nil);
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            
+            //Add accesibility label for Automation
+            [self.switchInstantUpload setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Impress_Cell", nil)];
             break;
             
         default:
@@ -668,6 +680,10 @@
             [self.switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:YES];
             [self.switchPasscode addTarget:self action:@selector(changeSwitchPasscode:) forControlEvents:UIControlEventValueChanged];
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            
+            //Add accesibility label for Automation
+            [self.switchPasscode setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Passcode_Switch", nil)];
+            
             break;
             
         default:
@@ -689,6 +705,9 @@
             [self.switchInstantUpload setOn:[ManageAppSettingsDB isInstantUpload] animated:YES];
             [self.switchInstantUpload addTarget:self action:@selector(changeSwitchInstantUpload:) forControlEvents:UIControlEventValueChanged];
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            
+            //Add accesibility label for Automation
+            [self.switchInstantUpload setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Instant_Uploads_Switch", nil)];
             
             break;
         default:
@@ -728,7 +747,8 @@
     }
     
     accountCell.urlServer.text = ((UserDto *) [self.listUsers objectAtIndex:row]).url;
-    accountCell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+   // accountCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    accountCell.accessoryView = [self createInfoAccountButtonForIndex:row];
     
     if(((UserDto *) [self.listUsers objectAtIndex:row]).activeaccount){
         [accountCell.activeButton setImage:[UIImage imageNamed:@"radio_checked.png"] forState:UIControlStateNormal];
@@ -738,13 +758,22 @@
     }
     
     //Accesibility support for Automation
-    NSString *accessibilityString = [NSString stringWithFormat:@"%@@%@", accountCell.userName.text, accountCell.urlServer.text];
-    [accountCell setAccessibilityLabel:accessibilityString];
+    NSString *accesibilityCellString = NSLocalizedString(@"ACS_Settings_User_Account_Cell", nil);
+    [accesibilityCellString stringByReplacingOccurrencesOfString:@"$user" withString:accountCell.userName.text];
+    [accesibilityCellString stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
+
+    [accountCell setAccessibilityLabel:accesibilityCellString];
     
+    NSString *accesibilityInfoButton = NSLocalizedString(@"ACS_Settings_User_Account_Detail_Button", nil);
+    [accesibilityInfoButton stringByReplacingOccurrencesOfString:@"$user" withString:accountCell.userName.text];
+    [accesibilityInfoButton stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
+    
+    [accountCell.accessoryView setAccessibilityLabel:accesibilityInfoButton];
     
     return accountCell;
     
 }
+
 
 - (UITableViewCell *) getSectionAddAccountButton:(UITableViewCell *) cell byRow:(NSInteger) row {
     
@@ -763,6 +792,9 @@
     addAccountCell.textLabel.text = NSLocalizedString(@"add_new_account", nil);
     addAccountCell.backgroundColor = [UIColor colorOfBackgroundButtonOnList];
     addAccountCell.textLabel.textColor = [UIColor colorOfTextButtonOnList];
+    
+    //Accesibility support for Automation
+    [addAccountCell setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Add_Account_Cell", nil)];
     
     return addAccountCell;
 }
@@ -789,6 +821,39 @@
     return disconnectCell;
 }
 
+#pragma mark - Accesories support for Accounts Section
+
+- (UIView *)createInfoAccountButtonForIndex:(NSInteger)index {
+    
+    UIView *accessoryView = [[UIView alloc] initWithFrame:CGRectZero];
+    UIButton *disclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    
+    disclosureButton.tag = index;
+    [disclosureButton addTarget:self action:@selector(pressedInfoAccountButton:) forControlEvents:UIControlEventTouchUpInside];
+    
+    accessoryView.bounds = disclosureButton.bounds;
+    [accessoryView addSubview:disclosureButton];
+    
+    return accessoryView;
+}
+
+- (void) pressedInfoAccountButton:(UIButton *)sender{
+    
+    //Edit Account
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:(UserDto *)[self.listUsers objectAtIndex:sender.tag]];
+    
+    if (IS_IPHONE)
+    {
+        viewController.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:navController animated:YES completion:nil];
+    }
+}
 
 
 #pragma mark - UITableView delegate
@@ -830,24 +895,6 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
-    
-    //Edit Account
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:(UserDto *)[self.listUsers objectAtIndex:indexPath.row]];
-    
-    if (IS_IPHONE)
-    {
-        viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:YES];
-    } else {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [app.splitViewController presentViewController:navController animated:YES completion:nil];
-    }
-    
-}
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {

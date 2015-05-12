@@ -558,6 +558,7 @@
 		EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */; };
 		EA2B4FB017FAFF69001766BB /* company_empty_screen_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */; };
 		EA2B4FB217FC2CCE001766BB /* company_empty_screen_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FB117FC2CCE001766BB /* company_empty_screen_ipad@2x.png */; };
+		EA421B941B021A9200E4071F /* AccesibilityLabels.strings in Resources */ = {isa = PBXBuildFile; fileRef = EA421B931B021A9200E4071F /* AccesibilityLabels.strings */; };
 		EA42FA4B18041E2F0006DB7C /* PassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4A18041E2F0006DB7C /* PassthroughView.m */; };
 		EA42FA4E1804217D0006DB7C /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA42FA51180539E70006DB7C /* ImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA50180539E70006DB7C /* ImageUtils.m */; };
@@ -1383,6 +1384,7 @@
 		EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = company_empty_screen_ipad.png; sourceTree = "<group>"; };
 		EA2B4FB117FC2CCE001766BB /* company_empty_screen_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "company_empty_screen_ipad@2x.png"; sourceTree = "<group>"; };
 		EA42197F1A94F6850081D400 /* Owncloud iOs Client-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Owncloud iOs Client-Bridging-Header.h"; sourceTree = "<group>"; };
+		EA421B931B021A9200E4071F /* AccesibilityLabels.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = AccesibilityLabels.strings; path = SupportingFiles/Accesibility/AccesibilityLabels.strings; sourceTree = "<group>"; };
 		EA42FA4918041E2F0006DB7C /* PassthroughView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PassthroughView.h; path = Tabs/FileTab/PassthroughView.h; sourceTree = "<group>"; };
 		EA42FA4A18041E2F0006DB7C /* PassthroughView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PassthroughView.m; path = Tabs/FileTab/PassthroughView.m; sourceTree = "<group>"; };
 		EA42FA4C1804217D0006DB7C /* OCToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCToolBar.h; path = Tabs/FileTab/OCToolBar.h; sourceTree = "<group>"; };
@@ -1654,6 +1656,7 @@
 		1324298315ADBB3700DF823E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				EA421B911B021A0300E4071F /* Accesibility */,
 				1487F15D177C35AA004A1A5A /* Images */,
 				EAF028B3177447530035084D /* FMDB */,
 				145EA7C917786FAC0087CDDB /* Languages */,
@@ -2731,6 +2734,14 @@
 			name = "Open With";
 			sourceTree = "<group>";
 		};
+		EA421B911B021A0300E4071F /* Accesibility */ = {
+			isa = PBXGroup;
+			children = (
+				EA421B931B021A9200E4071F /* AccesibilityLabels.strings */,
+			);
+			name = Accesibility;
+			sourceTree = "<group>";
+		};
 		EA4914661AC0344800BECF0B /* TTOpenInAppActivity */ = {
 			isa = PBXGroup;
 			children = (
@@ -3522,6 +3533,7 @@
 				EA4914731AC0346100BECF0B /* TTOpenInAppActivity@2x.png in Resources */,
 				13AA2C9B17D8AFCB00DB5E11 /* tabBar.png in Resources */,
 				149D98C1195AAD54005E0C73 /* fileSharedByLink.png in Resources */,
+				EA421B941B021A9200E4071F /* AccesibilityLabels.strings in Resources */,
 				13AA2C9C17D8AFCB00DB5E11 /* tabBar@2x.png in Resources */,
 				149D98C2195AAD54005E0C73 /* fileSharedByLink@2x.png in Resources */,
 				EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */,
