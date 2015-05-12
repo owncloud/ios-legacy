@@ -737,6 +737,10 @@
         [accountCell.activeButton setImage:[UIImage imageNamed:@"radio_unchecked.png"] forState:UIControlStateNormal];
     }
     
+    //Accesibility support for Automation
+    NSString *accessibilityString = [NSString stringWithFormat:@"%@@%@", accountCell.userName.text, accountCell.urlServer.text];
+    [accountCell setAccessibilityLabel:accessibilityString];
+    
     
     return accountCell;
     
