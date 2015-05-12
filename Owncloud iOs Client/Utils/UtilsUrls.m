@@ -136,6 +136,7 @@
  *
  *  http://domain/sub1/sub2/remote.php/webdav/
  * @return  partToRemove -> /sub1/sub2/remote.php/webdav
+ *                          /(subfolders)/k_url_wevdav_server/
  */
 //We remove the part of the remote file path that is not necesary
 +(NSString *) getRemovedPartOfFilePathAnd:(UserDto *)mUserDto {
@@ -174,7 +175,7 @@
  * Return the file path without
  *
  * @param filePath -> /sub1/sub2/remote.php/webdav/
-                      /(subfolders)/k_url_wevdav_server/
+ *                    /(subfolders)/k_url_wevdav_server/
  * @param filename -> (subfolders_file)/
  * @param mUser -> user dto
  *
@@ -482,6 +483,9 @@
     
     return fullFilePath;
 }
+
+
+
 
 + (NSString *) getUserAgent {
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
