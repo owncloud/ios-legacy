@@ -39,9 +39,13 @@
 #import "UtilsCookies.h"
 #import "ManageCookiesStorageDB.h"
 
+//Settings table view size separator
 #define k_padding_normal_section 20.0
 #define k_padding_under_section 5.0
 
+//Settings custom font
+#define k_settings_normal_font [UIFont fontWithName:@"HelveticaNeue" size:17]
+#define k_settings_bold_font [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
 
 
 ///-----------------------------------
@@ -586,8 +590,7 @@
  */
 - (void) setTitleOfRow: (NSInteger)row inCell: (UITableViewCell *)cell{
     
-    UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
-    cell.textLabel.font = appFont;
+    cell.textLabel.font = k_settings_normal_font;
     
     switch (row) {
             
@@ -597,7 +600,7 @@
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             
             //Add accesibility label for Automation
-            [self.switchInstantUpload setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Help_Cell", nil)];
+            [cell setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Help_Cell", nil)];
             break;
             
         case recommend:
@@ -606,7 +609,7 @@
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             
             //Add accesibility label for Automation
-            [self.switchInstantUpload setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Recommend_Cell", nil)];
+            [cell setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Recommend_Cell", nil)];
             break;
             
         case feedback:
@@ -615,7 +618,7 @@
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             
             //Add accesibility label for Automation
-            [self.switchInstantUpload setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Send_Feedback_Cell", nil)];
+            [cell setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Send_Feedback_Cell", nil)];
             break;
             
         case impress:
@@ -624,7 +627,7 @@
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             
             //Add accesibility label for Automation
-            [self.switchInstantUpload setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Impress_Cell", nil)];
+            [cell setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Impress_Cell", nil)];
             break;
             
         default:
@@ -669,8 +672,8 @@
 }
 
 - (UITableViewCell *) getSectionAppPinBlock:(UITableViewCell *) cell byRow:(NSInteger) row {
-    UIFont *itemFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
-    cell.textLabel.font = itemFont;
+   
+    cell.textLabel.font = k_settings_normal_font;
     
     switch (row) {
         case 0:
@@ -694,8 +697,8 @@
 }
 
 -(UITableViewCell *) getSectionAppInstantUpload:(UITableViewCell *) cell byRow:(NSInteger) row {
-    UIFont *itemFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
-    cell.textLabel.font = itemFont;
+   
+    cell.textLabel.font = k_settings_normal_font;
     
     switch (row) {
         case 0:
@@ -783,10 +786,8 @@
     
     addAccountCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
-    UIFont *cellBoldFont = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
-    
     addAccountCell.selectionStyle = UITableViewCellSelectionStyleBlue;
-    addAccountCell.textLabel.font = cellBoldFont;
+    addAccountCell.textLabel.font = k_settings_bold_font;
     addAccountCell.textLabel.textAlignment = NSTextAlignmentCenter;
     addAccountCell.editing = NO;
     addAccountCell.textLabel.text = NSLocalizedString(@"add_new_account", nil);
@@ -807,11 +808,9 @@
     UITableViewCell *disconnectCell;
     
     disconnectCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    
-    UIFont *cellBoldFont = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
-    
+   
     disconnectCell.selectionStyle = UITableViewCellSelectionStyleBlue;
-    disconnectCell.textLabel.font = cellBoldFont;
+    disconnectCell.textLabel.font = k_settings_bold_font;
     disconnectCell.textLabel.textAlignment = NSTextAlignmentCenter;
     disconnectCell.editing = NO;
     disconnectCell.textLabel.text = NSLocalizedString(@"disconnect_button", nil);
