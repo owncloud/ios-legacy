@@ -43,7 +43,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -72,7 +72,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -101,7 +101,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -131,7 +131,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -161,7 +161,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -197,7 +197,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -252,7 +252,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -307,7 +307,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -358,7 +358,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -389,7 +389,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -423,7 +423,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -474,7 +474,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -531,7 +531,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -572,7 +572,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -618,7 +618,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -644,7 +644,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -673,7 +673,7 @@
 #elif FILE_PICKER
         queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-        queue = [Managers sharedDatabase];
+        queue = Managers.sharedDatabase;
 #else
         queue = [FileProvider sharedDatabase];
 #endif
@@ -703,7 +703,7 @@
 #elif FILE_PICKER
         queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-        queue = [Managers sharedDatabase];
+        queue = Managers.sharedDatabase;
 #else
         queue = [FileProvider sharedDatabase];
 #endif
@@ -736,7 +736,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -790,7 +790,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -844,7 +844,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -874,7 +874,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -906,7 +906,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -936,7 +936,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -966,7 +966,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif
@@ -1003,7 +1003,7 @@
 #elif FILE_PICKER
     queue = [DocumentPickerViewController sharedDatabase];
 #elif SHARE_IN
-    queue = [Managers sharedDatabase];
+    queue = Managers.sharedDatabase;
 #else
     queue = [FileProvider sharedDatabase];
 #endif

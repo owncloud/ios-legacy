@@ -17,9 +17,27 @@ import UIKit
 
 class Managers: NSObject {
     
+    class var sharedDatabase: FMDatabaseQueue {
+        struct Static {
+            static var sharedDatabase: FMDatabaseQueue?
+            static var tokenDatabase: dispatch_once_t = 0
+        }
+        
+        dispatch_once(&Static.tokenDatabase) {
+            Static.sharedDatabase = FMDatabaseQueue()
+            
+            let documentsDir = UtilsUrls.getOwnCloudFilePath()
+            let dbPath = documentsDir.stringByAppendingPathComponent("DB.sqlite")
+            Static.sharedDatabase = FMDatabaseQueue(path: dbPath)
+            
+        }
+        
+        return Static.sharedDatabase!
+    }
+    
     //MARK: FMDataBase
     
-    class func sharedDatabase()->FMDatabaseQueue{
+    /*class func sharedDatabase()->FMDatabaseQueue{
         
          var sharedDatabase: FMDatabaseQueue?
         
@@ -39,7 +57,7 @@ class Managers: NSObject {
         }
         
         return sharedDatabase!
-    }
+    }*/
     
        //MARK: OCCommunication
     
