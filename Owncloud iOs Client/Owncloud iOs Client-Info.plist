@@ -59,7 +59,7 @@
 		<string>Default-Landscape_414h@3x.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
-	<string>com.owncloud.iOSmobileapp</string>
+	<string>com.wsacad.IOSmobileapp</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
