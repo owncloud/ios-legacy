@@ -65,7 +65,7 @@
             //Remove: /owncloud/remote.php/webdav/ to the pathFolder
             NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
             //Obtains the number of the downloaded files in DB which filepath contains the folder that the user want delete
-            _isFilesDownloadedInFolder=[ManageFilesDB isGetFilesByDownloadState:downloaded andByUser:app.activeUser andFolder:_file.filePath];
+            _isFilesDownloadedInFolder=[ManageFilesDB isGetFilesByDownloadState:downloaded andByUser:app.activeUser andFolder:pathFolder];
         }
         if((_file.isDownload || _isFilesDownloadedInFolder == YES) && !_file.isFavorite) {
             DLog(@"Delete downloaded files or folder with downloaded files");
