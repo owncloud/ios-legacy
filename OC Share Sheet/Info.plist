@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.owncloud.iOSmobileapp.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<string>com.wsacad.IOSmobileapp.$(PRODUCT_NAME:rfc1034identifier)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -28,13 +28,7 @@
 		<dict>
 			<key>NSExtensionActivationRule</key>
 			<dict>
-				<key>NSExtensionActivationSupportsText</key>
-				<true/>
-				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
-				<integer>3</integer>
-				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
-                <integer>20</integer>
-                <key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
+				<key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
 				<integer>20</integer>
 				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
 				<integer>3</integer>
