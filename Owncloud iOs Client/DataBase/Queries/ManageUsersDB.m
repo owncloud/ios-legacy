@@ -23,15 +23,15 @@
 #import "UtilsCookies.h"
 #import "constants.h"
 
-
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
+#import "Owncloud_iOs_Client-Swift.h"
 #elif FILE_PICKER
-#import "DocumentPickerViewController.h"
+#import "ownCloudExtApp-Swift.h"
 #elif SHARE_IN
 #import "OC_Share_Sheet-Swift.h"
 #else
-#import "FileProvider.h"
+#import "ownCloudExtAppFileProvider-Swift.h"
 #endif
 
 @implementation ManageUsersDB
@@ -45,17 +45,7 @@
     
      DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount);
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -90,17 +80,7 @@
     
     __block UserDto *output = nil;
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
@@ -186,17 +166,7 @@
     
     output=[UserDto new];
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
@@ -262,17 +232,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -323,17 +283,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -383,17 +333,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -440,17 +380,7 @@
  */
 +(void) setActiveAccountByIdUser: (NSInteger) idUser {
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -472,17 +402,7 @@
  */
 +(void) setAllUsersNoActive {
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -502,17 +422,7 @@
  */
 +(void) setActiveAccountAutomatically {
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -533,17 +443,7 @@
  */
 +(void) removeUserAndDataByIdUser:(NSInteger)idUser {
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -604,17 +504,7 @@
  */
 +(void) updateStorageByUserDto:(UserDto *) user {
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -638,17 +528,7 @@
     
     output=[UserDto new];
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users ORDER BY id DESC LIMIT 1"];
@@ -688,17 +568,7 @@
  */
 + (void) updateUserByUserDto:(UserDto *) user {
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = Managers.sharedDatabase;
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;

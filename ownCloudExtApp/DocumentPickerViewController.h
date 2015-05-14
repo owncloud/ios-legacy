@@ -14,7 +14,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "FMDatabaseQueue.h"
 #import "FileListDocumentProviderViewController.h"
 #import "KKPasscodeViewController.h"
 
@@ -26,8 +25,6 @@
 
 @interface DocumentPickerViewController : UIDocumentPickerExtensionViewController <KKPasscodeViewControllerDelegate, FileListDocumentProviderViewControllerDelegate>
 
-
-+ (FMDatabaseQueue*)sharedDatabase;
 + (OCCommunication*)sharedOCCommunication;
 
 @property (weak, nonatomic) IBOutlet UILabel *labelErrorLogin;

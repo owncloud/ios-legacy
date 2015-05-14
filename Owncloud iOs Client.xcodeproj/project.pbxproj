@@ -478,6 +478,7 @@
 		59A9A72A196E8E3C0042FEAC /* UtilsCookies.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A9A729196E8E3C0042FEAC /* UtilsCookies.m */; };
 		59AE9EB21990FEC2003380A8 /* CheckHasShareSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 59AE9EB11990FEC2003380A8 /* CheckHasShareSupport.m */; };
 		59AF279E19920A1100359151 /* CheckHasCookiesSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 59AF279D19920A1100359151 /* CheckHasCookiesSupport.m */; };
+		59BF57CB1B04C8E7000EB221 /* Managers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7217C1AAF2E0D009F5596 /* Managers.swift */; };
 		59BF9B2D1A2C5A5B009D9CF0 /* KKPasscodeLock.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */; };
 		59BF9B361A2C8BEA009D9CF0 /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */; };
 		59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 599D80B01A2338100071B66E /* FileListDocumentProviderViewController.m */; };
@@ -539,11 +540,15 @@
 		59D774CE1910EE0F004322BA /* UtilsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 59D774CD1910EE0F004322BA /* UtilsTableView.m */; };
 		59DA496619F7A4B600DD3619 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		59DA4F3C1A07A97100472639 /* DocumentPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 59DA4F3B1A07A97100472639 /* DocumentPickerViewController.xib */; };
+		59DF586D1B04B35B00EEFA84 /* Managers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7217C1AAF2E0D009F5596 /* Managers.swift */; };
 		59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
 		59E20C7B1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
 		59E20C7C1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
 		59E20C7E1AEFB45900554D7E /* ManageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F137177C2F48004A1A5A /* ManageDB.m */; };
 		59E20C7F1AEFB45900554D7E /* ManageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F137177C2F48004A1A5A /* ManageDB.m */; };
+		59E58B751B04ED15004E9739 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0816034C2200A95EAD /* libcrypto.a */; };
+		59E58B761B04ED15004E9739 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0916034C2200A95EAD /* libssl.a */; };
+		59E58B771B04ED20004E9739 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
 		EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
 		EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
@@ -1567,6 +1572,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59E58B771B04ED20004E9739 /* MobileCoreServices.framework in Frameworks */,
+				59E58B751B04ED15004E9739 /* libcrypto.a in Frameworks */,
+				59E58B761B04ED15004E9739 /* libssl.a in Frameworks */,
 				EA1F62DD1A5EC08300D6346F /* libownCloudiOS.a in Frameworks */,
 				EA1F62D61A5EBDF900D6346F /* libsqlite3.0.dylib in Frameworks */,
 			);
@@ -4011,6 +4019,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59DF586D1B04B35B00EEFA84 /* Managers.swift in Sources */,
 				59E20C7E1AEFB45900554D7E /* ManageDB.m in Sources */,
 				59C3AC1F1A287E3B005433A1 /* OCPortraitNavigationViewController.m in Sources */,
 				59C3AC1A1A287DE3005433A1 /* KKKeychain.m in Sources */,
@@ -4069,6 +4078,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59BF57CB1B04C8E7000EB221 /* Managers.swift in Sources */,
 				EAE80E241A6CFDE50061BD86 /* UploadsOfflineDto.m in Sources */,
 				EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */,
 				EA1F62D21A5EBD2400D6346F /* ManageProvidingFilesDB.m in Sources */,
@@ -4473,6 +4483,7 @@
 				CODE_SIGN_ENTITLEMENTS = ownCloudExtApp/ownCloudExtApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4509,6 +4520,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -4530,6 +4542,7 @@
 				CODE_SIGN_ENTITLEMENTS = ownCloudExtApp/ownCloudExtApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4561,6 +4574,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -4582,6 +4596,8 @@
 				CODE_SIGN_ENTITLEMENTS = ownCloudExtAppFileProvider/ownCloudExtAppFileProvider.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -4602,11 +4618,16 @@
 				INFOPLIST_FILE = ownCloudExtAppFileProvider/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -4628,6 +4649,8 @@
 				CODE_SIGN_ENTITLEMENTS = ownCloudExtAppFileProvider/ownCloudExtAppFileProvider.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
@@ -4644,10 +4667,15 @@
 				INFOPLIST_FILE = ownCloudExtAppFileProvider/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
 			};
 			name = Release;
 		};
