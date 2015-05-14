@@ -558,7 +558,6 @@
 		EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */; };
 		EA2B4FB017FAFF69001766BB /* company_empty_screen_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */; };
 		EA2B4FB217FC2CCE001766BB /* company_empty_screen_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FB117FC2CCE001766BB /* company_empty_screen_ipad@2x.png */; };
-		EA421B941B021A9200E4071F /* AccesibilityLabels.strings in Resources */ = {isa = PBXBuildFile; fileRef = EA421B931B021A9200E4071F /* AccesibilityLabels.strings */; };
 		EA42FA4B18041E2F0006DB7C /* PassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4A18041E2F0006DB7C /* PassthroughView.m */; };
 		EA42FA4E1804217D0006DB7C /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA42FA51180539E70006DB7C /* ImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA50180539E70006DB7C /* ImageUtils.m */; };
@@ -658,6 +657,7 @@
 		EAEDC0931AB197A0004836EB /* SelectFolderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6A51778668A00FB9977 /* SelectFolderViewController.xib */; };
 		EAEDC0941AB197D1004836EB /* SelectedFolderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14A50E9D18F3FC9100506E2B /* SelectedFolderCell.xib */; };
 		EAEDC0951AB19869004836EB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 145EA7CA17786FAC0087CDDB /* Localizable.strings */; };
+		EAEFAC0C1B0502BE00E28B5D /* AccesibilityLabels.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAEFAC0E1B0502BE00E28B5D /* AccesibilityLabels.strings */; };
 		EAF721191AADCC73009F5596 /* pdf_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F18E177C35AA004A1A5A /* pdf_icon.png */; };
 		EAF7211A1AADCC9B009F5596 /* BackRootFolderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F176177C35AA004A1A5A /* BackRootFolderIcon.png */; };
 		EAF7211B1AADCC9B009F5596 /* BackRootFolderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F177177C35AA004A1A5A /* BackRootFolderIcon@2x.png */; };
@@ -1384,7 +1384,6 @@
 		EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = company_empty_screen_ipad.png; sourceTree = "<group>"; };
 		EA2B4FB117FC2CCE001766BB /* company_empty_screen_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "company_empty_screen_ipad@2x.png"; sourceTree = "<group>"; };
 		EA42197F1A94F6850081D400 /* Owncloud iOs Client-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Owncloud iOs Client-Bridging-Header.h"; sourceTree = "<group>"; };
-		EA421B931B021A9200E4071F /* AccesibilityLabels.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = AccesibilityLabels.strings; path = SupportingFiles/Accesibility/AccesibilityLabels.strings; sourceTree = "<group>"; };
 		EA42FA4918041E2F0006DB7C /* PassthroughView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PassthroughView.h; path = Tabs/FileTab/PassthroughView.h; sourceTree = "<group>"; };
 		EA42FA4A18041E2F0006DB7C /* PassthroughView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PassthroughView.m; path = Tabs/FileTab/PassthroughView.m; sourceTree = "<group>"; };
 		EA42FA4C1804217D0006DB7C /* OCToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCToolBar.h; path = Tabs/FileTab/OCToolBar.h; sourceTree = "<group>"; };
@@ -1484,6 +1483,7 @@
 		EAE005F0180EF03E0066E8D4 /* CheckSSOServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckSSOServer.h; path = Login/SSO/CheckSSOServer.h; sourceTree = "<group>"; };
 		EAE93A3A19D18E43002B9E15 /* fi */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
+		EAEFAC0D1B0502BE00E28B5D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AccesibilityLabels.strings; sourceTree = "<group>"; };
 		EAF7217C1AAF2E0D009F5596 /* Managers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Managers.swift; sourceTree = "<group>"; };
 		EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2737,7 +2737,7 @@
 		EA421B911B021A0300E4071F /* Accesibility */ = {
 			isa = PBXGroup;
 			children = (
-				EA421B931B021A9200E4071F /* AccesibilityLabels.strings */,
+				EAEFAC0E1B0502BE00E28B5D /* AccesibilityLabels.strings */,
 			);
 			name = Accesibility;
 			sourceTree = "<group>";
@@ -3533,7 +3533,7 @@
 				EA4914731AC0346100BECF0B /* TTOpenInAppActivity@2x.png in Resources */,
 				13AA2C9B17D8AFCB00DB5E11 /* tabBar.png in Resources */,
 				149D98C1195AAD54005E0C73 /* fileSharedByLink.png in Resources */,
-				EA421B941B021A9200E4071F /* AccesibilityLabels.strings in Resources */,
+				EAEFAC0C1B0502BE00E28B5D /* AccesibilityLabels.strings in Resources */,
 				13AA2C9C17D8AFCB00DB5E11 /* tabBar@2x.png in Resources */,
 				149D98C2195AAD54005E0C73 /* fileSharedByLink@2x.png in Resources */,
 				EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */,
@@ -4158,6 +4158,15 @@
 				145EA7CD17786FAC0087CDDB /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		EAEFAC0E1B0502BE00E28B5D /* AccesibilityLabels.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EAEFAC0D1B0502BE00E28B5D /* en */,
+			);
+			name = AccesibilityLabels.strings;
+			path = SupportingFiles/Accesibility;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
