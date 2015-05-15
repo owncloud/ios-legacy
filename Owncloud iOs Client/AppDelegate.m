@@ -2194,12 +2194,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     DLog(@"doThingsThatShouldDoOnStart");
     
-    if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
-        [self restoreUploadsInProccessFromSystemWithIdentificator:k_session_name withCompletionHandler:nil];
-        [self restoreDownloadsInProccessFromSystemWithIdentificator:k_download_session_name withCompletionHandler:nil];
-    } else {
+    if (k_is_sso_active || !k_is_background_active) {
         [self performSelectorInBackground:@selector(initUploadsOffline) withObject:nil];
         [self updateTheDownloadState:downloading to:notDownload];
+    } else {
+        [self restoreUploadsInProccessFromSystemWithIdentificator:k_session_name withCompletionHandler:nil];
+        [self restoreDownloadsInProccessFromSystemWithIdentificator:k_download_session_name withCompletionHandler:nil];
+
     }
     
     [self addErrorUploadsToRecentsTab];
