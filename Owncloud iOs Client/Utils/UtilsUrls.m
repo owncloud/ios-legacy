@@ -379,7 +379,7 @@
     NSString *pathFile = [self getFilePathOnDBByFullPath:destinyPath andUser:mUserDto];
     NSString *pathWithAppName = [NSString stringWithFormat:@"%@/%@",appName,pathFile];
     
-    return  pathWithAppName;
+    return  [pathWithAppName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];
     
 }
 
