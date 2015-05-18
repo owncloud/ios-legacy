@@ -366,11 +366,6 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
         //We obtain the urlServerRedirected to make the uploads in background 
         NSURL *url = [[NSURL alloc] initWithString:responseURLString];
         NSURL * urlByRemovingLastComponent = [url URLByDeletingLastPathComponent];
-        
-#ifdef CONTAINER_APP
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        app.urlServerRedirected = [urlByRemovingLastComponent absoluteString];
-#endif
 
         UserDto *activeUser = [ManageUsersDB getActiveUser];
         if (activeUser) {
@@ -378,6 +373,12 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                 [ManageUsersDB updateUrlRedirected:[urlByRemovingLastComponent absoluteString] byUserDto:activeUser];
             }
         }
+        
+#ifdef CONTAINER_APP
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        app.urlServerRedirected = [urlByRemovingLastComponent absoluteString];
+        app.activeUser = [ManageUsersDB getActiveUser];
+#endif
 
         NSLog(@"responseURLString: %@", responseURLString);
         NSLog(@"requestRedirect.HTTPMethod: %@", request.HTTPMethod);
