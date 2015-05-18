@@ -363,7 +363,7 @@
 /// @name getPathWithAppName
 ///-----------------------------------
 /**
- * Return the appName with the path file components
+ * Return the appName with the path file components whithout percent escape encoding
  *
  * @param destinyPath -> http://domain/sub1/sub2/remote.php/webdav/Documents/...
  *                    -> http://domain/sub1/sub2/remote.php/webdav/
@@ -379,7 +379,7 @@
     NSString *pathFile = [self getFilePathOnDBByFullPath:destinyPath andUser:mUserDto];
     NSString *pathWithAppName = [NSString stringWithFormat:@"%@/%@",appName,pathFile];
     
-    return pathWithAppName;
+    return  pathWithAppName;
     
 }
 
