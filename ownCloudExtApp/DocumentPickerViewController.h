@@ -34,6 +34,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewLogo;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewError;
 
+@property (nonatomic) UIDocumentPickerMode mode;
+
 @property (nonatomic, strong) UserDto *user;
 
 @end

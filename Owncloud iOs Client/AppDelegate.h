@@ -41,7 +41,6 @@
 #define k_DB_version_11 11
 #define k_DB_version_12 12
 
-@class MGSplitViewController;
 @class FilesViewController;
 @class RecentViewController;
 @class SettingsViewController;
@@ -77,7 +76,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
     //OCTabBarController *_tabBarController;
    
     CheckAccessToServer *_mCheckAccessToServer;
-    MGSplitViewController *_splitViewController;  
+    UISplitViewController *_splitViewController;
     DetailViewController *_detailViewController;
     
     UploadFromOtherAppViewController *_uploadFromOtherAppViewController;
@@ -150,7 +149,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 + (ManageFavorites*)sharedManageFavorites;
 
-- (void)dismissPopover;
 - (void)doLoginWithOauthToken;
 
 //Method that erase the data of the detail view in iPad.
@@ -198,18 +196,11 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 - (void) doThingsThatShouldDoOnStart;
 
 /*
- * Methods to clear network cache
- */
-- (void) eraseURLCache;
-- (void) eraseCredentials;
-
-/*
  * Method relaunch the upload failed if exist
  * This method has a timeout
  *@isForced -> If YES the timeout is 0 secs
  */
 - (void) relaunchUploadsFailed:(BOOL)isForced;
-
 
 /*
  * Method that relaunch upload failed without timeout
@@ -313,7 +304,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) FilesViewController *filesViewController;
 @property (nonatomic, strong) FilesViewController *presentFilesViewController;
 @property (nonatomic, strong) SettingsViewController *settingsViewController;
-@property (nonatomic, strong) MGSplitViewController *splitViewController;
+@property (nonatomic, strong) UISplitViewController *splitViewController;
 @property (nonatomic, strong)DetailViewController *detailViewController;
 @property (nonatomic, strong) MediaViewController *mediaPlayer;
 @property (nonatomic, strong) UploadFromOtherAppViewController *uploadFromOtherAppViewController;

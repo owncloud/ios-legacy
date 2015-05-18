@@ -139,7 +139,7 @@
             
             itemPath = [UtilsDtos getTheParentPathOfThePath:itemPath];
             
-            NSLog(@"item path: %@", itemPath);
+            DLog(@"item path: %@", itemPath);
             //Only if is the same parent folder && only stored share type 3 (Shared with link)
             
             OCSharedDto *sharedDto = [OCSharedDto new];

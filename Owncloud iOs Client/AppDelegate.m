@@ -17,7 +17,6 @@
 #import "SettingsViewController.h"
 #import "RecentViewController.h"
 #import "CheckAccessToServer.h"
-#import "MGSplitViewController.h"
 #import "DetailViewController.h"
 #import "constants.h"
 #import "LoginViewController.h"
@@ -54,6 +53,7 @@
 #import "OCKeychain.h"
 #import "ManageLocation.h"
 #import "ManageAsset.h"
+#import "OCSplitViewController.h"
 
 
 #define k_server_with_chunking 4.5 
@@ -134,6 +134,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     [self moveIfIsNecessaryFolderOfOwnCloudFromContainerAppSandboxToAppGroupSanbox];
     
+    //Update keychain of all the users
+    [self updateAllKeychainsToUseTheLockProperty];
+    
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
     
@@ -144,7 +147,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //Update favorites files if there are active user
     if (_activeUser) {
-        [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
+        [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
     }
     
     //Needed to use on background tasks
@@ -234,31 +237,32 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 DLog(@"Response type = code");
             }
             NSArray *param_s = [text componentsSeparatedByString:@"?"];
-            NSString *param_1 = [param_s objectAtIndex:1];
             
-            NSMutableDictionary *result = [NSMutableDictionary dictionary];
-            NSArray *parameters = [param_1 componentsSeparatedByString:@"&"];
-            for (NSString *parameter in parameters)
-            {
-                NSArray *parts = [parameter componentsSeparatedByString:@"="];
-                NSString *key = [[parts objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                if ([parts count] > 1)
+            if (param_s.count > 1) {
+                NSString *param_1 = [param_s objectAtIndex:1];
+                
+                NSMutableDictionary *result = [NSMutableDictionary dictionary];
+                NSArray *parameters = [param_1 componentsSeparatedByString:@"&"];
+                for (NSString *parameter in parameters)
                 {
-                    id value = [[parts objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                    [result setObject:value forKey:key];
+                    NSArray *parts = [parameter componentsSeparatedByString:@"="];
+                    NSString *key = [[parts objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                    if ([parts count] > 1)
+                    {
+                        id value = [[parts objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                        [result setObject:value forKey:key];
+                    }
                 }
+                if (dbService.isDebugLogEnabled) {
+                    DLog(@"code = %@", [result objectForKey:@"code"]);
+                    self.oauthToken = [result objectForKey:@"code"];
+                }
+                AuthenticationDbService * dbService = [AuthenticationDbService sharedInstance];
+                [dbService setAuthorizationCode:[result objectForKey:@"code"]];
+                
+                RetrieveRefreshAndAccessTokenTask *task = [[RetrieveRefreshAndAccessTokenTask alloc] init];
+                [task executeRetrieveTask];
             }
-            if (dbService.isDebugLogEnabled) {
-                DLog(@"code = %@", [result objectForKey:@"code"]);
-                self.oauthToken = [result objectForKey:@"code"];
-            }
-            AuthenticationDbService * dbService = [AuthenticationDbService sharedInstance];
-            [dbService setAuthorizationCode:[result objectForKey:@"code"]];
-            
-            //[self prueba];
-            RetrieveRefreshAndAccessTokenTask *task = [[RetrieveRefreshAndAccessTokenTask alloc] init];
-            [task executeRetrieveTask];
-            
         }
     } else {
         DLog(@"URL from %@ application", sourceApplication);
@@ -326,7 +330,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         uploadFromOtherAppNavigationController.modalTransitionStyle=UIModalTransitionStyleCoverVertical;
         uploadFromOtherAppNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;
         [_splitViewController dismissViewControllerAnimated:NO completion:nil];
-        [self.detailViewController closePopover];
         [_splitViewController presentViewController:uploadFromOtherAppNavigationController animated:YES completion:nil];
 
     }
@@ -422,11 +425,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //[self presentModalViewController:_loginWindowViewController animated:NO];
     
-    //Set splitViewController to nil
-    if (_splitViewController) {
-        [_splitViewController.hiddenPopoverController dismissPopoverAnimated:NO];
-        _splitViewController=nil;
-    }
+  
     
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -568,22 +567,21 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //iPad
         
         //Create a splitViewController (Split container to show two view in the same time)
-        self.splitViewController=[[MGSplitViewController alloc]init];
+        self.splitViewController = [OCSplitViewController new];
+        
+        self.splitViewController.view.backgroundColor = [UIColor blackColor];
         
         //Create the detailViewController (Detail View of the split)
-        self.detailViewController=[[DetailViewController alloc]initWithNibName:@"DetailView" bundle:nil];
+        self.detailViewController = [[DetailViewController alloc]initWithNibName:@"DetailView" bundle:nil];
         
         //Assign tabBarController like a master view
-        [self.splitViewController setMasterViewController:_ocTabBarController];
-        [self.splitViewController setDetailViewController:_detailViewController];
         
+        self.splitViewController.viewControllers = [NSArray arrayWithObjects:self.ocTabBarController, self.detailViewController, nil];
+        self.splitViewController.delegate = self.detailViewController;
         
-        _detailViewController = (DetailViewController *) _detailViewController;
-        _detailViewController.splitController=_splitViewController;
-        _splitViewController.delegate=_detailViewController;
         
         // Add the split view controller's view to the window and display.
-        self.window.rootViewController=_splitViewController;
+        self.window.rootViewController = _splitViewController;
         [_window makeKeyAndVisible];
          _ocTabBarController.selectedIndex = 0;
         
@@ -719,12 +717,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) launchProcessToSyncAllFavorites {
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        //Do operations in background thread
-        [[AppDelegate sharedManageFavorites]syncAllFavoritesOfUser:_activeUser.idUser];
-        
-    });
-    
+    //Do operations in background thread
+    [[AppDelegate sharedManageFavorites]syncAllFavoritesOfUser:_activeUser.idUser];
     
 }
 
@@ -747,11 +741,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
 }
 
--(void)dismissPopover {
-    [self.splitViewController.masterViewController removeFromParentViewController];
-    [self.splitViewController.detailViewController removeFromParentViewController];
-    [self.splitViewController removeFromParentViewController];
-}
 
 - (void)presentWithView{
     [self.detailViewController presentWhiteView];
@@ -859,6 +848,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [fileManager removeItemAtPath:inboxFolder error:&error];
 }
 
+
+- (void) initInstantUploads{
+    
+    [self.settingsViewController initStateInstantUpload];
+}
+
 #pragma mark - Manage media player
 
 /*
@@ -896,7 +891,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             [_mediaPlayer.moviePlayer stop];
             [_mediaPlayer finalizePlayer];
             [_mediaPlayer.view removeFromSuperview];
-            _mediaPlayer=nil;
+            _mediaPlayer = nil;
         }
     }
 }
@@ -1009,11 +1004,14 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 
 
+
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     DLog(@"applicationWillEnterForeground");
     
-    [self.settingsViewController initStateInstantUpload];
+    [self performSelector:@selector(initInstantUploads) withObject:nil afterDelay:4.0];
+    
+   
     
     if (_activeUser.username==nil) {
         _activeUser=[ManageUsersDB getActiveUser];
@@ -1039,7 +1037,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 
     //Update the Favorites Files
-    [self performSelectorInBackground:@selector(launchProcessToSyncAllFavorites) withObject:nil];
+    [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
    
     //Refresh the list of files from the database
     if (_activeUser && self.presentFilesViewController) {
@@ -1668,11 +1666,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
         } else {
             //is ipad
-            _detailViewController.disablePopover=YES;
-            [_detailViewController closePopover];
             [_splitViewController dismissViewControllerAnimated:NO completion:nil];
 
-            
            // oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
             oc.modalPresentationStyle = UIModalPresentationFormSheet;
             
@@ -2039,10 +2034,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             [_ocTabBarController presentViewController:navController animated:YES completion:nil];
         } else {
             
-            if (IS_IOS8) {
-                [self.detailViewController.popoverController dismissPopoverAnimated:YES];
-            }
-            
             OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
             navController.modalPresentationStyle = UIModalPresentationFormSheet;
             [self.splitViewController presentViewController:navController animated:YES completion:nil];
@@ -2144,45 +2135,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-#pragma mark - Delete cache HTTP
-
-- (void)eraseCredentials
-{
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    NSString *connectURL =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
-    
-    NSURLCredentialStorage *credentialsStorage = [NSURLCredentialStorage sharedCredentialStorage];
-    NSDictionary *allCredentials = [credentialsStorage allCredentials];
-    
-    if ([allCredentials count] > 0)
-    {
-        for (NSURLProtectionSpace *protectionSpace in allCredentials)
-        {
-            DLog(@"Protetion espace: %@", [protectionSpace host]);
-            
-            if ([[protectionSpace host] isEqualToString:connectURL])
-            {
-                DLog(@"Credentials erase");
-                NSDictionary *credentials = [credentialsStorage credentialsForProtectionSpace:protectionSpace];
-                for (NSString *credentialKey in credentials)
-                {
-                    [credentialsStorage removeCredential:[credentials objectForKey:credentialKey] forProtectionSpace:protectionSpace];
-                }
-            }
-        }
-    }
-}
-
-- (void)eraseURLCache
-{
-    //  NSURL *loginUrl = [NSURL URLWithString:self.connectString];
-    //  NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc]initWithURL:loginUrl];
-    // [NSMutableURLRequest requestWithURL:loginUrl];
-    //  [[NSURLCache sharedURLCache] removeCachedResponseForRequest:urlRequest];
-    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
-    [[NSURLCache sharedURLCache] setDiskCapacity:0];
-}
 
 
 /*
@@ -2644,6 +2596,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             _prepareFiles.delegate = self;
         }
         
+      
         for (UploadsOfflineDto *upload in listOfFilesGeneratedByDocumentProvider) {
             upload.status = waitingAddToUploadList;
         }
@@ -2652,6 +2605,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         [_prepareFiles sendFileToUploadByUploadOfflineDto:[listOfFilesGeneratedByDocumentProvider objectAtIndex:0]];
         
+ 
     }
 }
 
@@ -2873,6 +2827,25 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             }
         }
     }
+}
+
+///-----------------------------------
+/// @name updateAllKeychainsToUseTheLockProperty
+///-----------------------------------
+
+/**
+ * This method updates all the credentials to use a property to allow to access to them when the passcode system is set.
+ */
+- (void) updateAllKeychainsToUseTheLockProperty{
+    
+    for (UserDto *user in [ManageUsersDB getAllUsersWithOutCredentialInfo]) {
+        
+         NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
+        
+        [OCKeychain updateKeychainForUseLockPropertyForUser:idString];
+        
+    }
+    
 }
 
 #pragma mark - Singletons of Server Version Checks

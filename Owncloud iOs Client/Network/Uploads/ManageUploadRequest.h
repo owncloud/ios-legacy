@@ -58,7 +58,7 @@ extern NSString *uploadOverwriteFileNotification;
 @property(nonatomic) BOOL isUploadBegan;
 @property(nonatomic) BOOL isFromBackground;
 
-
+@property(nonatomic, strong) NSProgress *progressValueGlobal;
 @property(nonatomic) NSUInteger progressTag;
 
 - (void) addFileToUpload:(UploadsOfflineDto*) currentUpload;

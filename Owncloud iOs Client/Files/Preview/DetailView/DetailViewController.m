@@ -16,7 +16,6 @@
 #import "DetailViewController.h"
 
 #import "AppDelegate.h"
-#import "MainPopOverBarckground.h"
 #import "UIColor+Constants.h"
 #import "constants.h"
 #import "EditAccountViewController.h"
@@ -37,9 +36,9 @@
 #import "ManageFavorites.h"
 #import "SettingsViewController.h"
 #import "UtilsUrls.h"
-
 #import "ReaderDocument.h"
 #import "ReaderViewController.h"
+#import "OCSplitViewController.h"
 
 
 NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
@@ -50,9 +49,12 @@ NSString * IpadSelectRowInFileListNotification = @"IpadSelectRowInFileListNotifi
 NSString * IpadCleanPreviewNotification = @"IpadCleanPreviewNotification";
 NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotConnectionWithServerMessageNotification";
 
-
+#define k_delta_width_for_split_transition 320.0
+#define k_delta_height_toolBar_split_transition 64.0
 
 @interface DetailViewController ()
+
+@property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 
 - (void)configureView;
 
@@ -61,7 +63,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 @implementation DetailViewController
 
-@synthesize splitController, popoverController, toolbar;
+@synthesize  toolbar;
 
 
 #pragma mark - Load view methods
@@ -73,21 +75,19 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     //Enable toolBar
     [toolbar setUserInteractionEnabled:YES];
     
-    
     //Init global atributes
-    _progressView.progress=0.0;
-    _progressView.hidden=YES;
-    _cancelButton.hidden=YES;
-    _progressLabel.hidden=YES;
-    _previewImageView.hidden=YES;
-    _isDownloading=NO;
-    _isViewBlocked=NO;
-    _isExtend=NO;
-    _isExtending=NO;
-    _isFileCharged=NO;
-    _disablePopover=NO;
-    _isOverwritedFile=NO;
+    _progressView.progress = 0.0;
+    _progressView.hidden = YES;
+    _cancelButton.hidden = YES;
+    _progressLabel.hidden = YES;
+    _previewImageView.hidden = YES;
+    _isDownloading = NO;
+    _isViewBlocked = NO;
+    self.isSizeChanging = NO;
+    _isFileCharged = NO;
+    _isOverwritedFile = NO;
     _isUpdatingFile = NO;
+    self.hideMaster = NO;
     _controllerManager = noManagerController;
     
     //Init notificacion in status bar
@@ -99,18 +99,16 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
    
     self.edgesForExtendedLayout = UIRectCornerAllCorners;
     
-    //Bar items. Set to botom in iOS 7
-    [_toggleItem setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
+    //Bar items. Set buttons
     [_openButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     [_favoriteButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     [_shareLinkButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     [_deleteButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     
     //Set Constraints
-    _toolBarHeightConstraint.constant=64;
-    _topMarginTitleLabelConstraint.constant=32;
-    _progressViewHeightConstraint.constant=2;
-    _fileTypeCenterHeightConstraint.constant=-40;
+    _topMarginTitleLabelConstraint.constant = 32;
+    _progressViewHeightConstraint.constant = 2;
+    _fileTypeCenterHeightConstraint.constant = -40;
     
 
     //Set title and the font of the label of the toolBar
@@ -122,12 +120,20 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     //Set notifications for communication betweenViews
     [self setNotificationForCommunicationBetweenViews];
+    
+    //Add gesture for the full screen support
+    self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(launchTransitionProcessForFullScreen)];
+    self.singleTap.numberOfTapsRequired = 1;
+    self.singleTap.numberOfTouchesRequired = 1;
+    self.singleTap.delegate = self;
+    
+    [self.splitViewController setPresentsWithGesture:NO];
+    
 }
+
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    //Show popover when the screen is loaded
-    [self showPopover];
 }
 
 
@@ -140,95 +146,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self configureView];
 }
 
-/*
- * Method that show or not show popover in this cases:
- * Automatic show popover in potrait view
- * Not show popover in landscape view
- * Not show popover in potrait view when the app receive a file from other app.
- * Not show popover in potrait or landscape extend if the player is in full screen option.
- */
--(void) showPopover {
-    
-    DLog(@"show popover");
-    
-    UIInterfaceOrientation currentOrientation;
-    currentOrientation=[[UIApplication sharedApplication] statusBarOrientation];
-    BOOL isPotrait = UIDeviceOrientationIsPortrait(currentOrientation);
-    BOOL disableAutomaticPopover=NO;
-    //If is player in fullscreen running not show popover automatic
-    if (_moviePlayer) {
-        if (_moviePlayer.isFullScreen) {
-            disableAutomaticPopover=YES;
-        }
-    }
-    
-    if (_disablePopover) {
-        disableAutomaticPopover=YES;
-    }
-    
-    //Disable automatic popover if the player is in full screen
-    if (disableAutomaticPopover==NO) {
-        
-        if (isPotrait==YES) {
-            
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            
-            //Method that show popover automatic if app dont show from other app
-            if (appDelegate.isSharedToOwncloudPresent == NO && appDelegate.isPasscodeVisible == NO && appDelegate.isSharedToOwncloudPresent == NO && appDelegate.settingsViewController.isMailComposeVisible == NO) {
-
-                if (self.popoverController!=nil && self.view.window != nil) {
-                    DLog(@"Popover exist");
-                    UIBarButtonItem *item = [toolbar.items objectAtIndex:0];
-                    [self.popoverController presentPopoverFromBarButtonItem:item permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-                }
-            } else {
-                if ([self.popoverController isPopoverVisible]) {
-                    [self.popoverController dismissPopoverAnimated:NO];
-                }
-            }
-        } else {
-            
-            //Method that show popover automatic
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            if (appDelegate.isSharedToOwncloudPresent == NO && _isExtending == NO) {
-                if (self.popoverController!=nil && self.view.window != nil) {
-                    DLog(@"Popover exist");
-                    UIBarButtonItem *item = [toolbar.items objectAtIndex:0];
-                    [self.popoverController presentPopoverFromBarButtonItem:item permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-                }
-            } else {
-                _isExtending = NO;
-                if ([popoverController isPopoverVisible]) {
-                    [popoverController dismissPopoverAnimated:NO];
-                }
-            }
-        }
-    }
-}
-
-/*
- *Method taht close popover if this is visible
- */
--(void)closePopover{
-    
-    if (popoverController.isPopoverVisible) {
-        [popoverController dismissPopoverAnimated:NO];
-    }
-}
 
 - (void)configureView
 {
     DLog(@"Detail Configure view");
-    
-    UIInterfaceOrientation currentOrientation;
-    currentOrientation=[[UIApplication sharedApplication] statusBarOrientation];
-    BOOL isPotrait = UIDeviceOrientationIsPortrait(currentOrientation);
-    
-    //Set the content offset of the gallery view scroll view.
-    if (_galleryView) {
-        [_mainScrollView setContentOffset:_mainScrollView.contentOffset animated:YES];
-        [_galleryView.scrollView setContentOffset:_mainScrollView.contentOffset animated:YES];
-    }
     
     //TitleLabel
     if (_file) {
@@ -242,146 +163,30 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     //Favorite
     [self putTheFavoriteStatus];
     
-    //Managed potrait or landscape orientation screen
-    if (isPotrait) {
-        [self potraitView];
-    } else {
-        [self landscapeView];
+    NSMutableArray *items = [NSMutableArray new];
+    [items insertObject:_spaceBar atIndex:0];
+    
+    if (self.isFileCharged ) {
+        [items insertObject:_openButtonBar atIndex:1];
+        [items insertObject:_spaceBar1 atIndex:2];
+        [items insertObject:_favoriteButtonBar atIndex:3];
+        [items insertObject:_spaceBar2 atIndex:4];
+        [items insertObject:_shareLinkButtonBar atIndex:5];
+        [items insertObject:_spaceBar3 atIndex:6];
+        [items insertObject:_deleteButtonBar atIndex:7];
     }
-}
-
-#pragma mark - Portrait/Landscape screen
-
-/*
- * Method that manage the interface objects in potrait orientation
- */
--(void)potraitView{
-    
-    //Configure toolBar
-    NSMutableArray *items = [[toolbar items] mutableCopy];
-    [items removeObject:_toggleItem];
-    
-    if (_isFileCharged==YES) {
-        [items insertObject:_spaceBar atIndex:1];
-        [items insertObject:_openButtonBar atIndex:2];
-        [items insertObject:_spaceBar1 atIndex:3];
-        [items insertObject:_favoriteButtonBar atIndex:4];
-        [items insertObject:_spaceBar2 atIndex:5];
-        [items insertObject:_shareLinkButtonBar atIndex:6];
-        [items insertObject:_spaceBar3 atIndex:7];
-        [items insertObject:_deleteButtonBar atIndex:8];
-    } else {
-        [items removeObject:_spaceBar];
-        [items removeObject:_openButtonBar];
-        [items removeObject:_spaceBar1];
-        [items removeObject:_favoriteButtonBar];
-        [items removeObject:_spaceBar2];
-        [items removeObject:_shareLinkButtonBar];
-        [items removeObject:_spaceBar3];
-        [items removeObject:_deleteButtonBar];
-    }
-    
     [toolbar setItems:items animated:YES];
     
-    //Configure size of movie player dinamically
-    if (_moviePlayer) {
-        if (_moviePlayer.isFullScreen==NO) {
-            _moviePlayer.moviePlayer.view.frame = _mainScrollView.frame;
-        } else {
-            CGRect fullScreenFrame = _mainScrollView.frame;
-            fullScreenFrame.size.height = _mainScrollView.frame.size.height + toolbar.frame.size.height;
-            fullScreenFrame.origin.y = toolbar.frame.origin.y;
-            _moviePlayer.moviePlayer.view.frame= fullScreenFrame;
-        }
-    } else if (_readerPDFViewController) {
-        _readerPDFViewController.view.frame = _mainScrollView.frame;
-        [_readerPDFViewController updateContentViews];
-    }
 }
 
-/*
- * Method that manage the interface objects in landscape orientation
- */
-- (void)landscapeView{
+- (CGRect) getTheCorrectSize{
     
-    //Configure toolBar
-    UIImage *image;
-    if ([splitController isShowingMaster]) {
-        image = [UIImage imageNamed:@"arrow_button.png"];
-    } else {
-        image = [UIImage imageNamed:@"conarrow_button.png"];
-    }
+    CGRect originFrame = self.mainScrollView.frame;
+    CGRect sizeFrame = self.view.bounds;
     
-    _toggleItem.image=image;
-    _toggleItem.style=UIBarButtonItemStylePlain;
+    CGRect correctFrame = CGRectMake(originFrame.origin.x, originFrame.origin.y, sizeFrame.size.width, (sizeFrame.size.height - originFrame.origin.y));
     
-    //Diferents configures of tool bar depends if the detail view is extend or not.
-    if (_isExtend==YES) {
-        
-        NSMutableArray *items = [[toolbar items] mutableCopy];
-        UIBarButtonItem *popoverItem = [items objectAtIndex:0];
-        [items removeAllObjects];
-        [items insertObject:popoverItem atIndex:0];
-        [items insertObject:_toggleItem atIndex:1];
-        [items insertObject:_spaceBar atIndex:2];
-        
-        if (_isFileCharged==YES) {
-            [items insertObject:_openButtonBar atIndex:3];
-            [items insertObject:_spaceBar1 atIndex:4];
-            [items insertObject:_favoriteButtonBar atIndex:5];
-            [items insertObject:_spaceBar2 atIndex:6];
-            [items insertObject:_shareLinkButtonBar atIndex:7];
-            [items insertObject:_spaceBar3 atIndex:8];
-            [items insertObject:_deleteButtonBar atIndex:9];
-        }
-        
-        [toolbar setItems:items animated:YES];
-        
-        
-        //Configure size of movie player dinamically
-        if (_moviePlayer) {
-            if (_moviePlayer.isFullScreen==NO) {
-                _moviePlayer.moviePlayer.view.frame= _mainScrollView.frame;
-            } else {
-                CGRect fullScreenFrame = _mainScrollView.frame;
-                fullScreenFrame.size.height = _mainScrollView.frame.size.height + toolbar.frame.size.height;
-                fullScreenFrame.origin.y = toolbar.frame.origin.y;
-                _moviePlayer.moviePlayer.view.frame= fullScreenFrame;
-            }
-        } else if (_readerPDFViewController) {
-            _readerPDFViewController.view.frame = _mainScrollView.frame;
-            [_readerPDFViewController updateContentViews];
-        }
-        
-    } else {
-        //Landscape normal mode
-        NSMutableArray *items = [[toolbar items] mutableCopy];
-        [items removeAllObjects];
-        [items insertObject:_toggleItem atIndex:0];
-        [items insertObject:_spaceBar atIndex:1];
-        
-        if (_isFileCharged==YES) {
-            [items insertObject:_openButtonBar atIndex:2];
-            [items insertObject:_spaceBar1 atIndex:3];
-            [items insertObject:_favoriteButtonBar atIndex:4];
-            [items insertObject:_spaceBar2 atIndex:5];
-            [items insertObject:_shareLinkButtonBar atIndex:6];
-            [items insertObject:_spaceBar3 atIndex:7];
-            [items insertObject:_deleteButtonBar atIndex:8];
-        }
-        [toolbar setItems:items animated:YES];
-        
-        if (_moviePlayer) {
-            CGRect frame = _mainScrollView.frame;
-            _moviePlayer.moviePlayer.view.frame = frame;
-        } else if (_readerPDFViewController) {
-            
-            CGRect frame = _mainScrollView.frame;
-            
-            _readerPDFViewController.view.frame = frame;
-            [_readerPDFViewController updateContentViews];
-        }
-    }
+    return correctFrame;
 }
 
 #pragma mark - Handle file methods
@@ -618,9 +423,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 
 - (void)previewFile {
-    _companyImageView.hidden=YES;
+    _companyImageView.hidden = YES;
     self.view.backgroundColor = [UIColor whiteColor];
-    _previewImageView.hidden=NO;
+    _previewImageView.hidden = NO;
     
     //Get the image preview name
     NSString *filePreviewName = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:_file.fileName];
@@ -665,9 +470,13 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             if (self.documentPDF != nil) {
                 self.readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:self.documentPDF];
+                
+                [self.readerPDFViewController.view addGestureRecognizer:self.singleTap];
           
                 [self.view addSubview:self.readerPDFViewController.view];
-                [self configureView];
+                
+                self.readerPDFViewController.view.frame = [self getTheCorrectSize];
+                [self.readerPDFViewController updateContentViews];
                 
             } else {
                 DLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, self.file.localFolder, @"");
@@ -675,13 +484,14 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
         } else {
             if (!self.officeView) {
-                CGRect frame = _mainScrollView.frame;
-                self.officeView=[[OfficeFileView alloc]initWithFrame:frame];
+                self.officeView = [[OfficeFileView alloc]initWithFrame:[self getTheCorrectSize]];
             } else {
                 [self.officeView.webView removeFromSuperview];
             }
             self.officeView.delegate = self;
             [self.officeView openOfficeFileWithPath:self.file.localFolder andFileName:self.file.fileName];
+            
+            [self.officeView.webView addGestureRecognizer:self.singleTap];
             
             [self.view addSubview:self.officeView.webView];
         }
@@ -741,8 +551,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self presentWhiteView];
     
     if (!_officeView) {
-        CGRect frame = self.mainScrollView.frame;
-        _officeView=[[OfficeFileView alloc]initWithFrame:frame];
+        _officeView = [[OfficeFileView alloc]initWithFrame:[self getTheCorrectSize]];
         _officeView.delegate = self;
     } else {
         [_officeView.webView removeFromSuperview];
@@ -798,15 +607,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self unselectCurrentFile];
     [self reloadFileList];
     
-    UIInterfaceOrientation currentOrientation;
-    currentOrientation=[[UIApplication sharedApplication] statusBarOrientation];
-    BOOL isPotrait = UIDeviceOrientationIsPortrait(currentOrientation);
-    
-    if ((self.popoverController!=nil && self.view.window != nil && isPotrait)||(self.popoverController!=nil && self.view.window != nil && !isPotrait && _isExtend)) {
-        DLog(@"Popover exist");
-        UIBarButtonItem *item = [toolbar.items objectAtIndex:0];
-        [self.popoverController presentPopoverFromBarButtonItem:item permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    }
 }
 
 - (void)reloadTableAfterDonwload{
@@ -898,7 +698,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 - (void) removeThePreviousViews {
     //Quit the player if exist
     if (self.moviePlayer) {
-        [self.moviePlayer.moviePlayer.view removeFromSuperview];
+        [self.moviePlayer.view removeFromSuperview];
     }
     
     //Quit the office view
@@ -925,26 +725,26 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 - (void)presentWhiteView {
     
-    _progressView.hidden=YES;
-    _cancelButton.hidden=YES;
-    _progressLabel.hidden=YES;
-    _progressLabel.text=@"";
-    _progressView.progress=0.0;
-    _mainScrollView.hidden=YES;
-    _previewImageView.hidden=YES;
+    _progressView.hidden = YES;
+    _cancelButton.hidden = YES;
+    _progressLabel.hidden = YES;
+    _progressLabel.text = @"";
+    _progressView.progress = 0.0;
+    _mainScrollView.hidden = YES;
+    _previewImageView.hidden = YES;
     
-    _companyImageView.hidden=NO;
+    _companyImageView.hidden = NO;
     self.view.backgroundColor = [UIColor colorOfBackgroundDetailViewiPad];
     
-    _titleLabel.text=@"";
+    _titleLabel.text = @"";
     
     [_openWith.activityPopoverController dismissPopoverAnimated:YES];
     [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:YES];
     
     [self removeThePreviousViews];
     
-    _isFileCharged=NO;
-    _file=nil;
+    _isFileCharged = NO;
+    _file = nil;
     
     [self configureView];
     
@@ -1045,9 +845,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     [self configureView];
     
-    
     if (!_galleryView) {
-        _galleryView=[[GalleryView alloc]initWithFrame:_mainScrollView.frame];
+        _galleryView=[[GalleryView alloc]initWithFrame:[self getTheCorrectSize]];
         //Pass the current file
         _galleryView.file=_file;
         _galleryView.delegate=self;
@@ -1056,7 +855,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         //Init the main scroll view of gallery
         [_galleryView initScrollView];
         //Run the gallery
-        [_galleryView initGallery];        
+        [_galleryView initGallery];
+        
+        [_galleryView.scrollView addGestureRecognizer:self.singleTap];
         
     }
     //Add Gallery to the preview
@@ -1157,7 +958,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     _mShareFileOrFolder = [ShareFileOrFolder new];
     _mShareFileOrFolder.delegate = self;
-    _mShareFileOrFolder.viewToShow = self.view;
+    _mShareFileOrFolder.viewToShow = self.splitViewController.view;
     _mShareFileOrFolder.parentButton = _shareLinkButtonBar;
     
     _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
@@ -1290,7 +1091,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 }
 
 
-
 ///-----------------------------------
 /// @name Action of updating cancel button
 ///-----------------------------------
@@ -1346,49 +1146,20 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 
 - (void)playMediaFile{
-    //Control if the popover is open
-    if ([self.popoverController isPopoverVisible]==YES) {
-        [self.popoverController dismissPopoverAnimated:NO];
-    }
-    
-    //This code is for the streaming case, but not works yet.
-    
-    /* UserDto *activeUser = [ExecuteManager getActiveUser];
-     NSArray *splitedUrl = [activeUser.url componentsSeparatedByString:@"/"];
-     
-     NSString *serverUrl = [NSString stringWithFormat:@"%@%@%@",[NSString stringWithFormat:@"%@/%@/%@",[splitedUrl objectAtIndex:0],[splitedUrl objectAtIndex:1],[splitedUrl objectAtIndex:2]], _file.filePath, _file.fileName];
-     
-     DLog(@"remote url: %@", serverUrl);
-     
-     NSURL *url = [NSURL URLWithString:serverUrl];
-     
-     NSURLCredential *cred= [NSURLCredential credentialWithUser:activeUser.username password:activeUser.password persistence:NSURLCredentialPersistenceForSession];
-     
-     NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc]
-     initWithHost: @"192.168.1.162/owncloud/"
-     port: 8080
-     protocol: @"http"
-     realm: serverUrl
-     authenticationMethod: NSURLAuthenticationMethodDefault];
-     
-     [[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential: cred forProtectionSpace: protectionSpace];*/
     
     BOOL needNewPlayer = NO;
     if (_file != nil) {
-        if (_moviePlayer) {
+        if (self.moviePlayer) {
             DLog(@"Movie urlString: %@", _moviePlayer.urlString);
             DLog(@"File local folder: %@", _file.localFolder);
-            if ([_moviePlayer.urlString isEqualToString:_file.localFolder]) {
+            if ([self.moviePlayer.urlString isEqualToString:self.file.localFolder]) {
                 needNewPlayer = NO;
             } else {
-                [_moviePlayer removeNotificationObservation];
-                [_moviePlayer.moviePlayer stop];
-                [_moviePlayer finalizePlayer];
-                [_moviePlayer.moviePlayer.view removeFromSuperview];
-                _moviePlayer = nil;
-                /* [[NSNotificationCenter defaultCenter] removeObserver:self
-                 name:MPMoviePlayerPlaybackDidFinishNotification
-                 object:nil];*/
+                [self.moviePlayer removeNotificationObservation];
+                [self.moviePlayer.moviePlayer stop];
+                [self.moviePlayer finalizePlayer];
+                [self.moviePlayer.view removeFromSuperview];
+                self.moviePlayer = nil;
                 needNewPlayer = YES;
             }
         } else {
@@ -1409,78 +1180,41 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
                 }
             }
             
-            NSURL *url = [NSURL fileURLWithPath:_file.localFolder];
+            NSURL *url = [NSURL fileURLWithPath:self.file.localFolder];
             
-            _moviePlayer = [[MediaViewController alloc]initWithContentURL:url];
-            _moviePlayer.delegate = self;
-            _moviePlayer.urlString = _file.localFolder;
+            self.moviePlayer = [[MediaViewController alloc]initWithContentURL:url];
+
+            self.moviePlayer.view.frame = [self getTheCorrectSize];
+            
+            self.moviePlayer.urlString = self.file.localFolder;
+            
             //if is audio file tell the controller the file is music
-            _moviePlayer.isMusic=YES;
+            self.moviePlayer.isMusic = YES;
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-            appDelegate.mediaPlayer = _moviePlayer;
+            appDelegate.mediaPlayer = self.moviePlayer;
             
-            /* [[NSNotificationCenter defaultCenter] addObserver:self
-             selector:@selector(moviePlayBackDidFinish:)
-             name:MPMoviePlayerPlaybackDidFinishNotification
-             object:nil];      */
+            self.moviePlayer.moviePlayer.controlStyle = MPMovieControlStyleNone;
             
-            _moviePlayer.moviePlayer.controlStyle=MPMovieControlStyleNone;
+            [self.moviePlayer.moviePlayer setFullscreen:NO];
             
-            [_moviePlayer.moviePlayer setFullscreen:NO];
+            self.moviePlayer.moviePlayer.shouldAutoplay = NO;
             
-            _moviePlayer.moviePlayer.shouldAutoplay=NO;
+            [self.moviePlayer initHudView];
             
-            [self configureView];
+            [self.moviePlayer.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
+            [self.moviePlayer.moviePlayer prepareToPlay];
             
-            [_moviePlayer initHudView];
+            [self.moviePlayer.view addGestureRecognizer:self.singleTap];
             
-            [_moviePlayer.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
-            [_moviePlayer.moviePlayer prepareToPlay];
+            [self.view addSubview:self.moviePlayer.view];
             
-            [self.view addSubview:_moviePlayer.moviePlayer.view];
-            
-            [_moviePlayer playFile];
-            
-            
+            [self.moviePlayer playFile];
             
         } else {
             
-            [self.view addSubview:_moviePlayer.moviePlayer.view];
-        }
-    }
-}
-
-
-#pragma mark - Media player delegate methods
-
-/*
- * Delegate method of media player that receive when the user tap the full screen button
- * @isFullScreenPlayer -> Boolean variable that indicate if the user tap over the fullscreen button
- */
-- (void)fullScreenPlayer:(BOOL)isFullScreenPlayer{
-    
-    UIInterfaceOrientation currentOrientation;
-    currentOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    BOOL isLandscape = UIDeviceOrientationIsLandscape(currentOrientation);
-    
-    if (isFullScreenPlayer) {
-        if (isLandscape && !_isExtend) {
-            [self toggleMasterView:nil];
-            [toolbar setHidden:YES];
-            [self configureView];
-        } else {
-            [toolbar setHidden:YES];
-            [self configureView];
-        }
-    } else {
-        
-        if (isLandscape && !_isExtend) {
-            [self toggleMasterView:nil];
-            [toolbar setHidden:NO];
-            [self configureView];
-        } else {
-            [toolbar setHidden:NO];
-            [self configureView];
+            [self.moviePlayer.view addGestureRecognizer:self.singleTap];
+            
+            [self.view addSubview:self.moviePlayer.view];
         }
     }
 }
@@ -1707,11 +1441,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
 
         //Quit the player if exist
-        if (_moviePlayer) {
-            [_moviePlayer.moviePlayer stop];
-            [_moviePlayer finalizePlayer];
-            [_moviePlayer.moviePlayer.view removeFromSuperview];
-            _moviePlayer = nil;
+        if (self.moviePlayer) {
+            [self.moviePlayer.moviePlayer stop];
+            [self.moviePlayer finalizePlayer];
+            [self.moviePlayer.view removeFromSuperview];
+            self.moviePlayer = nil;
         }
         
         //Depend if the file is an image or other "openimage" or "openfile"
@@ -1832,156 +1566,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 }
 
 
-- (void)tapCloudButton{
-    
-    DLog(@"Tap Cloud Button");
-}
-
-
-#pragma mark - Split view support
-
-
-- (void)splitViewController:(MGSplitViewController*)svc
-	 willHideViewController:(UIViewController *)aViewController
-		  withBarButtonItem:(UIBarButtonItem*)barButtonItem
-	   forPopoverController: (UIPopoverController*)pc
-{
-	DLog(@"%@", NSStringFromSelector(_cmd));
-    DLog(@"Create popover button");
-   	
-	if (barButtonItem) {
-		NSMutableArray *items = [[toolbar items] mutableCopy];
-       
-        [barButtonItem setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
-
-		[items insertObject:barButtonItem atIndex:0];
-		[toolbar setItems:items animated:YES];
-	}
-    
-     pc.popoverBackgroundViewClass=[MainPopOverBarckground class];
-  
-    //Present popover
-    self.popoverController = pc;
-}
-
-
-// Called when the view is shown again in the split view, invalidating the button and popover controller.
-- (void)splitViewController:(MGSplitViewController*)svc
-	 willShowViewController:(UIViewController *)aViewController
-  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
-	DLog(@"%@", NSStringFromSelector(_cmd));
-	
-	if (_isExtend==NO) {
-        
-        if (barButtonItem) {
-            NSMutableArray *items = [[toolbar items] mutableCopy];
-            [items removeObject:barButtonItem];
-            [toolbar setItems:items animated:YES];
-            //[items release];
-        }
-        self.popoverController = nil;
-    }
-}
-
-
-- (void)splitViewController:(MGSplitViewController*)svc
-		  popoverController:(UIPopoverController*)pc
-  willPresentViewController:(UIViewController *)aViewController {
-	DLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-
-- (void)splitViewController:(MGSplitViewController*)svc willChangeSplitOrientationToVertical:(BOOL)isVertical {
-	DLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-
-- (void)splitViewController:(MGSplitViewController*)svc willMoveSplitToPosition:(float)position {
-	DLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-
-- (float)splitViewController:(MGSplitViewController *)svc constrainSplitPosition:(float)proposedPosition splitViewSize:(CGSize)viewSize {
-	DLog(@"%@", NSStringFromSelector(_cmd));
-	return proposedPosition;
-}
-
-
-#pragma mark -
-#pragma mark Actions
-
-/*
- * MGSplitViewMethod that extend the detail view and
- * configure all of interface objects are in the view.
- */
-
-- (IBAction)toggleMasterView:(id)sender {
-    //If is galleryView chraged prepared the scroll view
-    if (_galleryView) {
-        [_galleryView prepareScrollViewBeforeTheRotation];
-    }
-    
-    [splitController removeThePopover];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.01 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        
-        //Tell to splitController to extend the detailview
-        [splitController toggleMasterView:sender];
-        
-        
-        //Change the global flag
-        if (_isExtend==NO) {
-            //Set the constraint
-            _leftMarginTitleLabelConstraint.constant = 92;
-            _isExtend = YES;
-        } else {
-            //Set the constraint
-            _leftMarginTitleLabelConstraint.constant = 62;
-            _isExtend = NO;
-        }
-        
-        //Managed the objects of landscape view.
-        [self landscapeView];
-        
-        //If galleryView charged indicated adjust the scroll view
-        if (_galleryView) {
-            _isExtending = YES;
-            [self adjustGalleryScrollView];
-        }
-
-        
-    });
-    
-    
-}
-
-/*
- * Not used method
- */
-
-
-- (IBAction)toggleVertical:(id)sender {
-	[splitController toggleSplitOrientation:self];
-	[self configureView];
-}
-
-/*
- * Not used method
- */
-- (IBAction)toggleDividerStyle:(id)sender {
-	MGSplitViewDividerStyle newStyle = ((splitController.dividerStyle == MGSplitViewDividerStyleThin) ? MGSplitViewDividerStylePaneSplitter : MGSplitViewDividerStyleThin);
-	[splitController setDividerStyle:newStyle animated:YES];
-	[self configureView];
-}
-
-/*
- * Not used method
- */
-- (IBAction)toggleMasterBeforeDetail:(id)sender {
-	[splitController toggleMasterBeforeDetail:sender];
-	[self configureView];
-}
-
 
 #pragma mark -
 #pragma mark Rotation support
@@ -2000,57 +1584,76 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
-    DLog(@"Will rotate");
-    
-    if (_galleryView) {
-        [_galleryView prepareScrollViewBeforeTheRotation];
+    if (IS_IOS7) {
+        [self customWillRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
     
-    if (_readerPDFViewController) {
-        [_readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+}
+
+-(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    if (IS_IOS7) {
+       [self customWillAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    }
+ 
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    
+    if (IS_IOS7) {
+        [self customDidRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    }
+
+}
+
+#pragma mark - Interface Rotations
+
+- (void) customWillRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
+    DLog(@"Will rotate");
+    
+    if (self.galleryView && self.isSizeChanging == NO) {
+        [self.galleryView prepareScrollViewBeforeTheRotation];
+    }
+    
+    if (self.readerPDFViewController && self.isSizeChanging == NO) {
+        [self.readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
     
     if (_mShareFileOrFolder && _mShareFileOrFolder.activityPopoverController) {
         [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
     }
-
+    
     if (_openWith) {
         [_openWith.activityPopoverController dismissPopoverAnimated:NO];
     }
+    
 }
 
--(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-
-    [_mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:YES];
-
+-(void) customWillAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
     DLog(@"will Animate Rotation");
     
-    //If its in potrait view rotate to landscape view and if the player in full screnn
-    //Extend the splitview to see in full screen also in landscape.
-    if (_moviePlayer) {
-        if (_moviePlayer.isFullScreen) {
-            if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-                if (_isExtend==NO) {
-                    [self toggleMasterView:nil];
-                }
-            }
-        }
-    } else if (_readerPDFViewController) {
-        
-        
+    [_mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:YES];
+    
+    if (_readerPDFViewController) {
         [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
-        
     }
+    
+    if (self.galleryView) {
+        [self adjustGalleryScrollView];
+    }
+    
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-
+- (void)customDidRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    
     DLog(@"did rotate");
+    
     if (_readerPDFViewController) {
         [_readerPDFViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     }
-
-    [self showPopover];
+    
 }
 
 #pragma mark - iOS 8 rotation method.
@@ -2062,19 +1665,18 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     NSTimeInterval duration = 0.5;
     
     // willRotateToInterfaceOrientation code goes here
-    [self willRotateToInterfaceOrientation:orientation duration:duration];
+    [self customWillRotateToInterfaceOrientation:orientation duration:duration];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         // willAnimateRotationToInterfaceOrientation code goes here
-        [self willAnimateRotationToInterfaceOrientation:orientation duration:duration];
+        [self customWillAnimateRotationToInterfaceOrientation:orientation duration:duration];
         
         
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        // didRotateFromInterfaceOrientation goes here (nothing for now)
-        [self didRotateFromInterfaceOrientation:orientation];
+        // didRotateFromInterfaceOrientation goes here
+        [self customDidRotateFromInterfaceOrientation:orientation];
         
     }];
-    
     
     [super viewWillTransitionToSize: size withTransitionCoordinator: coordinator];
 }
@@ -2087,10 +1689,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self configureView];
     
     if (_galleryView) {
-        [_galleryView.scrollView setFrame:_mainScrollView.frame];
+        [_galleryView.scrollView setFrame:[self getTheCorrectSize]];
         [_galleryView adjustTheScrollViewAfterTheRotation];
     }
 }
+
 
 
 
@@ -2131,20 +1734,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:appDelegate.activeUser];
             [viewController setBarForCancelForLoadingFromModal];
             
-            
-            if (IS_IPHONE) {
-                OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-                [self.navigationController presentViewController:navController animated:YES completion:nil];
-            } else {
-                
-                if (IS_IOS8) {
-                    [self.popoverController dismissPopoverAnimated:YES];
-                }
-                
-                OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-                navController.modalPresentationStyle = UIModalPresentationFormSheet;
-                [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
-            }
+            OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+            navController.modalPresentationStyle = UIModalPresentationFormSheet;
+            [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
         }
     }
 }
@@ -2186,7 +1778,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         DLog(@"id file: %ld", (long)_file.idFile);
     }    
 }
-
 
 
 - (void) receiveTestNotification:(NSNotification *) notification
@@ -2260,7 +1851,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 
 
-
 ///-----------------------------------
 /// @name Stop notification in status bar
 ///-----------------------------------
@@ -2278,14 +1868,13 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 
 
-
 #pragma mark - Loading Methods
 
 /*
  * Add loading screen and block the view
  */
 - (void) initLoading {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.splitViewController.view animated:YES];
     [hud bringSubviewToFront:self.view];
     
     hud.labelText = NSLocalizedString(@"loading", nil);
@@ -2297,7 +1886,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 }
 
 - (void) endLoading {
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [MBProgressHUD hideHUDForView:self.splitViewController.view animated:YES];
     self.view.userInteractionEnabled = YES;
     self.navigationController.navigationBar.userInteractionEnabled = YES;
     self.tabBarController.tabBar.userInteractionEnabled = YES;
@@ -2319,5 +1908,372 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             break;
     }
 }
+
+#pragma mark - Transitions Methods for Full Screen Support
+
+- (void) launchTransitionProcessForFullScreen{
+    
+    self.isSizeChanging = YES;
+    
+    if (self.hideMaster) {
+        
+        [self convertMasterViewInvisible:NO];
+        
+        [self.splitViewController.view setNeedsLayout];
+        self.splitViewController.delegate = nil;
+        self.splitViewController.delegate = self;
+        
+        CGRect selfFrame = self.splitViewController.view.frame;
+        
+        CGFloat deltaWidth = k_delta_width_for_split_transition;
+        
+        if (IS_IOS8) {
+            
+            selfFrame.size.width += deltaWidth;
+            selfFrame.origin.x -= deltaWidth;
+            
+        }else{
+            
+            if (IS_PORTRAIT) {
+                selfFrame.size.width += deltaWidth;
+                selfFrame.origin.x -= deltaWidth;
+            }else{
+                selfFrame.size.height += deltaWidth;
+                selfFrame.origin.y -= deltaWidth;
+            }
+            
+        }
+        
+        [self.splitViewController.view setFrame:selfFrame];
+        
+        self.hideMaster = !self.hideMaster;
+        
+        [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
+        
+        [self hideContainerView];
+        
+        [self toggleHideMaster:nil];
+        
+        [self toggleHideToolBar:^{
+              [self showContainerView];
+        }];
+        
+    }else{
+        
+        self.hideMaster = !self.hideMaster;
+        
+        [self hideContainerView];
+        
+        [self toggleHideMaster:nil];
+        
+        [self toggleHideToolBar:^{
+            
+            [self.splitViewController.view setNeedsLayout];
+            self.splitViewController.delegate = nil;
+            self.splitViewController.delegate = self;
+            
+            CGRect selfFrame = self.splitViewController.view.frame;
+            
+            CGFloat deltaWidth = k_delta_width_for_split_transition;
+            
+            if (IS_IOS8) {
+                
+                selfFrame.size.width -= deltaWidth;
+                selfFrame.origin.x += deltaWidth;
+                
+            }else{
+                
+                if (IS_PORTRAIT) {
+                    selfFrame.size.width -= deltaWidth;
+                    selfFrame.origin.x += deltaWidth;
+                }else{
+                    selfFrame.size.height -= deltaWidth;
+                    selfFrame.origin.y += deltaWidth;
+                }
+                
+            }
+            
+            [self.splitViewController.view setFrame:selfFrame];
+            
+            [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
+            
+            [self convertMasterViewInvisible:YES];
+            
+            [self showContainerView];
+            
+        }];
+        
+    }
+    
+    [self performSelector:@selector(updateStatusBar) withObject:nil afterDelay:0.0];
+    
+    [self performSelector:@selector(finishTransitionProcess) withObject:nil afterDelay:0.4];
+    
+}
+
+
+- (void) hideContainerView{
+    
+    if (self.galleryView) {
+        [self.galleryView prepareScrollViewBeforeTheRotation];
+        
+        self.mainScrollView.backgroundColor = [UIColor blackColor];
+        self.view.backgroundColor = [UIColor blackColor];
+        self.mainScrollView.hidden = NO;
+        self.galleryView.scrollView.alpha = 0.0;
+    }
+    
+    if (self.readerPDFViewController) {
+        self.readerPDFViewController.isChangingSize = YES;
+        
+        self.mainScrollView.backgroundColor = [UIColor grayColor];
+        self.view.backgroundColor = [UIColor grayColor];
+        self.mainScrollView.hidden = NO;
+        self.readerPDFViewController.view.alpha = 0.0;
+    }
+    
+}
+
+- (void) showContainerView{
+    
+    CGRect frame;
+    
+    if (self.hideMaster) {
+        
+        if (IS_IOS8) {
+            frame = self.view.window.bounds;
+        }else{
+            
+            if (IS_PORTRAIT) {
+                frame = self.view.window.bounds;
+            }else{
+                frame = CGRectMake(0.0, 0.0, self.view.window.bounds.size.height, self.view.window.bounds.size.width);
+            }
+            
+        }
+        
+    }else{
+        frame = [self getTheCorrectSize];
+    }
+    
+    if (self.galleryView) {
+        [self.galleryView.scrollView setFrame:frame];
+        [self.galleryView adjustTheScrollViewAfterTheRotation];
+        
+        self.mainScrollView.backgroundColor = [UIColor clearColor];
+        self.view.backgroundColor = [UIColor whiteColor];
+        self.galleryView.scrollView.alpha = 1.0;
+        self.mainScrollView.hidden = YES;
+    }
+    
+    if (self.readerPDFViewController) {
+        self.readerPDFViewController.view.frame = frame;
+        [self.readerPDFViewController updateContentViews];
+        
+        self.mainScrollView.backgroundColor = [UIColor clearColor];
+        self.view.backgroundColor = [UIColor whiteColor];
+        self.readerPDFViewController.view.alpha = 1.0;
+        self.mainScrollView.hidden = YES;
+    }
+}
+
+
+-(void)toggleHideMaster:(void(^)(void))completionBlock {
+    
+    // Adjust the detailView frame to hide/show the masterview
+    [UIView animateWithDuration:0.3f
+                          delay:0.0f
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^(void)
+     {
+         
+         CGRect selfFrame = self.splitViewController.view.frame;
+         
+         CGFloat deltaWidth = k_delta_width_for_split_transition;
+         
+         if (IS_IOS8) {
+             
+             if (self.hideMaster)
+             {
+                 selfFrame.size.width += deltaWidth;
+                 selfFrame.origin.x -= deltaWidth;
+             }
+             else
+             {
+                 selfFrame.size.width -= deltaWidth;
+                 selfFrame.origin.x += deltaWidth;
+             }
+
+         }else{
+             
+             if (self.hideMaster)
+             {
+                 if (IS_PORTRAIT) {
+                     selfFrame.size.width += deltaWidth;
+                     selfFrame.origin.x -= deltaWidth;
+                 }else{
+                     selfFrame.size.height += deltaWidth;
+                     selfFrame.origin.y -= deltaWidth;
+                 }
+ 
+             }
+             else
+             {
+                 if (IS_PORTRAIT) {
+                     selfFrame.size.width -= deltaWidth;
+                     selfFrame.origin.x += deltaWidth;
+                 }else{
+                     selfFrame.size.height -= deltaWidth;
+                     selfFrame.origin.y += deltaWidth;
+                 }
+             }
+
+         }
+         
+         [self.splitViewController.view setFrame:selfFrame];
+         
+         
+     }completion:^(BOOL finished){
+         if (finished)
+         {
+             
+             if (completionBlock)
+             {
+                 completionBlock();
+             }
+         }
+     }];
+    
+}
+
+
+- (void) toggleHideToolBar:(void(^)(void))completionBlock{
+    
+    CGFloat deltaHeigh = k_delta_height_toolBar_split_transition;
+    
+    if (self.hideMaster) {
+        toolBarTopMargin.constant = -deltaHeigh;
+        _topMarginUpdatingFileProgressView.constant = -deltaHeigh;
+        _topMarginTitleLabelConstraint.constant = -deltaHeigh;
+        toolBarHeight.constant = -deltaHeigh;
+        _toolBarHeightConstraint.constant = -deltaHeigh;
+    }else{
+        toolBarTopMargin.constant = 0;
+        _topMarginUpdatingFileProgressView.constant = 10;
+        _topMarginTitleLabelConstraint.constant = k_delta_height_toolBar_split_transition/2;
+        toolBarHeight.constant = 0;
+        _toolBarHeightConstraint.constant = k_delta_height_toolBar_split_transition;
+    }
+    
+    self.toolbar.alpha = 1.0;
+    self.titleLabel.alpha = 1.0;
+    
+    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        CGRect toolFrame = self.toolbar.frame;
+        CGRect scrollFrame = self.mainScrollView.frame;
+        
+        CGFloat deltaHeigh = k_delta_height_toolBar_split_transition;
+        
+        if (self.hideMaster) {
+            toolFrame.origin.y -= deltaHeigh;
+            scrollFrame.origin.y -= deltaHeigh;
+            scrollFrame.size.height += deltaHeigh;
+            
+        }else{
+            toolFrame.origin.y += deltaHeigh;
+            scrollFrame.origin.y += deltaHeigh;
+            scrollFrame.size.height -= deltaHeigh;
+        }
+        
+        [self.toolbar setFrame:toolFrame];
+        [self.mainScrollView setFrame:scrollFrame];
+        
+        [self.view layoutIfNeeded];
+        
+        if (self.officeView) {
+            self.officeView.webView.frame = [self getTheCorrectSize];
+        }
+        
+        if (self.moviePlayer) {
+            self.moviePlayer.view.frame = [self getTheCorrectSize];
+        }
+ 
+        
+    } completion:^(BOOL finished) {
+       
+        if (finished)
+        {
+            if (self.hideMaster) {
+                self.toolbar.alpha = 0.0;
+                self.titleLabel.alpha = 0.0;
+            }
+            
+            if (completionBlock)
+            {
+                completionBlock();
+            }
+        }
+        
+    }];
+    
+}
+
+- (void) convertMasterViewInvisible:(BOOL)isInvisible{
+    
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    OCTabBarController *tabBar = [app.splitViewController.viewControllers objectAtIndex:0];
+    UIViewController *viewController = tabBar.selectedViewController;
+    
+    if (isInvisible) {
+        viewController.view.alpha = 0.0;
+        tabBar.view.alpha = 0.0;
+    }else{
+        viewController.view.alpha = 1.0;
+        tabBar.view.alpha = 1.0;
+    }
+}
+
+
+- (void) finishTransitionProcess{
+    
+    self.isSizeChanging = NO;
+    
+    if (self.readerPDFViewController) {
+        self.readerPDFViewController.isChangingSize = NO;
+    }
+    
+}
+
+- (void) updateStatusBar{
+    
+    OCSplitViewController *splitView = (OCSplitViewController *)self.splitViewController;
+    splitView.isStatusBarHidden = self.hideMaster;
+    [splitView setNeedsStatusBarAppearanceUpdate];
+}
+
+#pragma mark - UISplitViewDelegateMethods
+
+- (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation{
+    
+    return self.hideMaster;
+}
+
+#pragma mark - UIGestureRecognizerDelegate methods
+
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (self.readerPDFViewController) {
+        if ([touch.view isDescendantOfView:self.readerPDFViewController.mainPagebar]) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 
 @end

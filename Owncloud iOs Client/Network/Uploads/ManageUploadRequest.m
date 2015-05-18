@@ -32,6 +32,7 @@
 #import "UtilsDtos.h"
 #import "OCURLSessionManager.h"
 #import "ManageAppSettingsDB.h"
+#import "UtilsCookies.h"
 
 NSString *fileDeleteInAOverwriteProcess=@"fileDeleteInAOverwriteProcess";
 NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
@@ -133,7 +134,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             } else {
                 [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
             }
-           
+            
         }
             break;
             
@@ -175,7 +176,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     [[AppDelegate sharedOCCommunication] createFolder:pathRemoteFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         DLog(@"Folder created");
@@ -190,24 +191,24 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             //Upload ready, continue
             [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
-
+            
         }
         
         
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-
+        
         //Web Dav Error Code
         switch (response.statusCode) {
             case kOCErrorServerMethodNotPermitted:
                 //405 Method not permitted "not_possible_create_folder"
-                 [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+                [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
                 break;
             default:
                 //"not_possible_connect_to_server"
                 break;
         }
-
+        
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
         
@@ -244,14 +245,13 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:_userUploading.username andPassword:_userUploading.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     NSString *urlClean = [NSString stringWithFormat:@"%@%@", _currentUpload.destinyFolder, _currentUpload.uploadFileName];
     urlClean = [urlClean stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     __block BOOL firstTime = YES;
     __weak typeof(self) weakSelf = self;
-    
     
     if (k_is_sso_active || !k_is_background_active) {
         
@@ -475,6 +475,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         
         _uploadTask = [[AppDelegate sharedOCCommunication] uploadFileSession:_currentUpload.originPath toDestiny:urlClean onCommunication:[AppDelegate sharedOCCommunication] withProgress:&progressValue successRequest:^(NSURLResponse *response, NSString *redirectedServer) {
             
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
+            
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             
             DLog(@"File uploaded");
@@ -538,6 +540,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             
         } failureRequest:^(NSURLResponse *response, NSString *redirectedServer, NSError *error) {
+            
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
             
             NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
             
@@ -608,6 +612,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 
             }
         } failureBeforeRequest:^(NSError *error) {
+            
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
+            
             switch (error.code) {
                 case OCErrorFileToUploadDoesNotExist: {
                     //TODO: create a state to control if the file does not exist
@@ -638,11 +645,11 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
         }];
         
+        self.progressValueGlobal = progressValue;
+        progressValue = nil;
+        
         // Observe fractionCompleted using KVO
-        [progressValue addObserver:self
-                        forKeyPath:@"fractionCompleted"
-                           options:NSKeyValueObservingOptionNew
-                           context:NULL];
+        [self.progressValueGlobal addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew context:NULL];
         
     }
     
@@ -665,7 +672,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 //Method to set the task identifier
 - (void) setTaskIdentifier{
     
-   [ManageUploadsDB setTaskIdentifier:_uploadTask.taskIdentifier forUploadOffline:_currentUpload];
+    [ManageUploadsDB setTaskIdentifier:_uploadTask.taskIdentifier forUploadOffline:_currentUpload];
     
 }
 
@@ -716,7 +723,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     }
     
     [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:notDownload];
-
+    
 }
 
 - (void) cancelUpload {
@@ -738,9 +745,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     //Quit the operation from the operation queue
     if (self.operation) {
-         [[AppDelegate sharedOCCommunication].uploadOperationQueueArray removeObjectIdenticalTo:self.operation];
+        [[AppDelegate sharedOCCommunication].uploadOperationQueueArray removeObjectIdenticalTo:self.operation];
     }
-   
+    
     //Send this percent to remove the progressview of the array
     //[self updateProgressWithPercent:1.0];
     
@@ -772,9 +779,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     //update Recents view
     [self updateRecentsTab];
-
+    
     //Clear cache and cookies
-    [app eraseURLCache];
+    [UtilsCookies eraseURLCache];
 }
 
 
@@ -796,7 +803,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     _currentUpload.status = errorUploading;
     _currentUpload.kindOfError = errorCredentials;
     [ManageUploadsDB setStatus:errorUploading andKindOfError:errorCredentials byUploadOffline:self.currentUpload];
-
+    
 }
 
 
@@ -806,7 +813,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     if (self.operation) {
         [self.operation cancel];
-         self.operation=nil;
+        self.operation=nil;
     }
     
     if (self.uploadTask) {
@@ -853,7 +860,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [appDelegate.uploadArray addObject:self];
     
     [self updateRecentsTab];
-
+    
 }
 
 
@@ -927,7 +934,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:self.userUploading.username andPassword:self.userUploading.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
@@ -977,7 +984,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 
                 //Launch a notification for update the file previewed
                 [[NSNotificationCenter defaultCenter] postNotificationName:uploadOverwriteFileNotification object:nil];
-             
+                
                 
                 [self.delegate overwriteCompleted];
             }
@@ -989,7 +996,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         
     }];
     //Erase cache and cookies
-    [weakSelf eraseURLCache];
+    [UtilsCookies eraseURLCache];
 }
 
 // Check the etag in the case that in the server has changed
@@ -1005,7 +1012,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:self.userUploading.username andPassword:self.userUploading.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
     NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
@@ -1073,23 +1080,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         
     }];
     //Erase cache and cookies
-    [weakSelf eraseURLCache];
+    [UtilsCookies eraseURLCache];
 }
-
-
-///-----------------------------------
-/// @name Erase URL Cache
-///-----------------------------------
-
-/**
- * Method that clear the URL cache
- *
- */
-- (void)eraseURLCache
-{
-    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
-    [[NSURLCache sharedURLCache] setDiskCapacity:0];
-}
-
 
 @end

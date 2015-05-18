@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DetailViewController">
@@ -18,7 +18,7 @@
                 <outlet property="_spaceBar1" destination="VYt-rC-1eC" id="Zxh-gN-XQS"/>
                 <outlet property="_spaceBar2" destination="98" id="mCo-DK-9Mz"/>
                 <outlet property="_spaceBar3" destination="PHm-EO-a4h" id="jRS-lG-1Wb"/>
-                <outlet property="_toolBarHeightConstraint" destination="BcG-k4-umR" id="7hT-3q-qGf"/>
+                <outlet property="_toolBarHeightConstraint" destination="Qgy-82-b7E" id="B6M-lP-nCw"/>
                 <outlet property="_topMarginTitleLabelConstraint" destination="5IR-2P-Sff" id="fwj-Eu-QOE"/>
                 <outlet property="_topMarginUpdatingButton" destination="z7s-hh-G4S" id="0xg-eK-9Sw"/>
                 <outlet property="_topMarginUpdatingFileProgressView" destination="jWd-pP-iNs" id="CjL-8s-l9K"/>
@@ -29,7 +29,7 @@
                 <outlet property="progressLabel" destination="85" id="86"/>
                 <outlet property="progressView" destination="82" id="89"/>
                 <outlet property="titleLabel" destination="1eq-mt-JYf" id="WLW-Lz-7kY"/>
-                <outlet property="toggleItem" destination="67" id="68"/>
+                <outlet property="toolBarTopMargin" destination="wvX-GC-a9Z" id="SeH-e7-f6n"/>
                 <outlet property="toolbar" destination="63" id="65"/>
                 <outlet property="updatingCancelButton" destination="SvH-e8-BmT" id="Z5m-co-vxq"/>
                 <outlet property="updatingFileProgressView" destination="E9s-I7-wvl" id="VzP-Ep-yFV"/>
@@ -44,7 +44,6 @@
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="company_empty_screen_ipad.png" translatesAutoresizingMaskIntoConstraints="NO" id="RhM-9d-K2q">
                     <rect key="frame" x="128" y="372" width="512" height="279"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="512" id="ZfA-nJ-UXQ"/>
                         <constraint firstAttribute="height" constant="279" id="aJ2-Od-njk"/>
@@ -52,14 +51,12 @@
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="80">
                     <rect key="frame" x="320" y="438" width="128" height="128"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="128" id="G5V-JT-pJe"/>
                     </constraints>
                 </imageView>
                 <progressView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="82">
                     <rect key="frame" x="280" y="594" width="200" height="2"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="200" id="MDP-z1-9tP"/>
                         <constraint firstAttribute="height" constant="2" id="vbk-Ga-oUy"/>
@@ -67,7 +64,6 @@
                 </progressView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="83">
                     <rect key="frame" x="498" y="583" width="25" height="25"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" size="button"/>
                     <state key="normal" image="cancel_download.png">
                         <color key="titleColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -80,25 +76,17 @@
                         <action selector="didPressCancelButton:" destination="-1" eventType="touchUpInside" id="100"/>
                     </connections>
                 </button>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="85">
-                    <rect key="frame" x="390" y="621" width="0.0" height="22"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="85">
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="63" customClass="OCToolBar">
                     <rect key="frame" x="0.0" y="0.0" width="768" height="64"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="64" id="BcG-k4-umR"/>
+                        <constraint firstAttribute="height" constant="64" id="Qgy-82-b7E"/>
                     </constraints>
                     <items>
-                        <barButtonItem image="arrow_button.png" style="plain" id="67">
-                            <connections>
-                                <action selector="toggleMasterView:" destination="-1" id="69"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="105"/>
                         <barButtonItem image="openWithTB.png" style="plain" id="90">
                             <connections>
@@ -125,32 +113,20 @@
                         </barButtonItem>
                     </items>
                 </toolbar>
-                <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="112">
-                    <rect key="frame" x="0.0" y="64" width="768" height="960"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="0.0"/>
-                    <connections>
-                        <outlet property="delegate" destination="-1" id="122"/>
-                    </connections>
-                </scrollView>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1eq-mt-JYf">
                     <rect key="frame" x="62" y="32" width="496" height="22"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="18"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BV7-Lz-cFn">
                     <rect key="frame" x="62" y="10" width="496" height="44"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="E9s-I7-wvl">
                             <rect key="frame" x="29" y="30" width="387" height="2"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </progressView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SvH-e8-BmT">
                             <rect key="frame" x="441" y="20" width="25" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" image="cancel_download_white.png">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
@@ -169,10 +145,20 @@
                         <constraint firstItem="SvH-e8-BmT" firstAttribute="top" secondItem="BV7-Lz-cFn" secondAttribute="top" constant="20" id="z7s-hh-G4S"/>
                     </constraints>
                 </view>
+                <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="112">
+                    <rect key="frame" x="0.0" y="64" width="768" height="960"/>
+                    <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="0.0"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="122"/>
+                    </connections>
+                </scrollView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="centerY" secondItem="RhM-9d-K2q" secondAttribute="centerY" id="0NL-xL-u5i"/>
+                <constraint firstAttribute="trailing" secondItem="63" secondAttribute="trailing" id="1e3-ov-4hM"/>
+                <constraint firstItem="63" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="1tP-NB-mJ5"/>
+                <constraint firstItem="112" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="26q-qR-A3X"/>
                 <constraint firstItem="85" firstAttribute="top" secondItem="82" secondAttribute="bottom" constant="25" id="3PW-AE-3Hz"/>
                 <constraint firstAttribute="centerY" secondItem="80" secondAttribute="centerY" constant="10" id="3Sq-kx-drL"/>
                 <constraint firstAttribute="centerY" secondItem="82" secondAttribute="centerY" constant="-83" id="3hY-dZ-W3e"/>
@@ -180,29 +166,25 @@
                 <constraint firstAttribute="centerX" secondItem="83" secondAttribute="centerX" constant="-126.5" id="4w4-gm-f2M"/>
                 <constraint firstItem="1eq-mt-JYf" firstAttribute="top" secondItem="8" secondAttribute="top" constant="32" id="5IR-2P-Sff"/>
                 <constraint firstItem="82" firstAttribute="top" secondItem="80" secondAttribute="bottom" constant="28" id="7bH-w7-UjE"/>
+                <constraint firstAttribute="trailing" secondItem="112" secondAttribute="trailing" id="BhR-id-DyS"/>
                 <constraint firstAttribute="centerX" secondItem="85" secondAttribute="centerX" constant="-6" id="C2r-2t-fGS"/>
                 <constraint firstAttribute="bottom" secondItem="112" secondAttribute="bottom" id="E2n-qO-LdM"/>
-                <constraint firstItem="63" firstAttribute="bottom" secondItem="112" secondAttribute="top" id="Eae-NX-uQV"/>
                 <constraint firstAttribute="centerX" secondItem="RhM-9d-K2q" secondAttribute="centerX" id="FdE-Oh-T1r"/>
                 <constraint firstAttribute="centerY" secondItem="83" secondAttribute="centerY" constant="-83" id="HPt-0F-QbD"/>
                 <constraint firstAttribute="centerX" secondItem="80" secondAttribute="centerX" id="O3M-bq-gO3"/>
                 <constraint firstItem="80" firstAttribute="centerX" secondItem="112" secondAttribute="centerX" id="R4W-5S-H3h"/>
-                <constraint firstItem="63" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="RhZ-6z-9Bm"/>
-                <constraint firstItem="63" firstAttribute="leading" secondItem="112" secondAttribute="leading" id="ScZ-Ia-1BV"/>
                 <constraint firstAttribute="centerX" secondItem="82" secondAttribute="centerX" constant="4" id="TbT-rI-qb9"/>
                 <constraint firstItem="BV7-Lz-cFn" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="62" id="Vsl-8p-I3W"/>
+                <constraint firstItem="112" firstAttribute="top" secondItem="63" secondAttribute="bottom" id="Wo6-z4-XgU"/>
                 <constraint firstAttribute="trailing" secondItem="1eq-mt-JYf" secondAttribute="trailing" constant="210" id="dtc-mg-Qfz"/>
-                <constraint firstAttribute="trailing" secondItem="63" secondAttribute="trailing" id="eqJ-iI-DfF"/>
                 <constraint firstAttribute="centerY" secondItem="85" secondAttribute="centerY" constant="-120" id="fcI-W2-MVH"/>
                 <constraint firstItem="BV7-Lz-cFn" firstAttribute="top" secondItem="8" secondAttribute="top" constant="10" id="jWd-pP-iNs"/>
                 <constraint firstItem="1eq-mt-JYf" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="62" id="nEk-l1-bFG"/>
-                <constraint firstItem="63" firstAttribute="top" secondItem="8" secondAttribute="top" id="vKc-nP-atq"/>
+                <constraint firstItem="63" firstAttribute="top" secondItem="8" secondAttribute="top" id="wvX-GC-a9Z"/>
             </constraints>
-            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
         </view>
     </objects>
     <resources>
-        <image name="arrow_button.png" width="25" height="25"/>
         <image name="cancel_download.png" width="25" height="25"/>
         <image name="cancel_download_white.png" width="25" height="25"/>
         <image name="company_empty_screen_ipad.png" width="512" height="279"/>
@@ -211,4 +193,9 @@
         <image name="openWithTB.png" width="25" height="25"/>
         <image name="sharedItem.png" width="25" height="25"/>
     </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
 </document>
