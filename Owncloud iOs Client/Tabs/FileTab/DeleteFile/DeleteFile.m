@@ -164,9 +164,8 @@
     if (_isFilesDownloadedInFolder == YES) {
         //If the item deleted is a directory update the is_download state to notDownload in the files contains in the folder for deleted
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
+        NSString *pathFolder= [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
         [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
-        DLog(@"path: %@",pathFolder);
         
         //Delete the folder and the files that it contains
         NSError *error;
@@ -175,6 +174,9 @@
         
         //Create the folder again for a correct navigation
         //We obtain the name of the folder in folderName
+        pathFolder = [NSString stringWithFormat:@"%@%@",_file.filePath,_file.fileName];
+        DLog(@"path: %@",pathFolder);
+        
         NSString *folderName = [UtilsDtos getDbFolderNameFromFilePath:pathFolder];
         DLog(@"folder name: %@ in this location: %@",folderName,_currentLocalFolder);
         [FileListDBOperations createAFolder:folderName inLocalFolder:_currentLocalFolder];
@@ -398,28 +400,28 @@
     if ((_file.isDownload || _isFilesDownloadedInFolder == YES) && !_file.isFavorite) {
         switch (buttonIndex) {
             case 0:
-                NSLog(@"Delete from server");
+                DLog(@"Delete from server");
                 _deleteFromFlag = deleteFromServerAndLocal;
                 [self executeDeleteItemInServer];
                 break;
             case 1:
-                NSLog(@"Delete from local");
+                DLog(@"Delete from local");
                 _deleteFromFlag = deleteFromLocal;
                 [self executeDeleteItemInDevice];
                 break;
             case 2:
-                NSLog(@"Cancel");
+                DLog(@"Cancel");
                 break;
         }
     } else {
         switch (buttonIndex) {
             case 0:
-                NSLog(@"Delete from server");
+                DLog(@"Delete from server");
                 _deleteFromFlag = deleteFromServerAndLocal;
                 [self executeDeleteItemInServer];
                 break;
             case 1:
-                NSLog(@"Cancel");
+                DLog(@"Cancel");
                 break;
         }
     }
