@@ -128,4 +128,4 @@
 #define k_user_agent @"iOS-ownCloud"
 
 //Enable/Disable Background uploads and download (NSURLSession or NSOperation)
-#define k_is_background_active NO
+#define k_is_background_active YES
