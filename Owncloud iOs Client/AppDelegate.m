@@ -566,6 +566,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //Create a splitViewController (Split container to show two view in the same time)
         self.splitViewController = [OCSplitViewController new];
         
+        self.splitViewController.view.backgroundColor = [UIColor blackColor];
+        
         //Create the detailViewController (Detail View of the split)
         self.detailViewController = [[DetailViewController alloc]initWithNibName:@"DetailView" bundle:nil];
         
@@ -1981,12 +1983,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     DLog(@"doThingsThatShouldDoOnStart");
     
-    if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
-        [self restoreUploadsInProccessFromSystemWithIdentificator:k_session_name withCompletionHandler:nil];
-        [self restoreDownloadsInProccessFromSystemWithIdentificator:k_download_session_name withCompletionHandler:nil];
-    } else {
+    if (k_is_sso_active || !k_is_background_active) {
         [self performSelectorInBackground:@selector(initUploadsOffline) withObject:nil];
         [self updateTheDownloadState:downloading to:notDownload];
+    } else {
+        [self restoreUploadsInProccessFromSystemWithIdentificator:k_session_name withCompletionHandler:nil];
+        [self restoreDownloadsInProccessFromSystemWithIdentificator:k_download_session_name withCompletionHandler:nil];
+
     }
     
     [self addErrorUploadsToRecentsTab];

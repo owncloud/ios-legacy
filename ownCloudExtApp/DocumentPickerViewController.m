@@ -69,6 +69,8 @@
     
     [InitializeDatabase initDataBase];
     
+    self.mode = mode;
+    
     if ([ManageAppSettingsDB isPasscode]) {
         [self showPassCode];
     } else {
@@ -155,8 +157,12 @@
         DLog(@"Error: %@", [error localizedDescription]);
     }
     
-    destinationUrl = [destinationUrl URLByAppendingPathComponent:fileDto.fileName];
-    
+    if (self.mode == UIDocumentPickerModeImport) {
+        //Import mode return the name without encoding
+        destinationUrl = [destinationUrl URLByAppendingPathComponent:[fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] ;
+    } else {
+        destinationUrl = [destinationUrl URLByAppendingPathComponent:fileDto.fileName];
+    }
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
         if (![[NSFileManager defaultManager] removeItemAtURL:destinationUrl error:&error]) {
