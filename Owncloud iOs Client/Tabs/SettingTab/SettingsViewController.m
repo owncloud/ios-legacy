@@ -38,6 +38,7 @@
 #import "UploadUtils.h"
 #import "UtilsCookies.h"
 #import "ManageCookiesStorageDB.h"
+#import "Accessibility.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -600,7 +601,7 @@
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             
             //Add accesibility label for Automation
-            [cell setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Help_Cell", nil)];
+            cell.accessibilityLabel = ACS_SETTINGS_HELP_CELL;
             break;
             
         case recommend:
@@ -609,7 +610,7 @@
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             
             //Add accesibility label for Automation
-            [cell setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Recommend_Cell", nil)];
+            cell.accessibilityLabel = ACS_SETTINGS_RECOMMEND_CELL;
             break;
             
         case feedback:
@@ -618,7 +619,7 @@
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             
             //Add accesibility label for Automation
-            [cell setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Send_Feedback_Cell", nil)];
+            cell.accessibilityLabel = ACS_SETTINGS_SEND_FEEDBACK_CELL;
             break;
             
         case impress:
@@ -627,7 +628,7 @@
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             
             //Add accesibility label for Automation
-            [cell setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Impress_Cell", nil)];
+            cell.accessibilityLabel = ACS_SETTINGS_IMPRESS_CELL;
             break;
             
         default:
@@ -685,7 +686,7 @@
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             
             //Add accesibility label for Automation
-            [self.switchPasscode setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Passcode_Switch", nil)];
+            self.switchPasscode.accessibilityLabel = ACS_SETTINGS_PASSCODE_SWITCH;
             
             break;
             
@@ -710,7 +711,7 @@
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             
             //Add accesibility label for Automation
-            [self.switchInstantUpload setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Instant_Uploads_Switch", nil)];
+            self.switchInstantUpload.accessibilityLabel = ACS_SETTINGS_INSTANT_UPLOADS_SWITCH;
             
             break;
         default:
@@ -761,15 +762,15 @@
     }
     
     //Accesibility support for Automation
-    NSString *accesibilityCellString = NSLocalizedString(@"ACS_Settings_User_Account_Cell", nil);
-    [accesibilityCellString stringByReplacingOccurrencesOfString:@"$user" withString:accountCell.userName.text];
-    [accesibilityCellString stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
+    NSString *accesibilityCellString = ACS_SETTINGS_USER_ACCOUNT_CELL;
+    accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$user" withString:accountCell.userName.text];
+    accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
 
     [accountCell setAccessibilityLabel:accesibilityCellString];
     
-    NSString *accesibilityInfoButton = NSLocalizedString(@"ACS_Settings_User_Account_Detail_Button", nil);
-    [accesibilityInfoButton stringByReplacingOccurrencesOfString:@"$user" withString:accountCell.userName.text];
-    [accesibilityInfoButton stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
+    NSString *accesibilityInfoButton = ACS_SETTINGS_USER_ACCOUNT_DETAIL_BUTTON;
+    accesibilityInfoButton = [accesibilityInfoButton stringByReplacingOccurrencesOfString:@"$user" withString:accountCell.userName.text];
+    accesibilityInfoButton = [accesibilityInfoButton stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
     
     [accountCell.accessoryView setAccessibilityLabel:accesibilityInfoButton];
     
@@ -795,7 +796,7 @@
     addAccountCell.textLabel.textColor = [UIColor colorOfTextButtonOnList];
     
     //Accesibility support for Automation
-    [addAccountCell setAccessibilityLabel:NSLocalizedString(@"ACS_Settings_Add_Account_Cell", nil)];
+    addAccountCell.accessibilityLabel = ACS_SETTINGS_ADD_ACCOUNT_CELL;
     
     return addAccountCell;
 }

@@ -657,7 +657,6 @@
 		EAEDC0931AB197A0004836EB /* SelectFolderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6A51778668A00FB9977 /* SelectFolderViewController.xib */; };
 		EAEDC0941AB197D1004836EB /* SelectedFolderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14A50E9D18F3FC9100506E2B /* SelectedFolderCell.xib */; };
 		EAEDC0951AB19869004836EB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 145EA7CA17786FAC0087CDDB /* Localizable.strings */; };
-		EAEFAC0C1B0502BE00E28B5D /* AccesibilityLabels.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAEFAC0E1B0502BE00E28B5D /* AccesibilityLabels.strings */; };
 		EAF721191AADCC73009F5596 /* pdf_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F18E177C35AA004A1A5A /* pdf_icon.png */; };
 		EAF7211A1AADCC9B009F5596 /* BackRootFolderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F176177C35AA004A1A5A /* BackRootFolderIcon.png */; };
 		EAF7211B1AADCC9B009F5596 /* BackRootFolderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F177177C35AA004A1A5A /* BackRootFolderIcon@2x.png */; };
@@ -1377,6 +1376,7 @@
 		59D774CC1910EE0F004322BA /* UtilsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsTableView.h; path = Utils/UtilsTableView.h; sourceTree = "<group>"; };
 		59D774CD1910EE0F004322BA /* UtilsTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsTableView.m; path = Utils/UtilsTableView.m; sourceTree = "<group>"; };
 		59DA4F3B1A07A97100472639 /* DocumentPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentPickerViewController.xib; sourceTree = "<group>"; };
+		59E52E7F1B0B666100F5B1B3 /* Accessibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Accessibility.h; path = SupportingFiles/Accessibility/Accessibility.h; sourceTree = "<group>"; };
 		EA1787AA17E33BB9005171AB /* OCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCNavigationController.h; path = Tabs/FileTab/OCNavigationController.h; sourceTree = "<group>"; };
 		EA1787AB17E33BB9005171AB /* OCNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCNavigationController.m; path = Tabs/FileTab/OCNavigationController.m; sourceTree = "<group>"; };
 		EA2678FB1876E4B8008678DE /* notSharedItem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notSharedItem.png; sourceTree = "<group>"; };
@@ -1483,7 +1483,6 @@
 		EAE005F0180EF03E0066E8D4 /* CheckSSOServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckSSOServer.h; path = Login/SSO/CheckSSOServer.h; sourceTree = "<group>"; };
 		EAE93A3A19D18E43002B9E15 /* fi */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
-		EAEFAC0D1B0502BE00E28B5D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AccesibilityLabels.strings; sourceTree = "<group>"; };
 		EAF7217C1AAF2E0D009F5596 /* Managers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Managers.swift; sourceTree = "<group>"; };
 		EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1656,7 +1655,7 @@
 		1324298315ADBB3700DF823E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				EA421B911B021A0300E4071F /* Accesibility */,
+				EA421B911B021A0300E4071F /* Accessibility */,
 				1487F15D177C35AA004A1A5A /* Images */,
 				EAF028B3177447530035084D /* FMDB */,
 				145EA7C917786FAC0087CDDB /* Languages */,
@@ -2734,12 +2733,12 @@
 			name = "Open With";
 			sourceTree = "<group>";
 		};
-		EA421B911B021A0300E4071F /* Accesibility */ = {
+		EA421B911B021A0300E4071F /* Accessibility */ = {
 			isa = PBXGroup;
 			children = (
-				EAEFAC0E1B0502BE00E28B5D /* AccesibilityLabels.strings */,
+				59E52E7F1B0B666100F5B1B3 /* Accessibility.h */,
 			);
-			name = Accesibility;
+			name = Accessibility;
 			sourceTree = "<group>";
 		};
 		EA4914661AC0344800BECF0B /* TTOpenInAppActivity */ = {
@@ -3533,7 +3532,6 @@
 				EA4914731AC0346100BECF0B /* TTOpenInAppActivity@2x.png in Resources */,
 				13AA2C9B17D8AFCB00DB5E11 /* tabBar.png in Resources */,
 				149D98C1195AAD54005E0C73 /* fileSharedByLink.png in Resources */,
-				EAEFAC0C1B0502BE00E28B5D /* AccesibilityLabels.strings in Resources */,
 				13AA2C9C17D8AFCB00DB5E11 /* tabBar@2x.png in Resources */,
 				149D98C2195AAD54005E0C73 /* fileSharedByLink@2x.png in Resources */,
 				EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */,
@@ -4158,15 +4156,6 @@
 				145EA7CD17786FAC0087CDDB /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		EAEFAC0E1B0502BE00E28B5D /* AccesibilityLabels.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EAEFAC0D1B0502BE00E28B5D /* en */,
-			);
-			name = AccesibilityLabels.strings;
-			path = SupportingFiles/Accesibility;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
