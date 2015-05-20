@@ -98,19 +98,8 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 
 -(void) isConnectionToTheServerByUrl:(NSString *) url {
     
-    //We obtain the urlServerRedirected to make the uploads in background
-#ifdef CONTAINER_APP
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    app.urlServerRedirected = nil;
-#endif
-
+    //We save the url to later compare with urlServerRedirected in request
     self.urlUserToCheck = url;
-    UserDto *activeUser = [ManageUsersDB getActiveUser];
-    if (activeUser) {
-        if ([activeUser.url isEqualToString:self.urlUserToCheck]) {
-            [ManageUsersDB updateUrlRedirected:nil byUserDto:activeUser];
-        }
-    }
     
     _urlStatusCheck = [NSString stringWithFormat:@"%@status.php", url];
     
@@ -391,6 +380,20 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
         return requestRedirect;
         
     } else {
+        
+        //We obtain the urlServerRedirected to make the uploads in background
+#ifdef CONTAINER_APP
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        app.urlServerRedirected = nil;
+        app.activeUser = [ManageUsersDB getActiveUser];
+#endif
+        UserDto *activeUser = [ManageUsersDB getActiveUser];
+        if (activeUser) {
+            if ([activeUser.url isEqualToString:self.urlUserToCheck]) {
+                [ManageUsersDB updateUrlRedirected:nil byUserDto:activeUser];
+            }
+        }
+        
         return request;
     }
 }
