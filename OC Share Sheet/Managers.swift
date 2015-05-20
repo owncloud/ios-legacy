@@ -18,47 +18,38 @@ import UIKit
 class Managers: NSObject {
     
     //MARK: FMDataBase
-    
-    class func sharedDatabase()->FMDatabaseQueue{
-        
-         var sharedDatabase: FMDatabaseQueue?
-        
-        let path = UtilsUrls.getOwnCloudFilePath().stringByAppendingPathComponent("DB.sqlite")
-        
-        if NSFileManager.defaultManager().fileExistsAtPath(path){
-            
-            if sharedDatabase == nil{
-                
-                let documentsDir = UtilsUrls.getOwnCloudFilePath()
-                let dbPath = documentsDir.stringByAppendingPathComponent("DB.sqlite")
-                
-                sharedDatabase = FMDatabaseQueue(path: dbPath)
-                
-            }
-            
+    class var sharedDatabase: FMDatabaseQueue {
+        struct Static {
+            static var sharedDatabase: FMDatabaseQueue?
+            static var tokenDatabase: dispatch_once_t = 0
         }
         
-        return sharedDatabase!
-    }
-    
-       //MARK: OCCommunication
-    
-    class func sharedOCCommunication() -> OCCommunication{
-        
-        var communication: OCCommunication?
-        
-        if communication == nil{
+        dispatch_once(&Static.tokenDatabase) {
+            Static.sharedDatabase = FMDatabaseQueue()
             
-            communication = OCCommunication()
+            let documentsDir = UtilsUrls.getOwnCloudFilePath()
+            let dbPath = documentsDir.stringByAppendingPathComponent("DB.sqlite")
             
+            Static.sharedDatabase = FMDatabaseQueue(path: dbPath, flags: SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE)
         }
         
-        return communication!
-        
+        return Static.sharedDatabase!
     }
-
-  
     
+    
+    //MARK: OCCommunication
+    class var sharedOCCommunication: OCCommunication {
+        struct Static {
+            static var sharedOCCommunication: OCCommunication?
+            static var tokenCommunication: dispatch_once_t = 0
+        }
+        
+        dispatch_once(&Static.tokenCommunication) {
+            Static.sharedOCCommunication = OCCommunication()
+        }
+        
+        return Static.sharedOCCommunication!
+    }
 }
 
 

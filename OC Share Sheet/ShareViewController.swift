@@ -39,6 +39,8 @@ import AVFoundation
     
     override func viewDidLoad() {
         
+        InitializeDatabase.initDataBase()
+        
         var delay = 0.1
         
         if ManageAppSettingsDB.isPasscode(){
