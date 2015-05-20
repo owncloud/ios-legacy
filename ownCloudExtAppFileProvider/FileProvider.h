@@ -18,6 +18,4 @@
 
 @interface FileProvider : NSFileProviderExtension
 
-+ (FMDatabaseQueue*)sharedDatabase;
-
 @end

@@ -21,6 +21,7 @@
 #import "OCSharedDto.h"
 #import "UtilsDtos.h"
 #import "NSString+Encoding.h"
+#import "Owncloud_iOs_Client-Swift.h"
 
 @implementation ManageSharesDB
 
@@ -38,10 +39,8 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UserDto *mUser = app.activeUser;
 
-    
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
 
-    
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         
         BOOL correctQuery = NO;
@@ -94,8 +93,7 @@
 
 + (void) deleteAllSharesOfUser:(NSInteger)idUser{
     
-    
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -128,7 +126,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE file_source IN (SELECT shared_file_source FROM files WHERE file_id = ? AND shared_file_source > 0)", [NSNumber numberWithInteger:folder.idFile]];
@@ -187,7 +185,7 @@
         path = [path substringToIndex:[path length]-1];
     }
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared"];
@@ -252,7 +250,7 @@
     __block NSMutableArray *items = [NSMutableArray new];
     NSArray *output = nil;
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
 
@@ -310,8 +308,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
 
-    
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
 
@@ -355,7 +352,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
@@ -402,7 +399,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ? AND share_type = ?", [NSNumber numberWithInteger:idUser], [NSNumber numberWithInteger:shareType]];
@@ -445,7 +442,7 @@
     //Shared items
     for (OCSharedDto *current in listOfRemoved) {
         
-        FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
         
         [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             BOOL correctQuery=NO;
@@ -471,7 +468,7 @@
  */
 + (void) deleteSharedNotRelatedByUser:(UserDto *) user {
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -501,7 +498,7 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UserDto *mUser = app.activeUser;
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     __block OCSharedDto *sharedDto = nil;
     

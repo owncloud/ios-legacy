@@ -366,7 +366,7 @@
             UserDto *activeUser = nil;
             
 #ifdef SHARE_IN
-            communication = [Managers sharedOCCommunication];
+            communication = Managers.sharedOCCommunication;
             activeUser = [ManageUsersDB getActiveUser];
             [[Managers sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
 #else

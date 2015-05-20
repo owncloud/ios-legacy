@@ -25,10 +25,11 @@
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
+#import "Owncloud_iOs_Client-Swift.h"
 #elif FILE_PICKER
-#import "DocumentPickerViewController.h"
+#import "ownCloudExtApp-Swift.h"
 #else
-#import "FileProvider.h"
+#import "ownCloudExtAppFileProvider-Swift.h"
 #endif
 
 
@@ -43,15 +44,7 @@
     
     output=[ProvidingFileDto new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, user_id FROM providing_files ORDER BY id DESC LIMIT 1"];
@@ -74,15 +67,7 @@
 
 + (ProvidingFileDto *) insertProvidingFileDtoWithPath:(NSString*)filePath byUserId:(NSInteger)userId{
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     __block BOOL correctQuery = NO;
     
@@ -110,15 +95,7 @@
     
     __block BOOL correctQuery = NO;
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -140,15 +117,7 @@
     
     __block NSMutableArray *tempArray = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, user_id FROM providing_files ORDER BY id DESC"];
@@ -176,15 +145,7 @@
 
     __block ProvidingFileDto *providerFileTemp = nil;
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     
     [queue inDatabase:^(FMDatabase *db) {
