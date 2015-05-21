@@ -892,7 +892,7 @@
                 if (error.code == OCErrorForbidenCharacters) {
                     [self endLoading];
                     DLog(@"The folder have problematic characters");
-                    _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbiden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+                    _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
                     [_alert show];
                 } else {
                     [self endLoading];
@@ -910,7 +910,7 @@
     } else {
         [self endLoading];
         DLog(@"The folder have problematic characters");
-        _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbiden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
         [_alert show];
     }
 }

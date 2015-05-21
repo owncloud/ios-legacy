@@ -97,7 +97,7 @@
     // cancel
     if( buttonIndex == 1 ){
         if ([FileNameUtils isForbidenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text]) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbiden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alert show];
         } else {
             DLog(@"We change %@ for %@", self.selectedFileDto.fileName, [_renameAlertView textFieldAtIndex:0].text);
@@ -313,7 +313,7 @@
                 break;
                 
             case OCErrorMovingDestinyNameHaveForbiddenCharacters:
-                [self showError:NSLocalizedString(@"forbiden_characters", nil)];
+                [self showError:NSLocalizedString(@"forbidden_characters", nil)];
                 break;
                 
             default:

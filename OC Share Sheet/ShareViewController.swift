@@ -220,7 +220,7 @@ import AVFoundation
                     
                 }else{
                 
-                    showAlertView(NSLocalizedString("forbiden_characters", comment: ""))
+                    showAlertView(NSLocalizedString("forbidden_characters", comment: ""))
                     
                 }
                 

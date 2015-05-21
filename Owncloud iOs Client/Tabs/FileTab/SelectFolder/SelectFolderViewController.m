@@ -427,7 +427,7 @@
                     [self endLoading];
                     DLog(@"The folder have problematic characters");
                     
-                    [self showError:NSLocalizedString(@"forbiden_characters", nil)];
+                    [self showError:NSLocalizedString(@"forbidden_characters", nil)];
                     
                 }
             }];
@@ -440,7 +440,7 @@
     } else {
         [self endLoading];
         DLog(@"The folder have problematic characters");
-        [self showError:NSLocalizedString(@"forbiden_characters", nil)];
+        [self showError:NSLocalizedString(@"forbidden_characters", nil)];
     }
 }
 
