@@ -597,17 +597,7 @@
 +(void)updateUrlRedirected:(NSString *)newValue byUserDto:(UserDto *)user {
     DLog(@"Updated url redirected");
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = [Managers sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -622,21 +612,11 @@
 }
 
 +(NSString *)getUrlRedirectedByUserDto:(UserDto *)user {
-        DLog(@"getUrlRedirected");
+    DLog(@"getUrlRedirected");
         
-        __block NSString *output;
+    __block NSString *output;
         
-        FMDatabaseQueue *queue;
-        
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#elif SHARE_IN
-    queue = [Managers sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
         
         [queue inDatabase:^(FMDatabase *db) {
             FMResultSet *rs = [db executeQuery:@"SELECT url_redirected FROM users  WHERE id = ?", [NSNumber numberWithInteger:user.idUser]];
