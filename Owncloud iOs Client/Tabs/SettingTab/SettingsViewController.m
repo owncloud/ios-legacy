@@ -751,8 +751,7 @@
     }
     
     accountCell.urlServer.text = ((UserDto *) [self.listUsers objectAtIndex:row]).url;
-   // accountCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    accountCell.accessoryView = [self createInfoAccountButtonForIndex:row];
+    accountCell.accessoryType = UITableViewCellAccessoryDetailButton;
     
     if(((UserDto *) [self.listUsers objectAtIndex:row]).activeaccount){
         [accountCell.activeButton setImage:[UIImage imageNamed:@"radio_checked.png"] forState:UIControlStateNormal];
@@ -767,12 +766,6 @@
     accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
 
     [accountCell setAccessibilityLabel:accesibilityCellString];
-    
-    NSString *accesibilityInfoButton = ACS_SETTINGS_USER_ACCOUNT_DETAIL_BUTTON;
-    accesibilityInfoButton = [accesibilityInfoButton stringByReplacingOccurrencesOfString:@"$user" withString:accountCell.userName.text];
-    accesibilityInfoButton = [accesibilityInfoButton stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
-    
-    [accountCell.accessoryView setAccessibilityLabel:accesibilityInfoButton];
     
     return accountCell;
     
@@ -822,20 +815,6 @@
 }
 
 #pragma mark - Accesories support for Accounts Section
-
-- (UIView *)createInfoAccountButtonForIndex:(NSInteger)index {
-    
-    UIView *accessoryView = [[UIView alloc] initWithFrame:CGRectZero];
-    UIButton *disclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    
-    disclosureButton.tag = index;
-    [disclosureButton addTarget:self action:@selector(pressedInfoAccountButton:) forControlEvents:UIControlEventTouchUpInside];
-    
-    accessoryView.bounds = disclosureButton.bounds;
-    [accessoryView addSubview:disclosureButton];
-    
-    return accessoryView;
-}
 
 - (void) pressedInfoAccountButton:(UIButton *)sender{
     
@@ -971,6 +950,24 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
+    
+    //Edit Account
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:(UserDto *)[self.listUsers objectAtIndex:indexPath.row]];
+    
+    if (IS_IPHONE)
+    {
+        viewController.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:navController animated:YES completion:nil];
+    }
+    
+}
 
 #pragma mark - DidSelectRow Sections
 

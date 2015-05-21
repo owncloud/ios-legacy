@@ -14,7 +14,6 @@
  */
 
 #define ACS_SETTINGS_USER_ACCOUNT_CELL @"Settings Account Cell $user@$server";
-#define ACS_SETTINGS_USER_ACCOUNT_DETAIL_BUTTON @"Settings Account Info Button $user@$server";
 #define ACS_SETTINGS_ADD_ACCOUNT_CELL @"Settings Add Account Cell";
 #define ACS_SETTINGS_PASSCODE_SWITCH @"Settings Passcode Switch";
 #define ACS_SETTINGS_INSTANT_UPLOADS_SWITCH @"Settings Instant Upload Switch";
