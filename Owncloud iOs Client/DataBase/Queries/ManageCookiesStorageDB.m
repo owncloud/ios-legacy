@@ -17,8 +17,9 @@
 #import "FMDatabaseQueue.h"
 #import "FMDatabase.h"
 #import "CookiesStorageDto.h"
-#import "AppDelegate.h"
 #import "UtilsCookies.h"
+#import "Owncloud_iOs_Client-Swift.h"
+#import "UserDto.h"
 
 @implementation ManageCookiesStorageDB
 
@@ -33,7 +34,7 @@
  *
  */
 + (void) insertCookie:(CookiesStorageDto *) cookie {
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -61,7 +62,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -96,7 +97,7 @@
  *
  */
 + (void) deleteCookiesByUser:(UserDto *) user {
-    FMDatabaseQueue *queue = [AppDelegate sharedDatabase];
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;

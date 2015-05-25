@@ -46,8 +46,6 @@
 
 	ReaderMainToolbar *mainToolbar;
 
-	ReaderMainPagebar *mainPagebar;
-
 	NSMutableDictionary *contentViews;
 
 	UIUserInterfaceIdiom userInterfaceIdiom;
@@ -65,6 +63,8 @@
 	NSDate *lastHideTime;
 
 	BOOL ignoreDidScroll;
+    
+    NSTimer *mainPageBarTimer;
 }
 
 #pragma mark - Constants
@@ -122,7 +122,7 @@
 
 	[mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
 
-	[mainPagebar updatePagebar]; // Update page bar
+	[_mainPagebar updatePagebar]; // Update page bar
 }
 
 - (void)addContentView:(UIScrollView *)scrollView page:(NSInteger)page
@@ -204,27 +204,32 @@
 
 - (void)handleScrollViewDidEnd:(UIScrollView *)scrollView
 {
-	CGFloat viewWidth = scrollView.bounds.size.width; // Scroll view width
-
-	CGFloat contentOffsetX = scrollView.contentOffset.x; // Content offset X
-
-	NSInteger page = (contentOffsetX / viewWidth); page++; // Page number
-
-	if (page != currentPage) // Only if on different page
-	{
-		currentPage = page; document.pageNumber = [NSNumber numberWithInteger:page];
-
-		[contentViews enumerateKeysAndObjectsUsingBlock: // Enumerate content views
-			^(NSNumber *key, ReaderContentView *contentView, BOOL *stop)
-			{
-				if ([key integerValue] != page) [contentView zoomResetAnimated:NO];
-			}
-		];
-
-		[mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
-
-		[mainPagebar updatePagebar]; // Update page bar
-	}
+    if (!self.isChangingSize) {
+        
+        CGFloat viewWidth = scrollView.bounds.size.width; // Scroll view width
+        
+        CGFloat contentOffsetX = scrollView.contentOffset.x; // Content offset X
+        
+        NSInteger page = (contentOffsetX / viewWidth); page++; // Page number
+        
+        if (page != currentPage) // Only if on different page
+        {
+            currentPage = page; document.pageNumber = [NSNumber numberWithInteger:page];
+            
+            [contentViews enumerateKeysAndObjectsUsingBlock: // Enumerate content views
+             ^(NSNumber *key, ReaderContentView *contentView, BOOL *stop)
+             {
+                 if ([key integerValue] != page) [contentView zoomResetAnimated:NO];
+             }
+             ];
+            
+            [mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
+            
+            [_mainPagebar updatePagebar]; // Update page bar
+        }
+    }
+ 
+	
 }
 
 - (void)showDocumentPage:(NSInteger)page
@@ -251,7 +256,7 @@
 
 		[mainToolbar setBookmarkState:[document.bookmarks containsIndex:page]];
 
-		[mainPagebar updatePagebar]; // Update page bar
+		[_mainPagebar updatePagebar]; // Update page bar
 	}
 }
 
@@ -323,6 +328,8 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+    
+    self.isChangingSize = NO;
 
 	assert(document != nil); // Must have a valid ReaderDocument
 
@@ -361,25 +368,33 @@
 
 	CGRect pagebarRect = self.view.bounds; pagebarRect.size.height = PAGEBAR_HEIGHT;
 	pagebarRect.origin.y = (self.view.bounds.size.height - pagebarRect.size.height);
-	mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect document:document]; // ReaderMainPagebar
-	mainPagebar.delegate = self; // ReaderMainPagebarDelegate
-	[self.view addSubview:mainPagebar];
-
+	_mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect document:document]; // ReaderMainPagebar
+	_mainPagebar.delegate = self; // ReaderMainPagebarDelegate
+    [self.view addSubview:_mainPagebar];
+    
+    if (!IS_IPHONE) {
+        [self maintainMainPageBarForATime];
+    }
+    
 	if (fakeStatusBar != nil) [self.view addSubview:fakeStatusBar]; // Add status bar background view
-
-	UITapGestureRecognizer *singleTapOne = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-	singleTapOne.numberOfTouchesRequired = 1; singleTapOne.numberOfTapsRequired = 1; singleTapOne.delegate = self;
-	[self.view addGestureRecognizer:singleTapOne];
-
-	UITapGestureRecognizer *doubleTapOne = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
-	doubleTapOne.numberOfTouchesRequired = 1; doubleTapOne.numberOfTapsRequired = 2; doubleTapOne.delegate = self;
-	[self.view addGestureRecognizer:doubleTapOne];
-
-	UITapGestureRecognizer *doubleTapTwo = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
-	doubleTapTwo.numberOfTouchesRequired = 2; doubleTapTwo.numberOfTapsRequired = 2; doubleTapTwo.delegate = self;
-	[self.view addGestureRecognizer:doubleTapTwo];
-
-	[singleTapOne requireGestureRecognizerToFail:doubleTapOne]; // Single tap requires double tap to fail
+    
+    UITapGestureRecognizer *singleTapOne = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+    singleTapOne.numberOfTouchesRequired = 1; singleTapOne.numberOfTapsRequired = 1; singleTapOne.delegate = self;
+    [self.view addGestureRecognizer:singleTapOne];  
+    
+    if (IS_IPHONE) {
+        
+        UITapGestureRecognizer *doubleTapOne = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+        doubleTapOne.numberOfTouchesRequired = 1; doubleTapOne.numberOfTapsRequired = 2; doubleTapOne.delegate = self;
+        [self.view addGestureRecognizer:doubleTapOne];
+        
+        UITapGestureRecognizer *doubleTapTwo = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+        doubleTapTwo.numberOfTouchesRequired = 2; doubleTapTwo.numberOfTapsRequired = 2; doubleTapTwo.delegate = self;
+        [self.view addGestureRecognizer:doubleTapTwo];
+        
+        
+        [singleTapOne requireGestureRecognizerToFail:doubleTapOne]; // Single tap requires double tap to fail
+    }
 
 	contentViews = [NSMutableDictionary new]; lastHideTime = [NSDate date];
 
@@ -409,6 +424,10 @@
 	{
 		[self performSelector:@selector(showDocument) withObject:nil afterDelay:0.0];
 	}
+    
+   
+    
+    
 
 #if (READER_DISABLE_IDLE == TRUE) // Option
 
@@ -441,7 +460,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	mainToolbar = nil; mainPagebar = nil;
+	mainToolbar = nil; _mainPagebar = nil;
 
 	theScrollView = nil; contentViews = nil; lastHideTime = nil;
 
@@ -494,6 +513,9 @@
     }
 }
 
+
+
+
 - (void)didReceiveMemoryWarning
 {
 #ifdef DEBUG
@@ -539,7 +561,7 @@
 
 		contentOffset.x -= theScrollView.bounds.size.width; // View X--
 
-		[theScrollView setContentOffset:contentOffset animated:YES];
+		[theScrollView setContentOffset:contentOffset animated:!self.isChangingSize];
 	}
 }
 
@@ -551,7 +573,7 @@
 
 		contentOffset.x += theScrollView.bounds.size.width; // View X++
 
-		[theScrollView setContentOffset:contentOffset animated:YES];
+		[theScrollView setContentOffset:contentOffset animated:!self.isChangingSize];
 	}
 }
 
@@ -612,9 +634,12 @@
 			{
 				if ([lastHideTime timeIntervalSinceNow] < -0.75) // Delay since hide
 				{
-					if ((mainToolbar.alpha < 1.0f) || (mainPagebar.alpha < 1.0f)) // Hidden
+					if ((mainToolbar.alpha < 1.0f) || (_mainPagebar.alpha < 1.0f)) // Hidden
 					{
-						[mainToolbar showToolbar]; [mainPagebar showPagebar]; // Show
+                        if (IS_IPHONE) {
+                            [mainToolbar showToolbar]; [_mainPagebar showPagebar]; // Show
+                        }
+ 
 					}
 				}
 			}
@@ -628,7 +653,7 @@
 
 		if (CGRectContainsPoint(nextPageRect, point) == true) // page++
 		{
-			[self incrementPageNumber]; return;
+			[self incrementPageNumber];return;
 		}
 
 		CGRect prevPageRect = viewRect;
@@ -636,7 +661,7 @@
 
 		if (CGRectContainsPoint(prevPageRect, point) == true) // page--
 		{
-			[self decrementPageNumber]; return;
+			[self decrementPageNumber];return;
 		}
 	}
 }
@@ -696,7 +721,7 @@
 
 - (void)contentView:(ReaderContentView *)contentView touchesBegan:(NSSet *)touches
 {
-	if ((mainToolbar.alpha > 0.0f) || (mainPagebar.alpha > 0.0f))
+	if ((mainToolbar.alpha > 0.0f) || (_mainPagebar.alpha > 0.0f))
 	{
 		if (touches.count == 1) // Single touches only
 		{
@@ -709,10 +734,56 @@
 			if (CGRectContainsPoint(areaRect, point) == false) return;
 		}
 
-		[mainToolbar hideToolbar]; [mainPagebar hidePagebar]; // Hide
+		[mainToolbar hideToolbar]; //Hide
+        
+        if (IS_IPHONE) {
+            [_mainPagebar hidePagebar];
+        }
 
 		lastHideTime = [NSDate date]; // Set last hide time
 	}
+    
+    if (!IS_IPHONE) {
+        [self showMainPageBar];
+    }
+}
+
+#pragma mark - Main Page Bar Show/Hide timer
+
+- (void) showMainPageBar{
+    
+    [self.mainPagebar showPagebar];
+    
+    [self maintainMainPageBarForATime];
+    
+}
+
+- (void)maintainMainPageBarForATime{
+    
+    if (mainPageBarTimer) {
+        [self cancelMainPageBarTimer];
+    }
+    
+    mainPageBarTimer = [NSTimer scheduledTimerWithTimeInterval:4.0f
+                                                 target:self
+                                               selector:@selector(hideMainPageBar)
+                                               userInfo:nil
+                                                repeats:NO];
+    
+}
+
+- (void) hideMainPageBar{
+    
+    [self cancelMainPageBarTimer];
+    
+    [self.mainPagebar hidePagebar];
+}
+
+- (void) cancelMainPageBarTimer{
+    
+    [mainPageBarTimer invalidate];
+    mainPageBarTimer = nil;
+    
 }
 
 #pragma mark - ReaderMainToolbarDelegate methods

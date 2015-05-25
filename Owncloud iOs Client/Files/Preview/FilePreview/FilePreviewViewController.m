@@ -932,6 +932,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [_moviePlayer.moviePlayer prepareToPlay];
         [_moviePlayer playFile];
         
+ 
         appDelegate.mediaPlayer = _moviePlayer;
         [self.view addSubview:_moviePlayer.moviePlayer.view];
     }

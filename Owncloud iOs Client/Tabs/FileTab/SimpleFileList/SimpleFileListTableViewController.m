@@ -364,7 +364,7 @@
 #ifdef CONTAINER_APP
     sharedCommunication = [AppDelegate sharedOCCommunication];
 #elif SHARE_IN
-    sharedCommunication = [Managers sharedOCCommunication];
+    sharedCommunication = Managers.sharedOCCommunication;
 #else
     sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
 #endif
@@ -674,7 +674,7 @@
 #ifdef CONTAINER_APP
     sharedCommunication = [AppDelegate sharedOCCommunication];
 #elif SHARE_IN
-    sharedCommunication = [Managers sharedOCCommunication];
+    sharedCommunication = Managers.sharedOCCommunication;
 #else
     sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
 #endif

@@ -44,7 +44,7 @@ extern NSString * IpadCleanPreviewNotification;
 extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, ShareFileOrFolderDelegate, UIAlertViewDelegate, ManageFavoritesDelegate> {
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, ShareFileOrFolderDelegate, UIAlertViewDelegate, ManageFavoritesDelegate, UIGestureRecognizerDelegate> {
     
     //Bar buttons
     IBOutlet UIBarButtonItem *_spaceBar;
@@ -69,6 +69,9 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
     IBOutlet NSLayoutConstraint *_topMarginUpdatingFileProgressView;
     IBOutlet NSLayoutConstraint *_topMarginUpdatingView;
     IBOutlet NSLayoutConstraint *_topMarginUpdatingButton;
+    
+    IBOutlet NSLayoutConstraint *toolBarTopMargin;
+    IBOutlet NSLayoutConstraint *toolBarHeight;
     
     NSString *nameFileToUpdate; 
     
@@ -113,10 +116,10 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 //Flags
 @property(nonatomic) BOOL isViewBlocked;
-@property(nonatomic) BOOL isExtending;
+@property(nonatomic) BOOL isSizeChanging;
 @property(nonatomic) BOOL isDownloading;
 @property(nonatomic) BOOL isFileCharged;
-@property(nonatomic) BOOL isExtend;
+
 //Flag for know the overwrited file
 @property (nonatomic) BOOL isOverwritedFile;
 //Flag for know the updating process
@@ -132,6 +135,10 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 //Favorites
 @property(nonatomic, strong) ManageFavorites *manageFavorites;
+
+//Full Screen Support
+@property(nonatomic) BOOL hideMaster;
+
 
 ///-----------------------------------
 /// @name Handle File

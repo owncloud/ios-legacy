@@ -46,6 +46,7 @@
 @property NSInteger currentNumberPage;
 @property (nonatomic)BOOL isDoubleTap;
 @property (nonatomic)BOOL fullScreen;
+@property (nonatomic)BOOL galleryIsChangingSize;
 @property(nonatomic,weak) __weak id<GalleryViewDelegate> delegate;
 
 
@@ -96,6 +97,9 @@
  * @param sortArray -> NSArray
  */
 - (void)updateImagesArrayWithNewArray:(NSArray*) sortArray;
+
+-(void)showFullScreen;
+- (void)exitFullScreen;
 
 
 @end
