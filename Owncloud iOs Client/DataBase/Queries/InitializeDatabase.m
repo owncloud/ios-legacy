@@ -26,6 +26,7 @@
 #define k_DB_version_10 10
 #define k_DB_version_11 11
 #define k_DB_version_12 12
+#define k_DB_version_13 13
 
 @implementation InitializeDatabase
 
@@ -43,7 +44,7 @@
     DLog(@"Password: %@", credDto.password);
     
     //New version
-    static int dbVersion = k_DB_version_12;
+    static int dbVersion = k_DB_version_13;
     
     //This method make a new database
     [ManageDB createDataBase];
@@ -68,6 +69,7 @@
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
                 [ManageDB updateDBVersion11To12];
+                [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_2:
                 [ManageDB updateDBVersion2To3];
@@ -81,6 +83,7 @@
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
                 [ManageDB updateDBVersion11To12];
+                [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_3:
                 [ManageDB updateDBVersion3To4];
@@ -92,6 +95,7 @@
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
                 [ManageDB updateDBVersion11To12];
+                [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_4:
                 [ManageDB updateDBVersion4To5];
@@ -102,6 +106,7 @@
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
                 [ManageDB updateDBVersion11To12];
+                [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_5:
                 [ManageDB updateDBVersion5To6];
@@ -111,6 +116,7 @@
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
                 [ManageDB updateDBVersion11To12];
+                [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_6:
                 [ManageDB updateDBVersion6To7];
@@ -119,6 +125,7 @@
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
                 [ManageDB updateDBVersion11To12];
+                [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_7:
                 [self updateDBVersion7To8];
@@ -126,24 +133,32 @@
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
                 [ManageDB updateDBVersion11To12];
+                [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_8:
                 [ManageDB updateDBVersion8To9];
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
                 [ManageDB updateDBVersion11To12];
+                [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_9:
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
                 [ManageDB updateDBVersion11To12];
+                [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_10:
                 [ManageDB updateDBVersion10To11];
                 [ManageDB updateDBVersion11To12];
+                [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_11:
                 [ManageDB updateDBVersion11To12];
+                [ManageDB updateDBVersion12To13];
+                break;
+            case k_DB_version_12:
+                [ManageDB updateDBVersion12To13];
                 break;
         }
     }
