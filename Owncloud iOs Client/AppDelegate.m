@@ -55,6 +55,7 @@
 #import "ManageAsset.h"
 #import "OCSplitViewController.h"
 #import "InitializeDatabase.h"
+#import "CheckHasForbiddenCharactersSupport.h"
 
 
 #define k_server_with_chunking 4.5 
@@ -803,6 +804,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //Check if the server support cookies
     [[AppDelegate sharedCheckHasCookiesSupport] checkIfServerHasCookiesSupport];
+    
+    //Check if the server has forbidden characters supports
+    [[AppDelegate sharedCheckHasForbiddenCharactersSupport] checkIfServerHasForbiddenCharactersSupport];
+  
 }
 
 /*
@@ -2674,6 +2679,24 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
 	}
 	return sharedCheckHasCookiesSupport;
+}
+
+//-----------------------------------
+/// @name sharedForbiddenCharactersSupport
+///-----------------------------------
+
+/**
+ * Singleton to check if a server has forbidden characters supports
+ *
+ */
++ (CheckHasForbiddenCharactersSupport *) sharedCheckHasForbiddenCharactersSupport {
+    static CheckHasForbiddenCharactersSupport* sharedCheckHasForbiddenCharactersSupport = nil;
+    if (sharedCheckHasForbiddenCharactersSupport == nil)
+    {
+        sharedCheckHasForbiddenCharactersSupport = [CheckHasForbiddenCharactersSupport new];
+        
+    }
+    return sharedCheckHasForbiddenCharactersSupport;
 }
 
 

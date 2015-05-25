@@ -34,10 +34,12 @@
         [[AppDelegate sharedOCCommunication] hasServerForbiddenCharactersSupport:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, BOOL hasSupport, NSString *redirectedServer) {
             
             if (hasSupport) {
-               //TODO: Store the value in a global variable
+               app.activeUser.hasForbiddenCharactersSupport = serverFunctionalitySupported;
             } else {
-               //TODO: Store the value in a global variable
+               app.activeUser.hasForbiddenCharactersSupport = serverFunctionalityNotSupported;
             }
+            
+             [ManageUsersDB updateUserByUserDto:app.activeUser];
             
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
             DLog(@"error when try to get the forbidden characters support support: %@", error);
