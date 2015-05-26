@@ -861,7 +861,13 @@
             
             NSString *pathOfNewFolder = [NSString stringWithFormat:@"%@%@",[_currentRemoteFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding], name ];
             
-            [[AppDelegate sharedOCCommunication] createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+            BOOL serverHasForbiddenCharactersSupport = NO;
+            
+            if (app.activeUser.hasForbiddenCharactersSupport == serverFunctionalitySupported){
+                serverHasForbiddenCharactersSupport = YES;
+            }
+            
+            [[AppDelegate sharedOCCommunication] createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
                 DLog(@"Folder created");
                 BOOL isSamlCredentialsError = NO;
                 

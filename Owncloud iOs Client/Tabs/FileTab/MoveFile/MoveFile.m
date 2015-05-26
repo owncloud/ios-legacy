@@ -140,10 +140,17 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    [[AppDelegate sharedOCCommunication] moveFileOrFolder:originFile toDestiny:destinyFile onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    BOOL serverHasForbiddenCharactersSupport = NO;
+    
+    if (app.activeUser.hasForbiddenCharactersSupport == serverFunctionalitySupported){
+        serverHasForbiddenCharactersSupport = YES;
+    }
+    
+    [[AppDelegate sharedOCCommunication] moveFileOrFolder:originFile toDestiny:destinyFile onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+        
         DLog(@"Great, the item is moved");
         
-        BOOL isSamlCredentialsError=NO;
+        BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
         if (k_is_sso_active && redirectedServer) {

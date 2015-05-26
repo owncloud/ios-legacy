@@ -178,7 +178,15 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    [[AppDelegate sharedOCCommunication] createFolder:pathRemoteFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    BOOL serverHasForbiddenCharactersSupport = NO;
+    
+    if (app.activeUser.hasForbiddenCharactersSupport == serverFunctionalitySupported){
+        serverHasForbiddenCharactersSupport = YES;
+    }
+    
+    [[AppDelegate sharedOCCommunication] createFolder:pathRemoteFolder onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport
+     successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+         
         DLog(@"Folder created");
         BOOL isSamlCredentialsError = NO;
         

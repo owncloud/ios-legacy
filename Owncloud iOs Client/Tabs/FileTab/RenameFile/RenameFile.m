@@ -275,7 +275,13 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    [[AppDelegate sharedOCCommunication] moveFileOrFolder:originalURLString toDestiny:newURLString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    BOOL serverHasForbiddenCharactersSupport = NO;
+    
+    if (app.activeUser.hasForbiddenCharactersSupport == serverFunctionalitySupported){
+        serverHasForbiddenCharactersSupport = YES;
+    }
+    
+    [[AppDelegate sharedOCCommunication] moveFileOrFolder:originalURLString toDestiny:newURLString onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         DLog(@"Great, the item is renamed");
         
         BOOL isSamlCredentialsError=NO;
