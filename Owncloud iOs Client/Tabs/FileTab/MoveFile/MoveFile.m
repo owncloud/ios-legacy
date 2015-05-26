@@ -14,7 +14,6 @@
  */
 
 #import "MoveFile.h"
-
 #import "constants.h"
 #import "UtilsDtos.h"
 #import "AppDelegate.h"
@@ -28,6 +27,7 @@
 #import "NSString+Encoding.h"
 #import "UploadUtils.h"
 #import "UtilsUrls.h"
+#import "ManageUsersDB.h"
 
 
 @implementation MoveFile
@@ -140,13 +140,7 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    BOOL serverHasForbiddenCharactersSupport = NO;
-    
-    if (app.activeUser.hasForbiddenCharactersSupport == serverFunctionalitySupported){
-        serverHasForbiddenCharactersSupport = YES;
-    }
-    
-    [[AppDelegate sharedOCCommunication] moveFileOrFolder:originFile toDestiny:destinyFile onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    [[AppDelegate sharedOCCommunication] moveFileOrFolder:originFile toDestiny:destinyFile onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
         DLog(@"Great, the item is moved");
         

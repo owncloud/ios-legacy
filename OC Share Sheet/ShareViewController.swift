@@ -174,7 +174,8 @@ import AVFoundation
                 }
                 
                 //2º Check filename 
-                if !FileNameUtils.isForbidenCharactersInFileName(fileName){
+            
+                if !FileNameUtils.isForbidenCharactersInFileName(fileName, withForbiddenCharactersSupported: ManageUsersDB.hasTheServerOfTheActiveUserForbiddenCharactersSupport()){
                     
                     //2º Copy the file to the tmp folder
                     destinyMovedFilePath = destinyMovedFilePath + fileName

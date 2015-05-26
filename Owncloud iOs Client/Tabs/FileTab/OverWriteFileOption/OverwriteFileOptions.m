@@ -15,6 +15,8 @@
 
 #import "OverwriteFileOptions.h"
 #import "FileNameUtils.h"
+#import "UserDto.h"
+#import "ManageUsersDB.h"
 
 @implementation OverwriteFileOptions
 
@@ -101,13 +103,14 @@
 - (void) alertView: (UIAlertView *) alertView willDismissWithButtonIndex: (NSInteger) buttonIndex {
     // Save
     if( buttonIndex == 1 ) {
-        if (![FileNameUtils isForbidenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text]) {
+        
+        if (![FileNameUtils isForbidenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
             //Character recognize
             
             //Clear the spaces of the left and the right of the sentence
             NSString* result = [[_renameAlertView textFieldAtIndex:0].text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
             
-            if ([FileNameUtils isForbidenCharactersInFileName:result]) {
+            if ([FileNameUtils isForbidenCharactersInFileName:result withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters", nil)
                                                                 message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
                 [alert show];

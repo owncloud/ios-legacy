@@ -38,6 +38,7 @@
 #import "UploadUtils.h"
 #import "OCNavigationController.h"
 #import "UtilsUrls.h"
+#import "ManageUsersDB.h"
 
 #define kOFFSET_FOR_KEYBOARD_iPhone5 160.0
 #define kOFFSET_FOR_KEYBOARD_iPhone 200.0
@@ -264,7 +265,8 @@
     NSString *name = _nameFileTextField.text;
     
     //Check the name of the file for it has forbiden characters
-    if(![FileNameUtils isForbidenCharactersInFileName:name]) {
+    
+    if(![FileNameUtils isForbidenCharactersInFileName:name withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
         
         name = [name encodeString:NSUTF8StringEncoding];
         

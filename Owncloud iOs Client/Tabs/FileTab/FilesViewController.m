@@ -56,9 +56,7 @@
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
 #import "Owncloud_iOs_Client-Swift.h"
-
-
-
+#import "ManageUsersDB.h"
 
 
 //Constant for iOS7
@@ -861,13 +859,7 @@
             
             NSString *pathOfNewFolder = [NSString stringWithFormat:@"%@%@",[_currentRemoteFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding], name ];
             
-            BOOL serverHasForbiddenCharactersSupport = NO;
-            
-            if (app.activeUser.hasForbiddenCharactersSupport == serverFunctionalitySupported){
-                serverHasForbiddenCharactersSupport = YES;
-            }
-            
-            [[AppDelegate sharedOCCommunication] createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+            [[AppDelegate sharedOCCommunication] createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
                 DLog(@"Folder created");
                 BOOL isSamlCredentialsError = NO;
                 

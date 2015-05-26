@@ -112,4 +112,15 @@
  */
 + (void) updateUserByUserDto:(UserDto *) user;
 
+//-----------------------------------
+/// @name Has the Server Of the Active User Forbidden Character Support
+///-----------------------------------
+
+/**
+ * Method to get YES/NO depend if the server of the active user has forbidden character support.
+ *
+ * @return BOOL
+ */
++ (BOOL) hasTheServerOfTheActiveUserForbiddenCharactersSupport;
+
 @end

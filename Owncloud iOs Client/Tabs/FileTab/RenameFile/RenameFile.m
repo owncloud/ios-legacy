@@ -24,12 +24,12 @@
 #import "Customization.h"
 #import "OCErrorMsg.h"
 #import "ManageFilesDB.h"
-#import "ManageFilesDB.h"
 #import "FileNameUtils.h"
 #import "DetailViewController.h"
 #import "OCCommunication.h"
 #import "UtilsNetworkRequest.h"
 #import "UtilsUrls.h"
+#import "ManageUsersDB.h"
 
 @interface RenameFile ()
 
@@ -96,7 +96,8 @@
 {
     // cancel
     if( buttonIndex == 1 ){
-        if ([FileNameUtils isForbidenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text]) {
+        
+        if ([FileNameUtils isForbidenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alert show];
         } else {
@@ -275,13 +276,7 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    BOOL serverHasForbiddenCharactersSupport = NO;
-    
-    if (app.activeUser.hasForbiddenCharactersSupport == serverFunctionalitySupported){
-        serverHasForbiddenCharactersSupport = YES;
-    }
-    
-    [[AppDelegate sharedOCCommunication] moveFileOrFolder:originalURLString toDestiny:newURLString onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    [[AppDelegate sharedOCCommunication] moveFileOrFolder:originalURLString toDestiny:newURLString onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         DLog(@"Great, the item is renamed");
         
         BOOL isSamlCredentialsError=NO;

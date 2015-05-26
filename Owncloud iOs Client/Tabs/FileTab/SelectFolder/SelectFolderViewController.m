@@ -392,13 +392,7 @@
             
             NSString *pathOfNewFolder = [newURL stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
-            BOOL serverHasForbiddenCharactersSupport = NO;
-            
-            if (activeUser.hasForbiddenCharactersSupport == serverFunctionalitySupported){
-                serverHasForbiddenCharactersSupport = YES;
-            }
-            
-            [communication createFolder:pathOfNewFolder onCommunication:communication withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+            [communication createFolder:pathOfNewFolder onCommunication:communication withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
                 
                 DLog(@"Folder created");
                 BOOL isSamlCredentialsError=NO;

@@ -589,6 +589,28 @@
     
 }
 
+//-----------------------------------
+/// @name Has the Server Of the Active User Forbidden Character Support
+///-----------------------------------
+
+/**
+ * Method to get YES/NO depend if the server of the active user has forbidden character support.
+ *
+ * @return BOOL
+ */
++ (BOOL) hasTheServerOfTheActiveUserForbiddenCharactersSupport{
+    
+    BOOL isForbiddenCharacterSupport = NO;
+    
+    UserDto *activeUser = [ManageUsersDB getActiveUser];
+    
+    if (activeUser.hasForbiddenCharactersSupport == serverFunctionalitySupported) {
+        isForbiddenCharacterSupport = YES;
+    }
+    
+    return isForbiddenCharacterSupport;
+    
+}
 
 
 @end
