@@ -58,6 +58,7 @@
 
 
 #define k_server_with_chunking 4.5 
+#define k_DB_version_12 12
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -97,8 +98,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //init
     DLog(@"Init");
     
-
-    
     self.oauthToken = @"";
     
     if(k_have_image_background_navigation_bar) {
@@ -109,7 +108,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Database queue
     _databaseOperationsQueue =[[NSOperationQueue alloc] init];
     [_databaseOperationsQueue setMaxConcurrentOperationCount:1];
-    
    
     //Network operation array
     _uploadArray=[[NSMutableArray alloc]init];
@@ -132,9 +130,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self moveIfIsNecessaryFilesAfterUpdateAppFromTheOldFolderArchitecture];
     
     [self moveIfIsNecessaryFolderOfOwnCloudFromContainerAppSandboxToAppGroupSanbox];
-    
-    //Update keychain of all the users
-    [OCKeychain updateAllKeychainsToUseTheLockProperty];
     
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];

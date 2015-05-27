@@ -285,7 +285,7 @@
 
 + (NSMutableArray *) getAllUsersWithOutCredentialInfo{
     
-    DLog(@"getAllUsers");
+    DLog(@"getAllUsersWithOutCredentialInfo");
     
     __block NSMutableArray *output = [NSMutableArray new];
     
@@ -293,7 +293,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users ORDER BY id ASC"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users ORDER BY id ASC"];
         
         UserDto *current = nil;
         
@@ -315,7 +315,7 @@
             current.onlyWifiInstantUpload = [rs intForColumn:@"only_wifi_instant_upload"];
             current.dateInstantUpload = [rs longForColumn:@"date_instant_upload"];
             
-            current.urlRedirected = [rs stringForColumn:@"url_redirected"];
+            current.urlRedirected = @"";
             
             [output addObject:current];
             
