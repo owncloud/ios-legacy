@@ -183,7 +183,15 @@
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error_folder_destiny_is_the_same", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alert show];
         } else if (error.code == OCErrorMovingDestinyNameHaveForbiddenCharacters) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+            
+            NSString *msg = nil;
+            if ([ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]) {
+                msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+            }else{
+                msg = NSLocalizedString(@"forbidden_characters", nil);
+            }
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alert show];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"unknow_response_server", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];

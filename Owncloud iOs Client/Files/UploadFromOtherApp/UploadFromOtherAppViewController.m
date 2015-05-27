@@ -266,7 +266,7 @@
     
     //Check the name of the file for it has forbiden characters
     
-    if(![FileNameUtils isForbidenCharactersInFileName:name withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
+    if(![FileNameUtils isForbiddenCharactersInFileName:name withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
         
         name = [name encodeString:NSUTF8StringEncoding];
         
@@ -285,7 +285,16 @@
     } else {
        
         DLog(@"The file name have problematic characters");
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        
+        NSString *msg = nil;
+        if ([ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]) {
+            msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+        }else{
+            msg = NSLocalizedString(@"forbidden_characters", nil);
+        }
+        
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
         [alert show];
     }
 /*

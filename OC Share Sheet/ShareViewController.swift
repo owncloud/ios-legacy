@@ -175,7 +175,7 @@ import AVFoundation
                 
                 //2º Check filename 
             
-                if !FileNameUtils.isForbidenCharactersInFileName(fileName, withForbiddenCharactersSupported: ManageUsersDB.hasTheServerOfTheActiveUserForbiddenCharactersSupport()){
+                if !FileNameUtils.isForbiddenCharactersInFileName(fileName, withForbiddenCharactersSupported: ManageUsersDB.hasTheServerOfTheActiveUserForbiddenCharactersSupport()){
                     
                     //2º Copy the file to the tmp folder
                     destinyMovedFilePath = destinyMovedFilePath + fileName
@@ -220,8 +220,16 @@ import AVFoundation
                     hasSomethingToUpload = true
                     
                 }else{
+                    
+                    var msg:String!
+                    
+                    if (ManageUsersDB.hasTheServerOfTheActiveUserForbiddenCharactersSupport()){
+                        msg = NSLocalizedString("forbidden_characters_from_server", comment: "")
+                    }else{
+                        msg = NSLocalizedString("forbidden_characters", comment: "")
+                    }
                 
-                    showAlertView(NSLocalizedString("forbidden_characters", comment: ""))
+                    showAlertView(msg)
                     
                 }
                 

@@ -92,7 +92,7 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
  *
  * @isFCSupported -> From ownCloud 8.1 the forbidden characters are controller by the server except the '/'
  */
-+ (BOOL) isForbidenCharactersInFileName:(NSString*)fileName withForbiddenCharactersSupported:(BOOL)isFCSupported;
++ (BOOL) isForbiddenCharactersInFileName:(NSString*)fileName withForbiddenCharactersSupported:(BOOL)isFCSupported;
 
 /*Method to remove the first http or https from an url
  *@url -> url from the server

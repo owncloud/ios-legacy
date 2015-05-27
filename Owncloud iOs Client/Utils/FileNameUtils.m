@@ -227,50 +227,50 @@
  *
  * @isFCSupported -> From ownCloud 8.1 the forbidden characters are controller by the server except the '/'
  */
-+ (BOOL) isForbidenCharactersInFileName:(NSString*)fileName withForbiddenCharactersSupported:(BOOL)isFCSupported{
-    BOOL thereAreForbidenCharacters = NO;
++ (BOOL) isForbiddenCharactersInFileName:(NSString*)fileName withForbiddenCharactersSupported:(BOOL)isFCSupported{
+    BOOL thereAreForbiddenCharacters = NO;
     
     //Check the filename
     for(NSInteger i = 0 ;i<[fileName length]; i++) {
         
         if ([fileName characterAtIndex:i]=='/'){
-            thereAreForbidenCharacters = YES;
+            thereAreForbiddenCharacters = YES;
         }
         
         if (!isFCSupported) {
             
             if ([fileName characterAtIndex:i] == '\\'){
-                thereAreForbidenCharacters = YES;
+                thereAreForbiddenCharacters = YES;
             }
             if ([fileName characterAtIndex:i] == '<'){
-                thereAreForbidenCharacters = YES;
+                thereAreForbiddenCharacters = YES;
             }
             if ([fileName characterAtIndex:i] == '>'){
-                thereAreForbidenCharacters = YES;
+                thereAreForbiddenCharacters = YES;
             }
             if ([fileName characterAtIndex:i] == '"'){
-                thereAreForbidenCharacters = YES;
+                thereAreForbiddenCharacters = YES;
             }
             if ([fileName characterAtIndex:i] == ','){
-                thereAreForbidenCharacters = YES;
+                thereAreForbiddenCharacters = YES;
             }
             if ([fileName characterAtIndex:i] == ':'){
-                thereAreForbidenCharacters = YES;
+                thereAreForbiddenCharacters = YES;
             }
             if ([fileName characterAtIndex:i] == '|'){
-                thereAreForbidenCharacters = YES;
+                thereAreForbiddenCharacters = YES;
             }
             if ([fileName characterAtIndex:i] == '?'){
-                thereAreForbidenCharacters = YES;
+                thereAreForbiddenCharacters = YES;
             }
             if ([fileName characterAtIndex:i] == '*'){
-                thereAreForbidenCharacters = YES;
+                thereAreForbiddenCharacters = YES;
             }
         }
         
     }
     
-    return thereAreForbidenCharacters;
+    return thereAreForbiddenCharacters;
 }
 
 

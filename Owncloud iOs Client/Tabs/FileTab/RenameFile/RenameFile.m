@@ -97,8 +97,18 @@
     // cancel
     if( buttonIndex == 1 ){
         
-        if ([FileNameUtils isForbidenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+          BOOL serverHasForbiddenCharactersSupport = [ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport];
+        
+        if ([FileNameUtils isForbiddenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport]) {
+            
+            NSString *msg = nil;
+            if (serverHasForbiddenCharactersSupport) {
+                msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+            }else{
+                msg = NSLocalizedString(@"forbidden_characters", nil);
+            }
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle: msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alert show];
         } else {
             DLog(@"We change %@ for %@", self.selectedFileDto.fileName, [_renameAlertView textFieldAtIndex:0].text);
@@ -304,6 +314,9 @@
         [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
         
     } errorBeforeRequest:^(NSError *error) {
+        
+        NSString *msg = nil;
+
         switch (error.code) {
             case OCErrorMovingTheDestinyAndOriginAreTheSame:
                 [self endLoading];
@@ -314,7 +327,14 @@
                 break;
                 
             case OCErrorMovingDestinyNameHaveForbiddenCharacters:
-                [self showError:NSLocalizedString(@"forbidden_characters", nil)];
+            
+                if ([ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]) {
+                    msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+                }else{
+                    msg = NSLocalizedString(@"forbidden_characters", nil);
+                }
+
+                [self showError:msg];
                 break;
                 
             default:

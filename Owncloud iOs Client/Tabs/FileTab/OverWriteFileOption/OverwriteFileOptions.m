@@ -104,14 +104,24 @@
     // Save
     if( buttonIndex == 1 ) {
         
-        if (![FileNameUtils isForbidenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
+        BOOL serverHasForbiddenCharactersSupport = [ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport];
+        
+        if (![FileNameUtils isForbiddenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport]) {
             //Character recognize
             
             //Clear the spaces of the left and the right of the sentence
             NSString* result = [[_renameAlertView textFieldAtIndex:0].text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
             
-            if ([FileNameUtils isForbidenCharactersInFileName:result withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters", nil)
+            if ([FileNameUtils isForbiddenCharactersInFileName:result withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport]) {
+                
+                NSString *msg = nil;
+                if (serverHasForbiddenCharactersSupport) {
+                    msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+                }else{
+                    msg = NSLocalizedString(@"forbidden_characters", nil);
+                }
+
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg
                                                                 message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
                 [alert show];
             } else {
