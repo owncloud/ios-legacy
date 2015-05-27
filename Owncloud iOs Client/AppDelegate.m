@@ -134,7 +134,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self moveIfIsNecessaryFolderOfOwnCloudFromContainerAppSandboxToAppGroupSanbox];
     
     //Update keychain of all the users
-    [self updateAllKeychainsToUseTheLockProperty];
+    [OCKeychain updateAllKeychainsToUseTheLockProperty];
     
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
@@ -2617,24 +2617,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-///-----------------------------------
-/// @name updateAllKeychainsToUseTheLockProperty
-///-----------------------------------
 
-/**
- * This method updates all the credentials to use a property to allow to access to them when the passcode system is set.
- */
-- (void) updateAllKeychainsToUseTheLockProperty{
-    
-    for (UserDto *user in [ManageUsersDB getAllUsersWithOutCredentialInfo]) {
-        
-         NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
-        
-        [OCKeychain updateKeychainForUseLockPropertyForUser:idString];
-        
-    }
-    
-}
 
 #pragma mark - Singletons of Server Version Checks
 

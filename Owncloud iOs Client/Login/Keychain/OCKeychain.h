@@ -24,6 +24,6 @@
 +(BOOL)updatePasswordById:(NSString *)idUser withNewPassword:(NSString *)password;
 +(BOOL)updateKeychainForUseLockPropertyForUser:(NSString *)idUser;
 +(BOOL)resetKeychain;
-
++(void)updateAllKeychainsToUseTheLockProperty;
 
 @end
