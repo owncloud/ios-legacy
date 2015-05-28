@@ -1665,7 +1665,7 @@
     
     NSString *path = _nextRemoteFolder;
     
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+   path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
@@ -1872,7 +1872,8 @@
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     NSString *path = _currentRemoteFolder;
-     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
