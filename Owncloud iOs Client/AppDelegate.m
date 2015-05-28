@@ -675,21 +675,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 #pragma mark - ManageFavorites
 
-+ (ManageFavorites*)sharedManageFavorites{
-    static ManageFavorites *sharedManageFavorites = nil;
-    if (sharedManageFavorites == nil) {
-        sharedManageFavorites = [[ManageFavorites alloc]init];
-    }
-    return sharedManageFavorites;
-}
-
 /*
  * This method is for launch the syncAllFavoritesOfUser in background
  */
 - (void) launchProcessToSyncAllFavorites {
+
+    if (!self.manageFavorites) {
+        self.manageFavorites = [ManageFavorites new];
+    }
     
     //Do operations in background thread
-    [[AppDelegate sharedManageFavorites]syncAllFavoritesOfUser:_activeUser.idUser];
+    [self.manageFavorites syncAllFavoritesOfUser:_activeUser.idUser];
     
 }
 

@@ -1838,7 +1838,7 @@
         
         //Launch the method to sync the favorites files with specific path
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        [[AppDelegate sharedManageFavorites]syncFavoritesOfFolder:folder withUser:app.activeUser.idUser];
+        [app.manageFavorites syncFavoritesOfFolder:folder withUser:app.activeUser.idUser];
         
     });
     
@@ -2588,19 +2588,13 @@
  * This method checks if there is on a favorite file a new version on the server
  */
 - (void) checkIfThereIsANewFavoriteVersion {
-    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    //Set if there is a new version of a favorite file and it's not checked
     
-    if([[AppDelegate sharedManageFavorites] thereIsANewVersionAvailableOfThisFile:_selectedFileDto]) {
-        //Set the file as isNecessaryUpdate
-        [ManageFilesDB setIsNecessaryUpdateOfTheFile:_selectedFileDto.idFile];
-        //Update the file on memory
-        _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
-        //Do the request to get the shared items
-        [self downloadTheFile];
-        
-        
+    if (!self.manageFavorites) {
+        self.manageFavorites = [ManageFavorites new];
+        self.manageFavorites.delegate = self;
     }
+    
+    [self.manageFavorites thereIsANewVersionAvailableOfThisFile:self.selectedFileDto];
 }
 
 
@@ -3180,6 +3174,24 @@
         }
     }
     
+}
+
+#pragma mark - ManageFavoritesDelegate
+
+- (void) fileHaveNewVersion:(BOOL)isNewVersionAvailable {
+    
+    if (isNewVersionAvailable) {
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        //Set if there is a new version of a favorite file and it's not checked
+        
+        //Set the file as isNecessaryUpdate
+        [ManageFilesDB setIsNecessaryUpdateOfTheFile:_selectedFileDto.idFile];
+        //Update the file on memory
+        _selectedFileDto = [ManageFilesDB getFileDtoByFileName:_selectedFileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+        //Do the request to get the shared items
+        [self downloadTheFile];
+        
+    }
 }
 
 @end

@@ -20,10 +20,16 @@
 
 extern NSString *FavoriteFileIsSync;
 
+@protocol ManageFavoritesDelegate
+
+@optional
+- (void) fileHaveNewVersion:(BOOL) isNewVersionAvailable;
+@end
 
 @interface ManageFavorites : NSObject <DownloadDelegate>
 
 @property (nonatomic, strong)NSMutableArray *favoritesSyncing;
+@property(nonatomic,weak) __weak id<ManageFavoritesDelegate> delegate;
 
 ///-----------------------------------
 /// @name isOnAnUpdatingProcessThisFavoriteFile
@@ -89,6 +95,6 @@ extern NSString *FavoriteFileIsSync;
  *
  * @param favoriteFile -> FileDto
  */
-- (BOOL) thereIsANewVersionAvailableOfThisFile: (FileDto *)favoriteFile;
+- (void) thereIsANewVersionAvailableOfThisFile: (FileDto *)favoriteFile;
 
 @end
