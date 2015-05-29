@@ -122,17 +122,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 + (OCCommunication*)sharedOCCommunication;
 
-
-///-----------------------------------
-/// @name SharedManageFavorites
-///-----------------------------------
-
-/**
- * Method to get a singelton of ManageFavorites
- *
- */
-+ (ManageFavorites*)sharedManageFavorites;
-
 - (void)doLoginWithOauthToken;
 
 //Method that erase the data of the detail view in iPad.
@@ -321,5 +310,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 //Url of the server redirected to be used on uploads in background
 @property (nonatomic, strong) NSString *urlServerRedirected;
 @property (nonatomic, strong) ManageDownloads *downloadManager;
+@property (nonatomic, strong) ManageFavorites *manageFavorites;
+
 
 @end

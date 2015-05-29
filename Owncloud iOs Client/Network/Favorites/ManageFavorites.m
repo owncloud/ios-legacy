@@ -316,10 +316,8 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
  *
  * @param favoriteFile -> FileDto
  */
-- (BOOL) thereIsANewVersionAvailableOfThisFile: (FileDto *)favoriteFile {
+- (void) thereIsANewVersionAvailableOfThisFile: (FileDto *)favoriteFile {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
     //Set the right credentials
     if (k_is_sso_active) {
@@ -337,8 +335,6 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:favoriteFile.filePath andUser:app.activeUser], favoriteFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    __block BOOL isNewVersion = NO;
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
@@ -372,24 +368,19 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                 FileDto *currentFileDto = [items objectAtIndex:0];
                 DLog(@"currentFileDto: %@", currentFileDto.etag);
                 if (![currentFileDto.etag isEqual: favoriteFile.etag]) {
-                    isNewVersion = YES;
+                    [self.delegate fileHaveNewVersion:YES];
+                } else {
+                    [self.delegate fileHaveNewVersion:NO];
                 }
             }
         }
-        dispatch_semaphore_signal(semaphore);
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
         
-        dispatch_semaphore_signal(semaphore);
+        [self.delegate fileHaveNewVersion:NO];
     }];
-    // Run loop
-    while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW))
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
-                                 beforeDate:[NSDate distantFuture]];
-    
-    return isNewVersion;
 }
 
 #pragma mark - Download Delegate Methods

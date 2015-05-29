@@ -47,10 +47,11 @@
 #import "ManageNetworkErrors.h"
 #import "SelectFolderViewController.h"
 #import "SelectFolderNavigation.h"
+#import "ManageFavorites.h"
 
 @interface FilesViewController : UIViewController
 <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate,
-ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBProgressHUDDelegate, UITextFieldDelegate, DeleteFileDelegate, OpenWithDelegate, DownloadViewControllerDelegate, CheckAccessToServerDelegate, RenameDelegate, MoveFileDelegate, ShareFileOrFolderDelegate, SWTableViewCellDelegate, ManageNetworkErrorsDelegate>
+ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBProgressHUDDelegate, UITextFieldDelegate, DeleteFileDelegate, OpenWithDelegate, DownloadViewControllerDelegate, CheckAccessToServerDelegate, RenameDelegate, MoveFileDelegate, ShareFileOrFolderDelegate, SWTableViewCellDelegate, ManageNetworkErrorsDelegate, ManageFavoritesDelegate>
 
 //Table view
 @property(nonatomic, strong) IBOutlet UITableView *tableView;
@@ -131,6 +132,9 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 @property (nonatomic) int numberOfFiles;
 
 @property (nonatomic) BOOL isLoadingForNavigate;
+
+//Favorites
+@property(nonatomic, strong) ManageFavorites *manageFavorites;
 
 
 // init method to load view from nib with an array of files
