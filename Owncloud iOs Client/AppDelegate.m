@@ -54,9 +54,7 @@
 #import "ManageLocation.h"
 #import "ManageAsset.h"
 #import "OCSplitViewController.h"
-
-
-#define k_server_with_chunking 4.5 
+#import "InitializeDatabase.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -83,7 +81,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @synthesize presentFilesViewController=_presentFilesViewController;
 @synthesize isRefreshInProgress=_isRefreshInProgress;
 @synthesize oauthToken = _oauthToken;
-@synthesize isNecessaryReloadFromWebDav = _isNecessaryReloadFromWebDav;
 @synthesize isErrorLoginShown = _isErrorLoginShown;
 @synthesize mediaPlayer=_mediaPlayer;
 @synthesize firstInit=_firstInit;
@@ -97,8 +94,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //init
     DLog(@"Init");
     
-
-    
     self.oauthToken = @"";
     
     if(k_have_image_background_navigation_bar) {
@@ -109,7 +104,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Database queue
     _databaseOperationsQueue =[[NSOperationQueue alloc] init];
     [_databaseOperationsQueue setMaxConcurrentOperationCount:1];
-    
    
     //Network operation array
     _uploadArray=[[NSMutableArray alloc]init];
@@ -121,7 +115,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     _isFileFromOtherAppWaitting = NO;
     _isSharedToOwncloudPresent = NO;
     _isRefreshInProgress = NO;
-    _isNecessaryReloadFromWebDav = NO;
     _isErrorLoginShown = NO;
     _firstInit = YES;
     _isLoadingVisible = NO;
@@ -133,9 +126,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self moveIfIsNecessaryFilesAfterUpdateAppFromTheOldFolderArchitecture];
     
     [self moveIfIsNecessaryFolderOfOwnCloudFromContainerAppSandboxToAppGroupSanbox];
-    
-    //Update keychain of all the users
-    [self updateAllKeychainsToUseTheLockProperty];
     
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
@@ -338,9 +328,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 - (void) initAppWithEtagRequest:(BOOL)isEtagRequestNecessary {
     
-    [self initDataBase];
-    
-    [UtilsUrls getOwnCloudFilePath];
+    [InitializeDatabase initDataBase];
     
     //First Call when init the app
      _activeUser = [ManageUsersDB getActiveUser];
@@ -450,7 +438,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     _activeUser=[ManageUsersDB getActiveUser];
     
-    NSString *wevDavString = [NSString stringWithFormat: @"%@%@", _activeUser.url,k_url_webdav_server];
+    NSString *wevDavString = [UtilsUrls getFullRemoteServerPathWithWebDav:_activeUser];
     NSString *localSystemPath = nil;
     
     //Check if we generate the interface from login screen or not
@@ -595,32 +583,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
 }
 
-#pragma mark - FMDataBase
-+ (FMDatabaseQueue*)sharedDatabase
-{
-	static FMDatabaseQueue* sharedDatabase = nil;
-	if (sharedDatabase == nil)
-	{
-        NSString *documentsDir = [UtilsUrls getOwnCloudFilePath];
-        NSString *dbPath = [documentsDir stringByAppendingPathComponent:@"DB.sqlite"];
-
-        
-		//NSString* bundledDatabasePath = [[NSBundle mainBundle] pathForResource:@"DB" ofType:@"sqlite"];
-		sharedDatabase = [[FMDatabaseQueue alloc] initWithPath:dbPath flags:SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE];
-	}
-    
-    NSString *documentsDir = [UtilsUrls getOwnCloudFilePath];
-    NSString *dbPath = [documentsDir stringByAppendingPathComponent:@"DB.sqlite"];
-    
-    // Make sure the database is encrypted when the device is locked
-    NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone forKey:NSFileProtectionKey];
-    if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:dbPath error:nil]) {
-        // Deal with the error
-    }
-    
-	return sharedDatabase;
-}
-
 #pragma mark - OCCommunications
 + (OCCommunication*)sharedOCCommunication
 {
@@ -699,21 +661,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 #pragma mark - ManageFavorites
 
-+ (ManageFavorites*)sharedManageFavorites{
-    static ManageFavorites *sharedManageFavorites = nil;
-    if (sharedManageFavorites == nil) {
-        sharedManageFavorites = [[ManageFavorites alloc]init];
-    }
-    return sharedManageFavorites;
-}
-
 /*
  * This method is for launch the syncAllFavoritesOfUser in background
  */
 - (void) launchProcessToSyncAllFavorites {
+
+    if (!self.manageFavorites) {
+        self.manageFavorites = [ManageFavorites new];
+    }
     
     //Do operations in background thread
-    [[AppDelegate sharedManageFavorites]syncAllFavoritesOfUser:_activeUser.idUser];
+    [self.manageFavorites syncAllFavoritesOfUser:_activeUser.idUser];
     
 }
 
@@ -1131,7 +1089,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadDB.estimateLength];
                     currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadDB.userId];
                     
-                    currentManageUploadRequest.pathOfUpload = [UploadUtils makePathString:uploadDB.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+                    currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadDB.destinyFolder andUser:currentManageUploadRequest.userUploading];
                     
                     currentManageUploadRequest.uploadTask = upload;
                     currentManageUploadRequest.isFromBackground = YES;
@@ -1237,7 +1195,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     
                     //Local folder
                     NSString *localFolder = nil;
-                    localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:self.activeUser]];
+                    localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:self.activeUser]];
                     localFolder = [localFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                     
                     download.currentLocalFolder = localFolder;
@@ -1826,10 +1784,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)refreshAfterUploadAllFiles:(NSString *) currentRemoteFolder {
     DLog(@"refreshAfterUploadAllFiles");
     
-    NSString *remoteUrlWithoutDomain = [UtilsDtos getHttpAndDomainByURL:currentRemoteFolder];
+    NSString *remoteUrlWithoutDomain = [UtilsUrls getHttpAndDomainByURL:currentRemoteFolder];
     remoteUrlWithoutDomain = [currentRemoteFolder substringFromIndex:remoteUrlWithoutDomain.length];
     
-    NSString *currentFolderWithoutDomain = [UtilsDtos getHttpAndDomainByURL:_presentFilesViewController.currentRemoteFolder];
+    NSString *currentFolderWithoutDomain = [UtilsUrls getHttpAndDomainByURL:_presentFilesViewController.currentRemoteFolder];
     currentFolderWithoutDomain = [_presentFilesViewController.currentRemoteFolder substringFromIndex:currentFolderWithoutDomain.length];
     
     //Only if is selected the first item: FileList.
@@ -1853,8 +1811,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [_presentFilesViewController reloadTableFromDataBase];
 }
 
-
-
 - (void)errorWhileUpload{
     
     //End of the background task
@@ -1862,140 +1818,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [[UIApplication sharedApplication] endBackgroundTask:uploadTask];
     }
     
-}
-
-
-
-#pragma mark - Database updates
-
-/*
- * This method prepare the dataBase
- * if not exist, make a new database
- * if exist, prepare the database to the new version
- * the current version it's 3
- */
-- (void) initDataBase {
-    
-    CredentialsDto *credDto = [OCKeychain getCredentialsById:@"1"];
-    DLog(@"User: %@", credDto.userName);
-    DLog(@"Password: %@", credDto.password);
-    
-    //New version
-    static int dbVersion = k_DB_version_12;
-    
-    //This method make a new database
-    [ManageDB createDataBase];
-    
-    //For future changes on the DB we should check here the version not if a cloum exist
-    if([ManageDB isLocalFolderExistOnFiles]) {
-        //Now we have to make the big change!
-        [ManageDB removeTable:@"files"];
-        [ManageDB removeTable:@"files_backup"];
-        [ManageDB createDataBase];
-        self.isNecessaryReloadFromWebDav = YES;
-    } else {
-        switch ([ManageDB getDatabaseVersion]) {
-            case k_DB_version_1:
-                [ManageDB updateDBVersion1To2];
-                [ManageDB updateDBVersion2To3];
-                [ManageDB updateDBVersion3To4];
-                [ManageDB updateDBVersion4To5];
-                [ManageDB updateDBVersion5To6];
-                [ManageDB updateDBVersion6To7];
-                [self updateDBVersion7To8];
-                [ManageDB updateDBVersion8To9];
-                [ManageDB updateDBVersion9To10];
-                [ManageDB updateDBVersion10To11];
-                [ManageDB updateDBVersion11To12];
-                break;
-            case k_DB_version_2:
-                [ManageDB updateDBVersion2To3];
-                [self removeURLEncodingFromAllFilesAndFoldersInTheFileSystem];
-                [ManageDB updateDBVersion3To4];
-                [ManageDB updateDBVersion4To5];
-                [ManageDB updateDBVersion5To6];
-                [ManageDB updateDBVersion6To7];
-                [self updateDBVersion7To8];
-                [ManageDB updateDBVersion8To9];
-                [ManageDB updateDBVersion9To10];
-                [ManageDB updateDBVersion10To11];
-                [ManageDB updateDBVersion11To12];
-                break;
-            case k_DB_version_3:
-                [ManageDB updateDBVersion3To4];
-                [ManageDB updateDBVersion4To5];
-                [ManageDB updateDBVersion5To6];
-                [ManageDB updateDBVersion6To7];
-                [self updateDBVersion7To8];
-                [ManageDB updateDBVersion8To9];
-                [ManageDB updateDBVersion9To10];
-                [ManageDB updateDBVersion10To11];
-                [ManageDB updateDBVersion11To12];
-                break;
-            case k_DB_version_4:
-                [ManageDB updateDBVersion4To5];
-                [ManageDB updateDBVersion5To6];
-                [ManageDB updateDBVersion6To7];
-                [self updateDBVersion7To8];
-                [ManageDB updateDBVersion8To9];
-                [ManageDB updateDBVersion9To10];
-                [ManageDB updateDBVersion10To11];
-                [ManageDB updateDBVersion11To12];
-                break;
-            case k_DB_version_5:
-                [ManageDB updateDBVersion5To6];
-                [ManageDB updateDBVersion6To7];
-                [self updateDBVersion7To8];
-                [ManageDB updateDBVersion8To9];
-                [ManageDB updateDBVersion9To10];
-                [ManageDB updateDBVersion10To11];
-                [ManageDB updateDBVersion11To12];
-                break;
-            case k_DB_version_6:
-                [ManageDB updateDBVersion6To7];
-                [self updateDBVersion7To8];
-                [ManageDB updateDBVersion8To9];
-                [ManageDB updateDBVersion9To10];
-                [ManageDB updateDBVersion10To11];
-                [ManageDB updateDBVersion11To12];
-                break;
-            case k_DB_version_7:
-                [self updateDBVersion7To8];
-                [ManageDB updateDBVersion8To9];
-                [ManageDB updateDBVersion9To10];
-                [ManageDB updateDBVersion10To11];
-                [ManageDB updateDBVersion11To12];
-                break;
-            case k_DB_version_8:
-                [ManageDB updateDBVersion8To9];
-                [ManageDB updateDBVersion9To10];
-                [ManageDB updateDBVersion10To11];
-                [ManageDB updateDBVersion11To12];
-                break;
-            case k_DB_version_9:
-                [ManageDB updateDBVersion9To10];
-                [ManageDB updateDBVersion10To11];
-                [ManageDB updateDBVersion11To12];
-                break;
-            case k_DB_version_10:
-                [ManageDB updateDBVersion10To11];
-                [ManageDB updateDBVersion11To12];
-                break;
-            case k_DB_version_11:
-                [ManageDB updateDBVersion11To12];
-                break;
-        }
-    }
-
-    //Insert DB version
-    [ManageDB insertVersionToDataBase:dbVersion];
-    
-    /*Reset keychain items when db need to be updated or when db first init after app has been removed and reinstalled */
-    NSMutableArray * users = [ManageUsersDB getAllUsers];
-    if (![users count]) {
-        //delete all keychain items
-        [OCKeychain resetKeychain];
-    }
 }
 
 - (void) errorLogin {
@@ -2141,12 +1963,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     DLog(@"doThingsThatShouldDoOnStart");
     
-    if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
-        [self restoreUploadsInProccessFromSystemWithIdentificator:k_session_name withCompletionHandler:nil];
-        [self restoreDownloadsInProccessFromSystemWithIdentificator:k_download_session_name withCompletionHandler:nil];
-    } else {
+    if (k_is_sso_active || !k_is_background_active) {
         [self performSelectorInBackground:@selector(initUploadsOffline) withObject:nil];
         [self updateTheDownloadState:downloading to:notDownload];
+    } else {
+        [self restoreUploadsInProccessFromSystemWithIdentificator:k_session_name withCompletionHandler:nil];
+        [self restoreDownloadsInProccessFromSystemWithIdentificator:k_download_session_name withCompletionHandler:nil];
+
     }
     
     [self addErrorUploadsToRecentsTab];
@@ -2338,7 +2161,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self createAManageRequestUploadWithTheUploadOffline:fileForUpload];
     DLog(@"The file is on server");
     
-    currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath andUser:self.activeUser] andUser:self.activeUser];
+    currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:self.activeUser] andUser:self.activeUser];
     
     if (currentFile.isDownload == overwriting) {
         [ManageFilesDB setFileIsDownloadState:currentFile.idFile andState:downloaded];
@@ -2372,7 +2195,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:currentUploadBackground.estimateLength];
     currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:currentUploadBackground.userId];
     
-    currentManageUploadRequest.pathOfUpload = [UploadUtils makePathString:currentUploadBackground.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+    currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:currentUploadBackground.destinyFolder andUser:currentManageUploadRequest.userUploading];
     
     currentManageUploadRequest.isFromBackground = YES;
     
@@ -2432,7 +2255,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:current.estimateLength];
         currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:current.userId];
         
-        currentManageUploadRequest.pathOfUpload = [UploadUtils makePathString:current.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+        currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:current.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
         //Add the object to the uploadArray without duplicates
         [self addToTheUploadArrayWithoutDuplicatesTheFile:currentManageUploadRequest];
@@ -2463,11 +2286,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         NSDate *uploadedDate = [NSDate dateWithTimeIntervalSince1970:uploadOffline.uploadedDate];
         currentManageUploadRequest.date = uploadedDate;
         //Set uploadOffline
-        currentManageUploadRequest.currentUpload=uploadOffline;
-        currentManageUploadRequest.lenghtOfFile=[UploadUtils makeLengthString:uploadOffline.estimateLength];
+        currentManageUploadRequest.currentUpload = uploadOffline;
+        currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadOffline.estimateLength];
         currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadOffline.userId];
         
-        currentManageUploadRequest.pathOfUpload=[UploadUtils makePathString:uploadOffline.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+        currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadOffline.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
         //Add the object to the array
         [self addToTheUploadArrayWithoutDuplicatesTheFile:currentManageUploadRequest];
@@ -2491,11 +2314,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         NSDate *uploadedDate = [NSDate dateWithTimeIntervalSince1970:uploadOffline.uploadedDate];
         currentManageUploadRequest.date = uploadedDate;
         //Set uploadOffline
-        currentManageUploadRequest.currentUpload=uploadOffline;
-        currentManageUploadRequest.lenghtOfFile=[UploadUtils makeLengthString:uploadOffline.estimateLength];
+        currentManageUploadRequest.currentUpload = uploadOffline;
+        currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadOffline.estimateLength];
         currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadOffline.userId];
         
-        currentManageUploadRequest.pathOfUpload=[UploadUtils makePathString:uploadOffline.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+        currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadOffline.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
         //Add the object to the array
         [self addToTheUploadArrayWithoutDuplicatesTheFile:currentManageUploadRequest];
@@ -2746,53 +2569,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-
-#pragma mark - System Updates
-
-- (void) removeURLEncodingFromAllFilesAndFoldersInTheFileSystem {
-    
-    NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
-    
-    NSFileManager *manager = [NSFileManager defaultManager];
-    NSArray * subpaths = [manager subpathsAtPath:documentsDirectory];
-    
-    subpaths = [[subpaths reverseObjectEnumerator] allObjects];
-    
-    for (NSString *fileRoute in subpaths){
-        NSArray *splitedUrl = [fileRoute componentsSeparatedByString:@"/"];
-        
-        //We check if the file that we should rename contain percent character
-        if([[splitedUrl objectAtIndex:[splitedUrl count]-1] rangeOfString:@"%"].location != NSNotFound) {
-            NSString *smallPath = @"";
-            for (int i = 0 ; i < [splitedUrl count]-1 ; i++ ){
-                smallPath = [NSString stringWithFormat:@"%@%@/", smallPath,[splitedUrl objectAtIndex:i]];
-            }
-            
-            NSString *fullPath = [NSString stringWithFormat:@"%@%@",documentsDirectory, smallPath];
-            NSString *originalName = [splitedUrl objectAtIndex:[splitedUrl count]-1];
-            NSString *destinyName = [[splitedUrl objectAtIndex:[splitedUrl count]-1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            
-            NSURL *originalPath = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",fullPath,originalName]];
-            NSURL *destinyPath= [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",fullPath,destinyName]];
-            
-            [manager moveItemAtURL: originalPath toURL: destinyPath error: nil];
-        }
-    }
-}
-
-
-///-----------------------------------
-/// @name updateDBVersion7To8
-///-----------------------------------
-
-/**
- * This method updates the DB from 7 to 8 version and delete the etag of the directories for to force the refresh
- */
-- (void) updateDBVersion7To8 {
-    [ManageDB updateDBVersion7To8];
-    [ManageFilesDB deleteAlleTagOfTheDirectoties];
-}
-
 ///-----------------------------------
 /// @name moveIfIsNecessaryFolderOfOwnCloudFromContainerAppSandboxToAppGroupSanbox
 ///-----------------------------------
@@ -2823,24 +2599,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-///-----------------------------------
-/// @name updateAllKeychainsToUseTheLockProperty
-///-----------------------------------
 
-/**
- * This method updates all the credentials to use a property to allow to access to them when the passcode system is set.
- */
-- (void) updateAllKeychainsToUseTheLockProperty{
-    
-    for (UserDto *user in [ManageUsersDB getAllUsersWithOutCredentialInfo]) {
-        
-         NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
-        
-        [OCKeychain updateKeychainForUseLockPropertyForUser:idString];
-        
-    }
-    
-}
 
 #pragma mark - Singletons of Server Version Checks
 

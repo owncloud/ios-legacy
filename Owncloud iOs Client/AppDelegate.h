@@ -28,19 +28,6 @@
 #import "DetailViewController.h"
 #import "ManageDownloads.h"
 
-#define k_DB_version_1 1
-#define k_DB_version_2 2
-#define k_DB_version_3 3
-#define k_DB_version_4 4
-#define k_DB_version_5 5
-#define k_DB_version_6 6
-#define k_DB_version_7 7
-#define k_DB_version_8 8
-#define k_DB_version_9 9
-#define k_DB_version_10 10
-#define k_DB_version_11 11
-#define k_DB_version_12 12
-
 @class FilesViewController;
 @class RecentViewController;
 @class SettingsViewController;
@@ -105,9 +92,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
     BOOL _isRefreshInProgress;
     BOOL _isErrorLoginShown;
     
-    //Flag to force the reload the File List from WebDav
-    BOOL _isNecessaryReloadFromWebDav;
-    
     //OAuth
     NSString *_oauthToken;
     
@@ -137,17 +121,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  * Method to get a Singleton of the OCCommunication to manage all the communications
  */
 + (OCCommunication*)sharedOCCommunication;
-
-
-///-----------------------------------
-/// @name SharedManageFavorites
-///-----------------------------------
-
-/**
- * Method to get a singelton of ManageFavorites
- *
- */
-+ (ManageFavorites*)sharedManageFavorites;
 
 - (void)doLoginWithOauthToken;
 
@@ -316,7 +289,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic) BOOL isFileFromOtherAppWaitting;
 @property (nonatomic) BOOL isSharedToOwncloudPresent;
 @property (nonatomic, strong) NSString *oauthToken;
-@property (nonatomic) BOOL isNecessaryReloadFromWebDav;
 @property (nonatomic, strong) PrepareFilesToUpload *prepareFiles;
 @property (nonatomic, strong) NSOperationQueue *databaseOperationsQueue;
 @property (nonatomic) BOOL isUploadViewVisible;
@@ -338,5 +310,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 //Url of the server redirected to be used on uploads in background
 @property (nonatomic, strong) NSString *urlServerRedirected;
 @property (nonatomic, strong) ManageDownloads *downloadManager;
+@property (nonatomic, strong) ManageFavorites *manageFavorites;
+
 
 @end

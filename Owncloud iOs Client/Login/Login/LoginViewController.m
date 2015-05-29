@@ -2161,6 +2161,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         //DLog(@"URL FINAL: %@", userDto.url);
         
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        
         NSString *userNameUTF8=self.usernameTextField.text;
         NSString *passwordUTF8=self.passwordTextField.text;
         
@@ -2168,21 +2170,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         userDto.password = passwordUTF8;
         userDto.ssl = isHttps;
         userDto.activeaccount = YES;
+        userDto.urlRedirected = app.urlServerRedirected;
         
         [ManageUsersDB insertUser:userDto];
         
-        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         app.activeUser=[ManageUsersDB getActiveUser];
         
         NSMutableArray *directoryList = [NSMutableArray arrayWithArray:items];
         
-        //Change the filePath from the library to our format
+        //Change the filePath from the library to our db format
         for (FileDto *currentFile in directoryList) {
-            //Remove part of the item file path
-            NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
-            if([currentFile.filePath length] >= [partToRemove length]){
-                currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
-            }
+            currentFile.filePath = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:app.activeUser];
         }
         
         DLog(@"The directory List have: %ld elements", (unsigned long)directoryList.count);

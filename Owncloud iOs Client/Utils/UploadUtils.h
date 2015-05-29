@@ -29,16 +29,9 @@ extern NSString * PreviewFileNotification;
 + (NSString *)makeLengthString:(long)estimateLength;
 
 /*
- * Method that make the path string
- */
-+ (NSString *)makePathString:(NSString *)destinyFolder withUserUrl:(NSString *)userUrl;
-
-/*
  *Method that updates a downloaded file when the user overwrites this file
  */
 +(void) updateOverwritenFile:(FileDto *)file FromPath:(NSString *)path;
-
-+ (NSString *) getUrlWithRedirectionByOriginalURL:(NSString *) originalUrl;
 
 + (FileDto *) getFileDtoByUploadOffline:(UploadsOfflineDto *) uploadsOfflineDto;
 

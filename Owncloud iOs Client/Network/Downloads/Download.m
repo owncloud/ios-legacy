@@ -69,7 +69,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Get file object
-    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
     _fileDto=file;
     
     //Get the etag
@@ -88,11 +88,9 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Get url path of server
-    NSArray *splitedUrl = [app.activeUser.url componentsSeparatedByString:@"/"];
+    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:app.activeUser] componentsSeparatedByString:@"/"];
     NSString *serverUrl = [NSString stringWithFormat:@"%@%@%@",[NSString stringWithFormat:@"%@/%@/%@",[splitedUrl objectAtIndex:0],[splitedUrl objectAtIndex:1],[splitedUrl objectAtIndex:2]], _fileDto.filePath, _fileDto.fileName];
-    
-    serverUrl = [UploadUtils getUrlWithRedirectionByOriginalURL:serverUrl];
-    
+        
     serverUrl = [serverUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     //get local path of server
@@ -120,7 +118,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     }
     
     [self reloadFileListForDataBase];
-   
+    
     
     //Set the right credentials
     if (k_is_sso_active) {
@@ -135,92 +133,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     __weak typeof(self) weakSelf = self;
     
-    
-    if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
-         NSProgress *progressValue;
-        
-        _downloadTask = [[AppDelegate sharedOCCommunication] downloadFileSession:serverUrl  toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] withProgress:&progressValue successRequest:^(NSURLResponse *response, NSURL *filePath) {
-            
-            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
-            
-            //Finalized the download
-            [weakSelf updateDataDownload];
-            [weakSelf setDownloadTaskIdentifierValid:NO];
-            
-        } failureRequest:^(NSURLResponse *response, NSError *error) {
-            
-            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
-            
-            DLog(@"Error: %@", error);
-            DLog(@"error.code: %ld", (long)error.code);
-            
-            if (!self.isForceCanceling) {
-                
-                [weakSelf setDownloadTaskIdentifierValid:NO];
-                NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-                DLog(@"Operation error: %ld", (long)httpResponse.statusCode);
-                
-                //Update the fileDto
-                _fileDto = [ManageFilesDB getFileDtoByIdFile:_fileDto.idFile];
-                
-                [self failureDownloadProcess];
-                
-                if ([error code] != NSURLErrorCancelled && weakSelf.isCancel==NO) {
-                    
-                    switch (error.code) {
-                        case kCFURLErrorUserCancelledAuthentication: { //-1012
-                            
-                            [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
-                            
-                            CheckAccessToServer *mCheckAccessToServer = [CheckAccessToServer new];
-                            [mCheckAccessToServer isConnectionToTheServerByUrl:app.activeUser.url];
-                            
-                            break;
-                        }
-                        case kCFURLErrorUserAuthenticationRequired:{
-                            [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
-                            [weakSelf.delegate errorLogin];
-                            
-                            break;
-                        }
-                        default:
-                            
-                            switch (httpResponse.statusCode) {
-                                case kOCErrorServerUnauthorized:
-                                    [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
-                                    [weakSelf.delegate errorLogin];
-                                    break;
-                                case kOCErrorServerForbidden:
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
-                                    break;
-                                case kOCErrorProxyAuth:
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
-                                    break;
-                                case kOCErrorServerPathNotFound:
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"download_file_exist", nil) andFile:weakSelf.fileDto];
-                                    break;
-                                default:
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
-                                    break;
-                            }
-                    }
-                }
-                
-                //Erase cache and cookies
-                [UtilsCookies eraseURLCache];
-        
-            }
-  
-        }];
-        
-        self.progressValueGlobal = progressValue;
-        progressValue = nil;
-        
-        // Observe fractionCompleted using KVO
-        [self.progressValueGlobal addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew context:NULL];
-        
-        
-    } else {
+    if (k_is_sso_active || !k_is_background_active) {
         
         //Create the block of NSOperation to download.
         _operation = [[AppDelegate sharedOCCommunication] downloadFile:serverUrl toDestiny:localPath withLIFOSystem:_isLIFO onCommunication:[AppDelegate sharedOCCommunication]
@@ -330,7 +243,89 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                                                           [weakSelf cancelDownload];
                                                       }];
         
-
+    } else {
+        
+        NSProgress *progressValue;
+        
+        _downloadTask = [[AppDelegate sharedOCCommunication] downloadFileSession:serverUrl  toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] withProgress:&progressValue successRequest:^(NSURLResponse *response, NSURL *filePath) {
+            
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
+            
+            //Finalized the download
+            [weakSelf updateDataDownload];
+            [weakSelf setDownloadTaskIdentifierValid:NO];
+            
+        } failureRequest:^(NSURLResponse *response, NSError *error) {
+            
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
+            
+            DLog(@"Error: %@", error);
+            DLog(@"error.code: %ld", (long)error.code);
+            
+            if (!self.isForceCanceling) {
+                
+                [weakSelf setDownloadTaskIdentifierValid:NO];
+                NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+                DLog(@"Operation error: %ld", (long)httpResponse.statusCode);
+                
+                //Update the fileDto
+                _fileDto = [ManageFilesDB getFileDtoByIdFile:_fileDto.idFile];
+                
+                [self failureDownloadProcess];
+                
+                if ([error code] != NSURLErrorCancelled && weakSelf.isCancel==NO) {
+                    
+                    switch (error.code) {
+                        case kCFURLErrorUserCancelledAuthentication: { //-1012
+                            
+                            [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
+                            
+                            CheckAccessToServer *mCheckAccessToServer = [CheckAccessToServer new];
+                            [mCheckAccessToServer isConnectionToTheServerByUrl:app.activeUser.url];
+                            
+                            break;
+                        }
+                        case kCFURLErrorUserAuthenticationRequired:{
+                            [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
+                            [weakSelf.delegate errorLogin];
+                            
+                            break;
+                        }
+                        default:
+                            
+                            switch (httpResponse.statusCode) {
+                                case kOCErrorServerUnauthorized:
+                                    [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
+                                    [weakSelf.delegate errorLogin];
+                                    break;
+                                case kOCErrorServerForbidden:
+                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
+                                    break;
+                                case kOCErrorProxyAuth:
+                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
+                                    break;
+                                case kOCErrorServerPathNotFound:
+                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"download_file_exist", nil) andFile:weakSelf.fileDto];
+                                    break;
+                                default:
+                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
+                                    break;
+                            }
+                    }
+                }
+                
+                //Erase cache and cookies
+                [UtilsCookies eraseURLCache];
+                
+            }
+            
+        }];
+        
+        self.progressValueGlobal = progressValue;
+        progressValue = nil;
+        
+        // Observe fractionCompleted using KVO
+        [self.progressValueGlobal addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew context:NULL];
     }
     
     if (_downloadTask) {
@@ -389,7 +384,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                 progressString = [NSString stringWithFormat:@"%ld KB / %ld KB", (long)(currentProgressDownload/1024), (long)(totalProgressDownload/1024)];
             }
         }
-
+        
         //We make it on the main thread because we came from a delegate
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -431,7 +426,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     }
     
     //Update the datas of the new file
-    _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     //Set file status like downloaded in Data Base
     [ManageFilesDB setFileIsDownloadState:_fileDto.idFile andState:downloaded];
@@ -455,14 +450,14 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
  *
  */
 - (void) finalizeDownload {
-
+    
     //Remove the object of global download array
     [self removeDownloadOfGlobalArray];
     
     //Remove file of favorites sync
     [self removeFileOfFavorites];
     
-     //Send that download is complete
+    //Send that download is complete
     if ([(NSObject*)self.delegate respondsToSelector:@selector(downloadCompleted:)]) {
         [self.delegate downloadCompleted:self.fileDto];
     }
@@ -489,7 +484,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         //Get FileDto
-        _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+        _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
         
         //If is downloaded or not
         if ([_fileDto isDownload] == downloaded && !_fileDto.isNecessaryUpdate) {
@@ -516,7 +511,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             //Clear the chache and cookies
             [UtilsCookies eraseURLCache];
             
-            //Set not download in database            
+            //Set not download in database
             if (!_fileDto.isNecessaryUpdate) {
                 [ManageFilesDB setFileIsDownloadState:_fileDto.idFile andState:notDownload];
             } else {
@@ -556,7 +551,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     [self deleteFileFromLocalFolder];
     [self removeDownloadOfGlobalArray];
     [self removeFileOfFavorites];
-
+    
     
 }
 
@@ -581,18 +576,18 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
  */
 - (void)removeDownloadOfGlobalArray{
     //Remove this objetc to a main class "AppDelegate"
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.downloadManager removeDownload:self];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [app.downloadManager removeDownload:self];
 }
 
-#pragma mark - Favorites 
+#pragma mark - Favorites
 
 /*
  * Remove _fileDto of the sync process
  */
 - (void) removeFileOfFavorites{
-    
-    [[AppDelegate sharedManageFavorites] removeOfSyncProcessFile:_fileDto];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [app.manageFavorites removeOfSyncProcessFile:_fileDto];
 }
 
 #pragma mark - FilesViewController callBacks
@@ -683,8 +678,8 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", app.activeUser.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:_fileDto.filePath andUser:app.activeUser], _fileDto.fileName];
+    NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser], _fileDto.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -716,7 +711,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             }
         }
         if(response.statusCode < kOCErrorServerUnauthorized && !isSamlCredentialsError) {
-
+            
             //Change the filePath from the library to our format
             for (FileDto *currentFile in items) {
                 //Remove part of the item file path
@@ -728,7 +723,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             
             DLog(@"The directory List have: %lu elements", (unsigned long)items.count);
             
-             //Check if there are almost one item in the array
+            //Check if there are almost one item in the array
             if (items.count >= 1) {
                 DLog(@"Directoy list: %@", items);
                 FileDto *currentFileDto = [items objectAtIndex:0];
@@ -765,7 +760,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                     
                     break;
                 }
-                
+                    
                 default:
                     
                     switch (response.statusCode) {
@@ -786,7 +781,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                             [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
                             break;
                     }
-                 break;
+                    break;
             }
         }
         //Erase cache

@@ -1648,11 +1648,11 @@
     
     if (stateInstantUpload) {
         [self switchInstantUploadTo:YES];
-        app.activeUser.instant_upload = YES;
+        app.activeUser.instantUpload = YES;
         [ManageAppSettingsDB updateInstantUploadTo:YES];
     } else {
         [self switchInstantUploadTo:NO];
-        app.activeUser.instant_upload = NO;
+        app.activeUser.instantUpload = NO;
         [ManageAppSettingsDB updateInstantUploadTo:NO];
         [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
     }
@@ -1665,7 +1665,7 @@
     }
     
     long dateInstantUpload = [[NSDate date] timeIntervalSince1970];
-    app.activeUser.date_instant_upload = dateInstantUpload;
+    app.activeUser.dateInstantUpload = dateInstantUpload;
     [ManageAppSettingsDB updateDateInstantUpload:dateInstantUpload];
 }
 

@@ -25,6 +25,7 @@
 #import "UtilsDtos.h"
 #import "UtilsUrls.h"
 #import "FileNameUtils.h"
+#import "UtilsUrls.h"
 
 #define k_progressView_delay_just_download 1.0
 #define k_progressView_delay_after_download 2.0
@@ -90,8 +91,8 @@
     [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.user.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:self.file.filePath andUser:self.user], self.file.fileName];
+    NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:self.user];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.file.filePath andUser:self.user], self.file.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -173,7 +174,7 @@
 - (void) startDownload {
     
     OCCommunication *sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
-    NSArray *splitedUrl = [self.user.url componentsSeparatedByString:@"/"];
+    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:self.user] componentsSeparatedByString:@"/"];
     NSString *serverUrl = [NSString stringWithFormat:@"%@%@%@",[NSString stringWithFormat:@"%@/%@/%@",[splitedUrl objectAtIndex:0],[splitedUrl objectAtIndex:1],[splitedUrl objectAtIndex:2]], self.file.filePath, self.file.fileName];
     
     serverUrl = [serverUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -413,7 +414,7 @@
     DLog(@"Old local path: %@", file.localFolder);
     
     //Update the file
-    self.file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:self.user] andUser:self.user];
+    self.file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:self.user] andUser:self.user];
     
     //Delete the old file
     NSFileManager *fileManager=nil;

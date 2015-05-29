@@ -97,7 +97,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 //Get the file dto related with the upload ofline if exist
 - (FileDto *) getFileDtoOfTheUploadOffline{
     
-    NSString *folderName=[UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",self.currentUpload.destinyFolder,self.currentUpload.uploadFileName] andUserDto:self.userUploading];
+    NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:self.currentUpload.destinyFolder andUser:self.userUploading];
     FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.currentUpload.uploadFileName andFilePath:folderName andUser:self.userUploading];
     
     return uploadFile;
@@ -134,7 +134,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             } else {
                 [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
             }
-           
+            
         }
             break;
             
@@ -191,24 +191,24 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             //Upload ready, continue
             [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
-
+            
         }
         
         
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-
+        
         //Web Dav Error Code
         switch (response.statusCode) {
             case kOCErrorServerMethodNotPermitted:
                 //405 Method not permitted "not_possible_create_folder"
-                 [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+                [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
                 break;
             default:
                 //"not_possible_connect_to_server"
                 break;
         }
-
+        
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
         
@@ -253,191 +253,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     __block BOOL firstTime = YES;
     __weak typeof(self) weakSelf = self;
     
-    
-    if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
-        NSProgress *progressValue;
-        
-        [[AppDelegate sharedOCCommunication].uploadSessionManager.operationQueue cancelAllOperations];
-        
-        _uploadTask = [[AppDelegate sharedOCCommunication] uploadFileSession:_currentUpload.originPath toDestiny:urlClean onCommunication:[AppDelegate sharedOCCommunication] withProgress:&progressValue successRequest:^(NSURLResponse *response, NSString *redirectedServer) {
-            
-            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
-            
-            AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-            
-            DLog(@"File uploaded");
-            
-            DLog(@"self.currentUpload: %@", weakSelf.currentUpload.uploadFileName);
-            
-            DLog(@"setCompletionBlockWithSuccess");
-            
-            
-            BOOL isSamlCredentialsError=NO;
-            
-            //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
-                //Check if there are fragmens of saml in url, in this case there are a credential error
-                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-                if (isSamlCredentialsError) {
-                    weakSelf.currentUpload.status = errorUploading;
-                    weakSelf.currentUpload.kindOfError = errorCredentials;
-                    [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                    [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
-                    [weakSelf updateRecentsTab];
-                }
-            }
-            
-            
-            if (!isSamlCredentialsError) {
-                
-                [ManageUploadsDB setStatus:uploaded andKindOfError:notAnError byUploadOffline:weakSelf.currentUpload];
-                
-                DLog(@"Transfer complete, next file if exists");
-                
-                [weakSelf storeDateOfUpload];
-                weakSelf.pathOfUpload = [UploadUtils makePathString:weakSelf.currentUpload.destinyFolder withUserUrl:weakSelf.userUploading.url];
-                
-                
-                [ManageUploadsDB setDatebyUploadOffline:weakSelf.currentUpload];
-                
-                weakSelf.currentUpload.status = uploaded;
-                
-                [weakSelf updateRecentsTab];
-                [weakSelf dismissTransferProgress:weakSelf];
-                [weakSelf removeTheFileOnFileSystem];
-                
-                if(weakSelf.currentUpload.isLastUploadFileOfThisArray) {
-                    DLog(@"self.currentUpload: %@", weakSelf.currentUpload.uploadFileName);
-                    [weakSelf.delegate uploadCompleted:weakSelf.currentUpload.destinyFolder];
-                }
-                
-                //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
-                //The folder Name: A/
-                
-                FileDto *uploadFile = [self getFileDtoOfTheUploadOffline];
-                
-                if (uploadFile.isDownload == overwriting) {
-                    //Update the etag
-                    [self updateTheEtagOfTheFile:uploadFile];
-                }
-                
-               
-           }
-            
-            
-        } failureRequest:^(NSURLResponse *response, NSString *redirectedServer, NSError *error) {
-            
-            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
-            
-            NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-            
-            AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-            
-            DLog(@"response.statusCode: %ld", (long)httpResponse.statusCode);
-            DLog(@"Error: %@", error);
-            DLog(@"error.code: %ld", (long)error.code);
-            
-            BOOL isSamlCredentialsError=NO;
-            
-            //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
-                //Check if there are fragmens of saml in url, in this case there are a credential error
-                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-                if (isSamlCredentialsError) {
-                    weakSelf.currentUpload.status = errorUploading;
-                    weakSelf.currentUpload.kindOfError = errorCredentials;
-                    [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                    [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
-                    [weakSelf updateRecentsTab];
-                }
-            }
-            
-            if (!isSamlCredentialsError) {
-                
-                if ([error code] != NSURLErrorCancelled) {
-                    
-                    if(appDelegate.isOverwriteProcess == YES){
-                        [self finishOverwriteProcess];
-                    }
-                    
-                    //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
-                    switch (httpResponse.statusCode) {
-                        case kOCErrorServerUnauthorized:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorCredentials;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
-                            break;
-                        case kOCErrorServerForbidden:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorNotPermission;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            break;
-                        case kOCErrorProxyAuth:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorCredentials;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
-                            break;
-                        case kOCErrorServerPathNotFound:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorDestinyNotExist;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            break;
-                        default:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = notAnError;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            
-                            appDelegate.userUploadWithError=weakSelf.userUploading;
-                            break;
-                    }
-                    
-                    [weakSelf updateRecentsTab];
-                }
-                
-            }            
-        } failureBeforeRequest:^(NSError *error) {
-            
-            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
-            
-            switch (error.code) {
-                case OCErrorFileToUploadDoesNotExist: {
-                    //TODO: create a state to control if the file does not exist
-                    
-                    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                    
-                    weakSelf.currentUpload.status = errorUploading;
-                    weakSelf.currentUpload.kindOfError = errorUploadFileDoesNotExist;
-                    [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                    
-                    appDelegate.userUploadWithError=weakSelf.userUploading;
-                    break;
-                }
-                    
-                    
-                default: {
-                    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                    
-                    weakSelf.currentUpload.status = errorUploading;
-                    weakSelf.currentUpload.kindOfError = errorUploadFileDoesNotExist;
-                    [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                    
-                    appDelegate.userUploadWithError=weakSelf.userUploading;
-                    break;
-                }
-            }
-            [weakSelf updateRecentsTab];
-        
-        }];
-        
-        self.progressValueGlobal = progressValue;
-        progressValue = nil;
-        
-        // Observe fractionCompleted using KVO
-        [self.progressValueGlobal addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew context:NULL];
-
-    } else {
+    if (k_is_sso_active || !k_is_background_active) {
         
         //Create the block of NSOperation to upload.
         _operation = [[AppDelegate sharedOCCommunication] uploadFile:_currentUpload.originPath toDestiny:urlClean onCommunication:[AppDelegate sharedOCCommunication] progressUpload:^(NSUInteger bytesWrote, long long totalBytesWrote, long long totalBytesExpectedToWrote) {
@@ -503,8 +319,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 DLog(@"Transfer complete, next file if exists");
                 
                 [weakSelf storeDateOfUpload];
-                weakSelf.pathOfUpload = [UploadUtils makePathString:weakSelf.currentUpload.destinyFolder withUserUrl:weakSelf.userUploading.url];
-                
+                weakSelf.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:weakSelf.currentUpload.destinyFolder andUser:weakSelf.userUploading];
                 
                 [ManageUploadsDB setDatebyUploadOffline:weakSelf.currentUpload];
                 
@@ -650,6 +465,190 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
              appDelegate.userUploadWithError=weakSelf.userUploading;
              }*/
         }];
+        
+    } else {
+        
+        NSProgress *progressValue;
+        
+        [[AppDelegate sharedOCCommunication].uploadSessionManager.operationQueue cancelAllOperations];
+        
+        _uploadTask = [[AppDelegate sharedOCCommunication] uploadFileSession:_currentUpload.originPath toDestiny:urlClean onCommunication:[AppDelegate sharedOCCommunication] withProgress:&progressValue successRequest:^(NSURLResponse *response, NSString *redirectedServer) {
+            
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
+            
+            AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+            
+            DLog(@"File uploaded");
+            
+            DLog(@"self.currentUpload: %@", weakSelf.currentUpload.uploadFileName);
+            
+            DLog(@"setCompletionBlockWithSuccess");
+            
+            
+            BOOL isSamlCredentialsError=NO;
+            
+            //Check the login error in shibboleth
+            if (k_is_sso_active && redirectedServer) {
+                //Check if there are fragmens of saml in url, in this case there are a credential error
+                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                if (isSamlCredentialsError) {
+                    weakSelf.currentUpload.status = errorUploading;
+                    weakSelf.currentUpload.kindOfError = errorCredentials;
+                    [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                    [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
+                    [weakSelf updateRecentsTab];
+                }
+            }
+            
+            
+            if (!isSamlCredentialsError) {
+                
+                [ManageUploadsDB setStatus:uploaded andKindOfError:notAnError byUploadOffline:weakSelf.currentUpload];
+                
+                DLog(@"Transfer complete, next file if exists");
+                
+                [weakSelf storeDateOfUpload];
+                weakSelf.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:weakSelf.currentUpload.destinyFolder andUser:weakSelf.userUploading];
+                
+                [ManageUploadsDB setDatebyUploadOffline:weakSelf.currentUpload];
+                
+                weakSelf.currentUpload.status = uploaded;
+                
+                [weakSelf updateRecentsTab];
+                [weakSelf dismissTransferProgress:weakSelf];
+                [weakSelf removeTheFileOnFileSystem];
+                
+                if(weakSelf.currentUpload.isLastUploadFileOfThisArray) {
+                    DLog(@"self.currentUpload: %@", weakSelf.currentUpload.uploadFileName);
+                    [weakSelf.delegate uploadCompleted:weakSelf.currentUpload.destinyFolder];
+                }
+                
+                //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
+                //The folder Name: A/
+                
+                FileDto *uploadFile = [self getFileDtoOfTheUploadOffline];
+                
+                if (uploadFile.isDownload == overwriting) {
+                    //Update the etag
+                    [self updateTheEtagOfTheFile:uploadFile];
+                }
+                
+                
+            }
+            
+            
+        } failureRequest:^(NSURLResponse *response, NSString *redirectedServer, NSError *error) {
+            
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
+            
+            NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+            
+            AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+            
+            DLog(@"response.statusCode: %ld", (long)httpResponse.statusCode);
+            DLog(@"Error: %@", error);
+            DLog(@"error.code: %ld", (long)error.code);
+            
+            BOOL isSamlCredentialsError=NO;
+            
+            //Check the login error in shibboleth
+            if (k_is_sso_active && redirectedServer) {
+                //Check if there are fragmens of saml in url, in this case there are a credential error
+                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                if (isSamlCredentialsError) {
+                    weakSelf.currentUpload.status = errorUploading;
+                    weakSelf.currentUpload.kindOfError = errorCredentials;
+                    [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                    [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
+                    [weakSelf updateRecentsTab];
+                }
+            }
+            
+            if (!isSamlCredentialsError) {
+                
+                if ([error code] != NSURLErrorCancelled) {
+                    
+                    if(appDelegate.isOverwriteProcess == YES){
+                        [self finishOverwriteProcess];
+                    }
+                    
+                    //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
+                    switch (httpResponse.statusCode) {
+                        case kOCErrorServerUnauthorized:
+                            weakSelf.currentUpload.status = errorUploading;
+                            weakSelf.currentUpload.kindOfError = errorCredentials;
+                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                            [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
+                            break;
+                        case kOCErrorServerForbidden:
+                            weakSelf.currentUpload.status = errorUploading;
+                            weakSelf.currentUpload.kindOfError = errorNotPermission;
+                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                            break;
+                        case kOCErrorProxyAuth:
+                            weakSelf.currentUpload.status = errorUploading;
+                            weakSelf.currentUpload.kindOfError = errorCredentials;
+                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                            [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
+                            break;
+                        case kOCErrorServerPathNotFound:
+                            weakSelf.currentUpload.status = errorUploading;
+                            weakSelf.currentUpload.kindOfError = errorDestinyNotExist;
+                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                            break;
+                        default:
+                            weakSelf.currentUpload.status = errorUploading;
+                            weakSelf.currentUpload.kindOfError = notAnError;
+                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                            
+                            appDelegate.userUploadWithError=weakSelf.userUploading;
+                            break;
+                    }
+                    
+                    [weakSelf updateRecentsTab];
+                }
+                
+            }
+        } failureBeforeRequest:^(NSError *error) {
+            
+            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
+            
+            switch (error.code) {
+                case OCErrorFileToUploadDoesNotExist: {
+                    //TODO: create a state to control if the file does not exist
+                    
+                    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+                    
+                    weakSelf.currentUpload.status = errorUploading;
+                    weakSelf.currentUpload.kindOfError = errorUploadFileDoesNotExist;
+                    [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                    
+                    appDelegate.userUploadWithError=weakSelf.userUploading;
+                    break;
+                }
+                    
+                    
+                default: {
+                    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+                    
+                    weakSelf.currentUpload.status = errorUploading;
+                    weakSelf.currentUpload.kindOfError = errorUploadFileDoesNotExist;
+                    [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                    
+                    appDelegate.userUploadWithError=weakSelf.userUploading;
+                    break;
+                }
+            }
+            [weakSelf updateRecentsTab];
+            
+        }];
+        
+        self.progressValueGlobal = progressValue;
+        progressValue = nil;
+        
+        // Observe fractionCompleted using KVO
+        [self.progressValueGlobal addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew context:NULL];
+        
     }
     
     if (_isCanceled) {
@@ -671,7 +670,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 //Method to set the task identifier
 - (void) setTaskIdentifier{
     
-   [ManageUploadsDB setTaskIdentifier:_uploadTask.taskIdentifier forUploadOffline:_currentUpload];
+    [ManageUploadsDB setTaskIdentifier:_uploadTask.taskIdentifier forUploadOffline:_currentUpload];
     
 }
 
@@ -708,21 +707,21 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     DLog(@"Overwriten process active: Cancel a file");
-    NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder andUser:self.userUploading];
+    NSString *localFolder=[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.currentUpload.destinyFolder andUser:self.userUploading];
     DLog(@"Local folder:%@",localFolder);
     
-    FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:_currentUpload.uploadFileName andFilePath:localFolder andUser:_userUploading];
+    FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:self.currentUpload.uploadFileName andFilePath:localFolder andUser:self.userUploading];
     DLog(@"id file: %ld",(long)deleteOverwriteFile.idFile);
     
     //In iPad clean the view
     if (!IS_IPHONE){
         [app.detailViewController presentWhiteView];
         //Launch a notification for update the previewed file
-        [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:_currentUpload.destinyFolder];
+        [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:self.currentUpload.destinyFolder];
     }
     
     [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:notDownload];
-
+    
 }
 
 - (void) cancelUpload {
@@ -744,9 +743,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     //Quit the operation from the operation queue
     if (self.operation) {
-         [[AppDelegate sharedOCCommunication].uploadOperationQueueArray removeObjectIdenticalTo:self.operation];
+        [[AppDelegate sharedOCCommunication].uploadOperationQueueArray removeObjectIdenticalTo:self.operation];
     }
-   
+    
     //Send this percent to remove the progressview of the array
     //[self updateProgressWithPercent:1.0];
     
@@ -778,7 +777,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     //update Recents view
     [self updateRecentsTab];
-
+    
     //Clear cache and cookies
     [UtilsCookies eraseURLCache];
 }
@@ -802,7 +801,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     _currentUpload.status = errorUploading;
     _currentUpload.kindOfError = errorCredentials;
     [ManageUploadsDB setStatus:errorUploading andKindOfError:errorCredentials byUploadOffline:self.currentUpload];
-
+    
 }
 
 
@@ -812,7 +811,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     if (self.operation) {
         [self.operation cancel];
-         self.operation=nil;
+        self.operation=nil;
     }
     
     if (self.uploadTask) {
@@ -859,7 +858,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [appDelegate.uploadArray addObject:self];
     
     [self updateRecentsTab];
-
+    
 }
 
 
@@ -936,8 +935,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
+    NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:self.userUploading];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -976,14 +975,14 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 FileDto *currentFileDto = [items objectAtIndex:0];
                 DLog(@"currentFileDto: %@", currentFileDto.etag);
                 //Update the etag
-                NSString *folderName=[UtilsDtos getDBFilePathOfFileDtoFilePath:overwrittenFile.filePath ofUserDto:self.userUploading];
+                NSString *folderName=[UtilsUrls getFilePathOnDBByFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading];
                 [ManageFilesDB updateEtagOfFileDtoByFileName:overwrittenFile.fileName andFilePath:folderName andActiveUser:self.userUploading withNewEtag:currentFileDto.etag];
                 //Set file status like downloaded in Data Base
                 [ManageFilesDB updateDownloadStateOfFileDtoByFileName:overwrittenFile.fileName andFilePath:folderName andActiveUser:self.userUploading withState:downloaded];
                 
                 //Launch a notification for update the file previewed
                 [[NSNotificationCenter defaultCenter] postNotificationName:uploadOverwriteFileNotification object:nil];
-             
+                
                 
                 [self.delegate overwriteCompleted];
             }
@@ -1014,8 +1013,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
+    NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:self.userUploading];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     

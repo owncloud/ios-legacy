@@ -36,6 +36,7 @@
 #import "ProvidingFileDto.h"
 #import "ManageProvidingFilesDB.h"
 #import "NSString+Encoding.h"
+#import "InitializeDatabase.h"
 
 @interface DocumentPickerViewController ()
 
@@ -65,6 +66,8 @@
 
 -(void)prepareForPresentationInMode:(UIDocumentPickerMode)mode {
     // TODO: present a view controller appropriate for picker mode here
+    
+    [InitializeDatabase initDataBase];
     
     self.mode = mode;
     
@@ -103,7 +106,7 @@
             CheckAccessToServer *mCheckAccessToServer = [[CheckAccessToServer alloc] init];
             mCheckAccessToServer.viewControllerToShow = fileListTableViewController;
             mCheckAccessToServer.delegate = fileListTableViewController;
-            [mCheckAccessToServer isConnectionToTheServerByUrl:self.user.url];
+            [mCheckAccessToServer isConnectionToTheServerByUrl:[UtilsUrls getFullRemoteServerPath:self.user]];
         }];
         
     } else {
@@ -115,35 +118,6 @@
     }
 }
 
-
-#pragma mark - FMDataBase
-+ (FMDatabaseQueue*)sharedDatabase
-{
-    
-    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:@"DB.sqlite"]];
-    
-    static FMDatabaseQueue* sharedDatabase = nil;
-    if (sharedDatabase == nil)
-    {
-        NSString *documentsDir = [UtilsUrls getOwnCloudFilePath];
-        NSString *dbPath = [documentsDir stringByAppendingPathComponent:@"DB.sqlite"];
-        
-        
-        //NSString* bundledDatabasePath = [[NSBundle mainBundle] pathForResource:@"DB" ofType:@"sqlite"];
-        sharedDatabase = [[FMDatabaseQueue alloc] initWithPath:dbPath flags:SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE];
-    }
-    
-    NSString *documentsDir = [UtilsUrls getOwnCloudFilePath];
-    NSString *dbPath = [documentsDir stringByAppendingPathComponent:@"DB.sqlite"];
-    
-    // Make sure the database is encrypted when the device is locked
-    NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone forKey:NSFileProtectionKey];
-    if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:dbPath error:nil]) {
-        // Deal with the error
-    }
-    
-    return sharedDatabase;
-}
 
 #pragma mark - OCCommunications
 + (OCCommunication*)sharedOCCommunication
