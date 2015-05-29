@@ -56,10 +56,6 @@
 #import "OCSplitViewController.h"
 #import "InitializeDatabase.h"
 
-
-#define k_server_with_chunking 4.5 
-#define k_DB_version_12 12
-
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
 NSString * NotReachableNetworkForUploadsNotification = @"NotReachableNetworkForUploadsNotification";
