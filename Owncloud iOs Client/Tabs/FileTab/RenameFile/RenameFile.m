@@ -166,10 +166,6 @@
     }
     
     _mNewName = name;
-    //NSString *originalFileName = [_selectedFileDto.fileName stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-    
-//    DLog(@"Original Name: %@", originalFileName);
-//    DLog(@"New Name: %@", self.mNewName);
     
     NSString *fileDBPathToCheck;
     NSString *fileDBPathToDestination;
@@ -181,26 +177,17 @@
     
     if ([_selectedFileDto isDirectory]) {
         //If is directory quit the "/"
-//        originalFileName = [originalFileName substringToIndex:[originalFileName length]-1];
-//        DLog(@"Original Name: %@", originalFileName);
-        
         //Get the file database path of the item for the check with the server
         fileDBPathToCheck  = [UtilsUrls getFilePathOnDBByFullPath:[NSString stringWithFormat:@"%@", self.currentRemoteFolder] andUser:app.activeUser];
-        
-
     } else {
         //Get the file database path of the item for the check with the server
         fileDBPathToCheck  = [UtilsUrls getFilePathOnDBByFullPath:[NSString stringWithFormat:@"%@%@", self.currentRemoteFolder,self.selectedFileDto.fileName] andUser:app.activeUser];
-        
-
-        
     }
     
     DLog(@"Destination file: %@%@", self.currentRemoteFolder, self.selectedFileDto.fileName);
     
     //Create the path of the destination
     _destinationFile = [NSString stringWithFormat:@"%@%@",fileDBPathToDestination,[name encodeString:NSUTF8StringEncoding]];
-    
     
     //Create path to check with the server
     NSString *pathToCheck=[NSString stringWithFormat:@"%@%@",self.currentRemoteFolder,[name encodeString:NSUTF8StringEncoding]];
