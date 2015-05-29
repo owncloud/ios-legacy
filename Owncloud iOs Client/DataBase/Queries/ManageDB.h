@@ -167,4 +167,15 @@
  */
 + (void) updateDBVersion11To12;
 
+///-----------------------------------
+/// @name Update Database version with 12 version to 13
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter users table, added new field to redirected url
+ */
++ (void) updateDBVersion12To13;
+
 @end

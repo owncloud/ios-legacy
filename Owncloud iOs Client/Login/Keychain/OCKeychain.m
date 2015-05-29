@@ -17,6 +17,8 @@
 #import <Security/Security.h>
 #import "CredentialsDto.h"
 #import "UtilsUrls.h"
+#import "ManageUsersDB.h"
+#import "UserDto.h"
 
 
 @implementation OCKeychain
@@ -214,6 +216,25 @@
 
     
     return output;
+    
+}
+
+///-----------------------------------
+/// @name updateAllKeychainsToUseTheLockProperty
+///-----------------------------------
+
+/**
+ * This method updates all the credentials to use a property to allow to access to them when the passcode system is set.
+ */
++ (void) updateAllKeychainsToUseTheLockProperty{
+    
+    for (UserDto *user in [ManageUsersDB getAllUsersWithOutCredentialInfo]) {
+        
+        NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
+        
+        [OCKeychain updateKeychainForUseLockPropertyForUser:idString];
+        
+    }
     
 }
 

@@ -161,6 +161,8 @@
         userDto.password = passwordUTF8;
         userDto.ssl = isHttps;
         userDto.activeaccount = NO;
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        userDto.urlRedirected = app.urlServerRedirected;
         
         [self hideTryingToLogin];
         
@@ -168,7 +170,6 @@
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"user_exist", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alertView show];
             
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             //1- Clean the cookies after login or not before go with the active user
             [UtilsFramework deleteAllCookies];
 

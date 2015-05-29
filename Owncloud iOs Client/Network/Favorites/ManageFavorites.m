@@ -157,8 +157,8 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     for (FileDto *file in favoritesFiles) {
         
         //FileName full path
-        NSString *serverPath = [NSString stringWithFormat:@"%@%@", user.url, k_url_webdav_server];
-        NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:file.filePath andUser:user], file.fileName];
+        NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:user];
+        NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:user], file.fileName];
         
         path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
@@ -192,7 +192,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                         FileDto *item = [directoryList objectAtIndex:0];
                         
                         //Update the file data
-                        FileDto *updatedFile = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:user] andUser:user];
+                        FileDto *updatedFile = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:user] andUser:user];
                         
                         //Check if the etag has changed
                         if (((![item.etag isEqual: updatedFile.etag] && updatedFile.isDownload != downloading && updatedFile.isDownload != updating) || (updatedFile.isDownload == notDownload)) && updatedFile) {
@@ -213,7 +213,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                             //Data to download
                             //Get the current local folder
                             AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                            NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:updatedFile.filePath ofUserDto:user]];
+                            NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:updatedFile.filePath andUser:user]];
                             currentLocalFolder = [currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                             
                             Download *download = [Download new];
@@ -331,8 +331,8 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", app.activeUser.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:favoriteFile.filePath andUser:app.activeUser], favoriteFile.fileName];
+    NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:favoriteFile.filePath andUser:app.activeUser], favoriteFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
