@@ -344,9 +344,6 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
 
     [self.listOfUploadOfflineToGenerateSQL addObject:currentUpload];
     
-    DLog(@"Date Database: %ld", [ManageAppSettingsDB getDateInstantUpload]);
-    DLog(@"Date Asset: %ld", (long)[assetToUpload.date timeIntervalSince1970]);
-    
     //update date last asset uploaded
     if ((long)[assetToUpload.date timeIntervalSince1970] > [ManageAppSettingsDB getDateInstantUpload]) {
         //assetDate later than startDate
