@@ -17,11 +17,7 @@
 #import "Customization.h"
 #import "FileNameUtils.h"
 #import "UtilsUrls.h"
-
-
-#define k_redirected_code_1 301
-#define k_redirected_code_2 302
-#define k_redirected_code_3 307
+#import "OCConstants.h"
 
 @implementation CheckSSOServer
 
