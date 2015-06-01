@@ -494,7 +494,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             Download *download = nil;
             
             for (Download *temp in downs) {
-                if (temp.fileDto.idFile == _file.idFile) {
+                if ([temp.fileDto.localFolder isEqualToString:_file.localFolder]) {
                     download = temp;
                     break;
                 }
