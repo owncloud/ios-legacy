@@ -183,7 +183,7 @@ import AVFoundation
                     }
                     
                     if currentRemotePath == nil {
-                        currentRemotePath = user.url + k_url_webdav_server
+                        currentRemotePath = UtilsUrls.getFullRemoteServerPathWithWebDav(user)
                     }
                     
                     //3º Crete the upload objects
@@ -488,7 +488,7 @@ import AVFoundation
         self.currentRemotePath = folder as String
         let name:NSString = folder.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
         let user = ManageUsersDB.getActiveUser()
-        let folderPath = UtilsDtos.getDbBFilePathFromFullFilePath(name as String, andUser: user)
+        let folderPath = UtilsUrls.getFilePathOnDBByFullPath(name as String, andUser: user)
 
         self.changeTheDestinyFolderWith(folderPath.lastPathComponent)
         

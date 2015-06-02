@@ -19,15 +19,8 @@
 
 @interface UtilsDtos : NSObject
 
-+(NSString *) getDbBFilePathFromFullFilePath:(NSString *) fullFilePath andUser:(UserDto *) user;
-+(NSString *) getDbBFolderPathFromFullFolderPath:(NSString *) fullFilePath andUser:(UserDto *) user;
-+(NSString *) getDbFolderPathWithoutUTF8FromFilePath:(NSString *) fullFilePath andUser:(UserDto *) user;
 +(NSString *) getDbFolderPathFromFilePath:(NSString *) filePath;
 +(NSString *) getDbFolderNameFromFilePath:(NSString *) filePath;
-+(NSString *) getFilePathOnDBFromFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user;
-+(NSString *) getFilePathByRemoteURL:(NSString *) remoteUrl andUserDto:(UserDto *) mUser;
-+(NSString *) getRemoteUrlByFile:(FileDto *) file andUserDto:(UserDto *) mUser;
-+(NSString *) getServerURLWithoutFolderByUserDto:(UserDto *)mUser;
 
 ///-----------------------------------
 /// @name Pass OCFileDto Array to FileDto Array
@@ -62,41 +55,6 @@
  * @return -> NSString
  */
 + (NSString*)getTheParentPathOfThePath:(NSString*)path;
-
-///-----------------------------------
-/// @name Get DataBase file_path of fileDto.filePath
-///-----------------------------------
-
-/**
- * This method get the real data in the database using the data of the FileDto.
- *
- * Ex: /master/owncloud/remote.php/webdav/music/ --> "music"
- *
- * Ex: /master/owncloud/remote.php/webdav/ --> ""
- *
- * @param path -> NSString
- *
- * @param user -> UserDto
- *
- * @return NSString
- *
- 
- */
-+ (NSString* )getDBFilePathOfFileDtoFilePath:(NSString*)path ofUserDto:(UserDto*)user;
-
-//-----------------------------------
-/// @name Get a domain by a URL
-///-----------------------------------
-
-/**
- * Method used to get only the domain and the protocol (http/https)
- *
- * @param NSString -> url
- *
- * @return NSString
- *
- */
-+ (NSString *) getHttpAndDomainByURL:(NSString *) url;
 
 
 @end

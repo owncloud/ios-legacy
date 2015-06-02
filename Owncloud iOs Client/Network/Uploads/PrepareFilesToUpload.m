@@ -242,8 +242,8 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    self.pathRemoteInstantUpload = [[NSString alloc]initWithFormat:@"%@%@%@/",app.activeUser.url,k_url_webdav_server,[self nameRemoteInstantUploadFolder]];
-    DLog(@"remoteFolder: %@", self.pathRemoteInstantUpload);
+    self.pathRemoteInstantUpload = [[NSString alloc]initWithFormat:@"%@%@/",[UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser],[self nameRemoteInstantUploadFolder]];
+    DLog(@"remoteFolderInstantUpload: %@", self.pathRemoteInstantUpload);
 
     BOOL isLastUploadFileOfThisArray = NO;
     

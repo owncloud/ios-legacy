@@ -62,10 +62,8 @@
         if (_file.isDirectory) {
             DLog(@"Delete a folder");
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            //Obtains the complete path of the folder
-            NSString *pathFolder= [NSString stringWithFormat:@"%@%@",_file.filePath,_file.fileName];
             //Remove: /owncloud/remote.php/webdav/ to the pathFolder
-            pathFolder =[UtilsDtos getDbBFolderPathFromFullFolderPath:pathFolder andUser:app.activeUser];
+            NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
             //Obtains the number of the downloaded files in DB which filepath contains the folder that the user want delete
             _isFilesDownloadedInFolder=[ManageFilesDB isGetFilesByDownloadState:downloaded andByUser:app.activeUser andFolder:pathFolder];
         }
@@ -166,11 +164,8 @@
     if (_isFilesDownloadedInFolder == YES) {
         //If the item deleted is a directory update the is_download state to notDownload in the files contains in the folder for deleted
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        NSString *pathFolder= [NSString stringWithFormat:@"%@%@",_file.filePath,_file.fileName];
-        //Remove: /owncloud/remote.php/webdav/ to the pathFolder
-        pathFolder =[UtilsDtos getDbBFolderPathFromFullFolderPath:pathFolder andUser:app.activeUser];
+        NSString *pathFolder= [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
         [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
-        DLog(@"path: %@",pathFolder);
         
         //Delete the folder and the files that it contains
         NSError *error;
@@ -179,6 +174,9 @@
         
         //Create the folder again for a correct navigation
         //We obtain the name of the folder in folderName
+        pathFolder = [NSString stringWithFormat:@"%@%@",_file.filePath,_file.fileName];
+        DLog(@"path: %@",pathFolder);
+        
         NSString *folderName = [UtilsDtos getDbFolderNameFromFilePath:pathFolder];
         DLog(@"folder name: %@ in this location: %@",folderName,_currentLocalFolder);
         [FileListDBOperations createAFolder:folderName inLocalFolder:_currentLocalFolder];
@@ -208,7 +206,7 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     DLog(@"FilePath: %@", file.filePath);
     
@@ -263,7 +261,7 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    NSArray *splitedUrl = [app.activeUser.url componentsSeparatedByString:@"/"];
+    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:app.activeUser] componentsSeparatedByString:@"/"];
     NSString *pathToDelete = [NSString stringWithFormat:@"%@//%@%@%@", [splitedUrl objectAtIndex:0], [splitedUrl objectAtIndex:2], file.filePath,file.fileName];
     pathToDelete = [pathToDelete stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -357,9 +355,7 @@
         if (_isFilesDownloadedInFolder) {
             
             //Obtains the complete path of the folder
-            NSString *pathFolder= [NSString stringWithFormat:@"%@%@",_file.filePath,_file.fileName];
-            //Remove: /owncloud/remote.php/webdav/ to the pathFolder
-            pathFolder =[UtilsDtos getDbBFolderPathFromFullFolderPath:pathFolder andUser:app.activeUser];
+            NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
             //Check if the id file is in the files into this folder
             DLog(@"path folder: %@", pathFolder);
             
@@ -378,7 +374,7 @@
 - (NSString *)filePath {
     NSString *localUrl = [NSString stringWithFormat:@"%@%@", _currentLocalFolder, _file.fileName];
     DLog(@"Current Local Folder: %@", _currentLocalFolder);
-    DLog(@"File Name: %@", _file);
+    DLog(@"File Name: %@", _file.fileName);
     DLog(@"Local URL: %@", localUrl);
     return localUrl;
 }
@@ -404,28 +400,28 @@
     if ((_file.isDownload || _isFilesDownloadedInFolder == YES) && !_file.isFavorite) {
         switch (buttonIndex) {
             case 0:
-                NSLog(@"Delete from server");
+                DLog(@"Delete from server");
                 _deleteFromFlag = deleteFromServerAndLocal;
                 [self executeDeleteItemInServer];
                 break;
             case 1:
-                NSLog(@"Delete from local");
+                DLog(@"Delete from local");
                 _deleteFromFlag = deleteFromLocal;
                 [self executeDeleteItemInDevice];
                 break;
             case 2:
-                NSLog(@"Cancel");
+                DLog(@"Cancel");
                 break;
         }
     } else {
         switch (buttonIndex) {
             case 0:
-                NSLog(@"Delete from server");
+                DLog(@"Delete from server");
                 _deleteFromFlag = deleteFromServerAndLocal;
                 [self executeDeleteItemInServer];
                 break;
             case 1:
-                NSLog(@"Cancel");
+                DLog(@"Cancel");
                 break;
         }
     }

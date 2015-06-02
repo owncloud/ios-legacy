@@ -27,6 +27,7 @@
 #import "ManageAppSettingsDB.h"
 #import "UtilsDtos.h"
 #import "Customization.h"
+#import "ManageUsersDB.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -97,10 +98,8 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 
 -(void) isConnectionToTheServerByUrl:(NSString *) url {
     
-#ifdef CONTAINER_APP
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    app.urlServerRedirected = nil;
-#endif
+    //We save the url to later compare with urlServerRedirected in request
+    self.urlUserToCheck = url;
     
     _urlStatusCheck = [NSString stringWithFormat:@"%@status.php", url];
     
@@ -351,15 +350,25 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     //Server path of redirected server
     NSString *responseURLString = [dict objectForKey:@"Location"];
     
-    
     if (responseURLString) {
         
-        //We obtain the URL to make the uploads in background
+        //We obtain the urlServerRedirected to make the uploads in background 
+        NSURL *url = [[NSURL alloc] initWithString:responseURLString];
+        NSURL * urlByRemovingLastComponent = [url URLByDeletingLastPathComponent];
+
+        UserDto *activeUser = [ManageUsersDB getActiveUser];
+        if (activeUser) {
+            if ([activeUser.url isEqualToString:self.urlUserToCheck]) {
+                [ManageUsersDB updateUrlRedirected:[urlByRemovingLastComponent absoluteString] byUserDto:activeUser];
+            }
+        }
+        
 #ifdef CONTAINER_APP
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        app.urlServerRedirected = [UtilsDtos getHttpAndDomainByURL:responseURLString];
+        app.urlServerRedirected = [urlByRemovingLastComponent absoluteString];
+        app.activeUser = [ManageUsersDB getActiveUser];
 #endif
-        
+
         NSLog(@"responseURLString: %@", responseURLString);
         NSLog(@"requestRedirect.HTTPMethod: %@", request.HTTPMethod);
         
@@ -371,6 +380,20 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
         return requestRedirect;
         
     } else {
+        
+        //We obtain the urlServerRedirected to make the uploads in background
+#ifdef CONTAINER_APP
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        app.urlServerRedirected = nil;
+        app.activeUser = [ManageUsersDB getActiveUser];
+#endif
+        UserDto *activeUser = [ManageUsersDB getActiveUser];
+        if (activeUser) {
+            if ([activeUser.url isEqualToString:self.urlUserToCheck]) {
+                [ManageUsersDB updateUrlRedirected:nil byUserDto:activeUser];
+            }
+        }
+        
         return request;
     }
 }

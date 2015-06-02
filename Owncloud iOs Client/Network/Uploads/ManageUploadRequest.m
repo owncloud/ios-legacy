@@ -97,7 +97,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 //Get the file dto related with the upload ofline if exist
 - (FileDto *) getFileDtoOfTheUploadOffline{
     
-    NSString *folderName=[UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",self.currentUpload.destinyFolder,self.currentUpload.uploadFileName] andUserDto:self.userUploading];
+    NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:self.currentUpload.destinyFolder andUser:self.userUploading];
     FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.currentUpload.uploadFileName andFilePath:folderName andUser:self.userUploading];
     
     return uploadFile;
@@ -319,8 +319,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 DLog(@"Transfer complete, next file if exists");
                 
                 [weakSelf storeDateOfUpload];
-                weakSelf.pathOfUpload = [UploadUtils makePathString:weakSelf.currentUpload.destinyFolder withUserUrl:weakSelf.userUploading.url];
-                
+                weakSelf.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:weakSelf.currentUpload.destinyFolder andUser:weakSelf.userUploading];
                 
                 [ManageUploadsDB setDatebyUploadOffline:weakSelf.currentUpload];
                 
@@ -509,8 +508,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 DLog(@"Transfer complete, next file if exists");
                 
                 [weakSelf storeDateOfUpload];
-                weakSelf.pathOfUpload = [UploadUtils makePathString:weakSelf.currentUpload.destinyFolder withUserUrl:weakSelf.userUploading.url];
-                
+                weakSelf.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:weakSelf.currentUpload.destinyFolder andUser:weakSelf.userUploading];
                 
                 [ManageUploadsDB setDatebyUploadOffline:weakSelf.currentUpload];
                 
@@ -709,17 +707,17 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     DLog(@"Overwriten process active: Cancel a file");
-    NSString *localFolder=[UtilsDtos getDbFolderPathWithoutUTF8FromFilePath:_currentUpload.destinyFolder andUser:self.userUploading];
+    NSString *localFolder=[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.currentUpload.destinyFolder andUser:self.userUploading];
     DLog(@"Local folder:%@",localFolder);
     
-    FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:_currentUpload.uploadFileName andFilePath:localFolder andUser:_userUploading];
+    FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:self.currentUpload.uploadFileName andFilePath:localFolder andUser:self.userUploading];
     DLog(@"id file: %ld",(long)deleteOverwriteFile.idFile);
     
     //In iPad clean the view
     if (!IS_IPHONE){
         [app.detailViewController presentWhiteView];
         //Launch a notification for update the previewed file
-        [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:_currentUpload.destinyFolder];
+        [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:self.currentUpload.destinyFolder];
     }
     
     [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:notDownload];
@@ -937,8 +935,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
+    NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:self.userUploading];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -977,7 +975,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 FileDto *currentFileDto = [items objectAtIndex:0];
                 DLog(@"currentFileDto: %@", currentFileDto.etag);
                 //Update the etag
-                NSString *folderName=[UtilsDtos getDBFilePathOfFileDtoFilePath:overwrittenFile.filePath ofUserDto:self.userUploading];
+                NSString *folderName=[UtilsUrls getFilePathOnDBByFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading];
                 [ManageFilesDB updateEtagOfFileDtoByFileName:overwrittenFile.fileName andFilePath:folderName andActiveUser:self.userUploading withNewEtag:currentFileDto.etag];
                 //Set file status like downloaded in Data Base
                 [ManageFilesDB updateDownloadStateOfFileDtoByFileName:overwrittenFile.fileName andFilePath:folderName andActiveUser:self.userUploading withState:downloaded];
@@ -1015,8 +1013,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", self.userUploading.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
+    NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:self.userUploading];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     

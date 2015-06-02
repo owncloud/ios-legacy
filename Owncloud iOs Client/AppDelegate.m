@@ -56,9 +56,6 @@
 #import "OCSplitViewController.h"
 #import "InitializeDatabase.h"
 
-
-#define k_server_with_chunking 4.5 
-
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
 NSString * NotReachableNetworkForUploadsNotification = @"NotReachableNetworkForUploadsNotification";
@@ -97,8 +94,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //init
     DLog(@"Init");
     
-
-    
     self.oauthToken = @"";
     
     if(k_have_image_background_navigation_bar) {
@@ -109,7 +104,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Database queue
     _databaseOperationsQueue =[[NSOperationQueue alloc] init];
     [_databaseOperationsQueue setMaxConcurrentOperationCount:1];
-    
    
     //Network operation array
     _uploadArray=[[NSMutableArray alloc]init];
@@ -132,9 +126,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self moveIfIsNecessaryFilesAfterUpdateAppFromTheOldFolderArchitecture];
     
     [self moveIfIsNecessaryFolderOfOwnCloudFromContainerAppSandboxToAppGroupSanbox];
-    
-    //Update keychain of all the users
-    [self updateAllKeychainsToUseTheLockProperty];
     
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
@@ -420,11 +411,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         _loginWindowViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPad" bundle:[NSBundle mainBundle]];
     }
     
-    //[self presentModalViewController:_loginWindowViewController animated:NO];
-    
-  
-    
-    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     self.window.rootViewController = self.loginWindowViewController;
@@ -452,7 +438,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     _activeUser=[ManageUsersDB getActiveUser];
     
-    NSString *wevDavString = [NSString stringWithFormat: @"%@%@", _activeUser.url,k_url_webdav_server];
+    NSString *wevDavString = [UtilsUrls getFullRemoteServerPathWithWebDav:_activeUser];
     NSString *localSystemPath = nil;
     
     //Check if we generate the interface from login screen or not
@@ -1103,7 +1089,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadDB.estimateLength];
                     currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadDB.userId];
                     
-                    currentManageUploadRequest.pathOfUpload = [UploadUtils makePathString:uploadDB.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+                    currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadDB.destinyFolder andUser:currentManageUploadRequest.userUploading];
                     
                     currentManageUploadRequest.uploadTask = upload;
                     currentManageUploadRequest.isFromBackground = YES;
@@ -1209,7 +1195,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     
                     //Local folder
                     NSString *localFolder = nil;
-                    localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:self.activeUser]];
+                    localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:self.activeUser]];
                     localFolder = [localFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                     
                     download.currentLocalFolder = localFolder;
@@ -1798,10 +1784,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)refreshAfterUploadAllFiles:(NSString *) currentRemoteFolder {
     DLog(@"refreshAfterUploadAllFiles");
     
-    NSString *remoteUrlWithoutDomain = [UtilsDtos getHttpAndDomainByURL:currentRemoteFolder];
+    NSString *remoteUrlWithoutDomain = [UtilsUrls getHttpAndDomainByURL:currentRemoteFolder];
     remoteUrlWithoutDomain = [currentRemoteFolder substringFromIndex:remoteUrlWithoutDomain.length];
     
-    NSString *currentFolderWithoutDomain = [UtilsDtos getHttpAndDomainByURL:_presentFilesViewController.currentRemoteFolder];
+    NSString *currentFolderWithoutDomain = [UtilsUrls getHttpAndDomainByURL:_presentFilesViewController.currentRemoteFolder];
     currentFolderWithoutDomain = [_presentFilesViewController.currentRemoteFolder substringFromIndex:currentFolderWithoutDomain.length];
     
     //Only if is selected the first item: FileList.
@@ -1824,8 +1810,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [_presentFilesViewController initLoading];
     [_presentFilesViewController reloadTableFromDataBase];
 }
-
-
 
 - (void)errorWhileUpload{
     
@@ -2177,7 +2161,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self createAManageRequestUploadWithTheUploadOffline:fileForUpload];
     DLog(@"The file is on server");
     
-    currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:currentFile.filePath andUser:self.activeUser] andUser:self.activeUser];
+    currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:self.activeUser] andUser:self.activeUser];
     
     if (currentFile.isDownload == overwriting) {
         [ManageFilesDB setFileIsDownloadState:currentFile.idFile andState:downloaded];
@@ -2211,7 +2195,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:currentUploadBackground.estimateLength];
     currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:currentUploadBackground.userId];
     
-    currentManageUploadRequest.pathOfUpload = [UploadUtils makePathString:currentUploadBackground.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+    currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:currentUploadBackground.destinyFolder andUser:currentManageUploadRequest.userUploading];
     
     currentManageUploadRequest.isFromBackground = YES;
     
@@ -2271,7 +2255,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:current.estimateLength];
         currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:current.userId];
         
-        currentManageUploadRequest.pathOfUpload = [UploadUtils makePathString:current.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+        currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:current.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
         //Add the object to the uploadArray without duplicates
         [self addToTheUploadArrayWithoutDuplicatesTheFile:currentManageUploadRequest];
@@ -2302,11 +2286,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         NSDate *uploadedDate = [NSDate dateWithTimeIntervalSince1970:uploadOffline.uploadedDate];
         currentManageUploadRequest.date = uploadedDate;
         //Set uploadOffline
-        currentManageUploadRequest.currentUpload=uploadOffline;
-        currentManageUploadRequest.lenghtOfFile=[UploadUtils makeLengthString:uploadOffline.estimateLength];
+        currentManageUploadRequest.currentUpload = uploadOffline;
+        currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadOffline.estimateLength];
         currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadOffline.userId];
         
-        currentManageUploadRequest.pathOfUpload=[UploadUtils makePathString:uploadOffline.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+        currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadOffline.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
         //Add the object to the array
         [self addToTheUploadArrayWithoutDuplicatesTheFile:currentManageUploadRequest];
@@ -2330,11 +2314,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         NSDate *uploadedDate = [NSDate dateWithTimeIntervalSince1970:uploadOffline.uploadedDate];
         currentManageUploadRequest.date = uploadedDate;
         //Set uploadOffline
-        currentManageUploadRequest.currentUpload=uploadOffline;
-        currentManageUploadRequest.lenghtOfFile=[UploadUtils makeLengthString:uploadOffline.estimateLength];
+        currentManageUploadRequest.currentUpload = uploadOffline;
+        currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadOffline.estimateLength];
         currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadOffline.userId];
         
-        currentManageUploadRequest.pathOfUpload=[UploadUtils makePathString:uploadOffline.destinyFolder withUserUrl:currentManageUploadRequest.userUploading.url];
+        currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadOffline.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
         //Add the object to the array
         [self addToTheUploadArrayWithoutDuplicatesTheFile:currentManageUploadRequest];
@@ -2615,24 +2599,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-///-----------------------------------
-/// @name updateAllKeychainsToUseTheLockProperty
-///-----------------------------------
 
-/**
- * This method updates all the credentials to use a property to allow to access to them when the passcode system is set.
- */
-- (void) updateAllKeychainsToUseTheLockProperty{
-    
-    for (UserDto *user in [ManageUsersDB getAllUsersWithOutCredentialInfo]) {
-        
-         NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
-        
-        [OCKeychain updateKeychainForUseLockPropertyForUser:idString];
-        
-    }
-    
-}
 
 #pragma mark - Singletons of Server Version Checks
 

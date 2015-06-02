@@ -16,6 +16,7 @@
 #import <Foundation/Foundation.h>
 
 @class UserDto;
+@class FileDto;
 
 @interface UtilsUrls : NSObject
 
@@ -39,6 +40,38 @@
 
 //Get the path of the temp folder where there are the temp files for the uploads
 + (NSString *) getTempFolderForUploadFiles;
+
++ (NSString *) getFilePathOnDBByFullPath:(NSString *)filePath andUser:(UserDto *)mUserDto;
+
++ (NSString *) getFullRemoteServerPath:(UserDto *)mUserDto;
+
++ (NSString *) getRemoteServerPathWithoutFolders:(UserDto *)mUser;
+
++ (NSString *) getFullRemoteServerPathWithWebDav:(UserDto *)mUserDto;
+
++ (NSString *) getPathWithAppNameByDestinyPath:(NSString *)destinyPath andUser:(UserDto *)mUserDto;
+
++ (NSString *) getFullRemoteServerPathWithoutProtocol:(UserDto *)mUserDto;
+
++ (NSString *) getUrlServerWithoutHttpOrHttps:(NSString*) url;
+
+//-----------------------------------
+/// @name Get a domain by a URL
+///-----------------------------------
+
+/**
+ * Method used to get only the domain and the protocol (http/https)
+ *
+ * @param NSString -> url
+ *
+ * @return NSString
+ *
+ */
++ (NSString *) getHttpAndDomainByURL:(NSString *) url;
+
++ (NSString *) getFilePathOnDBByFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user;
+
++ (NSString *) getFullRemoteServerFilePathByFile:(FileDto *) file andUser:(UserDto *) user;
 
 + (NSString *) getUserAgent;
 
