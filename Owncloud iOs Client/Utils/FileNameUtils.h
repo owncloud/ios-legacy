@@ -16,9 +16,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/AssetsLibrary.h>
-#import "OCAsset.h"
-
-
 
 typedef NS_ENUM (NSInteger, kindOfFileEnum){
     imageFileType = 0,
@@ -29,7 +26,6 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
 };
 
 @interface FileNameUtils : NSObject
-
 
 
 /*
