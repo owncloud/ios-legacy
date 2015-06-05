@@ -3017,15 +3017,20 @@
      [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0f]
                                                        title:NSLocalizedString(@"more_swipe", nil) andImage:[UIImage imageNamed:@"more-filled.png"]];
     
-    //Share
-    [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:
-     [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0f]
-                                                        title:NSLocalizedString(@"share_link_long_press", nil) andImage:[UIImage imageNamed:@"sharedItemSwipe.png"]];
+    if (!k_hide_share_options) {
+        
+        //Share
+        [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:
+         [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0f]
+                                                           title:NSLocalizedString(@"share_link_long_press", nil) andImage:[UIImage imageNamed:@"sharedItemSwipe.png"]];
+    }
     
     //Delete
     [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:
      [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
-                                                        title:NSLocalizedString(@"delete_label", nil) andImage:[UIImage imageNamed:@"deleteBlack.png"]];
+                                                       title:NSLocalizedString(@"delete_label", nil) andImage:[UIImage imageNamed:@"deleteBlack.png"]];
+    
+    
     
     return rightUtilityButtons;
 }
@@ -3058,6 +3063,10 @@
     
     [cell hideUtilityButtonsAnimated:YES];
     
+     if (!k_hide_share_options) {
+         
+     }
+    
     switch (index) {
         case 0:
         {
@@ -3067,15 +3076,24 @@
         }
         case 1:
         {
-            DLog(@"Click on index 1 - Share");
-            [self didSelectShareLinkOption];
-            break;
+            if (!k_hide_share_options) {
+                DLog(@"Click on index 1 - Share");
+                [self didSelectShareLinkOption];
+                break;
+            }else{
+                DLog(@"Click on index 2 - Delete");
+                [self didSelectDeleteOption];
+                break;
+            }
+
         }
         case 2:
         {
-            DLog(@"Click on index 2 - Delete");
-            [self didSelectDeleteOption];
-            break;
+            if (!k_hide_share_options) {
+                DLog(@"Click on index 2 - Delete");
+                [self didSelectDeleteOption];
+                break;
+            }
         }
         default:
             break;
