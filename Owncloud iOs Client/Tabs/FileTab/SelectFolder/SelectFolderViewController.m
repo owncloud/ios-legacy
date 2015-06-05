@@ -350,89 +350,106 @@
  */
 -(void) newFolderSaveClicked:(NSString*)name {
     
-    //Check if exist a folder with the same name
-    if ([self checkForSameName:name] == NO) {
-        
-        OCCommunication *communication = nil;
-        UserDto *activeUser = nil;
-        
+    //Check here if the user introduce a / character
+    if (![FileNameUtils isForbiddenCharactersInFileName:name withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]){
+        //Check if exist a folder with the same name
+        if ([self checkForSameName:name] == NO) {
+            
+            OCCommunication *communication = nil;
+            UserDto *activeUser = nil;
+            
 #ifdef SHARE_IN
-        communication = Managers.sharedOCCommunication;
-        activeUser = [ManageUsersDB getActiveUser];
-        [[Managers sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+            communication = Managers.sharedOCCommunication;
+            activeUser = [ManageUsersDB getActiveUser];
+            [[Managers sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
 #else
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        communication = [AppDelegate sharedOCCommunication];
-        activeUser = app.activeUser;
-        [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            communication = [AppDelegate sharedOCCommunication];
+            activeUser = app.activeUser;
+            [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
 #endif
-        
-        NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
-        NSString *newURL = [NSString stringWithFormat:@"%@%@",remotePath,[name encodeString:NSUTF8StringEncoding]];
-        NSString *rootPath = [UtilsDtos getDbBFilePathFromFullFilePath:newURL andUser:activeUser];
-        
-        //Set the right credentials
-        if (k_is_sso_active) {
-            [communication setCredentialsWithCookie:activeUser.password];
-        } else if (k_is_oauth_active) {
-            [communication setCredentialsOauthWithToken:activeUser.password];
+            
+            NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
+            NSString *newURL = [NSString stringWithFormat:@"%@%@",remotePath,[name encodeString:NSUTF8StringEncoding]];
+            NSString *rootPath = [UtilsDtos getDbBFilePathFromFullFilePath:newURL andUser:activeUser];
+            
+            //Set the right credentials
+            if (k_is_sso_active) {
+                [communication setCredentialsWithCookie:activeUser.password];
+            } else if (k_is_oauth_active) {
+                [communication setCredentialsOauthWithToken:activeUser.password];
+            } else {
+                [communication setCredentialsWithUser:activeUser.username andPassword:activeUser.password];
+            }
+            
+            NSString *pathOfNewFolder = [newURL stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
+            [communication createFolder:pathOfNewFolder onCommunication:communication withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+                
+                DLog(@"Folder created");
+                BOOL isSamlCredentialsError=NO;
+                
+                //Check the login error in shibboleth
+                if (k_is_sso_active && redirectedServer) {
+                    //Check if there are fragmens of saml in url, in this case there are a credential error
+                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                    if (isSamlCredentialsError) {
+                        [self errorLogin];
+                    }
+                }
+                if (!isSamlCredentialsError) {
+                    //Obtain the path where the folder will be created in the file system
+                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                    
+                    DLog(@"Name of the folder: %@ to create in: %@",name, currentLocalFileToCreateFolder);
+                    
+                    //Create the new folder in the file system
+                    [FileListDBOperations createAFolder:name inLocalFolder:currentLocalFileToCreateFolder];
+                    [self reloadCurrentFolder];
+                }
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+                DLog(@"error: %@", error);
+                [self endLoading];
+                DLog(@"Operation error: %ld", (long)response.statusCode);
+                [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:self.user];
+                
+            } errorBeforeRequest:^(NSError *error) {
+                if (error.code == OCErrorForbidenCharacters) {
+                    [self endLoading];
+                    DLog(@"The folder have problematic characters");
+                    
+                    NSString *msg = nil;
+                    if ([ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]) {
+                        msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+                    }else{
+                        msg = NSLocalizedString(@"forbidden_characters", nil);
+                    }
+                    
+                    [self showError:msg];
+                    
+                }
+            }];
         } else {
-            [communication setCredentialsWithUser:activeUser.username andPassword:activeUser.password];
+            [self endLoading];
+            DLog(@"Exist a folder with the same name");
+            [self showError:NSLocalizedString(@"folder_exist", nil)];
+            
+        }
+ 
+    }else{
+         [self endLoading];
+        
+        NSString *msg = nil;
+        if ([ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]) {
+            msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+        }else{
+            msg = NSLocalizedString(@"forbidden_characters", nil);
         }
         
-        NSString *pathOfNewFolder = [newURL stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        
-        [communication createFolder:pathOfNewFolder onCommunication:communication withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
-            
-            DLog(@"Folder created");
-            BOOL isSamlCredentialsError=NO;
-            
-            //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
-                //Check if there are fragmens of saml in url, in this case there are a credential error
-                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-                if (isSamlCredentialsError) {
-                    [self errorLogin];
-                }
-            }
-            if (!isSamlCredentialsError) {
-                //Obtain the path where the folder will be created in the file system
-                NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-                
-                DLog(@"Name of the folder: %@ to create in: %@",name, currentLocalFileToCreateFolder);
-                
-                //Create the new folder in the file system
-                [FileListDBOperations createAFolder:name inLocalFolder:currentLocalFileToCreateFolder];
-                [self reloadCurrentFolder];
-            }
-        } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-            DLog(@"error: %@", error);
-            [self endLoading];
-            DLog(@"Operation error: %ld", (long)response.statusCode);
-            [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:self.user];
-            
-        } errorBeforeRequest:^(NSError *error) {
-            if (error.code == OCErrorForbidenCharacters) {
-                [self endLoading];
-                DLog(@"The folder have problematic characters");
-                
-                NSString *msg = nil;
-                if ([ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]) {
-                    msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
-                }else{
-                    msg = NSLocalizedString(@"forbidden_characters", nil);
-                }
-                
-                [self showError:msg];
-                
-            }
-        }];
-    } else {
-        [self endLoading];
-        DLog(@"Exist a folder with the same name");
-        [self showError:NSLocalizedString(@"folder_exist", nil)];
-        
+        [self showError:msg];
     }
+    
+    
 }
 
 

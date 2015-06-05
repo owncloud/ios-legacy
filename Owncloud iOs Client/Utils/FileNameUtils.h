@@ -188,4 +188,5 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
  */
 + (NSString *)getComposeNameFromPath:(NSString *) path;
 
+
 @end
