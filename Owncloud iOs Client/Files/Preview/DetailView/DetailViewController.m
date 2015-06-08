@@ -171,9 +171,16 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [items insertObject:_spaceBar1 atIndex:2];
         [items insertObject:_favoriteButtonBar atIndex:3];
         [items insertObject:_spaceBar2 atIndex:4];
-        [items insertObject:_shareLinkButtonBar atIndex:5];
-        [items insertObject:_spaceBar3 atIndex:6];
-        [items insertObject:_deleteButtonBar atIndex:7];
+        
+        if (k_hide_share_options) {
+             [items insertObject:_deleteButtonBar atIndex:5];
+        }else{
+            [items insertObject:_shareLinkButtonBar atIndex:5];
+            [items insertObject:_spaceBar3 atIndex:6];
+            [items insertObject:_deleteButtonBar atIndex:7];
+        }
+        
+        
     }
     [toolbar setItems:items animated:YES];
     
