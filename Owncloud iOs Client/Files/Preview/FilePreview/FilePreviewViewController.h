@@ -39,6 +39,9 @@ extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
     //Autolayout attributes
     IBOutlet NSLayoutConstraint *_progressViewHeightConstraint;
     IBOutlet UIBarButtonItem *_favoriteButtonBar;
+    IBOutlet UIBarButtonItem *_shareButtonBar;
+    IBOutlet UIBarButtonItem *_flexibleSpaceAfterShareButtonBar;
+    
     
     NSString *nameFileToUpdate;
 }
