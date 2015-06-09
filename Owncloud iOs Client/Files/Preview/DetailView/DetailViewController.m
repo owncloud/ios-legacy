@@ -217,11 +217,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         _controllerManager = controller;
         _file = nil;
     } else {
-        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     }
     
     //Get the current local folder
-    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:myFile.filePath ofUserDto:app.activeUser]];
+    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:myFile.filePath andUser:app.activeUser]];
     _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
     //Quit the title
@@ -407,16 +407,15 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  * This method checks if there is on a favorite file a new version on the server
  */
 - (void) checkIfThereIsANewFavoriteVersion {
-    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    if([[AppDelegate sharedManageFavorites] thereIsANewVersionAvailableOfThisFile:_file]) {
-        //Set the file as isNecessaryUpdate
-        [ManageFilesDB setIsNecessaryUpdateOfTheFile:_file.idFile];
-        //Update the file on memory
-        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
-        [self reloadFileList];
-        [self manageTheSameFileOnThePreview];
+    
+    if (!self.manageFavorites) {
+        self.manageFavorites = [ManageFavorites new];
+        self.manageFavorites.delegate = self;
     }
+    
+    [self.manageFavorites thereIsANewVersionAvailableOfThisFile:self.file];
 }
+
 
 /*
  * Method that execute a image of type of file.
@@ -441,7 +440,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 - (void)openFile {
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    self.file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    self.file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     
     if (!self.openWith) {
@@ -514,7 +513,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     _isUpdatingFile = isUpdatingProcess;
     //Update the file
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     //Quit the gallery view
     if (_galleryView) {
@@ -972,7 +971,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 - (IBAction)didPressFavoritesButton:(id)sender {
     //Update the file from the DB
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (_file.isFavorite) {
         _file.isFavorite = NO;
@@ -1047,7 +1046,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         
         //Update the file
-        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
         
         DLog(@"idFile: %ld", (long)_file.idFile);
         
@@ -1307,7 +1306,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
-            _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+            _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
             
             [self downloadTheFile];
             
@@ -1426,7 +1425,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
    
     //Update fileDto
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     //Only if the file is the same
      if ([fileDto.localFolder isEqualToString: _file.localFolder]) {
@@ -1765,10 +1764,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Update the _file with DB
-    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     NSString *path = (NSString*)[notification object];
-    NSString *pathPreview=[UtilsDtos getRemoteUrlByFile:_file andUserDto:app.activeUser];
+    NSString *pathPreview = [UtilsUrls getFullRemoteServerFilePathByFile:self.file andUser:app.activeUser];
     
     if ([path isEqualToString:pathPreview]) {
         DLog(@"The file is the same, update the preview");
@@ -1798,7 +1797,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Update the preview file with the new information in DB
-    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     app.isOverwriteProcess = NO;
 }
 
@@ -1811,12 +1810,12 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Update the file with the new information in DB
-    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     DLog(@"file id: %ld",(long)_file.idFile);
 
     
     NSString *path = (NSString*)[notification object];
-    NSString * pathPreview=[UtilsDtos getRemoteUrlByFile:_file andUserDto:app.activeUser];
+    NSString *pathPreview = [UtilsUrls getFullRemoteServerFilePathByFile:self.file andUser:app.activeUser];
     
     //If the cancel file is the same that the previewed file, clean the view
     if ([path isEqualToString:pathPreview]) {
@@ -2260,7 +2259,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 #pragma mark - UIGestureRecognizerDelegate methods
 
-
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
     return YES;
 }
@@ -2273,6 +2271,22 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         }
     }
     return YES;
+}
+
+#pragma mark - ManageFavoritesDelegate
+
+- (void) fileHaveNewVersion:(BOOL)isNewVersionAvailable {
+    
+    if (isNewVersionAvailable) {
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        
+        //Set the file as isNecessaryUpdate
+        [ManageFilesDB setIsNecessaryUpdateOfTheFile:_file.idFile];
+        //Update the file on memory
+        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+        [self reloadFileList];
+        [self manageTheSameFileOnThePreview];
+    }
 }
 
 

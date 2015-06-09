@@ -21,23 +21,19 @@
 #import "UserDto.h"
 #import "KKPasscodeViewController.h"
 #import "ManageLocation.h"
+#import "AccountCell.h"
+#import "AddAccountViewController.h"
 
 
 typedef enum {
-    help=0,
+    help = 0,
     recommend = 1,
     feedback = 2,
     impress = 3,
     
 } enumInfoSetting;
 
-@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, ManageLocationDelegate>{
-
-    UISwitch *_switchPasscode;  
-    UITableView *_settingsTableView;
-    DetailViewController *_detailViewController;
-    UserDto *_user;
-}
+@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, ManageLocationDelegate, AccountCellDelegate, AddAccountDelegate>
 
 @property(nonatomic,strong)IBOutlet UITableView *settingsTableView;
 @property(nonatomic,strong)UISwitch *switchPasscode;
@@ -55,9 +51,10 @@ typedef enum {
 @property (nonatomic,strong) MFMailComposeViewController *mailer;
 @property (nonatomic) BOOL isMailComposeVisible;
 
--(IBAction)changeSwitchPasscode:(id)sender;
--(IBAction)changeSwitchInstantUpload:(id)sender;
--(void)disconnectUser;
--(void)initStateInstantUpload;
+
+- (IBAction)changeSwitchPasscode:(id)sender;
+- (IBAction)changeSwitchInstantUpload:(id)sender;
+- (void)disconnectUser;
+- (void)initStateInstantUpload;
 
 @end

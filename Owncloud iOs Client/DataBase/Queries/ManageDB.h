@@ -174,7 +174,7 @@
 /**
  * Changes:
  *
- * Alter users table, added new field to forbidden characters support.
+ * Alter users table, added new field to forbidden characters support, and to redirected url
  *
  */
 + (void) updateDBVersion12To13;

@@ -23,6 +23,8 @@
 #import "UtilsDtos.h"
 #import "UploadsOfflineDto.h"
 #import "ManageFilesDB.h"
+#import "ManageUsersDB.h"
+#import "UtilsUrls.h"
 
 NSString * PreviewFileNotification=@"PreviewFileNotification";
 
@@ -50,40 +52,6 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     NSString *temp =[NSString stringWithFormat:@"%@", lenghString];
     
     return temp;
-}
-
-/*
- * Method that make the path string
- */
-+ (NSString *)makePathString:(NSString *)destinyFolder withUserUrl:(NSString *)userUrl{
-    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-    NSArray *splitedUrlFromServer = [userUrl componentsSeparatedByString:@"/"];
-    DLog(@"splitedUrlFromServer: %lu", (unsigned long)[splitedUrlFromServer count]);
-    
-    NSString *utf8String;
-    
-    utf8String = [destinyFolder stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];
-    
-    NSString *tempString= appName;
-    NSString *temp;
-    NSArray *splitedUrl = [utf8String componentsSeparatedByString:@"/"];
-    
-    for (int i=0;i<[splitedUrl count]; i++) {
-        
-        if (i>[splitedUrlFromServer count]) {
-            temp=[NSString stringWithFormat:@"/%@", [splitedUrl objectAtIndex:i]];
-            DLog(@"Temp paht string: %@", temp);
-            tempString=[tempString stringByAppendingString:temp];
-        }
-    }
-    
-    if ([tempString isEqualToString:@""] || [tempString isEqualToString:@"/"]) {
-        tempString=appName;
-    }
-    
-    
-    return tempString;
-    
 }
 
 
@@ -114,9 +82,9 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Obtain the remotePath: https://s3.owncloud.com/owncloud/remote.php/webdav
-    NSString *remoteFolder = [NSString stringWithFormat: @"%@%@", app.activeUser.url, k_url_webdav_server];
+    NSString *remoteFolder = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     //With the filePath obtain the folder name: A/
-    NSString *folderName= [UtilsDtos getDbBFolderPathFromFullFolderPath:file.filePath andUser:app.activeUser];
+    NSString *folderName= [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser];
     //Obtain the complete path: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
     remoteFolder=[NSString stringWithFormat:@"%@%@",remoteFolder, folderName];
     DLog(@"remote folder: %@",remoteFolder);
@@ -126,37 +94,6 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     [[NSNotificationCenter defaultCenter] postNotificationName:PreviewFileNotification object:pathFile];
 }
 
-//-----------------------------------
-/// @name Get an URL with the Redirected
-///-----------------------------------
-
-/**
- * Method to modify a URL changing the domain and the protocol (http/https) with the urlServerRedirected if it is not nil
- *
- * @param NSString -> originalUrl
- *
- * @return NSString
- *
- */
-+ (NSString *) getUrlWithRedirectionByOriginalURL:(NSString *) originalUrl {
-    
-    NSString *output = originalUrl;
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-
-    //If app.urlServerRedirected is nil the server is not redirected
-    if (app.urlServerRedirected) {
-        NSString *textToBeRemoved = [UtilsDtos getHttpAndDomainByURL:originalUrl];
-        NSString *textWithoutOriginalDomain = [originalUrl substringFromIndex:textToBeRemoved.length];
-        
-        output = [app.urlServerRedirected stringByAppendingString:textWithoutOriginalDomain];
-
-    }
-    
-    
-    return output;
-    
-}
 
 //-----------------------------------
 /// @name Get a fileDto by the UploadOffline
@@ -175,7 +112,7 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
 + (FileDto *) getFileDtoByUploadOffline:(UploadsOfflineDto *) uploadsOfflineDto {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    NSString *partToRemoveOfPah = [app.activeUser.url stringByAppendingString:k_url_webdav_server];
+    NSString *partToRemoveOfPah = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     
     NSString *filePath = [uploadsOfflineDto.destinyFolder substringFromIndex:partToRemoveOfPah.length];
     

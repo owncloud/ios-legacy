@@ -246,7 +246,7 @@
     
     [self dismissViewControllerAnimated:YES completion:nil];
     
-    NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
+    NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:self.currentFolder andUser:self.user];
     
     [(SelectFolderNavigation*)self.parent selectFolder:remotePath];
 
@@ -369,9 +369,10 @@
             [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
 #endif
             
-            NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
+            NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:self.currentFolder andUser:self.user];
+
             NSString *newURL = [NSString stringWithFormat:@"%@%@",remotePath,[name encodeString:NSUTF8StringEncoding]];
-            NSString *rootPath = [UtilsDtos getDbBFilePathFromFullFilePath:newURL andUser:activeUser];
+            NSString *rootPath = [UtilsUrls getFilePathOnDBByFullPath:newURL andUser:activeUser];
             
             //Set the right credentials
             if (k_is_sso_active) {

@@ -123,4 +123,10 @@
  */
 + (BOOL) hasTheServerOfTheActiveUserForbiddenCharactersSupport;
 
+
+
++ (void)updateUrlRedirected:(NSString *)newValue byUserDto:(UserDto *)user;
+
++ (NSString *) getUrlRedirectedByUserDto:(UserDto *)user;
+
 @end

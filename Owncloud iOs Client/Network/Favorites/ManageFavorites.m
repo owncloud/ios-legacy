@@ -157,8 +157,8 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     for (FileDto *file in favoritesFiles) {
         
         //FileName full path
-        NSString *serverPath = [NSString stringWithFormat:@"%@%@", user.url, k_url_webdav_server];
-        NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:file.filePath andUser:user], file.fileName];
+        NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:user];
+        NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:user], file.fileName];
         
         path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
@@ -192,7 +192,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                         FileDto *item = [directoryList objectAtIndex:0];
                         
                         //Update the file data
-                        FileDto *updatedFile = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:file.filePath andUser:user] andUser:user];
+                        FileDto *updatedFile = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:user] andUser:user];
                         
                         //Check if the etag has changed
                         if (((![item.etag isEqual: updatedFile.etag] && updatedFile.isDownload != downloading && updatedFile.isDownload != updating) || (updatedFile.isDownload == notDownload)) && updatedFile) {
@@ -213,7 +213,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                             //Data to download
                             //Get the current local folder
                             AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                            NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:updatedFile.filePath ofUserDto:user]];
+                            NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:updatedFile.filePath andUser:user]];
                             currentLocalFolder = [currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                             
                             Download *download = [Download new];
@@ -316,10 +316,8 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
  *
  * @param favoriteFile -> FileDto
  */
-- (BOOL) thereIsANewVersionAvailableOfThisFile: (FileDto *)favoriteFile {
+- (void) thereIsANewVersionAvailableOfThisFile: (FileDto *)favoriteFile {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
     //Set the right credentials
     if (k_is_sso_active) {
@@ -333,12 +331,10 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    NSString *serverPath = [NSString stringWithFormat:@"%@%@", app.activeUser.url, k_url_webdav_server];
-    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsDtos getDbBFolderPathFromFullFolderPath:favoriteFile.filePath andUser:app.activeUser], favoriteFile.fileName];
+    NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:favoriteFile.filePath andUser:app.activeUser], favoriteFile.fileName];
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    __block BOOL isNewVersion = NO;
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
@@ -372,24 +368,19 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                 FileDto *currentFileDto = [items objectAtIndex:0];
                 DLog(@"currentFileDto: %@", currentFileDto.etag);
                 if (![currentFileDto.etag isEqual: favoriteFile.etag]) {
-                    isNewVersion = YES;
+                    [self.delegate fileHaveNewVersion:YES];
+                } else {
+                    [self.delegate fileHaveNewVersion:NO];
                 }
             }
         }
-        dispatch_semaphore_signal(semaphore);
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
         
-        dispatch_semaphore_signal(semaphore);
+        [self.delegate fileHaveNewVersion:NO];
     }];
-    // Run loop
-    while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW))
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
-                                 beforeDate:[NSDate distantFuture]];
-    
-    return isNewVersion;
 }
 
 #pragma mark - Download Delegate Methods

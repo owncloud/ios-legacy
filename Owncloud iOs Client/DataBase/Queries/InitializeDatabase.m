@@ -39,10 +39,6 @@
  */
 + (void) initDataBase {
     
-    CredentialsDto *credDto = [OCKeychain getCredentialsById:@"1"];
-    DLog(@"User: %@", credDto.userName);
-    DLog(@"Password: %@", credDto.password);
-    
     //New version
     static int dbVersion = k_DB_version_13;
     
@@ -158,6 +154,8 @@
                 [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_12:
+                //Update keychain of all the users
+                [OCKeychain updateAllKeychainsToUseTheLockProperty];
                 [ManageDB updateDBVersion12To13];
                 break;
         }
@@ -172,6 +170,10 @@
         //delete all keychain items
         [OCKeychain resetKeychain];
     }
+    
+    CredentialsDto *credDto = [OCKeychain getCredentialsById:@"1"];
+    DLog(@"User: %@", credDto.userName);
+    DLog(@"Password: %@", credDto.password);
 }
 
 #pragma mark - System Updates

@@ -274,17 +274,6 @@
 }
 
 
-+ (NSString*) getUrlServerWithoutHttpOrHttps:(NSString*) url {
-    
-    if ([[url lowercaseString] hasPrefix:@"http://"]) {
-        url = [url substringFromIndex:7];
-    } else if ([[url lowercaseString] hasPrefix:@"https://"]) {
-        url = [url substringFromIndex:8];
-    }
-    
-    return url;
-}
-
 /*
  * This method check and url and look for a saml fragment
  * and return the bollean result

@@ -106,7 +106,7 @@
             CheckAccessToServer *mCheckAccessToServer = [[CheckAccessToServer alloc] init];
             mCheckAccessToServer.viewControllerToShow = fileListTableViewController;
             mCheckAccessToServer.delegate = fileListTableViewController;
-            [mCheckAccessToServer isConnectionToTheServerByUrl:self.user.url];
+            [mCheckAccessToServer isConnectionToTheServerByUrl:[UtilsUrls getFullRemoteServerPath:self.user]];
         }];
         
     } else {
