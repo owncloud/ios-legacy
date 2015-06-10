@@ -30,6 +30,8 @@
 			<array>
 				<string>UIDocumentPickerModeOpen</string>
 				<string>UIDocumentPickerModeImport</string>
+				<string>UIDocumentPickerModeMoveToService</string>
+				<string>UIDocumentPickerModeExportToService</string>
 			</array>
 			<key>UIDocumentPickerSupportedFileTypes</key>
 			<array>

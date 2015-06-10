@@ -22,6 +22,7 @@
 
 @optional
 - (void) openFile:(FileDto*)fileDto;
+- (void) selectFolder:(FileDto*)fileDto;
 @end
 
 @interface FileListDocumentProviderViewController : SimpleFileListTableViewController <DPDownloadDelegate>
@@ -38,6 +39,12 @@ extern NSString *userHasCloseDocumentPicker;
 @property BOOL isNecessaryAdjustThePositionAndTheSizeOfTheNavigationBar;
 @property (nonatomic, strong) FileListDocumentProviderViewController *filesViewController;
 
+//For Export and Move
+@property (nonatomic) UIDocumentPickerMode mode;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *moveToThisLocationButton;
+
 - (void) showErrorMessage:(NSString *)string;
+
+- (IBAction)moveToThisLocationButtonTapped:(id)sender;
 
 @end
