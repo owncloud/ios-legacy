@@ -38,6 +38,7 @@
 #import "UtilsTableView.h"
 #import "DownloadUtils.h"
 #import "UtilsUrls.h"
+#import "RenameFile.h"
 
 @interface RecentViewController ()
 
@@ -530,6 +531,9 @@
                 case errorFileExist:
                     msgError=NSLocalizedString(@"error_file_exists", nil);
                     break;
+                case errorInvalidPath:
+                    msgError=NSLocalizedString(@"error_invalid_path", nil);
+                    break;
                 case errorNotPermission:
                     msgError=NSLocalizedString(@"error_permission", nil);
                     break;
@@ -733,11 +737,9 @@
             if (selectedManageUploadRequest.currentUpload.kindOfError == errorCredentials) {
                 DLog(@"Credential errors");
                 [self resolveCredentialError:selectedManageUploadRequest.currentUpload];
-                
             } else if (selectedManageUploadRequest.currentUpload.kindOfError == errorDestinyNotExist){
                 DLog(@"Destiny folder doesn't exist");
                 [self resolveFolderNotFoundError:selectedManageUploadRequest.currentUpload];
-                
             } else if (selectedManageUploadRequest.currentUpload.kindOfError == errorFileExist){
                 [self resolveFileExistError:selectedManageUploadRequest.currentUpload];
                 DLog(@"File exists");
@@ -1184,6 +1186,8 @@
         //Nothing
     }
 }
+
+
 
 
 @end
