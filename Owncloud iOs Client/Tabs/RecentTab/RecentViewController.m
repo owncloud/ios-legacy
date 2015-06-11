@@ -532,7 +532,7 @@
                     msgError=NSLocalizedString(@"error_file_exists", nil);
                     break;
                 case errorInvalidPath:
-                    msgError=NSLocalizedString(@"error_invalid_path", nil);
+                    msgError=NSLocalizedString(@"error_file_invalid_characters", nil);
                     break;
                 case errorNotPermission:
                     msgError=NSLocalizedString(@"error_permission", nil);
