@@ -1120,20 +1120,30 @@
 
 - (NSArray *)setSwipeLeftButtons
 {
-    //Share gray button
-    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    //Check the share options should be presented
+    if (k_hide_share_options) {
+        
+        return nil;
+        
+    }else{
+        
+        //Share gray button
+        NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+        
+        
+        [rightUtilityButtons sw_addUtilityTwoLinesButtonWithColor:
+         [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
+                                                            title:NSLocalizedString(@"share_link_long_press", nil)];
+        
+        //UnShare red button
+        [rightUtilityButtons sw_addUtilityTwoLinesButtonWithColor:
+         [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
+                                                            title:NSLocalizedString(@"unshare_link", nil)];
+        
+        return rightUtilityButtons;
+        
+    }
     
-    
-    [rightUtilityButtons sw_addUtilityTwoLinesButtonWithColor:
-     [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
-                                                        title:NSLocalizedString(@"share_link_long_press", nil)];
-    
-    //UnShare red button
-    [rightUtilityButtons sw_addUtilityTwoLinesButtonWithColor:
-     [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
-                                                        title:NSLocalizedString(@"unshare_link", nil)];
-    
-    return rightUtilityButtons;
 }
 
 #pragma mark - SWTableViewDelegate

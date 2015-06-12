@@ -87,8 +87,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     [super viewDidLoad];
     
     //Enable toolBar and navBar
-    self.navigationController.navigationBar.UserInteractionEnabled = YES;
-    _toolBar.UserInteractionEnabled = YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
+    _toolBar.userInteractionEnabled = YES;
     
     _progressViewHeightConstraint.constant = 2;
     
@@ -114,7 +114,14 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
     _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
-   
+    //Check if share link button should be appear.
+    if (k_hide_share_options) {
+        NSMutableArray *customItems = [NSMutableArray arrayWithArray:self.toolBar.items];
+        [customItems removeObjectIdenticalTo:_shareButtonBar];
+        [customItems removeObjectIdenticalTo:_flexibleSpaceAfterShareButtonBar];
+        self.toolBar.items = customItems;
+    }
+    
     //Method that managed every type of file
     [self handleFile];
 }

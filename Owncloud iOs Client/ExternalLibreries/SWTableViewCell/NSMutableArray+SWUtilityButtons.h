@@ -12,7 +12,7 @@
 
 - (void)sw_addUtilityButtonWithColor:(UIColor *)color title:(NSString *)title;
 - (void)sw_addUtilityTwoLinesButtonWithColor:(UIColor *)color title:(NSString *)title;
-- (void)sw_addUtilityOneLineButtonWithColor:(UIColor *)color title:(NSString *)title andImage:(UIImage *) image;
+- (void)sw_addUtilityOneLineButtonWithColor:(UIColor *)color title:(NSString *)title andImage:(UIImage *) image forTwoButtons:(BOOL) areOnlyTwoButtons;
 - (void)sw_addUtilityButtonWithColor:(UIColor *)color icon:(UIImage *)icon;
 
 
