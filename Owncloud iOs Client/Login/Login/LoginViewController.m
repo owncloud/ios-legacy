@@ -2073,6 +2073,13 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                 [self errorLogin];
             }
             
+        } else if (redirectedServer){
+            //Manage the redirectedServer. This case will only happen if is a permanent redirection 301
+            DLog(@"Set the redirectedServer as default URL for the new user");
+            
+            redirectedServer = [redirectedServer substringToIndex:[redirectedServer length] - k_url_webdav_server.length];
+            
+            self.urlTextField.text = redirectedServer;
         }
         
         if (!isSamlServer) {
