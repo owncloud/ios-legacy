@@ -102,11 +102,7 @@
         if ([FileNameUtils isForbiddenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport]) {
             
             NSString *msg = nil;
-            if (serverHasForbiddenCharactersSupport) {
-                msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
-            }else{
-                msg = NSLocalizedString(@"forbidden_characters", nil);
-            }
+            msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
             
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle: msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alert show];
@@ -312,11 +308,7 @@
                 
             case OCErrorMovingDestinyNameHaveForbiddenCharacters:
             
-                if ([ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]) {
-                    msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
-                }else{
-                    msg = NSLocalizedString(@"forbidden_characters", nil);
-                }
+                msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
 
                 [self showError:msg];
                 break;

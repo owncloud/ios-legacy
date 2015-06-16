@@ -222,12 +222,7 @@ import AVFoundation
                 }else{
                     
                     var msg:String!
-                    
-                    if (ManageUsersDB.hasTheServerOfTheActiveUserForbiddenCharactersSupport()){
-                        msg = NSLocalizedString("forbidden_characters_from_server", comment: "")
-                    }else{
-                        msg = NSLocalizedString("forbidden_characters", comment: "")
-                    }
+                    msg = NSLocalizedString("forbidden_characters_from_server", comment: "")
                 
                     showAlertView(msg)
                     

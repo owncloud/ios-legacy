@@ -884,11 +884,7 @@
                     DLog(@"The folder have problematic characters");
                     
                     NSString *msg = nil;
-                    if ([ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]) {
-                        msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
-                    }else{
-                        msg = NSLocalizedString(@"forbidden_characters", nil);
-                    }
+                    msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
                     
                     _alert = [[UIAlertView alloc] initWithTitle:msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
                     [_alert show];
@@ -910,11 +906,7 @@
         [self endLoading];
         //Forbidden characters found after the request.
         NSString *msg = nil;
-        if ([ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]) {
-            msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
-        }else{
-            msg = NSLocalizedString(@"forbidden_characters", nil);
-        }
+        msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
         
         _alert = [[UIAlertView alloc] initWithTitle:msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
         [_alert show];

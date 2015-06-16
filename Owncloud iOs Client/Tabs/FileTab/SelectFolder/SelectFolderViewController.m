@@ -420,11 +420,7 @@
                     DLog(@"The folder have problematic characters");
                     
                     NSString *msg = nil;
-                    if ([ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]) {
-                        msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
-                    }else{
-                        msg = NSLocalizedString(@"forbidden_characters", nil);
-                    }
+                    msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
                     
                     [self showError:msg];
                     
@@ -441,11 +437,7 @@
          [self endLoading];
         
         NSString *msg = nil;
-        if ([ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]) {
-            msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
-        }else{
-            msg = NSLocalizedString(@"forbidden_characters", nil);
-        }
+        msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
         
         [self showError:msg];
     }
