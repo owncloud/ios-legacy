@@ -204,91 +204,96 @@
 
 - (void) selectFolder:(FileDto*)fileDto{
     
-    
-    NSLog(@"URL : %@", self.originalURL.path);
-    
-   // NSURL *originUrl = [NSURL fileURLWithPath:fileDto.localFolder];
-    NSString *folder = [NSString stringWithFormat: @"test/"];
-    NSURL *destinationUrl = [self.documentStorageURL URLByAppendingPathComponent:folder];
-    
-    NSError *error = nil;
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:destinationUrl.path withIntermediateDirectories:NO attributes:nil error:&error];
-        DLog(@"Error: %@", [error localizedDescription]);
-    }
-    
-    destinationUrl = [destinationUrl URLByAppendingPathComponent:self.originalURL.lastPathComponent];
-    
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
-        if (![[NSFileManager defaultManager] removeItemAtURL:destinationUrl error:&error]) {
-            NSLog(@"Error removing file: %@", error);
+    BOOL access = [self.originalURL startAccessingSecurityScopedResource];
+
+    if (access) {
+        
+        NSLog(@"URL : %@", self.originalURL.path);
+        
+        // NSURL *originUrl = [NSURL fileURLWithPath:fileDto.localFolder];
+        NSString *folder = [NSString stringWithFormat: @"test/"];
+        NSURL *destinationUrl = [self.documentStorageURL URLByAppendingPathComponent:folder];
+        
+        NSError *error = nil;
+        
+        if (![[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
+            [[NSFileManager defaultManager] createDirectoryAtPath:destinationUrl.path withIntermediateDirectories:NO attributes:nil error:&error];
+            DLog(@"Error: %@", [error localizedDescription]);
         }
-    }
-    
-    if (![[NSFileManager defaultManager] copyItemAtURL:self.originalURL toURL:destinationUrl error:&error]) {
-        NSLog(@"Error copyng file: %@", error);
-    }
-    
-    NSDictionary *attributes = nil;
-    
-    if (!error) {
-        attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:destinationUrl.path error:&error];
-    }
-    
-    //Some error in the process to send the file to the document picker.
-    if (attributes && !error) {
         
-       // ProvidingFileDto *providingFile = [ManageProvidingFilesDB insertProvidingFileDtoWithPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:destinationUrl.path] byUserId:self.user.idUser];
-       // [ManageFilesDB updateFile:fileDto.idFile withProvidingFile:providingFile.idProvidingFile];
+        destinationUrl = [destinationUrl URLByAppendingPathComponent:self.originalURL.lastPathComponent];
         
         
-        
-        NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:self.user],folder];
-        
-       // long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:destinationUrl.path error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
-        
-        long long fileLength = [[attributes valueForKey:NSFileSize] unsignedLongLongValue];
-        
-        NSString *temp = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], self.originalURL.lastPathComponent];
-        
-        [self copyFileOnTheFileSystemByOrigin:self.originalURL.path andDestiny:temp];
-        
-        UploadsOfflineDto *upload = [UploadsOfflineDto new];
-        
-        upload.originPath = temp;
-        upload.destinyFolder = remotePath;
-        upload.uploadFileName = destinationUrl.lastPathComponent;
-        upload.kindOfError = notAnError;
-        upload.estimateLength = (long)fileLength;
-        upload.userId = self.user.idUser;
-        upload.isLastUploadFileOfThisArray = YES;
-        upload.status = generatedByDocumentProvider;
-        upload.chunksLength = k_lenght_chunk;
-        upload.isNotNecessaryCheckIfExist = NO;
-        upload.isInternalUpload = NO;
-        upload.taskIdentifier = 0;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
+            if (![[NSFileManager defaultManager] removeItemAtURL:destinationUrl error:&error]) {
+                NSLog(@"Error removing file: %@", error);
+            }
+        }
         
         
-        //Set this file as an overwritten state
-       // [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
+        NSFileManager *fileManager = [[NSFileManager alloc] init];
         
-        [ManageUploadsDB insertUpload:upload];
-        
-        
-        [self dismissGrantingAccessToURL:destinationUrl];
-        
-    }else{
-        
-        OCNavigationController *navigationController = (OCNavigationController*) self.presentedViewController;
-        FileListDocumentProviderViewController *fileListController = (FileListDocumentProviderViewController*) [navigationController.viewControllers objectAtIndex:0];
-        [fileListController showErrorMessage:NSLocalizedString(@"error_sending_file_to_document_picker", nil)];
-    }
+        NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] init];
    
-    
-    
+        //Copy file using file coordinate
+        [fileCoordinator coordinateReadingItemAtURL:self.originalURL options: NSFileCoordinatorReadingForUploading error:&error byAccessor:^(NSURL *newURL) {
+            
+            NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:self.user],folder];
+           
+            NSString *temp = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], self.originalURL.lastPathComponent];
+            NSURL *tempURL = [NSURL fileURLWithPath:temp];
+            
+            NSError *copyError = nil;
+            
+            NSData* data = [NSData dataWithContentsOfURL:newURL];
+            
+            [data writeToURL:destinationUrl atomically:YES];
+            
+           // [fileManager copyItemAtURL:newURL toURL:destinationUrl error:&copyError];
+            
+            if ([fileManager fileExistsAtPath:temp]) {
+                [fileManager removeItemAtURL:tempURL error:&copyError];
+            }
+            
+           // [fileManager copyItemAtURL:destinationUrl toURL:tempURL error:&copyError];
+            [data writeToURL:tempURL atomically:YES];
+            
+            NSDictionary *attributes = nil;
+            attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:tempURL.path error:&copyError];
+            long long fileLength = [[attributes valueForKey:NSFileSize] unsignedLongLongValue];
+            
+            UploadsOfflineDto *upload = [UploadsOfflineDto new];
+            
+            upload.originPath = temp;
+            upload.destinyFolder = remotePath;
+            upload.uploadFileName = temp.lastPathComponent;
+            upload.kindOfError = notAnError;
+            upload.estimateLength = (long)fileLength;
+            upload.userId = self.user.idUser;
+            upload.isLastUploadFileOfThisArray = YES;
+            upload.status = generatedByDocumentProvider;
+            upload.chunksLength = k_lenght_chunk;
+            upload.isNotNecessaryCheckIfExist = NO;
+            upload.isInternalUpload = NO;
+            upload.taskIdentifier = 0;
+            
+            [ManageUploadsDB insertUpload:upload];
+            
+            
+            [self dismissGrantingAccessToURL:destinationUrl];
+           
+
+            
+        }];
+        
+          [self.originalURL stopAccessingSecurityScopedResource];
+        
+    }
+
+ 
 }
+
+
 
 - (void) copyFileOnTheFileSystemByOrigin:(NSString *) origin andDestiny:(NSString *) destiny {
     
