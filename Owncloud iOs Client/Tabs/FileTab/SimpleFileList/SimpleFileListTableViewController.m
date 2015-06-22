@@ -561,8 +561,6 @@
 #ifdef CONTAINER_APP
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:message message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
         [alertView show];
-        
-        [self showEditAccount];
 #endif
         
     }else{
@@ -576,7 +574,7 @@
                              style:UIAlertActionStyleDefault
                              handler:^(UIAlertAction * action)
                              {
-                                    [self showEditAccount];
+                                 
                              }];
         [alert addAction:ok];
         
@@ -614,6 +612,8 @@
     } else {
        [self showError:NSLocalizedString(@"error_login_message", nil)];
     }
+    
+    [self showEditAccount];
 }
 
 #pragma mark - Pull Refresh
