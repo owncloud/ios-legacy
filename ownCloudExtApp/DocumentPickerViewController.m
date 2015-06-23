@@ -208,19 +208,20 @@
 
     if (access) {
         
-        NSLog(@"URL : %@", self.originalURL.path);
+       // NSLog(@"URL : %@", self.originalURL.path);
         
-        // NSURL *originUrl = [NSURL fileURLWithPath:fileDto.localFolder];
         NSString *folder = [NSString stringWithFormat: @"test/"];
         NSURL *destinationUrl = [self.documentStorageURL URLByAppendingPathComponent:folder];
         
         NSError *error = nil;
         
+        //Create the destiny folder
         if (![[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
-            [[NSFileManager defaultManager] createDirectoryAtPath:destinationUrl.path withIntermediateDirectories:NO attributes:nil error:&error];
-            DLog(@"Error: %@", [error localizedDescription]);
+            [[NSFileManager defaultManager] createDirectoryAtPath:destinationUrl.path withIntermediateDirectories:YES attributes:nil error:&error];
         }
         
+        
+        //Add the file name provided to the final path
         destinationUrl = [destinationUrl URLByAppendingPathComponent:self.originalURL.lastPathComponent];
         
         
@@ -230,64 +231,27 @@
             }
         }
         
+       
+        NSFileCoordinator *fileCoordinator = [NSFileCoordinator new];
         
-        NSFileManager *fileManager = [[NSFileManager alloc] init];
-        
-        NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] init];
-   
-        //Copy file using file coordinate
         [fileCoordinator coordinateReadingItemAtURL:self.originalURL options: NSFileCoordinatorReadingForUploading error:&error byAccessor:^(NSURL *newURL) {
             
-            NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:self.user],folder];
-           
-            NSString *temp = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], self.originalURL.lastPathComponent];
-            NSURL *tempURL = [NSURL fileURLWithPath:temp];
-            
-            NSError *copyError = nil;
-            
-            NSData* data = [NSData dataWithContentsOfURL:newURL];
-            
-            [data writeToURL:destinationUrl atomically:YES];
-            
-           // [fileManager copyItemAtURL:newURL toURL:destinationUrl error:&copyError];
-            
-            if ([fileManager fileExistsAtPath:temp]) {
-                [fileManager removeItemAtURL:tempURL error:&copyError];
+            if (error) {
+                NSLog(@"Error: %@", error.description);
+               
+            }else{
+                NSError *copyError = nil;
+                [[NSFileManager defaultManager] copyItemAtURL:newURL toURL:destinationUrl error:&copyError];
             }
             
-           // [fileManager copyItemAtURL:destinationUrl toURL:tempURL error:&copyError];
-            [data writeToURL:tempURL atomically:YES];
-            
-            NSDictionary *attributes = nil;
-            attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:tempURL.path error:&copyError];
-            long long fileLength = [[attributes valueForKey:NSFileSize] unsignedLongLongValue];
-            
-            UploadsOfflineDto *upload = [UploadsOfflineDto new];
-            
-            upload.originPath = temp;
-            upload.destinyFolder = remotePath;
-            upload.uploadFileName = temp.lastPathComponent;
-            upload.kindOfError = notAnError;
-            upload.estimateLength = (long)fileLength;
-            upload.userId = self.user.idUser;
-            upload.isLastUploadFileOfThisArray = YES;
-            upload.status = generatedByDocumentProvider;
-            upload.chunksLength = k_lenght_chunk;
-            upload.isNotNecessaryCheckIfExist = NO;
-            upload.isInternalUpload = NO;
-            upload.taskIdentifier = 0;
-            
-            [ManageUploadsDB insertUpload:upload];
-            
+            [self.originalURL stopAccessingSecurityScopedResource];
             
             [self dismissGrantingAccessToURL:destinationUrl];
-           
 
-            
         }];
         
-          [self.originalURL stopAccessingSecurityScopedResource];
-        
+    }else{
+        NSLog(@"There are not access to the file by export/move mode");
     }
 
  

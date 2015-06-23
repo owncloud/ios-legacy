@@ -93,10 +93,11 @@
 - (void)itemChangedAtURL:(NSURL *)url {
     // Called at some point after the file has changed; the provider may then trigger an upload
     NSLog(@"Item changed at URL %@", url);
-
+    
     ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoByPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:url.path]];
     
     if (providingFile) {
+        //Open
         FileDto *file = [ManageFilesDB getFileDtoRelatedWithProvidingFileId:providingFile.idProvidingFile ofUser:providingFile.userId];
         
         NSLog(@"File name %@", file.fileName);
@@ -106,6 +107,10 @@
         [self createUploadOfflineWithFile:file fromPath:url.path withUser:file.userId];
         
         [self removeItemByUrl:url];
+        
+    }else{
+        //Export / Move
+        [self createUploadOfflineWithUrl:url];
         
     }
 
@@ -191,6 +196,43 @@
     
 }
 
+
+- (void) createUploadOfflineWithUrl:(NSURL *)url{
+    
+    UserDto *user = [ManageUsersDB getActiveUser];
+    
+    NSString *folder = @"test/";
+    
+    NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:user],folder];
+    
+    NSString *temp = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], url.lastPathComponent];
+    
+    [self copyFileOnTheFileSystemByOrigin:url.path andDestiny:temp];
+    
+    NSError *copyError = nil;
+    
+    NSDictionary *attributes = nil;
+    attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:temp error:&copyError];
+    long long fileLength = [[attributes valueForKey:NSFileSize] unsignedLongLongValue];
+    
+    UploadsOfflineDto *upload = [UploadsOfflineDto new];
+    
+    upload.originPath = temp;
+    upload.destinyFolder = remotePath;
+    upload.uploadFileName = temp.lastPathComponent;
+    upload.kindOfError = notAnError;
+    upload.estimateLength = (long)fileLength;
+    upload.userId = user.idUser;
+    upload.isLastUploadFileOfThisArray = YES;
+    upload.status = generatedByDocumentProvider;
+    upload.chunksLength = k_lenght_chunk;
+    upload.isNotNecessaryCheckIfExist = NO;
+    upload.isInternalUpload = NO;
+    upload.taskIdentifier = 0;
+    
+    [ManageUploadsDB insertUpload:upload];
+    
+}
 
 
 @end
