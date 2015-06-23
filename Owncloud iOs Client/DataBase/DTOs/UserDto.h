@@ -34,6 +34,7 @@ typedef enum {
 @property long storage;
 @property NSInteger hasShareApiSupport;
 @property NSInteger hasCookiesSupport;
+@property NSInteger hasForbiddenCharactersSupport;
 @property BOOL instantUpload;
 @property (nonatomic, copy) NSString *pathInstantUpload;
 @property BOOL onlyWifiInstantUpload;

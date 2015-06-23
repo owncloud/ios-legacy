@@ -15,6 +15,8 @@
 
 #import "OverwriteFileOptions.h"
 #import "FileNameUtils.h"
+#import "UserDto.h"
+#import "ManageUsersDB.h"
 
 @implementation OverwriteFileOptions
 
@@ -101,14 +103,21 @@
 - (void) alertView: (UIAlertView *) alertView willDismissWithButtonIndex: (NSInteger) buttonIndex {
     // Save
     if( buttonIndex == 1 ) {
-        if (![FileNameUtils isForbidenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text]) {
+        
+        BOOL serverHasForbiddenCharactersSupport = [ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport];
+        
+        if (![FileNameUtils isForbiddenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport]) {
             //Character recognize
             
             //Clear the spaces of the left and the right of the sentence
             NSString* result = [[_renameAlertView textFieldAtIndex:0].text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
             
-            if ([FileNameUtils isForbidenCharactersInFileName:result]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbiden_characters", nil)
+            if ([FileNameUtils isForbiddenCharactersInFileName:result withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport]) {
+                
+                NSString *msg = nil;
+                msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg
                                                                 message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
                 [alert show];
             } else {
@@ -123,10 +132,10 @@
             DLog(@"The name has problematic characters");
             
             if (_fileDto.isDirectory) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"folder_forbbiden_characters", nil) message:@"" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters_from_server", nil) message:@"" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                 [alert show];
             } else {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"file_forbbiden_characters", nil) message:@"" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters_from_server", nil) message:@"" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                 [alert show];
             }
         }

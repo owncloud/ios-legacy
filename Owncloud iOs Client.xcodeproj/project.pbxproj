@@ -614,6 +614,7 @@
 		EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB4619ED356A00764C31 /* FileProvider.m */; };
 		EAB0AB4A19ED356A00764C31 /* ownCloudExtAppFileProvider.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EAB0AB4019ED356A00764C31 /* ownCloudExtAppFileProvider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EAB0AB4F19ED356A00764C31 /* ownCloudExtApp.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EAB0AB3219ED356A00764C31 /* ownCloudExtApp.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EABD9BC71B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD9BC61B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m */; };
 		EABE4BE3187D5AE6006DEC96 /* ManageSharesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EABE4BE2187D5AE6006DEC96 /* ManageSharesDB.m */; };
 		EABF68D61889339200A2217C /* SharedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF68D41889339200A2217C /* SharedViewController.m */; };
 		EABF68D71889339200A2217C /* SharedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EABF68D51889339200A2217C /* SharedViewController.xib */; };
@@ -1456,6 +1457,8 @@
 		EAB0AB4419ED356A00764C31 /* ownCloudExtAppFileProvider.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ownCloudExtAppFileProvider.entitlements; sourceTree = "<group>"; };
 		EAB0AB4519ED356A00764C31 /* FileProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProvider.h; sourceTree = "<group>"; };
 		EAB0AB4619ED356A00764C31 /* FileProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProvider.m; sourceTree = "<group>"; };
+		EABD9BC51B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckHasForbiddenCharactersSupport.h; path = "Network/Server Version Checks/CheckHasForbiddenCharactersSupport.h"; sourceTree = "<group>"; };
+		EABD9BC61B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckHasForbiddenCharactersSupport.m; path = "Network/Server Version Checks/CheckHasForbiddenCharactersSupport.m"; sourceTree = "<group>"; };
 		EABE4BE1187D5AE6006DEC96 /* ManageSharesDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageSharesDB.h; path = DataBase/Queries/ManageSharesDB.h; sourceTree = "<group>"; };
 		EABE4BE2187D5AE6006DEC96 /* ManageSharesDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageSharesDB.m; path = DataBase/Queries/ManageSharesDB.m; sourceTree = "<group>"; };
 		EABF68D31889339200A2217C /* SharedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SharedViewController.h; path = Tabs/SharedTap/SharedViewController.h; sourceTree = "<group>"; };
@@ -2634,6 +2637,8 @@
 				59AE9EB11990FEC2003380A8 /* CheckHasShareSupport.m */,
 				59AF279C19920A1100359151 /* CheckHasCookiesSupport.h */,
 				59AF279D19920A1100359151 /* CheckHasCookiesSupport.m */,
+				EABD9BC51B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.h */,
+				EABD9BC61B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m */,
 			);
 			name = "Server Version Checks";
 			sourceTree = "<group>";
@@ -3187,6 +3192,7 @@
 		1324296F15ADBB3700DF823E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0610;
 				TargetAttributes = {
 					1324297715ADBB3700DF823E = {
@@ -3932,6 +3938,7 @@
 				1487F15C177C3392004A1A5A /* FMResultSet.m in Sources */,
 				14A50E9E18F3FC9100506E2B /* SelectedFolderCell.m in Sources */,
 				EAD281BC1A38BB2E00A00D54 /* DPDownload.m in Sources */,
+				EABD9BC71B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m in Sources */,
 				1428F675178422AE0092F42A /* UploadsOfflineDto.m in Sources */,
 				EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */,
 				1428F678178422BE0092F42A /* UtilsDtos.m in Sources */,

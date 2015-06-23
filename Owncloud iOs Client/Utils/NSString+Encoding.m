@@ -24,7 +24,7 @@
      CFStringConvertNSStringEncodingToEncoding(encoding));*/
     
     CFStringRef stringRef = CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self,
-                                                                    NULL, (CFStringRef)@";?@&=$+{}<>,",
+                                                                    NULL, (CFStringRef)@";?@&=$+{}<>,!'*",
                                                                     CFStringConvertNSStringEncodingToEncoding(encoding));
     
     NSString *output = (NSString *)CFBridgingRelease(stringRef);
