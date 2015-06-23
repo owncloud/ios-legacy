@@ -101,7 +101,11 @@
 
 - (void) addDownload:(Download *)download{
     
-    if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active){
+    if (k_is_sso_active||!k_is_background_active) {
+        
+        [self.downloads addObject:download];
+        
+    } else {
         
         [[AppDelegate sharedOCCommunication].downloadSessionManager.operationQueue cancelAllOperations];
         
@@ -134,11 +138,6 @@
                 [download.downloadTask resume];
             }
         }
-        
-    } else {
-        
-        [self.downloads addObject:download];
-        
     }
     
 }
