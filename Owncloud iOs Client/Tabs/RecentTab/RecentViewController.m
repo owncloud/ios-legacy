@@ -908,7 +908,9 @@
             file.fileName = [_selectedUploadToResolveTheConflict.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             file.isDirectory = NO;
             
-            _overWritteOption = [OverwriteFileOptions new];
+            if (!self.overWritteOption) {
+                _overWritteOption = [OverwriteFileOptions new];
+            }
             
             if (IS_IPHONE) {
                 _overWritteOption.viewToShow = self.view;
