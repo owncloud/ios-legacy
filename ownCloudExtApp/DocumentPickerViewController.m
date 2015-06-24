@@ -39,6 +39,7 @@
 #import "InitializeDatabase.h"
 #import "UploadsOfflineDto.h"
 #import "ManageUploadsDB.h"
+#import "UtilsDtos.h"
 
 @interface DocumentPickerViewController ()
 
@@ -208,9 +209,11 @@
 
     if (access) {
         
-       // NSLog(@"URL : %@", self.originalURL.path);
+       //NSLog(@"URL : %@", self.originalURL.path);
         
-        NSString *folder = [NSString stringWithFormat: @"test/"];
+        NSString *serverPath = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:fileDto.filePath andUser:self.user];
+        NSString *folder = [NSString stringWithFormat:@"%@%@", serverPath, fileDto.fileName];
+       
         NSURL *destinationUrl = [self.documentStorageURL URLByAppendingPathComponent:folder];
         
         NSError *error = nil;

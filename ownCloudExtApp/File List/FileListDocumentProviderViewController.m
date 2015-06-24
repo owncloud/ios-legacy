@@ -490,8 +490,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (IBAction)moveToThisLocationButtonTapped:(id)sender{
     
-    //TODO:
-    [self.delegate selectFolder:nil];
+    [self.delegate selectFolder:self.currentFolder];
     
 }
 
