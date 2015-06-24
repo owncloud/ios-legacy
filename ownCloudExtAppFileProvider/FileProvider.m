@@ -201,7 +201,38 @@
     
     UserDto *user = [ManageUsersDB getActiveUser];
     
-    NSString *folder = @"test/";
+    NSArray *documentStorageURLcomponents = self.documentStorageURL.pathComponents;
+    NSMutableArray *urlComponents = [NSMutableArray arrayWithArray:url.pathComponents];
+    
+    NSMutableArray *itemsToDelete = [NSMutableArray new];
+    
+    
+    for (NSString *item in documentStorageURLcomponents) {
+        
+        for (NSInteger i = 0; i < urlComponents.count; i++) {
+            
+            NSString *item2 = [urlComponents objectAtIndex:i];
+    
+            if ([item2 isEqualToString:item]) {
+                [itemsToDelete addObject:item2];
+            }
+        }
+    }
+    
+    for (NSString *item in itemsToDelete) {
+        
+        [urlComponents removeObjectIdenticalTo:item];
+        
+    }
+    
+    NSMutableString *folder = [NSMutableString stringWithString:@""];
+    
+    for (NSInteger i = 0; i < (urlComponents.count -1); i++) {
+        NSString *item = [urlComponents objectAtIndex:i];
+        [folder appendString:item];
+        [folder appendString:@"/"];
+    }
+    
     
     NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:user],folder];
     
@@ -233,6 +264,8 @@
     [ManageUploadsDB insertUpload:upload];
     
 }
+
+
 
 
 @end
