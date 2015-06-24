@@ -265,7 +265,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     NSString *currentFileName = nil;
     NSDate *date = [assetToUpload valueForProperty:ALAssetPropertyDate];
     //NSString *type = [assetToUpload valueForProperty:ALAssetPropertyType];
-    ALAssetRepresentation *assetRep;
+    ALAssetRepresentation *assetRep = [assetToUpload defaultRepresentation];
     
     DLog(@"assetPath :%@", [[assetRep url] absoluteString]);
     
