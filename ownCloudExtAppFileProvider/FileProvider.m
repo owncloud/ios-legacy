@@ -196,10 +196,9 @@
     
 }
 
-
-- (void) createUploadOfflineWithUrl:(NSURL *)url{
+- (NSString *) getDestinyFolderWithUrl:(NSURL *)url{
     
-    UserDto *user = [ManageUsersDB getActiveUser];
+    NSMutableString *folder = [NSMutableString stringWithString:@""];
     
     NSArray *documentStorageURLcomponents = self.documentStorageURL.pathComponents;
     NSMutableArray *urlComponents = [NSMutableArray arrayWithArray:url.pathComponents];
@@ -212,7 +211,7 @@
         for (NSInteger i = 0; i < urlComponents.count; i++) {
             
             NSString *item2 = [urlComponents objectAtIndex:i];
-    
+            
             if ([item2 isEqualToString:item]) {
                 [itemsToDelete addObject:item2];
             }
@@ -225,14 +224,23 @@
         
     }
     
-    NSMutableString *folder = [NSMutableString stringWithString:@""];
     
     for (NSInteger i = 0; i < (urlComponents.count -1); i++) {
         NSString *item = [urlComponents objectAtIndex:i];
         [folder appendString:item];
         [folder appendString:@"/"];
     }
+
+    return folder;
     
+}
+
+
+- (void) createUploadOfflineWithUrl:(NSURL *)url{
+    
+    UserDto *user = [ManageUsersDB getActiveUser];
+    
+    NSString *folder = [self getDestinyFolderWithUrl:url];
     
     NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:user],folder];
     
