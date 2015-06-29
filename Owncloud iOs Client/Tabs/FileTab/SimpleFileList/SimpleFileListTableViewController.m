@@ -578,7 +578,12 @@
                              }];
         [alert addAction:ok];
         
-        [self presentViewController:alert animated:YES completion:nil];
+        if ([self.navigationController isViewLoaded] && self.navigationController.view.window) {
+            [self.resolveCredentialErrorViewController presentViewController:alert animated:YES completion:nil];
+        } else {
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        
     }
 }
 
@@ -588,16 +593,16 @@
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Edit Account
-    EditAccountViewController *resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
-    [resolvedCredentialError setBarForCancelForLoadingFromModal];
+    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
+    [self.resolveCredentialErrorViewController setBarForCancelForLoadingFromModal];
     
     if (IS_IPHONE) {
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
 
         OCNavigationController *navController = nil;
-        navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
+        navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
     }
@@ -607,13 +612,14 @@
 }
 
 - (void) errorLogin {
+    
+    [self showEditAccount];
+    
     if (k_is_sso_active) {
        [self showError:NSLocalizedString(@"session_expired", nil)];
     } else {
        [self showError:NSLocalizedString(@"error_login_message", nil)];
     }
-    
-    [self showEditAccount];
 }
 
 #pragma mark - Pull Refresh
