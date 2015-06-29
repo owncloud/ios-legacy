@@ -34,7 +34,8 @@ typedef NS_ENUM (NSInteger, enumKindOfError){
     errorFileExist = 2,
     errorNotPermission = 3,
     errorUploadFileDoesNotExist = 4,
-    errorUploadInBackground = 5
+    errorUploadInBackground = 5,
+    errorInvalidPath = 6
 };
 
 @property NSInteger idUploadsOffline;

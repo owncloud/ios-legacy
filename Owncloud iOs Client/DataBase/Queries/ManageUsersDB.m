@@ -51,7 +51,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_cookies_support, url_redirected) Values(?, ?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport], userDto.urlRedirected];
+        correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_cookies_support, has_forbidden_characters_support, url_redirected) Values(?, ?, ?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport], [NSNumber numberWithInteger:userDto.hasForbiddenCharactersSupport], userDto.urlRedirected];
         
         if (!correctQuery) {
             DLog(@"Error in insertUser");
@@ -83,7 +83,7 @@
         FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, has_forbidden_characters_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
         
         DLog(@"RSColumnt count: %d", rs.columnCount);
         
@@ -100,6 +100,7 @@
             output.storage = [rs longForColumn:@"storage"];
             output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            output.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
             
             output.instantUpload = [rs intForColumn:@"instant_upload"];
             output.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
@@ -171,7 +172,7 @@
         FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, has_forbidden_characters_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
     
         while ([rs next]) {
             
@@ -183,6 +184,7 @@
             output.storage = [rs longForColumn:@"storage"];
             output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            output.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
             
             output.instantUpload = [rs intForColumn:@"instant_upload"];
             output.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
@@ -240,7 +242,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users ORDER BY id ASC"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, has_forbidden_characters_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users ORDER BY id ASC"];
         
         UserDto *current = nil;
         
@@ -256,6 +258,7 @@
             current.storage = [rs longForColumn:@"storage"];
             current.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             current.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            current.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
             
             current.instantUpload = [rs intForColumn:@"instant_upload"];
             current.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
@@ -293,7 +296,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users ORDER BY id ASC"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, has_forbidden_characters_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users ORDER BY id ASC"];
         
         UserDto *current = nil;
         
@@ -309,6 +312,7 @@
             current.storage = [rs longForColumn:@"storage"];
             current.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             current.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            current.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
             
             current.instantUpload = [rs intForColumn:@"instant_upload"];
             current.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
@@ -539,7 +543,8 @@
         FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users ORDER BY id DESC LIMIT 1"];
+
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, has_forbidden_characters_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users ORDER BY id DESC LIMIT 1"];
         
         while ([rs next]) {
             
@@ -551,6 +556,7 @@
             output.storage = [rs longForColumn:@"storage"];
             output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            output.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
             
             output.instantUpload = [rs intForColumn:@"instant_upload"];
             output.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
@@ -583,8 +589,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_cookies_support=?, instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, date_instant_upload=?, url_redirected=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport],[NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithBool:user.instantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.dateInstantUpload], user.urlRedirected, [NSNumber numberWithInteger:user.idUser]];
-
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, date_instant_upload=?, url_redirected=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport],[NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithBool:user.instantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.dateInstantUpload], user.urlRedirected, [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error updating a user");
@@ -593,6 +598,31 @@
     }];
     
 }
+
+//-----------------------------------
+/// @name Has the Server Of the Active User Forbidden Character Support
+///-----------------------------------
+
+/**
+ * Method to get YES/NO depend if the server of the active user has forbidden character support.
+ *
+ * @return BOOL
+ */
++ (BOOL) hasTheServerOfTheActiveUserForbiddenCharactersSupport{
+    
+    BOOL isForbiddenCharacterSupport = NO;
+    
+    UserDto *activeUser = [ManageUsersDB getActiveUser];
+    
+    if (activeUser.hasForbiddenCharactersSupport == serverFunctionalitySupported) {
+        isForbiddenCharacterSupport = YES;
+    }
+    
+    return isForbiddenCharacterSupport;
+}
+
+
+#pragma mark - urlRedirected
 
 +(void)updateUrlRedirected:(NSString *)newValue byUserDto:(UserDto *)user {
     DLog(@"Updated url redirected");
@@ -608,7 +638,6 @@
             DLog(@"Error updating url_redirected");
         }
     }];
-    
 }
 
 +(NSString *)getUrlRedirectedByUserDto:(UserDto *)user {
@@ -628,9 +657,7 @@
             
         }];
         
-        return output;
-        
+    return output;
 }
-
 
 @end

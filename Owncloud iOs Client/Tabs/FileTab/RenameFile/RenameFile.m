@@ -24,12 +24,12 @@
 #import "Customization.h"
 #import "OCErrorMsg.h"
 #import "ManageFilesDB.h"
-#import "ManageFilesDB.h"
 #import "FileNameUtils.h"
 #import "DetailViewController.h"
 #import "OCCommunication.h"
 #import "UtilsNetworkRequest.h"
 #import "UtilsUrls.h"
+#import "ManageUsersDB.h"
 
 @interface RenameFile ()
 
@@ -96,8 +96,15 @@
 {
     // cancel
     if( buttonIndex == 1 ){
-        if ([FileNameUtils isForbidenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text]) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbiden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        
+          BOOL serverHasForbiddenCharactersSupport = [ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport];
+        
+        if ([FileNameUtils isForbiddenCharactersInFileName:[_renameAlertView textFieldAtIndex:0].text withForbiddenCharactersSupported:serverHasForbiddenCharactersSupport]) {
+            
+            NSString *msg = nil;
+            msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle: msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alert show];
         } else {
             DLog(@"We change %@ for %@", self.selectedFileDto.fileName, [_renameAlertView textFieldAtIndex:0].text);
@@ -259,7 +266,7 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    [[AppDelegate sharedOCCommunication] moveFileOrFolder:originalURLString toDestiny:newURLString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    [[AppDelegate sharedOCCommunication] moveFileOrFolder:originalURLString toDestiny:newURLString onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         DLog(@"Great, the item is renamed");
         
         BOOL isSamlCredentialsError=NO;
@@ -287,6 +294,9 @@
         [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
         
     } errorBeforeRequest:^(NSError *error) {
+        
+        NSString *msg = nil;
+
         switch (error.code) {
             case OCErrorMovingTheDestinyAndOriginAreTheSame:
                 [self endLoading];
@@ -297,7 +307,10 @@
                 break;
                 
             case OCErrorMovingDestinyNameHaveForbiddenCharacters:
-                [self showError:NSLocalizedString(@"forbiden_characters", nil)];
+            
+                msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+
+                [self showError:msg];
                 break;
                 
             default:

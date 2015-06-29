@@ -121,6 +121,7 @@
                 [ManageDB updateDBVersion9To10];
                 [ManageDB updateDBVersion10To11];
                 [ManageDB updateDBVersion11To12];
+                [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_7:
                 [self updateDBVersion7To8];

@@ -2073,6 +2073,13 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                 [self errorLogin];
             }
             
+        } else if (redirectedServer){
+            //Manage the redirectedServer. This case will only happen if is a permanent redirection 301
+            DLog(@"Set the redirectedServer as default URL for the new user");
+            
+            redirectedServer = [redirectedServer substringToIndex:[redirectedServer length] - k_url_webdav_server.length];
+            
+            self.urlTextField.text = redirectedServer;
         }
         
         if (!isSamlServer) {
@@ -2266,7 +2273,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         //We check the problematic characters before login
         //if([self isProblematicCharactersOnPassword:passwordTxtField.text]) {
         if(NO) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters", nil)
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters_in_password", nil)
                                                             message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alert show];
         } else {

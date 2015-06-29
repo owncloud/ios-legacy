@@ -19,9 +19,10 @@
 
 
 @class UploadsOfflineDto;
-@interface RecentViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, OverwriteFileOptionsDelegate, SelectFolderDelegate, UIAlertViewDelegate>
+@interface RecentViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, OverwriteFileOptionsDelegate, SelectFolderDelegate, UIAlertViewDelegate, UITextFieldDelegate>
  
 @property (nonatomic,strong) IBOutlet UITableView *uploadsTableView;
+@property(nonatomic,strong) UIAlertView *renameAlertView;
 @property (nonatomic,strong) NSArray *currentsUploads;
 @property (nonatomic,strong) NSArray *recentsUploads;
 @property (nonatomic,strong) NSArray *failedUploads;

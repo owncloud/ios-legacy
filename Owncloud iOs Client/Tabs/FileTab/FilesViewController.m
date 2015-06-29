@@ -56,9 +56,7 @@
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
 #import "Owncloud_iOs_Client-Swift.h"
-
-
-
+#import "ManageUsersDB.h"
 
 
 //Constant for iOS7
@@ -830,15 +828,7 @@
  */
 -(void) newFolderSaveClicked:(NSString*)name {
     
-    
-    //Check if the folder name has "/"
-    BOOL thereAreForbidenCharacters = NO;
-    for(int i = 0 ;i < [name length]; i++) {
-        if ([name characterAtIndex:i] == '/'){
-            thereAreForbidenCharacters = YES;
-        }
-    }
-    if (!thereAreForbidenCharacters) {
+    if (![FileNameUtils isForbiddenCharactersInFileName:name withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
         
         //Check if exist a folder with the same name
         if ([self checkForSameName:name] == NO) {
@@ -855,13 +845,13 @@
             }
             
             [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-            
+
             NSString *newURL = [NSString stringWithFormat:@"%@%@",self.currentRemoteFolder,[name encodeString:NSUTF8StringEncoding]];
             NSString *rootPath = [UtilsUrls getFilePathOnDBByFullPath:newURL andUser:app.activeUser];
             
             NSString *pathOfNewFolder = [NSString stringWithFormat:@"%@%@",[self.currentRemoteFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding], name ];
             
-            [[AppDelegate sharedOCCommunication] createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+            [[AppDelegate sharedOCCommunication] createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
                 DLog(@"Folder created");
                 BOOL isSamlCredentialsError = NO;
                 
@@ -874,10 +864,10 @@
                     }
                 }
                 if (!isSamlCredentialsError) {
-
+                    
                     //Obtain the path where the folder will be created in the file system
                     NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-
+                    
                     DLog(@"Name of the folder: %@ to create in: %@",name, currentLocalFileToCreateFolder);
                     
                     //Create the new folder in the file system
@@ -892,7 +882,11 @@
                 if (error.code == OCErrorForbidenCharacters) {
                     [self endLoading];
                     DLog(@"The folder have problematic characters");
-                    _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbiden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+                    
+                    NSString *msg = nil;
+                    msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+                    
+                    _alert = [[UIAlertView alloc] initWithTitle:msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
                     [_alert show];
                 } else {
                     [self endLoading];
@@ -907,11 +901,16 @@
             _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"folder_exist", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [_alert show];
         }
-    } else {
+
+    }else{
         [self endLoading];
-        DLog(@"The folder have problematic characters");
-        _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbiden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        //Forbidden characters found after the request.
+        NSString *msg = nil;
+        msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+        
+        _alert = [[UIAlertView alloc] initWithTitle:msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
         [_alert show];
+        
     }
 }
 
@@ -1675,7 +1674,7 @@
     
     NSString *path = _nextRemoteFolder;
     
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+   path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
@@ -1882,7 +1881,8 @@
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     NSString *path = _currentRemoteFolder;
-     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
@@ -3012,20 +3012,33 @@
     //Share gray button
     NSMutableArray *rightUtilityButtons = [NSMutableArray new];
     
-    //More
-    [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:
-     [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0f]
-                                                       title:NSLocalizedString(@"more_swipe", nil) andImage:[UIImage imageNamed:@"more-filled.png"]];
+    BOOL areTwoButtonsInTheSwipe = NO;
     
-    //Share
-    [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:
-     [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0f]
-                                                        title:NSLocalizedString(@"share_link_long_press", nil) andImage:[UIImage imageNamed:@"sharedItemSwipe.png"]];
+    if (!k_hide_share_options) {
+        //Three buttons
+        areTwoButtonsInTheSwipe = NO;
+    }else{
+        //Two buttons
+        areTwoButtonsInTheSwipe = YES;
+    }
+    
+    UIColor *normalColor = [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0f];
+    UIColor *destructiveColor = [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f];
+    
+    
+    //More
+    [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:normalColor title:NSLocalizedString(@"more_swipe", nil) andImage:[UIImage imageNamed:@"more-filled.png"]  forTwoButtons:areTwoButtonsInTheSwipe];
+    
+    if (!areTwoButtonsInTheSwipe) {
+        //Share
+        [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:normalColor title:NSLocalizedString(@"share_link_long_press", nil) andImage:[UIImage imageNamed:@"sharedItemSwipe.png"]  forTwoButtons:areTwoButtonsInTheSwipe];
+        
+    }
     
     //Delete
-    [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:
-     [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
-                                                        title:NSLocalizedString(@"delete_label", nil) andImage:[UIImage imageNamed:@"deleteBlack.png"]];
+    [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:destructiveColor title:NSLocalizedString(@"delete_label", nil) andImage:[UIImage imageNamed:@"deleteBlack.png"] forTwoButtons:areTwoButtonsInTheSwipe];
+    
+    
     
     return rightUtilityButtons;
 }
@@ -3058,6 +3071,10 @@
     
     [cell hideUtilityButtonsAnimated:YES];
     
+     if (!k_hide_share_options) {
+         
+     }
+    
     switch (index) {
         case 0:
         {
@@ -3067,15 +3084,24 @@
         }
         case 1:
         {
-            DLog(@"Click on index 1 - Share");
-            [self didSelectShareLinkOption];
-            break;
+            if (!k_hide_share_options) {
+                DLog(@"Click on index 1 - Share");
+                [self didSelectShareLinkOption];
+                break;
+            }else{
+                DLog(@"Click on index 2 - Delete");
+                [self didSelectDeleteOption];
+                break;
+            }
+
         }
         case 2:
         {
-            DLog(@"Click on index 2 - Delete");
-            [self didSelectDeleteOption];
-            break;
+            if (!k_hide_share_options) {
+                DLog(@"Click on index 2 - Delete");
+                [self didSelectDeleteOption];
+                break;
+            }
         }
         default:
             break;
