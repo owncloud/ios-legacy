@@ -91,7 +91,7 @@
         
         NSString *xibName = @"FileListDocumentProviderViewController";
         
-        if (self.mode == UIDocumentPickerModeMoveToService) {
+        if (self.mode == UIDocumentPickerModeMoveToService || self.mode == UIDocumentPickerModeExportToService) {
             xibName = @"FileListDocumentProviderMoveViewController";
         }
         
