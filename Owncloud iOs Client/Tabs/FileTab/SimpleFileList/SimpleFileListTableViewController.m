@@ -578,7 +578,7 @@
                              }];
         [alert addAction:ok];
         
-        if ([self.navigationController isViewLoaded] && self.navigationController.view.window) {
+        if ([self.navigationController isViewLoaded] && self.navigationController.view.window && self.resolveCredentialErrorViewController != nil) {
             [self.resolveCredentialErrorViewController presentViewController:alert animated:YES completion:nil];
         } else {
             [self presentViewController:alert animated:YES completion:nil];
