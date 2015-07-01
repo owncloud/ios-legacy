@@ -209,7 +209,8 @@
 
     if (access) {
         
-       //NSLog(@"URL : %@", self.originalURL.path);
+        DLog(@"URL : %@", self.originalURL.path);
+        
         
         NSString *serverPath = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:fileDto.filePath andUser:self.user];
         NSString *folder = [NSString stringWithFormat:@"%@%@", serverPath, fileDto.fileName];
@@ -223,7 +224,6 @@
             [[NSFileManager defaultManager] createDirectoryAtPath:destinationUrl.path withIntermediateDirectories:YES attributes:nil error:&error];
         }
         
-        
         //Add the file name provided to the final path
         destinationUrl = [destinationUrl URLByAppendingPathComponent:self.originalURL.lastPathComponent];
         
@@ -234,17 +234,50 @@
             }
         }
         
-       
         NSFileCoordinator *fileCoordinator = [NSFileCoordinator new];
         
         [fileCoordinator coordinateReadingItemAtURL:self.originalURL options: NSFileCoordinatorReadingForUploading error:&error byAccessor:^(NSURL *newURL) {
             
             if (error) {
-                NSLog(@"Error: %@", error.description);
+               // NSLog(@"Error: %@", error.description);
                
             }else{
-                NSError *copyError = nil;
+               
+                 NSError *copyError = nil;
                 [[NSFileManager defaultManager] copyItemAtURL:newURL toURL:destinationUrl error:&copyError];
+                
+                if (self.mode == UIDocumentPickerModeExportToService) {
+                    
+                    //Export mode
+                    NSString *temp = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], self.originalURL.lastPathComponent];
+                    [[NSFileManager defaultManager] copyItemAtPath:newURL.path toPath:temp error:&copyError];
+                    
+                    NSDictionary *attributes = nil;
+                    attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:temp error:&copyError];
+                    long long fileLength = [[attributes valueForKey:NSFileSize] unsignedLongLongValue];
+                    
+                    UserDto *user = [ManageUsersDB getActiveUser];
+                    
+                    NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:user],folder];
+                    
+                    UploadsOfflineDto *upload = [UploadsOfflineDto new];
+                    
+                    upload.originPath = temp;
+                    upload.destinyFolder = remotePath;
+                    upload.uploadFileName = temp.lastPathComponent;
+                    upload.kindOfError = notAnError;
+                    upload.estimateLength = (long)fileLength;
+                    upload.userId = user.idUser;
+                    upload.isLastUploadFileOfThisArray = YES;
+                    upload.status = generatedByDocumentProvider;
+                    upload.chunksLength = k_lenght_chunk;
+                    upload.isNotNecessaryCheckIfExist = NO;
+                    upload.isInternalUpload = NO;
+                    upload.taskIdentifier = 0;
+                    
+                    [ManageUploadsDB insertUpload:upload];
+                    
+                }
             }
             
             [self.originalURL stopAccessingSecurityScopedResource];
@@ -254,12 +287,11 @@
         }];
         
     }else{
-        NSLog(@"There are not access to the file by export/move mode");
+         DLog(@"There are not access to the file by export/move mode");
     }
 
  
 }
-
 
 
 - (void) copyFileOnTheFileSystemByOrigin:(NSString *) origin andDestiny:(NSString *) destiny {
