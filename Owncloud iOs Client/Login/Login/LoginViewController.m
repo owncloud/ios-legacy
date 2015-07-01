@@ -1903,6 +1903,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     //Update connect string
     [self updateConnectString];
     
+    [UtilsFramework deleteAllCookies];
     [UtilsCookies eraseURLCache];
     [UtilsCookies eraseCredentialsWithURL:self.connectString];
     
