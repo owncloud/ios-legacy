@@ -62,6 +62,10 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pickerIsClosing:) name:userHasCloseDocumentPicker object:nil];
     
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonTapped:)];
+    
+    self.navigationItem.rightBarButtonItem = cancelButton;
+    
     [super viewWillAppear:animated];
 }
 
@@ -80,6 +84,12 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
     
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+    
+}
+
+- (void) cancelButtonTapped: (UIButton *)sender {
+    
+    [self.delegate closeDocumentPicker];
     
 }
 

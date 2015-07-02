@@ -60,6 +60,11 @@
     
 }
 
+- (void) closeDocumentPicker{
+    
+    [self dismissGrantingAccessToURL:nil];
+}
+
 
 -(void)prepareForPresentationInMode:(UIDocumentPickerMode)mode {
     // TODO: present a view controller appropriate for picker mode here

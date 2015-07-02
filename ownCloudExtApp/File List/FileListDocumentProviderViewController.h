@@ -23,6 +23,7 @@
 @optional
 - (void) openFile:(FileDto*)fileDto;
 - (void) selectFolder:(FileDto*)fileDto;
+- (void) closeDocumentPicker;
 @end
 
 @interface FileListDocumentProviderViewController : SimpleFileListTableViewController <DPDownloadDelegate>
