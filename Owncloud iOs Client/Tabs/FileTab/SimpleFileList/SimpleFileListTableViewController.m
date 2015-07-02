@@ -588,9 +588,8 @@
 }
 
 - (void) showEditAccount {
-#ifdef CONTAINER_APP
     
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+#ifdef CONTAINER_APP
     
     //Edit Account
     self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
@@ -599,12 +598,13 @@
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
+        
     } else {
 
         OCNavigationController *navController = nil;
         navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
+        [self presentViewController:navController animated:YES completion:nil];
     }
 
 #endif
