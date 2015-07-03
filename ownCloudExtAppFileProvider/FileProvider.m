@@ -248,29 +248,51 @@
     
     [self copyFileOnTheFileSystemByOrigin:url.path andDestiny:temp];
     
-    NSError *copyError = nil;
+    if (![self thereAreFileUploadingWithPath:remotePath]) {
+        
+        NSError *copyError = nil;
+        
+        NSDictionary *attributes = nil;
+        attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:temp error:&copyError];
+        long long fileLength = [[attributes valueForKey:NSFileSize] unsignedLongLongValue];
+        
+        UploadsOfflineDto *upload = [UploadsOfflineDto new];
+        
+        upload.originPath = temp;
+        upload.destinyFolder = remotePath;
+        upload.uploadFileName = temp.lastPathComponent;
+        upload.kindOfError = notAnError;
+        upload.estimateLength = (long)fileLength;
+        upload.userId = user.idUser;
+        upload.isLastUploadFileOfThisArray = YES;
+        upload.status = generatedByDocumentProvider;
+        upload.chunksLength = k_lenght_chunk;
+        upload.isNotNecessaryCheckIfExist = NO;
+        upload.isInternalUpload = NO;
+        upload.taskIdentifier = 0;
+        
+        [ManageUploadsDB insertUpload:upload];
+        
+    }
+}
+
+- (BOOL) thereAreFileUploadingWithPath:(NSString *)path{
+
+    BOOL isFileUploading = NO;
     
-    NSDictionary *attributes = nil;
-    attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:temp error:&copyError];
-    long long fileLength = [[attributes valueForKey:NSFileSize] unsignedLongLongValue];
+    //Check remote path and user with current uploads
+    NSMutableArray *uploads = [ManageUploadsDB getUploadsByStatus:generatedByDocumentProvider];
+
     
-    UploadsOfflineDto *upload = [UploadsOfflineDto new];
-    
-    upload.originPath = temp;
-    upload.destinyFolder = remotePath;
-    upload.uploadFileName = temp.lastPathComponent;
-    upload.kindOfError = notAnError;
-    upload.estimateLength = (long)fileLength;
-    upload.userId = user.idUser;
-    upload.isLastUploadFileOfThisArray = YES;
-    upload.status = generatedByDocumentProvider;
-    upload.chunksLength = k_lenght_chunk;
-    upload.isNotNecessaryCheckIfExist = NO;
-    upload.isInternalUpload = NO;
-    upload.taskIdentifier = 0;
-    
-    [ManageUploadsDB insertUpload:upload];
-    
+    for (UploadsOfflineDto *upload in uploads) {
+        if ([upload.destinyFolder isEqualToString:path]) {
+            
+            isFileUploading = YES;
+            break;
+        }
+    }
+
+    return isFileUploading;
 }
 
 
