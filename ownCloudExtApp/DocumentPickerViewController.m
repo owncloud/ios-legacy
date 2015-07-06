@@ -262,25 +262,28 @@
                     long long fileLength = [[attributes valueForKey:NSFileSize] unsignedLongLongValue];
                     
                     UserDto *user = [ManageUsersDB getActiveUser];
-                    
                     NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:user],folder];
                     
-                    UploadsOfflineDto *upload = [UploadsOfflineDto new];
-                    
-                    upload.originPath = temp;
-                    upload.destinyFolder = remotePath;
-                    upload.uploadFileName = temp.lastPathComponent;
-                    upload.kindOfError = notAnError;
-                    upload.estimateLength = (long)fileLength;
-                    upload.userId = user.idUser;
-                    upload.isLastUploadFileOfThisArray = YES;
-                    upload.status = generatedByDocumentProvider;
-                    upload.chunksLength = k_lenght_chunk;
-                    upload.isNotNecessaryCheckIfExist = NO;
-                    upload.isInternalUpload = NO;
-                    upload.taskIdentifier = 0;
-                    
-                    [ManageUploadsDB insertUpload:upload];
+                    if (![UtilsUrls isFileUploadingWithPath:remotePath andUser:user]) {
+                        
+                        UploadsOfflineDto *upload = [UploadsOfflineDto new];
+                        
+                        upload.originPath = temp;
+                        upload.destinyFolder = remotePath;
+                        upload.uploadFileName = temp.lastPathComponent;
+                        upload.kindOfError = notAnError;
+                        upload.estimateLength = (long)fileLength;
+                        upload.userId = user.idUser;
+                        upload.isLastUploadFileOfThisArray = YES;
+                        upload.status = generatedByDocumentProvider;
+                        upload.chunksLength = k_lenght_chunk;
+                        upload.isNotNecessaryCheckIfExist = NO;
+                        upload.isInternalUpload = NO;
+                        upload.taskIdentifier = 0;
+                        
+                        [ManageUploadsDB insertUpload:upload];
+                        
+                    }
                     
                 }
             }

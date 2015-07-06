@@ -173,26 +173,29 @@
     
     [self copyFileOnTheFileSystemByOrigin:file.localFolder andDestiny:temp];
     
-    UploadsOfflineDto *upload = [UploadsOfflineDto new];
+    if (![UtilsUrls isFileUploadingWithPath:remotePath andUser:user]) {
     
-    upload.originPath = temp;
-    upload.destinyFolder = remotePath;
-    upload.uploadFileName = file.fileName;
-    upload.kindOfError = notAnError;
-    upload.estimateLength = (long)fileLength;
-    upload.userId = userId;
-    upload.isLastUploadFileOfThisArray = YES;
-    upload.status = generatedByDocumentProvider;
-    upload.chunksLength = k_lenght_chunk;
-    upload.isNotNecessaryCheckIfExist = NO;
-    upload.isInternalUpload = NO;
-    upload.taskIdentifier = 0;
-    
-    
-    //Set this file as an overwritten state
-    [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
-    
-    [ManageUploadsDB insertUpload:upload];
+        UploadsOfflineDto *upload = [UploadsOfflineDto new];
+        
+        upload.originPath = temp;
+        upload.destinyFolder = remotePath;
+        upload.uploadFileName = file.fileName;
+        upload.kindOfError = notAnError;
+        upload.estimateLength = (long)fileLength;
+        upload.userId = userId;
+        upload.isLastUploadFileOfThisArray = YES;
+        upload.status = generatedByDocumentProvider;
+        upload.chunksLength = k_lenght_chunk;
+        upload.isNotNecessaryCheckIfExist = NO;
+        upload.isInternalUpload = NO;
+        upload.taskIdentifier = 0;
+        
+        
+        //Set this file as an overwritten state
+        [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
+        
+        [ManageUploadsDB insertUpload:upload];
+    }
     
 }
 
