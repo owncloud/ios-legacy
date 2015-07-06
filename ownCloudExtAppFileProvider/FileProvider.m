@@ -248,7 +248,7 @@
     
     [self copyFileOnTheFileSystemByOrigin:url.path andDestiny:temp];
     
-    if (![self thereAreFileUploadingWithPath:remotePath]) {
+    if (![UtilsUrls isFileUploadingWithPath:remotePath]) {
         
         NSError *copyError = nil;
         
@@ -274,25 +274,6 @@
         [ManageUploadsDB insertUpload:upload];
         
     }
-}
-
-- (BOOL) thereAreFileUploadingWithPath:(NSString *)path{
-
-    BOOL isFileUploading = NO;
-    
-    //Check remote path and user with current uploads
-    NSMutableArray *uploads = [ManageUploadsDB getUploadsByStatus:generatedByDocumentProvider];
-
-    
-    for (UploadsOfflineDto *upload in uploads) {
-        if ([upload.destinyFolder isEqualToString:path]) {
-            
-            isFileUploading = YES;
-            break;
-        }
-    }
-
-    return isFileUploading;
 }
 
 
