@@ -488,7 +488,7 @@
     
 }
 
-+ (BOOL) isFileUploadingWithPath:(NSString *)path{
++ (BOOL) isFileUploadingWithPath:(NSString *)path andUser: (UserDto *) user {
     
     BOOL isFileUploading = NO;
     
@@ -496,8 +496,8 @@
     NSMutableArray *uploads = [ManageUploadsDB getUploadsByStatus:generatedByDocumentProvider];
     
     
-    for (UploadsOfflineDto *upload in uploads) {
-        if ([upload.destinyFolder isEqualToString:path]) {
+    for (UploadsOfflineDto *current in uploads) {
+        if ([current.destinyFolder isEqualToString:path] && current.userId == user.idUser) {
             
             isFileUploading = YES;
             break;

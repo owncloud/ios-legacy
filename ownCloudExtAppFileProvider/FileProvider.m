@@ -248,7 +248,7 @@
     
     [self copyFileOnTheFileSystemByOrigin:url.path andDestiny:temp];
     
-    if (![UtilsUrls isFileUploadingWithPath:remotePath]) {
+    if (![UtilsUrls isFileUploadingWithPath:remotePath andUser:user]) {
         
         NSError *copyError = nil;
         

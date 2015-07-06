@@ -75,6 +75,6 @@
 
 + (NSString *) getUserAgent;
 
-+ (BOOL) isFileUploadingWithPath:(NSString *)path;
++ (BOOL) isFileUploadingWithPath:(NSString *)path andUser: (UserDto *) user;
 
 @end
