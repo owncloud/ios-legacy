@@ -29,7 +29,6 @@
 #import "UploadUtils.h"
 #import "ManageUsersDB.h"
 #import "ManageUploadRequest.h"
-#import "OCAsset.h"
 #import "ManageAsset.h"
 #import "ManageAppSettingsDB.h"
 #import "UtilsNetworkRequest.h"
@@ -252,7 +251,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
         isLastUploadFileOfThisArray = YES;
     }
     
-    OCAsset *assetToUpload = [self.listOfAssetsToUpload objectAtIndex:0];
+    ALAsset *assetToUpload = [self.listOfAssetsToUpload objectAtIndex:0];
     
     [self.listOfAssetsToUpload removeObjectAtIndex:0];
 
@@ -260,14 +259,17 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
 
 }
 
-- (void) uploadAssetFromGallery:(OCAsset *) assetToUpload andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray{
+- (void) uploadAssetFromGallery:(ALAsset *) assetToUpload andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray{
     DLog(@"uploadAssetFromGalleryToRemoteFolder");
 
     NSString *currentFileName = nil;
+    NSDate *date = [assetToUpload valueForProperty:ALAssetPropertyDate];
+    //NSString *type = [assetToUpload valueForProperty:ALAssetPropertyType];
+    ALAssetRepresentation *assetRep = [assetToUpload defaultRepresentation];
     
-    DLog(@"assetPath :%@", [assetToUpload fullUrlString]);
+    DLog(@"assetPath :%@", [[assetRep url] absoluteString]);
     
-    currentFileName = [FileNameUtils getComposeNameFromAsset:[assetToUpload asset]];
+    currentFileName = [FileNameUtils getComposeNameFromAsset:assetToUpload];
     
     DLog(@"currentFileName: %@",currentFileName);
     DLog(@"isLastUploadFileOfThisArray: %d", isLastUploadFileOfThisArray);
@@ -283,12 +285,12 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     //Variables
     NSUInteger offset = 0;
     NSUInteger chunkSize = 1024 * 1024;
-    NSUInteger length = (NSUInteger)[ [assetToUpload asset] defaultRepresentation].size;
+    NSUInteger length = (NSUInteger)[assetToUpload defaultRepresentation].size;
     DLog(@"rep size %lu", (unsigned long) (length/1024)/1024);
     
     if (length < (k_lenght_chunk *1024)) {
         Byte *buffer = (Byte*)malloc(length);
-        NSUInteger k = [[assetToUpload rep] getBytes:buffer fromOffset: 0.0
+        NSUInteger k = [assetRep getBytes:buffer fromOffset: 0.0
                                         length:length error:nil];
         
         NSData *adata = [NSData dataWithBytesNoCopy:buffer length:k freeWhenDone:YES];
@@ -307,7 +309,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             NSUInteger thisChunkSize = length - offset > chunkSize ? chunkSize : length - offset;
             
             //Write data
-            NSUInteger k = [[assetToUpload rep] getBytes:buffer fromOffset: offset length:thisChunkSize error:nil];
+            NSUInteger k = [assetRep getBytes:buffer fromOffset: offset length:thisChunkSize error:nil];
             
             NSData *adata = [NSData dataWithBytes:buffer length:k];
             
@@ -344,13 +346,11 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
 
     [self.listOfUploadOfflineToGenerateSQL addObject:currentUpload];
     
-    DLog(@"Date Database: %ld", [ManageAppSettingsDB getDateInstantUpload]);
-    DLog(@"Date Asset: %ld", (long)[assetToUpload.date timeIntervalSince1970]);
-    
+    long dateAsset = (long)[date timeIntervalSince1970];
     //update date last asset uploaded
-    if ((long)[assetToUpload.date timeIntervalSince1970] > [ManageAppSettingsDB getDateInstantUpload]) {
+    if (dateAsset > [ManageAppSettingsDB getDateInstantUpload]) {
         //assetDate later than startDate
-        [ManageAppSettingsDB updateDateInstantUpload:[assetToUpload.date timeIntervalSince1970]];
+        [ManageAppSettingsDB updateDateInstantUpload:dateAsset];
     }
     
     if([self.listOfAssetsToUpload count] > 0) {
