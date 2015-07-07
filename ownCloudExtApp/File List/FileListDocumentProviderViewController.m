@@ -53,11 +53,11 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     }
     
     if (self.mode == UIDocumentPickerModeMoveToService) {
-        self.moveToThisLocationButton.title = @"Move to this location";
+        self.moveToThisLocationButton.title = NSLocalizedString(@"move_doc_provider_button", nil);
     }
     
     if (self.mode == UIDocumentPickerModeExportToService) {
-        self.moveToThisLocationButton.title = @"Export to this location";
+        self.moveToThisLocationButton.title = NSLocalizedString(@"export_doc_provider_button", nil);
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pickerIsClosing:) name:userHasCloseDocumentPicker object:nil];
