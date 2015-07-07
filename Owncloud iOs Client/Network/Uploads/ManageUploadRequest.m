@@ -178,7 +178,10 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    [[AppDelegate sharedOCCommunication] createFolder:pathRemoteFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    
+    [[AppDelegate sharedOCCommunication] createFolder:pathRemoteFolder onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]
+     successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+         
         DLog(@"Folder created");
         BOOL isSamlCredentialsError = NO;
         
@@ -378,39 +381,48 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                         [self finishOverwriteProcess];
                     }
                     
-                    //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
-                    switch (response.statusCode) {
-                        case kOCErrorServerUnauthorized:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorCredentials;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
-                            break;
-                        case kOCErrorServerForbidden:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorNotPermission;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            break;
-                        case kOCErrorProxyAuth:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorCredentials;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
-                            break;
-                        case kOCErrorServerPathNotFound:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorDestinyNotExist;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            break;
-                        default:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = notAnError;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            
-                            appDelegate.userUploadWithError=weakSelf.userUploading;
-                            break;
+                    if (error.code == OCServerErrorForbiddenCharacters) {
+                        weakSelf.currentUpload.status = errorUploading;
+                        weakSelf.currentUpload.kindOfError = errorInvalidPath;
+                        [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                        
+                    }else{
+                        
+                        //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
+                        switch (response.statusCode) {
+                            case kOCErrorServerUnauthorized:
+                                weakSelf.currentUpload.status = errorUploading;
+                                weakSelf.currentUpload.kindOfError = errorCredentials;
+                                [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                                [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
+                                break;
+                            case kOCErrorServerForbidden:
+                                weakSelf.currentUpload.status = errorUploading;
+                                weakSelf.currentUpload.kindOfError = errorNotPermission;
+                                [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                                break;
+                            case kOCErrorProxyAuth:
+                                weakSelf.currentUpload.status = errorUploading;
+                                weakSelf.currentUpload.kindOfError = errorCredentials;
+                                [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                                [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
+                                break;
+                            case kOCErrorServerPathNotFound:
+                                weakSelf.currentUpload.status = errorUploading;
+                                weakSelf.currentUpload.kindOfError = errorDestinyNotExist;
+                                [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                                break;
+                            default:
+                                weakSelf.currentUpload.status = errorUploading;
+                                weakSelf.currentUpload.kindOfError = notAnError;
+                                [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                                
+                                appDelegate.userUploadWithError=weakSelf.userUploading;
+                                break;
+                        }
+                        
                     }
-                    
+
                     [weakSelf updateRecentsTab];
                 }
                 
@@ -471,6 +483,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         NSProgress *progressValue;
         
         [[AppDelegate sharedOCCommunication].uploadSessionManager.operationQueue cancelAllOperations];
+        
         
         _uploadTask = [[AppDelegate sharedOCCommunication] uploadFileSession:_currentUpload.originPath toDestiny:urlClean onCommunication:[AppDelegate sharedOCCommunication] withProgress:&progressValue successRequest:^(NSURLResponse *response, NSString *redirectedServer) {
             
@@ -574,37 +587,45 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                         [self finishOverwriteProcess];
                     }
                     
-                    //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
-                    switch (httpResponse.statusCode) {
-                        case kOCErrorServerUnauthorized:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorCredentials;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
-                            break;
-                        case kOCErrorServerForbidden:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorNotPermission;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            break;
-                        case kOCErrorProxyAuth:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorCredentials;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
-                            break;
-                        case kOCErrorServerPathNotFound:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorDestinyNotExist;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            break;
-                        default:
-                            weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = notAnError;
-                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            
-                            appDelegate.userUploadWithError=weakSelf.userUploading;
-                            break;
+                    if (error.code == OCServerErrorForbiddenCharacters) {
+                        weakSelf.currentUpload.status = errorUploading;
+                        weakSelf.currentUpload.kindOfError = errorInvalidPath;
+                        [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                        
+                    }else{
+                        //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
+                        switch (httpResponse.statusCode) {
+                            case kOCErrorServerUnauthorized:
+                                weakSelf.currentUpload.status = errorUploading;
+                                weakSelf.currentUpload.kindOfError = errorCredentials;
+                                [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                                [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
+                                break;
+                            case kOCErrorServerForbidden:
+                                weakSelf.currentUpload.status = errorUploading;
+                                weakSelf.currentUpload.kindOfError = errorNotPermission;
+                                [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                                break;
+                            case kOCErrorProxyAuth:
+                                weakSelf.currentUpload.status = errorUploading;
+                                weakSelf.currentUpload.kindOfError = errorCredentials;
+                                [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                                [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
+                                break;
+                            case kOCErrorServerPathNotFound:
+                                weakSelf.currentUpload.status = errorUploading;
+                                weakSelf.currentUpload.kindOfError = errorDestinyNotExist;
+                                [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                                break;
+                            default:
+                                weakSelf.currentUpload.status = errorUploading;
+                                weakSelf.currentUpload.kindOfError = notAnError;
+                                [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                                
+                                appDelegate.userUploadWithError=weakSelf.userUploading;
+                                break;
+                        }
+
                     }
                     
                     [weakSelf updateRecentsTab];

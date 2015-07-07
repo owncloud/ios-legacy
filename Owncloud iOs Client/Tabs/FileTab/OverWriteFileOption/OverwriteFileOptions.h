@@ -27,7 +27,7 @@
 
 @property(nonatomic,strong)UIActionSheet *overwriteOptionsActionSheet;
 @property(nonatomic,strong)UIView *viewToShow;
-@property(nonatomic,strong)UIAlertView *renameAlertView;;
+@property(nonatomic,strong)UIAlertView *renameAlertView;
 @property(nonatomic,weak) __weak id<OverwriteFileOptionsDelegate> delegate;
 @property(nonatomic,strong) FileDto *fileDto;
 
