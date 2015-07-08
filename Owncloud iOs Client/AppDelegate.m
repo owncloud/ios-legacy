@@ -2693,9 +2693,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 #pragma mark - Init Easter Egg
 
 - (void) launchEasterEgg {
+    
+    //Force to be in Portrait
+    NSNumber *value = [NSNumber numberWithInt:UIDeviceOrientationPortrait];
+    [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+    
     // Create the main window
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
     
     // Create an CCGLView with a RGB565 color buffer, and a depth buffer of 0-bits
     CCGLView *glView = [CCGLView viewWithFrame:[self.window bounds]

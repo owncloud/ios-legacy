@@ -169,8 +169,9 @@
     shipYPosition = 50;
     
     // Invaders
-    numberOfInvaderColumns = 10;
-    invaderOffset = 22;
+    //numberOfInvaderColumns = 10;
+    numberOfInvaderColumns = ([UIScreen mainScreen].bounds.size.width/40);
+    invaderOffset = 12;
     invaderXMoveTimeInterval = 360;
     invaderYMoveTimeInterval = 10;
     invaderFrameCount = 0;
@@ -247,7 +248,7 @@
         NSMutableArray *invaderColumn = [[NSMutableArray alloc] init];
         [allInvaderColumns addObject:invaderColumn];
         
-        int yOffset = 0;
+        int yOffset = 20;
         
         // Invader
         [self addEnemyToColumn:invaderColumn withSpriteFrame:[invaderFrames objectAtIndex:0] 
