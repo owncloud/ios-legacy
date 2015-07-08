@@ -16,10 +16,15 @@ class RootRingController: WKInterfaceController {
     var progressCalculated: Int = 1
 
     
-    @IBOutlet var progressImage: WKInterfaceImage!
+    @IBOutlet var progressGroup: WKInterfaceGroup!
+    @IBOutlet var sizeLabel: WKInterfaceLabel!
+    @IBOutlet var detailLabel: WKInterfaceLabel!
 
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
+        
+        self.setTitle("ownCloud")
+        self.detailLabel.setText("Used space")
         
         self.getSpaceDataFromTheCoreApp()
         
@@ -41,7 +46,7 @@ class RootRingController: WKInterfaceController {
     }
     
     func getSpaceDataFromTheCoreApp() {
-        var info = [key : "GetTotalOcuppiedSpace"]
+        var info = [key : "GetUsedSpace"]
         
         WKInterfaceController.openParentApplication(info, reply: { (reply, error) -> Void in
             
@@ -56,13 +61,14 @@ class RootRingController: WKInterfaceController {
     
     func calculateProgress (watchDict : [String : AnyObject]){
         
-        let occupiedSpace = watchDict["SpaceOcuppied"] as! NSNumber
+        let usedSpace = watchDict["SpaceUsed"] as! NSNumber
         let totalSpace = watchDict["TotalDeviceSpace"] as! NSNumber
-        let occupiedSpaceString = watchDict["SpaceOcuppiedString"] as! NSString
+        let usedSpaceString = watchDict["SpaceUsedString"] as! String
+        let totalSpaceString = watchDict["SpaceTotalString"] as! String
         
-        println("\(occupiedSpaceString)")
+        println("\(usedSpaceString)")
     
-        let percent = (occupiedSpace.floatValue * 100.0) / totalSpace.floatValue
+        let percent = (usedSpace.floatValue * 100.0) / totalSpace.floatValue
         
         var progress: Int =  Int((percent * 30) / 100)
         
@@ -74,15 +80,22 @@ class RootRingController: WKInterfaceController {
         dataCharged = true
         
         self.updateRingWithProgress(progress)
+        self.updateCenterLabels(usedSpaceString, totalSize: totalSpaceString)
         
     }
     
     func updateRingWithProgress (progress : Int){
         
-        self.progressImage.setImageNamed("outer-120-9-")
-        self.progressImage.startAnimatingWithImagesInRange(NSMakeRange(0, progress), duration: 1.0, repeatCount: 1)
+        self.progressGroup.setBackgroundImageNamed("outer-120-9-")
+        self.progressGroup.startAnimatingWithImagesInRange(NSMakeRange(0, progress), duration: 0.4, repeatCount: 1)
     }
     
+    func updateCenterLabels(sizeUsed: String, totalSize: String){
+        
+        self.sizeLabel.setText(sizeUsed)
+    
+    }
+
 
 
 

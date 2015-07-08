@@ -2712,11 +2712,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     double megabytes = bytes / MB;
     double gigabytes = bytes / GB;
     if (gigabytes >= 1.0)
-        formatted = [NSString stringWithFormat:@"%.2f GB", gigabytes];
+        formatted = [NSString stringWithFormat:@"%.1f GB", gigabytes];
     else if (megabytes >= 1.0)
-        formatted = [NSString stringWithFormat:@"%.2f MB", megabytes];
+        formatted = [NSString stringWithFormat:@"%.1f MB", megabytes];
     else
-        formatted = [NSString stringWithFormat:@"%.2f bytes", bytes];
+        formatted = [NSString stringWithFormat:@"%.1f bytes", bytes];
     
     return formatted;
 }
@@ -2727,35 +2727,42 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     NSDictionary *watchDict = nil;
     
-    if ([action isEqualToString:@"GetTotalOcuppiedSpace"]){
+    if ([action isEqualToString:@"GetUsedSpace"]){
         
-        watchDict = [NSMutableDictionary dictionaryWithCapacity:3];
+        watchDict = [NSMutableDictionary dictionaryWithCapacity:4];
         
         long long space = [[[[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil] objectForKey:NSFileSystemSize] longLongValue];
-        long long spaceOcuppiedByUser = [self folderSize:[UtilsUrls getOwnCloudFilePath]];
+        long long spaceUsedByUser = [self folderSize:[UtilsUrls getOwnCloudFilePath]];
         
-        NSNumber *spaceOcuppied = [NSNumber numberWithLongLong:spaceOcuppiedByUser];
+        NSNumber *spaceUsed = [NSNumber numberWithLongLong:spaceUsedByUser];
         NSNumber *totalDeviceSpace = [NSNumber numberWithLongLong:space];
-        NSString *spaceOcuppiedString = [self memoryFormatter:spaceOcuppiedByUser];
+        NSString *spaceUsedString = [self memoryFormatter:spaceUsedByUser];
+        NSString *totalDeviceSpaceString = [self memoryFormatter:space];
         
-        [watchDict setValue:spaceOcuppied forKey:@"SpaceOcuppied"];
+        [watchDict setValue:spaceUsed forKey:@"SpaceUsed"];
         [watchDict setValue:totalDeviceSpace forKey:@"TotalDeviceSpace"];
-        [watchDict setValue:spaceOcuppiedString forKey:@"SpaceOcuppiedString"];
+        [watchDict setValue:spaceUsedString forKey:@"SpaceUsedString"];
+        [watchDict setValue:totalDeviceSpaceString forKey:@"SpaceTotalString"];
         
     }
     
 
-    if ([action isEqualToString:@"GetSplitOccupiedSpace"]){
+    if ([action isEqualToString:@"GetFreeSpace"]){
         
-        watchDict = [NSMutableDictionary dictionaryWithCapacity:2];
+        watchDict = [NSMutableDictionary dictionaryWithCapacity:4];
         
-        NSNumber *spaceOcuppied = [NSNumber numberWithFloat:12000.0];
-        NSNumber *totalDeviceSpace = [NSNumber numberWithFloat:16000.0];
+        long long space = [[[[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil] objectForKey:NSFileSystemSize] longLongValue];
+        long long freeSpace = [[[[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil] objectForKey:NSFileSystemFreeSize] longLongValue];
         
+        NSNumber *totalDeviceSpace = [NSNumber numberWithLongLong:space];
+        NSNumber *freeDeviceSpace = [NSNumber numberWithLongLong:freeSpace];
+        NSString *spaceFreeString = [self memoryFormatter:freeSpace];
+        NSString *totalDeviceSpaceString = [self memoryFormatter:space];
         
-        [watchDict setValue:spaceOcuppied forKey:@"SpaceOcuppied"];
         [watchDict setValue:totalDeviceSpace forKey:@"TotalDeviceSpace"];
-        
+        [watchDict setValue:freeDeviceSpace forKey:@"FreeDeviceSpace"];
+        [watchDict setValue:spaceFreeString forKey:@"SpaceFreeString"];
+        [watchDict setValue:totalDeviceSpaceString forKey:@"SpaceTotalString"];
         
     }
     
