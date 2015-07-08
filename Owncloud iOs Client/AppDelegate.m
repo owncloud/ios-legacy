@@ -56,6 +56,7 @@
 #import "OCSplitViewController.h"
 #import "InitializeDatabase.h"
 #import "CheckHasForbiddenCharactersSupport.h"
+#import "MenuLayer.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -2687,6 +2688,89 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         }
     }
     
+}
+
+#pragma mark - Init Easter Egg
+
+- (void) launchEasterEgg {
+    // Create the main window
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    
+    // Create an CCGLView with a RGB565 color buffer, and a depth buffer of 0-bits
+    CCGLView *glView = [CCGLView viewWithFrame:[self.window bounds]
+                                   pixelFormat:kEAGLColorFormatRGB565	//kEAGLColorFormatRGBA8
+                                   depthFormat:0	//GL_DEPTH_COMPONENT24_OES
+                            preserveBackbuffer:NO
+                                    sharegroup:nil
+                                 multiSampling:NO
+                               numberOfSamples:0];
+    
+    self.director = (CCDirectorIOS*) [CCDirector sharedDirector]; //Here is where the director is setup
+    
+    //self.director.wantsFullScreenLayout = YES; //deprecated
+    self.director.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    // Display FSP and SPF
+    [self.director setDisplayStats:YES];
+    
+    // set FPS at 60
+    [self.director setAnimationInterval:1.0/60];
+    
+    // attach the openglView to the director
+    [self.director setView:glView];
+    
+    // for rotation and other messages
+    [self.director setDelegate:self];
+    
+    // 2D projection
+    [self.director setProjection:kCCDirectorProjection2D];
+    
+    // Enables High Res mode (Retina Display) on iPhone 4 and maintains low res on all other devices
+    if( ! [self.director enableRetinaDisplay:YES] )
+        CCLOG(@"Retina Display Not supported");
+    
+    // Create a Navigation Controller with the Director
+    self.navControllerEasterEgg = [[UINavigationController alloc] initWithRootViewController:self.director];
+    self.navControllerEasterEgg.navigationBarHidden = YES;
+    
+    // set the Navigation Controller as a subview
+    [self.window addSubview:self.navControllerEasterEgg.view];
+    
+    // make main window visible
+    [self.window makeKeyAndVisible];
+    
+    // Default texture format for PNG/BMP/TIFF/JPEG/GIF images
+    // It can be RGBA8888, RGBA4444, RGB5_A1, RGB565
+    // You can change anytime.
+    [CCTexture2D setDefaultAlphaPixelFormat:kCCTexture2DPixelFormat_RGBA8888];
+    
+    // When in iPhone RetinaDisplay, iPad, iPad RetinaDisplay mode, CCFileUtils will append the "-hd", "-ipad", "-ipadhd" to all loaded files
+    // If the -hd, -ipad, -ipadhd files are not found, it will load the non-suffixed version
+    [CCFileUtils setiPhoneRetinaDisplaySuffix:@"-hd"];		// Default on iPhone RetinaDisplay is "-hd"
+    [CCFileUtils setiPadSuffix:@"-ipad"];					// Default on iPad is "" (empty string)
+    [CCFileUtils setiPadRetinaDisplaySuffix:@"-ipadhd"];	// Default on iPad RetinaDisplay is "-ipadhd"
+    
+    // Assume that PVR images have premultiplied alpha
+    [CCTexture2D PVRImagesHavePremultipliedAlpha:YES];
+    
+    // and add the scene to the stack. The director will run it when it automatically when the view is displayed.
+    
+    
+    
+    [self.director pushScene:[MenuLayer sceneWithMenuType:menuTypeWelcome]]; //Here is where we add the scene to the director.
+}
+
+// purge memory
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
+{
+    [[CCDirector sharedDirector] purgeCachedData];
+}
+
+// next delta time will be zero
+-(void) applicationSignificantTimeChange:(UIApplication *)application
+{
+    [[CCDirector sharedDirector] setNextDeltaTimeZero:YES];
 }
 
 

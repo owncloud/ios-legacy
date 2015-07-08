@@ -27,6 +27,7 @@
 #import "OCTabBarController.h"
 #import "DetailViewController.h"
 #import "ManageDownloads.h"
+#import "cocos2d.h"
 
 @class FilesViewController;
 @class RecentViewController;
@@ -45,7 +46,7 @@ extern NSString * NotReachableNetworkForUploadsNotification;
 extern NSString * NotReachableNetworkForDownloadsNotification;
 
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, CheckAccessToServerDelegate, PrepareFilesToUploadDelegate, KKPasscodeViewControllerDelegate> {
+@interface AppDelegate : UIResponder <UIApplicationDelegate, CheckAccessToServerDelegate, PrepareFilesToUploadDelegate, KKPasscodeViewControllerDelegate, CCDirectorDelegate> {
   
     
     UserDto *_activeUser;
@@ -311,6 +312,9 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) NSString *urlServerRedirected;
 @property (nonatomic, strong) ManageDownloads *downloadManager;
 @property (nonatomic, strong) ManageFavorites *manageFavorites;
+//Easter Egg
+@property (nonatomic, strong) CCDirectorIOS *director;
+@property (nonatomic, strong) UINavigationController *navControllerEasterEgg;
 
 
 @end
