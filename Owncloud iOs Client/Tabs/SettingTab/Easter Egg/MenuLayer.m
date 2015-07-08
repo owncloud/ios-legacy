@@ -52,27 +52,30 @@ NSString *const menuTypeLose = @"LOSE";
 	// Apple recommends to re-assign "self" with the "super's" return value
 	if ((self=[super init]))
     {        
-        self.isTouchEnabled = YES;        
+        self.isTouchEnabled = YES;
+        [[CCDirector sharedDirector] setDisplayStats:NO];
 	}
     
 	return self;
 }
 
 - (void)createIntroductionMenu
-{    
-    // Create some menu items
-    CCMenuItemImage * menuItem1 = [CCMenuItemImage itemWithNormalImage:@"new_game_default.png"
-                                                         selectedImage:@"new_game_selected.png"
-                                                                target:self
-                                                              selector:@selector(startGame)];
+{
     
-    CCMenuItemImage * menuItem2 = [CCMenuItemImage itemWithNormalImage:@"quit_default.png"
-                                                         selectedImage:@"quit_selected.png"
-                                                                target:self
-                                                              selector:@selector(endGame)];
+    // Create some menu items
+    CCMenuItemImage * logo = [CCMenuItemImage itemWithNormalImage:@"CompanyLogo.png"
+                                                         selectedImage:@"CompanyLogo.png"
+                                                                target:nil
+                                                              selector:nil];
+    CCLabelTTF *lbl1= [CCLabelTTF labelWithString:NSLocalizedString(@"new_game", nil) fontName:@"verdana" fontSize:25];
+    CCMenuItemLabel *menuItem1 = [CCMenuItemLabel itemWithLabel:lbl1 target:self selector:@selector(startGame)];
+
+    CCLabelTTF *lbl2= [CCLabelTTF labelWithString:NSLocalizedString(@"quit_game", nil) fontName:@"verdana" fontSize:20];
+    CCMenuItemLabel *menuItem2 = [CCMenuItemLabel itemWithLabel:lbl2 target:self selector:@selector(endGame)];
+    
     
     // Create a menu and add your menu items to it
-    CCMenu * myMenu = [CCMenu menuWithItems:menuItem1,menuItem2,nil];
+    CCMenu * myMenu = [CCMenu menuWithItems:logo,menuItem1,menuItem2,nil];
     
     // Arrange the menu items vertically
     [myMenu alignItemsVertically];
@@ -84,18 +87,19 @@ NSString *const menuTypeLose = @"LOSE";
 - (void)createWinMenu
 {    
     // Create some menu items
-    CCMenuItemImage * menuItem1 = [CCMenuItemImage itemWithNormalImage:@"play_again_default.png"
-                                                         selectedImage:@"play_again_selected.png"
-                                                                target:self
-                                                              selector:@selector(retry)];
+    CCMenuItemImage * logo = [CCMenuItemImage itemWithNormalImage:@"CompanyLogo.png"
+                                                    selectedImage:@"CompanyLogo.png"
+                                                           target:nil
+                                                         selector:nil];
     
-    CCMenuItemImage * menuItem2 = [CCMenuItemImage itemWithNormalImage:@"quit_default.png"
-                                                         selectedImage:@"quit_selected.png"
-                                                                target:self
-                                                              selector:@selector(endGame)];
+    CCLabelTTF *lbl1= [CCLabelTTF labelWithString:NSLocalizedString(@"retry_game", nil) fontName:@"verdana" fontSize:25];
+    CCMenuItemLabel *menuItem1 = [CCMenuItemLabel itemWithLabel:lbl1 target:self selector:@selector(retry)];
+    
+    CCLabelTTF *lbl2= [CCLabelTTF labelWithString:NSLocalizedString(@"quit_game", nil) fontName:@"verdana" fontSize:20];
+    CCMenuItemLabel *menuItem2 = [CCMenuItemLabel itemWithLabel:lbl2 target:self selector:@selector(endGame)];
     
     // Create a menu and add your menu items to it
-    CCMenu * myMenu = [CCMenu menuWithItems:menuItem1,menuItem2,nil];
+    CCMenu * myMenu = [CCMenu menuWithItems:logo,menuItem1,menuItem2,nil];
     
     // Arrange the menu items vertically
     [myMenu alignItemsVertically];
@@ -107,18 +111,19 @@ NSString *const menuTypeLose = @"LOSE";
 - (void)createLoseMenu
 {    
     // Create some menu items
-    CCMenuItemImage * menuItem1 = [CCMenuItemImage itemWithNormalImage:@"retry_default.png"
-                                                         selectedImage:@"retry_selected.png"
-                                                                target:self
-                                                              selector:@selector(retry)];
+    CCMenuItemImage * logo = [CCMenuItemImage itemWithNormalImage:@"CompanyLogo.png"
+                                                    selectedImage:@"CompanyLogo.png"
+                                                           target:nil
+                                                         selector:nil];
     
-    CCMenuItemImage * menuItem2 = [CCMenuItemImage itemWithNormalImage:@"quit_default.png"
-                                                         selectedImage:@"quit_selected.png"
-                                                                target:self
-                                                              selector:@selector(endGame)];
+    CCLabelTTF *lbl1= [CCLabelTTF labelWithString:NSLocalizedString(@"retry_game", nil) fontName:@"verdana" fontSize:25];
+    CCMenuItemLabel *menuItem1 = [CCMenuItemLabel itemWithLabel:lbl1 target:self selector:@selector(retry)];
+    
+    CCLabelTTF *lbl2= [CCLabelTTF labelWithString:NSLocalizedString(@"quit_game", nil) fontName:@"verdana" fontSize:20];
+    CCMenuItemLabel *menuItem2 = [CCMenuItemLabel itemWithLabel:lbl2 target:self selector:@selector(endGame)];
     
     // Create a menu and add your menu items to it
-    CCMenu * myMenu = [CCMenu menuWithItems:menuItem1,menuItem2,nil];
+    CCMenu * myMenu = [CCMenu menuWithItems:logo,menuItem1,menuItem2,nil];
     
     // Arrange the menu items vertically
     [myMenu alignItemsVertically];
