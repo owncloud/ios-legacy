@@ -264,7 +264,15 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 + (CheckHasShareSupport*) sharedCheckHasShareSupport;
 
+//-----------------------------------
+/// @name launchEasterEgg
+///-----------------------------------
 
+/**
+ * Launch the Easter Egg, the space invaders game
+ *
+ */
+- (void) launchEasterEgg;
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) LoginViewController *loginViewController;
