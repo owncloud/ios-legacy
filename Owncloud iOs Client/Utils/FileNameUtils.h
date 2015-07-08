@@ -115,6 +115,11 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
 
 + (NSString *)getTheNameOfTheBrandImage;
 
+///-----------------------------------
+/// @name Get is this app is ownCloud official or not
+///-----------------------------------
+
++ (BOOL) isOwnCloudOfficialApp;
 
 ///-----------------------------------
 /// @name Get the Name of shared path

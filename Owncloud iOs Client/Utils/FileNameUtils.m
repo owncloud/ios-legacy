@@ -307,9 +307,9 @@
     
     //Default name
     imageName = @"BackRootFolderIcon";
-    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-    //The special icon for chritmats only for ownCloud app
-    if ([appName isEqualToString:@"ownCloud"]) {
+    
+    //The special icon for christmas only for ownCloud app
+    if ([self isOwnCloudOfficialApp]) {
         // After day 354 of the year, the usual ownCloud icon is replaced by another icon
         NSCalendar *gregorian =
         [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
@@ -320,6 +320,23 @@
     }
     
     return imageName;
+}
+
+///-----------------------------------
+/// @name Get is this app is ownCloud official or not
+///-----------------------------------
+
++ (BOOL) isOwnCloudOfficialApp {
+    
+    BOOL isOwnCloud = NO;
+    
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    //The special icon for chritmats only for ownCloud app
+    if ([appName isEqualToString:@"ownCloud"]) {
+        isOwnCloud = YES;
+    }
+    
+    return isOwnCloud;
 }
 
 ///-----------------------------------

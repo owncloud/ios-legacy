@@ -51,6 +51,8 @@ typedef enum {
 @property (nonatomic,strong) MFMailComposeViewController *mailer;
 @property (nonatomic) BOOL isMailComposeVisible;
 
+//Easter Egg
+@property (nonatomic) NSInteger counterTapsForEasterEgg;
 
 - (IBAction)changeSwitchPasscode:(id)sender;
 - (IBAction)changeSwitchInstantUpload:(id)sender;

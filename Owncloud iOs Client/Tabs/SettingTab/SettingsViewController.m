@@ -39,6 +39,7 @@
 #import "UtilsCookies.h"
 #import "ManageCookiesStorageDB.h"
 #import "Accessibility.h"
+#import "FileNameUtils.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -47,6 +48,9 @@
 //Settings custom font
 #define k_settings_normal_font [UIFont fontWithName:@"HelveticaNeue" size:17]
 #define k_settings_bold_font [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
+
+//Easter Egg
+#define k_number_op_taps_to_show_easter_egg 5
 
 
 ///-----------------------------------
@@ -65,8 +69,9 @@
     [super viewDidLoad];
     
     [self.navigationBar setTintColor:[UIColor colorOfNavigationItems]];
+    
+    
 }
-
 
 -(UIStatusBarStyle)preferredStatusBarStyle
 {
@@ -109,8 +114,27 @@
     self.title = NSLocalizedString(@"settings", nil);
     
     [self.view setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
+    
+    UITapGestureRecognizer *navSingleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapButton)];
+    navSingleTap.numberOfTapsRequired = 1;
+    [[self.navigationController.navigationBar.subviews objectAtIndex:1] setUserInteractionEnabled:YES];
+    [[self.navigationController.navigationBar.subviews objectAtIndex:1] addGestureRecognizer:navSingleTap];
 
 }
+
+- (void) didTapButton {
+    
+    if ([FileNameUtils isOwnCloudOfficialApp]) {
+        self.counterTapsForEasterEgg++;
+        
+        if (self.counterTapsForEasterEgg >= k_number_op_taps_to_show_easter_egg) {
+            DLog(@"Launch easter egg");
+            self.counterTapsForEasterEgg = 0;
+            
+        }
+    }
+}
+
 
 - (void)viewDidUnload
 {
@@ -142,6 +166,7 @@
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    self.counterTapsForEasterEgg = 0;
 }
 
 -(void)viewWillLayoutSubviews
@@ -423,6 +448,7 @@
         label.textColor = [UIColor grayColor];
         label.backgroundColor = [UIColor clearColor];
         label.textAlignment = NSTextAlignmentCenter;
+        
     } else {
         label.backgroundColor = [UIColor clearColor];
         label.text = @"";
