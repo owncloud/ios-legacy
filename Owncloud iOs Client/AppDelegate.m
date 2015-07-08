@@ -57,6 +57,9 @@
 #import "InitializeDatabase.h"
 #import "CheckHasForbiddenCharactersSupport.h"
 
+#define MB (1024*1024)
+#define GB (MB*1024)
+
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
 NSString * NotReachableNetworkForUploadsNotification = @"NotReachableNetworkForUploadsNotification";
@@ -2686,6 +2689,79 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             }
         }
     }
+    
+}
+
+- (unsigned long long int)folderSize:(NSString *)folderPath {
+    NSArray *filesArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:folderPath error:nil];
+    NSEnumerator *filesEnumerator = [filesArray objectEnumerator];
+    NSString *fileName;
+    unsigned long long int fileSize = 0;
+    
+    while (fileName = [filesEnumerator nextObject]) {
+        NSDictionary *fileDictionary = [[NSFileManager defaultManager] fileAttributesAtPath:[folderPath stringByAppendingPathComponent:fileName] traverseLink:YES];
+        fileSize += [fileDictionary fileSize];
+    }
+    
+    return fileSize;
+}
+
+- (NSString *)memoryFormatter:(long long)diskSpace {
+    NSString *formatted;
+    double bytes = 1.0 * diskSpace;
+    double megabytes = bytes / MB;
+    double gigabytes = bytes / GB;
+    if (gigabytes >= 1.0)
+        formatted = [NSString stringWithFormat:@"%.2f GB", gigabytes];
+    else if (megabytes >= 1.0)
+        formatted = [NSString stringWithFormat:@"%.2f MB", megabytes];
+    else
+        formatted = [NSString stringWithFormat:@"%.2f bytes", bytes];
+    
+    return formatted;
+}
+
+- (void)application:(UIApplication *)application handleWatchKitExtensionRequest:(NSDictionary *)userInfo reply:(void (^)(NSDictionary *))reply {
+    
+    NSString *action = [userInfo objectForKey:@"RequestKey"];
+    
+    NSDictionary *watchDict = nil;
+    
+    if ([action isEqualToString:@"GetTotalOcuppiedSpace"]){
+        
+        watchDict = [NSMutableDictionary dictionaryWithCapacity:3];
+        
+        long long space = [[[[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil] objectForKey:NSFileSystemSize] longLongValue];
+        long long spaceOcuppiedByUser = [self folderSize:[UtilsUrls getOwnCloudFilePath]];
+        
+        NSNumber *spaceOcuppied = [NSNumber numberWithLongLong:spaceOcuppiedByUser];
+        NSNumber *totalDeviceSpace = [NSNumber numberWithLongLong:space];
+        NSString *spaceOcuppiedString = [self memoryFormatter:spaceOcuppiedByUser];
+        
+        [watchDict setValue:spaceOcuppied forKey:@"SpaceOcuppied"];
+        [watchDict setValue:totalDeviceSpace forKey:@"TotalDeviceSpace"];
+        [watchDict setValue:spaceOcuppiedString forKey:@"SpaceOcuppiedString"];
+        
+    }
+    
+
+    if ([action isEqualToString:@"GetSplitOccupiedSpace"]){
+        
+        watchDict = [NSMutableDictionary dictionaryWithCapacity:2];
+        
+        NSNumber *spaceOcuppied = [NSNumber numberWithFloat:12000.0];
+        NSNumber *totalDeviceSpace = [NSNumber numberWithFloat:16000.0];
+        
+        
+        [watchDict setValue:spaceOcuppied forKey:@"SpaceOcuppied"];
+        [watchDict setValue:totalDeviceSpace forKey:@"TotalDeviceSpace"];
+        
+        
+    }
+    
+  
+    
+    reply (watchDict);
     
 }
 

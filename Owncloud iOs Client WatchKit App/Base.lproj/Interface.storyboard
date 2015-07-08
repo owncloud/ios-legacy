@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AgC-eL-Hgc">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="7701"/>
+    </dependencies>
+    <scenes>
+        <!--Root Ring Controller-->
+        <scene sceneID="aou-V4-d1y">
+            <objects>
+                <controller id="AgC-eL-Hgc" customClass="RootRingController" customModule="Owncloud_iOs_Client_WatchKit_Extension">
+                    <items>
+                        <group width="1" height="120" alignment="center" id="bRP-6i-6zE" userLabel="Group Image">
+                            <items>
+                                <imageView width="1" height="1" alignment="center" contentMode="scaleAspectFit" id="7s6-LN-z4k"/>
+                            </items>
+                        </group>
+                        <group width="1" height="27" alignment="center" verticalAlignment="bottom" id="lB4-9e-e2o" userLabel="Group Title">
+                            <items>
+                                <label width="1" alignment="center" verticalAlignment="center" text="Data ocuppied" textAlignment="center" id="Gse-Wz-Amf">
+                                    <fontDescription key="font" style="UICTFontTextStyleSubhead"/>
+                                </label>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="progressImage" destination="7s6-LN-z4k" id="F4b-Sl-yYs"/>
+                        <segue destination="4Jf-bF-Lor" kind="relationship" relationship="nextPage" id="qnp-FX-cEM"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="164" y="217"/>
+        </scene>
+        <!--Second Ring Controller-->
+        <scene sceneID="9Ka-P5-psl">
+            <objects>
+                <controller id="4Jf-bF-Lor" customClass="SecondRingController" customModule="Owncloud_iOs_Client_WatchKit_Extension">
+                    <items>
+                        <group width="1" height="120" alignment="center" id="ZXf-uc-Atj" userLabel="Group Image">
+                            <items>
+                                <imageView width="1" height="1" alignment="center" contentMode="scaleAspectFit" id="fWS-jv-Sxu"/>
+                            </items>
+                        </group>
+                        <group width="1" height="27" alignment="center" verticalAlignment="bottom" id="ypk-Iq-b90" userLabel="Group Title">
+                            <items>
+                                <label width="1" alignment="center" verticalAlignment="center" text="Data split" textAlignment="center" id="4j2-YU-4kD">
+                                    <fontDescription key="font" style="UICTFontTextStyleSubhead"/>
+                                </label>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="progressImage" destination="fWS-jv-Sxu" id="eiQ-NZ-Qwz"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="420" y="217"/>
+        </scene>
+        <!--Glance Interface Controller-->
+        <scene sceneID="rjY-Ar-IMT">
+            <objects>
+                <glanceController spacing="0.0" id="Sv0-Ai-Zie" customClass="GlanceController" customModule="Owncloud_iOs_Client_WatchKit_App" customModuleProvider="target">
+                    <items>
+                        <group alignment="left" id="gv7-I2-MZq"/>
+                        <group alignment="left" id="eew-Gs-W6Y"/>
+                    </items>
+                    <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="14"/>
+                </glanceController>
+            </objects>
+            <point key="canvasLocation" x="164" y="514"/>
+        </scene>
+    </scenes>
+</document>

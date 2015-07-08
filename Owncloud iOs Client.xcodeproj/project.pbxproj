@@ -546,6 +546,15 @@
 		59E58B751B04ED15004E9739 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0816034C2200A95EAD /* libcrypto.a */; };
 		59E58B761B04ED15004E9739 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0916034C2200A95EAD /* libssl.a */; };
 		59E58B771B04ED20004E9739 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
+		EA115FE01B4D054000A0383E /* RootRingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA115FDF1B4D054000A0383E /* RootRingController.swift */; };
+		EA115FE21B4D054000A0383E /* GlanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA115FE11B4D054000A0383E /* GlanceController.swift */; };
+		EA115FE41B4D054000A0383E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA115FE31B4D054000A0383E /* Images.xcassets */; };
+		EA115FE81B4D054000A0383E /* Owncloud iOs Client WatchKit App.app in Resources */ = {isa = PBXBuildFile; fileRef = EA115FE71B4D054000A0383E /* Owncloud iOs Client WatchKit App.app */; };
+		EA115FF01B4D054000A0383E /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA115FEE1B4D054000A0383E /* Interface.storyboard */; };
+		EA115FF21B4D054100A0383E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA115FF11B4D054000A0383E /* Images.xcassets */; };
+		EA115FF51B4D054100A0383E /* Owncloud iOs Client WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EA115FDB1B4D054000A0383E /* Owncloud iOs Client WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EA115FFE1B4D05A100A0383E /* Ring.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA115FFD1B4D05A100A0383E /* Ring.xcassets */; };
+		EA1160031B4D216800A0383E /* SecondRingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1160021B4D216800A0383E /* SecondRingController.swift */; };
 		EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
 		EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
@@ -787,6 +796,20 @@
 			remoteGlobalIDString = EA7CC896183E11E600B6A4B4;
 			remoteInfo = "ownCloud iOS library";
 		};
+		EA115FE91B4D054000A0383E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1324296F15ADBB3700DF823E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA115FE61B4D054000A0383E;
+			remoteInfo = "Owncloud iOs Client WatchKit App";
+		};
+		EA115FF31B4D054100A0383E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1324296F15ADBB3700DF823E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA115FDA1B4D054000A0383E;
+			remoteInfo = "Owncloud iOs Client WatchKit Extension";
+		};
 		EA1F62DB1A5EC07E00D6346F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */;
@@ -867,6 +890,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				EAB0AB4A19ED356A00764C31 /* ownCloudExtAppFileProvider.appex in Embed App Extensions */,
+				EA115FF51B4D054100A0383E /* Owncloud iOs Client WatchKit Extension.appex in Embed App Extensions */,
 				EAB0AB4F19ED356A00764C31 /* ownCloudExtApp.appex in Embed App Extensions */,
 				EA66069F1AA767F800BA2C65 /* OC Share Sheet.appex in Embed App Extensions */,
 			);
@@ -1405,6 +1429,17 @@
 		59E48E931B3AAE72008FAAE0 /* th-TH */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "th-TH"; path = "th-TH.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		59E48E941B3AAE87008FAAE0 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		59E52E7F1B0B666100F5B1B3 /* Accessibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Accessibility.h; path = SupportingFiles/Accessibility/Accessibility.h; sourceTree = "<group>"; };
+		EA115FDB1B4D054000A0383E /* Owncloud iOs Client WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Owncloud iOs Client WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA115FDE1B4D054000A0383E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EA115FDF1B4D054000A0383E /* RootRingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootRingController.swift; sourceTree = "<group>"; };
+		EA115FE11B4D054000A0383E /* GlanceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlanceController.swift; sourceTree = "<group>"; };
+		EA115FE31B4D054000A0383E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		EA115FE71B4D054000A0383E /* Owncloud iOs Client WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Owncloud iOs Client WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA115FED1B4D054000A0383E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EA115FEF1B4D054000A0383E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		EA115FF11B4D054000A0383E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		EA115FFD1B4D05A100A0383E /* Ring.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Ring.xcassets; sourceTree = "<group>"; };
+		EA1160021B4D216800A0383E /* SecondRingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondRingController.swift; sourceTree = "<group>"; };
 		EA1787AA17E33BB9005171AB /* OCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCNavigationController.h; path = Tabs/FileTab/OCNavigationController.h; sourceTree = "<group>"; };
 		EA1787AB17E33BB9005171AB /* OCNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCNavigationController.m; path = Tabs/FileTab/OCNavigationController.m; sourceTree = "<group>"; };
 		EA2678FB1876E4B8008678DE /* notSharedItem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notSharedItem.png; sourceTree = "<group>"; };
@@ -1557,6 +1592,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EA115FD81B4D054000A0383E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EA6606921AA767F700BA2C65 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1614,6 +1656,8 @@
 				EAB0AB3319ED356A00764C31 /* ownCloudExtApp */,
 				EAB0AB4119ED356A00764C31 /* ownCloudExtAppFileProvider */,
 				EA6606961AA767F800BA2C65 /* OC Share Sheet */,
+				EA115FDC1B4D054000A0383E /* Owncloud iOs Client WatchKit Extension */,
+				EA115FEB1B4D054000A0383E /* Owncloud iOs Client WatchKit App */,
 				1324297B15ADBB3700DF823E /* Frameworks */,
 				1324297915ADBB3700DF823E /* Products */,
 			);
@@ -1627,6 +1671,8 @@
 				EAB0AB3219ED356A00764C31 /* ownCloudExtApp.appex */,
 				EAB0AB4019ED356A00764C31 /* ownCloudExtAppFileProvider.appex */,
 				EA6606951AA767F700BA2C65 /* OC Share Sheet.appex */,
+				EA115FDB1B4D054000A0383E /* Owncloud iOs Client WatchKit Extension.appex */,
+				EA115FE71B4D054000A0383E /* Owncloud iOs Client WatchKit App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2758,6 +2804,45 @@
 			name = "Select Folder";
 			sourceTree = "<group>";
 		};
+		EA115FDC1B4D054000A0383E /* Owncloud iOs Client WatchKit Extension */ = {
+			isa = PBXGroup;
+			children = (
+				EA115FDF1B4D054000A0383E /* RootRingController.swift */,
+				EA1160021B4D216800A0383E /* SecondRingController.swift */,
+				EA115FE11B4D054000A0383E /* GlanceController.swift */,
+				EA115FE31B4D054000A0383E /* Images.xcassets */,
+				EA115FDD1B4D054000A0383E /* Supporting Files */,
+			);
+			path = "Owncloud iOs Client WatchKit Extension";
+			sourceTree = "<group>";
+		};
+		EA115FDD1B4D054000A0383E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EA115FDE1B4D054000A0383E /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EA115FEB1B4D054000A0383E /* Owncloud iOs Client WatchKit App */ = {
+			isa = PBXGroup;
+			children = (
+				EA115FEE1B4D054000A0383E /* Interface.storyboard */,
+				EA115FF11B4D054000A0383E /* Images.xcassets */,
+				EA115FFD1B4D05A100A0383E /* Ring.xcassets */,
+				EA115FEC1B4D054000A0383E /* Supporting Files */,
+			);
+			path = "Owncloud iOs Client WatchKit App";
+			sourceTree = "<group>";
+		};
+		EA115FEC1B4D054000A0383E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EA115FED1B4D054000A0383E /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		EA394B1615E3EA3D00B1C0EA /* Open With */ = {
 			isa = PBXGroup;
 			children = (
@@ -3122,6 +3207,7 @@
 				EAB0AB4E19ED356A00764C31 /* PBXTargetDependency */,
 				EAB0AB5119ED356A00764C31 /* PBXTargetDependency */,
 				EA66069E1AA767F800BA2C65 /* PBXTargetDependency */,
+				EA115FF41B4D054100A0383E /* PBXTargetDependency */,
 			);
 			name = "Owncloud iOs Client";
 			productName = "Owncloud iOs Client";
@@ -3146,6 +3232,39 @@
 			productName = "Owncloud iOs ClientTests";
 			productReference = 132429AD15ADBB3800DF823E /* Owncloud iOs ClientTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		EA115FDA1B4D054000A0383E /* Owncloud iOs Client WatchKit Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA115FFC1B4D054100A0383E /* Build configuration list for PBXNativeTarget "Owncloud iOs Client WatchKit Extension" */;
+			buildPhases = (
+				EA115FD71B4D054000A0383E /* Sources */,
+				EA115FD81B4D054000A0383E /* Frameworks */,
+				EA115FD91B4D054000A0383E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EA115FEA1B4D054000A0383E /* PBXTargetDependency */,
+			);
+			name = "Owncloud iOs Client WatchKit Extension";
+			productName = "Owncloud iOs Client WatchKit Extension";
+			productReference = EA115FDB1B4D054000A0383E /* Owncloud iOs Client WatchKit Extension.appex */;
+			productType = "com.apple.product-type.watchkit-extension";
+		};
+		EA115FE61B4D054000A0383E /* Owncloud iOs Client WatchKit App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA115FFB1B4D054100A0383E /* Build configuration list for PBXNativeTarget "Owncloud iOs Client WatchKit App" */;
+			buildPhases = (
+				EA115FE51B4D054000A0383E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Owncloud iOs Client WatchKit App";
+			productName = "Owncloud iOs Client WatchKit App";
+			productReference = EA115FE71B4D054000A0383E /* Owncloud iOs Client WatchKit App.app */;
+			productType = "com.apple.product-type.application.watchapp";
 		};
 		EA6606941AA767F700BA2C65 /* OC Share Sheet */ = {
 			isa = PBXNativeTarget;
@@ -3221,6 +3340,13 @@
 							};
 						};
 					};
+					EA115FDA1B4D054000A0383E = {
+						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 9B5WD74GWJ;
+					};
+					EA115FE61B4D054000A0383E = {
+						CreatedOnToolsVersion = 6.4;
+					};
 					EA6606941AA767F700BA2C65 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = 9B5WD74GWJ;
@@ -3285,6 +3411,7 @@
 				cs,
 				"th-TH",
 				tr,
+				Base,
 			);
 			mainGroup = 1324296D15ADBB3700DF823E;
 			productRefGroup = 1324297915ADBB3700DF823E /* Products */;
@@ -3302,6 +3429,8 @@
 				EAB0AB3119ED356A00764C31 /* ownCloudExtApp */,
 				EAB0AB3F19ED356A00764C31 /* ownCloudExtAppFileProvider */,
 				EA6606941AA767F700BA2C65 /* OC Share Sheet */,
+				EA115FDA1B4D054000A0383E /* Owncloud iOs Client WatchKit Extension */,
+				EA115FE61B4D054000A0383E /* Owncloud iOs Client WatchKit App */,
 			);
 		};
 /* End PBXProject section */
@@ -3602,6 +3731,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				132429B915ADBB3800DF823E /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA115FD91B4D054000A0383E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA115FE81B4D054000A0383E /* Owncloud iOs Client WatchKit App.app in Resources */,
+				EA115FE41B4D054000A0383E /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA115FE51B4D054000A0383E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA115FF01B4D054000A0383E /* Interface.storyboard in Resources */,
+				EA115FFE1B4D05A100A0383E /* Ring.xcassets in Resources */,
+				EA115FF21B4D054100A0383E /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3999,6 +4147,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EA115FD71B4D054000A0383E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA115FE01B4D054000A0383E /* RootRingController.swift in Sources */,
+				EA1160031B4D216800A0383E /* SecondRingController.swift in Sources */,
+				EA115FE21B4D054000A0383E /* GlanceController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EA6606911AA767F700BA2C65 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4147,6 +4305,16 @@
 			name = "ownCloud iOS library";
 			targetProxy = 597A87961A013FD50071F2AF /* PBXContainerItemProxy */;
 		};
+		EA115FEA1B4D054000A0383E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EA115FE61B4D054000A0383E /* Owncloud iOs Client WatchKit App */;
+			targetProxy = EA115FE91B4D054000A0383E /* PBXContainerItemProxy */;
+		};
+		EA115FF41B4D054100A0383E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EA115FDA1B4D054000A0383E /* Owncloud iOs Client WatchKit Extension */;
+			targetProxy = EA115FF31B4D054100A0383E /* PBXContainerItemProxy */;
+		};
 		EA1F62DC1A5EC07E00D6346F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "ownCloud iOS library";
@@ -4232,6 +4400,14 @@
 				145EA7CD17786FAC0087CDDB /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		EA115FEE1B4D054000A0383E /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EA115FEF1B4D054000A0383E /* Base */,
+			);
+			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -4426,6 +4602,113 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
+			};
+			name = Release;
+		};
+		EA115FF61B4D054100A0383E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Owncloud iOs Client WatchKit Extension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		EA115FF71B4D054100A0383E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Owncloud iOs Client WatchKit Extension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		EA115FF81B4D054100A0383E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IBSC_MODULE = Owncloud_iOs_Client_WatchKit_Extension;
+				INFOPLIST_FILE = "Owncloud iOs Client WatchKit App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
+			};
+			name = Debug;
+		};
+		EA115FF91B4D054100A0383E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IBSC_MODULE = Owncloud_iOs_Client_WatchKit_Extension;
+				INFOPLIST_FILE = "Owncloud iOs Client WatchKit App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
 			};
 			name = Release;
 		};
@@ -4753,6 +5036,24 @@
 			buildConfigurations = (
 				132429C315ADBB3800DF823E /* Debug */,
 				132429C415ADBB3800DF823E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EA115FFB1B4D054100A0383E /* Build configuration list for PBXNativeTarget "Owncloud iOs Client WatchKit App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA115FF81B4D054100A0383E /* Debug */,
+				EA115FF91B4D054100A0383E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EA115FFC1B4D054100A0383E /* Build configuration list for PBXNativeTarget "Owncloud iOs Client WatchKit Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA115FF61B4D054100A0383E /* Debug */,
+				EA115FF71B4D054100A0383E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
