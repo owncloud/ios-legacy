@@ -152,7 +152,6 @@
 // initialize the sprites and position them correctly for the new game
 - (void)initializeGame
 {
-    [[CCDirector sharedDirector] dismissModalViewControllerAnimated:YES];
     
     //Ship Projectiles
     shipProjectileIndex = 0;

@@ -140,13 +140,16 @@ NSString *const menuTypeLose = @"LOSE";
 
 - (void)endGame
 {
-    while ([[CCDirector sharedDirector] runningScene]) 
+    /*while ([[CCDirector sharedDirector] runningScene])
     {
         [[CCDirector sharedDirector] popScene];
     }
     
     [[[CCDirector sharedDirector] runningThread] release];
-    exit(0);
+    exit(0);*/
+    
+    [[CCDirector sharedDirector] dismissViewControllerAnimated:YES completion:^{
+    }];
 }
 
 @end

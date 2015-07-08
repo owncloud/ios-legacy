@@ -23,7 +23,7 @@
 #import "ManageLocation.h"
 #import "AccountCell.h"
 #import "AddAccountViewController.h"
-
+#import "cocos2d.h"
 
 typedef enum {
     help = 0,
@@ -53,6 +53,8 @@ typedef enum {
 
 //Easter Egg
 @property (nonatomic) NSInteger counterTapsForEasterEgg;
+@property (nonatomic, strong) CCDirectorIOS *director;
+@property (nonatomic, strong) UINavigationController *navControllerEasterEgg;
 
 - (IBAction)changeSwitchPasscode:(id)sender;
 - (IBAction)changeSwitchInstantUpload:(id)sender;

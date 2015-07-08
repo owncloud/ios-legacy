@@ -27,7 +27,6 @@
 #import "OCTabBarController.h"
 #import "DetailViewController.h"
 #import "ManageDownloads.h"
-#import "cocos2d.h"
 
 @class FilesViewController;
 @class RecentViewController;
@@ -46,7 +45,7 @@ extern NSString * NotReachableNetworkForUploadsNotification;
 extern NSString * NotReachableNetworkForDownloadsNotification;
 
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, CheckAccessToServerDelegate, PrepareFilesToUploadDelegate, KKPasscodeViewControllerDelegate, CCDirectorDelegate> {
+@interface AppDelegate : UIResponder <UIApplicationDelegate, CheckAccessToServerDelegate, PrepareFilesToUploadDelegate, KKPasscodeViewControllerDelegate> {
   
     
     UserDto *_activeUser;
@@ -264,16 +263,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 + (CheckHasShareSupport*) sharedCheckHasShareSupport;
 
-//-----------------------------------
-/// @name launchEasterEgg
-///-----------------------------------
-
-/**
- * Launch the Easter Egg, the space invaders game
- *
- */
-- (void) launchEasterEgg;
-
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) LoginViewController *loginViewController;
 @property (strong, nonatomic) UserDto *activeUser;
@@ -320,9 +309,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) NSString *urlServerRedirected;
 @property (nonatomic, strong) ManageDownloads *downloadManager;
 @property (nonatomic, strong) ManageFavorites *manageFavorites;
-//Easter Egg
-@property (nonatomic, strong) CCDirectorIOS *director;
-@property (nonatomic, strong) UINavigationController *navControllerEasterEgg;
 
 
 @end
