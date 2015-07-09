@@ -16,6 +16,12 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     @IBOutlet weak var sharedLabel: UILabel?
     @IBOutlet weak var settingsLabel: UILabel?
     
+    @IBOutlet weak var filesButton: UIButton?
+    @IBOutlet weak var recentsButton: UIButton?
+    @IBOutlet weak var sharedButton: UIButton?
+    @IBOutlet weak var settingsButton: UIButton?
+    
+    
     @IBAction func openFilesTab(sender: AnyObject) {
         var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_files)!
         self.extensionContext?.openURL(url, completionHandler: nil)}
@@ -38,8 +44,24 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         
         filesLabel?.text = NSLocalizedString("files_tab", comment: "")
         recentsLabel?.text = NSLocalizedString("uploads_tab", comment: "")
-        //sharedLabel?.text = NSLocalizedString("shared_tab", comment: "")
+        sharedLabel?.text = NSLocalizedString("shared_tab", comment: "")
         settingsLabel?.text = NSLocalizedString("settings", comment: "")
+        
+        var filesImage = UIImage(named:"TABfiles")!
+        filesImage = filesImage.imageWithColor(UIColor.whiteColor())
+        filesButton?.setImage(filesImage, forState: UIControlState.Normal)
+        
+        var recentsImage = UIImage(named:"TABrecents")!
+        recentsImage = recentsImage.imageWithColor(UIColor.whiteColor())
+        recentsButton?.setImage(recentsImage, forState: UIControlState.Normal)
+        
+        var sharedImage = UIImage(named:"TABShares")!
+        sharedImage = sharedImage.imageWithColor(UIColor.whiteColor())
+        sharedButton?.setImage(sharedImage, forState: UIControlState.Normal)
+        
+        var settingsImage = UIImage(named:"TABsettings")!
+        settingsImage = settingsImage.imageWithColor(UIColor.whiteColor())
+        settingsButton?.setImage(settingsImage, forState: UIControlState.Normal)
     }
     
     override func didReceiveMemoryWarning() {
@@ -56,5 +78,4 @@ class TodayViewController: UIViewController, NCWidgetProviding {
 
         completionHandler(NCUpdateResult.NewData)
     }
-    
 }

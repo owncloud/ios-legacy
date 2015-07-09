@@ -242,9 +242,13 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="120"/>
                     <connections>
+                        <outlet property="filesButton" destination="d9q-gB-dm3" id="BhP-Wo-QvG"/>
                         <outlet property="filesLabel" destination="Qej-f6-zOi" id="oCf-3w-q3O"/>
+                        <outlet property="recentsButton" destination="kQn-kY-qBa" id="LXz-87-PZz"/>
                         <outlet property="recentsLabel" destination="kMa-ci-bjr" id="uyo-KJ-8RN"/>
+                        <outlet property="settingsButton" destination="JkY-8T-Wli" id="6ZS-Pt-V5K"/>
                         <outlet property="settingsLabel" destination="hIH-mZ-4xK" id="cfh-9T-4c9"/>
+                        <outlet property="sharedButton" destination="Zsr-NG-JCt" id="wmO-7l-HlW"/>
                         <outlet property="sharedLabel" destination="MjO-Ji-xKi" id="cVX-IA-1v2"/>
                     </connections>
                 </viewController>
