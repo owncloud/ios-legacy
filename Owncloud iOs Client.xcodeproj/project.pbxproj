@@ -537,6 +537,22 @@
 		59DA496619F7A4B600DD3619 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		59DA4F3C1A07A97100472639 /* DocumentPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 59DA4F3B1A07A97100472639 /* DocumentPickerViewController.xib */; };
 		59DF586D1B04B35B00EEFA84 /* Managers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7217C1AAF2E0D009F5596 /* Managers.swift */; };
+		59DF70CA1B4E5E43005457F2 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59DF70C91B4E5E43005457F2 /* NotificationCenter.framework */; };
+		59DF70CF1B4E5E43005457F2 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DF70CE1B4E5E43005457F2 /* TodayViewController.swift */; };
+		59DF70D11B4E5E43005457F2 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 59DF70D01B4E5E43005457F2 /* MainInterface.storyboard */; };
+		59DF70D41B4E5E43005457F2 /* OCTodayWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 59DF70C81B4E5E43005457F2 /* OCTodayWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		59DF70D91B4E62DD005457F2 /* TABShares.png in Resources */ = {isa = PBXBuildFile; fileRef = EABF68F0188FC2FA00A2217C /* TABShares.png */; };
+		59DF70DA1B4E62DD005457F2 /* TABShares@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABF68F1188FC2FA00A2217C /* TABShares@2x.png */; };
+		59DF70DB1B4E62DD005457F2 /* TABShares@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F6A1A123D1B003E7397 /* TABShares@3x.png */; };
+		59DF70DC1B4E62DD005457F2 /* TABfiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F198177C35AA004A1A5A /* TABfiles.png */; };
+		59DF70DD1B4E62DD005457F2 /* TABfiles@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F199177C35AA004A1A5A /* TABfiles@2x.png */; };
+		59DF70DE1B4E62DD005457F2 /* TABfiles@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F641A123B99003E7397 /* TABfiles@3x.png */; };
+		59DF70DF1B4E62DD005457F2 /* TABrecents.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F19A177C35AA004A1A5A /* TABrecents.png */; };
+		59DF70E01B4E62DD005457F2 /* TABrecents@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F19B177C35AA004A1A5A /* TABrecents@2x.png */; };
+		59DF70E11B4E62DD005457F2 /* TABrecents@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F661A123D03003E7397 /* TABrecents@3x.png */; };
+		59DF70E21B4E62DD005457F2 /* TABsettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F19C177C35AA004A1A5A /* TABsettings.png */; };
+		59DF70E31B4E62DD005457F2 /* TABsettings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F19D177C35AA004A1A5A /* TABsettings@2x.png */; };
+		59DF70E41B4E62DD005457F2 /* TABsettings@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F681A123D0E003E7397 /* TABsettings@3x.png */; };
 		59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
 		59E20C7B1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
 		59E20C7C1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
@@ -786,6 +802,13 @@
 			remoteGlobalIDString = EA7CC896183E11E600B6A4B4;
 			remoteInfo = "ownCloud iOS library";
 		};
+		59DF70D21B4E5E43005457F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1324296F15ADBB3700DF823E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 59DF70C71B4E5E43005457F2;
+			remoteInfo = OCTodayWidget;
+		};
 		EA1F62DB1A5EC07E00D6346F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */;
@@ -867,6 +890,7 @@
 			files = (
 				EAB0AB4A19ED356A00764C31 /* ownCloudExtAppFileProvider.appex in Embed App Extensions */,
 				EAB0AB4F19ED356A00764C31 /* ownCloudExtApp.appex in Embed App Extensions */,
+				59DF70D41B4E5E43005457F2 /* OCTodayWidget.appex in Embed App Extensions */,
 				EA66069F1AA767F800BA2C65 /* OC Share Sheet.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -1384,6 +1408,11 @@
 		59D774CC1910EE0F004322BA /* UtilsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsTableView.h; path = Utils/UtilsTableView.h; sourceTree = "<group>"; };
 		59D774CD1910EE0F004322BA /* UtilsTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsTableView.m; path = Utils/UtilsTableView.m; sourceTree = "<group>"; };
 		59DA4F3B1A07A97100472639 /* DocumentPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentPickerViewController.xib; sourceTree = "<group>"; };
+		59DF70C81B4E5E43005457F2 /* OCTodayWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OCTodayWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		59DF70C91B4E5E43005457F2 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		59DF70CD1B4E5E43005457F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		59DF70CE1B4E5E43005457F2 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
+		59DF70D01B4E5E43005457F2 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		59E20C781AEFAA8E00554D7E /* InitializeDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializeDatabase.h; path = DataBase/Queries/InitializeDatabase.h; sourceTree = "<group>"; };
 		59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InitializeDatabase.m; path = DataBase/Queries/InitializeDatabase.m; sourceTree = "<group>"; };
 		59E48E861B3AAC88008FAAE0 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1554,6 +1583,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		59DF70C51B4E5E43005457F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				59DF70CA1B4E5E43005457F2 /* NotificationCenter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EA6606921AA767F700BA2C65 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1611,6 +1648,7 @@
 				EAB0AB3319ED356A00764C31 /* ownCloudExtApp */,
 				EAB0AB4119ED356A00764C31 /* ownCloudExtAppFileProvider */,
 				EA6606961AA767F800BA2C65 /* OC Share Sheet */,
+				59DF70CB1B4E5E43005457F2 /* OCTodayWidget */,
 				1324297B15ADBB3700DF823E /* Frameworks */,
 				1324297915ADBB3700DF823E /* Products */,
 			);
@@ -1624,6 +1662,7 @@
 				EAB0AB3219ED356A00764C31 /* ownCloudExtApp.appex */,
 				EAB0AB4019ED356A00764C31 /* ownCloudExtAppFileProvider.appex */,
 				EA6606951AA767F700BA2C65 /* OC Share Sheet.appex */,
+				59DF70C81B4E5E43005457F2 /* OCTodayWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1653,6 +1692,7 @@
 				1324298015ADBB3700DF823E /* CoreGraphics.framework */,
 				13B721EC169D78BE00B24A51 /* Twitter.framework */,
 				13D8741E169DBE05000FBE6D /* MessageUI.framework */,
+				59DF70C91B4E5E43005457F2 /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2729,6 +2769,24 @@
 			name = Files;
 			sourceTree = "<group>";
 		};
+		59DF70CB1B4E5E43005457F2 /* OCTodayWidget */ = {
+			isa = PBXGroup;
+			children = (
+				59DF70CE1B4E5E43005457F2 /* TodayViewController.swift */,
+				59DF70D01B4E5E43005457F2 /* MainInterface.storyboard */,
+				59DF70CC1B4E5E43005457F2 /* Supporting Files */,
+			);
+			path = OCTodayWidget;
+			sourceTree = "<group>";
+		};
+		59DF70CC1B4E5E43005457F2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				59DF70CD1B4E5E43005457F2 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		A9267F1815D04C1B004D4403 /* Recent Tab */ = {
 			isa = PBXGroup;
 			children = (
@@ -3117,6 +3175,7 @@
 				EAB0AB4E19ED356A00764C31 /* PBXTargetDependency */,
 				EAB0AB5119ED356A00764C31 /* PBXTargetDependency */,
 				EA66069E1AA767F800BA2C65 /* PBXTargetDependency */,
+				59DF70D31B4E5E43005457F2 /* PBXTargetDependency */,
 			);
 			name = "Owncloud iOs Client";
 			productName = "Owncloud iOs Client";
@@ -3141,6 +3200,23 @@
 			productName = "Owncloud iOs ClientTests";
 			productReference = 132429AD15ADBB3800DF823E /* Owncloud iOs ClientTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		59DF70C71B4E5E43005457F2 /* OCTodayWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 59DF70D81B4E5E43005457F2 /* Build configuration list for PBXNativeTarget "OCTodayWidget" */;
+			buildPhases = (
+				59DF70C41B4E5E43005457F2 /* Sources */,
+				59DF70C51B4E5E43005457F2 /* Frameworks */,
+				59DF70C61B4E5E43005457F2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OCTodayWidget;
+			productName = OCTodayWidget;
+			productReference = 59DF70C81B4E5E43005457F2 /* OCTodayWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		EA6606941AA767F700BA2C65 /* OC Share Sheet */ = {
 			isa = PBXNativeTarget;
@@ -3215,6 +3291,10 @@
 								enabled = 1;
 							};
 						};
+					};
+					59DF70C71B4E5E43005457F2 = {
+						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 9B5WD74GWJ;
 					};
 					EA6606941AA767F700BA2C65 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -3297,6 +3377,7 @@
 				EAB0AB3119ED356A00764C31 /* ownCloudExtApp */,
 				EAB0AB3F19ED356A00764C31 /* ownCloudExtAppFileProvider */,
 				EA6606941AA767F700BA2C65 /* OC Share Sheet */,
+				59DF70C71B4E5E43005457F2 /* OCTodayWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -3597,6 +3678,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				132429B915ADBB3800DF823E /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		59DF70C61B4E5E43005457F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				59DF70D91B4E62DD005457F2 /* TABShares.png in Resources */,
+				59DF70DA1B4E62DD005457F2 /* TABShares@2x.png in Resources */,
+				59DF70DB1B4E62DD005457F2 /* TABShares@3x.png in Resources */,
+				59DF70DC1B4E62DD005457F2 /* TABfiles.png in Resources */,
+				59DF70DD1B4E62DD005457F2 /* TABfiles@2x.png in Resources */,
+				59DF70DE1B4E62DD005457F2 /* TABfiles@3x.png in Resources */,
+				59DF70DF1B4E62DD005457F2 /* TABrecents.png in Resources */,
+				59DF70E01B4E62DD005457F2 /* TABrecents@2x.png in Resources */,
+				59DF70E11B4E62DD005457F2 /* TABrecents@3x.png in Resources */,
+				59DF70E21B4E62DD005457F2 /* TABsettings.png in Resources */,
+				59DF70E31B4E62DD005457F2 /* TABsettings@2x.png in Resources */,
+				59DF70E41B4E62DD005457F2 /* TABsettings@3x.png in Resources */,
+				59DF70D11B4E5E43005457F2 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3993,6 +4094,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		59DF70C41B4E5E43005457F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				59DF70CF1B4E5E43005457F2 /* TodayViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EA6606911AA767F700BA2C65 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4140,6 +4249,11 @@
 			isa = PBXTargetDependency;
 			name = "ownCloud iOS library";
 			targetProxy = 597A87961A013FD50071F2AF /* PBXContainerItemProxy */;
+		};
+		59DF70D31B4E5E43005457F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 59DF70C71B4E5E43005457F2 /* OCTodayWidget */;
+			targetProxy = 59DF70D21B4E5E43005457F2 /* PBXContainerItemProxy */;
 		};
 		EA1F62DC1A5EC07E00D6346F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -4420,6 +4534,59 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
+			};
+			name = Release;
+		};
+		59DF70D51B4E5E43005457F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = OCTodayWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		59DF70D61B4E5E43005457F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = OCTodayWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -4750,6 +4917,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		59DF70D81B4E5E43005457F2 /* Build configuration list for PBXNativeTarget "OCTodayWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				59DF70D51B4E5E43005457F2 /* Debug */,
+				59DF70D61B4E5E43005457F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		EA6606A31AA767F800BA2C65 /* Build configuration list for PBXNativeTarget "OC Share Sheet" */ = {
 			isa = XCConfigurationList;
