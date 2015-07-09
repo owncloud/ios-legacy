@@ -55,6 +55,7 @@ typedef enum {
 @property (nonatomic) NSInteger counterTapsForEasterEgg;
 @property (nonatomic, strong) CCDirectorIOS *director;
 @property (nonatomic, strong) UINavigationController *navControllerEasterEgg;
+@property (nonatomic, strong) CCScene *gameScene;
 
 - (IBAction)changeSwitchPasscode:(id)sender;
 - (IBAction)changeSwitchInstantUpload:(id)sender;

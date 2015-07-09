@@ -197,9 +197,12 @@
             
             // and add the scene to the stack. The director will run it when it automatically when the view is displayed.
             
+            if (!self.gameScene) {
+                self.gameScene = [MenuLayer sceneWithMenuType:menuTypeWelcome];
+            }
             
             
-            [self.director pushScene:[MenuLayer sceneWithMenuType:menuTypeWelcome]]; //Here is where we add the scene to the director.
+            [self.director pushScene:self.gameScene]; //Here is where we add the scene to the director.
             
         }
     }
