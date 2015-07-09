@@ -35,6 +35,9 @@
                                         <state key="normal" image="TABfiles.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="openFilesTab:" destination="M4Y-Lb-cyx" eventType="touchUpInside" id="phV-gx-hjs"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Files" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qej-f6-zOi">
                                         <rect key="frame" x="0.0" y="29" width="40" height="21"/>
@@ -76,6 +79,9 @@
                                         <state key="normal" image="TABrecents.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="openRecentsTab:" destination="M4Y-Lb-cyx" eventType="touchUpInside" id="ceC-hd-YTr"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recents" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kMa-ci-bjr">
                                         <rect key="frame" x="0.0" y="29" width="40" height="21"/>
@@ -117,6 +123,9 @@
                                         <state key="normal" image="TABShares.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="openSharedTab:" destination="M4Y-Lb-cyx" eventType="touchUpInside" id="QiJ-uu-y0Z"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shared" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MjO-Ji-xKi">
                                         <rect key="frame" x="0.0" y="29" width="40" height="21"/>
@@ -158,6 +167,9 @@
                                         <state key="normal" image="TABsettings.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="openSettingsTab:" destination="M4Y-Lb-cyx" eventType="touchUpInside" id="tEf-qX-qCQ"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hIH-mZ-4xK">
                                         <rect key="frame" x="0.0" y="29" width="40" height="21"/>

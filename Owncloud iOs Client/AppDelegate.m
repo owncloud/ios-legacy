@@ -217,7 +217,26 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     NSString *scheme = [dbService getScheme];
     
     if ([[ url scheme] isEqualToString:scheme] ) {
-        if (dbService.isDebugLogEnabled) {
+        
+        NSString *urlString = [url absoluteString];
+        
+        if ([urlString containsString:k_widget_parameter]) {
+            if ([ManageUsersDB getActiveUser]) {
+                NSArray *urlSplit = [urlString componentsSeparatedByString:@"="];
+                if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_files]) {
+                    _ocTabBarController.selectedIndex = 0;
+                } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_recents]) {
+                    _ocTabBarController.selectedIndex = 1;
+                } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_shared]) {
+                    _ocTabBarController.selectedIndex = 2;
+                } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_settings]) {
+                    _ocTabBarController.selectedIndex = 3;
+                }
+            }
+        }
+        
+        //OAuth
+        /*if (dbService.isDebugLogEnabled) {
             DLog(@"found %@", scheme);
         }
         AuthenticationDbService * dbService = [AuthenticationDbService sharedInstance];
@@ -254,7 +273,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 RetrieveRefreshAndAccessTokenTask *task = [[RetrieveRefreshAndAccessTokenTask alloc] init];
                 [task executeRetrieveTask];
             }
-        }
+        }*/
     } else {
         DLog(@"URL from %@ application", sourceApplication);
         DLog(@"the path is: %@", url.path);

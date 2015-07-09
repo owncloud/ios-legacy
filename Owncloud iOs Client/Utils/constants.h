@@ -73,3 +73,10 @@
 //App name
 #define k_app_name @"ownCloud"
 
+//Widget parameters
+#define k_widget_parameter @"oc-widget-parameter"
+#define k_widget_parameter_files @"files"
+#define k_widget_parameter_recents @"recents"
+#define k_widget_parameter_shared @"shared"
+#define k_widget_parameter_settings @"settings"
+

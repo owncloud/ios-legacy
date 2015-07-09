@@ -31,4 +31,20 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         completionHandler(NCUpdateResult.NewData)
     }
     
+    @IBAction func openFilesTab(sender: AnyObject) {
+        var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_files)!
+        self.extensionContext?.openURL(url, completionHandler: nil)}
+    
+    @IBAction func openRecentsTab(sender: AnyObject) {
+        var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_recents)!
+        self.extensionContext?.openURL(url, completionHandler: nil)}
+    
+    @IBAction func openSharedTab(sender: AnyObject) {
+        var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_shared)!
+        self.extensionContext?.openURL(url, completionHandler: nil)}
+        
+    @IBAction func openSettingsTab(sender: AnyObject) {
+        var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_settings)!
+        self.extensionContext?.openURL(url, completionHandler: nil)}
+    
 }

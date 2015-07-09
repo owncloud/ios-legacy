@@ -553,6 +553,9 @@
 		59DF70E21B4E62DD005457F2 /* TABsettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F19C177C35AA004A1A5A /* TABsettings.png */; };
 		59DF70E31B4E62DD005457F2 /* TABsettings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F19D177C35AA004A1A5A /* TABsettings@2x.png */; };
 		59DF70E41B4E62DD005457F2 /* TABsettings@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F681A123D0E003E7397 /* TABsettings@3x.png */; };
+		59DF70EE1B4EB5EA005457F2 /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
+		59DF70EF1B4EBA9A005457F2 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0816034C2200A95EAD /* libcrypto.a */; };
+		59DF70F01B4EBA9A005457F2 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0916034C2200A95EAD /* libssl.a */; };
 		59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
 		59E20C7B1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
 		59E20C7C1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
@@ -808,6 +811,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 59DF70C71B4E5E43005457F2;
 			remoteInfo = OCTodayWidget;
+		};
+		59DF70F11B4EBADC005457F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = EA7CC896183E11E600B6A4B4;
+			remoteInfo = "ownCloud iOS library";
 		};
 		EA1F62DB1A5EC07E00D6346F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1587,6 +1597,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59DF70EF1B4EBA9A005457F2 /* libcrypto.a in Frameworks */,
+				59DF70F01B4EBA9A005457F2 /* libssl.a in Frameworks */,
+				59DF70EE1B4EB5EA005457F2 /* libownCloudiOS.a in Frameworks */,
 				59DF70CA1B4E5E43005457F2 /* NotificationCenter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3212,6 +3225,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				59DF70F21B4EBADC005457F2 /* PBXTargetDependency */,
 			);
 			name = OCTodayWidget;
 			productName = OCTodayWidget;
@@ -4255,6 +4269,11 @@
 			target = 59DF70C71B4E5E43005457F2 /* OCTodayWidget */;
 			targetProxy = 59DF70D21B4E5E43005457F2 /* PBXContainerItemProxy */;
 		};
+		59DF70F21B4EBADC005457F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ownCloud iOS library";
+			targetProxy = 59DF70F11B4EBADC005457F2 /* PBXContainerItemProxy */;
+		};
 		EA1F62DC1A5EC07E00D6346F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "ownCloud iOS library";
@@ -4555,12 +4574,22 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib",
+				);
 				INFOPLIST_FILE = OCTodayWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -4581,12 +4610,22 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib",
+				);
 				INFOPLIST_FILE = OCTodayWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -4630,7 +4669,7 @@
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Debug;
 		};
