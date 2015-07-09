@@ -10,10 +10,36 @@ import UIKit
 import NotificationCenter
 
 class TodayViewController: UIViewController, NCWidgetProviding {
-        
+    
+    @IBOutlet weak var filesLabel: UILabel?
+    @IBOutlet weak var recentsLabel: UILabel?
+    @IBOutlet weak var sharedLabel: UILabel?
+    @IBOutlet weak var settingsLabel: UILabel?
+    
+    @IBAction func openFilesTab(sender: AnyObject) {
+        var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_files)!
+        self.extensionContext?.openURL(url, completionHandler: nil)}
+    
+    @IBAction func openRecentsTab(sender: AnyObject) {
+        var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_recents)!
+        self.extensionContext?.openURL(url, completionHandler: nil)}
+    
+    @IBAction func openSharedTab(sender: AnyObject) {
+        var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_shared)!
+        self.extensionContext?.openURL(url, completionHandler: nil)}
+    
+    @IBAction func openSettingsTab(sender: AnyObject) {
+        var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_settings)!
+        self.extensionContext?.openURL(url, completionHandler: nil)}
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view from its nib.
+        
+        filesLabel?.text = NSLocalizedString("files_tab", comment: "")
+        recentsLabel?.text = NSLocalizedString("uploads_tab", comment: "")
+        //sharedLabel?.text = NSLocalizedString("shared_tab", comment: "")
+        settingsLabel?.text = NSLocalizedString("settings", comment: "")
     }
     
     override func didReceiveMemoryWarning() {
@@ -30,21 +56,5 @@ class TodayViewController: UIViewController, NCWidgetProviding {
 
         completionHandler(NCUpdateResult.NewData)
     }
-    
-    @IBAction func openFilesTab(sender: AnyObject) {
-        var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_files)!
-        self.extensionContext?.openURL(url, completionHandler: nil)}
-    
-    @IBAction func openRecentsTab(sender: AnyObject) {
-        var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_recents)!
-        self.extensionContext?.openURL(url, completionHandler: nil)}
-    
-    @IBAction func openSharedTab(sender: AnyObject) {
-        var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_shared)!
-        self.extensionContext?.openURL(url, completionHandler: nil)}
-        
-    @IBAction func openSettingsTab(sender: AnyObject) {
-        var url: NSURL = NSURL(string:"owncloud://"+k_widget_parameter+"="+k_widget_parameter_settings)!
-        self.extensionContext?.openURL(url, completionHandler: nil)}
     
 }

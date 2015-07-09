@@ -14,7 +14,7 @@
                         <viewControllerLayoutGuide type="bottom" id="FKl-LY-JtV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" simulatedAppContext="notificationCenter" id="S3S-Oj-5AN">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AZG-yL-mST" userLabel="Space0">
@@ -83,7 +83,7 @@
                                             <action selector="openRecentsTab:" destination="M4Y-Lb-cyx" eventType="touchUpInside" id="ceC-hd-YTr"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recents" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kMa-ci-bjr">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Uploads" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kMa-ci-bjr">
                                         <rect key="frame" x="0.0" y="29" width="40" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="H1Y-Y8-JtR"/>
@@ -127,7 +127,7 @@
                                             <action selector="openSharedTab:" destination="M4Y-Lb-cyx" eventType="touchUpInside" id="QiJ-uu-y0Z"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shared" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MjO-Ji-xKi">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shared Links" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MjO-Ji-xKi">
                                         <rect key="frame" x="0.0" y="29" width="40" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="hV1-fw-6us"/>
@@ -240,7 +240,13 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="100"/>
+                    <size key="freeformSize" width="320" height="120"/>
+                    <connections>
+                        <outlet property="filesLabel" destination="Qej-f6-zOi" id="oCf-3w-q3O"/>
+                        <outlet property="recentsLabel" destination="kMa-ci-bjr" id="uyo-KJ-8RN"/>
+                        <outlet property="settingsLabel" destination="hIH-mZ-4xK" id="cfh-9T-4c9"/>
+                        <outlet property="sharedLabel" destination="MjO-Ji-xKi" id="cVX-IA-1v2"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vXp-U4-Rya" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
