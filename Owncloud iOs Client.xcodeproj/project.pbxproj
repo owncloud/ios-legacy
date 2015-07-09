@@ -537,6 +537,7 @@
 		59DA496619F7A4B600DD3619 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		59DA4F3C1A07A97100472639 /* DocumentPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 59DA4F3B1A07A97100472639 /* DocumentPickerViewController.xib */; };
 		59DF586D1B04B35B00EEFA84 /* Managers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7217C1AAF2E0D009F5596 /* Managers.swift */; };
+		59DF70AB1B4E5325005457F2 /* EasterEggNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 59DF70AA1B4E5325005457F2 /* EasterEggNavigationController.m */; };
 		59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
 		59E20C7B1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
 		59E20C7C1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
@@ -1518,6 +1519,8 @@
 		59D774CC1910EE0F004322BA /* UtilsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsTableView.h; path = Utils/UtilsTableView.h; sourceTree = "<group>"; };
 		59D774CD1910EE0F004322BA /* UtilsTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsTableView.m; path = Utils/UtilsTableView.m; sourceTree = "<group>"; };
 		59DA4F3B1A07A97100472639 /* DocumentPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentPickerViewController.xib; sourceTree = "<group>"; };
+		59DF70A91B4E5325005457F2 /* EasterEggNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EasterEggNavigationController.h; path = "Tabs/SettingTab/Easter Egg/EasterEggNavigationController.h"; sourceTree = "<group>"; };
+		59DF70AA1B4E5325005457F2 /* EasterEggNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EasterEggNavigationController.m; path = "Tabs/SettingTab/Easter Egg/EasterEggNavigationController.m"; sourceTree = "<group>"; };
 		59E20C781AEFAA8E00554D7E /* InitializeDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializeDatabase.h; path = DataBase/Queries/InitializeDatabase.h; sourceTree = "<group>"; };
 		59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InitializeDatabase.m; path = DataBase/Queries/InitializeDatabase.m; sourceTree = "<group>"; };
 		59E48E861B3AAC88008FAAE0 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -3152,6 +3155,8 @@
 				59E4D0B11B4D018200587DD6 /* retry_default.png */,
 				59E4D0B21B4D018200587DD6 /* retry_selected.png */,
 				59E4D0B31B4D018200587DD6 /* StartGame.xib */,
+				59DF70A91B4E5325005457F2 /* EasterEggNavigationController.h */,
+				59DF70AA1B4E5325005457F2 /* EasterEggNavigationController.m */,
 			);
 			name = "Easter Egg";
 			sourceTree = "<group>";
@@ -4830,6 +4835,7 @@
 				1487F138177C2F48004A1A5A /* ManageDB.m in Sources */,
 				1487F13B177C2F73004A1A5A /* ManageFilesDB.m in Sources */,
 				1487F13E177C2F9C004A1A5A /* ManageUploadsDB.m in Sources */,
+				59DF70AB1B4E5325005457F2 /* EasterEggNavigationController.m in Sources */,
 				59E4D1081B4D018200587DD6 /* CDOpenALSupport.m in Sources */,
 				59E4D0C71B4D018200587DD6 /* CCConfiguration.m in Sources */,
 				59A9A725196E8A370042FEAC /* CookiesStorageDto.m in Sources */,

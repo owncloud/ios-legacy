@@ -173,7 +173,7 @@
                 CCLOG(@"Retina Display Not supported");
             
             // Create a Navigation Controller with the Director
-            self.navControllerEasterEgg = [[UINavigationController alloc] initWithRootViewController:self.director];
+            self.navControllerEasterEgg = [[EasterEggNavigationController alloc] initWithRootViewController:self.director];
             self.navControllerEasterEgg.navigationBarHidden = YES;
             
             // set the Navigation Controller as a subview
