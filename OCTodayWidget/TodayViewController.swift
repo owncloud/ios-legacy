@@ -16,10 +16,12 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     @IBOutlet weak var sharedLabel: UILabel?
     @IBOutlet weak var settingsLabel: UILabel?
     
-    @IBOutlet weak var filesButton: UIButton?
-    @IBOutlet weak var recentsButton: UIButton?
-    @IBOutlet weak var sharedButton: UIButton?
-    @IBOutlet weak var settingsButton: UIButton?
+    @IBOutlet weak var filesImageView: UIImageView?
+    @IBOutlet weak var recentsImageView: UIImageView?
+    @IBOutlet weak var sharedImageView: UIImageView?
+    @IBOutlet weak var settingsImageView: UIImageView?
+    
+    @IBOutlet weak var space0: NSLayoutConstraint?
     
     
     @IBAction func openFilesTab(sender: AnyObject) {
@@ -47,7 +49,16 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         sharedLabel?.text = NSLocalizedString("shared_tab", comment: "")
         settingsLabel?.text = NSLocalizedString("settings", comment: "")
         
-        var filesImage = UIImage(named:"TABfiles")!
+        if (UIDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().nativeBounds.width == 640) {
+            space0?.constant = -20;
+        }
+        
+        filesImageView?.image = filesImageView?.image!.imageWithColor(UIColor.whiteColor())
+        recentsImageView?.image = recentsImageView?.image!.imageWithColor(UIColor.whiteColor())
+        sharedImageView?.image = sharedImageView?.image!.imageWithColor(UIColor.whiteColor())
+        settingsImageView?.image = settingsImageView?.image!.imageWithColor(UIColor.whiteColor())
+        
+        /*var filesImage = UIImage(named:"TABfiles")!
         filesImage = filesImage.imageWithColor(UIColor.whiteColor())
         filesButton?.setImage(filesImage, forState: UIControlState.Normal)
         
@@ -61,7 +72,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         
         var settingsImage = UIImage(named:"TABsettings")!
         settingsImage = settingsImage.imageWithColor(UIColor.whiteColor())
-        settingsButton?.setImage(settingsImage, forState: UIControlState.Normal)
+        settingsButton?.setImage(settingsImage, forState: UIControlState.Normal)*/
     }
     
     override func didReceiveMemoryWarning() {

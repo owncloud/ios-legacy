@@ -4970,6 +4970,7 @@
 				59DF70D61B4E5E43005457F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EA6606A31AA767F800BA2C65 /* Build configuration list for PBXNativeTarget "OC Share Sheet" */ = {
 			isa = XCConfigurationList;
