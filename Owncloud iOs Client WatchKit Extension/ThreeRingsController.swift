@@ -69,7 +69,7 @@ class ThreeRingsController: WKInterfaceController {
         
         var progress = progress
         
-        if progress <= 5{
+        if progress > 0 && progress < 5{
             progress = 5
         }
         
@@ -96,7 +96,7 @@ class ThreeRingsController: WKInterfaceController {
         
         var progress = progress
         
-        if progress <= 5{
+        if progress > 0 && progress < 5{
             progress = 5
         }
         
@@ -122,7 +122,7 @@ class ThreeRingsController: WKInterfaceController {
         
         var progress = progress
         
-        if progress <= 5{
+        if progress > 0 && progress < 5{
             progress = 5
         }
         

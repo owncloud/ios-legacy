@@ -12,13 +12,22 @@
                     <items>
                         <group width="1" height="1" alignment="center" verticalAlignment="center" backgroundImage="images_ring-0" contentMode="scaleAspectFit" layout="vertical" id="bRP-6i-6zE" userLabel="Group Image">
                             <items>
+                                <group alignment="left" layout="vertical" id="tOH-26-eJ7" userLabel="Icon Group">
+                                    <items>
+                                        <imageView width="10" height="7" alignment="center" image="image_icon" contentMode="scaleAspectFit" id="d1s-Uk-odC"/>
+                                    </items>
+                                    <edgeInsets key="margins" left="75" right="0.0" top="15" bottom="0.0"/>
+                                    <variation key="device=watch38mm">
+                                        <edgeInsets key="margins" left="65" right="0.0" top="11" bottom="0.0"/>
+                                    </variation>
+                                </group>
                                 <group width="100" height="56" alignment="center" verticalAlignment="center" layout="vertical" id="TMx-3L-KnE">
                                     <items>
                                         <label width="1" height="28" alignment="center" text="550MB" textAlignment="center" id="Cf3-Kk-KwR">
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <fontDescription key="font" type="system" pointSize="27"/>
                                         </label>
-                                        <label width="1" height="17" alignment="center" text="OF 25GB" textAlignment="center" id="8Os-iR-nlJ">
+                                        <label width="1" height="14" alignment="center" text="OF 25GB" textAlignment="center" id="8Os-iR-nlJ">
                                             <fontDescription key="font" type="system" pointSize="14"/>
                                         </label>
                                     </items>
@@ -43,13 +52,22 @@
                     <items>
                         <group width="1" height="1" alignment="center" backgroundImage="media_ring-0" contentMode="scaleAspectFit" layout="vertical" id="ZXf-uc-Atj" userLabel="Group Image">
                             <items>
+                                <group alignment="left" layout="vertical" id="pJO-T1-t5p" userLabel="Icon Group">
+                                    <items>
+                                        <imageView width="10" height="7" alignment="center" image="media_icon" contentMode="scaleAspectFit" id="rsb-m5-Crk"/>
+                                    </items>
+                                    <edgeInsets key="margins" left="75" right="0.0" top="15" bottom="0.0"/>
+                                    <variation key="device=watch38mm">
+                                        <edgeInsets key="margins" left="65" right="0.0" top="11" bottom="0.0"/>
+                                    </variation>
+                                </group>
                                 <group width="100" height="56" alignment="center" verticalAlignment="center" layout="vertical" id="VbU-Bl-yfD">
                                     <items>
                                         <label width="1" height="28" alignment="center" text="550MB" textAlignment="center" id="hPL-lG-IkM">
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <fontDescription key="font" type="system" pointSize="27"/>
                                         </label>
-                                        <label width="1" height="17" alignment="center" text="OF 25GB" textAlignment="center" id="Ku4-7X-ry0">
+                                        <label width="1" height="14" alignment="center" text="OF 25GB" textAlignment="center" id="Ku4-7X-ry0">
                                             <fontDescription key="font" type="system" pointSize="14"/>
                                         </label>
                                     </items>
@@ -74,13 +92,22 @@
                     <items>
                         <group width="1" height="1" alignment="center" backgroundImage="other_ring-0" contentMode="scaleAspectFit" layout="vertical" id="Ft5-bT-Zzl" userLabel="Group Image">
                             <items>
+                                <group alignment="left" layout="vertical" id="XWe-db-xZV" userLabel="Icon Group">
+                                    <items>
+                                        <imageView width="10" height="7" alignment="center" image="other_icon" contentMode="scaleAspectFit" id="E82-vB-s6Y"/>
+                                    </items>
+                                    <edgeInsets key="margins" left="75" right="0.0" top="15" bottom="0.0"/>
+                                    <variation key="device=watch38mm">
+                                        <edgeInsets key="margins" left="65" right="0.0" top="11" bottom="0.0"/>
+                                    </variation>
+                                </group>
                                 <group width="100" height="56" alignment="center" verticalAlignment="center" layout="vertical" id="e00-09-YLl">
                                     <items>
                                         <label width="1" height="28" alignment="center" text="550MB" textAlignment="center" id="0tF-Tg-HRz">
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <fontDescription key="font" type="system" pointSize="27"/>
                                         </label>
-                                        <label width="1" height="17" alignment="center" text="OF 25GB" textAlignment="center" id="ULR-mo-puJ">
+                                        <label width="1" height="14" alignment="center" text="OF 25GB" textAlignment="center" id="ULR-mo-puJ">
                                             <fontDescription key="font" type="system" pointSize="14"/>
                                         </label>
                                     </items>
@@ -104,11 +131,34 @@
                     <items>
                         <group width="1" height="1" alignment="left" layout="vertical" id="g05-Qk-Wy4">
                             <items>
-                                <group width="1" height="1" alignment="left" backgroundImage="out_kind_ring-0" contentMode="scaleAspectFit" id="7ug-HO-D88" userLabel="OutRing">
+                                <group width="1" height="1" alignment="left" backgroundImage="out_kind_ring-0" contentMode="scaleAspectFit" layout="vertical" id="7ug-HO-D88" userLabel="OutRing">
                                     <items>
-                                        <group width="1" height="1" alignment="left" backgroundImage="middle_kind_ring-0" contentMode="scaleAspectFit" id="b30-94-T8T" userLabel="MiddleRing">
+                                        <group width="1" height="1" alignment="left" backgroundImage="middle_kind_ring-0" contentMode="scaleAspectFit" layout="vertical" id="b30-94-T8T" userLabel="MiddleRing">
                                             <items>
-                                                <group width="1" height="1" alignment="left" backgroundImage="inner_kind_ring-0" contentMode="scaleAspectFit" id="fRg-fH-Q5c" userLabel="InnerRing"/>
+                                                <group width="1" height="1" alignment="left" backgroundImage="inner_kind_ring-0" contentMode="scaleAspectFit" layout="vertical" id="fRg-fH-Q5c" userLabel="InnerRing">
+                                                    <items>
+                                                        <group height="73" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="AvL-Li-9fP" userLabel="Index">
+                                                            <items>
+                                                                <label width="1" height="11" alignment="left" text="IMAGES" textAlignment="right" id="MUd-vh-hko">
+                                                                    <color key="textColor" red="0.32014384340000002" green="0.54412201510000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <fontDescription key="font" type="system" pointSize="11"/>
+                                                                </label>
+                                                                <label width="1" height="11" alignment="left" text="MEDIA" textAlignment="right" id="osn-vs-dDE">
+                                                                    <color key="textColor" red="0.50196081400000003" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <fontDescription key="font" type="system" pointSize="11"/>
+                                                                </label>
+                                                                <label width="1" height="11" alignment="left" text="OTHER" textAlignment="right" id="5Tk-EY-m6m">
+                                                                    <color key="textColor" red="1" green="0.89461884353213417" blue="0.285801688557897" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <fontDescription key="font" type="system" pointSize="11"/>
+                                                                </label>
+                                                            </items>
+                                                            <edgeInsets key="margins" left="0.0" right="72" top="19" bottom="0.0"/>
+                                                            <variation key="device=watch38mm">
+                                                                <edgeInsets key="margins" left="0.0" right="68" top="19" bottom="0.0"/>
+                                                            </variation>
+                                                        </group>
+                                                    </items>
+                                                </group>
                                             </items>
                                         </group>
                                     </items>

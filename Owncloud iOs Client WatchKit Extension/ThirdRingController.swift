@@ -57,6 +57,12 @@ class ThirdRingController: WKInterfaceController {
     
     func updateRingWithProgress (progress : Int){
         
+        var progress = progress
+        
+        if progress > 0 && progress < 5{
+            progress = 5
+        }
+        
         var duration: NSTimeInterval = 1.0
         
         if progress <= 10{
