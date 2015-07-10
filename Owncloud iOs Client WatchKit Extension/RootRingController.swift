@@ -15,6 +15,7 @@ class RootRingController: WKInterfaceController {
 
     @IBOutlet var progressGroup: WKInterfaceGroup!
     @IBOutlet var sizeLabel: WKInterfaceLabel!
+    @IBOutlet var sizeDetailLabel: WKInterfaceLabel!
 
 
     override func awakeWithContext(context: AnyObject?) {
@@ -82,7 +83,10 @@ class RootRingController: WKInterfaceController {
     
     func updateInfoLabels(sizeUsed: String, totalSize: String){
         
+        let detail: String = "OF \(totalSize)"
+        
         self.sizeLabel.setText(sizeUsed)
+        self.sizeDetailLabel.setText(detail)
     
     }
 
