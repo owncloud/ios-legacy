@@ -18,19 +18,16 @@ class ThreeRingsController: WKInterfaceController {
     
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
-        
-        self.updateOutRingWithProgress(20)
-        self.updateMiddleRingWithProgress(21)
-        self.updateInnerRingWithProgress(23)
-        
+    
         self.setTitle("ownCloud")
+        
     }
     
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
         
-  
+        self.getSpaceData()
         
     }
     
@@ -39,7 +36,42 @@ class ThreeRingsController: WKInterfaceController {
         super.didDeactivate()
     }
     
+    
+    func getSpaceData(){
+        
+        let usedSpace: NSNumber = DiskDataManager.getOwnCloudUsedSpace()
+        let (imageSpace, mediaSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
+        let otherSpace = NSNumber(float: usedSpace.floatValue - (imageSpace.floatValue + mediaSpace.floatValue))
+        
+        
+        self.calculateProgress(usedSpace, imageSpace: imageSpace, mediaSpace: mediaSpace, otherSpace: otherSpace)
+        
+        
+    }
+    
+    func calculateProgress (usedSpace: NSNumber, imageSpace: NSNumber, mediaSpace: NSNumber, otherSpace: NSNumber){
+        
+        let imagePercent = (imageSpace.floatValue * 100.0) / usedSpace.floatValue
+        let mediaPercent = (mediaSpace.floatValue * 100.0) / usedSpace.floatValue
+        let otherPercent = (otherSpace.floatValue * 100.0) / usedSpace.floatValue
+        
+        var imageProgress: Int = Int((imagePercent * 30) / 100)
+        var mediaProgress: Int = Int((mediaPercent * 30) / 100)
+        var otherProgress: Int = Int((otherPercent * 30) / 100)
+        
+        self.updateOutRingWithProgress(imageProgress)
+        self.updateMiddleRingWithProgress(mediaProgress)
+        self.updateInnerRingWithProgress(otherProgress)
+        
+    }
+    
     func updateOutRingWithProgress (progress : Int){
+        
+        var progress = progress
+        
+        if progress <= 5{
+            progress = 5
+        }
         
         var duration: NSTimeInterval = 1.0
         
@@ -62,6 +94,12 @@ class ThreeRingsController: WKInterfaceController {
     
     func updateMiddleRingWithProgress (progress : Int){
         
+        var progress = progress
+        
+        if progress <= 5{
+            progress = 5
+        }
+        
         var duration: NSTimeInterval = 1.0
         
         if progress <= 10{
@@ -81,6 +119,12 @@ class ThreeRingsController: WKInterfaceController {
     }
     
     func updateInnerRingWithProgress (progress : Int){
+        
+        var progress = progress
+        
+        if progress <= 5{
+            progress = 5
+        }
         
         var duration: NSTimeInterval = 1.0
         

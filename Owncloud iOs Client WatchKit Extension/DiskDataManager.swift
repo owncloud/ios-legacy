@@ -60,6 +60,36 @@ class DiskDataManager {
         return totalSizeNumber
     }
     
+    class func getOwnCloudUsedSpaceByType() -> (imageSpace: NSNumber, mediaSpace: NSNumber){
+        
+        let ownCloudPath:String = UtilsUrls.getOwnCloudFilePath()
+        let files : NSArray = NSFileManager.defaultManager().subpathsOfDirectoryAtPath(ownCloudPath, error: nil)!
+        let dirEnumerator = files.objectEnumerator()
+        var totalImageSize: UInt64 = 0
+        var totalMediaSize: UInt64 = 0
+        let fileManager = NSFileManager.defaultManager();
+        while let file:String = dirEnumerator.nextObject() as? String
+        {
+            let attributes:NSDictionary = fileManager.attributesOfItemAtPath(ownCloudPath.stringByAppendingPathComponent(file), error: nil)!
+            
+            if attributes.fileType() == NSFileTypeRegular{
+                if FileNameUtils.isImageSupportedThisFile(file.lastPathComponent){
+                    totalImageSize += attributes.fileSize();
+                }
+                
+                if FileNameUtils.isVideoFileSupportedThisFile(file.lastPathComponent) || FileNameUtils.isAudioSupportedThisFile(file.lastPathComponent){
+                    totalMediaSize += attributes.fileSize();
+                }
+            }
+        }
+        
+        let imagesSize: NSNumber = NSNumber(unsignedLongLong: totalImageSize)
+        let mediaSize: NSNumber = NSNumber(unsignedLongLong: totalMediaSize)
+        
+        return (imagesSize, mediaSize)
+        
+    }
+    
  
    
 }

@@ -10,7 +10,7 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="RootRingController" customModule="Owncloud_iOs_Client_WatchKit_Extension">
                     <items>
-                        <group width="1" height="1" alignment="center" contentMode="scaleAspectFit" id="bRP-6i-6zE" userLabel="Group Image">
+                        <group width="1" height="1" alignment="center" backgroundImage="images_ring-0" contentMode="scaleAspectFit" id="bRP-6i-6zE" userLabel="Group Image">
                             <items>
                                 <label width="1" alignment="center" verticalAlignment="center" text="550MB" textAlignment="center" id="E52-MG-gia">
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -33,7 +33,7 @@
             <objects>
                 <controller id="4Jf-bF-Lor" customClass="SecondRingController" customModule="Owncloud_iOs_Client_WatchKit_Extension">
                     <items>
-                        <group width="1" height="1" alignment="center" contentMode="scaleAspectFit" id="ZXf-uc-Atj" userLabel="Group Image">
+                        <group width="1" height="1" alignment="center" backgroundImage="media_ring-0" contentMode="scaleAspectFit" id="ZXf-uc-Atj" userLabel="Group Image">
                             <items>
                                 <label width="1" alignment="center" verticalAlignment="center" text="550MB" textAlignment="center" id="RUh-Ml-jPL">
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -45,10 +45,33 @@
                     <connections>
                         <outlet property="progressGroup" destination="ZXf-uc-Atj" id="Llv-sr-HJf"/>
                         <outlet property="sizeLabel" destination="RUh-Ml-jPL" id="YY1-al-iw9"/>
+                        <segue destination="mbL-g6-0cE" kind="relationship" relationship="nextPage" id="hgj-HF-dwO"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="468" y="217"/>
+            <point key="canvasLocation" x="448" y="217"/>
+        </scene>
+        <!--Third Ring Controller-->
+        <scene sceneID="EzW-m4-vpi">
+            <objects>
+                <controller id="mbL-g6-0cE" customClass="ThirdRingController" customModule="Owncloud_iOs_Client_WatchKit_Extension">
+                    <items>
+                        <group width="1" height="1" alignment="center" backgroundImage="other_ring-0" contentMode="scaleAspectFit" id="Ft5-bT-Zzl" userLabel="Group Image">
+                            <items>
+                                <label width="1" alignment="center" verticalAlignment="center" text="550MB" textAlignment="center" id="MKv-5t-Fre">
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <fontDescription key="font" type="system" pointSize="28"/>
+                                </label>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="progressGroup" destination="Ft5-bT-Zzl" id="JDS-rm-Ka0"/>
+                        <outlet property="sizeLabel" destination="MKv-5t-Fre" id="YNp-ob-SFD"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="652" y="217"/>
         </scene>
         <!--Three Rings Controller-->
         <scene sceneID="85Q-OM-kxu">
@@ -93,4 +116,5 @@
             <point key="canvasLocation" x="164" y="514"/>
         </scene>
     </scenes>
+    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
 </document>

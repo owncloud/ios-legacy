@@ -18,9 +18,7 @@ class SecondRingController: WKInterfaceController {
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
         
-        self.setTitle("Free space")
-  
-        
+        self.setTitle("Media")
     }
     
     override func willActivate() {
@@ -37,35 +35,22 @@ class SecondRingController: WKInterfaceController {
     
     func getSpaceData(){
         
-        let totalDiskSpace: NSNumber = DiskDataManager.getTotalDiskSpace()
-        let freeSpace: NSNumber = DiskDataManager.getTotalFreeDiskSpace()
-        let freeSpaceString = DiskDataManager.memoryFormatter(freeSpace.longLongValue)
+        let usedSpace: NSNumber = DiskDataManager.getOwnCloudUsedSpace()
+        let (imageSpace, mediaSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
         
-        var watchDict:[String: AnyObject] = ["TotalDeviceSpace":totalDiskSpace, "FreeDeviceSpace":freeSpace, "SpaceFreeString": freeSpaceString, "SpaceTotalString": "500MB"]
+        let mediaSpaceString: String = DiskDataManager.memoryFormatter(mediaSpace.longLongValue)
+        let usedSpaceString: String = DiskDataManager.memoryFormatter(usedSpace.longLongValue)
         
-        self.calculateProgress(watchDict)
+        self.calculateProgress(usedSpace, mediaSpace: mediaSpace)
+        self.updateInfoLabels(mediaSpaceString, totalSize: usedSpaceString)
         
     }
     
-    
-    func calculateProgress (watchDict : [String : AnyObject]){
+    func calculateProgress (usedSpace: NSNumber, mediaSpace: NSNumber){
         
-        let totalSpace = watchDict["TotalDeviceSpace"] as! NSNumber
-        let freeSpace = watchDict["FreeDeviceSpace"] as! NSNumber
-        let freeSpaceString = watchDict["SpaceFreeString"] as! String
-        let totalSpaceString = watchDict["SpaceTotalString"] as! String
-        
-        let percent = (freeSpace.floatValue * 100.0) / totalSpace.floatValue
-        
-        var progress: Int =  Int((percent * 30) / 100)
-        
-        if progress <= 5 {
-            progress = 5
-        }
-        
-
-        self.updateRingWithProgress(progress)
-        self.updateCenterLabels(freeSpaceString, totalSize: totalSpaceString)
+        let mediaPercent = (mediaSpace.floatValue * 100.0) / usedSpace.floatValue
+        var mediaProgress: Int = Int((mediaPercent * 30) / 100)
+        self.updateRingWithProgress(mediaProgress)
         
     }
     
@@ -85,11 +70,11 @@ class SecondRingController: WKInterfaceController {
             duration = 1.0
         }
         
-        self.progressGroup.setBackgroundImageNamed("free_disk-")
+        self.progressGroup.setBackgroundImageNamed("media_ring-")
         self.progressGroup.startAnimatingWithImagesInRange(NSMakeRange(0, progress), duration: duration, repeatCount: 1)
     }
     
-    func updateCenterLabels(sizeUsed: String, totalSize: String){
+    func updateInfoLabels(sizeUsed: String, totalSize: String){
         
         self.sizeLabel.setText(sizeUsed)
         

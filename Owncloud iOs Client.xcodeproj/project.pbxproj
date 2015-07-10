@@ -622,6 +622,7 @@
 		EA8ADE691A31E9AB008D3612 /* FFCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE651A31E9AB008D3612 /* FFCircularProgressView.m */; };
 		EA8ADE6A1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE671A31E9AB008D3612 /* UIColor+iOS7.m */; };
 		EA8ADE6B1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE671A31E9AB008D3612 /* UIColor+iOS7.m */; };
+		EA9400E61B4FBA3B00095A3A /* FileNameUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6FC17786BF200FB9977 /* FileNameUtils.m */; };
 		EAABAB2A18585CD700909831 /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 		EAB0AB3919ED356A00764C31 /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */; };
 		EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB4619ED356A00764C31 /* FileProvider.m */; };
@@ -667,6 +668,7 @@
 		EAD281BB1A38A2F900A00D54 /* DPDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD281BA1A38A2F900A00D54 /* DPDownload.m */; };
 		EAD281BC1A38BB2E00A00D54 /* DPDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD281BA1A38A2F900A00D54 /* DPDownload.m */; };
 		EAD774F31AD2B01E0007C4DB /* OCSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD774F21AD2B01E0007C4DB /* OCSplitViewController.m */; };
+		EADBEA1E1B4FD4EE007BBE4C /* ThirdRingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADBEA1D1B4FD4EE007BBE4C /* ThirdRingController.swift */; };
 		EAE80E241A6CFDE50061BD86 /* UploadsOfflineDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F674178422AE0092F42A /* UploadsOfflineDto.m */; };
 		EAE80E261A6D317C0061BD86 /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
 		EAE80E271A6D31810061BD86 /* ManageUploadsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13D177C2F9C004A1A5A /* ManageUploadsDB.m */; };
@@ -1552,6 +1554,7 @@
 		EAD281BA1A38A2F900A00D54 /* DPDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DPDownload.m; path = Network/DPDownload.m; sourceTree = "<group>"; };
 		EAD774F11AD2B01E0007C4DB /* OCSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCSplitViewController.h; sourceTree = "<group>"; };
 		EAD774F21AD2B01E0007C4DB /* OCSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCSplitViewController.m; sourceTree = "<group>"; };
+		EADBEA1D1B4FD4EE007BBE4C /* ThirdRingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThirdRingController.swift; sourceTree = "<group>"; };
 		EAE005F0180EF03E0066E8D4 /* CheckSSOServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckSSOServer.h; path = Login/SSO/CheckSSOServer.h; sourceTree = "<group>"; };
 		EAE93A3A19D18E43002B9E15 /* fi */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
@@ -2817,9 +2820,10 @@
 		EA115FDC1B4D054000A0383E /* Owncloud iOs Client WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
+				EA86955C1B4FA69300C6C11C /* ThreeRingsController.swift */,
 				EA115FDF1B4D054000A0383E /* RootRingController.swift */,
 				EA1160021B4D216800A0383E /* SecondRingController.swift */,
-				EA86955C1B4FA69300C6C11C /* ThreeRingsController.swift */,
+				EADBEA1D1B4FD4EE007BBE4C /* ThirdRingController.swift */,
 				EA115FE11B4D054000A0383E /* GlanceController.swift */,
 				EA8695561B4E84C000C6C11C /* DiskDataManager.swift */,
 				EA115FE31B4D054000A0383E /* Images.xcassets */,
@@ -4176,8 +4180,10 @@
 				EA86955D1B4FA69300C6C11C /* ThreeRingsController.swift in Sources */,
 				EA8695591B4E9A2C00C6C11C /* UtilsUrls.m in Sources */,
 				EA8695571B4E84C000C6C11C /* DiskDataManager.swift in Sources */,
+				EADBEA1E1B4FD4EE007BBE4C /* ThirdRingController.swift in Sources */,
 				EA115FE01B4D054000A0383E /* RootRingController.swift in Sources */,
 				EA1160031B4D216800A0383E /* SecondRingController.swift in Sources */,
+				EA9400E61B4FBA3B00095A3A /* FileNameUtils.m in Sources */,
 				EA115FE21B4D054000A0383E /* GlanceController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -20,7 +20,7 @@ class RootRingController: WKInterfaceController {
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
         
-        self.setTitle("Used space")
+        self.setTitle("Images")
     }
 
     override func willActivate() {
@@ -39,38 +39,24 @@ class RootRingController: WKInterfaceController {
     
     func getSpaceData(){
         
-        let totalDiskSpace: NSNumber = DiskDataManager.getTotalDiskSpace()
         let usedSpace: NSNumber = DiskDataManager.getOwnCloudUsedSpace()
-        let spaceUsedString: String = DiskDataManager.memoryFormatter(usedSpace.longLongValue)
+        let (imageSpace, mediaSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
+
         
         
-        var watchDict:[String: AnyObject] = ["TotalDeviceSpace":totalDiskSpace, "SpaceUsed":usedSpace, "SpaceUsedString": spaceUsedString, "SpaceTotalString": "500MB"]
+        let imageSpaceString: String = DiskDataManager.memoryFormatter(imageSpace.longLongValue)
+        let usedSpaceString: String = DiskDataManager.memoryFormatter(usedSpace.longLongValue)
         
-        self.calculateProgress(watchDict)
-  
+        self.calculateProgress(usedSpace, imageSpace: imageSpace)
+        self.updateInfoLabels(imageSpaceString, totalSize: usedSpaceString)
         
     }
     
-    func calculateProgress (watchDict : [String : AnyObject]){
+    func calculateProgress (usedSpace: NSNumber, imageSpace: NSNumber){
         
-        let usedSpace = watchDict["SpaceUsed"] as! NSNumber
-        let totalSpace = watchDict["TotalDeviceSpace"] as! NSNumber
-        let usedSpaceString = watchDict["SpaceUsedString"] as! String
-        let totalSpaceString = watchDict["SpaceTotalString"] as! String
-        
-        println("\(usedSpaceString)")
-    
-        let percent = (usedSpace.floatValue * 100.0) / totalSpace.floatValue
-        
-        var progress: Int = Int((percent * 30) / 100)
-        
-        if progress <= 5 {
-            progress = 5
-        }
-        
-
-        self.updateRingWithProgress(progress)
-        self.updateCenterLabels(usedSpaceString, totalSize: totalSpaceString)
+        let imagePercent = (imageSpace.floatValue * 100.0) / usedSpace.floatValue
+        var imageProgress: Int = Int((imagePercent * 30) / 100)
+        self.updateRingWithProgress(imageProgress)
         
     }
     
@@ -90,17 +76,14 @@ class RootRingController: WKInterfaceController {
             duration = 1.0
         }
         
-        self.progressGroup.setBackgroundImageNamed("used_disk-")
+        self.progressGroup.setBackgroundImageNamed("images_ring-")
         self.progressGroup.startAnimatingWithImagesInRange(NSMakeRange(0, progress), duration: duration, repeatCount: 1)
     }
     
-    func updateCenterLabels(sizeUsed: String, totalSize: String){
+    func updateInfoLabels(sizeUsed: String, totalSize: String){
         
         self.sizeLabel.setText(sizeUsed)
     
     }
-
-
-
 
 }
