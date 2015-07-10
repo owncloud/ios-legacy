@@ -35,6 +35,13 @@
 @property (nonatomic, strong) UILabel *fourthLabel;
 @property (nonatomic, strong) UILabel *fifthLabel;
 
+@property (nonatomic, strong) UILabel *messageWelcomeLabel;
+@property (nonatomic, strong) UILabel *messageFirstLabel;
+@property (nonatomic, strong) UILabel *messageSecondLabel;
+@property (nonatomic, strong) UILabel *messageThirdLabel;
+@property (nonatomic, strong) UILabel *messageFourthLabel;
+//@property (nonatomic, strong) UILabel *messageFifthLabel;
+
 @property (nonatomic, strong) UIButton *signInButton;
 
 
@@ -82,6 +89,9 @@
     
 }
 
+
+#pragma mark Views
+
 - (void)configureViews
 {
     self.owncloudLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"companyLogoHelp"]];
@@ -97,6 +107,7 @@
 
 - (void)configureTextLabelsAndButtons{
     
+    //Titles labels
     self.welcomeLabel = [UILabel new];
     self.welcomeLabel.text = NSLocalizedString(@"title_help_slide_0", nil);
     self.welcomeLabel.textColor = [UIColor colorOfLoginText];
@@ -135,6 +146,44 @@
     [self.fifthLabel sizeToFit];
     [self.contentView addSubview:self.fifthLabel];
     
+    //Message labels
+    self.messageWelcomeLabel = [UILabel new];
+    self.messageWelcomeLabel.text = NSLocalizedString(@"message_help_slide_0", nil);
+    self.messageWelcomeLabel.textColor = [UIColor colorOfLoginText];
+    [self.messageWelcomeLabel sizeToFit];
+    [self.contentView addSubview:self.messageWelcomeLabel];
+    
+    self.messageFirstLabel = [UILabel new];
+    self.messageFirstLabel.text = NSLocalizedString(@"message_help_slide_1", nil);
+    self.messageFirstLabel.textColor = [UIColor colorOfLoginText];
+    [self.messageFirstLabel sizeToFit];
+    [self.contentView addSubview:self.messageFirstLabel];
+    
+    self.messageSecondLabel = [UILabel new];
+    self.messageSecondLabel.text = NSLocalizedString(@"message_help_slide_2", nil);
+    self.messageSecondLabel.textColor = [UIColor colorOfLoginText];
+    [self.messageSecondLabel sizeToFit];
+    [self.contentView addSubview:self.messageSecondLabel];
+    
+    self.messageThirdLabel = [UILabel new];
+    self.messageThirdLabel.text = NSLocalizedString(@"message_help_slide_3", nil);
+    self.messageThirdLabel.textColor = [UIColor colorOfLoginText];
+    [self.messageThirdLabel sizeToFit];
+    [self.contentView addSubview:self.messageThirdLabel];
+    
+    self.messageFourthLabel = [UILabel new];
+    self.messageFourthLabel.text = NSLocalizedString(@"message_help_slide_4", nil);
+    self.messageFourthLabel.textColor = [UIColor colorOfLoginText];
+    [self.messageFourthLabel sizeToFit];
+    [self.contentView addSubview:self.messageFourthLabel];
+    
+//    self.messageFifthLabel = [UILabel new];
+//    self.messageFifthLabel.text = NSLocalizedString(@"message_help_slide_5", nil);
+//    self.messageFifthLabel.textColor = [UIColor colorOfLoginText];
+//    [self.messageFifthLabel sizeToFit];
+//    [self.contentView addSubview:self.messageFifthLabel];
+    
+    //Button sign in
     self.signInButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.signInButton setTitle:NSLocalizedString(@"sign_in_button_help_guide", nil) forState:UIControlStateNormal];
     [self.signInButton setBackgroundColor:[UIColor colorOfLoginButtonBackground]];
@@ -169,10 +218,15 @@
     [self.contentView addSubview:self.iphoneAccounts];
 }
 
+
+#pragma mark Animations
+
 - (void)configureAnimations
 {
     [self configureScrollViewAnimations];
     [self configurePageControlAnimations];
+    
+    [self configureView4Animations];
     
     [self configureOwnCloudLogoAnimations];
     [self configureWordmarkAnimations];
@@ -181,16 +235,39 @@
     [self animateCurrentFrame];
 }
 
+- (void) configureView4Animations {
+    [self keepView:self.iphoneAccounts onPages:@[@(4)]];
+
+    NSLayoutConstraint *iphoneAccountsCenterYConstraint = [NSLayoutConstraint constraintWithItem:self.iphoneAccounts
+                                                                                     attribute:NSLayoutAttributeCenterY
+                                                                                     relatedBy:NSLayoutRelationEqual
+                                                                                        toItem:self.contentView
+                                                                                     attribute:NSLayoutAttributeCenterY
+                                                                                    multiplier:0.8f constant:0.f];
+    [self.contentView addConstraint:iphoneAccountsCenterYConstraint];
+    
+    // fade the owncloud in on page 0 and out on page 2
+    IFTTTAlphaAnimation *iphoneAccountAlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.iphoneAccounts];
+    [iphoneAccountAlphaAnimation addKeyframeForTime:0 alpha:0.f];
+    [iphoneAccountAlphaAnimation addKeyframeForTime:1 alpha:0.f];
+    [iphoneAccountAlphaAnimation addKeyframeForTime:2 alpha:0.f];
+    [iphoneAccountAlphaAnimation addKeyframeForTime:3 alpha:0.f];
+    [iphoneAccountAlphaAnimation addKeyframeForTime:4 alpha:1.f];
+    [iphoneAccountAlphaAnimation addKeyframeForTime:5 alpha:0.f];
+    [self.animator addAnimation:iphoneAccountAlphaAnimation];
+
+}
+
 - (void)configureScrollViewAnimations
 {
     // change the scrollView's background color for each page
     IFTTTColorAnimation *backgroundColorAnimation = [IFTTTColorAnimation animationWithView:self.scrollView];
     [backgroundColorAnimation addKeyframeForTime:0 color:[UIColor colorWithRed:0.98 green:0.98 blue:0.98 alpha:1]];
-    [backgroundColorAnimation addKeyframeForTime:1 color:[[UIColor cyanColor] colorWithAlphaComponent:0.4f]];
-    [backgroundColorAnimation addKeyframeForTime:2 color:[[UIColor greenColor] colorWithAlphaComponent:0.4f]];
-    [backgroundColorAnimation addKeyframeForTime:3 color:[[UIColor yellowColor] colorWithAlphaComponent:0.4f]];
-    [backgroundColorAnimation addKeyframeForTime:4 color:[[UIColor yellowColor] colorWithAlphaComponent:0.4f]];
-    [backgroundColorAnimation addKeyframeForTime:5 color:[[UIColor yellowColor] colorWithAlphaComponent:0.4f]];
+    [backgroundColorAnimation addKeyframeForTime:1 color:[[UIColor colorOfLoginBackground] colorWithAlphaComponent:0.4f]];
+    [backgroundColorAnimation addKeyframeForTime:2 color:[[UIColor colorOfLoginBackground] colorWithAlphaComponent:0.4f]];
+    [backgroundColorAnimation addKeyframeForTime:3 color:[[UIColor colorOfLoginBackground] colorWithAlphaComponent:0.4f]];
+    [backgroundColorAnimation addKeyframeForTime:4 color:[[UIColor colorOfLoginBackground] colorWithAlphaComponent:0.4f]];
+    [backgroundColorAnimation addKeyframeForTime:5 color:[[UIColor colorOfLoginBackground] colorWithAlphaComponent:0.4f]];
 
     [self.animator addAnimation:backgroundColorAnimation];
 }
@@ -331,14 +408,14 @@
     // now, we animate the ownCloudLogo
     // keep the owncloudLogo centered when we're on pages 1 and 2.
     // It will slide from the right between pages 0 and 1, and slide out to the left between pages 2 and 3.
-    [self keepView:self.owncloudLogo onPages:@[@(0), @(1) ]];
+    [self keepView:self.owncloudLogo onPages:@[@(0), @(1), @(2) ]];
     
     NSLayoutConstraint *ownCloudLogoCenterYConstraint = [NSLayoutConstraint constraintWithItem:self.owncloudLogo
                                                                                 attribute:NSLayoutAttributeCenterY
                                                                                 relatedBy:NSLayoutRelationEqual
                                                                                    toItem:self.contentView
                                                                                 attribute:NSLayoutAttributeCenterY
-                                                                               multiplier:1.f constant:0.f];
+                                                                               multiplier:0.8f constant:0.f];
     [self.contentView addConstraint:ownCloudLogoCenterYConstraint];
     
     // Move the owncloudLogo from a bit higher than center on page 1 to a bit lower on page 2, by an amount relative to the height of the view.
@@ -346,14 +423,16 @@
                                                                                                                   constraint:ownCloudLogoCenterYConstraint
                                                                                                                    attribute:IFTTTLayoutAttributeHeight
                                                                                                                referenceView:self.contentView];
-    [ownCloudLogoCenterYAnimation addKeyframeForTime:0 multiplier:-0.1f withEasingFunction:IFTTTEasingFunctionEaseOutQuad];
-    [ownCloudLogoCenterYAnimation addKeyframeForTime:1 multiplier:0.2f];
+    [ownCloudLogoCenterYAnimation addKeyframeForTime:0 multiplier:0.1f withEasingFunction:IFTTTEasingFunctionEaseOutQuad];
+    [ownCloudLogoCenterYAnimation addKeyframeForTime:1 multiplier:-0.2f];
+    [ownCloudLogoCenterYAnimation addKeyframeForTime:2 multiplier:0.2f];
     [self.animator addAnimation:ownCloudLogoCenterYAnimation];
     
     // Rotate the wordmark a full circle from page 1 to 2
     IFTTTRotationAnimation *ownCloudLogoRotationAnimation = [IFTTTRotationAnimation animationWithView:self.owncloudLogo];
     [ownCloudLogoRotationAnimation addKeyframeForTime:0 rotation:0.f];
     [ownCloudLogoRotationAnimation addKeyframeForTime:1 rotation:360.f];
+    
     [self.animator addAnimation:ownCloudLogoRotationAnimation];
     
     // Scale down the company logo by 75% between pages 0 and 1
@@ -366,7 +445,7 @@
     IFTTTAlphaAnimation *owncloudLogoAlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.owncloudLogo];
     [owncloudLogoAlphaAnimation addKeyframeForTime:0 alpha:1.f];
     [owncloudLogoAlphaAnimation addKeyframeForTime:1 alpha:1.f];
-    [owncloudLogoAlphaAnimation addKeyframeForTime:2 alpha:0.f];
+    [owncloudLogoAlphaAnimation addKeyframeForTime:2 alpha:1.f];
     [owncloudLogoAlphaAnimation addKeyframeForTime:3 alpha:0.f];
     [owncloudLogoAlphaAnimation addKeyframeForTime:4 alpha:0.f];
     [owncloudLogoAlphaAnimation addKeyframeForTime:5 alpha:0.f];
@@ -422,39 +501,76 @@
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeCenterY
-                                                                multiplier:0.4f constant:0.f]];
+                                                                multiplier:1.4f constant:0.f]];
     
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.secondLabel
                                                                  attribute:NSLayoutAttributeCenterY
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeCenterY
-                                                                multiplier:1.5f constant:0.f]];
+                                                                multiplier:1.4f constant:0.f]];
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.thirdLabel
                                                                  attribute:NSLayoutAttributeCenterY
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeCenterY
-                                                                multiplier:0.4f constant:0.f]];
+                                                                multiplier:1.4f constant:0.f]];
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.fourthLabel
                                                                  attribute:NSLayoutAttributeCenterY
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeCenterY
-                                                                multiplier:0.4f constant:0.f]];
+                                                                multiplier:1.4f constant:0.f]];
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.fifthLabel
                                                                  attribute:NSLayoutAttributeCenterY
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeCenterY
-                                                                multiplier:0.4f constant:0.f]];
+                                                                multiplier:1.4f constant:0.f]];
     
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.signInButton
                                                                  attribute:NSLayoutAttributeBottom
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeBottom
-                                                                multiplier:1.f constant:0.f]];
+                                                                multiplier:1.2f constant:0.f]];
+    //subtitles
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageWelcomeLabel
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                multiplier:1.6f constant:0.f]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageFirstLabel
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                multiplier:1.6f constant:0.f]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageSecondLabel
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                multiplier:1.6f constant:0.f]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageThirdLabel
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                multiplier:1.6f constant:0.f]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageFourthLabel
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                multiplier:1.6f constant:0.f]];
+
+
     
     // lay out the labels' horizontal positions (centered on each page)
     [self keepView:self.welcomeLabel onPage:0];
@@ -463,6 +579,14 @@
     [self keepView:self.thirdLabel onPage:3];
     [self keepView:self.fourthLabel onPage:4];
     [self keepView:self.fifthLabel onPage:5];
+    
+    [self keepView:self.messageWelcomeLabel onPage:0];
+    [self keepView:self.messageFirstLabel onPage:1];
+    [self keepView:self.messageSecondLabel onPage:2];
+    [self keepView:self.messageThirdLabel onPage:3];
+    [self keepView:self.messageFourthLabel onPage:4];
+    //[self keepView:self.messageFifthLabel onPage:5];
+    
     [self keepView:self.signInButton onPage:5];
     
     // apply a 3D zoom animation to the first label
