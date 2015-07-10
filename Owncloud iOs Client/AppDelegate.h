@@ -32,6 +32,7 @@
 @class RecentViewController;
 @class SettingsViewController;
 @class LoginViewController;
+@class HelpGuideViewController;
 @class Download;
 @class OCCommunication;
 @class UploadFromOtherAppViewController;
@@ -108,14 +109,17 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 }
 
 @property (strong, nonatomic) LoginViewController *loginWindowViewController;
+@property (strong, nonatomic) HelpGuideViewController *helpGuideWindowViewController;
 
 - (void) initAppWithEtagRequest:(BOOL)isEtagRequestNecessary;
 - (void)presentUploadFromOtherApp;
 - (void)updateRecents;
 - (void) updateProgressView:(NSUInteger)num withPercent:(float)percent;
 - (void) restartAppAfterDeleteAllAccounts;
+- (void) showLoginView;
+
 + (ALAssetsLibrary *)defaultAssetsLibrary;
-+ (FMDatabaseQueue*)sharedDatabase;
+//+ (FMDatabaseQueue*)sharedDatabase;
 
 /*
  * Method to get a Singleton of the OCCommunication to manage all the communications

@@ -135,3 +135,6 @@
 
 //Hide the share options
 #define k_hide_share_options NO
+
+//Help Guide init app
+#define k_show_main_help_guide YES
