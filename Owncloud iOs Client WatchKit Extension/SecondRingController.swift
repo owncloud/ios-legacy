@@ -12,21 +12,14 @@ import Foundation
 
 class SecondRingController: WKInterfaceController {
 
-    let key = "RequestKey"
-    var dataCharged: Bool = false
-    var progressCalculated: Int = 1
-    
     @IBOutlet var progressGroup: WKInterfaceGroup!
     @IBOutlet var sizeLabel: WKInterfaceLabel!
-    @IBOutlet var detailLabel: WKInterfaceLabel!
     
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
         
-        self.setTitle("ownCloud")
-        self.detailLabel.setText("Free space")
-        
-        self.getSpaceDataFromTheCoreApp()
+        self.setTitle("Free space")
+  
         
     }
     
@@ -34,9 +27,7 @@ class SecondRingController: WKInterfaceController {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
         
-        if dataCharged && progressCalculated > 0{
-            self.updateRingWithProgress(progressCalculated)
-        }
+        self.getSpaceData()
     }
     
     override func didDeactivate() {
@@ -44,19 +35,18 @@ class SecondRingController: WKInterfaceController {
         super.didDeactivate()
     }
     
-    func getSpaceDataFromTheCoreApp() {
-        var info = [key : "GetFreeSpace"]
+    func getSpaceData(){
         
-        WKInterfaceController.openParentApplication(info, reply: { (reply, error) -> Void in
-            
-            println("reply \(reply) error \(error)")
-            if reply != nil {
-                self.calculateProgress(reply as! [String: AnyObject])
-                
-            }
-        })
+        let totalDiskSpace: NSNumber = DiskDataManager.getTotalDiskSpace()
+        let freeSpace: NSNumber = DiskDataManager.getTotalFreeDiskSpace()
+        let freeSpaceString = DiskDataManager.memoryFormatter(freeSpace.longLongValue)
+        
+        var watchDict:[String: AnyObject] = ["TotalDeviceSpace":totalDiskSpace, "FreeDeviceSpace":freeSpace, "SpaceFreeString": freeSpaceString, "SpaceTotalString": "500MB"]
+        
+        self.calculateProgress(watchDict)
         
     }
+    
     
     func calculateProgress (watchDict : [String : AnyObject]){
         
@@ -69,13 +59,11 @@ class SecondRingController: WKInterfaceController {
         
         var progress: Int =  Int((percent * 30) / 100)
         
-        if progress == 0{
-            progress = 2
+        if progress <= 5 {
+            progress = 5
         }
         
-        progressCalculated = progress
-        dataCharged = true
-        
+
         self.updateRingWithProgress(progress)
         self.updateCenterLabels(freeSpaceString, totalSize: totalSpaceString)
         
@@ -83,8 +71,22 @@ class SecondRingController: WKInterfaceController {
     
     func updateRingWithProgress (progress : Int){
         
-        self.progressGroup.setBackgroundImageNamed("outer-120-9-")
-        self.progressGroup.startAnimatingWithImagesInRange(NSMakeRange(0, progress), duration: 1.0, repeatCount: 1)
+        var duration: NSTimeInterval = 1.0
+        
+        if progress <= 10{
+            
+            duration = 0.25
+            
+        }else if progress > 11 || progress <= 20{
+            
+            duration = 0.5
+        }else{
+            
+            duration = 1.0
+        }
+        
+        self.progressGroup.setBackgroundImageNamed("free_disk-")
+        self.progressGroup.startAnimatingWithImagesInRange(NSMakeRange(0, progress), duration: duration, repeatCount: 1)
     }
     
     func updateCenterLabels(sizeUsed: String, totalSize: String){

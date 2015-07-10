@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wrF-sl-fr9">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="7701"/>
@@ -10,7 +10,7 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="RootRingController" customModule="Owncloud_iOs_Client_WatchKit_Extension">
                     <items>
-                        <group width="1" height="120" alignment="center" contentMode="scaleAspectFit" id="bRP-6i-6zE" userLabel="Group Image">
+                        <group width="1" height="1" alignment="center" contentMode="scaleAspectFit" id="bRP-6i-6zE" userLabel="Group Image">
                             <items>
                                 <label width="1" alignment="center" verticalAlignment="center" text="550MB" textAlignment="center" id="E52-MG-gia">
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -18,30 +18,22 @@
                                 </label>
                             </items>
                         </group>
-                        <group width="1" height="27" alignment="center" verticalAlignment="bottom" id="lB4-9e-e2o" userLabel="Group Title">
-                            <items>
-                                <label width="1" alignment="center" verticalAlignment="center" text="Data ocuppied" textAlignment="center" id="Gse-Wz-Amf">
-                                    <fontDescription key="font" type="system" pointSize="14"/>
-                                </label>
-                            </items>
-                        </group>
                     </items>
                     <connections>
-                        <outlet property="detailLabel" destination="Gse-Wz-Amf" id="spQ-o1-BrS"/>
                         <outlet property="progressGroup" destination="bRP-6i-6zE" id="9pR-VV-a40"/>
                         <outlet property="sizeLabel" destination="E52-MG-gia" id="Rpj-RC-mtC"/>
-                        <segue destination="4Jf-bF-Lor" kind="relationship" relationship="nextPage" id="qnp-FX-cEM"/>
+                        <segue destination="4Jf-bF-Lor" kind="relationship" relationship="nextPage" id="UbB-B5-jPt"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="164" y="217"/>
+            <point key="canvasLocation" x="254" y="217"/>
         </scene>
         <!--Second Ring Controller-->
         <scene sceneID="9Ka-P5-psl">
             <objects>
                 <controller id="4Jf-bF-Lor" customClass="SecondRingController" customModule="Owncloud_iOs_Client_WatchKit_Extension">
                     <items>
-                        <group width="1" height="120" alignment="center" contentMode="scaleAspectFit" id="ZXf-uc-Atj" userLabel="Group Image">
+                        <group width="1" height="1" alignment="center" contentMode="scaleAspectFit" id="ZXf-uc-Atj" userLabel="Group Image">
                             <items>
                                 <label width="1" alignment="center" verticalAlignment="center" text="550MB" textAlignment="center" id="RUh-Ml-jPL">
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -49,22 +41,43 @@
                                 </label>
                             </items>
                         </group>
-                        <group width="1" height="27" alignment="center" verticalAlignment="bottom" id="ypk-Iq-b90" userLabel="Group Title">
-                            <items>
-                                <label width="1" alignment="center" verticalAlignment="center" text="Data split" textAlignment="center" id="4j2-YU-4kD">
-                                    <fontDescription key="font" type="system" pointSize="14"/>
-                                </label>
-                            </items>
-                        </group>
                     </items>
                     <connections>
-                        <outlet property="detailLabel" destination="4j2-YU-4kD" id="MDM-Qe-Flx"/>
                         <outlet property="progressGroup" destination="ZXf-uc-Atj" id="Llv-sr-HJf"/>
                         <outlet property="sizeLabel" destination="RUh-Ml-jPL" id="YY1-al-iw9"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="420" y="217"/>
+            <point key="canvasLocation" x="468" y="217"/>
+        </scene>
+        <!--Three Rings Controller-->
+        <scene sceneID="85Q-OM-kxu">
+            <objects>
+                <controller id="wrF-sl-fr9" customClass="ThreeRingsController" customModule="Owncloud_iOs_Client_WatchKit_Extension">
+                    <items>
+                        <group width="1" height="1" alignment="left" id="g05-Qk-Wy4">
+                            <items>
+                                <group width="1" height="1" alignment="left" backgroundImage="out_kind_ring-0" contentMode="scaleAspectFit" id="7ug-HO-D88" userLabel="OutRing">
+                                    <items>
+                                        <group width="1" height="1" alignment="left" backgroundImage="middle_kind_ring-0" contentMode="scaleAspectFit" id="b30-94-T8T" userLabel="MiddleRing">
+                                            <items>
+                                                <group width="1" height="1" alignment="left" backgroundImage="inner_kind_ring-0" contentMode="scaleAspectFit" id="fRg-fH-Q5c" userLabel="InnerRing"/>
+                                            </items>
+                                        </group>
+                                    </items>
+                                </group>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="innerProgressGroup" destination="fRg-fH-Q5c" id="072-Ts-1GZ"/>
+                        <outlet property="middleProgressGroup" destination="b30-94-T8T" id="z2d-mW-6UP"/>
+                        <outlet property="outProgressGroup" destination="7ug-HO-D88" id="keZ-Uk-mZi"/>
+                        <segue destination="AgC-eL-Hgc" kind="relationship" relationship="nextPage" id="V4N-9i-HxN"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="59" y="217"/>
         </scene>
         <!--Glance Interface Controller-->
         <scene sceneID="rjY-Ar-IMT">

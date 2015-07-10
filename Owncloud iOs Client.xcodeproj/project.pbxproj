@@ -612,6 +612,10 @@
 		EA68969917F9AC860033B3C1 /* OCPortraitNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68969817F9AC860033B3C1 /* OCPortraitNavigationViewController.m */; };
 		EA707223199CC59E00CE7079 /* ManageDownloads.m in Sources */ = {isa = PBXBuildFile; fileRef = EA707222199CC59E00CE7079 /* ManageDownloads.m */; };
 		EA8667E918AA299000D3550D /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
+		EA8695571B4E84C000C6C11C /* DiskDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8695561B4E84C000C6C11C /* DiskDataManager.swift */; };
+		EA8695591B4E9A2C00C6C11C /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
+		EA86955B1B4EA4F400C6C11C /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
+		EA86955D1B4FA69300C6C11C /* ThreeRingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86955C1B4FA69300C6C11C /* ThreeRingsController.swift */; };
 		EA8ADE601A31D759008D3612 /* DocumentPickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE5F1A31D759008D3612 /* DocumentPickerCell.m */; };
 		EA8ADE621A31D770008D3612 /* DocumentPickerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA8ADE611A31D770008D3612 /* DocumentPickerCell.xib */; };
 		EA8ADE681A31E9AB008D3612 /* FFCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA8ADE651A31E9AB008D3612 /* FFCircularProgressView.m */; };
@@ -1488,6 +1492,9 @@
 		EA707221199CC59E00CE7079 /* ManageDownloads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageDownloads.h; path = "Owncloud iOs Client/Network/Downloads/ManageDownloads.h"; sourceTree = "<group>"; };
 		EA707222199CC59E00CE7079 /* ManageDownloads.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageDownloads.m; path = "Owncloud iOs Client/Network/Downloads/ManageDownloads.m"; sourceTree = "<group>"; };
 		EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "ownCloud iOS library.xcodeproj"; path = "OCCommunicationLib/OCCommunicationLib/ownCloud iOS library.xcodeproj"; sourceTree = "<group>"; };
+		EA8695561B4E84C000C6C11C /* DiskDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskDataManager.swift; sourceTree = "<group>"; };
+		EA86955A1B4EA0E500C6C11C /* Owncloud_Watch_Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Owncloud_Watch_Bridging-Header.h"; sourceTree = "<group>"; };
+		EA86955C1B4FA69300C6C11C /* ThreeRingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreeRingsController.swift; sourceTree = "<group>"; };
 		EA8ADE5E1A31D759008D3612 /* DocumentPickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DocumentPickerCell.h; path = Cells/DocumentPickerCell.h; sourceTree = "<group>"; };
 		EA8ADE5F1A31D759008D3612 /* DocumentPickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DocumentPickerCell.m; path = Cells/DocumentPickerCell.m; sourceTree = "<group>"; };
 		EA8ADE611A31D770008D3612 /* DocumentPickerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DocumentPickerCell.xib; path = Cells/DocumentPickerCell.xib; sourceTree = "<group>"; };
@@ -1549,6 +1556,7 @@
 		EAE93A3A19D18E43002B9E15 /* fi */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
 		EAF7217C1AAF2E0D009F5596 /* Managers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Managers.swift; sourceTree = "<group>"; };
+		EAFA70121B4E69F500FC2890 /* OC WatchKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "OC WatchKit.entitlements"; sourceTree = "<group>"; };
 		EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1650,6 +1658,7 @@
 		1324296D15ADBB3700DF823E = {
 			isa = PBXGroup;
 			children = (
+				EAFA70121B4E69F500FC2890 /* OC WatchKit.entitlements */,
 				EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */,
 				1324298215ADBB3700DF823E /* Owncloud iOs Client */,
 				132429B415ADBB3800DF823E /* Owncloud iOs ClientTests */,
@@ -1727,6 +1736,7 @@
 				148DD689177865A900FB9977 /* Tabs */,
 				137F615615E36334001F460C /* Utils */,
 				EA42197F1A94F6850081D400 /* Owncloud iOs Client-Bridging-Header.h */,
+				EA86955A1B4EA0E500C6C11C /* Owncloud_Watch_Bridging-Header.h */,
 			);
 			path = "Owncloud iOs Client";
 			sourceTree = "<group>";
@@ -2809,7 +2819,9 @@
 			children = (
 				EA115FDF1B4D054000A0383E /* RootRingController.swift */,
 				EA1160021B4D216800A0383E /* SecondRingController.swift */,
+				EA86955C1B4FA69300C6C11C /* ThreeRingsController.swift */,
 				EA115FE11B4D054000A0383E /* GlanceController.swift */,
+				EA8695561B4E84C000C6C11C /* DiskDataManager.swift */,
 				EA115FE31B4D054000A0383E /* Images.xcassets */,
 				EA115FDD1B4D054000A0383E /* Supporting Files */,
 			);
@@ -3343,9 +3355,18 @@
 					EA115FDA1B4D054000A0383E = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = 9B5WD74GWJ;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					EA115FE61B4D054000A0383E = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 9B5WD74GWJ;
 					};
 					EA6606941AA767F700BA2C65 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -3740,6 +3761,7 @@
 			files = (
 				EA115FE81B4D054000A0383E /* Owncloud iOs Client WatchKit App.app in Resources */,
 				EA115FE41B4D054000A0383E /* Images.xcassets in Resources */,
+				EA86955B1B4EA4F400C6C11C /* Owncloud iOs Client.entitlements in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4151,6 +4173,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA86955D1B4FA69300C6C11C /* ThreeRingsController.swift in Sources */,
+				EA8695591B4E9A2C00C6C11C /* UtilsUrls.m in Sources */,
+				EA8695571B4E84C000C6C11C /* DiskDataManager.swift in Sources */,
 				EA115FE01B4D054000A0383E /* RootRingController.swift in Sources */,
 				EA1160031B4D216800A0383E /* SecondRingController.swift in Sources */,
 				EA115FE21B4D054000A0383E /* GlanceController.swift in Sources */,
@@ -4613,10 +4638,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_ENTITLEMENTS = "OC WatchKit.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -4628,7 +4655,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud_Watch_Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -4641,12 +4670,14 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_ENTITLEMENTS = "OC WatchKit.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = "Owncloud iOs Client WatchKit Extension/Info.plist";
@@ -4654,7 +4685,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud_Watch_Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -4667,6 +4700,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -4695,6 +4729,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;

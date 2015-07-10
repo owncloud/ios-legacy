@@ -57,9 +57,6 @@
 #import "InitializeDatabase.h"
 #import "CheckHasForbiddenCharactersSupport.h"
 
-#define MB (1024*1024)
-#define GB (MB*1024)
-
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
 NSString * NotReachableNetworkForUploadsNotification = @"NotReachableNetworkForUploadsNotification";
@@ -2689,86 +2686,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             }
         }
     }
-    
-}
-
-- (unsigned long long int)folderSize:(NSString *)folderPath {
-    NSArray *filesArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:folderPath error:nil];
-    NSEnumerator *filesEnumerator = [filesArray objectEnumerator];
-    NSString *fileName;
-    unsigned long long int fileSize = 0;
-    
-    while (fileName = [filesEnumerator nextObject]) {
-        NSDictionary *fileDictionary = [[NSFileManager defaultManager] fileAttributesAtPath:[folderPath stringByAppendingPathComponent:fileName] traverseLink:YES];
-        fileSize += [fileDictionary fileSize];
-    }
-    
-    return fileSize;
-}
-
-- (NSString *)memoryFormatter:(long long)diskSpace {
-    NSString *formatted;
-    double bytes = 1.0 * diskSpace;
-    double megabytes = bytes / MB;
-    double gigabytes = bytes / GB;
-    if (gigabytes >= 1.0)
-        formatted = [NSString stringWithFormat:@"%.1f GB", gigabytes];
-    else if (megabytes >= 1.0)
-        formatted = [NSString stringWithFormat:@"%.1f MB", megabytes];
-    else
-        formatted = [NSString stringWithFormat:@"%.1f bytes", bytes];
-    
-    return formatted;
-}
-
-- (void)application:(UIApplication *)application handleWatchKitExtensionRequest:(NSDictionary *)userInfo reply:(void (^)(NSDictionary *))reply {
-    
-    NSString *action = [userInfo objectForKey:@"RequestKey"];
-    
-    NSDictionary *watchDict = nil;
-    
-    if ([action isEqualToString:@"GetUsedSpace"]){
-        
-        watchDict = [NSMutableDictionary dictionaryWithCapacity:4];
-        
-        long long space = [[[[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil] objectForKey:NSFileSystemSize] longLongValue];
-        long long spaceUsedByUser = [self folderSize:[UtilsUrls getOwnCloudFilePath]];
-        
-        NSNumber *spaceUsed = [NSNumber numberWithLongLong:spaceUsedByUser];
-        NSNumber *totalDeviceSpace = [NSNumber numberWithLongLong:space];
-        NSString *spaceUsedString = [self memoryFormatter:spaceUsedByUser];
-        NSString *totalDeviceSpaceString = [self memoryFormatter:space];
-        
-        [watchDict setValue:spaceUsed forKey:@"SpaceUsed"];
-        [watchDict setValue:totalDeviceSpace forKey:@"TotalDeviceSpace"];
-        [watchDict setValue:spaceUsedString forKey:@"SpaceUsedString"];
-        [watchDict setValue:totalDeviceSpaceString forKey:@"SpaceTotalString"];
-        
-    }
-    
-
-    if ([action isEqualToString:@"GetFreeSpace"]){
-        
-        watchDict = [NSMutableDictionary dictionaryWithCapacity:4];
-        
-        long long space = [[[[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil] objectForKey:NSFileSystemSize] longLongValue];
-        long long freeSpace = [[[[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil] objectForKey:NSFileSystemFreeSize] longLongValue];
-        
-        NSNumber *totalDeviceSpace = [NSNumber numberWithLongLong:space];
-        NSNumber *freeDeviceSpace = [NSNumber numberWithLongLong:freeSpace];
-        NSString *spaceFreeString = [self memoryFormatter:freeSpace];
-        NSString *totalDeviceSpaceString = [self memoryFormatter:space];
-        
-        [watchDict setValue:totalDeviceSpace forKey:@"TotalDeviceSpace"];
-        [watchDict setValue:freeDeviceSpace forKey:@"FreeDeviceSpace"];
-        [watchDict setValue:spaceFreeString forKey:@"SpaceFreeString"];
-        [watchDict setValue:totalDeviceSpaceString forKey:@"SpaceTotalString"];
-        
-    }
-    
-  
-    
-    reply (watchDict);
     
 }
 
