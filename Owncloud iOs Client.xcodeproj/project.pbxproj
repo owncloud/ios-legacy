@@ -611,6 +611,7 @@
 		EA68969317F59A090033B3C1 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA68969217F59A090033B3C1 /* AudioToolbox.framework */; };
 		EA68969917F9AC860033B3C1 /* OCPortraitNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68969817F9AC860033B3C1 /* OCPortraitNavigationViewController.m */; };
 		EA707223199CC59E00CE7079 /* ManageDownloads.m in Sources */ = {isa = PBXBuildFile; fileRef = EA707222199CC59E00CE7079 /* ManageDownloads.m */; };
+		EA82BAC91B4FFA4D00EA4EBE /* InfoDataRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA82BAC81B4FFA4D00EA4EBE /* InfoDataRow.swift */; };
 		EA8667E918AA299000D3550D /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
 		EA8695571B4E84C000C6C11C /* DiskDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8695561B4E84C000C6C11C /* DiskDataManager.swift */; };
 		EA8695591B4E9A2C00C6C11C /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
@@ -1493,6 +1494,7 @@
 		EA68969817F9AC860033B3C1 /* OCPortraitNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCPortraitNavigationViewController.m; path = Tabs/FileTab/OCPortraitNavigationViewController.m; sourceTree = "<group>"; };
 		EA707221199CC59E00CE7079 /* ManageDownloads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageDownloads.h; path = "Owncloud iOs Client/Network/Downloads/ManageDownloads.h"; sourceTree = "<group>"; };
 		EA707222199CC59E00CE7079 /* ManageDownloads.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageDownloads.m; path = "Owncloud iOs Client/Network/Downloads/ManageDownloads.m"; sourceTree = "<group>"; };
+		EA82BAC81B4FFA4D00EA4EBE /* InfoDataRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoDataRow.swift; sourceTree = "<group>"; };
 		EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "ownCloud iOS library.xcodeproj"; path = "OCCommunicationLib/OCCommunicationLib/ownCloud iOS library.xcodeproj"; sourceTree = "<group>"; };
 		EA8695561B4E84C000C6C11C /* DiskDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskDataManager.swift; sourceTree = "<group>"; };
 		EA86955A1B4EA0E500C6C11C /* Owncloud_Watch_Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Owncloud_Watch_Bridging-Header.h"; sourceTree = "<group>"; };
@@ -2820,6 +2822,7 @@
 		EA115FDC1B4D054000A0383E /* Owncloud iOs Client WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
+				EA82BAC61B4FFA2900EA4EBE /* Cells */,
 				EA86955C1B4FA69300C6C11C /* ThreeRingsController.swift */,
 				EA115FDF1B4D054000A0383E /* RootRingController.swift */,
 				EA1160021B4D216800A0383E /* SecondRingController.swift */,
@@ -2951,6 +2954,14 @@
 				EA68968C17F599060033B3C1 /* KKPasscodeViewController.m */,
 			);
 			name = KKPasscodeLock;
+			sourceTree = "<group>";
+		};
+		EA82BAC61B4FFA2900EA4EBE /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				EA82BAC81B4FFA4D00EA4EBE /* InfoDataRow.swift */,
+			);
+			name = Cells;
 			sourceTree = "<group>";
 		};
 		EA8667DC18AA291C00D3550D /* Products */ = {
@@ -4178,6 +4189,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA86955D1B4FA69300C6C11C /* ThreeRingsController.swift in Sources */,
+				EA82BAC91B4FFA4D00EA4EBE /* InfoDataRow.swift in Sources */,
 				EA8695591B4E9A2C00C6C11C /* UtilsUrls.m in Sources */,
 				EA8695571B4E84C000C6C11C /* DiskDataManager.swift in Sources */,
 				EADBEA1E1B4FD4EE007BBE4C /* ThirdRingController.swift in Sources */,

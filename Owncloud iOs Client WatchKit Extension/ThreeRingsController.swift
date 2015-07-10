@@ -14,6 +14,7 @@ class ThreeRingsController: WKInterfaceController {
     @IBOutlet var outProgressGroup: WKInterfaceGroup!
     @IBOutlet var middleProgressGroup: WKInterfaceGroup!
     @IBOutlet var innerProgressGroup: WKInterfaceGroup!
+    @IBOutlet weak var infoTable: WKInterfaceTable!
     
     
     override func awakeWithContext(context: AnyObject?) {
@@ -28,6 +29,7 @@ class ThreeRingsController: WKInterfaceController {
         super.willActivate()
         
         self.getSpaceData()
+        self.loadListTable()
         
     }
     
@@ -143,5 +145,25 @@ class ThreeRingsController: WKInterfaceController {
         innerProgressGroup.setBackgroundImageNamed("inner_kind_ring-")
         innerProgressGroup.startAnimatingWithImagesInRange(NSMakeRange(0, progress), duration: duration, repeatCount: 1)
     }
+    
+    func loadListTable (){
+        
+        let usedSpace: NSNumber = DiskDataManager.getOwnCloudUsedSpace()
+        let freeSpace: NSNumber = DiskDataManager.getTotalFreeDiskSpace()
+        
+        infoTable.setNumberOfRows(2, withRowType: "InfoDataRow")
+        
+        let row1 = infoTable.rowControllerAtIndex(0) as! InfoDataRow
+        
+        row1.infoHeader.setText("SPACE USED BY OWNCLOUD")
+        row1.detailText.setText(DiskDataManager.memoryFormatter(usedSpace.longLongValue))
+        
+        let row2 = infoTable.rowControllerAtIndex(1) as! InfoDataRow
+        
+        row2.infoHeader.setText("SPACE FREE IN iPHONE")
+        row2.detailText.setText(DiskDataManager.memoryFormatter(freeSpace.longLongValue))
+        
+    }
+
 
 }
