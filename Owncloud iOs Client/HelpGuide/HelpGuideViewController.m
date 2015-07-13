@@ -120,38 +120,43 @@
     self.welcomeLabel = [UILabel new];
     self.welcomeLabel.text = NSLocalizedString(@"title_help_slide_0", nil);
     self.welcomeLabel.textColor = [UIColor colorOfLoginText];
-    //    UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:16];
-    //    self.firstLabel.font = appFont;
+    [self.welcomeLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    //[self.welcomeLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
     [self.welcomeLabel sizeToFit];
     [self.contentView addSubview:self.welcomeLabel];
     
     self.firstLabel = [UILabel new];
     self.firstLabel.text = NSLocalizedString(@"title_help_slide_1", nil);
     self.firstLabel.textColor = [UIColor colorOfLoginText];
+    [self.firstLabel setFont:[UIFont boldSystemFontOfSize:18]];
     [self.firstLabel sizeToFit];
     [self.contentView addSubview:self.firstLabel];
     
     self.secondLabel = [UILabel new];
     self.secondLabel.text = NSLocalizedString(@"title_help_slide_2", nil);
     self.secondLabel.textColor = [UIColor colorOfLoginText];
+    [self.secondLabel setFont:[UIFont boldSystemFontOfSize:18]];
     [self.secondLabel sizeToFit];
     [self.contentView addSubview:self.secondLabel];
     
     self.thirdLabel = [UILabel new];
     self.thirdLabel.text = NSLocalizedString(@"title_help_slide_3", nil);
     self.thirdLabel.textColor = [UIColor colorOfLoginText];
+    [self.thirdLabel setFont:[UIFont boldSystemFontOfSize:18]];
     [self.thirdLabel sizeToFit];
     [self.contentView addSubview:self.thirdLabel];
     
     self.fourthLabel = [UILabel new];
     self.fourthLabel.text = NSLocalizedString(@"title_help_slide_4", nil);
     self.fourthLabel.textColor = [UIColor colorOfLoginText];
+    [self.fourthLabel setFont:[UIFont boldSystemFontOfSize:18]];
     [self.fourthLabel sizeToFit];
     [self.contentView addSubview:self.fourthLabel];
     
     self.fifthLabel = [UILabel new];
     self.fifthLabel.text = NSLocalizedString(@"title_help_slide_5", nil);
     self.fifthLabel.textColor = [UIColor colorOfLoginText];
+    [self.fifthLabel setFont:[UIFont boldSystemFontOfSize:18]];
     [self.fifthLabel sizeToFit];
     [self.contentView addSubview:self.fifthLabel];
     
@@ -171,6 +176,7 @@
     self.messageSecondLabel = [UILabel new];
     self.messageSecondLabel.text = NSLocalizedString(@"message_help_slide_2", nil);
     self.messageSecondLabel.textColor = [UIColor colorOfLoginText];
+    self.messageSecondLabel.numberOfLines = 2;
     [self.messageSecondLabel sizeToFit];
     [self.contentView addSubview:self.messageSecondLabel];
     
@@ -186,21 +192,16 @@
     [self.messageFourthLabel sizeToFit];
     [self.contentView addSubview:self.messageFourthLabel];
     
-//    self.messageFifthLabel = [UILabel new];
-//    self.messageFifthLabel.text = NSLocalizedString(@"message_help_slide_5", nil);
-//    self.messageFifthLabel.textColor = [UIColor colorOfLoginText];
-//    [self.messageFifthLabel sizeToFit];
-//    [self.contentView addSubview:self.messageFifthLabel];
-    
     //Button sign in
     self.signInButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.signInButton setTitle:NSLocalizedString(@"sign_in_button_help_guide", nil) forState:UIControlStateNormal];
     [self.signInButton setBackgroundColor:[UIColor colorOfLoginButtonBackground]];
     [self.signInButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    //[self.signInButton setImage:[UIImage imageNamed:@".jpg"]   forState:UIControlStateSelected];
+    [self.signInButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
     [self.signInButton addTarget:self action:@selector(stayPressed:) forControlEvents:UIControlEventTouchDown];
     //[self.signInButton setBackgroundImage:[UIImage imageNamed:@"MainAppIcon_40-40@3x.png"] forState:UIControlStateNormal];
     //self.signInButton.frame = CGRectMake(80.0, 210.0, 160.0, 40.0);
+    self.signInButton.contentEdgeInsets = UIEdgeInsetsMake(7, 7, 7, 7);
     [self.contentView addSubview:self.signInButton];
 }
 
