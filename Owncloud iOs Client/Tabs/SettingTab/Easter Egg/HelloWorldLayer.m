@@ -169,7 +169,7 @@
     
     // Invaders
     //numberOfInvaderColumns = 10;
-    numberOfInvaderColumns = ([UIScreen mainScreen].bounds.size.width/40);
+    numberOfInvaderColumns = ([UIScreen mainScreen].bounds.size.width/45);
     invaderOffset = 12;
     invaderXMoveTimeInterval = 360;
     invaderYMoveTimeInterval = 10;
