@@ -36,7 +36,8 @@ class ThirdRingController: WKInterfaceController {
     func getSpaceData(){
         
         let usedSpace: NSNumber = DiskDataManager.getOwnCloudUsedSpace()
-        let (imageSpace, mediaSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
+        let (imageSpace, audioSpace, videoSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
+        let mediaSpace = NSNumber(unsignedLongLong: audioSpace.unsignedLongLongValue + videoSpace.unsignedLongLongValue)
         let otherSpace = NSNumber(float: usedSpace.floatValue - (imageSpace.floatValue + mediaSpace.floatValue))
         
         let otherSpaceString: String = DiskDataManager.memoryFormatter(otherSpace.longLongValue)
@@ -61,6 +62,10 @@ class ThirdRingController: WKInterfaceController {
         
         if progress > 0 && progress < 5{
             progress = 5
+        }
+        
+        if progress == 0{
+            progress = 1
         }
         
         var duration: NSTimeInterval = 1.0

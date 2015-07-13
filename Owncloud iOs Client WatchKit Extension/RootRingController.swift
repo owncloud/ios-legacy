@@ -41,9 +41,8 @@ class RootRingController: WKInterfaceController {
     func getSpaceData(){
         
         let usedSpace: NSNumber = DiskDataManager.getOwnCloudUsedSpace()
-        let (imageSpace, mediaSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
+        let (imageSpace, audioSpace, videoSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
 
-        
         
         let imageSpaceString: String = DiskDataManager.memoryFormatter(imageSpace.longLongValue)
         let usedSpaceString: String = DiskDataManager.memoryFormatter(usedSpace.longLongValue)
@@ -67,6 +66,10 @@ class RootRingController: WKInterfaceController {
         
         if progress > 0 && progress < 5{
             progress = 5
+        }
+        
+        if progress == 0{
+            progress = 1
         }
         
         

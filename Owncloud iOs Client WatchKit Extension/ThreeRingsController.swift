@@ -28,8 +28,7 @@ class ThreeRingsController: WKInterfaceController {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
         
-        self.getSpaceData()
-        self.loadListTable()
+       self.refreshData()
         
     }
     
@@ -39,15 +38,29 @@ class ThreeRingsController: WKInterfaceController {
     }
     
     
+    @IBAction func touchClearCacheButton(sender: AnyObject){
+        
+        DiskDataManager.removeAllDownloadedFiles()
+        
+        self.refreshData()
+    }
+    
+    func refreshData(){
+        
+        self.getSpaceData()
+        self.loadListTable()
+    }
+    
+    
     func getSpaceData(){
         
         let usedSpace: NSNumber = DiskDataManager.getOwnCloudUsedSpace()
-        let (imageSpace, mediaSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
+        let (imageSpace, audioSpace, videoSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
+        let mediaSpace = NSNumber(unsignedLongLong: audioSpace.unsignedLongLongValue + videoSpace.unsignedLongLongValue)
         let otherSpace = NSNumber(float: usedSpace.floatValue - (imageSpace.floatValue + mediaSpace.floatValue))
         
-        
+    
         self.calculateProgress(usedSpace, imageSpace: imageSpace, mediaSpace: mediaSpace, otherSpace: otherSpace)
-        
         
     }
     
@@ -74,6 +87,11 @@ class ThreeRingsController: WKInterfaceController {
         if progress > 0 && progress < 5{
             progress = 5
         }
+        
+        if progress == 0{
+            progress = 1
+        }
+        
         
         var duration: NSTimeInterval = 1.0
         
@@ -102,6 +120,10 @@ class ThreeRingsController: WKInterfaceController {
             progress = 5
         }
         
+        if progress == 0{
+            progress = 1
+        }
+        
         var duration: NSTimeInterval = 1.0
         
         if progress <= 10{
@@ -126,6 +148,10 @@ class ThreeRingsController: WKInterfaceController {
         
         if progress > 0 && progress < 5{
             progress = 5
+        }
+        
+        if progress == 0{
+            progress = 1
         }
         
         var duration: NSTimeInterval = 1.0

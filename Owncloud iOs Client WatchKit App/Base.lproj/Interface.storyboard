@@ -43,14 +43,14 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="254" y="217"/>
+            <point key="canvasLocation" x="86" y="166"/>
         </scene>
         <!--Second Ring Controller-->
         <scene sceneID="9Ka-P5-psl">
             <objects>
                 <controller id="4Jf-bF-Lor" customClass="SecondRingController" customModule="Owncloud_iOs_Client_WatchKit_Extension">
                     <items>
-                        <group width="1" height="1" alignment="center" backgroundImage="media_ring-0" contentMode="scaleAspectFit" layout="vertical" id="ZXf-uc-Atj" userLabel="Group Image">
+                        <group width="1" height="170" alignment="left" backgroundImage="media_ring-0" contentMode="scaleAspectFit" layout="vertical" id="ZXf-uc-Atj" userLabel="Group Image">
                             <items>
                                 <group alignment="left" layout="vertical" id="pJO-T1-t5p" userLabel="Icon Group">
                                     <items>
@@ -74,8 +74,41 @@
                                 </group>
                             </items>
                         </group>
+                        <group width="1" alignment="center" layout="vertical" id="pVW-GO-gYz">
+                            <items>
+                                <table alignment="left" id="Y10-R6-lqa">
+                                    <items>
+                                        <tableRow identifier="InfoDataRow" selectable="NO" id="7SV-if-dT7" customClass="InfoDataRow" customModule="Owncloud_iOs_Client_WatchKit_Extension">
+                                            <group key="rootItem" width="1" height="40" alignment="left" layout="vertical" id="9sG-PL-xox">
+                                                <items>
+                                                    <label width="1" height="11" alignment="left" text="DATA USED" id="aDV-hP-LvU">
+                                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <fontDescription key="font" type="system" pointSize="11"/>
+                                                    </label>
+                                                    <label width="1" height="18" alignment="left" text="550MB" id="idx-f6-p3q">
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <fontDescription key="font" type="system" pointSize="18"/>
+                                                    </label>
+                                                </items>
+                                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            </group>
+                                            <connections>
+                                                <outlet property="detailText" destination="idx-f6-p3q" id="4yP-TJ-KED"/>
+                                                <outlet property="infoHeader" destination="aDV-hP-LvU" id="biW-a6-txO"/>
+                                            </connections>
+                                        </tableRow>
+                                    </items>
+                                </table>
+                                <button width="1" alignment="left" title="Clear Cache" id="1Q7-gb-ell">
+                                    <connections>
+                                        <action selector="touchClearCacheButton:" destination="4Jf-bF-Lor" id="CdF-BL-Qox"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
                     </items>
                     <connections>
+                        <outlet property="infoTable" destination="Y10-R6-lqa" id="CMv-KP-8ra"/>
                         <outlet property="progressGroup" destination="ZXf-uc-Atj" id="Llv-sr-HJf"/>
                         <outlet property="sizeDetailLabel" destination="Ku4-7X-ry0" id="1zN-dj-a5S"/>
                         <outlet property="sizeLabel" destination="hPL-lG-IkM" id="rAS-tw-X6P"/>
@@ -83,7 +116,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="448" y="217"/>
+            <point key="canvasLocation" x="331" y="217.5"/>
         </scene>
         <!--Third Ring Controller-->
         <scene sceneID="EzW-m4-vpi">
@@ -129,13 +162,13 @@
             <objects>
                 <controller id="wrF-sl-fr9" customClass="ThreeRingsController" customModule="Owncloud_iOs_Client_WatchKit_Extension">
                     <items>
-                        <group width="1" height="166" alignment="left" layout="vertical" id="g05-Qk-Wy4">
+                        <group width="1" height="170" alignment="left" layout="vertical" id="g05-Qk-Wy4">
                             <items>
                                 <group width="1" height="1" alignment="left" backgroundImage="out_kind_ring-0" contentMode="scaleAspectFit" layout="vertical" id="7ug-HO-D88" userLabel="OutRing">
                                     <items>
                                         <group width="1" height="1" alignment="left" backgroundImage="middle_kind_ring-0" contentMode="scaleAspectFit" layout="vertical" id="b30-94-T8T" userLabel="MiddleRing">
                                             <items>
-                                                <group width="1" height="166" alignment="left" backgroundImage="inner_kind_ring-0" contentMode="scaleAspectFit" layout="vertical" id="fRg-fH-Q5c" userLabel="InnerRing">
+                                                <group width="1" height="1" alignment="left" backgroundImage="inner_kind_ring-0" contentMode="scaleAspectFit" layout="vertical" id="fRg-fH-Q5c" userLabel="InnerRing">
                                                     <items>
                                                         <group height="73" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="AvL-Li-9fP" userLabel="Index">
                                                             <items>
@@ -190,7 +223,11 @@
                                         </tableRow>
                                     </items>
                                 </table>
-                                <button width="1" alignment="left" title="Clear Cache" id="ARe-lH-0MA"/>
+                                <button width="1" alignment="left" title="Clear Cache" id="ARe-lH-0MA">
+                                    <connections>
+                                        <action selector="touchClearCacheButton:" destination="wrF-sl-fr9" id="mBo-t4-pCD"/>
+                                    </connections>
+                                </button>
                             </items>
                         </group>
                     </items>
@@ -203,7 +240,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="-11" y="216.5"/>
+            <point key="canvasLocation" x="-184" y="217.5"/>
         </scene>
         <!--Glance Interface Controller-->
         <scene sceneID="rjY-Ar-IMT">

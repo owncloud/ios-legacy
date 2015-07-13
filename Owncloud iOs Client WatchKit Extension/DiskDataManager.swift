@@ -10,6 +10,34 @@ import UIKit
 
 class DiskDataManager {
     
+    class func isForbiddenPath(path: String) -> Bool {
+        
+        let forbiddenPaths:[String] = ["DB.sqlite",".DS_Store"]
+        let forbiddenFolders: [String] = ["Certificates"]
+        
+        var forbidden: Bool = false
+        
+        for item in forbiddenPaths{
+            
+            if item == path{
+                forbidden = true
+                break
+            }
+        }
+        
+        for item in forbiddenFolders{
+            
+            if path.lowercaseString.rangeOfString(item) != nil{
+                forbidden = true
+                break
+            }
+            
+        }
+        
+        return forbidden
+        
+    }
+    
     class func memoryFormatter(diskSpace: Int64) -> String {
         
         var formatter = NSByteCountFormatter()
@@ -48,11 +76,13 @@ class DiskDataManager {
         let files : NSArray = NSFileManager.defaultManager().subpathsOfDirectoryAtPath(ownCloudPath, error: nil)!
         let dirEnumerator = files.objectEnumerator()
         var totalSize: UInt64 = 0
-        let fileManager = NSFileManager.defaultManager();
+        let fileManager = NSFileManager.defaultManager()
         while let file:String = dirEnumerator.nextObject() as? String
         {
-            let attributes:NSDictionary = fileManager.attributesOfItemAtPath(ownCloudPath.stringByAppendingPathComponent(file), error: nil)!
-            totalSize += attributes.fileSize();
+            if !self.isForbiddenPath(file){
+                let attributes:NSDictionary = fileManager.attributesOfItemAtPath(ownCloudPath.stringByAppendingPathComponent(file), error: nil)!
+                totalSize += attributes.fileSize()
+            }
         }
     
         let totalSizeNumber: NSNumber = NSNumber(unsignedLongLong: totalSize)
@@ -60,36 +90,122 @@ class DiskDataManager {
         return totalSizeNumber
     }
     
-    class func getOwnCloudUsedSpaceByType() -> (imageSpace: NSNumber, mediaSpace: NSNumber){
+    class func getOwnCloudUsedSpaceByType() -> (imageSpace: NSNumber, audioSpace: NSNumber, videoSpace: NSNumber){
         
         let ownCloudPath:String = UtilsUrls.getOwnCloudFilePath()
         let files : NSArray = NSFileManager.defaultManager().subpathsOfDirectoryAtPath(ownCloudPath, error: nil)!
         let dirEnumerator = files.objectEnumerator()
         var totalImageSize: UInt64 = 0
-        var totalMediaSize: UInt64 = 0
-        let fileManager = NSFileManager.defaultManager();
+        var totalAudioSize: UInt64 = 0
+        var totalVideoSize: UInt64 = 0
+        let fileManager = NSFileManager.defaultManager()
         while let file:String = dirEnumerator.nextObject() as? String
         {
             let attributes:NSDictionary = fileManager.attributesOfItemAtPath(ownCloudPath.stringByAppendingPathComponent(file), error: nil)!
             
-            if attributes.fileType() == NSFileTypeRegular{
+            if attributes.fileType() == NSFileTypeRegular && !self.isForbiddenPath(file){
                 if FileNameUtils.isImageSupportedThisFile(file.lastPathComponent){
-                    totalImageSize += attributes.fileSize();
+                    totalImageSize += attributes.fileSize()
                 }
                 
-                if FileNameUtils.isVideoFileSupportedThisFile(file.lastPathComponent) || FileNameUtils.isAudioSupportedThisFile(file.lastPathComponent){
-                    totalMediaSize += attributes.fileSize();
+                if FileNameUtils.isVideoFileSupportedThisFile(file.lastPathComponent){
+                    totalVideoSize += attributes.fileSize()
+                }
+                
+                if FileNameUtils.isAudioSupportedThisFile(file.lastPathComponent){
+                    totalAudioSize += attributes.fileSize()
                 }
             }
         }
         
         let imagesSize: NSNumber = NSNumber(unsignedLongLong: totalImageSize)
-        let mediaSize: NSNumber = NSNumber(unsignedLongLong: totalMediaSize)
+        let audioSize: NSNumber = NSNumber(unsignedLongLong: totalAudioSize)
+        let videoSize: NSNumber = NSNumber(unsignedLongLong: totalVideoSize)
         
-        return (imagesSize, mediaSize)
+        return (imagesSize, audioSize, videoSize)
         
     }
     
- 
+    
+    class func removeAllDownloadedFiles () {
+        
+        let ownCloudPath:String = UtilsUrls.getOwnCloudFilePath()
+        let files : NSArray = NSFileManager.defaultManager().subpathsOfDirectoryAtPath(ownCloudPath, error: nil)!
+        let dirEnumerator = files.objectEnumerator()
+        let fileManager = NSFileManager.defaultManager()
+        
+        while let file:String = dirEnumerator.nextObject() as? String
+        {
+            let attributes:NSDictionary = fileManager.attributesOfItemAtPath(ownCloudPath.stringByAppendingPathComponent(file), error: nil)!
+            
+            if attributes.fileType() == NSFileTypeRegular && !self.isForbiddenPath(file){
+                fileManager.removeItemAtPath(ownCloudPath + file, error: nil)
+            }
+        }
+    }
+    
+    
+    class func removeImageDownloadedFiles (){
+        
+        let ownCloudPath:String = UtilsUrls.getOwnCloudFilePath()
+        let files : NSArray = NSFileManager.defaultManager().subpathsOfDirectoryAtPath(ownCloudPath, error: nil)!
+        let dirEnumerator = files.objectEnumerator()
+        let fileManager = NSFileManager.defaultManager()
+        
+        while let file:String = dirEnumerator.nextObject() as? String
+        {
+            let attributes:NSDictionary = fileManager.attributesOfItemAtPath(ownCloudPath.stringByAppendingPathComponent(file), error: nil)!
+            
+            if attributes.fileType() == NSFileTypeRegular && !self.isForbiddenPath(file){
+                
+                if FileNameUtils.isImageSupportedThisFile(file.lastPathComponent){
+                    fileManager.removeItemAtPath(ownCloudPath + file, error: nil)
+                }
+            }
+        }
+        
+    }
+    
+    class func removeMediaDownloadedFiles (){
+        
+        let ownCloudPath:String = UtilsUrls.getOwnCloudFilePath()
+        let files : NSArray = NSFileManager.defaultManager().subpathsOfDirectoryAtPath(ownCloudPath, error: nil)!
+        let dirEnumerator = files.objectEnumerator()
+        let fileManager = NSFileManager.defaultManager()
+        
+        while let file:String = dirEnumerator.nextObject() as? String
+        {
+            let attributes:NSDictionary = fileManager.attributesOfItemAtPath(ownCloudPath.stringByAppendingPathComponent(file), error: nil)!
+            
+            if attributes.fileType() == NSFileTypeRegular && !self.isForbiddenPath(file){
+                
+                if FileNameUtils.isVideoFileSupportedThisFile(file.lastPathComponent) || FileNameUtils.isAudioSupportedThisFile(file.lastPathComponent){
+                    fileManager.removeItemAtPath(ownCloudPath + file, error: nil)
+                }
+            }
+        }
+        
+    }
+    
+    class func removeOtherDownloadedFiles (){
+        
+        let ownCloudPath:String = UtilsUrls.getOwnCloudFilePath()
+        let files : NSArray = NSFileManager.defaultManager().subpathsOfDirectoryAtPath(ownCloudPath, error: nil)!
+        let dirEnumerator = files.objectEnumerator()
+        let fileManager = NSFileManager.defaultManager()
+        
+        while let file:String = dirEnumerator.nextObject() as? String
+        {
+            let attributes:NSDictionary = fileManager.attributesOfItemAtPath(ownCloudPath.stringByAppendingPathComponent(file), error: nil)!
+            
+            if attributes.fileType() == NSFileTypeRegular && !self.isForbiddenPath(file){
+                
+                if !FileNameUtils.isVideoFileSupportedThisFile(file.lastPathComponent) && !FileNameUtils.isAudioSupportedThisFile(file.lastPathComponent) && !FileNameUtils.isImageSupportedThisFile(file.lastPathComponent){
+                    fileManager.removeItemAtPath(ownCloudPath + file, error: nil)
+                }
+            }
+        }
+        
+    }
    
 }
