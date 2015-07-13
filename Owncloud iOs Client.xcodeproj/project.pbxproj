@@ -363,6 +363,16 @@
 		593D531E17BF701800191846 /* SSOViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 593D531C17BF701800191846 /* SSOViewController.xib */; };
 		593F7CAA19EFDE96004136F7 /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
 		595333FB1A1DF26000C57ED5 /* UIAlertView+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 595333FA1A1DF26000C57ED5 /* UIAlertView+Blocks.m */; };
+		5973EC081B4FC1560021E1DB /* ManageUsersDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F140177C2FC1004A1A5A /* ManageUsersDB.m */; };
+		5973EC0A1B4FC2780021E1DB /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F14F177C3392004A1A5A /* FMDatabase.m */; };
+		5973EC0B1B4FC2780021E1DB /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F155177C3392004A1A5A /* FMDatabaseQueue.m */; };
+		5973EC0C1B4FC2910021E1DB /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F157177C3392004A1A5A /* FMResultSet.m */; };
+		5973EC0D1B4FC2AD0021E1DB /* Managers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7217C1AAF2E0D009F5596 /* Managers.swift */; };
+		5973EC0E1B4FC2DF0021E1DB /* UserDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F148177C315D004A1A5A /* UserDto.m */; };
+		5973EC0F1B4FC3800021E1DB /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 137F3B4715B9376D0009BB24 /* libsqlite3.0.dylib */; };
+		5973EC101B4FC3AF0021E1DB /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
+		5973EC111B4FC3EB0021E1DB /* OCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FF874219F81396008B7C62 /* OCKeychain.m */; };
+		5973EC161B4FF25B0021E1DB /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
 		597A87981A0143000071F2AF /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
 		59990A251A0BD67A00D3B842 /* InfoFileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 14AB382D18C8E35200B34697 /* InfoFileUtils.m */; };
 		59990A271A0BD74000D3B842 /* FileNameUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6FC17786BF200FB9977 /* FileNameUtils.m */; };
@@ -553,11 +563,13 @@
 		59DF70E21B4E62DD005457F2 /* TABsettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F19C177C35AA004A1A5A /* TABsettings.png */; };
 		59DF70E31B4E62DD005457F2 /* TABsettings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F19D177C35AA004A1A5A /* TABsettings@2x.png */; };
 		59DF70E41B4E62DD005457F2 /* TABsettings@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F681A123D0E003E7397 /* TABsettings@3x.png */; };
-		59DF70EE1B4EB5EA005457F2 /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
 		59DF70EF1B4EBA9A005457F2 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0816034C2200A95EAD /* libcrypto.a */; };
 		59DF70F01B4EBA9A005457F2 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0916034C2200A95EAD /* libssl.a */; };
 		59DF70F31B4EC589005457F2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 145EA7CA17786FAC0087CDDB /* Localizable.strings */; };
 		59DF70F51B4ED0F3005457F2 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DF70F41B4ED0F3005457F2 /* UIImageExtensions.swift */; };
+		59E1B1CD1B53985C00FA0E5C /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
+		59E1B1D01B5398A300FA0E5C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
+		59E1B1D11B539D0600FA0E5C /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
 		59E20C7B1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
 		59E20C7C1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
@@ -800,6 +812,13 @@
 			remoteGlobalIDString = 1324297715ADBB3700DF823E;
 			remoteInfo = "Owncloud iOs Client";
 		};
+		5973EC141B4FF2540021E1DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = EA7CC896183E11E600B6A4B4;
+			remoteInfo = "ownCloud iOS library";
+		};
 		597A87961A013FD50071F2AF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */;
@@ -813,13 +832,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 59DF70C71B4E5E43005457F2;
 			remoteInfo = OCTodayWidget;
-		};
-		59DF70F11B4EBADC005457F2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EA8667DB18AA291C00D3550D /* ownCloud iOS library.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = EA7CC896183E11E600B6A4B4;
-			remoteInfo = "ownCloud iOS library";
 		};
 		EA1F62DB1A5EC07E00D6346F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1342,6 +1354,7 @@
 		40E354E01A14FE36000E7FE4 /* sound_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sound_icon@3x.png"; sourceTree = "<group>"; };
 		40FF874119F81396008B7C62 /* OCKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCKeychain.h; sourceTree = "<group>"; };
 		40FF874219F81396008B7C62 /* OCKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCKeychain.m; sourceTree = "<group>"; };
+		591D77F71B4FF6740024A161 /* OCTodayWidget copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "OCTodayWidget copy-Info.plist"; path = "/Users/Javi/Documents/Workspace iOS/ios/OCTodayWidget copy-Info.plist"; sourceTree = "<absolute>"; };
 		593D531A17BF701800191846 /* SSOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSOViewController.h; path = Login/SSO/SSOViewController.h; sourceTree = "<group>"; };
 		593D531B17BF701800191846 /* SSOViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSOViewController.m; path = Login/SSO/SSOViewController.m; sourceTree = "<group>"; };
 		593D531C17BF701800191846 /* SSOViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SSOViewController.xib; path = Login/SSO/SSOViewController.xib; sourceTree = "<group>"; };
@@ -1426,6 +1439,7 @@
 		59DF70CE1B4E5E43005457F2 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
 		59DF70D01B4E5E43005457F2 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		59DF70F41B4ED0F3005457F2 /* UIImageExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
+		59E1B1CB1B5397FC00FA0E5C /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
 		59E20C781AEFAA8E00554D7E /* InitializeDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializeDatabase.h; path = DataBase/Queries/InitializeDatabase.h; sourceTree = "<group>"; };
 		59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InitializeDatabase.m; path = DataBase/Queries/InitializeDatabase.m; sourceTree = "<group>"; };
 		59E48E861B3AAC88008FAAE0 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1600,9 +1614,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59E1B1D01B5398A300FA0E5C /* MobileCoreServices.framework in Frameworks */,
+				5973EC0F1B4FC3800021E1DB /* libsqlite3.0.dylib in Frameworks */,
 				59DF70EF1B4EBA9A005457F2 /* libcrypto.a in Frameworks */,
 				59DF70F01B4EBA9A005457F2 /* libssl.a in Frameworks */,
-				59DF70EE1B4EB5EA005457F2 /* libownCloudiOS.a in Frameworks */,
+				5973EC161B4FF25B0021E1DB /* libownCloudiOS.a in Frameworks */,
 				59DF70CA1B4E5E43005457F2 /* NotificationCenter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1667,6 +1683,7 @@
 				59DF70CB1B4E5E43005457F2 /* OCTodayWidget */,
 				1324297B15ADBB3700DF823E /* Frameworks */,
 				1324297915ADBB3700DF823E /* Products */,
+				591D77F71B4FF6740024A161 /* OCTodayWidget copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1686,6 +1703,7 @@
 		1324297B15ADBB3700DF823E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				59E1B1CB1B5397FC00FA0E5C /* libz.1.1.3.dylib */,
 				59C71D271A921A5100F66166 /* ImageIO.framework */,
 				404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */,
 				EA68969217F59A090033B3C1 /* AudioToolbox.framework */,
@@ -3229,7 +3247,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				59DF70F21B4EBADC005457F2 /* PBXTargetDependency */,
+				5973EC151B4FF2540021E1DB /* PBXTargetDependency */,
 			);
 			name = OCTodayWidget;
 			productName = OCTodayWidget;
@@ -3703,6 +3721,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59E1B1D11B539D0600FA0E5C /* Owncloud iOs Client.entitlements in Resources */,
 				59DF70F31B4EC589005457F2 /* Localizable.strings in Resources */,
 				59DF70D91B4E62DD005457F2 /* TABShares.png in Resources */,
 				59DF70DA1B4E62DD005457F2 /* TABShares@2x.png in Resources */,
@@ -4117,6 +4136,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59E1B1CD1B53985C00FA0E5C /* CredentialsDto.m in Sources */,
+				5973EC111B4FC3EB0021E1DB /* OCKeychain.m in Sources */,
+				5973EC101B4FC3AF0021E1DB /* UtilsUrls.m in Sources */,
+				5973EC0E1B4FC2DF0021E1DB /* UserDto.m in Sources */,
+				5973EC0D1B4FC2AD0021E1DB /* Managers.swift in Sources */,
+				5973EC0C1B4FC2910021E1DB /* FMResultSet.m in Sources */,
+				5973EC0A1B4FC2780021E1DB /* FMDatabase.m in Sources */,
+				5973EC0B1B4FC2780021E1DB /* FMDatabaseQueue.m in Sources */,
+				5973EC081B4FC1560021E1DB /* ManageUsersDB.m in Sources */,
 				59DF70CF1B4E5E43005457F2 /* TodayViewController.swift in Sources */,
 				59DF70F51B4ED0F3005457F2 /* UIImageExtensions.swift in Sources */,
 			);
@@ -4265,6 +4293,11 @@
 			target = 1324297715ADBB3700DF823E /* Owncloud iOs Client */;
 			targetProxy = 132429B215ADBB3800DF823E /* PBXContainerItemProxy */;
 		};
+		5973EC151B4FF2540021E1DB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ownCloud iOS library";
+			targetProxy = 5973EC141B4FF2540021E1DB /* PBXContainerItemProxy */;
+		};
 		597A87971A013FD50071F2AF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "ownCloud iOS library";
@@ -4274,11 +4307,6 @@
 			isa = PBXTargetDependency;
 			target = 59DF70C71B4E5E43005457F2 /* OCTodayWidget */;
 			targetProxy = 59DF70D21B4E5E43005457F2 /* PBXContainerItemProxy */;
-		};
-		59DF70F21B4EBADC005457F2 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "ownCloud iOS library";
-			targetProxy = 59DF70F11B4EBADC005457F2 /* PBXContainerItemProxy */;
 		};
 		EA1F62DC1A5EC07E00D6346F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -4574,23 +4602,26 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					"TODAY_WIDGET=1",
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib",
+					"$(inherited)/**",
+					"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/**",
+					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
 				);
 				INFOPLIST_FILE = OCTodayWidget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(SRCROOT)",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4614,19 +4645,22 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "TODAY_WIDGET=1";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib",
+					"$(inherited)/**",
+					"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/**",
+					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
 				);
 				INFOPLIST_FILE = OCTodayWidget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(SRCROOT)",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4658,8 +4692,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
 					include,
+					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
 				);
 				INFOPLIST_FILE = "OC Share Sheet/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -4699,8 +4733,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
 					include,
+					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
 				);
 				INFOPLIST_FILE = "OC Share Sheet/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

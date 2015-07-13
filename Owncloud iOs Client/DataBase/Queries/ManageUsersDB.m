@@ -30,6 +30,8 @@
 #import "ownCloudExtApp-Swift.h"
 #elif SHARE_IN
 #import "OC_Share_Sheet-Swift.h"
+#elif TODAY_WIDGET
+#import "OCTodayWidget-Swift.h"
 #else
 #import "ownCloudExtAppFileProvider-Swift.h"
 #endif
