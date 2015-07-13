@@ -1354,7 +1354,6 @@
 		40E354E01A14FE36000E7FE4 /* sound_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sound_icon@3x.png"; sourceTree = "<group>"; };
 		40FF874119F81396008B7C62 /* OCKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCKeychain.h; sourceTree = "<group>"; };
 		40FF874219F81396008B7C62 /* OCKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCKeychain.m; sourceTree = "<group>"; };
-		591D77F71B4FF6740024A161 /* OCTodayWidget copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "OCTodayWidget copy-Info.plist"; path = "/Users/Javi/Documents/Workspace iOS/ios/OCTodayWidget copy-Info.plist"; sourceTree = "<absolute>"; };
 		593D531A17BF701800191846 /* SSOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSOViewController.h; path = Login/SSO/SSOViewController.h; sourceTree = "<group>"; };
 		593D531B17BF701800191846 /* SSOViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSOViewController.m; path = Login/SSO/SSOViewController.m; sourceTree = "<group>"; };
 		593D531C17BF701800191846 /* SSOViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SSOViewController.xib; path = Login/SSO/SSOViewController.xib; sourceTree = "<group>"; };
@@ -1683,7 +1682,6 @@
 				59DF70CB1B4E5E43005457F2 /* OCTodayWidget */,
 				1324297B15ADBB3700DF823E /* Frameworks */,
 				1324297915ADBB3700DF823E /* Products */,
-				591D77F71B4FF6740024A161 /* OCTodayWidget copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
