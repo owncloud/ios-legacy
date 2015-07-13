@@ -336,7 +336,7 @@
 		400A637C1B4FD75600890579 /* IFTTTTranslationAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A635F1B4FD75600890579 /* IFTTTTranslationAnimation.m */; };
 		400A637D1B4FD75600890579 /* IFTTTViewAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63611B4FD75600890579 /* IFTTTViewAnimation.m */; };
 		400A637E1B4FD75600890579 /* UIView+IFTTTJazzHands.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63631B4FD75600890579 /* UIView+IFTTTJazzHands.m */; };
-		400A63821B4FD94C00890579 /* test1.png in Resources */ = {isa = PBXBuildFile; fileRef = 400A63811B4FD94C00890579 /* test1.png */; };
+		400A63821B4FD94C00890579 /* iphoneAccounts.png in Resources */ = {isa = PBXBuildFile; fileRef = 400A63811B4FD94C00890579 /* iphoneAccounts.png */; };
 		4016E5C51A0CE9410022163C /* MainAppIcon_76_76@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4016E5C41A0CE9410022163C /* MainAppIcon_76_76@3x.png */; };
 		4026610C1A07926000517663 /* MainAppIcon_76-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4026610B1A07926000517663 /* MainAppIcon_76-76@2x.png */; };
 		402661141A07C66A00517663 /* Default-Landscape_375h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 402661121A07C66A00517663 /* Default-Landscape_375h@2x.png */; };
@@ -351,7 +351,10 @@
 		4030D8F51A16277100DB0871 /* file_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F21A16277100DB0871 /* file_icon.png */; };
 		4030D8F61A16277100DB0871 /* file_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F31A16277100DB0871 /* file_icon@2x.png */; };
 		4030D8F71A16277100DB0871 /* file_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F41A16277100DB0871 /* file_icon@3x.png */; };
-		404A90651B4FE0C000196BC2 /* iphoneAccounts.png in Resources */ = {isa = PBXBuildFile; fileRef = 404A90641B4FE0C000196BC2 /* iphoneAccounts.png */; };
+		403886581B53A8BA00F55ADA /* iphoneInstantUpload.png in Resources */ = {isa = PBXBuildFile; fileRef = 403886571B53A8BA00F55ADA /* iphoneInstantUpload.png */; };
+		403886601B53C82000F55ADA /* iphoneShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 4038865F1B53C82000F55ADA /* iphoneShare.png */; };
+		4038866C1B53D4CD00F55ADA /* iphoneFiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 4038866B1B53D4CD00F55ADA /* iphoneFiles.png */; };
+		4038866E1B53DD5800F55ADA /* owncloudLogoFiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 4038866D1B53DD5800F55ADA /* owncloudLogoFiles.png */; };
 		404FDA241A36E5E5008AB4E1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */; };
 		404FDA281A36EA9D008AB4E1 /* ManageLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 404FDA271A36EA9D008AB4E1 /* ManageLocation.m */; };
 		4052B4D81B4ECC75000788DA /* btnAllHelpGrey.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4D71B4ECC75000788DA /* btnAllHelpGrey.png */; };
@@ -1358,7 +1361,7 @@
 		400A63611B4FD75600890579 /* IFTTTViewAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTViewAnimation.m; sourceTree = "<group>"; };
 		400A63621B4FD75600890579 /* UIView+IFTTTJazzHands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+IFTTTJazzHands.h"; sourceTree = "<group>"; };
 		400A63631B4FD75600890579 /* UIView+IFTTTJazzHands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+IFTTTJazzHands.m"; sourceTree = "<group>"; };
-		400A63811B4FD94C00890579 /* test1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test1.png; sourceTree = "<group>"; };
+		400A63811B4FD94C00890579 /* iphoneAccounts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneAccounts.png; sourceTree = "<group>"; };
 		4016E5C41A0CE9410022163C /* MainAppIcon_76_76@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76_76@3x.png"; sourceTree = "<group>"; };
 		4026610B1A07926000517663 /* MainAppIcon_76-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76-76@2x.png"; sourceTree = "<group>"; };
 		402661121A07C66A00517663 /* Default-Landscape_375h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape_375h@2x.png"; sourceTree = "<group>"; };
@@ -1371,7 +1374,10 @@
 		4030D8F21A16277100DB0871 /* file_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_icon.png; sourceTree = "<group>"; };
 		4030D8F31A16277100DB0871 /* file_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@2x.png"; sourceTree = "<group>"; };
 		4030D8F41A16277100DB0871 /* file_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@3x.png"; sourceTree = "<group>"; };
-		404A90641B4FE0C000196BC2 /* iphoneAccounts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneAccounts.png; sourceTree = "<group>"; };
+		403886571B53A8BA00F55ADA /* iphoneInstantUpload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneInstantUpload.png; sourceTree = "<group>"; };
+		4038865F1B53C82000F55ADA /* iphoneShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneShare.png; sourceTree = "<group>"; };
+		4038866B1B53D4CD00F55ADA /* iphoneFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneFiles.png; sourceTree = "<group>"; };
+		4038866D1B53DD5800F55ADA /* owncloudLogoFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = owncloudLogoFiles.png; sourceTree = "<group>"; };
 		404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		404FDA261A36EA9D008AB4E1 /* ManageLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageLocation.h; sourceTree = "<group>"; };
 		404FDA271A36EA9D008AB4E1 /* ManageLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageLocation.m; sourceTree = "<group>"; };
@@ -2167,7 +2173,6 @@
 			isa = PBXGroup;
 			children = (
 				400A63251B4FD2C100890579 /* HelpGuide */,
-				4052B4AC1B4E951F000788DA /* HelpPageButtons */,
 				40CC7F0C1B4E665400231D73 /* Images.xcassets */,
 				1487F15E177C35AA004A1A5A /* ImageBranding */,
 				1487F1B7177C35AA004A1A5A /* ImageSystem */,
@@ -2668,6 +2673,7 @@
 		400A63251B4FD2C100890579 /* HelpGuide */ = {
 			isa = PBXGroup;
 			children = (
+				4052B4AC1B4E951F000788DA /* HelpPageButtons */,
 				400A63271B4FD2CD00890579 /* helpMultiaccount */,
 			);
 			name = HelpGuide;
@@ -2676,8 +2682,11 @@
 		400A63271B4FD2CD00890579 /* helpMultiaccount */ = {
 			isa = PBXGroup;
 			children = (
-				404A90641B4FE0C000196BC2 /* iphoneAccounts.png */,
-				400A63811B4FD94C00890579 /* test1.png */,
+				403886571B53A8BA00F55ADA /* iphoneInstantUpload.png */,
+				4038866B1B53D4CD00F55ADA /* iphoneFiles.png */,
+				4038865F1B53C82000F55ADA /* iphoneShare.png */,
+				400A63811B4FD94C00890579 /* iphoneAccounts.png */,
+				4038866D1B53DD5800F55ADA /* owncloudLogoFiles.png */,
 			);
 			name = helpMultiaccount;
 			sourceTree = "<group>";
@@ -3591,13 +3600,14 @@
 				14A87ADF1933390900D0D5AD /* FileDownloadingIcon.png in Resources */,
 				1487F208177C35AA004A1A5A /* MainAppIcon_29-29.png in Resources */,
 				1487F209177C35AA004A1A5A /* MainAppIcon_29-29@2x.png in Resources */,
-				400A63821B4FD94C00890579 /* test1.png in Resources */,
+				400A63821B4FD94C00890579 /* iphoneAccounts.png in Resources */,
 				14A7F7A018ED5781009AF347 /* presentation_icon@2x.png in Resources */,
 				EA42FA5A180C13710006DB7C /* cancel_download_white.png in Resources */,
 				1487F218177C35AA004A1A5A /* BackRootFolderIcon.png in Resources */,
 				400904DC1A02B54600E3DD15 /* MainAppIcon_60-60@3x.png in Resources */,
 				40E354D91A14FD66000E7FE4 /* pdf_icon@3x.png in Resources */,
 				1487F219177C35AA004A1A5A /* BackRootFolderIcon@2x.png in Resources */,
+				403886581B53A8BA00F55ADA /* iphoneInstantUpload.png in Resources */,
 				400904D61A02AE3300E3DD15 /* Default-667h@2x.png in Resources */,
 				13A5ADB718883C77000EB617 /* WhatsappShareipad.png in Resources */,
 				1487F21A177C35AA004A1A5A /* doc_icon.png in Resources */,
@@ -3615,6 +3625,7 @@
 				1487F228177C35AA004A1A5A /* image_icon.png in Resources */,
 				1487F229177C35AA004A1A5A /* image_icon@2x.png in Resources */,
 				1487F22A177C35AA004A1A5A /* image_icon@2x~ipad.png in Resources */,
+				4038866C1B53D4CD00F55ADA /* iphoneFiles.png in Resources */,
 				13B1DDE218EC1F69006166DC /* sharedItemWhite.png in Resources */,
 				4030D8F11A16275900DB0871 /* file_icon~ipad.png in Resources */,
 				14A4796F18EC708D003500BA /* FileFavoriteUpdatingIcon@2x.png in Resources */,
@@ -3664,6 +3675,7 @@
 				14A50E9F18F3FC9100506E2B /* SelectedFolderCell.xib in Resources */,
 				1487F242177C35AA004A1A5A /* zip_icon@2x~ipad.png in Resources */,
 				1487F243177C35AA004A1A5A /* zip_icon~ipad.png in Resources */,
+				403886601B53C82000F55ADA /* iphoneShare.png in Resources */,
 				1487F244177C35AA004A1A5A /* CredentialsError.png in Resources */,
 				EA42FA5B180C13710006DB7C /* cancel_download_white@2x.png in Resources */,
 				1487F245177C35AA004A1A5A /* CredentialsError@2x.png in Resources */,
@@ -3723,7 +3735,6 @@
 				13B1DDE318EC1F69006166DC /* sharedItemWhite@2x.png in Resources */,
 				4052B4D81B4ECC75000788DA /* btnAllHelpGrey.png in Resources */,
 				14EC1955195B297F00B02AB6 /* sharedItem.png in Resources */,
-				404A90651B4FE0C000196BC2 /* iphoneAccounts.png in Resources */,
 				1487F269177C35AA004A1A5A /* TSAlertViewMessageListViewShadow.png in Resources */,
 				13A9FCF417E9858C00FF48D7 /* Overlay@2x.png in Resources */,
 				40E354C91A14D6B2000E7FE4 /* openWithTB@3x.png in Resources */,
@@ -3743,6 +3754,7 @@
 				14A6115919346D0000AECA34 /* sharedItemSwipe.png in Resources */,
 				40E354CF1A14D6E8000E7FE4 /* deleteTB@3x.png in Resources */,
 				1487F276177C35AA004A1A5A /* server@2x.png in Resources */,
+				4038866E1B53DD5800F55ADA /* owncloudLogoFiles.png in Resources */,
 				4052B4E31B4ECF35000788DA /* btnHelpPage4.png in Resources */,
 				1487F277177C35AA004A1A5A /* user.png in Resources */,
 				1487F278177C35AA004A1A5A /* user@2x.png in Resources */,

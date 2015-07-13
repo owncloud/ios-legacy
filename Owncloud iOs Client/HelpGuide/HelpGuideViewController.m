@@ -25,8 +25,11 @@
 @property (nonatomic, strong) UIImageView *btnHelpPage5;
 
 //Multiaccount view
+@property (nonatomic, strong) UIImageView *iphoneInstantUpload;
+@property (nonatomic, strong) UIImageView *iphoneFiles;
+@property (nonatomic, strong) UIImageView *iphoneShare;
 @property (nonatomic, strong) UIImageView *iphoneAccounts;
-
+@property (nonatomic, strong) UIImageView *owncloudLogoFiles;
 
 @property (nonatomic, strong) UILabel *welcomeLabel;
 @property (nonatomic, strong) UILabel *firstLabel;
@@ -97,12 +100,18 @@
     self.owncloudLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"companyLogoHelp"]];
     [self.contentView addSubview:self.owncloudLogo];
     
-    self.wordmark = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ownCloud"]];
-    [self.contentView addSubview:self.wordmark];
+//    self.wordmark = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ownCloud"]];
+//    [self.contentView addSubview:self.wordmark];
     
     [self configureTextLabelsAndButtons];
     [self configurePageControlImages];
+    
+   // [self configureView0];
+    [self configureView1];
+    [self configureView2];
+    [self configureView3];
     [self configureView4];
+    [self configureView5];
 }
 
 - (void)configureTextLabelsAndButtons{
@@ -213,11 +222,29 @@
     [self.contentView addSubview:self.btnHelpPage5];
 }
 
+
+- (void)configureView1 {
+    self.iphoneInstantUpload = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iphoneInstantUpload"]];
+    [self.contentView addSubview:self.iphoneInstantUpload];
+}
+- (void)configureView2 {
+    self.iphoneFiles = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iphoneFiles"]];
+    [self.contentView addSubview:self.iphoneFiles];
+}
+- (void)configureView3 {
+    self.iphoneShare = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iphoneShare"]];
+    [self.contentView addSubview:self.iphoneShare];
+}
+
 - (void)configureView4 {
-    self.iphoneAccounts = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"test1"]];
+    self.iphoneAccounts = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iphoneAccounts"]];
     [self.contentView addSubview:self.iphoneAccounts];
 }
 
+- (void)configureView5 {
+    self.owncloudLogoFiles = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"owncloudLogoFiles"]];
+    [self.contentView addSubview:self.owncloudLogoFiles];
+}
 
 #pragma mark Animations
 
@@ -226,13 +253,77 @@
     [self configureScrollViewAnimations];
     [self configurePageControlAnimations];
     
+    [self configureView1Animations];
+    [self configureView2Animations];
+    [self configureView3Animations];
     [self configureView4Animations];
-    
+    [self configureView5Animations];
+
     [self configureOwnCloudLogoAnimations];
-    [self configureWordmarkAnimations];
+    //[self configureWordmarkAnimations];
 
     [self configureLabelAnimations];
     [self animateCurrentFrame];
+}
+
+
+- (void) configureView1Animations {
+    [self keepView:self.iphoneInstantUpload onPages:@[@(1)]];
+    
+    NSLayoutConstraint *iphoneInstantUploadCenterYConstraint = [NSLayoutConstraint constraintWithItem:self.iphoneInstantUpload
+                                                                                       attribute:NSLayoutAttributeCenterY
+                                                                                       relatedBy:NSLayoutRelationEqual
+                                                                                          toItem:self.contentView
+                                                                                       attribute:NSLayoutAttributeCenterY
+                                                                                      multiplier:1.f constant:0.f];
+    [self.contentView addConstraint:iphoneInstantUploadCenterYConstraint];
+    
+    // fade the owncloud in on page 0 and out on page 2
+    IFTTTAlphaAnimation *iphoneInstantUploadAlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.iphoneInstantUpload];
+    [iphoneInstantUploadAlphaAnimation addKeyframeForTime:0 alpha:0.f];
+    [iphoneInstantUploadAlphaAnimation addKeyframeForTime:1 alpha:1.f];
+    [iphoneInstantUploadAlphaAnimation addKeyframeForTime:2 alpha:0.f];
+    [self.animator addAnimation:iphoneInstantUploadAlphaAnimation];
+    
+}
+
+- (void) configureView2Animations {
+    [self keepView:self.iphoneFiles onPages:@[ @(2)]];
+    
+    NSLayoutConstraint *iphoneFilesCenterYConstraint = [NSLayoutConstraint constraintWithItem:self.iphoneFiles
+                                                                                            attribute:NSLayoutAttributeCenterY
+                                                                                            relatedBy:NSLayoutRelationEqual
+                                                                                               toItem:self.contentView
+                                                                                            attribute:NSLayoutAttributeCenterY
+                                                                                           multiplier:0.8f constant:0.f];
+    [self.contentView addConstraint:iphoneFilesCenterYConstraint];
+    
+    // fade the owncloud in on page 0 and out on page 2
+    IFTTTAlphaAnimation *iphoneFilesAlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.iphoneFiles];
+    [iphoneFilesAlphaAnimation addKeyframeForTime:1 alpha:0.f];
+    [iphoneFilesAlphaAnimation addKeyframeForTime:2 alpha:1.f];
+    [iphoneFilesAlphaAnimation addKeyframeForTime:3 alpha:0.f];
+    [self.animator addAnimation:iphoneFilesAlphaAnimation];
+}
+
+- (void) configureView3Animations {
+    [self keepView:self.iphoneShare onPages:@[@(3)]];
+    
+    NSLayoutConstraint *iphoneShareCenterYConstraint = [NSLayoutConstraint constraintWithItem:self.iphoneShare
+                                                                                            attribute:NSLayoutAttributeCenterY
+                                                                                            relatedBy:NSLayoutRelationEqual
+                                                                                               toItem:self.contentView
+                                                                                            attribute:NSLayoutAttributeCenterY
+                                                                                           multiplier:0.8f constant:0.f];
+    [self.contentView addConstraint:iphoneShareCenterYConstraint];
+    
+    // fade the owncloud in on page 0 and out on page 2
+    IFTTTAlphaAnimation *iphoneShareAlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.iphoneShare];
+    [iphoneShareAlphaAnimation addKeyframeForTime:2 alpha:0.f];
+    [iphoneShareAlphaAnimation addKeyframeForTime:3 alpha:1.f];
+    [iphoneShareAlphaAnimation addKeyframeForTime:4 alpha:0.f];
+    [self.animator addAnimation:iphoneShareAlphaAnimation];
+    
 }
 
 - (void) configureView4Animations {
@@ -248,14 +339,35 @@
     
     // fade the owncloud in on page 0 and out on page 2
     IFTTTAlphaAnimation *iphoneAccountAlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.iphoneAccounts];
-    [iphoneAccountAlphaAnimation addKeyframeForTime:0 alpha:0.f];
-    [iphoneAccountAlphaAnimation addKeyframeForTime:1 alpha:0.f];
-    [iphoneAccountAlphaAnimation addKeyframeForTime:2 alpha:0.f];
     [iphoneAccountAlphaAnimation addKeyframeForTime:3 alpha:0.f];
     [iphoneAccountAlphaAnimation addKeyframeForTime:4 alpha:1.f];
     [iphoneAccountAlphaAnimation addKeyframeForTime:5 alpha:0.f];
     [self.animator addAnimation:iphoneAccountAlphaAnimation];
 
+}
+
+
+- (void) configureView5Animations {
+    [self keepView:self.owncloudLogoFiles onPages:@[@(5)]];
+    
+    NSLayoutConstraint *owncloudLogoFilesCenterYConstraint = [NSLayoutConstraint constraintWithItem:self.owncloudLogoFiles
+                                                                                       attribute:NSLayoutAttributeCenterY
+                                                                                       relatedBy:NSLayoutRelationEqual
+                                                                                          toItem:self.contentView
+                                                                                       attribute:NSLayoutAttributeCenterY
+                                                                                      multiplier:0.8f constant:0.f];
+    [self.contentView addConstraint:owncloudLogoFilesCenterYConstraint];
+    
+    // fade the owncloud in on page 0 and out on page 2
+    IFTTTAlphaAnimation *owncloudLogoFilesAlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.owncloudLogoFiles];
+    [owncloudLogoFilesAlphaAnimation addKeyframeForTime:0 alpha:0.f];
+    [owncloudLogoFilesAlphaAnimation addKeyframeForTime:1 alpha:0.f];
+    [owncloudLogoFilesAlphaAnimation addKeyframeForTime:2 alpha:0.f];
+    [owncloudLogoFilesAlphaAnimation addKeyframeForTime:3 alpha:0.f];
+    [owncloudLogoFilesAlphaAnimation addKeyframeForTime:4 alpha:0.f];
+    [owncloudLogoFilesAlphaAnimation addKeyframeForTime:5 alpha:1.f];
+    [self.animator addAnimation:owncloudLogoFilesAlphaAnimation];
+    
 }
 
 - (void)configureScrollViewAnimations
@@ -408,7 +520,7 @@
     // now, we animate the ownCloudLogo
     // keep the owncloudLogo centered when we're on pages 1 and 2.
     // It will slide from the right between pages 0 and 1, and slide out to the left between pages 2 and 3.
-    [self keepView:self.owncloudLogo onPages:@[@(0), @(1), @(2) ]];
+    [self keepView:self.owncloudLogo onPages:@[@(0), @(1), @(2), @(5) ]];
     
     NSLayoutConstraint *ownCloudLogoCenterYConstraint = [NSLayoutConstraint constraintWithItem:self.owncloudLogo
                                                                                 attribute:NSLayoutAttributeCenterY
@@ -426,9 +538,10 @@
     [ownCloudLogoCenterYAnimation addKeyframeForTime:0 multiplier:0.1f withEasingFunction:IFTTTEasingFunctionEaseOutQuad];
     [ownCloudLogoCenterYAnimation addKeyframeForTime:1 multiplier:-0.2f];
     [ownCloudLogoCenterYAnimation addKeyframeForTime:2 multiplier:0.2f];
+    [ownCloudLogoCenterYAnimation addKeyframeForTime:5 multiplier:-0.0f withEasingFunction:IFTTTEasingFunctionEaseOutQuad];
     [self.animator addAnimation:ownCloudLogoCenterYAnimation];
     
-    // Rotate the wordmark a full circle from page 1 to 2
+    // Rotate the owncloudLogo a full circle from page 1 to 2
     IFTTTRotationAnimation *ownCloudLogoRotationAnimation = [IFTTTRotationAnimation animationWithView:self.owncloudLogo];
     [ownCloudLogoRotationAnimation addKeyframeForTime:0 rotation:0.f];
     [ownCloudLogoRotationAnimation addKeyframeForTime:1 rotation:360.f];
@@ -439,6 +552,7 @@
     IFTTTScaleAnimation *ownCloudLogoScaleAnimation = [IFTTTScaleAnimation animationWithView:self.owncloudLogo];
     [ownCloudLogoScaleAnimation addKeyframeForTime:0 scale:1.f];
     [ownCloudLogoScaleAnimation addKeyframeForTime:1 scale:0.80f];
+    [ownCloudLogoScaleAnimation addKeyframeForTime:5 scale:1.f];
     [self.animator addAnimation:ownCloudLogoScaleAnimation];
     
     // fade the owncloud in on page 0 and out on page 2
@@ -448,43 +562,43 @@
     [owncloudLogoAlphaAnimation addKeyframeForTime:2 alpha:1.f];
     [owncloudLogoAlphaAnimation addKeyframeForTime:3 alpha:0.f];
     [owncloudLogoAlphaAnimation addKeyframeForTime:4 alpha:0.f];
-    [owncloudLogoAlphaAnimation addKeyframeForTime:5 alpha:0.f];
+    [owncloudLogoAlphaAnimation addKeyframeForTime:5 alpha:1.f];
     [self.animator addAnimation:owncloudLogoAlphaAnimation];
 }
 
-- (void)configureWordmarkAnimations
-{
-    // let's animate the wordmark
-    // keep the wordmark centered on pages 1 and 2, slide it in fast from the right between page 0 and 1, and slide it out fast to the left between pages 2 and 3.
-    [self keepView:self.wordmark
-           onPages:@[ @(2), @(1), @(2), @(1) ]
-           atTimes:@[ @(0), @(1), @(2), @(3) ]];
-    
-    // keep the wordmark vertically centered on top of the ownCloudLogo
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.wordmark
-                                                                 attribute:NSLayoutAttributeCenterY
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.owncloudLogo
-                                                                 attribute:NSLayoutAttributeCenterY
-                                                                multiplier:0.5f constant:0.f]];
-    
-    // Rotate the wordmark a full circle from page 1 to 2
-    IFTTTRotationAnimation *wordmarkRotationAnimation = [IFTTTRotationAnimation animationWithView:self.wordmark];
-    [wordmarkRotationAnimation addKeyframeForTime:1 rotation:0.f];
-    [wordmarkRotationAnimation addKeyframeForTime:2 rotation:360.f];
-    [self.animator addAnimation:wordmarkRotationAnimation];
+//- (void)configureWordmarkAnimations
+//{
+//    // let's animate the wordmark
+//    // keep the wordmark centered on pages 1 and 2, slide it in fast from the right between page 0 and 1, and slide it out fast to the left between pages 2 and 3.
+//    [self keepView:self.wordmark
+//           onPages:@[ @(2), @(1), @(2), @(1) ]
+//           atTimes:@[ @(0), @(1), @(2), @(3) ]];
+//    
+//    // keep the wordmark vertically centered on top of the ownCloudLogo
+//    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.wordmark
+//                                                                 attribute:NSLayoutAttributeCenterY
+//                                                                 relatedBy:NSLayoutRelationEqual
+//                                                                    toItem:self.owncloudLogo
+//                                                                 attribute:NSLayoutAttributeCenterY
+//                                                                multiplier:0.5f constant:0.f]];
+//    
 //    // Rotate the wordmark a full circle from page 1 to 2
 //    IFTTTRotationAnimation *wordmarkRotationAnimation = [IFTTTRotationAnimation animationWithView:self.wordmark];
 //    [wordmarkRotationAnimation addKeyframeForTime:1 rotation:0.f];
 //    [wordmarkRotationAnimation addKeyframeForTime:2 rotation:360.f];
 //    [self.animator addAnimation:wordmarkRotationAnimation];
-    
-    // Scale down the wordmark by 75% between pages 1 and 2
-    IFTTTScaleAnimation *wordmarkScaleAnimation = [IFTTTScaleAnimation animationWithView:self.wordmark];
-    [wordmarkScaleAnimation addKeyframeForTime:1 scale:1.f];
-    [wordmarkScaleAnimation addKeyframeForTime:2 scale:0.75f];
-    [self.animator addAnimation:wordmarkScaleAnimation];
-}
+////    // Rotate the wordmark a full circle from page 1 to 2
+////    IFTTTRotationAnimation *wordmarkRotationAnimation = [IFTTTRotationAnimation animationWithView:self.wordmark];
+////    [wordmarkRotationAnimation addKeyframeForTime:1 rotation:0.f];
+////    [wordmarkRotationAnimation addKeyframeForTime:2 rotation:360.f];
+////    [self.animator addAnimation:wordmarkRotationAnimation];
+//    
+//    // Scale down the wordmark by 75% between pages 1 and 2
+//    IFTTTScaleAnimation *wordmarkScaleAnimation = [IFTTTScaleAnimation animationWithView:self.wordmark];
+//    [wordmarkScaleAnimation addKeyframeForTime:1 scale:1.f];
+//    [wordmarkScaleAnimation addKeyframeForTime:2 scale:0.75f];
+//    [self.animator addAnimation:wordmarkScaleAnimation];
+//}
 
 - (void)configureLabelAnimations
 {
@@ -501,39 +615,41 @@
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeCenterY
-                                                                multiplier:1.4f constant:0.f]];
+                                                                multiplier:1.5f constant:0.f]];
     
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.secondLabel
                                                                  attribute:NSLayoutAttributeCenterY
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeCenterY
-                                                                multiplier:1.4f constant:0.f]];
+                                                                multiplier:1.5f constant:0.f]];
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.thirdLabel
                                                                  attribute:NSLayoutAttributeCenterY
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeCenterY
-                                                                multiplier:1.4f constant:0.f]];
+                                                                multiplier:1.5f constant:0.f]];
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.fourthLabel
                                                                  attribute:NSLayoutAttributeCenterY
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeCenterY
-                                                                multiplier:1.4f constant:0.f]];
+                                                                multiplier:1.5f constant:0.f]];
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.fifthLabel
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                multiplier:1.2f constant:0.f]];
+    
+    
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.signInButton
                                                                  attribute:NSLayoutAttributeCenterY
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeCenterY
                                                                 multiplier:1.4f constant:0.f]];
     
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.signInButton
-                                                                 attribute:NSLayoutAttributeBottom
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeBottom
-                                                                multiplier:1.2f constant:0.f]];
     //subtitles
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageWelcomeLabel
                                                                  attribute:NSLayoutAttributeCenterY
@@ -580,6 +696,8 @@
     [self keepView:self.fourthLabel onPage:4];
     [self keepView:self.fifthLabel onPage:5];
     
+    [self keepView:self.signInButton onPage:5];
+    
     [self keepView:self.messageWelcomeLabel onPage:0];
     [self keepView:self.messageFirstLabel onPage:1];
     [self keepView:self.messageSecondLabel onPage:2];
@@ -587,7 +705,7 @@
     [self keepView:self.messageFourthLabel onPage:4];
     //[self keepView:self.messageFifthLabel onPage:5];
     
-    [self keepView:self.signInButton onPage:5];
+
     
     // apply a 3D zoom animation to the first label
     IFTTTTransform3DAnimation * labelTransform = [IFTTTTransform3DAnimation animationWithView:self.welcomeLabel];
@@ -619,14 +737,22 @@
     
     // Fade out the last label by dragging on the last page
     IFTTTAlphaAnimation *lastLabelAlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.fifthLabel];
-    [lastLabelAlphaAnimation addKeyframeForTime:3 alpha:1.f];
-    [lastLabelAlphaAnimation addKeyframeForTime:3.35f alpha:0.f];
+    [lastLabelAlphaAnimation addKeyframeForTime:5 alpha:1.f];
+    [lastLabelAlphaAnimation addKeyframeForTime:5.35f alpha:0.f];
     [self.animator addAnimation:lastLabelAlphaAnimation];
 }
 
 -(void)stayPressed:(UIButton *) sender {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     [app showLoginView];
+}
+
+- (NSUInteger) supportedInterfaceOrientation {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL) shouldAutorotate {
+    return NO;
 }
 
 @end
