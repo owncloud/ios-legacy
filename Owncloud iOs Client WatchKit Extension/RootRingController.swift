@@ -16,6 +16,7 @@ class RootRingController: WKInterfaceController {
     @IBOutlet var progressGroup: WKInterfaceGroup!
     @IBOutlet var sizeLabel: WKInterfaceLabel!
     @IBOutlet var sizeDetailLabel: WKInterfaceLabel!
+    @IBOutlet weak var infoTable: WKInterfaceTable!
 
 
     override func awakeWithContext(context: AnyObject?) {
@@ -28,7 +29,7 @@ class RootRingController: WKInterfaceController {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
         
-        self.getSpaceData()
+        self.refreshData()
         
     }
 
@@ -37,11 +38,24 @@ class RootRingController: WKInterfaceController {
         super.didDeactivate()
     }
     
+    func refreshData(){
+        
+        self.getSpaceData()
+        self.loadListTable()
+    }
+    
+    @IBAction func touchClearCacheButton(sender: AnyObject){
+        
+        DiskDataManager.removeImageDownloadedFiles()
+        
+        self.refreshData()
+    }
+    
     
     func getSpaceData(){
         
         let usedSpace: NSNumber = DiskDataManager.getOwnCloudUsedSpace()
-        let (imageSpace, audioSpace, videoSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
+        let (imageSpace, audioSpace, videoSpace, documentSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
 
         
         let imageSpaceString: String = DiskDataManager.memoryFormatter(imageSpace.longLongValue)
@@ -98,6 +112,25 @@ class RootRingController: WKInterfaceController {
         self.sizeLabel.setText(sizeUsed)
         self.sizeDetailLabel.setText(detail)
     
+    }
+    
+    func loadListTable (){
+        
+        let (imageSpace, audioSpace, videoSpace, documentSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
+        let freeSpace: NSNumber = DiskDataManager.getTotalFreeDiskSpace()
+        
+        infoTable.setNumberOfRows(2, withRowType: "InfoDataRow")
+        
+        let row1 = infoTable.rowControllerAtIndex(0) as! InfoDataRow
+        
+        row1.infoHeader.setText("IMAGE SPACE USED")
+        row1.detailText.setText(DiskDataManager.memoryFormatter(imageSpace.longLongValue))
+        
+        let row2 = infoTable.rowControllerAtIndex(1) as! InfoDataRow
+        
+        row2.infoHeader.setText("SPACE FREE IN iPHONE")
+        row2.detailText.setText(DiskDataManager.memoryFormatter(freeSpace.longLongValue))
+        
     }
 
 }

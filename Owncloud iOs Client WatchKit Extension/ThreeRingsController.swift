@@ -55,7 +55,7 @@ class ThreeRingsController: WKInterfaceController {
     func getSpaceData(){
         
         let usedSpace: NSNumber = DiskDataManager.getOwnCloudUsedSpace()
-        let (imageSpace, audioSpace, videoSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
+        let (imageSpace, audioSpace, videoSpace, documentSpace) = DiskDataManager.getOwnCloudUsedSpaceByType()
         let mediaSpace = NSNumber(unsignedLongLong: audioSpace.unsignedLongLongValue + videoSpace.unsignedLongLongValue)
         let otherSpace = NSNumber(float: usedSpace.floatValue - (imageSpace.floatValue + mediaSpace.floatValue))
         

@@ -90,7 +90,7 @@ class DiskDataManager {
         return totalSizeNumber
     }
     
-    class func getOwnCloudUsedSpaceByType() -> (imageSpace: NSNumber, audioSpace: NSNumber, videoSpace: NSNumber){
+    class func getOwnCloudUsedSpaceByType() -> (imageSpace: NSNumber, audioSpace: NSNumber, videoSpace: NSNumber, documentSpace: NSNumber){
         
         let ownCloudPath:String = UtilsUrls.getOwnCloudFilePath()
         let files : NSArray = NSFileManager.defaultManager().subpathsOfDirectoryAtPath(ownCloudPath, error: nil)!
@@ -98,6 +98,8 @@ class DiskDataManager {
         var totalImageSize: UInt64 = 0
         var totalAudioSize: UInt64 = 0
         var totalVideoSize: UInt64 = 0
+        var totalDocumentsSize: UInt64 = 0
+        
         let fileManager = NSFileManager.defaultManager()
         while let file:String = dirEnumerator.nextObject() as? String
         {
@@ -115,14 +117,19 @@ class DiskDataManager {
                 if FileNameUtils.isAudioSupportedThisFile(file.lastPathComponent){
                     totalAudioSize += attributes.fileSize()
                 }
+                
+                if FileNameUtils.isOfficeSupportedThisFile(file.lastPathComponent){
+                    totalDocumentsSize += attributes.fileSize()
+                }
             }
         }
         
         let imagesSize: NSNumber = NSNumber(unsignedLongLong: totalImageSize)
         let audioSize: NSNumber = NSNumber(unsignedLongLong: totalAudioSize)
         let videoSize: NSNumber = NSNumber(unsignedLongLong: totalVideoSize)
+        let documentSize: NSNumber = NSNumber(unsignedLongLong: totalDocumentsSize)
         
-        return (imagesSize, audioSize, videoSize)
+        return (imagesSize, audioSize, videoSize, documentSize)
         
     }
     

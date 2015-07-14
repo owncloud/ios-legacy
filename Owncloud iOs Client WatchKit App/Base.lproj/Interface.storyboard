@@ -10,15 +10,15 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="RootRingController" customModule="Owncloud_iOs_Client_WatchKit_Extension">
                     <items>
-                        <group width="1" height="1" alignment="center" verticalAlignment="center" backgroundImage="images_ring-0" contentMode="scaleAspectFit" layout="vertical" id="bRP-6i-6zE" userLabel="Group Image">
+                        <group width="1" height="170" alignment="left" backgroundImage="images_ring-0" contentMode="scaleAspectFit" layout="vertical" id="bRP-6i-6zE" userLabel="Group Image">
                             <items>
                                 <group alignment="left" layout="vertical" id="tOH-26-eJ7" userLabel="Icon Group">
                                     <items>
                                         <imageView width="10" height="7" alignment="center" image="image_icon" contentMode="scaleAspectFit" id="d1s-Uk-odC"/>
                                     </items>
-                                    <edgeInsets key="margins" left="75" right="0.0" top="15" bottom="0.0"/>
+                                    <edgeInsets key="margins" left="75" right="0.0" top="17" bottom="0.0"/>
                                     <variation key="device=watch38mm">
-                                        <edgeInsets key="margins" left="65" right="0.0" top="11" bottom="0.0"/>
+                                        <edgeInsets key="margins" left="65" right="0.0" top="13" bottom="0.0"/>
                                     </variation>
                                 </group>
                                 <group width="100" height="56" alignment="center" verticalAlignment="center" layout="vertical" id="TMx-3L-KnE">
@@ -34,8 +34,41 @@
                                 </group>
                             </items>
                         </group>
+                        <group width="1" alignment="center" layout="vertical" id="RlX-Cm-M2U">
+                            <items>
+                                <table alignment="left" id="KIz-c6-mal">
+                                    <items>
+                                        <tableRow identifier="InfoDataRow" selectable="NO" id="3El-uM-0wp" customClass="InfoDataRow" customModule="Owncloud_iOs_Client_WatchKit_Extension">
+                                            <group key="rootItem" width="1" height="40" alignment="left" layout="vertical" id="Tyh-jX-w18">
+                                                <items>
+                                                    <label width="1" height="11" alignment="left" text="DATA USED" id="0ds-L2-Dr4">
+                                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <fontDescription key="font" type="system" pointSize="11"/>
+                                                    </label>
+                                                    <label width="1" height="18" alignment="left" text="550MB" id="Rzi-em-sbT">
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <fontDescription key="font" type="system" pointSize="18"/>
+                                                    </label>
+                                                </items>
+                                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            </group>
+                                            <connections>
+                                                <outlet property="detailText" destination="Rzi-em-sbT" id="3B7-gf-Sto"/>
+                                                <outlet property="infoHeader" destination="0ds-L2-Dr4" id="rUV-2C-aTv"/>
+                                            </connections>
+                                        </tableRow>
+                                    </items>
+                                </table>
+                                <button width="1" alignment="left" title="Clear Cache" id="gG8-15-NM0">
+                                    <connections>
+                                        <action selector="touchClearCacheButton:" destination="AgC-eL-Hgc" id="0DL-di-ecS"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
                     </items>
                     <connections>
+                        <outlet property="infoTable" destination="KIz-c6-mal" id="VoT-lo-TNx"/>
                         <outlet property="progressGroup" destination="bRP-6i-6zE" id="9pR-VV-a40"/>
                         <outlet property="sizeDetailLabel" destination="8Os-iR-nlJ" id="yXA-Pe-Et9"/>
                         <outlet property="sizeLabel" destination="Cf3-Kk-KwR" id="E8t-QF-79A"/>
@@ -43,7 +76,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="86" y="166"/>
+            <point key="canvasLocation" x="-52" y="164.25"/>
         </scene>
         <!--Second Ring Controller-->
         <scene sceneID="9Ka-P5-psl">
@@ -56,9 +89,9 @@
                                     <items>
                                         <imageView width="10" height="7" alignment="center" image="media_icon" contentMode="scaleAspectFit" id="rsb-m5-Crk"/>
                                     </items>
-                                    <edgeInsets key="margins" left="75" right="0.0" top="15" bottom="0.0"/>
+                                    <edgeInsets key="margins" left="75" right="0.0" top="17" bottom="0.0"/>
                                     <variation key="device=watch38mm">
-                                        <edgeInsets key="margins" left="65" right="0.0" top="11" bottom="0.0"/>
+                                        <edgeInsets key="margins" left="65" right="0.0" top="13" bottom="0.0"/>
                                     </variation>
                                 </group>
                                 <group width="100" height="56" alignment="center" verticalAlignment="center" layout="vertical" id="VbU-Bl-yfD">
@@ -116,22 +149,22 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="331" y="217.5"/>
+            <point key="canvasLocation" x="178" y="164.5"/>
         </scene>
         <!--Third Ring Controller-->
         <scene sceneID="EzW-m4-vpi">
             <objects>
                 <controller id="mbL-g6-0cE" customClass="ThirdRingController" customModule="Owncloud_iOs_Client_WatchKit_Extension">
                     <items>
-                        <group width="1" height="1" alignment="center" backgroundImage="other_ring-0" contentMode="scaleAspectFit" layout="vertical" id="Ft5-bT-Zzl" userLabel="Group Image">
+                        <group width="1" height="171" alignment="center" backgroundImage="other_ring-0" contentMode="scaleAspectFit" layout="vertical" id="Ft5-bT-Zzl" userLabel="Group Image">
                             <items>
                                 <group alignment="left" layout="vertical" id="XWe-db-xZV" userLabel="Icon Group">
                                     <items>
                                         <imageView width="10" height="7" alignment="center" image="other_icon" contentMode="scaleAspectFit" id="E82-vB-s6Y"/>
                                     </items>
-                                    <edgeInsets key="margins" left="75" right="0.0" top="15" bottom="0.0"/>
+                                    <edgeInsets key="margins" left="75" right="0.0" top="17" bottom="0.0"/>
                                     <variation key="device=watch38mm">
-                                        <edgeInsets key="margins" left="65" right="0.0" top="11" bottom="0.0"/>
+                                        <edgeInsets key="margins" left="65" right="0.0" top="13" bottom="0.0"/>
                                     </variation>
                                 </group>
                                 <group width="100" height="56" alignment="center" verticalAlignment="center" layout="vertical" id="e00-09-YLl">
@@ -147,15 +180,48 @@
                                 </group>
                             </items>
                         </group>
+                        <group width="1" alignment="center" layout="vertical" id="RrB-lh-S8W">
+                            <items>
+                                <table alignment="left" id="B8d-uV-iJp">
+                                    <items>
+                                        <tableRow identifier="InfoDataRow" selectable="NO" id="VfN-eW-4Sc" customClass="InfoDataRow" customModule="Owncloud_iOs_Client_WatchKit_Extension">
+                                            <group key="rootItem" width="1" height="40" alignment="left" layout="vertical" id="fzC-d2-nTu">
+                                                <items>
+                                                    <label width="1" height="11" alignment="left" text="DATA USED" id="UM5-1U-ygj">
+                                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <fontDescription key="font" type="system" pointSize="11"/>
+                                                    </label>
+                                                    <label width="1" height="18" alignment="left" text="550MB" id="XP5-c6-5KD">
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <fontDescription key="font" type="system" pointSize="18"/>
+                                                    </label>
+                                                </items>
+                                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            </group>
+                                            <connections>
+                                                <outlet property="detailText" destination="XP5-c6-5KD" id="2km-mC-0gS"/>
+                                                <outlet property="infoHeader" destination="UM5-1U-ygj" id="gwY-WB-nTe"/>
+                                            </connections>
+                                        </tableRow>
+                                    </items>
+                                </table>
+                                <button width="1" alignment="left" title="Clear Cache" id="y5u-IM-aBf">
+                                    <connections>
+                                        <action selector="touchClearCacheButton:" destination="mbL-g6-0cE" id="i0C-uh-PQd"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
                     </items>
                     <connections>
+                        <outlet property="infoTable" destination="B8d-uV-iJp" id="Hgp-DT-cvE"/>
                         <outlet property="progressGroup" destination="Ft5-bT-Zzl" id="JDS-rm-Ka0"/>
                         <outlet property="sizeDetailLabel" destination="ULR-mo-puJ" id="OuM-gQ-enE"/>
                         <outlet property="sizeLabel" destination="0tF-Tg-HRz" id="DxG-0H-3fj"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="652" y="217"/>
+            <point key="canvasLocation" x="403" y="165"/>
         </scene>
         <!--Three Rings Controller-->
         <scene sceneID="85Q-OM-kxu">
@@ -240,7 +306,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="-184" y="217.5"/>
+            <point key="canvasLocation" x="-290" y="164.5"/>
         </scene>
         <!--Glance Interface Controller-->
         <scene sceneID="rjY-Ar-IMT">
