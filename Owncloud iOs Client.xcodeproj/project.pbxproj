@@ -2674,21 +2674,13 @@
 			isa = PBXGroup;
 			children = (
 				4052B4AC1B4E951F000788DA /* HelpPageButtons */,
-				400A63271B4FD2CD00890579 /* helpMultiaccount */,
-			);
-			name = HelpGuide;
-			sourceTree = "<group>";
-		};
-		400A63271B4FD2CD00890579 /* helpMultiaccount */ = {
-			isa = PBXGroup;
-			children = (
 				403886571B53A8BA00F55ADA /* iphoneInstantUpload.png */,
 				4038866B1B53D4CD00F55ADA /* iphoneFiles.png */,
 				4038865F1B53C82000F55ADA /* iphoneShare.png */,
 				400A63811B4FD94C00890579 /* iphoneAccounts.png */,
 				4038866D1B53DD5800F55ADA /* owncloudLogoFiles.png */,
 			);
-			name = helpMultiaccount;
+			path = HelpGuide;
 			sourceTree = "<group>";
 		};
 		404FDA251A36E60A008AB4E1 /* Location */ = {
@@ -2711,7 +2703,7 @@
 				4052B4DF1B4ECF35000788DA /* btnHelpPage4.png */,
 				4052B4E01B4ECF35000788DA /* btnHelpPage5.png */,
 			);
-			name = HelpPageButtons;
+			path = HelpPageButtons;
 			sourceTree = "<group>";
 		};
 		40A969DD1A5EDF900046A36C /* InstantUpload */ = {
