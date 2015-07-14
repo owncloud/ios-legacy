@@ -64,8 +64,15 @@ class ThirdRingController: WKInterfaceController {
     
     func calculateProgress (usedSpace: NSNumber, otherSpace: NSNumber){
         
-        let otherPercent = (otherSpace.floatValue * 100.0) / usedSpace.floatValue
-        var otherProgress: Int = Int((otherPercent * 30) / 100)
+        var otherProgress: Int = 0
+        
+        if usedSpace != 0{
+            
+            let otherPercent = (otherSpace.floatValue * 100.0) / usedSpace.floatValue
+            otherProgress = Int((otherPercent * 30) / 100)
+            
+        }
+
         self.updateRingWithProgress(otherProgress)
         
     }

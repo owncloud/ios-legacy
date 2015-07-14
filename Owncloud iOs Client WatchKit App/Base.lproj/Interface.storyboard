@@ -311,15 +311,63 @@
         <!--Glance Interface Controller-->
         <scene sceneID="rjY-Ar-IMT">
             <objects>
-                <glanceController spacing="0.0" id="Sv0-Ai-Zie" customClass="GlanceController" customModule="Owncloud_iOs_Client_WatchKit_App" customModuleProvider="target">
+                <glanceController spacing="0.0" topTemplateType="body1Group" id="Sv0-Ai-Zie" customClass="GlanceController" customModule="Owncloud_iOs_Client_WatchKit_App" customModuleProvider="target">
                     <items>
-                        <group alignment="left" id="gv7-I2-MZq"/>
-                        <group alignment="left" id="eew-Gs-W6Y"/>
+                        <label alignment="left" text="ownCloud" id="RpQ-LR-yWU"/>
+                        <group alignment="left" layout="vertical" id="gv7-I2-MZq">
+                            <items>
+                                <label width="136" height="1" alignment="center" text="Space Used" textAlignment="center" id="aSh-TD-jIO">
+                                    <fontDescription key="font" type="system" pointSize="20"/>
+                                </label>
+                            </items>
+                        </group>
+                        <group alignment="left" layout="vertical" id="eew-Gs-W6Y">
+                            <items>
+                                <group width="1" height="1" alignment="left" backgroundImage="out_kind_ring-0" contentMode="scaleAspectFit" layout="vertical" id="SGY-gH-8Dh" userLabel="OutRing">
+                                    <items>
+                                        <group width="1" height="1" alignment="left" backgroundImage="middle_kind_ring-0" contentMode="scaleAspectFit" layout="vertical" id="rD5-M3-gHn" userLabel="MiddleRing">
+                                            <items>
+                                                <group width="1" height="1" alignment="left" backgroundImage="inner_kind_ring-0" contentMode="scaleAspectFit" layout="vertical" id="kOb-bT-17y" userLabel="InnerRing">
+                                                    <items>
+                                                        <group height="73" alignment="left" verticalAlignment="center" layout="vertical" spacing="0.0" id="qSU-dc-3eC" userLabel="Index">
+                                                            <items>
+                                                                <label width="1" height="11" alignment="left" text="IMAGES" textAlignment="right" id="cdc-80-Ueq">
+                                                                    <color key="textColor" red="0.32014384340000002" green="0.54412201510000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <fontDescription key="font" type="system" pointSize="11"/>
+                                                                </label>
+                                                                <label width="1" height="11" alignment="left" text="MEDIA" textAlignment="right" id="lNz-7U-1Oh">
+                                                                    <color key="textColor" red="0.50196081400000003" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <fontDescription key="font" type="system" pointSize="11"/>
+                                                                </label>
+                                                                <label width="1" height="11" alignment="left" text="OTHER" textAlignment="right" id="4u0-SD-D7t">
+                                                                    <color key="textColor" red="1" green="0.89461884349999998" blue="0.28580168859999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <fontDescription key="font" type="system" pointSize="11"/>
+                                                                </label>
+                                                            </items>
+                                                            <edgeInsets key="margins" left="0.0" right="72" top="19" bottom="0.0"/>
+                                                            <variation key="device=watch38mm">
+                                                                <edgeInsets key="margins" left="0.0" right="68" top="19" bottom="0.0"/>
+                                                            </variation>
+                                                        </group>
+                                                    </items>
+                                                </group>
+                                            </items>
+                                        </group>
+                                    </items>
+                                </group>
+                            </items>
+                        </group>
                     </items>
                     <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="14"/>
+                    <connections>
+                        <outlet property="innerProgressGroup" destination="kOb-bT-17y" id="Gs5-sH-dO7"/>
+                        <outlet property="middleProgressGroup" destination="rD5-M3-gHn" id="TzP-1f-l2E"/>
+                        <outlet property="outProgressGroup" destination="SGY-gH-8Dh" id="GwX-kI-TG0"/>
+                        <outlet property="titleLabel" destination="aSh-TD-jIO" id="dcl-cB-lsd"/>
+                    </connections>
                 </glanceController>
             </objects>
-            <point key="canvasLocation" x="164" y="514"/>
+            <point key="canvasLocation" x="-7" y="499"/>
         </scene>
     </scenes>
     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

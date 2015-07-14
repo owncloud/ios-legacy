@@ -66,8 +66,15 @@ class SecondRingController: WKInterfaceController {
     
     func calculateProgress (usedSpace: NSNumber, mediaSpace: NSNumber){
         
-        let mediaPercent = (mediaSpace.floatValue * 100.0) / usedSpace.floatValue
-        var mediaProgress: Int = Int((mediaPercent * 30) / 100)
+        var mediaProgress: Int = 0
+        
+        if usedSpace != 0{
+            
+            let mediaPercent = (mediaSpace.floatValue * 100.0) / usedSpace.floatValue
+            mediaProgress = Int((mediaPercent * 30) / 100)
+            
+        }
+      
         self.updateRingWithProgress(mediaProgress)
         
     }

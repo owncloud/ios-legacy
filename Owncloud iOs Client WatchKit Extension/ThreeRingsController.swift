@@ -66,13 +66,22 @@ class ThreeRingsController: WKInterfaceController {
     
     func calculateProgress (usedSpace: NSNumber, imageSpace: NSNumber, mediaSpace: NSNumber, otherSpace: NSNumber){
         
-        let imagePercent = (imageSpace.floatValue * 100.0) / usedSpace.floatValue
-        let mediaPercent = (mediaSpace.floatValue * 100.0) / usedSpace.floatValue
-        let otherPercent = (otherSpace.floatValue * 100.0) / usedSpace.floatValue
+        var imageProgress: Int = 0
+        var mediaProgress: Int = 0
+        var otherProgress: Int = 0
         
-        var imageProgress: Int = Int((imagePercent * 30) / 100)
-        var mediaProgress: Int = Int((mediaPercent * 30) / 100)
-        var otherProgress: Int = Int((otherPercent * 30) / 100)
+        if usedSpace != 0{
+            
+            let imagePercent = (imageSpace.floatValue * 100.0) / usedSpace.floatValue
+            let mediaPercent = (mediaSpace.floatValue * 100.0) / usedSpace.floatValue
+            let otherPercent = (otherSpace.floatValue * 100.0) / usedSpace.floatValue
+            
+            
+            imageProgress = Int((imagePercent * 30) / 100)
+            mediaProgress = Int((mediaPercent * 30) / 100)
+            otherProgress = Int((otherPercent * 30) / 100)
+            
+        }
         
         self.updateOutRingWithProgress(imageProgress)
         self.updateMiddleRingWithProgress(mediaProgress)

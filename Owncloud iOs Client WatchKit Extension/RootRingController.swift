@@ -68,10 +68,16 @@ class RootRingController: WKInterfaceController {
     
     func calculateProgress (usedSpace: NSNumber, imageSpace: NSNumber){
         
-        let imagePercent = (imageSpace.floatValue * 100.0) / usedSpace.floatValue
-        var imageProgress: Int = Int((imagePercent * 30) / 100)
-        self.updateRingWithProgress(imageProgress)
+        var imageProgress: Int = 0
+
+        if usedSpace != 0{
+            
+            let imagePercent = (imageSpace.floatValue * 100.0) / usedSpace.floatValue
+            imageProgress = Int((imagePercent * 30) / 100)
+            
+        }
         
+        self.updateRingWithProgress(imageProgress)
     }
     
     func updateRingWithProgress (progress : Int){

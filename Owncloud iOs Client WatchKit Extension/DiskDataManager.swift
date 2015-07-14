@@ -79,8 +79,10 @@ class DiskDataManager {
         let fileManager = NSFileManager.defaultManager()
         while let file:String = dirEnumerator.nextObject() as? String
         {
-            if !self.isForbiddenPath(file){
-                let attributes:NSDictionary = fileManager.attributesOfItemAtPath(ownCloudPath.stringByAppendingPathComponent(file), error: nil)!
+            let attributes:NSDictionary = fileManager.attributesOfItemAtPath(ownCloudPath.stringByAppendingPathComponent(file), error: nil)!
+            
+            if attributes.fileType() == NSFileTypeRegular && !self.isForbiddenPath(file){
+               
                 totalSize += attributes.fileSize()
             }
         }
