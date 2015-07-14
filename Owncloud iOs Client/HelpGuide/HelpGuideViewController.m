@@ -43,7 +43,6 @@
 @property (nonatomic, strong) UILabel *messageSecondLabel;
 @property (nonatomic, strong) UILabel *messageThirdLabel;
 @property (nonatomic, strong) UILabel *messageFourthLabel;
-//@property (nonatomic, strong) UILabel *messageFifthLabel;
 
 @property (nonatomic, strong) UIButton *signInButton;
 
@@ -100,9 +99,6 @@
     self.owncloudLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"companyLogoHelp"]];
     [self.contentView addSubview:self.owncloudLogo];
     
-//    self.wordmark = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ownCloud"]];
-//    [self.contentView addSubview:self.wordmark];
-    
     [self configureTextLabelsAndButtons];
     [self configurePageControlImages];
     
@@ -121,7 +117,6 @@
     self.welcomeLabel.text = NSLocalizedString(@"title_help_slide_0", nil);
     self.welcomeLabel.textColor = [UIColor colorOfLoginText];
     [self.welcomeLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    //[self.welcomeLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
     [self.welcomeLabel sizeToFit];
     [self.contentView addSubview:self.welcomeLabel];
     
@@ -199,8 +194,6 @@
     [self.signInButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.signInButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
     [self.signInButton addTarget:self action:@selector(stayPressed:) forControlEvents:UIControlEventTouchDown];
-    //[self.signInButton setBackgroundImage:[UIImage imageNamed:@"MainAppIcon_40-40@3x.png"] forState:UIControlStateNormal];
-    //self.signInButton.frame = CGRectMake(80.0, 210.0, 160.0, 40.0);
     self.signInButton.contentEdgeInsets = UIEdgeInsetsMake(7, 7, 7, 7);
     [self.contentView addSubview:self.signInButton];
 }
@@ -261,7 +254,6 @@
     [self configureView5Animations];
 
     [self configureOwnCloudLogoAnimations];
-    //[self configureWordmarkAnimations];
 
     [self configureLabelAnimations];
     [self animateCurrentFrame];
@@ -388,12 +380,12 @@
 - (void)configurePageControlAnimations
 {
     [self keepView:self.btnAllHelpPage onPages:@[@(0), @(1), @(2), @(3), @(4), @(5)]];
-    [self keepView:self.btnHelpPage0 onPages:@[ @(0), @(1), @(2), @(3), @(4), @(5)]];
-    [self keepView:self.btnHelpPage1 onPages:@[ @(0), @(1), @(2), @(3), @(4), @(5)]];
-    [self keepView:self.btnHelpPage2 onPages:@[ @(0), @(1), @(2), @(3), @(4), @(5)]];
-    [self keepView:self.btnHelpPage3 onPages:@[ @(0), @(1), @(2), @(3), @(4), @(5)]];
-    [self keepView:self.btnHelpPage4 onPages:@[ @(0), @(1), @(2), @(3), @(4), @(5)]];
-    [self keepView:self.btnHelpPage5 onPages:@[ @(0), @(1), @(2), @(3), @(4), @(5)]];
+    [self keepView:self.btnHelpPage0 onPages:@[@(0), @(1)]];
+    [self keepView:self.btnHelpPage1 onPages:@[@(0), @(1), @(2)]];
+    [self keepView:self.btnHelpPage2 onPages:@[@(1), @(2), @(3)]];
+    [self keepView:self.btnHelpPage3 onPages:@[@(2), @(3), @(4)]];
+    [self keepView:self.btnHelpPage4 onPages:@[@(3), @(4), @(5)]];
+    [self keepView:self.btnHelpPage5 onPages:@[@(4), @(5)]];
     
     NSLayoutConstraint *btnAllHelpPageCenterYConstraint = [NSLayoutConstraint constraintWithItem:self.btnAllHelpPage
                                                                                      attribute:NSLayoutAttributeCenterY
@@ -464,53 +456,33 @@
     IFTTTAlphaAnimation *btnHelpPage0AlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.btnHelpPage0];
     [btnHelpPage0AlphaAnimation addKeyframeForTime:0 alpha:1.f];
     [btnHelpPage0AlphaAnimation addKeyframeForTime:1 alpha:0.f];
-    [btnHelpPage0AlphaAnimation addKeyframeForTime:2 alpha:0.f];
-    [btnHelpPage0AlphaAnimation addKeyframeForTime:3 alpha:0.f];
-    [btnHelpPage0AlphaAnimation addKeyframeForTime:4 alpha:0.f];
-    [btnHelpPage0AlphaAnimation addKeyframeForTime:5 alpha:0.f];
     [self.animator addAnimation:btnHelpPage0AlphaAnimation];
     
     IFTTTAlphaAnimation *btnHelpPage1AlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.btnHelpPage1];
     [btnHelpPage1AlphaAnimation addKeyframeForTime:0 alpha:0.f];
     [btnHelpPage1AlphaAnimation addKeyframeForTime:1 alpha:1.f];
     [btnHelpPage1AlphaAnimation addKeyframeForTime:2 alpha:0.f];
-    [btnHelpPage1AlphaAnimation addKeyframeForTime:3 alpha:0.f];
-    [btnHelpPage1AlphaAnimation addKeyframeForTime:4 alpha:0.f];
-    [btnHelpPage1AlphaAnimation addKeyframeForTime:5 alpha:0.f];
     [self.animator addAnimation:btnHelpPage1AlphaAnimation];
     
     IFTTTAlphaAnimation *btnHelpPage2AlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.btnHelpPage2];
-    [btnHelpPage2AlphaAnimation addKeyframeForTime:0 alpha:0.f];
     [btnHelpPage2AlphaAnimation addKeyframeForTime:1 alpha:0.f];
     [btnHelpPage2AlphaAnimation addKeyframeForTime:2 alpha:1.f];
     [btnHelpPage2AlphaAnimation addKeyframeForTime:3 alpha:0.f];
-    [btnHelpPage2AlphaAnimation addKeyframeForTime:4 alpha:0.f];
-    [btnHelpPage2AlphaAnimation addKeyframeForTime:5 alpha:0.f];
     [self.animator addAnimation:btnHelpPage2AlphaAnimation];
     
     IFTTTAlphaAnimation *btnHelpPage3AlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.btnHelpPage3];
-    [btnHelpPage3AlphaAnimation addKeyframeForTime:0 alpha:0.f];
-    [btnHelpPage3AlphaAnimation addKeyframeForTime:1 alpha:0.f];
     [btnHelpPage3AlphaAnimation addKeyframeForTime:2 alpha:0.f];
     [btnHelpPage3AlphaAnimation addKeyframeForTime:3 alpha:1.f];
     [btnHelpPage3AlphaAnimation addKeyframeForTime:4 alpha:0.f];
-    [btnHelpPage3AlphaAnimation addKeyframeForTime:5 alpha:0.f];
     [self.animator addAnimation:btnHelpPage3AlphaAnimation];
     
     IFTTTAlphaAnimation *btnHelpPage4AlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.btnHelpPage4];
-    [btnHelpPage4AlphaAnimation addKeyframeForTime:0 alpha:0.f];
-    [btnHelpPage4AlphaAnimation addKeyframeForTime:1 alpha:0.f];
-    [btnHelpPage4AlphaAnimation addKeyframeForTime:2 alpha:0.f];
     [btnHelpPage4AlphaAnimation addKeyframeForTime:3 alpha:0.f];
     [btnHelpPage4AlphaAnimation addKeyframeForTime:4 alpha:1.f];
     [btnHelpPage4AlphaAnimation addKeyframeForTime:5 alpha:0.f];
     [self.animator addAnimation:btnHelpPage4AlphaAnimation];
     
     IFTTTAlphaAnimation *btnHelpPage5AlphaAnimation = [IFTTTAlphaAnimation animationWithView:self.btnHelpPage5];
-    [btnHelpPage5AlphaAnimation addKeyframeForTime:0 alpha:0.f];
-    [btnHelpPage5AlphaAnimation addKeyframeForTime:1 alpha:0.f];
-    [btnHelpPage5AlphaAnimation addKeyframeForTime:2 alpha:0.f];
-    [btnHelpPage5AlphaAnimation addKeyframeForTime:3 alpha:0.f];
     [btnHelpPage5AlphaAnimation addKeyframeForTime:4 alpha:0.f];
     [btnHelpPage5AlphaAnimation addKeyframeForTime:5 alpha:1.f];
     [self.animator addAnimation:btnHelpPage5AlphaAnimation];
@@ -566,40 +538,6 @@
     [owncloudLogoAlphaAnimation addKeyframeForTime:5 alpha:1.f];
     [self.animator addAnimation:owncloudLogoAlphaAnimation];
 }
-
-//- (void)configureWordmarkAnimations
-//{
-//    // let's animate the wordmark
-//    // keep the wordmark centered on pages 1 and 2, slide it in fast from the right between page 0 and 1, and slide it out fast to the left between pages 2 and 3.
-//    [self keepView:self.wordmark
-//           onPages:@[ @(2), @(1), @(2), @(1) ]
-//           atTimes:@[ @(0), @(1), @(2), @(3) ]];
-//    
-//    // keep the wordmark vertically centered on top of the ownCloudLogo
-//    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.wordmark
-//                                                                 attribute:NSLayoutAttributeCenterY
-//                                                                 relatedBy:NSLayoutRelationEqual
-//                                                                    toItem:self.owncloudLogo
-//                                                                 attribute:NSLayoutAttributeCenterY
-//                                                                multiplier:0.5f constant:0.f]];
-//    
-//    // Rotate the wordmark a full circle from page 1 to 2
-//    IFTTTRotationAnimation *wordmarkRotationAnimation = [IFTTTRotationAnimation animationWithView:self.wordmark];
-//    [wordmarkRotationAnimation addKeyframeForTime:1 rotation:0.f];
-//    [wordmarkRotationAnimation addKeyframeForTime:2 rotation:360.f];
-//    [self.animator addAnimation:wordmarkRotationAnimation];
-////    // Rotate the wordmark a full circle from page 1 to 2
-////    IFTTTRotationAnimation *wordmarkRotationAnimation = [IFTTTRotationAnimation animationWithView:self.wordmark];
-////    [wordmarkRotationAnimation addKeyframeForTime:1 rotation:0.f];
-////    [wordmarkRotationAnimation addKeyframeForTime:2 rotation:360.f];
-////    [self.animator addAnimation:wordmarkRotationAnimation];
-//    
-//    // Scale down the wordmark by 75% between pages 1 and 2
-//    IFTTTScaleAnimation *wordmarkScaleAnimation = [IFTTTScaleAnimation animationWithView:self.wordmark];
-//    [wordmarkScaleAnimation addKeyframeForTime:1 scale:1.f];
-//    [wordmarkScaleAnimation addKeyframeForTime:2 scale:0.75f];
-//    [self.animator addAnimation:wordmarkScaleAnimation];
-//}
 
 - (void)configureLabelAnimations
 {
@@ -704,9 +642,6 @@
     [self keepView:self.messageSecondLabel onPage:2];
     [self keepView:self.messageThirdLabel onPage:3];
     [self keepView:self.messageFourthLabel onPage:4];
-    //[self keepView:self.messageFifthLabel onPage:5];
-    
-
     
     // apply a 3D zoom animation to the first label
     IFTTTTransform3DAnimation * labelTransform = [IFTTTTransform3DAnimation animationWithView:self.welcomeLabel];
@@ -746,10 +681,6 @@
 -(void)stayPressed:(UIButton *) sender {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     [app showLoginView];
-}
-
-- (NSUInteger) supportedInterfaceOrientation {
-    return UIInterfaceOrientationMaskPortrait;
 }
 
 - (BOOL) shouldAutorotate {
