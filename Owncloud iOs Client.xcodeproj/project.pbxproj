@@ -2173,7 +2173,6 @@
 			isa = PBXGroup;
 			children = (
 				400A63251B4FD2C100890579 /* HelpGuide */,
-				40CC7F0C1B4E665400231D73 /* Images.xcassets */,
 				1487F15E177C35AA004A1A5A /* ImageBranding */,
 				1487F1B7177C35AA004A1A5A /* ImageSystem */,
 			);
@@ -2674,6 +2673,7 @@
 			isa = PBXGroup;
 			children = (
 				4052B4AC1B4E951F000788DA /* HelpPageButtons */,
+				40CC7F0C1B4E665400231D73 /* Images.xcassets */,
 				403886571B53A8BA00F55ADA /* iphoneInstantUpload.png */,
 				4038866B1B53D4CD00F55ADA /* iphoneFiles.png */,
 				4038865F1B53C82000F55ADA /* iphoneShare.png */,
