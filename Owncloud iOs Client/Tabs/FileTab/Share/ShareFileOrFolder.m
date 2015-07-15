@@ -27,6 +27,7 @@
 #import "Customization.h"
 #import "FileNameUtils.h"
 #import "CheckHasShareSupport.h"
+#import "UtilsUrls.h"
 
 
 @implementation ShareFileOrFolder
@@ -50,12 +51,6 @@
             self.shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:NSLocalizedString(@"unshare_link", nil) otherButtonTitles:NSLocalizedString(@"share_link_long_press", nil), nil];
             
             if (!IS_IPHONE){
-                
-                AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                if (app.detailViewController.popoverController.isPopoverVisible){
-                    [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-                }
-                
                 [self.shareActionSheet showInView:_viewToShow];
             } else {
                 
@@ -204,7 +199,7 @@
     
     if (isFileDto) {
         //From fileDto
-        NSString *path = [NSString stringWithFormat:@"/%@", [UtilsDtos getDbBFolderPathFromFullFolderPath:_file.filePath andUser:app.activeUser]];
+        NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
         filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
         
         NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:_file.sharedFileSource forUser:app.activeUser.idUser];
@@ -229,9 +224,9 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    __block OCSharedDto *blockShareDto = _shareDto;
+     __block OCSharedDto *blockShareDto = _shareDto;
     
     [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:_shareDto.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared) {
         
@@ -270,7 +265,7 @@
                     [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
                 }
                 
-                [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+                [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
                 
                 //Checking the Shared files and folders
                 [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
@@ -545,7 +540,7 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     [[AppDelegate sharedOCCommunication] unShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:sharedByLink.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
@@ -634,7 +629,7 @@
             UITextField * passwordTextField = [alertView textFieldAtIndex:0];
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             NSString *filePath = @"";
-            NSString *path = [NSString stringWithFormat:@"/%@", [UtilsDtos getDbBFolderPathFromFullFolderPath:_file.filePath andUser:app.activeUser]];
+            NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
             filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
             NSString *passwordText = passwordTextField.text;
             NSString *encodePassword = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(

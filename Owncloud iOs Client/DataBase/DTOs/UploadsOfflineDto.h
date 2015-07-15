@@ -17,7 +17,7 @@
 
 @interface UploadsOfflineDto : NSObject
 
-typedef enum {
+typedef NS_ENUM (NSInteger, enumUpload){
     waitingAddToUploadList=0,
     waitingForUpload=1,
     uploading=2,
@@ -25,17 +25,18 @@ typedef enum {
     errorUploading = 4,
     pendingToBeCheck = 5,
     generatedByDocumentProvider = 6
-} enumUpload;
+};
 
-typedef enum {
+typedef NS_ENUM (NSInteger, enumKindOfError){
     notAnError = -1,
     errorCredentials = 0,
     errorDestinyNotExist = 1,
     errorFileExist = 2,
     errorNotPermission = 3,
     errorUploadFileDoesNotExist = 4,
-    errorUploadInBackground = 5
-} enumKindOfError;
+    errorUploadInBackground = 5,
+    errorInvalidPath = 6
+};
 
 @property NSInteger idUploadsOffline;
 @property (nonatomic, copy) NSString *originPath;

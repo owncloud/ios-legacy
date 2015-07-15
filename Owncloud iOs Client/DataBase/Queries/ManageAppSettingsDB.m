@@ -20,9 +20,15 @@
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
+#import "Owncloud_iOs_Client-Swift.h"
+#elif FILE_PICKER
+#import "ownCloudExtApp-Swift.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
 #else
-#import "DocumentPickerViewController.h"
+#import "ownCloudExtAppFileProvider-Swift.h"
 #endif
+
 
 @implementation ManageAppSettingsDB
 
@@ -35,13 +41,7 @@
     __block BOOL output = NO;
     __block int size = 0;
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT count(*) FROM passcode"];
@@ -67,13 +67,7 @@
 */
 +(void) insertPasscode: (NSString *) passcode {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -96,13 +90,7 @@
     
     __block NSString *output = [NSString new];
  
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT passcode FROM passcode  ORDER BY id DESC LIMIT 1"];
@@ -124,13 +112,7 @@
  */
 +(void) removePasscode {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -150,13 +132,7 @@
  */
 +(void) insertCertificate: (NSString *) certificateLocation {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -184,13 +160,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT certificate_location FROM certificates"];
@@ -215,13 +185,7 @@
     
     __block BOOL output = NO;
  
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -241,13 +205,7 @@
 
 +(void)updateInstantUploadTo:(BOOL)newValue {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -263,13 +221,7 @@
 
 +(void)updateDateInstantUpload:(long)newValue {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -288,13 +240,7 @@
     
     __block long output;
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT date_instant_upload FROM users  WHERE activeaccount=1"];
@@ -321,13 +267,7 @@
 
 +(void)updatePathInstantUpload:(NSString *)newValue {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -344,13 +284,7 @@
 
 +(void)updateOnlyWifiInstantUpload:(BOOL)newValue {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;

@@ -1903,8 +1903,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     //Update connect string
     [self updateConnectString];
     
-    [self eraseURLCache];
-    [self eraseCredentials];
+    [UtilsFramework deleteAllCookies];
+    [UtilsCookies eraseURLCache];
+    [UtilsCookies eraseCredentialsWithURL:self.connectString];
     
     [self performSelector:@selector(connectToServer) withObject:nil afterDelay:0.5];
 }
@@ -1932,7 +1933,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     [[AppDelegate sharedOCCommunication] setCredentialsWithUser:userName andPassword:password];
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     [[AppDelegate sharedOCCommunication] checkServer:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
@@ -2057,7 +2058,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:userName andPassword:password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     [[AppDelegate sharedOCCommunication] readFolder:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
@@ -2073,6 +2074,13 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                 [self errorLogin];
             }
             
+        } else if (redirectedServer){
+            //Manage the redirectedServer. This case will only happen if is a permanent redirection 301
+            DLog(@"Set the redirectedServer as default URL for the new user");
+            
+            redirectedServer = [redirectedServer substringToIndex:[redirectedServer length] - k_url_webdav_server.length];
+            
+            self.urlTextField.text = redirectedServer;
         }
         
         if (!isSamlServer) {
@@ -2161,6 +2169,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         //DLog(@"URL FINAL: %@", userDto.url);
         
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        
         NSString *userNameUTF8=self.usernameTextField.text;
         NSString *passwordUTF8=self.passwordTextField.text;
         
@@ -2168,21 +2178,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         userDto.password = passwordUTF8;
         userDto.ssl = isHttps;
         userDto.activeaccount = YES;
+        userDto.urlRedirected = app.urlServerRedirected;
         
         [ManageUsersDB insertUser:userDto];
         
-        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         app.activeUser=[ManageUsersDB getActiveUser];
         
         NSMutableArray *directoryList = [NSMutableArray arrayWithArray:items];
         
-        //Change the filePath from the library to our format
+        //Change the filePath from the library to our db format
         for (FileDto *currentFile in directoryList) {
-            //Remove part of the item file path
-            NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
-            if([currentFile.filePath length] >= [partToRemove length]){
-                currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
-            }
+            currentFile.filePath = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:app.activeUser];
         }
         
         DLog(@"The directory List have: %ld elements", (unsigned long)directoryList.count);
@@ -2235,43 +2241,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     [ManageCookiesStorageDB deleteCookiesByUser:app.activeUser];
 }
 
-#pragma mark - Delete HTTP cache
-
-- (void)eraseCredentials
-{
-    NSString *urlString = self.connectString;
-    NSURLCredentialStorage *credentialsStorage = [NSURLCredentialStorage sharedCredentialStorage];
-    NSDictionary *allCredentials = [credentialsStorage allCredentials];
-    
-    if ([allCredentials count] > 0)
-    {
-        for (NSURLProtectionSpace *protectionSpace in allCredentials)
-        {
-            DLog(@"Protetion espace: %@", [protectionSpace host]);
-            
-            if ([[protectionSpace host] isEqualToString:urlString])
-            {
-                DLog(@"Credentials erase");
-                NSDictionary *credentials = [credentialsStorage credentialsForProtectionSpace:protectionSpace];
-                for (NSString *credentialKey in credentials)
-                {
-                    [credentialsStorage removeCredential:[credentials objectForKey:credentialKey] forProtectionSpace:protectionSpace];
-                }
-            }
-        }
-    }
-}
-
-- (void)eraseURLCache
-{
-    //  NSURL *loginUrl = [NSURL URLWithString:self.connectString];
-    //  NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc]initWithURL:loginUrl];
-    // [NSMutableURLRequest requestWithURL:loginUrl];
-    //  [[NSURLCache sharedURLCache] removeCachedResponseForRequest:urlRequest];
-    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
-    [[NSURLCache sharedURLCache] setDiskCapacity:0];
-}
-
 #pragma marK - Action Buttons
 
 -(void)checkUrlManually {
@@ -2305,7 +2274,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         //We check the problematic characters before login
         //if([self isProblematicCharactersOnPassword:passwordTxtField.text]) {
         if(NO) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters", nil)
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters_in_password", nil)
                                                             message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alert show];
         } else {
@@ -2421,21 +2390,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             //iPad
             navController.modalTransitionStyle=UIModalTransitionStyleCoverVertical;
             navController.modalPresentationStyle = UIModalPresentationFormSheet;
-            
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            
-            //Check if the splitViewController exist
-           if (appDelegate.splitViewController) {
-                 [appDelegate.splitViewController.detailViewController presentViewController:navController animated:YES completion:nil];
-            } else {
-                [self presentViewController:navController animated:YES completion:nil];
-            }
-            
-           
-        } else {
-            //iPhone
-            [self presentViewController:navController animated:YES completion:nil];
         }
+        
+        [self presentViewController:navController animated:YES completion:nil];
     });
     
 }

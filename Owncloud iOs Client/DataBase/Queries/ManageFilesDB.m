@@ -24,10 +24,13 @@
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
+#import "Owncloud_iOs_Client-Swift.h"
 #elif FILE_PICKER
-#import "DocumentPickerViewController.h"
+#import "ownCloudExtApp-Swift.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
 #else
-#import "FileProvider.h"
+#import "ownCloudExtAppFileProvider-Swift.h"
 #endif
 
 @implementation ManageFilesDB
@@ -51,15 +54,7 @@
 
     DLog(@"getFilesByFileId: %ld",(long)fileId);
 
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, etag, is_favorite, is_necessary_update, shared_file_source, permissions, task_identifier, providing_file_id FROM files WHERE file_id = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:mUser.idUser]];
@@ -110,15 +105,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
 
@@ -171,15 +158,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, etag, is_favorite, is_necessary_update, shared_file_source, permissions, task_identifier, providing_file_id FROM files WHERE file_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:fileId]];
@@ -222,15 +201,7 @@
     
     DLog(@"getFileByIdFile: %ld", (long)idFile);
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
 
@@ -269,15 +240,7 @@
     
     __block FileDto *output = nil;
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, etag, is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier, providing_file_id FROM files WHERE file_name = ? AND file_path= ? AND user_id = ? ORDER BY file_name ASC",fileName, filePath, [NSNumber numberWithInteger:user.idUser]];
@@ -330,15 +293,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT DISTINCT file_path, file_name, id FROM files WHERE user_id = ? AND file_path LIKE ? ORDER BY file_name ASC", [NSNumber numberWithInteger:mUser.idUser], beginFilePath];
@@ -361,15 +316,7 @@
 +(void) setFileIsDownloadState: (NSInteger) idFile andState:(enumDownload)downloadState {
     
     DLog(@"setFileIsDownloadState");
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -387,15 +334,7 @@
 +(void) updateDownloadStateOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withState:(enumDownload)downloadState {
     
     DLog(@"setFileIsDownloadState");
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -412,15 +351,7 @@
 +(void) setFilePath: (NSString * ) filePath byIdFile: (NSInteger) idFile {
     
     DLog(@"NewFilePath: %@", filePath);
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -519,16 +450,7 @@
         //We add the sql with less than 450 request to the array
         [arrayOfSqlRequests addObject:sql];
         
-       
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-        queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-        queue = [DocumentPickerViewController sharedDatabase];
-#else
-        queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
         
         [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             
@@ -559,15 +481,7 @@
     mUser = [ManageUsersDB getActiveUser];
 #endif
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -592,15 +506,7 @@
  */
 +(void) deleteFileByIdFile:(NSInteger) idFile {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -627,15 +533,7 @@
     mUser = [ManageUsersDB getActiveUser];
 #endif
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -660,15 +558,7 @@
     mUser = [ManageUsersDB getActiveUser];
 #endif
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -694,15 +584,7 @@
     
     NSMutableArray *listFilesToUpdate = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT files.id, back.file_id, back.etag FROM files, (SELECT DISTINCT files.file_id, files_backup.file_path, files_backup.file_name, files_backup.etag FROM files_backup, files WHERE files.file_id = files_backup.id AND files_backup.is_directory = 1) back WHERE user_id = ? AND files.file_path = back.file_path AND files.file_name = back.file_name ORDER BY id DESC", [NSNumber numberWithInteger:mUser.idUser]];
@@ -759,15 +641,7 @@
     //1 - Select the files from the files_backup DB that want to be updated on the files DB
     NSMutableArray *listFilesToUpdate = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT f.id, f.user_id, b.etag, b.is_necessary_update, b.is_download, b.shared_file_source, b.permissions, b.task_identifier, b.providing_file_id FROM files f, (SELECT id, user_id, file_path, file_name, etag, is_necessary_update, is_download, shared_file_source, permissions, task_identifier, providing_file_id FROM files_backup WHERE (files_backup.is_download != 0 or files_backup.shared_file_source != 0 or files_backup.providing_file_id != 0)) b WHERE b.file_path = f.file_path AND b.file_name = f.file_name AND b.user_id = f.user_id"];
@@ -832,15 +706,7 @@
     NSMutableArray *listFilesFromFiles = [self getFilesByFileIdForActiveUser:idFile];
     NSMutableArray *listFilesFromFilesBackup = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT file_name, etag, is_download FROM files_backup WHERE is_download = 1 OR is_download = 2 OR is_download = 3"];
@@ -908,15 +774,7 @@
  */
 + (void) setIsNecessaryUpdateOfTheFile: (NSInteger) idFile {
     DLog(@"setIsNecessaryUpdateOfTheFile");
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -977,15 +835,7 @@
     
     NSMutableArray *listFilesToDelete = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT files_backup.id, files_backup.file_path, files_backup.file_name, files_backup.is_directory FROM files_backup WHERE files_backup.id NOT IN (SELECT back.id FROM (SELECT id, file_path, file_name FROM files_backup) back, (SELECT id, file_path, file_name FROM files WHERE user_id = ?) files WHERE files.file_path = back.file_path AND files.file_name = back.file_name)", [NSNumber numberWithInteger:mUser.idUser]];
@@ -1039,15 +889,7 @@
     
     NSMutableArray *listFilesToUpdate = [NSMutableArray new];
    
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT f.id FROM files f, (SELECT id, file_path, user_id, file_name FROM files_backup WHERE files_backup.is_favorite = 1) b WHERE b.file_path = f.file_path AND b.file_name=f.file_name AND f.user_id = b.user_id"];
@@ -1080,15 +922,7 @@
 
 + (void) deleteFilesBackup {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1104,15 +938,7 @@
 
 +(void) renameFileByFileDto:(FileDto *) file andNewName:(NSString *) mNewName {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1130,15 +956,7 @@
     
     mNewName=[NSString stringWithFormat:@"%@/", mNewName];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1159,15 +977,7 @@
     BOOL output = NO;
     DLog(@"File path: %@",fileDto.fileName);
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT COUNT(*) as NUM FROM files WHERE etag = ? AND user_id = ?", fileDto.etag, [NSNumber numberWithInteger:fileDto.userId]];
@@ -1197,15 +1007,7 @@
     mUser = [ManageUsersDB getActiveUser];
 #endif
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1231,15 +1033,7 @@
     mUser = [ManageUsersDB getActiveUser];
 #endif
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite FROM files WHERE file_path = ? AND file_name = ? AND user_id = ? AND is_directory = 1 ORDER BY file_name ASC", newFilePath, fileName, [NSNumber numberWithInteger:mUser.idUser]];
@@ -1269,15 +1063,7 @@
 
 + (void) updateFolderOfFileDtoByNewFilePath:(NSString *) newFilePath andDestinationFileDto:(FileDto *) folderDto andNewFileName:(NSString *)changedFileName andFileDto:(FileDto *) selectedFile {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1302,15 +1088,7 @@
     mUser = [ManageUsersDB getActiveUser];
 #endif
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1335,15 +1113,7 @@
     mUser = [ManageUsersDB getActiveUser];
 #endif
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1364,15 +1134,7 @@
     BOOL output = NO;
     
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT COUNT(*) AS NUM FROM files WHERE user_id = ? AND is_root_folder = 1", [NSNumber numberWithInteger:currentUser.idUser]];
@@ -1391,15 +1153,7 @@
 
 +(void) insertFile:(FileDto *)fileDto {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1416,15 +1170,7 @@
     
     __block FileDto *output = nil;
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, etag, is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier, providing_file_id FROM files WHERE user_id = ? AND is_root_folder = 1 ORDER BY file_name ASC", [NSNumber numberWithInteger:currentUser.idUser]];
@@ -1461,15 +1207,7 @@
 
 +(void) updateEtagOfFileDtoByid:(NSInteger) idFile andNewEtag: (NSString *)etag {
 
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1487,15 +1225,7 @@
 
 +(void) updateEtagOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withNewEtag: (NSString *)etag {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1519,15 +1249,7 @@
     mUser = [ManageUsersDB getActiveUser];
 #endif
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1542,15 +1264,7 @@
 }
 
 + (void) setFile:(NSInteger)idFile isNecessaryUpdate:(BOOL)isNecessaryUpdate {
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1570,15 +1284,7 @@
     __block BOOL output = NO;
     DLog(@"getFilesByFileId:(int) fileId");
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
      FMResultSet *rs = [db executeQuery:@"SELECT COUNT(*) as NUM FROM files WHERE is_download = ? AND user_id = ? AND file_path LIKE ? ORDER BY file_name ASC", [NSNumber numberWithInteger:downloadState], [NSNumber numberWithInteger:currentUser.idUser], [NSString stringWithFormat:@"%@%%", folder]];
@@ -1617,15 +1323,7 @@
     
     __block BOOL output = NO;
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT id FROM files WHERE user_id = ? AND file_path LIKE ?", [NSNumber numberWithInteger:idUser], [NSString stringWithFormat:@"%@%%", folder]];
@@ -1650,15 +1348,7 @@
 
 + (void) updateFilesByUser:(UserDto *) currentUser andFolder:(NSString *) folder toDownloadState:(enumDownload)downloadState andIsNecessaryUpdate:(BOOL) isNecessaryUpdate {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1690,15 +1380,7 @@
  */
 + (void) updateShareFileSource:(NSInteger)value forThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)idUser{
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1723,15 +1405,7 @@
  *
  */
 + (void) setUnShareAllFilesByIdUser:(NSInteger)idUser {
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1760,15 +1434,7 @@
     NSMutableArray *listOfFileSource = [NSMutableArray new];
     NSMutableArray *listOfidFile = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT tmp_shared.file_source AS file_source, tmp_file.id AS id_file FROM (SELECT * FROM shared WHERE share_type=3 AND user_id=?) AS tmp_shared, (SELECT id, shared_file_source , ('/' || file_path || file_name) full_file_path FROM files WHERE user_id=?) AS tmp_file WHERE tmp_shared.path = tmp_file.full_file_path AND tmp_shared.file_source != tmp_file.shared_file_source",[NSNumber numberWithInteger:userId], [NSNumber numberWithInteger:userId]];
@@ -1848,15 +1514,7 @@
     mUser = [ManageUsersDB getActiveUser];
 #endif
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -1905,15 +1563,7 @@
  */
 + (void) setUnShareFilesByUser:(UserDto *) user {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -1928,11 +1578,15 @@
     /*for (OCSharedDto *current in listOfRemoved) {
         FMDatabaseQueue *queue;
     
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#else
-    queue = [DocumentPickerViewController sharedDatabase];
-#endif
+     #ifdef CONTAINER_APP
+     queue = [AppDelegate sharedDatabase];
+     #elif FILE_PICKER
+     queue = [DocumentPickerViewController sharedDatabase];
+     #elif SHARE_IN
+     queue = Managers.sharedDatabase;
+     #else
+     queue = [FileProvider sharedDatabase];
+     #endif
         
         [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             BOOL correctQuery=NO;
@@ -1971,15 +1625,7 @@
     mUser = [ManageUsersDB getActiveUser];
 #endif
 
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     __block FileDto *output = nil;
     
@@ -2049,15 +1695,7 @@
     mUser = [ManageUsersDB getActiveUser];
 #endif
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     __block NSString *comparePath = nil;
     
@@ -2097,15 +1735,7 @@
  *
  */
 + (void) setUnShareFilesOfFolder:(FileDto *) folder {
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -2132,15 +1762,7 @@
  */
 + (void) updateTheFileID: (NSInteger)idFile asFavorite: (BOOL) isFavorite {
     DLog(@"updateTheFavoriteFile");
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -2167,15 +1789,7 @@
  */
 + (NSArray*) getAllFavoritesOfUserId:(NSInteger)userId {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     NSMutableArray *tempArray = [NSMutableArray new];
     //Get the user
@@ -2234,15 +1848,7 @@
  */
 +(NSArray*) getFavoritesOfPath:(NSString*)path andUserId:(NSInteger)userId{
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     NSMutableArray *tempArray = [NSMutableArray new];
     
@@ -2306,15 +1912,7 @@
  */
 +(void) deleteAlleTagOfTheDirectoties {
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -2335,15 +1933,7 @@
 
 + (void) updateFile:(NSInteger)idFile withTaskIdentifier:(NSInteger)taskIdentifier {
 
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -2360,15 +1950,7 @@
 
 + (void) updateFile:(NSInteger)idFile withProvidingFile:(NSInteger)providingFileId{
    
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -2386,15 +1968,7 @@
 + (FileDto *) getFileDtoRelatedWithProvidingFileId:(NSInteger)providingFileId ofUser:(NSInteger)userId{
     
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     __block FileDto *fileTemp = nil;
     

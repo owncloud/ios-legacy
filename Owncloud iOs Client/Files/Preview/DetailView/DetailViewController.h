@@ -14,7 +14,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "MGSplitViewController.h"
 #import "FileDto.h"
 #import "Download.h"
 #import "OpenWith.h"
@@ -25,6 +24,7 @@
 #import "OCToolBar.h"
 #import "CWStatusBarNotification.h"
 #import "ShareFileOrFolder.h"
+#import "ManageFavorites.h"
 
 @class ReaderDocument;
 @class ReaderViewController;
@@ -44,7 +44,7 @@ extern NSString * IpadCleanPreviewNotification;
 extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, MGSplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, ShareFileOrFolderDelegate, UIAlertViewDelegate> {
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, ShareFileOrFolderDelegate, UIAlertViewDelegate, ManageFavoritesDelegate, UIGestureRecognizerDelegate> {
     
     //Bar buttons
     IBOutlet UIBarButtonItem *_spaceBar;
@@ -57,9 +57,6 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
     IBOutlet UIBarButtonItem *_deleteButtonBar;
     IBOutlet UIImageView *_companyImageView;
     
-    //SplitView attributes
-    MGSplitViewController *splitController;
-    UIPopoverController *popoverController;
     OCToolBar *toolbar;
     
     //Autolayout constraints
@@ -73,6 +70,9 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
     IBOutlet NSLayoutConstraint *_topMarginUpdatingView;
     IBOutlet NSLayoutConstraint *_topMarginUpdatingButton;
     
+    IBOutlet NSLayoutConstraint *toolBarTopMargin;
+    IBOutlet NSLayoutConstraint *toolBarHeight;
+    
     NSString *nameFileToUpdate; 
     
 }
@@ -84,7 +84,6 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 @property (nonatomic, strong) IBOutlet UIProgressView *progressView;
 @property (nonatomic, strong) IBOutlet UIButton *cancelButton;
 @property (nonatomic, strong) IBOutlet UILabel *progressLabel;
-@property (nonatomic, strong) IBOutlet UIBarButtonItem *toggleItem;
 
 //View for show the updating progress bar
 @property (nonatomic, strong) IBOutlet UIView *updatingFileView;
@@ -108,9 +107,7 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 //The title of the link when the detail view it's used for a help page for example
 @property (nonatomic, strong) NSString *linkTitle;
-//SplitView attributes
-@property (nonatomic, strong) MGSplitViewController *splitController;
-@property (nonatomic, retain) UIPopoverController *popoverController;
+
 @property (nonatomic, strong) IBOutlet UIToolbar *toolbar;
 //ScrolView in DetailView.xib to copy the frame to scroll view of GalleryView
 @property(nonatomic, strong) IBOutlet UIScrollView *mainScrollView;
@@ -119,11 +116,10 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 //Flags
 @property(nonatomic) BOOL isViewBlocked;
-@property(nonatomic) BOOL isExtending;
+@property(nonatomic) BOOL isSizeChanging;
 @property(nonatomic) BOOL isDownloading;
-@property(nonatomic) BOOL disablePopover;
 @property(nonatomic) BOOL isFileCharged;
-@property(nonatomic) BOOL isExtend;
+
 //Flag for know the overwrited file
 @property (nonatomic) BOOL isOverwritedFile;
 //Flag for know the updating process
@@ -136,6 +132,13 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 //VFR Pdf reader
 @property(nonatomic, strong) ReaderDocument *documentPDF;
 @property(nonatomic, strong) ReaderViewController *readerPDFViewController;
+
+//Favorites
+@property(nonatomic, strong) ManageFavorites *manageFavorites;
+
+//Full Screen Support
+@property(nonatomic) BOOL hideMaster;
+
 
 ///-----------------------------------
 /// @name Handle File
@@ -224,29 +227,13 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
  */
 - (void)adjustGalleryScrollView;
 
-/*
- * Method that showPopover if is in portrait mode or extended mode
- */
-- (void)showPopover;
 
-/*
- * Method that close popover
- */
--(void)closePopover;
 
 /*
  * Method that show a pop up error from other class
 */
 - (void)showErrorOnIpadIfIsNecessaryCancelDownload;
 
-/*
- * MGSplitViewController methods.
- * Only we use "toogleMasterView" to expand the detail view in landscape
- */
-- (IBAction)toggleMasterView:(id)sender;
-- (IBAction)toggleVertical:(id)sender;
-- (IBAction)toggleDividerStyle:(id)sender;
-- (IBAction)toggleMasterBeforeDetail:(id)sender;
 
 /*
  * Method that manage the error login, show a pop up and then 

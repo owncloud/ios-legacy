@@ -24,6 +24,7 @@
 #import "ManageUploadsDB.h"
 #import "UtilsCookies.h"
 #import "UtilsFramework.h"
+#import "ManageCookiesStorageDB.h"
 
 
 //Initialization the notification
@@ -231,6 +232,12 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
  * Overwrite method of LoginViewController to check the username after continue the login process
  */
 - (void)setCookieForSSO:(NSString *) cookieString andSamlUserName:(NSString*)samlUserName {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    NSString *connectURL =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
+    
+    [ManageCookiesStorageDB deleteCookiesByUser:[ManageUsersDB getActiveUser]];
+    [UtilsCookies eraseCredentialsWithURL:connectURL];
+    [UtilsCookies eraseURLCache];
     
     //We check if the user that we are editing is the same that we are using
     if ([_selectedUser.username isEqualToString:samlUserName]) {
@@ -242,11 +249,11 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         _passwordTextField.text = cookieString;
         [self goTryToDoLogin];
     } else {
+        
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"credentials_different_user", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
         [alertView show];
     }
 }
-
 
 ///-----------------------------------
 /// @name Create data with server data

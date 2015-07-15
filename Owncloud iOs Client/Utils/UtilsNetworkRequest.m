@@ -21,6 +21,7 @@
 #import "FileNameUtils.h"
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
+#import "UtilsUrls.h"
 
 @implementation UtilsNetworkRequest
 
@@ -40,7 +41,7 @@
         [[AppDelegate sharedOCCommunication] setCredentialsWithUser:user.username andPassword:user.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:k_user_agent];
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

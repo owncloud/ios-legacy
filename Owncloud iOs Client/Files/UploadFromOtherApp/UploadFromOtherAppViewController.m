@@ -38,6 +38,7 @@
 #import "UploadUtils.h"
 #import "OCNavigationController.h"
 #import "UtilsUrls.h"
+#import "ManageUsersDB.h"
 
 #define kOFFSET_FOR_KEYBOARD_iPhone5 160.0
 #define kOFFSET_FOR_KEYBOARD_iPhone 200.0
@@ -111,27 +112,9 @@
     
     _userName = app.activeUser.username;
     
-   NSString *urlString = app.activeUser.url;
-   NSArray *splitedUrl = [urlString componentsSeparatedByString:@"/"];
-   NSMutableString *serverString = [NSMutableString new];
-   NSString *sentence;
-   for (int i=0; i<[splitedUrl count]; i++) {
-       
-       if (i==0 || i==1) {
-            //Nothing
-        }else if (i==2){
-            sentence = [NSString stringWithFormat:@"%@", [splitedUrl objectAtIndex:i]];
-            [serverString appendString:sentence];
-        }else{
-            sentence = [NSString stringWithFormat:@"/%@", [splitedUrl objectAtIndex:i]];
-            [serverString appendString:sentence];
-        }
-   }
+    _serverName = app.activeUser.url;
     
-  //  NSString *fileName = [NSString stringWithFormat:@"%@",[splitedUrl objectAtIndex:([splitedUrl count]-1)]];
-    _serverName = serverString;
-    
-    _remoteFolder = [NSString stringWithFormat: @"%@%@", app.activeUser.url, k_url_webdav_server];
+    _remoteFolder = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     
     NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
     _folderName=appName;
@@ -264,7 +247,8 @@
     NSString *name = _nameFileTextField.text;
     
     //Check the name of the file for it has forbiden characters
-    if(![FileNameUtils isForbidenCharactersInFileName:name]) {
+    
+    if(![FileNameUtils isForbiddenCharactersInFileName:name withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
         
         name = [name encodeString:NSUTF8StringEncoding];
         
@@ -283,7 +267,12 @@
     } else {
        
         DLog(@"The file name have problematic characters");
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbiden_characters", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        
+        NSString *msg = nil;
+        msg = NSLocalizedString(@"forbidden_characters_from_server", nil);
+        
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
         [alert show];
     }
 /*
@@ -902,10 +891,6 @@
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
         
-        if (IS_IOS8) {
-            [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
-        
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         
@@ -979,7 +964,7 @@
     //The _remoteFolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
     //The nameFileTextField: FileType.pdf
     //The folder Name: A/
-    NSString *folderName = [UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",_remoteFolder,_nameFileTextField.text] andUserDto:app.activeUser];
+    NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:_remoteFolder andUser:app.activeUser];
     
     //Obtain the file that the user wants overwrite
     FileDto *file = nil;

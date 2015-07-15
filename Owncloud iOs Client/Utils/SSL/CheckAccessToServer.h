@@ -14,6 +14,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @protocol CheckAccessToServerDelegate
 
@@ -38,6 +39,7 @@
 @property (nonatomic, weak) __weak id<CheckAccessToServerDelegate> delegate;
 @property (nonatomic, strong) NSString *urlStatusCheck;
 @property (nonatomic, strong) UIViewController *viewControllerToShow;
+@property (nonatomic, strong) NSString *urlUserToCheck;
 
 
 @end

@@ -3,10 +3,11 @@
 //  Owncloud iOs Client
 //
 //  Created by Gonzalo Gonzalez on 05/02/13.
+//  Light refactor by Gonzalo Gonzalez on 05/05/15
 //
 
 /*
- Copyright (C) 2014, ownCloud, Inc.
+ Copyright (C) 2015, ownCloud, Inc.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -17,10 +18,44 @@
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
-#define k_bottonHUD_height 50
-#define k_slider_height 20
-#define k_slider_height_ios7 6
-#define k_slider_origin_x 100
+#define k_bottonHUD_height 50.0
+
+//Slider
+
+#define k_slider_height 20.0
+#define k_slider_origin_x 100.0
+#define k_slider_origin_y 0.0
+#define k_slider_width_diference_iPhone 210.0
+#define k_slider_width_diference_iPad 160.0
+
+//Play/Pause Button
+
+#define k_play_button_origin_x 5.0
+#define k_play_button_origin_y 0.0
+#define k_play_button_width 46.0
+#define k_play_button_height 46.0
+
+//Progress Label
+
+#define k_progress_label_origin_x 40.0
+#define k_progress_label_origin_y 13.0
+#define k_progress_label_width 50.0
+#define k_progress_label_height 20.0
+
+//Rigth Label
+
+#define k_right_label_origin_x_difference_iPhone 100.0
+#define k_right_label_origin_x_difference_iPad 50.0
+#define k_right_label_origin_y 13.0
+#define k_right_label_width 60.0
+#define k_right_label_height 20.0
+
+//Full Screen Button
+
+#define k_full_screen_button_origin_x_difference_iPhone 50.0
+#define k_full_screen_button_origin_y 0.0
+#define k_full_screen_width 46.0
+#define k_full_screen_height 46.0
 
 
 static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
@@ -36,27 +71,8 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 }
 
 
-@interface MediaViewController (){
-    UIToolbar *_toolBar;
-}
-
-@end
-
 @implementation MediaViewController
-@synthesize bottomHUD=_bottomHUD;
-@synthesize progressSlider=_progressSlider;
-@synthesize playButton=_playButton;
-@synthesize leftLabel=_leftLabel;
-@synthesize progressLabel=_progressLabel;
-@synthesize isPlaying=_isPlaying;
-@synthesize isMusic=_isMusic;
-@synthesize thumbnailView=_thumbnailView;
-@synthesize urlString=_urlString;
-@synthesize fullScreenButton=_fullScreenButton;
-@synthesize isFullScreen=_isFullScreen;
-@synthesize oneTap=_oneTap;
-@synthesize hiddenHUD=_hiddenHUD;
-@synthesize delegate=_delegate;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -72,7 +88,6 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view
-
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -108,100 +123,111 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
  */
 - (void) initHudView{
  
+    self.moviePlayer.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
     //Bounds
-    CGRect bounds = self.moviePlayer.view.bounds;
+    CGRect bounds = self.moviePlayer.view.frame;
     CGFloat width = bounds.size.width;
     CGFloat height = bounds.size.height;
     
     //ThumbnailView
-    _thumbnailView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, width, height)];
-    _thumbnailView.autoresizingMask= UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _thumbnailView.contentMode = UIViewContentModeScaleAspectFit;
-    _thumbnailView.userInteractionEnabled=NO;
-    _thumbnailView.backgroundColor=[UIColor clearColor];
-    _thumbnailView.hidden=YES;
+    self.thumbnailView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, width, height)];
+    self.thumbnailView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.thumbnailView.contentMode = UIViewContentModeScaleAspectFit;
+    self.thumbnailView.userInteractionEnabled = NO;
+    self.thumbnailView.backgroundColor = [UIColor clearColor];
+    self.thumbnailView.hidden = YES;
     
-    [self.moviePlayer.view addSubview:_thumbnailView];
+    [self.moviePlayer.view addSubview:self.thumbnailView];
     
     //Bottom HUD
-    _bottomHUD = [[UIView alloc] initWithFrame:CGRectMake(0,height-k_bottonHUD_height,width,k_bottonHUD_height)];
-    _bottomHUD.opaque = NO;
-    _bottomHUD.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
-    
-    float sliderYPosition = -2.0;
-    
-    sliderYPosition = 0.0;
+    self.bottomHUD = [[UIView alloc] initWithFrame:CGRectMake(0, height-k_bottonHUD_height, width, k_bottonHUD_height)];
+    self.bottomHUD.opaque = NO;
+    self.bottomHUD.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
     
     
-    _progressSlider = [[UISlider alloc] initWithFrame:CGRectMake(k_slider_origin_x,sliderYPosition,width-212,k_bottonHUD_height)];
-    _progressSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    _progressSlider.continuous = YES;
-    _progressSlider.value = 0;
+    CGFloat sliderWidthSize = width - k_slider_width_diference_iPhone;
+    if (!IS_IPHONE) {
+        sliderWidthSize = width - k_slider_width_diference_iPad;
+    }
     
-    [_progressSlider addTarget:self
+    self.progressSlider = [[UISlider alloc] initWithFrame:CGRectMake(k_slider_origin_x, k_slider_origin_y, sliderWidthSize, k_bottonHUD_height)];
+    self.progressSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.progressSlider.continuous = YES;
+    self.progressSlider.value = 0;
+    
+    [self.progressSlider addTarget:self
                         action:@selector(playbackSliderMoved:)
               forControlEvents:UIControlEventValueChanged];
     
    
     //PlayButton
-    _playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _playButton.frame = CGRectMake(5,0,46,46);
-    _playButton.backgroundColor = [UIColor clearColor];
-    _playButton.showsTouchWhenHighlighted = YES;
-    [_playButton setImage:[UIImage imageNamed:@"playback_play.png"] forState:UIControlStateNormal];
-    [_playButton addTarget:self action:@selector(playDidTouch:) forControlEvents:UIControlEventTouchUpInside];
+    self.playButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.playButton.frame = CGRectMake(k_play_button_origin_x, k_play_button_origin_y, k_play_button_width, k_play_button_height);
+    self.playButton.backgroundColor = [UIColor clearColor];
+    self.playButton.showsTouchWhenHighlighted = YES;
+    [self.playButton setImage:[UIImage imageNamed:@"playback_play.png"] forState:UIControlStateNormal];
+    [self.playButton addTarget:self action:@selector(playDidTouch:) forControlEvents:UIControlEventTouchUpInside];
 
     
     //Progress label
-    _progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(40,13,50,20)];
-    _progressLabel.backgroundColor = [UIColor clearColor];
-    _progressLabel.opaque = NO;
-    _progressLabel.adjustsFontSizeToFitWidth = NO;
-    _progressLabel.textAlignment = NSTextAlignmentRight;
-    _progressLabel.textColor = [UIColor whiteColor];
-    _progressLabel.text = @"";
-    _progressLabel.font = [UIFont systemFontOfSize:12];
+    self.progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(k_progress_label_origin_x,k_progress_label_origin_y, k_progress_label_width, k_progress_label_height)];
+    self.progressLabel.backgroundColor = [UIColor clearColor];
+    self.progressLabel.opaque = NO;
+    self.progressLabel.adjustsFontSizeToFitWidth = NO;
+    self.progressLabel.textAlignment = NSTextAlignmentRight;
+    self.progressLabel.textColor = [UIColor whiteColor];
+    self.progressLabel.text = @"";
+    self.progressLabel.font = [UIFont systemFontOfSize:12];
     
     
-    //Left label
-    _leftLabel = [[UILabel alloc] initWithFrame:CGRectMake(width-108,13,60,20)];
-    _leftLabel.backgroundColor = [UIColor clearColor];
-    _leftLabel.opaque = NO;
-    _leftLabel.adjustsFontSizeToFitWidth = NO;
-    _leftLabel.textAlignment = NSTextAlignmentLeft;
-    _leftLabel.textColor = [UIColor whiteColor];
-    _leftLabel.text = @""; //@"-99:59:59";
-    _leftLabel.font = [UIFont systemFontOfSize:12];
-    _leftLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    //Right label
+    
+    CGFloat leftLabelXPosition = width - k_right_label_origin_x_difference_iPhone;
+    if (!IS_IPHONE) {
+        leftLabelXPosition = width - k_right_label_origin_x_difference_iPad;
+    }
+    
+    self.rightLabel = [[UILabel alloc] initWithFrame:CGRectMake(leftLabelXPosition, k_right_label_origin_y, k_right_label_width, k_right_label_height)];
+    self.rightLabel.backgroundColor = [UIColor clearColor];
+    self.rightLabel.opaque = NO;
+    self.rightLabel.adjustsFontSizeToFitWidth = NO;
+    self.rightLabel.textAlignment = NSTextAlignmentLeft;
+    self.rightLabel.textColor = [UIColor whiteColor];
+    self.rightLabel.text = @""; //@"-99:59:59";
+    self.rightLabel.font = [UIFont systemFontOfSize:12];
+    self.rightLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
    
-    //Full screen button
-    _fullScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _fullScreenButton.frame= CGRectMake(width-53, 0, 46, 46); //23 x 23 px
-    _fullScreenButton.backgroundColor=[UIColor clearColor];
-    _fullScreenButton.showsTouchWhenHighlighted=YES;
-    _fullScreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [_fullScreenButton setImage:[UIImage imageNamed:@"fullScreen.png"] forState:UIControlStateNormal];
+    if (IS_IPHONE) {
+        //Full screen button
+        self.fullScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.fullScreenButton.frame= CGRectMake(width-k_full_screen_button_origin_x_difference_iPhone, k_full_screen_button_origin_y, k_full_screen_width, k_full_screen_height);
+        self.fullScreenButton.backgroundColor=[UIColor clearColor];
+        self.fullScreenButton.showsTouchWhenHighlighted=YES;
+        self.fullScreenButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [self.fullScreenButton setImage:[UIImage imageNamed:@"fullScreen.png"] forState:UIControlStateNormal];
         
-    [_fullScreenButton addTarget:self action:@selector(fullScreenDidTouch:) forControlEvents:UIControlEventTouchUpInside];
+        [self.fullScreenButton addTarget:self action:@selector(fullScreenDidTouch:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.bottomHUD addSubview:self.fullScreenButton];
+    }
     
     
-    [_bottomHUD addSubview:_progressSlider];
-    [_bottomHUD addSubview:_playButton];
-    [_bottomHUD addSubview:_fullScreenButton];
-    [_bottomHUD addSubview:_progressLabel];
-    [_bottomHUD addSubview:_leftLabel];
+    [self.bottomHUD addSubview:self.progressSlider];
+    [self.bottomHUD addSubview:self.playButton];
+    [self.bottomHUD addSubview:self.progressLabel];
+    [self.bottomHUD addSubview:self.rightLabel];
     
     
-    _bottomHUD.backgroundColor= [UIColor clearColor];
+    self.bottomHUD.backgroundColor= [UIColor clearColor];
     
-  
-    [self.moviePlayer.view addSubview:_bottomHUD];
+    [self.moviePlayer.view addSubview:self.bottomHUD];
     
     
     //Init flags
-     _isPlaying=NO;
-    _isFullScreen=NO;
+    self.isPlaying=NO;
+    self.isFullScreen=NO;
     
     //Add observer for a MPMovieDurationAvailableNotification
     [[NSNotificationCenter defaultCenter]
@@ -216,15 +242,15 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
                                                object:nil];
     
     //One Tap Gesture to show/hide the HUD
-    _oneTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    _oneTap.numberOfTapsRequired = 1;
+    self.oneTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    self.oneTap.numberOfTapsRequired = 1;
     
     
-    _oneTap.delegate=self;
+    self.oneTap.delegate = self;
    
-    [self.moviePlayer.view addGestureRecognizer:_oneTap];
+    [self.moviePlayer.view addGestureRecognizer:self.oneTap];
     
-    _hiddenHUD=NO;
+    self.hiddenHUD = NO;
     
     [self startHUDTimer];
     
@@ -264,7 +290,6 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 /*
  * Method called from _HUDTimer to Hidden the controls
  */
-
 - (void)hiddenTheHUD{
     
     if (!_hiddenHUD) {
@@ -272,9 +297,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     }
     
     [_HUDTimer invalidate];
-    _HUDTimer=nil;
-    
-    
+    _HUDTimer = nil;
 }
 
 /*
@@ -283,10 +306,8 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
  * @notification -> MPMovieDurationAvailableNotification
  */
 - (void) movieDurationAvailable:(NSNotification*)notification {
-    [self initTimeLabels];   
-	
-	
-    _progressSlider.minimumValue=0.0;
+    [self initTimeLabels];
+    _progressSlider.minimumValue = 0.0;
     _progressSlider.maximumValue = [self.moviePlayer duration];
 	
 }
@@ -294,7 +315,6 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 /* Method that receive the notification that the play back is finish
  * @notification -> MPMovieDidFinishNotification
  */
-
 - (void) moviePlayBackDidFinish:(NSNotification*)notification {
     
     //_moviePlayer.moviePlayer = [notification object];
@@ -324,10 +344,10 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     float duration = self.moviePlayer.duration;
     float restTime = duration-playbackTime;
     
-    _progressLabel.text = formatTimeInterval(playbackTime, NO);
-    _leftLabel.text = formatTimeInterval(restTime, YES);
+    self.progressLabel.text = formatTimeInterval(playbackTime, NO);
+    self.rightLabel.text = formatTimeInterval(restTime, YES);
     
-    DLog(@"Time labels. Progress: %@ - Duration: %@", _progressLabel.text, _leftLabel.text);
+    DLog(@"Time labels. Progress: %@ - Duration: %@", self.progressLabel.text, self.rightLabel.text);
     
 }
 
@@ -369,8 +389,6 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
                                                userInfo:nil
                                                 repeats:NO];
 
-    
-    
 }
 
 /*
@@ -379,9 +397,8 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 - (void)stopHUDTimer{
     
     [_HUDTimer invalidate];
-    _HUDTimer=nil;
+    _HUDTimer = nil;
 }
-
 
 #pragma mark - gesture recognizer
 
@@ -390,11 +407,8 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     if (sender.state == UIGestureRecognizerStateEnded) {
         
         if (sender == _oneTap) {
-            
             DLog(@"ONE TAP");
-            
            [self showHUD: _hiddenHUD];
-            
         } 
     }
 }
@@ -415,8 +429,6 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     return YES;
 }
 
-
-
 #pragma mark - Control of player
 
 /*
@@ -436,9 +448,6 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [app canPlayerReceiveExternalEvents];
     }
-    
-    
-    
 }
 
 /*
@@ -481,11 +490,10 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     NSNumber *middleTime = [NSNumber numberWithFloat:self.moviePlayer.duration/2];
     
     UIImage *thumbnail = [self.moviePlayer thumbnailImageAtTime:[middleTime floatValue] timeOption:MPMovieTimeOptionNearestKeyFrame];
-    _thumbnailView.image=thumbnail;
-    _thumbnailView.backgroundColor=[UIColor blackColor];
-    _thumbnailView.hidden=NO;
-    
-   
+    _thumbnailView.image = thumbnail;
+    _thumbnailView.backgroundColor = [UIColor blackColor];
+    _thumbnailView.hidden = NO;
+
 }
 
 
@@ -493,7 +501,7 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
  * Quit image of video
  */
 - (void)quitImageOfVideo{
-     _thumbnailView.backgroundColor=[UIColor clearColor];
+    _thumbnailView.backgroundColor = [UIColor clearColor];
     _thumbnailView.hidden=YES;
 }
 
@@ -508,16 +516,16 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     float duration = self.moviePlayer.duration;
     float restTime = duration-playbackTime;
 		
-    _progressLabel.text = formatTimeInterval(playbackTime, NO);
-    _leftLabel.text = formatTimeInterval(restTime, YES);
+    self.progressLabel.text = formatTimeInterval(playbackTime, NO);
+    self.rightLabel.text = formatTimeInterval(restTime, YES);
     
-    DLog(@"Progress video label: %@", _progressLabel.text);
+    DLog(@"Progress video label: %@", self.progressLabel.text);
     
     //This is to detect if the video/audio is stopped outside the App and the App do not know
-    if(_progressSlider.value == playbackTime) {
+    if(self.progressSlider.value == playbackTime) {
         [self pauseFile];
     } else {
-        [_progressSlider setValue:playbackTime];
+        [self.progressSlider setValue:playbackTime];
     }
 }
 
@@ -525,8 +533,8 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
  * Method called when the user move the slider
  * @sender -> UISlider
  */
- 
 - (void)playbackSliderMoved:(UISlider *)sender {
+    
 	if (self.moviePlayer.playbackState != MPMoviePlaybackStatePaused) {
 		[self.moviePlayer pause];
 	}
@@ -536,13 +544,12 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
         [self.moviePlayer play];
     }
     
-	
 	float playbackTime = self.moviePlayer.currentPlaybackTime;
     float duration = self.moviePlayer.duration;
     float restTime = duration-playbackTime;
     
-    _progressLabel.text = formatTimeInterval(playbackTime, NO);
-    _leftLabel.text = formatTimeInterval(restTime, YES);
+    self.progressLabel.text = formatTimeInterval(playbackTime, NO);
+    self.rightLabel.text = formatTimeInterval(restTime, YES);
 }
 
 /*
@@ -564,8 +571,8 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     float duration = self.moviePlayer.duration;
     float restTime = duration-playbackTime;
     
-    _progressLabel.text = formatTimeInterval(playbackTime, NO);
-    _leftLabel.text = formatTimeInterval(restTime, YES);
+    self.progressLabel.text = formatTimeInterval(playbackTime, NO);
+    self.rightLabel.text = formatTimeInterval(restTime, YES);
     
 }
 
@@ -573,7 +580,6 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
 /*
  * User tap full screen button
  */
-
 -(void)fullScreenDidTouch:(id)sender{
     if (_isFullScreen)
         [self exitFullScreen];
@@ -585,23 +591,19 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
  * Method that tell to delegate class that the user tap the button to show full screen
  */
 -(void)showFullScreen{
-    _isFullScreen=YES;
+    _isFullScreen = YES;
     [_fullScreenButton setImage:[UIImage imageNamed:@"exitFullScreen.png"] forState:UIControlStateNormal];
     [_delegate fullScreenPlayer:_isFullScreen];
     
 }
 
-
-
 /*
  * Method that tell to delegate class that the user tap the button to quit full screen
  */
 - (void)exitFullScreen{
-    _isFullScreen=NO;
+    _isFullScreen = NO;
     [_fullScreenButton setImage:[UIImage imageNamed:@"fullScreen.png"] forState:UIControlStateNormal];
     [_delegate fullScreenPlayer:_isFullScreen];
-    
-    
 }
 
 

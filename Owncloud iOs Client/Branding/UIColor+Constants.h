@@ -14,8 +14,9 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface UIColor(Constants)
+@interface UIColor (Constants)
 
 //NAVIGATION AND TOOL BAR
 

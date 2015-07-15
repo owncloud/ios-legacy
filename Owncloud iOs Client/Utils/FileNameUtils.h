@@ -14,7 +14,9 @@
  */
 
 #import <Foundation/Foundation.h>
-
+#import <UIKit/UIKit.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import "OCAsset.h"
 
 
 
@@ -84,16 +86,14 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
 
 
 /*
- * Method that check the file name or folder name to find forbiden characters
- * This is the forbiden characters in server: "\", "/","<",">",":",""","|","?","*"
+ * Method that check the file name or folder name to find forbidden characters
+ * This is the forbidden characters in server: "\", "/","<",">",":",""","|","?","*"
  * @fileName -> file name
+ *
+ * @isFCSupported -> From ownCloud 8.1 the forbidden characters are controller by the server except the '/'
  */
-+ (BOOL)isForbidenCharactersInFileName:(NSString*)fileName;
++ (BOOL) isForbiddenCharactersInFileName:(NSString*)fileName withForbiddenCharactersSupported:(BOOL)isFCSupported;
 
-/*Method to remove the first http or https from an url
- *@url -> url from the server
- */
-+ (NSString*) getUrlServerWithoutHttpOrHttps:(NSString*) url;
 
 /*
  * This method check and url and look for a saml fragment
@@ -167,5 +167,22 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
  * @param alertView -> UIAlertView
  */
 + (void)markFileNameOnAlertView: (UITextField *) textFieldToMark;
+
+///-----------------------------------
+/// @name getComposeNameFromAsset
+///-----------------------------------
+/*
+ Method to generate the name of the file depending if it is a video or an image
+ */
++ (NSString *)getComposeNameFromAsset:(ALAsset *)asset;
+
+///-----------------------------------
+/// @name getComposeNameFromPath
+///-----------------------------------
+/*
+ Method to generate the name of the file depending if it is a video or an image
+ */
++ (NSString *)getComposeNameFromPath:(NSString *) path;
+
 
 @end

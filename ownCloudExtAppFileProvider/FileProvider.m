@@ -160,7 +160,7 @@
     
     UserDto *user = [ManageUsersDB getUserByIdUser:userId];
     
-    NSString *remotePath = [NSString stringWithFormat: @"%@%@%@", user.url, k_url_webdav_server,[UtilsDtos getDBFilePathOfFileDtoFilePath:file.filePath ofUserDto:user]];
+    NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:user],[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:user]];
     
     long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
     
@@ -188,36 +188,6 @@
     [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
     
     [ManageUploadsDB insertUpload:upload];
-    
-}
-
-#pragma mark - FMDataBase
-
-+ (FMDatabaseQueue*)sharedDatabase
-{
-     static FMDatabaseQueue* sharedDatabase = nil;
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:@"DB.sqlite"]]) {
-        
-        if (sharedDatabase == nil)
-        {
-            NSString *documentsDir = [UtilsUrls getOwnCloudFilePath];
-            NSString *dbPath = [documentsDir stringByAppendingPathComponent:@"DB.sqlite"];
-            
-            sharedDatabase = [[FMDatabaseQueue alloc] initWithPath:dbPath flags:SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE];
-        }
-    }
-    
-    NSString *documentsDir = [UtilsUrls getOwnCloudFilePath];
-    NSString *dbPath = [documentsDir stringByAppendingPathComponent:@"DB.sqlite"];
-    
-    // Make sure the database is encrypted when the device is locked
-    NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone forKey:NSFileProtectionKey];
-    if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:dbPath error:nil]) {
-        // Deal with the error
-    }
-    
-    return sharedDatabase;
     
 }
 

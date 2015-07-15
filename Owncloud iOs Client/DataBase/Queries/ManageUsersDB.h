@@ -57,6 +57,11 @@
 + (NSMutableArray *) getAllUsers;
 
 /*
+ * Method that return an array with all users without credentials info
+ */
++ (NSMutableArray *) getAllUsersWithOutCredentialInfo;
+
+/*
  * Method that return an array with all users.
  * This method is only used with the old structure of the table used until version 9
  * And is only used in the update database method
@@ -106,5 +111,22 @@
  * @param UserDto -> user
  */
 + (void) updateUserByUserDto:(UserDto *) user;
+
+//-----------------------------------
+/// @name Has the Server Of the Active User Forbidden Character Support
+///-----------------------------------
+
+/**
+ * Method to get YES/NO depend if the server of the active user has forbidden character support.
+ *
+ * @return BOOL
+ */
++ (BOOL) hasTheServerOfTheActiveUserForbiddenCharactersSupport;
+
+
+
++ (void)updateUrlRedirected:(NSString *)newValue byUserDto:(UserDto *)user;
+
++ (NSString *) getUrlRedirectedByUserDto:(UserDto *)user;
 
 @end

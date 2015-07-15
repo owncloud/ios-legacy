@@ -28,20 +28,6 @@
 #import "DetailViewController.h"
 #import "ManageDownloads.h"
 
-#define k_DB_version_1 1
-#define k_DB_version_2 2
-#define k_DB_version_3 3
-#define k_DB_version_4 4
-#define k_DB_version_5 5
-#define k_DB_version_6 6
-#define k_DB_version_7 7
-#define k_DB_version_8 8
-#define k_DB_version_9 9
-#define k_DB_version_10 10
-#define k_DB_version_11 11
-#define k_DB_version_12 12
-
-@class MGSplitViewController;
 @class FilesViewController;
 @class RecentViewController;
 @class SettingsViewController;
@@ -77,7 +63,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
     //OCTabBarController *_tabBarController;
    
     CheckAccessToServer *_mCheckAccessToServer;
-    MGSplitViewController *_splitViewController;  
+    UISplitViewController *_splitViewController;
     DetailViewController *_detailViewController;
     
     UploadFromOtherAppViewController *_uploadFromOtherAppViewController;
@@ -105,9 +91,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
     //Flag
     BOOL _isRefreshInProgress;
     BOOL _isErrorLoginShown;
-    
-    //Flag to force the reload the File List from WebDav
-    BOOL _isNecessaryReloadFromWebDav;
     
     //OAuth
     NSString *_oauthToken;
@@ -139,18 +122,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 + (OCCommunication*)sharedOCCommunication;
 
-
-///-----------------------------------
-/// @name SharedManageFavorites
-///-----------------------------------
-
-/**
- * Method to get a singelton of ManageFavorites
- *
- */
-+ (ManageFavorites*)sharedManageFavorites;
-
-- (void)dismissPopover;
 - (void)doLoginWithOauthToken;
 
 //Method that erase the data of the detail view in iPad.
@@ -198,18 +169,11 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 - (void) doThingsThatShouldDoOnStart;
 
 /*
- * Methods to clear network cache
- */
-- (void) eraseURLCache;
-- (void) eraseCredentials;
-
-/*
  * Method relaunch the upload failed if exist
  * This method has a timeout
  *@isForced -> If YES the timeout is 0 secs
  */
 - (void) relaunchUploadsFailed:(BOOL)isForced;
-
 
 /*
  * Method that relaunch upload failed without timeout
@@ -313,7 +277,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) FilesViewController *filesViewController;
 @property (nonatomic, strong) FilesViewController *presentFilesViewController;
 @property (nonatomic, strong) SettingsViewController *settingsViewController;
-@property (nonatomic, strong) MGSplitViewController *splitViewController;
+@property (nonatomic, strong) UISplitViewController *splitViewController;
 @property (nonatomic, strong)DetailViewController *detailViewController;
 @property (nonatomic, strong) MediaViewController *mediaPlayer;
 @property (nonatomic, strong) UploadFromOtherAppViewController *uploadFromOtherAppViewController;
@@ -325,7 +289,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic) BOOL isFileFromOtherAppWaitting;
 @property (nonatomic) BOOL isSharedToOwncloudPresent;
 @property (nonatomic, strong) NSString *oauthToken;
-@property (nonatomic) BOOL isNecessaryReloadFromWebDav;
 @property (nonatomic, strong) PrepareFilesToUpload *prepareFiles;
 @property (nonatomic, strong) NSOperationQueue *databaseOperationsQueue;
 @property (nonatomic) BOOL isUploadViewVisible;
@@ -347,5 +310,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 //Url of the server redirected to be used on uploads in background
 @property (nonatomic, strong) NSString *urlServerRedirected;
 @property (nonatomic, strong) ManageDownloads *downloadManager;
+@property (nonatomic, strong) ManageFavorites *manageFavorites;
+
 
 @end

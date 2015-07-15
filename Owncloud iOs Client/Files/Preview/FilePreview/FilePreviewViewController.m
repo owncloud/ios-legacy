@@ -87,8 +87,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     [super viewDidLoad];
     
     //Enable toolBar and navBar
-    self.navigationController.navigationBar.UserInteractionEnabled = YES;
-    _toolBar.UserInteractionEnabled = YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
+    _toolBar.userInteractionEnabled = YES;
     
     _progressViewHeightConstraint.constant = 2;
     
@@ -111,10 +111,17 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     //Get current local folder
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsDtos getDBFilePathOfFileDtoFilePath:_file.filePath ofUserDto:app.activeUser]];
+    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
     _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
-   
+    //Check if share link button should be appear.
+    if (k_hide_share_options) {
+        NSMutableArray *customItems = [NSMutableArray arrayWithArray:self.toolBar.items];
+        [customItems removeObjectIdenticalTo:_shareButtonBar];
+        [customItems removeObjectIdenticalTo:_flexibleSpaceAfterShareButtonBar];
+        self.toolBar.items = customItems;
+    }
+    
     //Method that managed every type of file
     [self handleFile];
 }
@@ -494,7 +501,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             Download *download = nil;
             
             for (Download *temp in downs) {
-                if (temp.fileDto.idFile == _file.idFile) {
+                if ([temp.fileDto.localFolder isEqualToString:_file.localFolder]) {
                     download = temp;
                     break;
                 }
@@ -551,17 +558,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  * This method checks if there is on a favorite file a new version on the server
  */
 - (void) checkIfThereIsANewFavoriteVersion {
-    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    //Set if there is a new version of a favorite file and it's not checked
     
-    if([[AppDelegate sharedManageFavorites] thereIsANewVersionAvailableOfThisFile:_file]) {
-        //Set the file as isNecessaryUpdate
-        [ManageFilesDB setIsNecessaryUpdateOfTheFile:_file.idFile];
-        //Update the file on memory
-        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
-        //Do the request to get the shared items
-        [self handleFile];
+    if (!self.manageFavorites) {
+        self.manageFavorites = [ManageFavorites new];
+        self.manageFavorites.delegate = self;
     }
+    
+    [self.manageFavorites thereIsANewVersionAvailableOfThisFile:self.file];
 }
 
 /*
@@ -723,14 +726,14 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  * Delegate method that change the file selected from gallery
  */
 - (void)selectThisFile:(FileDto*)file{
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    NSString *nextFile = [UtilsDtos getRemoteUrlByFile:file andUserDto:appDelegate.activeUser];
-    NSString *fileInGallery = [UtilsDtos getRemoteUrlByFile:_file andUserDto:appDelegate.activeUser];
+    NSString *nextFile = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:app.activeUser];
+    NSString *fileInGallery = [UtilsUrls getFullRemoteServerFilePathByFile:self.file andUser:app.activeUser];
     //If file is not the same that the previewed file, change the title
     if (![fileInGallery isEqualToString:nextFile]) {
-        _file = file;
-        [self putTitleInNavBarByName:_file.fileName];
+        self.file = file;
+        [self putTitleInNavBarByName:self.file.fileName];
         [self putTheFavoriteStatus];
     }
 }
@@ -936,6 +939,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [_moviePlayer.moviePlayer prepareToPlay];
         [_moviePlayer playFile];
         
+ 
         appDelegate.mediaPlayer = _moviePlayer;
         [self.view addSubview:_moviePlayer.moviePlayer.view];
     }
@@ -1038,7 +1042,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 - (IBAction)didPressFavoritesButton:(id)sender {
     //Update the file from the DB
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (_file.isFavorite) {
         _file.isFavorite = NO;
@@ -1285,7 +1289,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
-            _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+            _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
             
             [self downloadTheFile];
         } else {
@@ -1377,7 +1381,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Update fileDto    
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if (_file.idFile == fileDto.idFile) {
         
@@ -1577,10 +1581,10 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Update the _file with DB
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     NSString *path = (NSString*)[notification object];
-    NSString *pathPreview = [UtilsDtos getRemoteUrlByFile:_file andUserDto:app.activeUser];
+    NSString *pathPreview = [UtilsUrls getFullRemoteServerFilePathByFile:self.file andUser:app.activeUser];
     if ([path isEqualToString:pathPreview]) {
         DLog(@"The file is the same, update the preview");
         _file.isDownload = downloaded;
@@ -1597,8 +1601,27 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Update the preview file with the new information in DB
-    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsDtos getFilePathOnDBFromFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    _file=[ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     app.isOverwriteProcess = NO;
+}
+
+#pragma mark - ManageFavoritesDelegate
+
+- (void) fileHaveNewVersion:(BOOL)isNewVersionAvailable {
+    
+    if(isNewVersionAvailable) {
+        
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        //Set if there is a new version of a favorite file and it's not checked
+        
+        //Set the file as isNecessaryUpdate
+        [ManageFilesDB setIsNecessaryUpdateOfTheFile:_file.idFile];
+        //Update the file on memory
+        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
+        //Do the request to get the shared items
+        [self handleFile];
+    }
+    
 }
 
 @end

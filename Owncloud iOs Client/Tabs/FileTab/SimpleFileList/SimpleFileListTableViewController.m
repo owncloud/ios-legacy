@@ -37,6 +37,8 @@
 #import "AppDelegate.h"
 #import "EditAccountViewController.h"
 #import "OCNavigationController.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
 #else
 #import "DocumentPickerViewController.h"
 #endif
@@ -361,6 +363,8 @@
     
 #ifdef CONTAINER_APP
     sharedCommunication = [AppDelegate sharedOCCommunication];
+#elif SHARE_IN
+    sharedCommunication = Managers.sharedOCCommunication;
 #else
     sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
 #endif
@@ -374,9 +378,9 @@
         [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
     }
     
-    [sharedCommunication setUserAgent:k_user_agent];
+    [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
     
-    NSString *remotePath = [UtilsDtos getRemoteUrlByFile:file andUserDto:self.user];
+    NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:self.user];
     remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     [sharedCommunication readFolder:remotePath onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
@@ -512,7 +516,6 @@
     _HUD.delegate = self;
     [self.view.window addSubview:_HUD];
     
-    //MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     _HUD.labelText = NSLocalizedString(@"loading", nil);
     
     if (IS_IPHONE) {
@@ -558,8 +561,6 @@
 #ifdef CONTAINER_APP
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:message message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
         [alertView show];
-        
-        [self showEditAccount];
 #endif
         
     }else{
@@ -573,36 +574,37 @@
                              style:UIAlertActionStyleDefault
                              handler:^(UIAlertAction * action)
                              {
-                                    [self showEditAccount];
+                                 
                              }];
         [alert addAction:ok];
         
-        [self presentViewController:alert animated:YES completion:nil];
+        if ([self.navigationController isViewLoaded] && self.navigationController.view.window && self.resolveCredentialErrorViewController != nil) {
+            [self.resolveCredentialErrorViewController presentViewController:alert animated:YES completion:nil];
+        } else {
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        
     }
 }
 
 - (void) showEditAccount {
+    
 #ifdef CONTAINER_APP
     
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
     //Edit Account
-    EditAccountViewController *resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
-    [resolvedCredentialError setBarForCancelForLoadingFromModal];
+    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
+    [self.resolveCredentialErrorViewController setBarForCancelForLoadingFromModal];
     
     if (IS_IPHONE) {
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
+        
     } else {
-        
-        if (IS_IOS8) {
-            [appDelegate.detailViewController.popoverController dismissPopoverAnimated:YES];
-        }
-        
+
         OCNavigationController *navController = nil;
-        navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
+        navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
+        [self presentViewController:navController animated:YES completion:nil];
     }
 
 #endif
@@ -610,6 +612,9 @@
 }
 
 - (void) errorLogin {
+    
+    [self showEditAccount];
+    
     if (k_is_sso_active) {
        [self showError:NSLocalizedString(@"session_expired", nil)];
     } else {
@@ -674,6 +679,8 @@
     
 #ifdef CONTAINER_APP
     sharedCommunication = [AppDelegate sharedOCCommunication];
+#elif SHARE_IN
+    sharedCommunication = Managers.sharedOCCommunication;
 #else
     sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
 #endif
@@ -688,9 +695,9 @@
             [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
         }
         
-        [sharedCommunication setUserAgent:k_user_agent];
+        [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
         
-        NSString *remotePath = [UtilsDtos getRemoteUrlByFile:self.currentFolder andUserDto:self.user];
+        NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:self.currentFolder andUser:self.user];
         remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
         [sharedCommunication readFile:remotePath onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {

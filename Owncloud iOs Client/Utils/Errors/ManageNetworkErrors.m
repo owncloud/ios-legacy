@@ -42,6 +42,12 @@
             
             break;
         }
+            
+        case OCServerErrorForbiddenCharacters:
+            //Forbidden characters from the server side
+            [_delegate showError:NSLocalizedString(@"forbidden_characters_from_server", nil)];
+            break;
+            
         default:
             //Web Dav Error Code
             switch (errorHttp) {

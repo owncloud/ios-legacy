@@ -20,13 +20,18 @@
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
 #import "CredentialsDto.h"
+#import "UtilsCookies.h"
+#import "constants.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
+#import "Owncloud_iOs_Client-Swift.h"
 #elif FILE_PICKER
-#import "DocumentPickerViewController.h"
+#import "ownCloudExtApp-Swift.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
 #else
-#import "FileProvider.h"
+#import "ownCloudExtAppFileProvider-Swift.h"
 #endif
 
 @implementation ManageUsersDB
@@ -38,23 +43,15 @@
  */
 +(void) insertUser:(UserDto *)userDto {
     
-     DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount);
+     DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d / urlRedirected:%@ ", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount, userDto.urlRedirected);
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_cookies_support) Values(?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport]];
+        correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_cookies_support, has_forbidden_characters_support, url_redirected) Values(?, ?, ?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport], [NSNumber numberWithInteger:userDto.hasForbiddenCharactersSupport], userDto.urlRedirected];
         
         if (!correctQuery) {
             DLog(@"Error in insertUser");
@@ -83,18 +80,10 @@
     
     __block UserDto *output = nil;
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, has_forbidden_characters_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
         
         DLog(@"RSColumnt count: %d", rs.columnCount);
         
@@ -111,11 +100,14 @@
             output.storage = [rs longForColumn:@"storage"];
             output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            output.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
             
-            output.instant_upload = [rs intForColumn:@"instant_upload"];
-            output.path_instant_upload = [rs stringForColumn:@"path_instant_upload"];
-            output.only_wifi_instant_upload = [rs intForColumn:@"only_wifi_instant_upload"];
-            output.date_instant_upload = [rs longForColumn:@"date_instant_upload"];
+            output.instantUpload = [rs intForColumn:@"instant_upload"];
+            output.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
+            output.onlyWifiInstantUpload = [rs intForColumn:@"only_wifi_instant_upload"];
+            output.dateInstantUpload = [rs longForColumn:@"date_instant_upload"];
+            
+            output.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
             NSString *idString = [NSString stringWithFormat:@"%ld", (long)output.idUser];
 
@@ -154,8 +146,10 @@
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             app.activeUser = user;
             
-            [app eraseCredentials];
-            [app eraseURLCache];
+            NSString *connectURL =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
+
+            [UtilsCookies eraseCredentialsWithURL:connectURL];
+            [UtilsCookies eraseURLCache];
         }
 #endif
 
@@ -175,18 +169,10 @@
     
     output=[UserDto new];
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, has_forbidden_characters_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
     
         while ([rs next]) {
             
@@ -198,12 +184,15 @@
             output.storage = [rs longForColumn:@"storage"];
             output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            output.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
             
-            output.instant_upload = [rs intForColumn:@"instant_upload"];
-            output.path_instant_upload = [rs stringForColumn:@"path_instant_upload"];
-            output.only_wifi_instant_upload = [rs intForColumn:@"only_wifi_instant_upload"];
-            output.date_instant_upload = [rs longForColumn:@"date_instant_upload"];
-
+            output.instantUpload = [rs intForColumn:@"instant_upload"];
+            output.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
+            output.onlyWifiInstantUpload = [rs intForColumn:@"only_wifi_instant_upload"];
+            output.dateInstantUpload = [rs longForColumn:@"date_instant_upload"];
+            
+            output.urlRedirected = [rs stringForColumn:@"url_redirected"];
+            
             NSString *idString = [NSString stringWithFormat:@"%ld", (long)output.idUser];
 
             CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
@@ -249,19 +238,11 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-    FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users ORDER BY id ASC"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, has_forbidden_characters_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users ORDER BY id ASC"];
         
         UserDto *current = nil;
         
@@ -277,11 +258,14 @@
             current.storage = [rs longForColumn:@"storage"];
             current.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             current.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            current.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
             
-            current.instant_upload = [rs intForColumn:@"instant_upload"];
-            current.path_instant_upload = [rs stringForColumn:@"path_instant_upload"];
-            current.only_wifi_instant_upload = [rs intForColumn:@"only_wifi_instant_upload"];
-            current.date_instant_upload = [rs longForColumn:@"date_instant_upload"];
+            current.instantUpload = [rs intForColumn:@"instant_upload"];
+            current.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
+            current.onlyWifiInstantUpload = [rs intForColumn:@"only_wifi_instant_upload"];
+            current.dateInstantUpload = [rs longForColumn:@"date_instant_upload"];
+            
+            current.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
             NSString *idString = [NSString stringWithFormat:@"%ld", (long)current.idUser];
 
@@ -302,6 +286,54 @@
     return output;
 }
 
++ (NSMutableArray *) getAllUsersWithOutCredentialInfo{
+    
+    DLog(@"getAllUsersWithOutCredentialInfo");
+    
+    __block NSMutableArray *output = [NSMutableArray new];
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, has_forbidden_characters_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users ORDER BY id ASC"];
+        
+        UserDto *current = nil;
+        
+        while ([rs next]) {
+            
+            current = [UserDto new];
+            
+            current.idUser= [rs intForColumn:@"id"];
+            current.url = [rs stringForColumn:@"url"];
+            current.ssl = [rs intForColumn:@"ssl"];
+            current.activeaccount = [rs intForColumn:@"activeaccount"];
+            current.storageOccupied = [rs longForColumn:@"storage_occupied"];
+            current.storage = [rs longForColumn:@"storage"];
+            current.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
+            current.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            current.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
+            
+            current.instantUpload = [rs intForColumn:@"instant_upload"];
+            current.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
+            current.onlyWifiInstantUpload = [rs intForColumn:@"only_wifi_instant_upload"];
+            current.dateInstantUpload = [rs longForColumn:@"date_instant_upload"];
+            
+            current.urlRedirected = @"";
+            
+            [output addObject:current];
+            
+        }
+        
+        [rs close];
+        
+    }];
+    
+    
+    return output;
+
+}
+
 /*
  * Method that return an array with all users. 
  * This method is only used with the old structure of the table used until version 9
@@ -313,15 +345,7 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -368,15 +392,7 @@
  */
 +(void) setActiveAccountByIdUser: (NSInteger) idUser {
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -398,15 +414,7 @@
  */
 +(void) setAllUsersNoActive {
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -426,15 +434,7 @@
  */
 +(void) setActiveAccountAutomatically {
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -455,15 +455,7 @@
  */
 +(void) removeUserAndDataByIdUser:(NSInteger)idUser {
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -515,6 +507,7 @@
     NSString *idString = [NSString stringWithFormat:@"%ld", (long)idUser];
     if (![OCKeychain removeCredentialsById:idString]) {
         DLog(@"Error delete keychain credentials");
+        
     }
 }
 
@@ -523,15 +516,7 @@
  */
 +(void) updateStorageByUserDto:(UserDto *) user {
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
@@ -555,18 +540,11 @@
     
     output=[UserDto new];
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload FROM users ORDER BY id DESC LIMIT 1"];
+
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_cookies_support, has_forbidden_characters_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users ORDER BY id DESC LIMIT 1"];
         
         while ([rs next]) {
             
@@ -578,11 +556,14 @@
             output.storage = [rs longForColumn:@"storage"];
             output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            output.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
             
-            output.instant_upload = [rs intForColumn:@"instant_upload"];
-            output.path_instant_upload = [rs stringForColumn:@"path_instant_upload"];
-            output.only_wifi_instant_upload = [rs intForColumn:@"only_wifi_instant_upload"];
-            output.date_instant_upload = [rs longForColumn:@"date_instant_upload"];
+            output.instantUpload = [rs intForColumn:@"instant_upload"];
+            output.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
+            output.onlyWifiInstantUpload = [rs intForColumn:@"only_wifi_instant_upload"];
+            output.dateInstantUpload = [rs longForColumn:@"date_instant_upload"];
+            
+            output.urlRedirected = [rs stringForColumn:@"url_redirected"];
         }
         
         [rs close];
@@ -603,21 +584,12 @@
  */
 + (void) updateUserByUserDto:(UserDto *) user {
     
-        FMDatabaseQueue *queue;
-    
-#ifdef CONTAINER_APP
-    queue = [AppDelegate sharedDatabase];
-#elif FILE_PICKER
-    queue = [DocumentPickerViewController sharedDatabase];
-#else
-    queue = [FileProvider sharedDatabase];
-#endif
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_cookies_support=?, instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, date_instant_upload=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport],[NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithBool:user.instant_upload], user.path_instant_upload, [NSNumber numberWithBool:user.only_wifi_instant_upload], [NSNumber numberWithLong:user.date_instant_upload], [NSNumber numberWithInteger:user.idUser]];
-
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, date_instant_upload=?, url_redirected=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport],[NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithBool:user.instantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.dateInstantUpload], user.urlRedirected, [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error updating a user");
@@ -627,5 +599,65 @@
     
 }
 
+//-----------------------------------
+/// @name Has the Server Of the Active User Forbidden Character Support
+///-----------------------------------
+
+/**
+ * Method to get YES/NO depend if the server of the active user has forbidden character support.
+ *
+ * @return BOOL
+ */
++ (BOOL) hasTheServerOfTheActiveUserForbiddenCharactersSupport{
+    
+    BOOL isForbiddenCharacterSupport = NO;
+    
+    UserDto *activeUser = [ManageUsersDB getActiveUser];
+    
+    if (activeUser.hasForbiddenCharactersSupport == serverFunctionalitySupported) {
+        isForbiddenCharacterSupport = YES;
+    }
+    
+    return isForbiddenCharacterSupport;
+}
+
+
+#pragma mark - urlRedirected
+
++(void)updateUrlRedirected:(NSString *)newValue byUserDto:(UserDto *)user {
+    DLog(@"Updated url redirected");
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE users SET url_redirected=? WHERE id = ?", newValue, [NSNumber numberWithInteger:user.idUser]];
+        
+        if (!correctQuery) {
+            DLog(@"Error updating url_redirected");
+        }
+    }];
+}
+
++(NSString *)getUrlRedirectedByUserDto:(UserDto *)user {
+    DLog(@"getUrlRedirected");
+        
+    __block NSString *output;
+        
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+        
+        [queue inDatabase:^(FMDatabase *db) {
+            FMResultSet *rs = [db executeQuery:@"SELECT url_redirected FROM users  WHERE id = ?", [NSNumber numberWithInteger:user.idUser]];
+            
+            while ([rs next]) {
+                
+                output = [rs stringForColumn:@"url_redirected"];
+            }
+            
+        }];
+        
+    return output;
+}
 
 @end

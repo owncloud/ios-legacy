@@ -32,6 +32,7 @@
 #import "UtilsCookies.h"
 #import "ManageCookiesStorageDB.h"
 #import "UIAlertView+Blocks.h"
+#import "UtilsUrls.h"
 
 //Cookie
 #define k_cookie_user_value_name @"oc_username"
@@ -123,7 +124,7 @@
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:k_timeout_upload];
     
     //Add the user agent
-    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
+    [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
     
     [UtilsFramework deleteAllCookies];
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
@@ -145,7 +146,7 @@
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:k_timeout_upload];
     
     //Add the user agent
-    [request addValue:k_user_agent forHTTPHeaderField:@"User-Agent"];
+    [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
     
     _webView.delegate = self;
     [_webView setScalesPageToFit:YES];

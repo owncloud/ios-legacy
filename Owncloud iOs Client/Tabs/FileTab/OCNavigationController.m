@@ -30,33 +30,18 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
         
-        UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:18];
-        
-        self.navigationBar.barTintColor = [UIColor colorOfNavigationBar];
-        
-        [self.navigationBar setBackgroundImage:[ImageUtils imageWithColor:[UIColor colorOfBackgroundNavBarImage]] forBarMetrics:UIBarMetricsDefault];
-        
-        //Add background view in nav bar
-        [self manageBackgroundView:NO];
-        
-        [self.navigationBar setTintColor:[UIColor colorOfNavigationItems]];
-        
-        //Set the title color
-        NSShadow *shadow = [[NSShadow alloc] init];
-        shadow.shadowColor = [UIColor colorOfNavigationTitle];
-        shadow.shadowOffset = CGSizeMake(0.7, 0);
-        
-        
-       NSDictionary *titleAttributes = @{NSForegroundColorAttributeName: [UIColor colorOfNavigationTitle],
-                                          NSShadowAttributeName: shadow,
-                                          NSFontAttributeName: appFont};
-        
-        
-        
-        [self.navigationBar setTitleTextAttributes:titleAttributes];
-        
+        [self applyBrandedStyle];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder{
+    
+    self = [super initWithCoder:aDecoder];
+    
+    if (self) {
+        [self applyBrandedStyle];
     }
     return self;
 }
@@ -67,6 +52,38 @@
 	// Do any additional setup after loading the view.
     //NavBar color
    
+    
+}
+
+- (void) applyBrandedStyle{
+    
+    // Custom initialization
+    
+    UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:18];
+    
+    self.navigationBar.barTintColor = [UIColor colorOfNavigationBar];
+    
+    [self.navigationBar setBackgroundImage:[ImageUtils imageWithColor:[UIColor colorOfBackgroundNavBarImage]] forBarMetrics:UIBarMetricsDefault];
+    
+    //Add background view in nav bar
+    [self manageBackgroundView:NO];
+    
+    [self.navigationBar setTintColor:[UIColor colorOfNavigationItems]];
+    
+    //Set the title color
+    NSShadow *shadow = [[NSShadow alloc] init];
+    shadow.shadowColor = [UIColor colorOfNavigationTitle];
+    shadow.shadowOffset = CGSizeMake(0.7, 0);
+    
+    
+    NSDictionary *titleAttributes = @{NSForegroundColorAttributeName: [UIColor colorOfNavigationTitle],
+                                      NSShadowAttributeName: shadow,
+                                      NSFontAttributeName: appFont};
+    
+    
+    
+    [self.navigationBar setTitleTextAttributes:titleAttributes];
+    
     
 }
 
@@ -84,8 +101,15 @@
     if (!isShow) {
         
         CGRect bgFrame = self.navigationBar.bounds;
+#ifdef SHARE_IN
+        if (IS_IPHONE) {
+            bgFrame.origin.y -= 20.0;
+            bgFrame.size.height += 20.0;
+        }
+#else
         bgFrame.origin.y -= 20.0;
         bgFrame.size.height += 20.0;
+#endif
         _backgroundView = [[PassthroughView alloc] initWithFrame:bgFrame];
         _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _backgroundView.backgroundColor = [UIColor colorOfNavigationBar];
@@ -113,5 +137,20 @@
 {
     return UIStatusBarStyleLightContent;
 }
+
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+#ifdef SHARE_IN
+    if (IS_IPHONE && fromInterfaceOrientation != UIInterfaceOrientationPortrait) {
+        
+        CGRect frame = self.navigationBar.frame;
+        
+        self.navigationBar.frame = CGRectMake(0, 20, frame.size.width, frame.size.height);
+       
+    }
+#endif
+}
+
+
 
 @end

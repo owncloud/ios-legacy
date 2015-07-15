@@ -37,7 +37,8 @@
 #import "EmptyCell.h"
 #import "UtilsTableView.h"
 #import "DownloadUtils.h"
-
+#import "UtilsUrls.h"
+#import "RenameFile.h"
 
 @interface RecentViewController ()
 
@@ -530,6 +531,9 @@
                 case errorFileExist:
                     msgError=NSLocalizedString(@"error_file_exists", nil);
                     break;
+                case errorInvalidPath:
+                    msgError=NSLocalizedString(@"error_file_invalid_characters", nil);
+                    break;
                 case errorNotPermission:
                     msgError=NSLocalizedString(@"error_permission", nil);
                     break;
@@ -552,7 +556,7 @@
             
             failedCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             failedCell.labelLengthAndError.text=lengthAndError;
-            failedCell.labelUserName.text=[NSString stringWithFormat:@"%@@%@", currentManageUploadRequest.userUploading.username, [FileNameUtils getUrlServerWithoutHttpOrHttps:currentManageUploadRequest.userUploading.url]];
+            failedCell.labelUserName.text=[NSString stringWithFormat:@"%@@%@", currentManageUploadRequest.userUploading.username, [UtilsUrls getUrlServerWithoutHttpOrHttps:currentManageUploadRequest.userUploading.url]];
             //If there are SAML replacind the percents escapes with UTF8 coding
             if (k_is_sso_active) {
                 failedCell.labelUserName.text = [failedCell.labelUserName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -607,7 +611,7 @@
             uploadRecentCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             uploadRecentCell.labelLengthAndDate.text=labelLengthAndDateString;
             uploadRecentCell.labelPath.text=currentManageUploadRequest.pathOfUpload;
-            uploadRecentCell.labelUserName.text=[NSString stringWithFormat:@"%@@%@", currentManageUploadRequest.userUploading.username, [FileNameUtils getUrlServerWithoutHttpOrHttps:currentManageUploadRequest.userUploading.url]];
+            uploadRecentCell.labelUserName.text=[NSString stringWithFormat:@"%@@%@", currentManageUploadRequest.userUploading.username, [UtilsUrls getUrlServerWithoutHttpOrHttps:currentManageUploadRequest.userUploading.url]];
             //If there are SAML replacind the percents escapes with UTF8 coding
             if (k_is_sso_active) {
                 uploadRecentCell.labelUserName.text = [uploadRecentCell.labelUserName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -733,11 +737,9 @@
             if (selectedManageUploadRequest.currentUpload.kindOfError == errorCredentials) {
                 DLog(@"Credential errors");
                 [self resolveCredentialError:selectedManageUploadRequest.currentUpload];
-                
             } else if (selectedManageUploadRequest.currentUpload.kindOfError == errorDestinyNotExist){
                 DLog(@"Destiny folder doesn't exist");
                 [self resolveFolderNotFoundError:selectedManageUploadRequest.currentUpload];
-                
             } else if (selectedManageUploadRequest.currentUpload.kindOfError == errorFileExist){
                 [self resolveFileExistError:selectedManageUploadRequest.currentUpload];
                 DLog(@"File exists");
@@ -811,7 +813,7 @@
         if (k_is_sso_active) {
             userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         }
-        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [FileNameUtils getUrlServerWithoutHttpOrHttps:userSelected.url]];
+        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                            message:temp
                                                           delegate:nil
@@ -848,7 +850,7 @@
         if (k_is_sso_active) {
             userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         }
-        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [FileNameUtils getUrlServerWithoutHttpOrHttps:userSelected.url]];
+        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                            message:temp
                                                           delegate:nil
@@ -865,10 +867,6 @@
             OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
             [self.navigationController presentViewController:navController animated:YES completion:nil];
         } else {
-            
-            if (IS_IOS8) {
-                [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-            }
             
             OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
             navController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -910,14 +908,13 @@
             file.fileName = [_selectedUploadToResolveTheConflict.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             file.isDirectory = NO;
             
-            _overWritteOption = [OverwriteFileOptions new];
+            if (!self.overWritteOption) {
+                _overWritteOption = [OverwriteFileOptions new];
+            }
             
             if (IS_IPHONE) {
                 _overWritteOption.viewToShow = self.view;
             } else {
-                if (IS_IOS8) {
-                    [app.detailViewController.popoverController dismissPopoverAnimated:YES];
-                }
                 _overWritteOption.viewToShow = app.splitViewController.view;
             }
             _overWritteOption.delegate = self;
@@ -932,7 +929,7 @@
                 userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             }
 
-            NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [FileNameUtils getUrlServerWithoutHttpOrHttps:userSelected.url]];
+            NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
             UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                                message:temp
                                                               delegate:nil
@@ -971,7 +968,7 @@
         if (k_is_sso_active) {
             userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         }
-        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [FileNameUtils getUrlServerWithoutHttpOrHttps:userSelected.url]];
+        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                            message:temp
                                                           delegate:nil
@@ -990,7 +987,8 @@
     //Get the file related with the upload file if exist and remove the download
     UserDto *user = [ManageUsersDB getUserByIdUser:self.selectedUploadToResolveTheConflict.userId];
     
-    NSString *folderName=[UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",self.selectedUploadToResolveTheConflict.destinyFolder,self.selectedUploadToResolveTheConflict.uploadFileName] andUserDto:user];
+    NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:_selectedUploadToResolveTheConflict.destinyFolder andUser:user];
+
     FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.selectedUploadToResolveTheConflict.uploadFileName andFilePath:folderName andUser:user];
     
     if (uploadFile) {
@@ -1025,10 +1023,10 @@
     
     //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
     //The folder Name: A/
-    NSString *folderName=[UtilsDtos getFilePathByRemoteURL:[NSString stringWithFormat:@"%@%@",_selectedUploadToResolveTheConflict.destinyFolder,_selectedUploadToResolveTheConflict.uploadFileName] andUserDto:app.activeUser];
+    NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:_selectedUploadToResolveTheConflict.destinyFolder andUser:app.activeUser];
     
     //Obtain the file that the user wants overwrite    
-    FileDto *file=nil;
+    FileDto *file = nil;
     file = [ManageFilesDB getFileDtoByFileName:_selectedUploadToResolveTheConflict.uploadFileName andFilePath:folderName andUser:app.activeUser];
     
     //Check if this file is being updated and cancel it
@@ -1075,7 +1073,7 @@
     NSString *folderName = [NSString stringWithFormat:@"/%@",[splitedUrl objectAtIndex:([splitedUrl count]-2)]];
     
     DLog(@"Folder is:%@", folderName);
-    if ([_currentRemoteFolder isEqualToString:[NSString stringWithFormat:@"%@%@", app.activeUser.url,k_url_webdav_server]]) {
+    if ([_currentRemoteFolder isEqualToString:[UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser]]) {
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
         folderName=appName;
     }
@@ -1190,6 +1188,8 @@
         //Nothing
     }
 }
+
+
 
 
 @end
