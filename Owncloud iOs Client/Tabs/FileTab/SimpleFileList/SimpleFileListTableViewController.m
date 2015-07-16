@@ -383,7 +383,7 @@
     NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:self.user];
     remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    [sharedCommunication readFolder:remotePath onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+     [sharedCommunication readFolder:remotePath withUserSessionToken:nil onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
         
         for (OCFileDto *file in items) {
             DLog(@"File: %@", file.fileName);
@@ -454,7 +454,7 @@
             [self stopPullRefresh];
         }
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
         
         DLog(@"response: %@", response);
         DLog(@"error: %@", error);
