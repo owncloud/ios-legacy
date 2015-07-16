@@ -57,6 +57,7 @@
 #import "UtilsUrls.h"
 #import "Owncloud_iOs_Client-Swift.h"
 #import "ManageUsersDB.h"
+#import "UtilsFramework.h"
 
 
 //Constant for iOS7
@@ -1676,8 +1677,11 @@
     
    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
+    if (!app.userSessionCurrentToken) {
+        app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
+    }
     
-    [[AppDelegate sharedOCCommunication] readFolder:path withUserSessionToken:nil onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
+    [[AppDelegate sharedOCCommunication] readFolder:path withUserSessionToken:app.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
         
         DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError = NO;
@@ -1885,7 +1889,11 @@
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-     [[AppDelegate sharedOCCommunication] readFolder:path withUserSessionToken:nil onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
+    if (!app.userSessionCurrentToken) {
+        app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
+    }
+    
+     [[AppDelegate sharedOCCommunication] readFolder:path withUserSessionToken:app.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
         
         DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError=NO;

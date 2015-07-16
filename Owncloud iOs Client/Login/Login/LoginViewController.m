@@ -2047,6 +2047,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  */
 - (void) connectToServer{
     
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
     NSString *userName=self.usernameTextField.text;
     NSString *password=self.passwordTextField.text;
     
@@ -2059,6 +2061,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     }
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+    
+    
     
      [[AppDelegate sharedOCCommunication] readFolder:_connectString withUserSessionToken:nil onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token){
         
