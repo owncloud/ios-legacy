@@ -154,9 +154,10 @@
                 [ManageDB updateDBVersion12To13];
                 break;
             case k_DB_version_12:
+                [ManageDB updateDBVersion12To13];
                 //Update keychain of all the users
                 [OCKeychain updateAllKeychainsToUseTheLockProperty];
-                [ManageDB updateDBVersion12To13];
+                
                 break;
         }
     }
