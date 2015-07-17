@@ -173,7 +173,9 @@
     
     [self copyFileOnTheFileSystemByOrigin:file.localFolder andDestiny:temp];
     
-    if (![UtilsUrls isFileUploadingWithPath:remotePath andUser:user]) {
+    NSString *checkPath = [NSString stringWithFormat:@"%@%@", remotePath, file.fileName];
+    
+    if (![UtilsUrls isFileUploadingWithPath:checkPath andUser:user]) {
     
         UploadsOfflineDto *upload = [UploadsOfflineDto new];
         
@@ -251,8 +253,10 @@
     
     [self copyFileOnTheFileSystemByOrigin:url.path andDestiny:temp];
     
-    if (![UtilsUrls isFileUploadingWithPath:remotePath andUser:user]) {
-        
+     NSString *checkPath = [NSString stringWithFormat:@"%@%@", remotePath, url.lastPathComponent];
+    
+    if (![UtilsUrls isFileUploadingWithPath:checkPath andUser:user]) {
+
         NSError *copyError = nil;
         
         NSDictionary *attributes = nil;
@@ -278,7 +282,6 @@
         
     }
 }
-
 
 
 

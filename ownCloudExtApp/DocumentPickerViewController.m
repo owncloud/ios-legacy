@@ -264,6 +264,8 @@
                     UserDto *user = [ManageUsersDB getActiveUser];
                     NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:user],folder];
                     
+                     NSString *checkPath = [NSString stringWithFormat:@"%@%@", remotePath, temp.lastPathComponent];
+                    
                     if (![UtilsUrls isFileUploadingWithPath:remotePath andUser:user]) {
                         
                         UploadsOfflineDto *upload = [UploadsOfflineDto new];

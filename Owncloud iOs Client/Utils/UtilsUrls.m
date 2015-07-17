@@ -495,13 +495,18 @@
     //Check remote path and user with current uploads
     NSMutableArray *uploads = [ManageUploadsDB getUploadsByStatus:generatedByDocumentProvider];
     
+     NSString *checkPath = nil;
     
     for (UploadsOfflineDto *current in uploads) {
-        if ([current.destinyFolder isEqualToString:path] && current.userId == user.idUser) {
+        
+        checkPath = [NSString stringWithFormat:@"%@%@", current.destinyFolder, current.uploadFileName];
+        
+        if ([checkPath isEqualToString:path] && current.userId == user.idUser) {
             
             isFileUploading = YES;
             break;
         }
+
     }
     
     return isFileUploading;
