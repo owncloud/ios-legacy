@@ -1694,7 +1694,7 @@
                 [self errorLogin];
             }
         }
-        if (!isSamlCredentialsError) {
+        if (!isSamlCredentialsError && [app.userSessionCurrentToken isEqualToString:token]) {
            //Pass the items with OCFileDto to FileDto Array
            NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
            [self prepareForNavigationWithData:directoryList];
@@ -1894,9 +1894,9 @@
     }
     
      [[AppDelegate sharedOCCommunication] readFolder:path withUserSessionToken:app.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
-        
+         
         DLog(@"Operation response code: %ld", (long)response.statusCode);
-        BOOL isSamlCredentialsError=NO;
+        BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
         if (k_is_sso_active && redirectedServer) {
@@ -1907,7 +1907,7 @@
             }
         }
         
-        if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError) {
+        if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError && [app.userSessionCurrentToken isEqualToString:token]) {
             
             //Pass the items with OCFileDto to FileDto Array
             NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
