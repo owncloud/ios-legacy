@@ -352,8 +352,6 @@
 		4030D8F51A16277100DB0871 /* file_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F21A16277100DB0871 /* file_icon.png */; };
 		4030D8F61A16277100DB0871 /* file_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F31A16277100DB0871 /* file_icon@2x.png */; };
 		4030D8F71A16277100DB0871 /* file_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F41A16277100DB0871 /* file_icon@3x.png */; };
-		403886581B53A8BA00F55ADA /* iphoneInstantUpload.png in Resources */ = {isa = PBXBuildFile; fileRef = 403886571B53A8BA00F55ADA /* iphoneInstantUpload.png */; };
-		4038866C1B53D4CD00F55ADA /* iphoneFiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 4038866B1B53D4CD00F55ADA /* iphoneFiles.png */; };
 		404FDA241A36E5E5008AB4E1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */; };
 		404FDA281A36EA9D008AB4E1 /* ManageLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 404FDA271A36EA9D008AB4E1 /* ManageLocation.m */; };
 		4052B4D81B4ECC75000788DA /* btnAllHelpGrey.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4D71B4ECC75000788DA /* btnAllHelpGrey.png */; };
@@ -375,6 +373,8 @@
 		40AB1F6B1A123D1B003E7397 /* TABShares@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F6A1A123D1B003E7397 /* TABShares@3x.png */; };
 		40AC24D219FE725600582867 /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
 		40CC7F0D1B4E665400231D73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40CC7F0C1B4E665400231D73 /* Images.xcassets */; };
+		40E30ED61B59105D00D36B07 /* iphoneInstantUpload.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */; };
+		40E30EDA1B5911A400D36B07 /* iphoneFiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E30ED91B5911A400D36B07 /* iphoneFiles.png */; };
 		40E354C51A14D671000E7FE4 /* ownCloud-xmas@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */; };
 		40E354C71A14D6A2000E7FE4 /* sharedItem@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C61A14D6A2000E7FE4 /* sharedItem@3x.png */; };
 		40E354C91A14D6B2000E7FE4 /* openWithTB@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C81A14D6B2000E7FE4 /* openWithTB@3x.png */; };
@@ -1375,8 +1375,6 @@
 		4030D8F21A16277100DB0871 /* file_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_icon.png; sourceTree = "<group>"; };
 		4030D8F31A16277100DB0871 /* file_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@2x.png"; sourceTree = "<group>"; };
 		4030D8F41A16277100DB0871 /* file_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@3x.png"; sourceTree = "<group>"; };
-		403886571B53A8BA00F55ADA /* iphoneInstantUpload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneInstantUpload.png; sourceTree = "<group>"; };
-		4038866B1B53D4CD00F55ADA /* iphoneFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneFiles.png; sourceTree = "<group>"; };
 		404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		404FDA261A36EA9D008AB4E1 /* ManageLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageLocation.h; sourceTree = "<group>"; };
 		404FDA271A36EA9D008AB4E1 /* ManageLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageLocation.m; sourceTree = "<group>"; };
@@ -1401,6 +1399,8 @@
 		40AC24D019FE725600582867 /* CredentialsDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CredentialsDto.h; path = DataBase/DTOs/CredentialsDto.h; sourceTree = "<group>"; };
 		40AC24D119FE725600582867 /* CredentialsDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CredentialsDto.m; path = DataBase/DTOs/CredentialsDto.m; sourceTree = "<group>"; };
 		40CC7F0C1B4E665400231D73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneInstantUpload.png; sourceTree = "<group>"; };
+		40E30ED91B5911A400D36B07 /* iphoneFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneFiles.png; sourceTree = "<group>"; };
 		40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ownCloud-xmas@3x.png"; sourceTree = "<group>"; };
 		40E354C61A14D6A2000E7FE4 /* sharedItem@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@3x.png"; sourceTree = "<group>"; };
 		40E354C81A14D6B2000E7FE4 /* openWithTB@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "openWithTB@3x.png"; sourceTree = "<group>"; };
@@ -2674,8 +2674,8 @@
 			children = (
 				4052B4AC1B4E951F000788DA /* HelpPageButtons */,
 				40CC7F0C1B4E665400231D73 /* Images.xcassets */,
-				403886571B53A8BA00F55ADA /* iphoneInstantUpload.png */,
-				4038866B1B53D4CD00F55ADA /* iphoneFiles.png */,
+				40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */,
+				40E30ED91B5911A400D36B07 /* iphoneFiles.png */,
 				401AAA361B57C4F70047EA27 /* owncloudLogoFiles.png */,
 				405AD0C01B56C26A00271424 /* iphoneShare.png */,
 				400A63811B4FD94C00890579 /* iphoneAccounts.png */,
@@ -3599,7 +3599,6 @@
 				400904DC1A02B54600E3DD15 /* MainAppIcon_60-60@3x.png in Resources */,
 				40E354D91A14FD66000E7FE4 /* pdf_icon@3x.png in Resources */,
 				1487F219177C35AA004A1A5A /* BackRootFolderIcon@2x.png in Resources */,
-				403886581B53A8BA00F55ADA /* iphoneInstantUpload.png in Resources */,
 				400904D61A02AE3300E3DD15 /* Default-667h@2x.png in Resources */,
 				13A5ADB718883C77000EB617 /* WhatsappShareipad.png in Resources */,
 				1487F21A177C35AA004A1A5A /* doc_icon.png in Resources */,
@@ -3618,7 +3617,6 @@
 				1487F228177C35AA004A1A5A /* image_icon.png in Resources */,
 				1487F229177C35AA004A1A5A /* image_icon@2x.png in Resources */,
 				1487F22A177C35AA004A1A5A /* image_icon@2x~ipad.png in Resources */,
-				4038866C1B53D4CD00F55ADA /* iphoneFiles.png in Resources */,
 				13B1DDE218EC1F69006166DC /* sharedItemWhite.png in Resources */,
 				4030D8F11A16275900DB0871 /* file_icon~ipad.png in Resources */,
 				14A4796F18EC708D003500BA /* FileFavoriteUpdatingIcon@2x.png in Resources */,
@@ -3649,6 +3647,7 @@
 				1487F237177C35AA004A1A5A /* sound_icon@2x.png in Resources */,
 				1487F238177C35AA004A1A5A /* sound_icon@2x~ipad.png in Resources */,
 				13A726C818B399EC00795A90 /* ownCloud-xmas.png in Resources */,
+				40E30EDA1B5911A400D36B07 /* iphoneFiles.png in Resources */,
 				13A5ADB518883C77000EB617 /* CopyLinkShareiphone.png in Resources */,
 				40AB1F611A123B17003E7397 /* RootFolderIcon@3x.png in Resources */,
 				1487F239177C35AA004A1A5A /* sound_icon~ipad.png in Resources */,
@@ -3706,6 +3705,7 @@
 				40E354C71A14D6A2000E7FE4 /* sharedItem@3x.png in Resources */,
 				4005607C1A03CEEE0030D502 /* MainAppIcon_60-60@2x.png in Resources */,
 				1487F257177C35AA004A1A5A /* radio_checked@2x.png in Resources */,
+				40E30ED61B59105D00D36B07 /* iphoneInstantUpload.png in Resources */,
 				1487F258177C35AA004A1A5A /* radio_unchecked.png in Resources */,
 				1487F259177C35AA004A1A5A /* radio_unchecked@2x.png in Resources */,
 				13A5ADB618883C77000EB617 /* CopyLinkShareiphone@2x.png in Resources */,
