@@ -193,7 +193,7 @@
         
         while ([rs next]) {
             
-            output =[rs intForColumn:@"instant_upload"];
+            output =[rs boolForColumn:@"instant_upload"];
             
         }
         

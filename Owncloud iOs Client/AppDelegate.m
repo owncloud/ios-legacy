@@ -167,7 +167,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [NSURLCache setSharedURLCache:sharedCache];
     sleep(1); //Important sleep. Very ugly but neccesarry.
     
-    if (k_show_main_help_guide) {
+    DLog(@"showHelp_:%d",[ManageDB getShowHelpGuide]);
+    if (k_show_main_help_guide && [ManageDB getShowHelpGuide] && !_activeUser) {
         self.helpGuideWindowViewController = [HelpGuideViewController new];        
         self.window.rootViewController = self.helpGuideWindowViewController;
     }
@@ -1700,6 +1701,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //If it's first open
         if (!_filesViewController) {
             [self initAppWithEtagRequest:YES];
+            
 
         } else {
             if (_splitViewController) {

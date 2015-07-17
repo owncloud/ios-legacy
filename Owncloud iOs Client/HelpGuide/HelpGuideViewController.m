@@ -10,6 +10,7 @@
 #import "MyCustomAnimation.h"
 #import "AppDelegate.h"
 #import "UIColor+Constants.h"
+#import "ManageDB.h"
 
 @interface HelpGuideViewController ()
 
@@ -680,6 +681,7 @@
 
 -(void)stayPressed:(UIButton *) sender {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    [ManageDB updateShowHelpGuide:NO];
     [app showLoginView];
 }
 
