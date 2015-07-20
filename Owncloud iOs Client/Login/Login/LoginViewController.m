@@ -1903,6 +1903,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     //Update connect string
     [self updateConnectString];
     
+    [UtilsFramework deleteAllCookies];
     [UtilsCookies eraseURLCache];
     [UtilsCookies eraseCredentialsWithURL:self.connectString];
     
@@ -2046,6 +2047,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  */
 - (void) connectToServer{
     
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
     NSString *userName=self.usernameTextField.text;
     NSString *password=self.passwordTextField.text;
     
@@ -2059,7 +2062,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    [[AppDelegate sharedOCCommunication] readFolder:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+    
+    
+     [[AppDelegate sharedOCCommunication] readFolder:_connectString withUserSessionToken:nil onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token){
         
         DLog(@"Operation response code: %ld", (long)response.statusCode);
         
@@ -2087,7 +2092,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
             [self createUserAndDataInTheSystemWithRequest:directoryList andCode:response.statusCode];
         }
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
         
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);

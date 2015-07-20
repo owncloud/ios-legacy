@@ -112,7 +112,7 @@
     
     _userName = app.activeUser.username;
     
-    _serverName = [UtilsUrls getFullRemoteServerPathWithoutProtocol:app.activeUser];
+    _serverName = app.activeUser.url;
     
     _remoteFolder = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     

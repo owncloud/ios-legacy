@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
-#import "OCAsset.h"
-
 
 @interface ManageAsset : NSObject
 

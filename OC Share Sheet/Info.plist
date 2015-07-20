@@ -17,24 +17,18 @@
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>3.4.4</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>1.0</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>NSExtensionActivationRule</key>
 			<dict>
-				<key>NSExtensionActivationSupportsText</key>
-				<true/>
-				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
-				<integer>3</integer>
-				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
-                <integer>20</integer>
-                <key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
+				<key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
 				<integer>20</integer>
 				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
 				<integer>3</integer>
@@ -43,14 +37,10 @@
 				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
 				<integer>3</integer>
 				<key>NSExtensionActivationSupportsText</key>
-				<integer>3</integer>
+				<true/>
 				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
 				<integer>0</integer>
 			</dict>
-			<key>NSExtensionPointName</key>
-			<string>com.apple.share-services</string>
-			<key>NSExtensionPointVersion</key>
-			<string>1.0</string>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
 		<string>MainInterface</string>
