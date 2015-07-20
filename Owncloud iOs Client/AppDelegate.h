@@ -311,6 +311,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) NSString *urlServerRedirected;
 @property (nonatomic, strong) ManageDownloads *downloadManager;
 @property (nonatomic, strong) ManageFavorites *manageFavorites;
+@property (nonatomic, strong) NSString *userSessionCurrentToken;
 
 
 @end
