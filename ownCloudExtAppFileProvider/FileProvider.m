@@ -82,7 +82,7 @@
         error = [NSError errorWithDomain:NSPOSIXErrorDomain code:-1 userInfo:nil];
     }
     
-    NSLog(@"Provider identifier : %@", self.description);
+   // DLog(@"Provider identifier : %@", self.description);
     
     if (completionHandler) {
         completionHandler(error);
@@ -92,7 +92,7 @@
 
 - (void)itemChangedAtURL:(NSURL *)url {
     // Called at some point after the file has changed; the provider may then trigger an upload
-    NSLog(@"Item changed at URL %@", url);
+    DLog(@"Item changed at URL %@", url);
     
     ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoByPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:url.path]];
     
@@ -100,7 +100,7 @@
         //Open
         FileDto *file = [ManageFilesDB getFileDtoRelatedWithProvidingFileId:providingFile.idProvidingFile ofUser:providingFile.userId];
         
-        NSLog(@"File name %@", file.fileName);
+        DLog(@"File name %@", file.fileName);
         
         [self copyFileOnTheFileSystemByOrigin:url.path andDestiny:file.localFolder];
         
