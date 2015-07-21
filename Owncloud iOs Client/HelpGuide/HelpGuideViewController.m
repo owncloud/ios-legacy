@@ -22,40 +22,6 @@
 
 @interface HelpGuideViewController ()
 
-@property (nonatomic, strong) UIImageView *wordmark;
-@property (nonatomic, strong) UIImageView *owncloudLogo;
-
-@property (nonatomic, strong) UIImageView *btnAllHelpPage;
-@property (nonatomic, strong) UIImageView *btnHelpPage0;
-@property (nonatomic, strong) UIImageView *btnHelpPage1;
-@property (nonatomic, strong) UIImageView *btnHelpPage2;
-@property (nonatomic, strong) UIImageView *btnHelpPage3;
-@property (nonatomic, strong) UIImageView *btnHelpPage4;
-@property (nonatomic, strong) UIImageView *btnHelpPage5;
-
-//Multiaccount view
-@property (nonatomic, strong) UIImageView *iphoneInstantUpload;
-@property (nonatomic, strong) UIImageView *iphoneFiles;
-@property (nonatomic, strong) UIImageView *iphoneShare;
-@property (nonatomic, strong) UIImageView *iphoneAccounts;
-@property (nonatomic, strong) UIImageView *owncloudLogoFiles;
-
-@property (nonatomic, strong) UILabel *welcomeLabel;
-@property (nonatomic, strong) UILabel *firstLabel;
-@property (nonatomic, strong) UILabel *secondLabel;
-@property (nonatomic, strong) UILabel *thirdLabel;
-@property (nonatomic, strong) UILabel *fourthLabel;
-@property (nonatomic, strong) UILabel *fifthLabel;
-
-@property (nonatomic, strong) UILabel *messageWelcomeLabel;
-@property (nonatomic, strong) UILabel *messageFirstLabel;
-@property (nonatomic, strong) UILabel *messageSecondLabel;
-@property (nonatomic, strong) UILabel *messageThirdLabel;
-@property (nonatomic, strong) UILabel *messageFourthLabel;
-
-@property (nonatomic, strong) UIButton *signInButton;
-
-
 @end
 
 @implementation HelpGuideViewController
@@ -105,13 +71,10 @@
 
 - (void)configureViews
 {
-    self.owncloudLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"companyLogoHelp"]];
-    [self.contentView addSubview:self.owncloudLogo];
-    
     [self configureTextLabelsAndButtons];
     [self configurePageControlImages];
     
-   // [self configureView0];
+    [self configureView0];
     [self configureView1];
     [self configureView2];
     [self configureView3];
@@ -125,7 +88,7 @@
     self.welcomeLabel = [UILabel new];
     self.welcomeLabel.text = NSLocalizedString(@"title_help_slide_0", nil);
     self.welcomeLabel.textColor = [UIColor colorOfLoginText];
-    [self.welcomeLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    [self.welcomeLabel setFont:[UIFont boldSystemFontOfSize:22]];
     [self.welcomeLabel sizeToFit];
     [self.contentView addSubview:self.welcomeLabel];
     
@@ -168,6 +131,7 @@
     self.messageWelcomeLabel = [UILabel new];
     self.messageWelcomeLabel.text = NSLocalizedString(@"message_help_slide_0", nil);
     self.messageWelcomeLabel.textColor = [UIColor colorOfLoginText];
+    [self.messageWelcomeLabel setFont:[UIFont boldSystemFontOfSize:18]];
     [self.messageWelcomeLabel sizeToFit];
     [self.contentView addSubview:self.messageWelcomeLabel];
     
@@ -196,15 +160,26 @@
     [self.messageFourthLabel sizeToFit];
     [self.contentView addSubview:self.messageFourthLabel];
     
+    //Button skip help guide
+    self.skipButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.skipButton setTitle:NSLocalizedString(@"skip_button_help_guide", nil) forState:UIControlStateNormal];
+    [self.skipButton setBackgroundColor:[UIColor colorOfLoginButtonBackground]];
+    [self.skipButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.skipButton.titleLabel setFont:[UIFont systemFontOfSize:18]];
+    [self.skipButton addTarget:self action:@selector(stayPressed:) forControlEvents:UIControlEventTouchDown];
+    self.skipButton.contentEdgeInsets = UIEdgeInsetsMake(7, 20, 7, 20);
+    [self.contentView addSubview:self.skipButton];
+    
     //Button sign in
     self.signInButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.signInButton setTitle:NSLocalizedString(@"sign_in_button_help_guide", nil) forState:UIControlStateNormal];
     [self.signInButton setBackgroundColor:[UIColor colorOfLoginButtonBackground]];
     [self.signInButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.signInButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    [self.signInButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
     [self.signInButton addTarget:self action:@selector(stayPressed:) forControlEvents:UIControlEventTouchDown];
-    self.signInButton.contentEdgeInsets = UIEdgeInsetsMake(7, 7, 7, 7);
+    self.signInButton.contentEdgeInsets = UIEdgeInsetsMake(7, 20, 7, 20);
     [self.contentView addSubview:self.signInButton];
+    
 }
 
 - (void)configurePageControlImages
@@ -225,6 +200,10 @@
     [self.contentView addSubview:self.btnHelpPage5];
 }
 
+- (void)configureView0 {
+    self.owncloudLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"companyLogoHelp"]];
+    [self.contentView addSubview:self.owncloudLogo];
+}
 
 - (void)configureView1 {
     self.iphoneInstantUpload = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iphoneInstantUpload"]];
@@ -509,7 +488,7 @@
                                                                                 relatedBy:NSLayoutRelationEqual
                                                                                    toItem:self.contentView
                                                                                 attribute:NSLayoutAttributeCenterY
-                                                                               multiplier:0.8f constant:0.f];
+                                                                               multiplier:0.7f constant:0.f];
     [self.contentView addConstraint:ownCloudLogoCenterYConstraint];
     
     // Move the owncloudLogo from a bit higher than center on page 1 to a bit lower on page 2, by an amount relative to the height of the view.
@@ -518,9 +497,9 @@
                                                                                                                    attribute:IFTTTLayoutAttributeHeight
                                                                                                                referenceView:self.contentView];
     [ownCloudLogoCenterYAnimation addKeyframeForTime:0 multiplier:0.1f withEasingFunction:IFTTTEasingFunctionEaseOutQuad];
-    [ownCloudLogoCenterYAnimation addKeyframeForTime:1 multiplier:-0.2f];
-    [ownCloudLogoCenterYAnimation addKeyframeForTime:2 multiplier:0.2f];
-    [ownCloudLogoCenterYAnimation addKeyframeForTime:5 multiplier:-0.0f withEasingFunction:IFTTTEasingFunctionEaseOutQuad];
+    [ownCloudLogoCenterYAnimation addKeyframeForTime:1 multiplier:-0.1f];
+    [ownCloudLogoCenterYAnimation addKeyframeForTime:2 multiplier:0.25f];
+    [ownCloudLogoCenterYAnimation addKeyframeForTime:5 multiplier:0.05f withEasingFunction:IFTTTEasingFunctionEaseOutQuad];
     [self.animator addAnimation:ownCloudLogoCenterYAnimation];
     
     // Rotate the owncloudLogo a full circle from page 1 to 2
@@ -564,7 +543,6 @@
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeCenterY
                                                                 multiplier:1.5f constant:0.f]];
-    
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.secondLabel
                                                                  attribute:NSLayoutAttributeCenterY
                                                                  relatedBy:NSLayoutRelationEqual
@@ -598,13 +576,20 @@
                                                                  attribute:NSLayoutAttributeCenterY
                                                                 multiplier:1.4f constant:0.f]];
     
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.skipButton
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                multiplier:1.6f constant:0.f]];
+    
     //subtitles
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageWelcomeLabel
                                                                  attribute:NSLayoutAttributeCenterY
                                                                  relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeCenterY
-                                                                multiplier:1.6f constant:0.f]];
+                                                                multiplier:1.4f constant:0.f]];
     
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageFirstLabel
                                                                  attribute:NSLayoutAttributeCenterY
@@ -645,6 +630,7 @@
     [self keepView:self.fifthLabel onPage:5];
     
     [self keepView:self.signInButton onPage:5];
+    [self keepView:self.skipButton onPage:0];
     
     [self keepView:self.messageWelcomeLabel onPage:0];
     [self keepView:self.messageFirstLabel onPage:1];
