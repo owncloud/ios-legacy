@@ -37,6 +37,9 @@
 #import "ManageProvidingFilesDB.h"
 #import "NSString+Encoding.h"
 #import "InitializeDatabase.h"
+#import "UploadsOfflineDto.h"
+#import "ManageUploadsDB.h"
+#import "UtilsDtos.h"
 
 @interface DocumentPickerViewController ()
 
@@ -57,12 +60,11 @@
     
 }
 
-- (IBAction)openDocument:(id)sender {
-    NSURL* documentURL = [self.documentStorageURL URLByAppendingPathComponent:@"Untitled.txt"];
+- (void) closeDocumentPicker{
     
-    // TODO: if you do not have a corresponding file provider, you must ensure that the URL returned here is backed by a file
-    [self dismissGrantingAccessToURL:documentURL];
+    [self dismissGrantingAccessToURL:nil];
 }
+
 
 -(void)prepareForPresentationInMode:(UIDocumentPickerMode)mode {
     // TODO: present a view controller appropriate for picker mode here
@@ -92,8 +94,15 @@
             rootFolder = [FileListDBOperations createRootFolderAndGetFileDtoByUser:self.user];
         }
         
-        FileListDocumentProviderViewController *fileListTableViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:rootFolder];
+        NSString *xibName = @"FileListDocumentProviderViewController";
+        
+        if (self.mode == UIDocumentPickerModeMoveToService || self.mode == UIDocumentPickerModeExportToService) {
+            xibName = @"FileListDocumentProviderMoveViewController";
+        }
+        
+        FileListDocumentProviderViewController *fileListTableViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:xibName onFolder:rootFolder];
         fileListTableViewController.delegate = self;
+        fileListTableViewController.mode = self.mode;
         
         OCNavigationController *navigationViewController = [[OCNavigationController alloc] initWithRootViewController:fileListTableViewController];
         
@@ -196,6 +205,116 @@
         FileListDocumentProviderViewController *fileListController = (FileListDocumentProviderViewController*) [navigationController.viewControllers objectAtIndex:0];
         [fileListController showErrorMessage:NSLocalizedString(@"error_sending_file_to_document_picker", nil)];
     }
+}
+
+
+- (void) selectFolder:(FileDto*)fileDto{
+    
+    BOOL access = [self.originalURL startAccessingSecurityScopedResource];
+
+    if (access) {
+        
+        DLog(@"URL : %@", self.originalURL.path);
+        
+        
+        NSString *serverPath = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:fileDto.filePath andUser:self.user];
+        NSString *folder = [NSString stringWithFormat:@"%@%@", serverPath, fileDto.fileName];
+       
+        NSURL *destinationUrl = [self.documentStorageURL URLByAppendingPathComponent:folder];
+        
+        NSError *error = nil;
+        
+        //Create the destiny folder
+        if (![[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
+            [[NSFileManager defaultManager] createDirectoryAtPath:destinationUrl.path withIntermediateDirectories:YES attributes:nil error:&error];
+        }
+        
+        //Add the file name provided to the final path
+        destinationUrl = [destinationUrl URLByAppendingPathComponent:self.originalURL.lastPathComponent];
+        
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:destinationUrl.path]) {
+            if (![[NSFileManager defaultManager] removeItemAtURL:destinationUrl error:&error]) {
+                NSLog(@"Error removing file: %@", error);
+            }
+        }
+        
+        NSFileCoordinator *fileCoordinator = [NSFileCoordinator new];
+        
+        [fileCoordinator coordinateReadingItemAtURL:self.originalURL options: NSFileCoordinatorReadingForUploading error:&error byAccessor:^(NSURL *newURL) {
+            
+            if (error) {
+               // NSLog(@"Error: %@", error.description);
+               
+            }else{
+               
+                 NSError *copyError = nil;
+                [[NSFileManager defaultManager] copyItemAtURL:newURL toURL:destinationUrl error:&copyError];
+                
+                if (self.mode == UIDocumentPickerModeExportToService) {
+                    
+                    //Export mode
+                    NSString *temp = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], self.originalURL.lastPathComponent];
+                    [[NSFileManager defaultManager] copyItemAtPath:newURL.path toPath:temp error:&copyError];
+                    
+                    NSDictionary *attributes = nil;
+                    attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:temp error:&copyError];
+                    long long fileLength = [[attributes valueForKey:NSFileSize] unsignedLongLongValue];
+                    
+                    UserDto *user = [ManageUsersDB getActiveUser];
+                    NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:user],folder];
+                    
+                     NSString *checkPath = [NSString stringWithFormat:@"%@%@", remotePath, temp.lastPathComponent];
+                    
+                    if (![UtilsUrls isFileUploadingWithPath:remotePath andUser:user]) {
+                        
+                        UploadsOfflineDto *upload = [UploadsOfflineDto new];
+                        
+                        upload.originPath = temp;
+                        upload.destinyFolder = remotePath;
+                        upload.uploadFileName = temp.lastPathComponent;
+                        upload.kindOfError = notAnError;
+                        upload.estimateLength = (long)fileLength;
+                        upload.userId = user.idUser;
+                        upload.isLastUploadFileOfThisArray = YES;
+                        upload.status = generatedByDocumentProvider;
+                        upload.chunksLength = k_lenght_chunk;
+                        upload.isNotNecessaryCheckIfExist = NO;
+                        upload.isInternalUpload = NO;
+                        upload.taskIdentifier = 0;
+                        
+                        [ManageUploadsDB insertUpload:upload];
+                        
+                    }
+                    
+                }
+            }
+            
+            [self.originalURL stopAccessingSecurityScopedResource];
+            
+            [self dismissGrantingAccessToURL:destinationUrl];
+
+        }];
+        
+    }else{
+         DLog(@"There are not access to the file by export/move mode");
+    }
+
+ 
+}
+
+
+- (void) copyFileOnTheFileSystemByOrigin:(NSString *) origin andDestiny:(NSString *) destiny {
+    
+    NSFileManager *filemgr = [NSFileManager defaultManager];
+    
+    [filemgr removeItemAtPath:destiny error:nil];
+    
+    NSURL *oldPath = [NSURL fileURLWithPath:origin];
+    NSURL *newPath= [NSURL fileURLWithPath:destiny];
+    
+    [filemgr copyItemAtURL:oldPath toURL:newPath error:nil];
+    
 }
 
 #pragma mark - Pass Code

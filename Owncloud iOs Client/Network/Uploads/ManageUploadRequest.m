@@ -34,6 +34,8 @@
 #import "ManageAppSettingsDB.h"
 #import "UtilsCookies.h"
 
+#define k_delay_after_check_instant_uploads_folders 2.0
+
 NSString *fileDeleteInAOverwriteProcess=@"fileDeleteInAOverwriteProcess";
 NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 
@@ -193,10 +195,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         if (!isSamlCredentialsError) {
             
             //Upload ready, continue
-            [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+            [self performSelector:@selector(startUploadFile) withObject:nil afterDelay:k_delay_after_check_instant_uploads_folders];
             
         }
-        
         
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
@@ -205,7 +206,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         switch (response.statusCode) {
             case kOCErrorServerMethodNotPermitted:
                 //405 Method not permitted "not_possible_create_folder"
-                [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+                [self performSelector:@selector(startUploadFile) withObject:nil afterDelay:k_delay_after_check_instant_uploads_folders];
                 break;
             default:
                 //"not_possible_connect_to_server"
@@ -515,6 +516,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             
             if (!isSamlCredentialsError) {
+                
+                NSLog(@"response: %@", response);
                 
                 [ManageUploadsDB setStatus:uploaded andKindOfError:notAnError byUploadOffline:weakSelf.currentUpload];
                 

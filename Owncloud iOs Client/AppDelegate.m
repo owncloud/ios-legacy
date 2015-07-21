@@ -2173,7 +2173,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self createAManageRequestUploadWithTheUploadOffline:fileForUpload];
     DLog(@"The file is on server");
     
-    currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:self.activeUser] andUser:self.activeUser];
+    currentFile = [ManageFilesDB getFileDtoByFileName:currentUploadBackground.uploadFileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:self.activeUser] andUser:self.activeUser];
     
     if (currentFile.isDownload == overwriting) {
         [ManageFilesDB setFileIsDownloadState:currentFile.idFile andState:downloaded];

@@ -383,7 +383,7 @@
     NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:self.user];
     remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    [sharedCommunication readFolder:remotePath onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+     [sharedCommunication readFolder:remotePath withUserSessionToken:nil onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
         
         for (OCFileDto *file in items) {
             DLog(@"File: %@", file.fileName);
@@ -454,7 +454,7 @@
             [self stopPullRefresh];
         }
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
         
         DLog(@"response: %@", response);
         DLog(@"error: %@", error);
@@ -578,28 +578,33 @@
                              }];
         [alert addAction:ok];
         
-        [self presentViewController:alert animated:YES completion:nil];
+        if ([self.navigationController isViewLoaded] && self.navigationController.view.window && self.resolveCredentialErrorViewController != nil) {
+            [self.resolveCredentialErrorViewController presentViewController:alert animated:YES completion:nil];
+        } else {
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        
     }
 }
 
 - (void) showEditAccount {
+    
 #ifdef CONTAINER_APP
     
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
     //Edit Account
-    EditAccountViewController *resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
-    [resolvedCredentialError setBarForCancelForLoadingFromModal];
+    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
+    [self.resolveCredentialErrorViewController setBarForCancelForLoadingFromModal];
     
     if (IS_IPHONE) {
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
+        
     } else {
 
         OCNavigationController *navController = nil;
-        navController = [[OCNavigationController alloc] initWithRootViewController:resolvedCredentialError];
+        navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
+        [self presentViewController:navController animated:YES completion:nil];
     }
 
 #endif
@@ -607,13 +612,14 @@
 }
 
 - (void) errorLogin {
+    
+    [self showEditAccount];
+    
     if (k_is_sso_active) {
        [self showError:NSLocalizedString(@"session_expired", nil)];
     } else {
        [self showError:NSLocalizedString(@"error_login_message", nil)];
     }
-    
-    [self showEditAccount];
 }
 
 #pragma mark - Pull Refresh

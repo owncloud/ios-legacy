@@ -1119,6 +1119,9 @@
     
     [self cancelAllDownloadsOfActiveUser];
     
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    app.userSessionCurrentToken = nil;
+    
     //Method to change the account
     AccountCell *cell = (AccountCell *) [self.settingsTableView cellForRowAtIndexPath:indexPath];
     [cell activeAccount:nil];
@@ -1134,6 +1137,8 @@
     if (app.activeUser.idUser != selectedUser.idUser) {
         //Cancel downloads of the previous user
         [self cancelAllDownloadsOfActiveUser];
+        
+        app.userSessionCurrentToken = nil;
         
         //If ipad, clean the detail view
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
