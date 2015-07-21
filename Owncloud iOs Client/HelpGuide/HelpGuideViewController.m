@@ -693,8 +693,9 @@
     [app showLoginView];
 }
 
-- (BOOL) shouldAutorotate {
-    return NO;
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end
