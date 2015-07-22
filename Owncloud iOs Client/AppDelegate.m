@@ -56,6 +56,7 @@
 #import "OCSplitViewController.h"
 #import "InitializeDatabase.h"
 #import "CheckHasForbiddenCharactersSupport.h"
+#import "HelpGuideViewController.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -166,7 +167,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [NSURLCache setSharedURLCache:sharedCache];
     sleep(1); //Important sleep. Very ugly but neccesarry.
     
-    
+    DLog(@"showHelp_:%d",[ManageDB getShowHelpGuide]);
+    if (k_show_main_help_guide && [ManageDB getShowHelpGuide] && !_activeUser) {
+        self.helpGuideWindowViewController = [HelpGuideViewController new];        
+        self.window.rootViewController = self.helpGuideWindowViewController;
+    }
+   
     return YES;
 }
 
@@ -1695,6 +1701,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //If it's first open
         if (!_filesViewController) {
             [self initAppWithEtagRequest:YES];
+            
 
         } else {
             if (_splitViewController) {
@@ -2689,5 +2696,21 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
 }
 
+
+
+- (void) showLoginView {
+    DLog(@"ShowLoginView");
+    
+    if (IS_IPHONE) {
+        _loginWindowViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPhone" bundle:[NSBundle mainBundle]];
+    } else {
+        _loginWindowViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPad" bundle:[NSBundle mainBundle]];
+    }
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    self.window.rootViewController = self.loginWindowViewController;
+    [self.window makeKeyAndVisible];
+}
 
 @end

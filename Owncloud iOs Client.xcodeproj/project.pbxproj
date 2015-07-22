@@ -309,7 +309,36 @@
 		400904D71A02AE3300E3DD15 /* Default-736h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400904D51A02AE3300E3DD15 /* Default-736h@3x.png */; };
 		400904DA1A02B49600E3DD15 /* MainAppIcon_29-29@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400904D91A02B49600E3DD15 /* MainAppIcon_29-29@3x.png */; };
 		400904DC1A02B54600E3DD15 /* MainAppIcon_60-60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400904DB1A02B54600E3DD15 /* MainAppIcon_60-60@3x.png */; };
+		400A63641B4FD75600890579 /* IFTTTAlphaAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A632D1B4FD75600890579 /* IFTTTAlphaAnimation.m */; };
+		400A63651B4FD75600890579 /* IFTTTAnimatedPagingScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63301B4FD75600890579 /* IFTTTAnimatedPagingScrollViewController.m */; };
+		400A63661B4FD75600890579 /* IFTTTAnimatedScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63321B4FD75600890579 /* IFTTTAnimatedScrollViewController.m */; };
+		400A63671B4FD75600890579 /* IFTTTAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63341B4FD75600890579 /* IFTTTAnimation.m */; };
+		400A63681B4FD75600890579 /* IFTTTAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63361B4FD75600890579 /* IFTTTAnimator.m */; };
+		400A63691B4FD75600890579 /* IFTTTColorAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63381B4FD75600890579 /* IFTTTColorAnimation.m */; };
+		400A636A1B4FD75600890579 /* IFTTTConstraintConstantAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A633A1B4FD75600890579 /* IFTTTConstraintConstantAnimation.m */; };
+		400A636B1B4FD75600890579 /* IFTTTConstraintMultiplierAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A633C1B4FD75600890579 /* IFTTTConstraintMultiplierAnimation.m */; };
+		400A636C1B4FD75600890579 /* IFTTTCornerRadiusAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A633E1B4FD75600890579 /* IFTTTCornerRadiusAnimation.m */; };
+		400A636D1B4FD75600890579 /* IFTTTEasingFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63401B4FD75600890579 /* IFTTTEasingFunction.m */; };
+		400A636E1B4FD75600890579 /* IFTTTFillColorAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63421B4FD75600890579 /* IFTTTFillColorAnimation.m */; };
+		400A636F1B4FD75600890579 /* IFTTTFilmstrip.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63441B4FD75600890579 /* IFTTTFilmstrip.m */; };
+		400A63701B4FD75600890579 /* IFTTTFrameAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63461B4FD75600890579 /* IFTTTFrameAnimation.m */; };
+		400A63711B4FD75600890579 /* IFTTTHideAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63481B4FD75600890579 /* IFTTTHideAnimation.m */; };
+		400A63721B4FD75600890579 /* IFTTTInterpolatable.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A634A1B4FD75600890579 /* IFTTTInterpolatable.m */; };
+		400A63731B4FD75600890579 /* IFTTTLabelAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A634D1B4FD75600890579 /* IFTTTLabelAnimation.m */; };
+		400A63741B4FD75600890579 /* IFTTTRotationAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A634F1B4FD75600890579 /* IFTTTRotationAnimation.m */; };
+		400A63751B4FD75600890579 /* IFTTTScaleAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63511B4FD75600890579 /* IFTTTScaleAnimation.m */; };
+		400A63761B4FD75600890579 /* IFTTTScrollViewPageConstraintAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63531B4FD75600890579 /* IFTTTScrollViewPageConstraintAnimation.m */; };
+		400A63771B4FD75600890579 /* IFTTTShapeLayerAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63551B4FD75600890579 /* IFTTTShapeLayerAnimation.m */; };
+		400A63781B4FD75600890579 /* IFTTTStrokeEndAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63571B4FD75600890579 /* IFTTTStrokeEndAnimation.m */; };
+		400A63791B4FD75600890579 /* IFTTTStrokeStartAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63591B4FD75600890579 /* IFTTTStrokeStartAnimation.m */; };
+		400A637A1B4FD75600890579 /* IFTTTTextColorAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A635B1B4FD75600890579 /* IFTTTTextColorAnimation.m */; };
+		400A637B1B4FD75600890579 /* IFTTTTransform3DAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A635D1B4FD75600890579 /* IFTTTTransform3DAnimation.m */; };
+		400A637C1B4FD75600890579 /* IFTTTTranslationAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A635F1B4FD75600890579 /* IFTTTTranslationAnimation.m */; };
+		400A637D1B4FD75600890579 /* IFTTTViewAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63611B4FD75600890579 /* IFTTTViewAnimation.m */; };
+		400A637E1B4FD75600890579 /* UIView+IFTTTJazzHands.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63631B4FD75600890579 /* UIView+IFTTTJazzHands.m */; };
+		400A63821B4FD94C00890579 /* iphoneAccounts.png in Resources */ = {isa = PBXBuildFile; fileRef = 400A63811B4FD94C00890579 /* iphoneAccounts.png */; };
 		4016E5C51A0CE9410022163C /* MainAppIcon_76_76@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4016E5C41A0CE9410022163C /* MainAppIcon_76_76@3x.png */; };
+		401AAA371B57C4F70047EA27 /* owncloudLogoFiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 401AAA361B57C4F70047EA27 /* owncloudLogoFiles.png */; };
 		4026610C1A07926000517663 /* MainAppIcon_76-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4026610B1A07926000517663 /* MainAppIcon_76-76@2x.png */; };
 		402661141A07C66A00517663 /* Default-Landscape_375h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 402661121A07C66A00517663 /* Default-Landscape_375h@2x.png */; };
 		402661151A07C66A00517663 /* Default-Landscape_414h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 402661131A07C66A00517663 /* Default-Landscape_414h@3x.png */; };
@@ -325,6 +354,14 @@
 		4030D8F71A16277100DB0871 /* file_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F41A16277100DB0871 /* file_icon@3x.png */; };
 		404FDA241A36E5E5008AB4E1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */; };
 		404FDA281A36EA9D008AB4E1 /* ManageLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 404FDA271A36EA9D008AB4E1 /* ManageLocation.m */; };
+		4052B4D81B4ECC75000788DA /* btnAllHelpGrey.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4D71B4ECC75000788DA /* btnAllHelpGrey.png */; };
+		4052B4DA1B4ECD3A000788DA /* btnHelpPage0.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4D91B4ECD3A000788DA /* btnHelpPage0.png */; };
+		4052B4DC1B4ECD74000788DA /* btnHelpPage1.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4DB1B4ECD74000788DA /* btnHelpPage1.png */; };
+		4052B4E11B4ECF35000788DA /* btnHelpPage2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4DD1B4ECF35000788DA /* btnHelpPage2.png */; };
+		4052B4E21B4ECF35000788DA /* btnHelpPage3.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4DE1B4ECF35000788DA /* btnHelpPage3.png */; };
+		4052B4E31B4ECF35000788DA /* btnHelpPage4.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4DF1B4ECF35000788DA /* btnHelpPage4.png */; };
+		4052B4E41B4ECF35000788DA /* btnHelpPage5.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4E01B4ECF35000788DA /* btnHelpPage5.png */; };
+		405AD0C11B56C26A00271424 /* iphoneShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 405AD0C01B56C26A00271424 /* iphoneShare.png */; };
 		40A969E41A5EEAC80046A36C /* ManageAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A969E31A5EEAC80046A36C /* ManageAsset.m */; };
 		40AB1F5B1A12392E003E7397 /* cancel_download_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F591A12392E003E7397 /* cancel_download_white@3x.png */; };
 		40AB1F5C1A12392E003E7397 /* cancel_download@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F5A1A12392E003E7397 /* cancel_download@3x.png */; };
@@ -335,6 +372,9 @@
 		40AB1F691A123D0E003E7397 /* TABsettings@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F681A123D0E003E7397 /* TABsettings@3x.png */; };
 		40AB1F6B1A123D1B003E7397 /* TABShares@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F6A1A123D1B003E7397 /* TABShares@3x.png */; };
 		40AC24D219FE725600582867 /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
+		40CC7F0D1B4E665400231D73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40CC7F0C1B4E665400231D73 /* Images.xcassets */; };
+		40E30ED61B59105D00D36B07 /* iphoneInstantUpload.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */; };
+		40E30EDA1B5911A400D36B07 /* iphoneFiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E30ED91B5911A400D36B07 /* iphoneFiles.png */; };
 		40E354C51A14D671000E7FE4 /* ownCloud-xmas@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */; };
 		40E354C71A14D6A2000E7FE4 /* sharedItem@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C61A14D6A2000E7FE4 /* sharedItem@3x.png */; };
 		40E354C91A14D6B2000E7FE4 /* openWithTB@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C81A14D6B2000E7FE4 /* openWithTB@3x.png */; };
@@ -349,6 +389,8 @@
 		40E354DD1A14FE00000E7FE4 /* image_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354DC1A14FE00000E7FE4 /* image_icon@3x.png */; };
 		40E354DF1A14FE26000E7FE4 /* spreadsheet_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354DE1A14FE26000E7FE4 /* spreadsheet_icon@3x.png */; };
 		40E354E11A14FE36000E7FE4 /* sound_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354E01A14FE36000E7FE4 /* sound_icon@3x.png */; };
+		40EDF89F1B4D123500700E3A /* HelpGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EDF89E1B4D123500700E3A /* HelpGuideViewController.m */; };
+		40EDF8A31B4D152300700E3A /* MyCustomAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EDF8A21B4D152300700E3A /* MyCustomAnimation.m */; };
 		40FF874319F81396008B7C62 /* OCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FF874219F81396008B7C62 /* OCKeychain.m */; };
 		590849EF1A0A7D6000D3E842 /* CustomCellFileAndDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5C0177850B100FB9977 /* CustomCellFileAndDirectory.m */; };
 		590849F01A0A7D6D00D3E842 /* CustomCellFileAndDirectory.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD5C1177850B100FB9977 /* CustomCellFileAndDirectory.xib */; };
@@ -1264,7 +1306,65 @@
 		400904D51A02AE3300E3DD15 /* Default-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x.png"; sourceTree = "<group>"; };
 		400904D91A02B49600E3DD15 /* MainAppIcon_29-29@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_29-29@3x.png"; sourceTree = "<group>"; };
 		400904DB1A02B54600E3DD15 /* MainAppIcon_60-60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_60-60@3x.png"; sourceTree = "<group>"; };
+		400A632C1B4FD75600890579 /* IFTTTAlphaAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTAlphaAnimation.h; sourceTree = "<group>"; };
+		400A632D1B4FD75600890579 /* IFTTTAlphaAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTAlphaAnimation.m; sourceTree = "<group>"; };
+		400A632E1B4FD75600890579 /* IFTTTAnimatable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTAnimatable.h; sourceTree = "<group>"; };
+		400A632F1B4FD75600890579 /* IFTTTAnimatedPagingScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTAnimatedPagingScrollViewController.h; sourceTree = "<group>"; };
+		400A63301B4FD75600890579 /* IFTTTAnimatedPagingScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTAnimatedPagingScrollViewController.m; sourceTree = "<group>"; };
+		400A63311B4FD75600890579 /* IFTTTAnimatedScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTAnimatedScrollViewController.h; sourceTree = "<group>"; };
+		400A63321B4FD75600890579 /* IFTTTAnimatedScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTAnimatedScrollViewController.m; sourceTree = "<group>"; };
+		400A63331B4FD75600890579 /* IFTTTAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTAnimation.h; sourceTree = "<group>"; };
+		400A63341B4FD75600890579 /* IFTTTAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTAnimation.m; sourceTree = "<group>"; };
+		400A63351B4FD75600890579 /* IFTTTAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTAnimator.h; sourceTree = "<group>"; };
+		400A63361B4FD75600890579 /* IFTTTAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTAnimator.m; sourceTree = "<group>"; };
+		400A63371B4FD75600890579 /* IFTTTColorAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTColorAnimation.h; sourceTree = "<group>"; };
+		400A63381B4FD75600890579 /* IFTTTColorAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTColorAnimation.m; sourceTree = "<group>"; };
+		400A63391B4FD75600890579 /* IFTTTConstraintConstantAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTConstraintConstantAnimation.h; sourceTree = "<group>"; };
+		400A633A1B4FD75600890579 /* IFTTTConstraintConstantAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTConstraintConstantAnimation.m; sourceTree = "<group>"; };
+		400A633B1B4FD75600890579 /* IFTTTConstraintMultiplierAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTConstraintMultiplierAnimation.h; sourceTree = "<group>"; };
+		400A633C1B4FD75600890579 /* IFTTTConstraintMultiplierAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTConstraintMultiplierAnimation.m; sourceTree = "<group>"; };
+		400A633D1B4FD75600890579 /* IFTTTCornerRadiusAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTCornerRadiusAnimation.h; sourceTree = "<group>"; };
+		400A633E1B4FD75600890579 /* IFTTTCornerRadiusAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTCornerRadiusAnimation.m; sourceTree = "<group>"; };
+		400A633F1B4FD75600890579 /* IFTTTEasingFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTEasingFunction.h; sourceTree = "<group>"; };
+		400A63401B4FD75600890579 /* IFTTTEasingFunction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTEasingFunction.m; sourceTree = "<group>"; };
+		400A63411B4FD75600890579 /* IFTTTFillColorAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTFillColorAnimation.h; sourceTree = "<group>"; };
+		400A63421B4FD75600890579 /* IFTTTFillColorAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTFillColorAnimation.m; sourceTree = "<group>"; };
+		400A63431B4FD75600890579 /* IFTTTFilmstrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTFilmstrip.h; sourceTree = "<group>"; };
+		400A63441B4FD75600890579 /* IFTTTFilmstrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTFilmstrip.m; sourceTree = "<group>"; };
+		400A63451B4FD75600890579 /* IFTTTFrameAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTFrameAnimation.h; sourceTree = "<group>"; };
+		400A63461B4FD75600890579 /* IFTTTFrameAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTFrameAnimation.m; sourceTree = "<group>"; };
+		400A63471B4FD75600890579 /* IFTTTHideAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTHideAnimation.h; sourceTree = "<group>"; };
+		400A63481B4FD75600890579 /* IFTTTHideAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTHideAnimation.m; sourceTree = "<group>"; };
+		400A63491B4FD75600890579 /* IFTTTInterpolatable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTInterpolatable.h; sourceTree = "<group>"; };
+		400A634A1B4FD75600890579 /* IFTTTInterpolatable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTInterpolatable.m; sourceTree = "<group>"; };
+		400A634B1B4FD75600890579 /* IFTTTJazzHands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTJazzHands.h; sourceTree = "<group>"; };
+		400A634C1B4FD75600890579 /* IFTTTLabelAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTLabelAnimation.h; sourceTree = "<group>"; };
+		400A634D1B4FD75600890579 /* IFTTTLabelAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTLabelAnimation.m; sourceTree = "<group>"; };
+		400A634E1B4FD75600890579 /* IFTTTRotationAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTRotationAnimation.h; sourceTree = "<group>"; };
+		400A634F1B4FD75600890579 /* IFTTTRotationAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTRotationAnimation.m; sourceTree = "<group>"; };
+		400A63501B4FD75600890579 /* IFTTTScaleAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTScaleAnimation.h; sourceTree = "<group>"; };
+		400A63511B4FD75600890579 /* IFTTTScaleAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTScaleAnimation.m; sourceTree = "<group>"; };
+		400A63521B4FD75600890579 /* IFTTTScrollViewPageConstraintAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTScrollViewPageConstraintAnimation.h; sourceTree = "<group>"; };
+		400A63531B4FD75600890579 /* IFTTTScrollViewPageConstraintAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTScrollViewPageConstraintAnimation.m; sourceTree = "<group>"; };
+		400A63541B4FD75600890579 /* IFTTTShapeLayerAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTShapeLayerAnimation.h; sourceTree = "<group>"; };
+		400A63551B4FD75600890579 /* IFTTTShapeLayerAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTShapeLayerAnimation.m; sourceTree = "<group>"; };
+		400A63561B4FD75600890579 /* IFTTTStrokeEndAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTStrokeEndAnimation.h; sourceTree = "<group>"; };
+		400A63571B4FD75600890579 /* IFTTTStrokeEndAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTStrokeEndAnimation.m; sourceTree = "<group>"; };
+		400A63581B4FD75600890579 /* IFTTTStrokeStartAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTStrokeStartAnimation.h; sourceTree = "<group>"; };
+		400A63591B4FD75600890579 /* IFTTTStrokeStartAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTStrokeStartAnimation.m; sourceTree = "<group>"; };
+		400A635A1B4FD75600890579 /* IFTTTTextColorAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTTextColorAnimation.h; sourceTree = "<group>"; };
+		400A635B1B4FD75600890579 /* IFTTTTextColorAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTTextColorAnimation.m; sourceTree = "<group>"; };
+		400A635C1B4FD75600890579 /* IFTTTTransform3DAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTTransform3DAnimation.h; sourceTree = "<group>"; };
+		400A635D1B4FD75600890579 /* IFTTTTransform3DAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTTransform3DAnimation.m; sourceTree = "<group>"; };
+		400A635E1B4FD75600890579 /* IFTTTTranslationAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTTranslationAnimation.h; sourceTree = "<group>"; };
+		400A635F1B4FD75600890579 /* IFTTTTranslationAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTTranslationAnimation.m; sourceTree = "<group>"; };
+		400A63601B4FD75600890579 /* IFTTTViewAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTViewAnimation.h; sourceTree = "<group>"; };
+		400A63611B4FD75600890579 /* IFTTTViewAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTViewAnimation.m; sourceTree = "<group>"; };
+		400A63621B4FD75600890579 /* UIView+IFTTTJazzHands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+IFTTTJazzHands.h"; sourceTree = "<group>"; };
+		400A63631B4FD75600890579 /* UIView+IFTTTJazzHands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+IFTTTJazzHands.m"; sourceTree = "<group>"; };
+		400A63811B4FD94C00890579 /* iphoneAccounts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneAccounts.png; sourceTree = "<group>"; };
 		4016E5C41A0CE9410022163C /* MainAppIcon_76_76@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76_76@3x.png"; sourceTree = "<group>"; };
+		401AAA361B57C4F70047EA27 /* owncloudLogoFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = owncloudLogoFiles.png; sourceTree = "<group>"; };
 		4026610B1A07926000517663 /* MainAppIcon_76-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76-76@2x.png"; sourceTree = "<group>"; };
 		402661121A07C66A00517663 /* Default-Landscape_375h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape_375h@2x.png"; sourceTree = "<group>"; };
 		402661131A07C66A00517663 /* Default-Landscape_414h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape_414h@3x.png"; sourceTree = "<group>"; };
@@ -1279,6 +1379,14 @@
 		404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		404FDA261A36EA9D008AB4E1 /* ManageLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageLocation.h; sourceTree = "<group>"; };
 		404FDA271A36EA9D008AB4E1 /* ManageLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageLocation.m; sourceTree = "<group>"; };
+		4052B4D71B4ECC75000788DA /* btnAllHelpGrey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnAllHelpGrey.png; sourceTree = "<group>"; };
+		4052B4D91B4ECD3A000788DA /* btnHelpPage0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage0.png; sourceTree = "<group>"; };
+		4052B4DB1B4ECD74000788DA /* btnHelpPage1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage1.png; sourceTree = "<group>"; };
+		4052B4DD1B4ECF35000788DA /* btnHelpPage2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage2.png; sourceTree = "<group>"; };
+		4052B4DE1B4ECF35000788DA /* btnHelpPage3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage3.png; sourceTree = "<group>"; };
+		4052B4DF1B4ECF35000788DA /* btnHelpPage4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage4.png; sourceTree = "<group>"; };
+		4052B4E01B4ECF35000788DA /* btnHelpPage5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage5.png; sourceTree = "<group>"; };
+		405AD0C01B56C26A00271424 /* iphoneShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneShare.png; sourceTree = "<group>"; };
 		40A969E21A5EEAC80046A36C /* ManageAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageAsset.h; sourceTree = "<group>"; };
 		40A969E31A5EEAC80046A36C /* ManageAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageAsset.m; sourceTree = "<group>"; };
 		40AB1F591A12392E003E7397 /* cancel_download_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel_download_white@3x.png"; sourceTree = "<group>"; };
@@ -1291,6 +1399,9 @@
 		40AB1F6A1A123D1B003E7397 /* TABShares@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TABShares@3x.png"; sourceTree = "<group>"; };
 		40AC24D019FE725600582867 /* CredentialsDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CredentialsDto.h; path = DataBase/DTOs/CredentialsDto.h; sourceTree = "<group>"; };
 		40AC24D119FE725600582867 /* CredentialsDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CredentialsDto.m; path = DataBase/DTOs/CredentialsDto.m; sourceTree = "<group>"; };
+		40CC7F0C1B4E665400231D73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneInstantUpload.png; sourceTree = "<group>"; };
+		40E30ED91B5911A400D36B07 /* iphoneFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneFiles.png; sourceTree = "<group>"; };
 		40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ownCloud-xmas@3x.png"; sourceTree = "<group>"; };
 		40E354C61A14D6A2000E7FE4 /* sharedItem@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@3x.png"; sourceTree = "<group>"; };
 		40E354C81A14D6B2000E7FE4 /* openWithTB@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "openWithTB@3x.png"; sourceTree = "<group>"; };
@@ -1305,6 +1416,10 @@
 		40E354DC1A14FE00000E7FE4 /* image_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image_icon@3x.png"; sourceTree = "<group>"; };
 		40E354DE1A14FE26000E7FE4 /* spreadsheet_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spreadsheet_icon@3x.png"; sourceTree = "<group>"; };
 		40E354E01A14FE36000E7FE4 /* sound_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sound_icon@3x.png"; sourceTree = "<group>"; };
+		40EDF89E1B4D123500700E3A /* HelpGuideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpGuideViewController.m; sourceTree = "<group>"; };
+		40EDF8A01B4D125A00700E3A /* HelpGuideViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HelpGuideViewController.h; sourceTree = "<group>"; };
+		40EDF8A11B4D152300700E3A /* MyCustomAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCustomAnimation.h; sourceTree = "<group>"; };
+		40EDF8A21B4D152300700E3A /* MyCustomAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCustomAnimation.m; sourceTree = "<group>"; };
 		40FF874119F81396008B7C62 /* OCKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCKeychain.h; sourceTree = "<group>"; };
 		40FF874219F81396008B7C62 /* OCKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCKeychain.m; sourceTree = "<group>"; };
 		593D531A17BF701800191846 /* SSOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSOViewController.h; path = Login/SSO/SSOViewController.h; sourceTree = "<group>"; };
@@ -1669,6 +1784,7 @@
 				1324298C15ADBB3700DF823E /* AppDelegate.m */,
 				148DD5B11778425400FB9977 /* Branding */,
 				148DD5B81778501B00FB9977 /* Cells */,
+				40EDF89D1B4D112900700E3A /* HelpGuide */,
 				137E485115B6A37F00628EB1 /* Database */,
 				148DD5DD1778549700FB9977 /* ExternalLibreries */,
 				148DD61D17785D4200FB9977 /* Files */,
@@ -2058,6 +2174,7 @@
 		1487F15D177C35AA004A1A5A /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				400A63251B4FD2C100890579 /* HelpGuide */,
 				1487F15E177C35AA004A1A5A /* ImageBranding */,
 				1487F1B7177C35AA004A1A5A /* ImageSystem */,
 			);
@@ -2440,6 +2557,7 @@
 		148DD5DD1778549700FB9977 /* ExternalLibreries */ = {
 			isa = PBXGroup;
 			children = (
+				40EDF8AB1B4D1E9600700E3A /* JazzHands */,
 				EA4914661AC0344800BECF0B /* TTOpenInAppActivity */,
 				EA8ADE631A31E99B008D3612 /* FFCircularProgressView */,
 				1498708E187D66CB000D9C49 /* CustomStatusBar */,
@@ -2553,6 +2671,20 @@
 			name = EmptyCell;
 			sourceTree = "<group>";
 		};
+		400A63251B4FD2C100890579 /* HelpGuide */ = {
+			isa = PBXGroup;
+			children = (
+				4052B4AC1B4E951F000788DA /* HelpPageButtons */,
+				40CC7F0C1B4E665400231D73 /* Images.xcassets */,
+				40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */,
+				40E30ED91B5911A400D36B07 /* iphoneFiles.png */,
+				401AAA361B57C4F70047EA27 /* owncloudLogoFiles.png */,
+				405AD0C01B56C26A00271424 /* iphoneShare.png */,
+				400A63811B4FD94C00890579 /* iphoneAccounts.png */,
+			);
+			path = HelpGuide;
+			sourceTree = "<group>";
+		};
 		404FDA251A36E60A008AB4E1 /* Location */ = {
 			isa = PBXGroup;
 			children = (
@@ -2562,6 +2694,20 @@
 			path = Location;
 			sourceTree = "<group>";
 		};
+		4052B4AC1B4E951F000788DA /* HelpPageButtons */ = {
+			isa = PBXGroup;
+			children = (
+				4052B4D71B4ECC75000788DA /* btnAllHelpGrey.png */,
+				4052B4D91B4ECD3A000788DA /* btnHelpPage0.png */,
+				4052B4DB1B4ECD74000788DA /* btnHelpPage1.png */,
+				4052B4DD1B4ECF35000788DA /* btnHelpPage2.png */,
+				4052B4DE1B4ECF35000788DA /* btnHelpPage3.png */,
+				4052B4DF1B4ECF35000788DA /* btnHelpPage4.png */,
+				4052B4E01B4ECF35000788DA /* btnHelpPage5.png */,
+			);
+			path = HelpPageButtons;
+			sourceTree = "<group>";
+		};
 		40A969DD1A5EDF900046A36C /* InstantUpload */ = {
 			isa = PBXGroup;
 			children = (
@@ -2569,6 +2715,81 @@
 				40A969E31A5EEAC80046A36C /* ManageAsset.m */,
 			);
 			path = InstantUpload;
+			sourceTree = "<group>";
+		};
+		40EDF89D1B4D112900700E3A /* HelpGuide */ = {
+			isa = PBXGroup;
+			children = (
+				40EDF8A11B4D152300700E3A /* MyCustomAnimation.h */,
+				40EDF8A21B4D152300700E3A /* MyCustomAnimation.m */,
+				40EDF8A01B4D125A00700E3A /* HelpGuideViewController.h */,
+				40EDF89E1B4D123500700E3A /* HelpGuideViewController.m */,
+			);
+			path = HelpGuide;
+			sourceTree = "<group>";
+		};
+		40EDF8AB1B4D1E9600700E3A /* JazzHands */ = {
+			isa = PBXGroup;
+			children = (
+				400A632C1B4FD75600890579 /* IFTTTAlphaAnimation.h */,
+				400A632D1B4FD75600890579 /* IFTTTAlphaAnimation.m */,
+				400A632E1B4FD75600890579 /* IFTTTAnimatable.h */,
+				400A632F1B4FD75600890579 /* IFTTTAnimatedPagingScrollViewController.h */,
+				400A63301B4FD75600890579 /* IFTTTAnimatedPagingScrollViewController.m */,
+				400A63311B4FD75600890579 /* IFTTTAnimatedScrollViewController.h */,
+				400A63321B4FD75600890579 /* IFTTTAnimatedScrollViewController.m */,
+				400A63331B4FD75600890579 /* IFTTTAnimation.h */,
+				400A63341B4FD75600890579 /* IFTTTAnimation.m */,
+				400A63351B4FD75600890579 /* IFTTTAnimator.h */,
+				400A63361B4FD75600890579 /* IFTTTAnimator.m */,
+				400A63371B4FD75600890579 /* IFTTTColorAnimation.h */,
+				400A63381B4FD75600890579 /* IFTTTColorAnimation.m */,
+				400A63391B4FD75600890579 /* IFTTTConstraintConstantAnimation.h */,
+				400A633A1B4FD75600890579 /* IFTTTConstraintConstantAnimation.m */,
+				400A633B1B4FD75600890579 /* IFTTTConstraintMultiplierAnimation.h */,
+				400A633C1B4FD75600890579 /* IFTTTConstraintMultiplierAnimation.m */,
+				400A633D1B4FD75600890579 /* IFTTTCornerRadiusAnimation.h */,
+				400A633E1B4FD75600890579 /* IFTTTCornerRadiusAnimation.m */,
+				400A633F1B4FD75600890579 /* IFTTTEasingFunction.h */,
+				400A63401B4FD75600890579 /* IFTTTEasingFunction.m */,
+				400A63411B4FD75600890579 /* IFTTTFillColorAnimation.h */,
+				400A63421B4FD75600890579 /* IFTTTFillColorAnimation.m */,
+				400A63431B4FD75600890579 /* IFTTTFilmstrip.h */,
+				400A63441B4FD75600890579 /* IFTTTFilmstrip.m */,
+				400A63451B4FD75600890579 /* IFTTTFrameAnimation.h */,
+				400A63461B4FD75600890579 /* IFTTTFrameAnimation.m */,
+				400A63471B4FD75600890579 /* IFTTTHideAnimation.h */,
+				400A63481B4FD75600890579 /* IFTTTHideAnimation.m */,
+				400A63491B4FD75600890579 /* IFTTTInterpolatable.h */,
+				400A634A1B4FD75600890579 /* IFTTTInterpolatable.m */,
+				400A634B1B4FD75600890579 /* IFTTTJazzHands.h */,
+				400A634C1B4FD75600890579 /* IFTTTLabelAnimation.h */,
+				400A634D1B4FD75600890579 /* IFTTTLabelAnimation.m */,
+				400A634E1B4FD75600890579 /* IFTTTRotationAnimation.h */,
+				400A634F1B4FD75600890579 /* IFTTTRotationAnimation.m */,
+				400A63501B4FD75600890579 /* IFTTTScaleAnimation.h */,
+				400A63511B4FD75600890579 /* IFTTTScaleAnimation.m */,
+				400A63521B4FD75600890579 /* IFTTTScrollViewPageConstraintAnimation.h */,
+				400A63531B4FD75600890579 /* IFTTTScrollViewPageConstraintAnimation.m */,
+				400A63541B4FD75600890579 /* IFTTTShapeLayerAnimation.h */,
+				400A63551B4FD75600890579 /* IFTTTShapeLayerAnimation.m */,
+				400A63561B4FD75600890579 /* IFTTTStrokeEndAnimation.h */,
+				400A63571B4FD75600890579 /* IFTTTStrokeEndAnimation.m */,
+				400A63581B4FD75600890579 /* IFTTTStrokeStartAnimation.h */,
+				400A63591B4FD75600890579 /* IFTTTStrokeStartAnimation.m */,
+				400A635A1B4FD75600890579 /* IFTTTTextColorAnimation.h */,
+				400A635B1B4FD75600890579 /* IFTTTTextColorAnimation.m */,
+				400A635C1B4FD75600890579 /* IFTTTTransform3DAnimation.h */,
+				400A635D1B4FD75600890579 /* IFTTTTransform3DAnimation.m */,
+				400A635E1B4FD75600890579 /* IFTTTTranslationAnimation.h */,
+				400A635F1B4FD75600890579 /* IFTTTTranslationAnimation.m */,
+				400A63601B4FD75600890579 /* IFTTTViewAnimation.h */,
+				400A63611B4FD75600890579 /* IFTTTViewAnimation.m */,
+				400A63621B4FD75600890579 /* UIView+IFTTTJazzHands.h */,
+				400A63631B4FD75600890579 /* UIView+IFTTTJazzHands.m */,
+			);
+			name = JazzHands;
+			path = ExternalLibreries/JazzHands;
 			sourceTree = "<group>";
 		};
 		40FF873F19F8135C008B7C62 /* Keychain */ = {
@@ -3374,6 +3595,7 @@
 				14A87ADF1933390900D0D5AD /* FileDownloadingIcon.png in Resources */,
 				1487F208177C35AA004A1A5A /* MainAppIcon_29-29.png in Resources */,
 				1487F209177C35AA004A1A5A /* MainAppIcon_29-29@2x.png in Resources */,
+				400A63821B4FD94C00890579 /* iphoneAccounts.png in Resources */,
 				14A7F7A018ED5781009AF347 /* presentation_icon@2x.png in Resources */,
 				EA42FA5A180C13710006DB7C /* cancel_download_white.png in Resources */,
 				1487F218177C35AA004A1A5A /* BackRootFolderIcon.png in Resources */,
@@ -3386,6 +3608,7 @@
 				1487F21B177C35AA004A1A5A /* doc_icon@2x.png in Resources */,
 				1487F21C177C35AA004A1A5A /* doc_icon@2x~ipad.png in Resources */,
 				1487F21D177C35AA004A1A5A /* doc_icon~ipad.png in Resources */,
+				401AAA371B57C4F70047EA27 /* owncloudLogoFiles.png in Resources */,
 				40E354CB1A14D6C2000E7FE4 /* favoriteTB-filled@3x.png in Resources */,
 				13A726C918B399EC00795A90 /* ownCloud-xmas@2x.png in Resources */,
 				1487F222177C35AA004A1A5A /* FileDownloadedIcon.png in Resources */,
@@ -3415,6 +3638,7 @@
 				1487F22D177C35AA004A1A5A /* movie_icon@2x.png in Resources */,
 				40E354D51A14FCE7000E7FE4 /* movie_icon@3x.png in Resources */,
 				1487F22E177C35AA004A1A5A /* movie_icon@2x~ipad.png in Resources */,
+				405AD0C11B56C26A00271424 /* iphoneShare.png in Resources */,
 				1487F22F177C35AA004A1A5A /* movie_icon~ipad.png in Resources */,
 				1487F230177C35AA004A1A5A /* pdf_icon.png in Resources */,
 				1487F231177C35AA004A1A5A /* pdf_icon@2x.png in Resources */,
@@ -3426,6 +3650,7 @@
 				1487F237177C35AA004A1A5A /* sound_icon@2x.png in Resources */,
 				1487F238177C35AA004A1A5A /* sound_icon@2x~ipad.png in Resources */,
 				13A726C818B399EC00795A90 /* ownCloud-xmas.png in Resources */,
+				40E30EDA1B5911A400D36B07 /* iphoneFiles.png in Resources */,
 				13A5ADB518883C77000EB617 /* CopyLinkShareiphone.png in Resources */,
 				40AB1F611A123B17003E7397 /* RootFolderIcon@3x.png in Resources */,
 				1487F239177C35AA004A1A5A /* sound_icon~ipad.png in Resources */,
@@ -3438,6 +3663,7 @@
 				59D717E11959755600075E02 /* folder-shared@2x.png in Resources */,
 				14A32BBF18DC46CE0084CDCC /* FileOverwritingIcon@2x.png in Resources */,
 				1487F23F177C35AA004A1A5A /* TABsettings@2x.png in Resources */,
+				4052B4E21B4ECF35000788DA /* btnHelpPage3.png in Resources */,
 				1487F240177C35AA004A1A5A /* zip_icon.png in Resources */,
 				14A7F79F18ED5781009AF347 /* presentation_icon.png in Resources */,
 				40AB1F691A123D0E003E7397 /* TABsettings@3x.png in Resources */,
@@ -3449,6 +3675,7 @@
 				EA42FA5B180C13710006DB7C /* cancel_download_white@2x.png in Resources */,
 				1487F245177C35AA004A1A5A /* CredentialsError@2x.png in Resources */,
 				1487F246177C35AA004A1A5A /* NonRevealPasswordIcon.png in Resources */,
+				40CC7F0D1B4E665400231D73 /* Images.xcassets in Resources */,
 				400904DA1A02B49600E3DD15 /* MainAppIcon_29-29@3x.png in Resources */,
 				1487F247177C35AA004A1A5A /* NonRevealPasswordIcon@2x.png in Resources */,
 				1487F248177C35AA004A1A5A /* NonSecureConnectionIcon.png in Resources */,
@@ -3472,6 +3699,7 @@
 				1487F251177C35AA004A1A5A /* cancel_download@2x.png in Resources */,
 				14EFCAEB17FAFEAA007A38B6 /* MainAppIcon_76-76.png in Resources */,
 				14A4796218EBF174003500BA /* favoriteTB@2x.png in Resources */,
+				4052B4DA1B4ECD3A000788DA /* btnHelpPage0.png in Resources */,
 				1487F252177C35AA004A1A5A /* genericFile_icon.png in Resources */,
 				1487F253177C35AA004A1A5A /* genericFile_icon@2x.png in Resources */,
 				1487F254177C35AA004A1A5A /* imageSelected.png in Resources */,
@@ -3480,6 +3708,7 @@
 				40E354C71A14D6A2000E7FE4 /* sharedItem@3x.png in Resources */,
 				4005607C1A03CEEE0030D502 /* MainAppIcon_60-60@2x.png in Resources */,
 				1487F257177C35AA004A1A5A /* radio_checked@2x.png in Resources */,
+				40E30ED61B59105D00D36B07 /* iphoneInstantUpload.png in Resources */,
 				1487F258177C35AA004A1A5A /* radio_unchecked.png in Resources */,
 				1487F259177C35AA004A1A5A /* radio_unchecked@2x.png in Resources */,
 				13A5ADB618883C77000EB617 /* CopyLinkShareiphone@2x.png in Resources */,
@@ -3500,6 +3729,7 @@
 				14A4796618EC6294003500BA /* favoriteTB-filled.png in Resources */,
 				1487F268177C35AA004A1A5A /* TSAlertViewCancelButtonBackground.png in Resources */,
 				13B1DDE318EC1F69006166DC /* sharedItemWhite@2x.png in Resources */,
+				4052B4D81B4ECC75000788DA /* btnAllHelpGrey.png in Resources */,
 				14EC1955195B297F00B02AB6 /* sharedItem.png in Resources */,
 				1487F269177C35AA004A1A5A /* TSAlertViewMessageListViewShadow.png in Resources */,
 				13A9FCF417E9858C00FF48D7 /* Overlay@2x.png in Resources */,
@@ -3520,6 +3750,7 @@
 				14A6115919346D0000AECA34 /* sharedItemSwipe.png in Resources */,
 				40E354CF1A14D6E8000E7FE4 /* deleteTB@3x.png in Resources */,
 				1487F276177C35AA004A1A5A /* server@2x.png in Resources */,
+				4052B4E31B4ECF35000788DA /* btnHelpPage4.png in Resources */,
 				1487F277177C35AA004A1A5A /* user.png in Resources */,
 				1487F278177C35AA004A1A5A /* user@2x.png in Resources */,
 				1487F279177C35AA004A1A5A /* exitFullScreen.png in Resources */,
@@ -3557,11 +3788,13 @@
 				142C3FB6177C5CEC00FE0690 /* Default-Landscape@2x~ipad.png in Resources */,
 				142C3FB7177C5CEC00FE0690 /* Default-Landscape~ipad.png in Resources */,
 				EA2B4FB017FAFF69001766BB /* company_empty_screen_ipad.png in Resources */,
+				4052B4E11B4ECF35000788DA /* btnHelpPage2.png in Resources */,
 				142C3FB8177C5CEC00FE0690 /* Default-Portrait@2x~ipad.png in Resources */,
 				40E354DD1A14FE00000E7FE4 /* image_icon@3x.png in Resources */,
 				14B0084118FD1B5B004CB06B /* EmptyCell.xib in Resources */,
 				142C3FB9177C5CEC00FE0690 /* Default-Portrait~ipad.png in Resources */,
 				149D98BE195AAD08005E0C73 /* fileSharedWithUs@2x.png in Resources */,
+				4052B4E41B4ECF35000788DA /* btnHelpPage5.png in Resources */,
 				142C3FBA177C5CEC00FE0690 /* Default.png in Resources */,
 				14A9B1CB18E2E687001E9457 /* FileUpdatedIcon@2x.png in Resources */,
 				59D717E01959755600075E02 /* folder-shared.png in Resources */,
@@ -3575,6 +3808,7 @@
 				EA4914781AC0346100BECF0B /* TTOpenInAppActivity8@3x.png in Resources */,
 				14A7F7AA18ED578E009AF347 /* spreadsheet_icon@2x~ipad.png in Resources */,
 				14CB98AA19657B7700F6FF4E /* folder-public@2x.png in Resources */,
+				4052B4DC1B4ECD74000788DA /* btnHelpPage1.png in Resources */,
 				4016E5C51A0CE9410022163C /* MainAppIcon_76_76@3x.png in Resources */,
 				148BEA64178C027400696246 /* FailedUploadCell.xib in Resources */,
 				1339D935178D5DA900002156 /* genericFile_icon_error@2x.png in Resources */,
@@ -3850,14 +4084,17 @@
 				148DD5B51778436A00FB9977 /* UIColor+Constants.m in Sources */,
 				148DD5C2177850B100FB9977 /* CustomCellFileAndDirectory.m in Sources */,
 				59C71D1D1A9216AE00F66166 /* ReaderThumbQueue.m in Sources */,
+				400A63731B4FD75600890579 /* IFTTTLabelAnimation.m in Sources */,
 				148DD5D9177851E700FB9977 /* UploadCell.m in Sources */,
 				148DD5DB177851E700FB9977 /* UploadRecentCell.m in Sources */,
 				EABF68E11889593100A2217C /* ShareLinkCell.m in Sources */,
 				13A9FCED17E9858C00FF48D7 /* ELCAlbumPickerController.m in Sources */,
+				400A636A1B4FD75600890579 /* IFTTTConstraintConstantAnimation.m in Sources */,
 				59A6B65719458F6E000B107D /* OCURLSessionManager.m in Sources */,
 				1493D8CF185702D70090FEFB /* CheckSSOServer.m in Sources */,
 				148DD5FD1778556500FB9977 /* MBProgressHUD.m in Sources */,
 				EAC5985A1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
+				400A63641B4FD75600890579 /* IFTTTAlphaAnimation.m in Sources */,
 				59C71D161A9216AE00F66166 /* ReaderContentView.m in Sources */,
 				148DD612177855B600FB9977 /* AuthenticationDbService.m in Sources */,
 				59C71D1C1A9216AE00F66166 /* ReaderThumbFetch.m in Sources */,
@@ -3868,6 +4105,7 @@
 				148DD614177855B600FB9977 /* RetrieveAccessTokenTask.m in Sources */,
 				59C71D171A9216AE00F66166 /* ReaderDocument.m in Sources */,
 				148DD615177855B600FB9977 /* RetrieveDataResponseTypeCodeTask.m in Sources */,
+				400A636C1B4FD75600890579 /* IFTTTCornerRadiusAnimation.m in Sources */,
 				148DD616177855B600FB9977 /* RetrieveRefreshAndAccessTokenTask.m in Sources */,
 				EAD774F31AD2B01E0007C4DB /* OCSplitViewController.m in Sources */,
 				EA68968D17F599060033B3C1 /* KKKeychain.m in Sources */,
@@ -3881,10 +4119,12 @@
 				148DD63117785DE900FB9977 /* MediaViewController.m in Sources */,
 				13D6B7CA18855EE40090A96C /* AppsActivityProvider.m in Sources */,
 				148DD63417785DF900FB9977 /* OfficeFileView.m in Sources */,
+				400A63721B4FD75600890579 /* IFTTTInterpolatable.m in Sources */,
 				148DD63817785E2200FB9977 /* UploadFromOtherAppViewController.m in Sources */,
 				13A9FCF117E9858C00FF48D7 /* ELCImagePickerController.m in Sources */,
 				148DD6691778627200FB9977 /* Download.m in Sources */,
 				59C71D251A9216AE00F66166 /* UIXToolbarView.m in Sources */,
+				400A63771B4FD75600890579 /* IFTTTShapeLayerAnimation.m in Sources */,
 				EA42FA4B18041E2F0006DB7C /* PassthroughView.m in Sources */,
 				59C71D151A9216AE00F66166 /* ReaderContentTile.m in Sources */,
 				EA68969917F9AC860033B3C1 /* OCPortraitNavigationViewController.m in Sources */,
@@ -3897,11 +4137,16 @@
 				EAABAB2A18585CD700909831 /* NSString+Encoding.m in Sources */,
 				EABF69161891379C00A2217C /* SWLongPressGestureRecognizer.m in Sources */,
 				14AB382E18C8E35200B34697 /* InfoFileUtils.m in Sources */,
+				40EDF89F1B4D123500700E3A /* HelpGuideViewController.m in Sources */,
 				148DD6951778663100FB9977 /* DownloadViewController.m in Sources */,
+				400A63691B4FD75600890579 /* IFTTTColorAnimation.m in Sources */,
+				40EDF8A31B4D152300700E3A /* MyCustomAnimation.m in Sources */,
 				59C71D141A9216AE00F66166 /* ReaderContentPage.m in Sources */,
+				400A63701B4FD75600890579 /* IFTTTFrameAnimation.m in Sources */,
 				59AF279E19920A1100359151 /* CheckHasCookiesSupport.m in Sources */,
 				14987092187D6702000D9C49 /* CWStatusBarNotification.m in Sources */,
 				59A9A72A196E8E3C0042FEAC /* UtilsCookies.m in Sources */,
+				400A63681B4FD75600890579 /* IFTTTAnimator.m in Sources */,
 				59C71D1B1A9216AE00F66166 /* ReaderThumbCache.m in Sources */,
 				148DD6971778663100FB9977 /* OpenWith.m in Sources */,
 				13AD22B318311A26007E0F1A /* ManageUploadRequest.m in Sources */,
@@ -3912,6 +4157,7 @@
 				EA68969117F599060033B3C1 /* KKPasscodeViewController.m in Sources */,
 				593F7CAA19EFDE96004136F7 /* UtilsUrls.m in Sources */,
 				EA42FA4E1804217D0006DB7C /* OCToolBar.m in Sources */,
+				400A63781B4FD75600890579 /* IFTTTStrokeEndAnimation.m in Sources */,
 				148DD6A91778668A00FB9977 /* SelectFolderViewController.m in Sources */,
 				148DD6AB1778668A00FB9977 /* UINavigationController+KeyboardDismiss.m in Sources */,
 				59C71D221A9216AE00F66166 /* ReaderViewController.m in Sources */,
@@ -3921,18 +4167,24 @@
 				148DD6B2177866A400FB9977 /* FilesViewController.m in Sources */,
 				EA707223199CC59E00CE7079 /* ManageDownloads.m in Sources */,
 				148DD6B71778693000FB9977 /* RecentViewController.m in Sources */,
+				400A636F1B4FD75600890579 /* IFTTTFilmstrip.m in Sources */,
 				148DD6BD1778695E00FB9977 /* AddAccountViewController.m in Sources */,
 				14987095187DB14A000D9C49 /* NotificationStatusBarViewController.m in Sources */,
 				148DD6C11778697100FB9977 /* AccountCell.m in Sources */,
+				400A637B1B4FD75600890579 /* IFTTTTransform3DAnimation.m in Sources */,
 				148DD6C71778698300FB9977 /* EditAccountViewController.m in Sources */,
+				400A637A1B4FD75600890579 /* IFTTTTextColorAnimation.m in Sources */,
 				14B0084018FD1B5B004CB06B /* EmptyCell.m in Sources */,
 				59C9D324195C0EFB00400AE2 /* ManageNetworkErrors.m in Sources */,
 				EA68969017F599060033B3C1 /* KKPasscodeSettingsViewController.m in Sources */,
 				59C71D121A9216AE00F66166 /* CGPDFDocument.m in Sources */,
+				400A63671B4FD75600890579 /* IFTTTAnimation.m in Sources */,
 				EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */,
 				59AE9EB21990FEC2003380A8 /* CheckHasShareSupport.m in Sources */,
 				EABF69191891379C00A2217C /* SWUtilityButtonView.m in Sources */,
+				400A636E1B4FD75600890579 /* IFTTTFillColorAnimation.m in Sources */,
 				148DD6D9177869C800FB9977 /* ImpressumViewController.m in Sources */,
+				400A636D1B4FD75600890579 /* IFTTTEasingFunction.m in Sources */,
 				148DD6E817786A1400FB9977 /* SettingsViewController.m in Sources */,
 				59D774CE1910EE0F004322BA /* UtilsTableView.m in Sources */,
 				148DD6EA17786A1400FB9977 /* WebViewController.m in Sources */,
@@ -3940,14 +4192,19 @@
 				EABF69141891379C00A2217C /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */,
 				148DD6F617786BDA00FB9977 /* UIImage+Alpha.m in Sources */,
+				400A63791B4FD75600890579 /* IFTTTStrokeStartAnimation.m in Sources */,
 				148DD6F717786BDA00FB9977 /* UIImage+Resize.m in Sources */,
 				148DD6F817786BDA00FB9977 /* UIImage+RoundedCorner.m in Sources */,
 				EA4914711AC0346100BECF0B /* TTOpenInAppActivity.m in Sources */,
 				1467037519372ACC00087289 /* DownloadUtils.m in Sources */,
+				400A63711B4FD75600890579 /* IFTTTHideAnimation.m in Sources */,
 				599D80A21A23366D0071B66E /* SimpleFileListTableViewController.m in Sources */,
 				148DD6FE17786BF200FB9977 /* FileNameUtils.m in Sources */,
+				400A63741B4FD75600890579 /* IFTTTRotationAnimation.m in Sources */,
+				400A637C1B4FD75600890579 /* IFTTTTranslationAnimation.m in Sources */,
 				59C71D201A9216AE00F66166 /* ReaderThumbsView.m in Sources */,
 				40FF874319F81396008B7C62 /* OCKeychain.m in Sources */,
+				400A63751B4FD75600890579 /* IFTTTScaleAnimation.m in Sources */,
 				1487F135177C2F08004A1A5A /* ManageAppSettingsDB.m in Sources */,
 				1487F138177C2F48004A1A5A /* ManageDB.m in Sources */,
 				1487F13B177C2F73004A1A5A /* ManageFilesDB.m in Sources */,
@@ -3957,15 +4214,19 @@
 				1487F141177C2FC1004A1A5A /* ManageUsersDB.m in Sources */,
 				59C71D1E1A9216AE00F66166 /* ReaderThumbRender.m in Sources */,
 				1487F14B177C315D004A1A5A /* FileDto.m in Sources */,
+				400A637D1B4FD75600890579 /* IFTTTViewAnimation.m in Sources */,
+				400A63651B4FD75600890579 /* IFTTTAnimatedPagingScrollViewController.m in Sources */,
 				1487F14C177C315D004A1A5A /* UserDto.m in Sources */,
 				1487F158177C3392004A1A5A /* FMDatabase.m in Sources */,
 				1487F159177C3392004A1A5A /* FMDatabaseAdditions.m in Sources */,
 				13A9FCEF17E9858C00FF48D7 /* ELCAssetCell.m in Sources */,
 				1487F15A177C3392004A1A5A /* FMDatabasePool.m in Sources */,
 				59C71D1F1A9216AE00F66166 /* ReaderThumbRequest.m in Sources */,
+				400A636B1B4FD75600890579 /* IFTTTConstraintMultiplierAnimation.m in Sources */,
 				1487F15B177C3392004A1A5A /* FMDatabaseQueue.m in Sources */,
 				1487F15C177C3392004A1A5A /* FMResultSet.m in Sources */,
 				14A50E9E18F3FC9100506E2B /* SelectedFolderCell.m in Sources */,
+				400A63761B4FD75600890579 /* IFTTTScrollViewPageConstraintAnimation.m in Sources */,
 				EAD281BC1A38BB2E00A00D54 /* DPDownload.m in Sources */,
 				EABD9BC71B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m in Sources */,
 				1428F675178422AE0092F42A /* UploadsOfflineDto.m in Sources */,
@@ -3973,6 +4234,7 @@
 				1428F678178422BE0092F42A /* UtilsDtos.m in Sources */,
 				59C71D181A9216AE00F66166 /* ReaderDocumentOutline.m in Sources */,
 				1420C3AC178A9F5000C0455C /* LoginViewController.m in Sources */,
+				400A63661B4FD75600890579 /* IFTTTAnimatedScrollViewController.m in Sources */,
 				EA8ADE6A1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */,
 				13A9C667187FE91700C6EEE8 /* ShareFileOrFolder.m in Sources */,
 				EA42FA51180539E70006DB7C /* ImageUtils.m in Sources */,
@@ -3985,6 +4247,7 @@
 				EABF69181891379C00A2217C /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				59A0DADB1941A7A60088FECD /* CheckAccessToServer.m in Sources */,
 				593D531D17BF701800191846 /* SSOViewController.m in Sources */,
+				400A637E1B4FD75600890579 /* UIView+IFTTTJazzHands.m in Sources */,
 				59C71D241A9216AE00F66166 /* ThumbsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
