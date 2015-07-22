@@ -20,6 +20,8 @@
 #import "UIColor+Constants.h"
 #import "ManageDB.h"
 
+#define k_number_of_pages_help_guide 6
+
 @interface HelpGuideViewController ()
 
 @end
@@ -29,7 +31,7 @@
 - (instancetype)init
 {
     if ((self = [super init])) {
-        self.numberOfPages = 6;
+        self.numberOfPages = k_number_of_pages_help_guide;
     }
     
     return self;
@@ -38,7 +40,7 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     if ((self = [super initWithCoder:aDecoder])) {
-        self.numberOfPages = 6;
+        self.numberOfPages = k_number_of_pages_help_guide;
     }
     
     return self;
@@ -47,7 +49,7 @@
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
-        self.numberOfPages = 6;
+        self.numberOfPages = k_number_of_pages_help_guide;
     }
     
     return self;
