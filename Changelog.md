@@ -1,3 +1,12 @@
+## 3.4.4 (July 2015)
+- Updated networking library to address security issues
+- New navigation drawer on iPad
+- Added Share-IN extension, upload image and videos directly from the Gallery app
+- More characters allowed in file names
+- Improved management of multi accounts
+- Added new languages
+- Bugs fixed
+
 ## 3.4.1 ( March 2015)
 - Share link, share your files with password enforced
 - Get the app ready for oc 8.1
