@@ -10,12 +10,7 @@ class loginTest(unittest.TestCase):
 
     def setUp(self):
         # set up appium
-        desired_caps = {}
-        desired_caps['appium-version'] = const.K_APPIUM_VER
-        desired_caps['platformName'] = const.K_APP_PLATFORM_NAME
-        desired_caps['platformVersion'] = const.K_APP_PLATFORM_VER
-        desired_caps['deviceName'] = const.K_DEVICE_NAME
-        self.driver = webdriver.Remote('http://0.0.0.0:4723/wd/hub', desired_caps)
+        self.driver = actions.getWebDriver()
         #self.driver.implicitly_wait(60)
 
 
