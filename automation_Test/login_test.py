@@ -15,9 +15,7 @@ class loginTest(unittest.TestCase):
         desired_caps['platformName'] = const.K_APP_PLATFORM_NAME
         desired_caps['platformVersion'] = const.K_APP_PLATFORM_VER
         desired_caps['deviceName'] = const.K_DEVICE_NAME
-        #desired_caps['app'] = os.path.dirname(os.path.realpath(__file__)) + const.K_APP_FILE_NAME
         desired_caps['app'] = os.path.abspath(const.K_APP_FILE_NAME)
-        desired_caps['udid'] = 'c45487fe52e63da068ba43e41755a165e84f0f0d'
         self.driver = webdriver.Remote('http://0.0.0.0:4723/wd/hub', desired_caps)
         #self.driver.implicitly_wait(60)
 
