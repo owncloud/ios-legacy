@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+
 from appium import webdriver
 import time
 import os
@@ -12,7 +15,6 @@ class loginTest(unittest.TestCase):
         # set up appium
         self.driver = actions.getWebDriver()
         #self.driver.implicitly_wait(60)
-
 
     def tearDown(self):
         self.driver.quit()

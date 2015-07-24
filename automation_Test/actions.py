@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+
 import time
 import os
 from time import sleep
-import constant as const
+import constants as const
 from appium import webdriver
 
 def getWebDriver():
@@ -10,7 +13,7 @@ def getWebDriver():
     desired_caps['platformName'] = const.K_APP_PLATFORM_NAME
     desired_caps['platformVersion'] = const.K_APP_PLATFORM_VER
     desired_caps['deviceName'] = const.K_DEVICE_NAME
-    return webdriver.Remote('http://0.0.0.0:4723/wd/hub', desired_caps)
+    return webdriver.Remote(const.K_WD_REMOTE_URL, desired_caps)
 
 def doLoginWith(driver,server,user,password, ssl):
     user_field = driver.find_elements_by_class_name('UIATextField')[1]
