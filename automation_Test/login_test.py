@@ -3,7 +3,7 @@ import time
 import os
 import unittest
 from time import sleep
-import constant as const
+import constants as const
 import actions
 
 class loginTest(unittest.TestCase):
@@ -15,7 +15,6 @@ class loginTest(unittest.TestCase):
         desired_caps['platformName'] = const.K_APP_PLATFORM_NAME
         desired_caps['platformVersion'] = const.K_APP_PLATFORM_VER
         desired_caps['deviceName'] = const.K_DEVICE_NAME
-        desired_caps['app'] = os.path.abspath(const.K_APP_FILE_NAME)
         self.driver = webdriver.Remote('http://0.0.0.0:4723/wd/hub', desired_caps)
         #self.driver.implicitly_wait(60)
 
@@ -24,10 +23,10 @@ class loginTest(unittest.TestCase):
         self.driver.quit()
 
     def test_ui_login_ok(self):
-        server_url = "docker.oc.solidgear.es:51222"
-        user = "gon"
-        password = "gon"
-        ssl = True
+        server_url = const.K_URL_1
+        user = const.K_USER_1
+        password = const.K_PASSWORD_1
+        ssl = const.K_SELF_SIGNED_1
 
         actions.doLoginWith(self.driver,server_url,user,password,ssl)
 
@@ -37,10 +36,10 @@ class loginTest(unittest.TestCase):
         #import ipdb; ipdb.set_trace()
 
     def test_ui_login_noOk(self):
-        server_url = "docker.oc.solidgear.es:51222"
-        user = "gon"
-        password = "go"
-        ssl = True
+        server_url = const.K_URL_1
+        user = const.K_USER_1
+        password = const.K_PASSWORD_WRONG_1
+        ssl = const.K_SELF_SIGNED_1
 
         actions.doLoginWith(self.driver,server_url,user,password,ssl)
 
