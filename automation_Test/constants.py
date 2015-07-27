@@ -26,10 +26,10 @@ K_RST_PDF_FILE = 'Report'
 K_FILE_NOT_FOUND = 'File not found for given path %s'
 
 #Login
-K_URL_1 = 'docker.oc.solidgear.es:51222'
-K_USER_1 = 'gon'
-K_PASSWORD_1 = 'gon'
-K_PASSWORD_WRONG_1 = 'go'
+K_URL_1 = 'ownCloud_server'
+K_USER_1 = 'user'
+K_PASSWORD_1 = 'pass'
+K_PASSWORD_WRONG_1 = 'pass_wrong'
 K_SELF_SIGNED_1 = True
 
 class utility_functions():
