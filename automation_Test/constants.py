@@ -30,7 +30,7 @@ K_URL_1 = 'docker.oc.solidgear.es:51222'
 K_USER_1 = 'gon'
 K_PASSWORD_1 = 'gon'
 K_PASSWORD_WRONG_1 = 'go'
-K_SELF_SIGNED_1 = False
+K_SELF_SIGNED_1 = True
 
 class utility_functions():
 
