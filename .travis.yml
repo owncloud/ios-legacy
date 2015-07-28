@@ -1,4 +1,5 @@
 language: objective-c
+osx_image: xcode6.4
 xcode_project: Owncloud iOs Client.xcodeproj
 xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
