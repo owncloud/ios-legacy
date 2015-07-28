@@ -13,11 +13,35 @@ We need to install:
 * [Python][python]
 * [Appium UI client][appium] 
 
-Or with [Homebrew][homebrew] do:
+###With [Homebrew][homebrew] do:
+We need to install node without sudo to run appium.
+
+Check if you have node installed:
 ```
-brew install node
-brew install python
+npm --version
+```
+
+If you already have node installed with sudo remove it with following steps:
+```
+sudo rm -rf /usr/local/lib/node_modules
+sudo rm -rf ~/.npm
+brew uninstall node
+```
+
+Install node with the following steps:
+```
+brew install node --without-npm
+echo prefix=~/.node >> ~/.npmrc
+curl -L https://www.npmjs.com/install.sh | sh
+export PATH="$HOME/.node/bin:$PATH”
+```
+Install appium
+```
 npm install -g appium
+```
+Install python
+```
+brew install python
 ```
 
 [node]: https://nodejs.org/
@@ -33,20 +57,20 @@ pip install Appium-Python-Client
 ```
 
 #Config your constants
-In *constants.py* change the constants you need with your personal configuration.
-Modified *K_APP_FILE_NAME* with the path of your *.app*.
-Open Appium. From Appium IOS settings choose your build(.app) of the iPhone-Simulator from finder.
+* In *constants.py* change the constants you need with your personal configuration.
+* Modified *K_APP_FILE_NAME* with the path of your *.app*.
+* Open Appium. From Appium IOS settings choose your build(.app) of the iPhone-Simulator from finder.
 
 #Run tests
 In config file 'config.ini' add tests that we want to run with nose.
 
-* Launch appium from Appium UI or with command line 'appium &'.
+* Launch appium from Appium UI or with command line ```appium &```.
 
-* Launch test:
+* Launch a single test file:
 ```
 python nameTest.py
 ```
-or launch test with nose:
+or launch several test files with nose:
 ```
 nosetests -c config.ini
 ```
