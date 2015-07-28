@@ -28,9 +28,9 @@ K_FILE_NOT_FOUND = 'File not found for given path %s'
 #Login
 K_URL_1 = 'serverName'
 K_USER_1 = 'userName'
-K_PASSWORD_1 = 'password'
+K_PASSWORD_1 = 'passName'
 K_PASSWORD_WRONG_1 = 'pass_wrong'
-K_SELF_SIGNED_1 = False
+K_SELF_SIGNED_1 = True
 
 class utility_functions():
 
