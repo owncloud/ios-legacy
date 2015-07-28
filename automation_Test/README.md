@@ -32,14 +32,21 @@ pip install nose
 pip install Appium-Python-Client
 ```
 
+#Config your constants
+In *constants.py* change the constants you need with your personal configuration.
+Modified *K_APP_FILE_NAME* with the path of your *.app*.
+Open Appium. From Appium IOS settings choose your build(.app) of the iPhone-Simulator from finder.
+
 #Run tests
 In config file 'config.ini' add tests that we want to run with nose.
 
-with appium activated do:
+* Launch appium from Appium UI or with command line 'appium &'.
+
+* Launch test:
 ```
 python nameTest.py
 ```
-or with nose:
+or launch test with nose:
 ```
 nosetests -c config.ini
 ```
