@@ -8,12 +8,16 @@ import constants as const
 from appium import webdriver
 
 def getWebDriver():
+    wd = None
     desired_caps = {}
     desired_caps['appium-version'] = const.K_APPIUM_VER
     desired_caps['platformName'] = const.K_APP_PLATFORM_NAME
     desired_caps['platformVersion'] = const.K_APP_PLATFORM_VER
     desired_caps['deviceName'] = const.K_DEVICE_NAME
-    return webdriver.Remote(const.K_WD_REMOTE_URL, desired_caps)
+    desired_caps['app'] = os.path.dirname(os.path.realpath(__file__)) + const.K_APP_FILE_NAME
+    wd = webdriver.Remote(const.K_WD_REMOTE_URL, desired_caps)
+    wd.implicitly_wait(const.K_WD_EXPLICITY_WAIT)
+    return wd
 
 def doLoginWith(driver,server,user,password, ssl):
     user_field = driver.find_elements_by_class_name('UIATextField')[1]

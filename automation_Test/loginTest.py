@@ -45,6 +45,6 @@ class loginTest(unittest.TestCase):
         self.assertEqual(len(self.driver.find_elements_by_class_name('UIATabBar')), 0)
         #import ipdb; ipdb.set_trace()
 
-#if __name__ == '__main__':
-#    suite = unittest.TestLoader().loadTestsFromTestCase(loginTest)
-#    unittest.TextTestRunner(verbosity=2).run(suite)
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(loginTest)
+    unittest.TextTestRunner(verbosity=2).run(suite)

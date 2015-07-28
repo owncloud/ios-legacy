@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 
 #--Generic Variables for use through Appium connection
-K_APP_FILE_NAME = '../../ownCloud.app'
+K_APP_FILE_NAME = '../../ownCloud.zip'
 K_APPIUM_VER = '1.4.1'
 K_APP_PLATFORM_NAME = 'iOS'
 K_APP_PLATFORM_VER = '8.4'
@@ -26,11 +26,11 @@ K_RST_PDF_FILE = 'Report'
 K_FILE_NOT_FOUND = 'File not found for given path %s'
 
 #Login
-K_URL_1 = 'ownCloud_server'
-K_USER_1 = 'user'
-K_PASSWORD_1 = 'pass'
+K_URL_1 = 'docker.oc.solidgear.es:50018'
+K_USER_1 = 'testios'
+K_PASSWORD_1 = 'testios'
 K_PASSWORD_WRONG_1 = 'pass_wrong'
-K_SELF_SIGNED_1 = True
+K_SELF_SIGNED_1 = False
 
 class utility_functions():
 
