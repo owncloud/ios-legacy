@@ -1,4 +1,4 @@
-# Atomated tests for iOS OC App
+# Automated tests for iOS OC App
 
 Suite of tests and needed utilities to be runned for testing the iOS OC App
 
@@ -12,6 +12,13 @@ We need to install:
 * [Node][node]
 * [Python][python]
 * [Appium UI client][appium] 
+
+Or with [Homebrew][homebrew] do:
+```
+brew install node
+brew install python
+npm install -g appium
+```
 
 [node]: https://nodejs.org/
 [python]: https://www.python.org/downloads/
