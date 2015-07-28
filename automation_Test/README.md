@@ -2,27 +2,28 @@
 
 Suite of tests and needed utilities to be runned for testing the iOS OC App
 
-It uses python as main language and selenium webdriver.
+It uses python as main language and selenium webdriver with appium.
 
 
 #Prepare environment
-* Install Node from [here][node]
-* Install python [here][python]
-* Install pip: sudo easy_install pip
-* Install nosetests: pip install nose
-* Download Appium UI client [here][appium] 
 
-Or with [Homebrew][homebrew] do:
-```
-install node
-install python
-install pip
-pip install nose
-```
+We need to install:
+
+* [Node][node]
+* [Python][python]
+* [Appium UI client][appium] 
+
 [node]: https://nodejs.org/
 [python]: https://www.python.org/downloads/
 [appium]: http://appium.io/
 [homebrew]: http://brew.sh/
+
+Install pip and packages:
+```
+sudo easy_install pip
+pip install nose
+pip install Appium-Python-Client
+```
 
 #Run tests
 In config file 'config.ini' add tests that we want to run with nose.
@@ -31,8 +32,7 @@ with appium activated do:
 ```
 python nameTest.py
 ```
-or with nose
+or with nose:
 ```
-nosetest config.ini
+nosetests -c config.ini
 ```
-
