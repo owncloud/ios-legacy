@@ -43,3 +43,18 @@ def doLoginWith(driver,server,user,password, ssl):
 
     login_button = driver.find_elements_by_class_name('UIAStaticText')[1]
     login_button.click()
+
+def wait_until(some_method, timeout, period=0.25, *args, **kwargs):
+    mustend = time.time() + timeout
+    while time.time() < mustend:
+        if some_method(*args, **kwargs): return True
+    time.sleep(period)
+    return False
+
+def check_values(driver, class_name, exp_value):
+    number_of_classes = len(driver.find_elements_by_class_name(class_name))
+    if number_of_classes == exp_value: return True
+    return False
+
+
+
