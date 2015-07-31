@@ -27,6 +27,10 @@
  */
 + (void) insertVersionToDataBase:(int) version;
 
+/*
+ * Update show_help_guide
+ */
++ (void) updateShowHelpGuide:(BOOL) newValue;
 
 /*
  * Method that remove a specific table
@@ -44,6 +48,12 @@
  */
 
 +(int) getDatabaseVersion;
+
+/*
+ * This method return if the show help guide should be show
+ */
+
++(BOOL) getShowHelpGuide;
 
 /*
  * Method that make the update the version of the dataBase
@@ -178,5 +188,17 @@
  *
  */
 + (void) updateDBVersion12To13;
+
+///-----------------------------------
+/// @name Update Database version with 13 version to 14
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter db_version table, added new field to show help guide
+ *
+ */
++ (void) updateDBVersion13To14;
 
 @end

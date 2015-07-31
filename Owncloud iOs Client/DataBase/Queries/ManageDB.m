@@ -77,8 +77,7 @@
             DLog(@"Error in createDataBase table certificates");
         }
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'db_version' ('id' INTEGER PRIMARY KEY, 'version' INTEGER)"];
-        
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'db_version' ('id' INTEGER PRIMARY KEY, 'version' INTEGER, 'show_help_guide' BOOL NOT NULL DEFAULT 1)"];
         if (!correctQuery) {
             DLog(@"Error in createDataBase table db_version");
         }
@@ -110,24 +109,6 @@
     }];    
 }
 
-/*
- * Delete table of database version
- */
-+ (void)clearTableDbVersion {
-    
-    FMDatabaseQueue *queue = Managers.sharedDatabase;
-    
-    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-        BOOL correctQuery=NO;
-        
-       correctQuery = [db executeUpdate:@"DELETE FROM db_version"];
-        
-        if (!correctQuery) {
-            DLog(@"Error in clearTableDbVersion");
-        }
-    }];
-    
-}
 
 /*
  * Insert version of the database
@@ -136,20 +117,56 @@
 
 + (void) insertVersionToDataBase:(int) version {
     
-    [self clearTableDbVersion];
+    __block BOOL hasRow = NO;
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
+
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT COUNT(*) as NUM from db_version"];
+        while ([rs next]) {
+            int num = [rs intForColumn:@"NUM"];
+            if (num>0) {
+                 hasRow = YES;
+            }
+        }
+    }];
+    
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"INSERT INTO db_version(version) Values(?)", [NSNumber numberWithInt:version]];
+        if (hasRow) {
+            correctQuery = [db executeUpdate:@"UPDATE db_version SET version=?", [NSNumber numberWithInt:version]];
+        } else {
+            correctQuery = [db executeUpdate:@"INSERT INTO db_version(version) Values(?)", [NSNumber numberWithInt:version]];
+        }
         
         if (!correctQuery) {
             DLog(@"Error in insertVersionToDataBase");
         }
         
     }];
+}
+
+/*
+ * Update show help guide
+ * @showHelp -> value YES,NO
+ */
+
++ (void) updateShowHelpGuide:(BOOL) newValue {
+   
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE db_version SET show_help_guide=? ",[NSNumber numberWithBool:newValue]];
+        
+        if (!correctQuery) {
+            DLog(@"Error update show help guide");
+        }
+        
+    }];
+     DLog(@"Se ha actualizado helpGuide a:%d",newValue);
 }
 
 /*
@@ -219,6 +236,31 @@
     DLog(@"DataBase Version is: %d", output);
     return output;
 }
+
+/*
+ * This method return the show help guide
+ */
+
++(BOOL) getShowHelpGuide {
+    
+    __block BOOL output = NO;
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT show_help_guide FROM db_version LIMIT 1"];
+        
+        while ([rs next]) {
+            output = [rs boolForColumn:@"show_help_guide"];
+        }
+        
+       [rs close];
+    }];
+    
+    DLog(@"getShowHelpGuide: %d", output);
+    return output;
+}
+
 
 /*
  * Method that make the update the version of the dataBase
@@ -819,6 +861,31 @@
         correctQuery = [db executeUpdate:@"ALTER TABLE users ADD url_redirected VARCHAR"];
         if (!correctQuery) {
             DLog(@"Error update version 12 to 13 table users url_redirected");
+        }
+        
+    }];
+}
+
+///-----------------------------------
+/// @name Update Database version with 13 version to 14
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter users table, added new fields to forbidden characters support and to redirected url.
+ *
+ */
++ (void) updateDBVersion13To14{
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"ALTER TABLE db_version ADD show_help_guide BOOL NOT NULL DEFAULT 0"];
+        if (!correctQuery) {
+            DLog(@"Error update version 13 to 14 table db_version show_help_guide");
         }
         
     }];
