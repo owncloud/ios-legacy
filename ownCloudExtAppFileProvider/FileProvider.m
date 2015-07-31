@@ -82,7 +82,7 @@
         error = [NSError errorWithDomain:NSPOSIXErrorDomain code:-1 userInfo:nil];
     }
     
-    NSLog(@"Provider identifier : %@", self.description);
+   // DLog(@"Provider identifier : %@", self.description);
     
     if (completionHandler) {
         completionHandler(error);
@@ -92,20 +92,25 @@
 
 - (void)itemChangedAtURL:(NSURL *)url {
     // Called at some point after the file has changed; the provider may then trigger an upload
-    NSLog(@"Item changed at URL %@", url);
-
+    DLog(@"Item changed at URL %@", url);
+    
     ProvidingFileDto *providingFile = [ManageProvidingFilesDB getProvidingFileDtoByPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:url.path]];
     
     if (providingFile) {
+        //Open
         FileDto *file = [ManageFilesDB getFileDtoRelatedWithProvidingFileId:providingFile.idProvidingFile ofUser:providingFile.userId];
         
-        NSLog(@"File name %@", file.fileName);
+        DLog(@"File name %@", file.fileName);
         
         [self copyFileOnTheFileSystemByOrigin:url.path andDestiny:file.localFolder];
         
         [self createUploadOfflineWithFile:file fromPath:url.path withUser:file.userId];
         
         [self removeItemByUrl:url];
+        
+    }else{
+        //Export / Move
+        [self createUploadOfflineWithUrl:url];
         
     }
 
@@ -168,27 +173,116 @@
     
     [self copyFileOnTheFileSystemByOrigin:file.localFolder andDestiny:temp];
     
-    UploadsOfflineDto *upload = [UploadsOfflineDto new];
+    NSString *checkPath = [NSString stringWithFormat:@"%@%@", remotePath, file.fileName];
     
-    upload.originPath = temp;
-    upload.destinyFolder = remotePath;
-    upload.uploadFileName = file.fileName;
-    upload.kindOfError = notAnError;
-    upload.estimateLength = (long)fileLength;
-    upload.userId = userId;
-    upload.isLastUploadFileOfThisArray = YES;
-    upload.status = generatedByDocumentProvider;
-    upload.chunksLength = k_lenght_chunk;
-    upload.isNotNecessaryCheckIfExist = NO;
-    upload.isInternalUpload = NO;
-    upload.taskIdentifier = 0;
+    if (![UtilsUrls isFileUploadingWithPath:checkPath andUser:user]) {
     
-    
-    //Set this file as an overwritten state
-    [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
-    
-    [ManageUploadsDB insertUpload:upload];
+        UploadsOfflineDto *upload = [UploadsOfflineDto new];
+        
+        upload.originPath = temp;
+        upload.destinyFolder = remotePath;
+        upload.uploadFileName = file.fileName;
+        upload.kindOfError = notAnError;
+        upload.estimateLength = (long)fileLength;
+        upload.userId = userId;
+        upload.isLastUploadFileOfThisArray = YES;
+        upload.status = generatedByDocumentProvider;
+        upload.chunksLength = k_lenght_chunk;
+        upload.isNotNecessaryCheckIfExist = NO;
+        upload.isInternalUpload = NO;
+        upload.taskIdentifier = 0;
+        
+        
+        //Set this file as an overwritten state
+        [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
+        
+        [ManageUploadsDB insertUpload:upload];
+    }
     
 }
+
+- (NSString *) getDestinyFolderWithUrl:(NSURL *)url{
+    
+    NSMutableString *folder = [NSMutableString stringWithString:@""];
+    
+    NSArray *documentStorageURLcomponents = self.documentStorageURL.pathComponents;
+    NSMutableArray *urlComponents = [NSMutableArray arrayWithArray:url.pathComponents];
+    
+    NSMutableArray *itemsToDelete = [NSMutableArray new];
+    
+    
+    for (NSString *item in documentStorageURLcomponents) {
+        
+        for (NSInteger i = 0; i < urlComponents.count; i++) {
+            
+            NSString *item2 = [urlComponents objectAtIndex:i];
+            
+            if ([item2 isEqualToString:item]) {
+                [itemsToDelete addObject:item2];
+            }
+        }
+    }
+    
+    for (NSString *item in itemsToDelete) {
+        
+        [urlComponents removeObjectIdenticalTo:item];
+        
+    }
+    
+    
+    for (NSInteger i = 0; i < (urlComponents.count -1); i++) {
+        NSString *item = [urlComponents objectAtIndex:i];
+        [folder appendString:item];
+        [folder appendString:@"/"];
+    }
+
+    return folder;
+    
+}
+
+
+- (void) createUploadOfflineWithUrl:(NSURL *)url{
+    
+    UserDto *user = [ManageUsersDB getActiveUser];
+    
+    NSString *folder = [self getDestinyFolderWithUrl:url];
+    
+    NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:user],folder];
+    
+    NSString *temp = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], url.lastPathComponent];
+    
+    [self copyFileOnTheFileSystemByOrigin:url.path andDestiny:temp];
+    
+     NSString *checkPath = [NSString stringWithFormat:@"%@%@", remotePath, url.lastPathComponent];
+    
+    if (![UtilsUrls isFileUploadingWithPath:checkPath andUser:user]) {
+
+        NSError *copyError = nil;
+        
+        NSDictionary *attributes = nil;
+        attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:temp error:&copyError];
+        long long fileLength = [[attributes valueForKey:NSFileSize] unsignedLongLongValue];
+        
+        UploadsOfflineDto *upload = [UploadsOfflineDto new];
+        
+        upload.originPath = temp;
+        upload.destinyFolder = remotePath;
+        upload.uploadFileName = temp.lastPathComponent;
+        upload.kindOfError = notAnError;
+        upload.estimateLength = (long)fileLength;
+        upload.userId = user.idUser;
+        upload.isLastUploadFileOfThisArray = YES;
+        upload.status = generatedByDocumentProvider;
+        upload.chunksLength = k_lenght_chunk;
+        upload.isNotNecessaryCheckIfExist = NO;
+        upload.isInternalUpload = NO;
+        upload.taskIdentifier = 0;
+        
+        [ManageUploadsDB insertUpload:upload];
+        
+    }
+}
+
+
 
 @end

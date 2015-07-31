@@ -517,6 +517,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             if (!isSamlCredentialsError) {
                 
+                NSLog(@"response: %@", response);
+                
                 [ManageUploadsDB setStatus:uploaded andKindOfError:notAnError byUploadOffline:weakSelf.currentUpload];
                 
                 DLog(@"Transfer complete, next file if exists");

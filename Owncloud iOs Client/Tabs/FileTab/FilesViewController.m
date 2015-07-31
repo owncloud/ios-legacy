@@ -57,6 +57,7 @@
 #import "UtilsUrls.h"
 #import "Owncloud_iOs_Client-Swift.h"
 #import "ManageUsersDB.h"
+#import "UtilsFramework.h"
 
 
 //Constant for iOS7
@@ -1676,7 +1677,11 @@
     
    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+    if (!app.userSessionCurrentToken) {
+        app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
+    }
+    
+    [[AppDelegate sharedOCCommunication] readFolder:path withUserSessionToken:app.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
         
         DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError = NO;
@@ -1689,12 +1694,12 @@
                 [self errorLogin];
             }
         }
-        if (!isSamlCredentialsError) {
+        if (!isSamlCredentialsError && [app.userSessionCurrentToken isEqualToString:token]) {
            //Pass the items with OCFileDto to FileDto Array
            NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
            [self prepareForNavigationWithData:directoryList];
         }
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
         
         _isLoadingForNavigate = NO;
         
@@ -1884,10 +1889,14 @@
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
-        
+    if (!app.userSessionCurrentToken) {
+        app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
+    }
+    
+     [[AppDelegate sharedOCCommunication] readFolder:path withUserSessionToken:app.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
+         
         DLog(@"Operation response code: %ld", (long)response.statusCode);
-        BOOL isSamlCredentialsError=NO;
+        BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
         if (k_is_sso_active && redirectedServer) {
@@ -1898,7 +1907,7 @@
             }
         }
         
-        if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError) {
+        if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError && [app.userSessionCurrentToken isEqualToString:token]) {
             
             //Pass the items with OCFileDto to FileDto Array
             NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
@@ -1910,7 +1919,7 @@
             _showLoadingAfterChangeUser = NO;
         }
 
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
         
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);

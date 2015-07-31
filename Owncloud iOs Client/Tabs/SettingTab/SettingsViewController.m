@@ -1119,6 +1119,9 @@
     
     [self cancelAllDownloadsOfActiveUser];
     
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    app.userSessionCurrentToken = nil;
+    
     //Method to change the account
     AccountCell *cell = (AccountCell *) [self.settingsTableView cellForRowAtIndexPath:indexPath];
     [cell activeAccount:nil];
@@ -1134,6 +1137,8 @@
     if (app.activeUser.idUser != selectedUser.idUser) {
         //Cancel downloads of the previous user
         [self cancelAllDownloadsOfActiveUser];
+        
+        app.userSessionCurrentToken = nil;
         
         //If ipad, clean the detail view
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -1520,7 +1525,12 @@
         [self.mailer.navigationBar setTintColor:[UIColor colorOfNavigationItems]];
         
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-        [self.mailer setSubject:[NSLocalizedString(@"mail_feedback_subject", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName]];
+        NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+
+        NSString *subject = [NSString stringWithFormat:@"%@ - iOS v%@", NSLocalizedString(@"mail_feedback_subject", nil), version];
+        subject = [subject stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
+
+        [self.mailer setSubject:subject];
         
         NSArray *toRecipients = [NSArray arrayWithObjects:k_mail_feedback,nil];
         [self.mailer setToRecipients:toRecipients];
