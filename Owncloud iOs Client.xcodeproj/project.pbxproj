@@ -628,6 +628,12 @@
 		EA4B8E1C1AC92DCC004F335E /* KKPasscodeLock.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968817F599060033B3C1 /* KKPasscodeLock.m */; };
 		EA4B8E1D1AC92DCF004F335E /* KKPasscodeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968A17F599060033B3C1 /* KKPasscodeSettingsViewController.m */; };
 		EA4B8E1E1AC92FCC004F335E /* KKPasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968C17F599060033B3C1 /* KKPasscodeViewController.m */; };
+		EA5C6F7E1B70BA880088071B /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C6F7C1B70BA880088071B /* ShareViewController.swift */; };
+		EA5C6F7F1B70BA880088071B /* ShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA5C6F7D1B70BA880088071B /* ShareViewController.xib */; };
+		EA5C6F841B70BEE30088071B /* ShareFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C6F821B70BEE20088071B /* ShareFileCell.swift */; };
+		EA5C6F851B70BEE30088071B /* ShareFileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA5C6F831B70BEE30088071B /* ShareFileCell.xib */; };
+		EA5C6F881B70BF370088071B /* ShareLinkOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C6F861B70BF370088071B /* ShareLinkOptionCell.swift */; };
+		EA5C6F891B70BF370088071B /* ShareLinkOptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA5C6F871B70BF370088071B /* ShareLinkOptionCell.xib */; };
 		EA5FA47F1A6403A0000C1F80 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		EA6462841A6F98F300991913 /* UtilsDtos.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F677178422BE0092F42A /* UtilsDtos.m */; };
 		EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6606991AA767F800BA2C65 /* ShareViewController.swift */; };
@@ -1544,6 +1550,12 @@
 		EA49146E1AC0346100BECF0B /* TTOpenInAppActivity8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TTOpenInAppActivity8.png; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8.png; sourceTree = "<group>"; };
 		EA49146F1AC0346100BECF0B /* TTOpenInAppActivity8@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity8@2x.png"; path = "ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8@2x.png"; sourceTree = "<group>"; };
 		EA4914701AC0346100BECF0B /* TTOpenInAppActivity8@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity8@3x.png"; path = "ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8@3x.png"; sourceTree = "<group>"; };
+		EA5C6F7C1B70BA880088071B /* ShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareViewController.swift; path = Tabs/FileTab/Share/ShareViewController.swift; sourceTree = "<group>"; };
+		EA5C6F7D1B70BA880088071B /* ShareViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareViewController.xib; path = Tabs/FileTab/Share/ShareViewController.xib; sourceTree = "<group>"; };
+		EA5C6F821B70BEE20088071B /* ShareFileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareFileCell.swift; path = Tabs/FileTab/Share/Cells/ShareFileCell.swift; sourceTree = "<group>"; };
+		EA5C6F831B70BEE30088071B /* ShareFileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareFileCell.xib; path = Tabs/FileTab/Share/Cells/ShareFileCell.xib; sourceTree = "<group>"; };
+		EA5C6F861B70BF370088071B /* ShareLinkOptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareLinkOptionCell.swift; path = Tabs/FileTab/Share/Cells/ShareLinkOptionCell.swift; sourceTree = "<group>"; };
+		EA5C6F871B70BF370088071B /* ShareLinkOptionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareLinkOptionCell.xib; path = Tabs/FileTab/Share/Cells/ShareLinkOptionCell.xib; sourceTree = "<group>"; };
 		EA6606951AA767F700BA2C65 /* OC Share Sheet.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "OC Share Sheet.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA6606981AA767F800BA2C65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EA6606991AA767F800BA2C65 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -2045,10 +2057,13 @@
 		13A9C663187FE8B300C6EEE8 /* Share */ = {
 			isa = PBXGroup;
 			children = (
+				EA5C6F811B70BEAC0088071B /* Cells */,
 				13A9C665187FE91700C6EEE8 /* ShareFileOrFolder.h */,
 				13A9C666187FE91700C6EEE8 /* ShareFileOrFolder.m */,
 				13D6B7C818855EE40090A96C /* AppsActivityProvider.h */,
 				13D6B7C918855EE40090A96C /* AppsActivityProvider.m */,
+				EA5C6F7C1B70BA880088071B /* ShareViewController.swift */,
+				EA5C6F7D1B70BA880088071B /* ShareViewController.xib */,
 			);
 			name = Share;
 			sourceTree = "<group>";
@@ -3024,6 +3039,17 @@
 			name = DetailView;
 			sourceTree = "<group>";
 		};
+		EA5C6F811B70BEAC0088071B /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				EA5C6F821B70BEE20088071B /* ShareFileCell.swift */,
+				EA5C6F831B70BEE30088071B /* ShareFileCell.xib */,
+				EA5C6F861B70BF370088071B /* ShareLinkOptionCell.swift */,
+				EA5C6F871B70BF370088071B /* ShareLinkOptionCell.xib */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
 		EA6606961AA767F800BA2C65 /* OC Share Sheet */ = {
 			isa = PBXGroup;
 			children = (
@@ -3597,6 +3623,7 @@
 				1487F209177C35AA004A1A5A /* MainAppIcon_29-29@2x.png in Resources */,
 				400A63821B4FD94C00890579 /* iphoneAccounts.png in Resources */,
 				14A7F7A018ED5781009AF347 /* presentation_icon@2x.png in Resources */,
+				EA5C6F7F1B70BA880088071B /* ShareViewController.xib in Resources */,
 				EA42FA5A180C13710006DB7C /* cancel_download_white.png in Resources */,
 				1487F218177C35AA004A1A5A /* BackRootFolderIcon.png in Resources */,
 				400904DC1A02B54600E3DD15 /* MainAppIcon_60-60@3x.png in Resources */,
@@ -3658,6 +3685,7 @@
 				1487F23B177C35AA004A1A5A /* TABfiles@2x.png in Resources */,
 				1487F23C177C35AA004A1A5A /* TABrecents.png in Resources */,
 				EABF68D71889339200A2217C /* SharedViewController.xib in Resources */,
+				EA5C6F891B70BF370088071B /* ShareLinkOptionCell.xib in Resources */,
 				1487F23D177C35AA004A1A5A /* TABrecents@2x.png in Resources */,
 				1487F23E177C35AA004A1A5A /* TABsettings.png in Resources */,
 				59D717E11959755600075E02 /* folder-shared@2x.png in Resources */,
@@ -3747,6 +3775,7 @@
 				1487F274177C35AA004A1A5A /* password@2x.png in Resources */,
 				13A9FCF217E9858C00FF48D7 /* ELCAlbumPickerController.xib in Resources */,
 				1487F275177C35AA004A1A5A /* server.png in Resources */,
+				EA5C6F851B70BEE30088071B /* ShareFileCell.xib in Resources */,
 				14A6115919346D0000AECA34 /* sharedItemSwipe.png in Resources */,
 				40E354CF1A14D6E8000E7FE4 /* deleteTB@3x.png in Resources */,
 				1487F276177C35AA004A1A5A /* server@2x.png in Resources */,
@@ -4098,6 +4127,7 @@
 				59C71D161A9216AE00F66166 /* ReaderContentView.m in Sources */,
 				148DD612177855B600FB9977 /* AuthenticationDbService.m in Sources */,
 				59C71D1C1A9216AE00F66166 /* ReaderThumbFetch.m in Sources */,
+				EA5C6F841B70BEE30088071B /* ShareFileCell.swift in Sources */,
 				59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */,
 				EA42FA54180565CB0006DB7C /* OCTabBarController.m in Sources */,
 				148DD613177855B600FB9977 /* AuthenticationResponseTypeCodeTask.m in Sources */,
@@ -4151,11 +4181,13 @@
 				148DD6971778663100FB9977 /* OpenWith.m in Sources */,
 				13AD22B318311A26007E0F1A /* ManageUploadRequest.m in Sources */,
 				148DD69A1778664400FB9977 /* OverwriteFileOptions.m in Sources */,
+				EA5C6F7E1B70BA880088071B /* ShareViewController.swift in Sources */,
 				148DD6A01778667000FB9977 /* RenameFile.m in Sources */,
 				EAC598601A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */,
 				148DD6A81778668A00FB9977 /* SelectFolderNavigation.m in Sources */,
 				EA68969117F599060033B3C1 /* KKPasscodeViewController.m in Sources */,
 				593F7CAA19EFDE96004136F7 /* UtilsUrls.m in Sources */,
+				EA5C6F881B70BF370088071B /* ShareLinkOptionCell.swift in Sources */,
 				EA42FA4E1804217D0006DB7C /* OCToolBar.m in Sources */,
 				400A63781B4FD75600890579 /* IFTTTStrokeEndAnimation.m in Sources */,
 				148DD6A91778668A00FB9977 /* SelectFolderViewController.m in Sources */,

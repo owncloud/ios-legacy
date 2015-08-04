@@ -2611,8 +2611,13 @@
  */
 - (void)didSelectShareLinkOption {
     DLog(@"Share Link Option");
+    
+    ShareViewController *share = [[ShareViewController alloc] initWithNibName:@"ShareViewController" bundle:nil];
+    OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
+    [self presentViewController:nav animated:YES completion:nil];
+    
 
-    if (self.mShareFileOrFolder) {
+   /* if (self.mShareFileOrFolder) {
         self.mShareFileOrFolder = nil;
     }
     
@@ -2637,7 +2642,7 @@
         self.mShareFileOrFolder.viewToShow=self.tabBarController.view;
     }
     
-    [self.mShareFileOrFolder showShareActionSheetForFile:_selectedFileDto];
+    [self.mShareFileOrFolder showShareActionSheetForFile:_selectedFileDto];*/
 }
 
 
