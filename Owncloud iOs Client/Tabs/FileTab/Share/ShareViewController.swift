@@ -14,8 +14,11 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     let shareFileCellNib: String = "ShareFileCell"
     let shareLinkOptionIdentifer: String = "ShareLinkOptionIdentifier"
     let shareLinkOptionNib: String = "ShareLinkOptionCell"
+    let shareLinkHeaderIdentifier: String = "ShareLinkHeaderIdentifier"
+    let shareLinkHeaderNib: String = "ShareLinkHeaderCell"
     let heightOfFileDetailRow: CGFloat = 120.0
     let heightOfShareLinkOptionRow: CGFloat = 55.0
+    let heightOfShareLinkHeader: CGFloat = 40.0
     
     @IBOutlet weak var shareTableView: UITableView!
     
@@ -122,15 +125,15 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?{
+   /* func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?{
         if section == 1{
             return "Share link"
         }else{
             return "";
         }
-    }
+    }*/
     
-    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+   /* func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         
         if section == 1{
             let header:UITableViewHeaderFooterView = view as! UITableViewHeaderFooterView
@@ -143,12 +146,87 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             backgroundView.addSubview(sectionSwitch)
             
-            header.backgroundView = backgroundView
+            var titleLabel: UILabel = header.textLabel;
+            header.textLabel.text = "";
+            
+            titleLabel.textColor = UIColor.whiteColor()
+            titleLabel.frame = header.frame
+            titleLabel.backgroundColor = UIColor.clearColor()
+            titleLabel.textAlignment = NSTextAlignment.Left
+            titleLabel.text = "Share Link"
+
+            backgroundView.addSubview(titleLabel)
+            
+            header.addSubview(backgroundView)
+            
+            /*header.backgroundView = backgroundView
             header.textLabel.textColor = UIColor.whiteColor()
             header.textLabel.frame = header.frame
             header.textLabel.textAlignment = NSTextAlignment.Left
-            header.textLabel.text = "Share Link"
+            header.textLabel.text = "Share Link"*/
 
         }
+    }*/
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        var height: CGFloat = 0.0
+        
+        if section == 1{
+            height = 35
+        }
+        
+        return height
+        
     }
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        if section == 1 {
+            var header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(shareLinkHeaderIdentifier) as? ShareLinkHeaderCell
+            
+            if header == nil{
+                tableView.registerNib(UINib(nibName: shareLinkHeaderNib, bundle: nil), forHeaderFooterViewReuseIdentifier: shareLinkHeaderIdentifier)
+                
+                header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(shareLinkHeaderIdentifier) as? ShareLinkHeaderCell
+                
+            }
+        
+            header!.titleSection.text = "Share Link"
+            header!.backgroundColor = UIColor.colorOfNavigationBar()
+            
+            return header
+        } else {
+            return UIView()
+        }
+    }
+    
+       /* let sectionFrame: CGRect = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 35)
+        var headerView: UIView = UIView(frame:sectionFrame)
+        
+        if section == 1{
+            
+            
+            headerView.backgroundColor = UIColor.colorOfNavigationBar()
+            
+            let switchFrame: CGRect = CGRect(x: headerView.frame.size.width - 61, y: (headerView.frame.size.height/2)-15, width: 51, height: 31)
+            var sectionSwitch: UISwitch = UISwitch(frame: switchFrame)
+            
+            headerView.addSubview(sectionSwitch)
+            
+            let titleFrame: CGRect = CGRect(x: 10.0, y: switchFrame.origin.y, width: 100, height: 10)
+            var titleLabel: UILabel = UILabel(frame: titleFrame)
+            
+            titleLabel.textColor = UIColor.whiteColor()
+            titleLabel.backgroundColor = UIColor.clearColor()
+            titleLabel.textAlignment = NSTextAlignment.Left
+            titleLabel.text = "Share Link"
+            
+            headerView.addSubview(titleLabel)
+            
+        
+            
+        }
+        
+        return headerView
+    }*/
 }
