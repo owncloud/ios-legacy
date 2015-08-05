@@ -30,13 +30,13 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     var optionsShownWithShareLink: Int = 0
     var isShareLinkEnabled: Bool = false
-    var file: FileDto!
+    var sharedItem: FileDto!
     
     @IBOutlet weak var shareTableView: UITableView!
     
      init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?, fileDto: FileDto?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        self.file = fileDto
+        self.sharedItem = fileDto
     }
 
     required init(coder aDecoder: NSCoder) {
@@ -141,10 +141,21 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
                 tableView.registerNib(UINib(nibName: shareFileCellNib, bundle: nil), forCellReuseIdentifier: shareFileCellIdentifier)
                 cell = tableView.dequeueReusableCellWithIdentifier(shareFileCellIdentifier) as? ShareFileCell
             }
-            cell.fileImage.image = UIImage(named: FileNameUtils.getTheNameOfTheImagePreviewOfFileName(file.fileName))
-            cell.fileName.text = file.fileName
-            cell.fileSize.text = NSByteCountFormatter.stringFromByteCount(NSNumber(integer: file.size).longLongValue, countStyle: NSByteCountFormatterCountStyle.Memory)
+            
+            
+            if sharedItem.isDirectory{
+               cell.fileImage.image = UIImage(named:"folder_icon")
+               cell.fileSize.text = ""
+            
+            }else{
+               cell.fileImage.image = UIImage(named: FileNameUtils.getTheNameOfTheImagePreviewOfFileName(sharedItem.fileName.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)))
+               cell.fileSize.text = NSByteCountFormatter.stringFromByteCount(NSNumber(integer: sharedItem.size).longLongValue, countStyle: NSByteCountFormatterCountStyle.Memory)
+            }
+            
+            cell.fileName.text = sharedItem.fileName.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+            
             return cell
+            
         }else{
             
             var cell: ShareLinkOptionCell! = tableView.dequeueReusableCellWithIdentifier(shareLinkOptionIdentifer) as? ShareLinkOptionCell
