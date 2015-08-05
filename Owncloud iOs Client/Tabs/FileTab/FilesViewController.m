@@ -2614,7 +2614,14 @@
     
     ShareViewController *share = [[ShareViewController alloc] initWithNibName:@"ShareViewController" bundle:nil fileDto:_selectedFileDto];
     OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
-    [self presentViewController:nav animated:YES completion:nil];
+    
+    if (IS_IPHONE) {
+        [self presentViewController:nav animated:YES completion:nil];
+    } else {
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:nav animated:YES completion:nil];
+    }
     
 
    /* if (self.mShareFileOrFolder) {
