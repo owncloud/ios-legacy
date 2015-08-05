@@ -1644,6 +1644,7 @@
 		EAE93A3A19D18E43002B9E15 /* fi */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
 		EAF7217C1AAF2E0D009F5596 /* Managers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Managers.swift; sourceTree = "<group>"; };
+		EAF771281B72691100ED6E6E /* OCExtensions-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCExtensions-Bridging-Header.h"; sourceTree = "<group>"; };
 		EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1812,6 +1813,7 @@
 				148DD689177865A900FB9977 /* Tabs */,
 				137F615615E36334001F460C /* Utils */,
 				EA42197F1A94F6850081D400 /* Owncloud iOs Client-Bridging-Header.h */,
+				EAF771281B72691100ED6E6E /* OCExtensions-Bridging-Header.h */,
 			);
 			path = "Owncloud iOs Client";
 			sourceTree = "<group>";
@@ -4769,7 +4771,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -4810,7 +4812,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -4869,7 +4871,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -4923,7 +4925,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -4976,7 +4978,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -5024,7 +5026,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 			};
 			name = Release;
 		};
