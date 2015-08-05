@@ -2612,7 +2612,7 @@
 - (void)didSelectShareLinkOption {
     DLog(@"Share Link Option");
     
-    ShareViewController *share = [[ShareViewController alloc] initWithNibName:@"ShareViewController" bundle:nil];
+    ShareViewController *share = [[ShareViewController alloc] initWithNibName:@"ShareViewController" bundle:nil fileDto:_selectedFileDto];
     OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
     [self presentViewController:nav animated:YES completion:nil];
     

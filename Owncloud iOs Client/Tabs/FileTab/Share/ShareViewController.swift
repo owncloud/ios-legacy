@@ -10,6 +10,10 @@ import UIKit
 
 class ShareViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    //tools
+    let standardDelay: Double = 0.2
+    
+    //Cells and Sections
     let shareFileCellIdentifier: String = "ShareFileIdentifier"
     let shareFileCellNib: String = "ShareFileCell"
     let shareLinkOptionIdentifer: String = "ShareLinkOptionIdentifier"
@@ -20,7 +24,24 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     let heightOfShareLinkOptionRow: CGFloat = 55.0
     let heightOfShareLinkHeader: CGFloat = 40.0
     
+    //Nº of Rows
+    let optionsShownWithShareLinkEnable: Int = 2
+    let optionsShownWithShareLinkDisable: Int = 0
+    
+    var optionsShownWithShareLink: Int = 0
+    var isShareLinkEnabled: Bool = false
+    var file: FileDto!
+    
     @IBOutlet weak var shareTableView: UITableView!
+    
+     init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?, fileDto: FileDto?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        self.file = fileDto
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
 
     override func viewDidLoad() {
@@ -35,6 +56,8 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
         // Dispose of any resources that can be recreated.
     }
     
+    
+    
     //MARK: - Style Methods
     
     func setStyleView() {
@@ -44,10 +67,22 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.setBarButtonStyle()
     }
     
+    
     func setBarButtonStyle() {
         
         var barButton: UIBarButtonItem = UIBarButtonItem(title: "Back", style: .Plain, target: self, action: "didSelectCloseView")
         self.navigationItem.leftBarButtonItem = barButton
+    }
+    
+    func reloadView() {
+        
+        if isShareLinkEnabled == true{
+            optionsShownWithShareLink = optionsShownWithShareLinkEnable
+        }else{
+            optionsShownWithShareLink = optionsShownWithShareLinkDisable
+        }
+        
+        self.shareTableView.reloadData()
     }
     
     
@@ -55,6 +90,27 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func didSelectCloseView() {
         self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func sharedLinkSwithValueChanged(sender: UISwitch){
+        
+        isShareLinkEnabled = sender.on
+        
+        delay(standardDelay) {
+            self.reloadView()
+        }
+        
+        
+    }
+    
+    //MARK: - Tools
+    func delay(delay:Double, closure:()->()) {
+        dispatch_after(
+            dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC))
+            ),
+            dispatch_get_main_queue(), closure)
     }
         
     
@@ -70,7 +126,7 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
         if section == 0{
             return 1;
         }else{
-            return 2;
+            return optionsShownWithShareLink;
         }
         
     }
@@ -85,10 +141,9 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
                 tableView.registerNib(UINib(nibName: shareFileCellNib, bundle: nil), forCellReuseIdentifier: shareFileCellIdentifier)
                 cell = tableView.dequeueReusableCellWithIdentifier(shareFileCellIdentifier) as? ShareFileCell
             }
-            
-            cell.fileName.text = "filename.pdf"
-            cell.fileSize.text = "15,5MB"
-            
+            cell.fileImage.image = UIImage(named: FileNameUtils.getTheNameOfTheImagePreviewOfFileName(file.fileName))
+            cell.fileName.text = file.fileName
+            cell.fileSize.text = NSByteCountFormatter.stringFromByteCount(NSNumber(integer: file.size).longLongValue, countStyle: NSByteCountFormatterCountStyle.Memory)
             return cell
         }else{
             
@@ -125,54 +180,11 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
-   /* func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?{
-        if section == 1{
-            return "Share link"
-        }else{
-            return "";
-        }
-    }*/
-    
-   /* func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        
-        if section == 1{
-            let header:UITableViewHeaderFooterView = view as! UITableViewHeaderFooterView
-            
-            var backgroundView: UIView = UIView(frame: header.frame)
-            backgroundView.backgroundColor = UIColor.colorOfNavigationBar()
-            
-            let switchFrame: CGRect = CGRect(x: header.frame.size.width - 52, y: (header.frame.size.height/2)-15, width: 31, height: 51)
-            var sectionSwitch: UISwitch = UISwitch(frame: switchFrame)
-            
-            backgroundView.addSubview(sectionSwitch)
-            
-            var titleLabel: UILabel = header.textLabel;
-            header.textLabel.text = "";
-            
-            titleLabel.textColor = UIColor.whiteColor()
-            titleLabel.frame = header.frame
-            titleLabel.backgroundColor = UIColor.clearColor()
-            titleLabel.textAlignment = NSTextAlignment.Left
-            titleLabel.text = "Share Link"
-
-            backgroundView.addSubview(titleLabel)
-            
-            header.addSubview(backgroundView)
-            
-            /*header.backgroundView = backgroundView
-            header.textLabel.textColor = UIColor.whiteColor()
-            header.textLabel.frame = header.frame
-            header.textLabel.textAlignment = NSTextAlignment.Left
-            header.textLabel.text = "Share Link"*/
-
-        }
-    }*/
-    
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        var height: CGFloat = 0.0
+        var height: CGFloat = 10.0
         
         if section == 1{
-            height = 35
+            height = heightOfShareLinkHeader
         }
         
         return height
@@ -182,17 +194,19 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if section == 1 {
-            var header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(shareLinkHeaderIdentifier) as? ShareLinkHeaderCell
             
-            if header == nil{
-                tableView.registerNib(UINib(nibName: shareLinkHeaderNib, bundle: nil), forHeaderFooterViewReuseIdentifier: shareLinkHeaderIdentifier)
-                
-                header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(shareLinkHeaderIdentifier) as? ShareLinkHeaderCell
-                
+            var header: ShareLinkHeaderCell! = tableView.dequeueReusableCellWithIdentifier(shareLinkHeaderIdentifier) as? ShareLinkHeaderCell
+            
+            if header == nil {
+                tableView.registerNib(UINib(nibName: shareLinkHeaderNib, bundle: nil), forCellReuseIdentifier: shareLinkHeaderIdentifier)
+                header = tableView.dequeueReusableCellWithIdentifier(shareLinkHeaderIdentifier) as? ShareLinkHeaderCell
             }
         
             header!.titleSection.text = "Share Link"
-            header!.backgroundColor = UIColor.colorOfNavigationBar()
+            header!.switchSection.setOn(isShareLinkEnabled, animated: false)
+            header!.switchSection.addTarget(self, action: "sharedLinkSwithValueChanged:", forControlEvents: .ValueChanged)
+            
+            
             
             return header
         } else {
@@ -200,33 +214,4 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
-       /* let sectionFrame: CGRect = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 35)
-        var headerView: UIView = UIView(frame:sectionFrame)
-        
-        if section == 1{
-            
-            
-            headerView.backgroundColor = UIColor.colorOfNavigationBar()
-            
-            let switchFrame: CGRect = CGRect(x: headerView.frame.size.width - 61, y: (headerView.frame.size.height/2)-15, width: 51, height: 31)
-            var sectionSwitch: UISwitch = UISwitch(frame: switchFrame)
-            
-            headerView.addSubview(sectionSwitch)
-            
-            let titleFrame: CGRect = CGRect(x: 10.0, y: switchFrame.origin.y, width: 100, height: 10)
-            var titleLabel: UILabel = UILabel(frame: titleFrame)
-            
-            titleLabel.textColor = UIColor.whiteColor()
-            titleLabel.backgroundColor = UIColor.clearColor()
-            titleLabel.textAlignment = NSTextAlignment.Left
-            titleLabel.text = "Share Link"
-            
-            headerView.addSubview(titleLabel)
-            
-        
-            
-        }
-        
-        return headerView
-    }*/
 }
