@@ -19,7 +19,7 @@ import MobileCoreServices
 import AVFoundation
 
 
-@objc class ShareViewController: UIViewController, UITableViewDelegate, KKPasscodeViewControllerDelegate {
+@objc class ShareViewController: UIViewController, UITableViewDelegate, KKPasscodeViewControllerDelegate, CheckAccessToServerDelegate {
     
     @IBOutlet weak var navigationBar: UINavigationBar?
     @IBOutlet weak var shareTable: UITableView?
@@ -261,6 +261,10 @@ import AVFoundation
             
             self.presentViewController(navigation, animated: true) { () -> Void in
                 print("select folder presented")
+                //We check the connection here because we need to accept the certificate on the self signed server
+                let mCheckAccessToServer = CheckAccessToServer.new()
+                mCheckAccessToServer.delegate = selectFolderViewController
+                mCheckAccessToServer.isConnectionToTheServerByUrl(activeUser.url)
             }
         } else {
             showAlertView(NSLocalizedString("error_login_doc_provider", comment: ""))
