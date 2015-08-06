@@ -60,6 +60,7 @@ pip install Appium-Python-Client
 * In *constants.py* change the constants you need with your personal configuration.
 * Modified *K_APP_FILE_NAME* with the path of your *.app*.
 * Open Appium. From Appium IOS settings choose your build(.app) of the iPhone-Simulator from finder.
+* Take into account that the device should be in English.
 
 #Run tests
 In config file 'config.ini' add tests that we want to run with nose.
