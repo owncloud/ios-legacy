@@ -25,16 +25,16 @@ class loginTest(unittest.TestCase):
         password = const.K_PASSWORD_1
         ssl = const.K_SELF_SIGNED_1
 
-        actions.doLoginWith(self.driver,server_url,user,password,ssl)
+        actions.doLoginWith(self,server_url,user,password,ssl)
         sleep(1)
 
         class_to_check = 'UIATabBar'
         time_out = 20
         sleep_time = 1
         expected_class_found = 1
-        actions.wait_until(actions.check_values, time_out, sleep_time, self.driver, class_to_check, expected_class_found)
+        actions.wait_until(actions.check_values_by_class_name, time_out, sleep_time, self.driver, class_to_check, expected_class_found)
 
-        self.assertTrue(actions.check_values(self.driver, class_to_check, expected_class_found))
+        self.assertTrue(actions.check_values_by_class_name(self.driver, class_to_check, expected_class_found))
         #import ipdb; ipdb.set_trace()
 
     def test_ui_login_noOk(self):
@@ -43,16 +43,16 @@ class loginTest(unittest.TestCase):
         password = const.K_PASSWORD_WRONG_1
         ssl = const.K_SELF_SIGNED_1
 
-        actions.doLoginWith(self.driver,server_url,user,password,ssl)
+        actions.doLoginWith(self,server_url,user,password,ssl)
         sleep(1)
 
         class_to_check = 'UIATabBar'
         time_out = 20
         sleep_time = 1
         expected_class_found = 0
-        actions.wait_until(actions.check_values, time_out, sleep_time, self.driver, class_to_check, expected_class_found)
+        actions.wait_until(actions.check_values_by_class_name, time_out, sleep_time, self.driver, class_to_check, expected_class_found)
 
-        self.assertTrue(actions.check_values(self.driver, class_to_check, expected_class_found))
+        self.assertTrue(actions.check_values_by_class_name(self.driver, class_to_check, expected_class_found))
         #import ipdb; ipdb.set_trace()
 
 if __name__ == '__main__':
