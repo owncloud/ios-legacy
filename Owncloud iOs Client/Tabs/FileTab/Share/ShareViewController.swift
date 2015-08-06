@@ -4,11 +4,18 @@
 //
 //  Created by Gonzalo Gonzalez on 4/8/15.
 //
-//
+
+/*
+Copyright (C) 2015, ownCloud, Inc.
+This code is covered by the GNU Public License Version 3.
+For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+You should have received a copy of this license
+along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*/
 
 import UIKit
 
-class ShareViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ShareViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ShareFileOrFolderDelegate {
     
     //tools
     let standardDelay: Double = 0.2
@@ -20,19 +27,24 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     let shareLinkOptionNib: String = "ShareLinkOptionCell"
     let shareLinkHeaderIdentifier: String = "ShareLinkHeaderIdentifier"
     let shareLinkHeaderNib: String = "ShareLinkHeaderCell"
+    let shareLinkButtonIdentifier: String = "ShareLinkButtonIdentifier"
+    let shareLinkButtonNib: String = "ShareLinkButtonCell"
     let heightOfFileDetailRow: CGFloat = 120.0
     let heightOfShareLinkOptionRow: CGFloat = 55.0
     let heightOfShareLinkHeader: CGFloat = 40.0
+    let shareTableViewSectionsNumber: Int = 2
     
     //Nº of Rows
-    let optionsShownWithShareLinkEnable: Int = 2
+    let optionsShownWithShareLinkEnable: Int = 3
     let optionsShownWithShareLinkDisable: Int = 0
     
     var optionsShownWithShareLink: Int = 0
     var isShareLinkEnabled: Bool = false
     var sharedItem: FileDto!
+    var shareFileOrFolder: ShareFileOrFolder!
     
     @IBOutlet weak var shareTableView: UITableView!
+    
     
      init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?, fileDto: FileDto?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -47,8 +59,9 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
         self.setStyleView()
+        
+        self.updateInterfaceWithShareLinkStatus()
     }
 
     override func didReceiveMemoryWarning() {
@@ -88,6 +101,18 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     //MARK: - Action methods
     
+    func updateInterfaceWithShareLinkStatus() {
+        
+        if self.sharedItem.sharedFileSource > 0{
+            isShareLinkEnabled = true
+        }else{
+            isShareLinkEnabled = false
+        }
+        
+        self.reloadView()
+        
+    }
+    
     func didSelectCloseView() {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -95,6 +120,49 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     func sharedLinkSwithValueChanged(sender: UISwitch){
         
         isShareLinkEnabled = sender.on
+        
+        if isShareLinkEnabled == true{
+            
+            self.shareFileOrFolder = nil
+            
+            self.shareFileOrFolder = ShareFileOrFolder.new()
+            
+            self.shareFileOrFolder.delegate = self
+            
+            self.shareFileOrFolder.viewToShow = self.tabBarController?.view
+            
+            self.shareFileOrFolder.showShareActionSheetForFile(self.sharedItem)
+            
+            
+            /* if (self.mShareFileOrFolder) {
+            self.mShareFileOrFolder = nil;
+            }
+            
+            self.mShareFileOrFolder = [ShareFileOrFolder new];
+            self.mShareFileOrFolder.delegate = self;
+            
+            //If is iPad get the selected cell
+            if (!IS_IPHONE) {
+            
+            self.mShareFileOrFolder.viewToShow = self.splitViewController.view;
+            
+            //We use _selectedIndexPath to identify the position where we have to put the arrow of the popover
+            if (_selectedIndexPath) {
+            UITableViewCell *cell;
+            cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
+            self.mShareFileOrFolder.cellFrame = cell.frame;
+            self.mShareFileOrFolder.parentView = _tableView;
+            self.mShareFileOrFolder.isTheParentViewACell = YES;
+            }
+            } else {
+            
+            self.mShareFileOrFolder.viewToShow=self.tabBarController.view;
+            }
+            
+            [self.mShareFileOrFolder showShareActionSheetForFile:_selectedFileDto];*/
+            
+        }
+        
         
         delay(standardDelay) {
             self.reloadView()
@@ -118,7 +186,7 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     //MARK: - Table view data source
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+        return shareTableViewSectionsNumber
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -158,27 +226,44 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
             
         }else{
             
-            var cell: ShareLinkOptionCell! = tableView.dequeueReusableCellWithIdentifier(shareLinkOptionIdentifer) as? ShareLinkOptionCell
-            if cell == nil {
-                tableView.registerNib(UINib(nibName: shareLinkOptionNib, bundle: nil), forCellReuseIdentifier: shareLinkOptionIdentifer)
-                cell = tableView.dequeueReusableCellWithIdentifier(shareLinkOptionIdentifer) as? ShareLinkOptionCell
+            if indexPath.row == 2 {
+                
+                var cell: ShareLinkButtonCell! = tableView.dequeueReusableCellWithIdentifier(shareLinkButtonIdentifier) as? ShareLinkButtonCell
+                if cell == nil {
+                    tableView.registerNib(UINib(nibName: shareLinkButtonNib, bundle: nil), forCellReuseIdentifier: shareLinkButtonIdentifier)
+                    cell = tableView.dequeueReusableCellWithIdentifier(shareLinkButtonIdentifier) as? ShareLinkButtonCell
+                }
+                
+                cell.titleButton.text = "Get Share Link"
+                
+                return cell
+                
+                
+            }else{
+                
+                var cell: ShareLinkOptionCell! = tableView.dequeueReusableCellWithIdentifier(shareLinkOptionIdentifer) as? ShareLinkOptionCell
+                if cell == nil {
+                    tableView.registerNib(UINib(nibName: shareLinkOptionNib, bundle: nil), forCellReuseIdentifier: shareLinkOptionIdentifer)
+                    cell = tableView.dequeueReusableCellWithIdentifier(shareLinkOptionIdentifer) as? ShareLinkOptionCell
+                }
+                
+                switch (indexPath.row){
+                case 0:
+                    cell.optionName.text = "Set expiration time"
+                    cell.detailTextLabel?.text = "empty"
+                    cell.optionSwith.setOn(false, animated: true)
+                case 1:
+                    cell.optionName.text = "Password protect"
+                    cell.detailTextLabel?.text = "empty"
+                    cell.optionSwith.setOn(false, animated: true)
+                default:
+                    println("Not expected")
+                    
+                }
+                
+                return cell
+                
             }
-            
-            switch (indexPath.row){
-            case 0:
-                cell.optionName.text = "Set expiration time"
-                cell.detailTextLabel?.text = "empty"
-                cell.optionSwith.setOn(false, animated: true)
-            case 1:
-                cell.optionName.text = "Password protect"
-                cell.detailTextLabel?.text = "empty"
-                cell.optionSwith.setOn(false, animated: true)
-            default:
-                println("Not expected")
-            
-            }
-            
-            return cell
         }
     }
     
@@ -223,6 +308,32 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
         } else {
             return UIView()
         }
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        if indexPath.section == 1 && indexPath.row == 2{
+            
+            //Get Shared Link button tapped
+        }
+    }
+    
+    //MARK: - ShareFileOrFolder Delegate Methods
+    
+    func initLoading() {
+        
+        
+    }
+    
+    func endLoading() {
+        
+        
+    }
+    
+    func errorLogin() {
+        
+        
     }
     
 }

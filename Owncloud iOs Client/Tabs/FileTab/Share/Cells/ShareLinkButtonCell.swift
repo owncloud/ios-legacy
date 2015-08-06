@@ -1,8 +1,8 @@
 //
-//  ShareLinkOptionCell.swift
+//  ShareLinkButtonCell.swift
 //  Owncloud iOs Client
 //
-//  Created by Gonzalo Gonzalez on 4/8/15.
+//  Created by Gonzalo Gonzalez on 6/8/15.
 //
 
 /*
@@ -15,11 +15,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.htm
 
 import UIKit
 
-class ShareLinkOptionCell: UITableViewCell {
+class ShareLinkButtonCell: UITableViewCell {
     
-     @IBOutlet weak var optionSwith: UISwitch!
-     @IBOutlet weak var optionName: UILabel!
-     @IBOutlet weak var optionDetail: UILabel!
+    @IBOutlet weak var titleButton: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
