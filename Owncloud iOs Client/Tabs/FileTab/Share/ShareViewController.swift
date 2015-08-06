@@ -15,7 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.htm
 
 import UIKit
 
-class ShareViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ShareFileOrFolderDelegate {
+class ShareViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ShareFileOrFolderDelegate, MBProgressHUDDelegate {
     
     //tools
     let standardDelay: Double = 0.2
@@ -42,6 +42,7 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     var isShareLinkEnabled: Bool = false
     var sharedItem: FileDto!
     var shareFileOrFolder: ShareFileOrFolder!
+    var loadingView: MBProgressHUD!
     
     @IBOutlet weak var shareTableView: UITableView!
     
@@ -201,7 +202,6 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        //ShareFileIdentifier
         
         if indexPath.section == 0 {
             var cell: ShareFileCell! = tableView.dequeueReusableCellWithIdentifier(shareFileCellIdentifier) as? ShareFileCell
@@ -323,17 +323,52 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func initLoading() {
         
+        if loadingView != nil{
+            
+            loadingView.removeFromSuperview()
+            loadingView = nil
+            
+        }
+        
+        loadingView = MBProgressHUD(window: UIApplication.sharedApplication().keyWindow)
+        loadingView.delegate = self
+        
+        
+        if IS_IPHONE{
+            self.view.window?.addSubview(loadingView)
+        }else{
+            appDelegate.splitViewController.view.window?.addSubview(loadingView)
+        }
+        
+        self.view.addSubview(loadingView)
+        
+        loadingView.labelText = NSLocalizedString("loading", comment: "")
+        loadingView.dimBackground = false
+        
+        loadingView.show(true)
+        
+        self.view.userInteractionEnabled = false
+        self.navigationController?.navigationBar.userInteractionEnabled = false
+        self.view.window?.userInteractionEnabled = false
         
     }
     
     func endLoading() {
         
-        
+        if appDelegate.isLoadingVisible == false{
+            
+            self.loadingView.removeFromSuperview()
+            
+            self.view.userInteractionEnabled = true
+            self.navigationController?.navigationBar.userInteractionEnabled = true
+            self.view.window?.userInteractionEnabled = true
+            
+        }
     }
     
     func errorLogin() {
         
-        
+        self.endLoading()
     }
     
 }

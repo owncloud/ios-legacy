@@ -820,6 +820,7 @@
 		EAF721871AB03DB9009F5596 /* ManageFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13A177C2F73004A1A5A /* ManageFilesDB.m */; };
 		EAF7712C1B7340C400ED6E6E /* ShareLinkButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7712A1B7340C400ED6E6E /* ShareLinkButtonCell.swift */; };
 		EAF7712D1B7340C400ED6E6E /* ShareLinkButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EAF7712B1B7340C400ED6E6E /* ShareLinkButtonCell.xib */; };
+		EAF771311B73523800ED6E6E /* SystemConstants-swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF771301B73523800ED6E6E /* SystemConstants-swift.swift */; };
 		EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 		EAFE20A81AC4617D00BB888E /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */; };
 /* End PBXBuildFile section */
@@ -1649,6 +1650,7 @@
 		EAF771281B72691100ED6E6E /* OCExtensions-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCExtensions-Bridging-Header.h"; sourceTree = "<group>"; };
 		EAF7712A1B7340C400ED6E6E /* ShareLinkButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareLinkButtonCell.swift; path = Tabs/FileTab/Share/Cells/ShareLinkButtonCell.swift; sourceTree = "<group>"; };
 		EAF7712B1B7340C400ED6E6E /* ShareLinkButtonCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareLinkButtonCell.xib; path = Tabs/FileTab/Share/Cells/ShareLinkButtonCell.xib; sourceTree = "<group>"; };
+		EAF771301B73523800ED6E6E /* SystemConstants-swift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SystemConstants-swift.swift"; path = "Utils/SystemConstants-swift.swift"; sourceTree = "<group>"; };
 		EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1958,6 +1960,7 @@
 				59C9D321195C0EC800400AE2 /* Errors */,
 				59A0DAD71941A5060088FECD /* SSL */,
 				EAEE0830192B35CC00E1AA25 /* SystemConstants.h */,
+				EAF771301B73523800ED6E6E /* SystemConstants-swift.swift */,
 				148DD6EC17786BAF00FB9977 /* constants.h */,
 				1467037319372ACC00087289 /* DownloadUtils.h */,
 				1467037419372ACC00087289 /* DownloadUtils.m */,
@@ -4118,6 +4121,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAF771311B73523800ED6E6E /* SystemConstants-swift.swift in Sources */,
 				59BF9B361A2C8BEA009D9CF0 /* DocumentPickerViewController.m in Sources */,
 				404FDA281A36EA9D008AB4E1 /* ManageLocation.m in Sources */,
 				59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */,

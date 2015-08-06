@@ -31,3 +31,6 @@
 #import "ManageAppSettingsDB.h"
 #import "InitializeDatabase.h"
 #import "ShareFileOrFolder.h"
+#import "MBProgressHUD.h"
+#import "AppDelegate.h"
+
