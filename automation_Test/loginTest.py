@@ -37,7 +37,7 @@ class loginTest(unittest.TestCase):
         self.assertTrue(actions.check_values_by_class_name(self.driver, class_to_check, expected_class_found))
         #import ipdb; ipdb.set_trace()
 
-    def test_ui_login_noOk(self):
+    def test_ui_login_incorrect_password(self):
         server_url = const.K_URL_1
         user = const.K_USER_1
         password = const.K_PASSWORD_WRONG_1
@@ -53,6 +53,7 @@ class loginTest(unittest.TestCase):
         actions.wait_until(actions.check_values_by_class_name, time_out, sleep_time, self.driver, class_to_check, expected_class_found)
 
         self.assertTrue(actions.check_values_by_class_name(self.driver, class_to_check, expected_class_found))
+        self.assertEqual(self.driver.find_elements_by_class_name("UIAStaticText")[1].get_attribute("name"), "The user or password is incorrect")
         #import ipdb; ipdb.set_trace()
 
 if __name__ == '__main__':
