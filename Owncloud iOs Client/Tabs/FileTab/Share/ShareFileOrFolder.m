@@ -111,7 +111,14 @@
     
     
     if (IS_IPHONE) {
-        [app.ocTabBarController presentViewController:activityView animated:YES completion:nil];
+        
+         if ([_delegate respondsToSelector:@selector(presentShareOptions:)]){
+            [_delegate presentShareOptions:activityView];
+          }else{
+           [app.ocTabBarController presentViewController:activityView animated:YES completion:nil];
+          }
+  
+        
     } else {
         
         if (self.activityPopoverController) {

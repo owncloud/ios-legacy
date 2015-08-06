@@ -130,7 +130,9 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             self.shareFileOrFolder.delegate = self
             
-            self.shareFileOrFolder.viewToShow = self.tabBarController?.view
+            self.shareFileOrFolder.viewToShow = self.view
+            
+            self.shareFileOrFolder.parentViewController = self
             
             self.shareFileOrFolder.showShareActionSheetForFile(self.sharedItem)
             
@@ -162,11 +164,6 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             [self.mShareFileOrFolder showShareActionSheetForFile:_selectedFileDto];*/
             
-        }
-        
-        
-        delay(standardDelay) {
-            self.reloadView()
         }
         
         
@@ -370,5 +367,19 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         self.endLoading()
     }
+    
+    
+    func presentShareOptions(activity: AnyObject){
+        
+        let activityView: UIActivityViewController = activity as! UIActivityViewController
+        
+        self.presentViewController(activityView, animated: true, completion: nil)
+        
+        delay(standardDelay) {
+            self.reloadView()
+        }
+        
+    }
+ 
     
 }

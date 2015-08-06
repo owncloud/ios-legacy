@@ -17,12 +17,13 @@
 #import "FileDto.h"
 #import "OCSharedDto.h"
 
-@protocol ShareFileOrFolderDelegate
+@protocol ShareFileOrFolderDelegate <NSObject>
 
 @optional
 - (void)initLoading;
 - (void)endLoading;
 - (void)errorLogin;
+- (void)presentShareOptions:(id)activity;
 @end
 
 @interface ShareFileOrFolder : NSObject <UIActionSheetDelegate,UITextFieldDelegate,UIAlertViewDelegate>
@@ -41,7 +42,7 @@
 @property (nonatomic, strong) UIBarButtonItem *parentButton;
 //This view is to show the Popover with the share link options
 @property (nonatomic, strong) UIView *parentView;
-
+@property (nonatomic, strong) UIViewController *parentViewController;
 @property(nonatomic, strong) UIAlertView *shareProtectedAlertView;
 
 
