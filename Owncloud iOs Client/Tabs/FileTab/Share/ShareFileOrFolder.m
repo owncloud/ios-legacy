@@ -118,7 +118,6 @@
            [app.ocTabBarController presentViewController:activityView animated:YES completion:nil];
           }
   
-        
     } else {
         
         if (self.activityPopoverController) {

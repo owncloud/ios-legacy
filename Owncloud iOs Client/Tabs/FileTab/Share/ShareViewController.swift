@@ -122,6 +122,12 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         isShareLinkEnabled = sender.on
         
+        self.getShareLinkView()
+        
+    }
+    
+    func getShareLinkView() {
+        
         if isShareLinkEnabled == true{
             
             self.shareFileOrFolder = nil
@@ -133,6 +139,13 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
             self.shareFileOrFolder.viewToShow = self.view
             
             self.shareFileOrFolder.parentViewController = self
+            
+            if self.sharedItem.sharedFileSource > 0{
+                self.shareFileOrFolder.clickOnShareLinkFromFileDto(true)
+                clickOnShareLinkFromFileDto
+            }else{
+                
+            }
             
             self.shareFileOrFolder.showShareActionSheetForFile(self.sharedItem)
             
@@ -165,8 +178,7 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
             [self.mShareFileOrFolder showShareActionSheetForFile:_selectedFileDto];*/
             
         }
-        
-        
+
     }
     
     //MARK: - Tools
@@ -313,6 +325,7 @@ class ShareViewController: UIViewController, UITableViewDataSource, UITableViewD
         if indexPath.section == 1 && indexPath.row == 2{
             
             //Get Shared Link button tapped
+            self.getShareLinkView()
         }
     }
     
