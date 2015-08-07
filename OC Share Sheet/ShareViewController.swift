@@ -162,13 +162,13 @@ import AVFoundation
                 
                 var fileName:String!
                 
-                let urlOriginalPath :String = url.path!.stringByDeletingLastPathComponent
+                let urlOriginalPath :String = (url.path! as NSString).stringByDeletingLastPathComponent
                 var destinyMovedFilePath :String = UtilsUrls.getTempFolderForUploadFiles()
                 
-                fileName = url.path!.lastPathComponent
+                fileName = (url.path! as NSString).lastPathComponent
                 if type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue {
                     
-                    if  urlOriginalPath != String(dropLast(destinyMovedFilePath.characters)) {
+                    if  urlOriginalPath != String(destinyMovedFilePath.characters.dropLast()) {
                         fileName = FileNameUtils.getComposeNameFromPath(url.path)
                     }
                 }
@@ -179,7 +179,7 @@ import AVFoundation
                     
                     //2º Copy the file to the tmp folder
                     destinyMovedFilePath = destinyMovedFilePath + fileName
-                    if destinyMovedFilePath.stringByDeletingLastPathComponent != urlOriginalPath {
+                    if (destinyMovedFilePath as NSString).stringByDeletingLastPathComponent != urlOriginalPath {
                         do {
                             try NSFileManager.defaultManager().copyItemAtPath(url.path!, toPath: destinyMovedFilePath)
                         } catch _ {
@@ -196,7 +196,7 @@ import AVFoundation
                     let fileLength = (try! NSFileManager.defaultManager().attributesOfItemAtPath(url.path!))[NSFileSize] as! Int
                     print("fileLength: \(fileLength)")
                     
-                    let upload = UploadsOfflineDto.alloc()
+                    let upload = UploadsOfflineDto()
                     
                     upload.originPath = destinyMovedFilePath
                     upload.destinyFolder = currentRemotePath
@@ -307,10 +307,10 @@ import AVFoundation
                                
                                         var fullNameArr = description.componentsSeparatedByString("\"")
                                         var fileExtArr = fullNameArr[1].componentsSeparatedByString(".")
-                                        var ext = (fileExtArr[fileExtArr.count-1]).uppercaseString
+                                        let ext = (fileExtArr[fileExtArr.count-1]).uppercaseString
                                         let dateFormatter = NSDateFormatter()
                                         dateFormatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
-                                        var fileName = "Photo_email_\(dateFormatter.stringFromDate(NSDate())).\(ext)"
+                                        let fileName = "Photo_email_\(dateFormatter.stringFromDate(NSDate())).\(ext)"
                                         
                                         //2º Copy the file to the tmp folder
                                         var destinyMovedFilePath = UtilsUrls.getTempFolderForUploadFiles()
@@ -447,7 +447,7 @@ import AVFoundation
         
         if (type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue){
             //Image
-            let fileName: NSString = url.path!.lastPathComponent
+            let fileName: NSString = (url.path! as NSString).lastPathComponent
             if row < images.count {
                 cell.imageForFile?.image = images[indexPath.row];
             }
@@ -461,7 +461,7 @@ import AVFoundation
             let image = UIImage(named: FileNameUtils.getTheNameOfTheImagePreviewOfFileName(url.lastPathComponent))
             cell.imageForFile?.image = image
             cell.imageForFile?.backgroundColor = UIColor.whiteColor()
-            cell.title?.text = url.path?.lastPathComponent
+            cell.title?.text = (url.path! as NSString).lastPathComponent
         }
         
 
@@ -502,7 +502,7 @@ import AVFoundation
         let user = ManageUsersDB.getActiveUser()
         let folderPath = UtilsUrls.getFilePathOnDBByFullPath(name as String, andUser: user)
 
-        self.changeTheDestinyFolderWith(folderPath.lastPathComponent)
+        self.changeTheDestinyFolderWith((folderPath as NSString).lastPathComponent)
         
     }
     
