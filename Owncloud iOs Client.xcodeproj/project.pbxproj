@@ -588,6 +588,7 @@
 		59E58B761B04ED15004E9739 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0916034C2200A95EAD /* libssl.a */; };
 		59E58B771B04ED20004E9739 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
 		EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
+		EA1762A01B78B50100D36186 /* ShareMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA17629F1B78B50100D36186 /* ShareMainViewController.m */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
 		EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
 		EA1F62CE1A5EBC2A00D6346F /* UserDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F148177C315D004A1A5A /* UserDto.m */; };
@@ -630,7 +631,6 @@
 		EA4B8E1C1AC92DCC004F335E /* KKPasscodeLock.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968817F599060033B3C1 /* KKPasscodeLock.m */; };
 		EA4B8E1D1AC92DCF004F335E /* KKPasscodeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968A17F599060033B3C1 /* KKPasscodeSettingsViewController.m */; };
 		EA4B8E1E1AC92FCC004F335E /* KKPasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968C17F599060033B3C1 /* KKPasscodeViewController.m */; };
-		EA5C6F7E1B70BA880088071B /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C6F7C1B70BA880088071B /* ShareViewController.swift */; };
 		EA5C6F7F1B70BA880088071B /* ShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA5C6F7D1B70BA880088071B /* ShareViewController.xib */; };
 		EA5C6F841B70BEE30088071B /* ShareFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C6F821B70BEE20088071B /* ShareFileCell.swift */; };
 		EA5C6F851B70BEE30088071B /* ShareFileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA5C6F831B70BEE30088071B /* ShareFileCell.xib */; };
@@ -1529,6 +1529,8 @@
 		59E48E931B3AAE72008FAAE0 /* th-TH */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "th-TH"; path = "th-TH.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		59E48E941B3AAE87008FAAE0 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		59E52E7F1B0B666100F5B1B3 /* Accessibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Accessibility.h; path = SupportingFiles/Accessibility/Accessibility.h; sourceTree = "<group>"; };
+		EA17629E1B78B50100D36186 /* ShareMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareMainViewController.h; path = Tabs/FileTab/Share/ShareMainViewController.h; sourceTree = "<group>"; };
+		EA17629F1B78B50100D36186 /* ShareMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareMainViewController.m; path = Tabs/FileTab/Share/ShareMainViewController.m; sourceTree = "<group>"; };
 		EA1787AA17E33BB9005171AB /* OCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCNavigationController.h; path = Tabs/FileTab/OCNavigationController.h; sourceTree = "<group>"; };
 		EA1787AB17E33BB9005171AB /* OCNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCNavigationController.m; path = Tabs/FileTab/OCNavigationController.m; sourceTree = "<group>"; };
 		EA2243E81B71276D00F62E2A /* ShareLinkHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareLinkHeaderCell.swift; path = Tabs/FileTab/Share/Cells/ShareLinkHeaderCell.swift; sourceTree = "<group>"; };
@@ -1557,7 +1559,6 @@
 		EA49146E1AC0346100BECF0B /* TTOpenInAppActivity8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TTOpenInAppActivity8.png; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8.png; sourceTree = "<group>"; };
 		EA49146F1AC0346100BECF0B /* TTOpenInAppActivity8@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity8@2x.png"; path = "ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8@2x.png"; sourceTree = "<group>"; };
 		EA4914701AC0346100BECF0B /* TTOpenInAppActivity8@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity8@3x.png"; path = "ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8@3x.png"; sourceTree = "<group>"; };
-		EA5C6F7C1B70BA880088071B /* ShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareViewController.swift; path = Tabs/FileTab/Share/ShareViewController.swift; sourceTree = "<group>"; };
 		EA5C6F7D1B70BA880088071B /* ShareViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareViewController.xib; path = Tabs/FileTab/Share/ShareViewController.xib; sourceTree = "<group>"; };
 		EA5C6F821B70BEE20088071B /* ShareFileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareFileCell.swift; path = Tabs/FileTab/Share/Cells/ShareFileCell.swift; sourceTree = "<group>"; };
 		EA5C6F831B70BEE30088071B /* ShareFileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareFileCell.xib; path = Tabs/FileTab/Share/Cells/ShareFileCell.xib; sourceTree = "<group>"; };
@@ -2075,8 +2076,9 @@
 				13A9C666187FE91700C6EEE8 /* ShareFileOrFolder.m */,
 				13D6B7C818855EE40090A96C /* AppsActivityProvider.h */,
 				13D6B7C918855EE40090A96C /* AppsActivityProvider.m */,
-				EA5C6F7C1B70BA880088071B /* ShareViewController.swift */,
 				EA5C6F7D1B70BA880088071B /* ShareViewController.xib */,
+				EA17629E1B78B50100D36186 /* ShareMainViewController.h */,
+				EA17629F1B78B50100D36186 /* ShareMainViewController.m */,
 			);
 			name = Share;
 			sourceTree = "<group>";
@@ -4201,7 +4203,6 @@
 				148DD6971778663100FB9977 /* OpenWith.m in Sources */,
 				13AD22B318311A26007E0F1A /* ManageUploadRequest.m in Sources */,
 				148DD69A1778664400FB9977 /* OverwriteFileOptions.m in Sources */,
-				EA5C6F7E1B70BA880088071B /* ShareViewController.swift in Sources */,
 				148DD6A01778667000FB9977 /* RenameFile.m in Sources */,
 				EAC598601A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */,
 				148DD6A81778668A00FB9977 /* SelectFolderNavigation.m in Sources */,
@@ -4285,6 +4286,7 @@
 				EABD9BC71B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m in Sources */,
 				1428F675178422AE0092F42A /* UploadsOfflineDto.m in Sources */,
 				EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */,
+				EA1762A01B78B50100D36186 /* ShareMainViewController.m in Sources */,
 				1428F678178422BE0092F42A /* UtilsDtos.m in Sources */,
 				59C71D181A9216AE00F66166 /* ReaderDocumentOutline.m in Sources */,
 				1420C3AC178A9F5000C0455C /* LoginViewController.m in Sources */,

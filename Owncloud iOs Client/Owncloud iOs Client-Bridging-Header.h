@@ -33,4 +33,5 @@
 #import "ShareFileOrFolder.h"
 #import "MBProgressHUD.h"
 #import "AppDelegate.h"
+#import "ManageFilesDB.h"
 

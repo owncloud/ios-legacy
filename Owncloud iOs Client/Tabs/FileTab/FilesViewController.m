@@ -58,6 +58,7 @@
 #import "Owncloud_iOs_Client-Swift.h"
 #import "ManageUsersDB.h"
 #import "UtilsFramework.h"
+#import "ShareMainViewController.h"
 
 
 //Constant for iOS7
@@ -2612,7 +2613,8 @@
 - (void)didSelectShareLinkOption {
     DLog(@"Share Link Option");
     
-    ShareViewController *share = [[ShareViewController alloc] initWithNibName:@"ShareViewController" bundle:nil fileDto:_selectedFileDto];
+    ShareMainViewController *share = [[ShareMainViewController alloc] initWithFileDto:_selectedFileDto];
+    
     OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
     
     if (IS_IPHONE) {
