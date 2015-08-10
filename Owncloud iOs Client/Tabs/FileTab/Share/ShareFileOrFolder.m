@@ -491,6 +491,7 @@
     if([self.delegate respondsToSelector:@selector(initLoading)]) {
         [self.delegate initLoading];
     }
+}
 
 /**
  * Method to hide the Loading view
@@ -715,5 +716,6 @@
         
     }
 }
+
 
 @end
