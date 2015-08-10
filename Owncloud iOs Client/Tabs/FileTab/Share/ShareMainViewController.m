@@ -74,10 +74,14 @@
 - (void) viewDidLoad{
     [super viewDidLoad];
     
+    
 }
 
 - (void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    [self setStyleView];
+    [self updateInterfaceWithShareLinkStatus];
 }
 
 - (void) viewDidAppear:(BOOL)animated{
