@@ -43,5 +43,12 @@
 		<key>NSExtensionPrincipalClass</key>
 		<string>DocumentPickerViewController</string>
 	</dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict/>
+	</dict>
 </dict>
 </plist>
