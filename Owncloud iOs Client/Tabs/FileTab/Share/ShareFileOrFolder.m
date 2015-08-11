@@ -236,7 +236,7 @@
     
      __block OCSharedDto *blockShareDto = _shareDto;
     
-    [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:_shareDto.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared) {
+    [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:_shareDto.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared, OCSharedDto *shareDto) {
         
         BOOL isSamlCredentialsError=NO;
         
@@ -603,8 +603,8 @@
                 [self endLoading];
                 [self errorLogin];
                 
-                if([self.delegate respondsToSelector:@selector(finishUnShare)]) {
-                    [self.delegate finishUnShare];
+                if([self.delegate respondsToSelector:@selector(finishUpdateShare)]) {
+                    [self.delegate finishUpdateShare];
                 } 
             }
         }
@@ -612,8 +612,8 @@
             [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
             [self endLoading];
             
-            if([self.delegate respondsToSelector:@selector(finishUnShare)]) {
-                [self.delegate finishUnShare];
+            if([self.delegate respondsToSelector:@selector(finishUpdateShare)]) {
+                [self.delegate finishUpdateShare];
             }
         }
         

@@ -25,6 +25,7 @@
 - (void)errorLogin;
 - (void) presentShareOptions:(UIActivityViewController*) activityView;
 - (void) finishUnShare;
+- (void) finishUpdateShare;
 @end
 
 

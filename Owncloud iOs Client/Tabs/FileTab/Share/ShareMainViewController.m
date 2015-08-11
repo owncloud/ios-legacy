@@ -148,7 +148,25 @@
 - (void) updateInterfaceWithShareLinkStatus {
     
     if (self.sharedItem.sharedFileSource > 0) {
+        
         self.isShareLinkEnabled = true;
+        
+        self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
+        
+        if (self.sharedFileOrFolder == nil) {
+            self.sharedFileOrFolder = [ShareFileOrFolder new];
+            self.sharedFileOrFolder.delegate = self;
+        }
+        
+        OCSharedDto *ocShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
+        
+        if (![ocShare.shareWith isEqualToString:@""] && ocShare.shareType == shareTypeLink) {
+            self.isPasswordProtectEnabled = true;
+        }else{
+            self.isPasswordProtectEnabled = false;
+        }
+        
+        
     }else{
         self.isShareLinkEnabled = false;
     }
@@ -175,11 +193,13 @@
 
 - (void) passwordProtectedSwithValueChanged:(UISwitch*) sender{
     
+    
     if (self.isPasswordProtectEnabled == false) {
         //Update with password protected
         [self showPasswordView];
     } else{
         //Remove passwordProtected
+        [self updateSharedLinkWithPassword:@""];
         
     }
 }
@@ -388,7 +408,7 @@
                     if (self.isExpirationTimeEnabled == true) {
                         shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
                         shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
-                        shareLinkOptionCell.optionDetail.text = @"Secured";
+                        shareLinkOptionCell.optionDetail.text = @"Date formated";
                     }else{
                         shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
                         shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
@@ -405,7 +425,7 @@
                     if (self.isPasswordProtectEnabled == true) {
                         shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
                         shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
-                        shareLinkOptionCell.optionDetail.text = @"Date formated";
+                        shareLinkOptionCell.optionDetail.text = @"Secured";
                     } else {
                         shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
                         shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
@@ -535,6 +555,12 @@
 - (void) finishUnShare {
     
     [self performSelector:@selector(reloadView) withObject:nil afterDelay:standardDelay];
+    
+}
+
+- (void) finishUpdateShare {
+    
+    [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
     
 }
 
