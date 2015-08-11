@@ -47,9 +47,13 @@
 @property (nonatomic, strong) FileDto* sharedItem;
 @property (nonatomic) NSInteger optionsShownWithShareLink;
 @property (nonatomic) BOOL isShareLinkEnabled;
+@property (nonatomic) BOOL isPasswordProtectEnabled;
+@property (nonatomic) BOOL isExpirationTimeEnabled;
 @property (nonatomic, strong) NSString* sharedToken;
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
+@property(nonatomic, strong) UIAlertView *passwordView;
+
 
 
 @end
@@ -65,6 +69,8 @@
         self.sharedItem = fileDto;
         self.optionsShownWithShareLink = 0;
         self.isShareLinkEnabled = false;
+        self.isPasswordProtectEnabled = false;
+        self.isExpirationTimeEnabled = false;
         
     }
     
@@ -88,6 +94,27 @@
     [super viewDidAppear:animated];
     
     
+}
+
+#pragma mark - Accessory alert views
+
+- (void) showPasswordView {
+    
+    if (self.passwordView != nil) {
+        self.passwordView = nil;
+    }
+    
+    self.passwordView = [[UIAlertView alloc]initWithTitle:@"Enter password" message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
+    
+    self.passwordView.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [self.passwordView textFieldAtIndex:0].delegate = self;
+    [[self.passwordView textFieldAtIndex:0] setAutocorrectionType:UITextAutocorrectionTypeNo];
+    [[self.passwordView textFieldAtIndex:0] setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+    [[self.passwordView textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeDefault];
+    [[self.passwordView textFieldAtIndex:0] setKeyboardAppearance:UIKeyboardAppearanceLight];
+    [[self.passwordView textFieldAtIndex:0] setSecureTextEntry:true];
+    
+    [self.passwordView show];
 }
 
 #pragma mark - Style Methods
@@ -146,6 +173,28 @@
     }
 }
 
+- (void) passwordProtectedSwithValueChanged:(UISwitch*) sender{
+    
+    if (self.isPasswordProtectEnabled == false) {
+        //Update with password protected
+        [self showPasswordView];
+    } else{
+        //Remove passwordProtected
+        
+    }
+}
+
+
+- (void) expirationTimeSwithValueChanged:(UISwitch*) sender{
+    
+    self.isExpirationTimeEnabled = sender.on;
+    
+    [self reloadView];
+    
+}
+
+#pragma mark - Actions with ShareFileOrFolder class
+
 - (void) getShareLinkView {
     
     if (self.sharedFileOrFolder == nil) {
@@ -189,6 +238,79 @@
         [self.sharedFileOrFolder unshareTheFile:ocShare];
     }
     
+}
+
+- (void) updateSharedLinkWithPassword:(NSString*) password {
+    
+    if (self.sharedFileOrFolder == nil) {
+        self.sharedFileOrFolder = [ShareFileOrFolder new];
+        self.sharedFileOrFolder.delegate = self;
+    }
+    
+    self.sharedFileOrFolder.parentViewController = self;
+    
+    self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
+    
+    OCSharedDto *ocShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
+
+    [self.sharedFileOrFolder updateShareLink:ocShare withPassword:password andExpirationTime:@""];
+    
+}
+
+#pragma mark - UITextField delegate methods
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    
+    return YES;
+}
+
+#pragma mark - UIAlertView delegate methods
+
+
+- (void) alertView: (UIAlertView *) alertView willDismissWithButtonIndex: (NSInteger) buttonIndex
+{
+    
+    if( buttonIndex == 1 ){
+        //Update share item with password
+        
+        NSString* password = [alertView textFieldAtIndex:0].text;
+        [self initLoading];
+        [self performSelector:@selector(updateSharedLinkWithPassword:) withObject:password];
+        
+    }else if (buttonIndex == 0) {
+        //Cancel
+        [self reloadView];
+        
+    }else {
+        //Nothing
+    }
+
+}
+
+
+- (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView
+{
+    BOOL output = YES;
+    
+    NSString *stringNow = [alertView textFieldAtIndex:0].text;
+    
+    
+    //Active button of folderview only when the textfield has something.
+    NSString *rawString = stringNow;
+    NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSString *trimmed = [rawString stringByTrimmingCharactersInSet:whitespace];
+    
+    if ([trimmed length] == 0) {
+        // Text was empty or only whitespace.
+        output = NO;
+    }
+    
+    //Button save disable when the textfield is empty
+    if ([stringNow isEqualToString:@""]) {
+        output = NO;
+    }
+    
+    return output;
 }
 
 
@@ -262,13 +384,37 @@
             switch (indexPath.row) {
                 case 0:
                     shareLinkOptionCell.optionName.text = @"Set expiration time";
-                    shareLinkOptionCell.detailTextLabel.text = @"empty";
-                    [shareLinkOptionCell.optionSwith setOn:false animated:true];
+                    
+                    if (self.isExpirationTimeEnabled == true) {
+                        shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
+                        shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
+                        shareLinkOptionCell.optionDetail.text = @"Secured";
+                    }else{
+                        shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
+                        shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
+                        shareLinkOptionCell.optionDetail.text = @"";
+                    }
+                    [shareLinkOptionCell.optionSwith setOn:self.isExpirationTimeEnabled animated:false];
+                    
+                    [shareLinkOptionCell.optionSwith addTarget:self action:@selector(expirationTimeSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+                    
                     break;
                 case 1:
                     shareLinkOptionCell.optionName.text = @"Password protect";
-                    shareLinkOptionCell.detailTextLabel.text = @"empty";
-                    [shareLinkOptionCell.optionSwith setOn:false animated:true];
+                    
+                    if (self.isPasswordProtectEnabled == true) {
+                        shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
+                        shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
+                        shareLinkOptionCell.optionDetail.text = @"Date formated";
+                    } else {
+                        shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
+                        shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
+                        shareLinkOptionCell.optionDetail.text = @"";
+                    }
+                    [shareLinkOptionCell.optionSwith setOn:self.isPasswordProtectEnabled animated:false];
+                    
+                    [shareLinkOptionCell.optionSwith addTarget:self action:@selector(passwordProtectedSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+                    
                     break;
                     
                 default:
@@ -320,7 +466,7 @@
         }
         
          shareLinkHeaderCell.titleSection.text = @"Share Link";
-        [shareLinkHeaderCell.switchSection setOn:self.isShareLinkEnabled animated:true];
+        [shareLinkHeaderCell.switchSection setOn:self.isShareLinkEnabled animated:false];
         [shareLinkHeaderCell.switchSection addTarget:self action:@selector(sharedLinkSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
         
         headerView = shareLinkHeaderCell;

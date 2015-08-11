@@ -481,6 +481,7 @@
 }
 
 
+
 ///-----------------------------------
 /// @name endLoading
 ///-----------------------------------
@@ -543,8 +544,7 @@
 
 - (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file{
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:file.sharedFileSource forUser:app.activeUser.idUser];
+    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:file.sharedFileSource forUser:APP_DELEGATE.activeUser.idUser];
     
     OCSharedDto *sharedByLink;
     
@@ -555,6 +555,101 @@
     }
     
     return sharedByLink;
+
+    
+}
+
+///-----------------------------------
+/// @name Update the share link with password protect
+///-----------------------------------
+
+/**
+ * This method unshares the file/folder
+ *
+ * @param OCSharedDto -> The shared file/folder
+ */
+- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password andExpirationTime:(NSString*)expirationTime{
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    [self initLoading];
+    
+    //In iPad set the global variable
+    if (!IS_IPHONE) {
+        //Set global loading screen global flag to YES (only for iPad)
+        app.isLoadingVisible = YES;
+    }
+    
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
+    }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+    
+    [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+        
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self endLoading];
+                [self errorLogin];
+                
+                if([self.delegate respondsToSelector:@selector(finishUnShare)]) {
+                    [self.delegate finishUnShare];
+                } 
+            }
+        }
+        if (!isSamlCredentialsError) {
+            [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+            [self endLoading];
+            
+            if([self.delegate respondsToSelector:@selector(finishUnShare)]) {
+                [self.delegate finishUnShare];
+            }
+        }
+        
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+        [self endLoading];
+        
+        DLog(@"error.code: %ld", (long)error.code);
+        DLog(@"server error: %ld", (long)response.statusCode);
+        NSInteger code = response.statusCode;
+        
+        //Select the correct msg and action for this error
+        switch (code) {
+            case kOCErrorServerPathNotFound:
+                [self showError:NSLocalizedString(@"file_to_unshare_not_exist", nil)];
+                break;
+            case kOCErrorServerUnauthorized:
+                [self errorLogin];
+                break;
+            case kOCErrorServerForbidden:
+                [self showError:NSLocalizedString(@"error_not_permission", nil)];
+                break;
+            case kOCErrorServerTimeout:
+                [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                break;
+            default:
+                if (error.code == kOCErrorServerPathNotFound) {
+                    [self showError:NSLocalizedString(@"file_to_unshare_not_exist", nil)];
+                } else {
+                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                }
+                
+                break;
+        }
+
+    }];
 
     
 }

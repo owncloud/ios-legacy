@@ -96,4 +96,11 @@
  * @param file -> FileDto. this object should be update with the DB.
  */
 - (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file;
+
+/**
+ * This method unshares the file/folder
+ *
+ * @param OCSharedDto -> The shared file/folder
+ */
+- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password andExpirationTime:(NSString*)expirationTime;
 @end
