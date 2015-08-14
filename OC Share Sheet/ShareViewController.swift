@@ -262,7 +262,7 @@ import AVFoundation
             self.presentViewController(navigation, animated: true) { () -> Void in
                 print("select folder presented")
                 //We check the connection here because we need to accept the certificate on the self signed server
-                let mCheckAccessToServer = CheckAccessToServer.new()
+                let mCheckAccessToServer = CheckAccessToServer()
                 mCheckAccessToServer.delegate = selectFolderViewController
                 mCheckAccessToServer.isConnectionToTheServerByUrl(activeUser.url)
             }
@@ -490,7 +490,7 @@ import AVFoundation
         return false
     }
     
-    func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!)
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
         print("row = %d",indexPath.row)
     }
