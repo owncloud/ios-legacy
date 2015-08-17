@@ -117,6 +117,103 @@
     [self.passwordView show];
 }
 
+#pragma mark - Date Picker methods
+
+- (void) launchDatePicker{
+    
+    self.datePickerContainerView = [[UIView alloc] initWithFrame:self.view.frame];
+    [self.datePickerContainerView setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.datePickerContainerView];
+    
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapBehind:)];
+    [recognizer setNumberOfTapsRequired:1];
+    recognizer.delegate = self;
+    recognizer.cancelsTouchesInView = NO;
+    [self.datePickerContainerView addGestureRecognizer:recognizer];
+    
+    UIToolbar *controlToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    [controlToolbar sizeToFit];
+    
+   
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dateSelected:)];
+    
+    UIBarButtonItem *spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(closeDatePicker)];
+
+    [controlToolbar setItems:[NSArray arrayWithObjects:cancelButton, spacer, doneButton, nil] animated:NO];
+    
+    if (self.datePickerView == nil) {
+        self.datePickerView = [[UIDatePicker alloc] init];
+        self.datePickerView.datePickerMode = UIDatePickerModeDate;
+        self.datePickerView.minimumDate = [NSDate date];
+    }
+    
+    [self.datePickerView setFrame:CGRectMake(0, 40, self.view.frame.size.width,300)];
+    
+    if (!self.pickerView) {
+        self.pickerView = [[UIView alloc] initWithFrame:self.datePickerView.frame];
+    } else {
+        [self.pickerView setHidden:NO];
+    }
+    
+    
+    [self.pickerView setFrame:CGRectMake(0,
+                                         self.view.frame.size.height,
+                                         self.view.frame.size.width,
+                                         250)];
+    [self.pickerView setBackgroundColor:[UIColor whiteColor]];
+    [self.pickerView addSubview:controlToolbar];
+    [self.pickerView addSubview:self.datePickerView];
+    [self.datePickerView setHidden:NO];
+    
+    [self.datePickerContainerView addSubview:self.pickerView];
+    
+    [UIView animateWithDuration:0.5f
+                     animations:^{
+                         [self.pickerView setFrame:CGRectMake(0,
+                                                              self.view.frame.size.height - self.pickerView.frame.size.height,
+                                                              self.view.frame.size.width,
+                                                              250)];
+                     }
+                     completion:nil];
+    
+}
+
+- (void) dateSelected:(UIBarButtonItem *)sender{
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        [self.pickerView setFrame:CGRectMake(self.pickerView.frame.origin.x,
+                                         self.view.frame.size.height,
+                                         self.pickerView.frame.size.width,
+                                         self.pickerView.frame.size.height)];
+    } completion:^(BOOL finished) {
+        [self.datePickerContainerView removeFromSuperview];
+    }];
+    
+   //TODO: Store the date and tell to the server
+    
+}
+
+- (void) closeDatePicker {
+    [UIView animateWithDuration:0.5 animations:^{
+        [self.pickerView setFrame:CGRectMake(self.pickerView.frame.origin.x,
+                                         self.view.frame.size.height,
+                                         self.pickerView.frame.size.width,
+                                         self.pickerView.frame.size.height)];
+    } completion:^(BOOL finished) {
+        [self.datePickerContainerView removeFromSuperview];
+    }];
+    
+}
+
+- (void)handleTapBehind:(UITapGestureRecognizer *)sender
+{
+    [self.datePickerContainerView removeGestureRecognizer:sender];
+    [self closeDatePicker];
+}
+
+
 #pragma mark - Style Methods
 
 - (void) setStyleView {
@@ -198,8 +295,9 @@
         //Update with password protected
         [self showPasswordView];
     } else{
-        //Remove passwordProtected
-        [self updateSharedLinkWithPassword:@""];
+        //Remove password Protected
+        [self updateSharedLinkWithPassword:@"" andExpirationDate:@""];
+        
         
     }
 }
@@ -207,10 +305,14 @@
 
 - (void) expirationTimeSwithValueChanged:(UISwitch*) sender{
     
-    self.isExpirationTimeEnabled = sender.on;
+    if (self.isExpirationTimeEnabled == false) {
+        [self launchDatePicker];
+    }else{
+        //Remove exipration time
+        [self updateSharedLinkWithPassword:@"" andExpirationDate:@""];
+    }
     
-    [self reloadView];
-    
+
 }
 
 #pragma mark - Actions with ShareFileOrFolder class
@@ -260,7 +362,7 @@
     
 }
 
-- (void) updateSharedLinkWithPassword:(NSString*) password {
+- (void) updateSharedLinkWithPassword:(NSString*) password andExpirationDate:(NSString*)expirationDate {
     
     if (self.sharedFileOrFolder == nil) {
         self.sharedFileOrFolder = [ShareFileOrFolder new];
@@ -273,9 +375,11 @@
     
     OCSharedDto *ocShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
 
-    [self.sharedFileOrFolder updateShareLink:ocShare withPassword:password andExpirationTime:@""];
+    [self.sharedFileOrFolder updateShareLink:ocShare withPassword:password andExpirationTime:expirationDate];
     
 }
+
+
 
 #pragma mark - UITextField delegate methods
 
@@ -295,7 +399,7 @@
         
         NSString* password = [alertView textFieldAtIndex:0].text;
         [self initLoading];
-        [self performSelector:@selector(updateSharedLinkWithPassword:) withObject:password];
+        [self updateSharedLinkWithPassword:password andExpirationDate:@""];
         
     }else if (buttonIndex == 0) {
         //Cancel
