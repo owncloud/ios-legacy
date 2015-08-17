@@ -128,13 +128,12 @@
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapBehind:)];
     [recognizer setNumberOfTapsRequired:1];
     recognizer.delegate = self;
-    recognizer.cancelsTouchesInView = NO;
+    recognizer.cancelsTouchesInView = true;
     [self.datePickerContainerView addGestureRecognizer:recognizer];
     
     UIToolbar *controlToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
     [controlToolbar sizeToFit];
     
-   
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dateSelected:)];
     
     UIBarButtonItem *spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -182,16 +181,14 @@
 
 - (void) dateSelected:(UIBarButtonItem *)sender{
     
-    [UIView animateWithDuration:0.5 animations:^{
-        [self.pickerView setFrame:CGRectMake(self.pickerView.frame.origin.x,
-                                         self.view.frame.size.height,
-                                         self.pickerView.frame.size.width,
-                                         self.pickerView.frame.size.height)];
-    } completion:^(BOOL finished) {
-        [self.datePickerContainerView removeFromSuperview];
-    }];
+    [self closeDatePicker];
     
    //TODO: Store the date and tell to the server
+  /*  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
+    self.txtDate.text = [dateFormatter stringFromDate:datePickerView.date];*/
+
+    
     
 }
 
@@ -204,6 +201,8 @@
     } completion:^(BOOL finished) {
         [self.datePickerContainerView removeFromSuperview];
     }];
+    
+    [self updateInterfaceWithShareLinkStatus];
     
 }
 
@@ -261,6 +260,15 @@
             self.isPasswordProtectEnabled = true;
         }else{
             self.isPasswordProtectEnabled = false;
+        }
+        
+        if (ocShare.expirationDate == 0.0 || ocShare.expirationDate == nil) {
+            self.isExpirationTimeEnabled = false;
+        }else {
+            self.isExpirationTimeEnabled = true;
+            
+            NSDate *expirationTime = [NSDate dateWithTimeIntervalSince1970:ocShare.expirationDate];
+            
         }
         
         
