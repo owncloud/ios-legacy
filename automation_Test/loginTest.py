@@ -25,7 +25,7 @@ class loginTest(unittest.TestCase):
         password = const.K_PASSWORD_1
         ssl = const.K_SELF_SIGNED_1
 
-        actions.doLoginWith(self,server_url,user,password,ssl)
+        actions.doFirstLoginWith(self,server_url,user,password,ssl)
         sleep(1)
 
         class_to_check = 'UIATabBar'
@@ -43,7 +43,7 @@ class loginTest(unittest.TestCase):
         password = const.K_PASSWORD_WRONG_1
         ssl = const.K_SELF_SIGNED_1
 
-        actions.doLoginWith(self,server_url,user,password,ssl)
+        actions.doFirstLoginWith(self,server_url,user,password,ssl)
         sleep(1)
 
         class_to_check = 'UIATabBar'
@@ -55,6 +55,8 @@ class loginTest(unittest.TestCase):
         self.assertTrue(actions.check_values_by_class_name(self.driver, class_to_check, expected_class_found))
         self.assertEqual(self.driver.find_elements_by_class_name("UIAStaticText")[1].get_attribute("name"), "The user or password is incorrect")
         #import ipdb; ipdb.set_trace()
+
+    
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(loginTest)

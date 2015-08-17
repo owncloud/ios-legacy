@@ -19,8 +19,18 @@ def getWebDriver():
     wd.implicitly_wait(const.K_WD_EXPLICITY_WAIT)
     return wd
 
+def doFirstLoginWith(self,server,user,password, ssl):
+    driver = self.driver
+
+    skipButtonInHelpGuide = driver.find_elements_by_class_name('UIAButton')[1]
+    self.assertEqual(skipButtonInHelpGuide.get_attribute("name"), "Skip")
+    skipButtonInHelpGuide.click()
+
+    doLoginWith(self,server,user,password,ssl)
+
 def doLoginWith(self,server,user,password, ssl):
     driver = self.driver
+
     user_field = driver.find_elements_by_class_name('UIATextField')[1]
     user_field.clear()
     user_field.set_value(user)
