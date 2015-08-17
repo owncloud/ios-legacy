@@ -7,6 +7,9 @@ import os
 import unittest
 from time import sleep
 import constants as const
+import loginView
+import filesView
+import settingsView
 import actions
 
 class loginTest(unittest.TestCase):
@@ -37,7 +40,7 @@ class loginTest(unittest.TestCase):
 
         actions.doFirstLoginWith(self,server_url,user,password,ssl)
         actions.assert_is_not_in_files_view(self)
-        self.assertEqual(self.driver.find_elements_by_class_name("UIAStaticText")[1].get_attribute("name"), "The user or password is incorrect")
+        self.assertEqual(self.driver.find_elements_by_class_name(loginView.user_password_field_class)[loginView.user_password_field_index].get_attribute("name"), loginView.user_password_field_name)
         #import ipdb; ipdb.set_trace()
 
     def test_ui_multiaccount(self):
@@ -50,12 +53,12 @@ class loginTest(unittest.TestCase):
         actions.doFirstLoginWith(self,server_url,user,password,ssl)
         actions.assert_is_in_files_view(self)
 
-        settingsButton =  driver.find_element_by_xpath("//UIAApplication[1]/UIAWindow[1]/UIATabBar[1]/UIAButton[4]");
-        self.assertEqual(settingsButton.get_attribute("name"), "Settings")
+        settingsButton =  driver.find_element_by_xpath(filesView.settingsButton_xpath);
+        self.assertEqual(settingsButton.get_attribute("name"), filesView.settingsButton_name)
         settingsButton.click();
 
-        addNewAccountButton = driver.find_element_by_xpath("//UIAApplication[1]/UIAWindow[1]/UIATableView[1]/UIATableCell[2]/UIAStaticText[1]")
-        self.assertEqual(addNewAccountButton.get_attribute("name"), "Add new account")
+        addNewAccountButton = driver.find_element_by_xpath(settingsView.addNewAccountButton_xpath)
+        self.assertEqual(addNewAccountButton.get_attribute("name"), settingsView.addNewAccountButton_name)
         addNewAccountButton.click()
 
         actions.doLoginWith(self,const.K_URL_2,const.K_USER_2,const.K_PASSWORD_2,const.K_SELF_SIGNED_2)
