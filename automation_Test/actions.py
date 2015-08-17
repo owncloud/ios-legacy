@@ -82,4 +82,25 @@ def check_values_by_name(driver, class_name, index, exp_name):
     if driver.find_elements_by_class_name(class_name)[index].get_attribute("name") == exp_name: return True
     return False
 
+def assert_is_in_files_view(self):
+    sleep(1)
+
+    class_to_check = 'UIATabBar'
+    time_out = 20
+    sleep_time = 1
+    expected_class_found = 1
+    wait_until(check_values_by_class_name, time_out, sleep_time, self.driver, class_to_check, expected_class_found)
+
+    self.assertTrue(check_values_by_class_name(self.driver, class_to_check, expected_class_found))
+
+def assert_is_not_in_files_view(self):
+    sleep(1)
+
+    class_to_check = 'UIATabBar'
+    time_out = 20
+    sleep_time = 1
+    expected_class_found = 0
+    wait_until(check_values_by_class_name, time_out, sleep_time, self.driver, class_to_check, expected_class_found)
+
+    self.assertTrue(check_values_by_class_name(self.driver, class_to_check, expected_class_found))
 
