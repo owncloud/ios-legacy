@@ -1257,7 +1257,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         if (downloadIsInProgress) {
             
-            if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
+            if (!k_is_sso_active) {
                 
                 if (_file.isNecessaryUpdate) {
                     [self putUpdateProgressInNavBar];
@@ -1938,8 +1938,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             selfFrame.size.width += deltaWidth;
             selfFrame.origin.x -= deltaWidth;
             
-        }else{
+        } else if (IS_IOS9){
             
+            
+        } else {
+        
             if (IS_PORTRAIT) {
                 selfFrame.size.width += deltaWidth;
                 selfFrame.origin.x -= deltaWidth;
@@ -1964,6 +1967,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
               [self showContainerView];
         }];
         
+        self.isSecondResizeOrMore = YES;
+        
     }else{
         
         self.hideMaster = !self.hideMaster;
@@ -1987,7 +1992,15 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
                 selfFrame.size.width -= deltaWidth;
                 selfFrame.origin.x += deltaWidth;
                 
-            }else{
+            } else if (IS_IOS9) {
+                
+                if (!self.isSecondResizeOrMore) {
+                    //first resize
+                    selfFrame.size.width -= deltaWidth;
+                    selfFrame.origin.x += deltaWidth;
+                }
+                
+            } else {
                 
                 if (IS_PORTRAIT) {
                     selfFrame.size.width -= deltaWidth;
@@ -2048,7 +2061,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         if (IS_IOS8) {
             frame = self.view.window.bounds;
-        }else{
+        } else if (IS_IOS9) {
+            frame = self.view.window.bounds;
+        } else {
             
             if (IS_PORTRAIT) {
                 frame = self.view.window.bounds;
@@ -2099,41 +2114,44 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
          
          if (IS_IOS8) {
              
-             if (self.hideMaster)
-             {
+             if (self.hideMaster) {
                  selfFrame.size.width += deltaWidth;
                  selfFrame.origin.x -= deltaWidth;
-             }
-             else
-             {
+             } else {
                  selfFrame.size.width -= deltaWidth;
                  selfFrame.origin.x += deltaWidth;
              }
 
-         }else{
+         } else if (IS_IOS9) {
              
-             if (self.hideMaster)
-             {
+             if (self.hideMaster) {
+                 selfFrame.size.width += deltaWidth;
+                 selfFrame.origin.x -= deltaWidth;
+             } else {
+                 selfFrame.size.width -= deltaWidth;
+                 selfFrame.origin.x += deltaWidth;
+             }
+             
+         } else {
+             
+             if (self.hideMaster) {
                  if (IS_PORTRAIT) {
                      selfFrame.size.width += deltaWidth;
                      selfFrame.origin.x -= deltaWidth;
-                 }else{
+                 } else {
                      selfFrame.size.height += deltaWidth;
                      selfFrame.origin.y -= deltaWidth;
                  }
  
-             }
-             else
-             {
+             } else {
                  if (IS_PORTRAIT) {
                      selfFrame.size.width -= deltaWidth;
                      selfFrame.origin.x += deltaWidth;
-                 }else{
+                 } else {
                      selfFrame.size.height -= deltaWidth;
                      selfFrame.origin.y += deltaWidth;
                  }
              }
-
          }
          
          [self.splitViewController.view setFrame:selfFrame];
