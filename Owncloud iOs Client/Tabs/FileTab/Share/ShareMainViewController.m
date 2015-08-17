@@ -160,7 +160,7 @@
         
         OCSharedDto *ocShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
         
-        if (![ocShare.shareWith isEqualToString:@""] && ocShare.shareType == shareTypeLink) {
+        if (![ocShare.shareWith isEqualToString:@""] && ![ocShare.shareWith isEqualToString:@"NULL"]  && ocShare.shareType == shareTypeLink) {
             self.isPasswordProtectEnabled = true;
         }else{
             self.isPasswordProtectEnabled = false;

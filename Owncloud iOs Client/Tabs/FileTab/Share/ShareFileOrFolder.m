@@ -609,12 +609,9 @@
             }
         }
         if (!isSamlCredentialsError) {
-            [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
-            [self endLoading];
             
-            if([self.delegate respondsToSelector:@selector(finishUpdateShare)]) {
-                [self.delegate finishUpdateShare];
-            }
+            [self updateLocalShareLink:ocShare];
+            
         }
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
@@ -652,6 +649,117 @@
     }];
 
     
+}
+
+- (void) updateLocalShareLink:(OCSharedDto *)ocShare{
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
+    }
+    
+    
+    [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:ocShare.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared, OCSharedDto *shareDto) {
+        
+        
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self endLoading];
+                [self errorLogin];
+                
+                if([self.delegate respondsToSelector:@selector(finishUpdateShare)]) {
+                    [self.delegate finishUpdateShare];
+                }
+            }
+        }
+        if (!isSamlCredentialsError) {
+            
+            [self refreshSharedItemInDataBase:shareDto];
+            
+            [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+            [self endLoading];
+            
+            if([self.delegate respondsToSelector:@selector(finishUpdateShare)]) {
+                [self.delegate finishUpdateShare];
+            }
+            
+        }
+        
+      } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+          
+          [self endLoading];
+          
+          if([self.delegate respondsToSelector:@selector(finishUpdateShare)]) {
+              [self.delegate finishUpdateShare];
+          }
+          
+          DLog(@"error.code: %ld", (long)error.code);
+          DLog(@"server error: %ld", (long)response.statusCode);
+          NSInteger code = response.statusCode;
+          
+          //Select the correct msg and action for this error
+          switch (code) {
+                  //Switch with response https
+              case kOCErrorServerPathNotFound:
+                  [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
+                  break;
+              case kOCErrorServerUnauthorized:
+                  [self errorLogin];
+                  break;
+              case kOCErrorServerForbidden:
+                  [self showError:NSLocalizedString(@"error_not_permission", nil)];
+                  break;
+              case kOCErrorServerTimeout:
+                  [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                  break;
+              default:
+                  //Switch with API response errors
+                  switch (error.code) {
+                          //Switch with response https
+                      case kOCErrorServerPathNotFound:
+                          [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
+                          break;
+                      case kOCErrorServerUnauthorized:
+                          [self errorLogin];
+                          break;
+                      case kOCErrorServerForbidden:
+                          [self showError:NSLocalizedString(@"error_not_permission", nil)];
+                          break;
+                      case kOCErrorServerTimeout:
+                          [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                          break;
+                      default:
+                          //Switch with API response errors
+                          [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                          break;
+                  }
+                  break;
+          }
+
+      }];
+}
+
+- (void) refreshSharedItemInDataBase:(OCSharedDto *) item{
+    
+    NSArray* items = [NSArray arrayWithObject:item];
+    
+    [ManageSharesDB deleteLSharedByList:items];
+    //4. We add the new shared on the share list
+    [ManageSharesDB insertSharedList:items];
+    //5. Update the files with shared info of this folder
+    [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
 }
 
 
