@@ -32,6 +32,11 @@ K_PASSWORD_1 = 'passName'
 K_PASSWORD_WRONG_1 = 'pass_wrong'
 K_SELF_SIGNED_1 = True
 
+K_URL_2 = 'serverName2'
+K_USER_2 = 'userName2'
+K_PASSWORD_2 = 'passName2'
+K_SELF_SIGNED_2 = True
+
 class utility_functions():
 
     #--Common utils for Apending string in test.txt file.
