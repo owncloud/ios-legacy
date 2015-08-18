@@ -42,13 +42,17 @@
 #define optionsShownWithShareLinkEnable 3
 #define optionsShownWithShareLinkDisable 0
 
+//Date
+#define expirationDateFormat @"YYYY-MM-dd"
+
 @interface ShareMainViewController ()
 
 @property (nonatomic, strong) FileDto* sharedItem;
+@property (nonatomic, strong) OCSharedDto *updatedOCShare;
 @property (nonatomic) NSInteger optionsShownWithShareLink;
 @property (nonatomic) BOOL isShareLinkEnabled;
 @property (nonatomic) BOOL isPasswordProtectEnabled;
-@property (nonatomic) BOOL isExpirationTimeEnabled;
+@property (nonatomic) BOOL isExpirationDateEnabled;
 @property (nonatomic, strong) NSString* sharedToken;
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
@@ -70,7 +74,7 @@
         self.optionsShownWithShareLink = 0;
         self.isShareLinkEnabled = false;
         self.isPasswordProtectEnabled = false;
-        self.isExpirationTimeEnabled = false;
+        self.isExpirationDateEnabled = false;
         
     }
     
@@ -183,11 +187,9 @@
     
     [self closeDatePicker];
     
-   //TODO: Store the date and tell to the server
-  /*  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd hh:mm a"];
-    self.txtDate.text = [dateFormatter stringFromDate:datePickerView.date];*/
-
+    NSString *dateString = [self converDateInCorrectFormat:self.datePickerView.date];
+    
+    [self updateSharedLinkWithPassword:nil andExpirationDate:dateString];
     
     
 }
@@ -210,6 +212,13 @@
 {
     [self.datePickerContainerView removeGestureRecognizer:sender];
     [self closeDatePicker];
+}
+
+- (NSString *) converDateInCorrectFormat:(NSDate *) date {
+    
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setDateFormat:expirationDateFormat];
+    return [dateFormatter stringFromDate:date];
 }
 
 
@@ -254,21 +263,18 @@
             self.sharedFileOrFolder.delegate = self;
         }
         
-        OCSharedDto *ocShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
+        self.updatedOCShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
         
-        if (![ocShare.shareWith isEqualToString:@""] && ![ocShare.shareWith isEqualToString:@"NULL"]  && ocShare.shareType == shareTypeLink) {
+        if (![ self.updatedOCShare.shareWith isEqualToString:@""] && ![ self.updatedOCShare.shareWith isEqualToString:@"NULL"]  &&  self.updatedOCShare.shareType == shareTypeLink) {
             self.isPasswordProtectEnabled = true;
         }else{
             self.isPasswordProtectEnabled = false;
         }
         
-        if (ocShare.expirationDate == 0.0 || ocShare.expirationDate == nil) {
-            self.isExpirationTimeEnabled = false;
+        if ( self.updatedOCShare.expirationDate == 0.0 ||  self.updatedOCShare.expirationDate == nil) {
+            self.isExpirationDateEnabled = false;
         }else {
-            self.isExpirationTimeEnabled = true;
-            
-            NSDate *expirationTime = [NSDate dateWithTimeIntervalSince1970:ocShare.expirationDate];
-            
+            self.isExpirationDateEnabled = true;
         }
         
         
@@ -304,20 +310,18 @@
         [self showPasswordView];
     } else{
         //Remove password Protected
-        [self updateSharedLinkWithPassword:@"" andExpirationDate:@""];
-        
-        
+        [self updateSharedLinkWithPassword:@"" andExpirationDate:nil];
     }
 }
 
 
 - (void) expirationTimeSwithValueChanged:(UISwitch*) sender{
     
-    if (self.isExpirationTimeEnabled == false) {
+    if (self.isExpirationDateEnabled == false) {
         [self launchDatePicker];
     }else{
         //Remove exipration time
-        [self updateSharedLinkWithPassword:@"" andExpirationDate:@""];
+        [self updateSharedLinkWithPassword:nil andExpirationDate:@""];
     }
     
 
@@ -347,8 +351,6 @@
     }else{
         [self.sharedFileOrFolder showShareActionSheetForFile:self.sharedItem];
     }
-    
-    
 }
 
 - (void) unShareByLink {
@@ -407,7 +409,7 @@
         
         NSString* password = [alertView textFieldAtIndex:0].text;
         [self initLoading];
-        [self updateSharedLinkWithPassword:password andExpirationDate:@""];
+        [self updateSharedLinkWithPassword:password andExpirationDate:nil];
         
     }else if (buttonIndex == 0) {
         //Cancel
@@ -517,16 +519,16 @@
                 case 0:
                     shareLinkOptionCell.optionName.text = @"Set expiration time";
                     
-                    if (self.isExpirationTimeEnabled == true) {
+                    if (self.isExpirationDateEnabled == true) {
                         shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
                         shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
-                        shareLinkOptionCell.optionDetail.text = @"Date formated";
+                        shareLinkOptionCell.optionDetail.text = [self converDateInCorrectFormat:[NSDate dateWithTimeIntervalSince1970: self.updatedOCShare.expirationDate]];
                     }else{
                         shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
                         shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
                         shareLinkOptionCell.optionDetail.text = @"";
                     }
-                    [shareLinkOptionCell.optionSwith setOn:self.isExpirationTimeEnabled animated:false];
+                    [shareLinkOptionCell.optionSwith setOn:self.isExpirationDateEnabled animated:false];
                     
                     [shareLinkOptionCell.optionSwith addTarget:self action:@selector(expirationTimeSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
                     
