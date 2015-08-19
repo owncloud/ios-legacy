@@ -686,7 +686,9 @@
         }
         if (!isSamlCredentialsError) {
             
-            [self refreshSharedItemInDataBase:shareDto];
+            if (shareDto != nil) {
+               [self refreshSharedItemInDataBase:shareDto];
+            }
             
             [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
             [self endLoading];
