@@ -160,8 +160,6 @@
   
 }
 
-
-
 #pragma mark - UIActionSheetDelegate
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -179,7 +177,6 @@
             break;
     }
 }
-
 
 ///-----------------------------------
 /// @name Click on share link from file
@@ -245,14 +242,10 @@
             //Check if there are fragmens of saml in url, in this case there are a credential error
             isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
             if (isSamlCredentialsError) {
-                
                 [self endLoading];
-                
                 [self errorLogin];
-                
             }
         }
-        
         
         if (!isSamlCredentialsError) {
         
@@ -312,48 +305,10 @@
                     DLog(@"server error: %ld", (long)response.statusCode);
                     NSInteger code = response.statusCode;
                     
-                    //Select the correct msg and action for this error
-                    switch (code) {
-                            //Switch with response https
-                        case kOCErrorServerPathNotFound:
-                            [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
-                            break;
-                        case kOCErrorServerUnauthorized:
-                            [self errorLogin];
-                            break;
-                        case kOCErrorServerForbidden:
-                            [self showError:NSLocalizedString(@"error_not_permission", nil)];
-                            break;
-                        case kOCErrorServerTimeout:
-                            [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                            break;
-                        default:
-                            //Switch with API response errors
-                            switch (error.code) {
-                                    //Switch with response https
-                                case kOCErrorServerPathNotFound:
-                                    [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
-                                    break;
-                                case kOCErrorServerUnauthorized:
-                                    [self errorLogin];
-                                    break;
-                                case kOCErrorServerForbidden:
-                                    //Share whith password maybe enabled, ask for password and try to do the request again with it
-                                    [self showAlertEnterPassword];
-                                    break;
-                                case kOCErrorServerTimeout:
-                                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                                    break;
-                                default:
-                                    //Switch with API response errors
-                                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                                    break;
-                            }
-                            break;
-                    }
-                }];
+                    [self manageServerErrors:code and:error withPasswordSupport:true];
+                    
+               }];
 
-                
             }
         }
         
@@ -364,44 +319,8 @@
         DLog(@"server error: %ld", (long)response.statusCode);
         NSInteger code = response.statusCode;
         
-        //Select the correct msg and action for this error
-        switch (code) {
-                //Switch with response https
-            case kOCErrorServerPathNotFound:
-                [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
-                break;
-            case kOCErrorServerUnauthorized:
-                [self errorLogin];
-                break;
-            case kOCErrorServerForbidden:
-                [self showError:NSLocalizedString(@"error_not_permission", nil)];
-                break;
-            case kOCErrorServerTimeout:
-                [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                break;
-            default:
-                //Switch with API response errors
-                switch (error.code) {
-                        //Switch with response https
-                    case kOCErrorServerPathNotFound:
-                        [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
-                        break;
-                    case kOCErrorServerUnauthorized:
-                        [self errorLogin];
-                        break;
-                    case kOCErrorServerForbidden:
-                        [self showError:NSLocalizedString(@"error_not_permission", nil)];
-                        break;
-                    case kOCErrorServerTimeout:
-                        [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                        break;
-                    default:
-                        //Switch with API response errors
-                        [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                        break;
-                }
-                break;
-        }
+        [self manageServerErrors:code and:error withPasswordSupport:true];
+        
     }];
 }
 
@@ -434,44 +353,8 @@
                 DLog(@"error.code: %ld", (long)error.code);
                 DLog(@"server error: %ld", (long)response.statusCode);
                 NSInteger code = response.statusCode;
-                //Select the correct msg and action for this error
-                switch (code) {
-                        //Switch with response https
-                    case kOCErrorServerPathNotFound:
-                        [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
-                        break;
-                    case kOCErrorServerUnauthorized:
-                        [self errorLogin];
-                        break;
-                    case kOCErrorServerForbidden:
-                        [self showError:NSLocalizedString(@"error_not_permission", nil)];
-                        break;
-                    case kOCErrorServerTimeout:
-                        [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                        break;
-                    default:
-                        //Switch with API response errors
-                        switch (error.code) {
-                                //Switch with response https
-                            case kOCErrorServerPathNotFound:
-                                [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
-                                break;
-                            case kOCErrorServerUnauthorized:
-                                [self errorLogin];
-                                break;
-                            case kOCErrorServerForbidden:
-                                [self showError:NSLocalizedString(@"error_not_permission", nil)];
-                                break;
-                            case kOCErrorServerTimeout:
-                                [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                                break;
-                            default:
-                                //Switch with API response errors
-                                [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                                break;
-                        }
-                        break;
-                }
+                
+                [self manageServerErrors:code and:error withPasswordSupport:false];
                 
             }];
 
@@ -622,30 +505,8 @@
         DLog(@"server error: %ld", (long)response.statusCode);
         NSInteger code = response.statusCode;
         
-        //Select the correct msg and action for this error
-        switch (code) {
-            case kOCErrorServerPathNotFound:
-                [self showError:NSLocalizedString(@"file_to_unshare_not_exist", nil)];
-                break;
-            case kOCErrorServerUnauthorized:
-                [self errorLogin];
-                break;
-            case kOCErrorServerForbidden:
-                [self showError:NSLocalizedString(@"error_not_permission", nil)];
-                break;
-            case kOCErrorServerTimeout:
-                [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                break;
-            default:
-                if (error.code == kOCErrorServerPathNotFound) {
-                    [self showError:NSLocalizedString(@"file_to_unshare_not_exist", nil)];
-                } else {
-                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                }
-                
-                break;
-        }
-
+        [self manageServerErrors:code and:error withPasswordSupport:false];
+        
     }];
 
     
@@ -711,46 +572,9 @@
           DLog(@"server error: %ld", (long)response.statusCode);
           NSInteger code = response.statusCode;
           
-          //Select the correct msg and action for this error
-          switch (code) {
-                  //Switch with response https
-              case kOCErrorServerPathNotFound:
-                  [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
-                  break;
-              case kOCErrorServerUnauthorized:
-                  [self errorLogin];
-                  break;
-              case kOCErrorServerForbidden:
-                  [self showError:NSLocalizedString(@"error_not_permission", nil)];
-                  break;
-              case kOCErrorServerTimeout:
-                  [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                  break;
-              default:
-                  //Switch with API response errors
-                  switch (error.code) {
-                          //Switch with response https
-                      case kOCErrorServerPathNotFound:
-                          [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
-                          break;
-                      case kOCErrorServerUnauthorized:
-                          [self errorLogin];
-                          break;
-                      case kOCErrorServerForbidden:
-                          [self showError:NSLocalizedString(@"error_not_permission", nil)];
-                          break;
-                      case kOCErrorServerTimeout:
-                          [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                          break;
-                      default:
-                          //Switch with API response errors
-                          [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                          break;
-                  }
-                  break;
-          }
-
-      }];
+          [self manageServerErrors:code and:error withPasswordSupport:false];
+          
+    }];
 }
 
 - (void) refreshSharedItemInDataBase:(OCSharedDto *) item{
@@ -834,30 +658,61 @@
         DLog(@"server error: %ld", (long)response.statusCode);
         NSInteger code = response.statusCode;
         
-        //Select the correct msg and action for this error
-        switch (code) {
-            case kOCErrorServerPathNotFound:
-                [self showError:NSLocalizedString(@"file_to_unshare_not_exist", nil)];
-                break;
-            case kOCErrorServerUnauthorized:
-                [self errorLogin];
-                break;
-            case kOCErrorServerForbidden:
-                [self showError:NSLocalizedString(@"error_not_permission", nil)];
-                break;
-            case kOCErrorServerTimeout:
-                [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                break;
-            default:
-                if (error.code == kOCErrorServerPathNotFound) {
-                    [self showError:NSLocalizedString(@"file_to_unshare_not_exist", nil)];
-                } else {
-                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                }
-                
-                break;
-        }
+        [self manageServerErrors:code and:error withPasswordSupport:false];
+        
     }];
+}
+
+#pragma mark - Manage Error methods
+
+- (void)manageServerErrors: (NSInteger)code and:(NSError *)error withPasswordSupport:(BOOL)isPasswordSupported{
+    
+    //Select the correct msg and action for this error
+    switch (code) {
+            //Switch with response https
+        case kOCErrorServerPathNotFound:
+            [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
+            break;
+        case kOCErrorServerUnauthorized:
+            [self errorLogin];
+            break;
+        case kOCErrorServerForbidden:
+            [self showError:NSLocalizedString(@"error_not_permission", nil)];
+            break;
+        case kOCErrorServerTimeout:
+            [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+            break;
+        default:
+            //Switch with API response errors
+            switch (error.code) {
+                    //Switch with response https
+                case kOCErrorServerPathNotFound:
+                    [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
+                    break;
+                case kOCErrorServerUnauthorized:
+                    [self errorLogin];
+                    break;
+                case kOCErrorServerForbidden:
+                    
+                    if (isPasswordSupported == true) {
+                        //Share whith password maybe enabled, ask for password and try to do the request again with it
+                        [self showAlertEnterPassword];
+                    }else{
+                        [self showError:NSLocalizedString(@"error_not_permission", nil)];
+                    }
+                    
+                    break;
+                case kOCErrorServerTimeout:
+                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                    break;
+                default:
+                    //Switch with API response errors
+                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                    break;
+            }
+            break;
+    }
+    
 }
 
 /*
