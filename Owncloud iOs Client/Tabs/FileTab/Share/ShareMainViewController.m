@@ -131,6 +131,7 @@
     static CGFloat datePickerViewYPosition = 40.0;
     static CGFloat datePickerViewHeight = 300.0;
     static CGFloat pickerViewHeight = 250.0;
+    static CGFloat deltaSpacerWidthiPad = 150.0;
  
     
     self.datePickerContainerView = [[UIView alloc] initWithFrame:self.view.frame];
@@ -143,14 +144,25 @@
     recognizer.cancelsTouchesInView = true;
     [self.datePickerContainerView addGestureRecognizer:recognizer];
     
+
+  
     UIToolbar *controlToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, controlToolBarHeight)];
     [controlToolbar sizeToFit];
     
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dateSelected:)];
     
-    UIBarButtonItem *spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *spacer;
+    
+    if (IS_IPHONE) {
+         spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    }else{
+         spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+         CGFloat width = self.view.frame.size.width - deltaSpacerWidthiPad;
+         spacer.width = width;
+    }
     
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(closeDatePicker)];
+    
 
     [controlToolbar setItems:[NSArray arrayWithObjects:cancelButton, spacer, doneButton, nil] animated:NO];
     
