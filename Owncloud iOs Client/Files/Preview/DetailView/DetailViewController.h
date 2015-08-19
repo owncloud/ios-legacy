@@ -138,7 +138,6 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 //Full Screen Support
 @property(nonatomic) BOOL hideMaster;
-@property(nonatomic) BOOL isSecondResizeOrMore;
 
 
 ///-----------------------------------
