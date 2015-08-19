@@ -271,7 +271,7 @@
             self.isPasswordProtectEnabled = false;
         }
         
-        if ( self.updatedOCShare.expirationDate == 0.0 ||  self.updatedOCShare.expirationDate == nil) {
+        if (self.updatedOCShare.expirationDate == 0.0) {
             self.isExpirationDateEnabled = false;
         }else {
             self.isExpirationDateEnabled = true;
