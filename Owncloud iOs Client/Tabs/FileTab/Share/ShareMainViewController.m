@@ -23,6 +23,10 @@
 
 //tools
 #define standardDelay 0.2
+#define animationsDelay 0.5
+
+//Xib
+#define shareMainViewNibName @"ShareViewController"
 
 //Cells and Sections
 #define shareFileCellIdentifier @"ShareFileIdentifier"
@@ -68,7 +72,7 @@
 
 - (id) initWithFileDto:(FileDto *)fileDto {
     
-    if ((self = [super initWithNibName:@"ShareViewController" bundle:nil]))
+    if ((self = [super initWithNibName:shareMainViewNibName bundle:nil]))
     {
         self.sharedItem = fileDto;
         self.optionsShownWithShareLink = 0;
@@ -84,7 +88,6 @@
 - (void) viewDidLoad{
     [super viewDidLoad];
     
-    
 }
 
 - (void) viewWillAppear:(BOOL)animated{
@@ -97,7 +100,6 @@
 - (void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    
 }
 
 #pragma mark - Accessory alert views
@@ -108,7 +110,7 @@
         self.passwordView = nil;
     }
     
-    self.passwordView = [[UIAlertView alloc]initWithTitle:@"Enter password" message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
+    self.passwordView = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil) message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
     
     self.passwordView.alertViewStyle = UIAlertViewStylePlainTextInput;
     [self.passwordView textFieldAtIndex:0].delegate = self;
@@ -125,6 +127,12 @@
 
 - (void) launchDatePicker{
     
+    static CGFloat controlToolBarHeight = 44.0;
+    static CGFloat datePickerViewYPosition = 40.0;
+    static CGFloat datePickerViewHeight = 300.0;
+    static CGFloat pickerViewHeight = 250.0;
+ 
+    
     self.datePickerContainerView = [[UIView alloc] initWithFrame:self.view.frame];
     [self.datePickerContainerView setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:self.datePickerContainerView];
@@ -135,7 +143,7 @@
     recognizer.cancelsTouchesInView = true;
     [self.datePickerContainerView addGestureRecognizer:recognizer];
     
-    UIToolbar *controlToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    UIToolbar *controlToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, controlToolBarHeight)];
     [controlToolbar sizeToFit];
     
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dateSelected:)];
@@ -152,7 +160,7 @@
         self.datePickerView.minimumDate = [NSDate date];
     }
     
-    [self.datePickerView setFrame:CGRectMake(0, 40, self.view.frame.size.width,300)];
+    [self.datePickerView setFrame:CGRectMake(0, datePickerViewYPosition, self.view.frame.size.width, datePickerViewHeight)];
     
     if (!self.pickerView) {
         self.pickerView = [[UIView alloc] initWithFrame:self.datePickerView.frame];
@@ -164,20 +172,21 @@
     [self.pickerView setFrame:CGRectMake(0,
                                          self.view.frame.size.height,
                                          self.view.frame.size.width,
-                                         250)];
-    [self.pickerView setBackgroundColor:[UIColor whiteColor]];
-    [self.pickerView addSubview:controlToolbar];
-    [self.pickerView addSubview:self.datePickerView];
-    [self.datePickerView setHidden:NO];
+                                         pickerViewHeight)];
+    
+    [self.pickerView setBackgroundColor: [UIColor whiteColor]];
+    [self.pickerView addSubview: controlToolbar];
+    [self.pickerView addSubview: self.datePickerView];
+    [self.datePickerView setHidden: false];
     
     [self.datePickerContainerView addSubview:self.pickerView];
     
-    [UIView animateWithDuration:0.5f
+    [UIView animateWithDuration:animationsDelay
                      animations:^{
                          [self.pickerView setFrame:CGRectMake(0,
                                                               self.view.frame.size.height - self.pickerView.frame.size.height,
                                                               self.view.frame.size.width,
-                                                              250)];
+                                                              pickerViewHeight)];
                      }
                      completion:nil];
     
@@ -195,7 +204,7 @@
 }
 
 - (void) closeDatePicker {
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:animationsDelay animations:^{
         [self.pickerView setFrame:CGRectMake(self.pickerView.frame.origin.x,
                                          self.view.frame.size.height,
                                          self.pickerView.frame.size.width,
@@ -226,14 +235,15 @@
 
 - (void) setStyleView {
     
-    self.navigationItem.title = @"Share";
+    self.navigationItem.title = NSLocalizedString(@"share_link_long_press", nil);
     [self setBarButtonStyle];
     
 }
 
 - (void) setBarButtonStyle {
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc]initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(didSelectCloseView)];
-    self.navigationItem.leftBarButtonItem = barButton;
+
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"UINavigationBarBackIndicatorDefaultWhite"] style:UIBarButtonItemStylePlain target:self action:@selector(didSelectCloseView)];
+    self.navigationItem.leftBarButtonItem = backButton;
     
 }
 

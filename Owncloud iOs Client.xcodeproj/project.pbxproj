@@ -631,6 +631,8 @@
 		EA4B8E1C1AC92DCC004F335E /* KKPasscodeLock.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968817F599060033B3C1 /* KKPasscodeLock.m */; };
 		EA4B8E1D1AC92DCF004F335E /* KKPasscodeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968A17F599060033B3C1 /* KKPasscodeSettingsViewController.m */; };
 		EA4B8E1E1AC92FCC004F335E /* KKPasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968C17F599060033B3C1 /* KKPasscodeViewController.m */; };
+		EA4EEF351B84935C0063E33F /* UINavigationBarBackIndicatorDefaultWhite.png in Resources */ = {isa = PBXBuildFile; fileRef = EA4EEF331B84935C0063E33F /* UINavigationBarBackIndicatorDefaultWhite.png */; };
+		EA4EEF361B84935C0063E33F /* UINavigationBarBackIndicatorDefaultWhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA4EEF341B84935C0063E33F /* UINavigationBarBackIndicatorDefaultWhite@2x.png */; };
 		EA5C6F7F1B70BA880088071B /* ShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA5C6F7D1B70BA880088071B /* ShareViewController.xib */; };
 		EA5C6F841B70BEE30088071B /* ShareFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C6F821B70BEE20088071B /* ShareFileCell.swift */; };
 		EA5C6F851B70BEE30088071B /* ShareFileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA5C6F831B70BEE30088071B /* ShareFileCell.xib */; };
@@ -1559,6 +1561,8 @@
 		EA49146E1AC0346100BECF0B /* TTOpenInAppActivity8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TTOpenInAppActivity8.png; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8.png; sourceTree = "<group>"; };
 		EA49146F1AC0346100BECF0B /* TTOpenInAppActivity8@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity8@2x.png"; path = "ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8@2x.png"; sourceTree = "<group>"; };
 		EA4914701AC0346100BECF0B /* TTOpenInAppActivity8@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity8@3x.png"; path = "ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8@3x.png"; sourceTree = "<group>"; };
+		EA4EEF331B84935C0063E33F /* UINavigationBarBackIndicatorDefaultWhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = UINavigationBarBackIndicatorDefaultWhite.png; path = Navigation/UINavigationBarBackIndicatorDefaultWhite.png; sourceTree = "<group>"; };
+		EA4EEF341B84935C0063E33F /* UINavigationBarBackIndicatorDefaultWhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "UINavigationBarBackIndicatorDefaultWhite@2x.png"; path = "Navigation/UINavigationBarBackIndicatorDefaultWhite@2x.png"; sourceTree = "<group>"; };
 		EA5C6F7D1B70BA880088071B /* ShareViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareViewController.xib; path = Tabs/FileTab/Share/ShareViewController.xib; sourceTree = "<group>"; };
 		EA5C6F821B70BEE20088071B /* ShareFileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareFileCell.swift; path = Tabs/FileTab/Share/Cells/ShareFileCell.swift; sourceTree = "<group>"; };
 		EA5C6F831B70BEE30088071B /* ShareFileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareFileCell.xib; path = Tabs/FileTab/Share/Cells/ShareFileCell.xib; sourceTree = "<group>"; };
@@ -2398,6 +2402,7 @@
 		1487F1B7177C35AA004A1A5A /* ImageSystem */ = {
 			isa = PBXGroup;
 			children = (
+				EA4EEF311B8493460063E33F /* Navigation */,
 				1487F1B8177C35AA004A1A5A /* Account */,
 				1487F1BD177C35AA004A1A5A /* Arrow */,
 				1487F1CB177C35AA004A1A5A /* ExternalLibreries */,
@@ -3043,6 +3048,15 @@
 			name = TTOpenInAppActivity;
 			sourceTree = "<group>";
 		};
+		EA4EEF311B8493460063E33F /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				EA4EEF331B84935C0063E33F /* UINavigationBarBackIndicatorDefaultWhite.png */,
+				EA4EEF341B84935C0063E33F /* UINavigationBarBackIndicatorDefaultWhite@2x.png */,
+			);
+			name = Navigation;
+			sourceTree = "<group>";
+		};
 		EA59963F160874FC00173E09 /* DetailView */ = {
 			isa = PBXGroup;
 			children = (
@@ -3593,6 +3607,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				59DA496619F7A4B600DD3619 /* Owncloud iOs Client.entitlements in Resources */,
+				EA4EEF351B84935C0063E33F /* UINavigationBarBackIndicatorDefaultWhite.png in Resources */,
 				14A4796A18EC6FDF003500BA /* FileFavoriteIcon.png in Resources */,
 				137E485E15B6A3A400628EB1 /* DB.sqlite in Resources */,
 				40AB1F5B1A12392E003E7397 /* cancel_download_white@3x.png in Resources */,
@@ -3866,6 +3881,7 @@
 				593D531E17BF701800191846 /* SSOViewController.xib in Resources */,
 				EA4914731AC0346100BECF0B /* TTOpenInAppActivity@2x.png in Resources */,
 				13AA2C9B17D8AFCB00DB5E11 /* tabBar.png in Resources */,
+				EA4EEF361B84935C0063E33F /* UINavigationBarBackIndicatorDefaultWhite@2x.png in Resources */,
 				149D98C1195AAD54005E0C73 /* fileSharedByLink.png in Resources */,
 				13AA2C9C17D8AFCB00DB5E11 /* tabBar@2x.png in Resources */,
 				149D98C2195AAD54005E0C73 /* fileSharedByLink@2x.png in Resources */,
