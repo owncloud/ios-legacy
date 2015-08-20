@@ -481,7 +481,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             if (self.documentPDF != nil) {
                 self.readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:self.documentPDF];
                 
-                if (([[[UIDevice currentDevice] systemVersion] floatValue] < 9)) {
+                if (self.singleTap) {
                     [self.readerPDFViewController.view addGestureRecognizer:self.singleTap];
                 }
           
@@ -503,7 +503,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             self.officeView.delegate = self;
             [self.officeView openOfficeFileWithPath:self.file.localFolder andFileName:self.file.fileName];
             
-            if (([[[UIDevice currentDevice] systemVersion] floatValue] < 9)) {
+            if (self.singleTap) {
                 [self.officeView.webView addGestureRecognizer:self.singleTap];
             }
             
@@ -871,7 +871,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         //Run the gallery
         [_galleryView initGallery];
         
-        if (([[[UIDevice currentDevice] systemVersion] floatValue] < 9)) {
+        if (self.singleTap) {
             [_galleryView.scrollView addGestureRecognizer:self.singleTap];
         }
         
@@ -1221,7 +1221,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             [self.moviePlayer.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
             [self.moviePlayer.moviePlayer prepareToPlay];
             
-            if (([[[UIDevice currentDevice] systemVersion] floatValue] < 9)) {
+            if (self.singleTap) {
                 [self.moviePlayer.view addGestureRecognizer:self.singleTap];
             }
             
@@ -1231,7 +1231,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
         } else {
             
-            if (([[[UIDevice currentDevice] systemVersion] floatValue] < 9)) {
+            if (self.singleTap) {
                 [self.moviePlayer.view addGestureRecognizer:self.singleTap];
             }
             
