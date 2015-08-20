@@ -2625,33 +2625,6 @@
         [app.splitViewController presentViewController:nav animated:YES completion:nil];
     }
     
-
-   /* if (self.mShareFileOrFolder) {
-        self.mShareFileOrFolder = nil;
-    }
-    
-    self.mShareFileOrFolder = [ShareFileOrFolder new];
-    self.mShareFileOrFolder.delegate = self;
-    
-    //If is iPad get the selected cell
-    if (!IS_IPHONE) {
-        
-        self.mShareFileOrFolder.viewToShow = self.splitViewController.view;
-        
-        //We use _selectedIndexPath to identify the position where we have to put the arrow of the popover
-        if (_selectedIndexPath) {
-            UITableViewCell *cell;
-            cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
-            self.mShareFileOrFolder.cellFrame = cell.frame;
-            self.mShareFileOrFolder.parentView = _tableView;
-            self.mShareFileOrFolder.isTheParentViewACell = YES;
-        }
-    } else {
-        
-        self.mShareFileOrFolder.viewToShow=self.tabBarController.view;
-    }
-    
-    [self.mShareFileOrFolder showShareActionSheetForFile:_selectedFileDto];*/
 }
 
 
