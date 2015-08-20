@@ -232,7 +232,7 @@
     
      __block OCSharedDto *blockShareDto = _shareDto;
     
-    [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:_shareDto.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared, OCSharedDto *shareDto) {
+    [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:_shareDto.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared, id shareObjc) {
         
         BOOL isSamlCredentialsError=NO;
         
@@ -507,14 +507,11 @@
         [self manageServerErrors:code and:error withPasswordSupport:false];
         
     }];
-
-    
 }
 
 - (void) updateLocalShareLink:(OCSharedDto *)ocShare{
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
     
     //Set the right credentials
     if (k_is_sso_active) {
@@ -526,8 +523,9 @@
     }
     
     
-    [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:ocShare.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared, OCSharedDto *shareDto) {
+    [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:ocShare.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared, id sharedObjc) {
         
+        OCSharedDto *shareDto = (OCSharedDto *) sharedObjc;
         
         BOOL isSamlCredentialsError=NO;
         
@@ -544,6 +542,7 @@
                 }
             }
         }
+        
         if (!isSamlCredentialsError) {
             
             if (shareDto != nil) {
