@@ -23,7 +23,6 @@
 #import "AppsActivityProvider.h"
 #import "OCErrorMsg.h"
 #import "ManageSharesDB.h"
-#import "OCSharedDto.h"
 #import "Customization.h"
 #import "FileNameUtils.h"
 #import "CheckHasShareSupport.h"
