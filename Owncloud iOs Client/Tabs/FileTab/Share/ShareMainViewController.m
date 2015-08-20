@@ -254,8 +254,8 @@
 
 - (void) setBarButtonStyle {
 
-    UIBarButtonItem *backButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"UINavigationBarBackIndicatorDefaultWhite"] style:UIBarButtonItemStylePlain target:self action:@selector(didSelectCloseView)];
-    self.navigationItem.leftBarButtonItem = backButton;
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(didSelectCloseView)];
+    self.navigationItem.rightBarButtonItem = doneButton;
     
 }
 
