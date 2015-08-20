@@ -27,6 +27,7 @@
 #import "FileNameUtils.h"
 #import "CheckHasShareSupport.h"
 #import "UtilsUrls.h"
+#import "OCSharedDto.h"
 
 
 @implementation ShareFileOrFolder

@@ -15,7 +15,8 @@
 
 #import <Foundation/Foundation.h>
 #import "FileDto.h"
-#import "OCSharedDto.h"
+
+@class OCSharedDto;
 
 @protocol ShareFileOrFolderDelegate <NSObject>
 
