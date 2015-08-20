@@ -5,4 +5,4 @@ xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
 
 before_install:
- - brew update
+ - brew update; brew update
