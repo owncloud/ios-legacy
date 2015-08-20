@@ -20,9 +20,9 @@
 @protocol ShareFileOrFolderDelegate <NSObject>
 
 @optional
-- (void)initLoading;
-- (void)endLoading;
-- (void)errorLogin;
+- (void) initLoading;
+- (void) endLoading;
+- (void) errorLogin;
 - (void) presentShareOptions:(UIActivityViewController*) activityView;
 - (void) finishUnShare;
 - (void) finishUpdateShare;
