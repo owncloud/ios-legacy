@@ -5,6 +5,4 @@ xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
 
 before_install:
- - git submodule init
- - git submodule update
- - brew update; brew update
+ - brew update
