@@ -17,7 +17,7 @@
 #import "FileDto.h"
 #import "OCSharedDto.h"
 
-@protocol ShareFileOrFolderDelegate
+@protocol ShareFileOrFolderDelegate <NSObject>
 
 @optional
 - (void) initLoading;
