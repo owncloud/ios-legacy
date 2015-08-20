@@ -523,7 +523,7 @@
                 shareLinkButtonCell = (ShareLinkButtonCell *)[topLevelObjects objectAtIndex:0];
             }
             
-            shareLinkButtonCell.titleButton.text = @"Get Share Link";
+            shareLinkButtonCell.titleButton.text = NSLocalizedString(@"get_share_link", nil);
             
             cell = shareLinkButtonCell;
             
@@ -539,7 +539,7 @@
             
             switch (indexPath.row) {
                 case 0:
-                    shareLinkOptionCell.optionName.text = @"Set expiration time";
+                    shareLinkOptionCell.optionName.text = NSLocalizedString(@"set_expiration_time", nil);
                     
                     if (self.isExpirationDateEnabled == true) {
                         shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
@@ -556,7 +556,7 @@
                     
                     break;
                 case 1:
-                    shareLinkOptionCell.optionName.text = @"Password protect";
+                    shareLinkOptionCell.optionName.text = NSLocalizedString(@"password_protect", nil);
                     
                     if (self.isPasswordProtectEnabled == true) {
                         shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
@@ -621,7 +621,7 @@
             shareLinkHeaderCell = (ShareLinkHeaderCell *)[topLevelObjects objectAtIndex:0];
         }
         
-         shareLinkHeaderCell.titleSection.text = @"Share Link";
+         shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"share_link_long_press", nil);
         [shareLinkHeaderCell.switchSection setOn:self.isShareLinkEnabled animated:false];
         [shareLinkHeaderCell.switchSection addTarget:self action:@selector(sharedLinkSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
         
