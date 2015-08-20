@@ -43,7 +43,6 @@
 #import "ManageFilesDB.h"
 #import "OCNavigationController.h"
 #import "OCCommunication.h"
-#import "ShareFileOrFolder.h"
 #import "OCSharedDto.h"
 #import "ManageSharesDB.h"
 #import "InfoFileUtils.h"
@@ -633,17 +632,6 @@
     //Avoid the overwrite message
     if(_moveFile.overWritteOption) {
         [_moveFile.overWritteOption.overwriteOptionsActionSheet dismissWithClickedButtonIndex:0 animated:NO];
-    }
-    
-    //Close the openWith option in FileViewController
-    if (!IS_IPHONE && self.mShareFileOrFolder && self.mShareFileOrFolder.activityPopoverController) {
-        [self.mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
-    }
-    
-    //Close the shareActionSheet in order to not have errors after rotate and click
-    if (!IS_IPHONE && self.mShareFileOrFolder) {
-
-        [self.mShareFileOrFolder.shareActionSheet dismissWithClickedButtonIndex:self.mShareFileOrFolder.shareActionSheet.cancelButtonIndex animated:NO];
     }
     
     //Close the _moreActionSheet in order to not have errors after rotate and click

@@ -959,10 +959,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_presentFilesViewController.folderView) {
         [_presentFilesViewController.folderView dismissWithClickedButtonIndex:0 animated:NO];
     }
-    //Close the pop-up of share link with password
-    if (_presentFilesViewController.mShareFileOrFolder.shareProtectedAlertView) {
-        [_presentFilesViewController.mShareFileOrFolder.shareProtectedAlertView dismissWithClickedButtonIndex:0 animated:NO];
-    }
 
 }
 
@@ -1678,10 +1674,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_settingsViewController.vc) {
         [_settingsViewController.vc dismissViewControllerAnimated:NO completion:nil];
     }
-    //Close the openWith option in FileViewController
-    if (_presentFilesViewController.mShareFileOrFolder) {
-        [_presentFilesViewController.mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
-    }
+    
 }
 
 

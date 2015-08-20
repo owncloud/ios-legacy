@@ -15,7 +15,6 @@
 
 #import "FilePreviewViewController.h"
 #import "FileDto.h"
-
 #import "MBProgressHUD.h"
 #import "UIColor+Constants.h"
 #import "constants.h"
@@ -31,7 +30,6 @@
 #import "UploadUtils.h"
 #import "CWStatusBarNotification.h"
 #import "UIAlertView+Blocks.h"
-#import "ShareFileOrFolder.h"
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
 #import "ManageFavorites.h"

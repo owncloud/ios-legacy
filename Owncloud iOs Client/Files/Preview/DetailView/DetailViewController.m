@@ -30,7 +30,6 @@
 #import "UploadUtils.h"
 #import "OCNavigationController.h"
 #import "UIAlertView+Blocks.h"
-#import "ShareFileOrFolder.h"
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
 #import "ManageFavorites.h"
@@ -746,7 +745,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     _titleLabel.text = @"";
     
     [_openWith.activityPopoverController dismissPopoverAnimated:YES];
-    [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:YES];
     
     [self removeThePreviousViews];
     
@@ -917,10 +915,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     }
     
     if (canOpenButton) {
-        
-        if ([_mShareFileOrFolder.activityPopoverController isPopoverVisible]) {
-            [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:YES];
-        }
         
         CheckAccessToServer *mCheckAccessToServer = [[CheckAccessToServer alloc] init];
         
@@ -1630,10 +1624,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     if (self.readerPDFViewController && self.isSizeChanging == NO) {
         [self.readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    }
-    
-    if (_mShareFileOrFolder && _mShareFileOrFolder.activityPopoverController) {
-        [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
     }
     
     if (_openWith) {

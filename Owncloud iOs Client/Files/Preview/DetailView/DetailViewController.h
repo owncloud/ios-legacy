@@ -23,7 +23,6 @@
 #import "GalleryView.h"
 #import "OCToolBar.h"
 #import "CWStatusBarNotification.h"
-#import "ShareFileOrFolder.h"
 #import "ManageFavorites.h"
 
 @class ReaderDocument;
@@ -44,7 +43,7 @@ extern NSString * IpadCleanPreviewNotification;
 extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, ShareFileOrFolderDelegate, UIAlertViewDelegate, ManageFavoritesDelegate, UIGestureRecognizerDelegate> {
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, UIAlertViewDelegate, ManageFavoritesDelegate, UIGestureRecognizerDelegate> {
     
     //Bar buttons
     IBOutlet UIBarButtonItem *_spaceBar;
@@ -96,7 +95,6 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 //Features objects
 @property (nonatomic, strong) OpenWith *openWith;
 @property (nonatomic, strong) DeleteFile *mDeleteFile;
-@property(nonatomic, strong) ShareFileOrFolder *mShareFileOrFolder;
 
 //Owncloud preview objects
 @property (nonatomic, strong) OfficeFileView *officeView;
