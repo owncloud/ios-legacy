@@ -39,6 +39,7 @@
 #import "ReaderDocument.h"
 #import "ReaderViewController.h"
 #import "OCSplitViewController.h"
+#import "ShareMainViewController.h"
 
 
 NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
@@ -962,13 +963,18 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [_openWith.activityPopoverController dismissPopoverAnimated:YES];
     }
     
-    _mShareFileOrFolder = [ShareFileOrFolder new];
-    _mShareFileOrFolder.delegate = self;
-    _mShareFileOrFolder.viewToShow = self.splitViewController.view;
-    _mShareFileOrFolder.parentButton = _shareLinkButtonBar;
+    DLog(@"Share Link Option");
+    ShareMainViewController *share = [[ShareMainViewController alloc] initWithFileDto:self.file];
     
-    _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
-    [_mShareFileOrFolder showShareActionSheetForFile:_file];
+    OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
+    
+    if (IS_IPHONE) {
+        [self presentViewController:nav animated:YES completion:nil];
+    } else {
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:nav animated:YES completion:nil];
+    }
 }
 
 
