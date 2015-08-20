@@ -713,7 +713,7 @@
         NSIndexPath* indexPath = [NSIndexPath indexPathForRow:2 inSection:1];
         UITableViewCell* cell = [self.shareTableView cellForRowAtIndexPath:indexPath];
         
-        [activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareTableView permittedArrowDirections:UIPopoverArrowDirectionUp animated:true];
+        [activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareTableView permittedArrowDirections:UIPopoverArrowDirectionAny animated:true];
     }
     
 }
