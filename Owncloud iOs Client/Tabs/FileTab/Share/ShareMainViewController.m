@@ -330,7 +330,6 @@
 
 - (void) passwordProtectedSwithValueChanged:(UISwitch*) sender{
     
-    
     if (self.isPasswordProtectEnabled == false) {
         //Update with password protected
         [self showPasswordView];
@@ -340,7 +339,6 @@
     }
 }
 
-
 - (void) expirationTimeSwithValueChanged:(UISwitch*) sender{
     
     if (self.isExpirationDateEnabled == false) {
@@ -349,8 +347,6 @@
         //Remove exipration time
         [self updateSharedLinkWithPassword:nil andExpirationDate:@""];
     }
-    
-
 }
 
 #pragma mark - Actions with ShareFileOrFolder class
@@ -692,13 +688,23 @@
     
 }
 
-- (void) finishUnShare {
+- (void) finishShareWithStatus:(BOOL)successful {
     
-    [self performSelector:@selector(reloadView) withObject:nil afterDelay:standardDelay];
+    [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
     
 }
 
-- (void) finishUpdateShare {
+- (void) finishUnShareWithStatus:(BOOL)successful {
+    
+    if (successful == true) {
+        [ManageFilesDB updateShareFileSource:0 forThisFile:self.sharedItem.idFile ofThisUserId:APP_DELEGATE.activeUser.idUser];
+    }
+    
+    [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
+    
+}
+
+- (void) finishUpdateShareWithStatus:(BOOL)successful {
     
     [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
     

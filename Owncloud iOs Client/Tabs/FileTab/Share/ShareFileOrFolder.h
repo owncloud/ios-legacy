@@ -25,8 +25,9 @@
 - (void) endLoading;
 - (void) errorLogin;
 - (void) presentShareOptions:(UIActivityViewController*) activityView;
-- (void) finishUnShare;
-- (void) finishUpdateShare;
+- (void) finishUnShareWithStatus:(BOOL)successful;
+- (void) finishShareWithStatus:(BOOL)successful;
+- (void) finishUpdateShareWithStatus:(BOOL)successful;
 @end
 
 

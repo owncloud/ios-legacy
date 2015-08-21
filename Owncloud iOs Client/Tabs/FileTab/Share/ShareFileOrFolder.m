@@ -244,6 +244,10 @@
             if (isSamlCredentialsError) {
                 [self endLoading];
                 [self errorLogin];
+                
+                if([self.delegate respondsToSelector:@selector(finishShareWithStatus:)]) {
+                    [self.delegate finishShareWithStatus:false];
+                }
             }
         }
         
@@ -307,6 +311,10 @@
                     
                     [self manageServerErrors:code and:error withPasswordSupport:true];
                     
+                    if([self.delegate respondsToSelector:@selector(finishShareWithStatus:)]) {
+                        [self.delegate finishShareWithStatus:false];
+                    }
+                    
                }];
 
             }
@@ -320,6 +328,10 @@
         NSInteger code = response.statusCode;
         
         [self manageServerErrors:code and:error withPasswordSupport:true];
+        
+        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:)]) {
+            [self.delegate finishShareWithStatus:false];
+        }
         
     }];
 }
@@ -486,8 +498,8 @@
                 [self endLoading];
                 [self errorLogin];
                 
-                if([self.delegate respondsToSelector:@selector(finishUpdateShare)]) {
-                    [self.delegate finishUpdateShare];
+                if([self.delegate respondsToSelector:@selector(finishUpdateShareWithStatus:)]) {
+                    [self.delegate finishUpdateShareWithStatus:false];
                 } 
             }
         }
@@ -506,6 +518,10 @@
         NSInteger code = response.statusCode;
         
         [self manageServerErrors:code and:error withPasswordSupport:false];
+        
+        if([self.delegate respondsToSelector:@selector(finishUpdateShareWithStatus:)]) {
+            [self.delegate finishUpdateShareWithStatus:false];
+        }
         
     }];
 }
@@ -538,8 +554,8 @@
                 [self endLoading];
                 [self errorLogin];
                 
-                if([self.delegate respondsToSelector:@selector(finishUpdateShare)]) {
-                    [self.delegate finishUpdateShare];
+                if([self.delegate respondsToSelector:@selector(finishUpdateShareWithStatus:)]) {
+                    [self.delegate finishUpdateShareWithStatus:false];
                 }
             }
         }
@@ -553,8 +569,8 @@
             [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
             [self endLoading];
             
-            if([self.delegate respondsToSelector:@selector(finishUpdateShare)]) {
-                [self.delegate finishUpdateShare];
+            if([self.delegate respondsToSelector:@selector(finishUpdateShareWithStatus:)]) {
+                [self.delegate finishUpdateShareWithStatus:true];
             }
             
         }
@@ -563,27 +579,27 @@
           
           [self endLoading];
           
-          if([self.delegate respondsToSelector:@selector(finishUpdateShare)]) {
-              [self.delegate finishUpdateShare];
-          }
-          
           DLog(@"error.code: %ld", (long)error.code);
           DLog(@"server error: %ld", (long)response.statusCode);
           NSInteger code = response.statusCode;
           
           [self manageServerErrors:code and:error withPasswordSupport:false];
           
+          if([self.delegate respondsToSelector:@selector(finishUpdateShareWithStatus:)]) {
+              [self.delegate finishUpdateShareWithStatus:false];
+          }
+          
     }];
 }
 
-- (void) refreshSharedItemInDataBase:(OCSharedDto *) item{
+- (void) refreshSharedItemInDataBase:(OCSharedDto *) item {
     
     NSArray* items = [NSArray arrayWithObject:item];
     
     [ManageSharesDB deleteLSharedByList:items];
-    //4. We add the new shared on the share list
+
     [ManageSharesDB insertSharedList:items];
-    //5. Update the files with shared info of this folder
+
     [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
 }
 
@@ -632,20 +648,20 @@
                 [self endLoading];
                 [self errorLogin];
                 
-                if([self.delegate respondsToSelector:@selector(finishUnShare)]) {
-                    [self.delegate finishUnShare];
+                if([self.delegate respondsToSelector:@selector(finishUnShareWithStatus:)]) {
+                    [self.delegate finishUnShareWithStatus:false];
                 }
-                
-                
             }
         }
         if (!isSamlCredentialsError) {
             [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+            
             [self endLoading];
             
-            if([self.delegate respondsToSelector:@selector(finishUnShare)]) {
-                [self.delegate finishUnShare];
+            if([self.delegate respondsToSelector:@selector(finishUnShareWithStatus:)]) {
+                [self.delegate finishUnShareWithStatus:true];
             }
+
         }
 
         
@@ -658,6 +674,12 @@
         NSInteger code = response.statusCode;
         
         [self manageServerErrors:code and:error withPasswordSupport:false];
+
+        
+        if([self.delegate respondsToSelector:@selector(finishUnShareWithStatus:)]) {
+            [self.delegate finishUnShareWithStatus:false];
+        }
+
         
     }];
 }
