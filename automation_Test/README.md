@@ -49,11 +49,21 @@ brew install python
 [appium]: http://appium.io/
 [homebrew]: http://brew.sh/
 
+
 Install pip and packages:
 ```
 sudo easy_install pip
 pip install nose
 pip install Appium-Python-Client
+```
+
+Install ipdb for debug
+```
+pip install ipdb
+```
+Use ipdb to create break points:
+```
+#import ipdb;ipdbs.set_trace()
 ```
 
 #Config your constants
