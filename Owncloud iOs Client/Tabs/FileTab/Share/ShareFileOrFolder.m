@@ -178,6 +178,8 @@
     }
 }
 
+#pragma mark - Share Actions
+
 ///-----------------------------------
 /// @name Click on share link from file
 ///-----------------------------------
@@ -377,42 +379,6 @@
 
 
 
-///-----------------------------------
-/// @name endLoading
-///-----------------------------------
-
-
-- (void) initLoading{
-    
-    if([self.delegate respondsToSelector:@selector(initLoading)]) {
-        [self.delegate initLoading];
-    }
-}
-
-/**
- * Method to hide the Loading view
- *
- */
-- (void) endLoading {
-    
-    //Set global loading screen global flag to NO
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    app.isLoadingVisible = NO;
-    
-    if([self.delegate respondsToSelector:@selector(endLoading)]) {
-        [self.delegate endLoading];
-    }
-}
-
-- (void) errorLogin {
-    
-    if([self.delegate respondsToSelector:@selector(errorLogin)]) {
-        [self.delegate errorLogin];
-    }
-    
-}
-
-
 
 ///-----------------------------------
 /// @name clickOnUnShare
@@ -437,22 +403,6 @@
     [self unshareTheFile:sharedByLink];
 }
 
-- (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file{
-    
-    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:file.sharedFileSource forUser:APP_DELEGATE.activeUser.idUser];
-    
-    OCSharedDto *sharedByLink;
-    
-    for (OCSharedDto *current in sharesOfFile) {
-        if (current.shareType == shareTypeLink) {
-            sharedByLink = current;
-        }
-    }
-    
-    return sharedByLink;
-
-    
-}
 
 ///-----------------------------------
 /// @name Update the share link with password protect
@@ -592,17 +542,6 @@
     }];
 }
 
-- (void) refreshSharedItemInDataBase:(OCSharedDto *) item {
-    
-    NSArray* items = [NSArray arrayWithObject:item];
-    
-    [ManageSharesDB deleteLSharedByList:items];
-
-    [ManageSharesDB insertSharedList:items];
-
-    [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
-}
-
 
 ///-----------------------------------
 /// @name Unshare the file
@@ -683,6 +622,163 @@
         
     }];
 }
+
+- (void) checkSharedStatusOfFile:(FileDto *) file {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    [self initLoading];
+    
+    //In iPad set the global variable
+    if (!IS_IPHONE) {
+        //Set global loading screen global flag to YES (only for iPad)
+        app.isLoadingVisible = YES;
+    }
+
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:APP_DELEGATE.activeUser.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:APP_DELEGATE.activeUser.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:APP_DELEGATE.activeUser.username andPassword:APP_DELEGATE.activeUser.password];
+    }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+    
+    FileDto *parentFolder = [ManageFilesDB getFileDtoByIdFile:file.fileId];
+    
+    NSString *path = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:parentFolder.filePath andUser:APP_DELEGATE.activeUser];
+    path = [path stringByAppendingString:parentFolder.fileName];
+    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [[AppDelegate sharedOCCommunication] readSharedByServer:APP_DELEGATE.activeUser.url andPath:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *listOfShared, NSString *redirectedServer) {
+        
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self endLoading];
+                [self errorLogin];
+                
+                if([self.delegate respondsToSelector:@selector(finishCheckSharedStatusOfFile:)]) {
+                    [self.delegate finishCheckSharedStatusOfFile:false];
+                }
+            }
+        }
+        
+        if (!isSamlCredentialsError) {
+            
+            NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:parentFolder.filePath andUser:APP_DELEGATE.activeUser], parentFolder.fileName]];
+            
+            //1. We remove the removed shared from the Files table of the current folder
+            [ManageFilesDB setUnShareFilesOfFolder:parentFolder];
+            //2. Delete all shared to not repeat them
+            [ManageSharesDB deleteLSharedByList:itemsToDelete];
+            //3. Delete all the items that we want to insert to not insert them twice
+            [ManageSharesDB deleteLSharedByList:listOfShared];
+            //4. We add the new shared on the share list
+            [ManageSharesDB insertSharedList:listOfShared];
+            //5. Update the files with shared info of this folder
+            [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
+            
+            [self endLoading];
+            
+            if([self.delegate respondsToSelector:@selector(finishCheckSharedStatusOfFile:)]) {
+                [self.delegate finishCheckSharedStatusOfFile:true];
+            }
+            
+        }
+
+        
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        [self endLoading];
+        
+        DLog(@"error.code: %ld", (long)error.code);
+        DLog(@"server error: %ld", (long)response.statusCode);
+        NSInteger code = response.statusCode;
+        
+        [self manageServerErrors:code and:error withPasswordSupport:false];
+        
+        
+        if([self.delegate respondsToSelector:@selector(finishCheckSharedStatusOfFile:)]) {
+            [self.delegate finishCheckSharedStatusOfFile:false];
+        }
+    }];
+    
+    
+}
+
+#pragma mark - Utils
+
+- (void) refreshSharedItemInDataBase:(OCSharedDto *) item {
+    
+    NSArray* items = [NSArray arrayWithObject:item];
+    
+    [ManageSharesDB deleteLSharedByList:items];
+    
+    [ManageSharesDB insertSharedList:items];
+    
+    [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
+}
+
+- (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file{
+    
+    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:file.sharedFileSource forUser:APP_DELEGATE.activeUser.idUser];
+    
+    OCSharedDto *sharedByLink;
+    
+    for (OCSharedDto *current in sharesOfFile) {
+        if (current.shareType == shareTypeLink) {
+            sharedByLink = current;
+        }
+    }
+    
+    return sharedByLink;
+    
+    
+}
+
+
+#pragma mark - Loading Methods
+
+///-----------------------------------
+/// @name endLoading
+///-----------------------------------
+
+
+- (void) initLoading{
+    
+    if([self.delegate respondsToSelector:@selector(initLoading)]) {
+        [self.delegate initLoading];
+    }
+}
+
+/**
+ * Method to hide the Loading view
+ *
+ */
+- (void) endLoading {
+    
+    //Set global loading screen global flag to NO
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    app.isLoadingVisible = NO;
+    
+    if([self.delegate respondsToSelector:@selector(endLoading)]) {
+        [self.delegate endLoading];
+    }
+}
+
+- (void) errorLogin {
+    
+    if([self.delegate respondsToSelector:@selector(errorLogin)]) {
+        [self.delegate errorLogin];
+    }
+    
+}
+
 
 #pragma mark - Manage Error methods
 

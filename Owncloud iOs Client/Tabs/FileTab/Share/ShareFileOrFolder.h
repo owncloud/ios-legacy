@@ -28,6 +28,7 @@
 - (void) finishUnShareWithStatus:(BOOL)successful;
 - (void) finishShareWithStatus:(BOOL)successful;
 - (void) finishUpdateShareWithStatus:(BOOL)successful;
+- (void) finishCheckSharedStatusOfFile:(BOOL)successful;
 @end
 
 
@@ -106,4 +107,11 @@
  * @param OCSharedDto -> The shared file/folder
  */
 - (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password andExpirationTime:(NSString*)expirationTime;
+
+/**
+ * Check if the file is shared in the server side. If yes, update the database with update data
+ *
+ * @param FileDto -> The file/folder object
+ */
+- (void) checkSharedStatusOfFile:(FileDto *) file;
 @end

@@ -60,9 +60,8 @@
 @property (nonatomic, strong) NSString* sharedToken;
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
-@property(nonatomic, strong) UIAlertView *passwordView;
-
-
+@property (nonatomic, strong) UIAlertView *passwordView;
+@property (nonatomic) BOOL isFirstTime;
 
 @end
 
@@ -79,6 +78,7 @@
         self.isShareLinkEnabled = false;
         self.isPasswordProtectEnabled = false;
         self.isExpirationDateEnabled = false;
+        self.isFirstTime = true;
         
     }
     
@@ -92,9 +92,15 @@
 
 - (void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
     [self setStyleView];
-    [self updateInterfaceWithShareLinkStatus];
+    
+    if (self.isFirstTime == true) {
+        [self checkSharedStatusOFile];
+        self.isFirstTime = false;
+    }else{
+       [self updateInterfaceWithShareLinkStatus];
+    }
+    
 }
 
 - (void) viewDidAppear:(BOOL)animated{
@@ -411,6 +417,20 @@
     
 }
 
+- (void) checkSharedStatusOFile {
+    
+    if (self.sharedFileOrFolder == nil) {
+        self.sharedFileOrFolder = [ShareFileOrFolder new];
+        self.sharedFileOrFolder.delegate = self;
+    }
+    
+    self.sharedFileOrFolder.parentViewController = self;
+    
+    self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
+    
+    [self.sharedFileOrFolder checkSharedStatusOfFile:self.sharedItem];
+    
+}
 
 
 #pragma mark - UITextField delegate methods
@@ -710,6 +730,12 @@
     
 }
 
+- (void) finishCheckSharedStatusOfFile:(BOOL)successful {
+    
+    [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
+    
+}
+
 - (void) presentShareOptions:(UIActivityViewController*) activityView{
     
     if (IS_IPHONE) {
@@ -727,6 +753,8 @@
     }
     
 }
+
+
 
 
 
