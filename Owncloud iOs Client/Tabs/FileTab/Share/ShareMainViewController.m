@@ -265,6 +265,8 @@
         self.optionsShownWithShareLink = optionsShownWithShareLinkEnable;
     }else{
         self.optionsShownWithShareLink = optionsShownWithShareLinkDisable;
+        self.isPasswordProtectEnabled = false;
+        self.isExpirationDateEnabled = false;
     }
     
     [self.shareTableView reloadData];
@@ -274,7 +276,7 @@
 
 - (void) updateInterfaceWithShareLinkStatus {
     
-       self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
+    self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
     
     if (self.sharedItem.sharedFileSource > 0) {
         
