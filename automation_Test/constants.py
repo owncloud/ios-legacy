@@ -37,6 +37,9 @@ K_USER_2 = 'userName2'
 K_PASSWORD_2 = 'passName2'
 K_SELF_SIGNED_2 = True
 
+#Create Folder
+K_FOLDER_NAME = 'TestFolder'
+
 class utility_functions():
 
     #--Common utils for Apending string in test.txt file.

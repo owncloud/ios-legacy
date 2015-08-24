@@ -54,6 +54,7 @@ Install pip and packages:
 sudo easy_install pip
 pip install nose
 pip install Appium-Python-Client
+pip install requests
 ```
 
 #Config your constants
