@@ -736,7 +736,7 @@
     
 }
 
-- (void) presentShareOptions:(UIActivityViewController*) activityView{
+- (void) presentShareOptions:(UIActivityViewController*) activityView withPassword:(BOOL)isPasswordSet{
     
     if (IS_IPHONE) {
         [self presentViewController:activityView animated:true completion:nil];
@@ -752,6 +752,10 @@
         [activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareTableView permittedArrowDirections:UIPopoverArrowDirectionAny animated:true];
     }
     
+    if (isPasswordSet == true) {
+        self.isPasswordProtectEnabled = true;
+        [self reloadView];
+    }
 }
 
 

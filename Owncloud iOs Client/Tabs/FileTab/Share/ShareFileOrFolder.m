@@ -29,6 +29,8 @@
 #import "UtilsUrls.h"
 #import "OCSharedDto.h"
 
+#define password_alert_view_tag 600
+
 
 @implementation ShareFileOrFolder
 
@@ -78,7 +80,7 @@
  * @param token -> NSString
  *
  */
-- (void) presentShareActionSheetForToken:(NSString *)token{
+- (void) presentShareActionSheetForToken:(NSString *)token withPassword:(BOOL) isPasswordSet{
     
     NSString *sharedLink = [NSString stringWithFormat:@"%@%@%@",APP_DELEGATE.activeUser.url,k_share_link_middle_part_url,token];
     
@@ -109,8 +111,8 @@
        UIActivityTypeSaveToCameraRoll,
        UIActivityTypePostToWeibo]];
     
-    if ([self.delegate respondsToSelector:@selector(presentShareOptions:)]){
-        [self.delegate presentShareOptions:activityView];
+    if ([self.delegate respondsToSelector:@selector(presentShareOptions:withPassword:)]){
+        [self.delegate presentShareOptions:activityView withPassword:isPasswordSet];
     }else{
         
         if (IS_IPHONE) {
@@ -260,7 +262,7 @@
                 [self endLoading];
                 
                 //Present
-                [self presentShareActionSheetForToken:blockShareDto.token];
+                [self presentShareActionSheetForToken:blockShareDto.token withPassword:false];
                 
             }else{
                 
@@ -300,7 +302,7 @@
                         [self endLoading];
                         
                         //Present
-                        [self presentShareActionSheetForToken:token];
+                        [self presentShareActionSheetForToken:token withPassword:false];
                     }
                     
                 } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
@@ -313,8 +315,11 @@
                     
                     [self manageServerErrors:code and:error withPasswordSupport:true];
                     
-                    if([self.delegate respondsToSelector:@selector(finishShareWithStatus:)]) {
-                        [self.delegate finishShareWithStatus:false];
+                    if (error.code != kOCErrorSharedAPIUploadDisabled) {
+                        
+                        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:)]) {
+                            [self.delegate finishShareWithStatus:false];
+                        }
                     }
                     
                }];
@@ -360,7 +365,7 @@
                 [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
                 
                 //Present
-                [self presentShareActionSheetForToken:token];
+                [self presentShareActionSheetForToken:token withPassword:true];
                 
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                 
@@ -369,6 +374,10 @@
                 NSInteger code = response.statusCode;
                 
                 [self manageServerErrors:code and:error withPasswordSupport:false];
+                
+                if([self.delegate respondsToSelector:@selector(finishShareWithStatus:)]) {
+                    [self.delegate finishShareWithStatus:false];
+                }
                 
             }];
 
@@ -435,6 +444,8 @@
     }
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+    
+    password = [self getPasswordEncodingWithPassword:password];
     
     [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
@@ -737,7 +748,18 @@
     }
     
     return sharedByLink;
+}
+
+- (NSString *) getPasswordEncodingWithPassword:(NSString *)password{
     
+    NSString *encodePassword = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
+                                                                                                     NULL,
+                                                                                                     (CFStringRef)password,
+                                                                                                     NULL,
+                                                                                                     (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                     kCFStringEncodingUTF8 ));
+    
+    return encodePassword;
     
 }
 
@@ -809,7 +831,7 @@
                 case kOCErrorServerUnauthorized:
                     [self errorLogin];
                     break;
-                case kOCErrorServerForbidden:
+                case kOCErrorSharedAPIUploadDisabled:
                     
                     if (isPasswordSupported == true) {
                         //Share whith password maybe enabled, ask for password and try to do the request again with it
@@ -850,7 +872,7 @@
                                                    delegate:self
                                           cancelButtonTitle:NSLocalizedString(@"cancel", nil)
                                           otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
-    _shareProtectedAlertView.tag = 600;
+    _shareProtectedAlertView.tag = password_alert_view_tag;
     _shareProtectedAlertView.alertViewStyle = UIAlertViewStyleSecureTextInput;
     [_shareProtectedAlertView show];
 }
@@ -859,7 +881,7 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     
-    if (alertView.tag == 600) {
+    if (alertView.tag == password_alert_view_tag) {
         //alert share link enter password
         if (buttonIndex != 0) {
             
@@ -869,21 +891,17 @@
             NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
             filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
             NSString *passwordText = passwordTextField.text;
-            NSString *encodePassword = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
-                                                                                                             NULL,
-                                                                                                             (CFStringRef)passwordText,
-                                                                                                             NULL,
-                                                                                                             (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                                                             kCFStringEncodingUTF8 ));
-            [self doRequestSharedLinkWithPath:filePath andPassword:encodePassword];
+            [self doRequestSharedLinkWithPath:filePath andPassword:[self getPasswordEncodingWithPassword:passwordText]];
 
+        }else{
+            [self.delegate finishShareWithStatus:false];
         }
     }
 }
 
 - (void)didPresentAlertView:(UIAlertView *)alertView{
     
-    if (alertView.tag == 600) {
+    if (alertView.tag == password_alert_view_tag) {
         if (IS_IPHONE) {
             if (!IS_PORTRAIT) {
                 UITextField *txtField = [alertView textFieldAtIndex:0];
