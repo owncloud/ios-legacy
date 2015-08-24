@@ -823,8 +823,8 @@
             //Switch with API response errors
             switch (error.code) {
                     //Switch with response https
-                case kOCErrorServerPathNotFound:
-                    [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
+                case kOCErrorSharedAPINotUpdateShare:
+                     [self showError:error.localizedDescription];
                     break;
                 case kOCErrorServerUnauthorized:
                     [self errorLogin];
@@ -835,7 +835,7 @@
                         //Share whith password maybe enabled, ask for password and try to do the request again with it
                         [self showAlertEnterPassword];
                     }else{
-                        [self showError:NSLocalizedString(@"error_not_permission", nil)];
+                        [self showError:error.localizedDescription];
                     }
                     
                     break;
