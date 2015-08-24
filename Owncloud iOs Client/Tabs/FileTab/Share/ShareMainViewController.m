@@ -175,7 +175,12 @@
     if (self.datePickerView == nil) {
         self.datePickerView = [[UIDatePicker alloc] init];
         self.datePickerView.datePickerMode = UIDatePickerModeDate;
-        self.datePickerView.minimumDate = [NSDate date];
+        
+        NSDateComponents *deltaComps = [NSDateComponents new];
+        [deltaComps setDay:1];
+        NSDate *tomorrow = [[NSCalendar currentCalendar] dateByAddingComponents:deltaComps toDate:[NSDate date] options:0];
+        
+        self.datePickerView.minimumDate = tomorrow;
     }
     
     [self.datePickerView setFrame:CGRectMake(0, datePickerViewYPosition, self.view.frame.size.width, datePickerViewHeight)];
