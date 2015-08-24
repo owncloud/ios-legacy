@@ -24,9 +24,8 @@
 - (void) initLoading;
 - (void) endLoading;
 - (void) errorLogin;
-- (void) presentShareOptions:(UIActivityViewController*) activityView withPassword:(BOOL)isPasswordSet;
 - (void) finishUnShareWithStatus:(BOOL)successful;
-- (void) finishShareWithStatus:(BOOL)successful;
+- (void) finishShareWithStatus:(BOOL)successful andWithOptions:(UIActivityViewController*) activityView;
 - (void) finishUpdateShareWithStatus:(BOOL)successful;
 - (void) finishCheckSharedStatusOfFile:(BOOL)successful;
 @end

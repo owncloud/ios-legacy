@@ -111,8 +111,8 @@
        UIActivityTypeSaveToCameraRoll,
        UIActivityTypePostToWeibo]];
     
-    if ([self.delegate respondsToSelector:@selector(presentShareOptions:withPassword:)]){
-        [self.delegate presentShareOptions:activityView withPassword:isPasswordSet];
+    if ([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]){
+        [self.delegate finishShareWithStatus:true andWithOptions:activityView];
     }else{
         
         if (IS_IPHONE) {
@@ -249,8 +249,8 @@
                 [self endLoading];
                 [self errorLogin];
                 
-                if([self.delegate respondsToSelector:@selector(finishShareWithStatus:)]) {
-                    [self.delegate finishShareWithStatus:false];
+                if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+                    [self.delegate finishShareWithStatus:false andWithOptions:nil];
                 }
             }
         }
@@ -258,8 +258,6 @@
         if (!isSamlCredentialsError) {
         
             if (isShared) {
-                
-                [self endLoading];
                 
                 //Present
                 [self presentShareActionSheetForToken:blockShareDto.token withPassword:false];
@@ -317,8 +315,8 @@
                     
                     if (error.code != kOCErrorSharedAPIUploadDisabled) {
                         
-                        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:)]) {
-                            [self.delegate finishShareWithStatus:false];
+                        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+                            [self.delegate finishShareWithStatus:false andWithOptions:nil];
                         }
                     }
                     
@@ -336,8 +334,8 @@
         
         [self manageServerErrors:code and:error withPasswordSupport:true];
         
-        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:)]) {
-            [self.delegate finishShareWithStatus:false];
+        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+            [self.delegate finishShareWithStatus:false andWithOptions:nil];
         }
         
     }];
@@ -375,8 +373,8 @@
                 
                 [self manageServerErrors:code and:error withPasswordSupport:false];
                 
-                if([self.delegate respondsToSelector:@selector(finishShareWithStatus:)]) {
-                    [self.delegate finishShareWithStatus:false];
+                if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+                    [self.delegate finishShareWithStatus:false andWithOptions:nil];
                 }
                 
             }];
@@ -894,7 +892,9 @@
             [self doRequestSharedLinkWithPath:filePath andPassword:[self getPasswordEncodingWithPassword:passwordText]];
 
         }else{
-            [self.delegate finishShareWithStatus:false];
+            if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+                [self.delegate finishShareWithStatus:false andWithOptions:nil];
+            }
         }
     }
 }

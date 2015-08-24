@@ -62,6 +62,7 @@
 @property (nonatomic, strong) MBProgressHUD* loadingView;
 @property (nonatomic, strong) UIAlertView *passwordView;
 @property (nonatomic) BOOL isFirstTime;
+@property (nonatomic, strong) UIActivityViewController *activityView;
 
 @end
 
@@ -669,7 +670,7 @@
 #pragma mark - ShareFileOrFolder Delegate Methods
 
 - (void) initLoading {
-    
+
     if (self.loadingView != nil) {
         [self.loadingView removeFromSuperview];
         self.loadingView = nil;
@@ -713,10 +714,15 @@
     
 }
 
-- (void) finishShareWithStatus:(BOOL)successful {
+- (void) finishShareWithStatus:(BOOL)successful andWithOptions:(UIActivityViewController*) activityView{
     
-    [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
-    
+    if (successful == true) {
+        self.activityView = activityView;
+         [self checkSharedStatusOFile];
+        
+    }else{
+       [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
+    }
 }
 
 - (void) finishUnShareWithStatus:(BOOL)successful {
@@ -737,19 +743,24 @@
 
 - (void) finishCheckSharedStatusOfFile:(BOOL)successful {
     
-    [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
-    
+    if (successful == true && self.activityView != nil) {
+        [self updateInterfaceWithShareLinkStatus];
+        [self performSelector:@selector(presentShareOptions) withObject:nil afterDelay:standardDelay];
+    }else{
+         [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
+    }
 }
 
-- (void) presentShareOptions:(UIActivityViewController*) activityView withPassword:(BOOL)isPasswordSet{
+
+- (void) presentShareOptions{
     
     if (IS_IPHONE) {
-        [self presentViewController:activityView animated:true completion:nil];
+        [self presentViewController:self.activityView animated:true completion:nil];
         [self performSelector:@selector(reloadView) withObject:nil afterDelay:standardDelay];
     }else{
         [self reloadView];
         
-        UIPopoverController* activityPopoverController = [[UIPopoverController alloc]initWithContentViewController:activityView];
+        UIPopoverController* activityPopoverController = [[UIPopoverController alloc]initWithContentViewController:self.activityView];
         
         NSIndexPath* indexPath = [NSIndexPath indexPathForRow:2 inSection:1];
         UITableViewCell* cell = [self.shareTableView cellForRowAtIndexPath:indexPath];
@@ -757,11 +768,10 @@
         [activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareTableView permittedArrowDirections:UIPopoverArrowDirectionAny animated:true];
     }
     
-    if (isPasswordSet == true) {
-        self.isPasswordProtectEnabled = true;
-        [self reloadView];
-    }
+    
 }
+
+
 
 
 
