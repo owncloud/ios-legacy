@@ -34,16 +34,13 @@ class createFolderTest(unittest.TestCase):
 
         actions.doFirstLoginWith(self,server_url,user,password,ssl)
         sleep(1)
-        self.driver.find_element_by_name("Add").click()
+        self.driver.find_element_by_name(filesView.addButton_name).click()
         sleep(1)
-        self.driver.find_element_by_name("New folder").click()
+        self.driver.find_element_by_name(filesView.createFolder_name).click()
         sleep(1)
-        self.driver.find_element_by_xpath("//UIAApplication[1]/UIAWindow[3]/UIAAlert[1]/UIAScrollView[1]/UIATableView[1]/UIATableCell[1]/UIATextField[1]").set_value(const.K_FOLDER_NAME)
-        self.driver.find_element_by_xpath("//UIAApplication[1]/UIAWindow[3]/UIAAlert[1]/UIACollectionView[1]/UIACollectionCell[2]").click()
+        self.driver.find_element_by_xpath(filesView.createFolderTextView_xpath).set_value(const.K_FOLDER_NAME)
+        self.driver.find_element_by_name(filesView.saveButton_name).click()
         sleep(3)
-        
-        #this works
-        #cellName = self.driver.find_element_by_xpath("//UIAApplication[1]/UIAWindow[1]/UIATableView[1]/UIATableCell[2]").get_attribute("name")
         
         cellsNumber = len(self.driver.find_element_by_xpath("//UIAApplication[1]/UIAWindow[1]/UIATableView[1]").find_elements_by_class_name('UIATableCell'))
         cellName = (self.driver.find_element_by_xpath("//UIAApplication[1]/UIAWindow[1]/UIATableView[1]").find_elements_by_class_name('UIATableCell'))[2].get_attribute("name")
@@ -59,7 +56,7 @@ class createFolderTest(unittest.TestCase):
 
         isExistByWebDav = webdavCommands.isFile(const.K_URL_1, const.K_USER_1, const.K_PASSWORD_1, const.K_FOLDER_NAME)
 
-        import ipdb; ipdb.set_trace()
+        
         sleep(3)
         
         #import ipdb; ipdb.set_trace()
