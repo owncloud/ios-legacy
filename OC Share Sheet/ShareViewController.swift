@@ -125,7 +125,8 @@ import AVFoundation
         }
 
         if (nameFolder.characters.count > 20) {
-            nameFolder =  nameFolder.substringWithRange(Range<String.Index>(start:nameFolder.startIndex, end: advance(nameFolder.startIndex, 20)))
+            let nameFolderNSString = nameFolder as NSString
+            nameFolder = nameFolderNSString.substringWithRange(NSRange(location: 0, length: 20))
             nameFolder += "..."
         }
 
