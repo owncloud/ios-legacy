@@ -21,6 +21,10 @@
 #import "Owncloud_iOs_Client-Swift.h"
 #import "FileNameUtils.h"
 #import "UIColor+Constants.h"
+#import "OCNavigationController.h"
+#import "ManageUsersDB.h"
+#import "EditAccountViewController.h"
+#import "Customization.h"
 
 //tools
 #define standardDelay 0.2
@@ -714,7 +718,17 @@
 
 - (void) errorLogin {
     
+    if (k_is_sso_active) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"session_expired", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        [alertView show];
+    }
+    else{
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error_login_message", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        [alertView show];
+    }
     
+    
+    [self showEditAccount];
 }
 
 - (void) finishShareWithStatus:(BOOL)successful andWithOptions:(UIActivityViewController*) activityView{
@@ -771,13 +785,32 @@
         [activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareTableView permittedArrowDirections:UIPopoverArrowDirectionAny animated:true];
     }
     
-    
 }
 
+#pragma mark - Error Login Methods
 
-
-
-
-
+- (void) showEditAccount {
+    
+#ifdef CONTAINER_APP
+    
+    //Edit Account
+    EditAccountViewController *resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
+    [resolveCredentialErrorViewController setBarForCancelForLoadingFromModal];
+    
+    if (IS_IPHONE) {
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:resolveCredentialErrorViewController];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
+        
+    } else {
+        
+        OCNavigationController *navController = nil;
+        navController = [[OCNavigationController alloc] initWithRootViewController:resolveCredentialErrorViewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:navController animated:YES completion:nil];
+    }
+    
+#endif
+    
+}
 
 @end
