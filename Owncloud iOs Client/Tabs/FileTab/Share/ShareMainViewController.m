@@ -531,15 +531,19 @@
             shareFileCell = (ShareFileCell *)[topLevelObjects objectAtIndex:0];
         }
         
+        NSString *itemName = [self.sharedItem.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        
         if (self.sharedItem.isDirectory == true) {
             shareFileCell.fileImage.image = [UIImage imageNamed:@"folder_icon"];
             shareFileCell.fileSize.text = @"";
+            //Remove the last character (folderName/ -> folderName)
+            shareFileCell.fileName.text = [itemName substringToIndex:[itemName length]-1];
+            
         }else{
             shareFileCell.fileImage.image = [UIImage imageNamed:[FileNameUtils getTheNameOfTheImagePreviewOfFileName:[self.sharedItem.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
             shareFileCell.fileSize.text = [NSByteCountFormatter stringFromByteCount:[NSNumber numberWithLong:self.sharedItem.size].longLongValue countStyle:NSByteCountFormatterCountStyleMemory];
+            shareFileCell.fileName.text = itemName;
         }
-        
-        shareFileCell.fileName.text = [self.sharedItem.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
         cell = shareFileCell;
         
