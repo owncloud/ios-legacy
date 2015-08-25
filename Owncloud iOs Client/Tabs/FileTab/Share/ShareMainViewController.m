@@ -20,6 +20,7 @@
 #import "OCSharedDto.h"
 #import "Owncloud_iOs_Client-Swift.h"
 #import "FileNameUtils.h"
+#import "UIColor+Constants.h"
 
 //tools
 #define standardDelay 0.2
@@ -549,6 +550,8 @@
                 shareLinkButtonCell = (ShareLinkButtonCell *)[topLevelObjects objectAtIndex:0];
             }
             
+            shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
+            shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
             shareLinkButtonCell.titleButton.text = NSLocalizedString(@"get_share_link", nil);
             
             cell = shareLinkButtonCell;
