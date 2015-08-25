@@ -15,14 +15,14 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bdN-Mu-iOS">
-                        <rect key="frame" x="10" y="7" width="240" height="18"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bdN-Mu-iOS">
+                        <rect key="frame" x="10" y="7" width="240" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KwH-fr-NKC">
-                        <rect key="frame" x="10" y="33" width="240" height="14"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KwH-fr-NKC">
+                        <rect key="frame" x="10" y="36" width="240" height="11"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -30,15 +30,25 @@
                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2eu-Ak-XXg">
                         <rect key="frame" x="260" y="10" width="51" height="31"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="31" id="uEX-Wz-ZaI"/>
-                            <constraint firstAttribute="width" constant="49" id="xR7-cU-Vkh"/>
+                            <constraint firstAttribute="height" constant="31" id="PJR-Q6-ryQ"/>
+                            <constraint firstAttribute="width" constant="49" id="bh5-DE-gNa"/>
                         </constraints>
                     </switch>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailingMargin" secondItem="2eu-Ak-XXg" secondAttribute="trailing" constant="3" id="QRX-qH-Pm9"/>
-                    <constraint firstItem="2eu-Ak-XXg" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="2" id="Qcs-UG-5b4"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="2eu-Ak-XXg" secondAttribute="bottom" constant="5" id="SNe-Yl-m7d"/>
+                    <constraint firstItem="bdN-Mu-iOS" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-1" id="0HZ-4h-Kxb"/>
+                    <constraint firstItem="2eu-Ak-XXg" firstAttribute="leading" secondItem="KwH-fr-NKC" secondAttribute="trailing" constant="10" id="Hq1-5H-wwU"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="KwH-fr-NKC" secondAttribute="bottom" constant="-1" id="MD0-dl-l5d"/>
+                    <constraint firstItem="KwH-fr-NKC" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="2" id="Raa-7f-ewS"/>
+                    <constraint firstItem="KwH-fr-NKC" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="2" id="WIB-IY-VUg"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="2eu-Ak-XXg" secondAttribute="bottom" constant="5" id="YAh-YV-sUh"/>
+                    <constraint firstItem="KwH-fr-NKC" firstAttribute="top" secondItem="bdN-Mu-iOS" secondAttribute="bottom" constant="8" id="eCh-mY-lqR"/>
+                    <constraint firstItem="2eu-Ak-XXg" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="2" id="ekH-30-M19"/>
+                    <constraint firstItem="bdN-Mu-iOS" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-1" id="hXf-qT-UJD"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="2eu-Ak-XXg" secondAttribute="trailing" constant="3" id="j12-kp-iVU"/>
+                    <constraint firstItem="bdN-Mu-iOS" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="2" id="mc5-cn-VAd"/>
+                    <constraint firstItem="bdN-Mu-iOS" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="2" id="n31-eC-n2x"/>
+                    <constraint firstItem="2eu-Ak-XXg" firstAttribute="leading" secondItem="bdN-Mu-iOS" secondAttribute="trailing" constant="10" id="yhE-dB-YPc"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>

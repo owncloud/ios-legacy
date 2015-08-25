@@ -44,7 +44,7 @@
 #define shareLinkButtonNib @"ShareLinkButtonCell"
 #define heighOfFileDetailrow 120.0
 #define heightOfShareLinkOptionRow 55.0
-#define heightOfShareLinkHeader 40.0
+#define heightOfShareLinkHeader 45.0
 #define shareTableViewSectionsNumber  2
 
 //Nº of Rows
