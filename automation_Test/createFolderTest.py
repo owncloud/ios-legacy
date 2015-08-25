@@ -40,24 +40,25 @@ class createFolderTest(unittest.TestCase):
         sleep(1)
         self.driver.find_element_by_xpath(filesView.createFolderTextView_xpath).set_value(const.K_FOLDER_NAME)
         self.driver.find_element_by_name(filesView.saveButton_name).click()
-        sleep(3)
+        sleep(30)
         
-        cellsNumber = len(self.driver.find_element_by_xpath("//UIAApplication[1]/UIAWindow[1]/UIATableView[1]").find_elements_by_class_name('UIATableCell'))
-        cellName = (self.driver.find_element_by_xpath("//UIAApplication[1]/UIAWindow[1]/UIATableView[1]").find_elements_by_class_name('UIATableCell'))[2].get_attribute("name")
-        allCells = self.driver.find_element_by_xpath("//UIAApplication[1]/UIAWindow[1]/UIATableView[1]").find_elements_by_class_name('UIATableCell')
+        cellName = (self.driver.find_element_by_xpath(filesView.filesTableView_xpath).find_elements_by_class_name(filesView.cell_class))[2].get_attribute(filesView.name_attribute)
+        allCells = self.driver.find_element_by_xpath(filesView.filesTableView_xpath).find_elements_by_class_name(filesView.cell_class)
 
         isExistByUserInterface = False
         isExistByWebDav = False
 
         for currentCell in allCells:
-            print currentCell.get_attribute("name")
-            if currentCell.get_attribute("name") == const.K_FOLDER_NAME:
+            if currentCell.get_attribute(filesView.name_attribute) == const.K_FOLDER_NAME:
                 isExistByUserInterface = True
 
         isExistByWebDav = webdavCommands.isFile(const.K_URL_1, const.K_USER_1, const.K_PASSWORD_1, const.K_FOLDER_NAME)
 
-        
-        sleep(3)
+        if isExistByWebDav and isExistByUserInterface:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+
         
         #import ipdb; ipdb.set_trace()
 
