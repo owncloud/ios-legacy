@@ -6,9 +6,13 @@
 //
 //
 
+// Under test
+#import "FileNameUtils.h"
+
+// Test support
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "FileNameUtils.h"
+#import <OCMock/OCMock.h>
 
 @interface FileNameUtilsTests : XCTestCase
 
@@ -72,6 +76,22 @@
     XCTAssertEqualObjects(expectedExtension, extension, @"The extension pdf.zip string did not match the expected extension ZIP");
 }
 
+//@interface MyClass (ExposeForTest)
+//- (void)method;
+//@end
 
+- (void)testOCMockPass {
+    id mock = [OCMockObject mockForClass:NSString.class];
+    [[[mock stub] andReturn:@"mocktest"] lowercaseString];
+    
+    NSString *returnValue = [mock lowercaseString];
+    
+    //check
+    
+//    id mock = [OCMockObject mockForClass:MyClass.class];
+//    [[mock expect] method];
+//    [mock simpleMethod];
+   
+}
 
 @end
