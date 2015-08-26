@@ -26,9 +26,9 @@ K_RST_PDF_FILE = 'Report'
 K_FILE_NOT_FOUND = 'File not found for given path %s'
 
 #Login
-K_URL_1 = 'https://docker.oc.solidgear.es:51075'
-K_USER_1 = 'javi'
-K_PASSWORD_1 = 'javi'
+K_URL_1 = 'serverName'
+K_USER_1 = 'userName'
+K_PASSWORD_1 = 'passName'
 K_PASSWORD_WRONG_1 = 'pass_wrong'
 K_SELF_SIGNED_1 = True
 
