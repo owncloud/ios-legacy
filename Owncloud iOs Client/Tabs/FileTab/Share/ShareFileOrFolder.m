@@ -80,12 +80,19 @@
  * @param token -> NSString
  *
  */
-- (void) presentShareActionSheetForToken:(NSString *)token withPassword:(BOOL) isPasswordSet{
+- (void) presentShareActionSheetForToken:(NSString *)sharedLink withPassword:(BOOL) isPasswordSet{
     
-    NSString *sharedLink = [NSString stringWithFormat:@"%@%@%@",APP_DELEGATE.activeUser.url,k_share_link_middle_part_url,token];
+    NSString *url = nil;
+    
+    if ([sharedLink hasPrefix:@"http://"] || [sharedLink hasPrefix:@"https://"])
+    {
+        url = sharedLink;
+    }else{
+        url = [NSString stringWithFormat:@"%@%@%@",APP_DELEGATE.activeUser.url,k_share_link_middle_part_url,sharedLink];
+    }
     
     UIActivityItemProvider *activityProvider = [UIActivityItemProvider new];
-    NSArray *items = @[activityProvider, sharedLink];
+    NSArray *items = @[activityProvider, url];
     
     //Adding the bottom buttons on the share view
     APCopyActivityIcon *copyLink = [[APCopyActivityIcon alloc] initWithLink:sharedLink];
@@ -192,7 +199,6 @@
  * @param isFile -> BOOL. Distinct between is fileDto or shareDto
  */
 - (void) clickOnShareLinkFromFileDto:(BOOL)isFileDto {
-    DLog(@"Click on Share Link");
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -278,7 +284,7 @@
                 [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
                 
                 //Checking the Shared files and folders
-                [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
+                [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *shareLink, NSString *redirectedServer) {
                     
                     BOOL isSamlCredentialsError=NO;
                     
@@ -300,7 +306,7 @@
                         [self endLoading];
                         
                         //Present
-                        [self presentShareActionSheetForToken:token withPassword:false];
+                        [self presentShareActionSheetForToken:shareLink withPassword:false];
                     }
                     
                 } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
