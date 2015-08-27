@@ -83,12 +83,21 @@
 - (void) presentShareActionSheetForToken:(NSString *)sharedLink withPassword:(BOOL) isPasswordSet{
     
     NSString *url = nil;
-    
+    // From ownCloud server 8.2 the url field is always set for public shares
     if ([sharedLink hasPrefix:@"http://"] || [sharedLink hasPrefix:@"https://"])
     {
         url = sharedLink;
     }else{
-        url = [NSString stringWithFormat:@"%@%@%@",APP_DELEGATE.activeUser.url,k_share_link_middle_part_url,sharedLink];
+        
+        NSString *firstNumber = [[AppDelegate sharedOCCommunication].getCurrentServerVersion substringToIndex:1];
+        
+        if (firstNumber.integerValue >= 8) {
+            // From ownCloud server version 8 on, a different share link scheme is used.
+            url = [NSString stringWithFormat:@"%@%@%@", APP_DELEGATE.activeUser.url, k_share_link_middle_part_url_after_version_8, sharedLink];
+        }else{
+            url = [NSString stringWithFormat:@"%@%@%@", APP_DELEGATE.activeUser.url, k_share_link_middle_part_url_before_version_8, sharedLink];
+        }
+   
     }
     
     UIActivityItemProvider *activityProvider = [UIActivityItemProvider new];
