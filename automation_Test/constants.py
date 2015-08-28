@@ -38,7 +38,7 @@ K_PASSWORD_2 = 'passName2'
 K_SELF_SIGNED_2 = True
 
 #Create Folder
-K_FOLDER_NAME = 'TestFolder'
+K_FOLDER_NAME = 'Test Folder Ñ'
 
 class utility_functions():
 
