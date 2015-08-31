@@ -842,6 +842,9 @@
                 case kOCErrorServerTimeout:
                     [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
                     break;
+                case kOCErrorSharedAPIWrong:
+                    [self showError:error.localizedDescription];
+                    break;
                 default:
                     //Switch with API response errors
                     [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
