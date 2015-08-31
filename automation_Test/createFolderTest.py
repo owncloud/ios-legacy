@@ -48,8 +48,11 @@ class createFolderTest(unittest.TestCase):
         isExistByUserInterface = False
         isExistByWebDav = False
 
+        import ipdb; ipdb.set_trace()
+
         for currentCell in allCells:
-            if currentCell.get_attribute(filesView.name_attribute) == const.K_FOLDER_NAME:
+
+            if const.K_FOLDER_NAME == currentCell.get_attribute(filesView.name_attribute).encode('utf-8'):
                 isExistByUserInterface = True
 
         isExistByWebDav = webdavCommands.isFile(const.K_URL_1, const.K_USER_1, const.K_PASSWORD_1, const.K_FOLDER_NAME)
@@ -58,7 +61,6 @@ class createFolderTest(unittest.TestCase):
             self.assertTrue(True)
         else:
             self.assertTrue(False)
-
         
         #import ipdb; ipdb.set_trace()
 
