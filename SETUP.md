@@ -20,6 +20,11 @@ NOTE: This will connect with our ownCloud iOS Library repository at "https://git
   - Init the library submodule: "git submodule init"
   - Update the library submodule: "git submodule update"
 
+### 3. Create your own certificates
+* Login at https://developer.apple.com/ as developer and there to to the Certificates section.
+* Create a Development Certificate for you (probably you got it one now)
+* Create a App Id 
+
 ### 3. Create pull request:
   
 NOTE: You must sign the [Contributor Agreement][1] or contribute your code under the [MIT license][2] before your changes can be accepted! See the [iOS license exception][3] for testing the ownCloud iOS app on Apple hardware.
