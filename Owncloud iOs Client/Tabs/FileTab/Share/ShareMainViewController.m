@@ -533,11 +533,15 @@
         
         NSString *itemName = [self.sharedItem.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
+        shareFileCell.fileName.hidden = self.sharedItem.isDirectory;
+        shareFileCell.fileSize.hidden = self.sharedItem.isDirectory;
+        shareFileCell.folderName.hidden = !self.sharedItem.isDirectory;
+        
         if (self.sharedItem.isDirectory == true) {
             shareFileCell.fileImage.image = [UIImage imageNamed:@"folder_icon"];
-            shareFileCell.fileSize.text = @"";
+            shareFileCell.folderName.text = @"";
             //Remove the last character (folderName/ -> folderName)
-            shareFileCell.fileName.text = [itemName substringToIndex:[itemName length]-1];
+            shareFileCell.folderName.text = [itemName substringToIndex:[itemName length]-1];
             
         }else{
             shareFileCell.fileImage.image = [UIImage imageNamed:[FileNameUtils getTheNameOfTheImagePreviewOfFileName:[self.sharedItem.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
