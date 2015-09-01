@@ -677,6 +677,11 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:true];
     
+    if (indexPath.section == 1 && indexPath.row == 0 && self.isExpirationDateEnabled == true){
+        //Change expiration time
+        [self launchDatePicker];
+    }
+    
     if (indexPath.section == 1 && indexPath.row == 2) {
         [self getShareLinkView];
     }
