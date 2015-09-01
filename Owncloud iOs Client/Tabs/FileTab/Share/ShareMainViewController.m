@@ -682,6 +682,11 @@
         [self launchDatePicker];
     }
     
+    if (indexPath.section == 1 && indexPath.row == 1 && self.isPasswordProtectEnabled == true) {
+        //Change the password
+        [self showPasswordView];
+    }
+    
     if (indexPath.section == 1 && indexPath.row == 2) {
         [self getShareLinkView];
     }
