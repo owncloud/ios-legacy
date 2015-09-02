@@ -21,14 +21,16 @@ NOTE: This will connect with our ownCloud iOS Library repository at "https://git
   - Update the library submodule: "git submodule update"
 
 ### 3. Create your own certificates
+
+NOTE: You must use the same "extension" on the certificates of the extensions (ownCloudExtApp, ownCloudExtAppFileProvider, OC-Share-Sheet)
+
 * Login at https://developer.apple.com/ as developer and there to to the Certificates section.
 * Create a Development Certificate for you (probably you got it one now)
 * Create an App Id for the main app. Ex: com.mywebpage.owncloud.ios
 * Create an App Id for the Document Provider. Ex: com.mywebpage.owncloud.ios.ownCloudExtApp
-* Create an App Id for the Document Provider File Provider. Ex: com.mywebpage.owncloud.ios.ownCloudExtAppFileProvi
-der
+* Create an App Id for the Document Provider File Provider. Ex: com.mywebpage.owncloud.ios.ownCloudExtAppFileProvider
 * Create an App Id for the Share In. Ex: com.mywebpage.owncloud.ios.OC-Share-Sheet
-* Create an AppGroup and add it too all the App Id. Ex: group.com.mywebpage.owncloud.ios
+* Create an AppGroup and add it too all the App Id. Must have the App Id than the main app but with the group. Ex: group.com.mywebpage.owncloud.ios
 * Add the UDID of your device on the Devices section.
 * Create 4 Development Profiles. One for each App Id.
 
