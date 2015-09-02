@@ -374,7 +374,6 @@
 		40AB1F6B1A123D1B003E7397 /* TABShares@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F6A1A123D1B003E7397 /* TABShares@3x.png */; };
 		40AC24D219FE725600582867 /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
 		40CC7F0D1B4E665400231D73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40CC7F0C1B4E665400231D73 /* Images.xcassets */; };
-		40DAF1A61B8C7E1400D100D3 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 40DAF1A51B8C7E1400D100D3 /* libOCMock.a */; };
 		40E30ED61B59105D00D36B07 /* iphoneInstantUpload.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */; };
 		40E30EDA1B5911A400D36B07 /* iphoneFiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E30ED91B5911A400D36B07 /* iphoneFiles.png */; };
 		40E354C51A14D671000E7FE4 /* ownCloud-xmas@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */; };
@@ -589,6 +588,7 @@
 		59E58B751B04ED15004E9739 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0816034C2200A95EAD /* libcrypto.a */; };
 		59E58B761B04ED15004E9739 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0916034C2200A95EAD /* libssl.a */; };
 		59E58B771B04ED20004E9739 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
+		D924DCBD1B973E88008B4BE7 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D924DCBC1B973E88008B4BE7 /* libOCMock.a */; };
 		EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
 		EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
@@ -1403,16 +1403,6 @@
 		40AC24D019FE725600582867 /* CredentialsDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CredentialsDto.h; path = DataBase/DTOs/CredentialsDto.h; sourceTree = "<group>"; };
 		40AC24D119FE725600582867 /* CredentialsDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CredentialsDto.m; path = DataBase/DTOs/CredentialsDto.m; sourceTree = "<group>"; };
 		40CC7F0C1B4E665400231D73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		40DAF1A51B8C7E1400D100D3 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
-		40DAF1A81B8C7E2A00D100D3 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
-		40DAF1A91B8C7E2A00D100D3 /* OCMArg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
-		40DAF1AA1B8C7E2A00D100D3 /* OCMConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMConstraint.h; sourceTree = "<group>"; };
-		40DAF1AB1B8C7E2A00D100D3 /* OCMLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMLocation.h; sourceTree = "<group>"; };
-		40DAF1AC1B8C7E2A00D100D3 /* OCMMacroState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMMacroState.h; sourceTree = "<group>"; };
-		40DAF1AD1B8C7E2A00D100D3 /* OCMock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMock.h; sourceTree = "<group>"; };
-		40DAF1AE1B8C7E2A00D100D3 /* OCMockObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMockObject.h; sourceTree = "<group>"; };
-		40DAF1AF1B8C7E2A00D100D3 /* OCMRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMRecorder.h; sourceTree = "<group>"; };
-		40DAF1B01B8C7E2A00D100D3 /* OCMStubRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMStubRecorder.h; sourceTree = "<group>"; };
 		40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneInstantUpload.png; sourceTree = "<group>"; };
 		40E30ED91B5911A400D36B07 /* iphoneFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneFiles.png; sourceTree = "<group>"; };
 		40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ownCloud-xmas@3x.png"; sourceTree = "<group>"; };
@@ -1531,6 +1521,16 @@
 		59E48E931B3AAE72008FAAE0 /* th-TH */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "th-TH"; path = "th-TH.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		59E48E941B3AAE87008FAAE0 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		59E52E7F1B0B666100F5B1B3 /* Accessibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Accessibility.h; path = SupportingFiles/Accessibility/Accessibility.h; sourceTree = "<group>"; };
+		D924DCBC1B973E88008B4BE7 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
+		D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
+		D924DCBF1B973E98008B4BE7 /* OCMArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
+		D924DCC01B973E98008B4BE7 /* OCMConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMConstraint.h; sourceTree = "<group>"; };
+		D924DCC11B973E98008B4BE7 /* OCMLocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMLocation.h; sourceTree = "<group>"; };
+		D924DCC21B973E98008B4BE7 /* OCMMacroState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMMacroState.h; sourceTree = "<group>"; };
+		D924DCC31B973E98008B4BE7 /* OCMock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMock.h; sourceTree = "<group>"; };
+		D924DCC41B973E98008B4BE7 /* OCMockObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMockObject.h; sourceTree = "<group>"; };
+		D924DCC51B973E98008B4BE7 /* OCMRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMRecorder.h; sourceTree = "<group>"; };
+		D924DCC61B973E98008B4BE7 /* OCMStubRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMStubRecorder.h; sourceTree = "<group>"; };
 		EA1787AA17E33BB9005171AB /* OCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCNavigationController.h; path = Tabs/FileTab/OCNavigationController.h; sourceTree = "<group>"; };
 		EA1787AB17E33BB9005171AB /* OCNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCNavigationController.m; path = Tabs/FileTab/OCNavigationController.m; sourceTree = "<group>"; };
 		EA2678FB1876E4B8008678DE /* notSharedItem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notSharedItem.png; sourceTree = "<group>"; };
@@ -1670,6 +1670,7 @@
 				1324297D15ADBB3700DF823E /* UIKit.framework in Frameworks */,
 				1324297F15ADBB3700DF823E /* Foundation.framework in Frameworks */,
 				1324298115ADBB3700DF823E /* CoreGraphics.framework in Frameworks */,
+				D924DCBD1B973E88008B4BE7 /* libOCMock.a in Frameworks */,
 				13824C0A16034C2200A95EAD /* libcrypto.a in Frameworks */,
 				13824C0B16034C2200A95EAD /* libssl.a in Frameworks */,
 			);
@@ -1679,7 +1680,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40DAF1A61B8C7E1400D100D3 /* libOCMock.a in Frameworks */,
 				132429B015ADBB3800DF823E /* UIKit.framework in Frameworks */,
 				132429B115ADBB3800DF823E /* Foundation.framework in Frameworks */,
 			);
@@ -2736,34 +2736,9 @@
 		40DAF1A31B8C7D3400D100D3 /* ExternalLibraries */ = {
 			isa = PBXGroup;
 			children = (
-				40DAF1A41B8C7D3400D100D3 /* OCMock_3.1.3 */,
+				D924DCAF1B973D7E008B4BE7 /* OCMock_3.1.5 */,
 			);
 			path = ExternalLibraries;
-			sourceTree = "<group>";
-		};
-		40DAF1A41B8C7D3400D100D3 /* OCMock_3.1.3 */ = {
-			isa = PBXGroup;
-			children = (
-				40DAF1A71B8C7E2A00D100D3 /* OCMock */,
-				40DAF1A51B8C7E1400D100D3 /* libOCMock.a */,
-			);
-			path = OCMock_3.1.3;
-			sourceTree = "<group>";
-		};
-		40DAF1A71B8C7E2A00D100D3 /* OCMock */ = {
-			isa = PBXGroup;
-			children = (
-				40DAF1A81B8C7E2A00D100D3 /* NSNotificationCenter+OCMAdditions.h */,
-				40DAF1A91B8C7E2A00D100D3 /* OCMArg.h */,
-				40DAF1AA1B8C7E2A00D100D3 /* OCMConstraint.h */,
-				40DAF1AB1B8C7E2A00D100D3 /* OCMLocation.h */,
-				40DAF1AC1B8C7E2A00D100D3 /* OCMMacroState.h */,
-				40DAF1AD1B8C7E2A00D100D3 /* OCMock.h */,
-				40DAF1AE1B8C7E2A00D100D3 /* OCMockObject.h */,
-				40DAF1AF1B8C7E2A00D100D3 /* OCMRecorder.h */,
-				40DAF1B01B8C7E2A00D100D3 /* OCMStubRecorder.h */,
-			);
-			path = OCMock;
 			sourceTree = "<group>";
 		};
 		40EDF89D1B4D112900700E3A /* HelpGuide */ = {
@@ -3010,6 +2985,32 @@
 				148DD6B61778693000FB9977 /* RecentViewController.xib */,
 			);
 			name = "Recent Tab";
+			sourceTree = "<group>";
+		};
+		D924DCAF1B973D7E008B4BE7 /* OCMock_3.1.5 */ = {
+			isa = PBXGroup;
+			children = (
+				D924DCBC1B973E88008B4BE7 /* libOCMock.a */,
+				D924DCB21B973E3A008B4BE7 /* OCMock */,
+			);
+			name = OCMock_3.1.5;
+			path = "../../Owncloud iOs Client/ExternalLibreries/OCMock_3.1.5";
+			sourceTree = "<group>";
+		};
+		D924DCB21B973E3A008B4BE7 /* OCMock */ = {
+			isa = PBXGroup;
+			children = (
+				D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */,
+				D924DCBF1B973E98008B4BE7 /* OCMArg.h */,
+				D924DCC01B973E98008B4BE7 /* OCMConstraint.h */,
+				D924DCC11B973E98008B4BE7 /* OCMLocation.h */,
+				D924DCC21B973E98008B4BE7 /* OCMMacroState.h */,
+				D924DCC31B973E98008B4BE7 /* OCMock.h */,
+				D924DCC41B973E98008B4BE7 /* OCMockObject.h */,
+				D924DCC51B973E98008B4BE7 /* OCMRecorder.h */,
+				D924DCC61B973E98008B4BE7 /* OCMStubRecorder.h */,
+			);
+			path = OCMock;
 			sourceTree = "<group>";
 		};
 		EA10B3661615B15000548F0C /* Select Folder */ = {
@@ -4649,13 +4650,20 @@
 				HEADER_SEARCH_PATHS = (
 					"include/**",
 					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "Owncloud iOs Client/Owncloud iOs Client-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)/Owncloud",
+					iOs,
+					Client,
+					"$(PROJECT_DIR)/Owncloud",
+					iOs,
+					Client/ExternalLibreries/OCMock_3.1.5,
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4692,13 +4700,20 @@
 				HEADER_SEARCH_PATHS = (
 					"include/**",
 					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "Owncloud iOs Client/Owncloud iOs Client-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)/Owncloud",
+					iOs,
+					Client,
+					"$(PROJECT_DIR)/Owncloud",
+					iOs,
+					Client/ExternalLibreries/OCMock_3.1.5,
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4729,9 +4744,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/Owncloud",
-					iOs,
-					ClientTests/ExternalLibraries/OCMock_3.1.3,
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
@@ -4755,9 +4773,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/Owncloud",
-					iOs,
-					ClientTests/ExternalLibraries/OCMock_3.1.3,
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
