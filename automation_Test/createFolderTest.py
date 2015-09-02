@@ -48,8 +48,6 @@ class createFolderTest(unittest.TestCase):
         isExistByUserInterface = False
         isExistByWebDav = False
 
-        import ipdb; ipdb.set_trace()
-
         for currentCell in allCells:
 
             if const.K_FOLDER_NAME == currentCell.get_attribute(filesView.name_attribute).encode('utf-8'):

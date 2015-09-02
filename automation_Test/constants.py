@@ -26,9 +26,9 @@ K_RST_PDF_FILE = 'Report'
 K_FILE_NOT_FOUND = 'File not found for given path %s'
 
 #Login
-K_URL_1 = 'serverName1'
-K_USER_1 = 'userName1'
-K_PASSWORD_1 = 'passName1'
+K_URL_1 = 'serverName'
+K_USER_1 = 'userName'
+K_PASSWORD_1 = 'passName'
 K_PASSWORD_WRONG_1 = 'pass_wrong'
 K_SELF_SIGNED_1 = True
 
@@ -36,9 +36,6 @@ K_URL_2 = 'serverName2'
 K_USER_2 = 'userName2'
 K_PASSWORD_2 = 'passName2'
 K_SELF_SIGNED_2 = True
-
-#Create Folder
-K_FOLDER_NAME = 'Test Folder ß'
 
 class utility_functions():
 
