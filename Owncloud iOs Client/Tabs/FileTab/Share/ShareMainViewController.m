@@ -44,6 +44,7 @@
 #define shareLinkButtonNib @"ShareLinkButtonCell"
 #define heighOfFileDetailrow 120.0
 #define heightOfShareLinkOptionRow 55.0
+#define heightOfShareLinkButtonRow 40.0
 #define heightOfShareLinkHeader 45.0
 #define shareTableViewSectionsNumber  2
 
@@ -632,11 +633,19 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    CGFloat height = 0.0;
+    
     if (indexPath.section == 0) {
-        return heighOfFileDetailrow;
+        height = heighOfFileDetailrow;
     }else{
-        return heightOfShareLinkOptionRow;
+        if (indexPath.row == 2) {
+            height = heightOfShareLinkButtonRow;
+        }else{
+            height = heightOfShareLinkOptionRow;
+        }
     }
+    
+    return height;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
