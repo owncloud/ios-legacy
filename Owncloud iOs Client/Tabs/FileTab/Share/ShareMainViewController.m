@@ -222,6 +222,7 @@
     
 }
 
+
 - (void) dateSelected:(UIBarButtonItem *)sender{
     
     [self closeDatePicker];
@@ -838,6 +839,17 @@
     
 #endif
     
+}
+
+#pragma mark - UIGestureRecognizer delegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // test if our control subview is on-screen
+    if ([touch.view isDescendantOfView:self.pickerView]) {
+        // we touched our control surface
+        return NO;
+    }
+    return YES;
 }
 
 @end
