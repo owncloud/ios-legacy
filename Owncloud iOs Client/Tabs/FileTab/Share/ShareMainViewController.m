@@ -29,6 +29,7 @@
 //tools
 #define standardDelay 0.2
 #define animationsDelay 0.5
+#define largeDelay 1.0
 
 //Xib
 #define shareMainViewNibName @"ShareViewController"
@@ -69,6 +70,7 @@
 @property (nonatomic, strong) UIAlertView *passwordView;
 @property (nonatomic) BOOL isFirstTime;
 @property (nonatomic, strong) UIActivityViewController *activityView;
+@property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
 
 @end
 
@@ -114,6 +116,8 @@
     [super viewDidAppear:animated];
     
 }
+
+
 
 #pragma mark - Accessory alert views
 
@@ -746,17 +750,12 @@
 
 - (void) errorLogin {
     
-    if (k_is_sso_active) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"session_expired", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [alertView show];
-    }
-    else{
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error_login_message", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [alertView show];
-    }
+     [self endLoading];
     
+     [self performSelector:@selector(showEditAccount) withObject:nil afterDelay:animationsDelay];
     
-    [self showEditAccount];
+     [self performSelector:@selector(showErrorAccount) withObject:nil afterDelay:largeDelay];
+   
 }
 
 - (void) finishShareWithStatus:(BOOL)successful andWithOptions:(UIActivityViewController*) activityView{
@@ -822,22 +821,34 @@
 #ifdef CONTAINER_APP
     
     //Edit Account
-    EditAccountViewController *resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
-    [resolveCredentialErrorViewController setBarForCancelForLoadingFromModal];
+    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
+    [self.resolveCredentialErrorViewController setBarForCancelForLoadingFromModal];
     
     if (IS_IPHONE) {
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:resolveCredentialErrorViewController];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
         
     } else {
         
         OCNavigationController *navController = nil;
-        navController = [[OCNavigationController alloc] initWithRootViewController:resolveCredentialErrorViewController];
+        navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self presentViewController:navController animated:YES completion:nil];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
     }
     
 #endif
+    
+}
+
+- (void) showErrorAccount {
+    
+     if (k_is_sso_active) {
+         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"session_expired", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+         [alertView show];
+     } else{
+         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error_login_message", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+         [alertView show];
+     }
     
 }
 
