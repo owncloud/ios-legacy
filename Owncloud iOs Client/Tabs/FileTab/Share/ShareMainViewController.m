@@ -718,12 +718,6 @@
     self.loadingView = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
     self.loadingView.delegate = self;
     
-    if (IS_IPHONE) {
-        [self.view.window addSubview:self.loadingView];
-    }else{
-        [APP_DELEGATE.splitViewController.view.window addSubview:self.loadingView];
-    }
-    
     [self.view addSubview:self.loadingView];
     
     self.loadingView.labelText = NSLocalizedString(@"loading", nil);
