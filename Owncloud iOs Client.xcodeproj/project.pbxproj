@@ -588,7 +588,7 @@
 		59E58B751B04ED15004E9739 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0816034C2200A95EAD /* libcrypto.a */; };
 		59E58B761B04ED15004E9739 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0916034C2200A95EAD /* libssl.a */; };
 		59E58B771B04ED20004E9739 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
-		D924DCBD1B973E88008B4BE7 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D924DCBC1B973E88008B4BE7 /* libOCMock.a */; };
+		D968DC9E1B9DB93200B546BD /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D924DCBC1B973E88008B4BE7 /* libOCMock.a */; };
 		EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
 		EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
@@ -1670,7 +1670,6 @@
 				1324297D15ADBB3700DF823E /* UIKit.framework in Frameworks */,
 				1324297F15ADBB3700DF823E /* Foundation.framework in Frameworks */,
 				1324298115ADBB3700DF823E /* CoreGraphics.framework in Frameworks */,
-				D924DCBD1B973E88008B4BE7 /* libOCMock.a in Frameworks */,
 				13824C0A16034C2200A95EAD /* libcrypto.a in Frameworks */,
 				13824C0B16034C2200A95EAD /* libssl.a in Frameworks */,
 			);
@@ -1680,6 +1679,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D968DC9E1B9DB93200B546BD /* libOCMock.a in Frameworks */,
 				132429B015ADBB3800DF823E /* UIKit.framework in Frameworks */,
 				132429B115ADBB3800DF823E /* Foundation.framework in Frameworks */,
 			);
@@ -2994,8 +2994,8 @@
 				D924DCB21B973E3A008B4BE7 /* OCMock */,
 			);
 			name = OCMock_3.1.5;
-			path = "../../Owncloud iOs Client/ExternalLibreries/OCMock_3.1.5";
-			sourceTree = "<group>";
+			path = "Owncloud iOs ClientTests/ExternalLibraries/OCMock_3.1.5";
+			sourceTree = SOURCE_ROOT;
 		};
 		D924DCB21B973E3A008B4BE7 /* OCMock */ = {
 			isa = PBXGroup;
@@ -4650,7 +4650,7 @@
 				HEADER_SEARCH_PATHS = (
 					"include/**",
 					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/**",
 				);
 				INFOPLIST_FILE = "Owncloud iOs Client/Owncloud iOs Client-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -4658,12 +4658,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
-					"$(PROJECT_DIR)/Owncloud",
-					iOs,
-					Client,
-					"$(PROJECT_DIR)/Owncloud",
-					iOs,
-					Client/ExternalLibreries/OCMock_3.1.5,
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4700,7 +4694,7 @@
 				HEADER_SEARCH_PATHS = (
 					"include/**",
 					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/**",
 				);
 				INFOPLIST_FILE = "Owncloud iOs Client/Owncloud iOs Client-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -4708,12 +4702,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
-					"$(PROJECT_DIR)/Owncloud",
-					iOs,
-					Client,
-					"$(PROJECT_DIR)/Owncloud",
-					iOs,
-					Client/ExternalLibreries/OCMock_3.1.5,
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4740,10 +4728,13 @@
 					"$(PROJECT_DIR)/**",
 				);
 				INFOPLIST_FILE = "Owncloud iOs ClientTests/Owncloud iOs ClientTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Owncloud",
+					iOs,
+					ClientTests/ExternalLibraries/OCMock_3.1.5,
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -4769,10 +4760,13 @@
 					"$(PROJECT_DIR)/**",
 				);
 				INFOPLIST_FILE = "Owncloud iOs ClientTests/Owncloud iOs ClientTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Owncloud",
+					iOs,
+					ClientTests/ExternalLibraries/OCMock_3.1.5,
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
