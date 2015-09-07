@@ -111,6 +111,16 @@
     
 }
 
+- (void)testOCMockVerify {
+    id mock = [OCMockObject partialMockForObject:NSString.class];
+    [[[mock stub] andReturn:@"mocktest"] lowercaseString];
+    
+    [[mock expect] lowercaseString];
+
+    [mock verify];
+    
+}
+
 //- (void)testOCMockManageAppSettingDB {
 //    //check
 //
@@ -210,9 +220,13 @@
     
     [[mock expect] isImageSupportedThisFile:@"name"];
     
-    [mock checkTheTypeOfFile:@"name"];
+    [mock isImageSupportedThisObject];
     
     [mock verify];
+    
+}
+
+- (void) testReject {
     
 }
 
