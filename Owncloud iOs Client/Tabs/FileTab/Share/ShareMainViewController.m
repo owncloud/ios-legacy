@@ -710,14 +710,11 @@
 
 - (void) initLoading {
 
-    if (self.loadingView != nil) {
-        [self.loadingView removeFromSuperview];
-        self.loadingView = nil;
+    if (self.loadingView == nil) {
+        self.loadingView = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
+        self.loadingView.delegate = self;
     }
-    
-    self.loadingView = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
-    self.loadingView.delegate = self;
-    
+        
     [self.view addSubview:self.loadingView];
     
     self.loadingView.labelText = NSLocalizedString(@"loading", nil);
@@ -728,6 +725,7 @@
     self.view.userInteractionEnabled = false;
     self.navigationController.navigationBar.userInteractionEnabled = false;
     self.view.window.userInteractionEnabled = false;
+
 }
 
 - (void) endLoading {
@@ -785,7 +783,7 @@
         [self updateInterfaceWithShareLinkStatus];
         [self performSelector:@selector(presentShareOptions) withObject:nil afterDelay:standardDelay];
     }else{
-         [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
+        [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
     }
 }
 
