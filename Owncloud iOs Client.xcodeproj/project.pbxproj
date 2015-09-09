@@ -4732,9 +4732,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
-					"$(PROJECT_DIR)/Owncloud",
-					iOs,
-					ClientTests/ExternalLibraries/OCMock_3.1.5,
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -4764,9 +4761,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
-					"$(PROJECT_DIR)/Owncloud",
-					iOs,
-					ClientTests/ExternalLibraries/OCMock_3.1.5,
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
