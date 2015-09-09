@@ -71,6 +71,7 @@
 @property (nonatomic) BOOL isFirstTime;
 @property (nonatomic, strong) UIActivityViewController *activityView;
 @property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
+@property (nonatomic, strong)  UIPopoverController* activityPopoverController;
 
 @end
 
@@ -796,12 +797,12 @@
     }else{
         [self reloadView];
         
-        UIPopoverController* activityPopoverController = [[UIPopoverController alloc]initWithContentViewController:self.activityView];
+        self.activityPopoverController = [[UIPopoverController alloc]initWithContentViewController:self.activityView];
         
         NSIndexPath* indexPath = [NSIndexPath indexPathForRow:2 inSection:1];
         UITableViewCell* cell = [self.shareTableView cellForRowAtIndexPath:indexPath];
         
-        [activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareTableView permittedArrowDirections:UIPopoverArrowDirectionAny animated:true];
+        [self.activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareTableView permittedArrowDirections:UIPopoverArrowDirectionAny animated:true];
     }
     
 }
