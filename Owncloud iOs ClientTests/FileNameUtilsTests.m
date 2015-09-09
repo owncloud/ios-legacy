@@ -114,58 +114,7 @@
     
 }
 
-- (void)testOCMockVerify {
-    id mock = [OCMockObject partialMockForObject:NSString.class];
-    [[[mock stub] andReturn:@"mocktest"] lowercaseString];
-    
-    [[mock expect] lowercaseString];
-
-    [mock verify];
-    
-}
-
-//- (void)testOCMockManageAppSettingDB {
-//    //check
-//
-//    //check method was invoked
-//    id mock = [OCMockObject mockForClass:ManageAppSettingsDB.class];
-//
-//    //TODO create category
-//    [[mock expect] insertCertificate];
-//    [mock verify];
-//}
-//
-//- (void)testOCMockAcceptCertificate {
-//    //check
-//
-//    //check method was invoked
-//    id mock = [OCMockObject mockForClass:CheckAccessToServer.class];
-//    [[[mock stub] andReturn:@"mocktest"] lowercaseString];
-//
-//    id mock = [OCMockObject mockForClass:UtilsUrls.class];
-//    [[[mock stub] andReturn:@"mocktest"] getOwnCloudFilePath];
-//
-//    //TODO create category
-//    [[mock expect] insertCertificate];
-//    [mock verify];
-//}
-
-- (void) testCheckTheTypeOfFile {
-    
-    //check method was invoked
-    id mock = [OCMockObject mockForClass:FileNameUtils.class];
-    [[[mock stub] andReturn:@"yes"] isImageSupportedThisFile:@"name"];
-    long expectedReturn = 0;
-    
-    long returnValue = [mock checkTheTypeOfFile:@"name"];
-    
-    //[[mock expect] isImageSupportedThisFile];
-    
-    XCTAssertEqual(expectedReturn, returnValue, @"The return value did not match the expected return value");
-    
-    
-}
-
+/*
 - (void) testIsImageSupportedThisFile {
     
     //FileNameUtils *obj = [[FileNameUtils alloc] init];
@@ -185,60 +134,10 @@
      XCTAssertEqual(expectedReturn, returnValue, @"The return value did not match the expected return value");
     
     
-}
+}*/
 
 
-- (void) testIsImageSupportedThisFileIsInvoked {
-    
-    //check method was invoked
-    FileNameUtils *obj = [[FileNameUtils alloc] init];
-    id mock = [OCMockObject partialMockForObject:obj];
-    
-    [[mock expect] isImageSupportedThisFile:@"name"];
-    
-    [mock checkTheTypeOfFile:@"name"];
-    
-    [mock verify];
-    
-}
 
-- (void) testIsImageSupportedThisFileIsInvoked_ {
-    
-    //check method was invoked
-    id mock = [OCMockObject mockForClass:FileNameUtils.class];
-    
-    [[mock expect] isImageSupportedThisFile:@"name"];
-    
-    [mock checkTheTypeOfFile:@"name"];
-    
-    [mock verify];
-    
-}
-
-- (void) testIsVideoFileSupportedThisFile {
-    
-    //check method was invoked
-    FileNameUtils *obj = [[FileNameUtils alloc] init];
-    id mock = [OCMockObject partialMockForObject:obj];
-    
-    [[mock expect] isImageSupportedThisFile:@"name"];
-    
-    [mock isImageSupportedThisObject];
-    
-    [mock verify];
-    
-}
-
-- (void) testReject {
-    
-}
-
-//- (void) testDisplayAlertView {
-//    OCMockObject *mock = [OCMockObject mockForClass:[MoveFile class]];
-//    [[mock expect] showError:@"message"];
-//    [mock showError:@""];
-//    [mock verify];
-//}
 
 
 
