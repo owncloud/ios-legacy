@@ -8,19 +8,20 @@
 
 // Under test
 #import "FileNameUtils.h"
+#import "MoveFile.h"
 
 // Test support
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 
-@interface FileNameUtils (ExposeForTest)
+@interface FileNameUtils ()
 -(void) isImageSupportedThisObject;
 -(void) checkTheTypeOfFile;
 @end
 
 @interface FileNameUtilsTests : XCTestCase
-
+ @property (nonatomic) FileNameUtils *oFileNameUtils;
 @end
 
 @implementation FileNameUtilsTests
@@ -28,6 +29,8 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+     self.oFileNameUtils = [[FileNameUtils alloc] init];
+
 }
 
 - (void)tearDown {
@@ -165,21 +168,21 @@
 
 - (void) testIsImageSupportedThisFile {
     
-    FileNameUtils *obj = [[FileNameUtils alloc] init];
-    id mock = [OCMockObject partialMockForObject:obj];
-    //[[[mock stub] andReturn:@"JPG"] getExtension:@"name.JPG"];
-    // long expectedReturn = 0;
+    //FileNameUtils *obj = [[FileNameUtils alloc] init];
+    id mock = [OCMockObject partialMockForObject:self.oFileNameUtils];
+    [[[mock stub] andReturn:@"JPG"] getExtension:@"name.JPG"];
+     long expectedReturn = 0;
     
-    //long returnValue = [mock isImageSupportedThisFile:@"name"];
+    long returnValue = [mock isImageSupportedThisFile:@"name"];
     //
     //tell the mock object what you expect
-    [[mock expect] isImageSupportedThisFile:@"name.JPG"];
-    //call the second method
-    [mock checkTheTypeOfFile:@"name.JPG"];
-    //verify if the first method expected is in invoked in the second one
-    [mock verify];
+//    [[mock expect] isImageSupportedThisFile:@"name.JPG"];
+//    //call the second method
+//    [mock checkTheTypeOfFile];
+//    //verify if the first method expected is in invoked in the second one
+//    [mock verify];
     
-    // XCTAssertEqual(expectedReturn, returnValue, @"The return value did not match the expected return value");
+     XCTAssertEqual(expectedReturn, returnValue, @"The return value did not match the expected return value");
     
     
 }
@@ -229,6 +232,13 @@
 - (void) testReject {
     
 }
+
+//- (void) testDisplayAlertView {
+//    OCMockObject *mock = [OCMockObject mockForClass:[MoveFile class]];
+//    [[mock expect] showError:@"message"];
+//    [mock showError:@""];
+//    [mock verify];
+//}
 
 
 
