@@ -355,7 +355,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         DLog(@"ide file: %ld",(long)_file.idFile);
         
         //Check if the file is in the device
-        if (([_file isDownload] == notDownload) && _typeOfFile != otherFileType) {
+        if ([_file isDownload] == notDownload) {
             //Download the file
             [self downloadTheFile];
         } else if (([_file isDownload] == downloading) || ([_file isDownload] == updating)) {
