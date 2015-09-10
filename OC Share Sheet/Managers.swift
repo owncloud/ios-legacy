@@ -28,7 +28,7 @@ class Managers: NSObject {
             Static.sharedDatabase = FMDatabaseQueue()
             
             let documentsDir = UtilsUrls.getOwnCloudFilePath()
-            let dbPath = documentsDir.stringByAppendingPathComponent("DB.sqlite")
+            let dbPath = documentsDir.stringByAppendingString("DB.sqlite")
             
             Static.sharedDatabase = FMDatabaseQueue(path: dbPath, flags: SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE)
         }

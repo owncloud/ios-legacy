@@ -474,7 +474,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         DLog(@"is Donwloaded: %ld",(long)_file.isDownload);
         
         //Check if the file is in the device
-        if (([_file isDownload] == notDownload) && _typeOfFile != otherFileType) {
+        if ([_file isDownload] == notDownload) {
 
             //Download the file
             [self downloadTheFile];

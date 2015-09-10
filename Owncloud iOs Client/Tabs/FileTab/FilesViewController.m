@@ -3141,9 +3141,13 @@
         self.moreActionSheet = nil;
     }
     
+    NSString *title = [self.selectedFileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
     if(_selectedFileDto.isDirectory) {
         
-        self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), nil];
+        title = [title substringToIndex:[title length]-1];
+        
+        self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), nil];
         self.moreActionSheet.tag=200;
         
         if (IS_IPHONE) {
@@ -3166,7 +3170,7 @@
             favoriteOrUnfavoriteString = NSLocalizedString(@"favorite", nil);
         }
         
-        self.moreActionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle: nil otherButtonTitles:NSLocalizedString(@"open_with_label", nil), NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), favoriteOrUnfavoriteString, nil];
+        self.moreActionSheet = [[UIActionSheet alloc]initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle: nil otherButtonTitles:NSLocalizedString(@"open_with_label", nil), NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), favoriteOrUnfavoriteString, nil];
         self.moreActionSheet.tag=200;
         
         if (IS_IPHONE) {
