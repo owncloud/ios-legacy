@@ -84,7 +84,7 @@
     
     NSString *sharedLink = [NSString stringWithFormat:@"%@%@%@",APP_DELEGATE.activeUser.url,k_share_link_middle_part_url,token];
     
-    UIActivityItemProvider *activityProvider = [UIActivityItemProvider new];
+    UIActivityItemProvider *activityProvider = [[UIActivityItemProvider alloc] initWithPlaceholderItem:sharedLink];;
     NSArray *items = @[activityProvider, sharedLink];
     
     //Adding the bottom buttons on the share view
