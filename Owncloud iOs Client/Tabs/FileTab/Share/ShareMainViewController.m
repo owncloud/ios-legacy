@@ -53,9 +53,6 @@
 #define optionsShownWithShareLinkEnable 3
 #define optionsShownWithShareLinkDisable 0
 
-//Date
-#define expirationDateFormat @"YYYY-MM-dd"
-
 @interface ShareMainViewController ()
 
 @property (nonatomic, strong) FileDto* sharedItem;
@@ -262,7 +259,12 @@
 - (NSString *) converDateInCorrectFormat:(NSDate *) date {
     
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    [dateFormatter setDateFormat:expirationDateFormat];
+    
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    
+    NSLocale *locale = [NSLocale currentLocale];
+    [dateFormatter setLocale:locale];
+
     return [dateFormatter stringFromDate:date];
 }
 
