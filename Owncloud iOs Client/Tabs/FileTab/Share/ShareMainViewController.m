@@ -29,6 +29,7 @@
 //tools
 #define standardDelay 0.2
 #define animationsDelay 0.5
+#define largeDelay 1.0
 
 //Xib
 #define shareMainViewNibName @"ShareViewController"
@@ -44,15 +45,13 @@
 #define shareLinkButtonNib @"ShareLinkButtonCell"
 #define heighOfFileDetailrow 120.0
 #define heightOfShareLinkOptionRow 55.0
+#define heightOfShareLinkButtonRow 40.0
 #define heightOfShareLinkHeader 45.0
 #define shareTableViewSectionsNumber  2
 
 //Nº of Rows
 #define optionsShownWithShareLinkEnable 3
 #define optionsShownWithShareLinkDisable 0
-
-//Date
-#define expirationDateFormat @"YYYY-MM-dd"
 
 @interface ShareMainViewController ()
 
@@ -68,6 +67,8 @@
 @property (nonatomic, strong) UIAlertView *passwordView;
 @property (nonatomic) BOOL isFirstTime;
 @property (nonatomic, strong) UIActivityViewController *activityView;
+@property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
+@property (nonatomic, strong)  UIPopoverController* activityPopoverController;
 
 @end
 
@@ -113,6 +114,8 @@
     [super viewDidAppear:animated];
     
 }
+
+
 
 #pragma mark - Accessory alert views
 
@@ -221,6 +224,7 @@
     
 }
 
+
 - (void) dateSelected:(UIBarButtonItem *)sender{
     
     [self closeDatePicker];
@@ -255,7 +259,12 @@
 - (NSString *) converDateInCorrectFormat:(NSDate *) date {
     
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    [dateFormatter setDateFormat:expirationDateFormat];
+    
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    
+    NSLocale *locale = [NSLocale currentLocale];
+    [dateFormatter setLocale:locale];
+
     return [dateFormatter stringFromDate:date];
 }
 
@@ -533,11 +542,15 @@
         
         NSString *itemName = [self.sharedItem.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
+        shareFileCell.fileName.hidden = self.sharedItem.isDirectory;
+        shareFileCell.fileSize.hidden = self.sharedItem.isDirectory;
+        shareFileCell.folderName.hidden = !self.sharedItem.isDirectory;
+        
         if (self.sharedItem.isDirectory == true) {
             shareFileCell.fileImage.image = [UIImage imageNamed:@"folder_icon"];
-            shareFileCell.fileSize.text = @"";
+            shareFileCell.folderName.text = @"";
             //Remove the last character (folderName/ -> folderName)
-            shareFileCell.fileName.text = [itemName substringToIndex:[itemName length]-1];
+            shareFileCell.folderName.text = [itemName substringToIndex:[itemName length]-1];
             
         }else{
             shareFileCell.fileImage.image = [UIImage imageNamed:[FileNameUtils getTheNameOfTheImagePreviewOfFileName:[self.sharedItem.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
@@ -628,11 +641,19 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    CGFloat height = 0.0;
+    
     if (indexPath.section == 0) {
-        return heighOfFileDetailrow;
+        height = heighOfFileDetailrow;
     }else{
-        return heightOfShareLinkOptionRow;
+        if (indexPath.row == 2) {
+            height = heightOfShareLinkButtonRow;
+        }else{
+            height = heightOfShareLinkOptionRow;
+        }
     }
+    
+    return height;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -673,6 +694,16 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:true];
     
+    if (indexPath.section == 1 && indexPath.row == 0 && self.isExpirationDateEnabled == true){
+        //Change expiration time
+        [self launchDatePicker];
+    }
+    
+    if (indexPath.section == 1 && indexPath.row == 1 && self.isPasswordProtectEnabled == true) {
+        //Change the password
+        [self showPasswordView];
+    }
+    
     if (indexPath.section == 1 && indexPath.row == 2) {
         [self getShareLinkView];
     }
@@ -682,20 +713,11 @@
 
 - (void) initLoading {
 
-    if (self.loadingView != nil) {
-        [self.loadingView removeFromSuperview];
-        self.loadingView = nil;
+    if (self.loadingView == nil) {
+        self.loadingView = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
+        self.loadingView.delegate = self;
     }
-    
-    self.loadingView = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
-    self.loadingView.delegate = self;
-    
-    if (IS_IPHONE) {
-        [self.view.window addSubview:self.loadingView];
-    }else{
-        [APP_DELEGATE.splitViewController.view.window addSubview:self.loadingView];
-    }
-    
+        
     [self.view addSubview:self.loadingView];
     
     self.loadingView.labelText = NSLocalizedString(@"loading", nil);
@@ -706,6 +728,7 @@
     self.view.userInteractionEnabled = false;
     self.navigationController.navigationBar.userInteractionEnabled = false;
     self.view.window.userInteractionEnabled = false;
+
 }
 
 - (void) endLoading {
@@ -722,17 +745,12 @@
 
 - (void) errorLogin {
     
-    if (k_is_sso_active) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"session_expired", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [alertView show];
-    }
-    else{
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error_login_message", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [alertView show];
-    }
+     [self endLoading];
     
+     [self performSelector:@selector(showEditAccount) withObject:nil afterDelay:animationsDelay];
     
-    [self showEditAccount];
+     [self performSelector:@selector(showErrorAccount) withObject:nil afterDelay:largeDelay];
+   
 }
 
 - (void) finishShareWithStatus:(BOOL)successful andWithOptions:(UIActivityViewController*) activityView{
@@ -768,7 +786,7 @@
         [self updateInterfaceWithShareLinkStatus];
         [self performSelector:@selector(presentShareOptions) withObject:nil afterDelay:standardDelay];
     }else{
-         [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
+        [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
     }
 }
 
@@ -781,12 +799,12 @@
     }else{
         [self reloadView];
         
-        UIPopoverController* activityPopoverController = [[UIPopoverController alloc]initWithContentViewController:self.activityView];
+        self.activityPopoverController = [[UIPopoverController alloc]initWithContentViewController:self.activityView];
         
         NSIndexPath* indexPath = [NSIndexPath indexPathForRow:2 inSection:1];
         UITableViewCell* cell = [self.shareTableView cellForRowAtIndexPath:indexPath];
         
-        [activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareTableView permittedArrowDirections:UIPopoverArrowDirectionAny animated:true];
+        [self.activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareTableView permittedArrowDirections:UIPopoverArrowDirectionAny animated:true];
     }
     
 }
@@ -798,23 +816,46 @@
 #ifdef CONTAINER_APP
     
     //Edit Account
-    EditAccountViewController *resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
-    [resolveCredentialErrorViewController setBarForCancelForLoadingFromModal];
+    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
+    [self.resolveCredentialErrorViewController setBarForCancelForLoadingFromModal];
     
     if (IS_IPHONE) {
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:resolveCredentialErrorViewController];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
         
     } else {
         
         OCNavigationController *navController = nil;
-        navController = [[OCNavigationController alloc] initWithRootViewController:resolveCredentialErrorViewController];
+        navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self presentViewController:navController animated:YES completion:nil];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
     }
     
 #endif
     
+}
+
+- (void) showErrorAccount {
+    
+     if (k_is_sso_active) {
+         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"session_expired", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+         [alertView show];
+     } else{
+         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error_login_message", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+         [alertView show];
+     }
+    
+}
+
+#pragma mark - UIGestureRecognizer delegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // test if our control subview is on-screen
+    if ([touch.view isDescendantOfView:self.pickerView]) {
+        // we touched our control surface
+        return NO;
+    }
+    return YES;
 }
 
 @end

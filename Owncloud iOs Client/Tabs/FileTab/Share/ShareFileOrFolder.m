@@ -100,8 +100,8 @@
         }
     }
     
-    UIActivityItemProvider *activityProvider = [UIActivityItemProvider new];
-    NSArray *items = @[activityProvider, url];
+    UIActivityItemProvider *activityProvider = [[UIActivityItemProvider alloc] initWithPlaceholderItem:[NSURL URLWithString:sharedLink]];
+    NSArray *items = @[activityProvider, sharedLink];
     
     //Adding the bottom buttons on the share view
     APCopyActivityIcon *copyLink = [[APCopyActivityIcon alloc] initWithLink:sharedLink];
@@ -856,6 +856,9 @@
                     break;
                 case kOCErrorServerTimeout:
                     [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                    break;
+                case kOCErrorSharedAPIWrong:
+                    [self showError:error.localizedDescription];
                     break;
                 default:
                     //Switch with API response errors

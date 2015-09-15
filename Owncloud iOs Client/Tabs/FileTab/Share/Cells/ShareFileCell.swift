@@ -12,6 +12,7 @@ class ShareFileCell: UITableViewCell {
     
     @IBOutlet weak var fileImage: UIImageView!
     @IBOutlet weak var fileName: UILabel!
+    @IBOutlet weak var folderName: UILabel!
     @IBOutlet weak var fileSize: UILabel!
 
     override func awakeFromNib() {
