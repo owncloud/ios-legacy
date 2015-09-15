@@ -24,7 +24,6 @@
 #import "CheckAccessToServer.h"
 #import "OCToolBar.h"
 #import "CWStatusBarNotification.h"
-#import "ShareFileOrFolder.h"
 #import "ManageFavorites.h"
 
 @class ReaderDocument;
@@ -34,7 +33,7 @@ extern NSString * iPhoneCleanPreviewNotification;
 extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 
 
-@interface FilePreviewViewController : UIViewController <UIAlertViewDelegate, DeleteFileDelegate, CheckAccessToServerDelegate, DownloadDelegate, MediaViewControllerDelegate, GalleryViewDelegate, ShareFileOrFolderDelegate, ManageFavoritesDelegate>
+@interface FilePreviewViewController : UIViewController <UIAlertViewDelegate, DeleteFileDelegate, CheckAccessToServerDelegate, DownloadDelegate, MediaViewControllerDelegate, GalleryViewDelegate, ManageFavoritesDelegate>
 {
     //Autolayout attributes
     IBOutlet NSLayoutConstraint *_progressViewHeightConstraint;
@@ -66,7 +65,6 @@ extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 //Features objects
 @property(nonatomic, strong) DeleteFile *mDeleteFile;
 @property(nonatomic) OpenWith *openWith;
-@property(nonatomic, strong) ShareFileOrFolder *mShareFileOrFolder;
 
 //Local folder
 @property(nonatomic, strong) NSString *currentLocalFolder;
