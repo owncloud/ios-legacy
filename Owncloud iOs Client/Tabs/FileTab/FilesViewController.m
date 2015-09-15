@@ -43,7 +43,6 @@
 #import "ManageFilesDB.h"
 #import "OCNavigationController.h"
 #import "OCCommunication.h"
-#import "ShareFileOrFolder.h"
 #import "OCSharedDto.h"
 #import "ManageSharesDB.h"
 #import "InfoFileUtils.h"
@@ -58,6 +57,7 @@
 #import "Owncloud_iOs_Client-Swift.h"
 #import "ManageUsersDB.h"
 #import "UtilsFramework.h"
+#import "ShareMainViewController.h"
 
 
 //Constant for iOS7
@@ -632,17 +632,6 @@
     //Avoid the overwrite message
     if(_moveFile.overWritteOption) {
         [_moveFile.overWritteOption.overwriteOptionsActionSheet dismissWithClickedButtonIndex:0 animated:NO];
-    }
-    
-    //Close the openWith option in FileViewController
-    if (!IS_IPHONE && self.mShareFileOrFolder && self.mShareFileOrFolder.activityPopoverController) {
-        [self.mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
-    }
-    
-    //Close the shareActionSheet in order to not have errors after rotate and click
-    if (!IS_IPHONE && self.mShareFileOrFolder) {
-
-        [self.mShareFileOrFolder.shareActionSheet dismissWithClickedButtonIndex:self.mShareFileOrFolder.shareActionSheet.cancelButtonIndex animated:NO];
     }
     
     //Close the _moreActionSheet in order to not have errors after rotate and click
@@ -2611,33 +2600,19 @@
  */
 - (void)didSelectShareLinkOption {
     DLog(@"Share Link Option");
-
-    if (self.mShareFileOrFolder) {
-        self.mShareFileOrFolder = nil;
-    }
     
-    self.mShareFileOrFolder = [ShareFileOrFolder new];
-    self.mShareFileOrFolder.delegate = self;
+    ShareMainViewController *share = [[ShareMainViewController alloc] initWithFileDto:_selectedFileDto];
     
-    //If is iPad get the selected cell
-    if (!IS_IPHONE) {
-        
-        self.mShareFileOrFolder.viewToShow = self.splitViewController.view;
-        
-        //We use _selectedIndexPath to identify the position where we have to put the arrow of the popover
-        if (_selectedIndexPath) {
-            UITableViewCell *cell;
-            cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
-            self.mShareFileOrFolder.cellFrame = cell.frame;
-            self.mShareFileOrFolder.parentView = _tableView;
-            self.mShareFileOrFolder.isTheParentViewACell = YES;
-        }
+    OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
+    
+    if (IS_IPHONE) {
+        [self presentViewController:nav animated:YES completion:nil];
     } else {
-        
-        self.mShareFileOrFolder.viewToShow=self.tabBarController.view;
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:nav animated:YES completion:nil];
     }
     
-    [self.mShareFileOrFolder showShareActionSheetForFile:_selectedFileDto];
 }
 
 

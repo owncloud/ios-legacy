@@ -30,7 +30,6 @@
 #import "UploadUtils.h"
 #import "OCNavigationController.h"
 #import "UIAlertView+Blocks.h"
-#import "ShareFileOrFolder.h"
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
 #import "ManageFavorites.h"
@@ -39,6 +38,7 @@
 #import "ReaderDocument.h"
 #import "ReaderViewController.h"
 #import "OCSplitViewController.h"
+#import "ShareMainViewController.h"
 
 
 NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
@@ -753,7 +753,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     _titleLabel.text = @"";
     
     [_openWith.activityPopoverController dismissPopoverAnimated:YES];
-    [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:YES];
     
     [self removeThePreviousViews];
     
@@ -928,10 +927,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     if (canOpenButton) {
         
-        if ([_mShareFileOrFolder.activityPopoverController isPopoverVisible]) {
-            [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:YES];
-        }
-        
         CheckAccessToServer *mCheckAccessToServer = [[CheckAccessToServer alloc] init];
         
         if([_file isDownload]) {
@@ -973,13 +968,18 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [_openWith.activityPopoverController dismissPopoverAnimated:YES];
     }
     
-    _mShareFileOrFolder = [ShareFileOrFolder new];
-    _mShareFileOrFolder.delegate = self;
-    _mShareFileOrFolder.viewToShow = self.splitViewController.view;
-    _mShareFileOrFolder.parentButton = _shareLinkButtonBar;
+    DLog(@"Share Link Option");
+    ShareMainViewController *share = [[ShareMainViewController alloc] initWithFileDto:self.file];
     
-    _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
-    [_mShareFileOrFolder showShareActionSheetForFile:_file];
+    OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
+    
+    if (IS_IPHONE) {
+        [self presentViewController:nav animated:YES completion:nil];
+    } else {
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:nav animated:YES completion:nil];
+    }
 }
 
 
@@ -1640,10 +1640,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     if (self.readerPDFViewController && self.isSizeChanging == NO) {
         [self.readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    }
-    
-    if (_mShareFileOrFolder && _mShareFileOrFolder.activityPopoverController) {
-        [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
     }
     
     if (_openWith) {

@@ -588,6 +588,7 @@
 		59E58B761B04ED15004E9739 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0916034C2200A95EAD /* libssl.a */; };
 		59E58B771B04ED20004E9739 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
 		EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
+		EA1762A01B78B50100D36186 /* ShareMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA17629F1B78B50100D36186 /* ShareMainViewController.m */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
 		EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
 		EA1F62CE1A5EBC2A00D6346F /* UserDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F148177C315D004A1A5A /* UserDto.m */; };
@@ -605,6 +606,8 @@
 		EA1F62DA1A5EBFF100D6346F /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
 		EA1F62DD1A5EC08300D6346F /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
 		EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F146177C315D004A1A5A /* FileDto.m */; };
+		EA2243EA1B71276D00F62E2A /* ShareLinkHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2243E81B71276D00F62E2A /* ShareLinkHeaderCell.swift */; };
+		EA2243EB1B71276D00F62E2A /* ShareLinkHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA2243E91B71276D00F62E2A /* ShareLinkHeaderCell.xib */; };
 		EA2678FF1876E4B8008678DE /* notSharedItem.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FB1876E4B8008678DE /* notSharedItem.png */; };
 		EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */; };
 		EA2B4FB017FAFF69001766BB /* company_empty_screen_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */; };
@@ -628,6 +631,11 @@
 		EA4B8E1C1AC92DCC004F335E /* KKPasscodeLock.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968817F599060033B3C1 /* KKPasscodeLock.m */; };
 		EA4B8E1D1AC92DCF004F335E /* KKPasscodeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968A17F599060033B3C1 /* KKPasscodeSettingsViewController.m */; };
 		EA4B8E1E1AC92FCC004F335E /* KKPasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968C17F599060033B3C1 /* KKPasscodeViewController.m */; };
+		EA5C6F7F1B70BA880088071B /* ShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA5C6F7D1B70BA880088071B /* ShareViewController.xib */; };
+		EA5C6F841B70BEE30088071B /* ShareFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C6F821B70BEE20088071B /* ShareFileCell.swift */; };
+		EA5C6F851B70BEE30088071B /* ShareFileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA5C6F831B70BEE30088071B /* ShareFileCell.xib */; };
+		EA5C6F881B70BF370088071B /* ShareLinkOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C6F861B70BF370088071B /* ShareLinkOptionCell.swift */; };
+		EA5C6F891B70BF370088071B /* ShareLinkOptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA5C6F871B70BF370088071B /* ShareLinkOptionCell.xib */; };
 		EA5FA47F1A6403A0000C1F80 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		EA6462841A6F98F300991913 /* UtilsDtos.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F677178422BE0092F42A /* UtilsDtos.m */; };
 		EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6606991AA767F800BA2C65 /* ShareViewController.swift */; };
@@ -810,6 +818,9 @@
 		EAF721851AAF3C86009F5596 /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
 		EAF721861AB027F4009F5596 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		EAF721871AB03DB9009F5596 /* ManageFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13A177C2F73004A1A5A /* ManageFilesDB.m */; };
+		EAF7712C1B7340C400ED6E6E /* ShareLinkButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7712A1B7340C400ED6E6E /* ShareLinkButtonCell.swift */; };
+		EAF7712D1B7340C400ED6E6E /* ShareLinkButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EAF7712B1B7340C400ED6E6E /* ShareLinkButtonCell.xib */; };
+		EAF771311B73523800ED6E6E /* SystemConstants-swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF771301B73523800ED6E6E /* SystemConstants-swift.swift */; };
 		EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 		EAFE20A81AC4617D00BB888E /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */; };
 /* End PBXBuildFile section */
@@ -1518,8 +1529,12 @@
 		59E48E931B3AAE72008FAAE0 /* th-TH */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "th-TH"; path = "th-TH.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		59E48E941B3AAE87008FAAE0 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		59E52E7F1B0B666100F5B1B3 /* Accessibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Accessibility.h; path = SupportingFiles/Accessibility/Accessibility.h; sourceTree = "<group>"; };
+		EA17629E1B78B50100D36186 /* ShareMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareMainViewController.h; path = Tabs/FileTab/Share/ShareMainViewController.h; sourceTree = "<group>"; };
+		EA17629F1B78B50100D36186 /* ShareMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareMainViewController.m; path = Tabs/FileTab/Share/ShareMainViewController.m; sourceTree = "<group>"; };
 		EA1787AA17E33BB9005171AB /* OCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCNavigationController.h; path = Tabs/FileTab/OCNavigationController.h; sourceTree = "<group>"; };
 		EA1787AB17E33BB9005171AB /* OCNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCNavigationController.m; path = Tabs/FileTab/OCNavigationController.m; sourceTree = "<group>"; };
+		EA2243E81B71276D00F62E2A /* ShareLinkHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareLinkHeaderCell.swift; path = Tabs/FileTab/Share/Cells/ShareLinkHeaderCell.swift; sourceTree = "<group>"; };
+		EA2243E91B71276D00F62E2A /* ShareLinkHeaderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareLinkHeaderCell.xib; path = Tabs/FileTab/Share/Cells/ShareLinkHeaderCell.xib; sourceTree = "<group>"; };
 		EA2678FB1876E4B8008678DE /* notSharedItem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notSharedItem.png; sourceTree = "<group>"; };
 		EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notSharedItem@2x.png"; sourceTree = "<group>"; };
 		EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = company_empty_screen_ipad.png; sourceTree = "<group>"; };
@@ -1544,6 +1559,11 @@
 		EA49146E1AC0346100BECF0B /* TTOpenInAppActivity8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TTOpenInAppActivity8.png; path = ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8.png; sourceTree = "<group>"; };
 		EA49146F1AC0346100BECF0B /* TTOpenInAppActivity8@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity8@2x.png"; path = "ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8@2x.png"; sourceTree = "<group>"; };
 		EA4914701AC0346100BECF0B /* TTOpenInAppActivity8@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TTOpenInAppActivity8@3x.png"; path = "ExternalLibreries/TTOpenInAppActivity/TTOpenInAppActivity8@3x.png"; sourceTree = "<group>"; };
+		EA5C6F7D1B70BA880088071B /* ShareViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareViewController.xib; path = Tabs/FileTab/Share/ShareViewController.xib; sourceTree = "<group>"; };
+		EA5C6F821B70BEE20088071B /* ShareFileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareFileCell.swift; path = Tabs/FileTab/Share/Cells/ShareFileCell.swift; sourceTree = "<group>"; };
+		EA5C6F831B70BEE30088071B /* ShareFileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareFileCell.xib; path = Tabs/FileTab/Share/Cells/ShareFileCell.xib; sourceTree = "<group>"; };
+		EA5C6F861B70BF370088071B /* ShareLinkOptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareLinkOptionCell.swift; path = Tabs/FileTab/Share/Cells/ShareLinkOptionCell.swift; sourceTree = "<group>"; };
+		EA5C6F871B70BF370088071B /* ShareLinkOptionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareLinkOptionCell.xib; path = Tabs/FileTab/Share/Cells/ShareLinkOptionCell.xib; sourceTree = "<group>"; };
 		EA6606951AA767F700BA2C65 /* OC Share Sheet.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "OC Share Sheet.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA6606981AA767F800BA2C65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EA6606991AA767F800BA2C65 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -1628,6 +1648,10 @@
 		EAE93A3A19D18E43002B9E15 /* fi */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
 		EAF7217C1AAF2E0D009F5596 /* Managers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Managers.swift; sourceTree = "<group>"; };
+		EAF771281B72691100ED6E6E /* OCExtensions-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCExtensions-Bridging-Header.h"; sourceTree = "<group>"; };
+		EAF7712A1B7340C400ED6E6E /* ShareLinkButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareLinkButtonCell.swift; path = Tabs/FileTab/Share/Cells/ShareLinkButtonCell.swift; sourceTree = "<group>"; };
+		EAF7712B1B7340C400ED6E6E /* ShareLinkButtonCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareLinkButtonCell.xib; path = Tabs/FileTab/Share/Cells/ShareLinkButtonCell.xib; sourceTree = "<group>"; };
+		EAF771301B73523800ED6E6E /* SystemConstants-swift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SystemConstants-swift.swift"; path = "Utils/SystemConstants-swift.swift"; sourceTree = "<group>"; };
 		EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1796,6 +1820,7 @@
 				148DD689177865A900FB9977 /* Tabs */,
 				137F615615E36334001F460C /* Utils */,
 				EA42197F1A94F6850081D400 /* Owncloud iOs Client-Bridging-Header.h */,
+				EAF771281B72691100ED6E6E /* OCExtensions-Bridging-Header.h */,
 			);
 			path = "Owncloud iOs Client";
 			sourceTree = "<group>";
@@ -1936,6 +1961,7 @@
 				59C9D321195C0EC800400AE2 /* Errors */,
 				59A0DAD71941A5060088FECD /* SSL */,
 				EAEE0830192B35CC00E1AA25 /* SystemConstants.h */,
+				EAF771301B73523800ED6E6E /* SystemConstants-swift.swift */,
 				148DD6EC17786BAF00FB9977 /* constants.h */,
 				1467037319372ACC00087289 /* DownloadUtils.h */,
 				1467037419372ACC00087289 /* DownloadUtils.m */,
@@ -2045,10 +2071,14 @@
 		13A9C663187FE8B300C6EEE8 /* Share */ = {
 			isa = PBXGroup;
 			children = (
+				EA5C6F811B70BEAC0088071B /* Cells */,
 				13A9C665187FE91700C6EEE8 /* ShareFileOrFolder.h */,
 				13A9C666187FE91700C6EEE8 /* ShareFileOrFolder.m */,
 				13D6B7C818855EE40090A96C /* AppsActivityProvider.h */,
 				13D6B7C918855EE40090A96C /* AppsActivityProvider.m */,
+				EA5C6F7D1B70BA880088071B /* ShareViewController.xib */,
+				EA17629E1B78B50100D36186 /* ShareMainViewController.h */,
+				EA17629F1B78B50100D36186 /* ShareMainViewController.m */,
 			);
 			name = Share;
 			sourceTree = "<group>";
@@ -3024,6 +3054,21 @@
 			name = DetailView;
 			sourceTree = "<group>";
 		};
+		EA5C6F811B70BEAC0088071B /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				EA5C6F821B70BEE20088071B /* ShareFileCell.swift */,
+				EA5C6F831B70BEE30088071B /* ShareFileCell.xib */,
+				EA5C6F861B70BF370088071B /* ShareLinkOptionCell.swift */,
+				EA5C6F871B70BF370088071B /* ShareLinkOptionCell.xib */,
+				EA2243E81B71276D00F62E2A /* ShareLinkHeaderCell.swift */,
+				EA2243E91B71276D00F62E2A /* ShareLinkHeaderCell.xib */,
+				EAF7712A1B7340C400ED6E6E /* ShareLinkButtonCell.swift */,
+				EAF7712B1B7340C400ED6E6E /* ShareLinkButtonCell.xib */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
 		EA6606961AA767F800BA2C65 /* OC Share Sheet */ = {
 			isa = PBXGroup;
 			children = (
@@ -3594,10 +3639,12 @@
 				1487F203177C35AA004A1A5A /* CompanyLogo.png in Resources */,
 				1487F204177C35AA004A1A5A /* CompanyLogo@2x.png in Resources */,
 				14A87ADF1933390900D0D5AD /* FileDownloadingIcon.png in Resources */,
+				EA2243EB1B71276D00F62E2A /* ShareLinkHeaderCell.xib in Resources */,
 				1487F208177C35AA004A1A5A /* MainAppIcon_29-29.png in Resources */,
 				1487F209177C35AA004A1A5A /* MainAppIcon_29-29@2x.png in Resources */,
 				400A63821B4FD94C00890579 /* iphoneAccounts.png in Resources */,
 				14A7F7A018ED5781009AF347 /* presentation_icon@2x.png in Resources */,
+				EA5C6F7F1B70BA880088071B /* ShareViewController.xib in Resources */,
 				EA42FA5A180C13710006DB7C /* cancel_download_white.png in Resources */,
 				1487F218177C35AA004A1A5A /* BackRootFolderIcon.png in Resources */,
 				400904DC1A02B54600E3DD15 /* MainAppIcon_60-60@3x.png in Resources */,
@@ -3631,6 +3678,7 @@
 				13B1DDDE18EBF610006166DC /* more-filled@2x.png in Resources */,
 				14A9B1CA18E2E687001E9457 /* FileUpdatedIcon.png in Resources */,
 				1487F22B177C35AA004A1A5A /* image_icon~ipad.png in Resources */,
+				EAF7712D1B7340C400ED6E6E /* ShareLinkButtonCell.xib in Resources */,
 				4030D8ED1A16204000DB0871 /* zip_icon@3x.png in Resources */,
 				14A7F7A918ED578E009AF347 /* spreadsheet_icon@2x.png in Resources */,
 				59C0F2B31A963670007FE71B /* iTunesArtwork@2x in Resources */,
@@ -3659,6 +3707,7 @@
 				1487F23B177C35AA004A1A5A /* TABfiles@2x.png in Resources */,
 				1487F23C177C35AA004A1A5A /* TABrecents.png in Resources */,
 				EABF68D71889339200A2217C /* SharedViewController.xib in Resources */,
+				EA5C6F891B70BF370088071B /* ShareLinkOptionCell.xib in Resources */,
 				1487F23D177C35AA004A1A5A /* TABrecents@2x.png in Resources */,
 				1487F23E177C35AA004A1A5A /* TABsettings.png in Resources */,
 				59D717E11959755600075E02 /* folder-shared@2x.png in Resources */,
@@ -3748,6 +3797,7 @@
 				1487F274177C35AA004A1A5A /* password@2x.png in Resources */,
 				13A9FCF217E9858C00FF48D7 /* ELCAlbumPickerController.xib in Resources */,
 				1487F275177C35AA004A1A5A /* server.png in Resources */,
+				EA5C6F851B70BEE30088071B /* ShareFileCell.xib in Resources */,
 				14A6115919346D0000AECA34 /* sharedItemSwipe.png in Resources */,
 				40E354CF1A14D6E8000E7FE4 /* deleteTB@3x.png in Resources */,
 				1487F276177C35AA004A1A5A /* server@2x.png in Resources */,
@@ -4074,6 +4124,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAF771311B73523800ED6E6E /* SystemConstants-swift.swift in Sources */,
 				59BF9B361A2C8BEA009D9CF0 /* DocumentPickerViewController.m in Sources */,
 				404FDA281A36EA9D008AB4E1 /* ManageLocation.m in Sources */,
 				59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */,
@@ -4099,6 +4150,7 @@
 				59C71D161A9216AE00F66166 /* ReaderContentView.m in Sources */,
 				148DD612177855B600FB9977 /* AuthenticationDbService.m in Sources */,
 				59C71D1C1A9216AE00F66166 /* ReaderThumbFetch.m in Sources */,
+				EA5C6F841B70BEE30088071B /* ShareFileCell.swift in Sources */,
 				59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */,
 				EA42FA54180565CB0006DB7C /* OCTabBarController.m in Sources */,
 				148DD613177855B600FB9977 /* AuthenticationResponseTypeCodeTask.m in Sources */,
@@ -4157,6 +4209,7 @@
 				148DD6A81778668A00FB9977 /* SelectFolderNavigation.m in Sources */,
 				EA68969117F599060033B3C1 /* KKPasscodeViewController.m in Sources */,
 				593F7CAA19EFDE96004136F7 /* UtilsUrls.m in Sources */,
+				EA5C6F881B70BF370088071B /* ShareLinkOptionCell.swift in Sources */,
 				EA42FA4E1804217D0006DB7C /* OCToolBar.m in Sources */,
 				400A63781B4FD75600890579 /* IFTTTStrokeEndAnimation.m in Sources */,
 				148DD6A91778668A00FB9977 /* SelectFolderViewController.m in Sources */,
@@ -4181,6 +4234,7 @@
 				59C71D121A9216AE00F66166 /* CGPDFDocument.m in Sources */,
 				400A63671B4FD75600890579 /* IFTTTAnimation.m in Sources */,
 				EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */,
+				EA2243EA1B71276D00F62E2A /* ShareLinkHeaderCell.swift in Sources */,
 				59AE9EB21990FEC2003380A8 /* CheckHasShareSupport.m in Sources */,
 				EABF69191891379C00A2217C /* SWUtilityButtonView.m in Sources */,
 				400A636E1B4FD75600890579 /* IFTTTFillColorAnimation.m in Sources */,
@@ -4215,6 +4269,7 @@
 				1487F141177C2FC1004A1A5A /* ManageUsersDB.m in Sources */,
 				59C71D1E1A9216AE00F66166 /* ReaderThumbRender.m in Sources */,
 				1487F14B177C315D004A1A5A /* FileDto.m in Sources */,
+				EAF7712C1B7340C400ED6E6E /* ShareLinkButtonCell.swift in Sources */,
 				400A637D1B4FD75600890579 /* IFTTTViewAnimation.m in Sources */,
 				400A63651B4FD75600890579 /* IFTTTAnimatedPagingScrollViewController.m in Sources */,
 				1487F14C177C315D004A1A5A /* UserDto.m in Sources */,
@@ -4232,6 +4287,7 @@
 				EABD9BC71B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m in Sources */,
 				1428F675178422AE0092F42A /* UploadsOfflineDto.m in Sources */,
 				EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */,
+				EA1762A01B78B50100D36186 /* ShareMainViewController.m in Sources */,
 				1428F678178422BE0092F42A /* UtilsDtos.m in Sources */,
 				59C71D181A9216AE00F66166 /* ReaderDocumentOutline.m in Sources */,
 				1420C3AC178A9F5000C0455C /* LoginViewController.m in Sources */,
@@ -4733,7 +4789,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -4775,7 +4831,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -4835,7 +4891,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -4890,7 +4946,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -4944,7 +5000,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -4993,7 +5049,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 			};
 			name = Release;
 		};
