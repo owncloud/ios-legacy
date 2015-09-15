@@ -29,6 +29,7 @@
 #import "UtilsUrls.h"
 #import "OCSharedDto.h"
 
+#define server_version_with_new_shared_schema 8
 #define password_alert_view_tag 600
 
 
@@ -80,9 +81,24 @@
  * @param token -> NSString
  *
  */
-- (void) presentShareActionSheetForToken:(NSString *)token withPassword:(BOOL) isPasswordSet{
+- (void) presentShareActionSheetForToken:(NSString *)sharedLink withPassword:(BOOL) isPasswordSet{
     
-    NSString *sharedLink = [NSString stringWithFormat:@"%@%@%@",APP_DELEGATE.activeUser.url,k_share_link_middle_part_url,token];
+    NSString *url = nil;
+    // From ownCloud server 8.2 the url field is always set for public shares
+    if ([sharedLink hasPrefix:@"http://"] || [sharedLink hasPrefix:@"https://"])
+    {
+        url = sharedLink;
+    }else{
+        //Token
+        NSString *firstNumber = [[AppDelegate sharedOCCommunication].getCurrentServerVersion substringToIndex:1];
+        
+        if (firstNumber.integerValue >= server_version_with_new_shared_schema) {
+            // From ownCloud server version 8 on, a different share link scheme is used.
+            url = [NSString stringWithFormat:@"%@%@%@", APP_DELEGATE.activeUser.url, k_share_link_middle_part_url_after_version_8, sharedLink];
+        }else{
+            url = [NSString stringWithFormat:@"%@%@%@", APP_DELEGATE.activeUser.url, k_share_link_middle_part_url_before_version_8, sharedLink];
+        }
+    }
     
     UIActivityItemProvider *activityProvider = [[UIActivityItemProvider alloc] initWithPlaceholderItem:[NSURL URLWithString:sharedLink]];
     NSArray *items = @[activityProvider, sharedLink];
@@ -192,7 +208,6 @@
  * @param isFile -> BOOL. Distinct between is fileDto or shareDto
  */
 - (void) clickOnShareLinkFromFileDto:(BOOL)isFileDto {
-    DLog(@"Click on Share Link");
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -278,7 +293,7 @@
                 [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
                 
                 //Checking the Shared files and folders
-                [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
+                [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *shareLink, NSString *redirectedServer) {
                     
                     BOOL isSamlCredentialsError=NO;
                     
@@ -300,7 +315,7 @@
                         [self endLoading];
                         
                         //Present
-                        [self presentShareActionSheetForToken:token withPassword:false];
+                        [self presentShareActionSheetForToken:shareLink withPassword:false];
                     }
                     
                 } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
