@@ -100,12 +100,12 @@
         }
     }
     
-    UIActivityItemProvider *activityProvider = [[UIActivityItemProvider alloc] initWithPlaceholderItem:[NSURL URLWithString:sharedLink]];
-    NSArray *items = @[activityProvider, sharedLink];
+    UIActivityItemProvider *activityProvider = [[UIActivityItemProvider alloc] initWithPlaceholderItem:[NSURL URLWithString:url]];
+    NSArray *items = @[activityProvider, url];
     
     //Adding the bottom buttons on the share view
-    APCopyActivityIcon *copyLink = [[APCopyActivityIcon alloc] initWithLink:sharedLink];
-    APWhatsAppActivityIcon *whatsApp = [[APWhatsAppActivityIcon alloc] initWithLink:sharedLink];
+    APCopyActivityIcon *copyLink = [[APCopyActivityIcon alloc] initWithLink:url];
+    APWhatsAppActivityIcon *whatsApp = [[APWhatsAppActivityIcon alloc] initWithLink:url];
     
     NSMutableArray *activities = [NSMutableArray new];
     
