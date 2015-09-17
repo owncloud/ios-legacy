@@ -58,12 +58,12 @@
 ///-----------------------------------
 
 /**
- * This method show a Share View using a share token
+ * This method show a Share View using a share link
  *
- * @param token -> NSString
+ * @param sharedLink -> NSString
  *
  */
-- (void) presentShareActionSheetForToken:(NSString *)token;
+- (void) presentShareActionSheetForToken:(NSString *)sharedLink withPassword:(BOOL) isPasswordSet;
 
 
 
