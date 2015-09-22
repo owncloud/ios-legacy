@@ -30,7 +30,6 @@
 #import "UploadUtils.h"
 #import "OCNavigationController.h"
 #import "UIAlertView+Blocks.h"
-#import "ShareFileOrFolder.h"
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
 #import "ManageFavorites.h"
@@ -39,6 +38,7 @@
 #import "ReaderDocument.h"
 #import "ReaderViewController.h"
 #import "OCSplitViewController.h"
+#import "ShareMainViewController.h"
 
 
 NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
@@ -121,11 +121,15 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     //Set notifications for communication betweenViews
     [self setNotificationForCommunicationBetweenViews];
     
-    //Add gesture for the full screen support
-    self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(launchTransitionProcessForFullScreen)];
-    self.singleTap.numberOfTapsRequired = 1;
-    self.singleTap.numberOfTouchesRequired = 1;
-    self.singleTap.delegate = self;
+    
+    if (([[[UIDevice currentDevice] systemVersion] floatValue] < 9)) {
+        //Add gesture for the full screen support
+        self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(launchTransitionProcessForFullScreen)];
+        self.singleTap.numberOfTapsRequired = 1;
+        self.singleTap.numberOfTouchesRequired = 1;
+        self.singleTap.delegate = self;
+    }
+    
     
     [self.splitViewController setPresentsWithGesture:NO];
     
@@ -351,7 +355,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         DLog(@"ide file: %ld",(long)_file.idFile);
         
         //Check if the file is in the device
-        if (([_file isDownload] == notDownload) && _typeOfFile != otherFileType) {
+        if ([_file isDownload] == notDownload) {
             //Download the file
             [self downloadTheFile];
         } else if (([_file isDownload] == downloading) || ([_file isDownload] == updating)) {
@@ -477,7 +481,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             if (self.documentPDF != nil) {
                 self.readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:self.documentPDF];
                 
-                [self.readerPDFViewController.view addGestureRecognizer:self.singleTap];
+                if (self.singleTap) {
+                    [self.readerPDFViewController.view addGestureRecognizer:self.singleTap];
+                }
           
                 [self.view addSubview:self.readerPDFViewController.view];
                 
@@ -497,7 +503,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             self.officeView.delegate = self;
             [self.officeView openOfficeFileWithPath:self.file.localFolder andFileName:self.file.fileName];
             
-            [self.officeView.webView addGestureRecognizer:self.singleTap];
+            if (self.singleTap) {
+                [self.officeView.webView addGestureRecognizer:self.singleTap];
+            }
             
             [self.view addSubview:self.officeView.webView];
         }
@@ -745,7 +753,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     _titleLabel.text = @"";
     
     [_openWith.activityPopoverController dismissPopoverAnimated:YES];
-    [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:YES];
     
     [self removeThePreviousViews];
     
@@ -863,7 +870,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         //Run the gallery
         [_galleryView initGallery];
         
-        [_galleryView.scrollView addGestureRecognizer:self.singleTap];
+        if (self.singleTap) {
+            [_galleryView.scrollView addGestureRecognizer:self.singleTap];
+        }
+        
         
     }
     //Add Gallery to the preview
@@ -917,10 +927,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     if (canOpenButton) {
         
-        if ([_mShareFileOrFolder.activityPopoverController isPopoverVisible]) {
-            [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:YES];
-        }
-        
         CheckAccessToServer *mCheckAccessToServer = [[CheckAccessToServer alloc] init];
         
         if([_file isDownload]) {
@@ -962,13 +968,18 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [_openWith.activityPopoverController dismissPopoverAnimated:YES];
     }
     
-    _mShareFileOrFolder = [ShareFileOrFolder new];
-    _mShareFileOrFolder.delegate = self;
-    _mShareFileOrFolder.viewToShow = self.splitViewController.view;
-    _mShareFileOrFolder.parentButton = _shareLinkButtonBar;
+    DLog(@"Share Link Option");
+    ShareMainViewController *share = [[ShareMainViewController alloc] initWithFileDto:self.file];
     
-    _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
-    [_mShareFileOrFolder showShareActionSheetForFile:_file];
+    OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
+    
+    if (IS_IPHONE) {
+        [self presentViewController:nav animated:YES completion:nil];
+    } else {
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:nav animated:YES completion:nil];
+    }
 }
 
 
@@ -1210,7 +1221,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             [self.moviePlayer.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
             [self.moviePlayer.moviePlayer prepareToPlay];
             
-            [self.moviePlayer.view addGestureRecognizer:self.singleTap];
+            if (self.singleTap) {
+                [self.moviePlayer.view addGestureRecognizer:self.singleTap];
+            }
             
             [self.view addSubview:self.moviePlayer.view];
             
@@ -1218,7 +1231,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
         } else {
             
-            [self.moviePlayer.view addGestureRecognizer:self.singleTap];
+            if (self.singleTap) {
+                [self.moviePlayer.view addGestureRecognizer:self.singleTap];
+            }
+            
             
             [self.view addSubview:self.moviePlayer.view];
         }
@@ -1624,10 +1640,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     if (self.readerPDFViewController && self.isSizeChanging == NO) {
         [self.readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    }
-    
-    if (_mShareFileOrFolder && _mShareFileOrFolder.activityPopoverController) {
-        [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
     }
     
     if (_openWith) {

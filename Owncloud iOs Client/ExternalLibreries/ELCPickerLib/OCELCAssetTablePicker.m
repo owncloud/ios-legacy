@@ -50,12 +50,6 @@
 	[self performSelectorInBackground:@selector(preparePhotos) withObject:nil];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    self.columns = self.view.bounds.size.width / 80;
-}
-
 #pragma mark - Rotation Methods
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -108,7 +102,6 @@
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-    self.columns = self.view.bounds.size.width / 80;
     [self.tableView reloadData];
     
     // scroll to _rowToScrollAfterRotation
@@ -217,6 +210,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    self.columns = self.view.bounds.size.width / 80;
+    
     return ceil([self.elcAssets count] / (float)self.columns);
 }
 
