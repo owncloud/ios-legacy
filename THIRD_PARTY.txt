@@ -132,3 +132,10 @@ The third party software included and used by this project is:
 	Original license document included at ExternalLibreries/TTOpenInAppActivity/LICENSE.
    	See https://github.com/honkmaster/TTOpenInAppActivity
 
+ * 	ocmock v 3.1.5
+   	Copyright (c) 2004-2015 by Erik Dörnenburg  (http://ocmock.org) 
+   	Licensed under Apache License, Version 2.0.
+   	Placed at Owncloud iOs ClientTests/ExternalLibraries/OCMock_3.1.5
+	Original license document included at ExternalLibreries/KKPasscodeLock/LICENSE
+	See https://github.com/erikdoe/ocmock
+
