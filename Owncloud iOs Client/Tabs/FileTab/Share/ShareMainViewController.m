@@ -53,6 +53,9 @@
 #define optionsShownWithShareLinkEnable 3
 #define optionsShownWithShareLinkDisable 0
 
+//Date server format
+#define dateServerFormat @"YYYY-MM-dd"
+
 @interface ShareMainViewController ()
 
 @property (nonatomic, strong) FileDto* sharedItem;
@@ -229,10 +232,9 @@
     
     [self closeDatePicker];
     
-    NSString *dateString = [self converDateInCorrectFormat:self.datePickerView.date];
+    NSString *dateString = [self convertDateInServerFormat:self.datePickerView.date];
     
     [self updateSharedLinkWithPassword:nil andExpirationDate:dateString];
-    
     
 }
 
@@ -265,6 +267,15 @@
     NSLocale *locale = [NSLocale currentLocale];
     [dateFormatter setLocale:locale];
 
+    return [dateFormatter stringFromDate:date];
+}
+
+- (NSString *) convertDateInServerFormat:(NSDate *)date {
+    
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    
+    [dateFormatter setDateFormat:dateServerFormat];
+    
     return [dateFormatter stringFromDate:date];
 }
 
