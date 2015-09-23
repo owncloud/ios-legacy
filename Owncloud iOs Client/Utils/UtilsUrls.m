@@ -36,7 +36,7 @@
     output = [[[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:bundleSecurityGroup] path];
     
     if (!output) {
-        DLog(@"ERROR Getting the AppGroup: You will not be able to use the Document Provider or other extensions. Please reade the Documentation of the project to fix it");
+        NSLog(@"ERROR Getting the AppGroup: You will not be able to use the Document Provider or other extensions. Please reade the Documentation of the project to fix it");
         
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         output = paths.firstObject;
