@@ -480,7 +480,6 @@
         if (!isSamlCredentialsError) {
             
             [self updateLocalShareLink:ocShare];
-            
         }
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
@@ -540,7 +539,6 @@
                [self refreshSharedItemInDataBase:shareDto];
             }
             
-            [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
             [self endLoading];
             
             if([self.delegate respondsToSelector:@selector(finishUpdateShareWithStatus:)]) {
