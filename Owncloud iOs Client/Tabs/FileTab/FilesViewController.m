@@ -43,7 +43,6 @@
 #import "ManageFilesDB.h"
 #import "OCNavigationController.h"
 #import "OCCommunication.h"
-#import "ShareFileOrFolder.h"
 #import "OCSharedDto.h"
 #import "ManageSharesDB.h"
 #import "InfoFileUtils.h"
@@ -57,6 +56,8 @@
 #import "UtilsUrls.h"
 #import "Owncloud_iOs_Client-Swift.h"
 #import "ManageUsersDB.h"
+#import "UtilsFramework.h"
+#import "ShareMainViewController.h"
 
 
 //Constant for iOS7
@@ -631,17 +632,6 @@
     //Avoid the overwrite message
     if(_moveFile.overWritteOption) {
         [_moveFile.overWritteOption.overwriteOptionsActionSheet dismissWithClickedButtonIndex:0 animated:NO];
-    }
-    
-    //Close the openWith option in FileViewController
-    if (!IS_IPHONE && self.mShareFileOrFolder && self.mShareFileOrFolder.activityPopoverController) {
-        [self.mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
-    }
-    
-    //Close the shareActionSheet in order to not have errors after rotate and click
-    if (!IS_IPHONE && self.mShareFileOrFolder) {
-
-        [self.mShareFileOrFolder.shareActionSheet dismissWithClickedButtonIndex:self.mShareFileOrFolder.shareActionSheet.cancelButtonIndex animated:NO];
     }
     
     //Close the _moreActionSheet in order to not have errors after rotate and click
@@ -1676,7 +1666,11 @@
     
    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+    if (!app.userSessionCurrentToken) {
+        app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
+    }
+    
+    [[AppDelegate sharedOCCommunication] readFolder:path withUserSessionToken:app.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
         
         DLog(@"Operation response code: %ld", (long)response.statusCode);
         BOOL isSamlCredentialsError = NO;
@@ -1689,12 +1683,12 @@
                 [self errorLogin];
             }
         }
-        if (!isSamlCredentialsError) {
+        if (!isSamlCredentialsError && [app.userSessionCurrentToken isEqualToString:token]) {
            //Pass the items with OCFileDto to FileDto Array
            NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
            [self prepareForNavigationWithData:directoryList];
         }
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
         
         _isLoadingForNavigate = NO;
         
@@ -1884,10 +1878,14 @@
     
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    [[AppDelegate sharedOCCommunication] readFolder:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
-        
+    if (!app.userSessionCurrentToken) {
+        app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
+    }
+    
+     [[AppDelegate sharedOCCommunication] readFolder:path withUserSessionToken:app.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
+         
         DLog(@"Operation response code: %ld", (long)response.statusCode);
-        BOOL isSamlCredentialsError=NO;
+        BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
         if (k_is_sso_active && redirectedServer) {
@@ -1898,7 +1896,7 @@
             }
         }
         
-        if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError) {
+        if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError && [app.userSessionCurrentToken isEqualToString:token]) {
             
             //Pass the items with OCFileDto to FileDto Array
             NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
@@ -1910,7 +1908,7 @@
             _showLoadingAfterChangeUser = NO;
         }
 
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
         
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
@@ -2602,33 +2600,19 @@
  */
 - (void)didSelectShareLinkOption {
     DLog(@"Share Link Option");
-
-    if (self.mShareFileOrFolder) {
-        self.mShareFileOrFolder = nil;
-    }
     
-    self.mShareFileOrFolder = [ShareFileOrFolder new];
-    self.mShareFileOrFolder.delegate = self;
+    ShareMainViewController *share = [[ShareMainViewController alloc] initWithFileDto:_selectedFileDto];
     
-    //If is iPad get the selected cell
-    if (!IS_IPHONE) {
-        
-        self.mShareFileOrFolder.viewToShow = self.splitViewController.view;
-        
-        //We use _selectedIndexPath to identify the position where we have to put the arrow of the popover
-        if (_selectedIndexPath) {
-            UITableViewCell *cell;
-            cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
-            self.mShareFileOrFolder.cellFrame = cell.frame;
-            self.mShareFileOrFolder.parentView = _tableView;
-            self.mShareFileOrFolder.isTheParentViewACell = YES;
-        }
+    OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
+    
+    if (IS_IPHONE) {
+        [self presentViewController:nav animated:YES completion:nil];
     } else {
-        
-        self.mShareFileOrFolder.viewToShow=self.tabBarController.view;
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:nav animated:YES completion:nil];
     }
     
-    [self.mShareFileOrFolder showShareActionSheetForFile:_selectedFileDto];
 }
 
 
@@ -3157,9 +3141,13 @@
         self.moreActionSheet = nil;
     }
     
+    NSString *title = [self.selectedFileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
     if(_selectedFileDto.isDirectory) {
         
-        self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), nil];
+        title = [title substringToIndex:[title length]-1];
+        
+        self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), nil];
         self.moreActionSheet.tag=200;
         
         if (IS_IPHONE) {
@@ -3182,7 +3170,7 @@
             favoriteOrUnfavoriteString = NSLocalizedString(@"favorite", nil);
         }
         
-        self.moreActionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle: nil otherButtonTitles:NSLocalizedString(@"open_with_label", nil), NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), favoriteOrUnfavoriteString, nil];
+        self.moreActionSheet = [[UIActionSheet alloc]initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle: nil otherButtonTitles:NSLocalizedString(@"open_with_label", nil), NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), favoriteOrUnfavoriteString, nil];
         self.moreActionSheet.tag=200;
         
         if (IS_IPHONE) {

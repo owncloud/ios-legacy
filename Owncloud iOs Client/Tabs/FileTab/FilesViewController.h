@@ -41,7 +41,6 @@
 #import "RenameFile.h"
 #import "MoveFile.h"
 #import "EditAccountViewController.h"
-#import "ShareFileOrFolder.h"
 #import "SWTableViewCell.h"
 #import "OverwriteFileOptions.h"
 #import "ManageNetworkErrors.h"
@@ -51,7 +50,7 @@
 
 @interface FilesViewController : UIViewController
 <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate,
-ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBProgressHUDDelegate, UITextFieldDelegate, DeleteFileDelegate, OpenWithDelegate, DownloadViewControllerDelegate, CheckAccessToServerDelegate, RenameDelegate, MoveFileDelegate, ShareFileOrFolderDelegate, SWTableViewCellDelegate, ManageNetworkErrorsDelegate, ManageFavoritesDelegate>
+ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBProgressHUDDelegate, UITextFieldDelegate, DeleteFileDelegate, OpenWithDelegate, DownloadViewControllerDelegate, CheckAccessToServerDelegate, RenameDelegate, MoveFileDelegate, SWTableViewCellDelegate, ManageNetworkErrorsDelegate, ManageFavoritesDelegate>
 
 //Table view
 @property(nonatomic, strong) IBOutlet UITableView *tableView;
@@ -80,8 +79,6 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 @property(nonatomic, strong) DeleteFile *mDeleteFile;
 //OpenWith option
 @property(nonatomic, strong) OpenWith *openWith;
-//Share file/folder option
-@property(nonatomic, strong) ShareFileOrFolder *mShareFileOrFolder;
 //Download view for the open with option
 @property(nonatomic, strong) DownloadViewController *downloadView;
 //Rename file/folder option

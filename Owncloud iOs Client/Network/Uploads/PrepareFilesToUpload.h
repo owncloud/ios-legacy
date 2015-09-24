@@ -21,7 +21,6 @@
 #import <Foundation/Foundation.h>
 #import "UserDto.h"
 #import "ManageUploadRequest.h"
-#import "OCAsset.h"
 
 //Notification to init and end loading screen in main view
 extern NSString *EndLoadingFileListNotification;

@@ -20,6 +20,7 @@
 #import "ManageUsersDB.h"
 #import "Customization.h"
 #import "FileDto.h"
+#import "ManageUploadsDB.h"
 
 
 @implementation UtilsUrls
@@ -487,5 +488,28 @@
     
 }
 
++ (BOOL) isFileUploadingWithPath:(NSString *)path andUser: (UserDto *) user {
+    
+    BOOL isFileUploading = NO;
+    
+    //Check remote path and user with current uploads
+    NSMutableArray *uploads = [ManageUploadsDB getUploadsByStatus:generatedByDocumentProvider];
+    
+     NSString *checkPath = nil;
+    
+    for (UploadsOfflineDto *current in uploads) {
+        
+        checkPath = [NSString stringWithFormat:@"%@%@", current.destinyFolder, current.uploadFileName];
+        
+        if ([checkPath isEqualToString:path] && current.userId == user.idUser) {
+            
+            isFileUploading = YES;
+            break;
+        }
+
+    }
+    
+    return isFileUploading;
+}
 
 @end

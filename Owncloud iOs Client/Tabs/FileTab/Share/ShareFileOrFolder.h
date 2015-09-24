@@ -15,15 +15,21 @@
 
 #import <Foundation/Foundation.h>
 #import "FileDto.h"
-#import "OCSharedDto.h"
 
-@protocol ShareFileOrFolderDelegate
+@class OCSharedDto;
+
+@protocol ShareFileOrFolderDelegate <NSObject>
 
 @optional
-- (void)initLoading;
-- (void)endLoading;
-- (void)errorLogin;
+- (void) initLoading;
+- (void) endLoading;
+- (void) errorLogin;
+- (void) finishUnShareWithStatus:(BOOL)successful;
+- (void) finishShareWithStatus:(BOOL)successful andWithOptions:(UIActivityViewController*) activityView;
+- (void) finishUpdateShareWithStatus:(BOOL)successful;
+- (void) finishCheckSharedStatusOfFile:(BOOL)successful;
 @end
+
 
 @interface ShareFileOrFolder : NSObject <UIActionSheetDelegate,UITextFieldDelegate,UIAlertViewDelegate>
 
@@ -41,7 +47,7 @@
 @property (nonatomic, strong) UIBarButtonItem *parentButton;
 //This view is to show the Popover with the share link options
 @property (nonatomic, strong) UIView *parentView;
-
+@property (nonatomic, strong) UIViewController *parentViewController;
 @property(nonatomic, strong) UIAlertView *shareProtectedAlertView;
 
 
@@ -52,12 +58,12 @@
 ///-----------------------------------
 
 /**
- * This method show a Share View using a share token
+ * This method show a Share View using a share link
  *
- * @param token -> NSString
+ * @param sharedLink -> NSString
  *
  */
-- (void) presentShareActionSheetForToken:(NSString *)token;
+- (void) presentShareActionSheetForToken:(NSString *)sharedLink withPassword:(BOOL) isPasswordSet;
 
 
 
@@ -85,4 +91,26 @@
 
 
 -(void)doRequestSharedLinkWithPath: (NSString *)filePath andPassword: (NSString *)password;
+
+
+/**
+ * Method get the OCShareDto of a FileDto
+ *
+ * @param file -> FileDto. this object should be update with the DB.
+ */
+- (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file;
+
+/**
+ * This method unshares the file/folder
+ *
+ * @param OCSharedDto -> The shared file/folder
+ */
+- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password andExpirationTime:(NSString*)expirationTime;
+
+/**
+ * Check if the file is shared in the server side. If yes, update the database with update data
+ *
+ * @param FileDto -> The file/folder object
+ */
+- (void) checkSharedStatusOfFile:(FileDto *) file;
 @end

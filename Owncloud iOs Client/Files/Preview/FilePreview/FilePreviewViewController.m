@@ -15,7 +15,6 @@
 
 #import "FilePreviewViewController.h"
 #import "FileDto.h"
-
 #import "MBProgressHUD.h"
 #import "UIColor+Constants.h"
 #import "constants.h"
@@ -31,15 +30,13 @@
 #import "UploadUtils.h"
 #import "CWStatusBarNotification.h"
 #import "UIAlertView+Blocks.h"
-#import "ShareFileOrFolder.h"
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
 #import "ManageFavorites.h"
 #import "UtilsUrls.h"
-
 #import "ReaderDocument.h"
 #import "ReaderViewController.h"
-
+#import "ShareMainViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 
@@ -477,7 +474,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         DLog(@"is Donwloaded: %ld",(long)_file.isDownload);
         
         //Check if the file is in the device
-        if (([_file isDownload] == notDownload) && _typeOfFile != otherFileType) {
+        if ([_file isDownload] == notDownload) {
 
             //Download the file
             [self downloadTheFile];
@@ -1025,14 +1022,20 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 - (IBAction)didPressShareLinkButton:(id)sender
 {
-    DLog(@"didPressShareLinkButton");
     
-    _mShareFileOrFolder = [ShareFileOrFolder new];
-    _mShareFileOrFolder.delegate = self;
-    _mShareFileOrFolder.viewToShow = self.view;
+    DLog(@"Share Link Option");
+    self.file = [ManageFilesDB getFileDtoByIdFile:self.file.idFile];
+    ShareMainViewController *share = [[ShareMainViewController alloc] initWithFileDto:self.file];
     
-    _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
-    [_mShareFileOrFolder showShareActionSheetForFile:_file];
+    OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
+    
+    if (IS_IPHONE) {
+        [self presentViewController:nav animated:YES completion:nil];
+    } else {
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:nav animated:YES completion:nil];
+    }
     
 }
 

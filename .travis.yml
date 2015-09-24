@@ -1,7 +1,8 @@
 language: objective-c
+osx_image: xcode7
 xcode_project: Owncloud iOs Client.xcodeproj
 xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
 
 before_install:
-  - brew update
+  - brew update; brew update

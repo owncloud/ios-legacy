@@ -52,7 +52,19 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChange:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
     }
     
+    if (self.mode == UIDocumentPickerModeMoveToService) {
+        self.moveToThisLocationButton.title = NSLocalizedString(@"move_doc_provider_button", nil);
+    }
+    
+    if (self.mode == UIDocumentPickerModeExportToService) {
+        self.moveToThisLocationButton.title = NSLocalizedString(@"export_doc_provider_button", nil);
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pickerIsClosing:) name:userHasCloseDocumentPicker object:nil];
+    
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonTapped:)];
+    
+    self.navigationItem.rightBarButtonItem = cancelButton;
     
     [super viewWillAppear:animated];
 }
@@ -72,6 +84,12 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
     
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+    
+}
+
+- (void) cancelButtonTapped: (UIButton *)sender {
+    
+    [self.delegate closeDocumentPicker];
     
 }
 
@@ -149,6 +167,8 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     if (self.download.state != downloadNotStarted ) {
         [self cancelCurrentDownloadFile];
     }
+    
+    
 }
 
 #pragma mark - DPDownload Delegate Methods
@@ -431,9 +451,17 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 #pragma mark - Navigation
 - (void) navigateToFile:(FileDto *) file {
     //Method to be overwritten
-    _filesViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:@"FileListDocumentProviderViewController" onFolder:file];
+    
+    NSString *xibName = @"FileListDocumentProviderViewController";
+    
+    if (self.mode == UIDocumentPickerModeMoveToService || self.mode == UIDocumentPickerModeExportToService) {
+        xibName = @"FileListDocumentProviderMoveViewController";
+    }
+    
+    _filesViewController = [[FileListDocumentProviderViewController alloc] initWithNibName:xibName onFolder:file];
     
     _filesViewController.delegate = self.delegate;
+    _filesViewController.mode = self.mode;
     
     [[self navigationController] pushViewController:_filesViewController animated:YES];
 }
@@ -465,6 +493,15 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 - (void) openFile:(FileDto *) file {
     
     [self.delegate openFile:file];
+}
+
+#pragma mark - Move and Export support
+
+
+- (IBAction)moveToThisLocationButtonTapped:(id)sender{
+    
+    [self.delegate selectFolder:self.currentFolder];
+    
 }
 
 @end
