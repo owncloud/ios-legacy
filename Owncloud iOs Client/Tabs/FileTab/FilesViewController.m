@@ -2168,6 +2168,9 @@
                 case 1:
                     [self didSelectMoveOption];
                     break;
+                case 2:
+                    [self didSelectDownloadFolder];
+                    break;
                 default:
                     break;
             }
@@ -2441,7 +2444,7 @@
 #pragma mark - Move option
 
 /*
- * Method called when the user select de move option
+ * Method called when the user select the move option
  */
 - (void)didSelectMoveOption {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -2509,6 +2512,15 @@
         //Hide preview (only in iPad)
         [self hidePreviewOniPad];
     }
+}
+
+#pragma mark - Download Folder
+
+/*
+ * Method called when the user select the Download Folder
+ */
+- (void) didSelectDownloadFolder {
+    DLog(@"Download Folder");
 }
 
 /*
@@ -3147,7 +3159,7 @@
         
         title = [title substringToIndex:[title length]-1];
         
-        self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), nil];
+        self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), NSLocalizedString(@"download_folder", nil), nil];
         self.moreActionSheet.tag=200;
         
         if (IS_IPHONE) {
@@ -3184,7 +3196,6 @@
             }
         }
     }
-    
 }
 
 #pragma mark - ManageFavoritesDelegate

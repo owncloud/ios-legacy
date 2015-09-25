@@ -126,6 +126,11 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 + (OCCommunication*)sharedOCCommunication;
 
+/*
+* Method to get a Singleton of the OCCommunication to manage the communications to download a folder
+*/
++ (OCCommunication*)sharedOCCommunicationDownloadFolder;
+
 - (void)doLoginWithOauthToken;
 
 //Method that erase the data of the detail view in iPad.

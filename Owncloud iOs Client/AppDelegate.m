@@ -665,6 +665,45 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 	return sharedOCCommunication;
 }
 
++ (OCCommunication*)sharedOCCommunicationsharedOCCommunicationDownloadFolder {
+    static OCCommunication* sharedOCCommunicationDownloadFolder = nil;
+    if (sharedOCCommunicationDownloadFolder == nil)
+    {
+        
+        NSURLSessionConfiguration *configurationDownload = nil;
+        
+        if (IS_IOS8) {
+            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_folder_session_name];
+        }else{
+            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_folder_session_name];
+        }
+        
+        configurationDownload.HTTPMaximumConnectionsPerHost = 1;
+        configurationDownload.requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
+        configurationDownload.timeoutIntervalForRequest = k_timeout_upload;
+        configurationDownload.sessionSendsLaunchEvents = YES;
+        [configurationDownload setAllowsCellularAccess:YES];
+        OCURLSessionManager *downloadSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:configurationDownload];
+        [downloadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
+        [downloadSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
+            return NSURLSessionAuthChallengePerformDefaultHandling;
+        }];
+        
+        sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager];
+        
+        
+        //Acive the cookies functionality if the server supports it
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        if (appDelegate.activeUser) {
+            if (appDelegate.activeUser.hasCookiesSupport == serverFunctionalitySupported) {
+                sharedOCCommunicationDownloadFolder.isCookiesAvailable = YES;
+            }
+        }
+        
+    }
+    return sharedOCCommunicationDownloadFolder;
+}
+
 
 #pragma mark - ManageFavorites
 
