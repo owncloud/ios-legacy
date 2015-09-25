@@ -571,6 +571,7 @@
 		59C88EA01A27335B00D83AB4 /* TABsettings@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F681A123D0E003E7397 /* TABsettings@3x.png */; };
 		59C88EA11A27335B00D83AB4 /* zip_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8EC1A16204000DB0871 /* zip_icon@3x.png */; };
 		59C9D324195C0EFB00400AE2 /* ManageNetworkErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C9D323195C0EFB00400AE2 /* ManageNetworkErrors.m */; };
+		59D4913B1BB5414C009954D4 /* SyncFolderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 59D4913A1BB5414C009954D4 /* SyncFolderManager.m */; settings = {ASSET_TAGS = (); }; };
 		59D700FC1A122BB6006DB0B7 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
 		59D700FE1A1235EA006DB0B7 /* UtilsDtos.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F677178422BE0092F42A /* UtilsDtos.m */; };
 		59D717E01959755600075E02 /* folder-shared.png in Resources */ = {isa = PBXBuildFile; fileRef = 59D717DE1959755600075E02 /* folder-shared.png */; };
@@ -1506,6 +1507,8 @@
 		59C71D271A921A5100F66166 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		59C9D322195C0EFB00400AE2 /* ManageNetworkErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageNetworkErrors.h; path = Utils/Errors/ManageNetworkErrors.h; sourceTree = "<group>"; };
 		59C9D323195C0EFB00400AE2 /* ManageNetworkErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageNetworkErrors.m; path = Utils/Errors/ManageNetworkErrors.m; sourceTree = "<group>"; };
+		59D491391BB5414C009954D4 /* SyncFolderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SyncFolderManager.h; path = "Owncloud iOs Client/Network/Downloads/SyncFolderManager.h"; sourceTree = "<group>"; };
+		59D4913A1BB5414C009954D4 /* SyncFolderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SyncFolderManager.m; path = "Owncloud iOs Client/Network/Downloads/SyncFolderManager.m"; sourceTree = "<group>"; };
 		59D717DE1959755600075E02 /* folder-shared.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "folder-shared.png"; sourceTree = "<group>"; };
 		59D717DF1959755600075E02 /* folder-shared@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "folder-shared@2x.png"; sourceTree = "<group>"; };
 		59D774CC1910EE0F004322BA /* UtilsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsTableView.h; path = Utils/UtilsTableView.h; sourceTree = "<group>"; };
@@ -3320,6 +3323,8 @@
 				EA707222199CC59E00CE7079 /* ManageDownloads.m */,
 				148DD6671778627200FB9977 /* Download.h */,
 				148DD6681778627200FB9977 /* Download.m */,
+				59D491391BB5414C009954D4 /* SyncFolderManager.h */,
+				59D4913A1BB5414C009954D4 /* SyncFolderManager.m */,
 			);
 			name = Download;
 			path = ..;
@@ -4243,6 +4248,7 @@
 				148DD6E817786A1400FB9977 /* SettingsViewController.m in Sources */,
 				59D774CE1910EE0F004322BA /* UtilsTableView.m in Sources */,
 				148DD6EA17786A1400FB9977 /* WebViewController.m in Sources */,
+				59D4913B1BB5414C009954D4 /* SyncFolderManager.m in Sources */,
 				EABF69151891379C00A2217C /* SWCellScrollView.m in Sources */,
 				EABF69141891379C00A2217C /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */,

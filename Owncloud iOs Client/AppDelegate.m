@@ -57,6 +57,7 @@
 #import "InitializeDatabase.h"
 #import "CheckHasForbiddenCharactersSupport.h"
 #import "HelpGuideViewController.h"
+#import "SyncFolderManager.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -702,6 +703,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
     }
     return sharedOCCommunicationDownloadFolder;
+}
+
++ (SyncFolderManager*)sharedSyncFolderManager {
+    
+    static SyncFolderManager* sharedSyncFolderManager = nil;
+    
+    if (sharedSyncFolderManager == nil) {
+        sharedSyncFolderManager = [SyncFolderManager new];
+    }
+    
+    return sharedSyncFolderManager;
 }
 
 

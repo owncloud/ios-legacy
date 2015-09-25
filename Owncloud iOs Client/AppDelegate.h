@@ -35,6 +35,7 @@
 @class HelpGuideViewController;
 @class Download;
 @class OCCommunication;
+@class SyncFolderManager;
 @class UploadFromOtherAppViewController;
 @class SharedViewController;
 @class ManageFavorites;
@@ -112,8 +113,8 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (strong, nonatomic) HelpGuideViewController *helpGuideWindowViewController;
 
 - (void) initAppWithEtagRequest:(BOOL)isEtagRequestNecessary;
-- (void)presentUploadFromOtherApp;
-- (void)updateRecents;
+- (void) presentUploadFromOtherApp;
+- (void) updateRecents;
 - (void) updateProgressView:(NSUInteger)num withPercent:(float)percent;
 - (void) restartAppAfterDeleteAllAccounts;
 - (void) showLoginView;
@@ -130,6 +131,11 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 * Method to get a Singleton of the OCCommunication to manage the communications to download a folder
 */
 + (OCCommunication*)sharedOCCommunicationDownloadFolder;
+
+/*
+ * Method to get a Singleton of the SyncFolderManager to manage the download of a folder process
+ */
++ (SyncFolderManager*)sharedSyncFolderManager;
 
 - (void)doLoginWithOauthToken;
 
