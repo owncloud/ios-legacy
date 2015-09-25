@@ -111,6 +111,8 @@
        [self updateInterfaceWithShareLinkStatus];
     }
     
+    [self searchForUsersAndGroupsUsingString:@"a"];
+    
 }
 
 - (void) viewDidAppear:(BOOL)animated{
@@ -460,6 +462,20 @@
     self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
     
     [self.sharedFileOrFolder checkSharedStatusOfFile:self.sharedItem];
+    
+}
+
+- (void) searchForUsersAndGroupsUsingString:(NSString *)searchString {
+    
+    if (self.sharedFileOrFolder == nil) {
+        self.sharedFileOrFolder = [ShareFileOrFolder new];
+        self.sharedFileOrFolder.delegate = self;
+    }
+    
+    self.sharedFileOrFolder.parentViewController = self;
+    
+    [self.sharedFileOrFolder getUsersOrGroupsUsingSearchString:searchString];
+    
     
 }
 
