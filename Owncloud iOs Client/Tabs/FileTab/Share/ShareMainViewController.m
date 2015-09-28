@@ -72,7 +72,7 @@
 @property (nonatomic, strong) UIActivityViewController *activityView;
 @property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
-@property (nonatomic, strong) NSArray *sharedUsers;
+@property (nonatomic, strong) NSArray *sharedUsersOrGroups;
 
 
 @end
@@ -91,6 +91,7 @@
         self.isPasswordProtectEnabled = false;
         self.isExpirationDateEnabled = false;
         self.isFirstTime = true;
+        self.sharedUsersOrGroups = [NSArray new];
         
     }
     
@@ -551,9 +552,9 @@
     if (section == 0) {
         return 1;
     }else if (section == 1){
-        return 0;
+        return self.sharedUsersOrGroups.count + 1;
     }else{
-        return self.optionsShownWithShareLink;;
+        return self.optionsShownWithShareLink;
     }
 }
 
@@ -593,8 +594,27 @@
         
     } else if (indexPath.section == 1) {
         
-        
-        
+        if (indexPath.row == self.sharedUsersOrGroups.count) {
+            
+            ShareLinkButtonCell *shareLinkButtonCell = [tableView dequeueReusableCellWithIdentifier:shareLinkButtonIdentifier];
+            
+            if (shareLinkButtonCell == nil) {
+                NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkButtonNib owner:self options:nil];
+                shareLinkButtonCell = (ShareLinkButtonCell *)[topLevelObjects objectAtIndex:0];
+            }
+            
+            shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
+            shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
+            shareLinkButtonCell.titleButton.text = @"Add user or group";
+            
+            cell = shareLinkButtonCell;
+            
+        }else{
+            
+            
+            
+            
+        }
         
         
         
@@ -686,7 +706,12 @@
         
     }else if (indexPath.section == 1){
         
-        height = heightOfShareLinkOptionRow;
+        if (indexPath.row == self.sharedUsersOrGroups.count) {
+            height = heightOfShareLinkButtonRow;
+        }else{
+            height = heightOfShareLinkOptionRow;
+        }
+        
        
     }else{
         
