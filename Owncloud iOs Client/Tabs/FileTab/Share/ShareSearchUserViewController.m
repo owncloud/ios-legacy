@@ -6,8 +6,21 @@
 //
 //
 
+/*
+ Copyright (C) 2015, ownCloud, Inc.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
+
 #import "ShareSearchUserViewController.h"
 #import "Owncloud_iOs_Client-Swift.h"
+#import "AppDelegate.h"
+#import "constants.h"
+#import "Customization.h"
+#import "OCCommunication.h"
+#import "UtilsUrls.h"
 
 
 #define heightOfShareLinkOptionRow 55.0
@@ -70,7 +83,7 @@
             shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
         }
 
-        shareUserCell.itemName.text = @"User test name";
+        shareUserCell.itemName.text = [self.filteredItems objectAtIndex:indexPath.row];
     
         cell = shareUserCell;
         
@@ -94,13 +107,59 @@
     
 }
 
+#pragma mark OCLibrary Search Block Methods
+
+- (void) sendSearchRequestToUpdateTheUsersListWith: (NSString *)searchString {
+    
+   // AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    //  [self initLoading];
+    
+    //In iPad set the global variable
+    /* if (!IS_IPHONE) {
+     //Set global loading screen global flag to YES (only for iPad)
+     app.isLoadingVisible = YES;
+     }*/
+    
+    if (searchString) {
+        [self.filteredItems removeAllObjects];
+    }
+    
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:APP_DELEGATE.activeUser.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:APP_DELEGATE.activeUser.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:APP_DELEGATE.activeUser.username andPassword:APP_DELEGATE.activeUser.password];
+    }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+    
+    [[AppDelegate sharedOCCommunication] searchUsersAndGroupsWith: searchString ofServer: APP_DELEGATE.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *itemList, NSString *redirectedServer) {
+        
+        [self.filteredItems addObjectsFromArray:itemList];
+        
+        [self.searchDisplayController.searchResultsTableView reloadData];
+        
+        
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        
+        
+        
+    }];
+    
+}
+
+
+
 #pragma mark - SearchViewController Delegate Methods
 
 -(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
     
     if  ([searchString isEqualToString:@""] == NO)
     {
-       // [self sendSearchRequestToUpdateSongListWithSearchString:searchString];
+        [self sendSearchRequestToUpdateTheUsersListWith:searchString];
         
         return NO;
     }

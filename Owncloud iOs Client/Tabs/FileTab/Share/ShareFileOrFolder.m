@@ -733,43 +733,6 @@
     
 }
 
-#pragma mark - Shared with users
-
-- (void) getUsersOrGroupsUsingSearchString:(NSString *)searchString {
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-  //  [self initLoading];
-    
-    //In iPad set the global variable
-   /* if (!IS_IPHONE) {
-        //Set global loading screen global flag to YES (only for iPad)
-        app.isLoadingVisible = YES;
-    }*/
-    
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:APP_DELEGATE.activeUser.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:APP_DELEGATE.activeUser.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:APP_DELEGATE.activeUser.username andPassword:APP_DELEGATE.activeUser.password];
-    }
-    
-    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-    
-    [[AppDelegate sharedOCCommunication] searchUsersAndGroupsWith: searchString ofServer: APP_DELEGATE.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *itemList, NSString *redirectedServer) {
-        
-        
-        
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-        
-        
-        
-    }];
-    
-}
-
 #pragma mark - Utils
 
 - (void) refreshSharedItemInDataBase:(OCSharedDto *) item {
