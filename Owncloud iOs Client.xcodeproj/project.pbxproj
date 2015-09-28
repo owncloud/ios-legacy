@@ -589,6 +589,8 @@
 		59E58B771B04ED20004E9739 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
 		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; settings = {ASSET_TAGS = (); }; };
 		EA0599861BB92B19002C2864 /* ShareUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599841BB92B19002C2864 /* ShareUserCell.xib */; settings = {ASSET_TAGS = (); }; };
+		EA0599931BB94F3F002C2864 /* ShareSearchUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0599911BB94F3F002C2864 /* ShareSearchUserViewController.m */; settings = {ASSET_TAGS = (); }; };
+		EA0599941BB94F3F002C2864 /* ShareSearchUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599921BB94F3F002C2864 /* ShareSearchUserViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA1762A01B78B50100D36186 /* ShareMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA17629F1B78B50100D36186 /* ShareMainViewController.m */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
@@ -1533,6 +1535,9 @@
 		59E52E7F1B0B666100F5B1B3 /* Accessibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Accessibility.h; path = SupportingFiles/Accessibility/Accessibility.h; sourceTree = "<group>"; };
 		EA0599831BB92B19002C2864 /* ShareUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareUserCell.swift; path = Tabs/FileTab/Share/Cells/ShareUserCell.swift; sourceTree = "<group>"; };
 		EA0599841BB92B19002C2864 /* ShareUserCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareUserCell.xib; path = Tabs/FileTab/Share/Cells/ShareUserCell.xib; sourceTree = "<group>"; };
+		EA0599901BB94F3F002C2864 /* ShareSearchUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareSearchUserViewController.h; path = Tabs/FileTab/Share/ShareSearchUserViewController.h; sourceTree = "<group>"; };
+		EA0599911BB94F3F002C2864 /* ShareSearchUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareSearchUserViewController.m; path = Tabs/FileTab/Share/ShareSearchUserViewController.m; sourceTree = "<group>"; };
+		EA0599921BB94F3F002C2864 /* ShareSearchUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareSearchUserViewController.xib; path = Tabs/FileTab/Share/ShareSearchUserViewController.xib; sourceTree = "<group>"; };
 		EA17629E1B78B50100D36186 /* ShareMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareMainViewController.h; path = Tabs/FileTab/Share/ShareMainViewController.h; sourceTree = "<group>"; };
 		EA17629F1B78B50100D36186 /* ShareMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareMainViewController.m; path = Tabs/FileTab/Share/ShareMainViewController.m; sourceTree = "<group>"; };
 		EA1787AA17E33BB9005171AB /* OCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCNavigationController.h; path = Tabs/FileTab/OCNavigationController.h; sourceTree = "<group>"; };
@@ -2083,6 +2088,9 @@
 				EA5C6F7D1B70BA880088071B /* ShareViewController.xib */,
 				EA17629E1B78B50100D36186 /* ShareMainViewController.h */,
 				EA17629F1B78B50100D36186 /* ShareMainViewController.m */,
+				EA0599901BB94F3F002C2864 /* ShareSearchUserViewController.h */,
+				EA0599911BB94F3F002C2864 /* ShareSearchUserViewController.m */,
+				EA0599921BB94F3F002C2864 /* ShareSearchUserViewController.xib */,
 			);
 			name = Share;
 			sourceTree = "<group>";
@@ -3736,6 +3744,7 @@
 				400904DA1A02B49600E3DD15 /* MainAppIcon_29-29@3x.png in Resources */,
 				1487F247177C35AA004A1A5A /* NonRevealPasswordIcon@2x.png in Resources */,
 				1487F248177C35AA004A1A5A /* NonSecureConnectionIcon.png in Resources */,
+				EA0599941BB94F3F002C2864 /* ShareSearchUserViewController.xib in Resources */,
 				EA4914721AC0346100BECF0B /* TTOpenInAppActivity.png in Resources */,
 				1487F249177C35AA004A1A5A /* NonSecureConnectionIcon@2x.png in Resources */,
 				1487F24A177C35AA004A1A5A /* ReconnectIcon.png in Resources */,
@@ -4156,6 +4165,7 @@
 				400A63641B4FD75600890579 /* IFTTTAlphaAnimation.m in Sources */,
 				59C71D161A9216AE00F66166 /* ReaderContentView.m in Sources */,
 				148DD612177855B600FB9977 /* AuthenticationDbService.m in Sources */,
+				EA0599931BB94F3F002C2864 /* ShareSearchUserViewController.m in Sources */,
 				59C71D1C1A9216AE00F66166 /* ReaderThumbFetch.m in Sources */,
 				EA5C6F841B70BEE30088071B /* ShareFileCell.swift in Sources */,
 				59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */,

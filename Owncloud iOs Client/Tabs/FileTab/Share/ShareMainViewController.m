@@ -25,6 +25,7 @@
 #import "ManageUsersDB.h"
 #import "EditAccountViewController.h"
 #import "Customization.h"
+#import "ShareSearchUserViewController.h"
 
 //tools
 #define standardDelay 0.2
@@ -768,6 +769,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [tableView deselectRowAtIndexPath:indexPath animated:true];
+    
+    if (indexPath.section == 1 && indexPath.row == self.sharedUsersOrGroups.count) {
+        ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
+        [self.navigationController pushViewController:ssuvc animated:true];
+    }
     
     if (indexPath.section == 2 && indexPath.row == 0 && self.isExpirationDateEnabled == true){
         //Change expiration time
