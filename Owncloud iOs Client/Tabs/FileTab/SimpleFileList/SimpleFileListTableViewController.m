@@ -385,10 +385,6 @@
     
      [sharedCommunication readFolder:remotePath withUserSessionToken:nil onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
         
-        for (OCFileDto *file in items) {
-            DLog(@"File: %@", file.fileName);
-        }
-        
         DLog(@"Operation response code: %d", (int)response.statusCode);
         BOOL isSamlCredentialsError=NO;
         
