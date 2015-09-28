@@ -21,6 +21,7 @@
 #import "Customization.h"
 #import "OCCommunication.h"
 #import "UtilsUrls.h"
+#import "OCShareUser.h"
 
 
 #define heightOfShareLinkOptionRow 55.0
@@ -82,8 +83,10 @@
             NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareUserCellNib owner:self options:nil];
             shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
         }
+        
+        OCShareUser *userOrGroup = [self.filteredItems objectAtIndex:indexPath.row];
 
-        shareUserCell.itemName.text = [self.filteredItems objectAtIndex:indexPath.row];
+        shareUserCell.itemName.text = userOrGroup.name;
     
         cell = shareUserCell;
         
