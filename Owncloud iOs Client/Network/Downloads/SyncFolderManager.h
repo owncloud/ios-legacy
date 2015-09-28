@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+@class FileDto;
+
 @interface SyncFolderManager : NSObject
+
+@property (nonatomic, strong) NSMutableDictionary *dictOfFilesAndFoldersToBeDownloaded;
+
+- (void) addFolderToBeDownloaded: (FileDto *) folder;
 
 @end

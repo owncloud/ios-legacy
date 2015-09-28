@@ -58,7 +58,7 @@
 #import "ManageUsersDB.h"
 #import "UtilsFramework.h"
 #import "ShareMainViewController.h"
-
+#import "SyncFolderManager.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -2521,6 +2521,12 @@
  */
 - (void) didSelectDownloadFolder {
     DLog(@"Download Folder");
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    //Update fileDto
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+    
+    [[AppDelegate sharedSyncFolderManager] addFolderToBeDownloaded:self.selectedFileDto];
 }
 
 /*
