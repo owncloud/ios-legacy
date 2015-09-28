@@ -47,7 +47,7 @@
 #define heightOfShareLinkOptionRow 55.0
 #define heightOfShareLinkButtonRow 40.0
 #define heightOfShareLinkHeader 45.0
-#define shareTableViewSectionsNumber  2
+#define shareTableViewSectionsNumber  3
 
 //Nº of Rows
 #define optionsShownWithShareLinkEnable 3
@@ -71,7 +71,9 @@
 @property (nonatomic) BOOL isFirstTime;
 @property (nonatomic, strong) UIActivityViewController *activityView;
 @property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
-@property (nonatomic, strong)  UIPopoverController* activityPopoverController;
+@property (nonatomic, strong) UIPopoverController* activityPopoverController;
+@property (nonatomic, strong) NSArray *sharedUsers;
+
 
 @end
 
@@ -111,7 +113,7 @@
        [self updateInterfaceWithShareLinkStatus];
     }
     
-    [self searchForUsersAndGroupsUsingString:@"a"];
+   // [self searchForUsersAndGroupsUsingString:@"a"];
     
 }
 
@@ -548,8 +550,10 @@
     
     if (section == 0) {
         return 1;
+    }else if (section == 1){
+        return 0;
     }else{
-        return self.optionsShownWithShareLink;
+        return self.optionsShownWithShareLink;;
     }
 }
 
@@ -587,7 +591,14 @@
         
         cell = shareFileCell;
         
-    } else {
+    } else if (indexPath.section == 1) {
+        
+        
+        
+        
+        
+        
+    }else {
         
         if (indexPath.row == 2) {
             
@@ -659,7 +670,6 @@
             cell = shareLinkOptionCell;
             
         }
-        
     }
     
     return cell;
@@ -671,13 +681,21 @@
     CGFloat height = 0.0;
     
     if (indexPath.section == 0) {
+        
         height = heighOfFileDetailrow;
+        
+    }else if (indexPath.section == 1){
+        
+        height = heightOfShareLinkOptionRow;
+       
     }else{
+        
         if (indexPath.row == 2) {
             height = heightOfShareLinkButtonRow;
         }else{
             height = heightOfShareLinkOptionRow;
         }
+
     }
     
     return height;
@@ -686,7 +704,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     CGFloat height = 10.0;
     
-    if (section == 1) {
+    if (section == 1 || section == 2) {
         height = heightOfShareLinkHeader;
     }
     
@@ -697,7 +715,7 @@
     
     UIView *headerView = [UIView new];
     
-    if (section == 1) {
+    if (section == 1 || section == 2) {
         
         ShareLinkHeaderCell* shareLinkHeaderCell = [tableView dequeueReusableCellWithIdentifier:shareLinkHeaderIdentifier];
         
@@ -706,10 +724,15 @@
             shareLinkHeaderCell = (ShareLinkHeaderCell *)[topLevelObjects objectAtIndex:0];
         }
         
-         shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"share_link_long_press", nil);
-        [shareLinkHeaderCell.switchSection setOn:self.isShareLinkEnabled animated:false];
-        [shareLinkHeaderCell.switchSection addTarget:self action:@selector(sharedLinkSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
-        
+        if (section == 1) {
+            shareLinkHeaderCell.titleSection.text = @"Share with users and groups";
+            shareLinkHeaderCell.switchSection.hidden = true;
+        }else{
+            shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"share_link_long_press", nil);
+            [shareLinkHeaderCell.switchSection setOn:self.isShareLinkEnabled animated:false];
+            [shareLinkHeaderCell.switchSection addTarget:self action:@selector(sharedLinkSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+        }
+ 
         headerView = shareLinkHeaderCell;
         
     }
@@ -721,17 +744,17 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:true];
     
-    if (indexPath.section == 1 && indexPath.row == 0 && self.isExpirationDateEnabled == true){
+    if (indexPath.section == 2 && indexPath.row == 0 && self.isExpirationDateEnabled == true){
         //Change expiration time
         [self launchDatePicker];
     }
     
-    if (indexPath.section == 1 && indexPath.row == 1 && self.isPasswordProtectEnabled == true) {
+    if (indexPath.section == 2 && indexPath.row == 1 && self.isPasswordProtectEnabled == true) {
         //Change the password
         [self showPasswordView];
     }
     
-    if (indexPath.section == 1 && indexPath.row == 2) {
+    if (indexPath.section == 2 && indexPath.row == 2) {
         [self getShareLinkView];
     }
 }
