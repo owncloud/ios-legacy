@@ -31,6 +31,7 @@
 @interface ShareSearchUserViewController ()
 
 @property (strong, nonatomic) NSMutableArray *filteredItems;
+@property (strong, nonatomic) NSMutableArray *selectedItems;
 
 @end
 
@@ -39,7 +40,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.filteredItems = [NSMutableArray array];
+    self.filteredItems = [NSMutableArray new];
+    self.selectedItems = [NSMutableArray new];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -57,6 +60,27 @@
 }
 */
 
+#pragma mark - Utils
+
+- (void) insertUseroOrGroupObjectInSelectedItems: (OCShareUser *) item {
+    
+    BOOL exist = false;
+    
+    for (OCShareUser *tempItem in self.selectedItems) {
+        
+        if ([tempItem.name isEqualToString:item.name] && tempItem.isGroup == item.isGroup) {
+            exist = true;
+            break;
+        }
+    }
+    
+    if (exist == false) {
+        [self.selectedItems addObject:item];
+    }
+
+    
+}
+
 #pragma mark - TableView methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -66,7 +90,12 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    return self.filteredItems.count;
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return self.filteredItems.count;
+    }else {
+        return self.selectedItems.count;
+    }
+    
 }
 
 
@@ -74,25 +103,30 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     
-   
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        
-        ShareUserCell* shareUserCell = (ShareUserCell*)[tableView dequeueReusableCellWithIdentifier:shareUserCellIdentifier];
-        
-        if (shareUserCell == nil) {
-            NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareUserCellNib owner:self options:nil];
-            shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
-        }
-        
-        OCShareUser *userOrGroup = [self.filteredItems objectAtIndex:indexPath.row];
-
-        shareUserCell.itemName.text = userOrGroup.name;
+    ShareUserCell* shareUserCell = (ShareUserCell*)[tableView dequeueReusableCellWithIdentifier:shareUserCellIdentifier];
     
-        cell = shareUserCell;
-        
-        
+    if (shareUserCell == nil) {
+        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareUserCellNib owner:self options:nil];
+        shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
     }
-
+    
+    OCShareUser *userOrGroup = nil;
+    
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        userOrGroup = [self.filteredItems objectAtIndex:indexPath.row];
+    }else{
+        userOrGroup = [self.selectedItems objectAtIndex:indexPath.row];
+    }
+    NSString *name = userOrGroup.name;
+    
+    if (userOrGroup.isGroup) {
+        name = [name stringByAppendingString:@" (group)"];
+    }
+    
+    shareUserCell.itemName.text = name;
+    
+    cell = shareUserCell;
+    
     return cell;
     
 }
@@ -107,8 +141,18 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:true];
     
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+       
+        OCShareUser *selectedUser = [self.filteredItems objectAtIndex:indexPath.row];
+        [self insertUseroOrGroupObjectInSelectedItems:selectedUser];
+        
+        [self.searchDisplayController setActive:NO animated:YES];
+        
+        [self.searchTableView reloadData];
+    }
     
 }
+
 
 #pragma mark OCLibrary Search Block Methods
 
@@ -153,7 +197,6 @@
     }];
     
 }
-
 
 
 #pragma mark - SearchViewController Delegate Methods

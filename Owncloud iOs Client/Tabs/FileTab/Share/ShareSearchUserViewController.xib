@@ -29,6 +29,10 @@
                             <outlet property="delegate" destination="-1" id="W95-Yl-C3G"/>
                         </connections>
                     </searchBar>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="E8i-uz-CtH"/>
+                        <outlet property="delegate" destination="-1" id="mDI-D5-fwl"/>
+                    </connections>
                 </tableView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
