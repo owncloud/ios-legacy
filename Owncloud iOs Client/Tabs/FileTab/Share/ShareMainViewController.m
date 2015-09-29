@@ -589,7 +589,7 @@
             
             shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
             shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
-            shareLinkButtonCell.titleButton.text = @"Add user or group";
+            shareLinkButtonCell.titleButton.text = NSLocalizedString(@"add_user_or_group_title", nil);
             
             cell = shareLinkButtonCell;
             

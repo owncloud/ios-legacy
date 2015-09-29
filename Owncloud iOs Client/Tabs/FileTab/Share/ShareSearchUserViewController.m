@@ -43,6 +43,8 @@
     self.filteredItems = [NSMutableArray new];
     self.selectedItems = [NSMutableArray new];
     
+    self.title = NSLocalizedString(@"add_user_or_group_title", nil);
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -120,7 +122,7 @@
     NSString *name = userOrGroup.name;
     
     if (userOrGroup.isGroup) {
-        name = [name stringByAppendingString:@" (group)"];
+        name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_group_indicator", nil)];
     }
     
     shareUserCell.itemName.text = name;
