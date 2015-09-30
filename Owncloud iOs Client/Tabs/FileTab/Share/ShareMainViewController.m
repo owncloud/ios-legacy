@@ -26,6 +26,7 @@
 #import "EditAccountViewController.h"
 #import "Customization.h"
 #import "ShareSearchUserViewController.h"
+#import "ManageSharesDB.h"
 
 //tools
 #define standardDelay 0.2
@@ -44,10 +45,13 @@
 #define shareLinkHeaderNib @"ShareLinkHeaderCell"
 #define shareLinkButtonIdentifier @"ShareLinkButtonIdentifier"
 #define shareLinkButtonNib @"ShareLinkButtonCell"
+#define shareUserCellIdentifier @"ShareUserCellIdentifier"
+#define shareUserCellNib @"ShareUserCell"
 #define heighOfFileDetailrow 120.0
 #define heightOfShareLinkOptionRow 55.0
 #define heightOfShareLinkButtonRow 40.0
 #define heightOfShareLinkHeader 45.0
+#define heightOfShareWithUserRow 55.0
 #define shareTableViewSectionsNumber  3
 
 //Nº of Rows
@@ -73,8 +77,7 @@
 @property (nonatomic, strong) UIActivityViewController *activityView;
 @property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
-@property (nonatomic, strong) NSArray *sharedUsersOrGroups;
-
+@property (nonatomic, strong) NSMutableArray *sharedUsersOrGroups;
 
 @end
 
@@ -92,7 +95,7 @@
         self.isPasswordProtectEnabled = false;
         self.isExpirationDateEnabled = false;
         self.isFirstTime = true;
-        self.sharedUsersOrGroups = [NSArray new];
+        self.sharedUsersOrGroups = [NSMutableArray new];
         
     }
     
@@ -349,8 +352,27 @@
         self.isShareLinkEnabled = false;
     }
     
+    [self checkForShareWithUsersOrGroups];
+    
     [self reloadView];
     
+}
+
+- (void) checkForShareWithUsersOrGroups {
+    
+    NSString *path = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser], self.sharedItem.fileName];
+    
+    NSArray *sharesWith = [ManageSharesDB getSharesFromUserAndGroupByPath:path];
+    
+    DLog(@"SharesWith: %@", sharesWith);
+    
+    [self.sharedUsersOrGroups removeAllObjects];
+    
+    for (OCSharedDto *shareWith in sharesWith) {
+        if (shareWith.shareType == 0 || shareWith.shareType == 1) {
+            [self.sharedUsersOrGroups addObject:shareWith];
+        }
+    }
 }
 
 - (void) didSelectCloseView {
@@ -595,11 +617,28 @@
             
         }else{
             
+            ShareUserCell* shareUserCell = (ShareUserCell*)[tableView dequeueReusableCellWithIdentifier:shareUserCellIdentifier];
             
+            if (shareUserCell == nil) {
+                NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareUserCellNib owner:self options:nil];
+                shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
+            }
             
+            OCSharedDto *shareWith = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
+            
+            NSString *name = shareWith.shareWith;
+            
+            if (shareWith.shareType == 1) {
+                name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_group_indicator", nil)];
+            }
+            
+            shareUserCell.itemName.text = name;
+            
+            shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
+            
+            cell = shareUserCell;
             
         }
-        
         
         
     }else {
@@ -693,10 +732,9 @@
         if (indexPath.row == self.sharedUsersOrGroups.count) {
             height = heightOfShareLinkButtonRow;
         }else{
-            height = heightOfShareLinkOptionRow;
+            height = heightOfShareWithUserRow;
         }
         
-       
     }else{
         
         if (indexPath.row == 2) {
@@ -756,7 +794,10 @@
     if (indexPath.section == 1 && indexPath.row == self.sharedUsersOrGroups.count) {
         ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
         ssuvc.shareFileDto = self.sharedItem;
+         [ssuvc setSelectedItems:self.sharedUsersOrGroups];
         [self.navigationController pushViewController:ssuvc animated:true];
+       
+       
     }
     
     if (indexPath.section == 2 && indexPath.row == 0 && self.isExpirationDateEnabled == true){

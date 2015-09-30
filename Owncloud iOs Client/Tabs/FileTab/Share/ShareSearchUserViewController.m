@@ -22,9 +22,10 @@
 #import "OCCommunication.h"
 #import "UtilsUrls.h"
 #import "OCShareUser.h"
+#import "OCSharedDto.h"
 
 
-#define heightOfShareLinkOptionRow 55.0
+#define heightOfShareWithUserRow 55.0
 #define shareUserCellIdentifier @"ShareUserCellIdentifier"
 #define shareUserCellNib @"ShareUserCell"
 
@@ -37,12 +38,19 @@
 
 @implementation ShareSearchUserViewController
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        _filteredItems = [NSMutableArray new];
+        _selectedItems = [NSMutableArray new];
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.filteredItems = [NSMutableArray new];
-    self.selectedItems = [NSMutableArray new];
-    
     self.title = NSLocalizedString(@"add_user_or_group_title", nil);
     
 }
@@ -79,8 +87,24 @@
     if (exist == false) {
         [self.selectedItems addObject:item];
     }
+}
 
+- (void) setSelectedItems:(NSMutableArray *) selectedItems {
     
+    for (OCSharedDto *shareWith in selectedItems) {
+        OCShareUser *shareUser = [OCShareUser new];
+        shareUser.name = shareWith.shareWith;
+        
+        shareUser.isGroup = false;
+        
+        if (shareWith.shareType == 1) {
+            shareUser.isGroup = true;
+        }
+        
+        [self.selectedItems addObject:shareUser];
+        
+    }
+
 }
 
 #pragma mark - TableView methods
@@ -118,6 +142,7 @@
         userOrGroup = [self.filteredItems objectAtIndex:indexPath.row];
     }else{
         userOrGroup = [self.selectedItems objectAtIndex:indexPath.row];
+        shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
     }
     NSString *name = userOrGroup.name;
     
@@ -135,7 +160,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return heightOfShareLinkOptionRow;
+    return heightOfShareWithUserRow;
 }
 
 
@@ -222,7 +247,6 @@
         
         [self.searchTableView reloadData];
 
-        
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
