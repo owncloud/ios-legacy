@@ -103,6 +103,8 @@
 - (void) viewDidLoad{
     [super viewDidLoad];
     
+    
+    
 }
 
 - (void) viewWillAppear:(BOOL)animated{
@@ -448,6 +450,19 @@
     
 }
 
+- (void) unShareWith:(OCSharedDto *) share{
+    
+    if (self.sharedFileOrFolder == nil) {
+        self.sharedFileOrFolder = [ShareFileOrFolder new];
+        self.sharedFileOrFolder.delegate = self;
+    }
+    
+    self.sharedFileOrFolder.parentViewController = self;
+    
+    [self.sharedFileOrFolder unshareTheFile:share];
+    
+}
+
 - (void) updateSharedLinkWithPassword:(NSString*) password andExpirationDate:(NSString*)expirationDate {
     
     if (self.sharedFileOrFolder == nil) {
@@ -751,7 +766,8 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     
-    UIView *headerView = [UIView new];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.shareTableView.frame.size.width, 1)];
+    
     
     if (section == 1 || section == 2) {
         
@@ -770,8 +786,9 @@
             [shareLinkHeaderCell.switchSection setOn:self.isShareLinkEnabled animated:false];
             [shareLinkHeaderCell.switchSection addTarget:self action:@selector(sharedLinkSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
         }
- 
-        headerView = shareLinkHeaderCell;
+        
+        
+        headerView = shareLinkHeaderCell.contentView;
         
     }
     
@@ -805,6 +822,33 @@
         [self getShareLinkView];
     }
 }
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (indexPath.section == 1 && indexPath.row != self.sharedUsersOrGroups.count) {
+        //DLog(@"section: %ld, row:%ld", indexPath.section, indexPath.row);
+        return true;
+    }
+    
+    return false;
+}
+
+
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        OCSharedDto *shareWith = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
+        
+        [self unShareWith:shareWith];
+        
+    }
+}
+
 
 #pragma mark - ShareFileOrFolder Delegate Methods
 
@@ -853,7 +897,7 @@
 - (void) finishShareWithStatus:(BOOL)successful andWithOptions:(UIActivityViewController*) activityView{
     
     if (successful == true) {
-        self.activityView = activityView;
+         self.activityView = activityView;
          [self checkSharedStatusOFile];
         
     }else{
@@ -864,10 +908,11 @@
 - (void) finishUnShareWithStatus:(BOOL)successful {
     
     if (successful == true) {
-        [ManageFilesDB updateShareFileSource:0 forThisFile:self.sharedItem.idFile ofThisUserId:APP_DELEGATE.activeUser.idUser];
+        self.activityView = nil;
+        [self checkSharedStatusOFile];
+    }else{
+        [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
     }
-    
-    [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
     
 }
 
