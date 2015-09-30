@@ -214,7 +214,7 @@
     NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.shareFileDto.filePath andUser:APP_DELEGATE.activeUser]];
     NSString *filePath = [NSString stringWithFormat: @"%@%@", path, self.shareFileDto.fileName];
     
-    [[AppDelegate sharedOCCommunication] shareWith:userOrGroup.name isUser:!userOrGroup.isGroup inServer:APP_DELEGATE.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    [[AppDelegate sharedOCCommunication] shareWith:userOrGroup.name isGroup:userOrGroup.isGroup inServer:APP_DELEGATE.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
         [self insertUseroOrGroupObjectInSelectedItems:userOrGroup];
         
@@ -229,9 +229,6 @@
         DLog(@"Failure in the share with process: %@", error);
         
     }];
-    
-    
-    
     
 }
 
