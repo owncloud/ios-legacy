@@ -755,6 +755,7 @@
     
     if (indexPath.section == 1 && indexPath.row == self.sharedUsersOrGroups.count) {
         ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
+        ssuvc.shareFileDto = self.sharedItem;
         [self.navigationController pushViewController:ssuvc animated:true];
     }
     

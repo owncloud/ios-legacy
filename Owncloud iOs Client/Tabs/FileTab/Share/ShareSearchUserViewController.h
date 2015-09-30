@@ -16,11 +16,13 @@
 
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
+#import "FileDto.h"
 
 
 @interface ShareSearchUserViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate, UISearchDisplayDelegate>
 
-@property (weak, nonatomic) IBOutlet UITableView* searchTableView;
-@property(nonatomic,strong) IBOutlet UISearchBar *itemSearchBar;
+@property (nonatomic, weak) IBOutlet UITableView* searchTableView;
+@property (nonatomic, strong) IBOutlet UISearchBar *itemSearchBar;
+@property (nonatomic, strong) FileDto *shareFileDto;
 
 @end

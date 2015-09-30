@@ -146,17 +146,15 @@
     if (tableView == self.searchDisplayController.searchResultsTableView) {
        
         OCShareUser *selectedUser = [self.filteredItems objectAtIndex:indexPath.row];
-        [self insertUseroOrGroupObjectInSelectedItems:selectedUser];
         
-        [self.searchDisplayController setActive:NO animated:YES];
+        [self sendShareWithRequestWithUserOrGroup:selectedUser];
         
-        [self.searchTableView reloadData];
     }
     
 }
 
 
-#pragma mark OCLibrary Search Block Methods
+#pragma mark OCLibrary Block Methods
 
 - (void) sendSearchRequestToUpdateTheUsersListWith: (NSString *)searchString {
     
@@ -197,6 +195,43 @@
         
         
     }];
+    
+}
+
+- (void) sendShareWithRequestWithUserOrGroup: (OCShareUser *)userOrGroup{
+    
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:APP_DELEGATE.activeUser.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:APP_DELEGATE.activeUser.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:APP_DELEGATE.activeUser.username andPassword:APP_DELEGATE.activeUser.password];
+    }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+    
+    NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.shareFileDto.filePath andUser:APP_DELEGATE.activeUser]];
+    NSString *filePath = [NSString stringWithFormat: @"%@%@", path, self.shareFileDto.fileName];
+    
+    [[AppDelegate sharedOCCommunication] shareWith:userOrGroup.name isUser:!userOrGroup.isGroup inServer:APP_DELEGATE.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+        
+        [self insertUseroOrGroupObjectInSelectedItems:userOrGroup];
+        
+        [self.searchDisplayController setActive:NO animated:YES];
+        
+        [self.searchTableView reloadData];
+
+        
+        
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        
+        DLog(@"Failure in the share with process: %@", error);
+        
+    }];
+    
+    
+    
     
 }
 
