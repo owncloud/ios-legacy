@@ -17,6 +17,8 @@
 #import "OCErrorMsg.h"
 #import "ManageFilesDB.h"
 #import "FileListDBOperations.h"
+#import "FolderSyncDto.h"
+#import "FileDto.h"
 
 @implementation SyncFolderManager
 
@@ -25,31 +27,42 @@
     self = [super init];
     if (self) {
         self.dictOfFilesAndFoldersToBeDownloaded = [NSMutableDictionary new];
+        self.indexDict = 0;
     }
     return self;
 }
 
 - (void) addFolderToBeDownloaded: (FileDto *) folder {
+    
+    FolderSyncDto *folderSync = [FolderSyncDto new];
+    folderSync.file = folder;
+    folderSync.isRead = NO;
 
-    [self.dictOfFilesAndFoldersToBeDownloaded setObject:folder forKey:folder.localFolder];
+    [self.dictOfFilesAndFoldersToBeDownloaded setObject:folderSync forKey:folder.localFolder];
     
     if (self.dictOfFilesAndFoldersToBeDownloaded.count == 1) {
         //id currentKey = [[self.dictOfFilesAndFoldersToBeDownloaded allKeys] objectAtIndex:0];
-        [self checkFolderByIdKey:folder.localFolder];
+        [self checkFolderByIdKey:folderSync.file.localFolder];
     }
 }
 
 - (void) continueWithNextFolder {
     
-    id currentKey = [[self.dictOfFilesAndFoldersToBeDownloaded allKeys] objectAtIndex:0];
-    [self checkFolderByIdKey:currentKey];
+    if (self.dictOfFilesAndFoldersToBeDownloaded.count > self.indexDict) {
+        id currentKey = [[self.dictOfFilesAndFoldersToBeDownloaded allKeys] objectAtIndex:self.indexDict];
+        self.indexDict++;
+        [self checkFolderByIdKey:currentKey];
+    }
+    
 }
 
 - (void) checkFolderByIdKey:(id) idKey {
     
     __block AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    FileDto *currentFolder = [self.dictOfFilesAndFoldersToBeDownloaded objectForKey:idKey];
+    FolderSyncDto *currentFolderSync = [self.dictOfFilesAndFoldersToBeDownloaded objectForKey:idKey];
+    
+    FileDto *currentFolder = currentFolderSync.file;
     currentFolder = [ManageFilesDB getFileDtoByFileName:currentFolder.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFolder.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     //Set the right credentials
@@ -66,6 +79,8 @@
     NSString *path = [UtilsUrls getFullRemoteServerFilePathByFile:currentFolder andUser:app.activeUser];
     path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
+    DLog(@"PathRquest: %@", path);
+    
     if (!app.userSessionCurrentToken) {
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
     }
@@ -79,9 +94,6 @@
         if (k_is_sso_active && redirectedServer) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
             isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-            if (isSamlCredentialsError) {
-                //TODO: cancel all download if we can not continue
-            }
         }
         
         if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError) {
@@ -109,6 +121,7 @@
                     
                     //We update the current folder with the new etag
                     [ManageFilesDB updateEtagOfFileDtoByid:currentFolder.idFile andNewEtag: currentFolder.etag];
+                    
                 }
             }
             
@@ -117,24 +130,28 @@
             //Send the data to DB and refresh the table
             [self deleteOldDataFromDBBeforeRefresh:directoryList ofFolder:currentFolder];
             
-            /*if (isNecessaryNavigate) {
-                
-                [self endLoading];
-                
-                [self navigateToFile:file];
-            } else {
-                
-                [self fillTheArraysFromDatabase];
-                [self.tableView reloadData];
-                
-                [self stopPullRefresh];
-                [self endLoading];
+      
+            NSMutableArray *tmpFilesAndFolderToSync = [ManageFilesDB getFilesByFileIdForActiveUser:currentFolder.idFile];
+            
+            for (FileDto *currentFile in tmpFilesAndFolderToSync) {
+                //Add the folder to the queue of sync and the file to the queue of downloads
+                if (currentFile.fileName != nil && currentFile.isDirectory) {
+                    
+                    FolderSyncDto *folderSync = [FolderSyncDto new];
+                    folderSync.file = currentFile;
+                    folderSync.isRead = NO;
+                    
+                    [self.dictOfFilesAndFoldersToBeDownloaded setObject:folderSync forKey:folderSync.file.localFolder];
+                } else {
+                    //TODO: Add the file to be downloaded
+                }
             }
             
-            self.isRefreshInProgress = NO;*/
+            //Continue with the next
+            [self continueWithNextFolder];
+            
         } else {
-            //[self endLoading];
-            //[self stopPullRefresh];
+            //TODO: cancel all downloads because we have a credential error
         }
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
