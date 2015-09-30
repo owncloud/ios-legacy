@@ -73,7 +73,6 @@
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
 @property (nonatomic, strong) UIAlertView *passwordView;
-@property (nonatomic) BOOL isFirstTime;
 @property (nonatomic, strong) UIActivityViewController *activityView;
 @property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
@@ -94,7 +93,6 @@
         self.isShareLinkEnabled = false;
         self.isPasswordProtectEnabled = false;
         self.isExpirationDateEnabled = false;
-        self.isFirstTime = true;
         self.sharedUsersOrGroups = [NSMutableArray new];
         
     }
@@ -111,20 +109,13 @@
     [super viewWillAppear:animated];
     [self setStyleView];
     
-    if (self.isFirstTime == true) {
-        [self checkSharedStatusOFile];
-        self.isFirstTime = false;
-    }else{
-       [self updateInterfaceWithShareLinkStatus];
-    }
-    
+    [self checkSharedStatusOFile];
 }
 
 - (void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
 }
-
 
 
 #pragma mark - Accessory alert views
