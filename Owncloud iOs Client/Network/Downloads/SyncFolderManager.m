@@ -19,6 +19,7 @@
 #import "FileListDBOperations.h"
 #import "FolderSyncDto.h"
 #import "FileDto.h"
+#import "CWLOrderedDictionary.h"
 
 @implementation SyncFolderManager
 
@@ -26,7 +27,7 @@
     
     self = [super init];
     if (self) {
-        self.dictOfFilesAndFoldersToBeDownloaded = [NSMutableDictionary new];
+        self.dictOfFilesAndFoldersToBeDownloaded = [CWLOrderedDictionary new];
         self.indexDict = 0;
     }
     return self;
@@ -129,7 +130,6 @@
             
             //Send the data to DB and refresh the table
             [self deleteOldDataFromDBBeforeRefresh:directoryList ofFolder:currentFolder];
-            
       
             NSMutableArray *tmpFilesAndFolderToSync = [ManageFilesDB getFilesByFileIdForActiveUser:currentFolder.idFile];
             
@@ -140,6 +140,9 @@
                     FolderSyncDto *folderSync = [FolderSyncDto new];
                     folderSync.file = currentFile;
                     folderSync.isRead = NO;
+                    
+                    DLog(@"folderSync 1: %@", folderSync.file.fileName);
+                    DLog(@"folderSync 2: %@", folderSync.file.localFolder);
                     
                     [self.dictOfFilesAndFoldersToBeDownloaded setObject:folderSync forKey:folderSync.file.localFolder];
                 } else {
