@@ -666,7 +666,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 	return sharedOCCommunication;
 }
 
-+ (OCCommunication*)sharedOCCommunicationsharedOCCommunicationDownloadFolder {
++ (OCCommunication*)sharedOCCommunicationDownloadFolder {
     static OCCommunication* sharedOCCommunicationDownloadFolder = nil;
     if (sharedOCCommunicationDownloadFolder == nil)
     {
