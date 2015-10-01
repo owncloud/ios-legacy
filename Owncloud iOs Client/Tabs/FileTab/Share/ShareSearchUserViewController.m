@@ -30,12 +30,15 @@
 #define shareUserCellNib @"ShareUserCell"
 #define loadingVisibleSearchDelay 2.0
 #define loadingVisibleSortDelay 0.1
+#define searchResultsPerPage 30
 
 @interface ShareSearchUserViewController ()
 
 @property (strong, nonatomic) NSMutableArray *filteredItems;
 @property (strong, nonatomic) NSMutableArray *selectedItems;
-@property (nonatomic, strong) MBProgressHUD* loadingView;
+@property (nonatomic, strong) MBProgressHUD *loadingView;
+@property (nonatomic) NSInteger indexSearchPage;
+@property (nonatomic, strong) NSString *searchString;
 
 @end
 
@@ -215,13 +218,16 @@
 
 #pragma mark OCLibrary Block Methods
 
-- (void) sendSearchRequestToUpdateTheUsersListWith: (NSString *)searchString {
+- (void) sendSearchRequestToUpdateTheUsersListWith: (NSString *)filterString {
+    
+    if (filterString != nil) {
+        self.searchString = filterString;
+        self.indexSearchPage = 1;
+    }else{
+        self.indexSearchPage++;
+    }
     
      [self initLoadingWithDelay:loadingVisibleSearchDelay];
-    
-    if (searchString) {
-        [self.filteredItems removeAllObjects];
-    }
     
     //Set the right credentials
     if (k_is_sso_active) {
@@ -234,11 +240,14 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    [[AppDelegate sharedOCCommunication] searchUsersAndGroupsWith: searchString ofServer: APP_DELEGATE.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *itemList, NSString *redirectedServer) {
+    [[AppDelegate sharedOCCommunication] searchUsersAndGroupsWith:self.searchString forPage:self.indexSearchPage with:searchResultsPerPage ofServer: APP_DELEGATE.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *itemList, NSString *redirectedServer) {
         
         [self endLoading];
         
-        [self.filteredItems removeAllObjects];
+        if (filterString != nil) {
+            [self.filteredItems removeAllObjects];
+        }
+        
         [self.filteredItems addObjectsFromArray:itemList];
         
         [self.searchDisplayController.searchResultsTableView reloadData];
@@ -321,6 +330,25 @@
 {
     tableView.rowHeight = self.searchTableView.rowHeight;
 }
+
+#pragma mark - UIScrollView Delegate Methods
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
+                  willDecelerate:(BOOL)decelerate
+{
+    CGPoint offset = aScrollView.contentOffset;
+    CGRect bounds = aScrollView.bounds;
+    CGSize size = aScrollView.contentSize;
+    UIEdgeInsets inset = aScrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    float reload_distance = 50;
+    if (y > h + reload_distance) {
+        [self sendSearchRequestToUpdateTheUsersListWith:nil];
+    }
+}
+
 
 
 
