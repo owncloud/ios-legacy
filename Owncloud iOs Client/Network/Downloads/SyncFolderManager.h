@@ -13,9 +13,10 @@
 
 @interface SyncFolderManager : NSObject
 
+@property NSInteger indexOfFoldersToBeCheck;
+
+@property (nonatomic, strong) CWLOrderedDictionary *dictOfFoldersToBeCheck;
 @property (nonatomic, strong) CWLOrderedDictionary *dictOfFilesAndFoldersToBeDownloaded;
-@property NSInteger indexDict; //TODO: set indexDict to 0 when we finish the loop
-@property(nonatomic, strong) NSMutableArray *downloadsArray;
 
 - (void) addFolderToBeDownloaded: (FileDto *) folder;
 

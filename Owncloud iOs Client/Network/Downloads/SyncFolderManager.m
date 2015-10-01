@@ -27,8 +27,8 @@
     
     self = [super init];
     if (self) {
-        self.dictOfFilesAndFoldersToBeDownloaded = [CWLOrderedDictionary new];
-        self.indexDict = 0;
+        self.dictOfFoldersToBeCheck = [CWLOrderedDictionary new];
+        self.indexOfFoldersToBeCheck = 0;
     }
     return self;
 }
@@ -39,10 +39,10 @@
     folderSync.file = folder;
     folderSync.isRead = NO;
 
-    [self.dictOfFilesAndFoldersToBeDownloaded setObject:folderSync forKey:folder.localFolder];
+    [self.dictOfFoldersToBeCheck setObject:folderSync forKey:folder.localFolder];
     
-    if (self.dictOfFilesAndFoldersToBeDownloaded.count == 1) {
-        //id currentKey = [[self.dictOfFilesAndFoldersToBeDownloaded allKeys] objectAtIndex:0];
+    if (self.dictOfFoldersToBeCheck.count == 1) {
+        //id currentKey = [[self.dictOfFoldersToBeCheck allKeys] objectAtIndex:0];
         [self continueWithNextFolder];
     }
 }
@@ -51,11 +51,11 @@
 
 - (void) continueWithNextFolder {
     
-    if (self.dictOfFilesAndFoldersToBeDownloaded.count > self.indexDict) {
-        id currentKey = [[self.dictOfFilesAndFoldersToBeDownloaded allKeys] objectAtIndex:self.indexDict];
+    if (self.dictOfFoldersToBeCheck.count > self.indexOfFoldersToBeCheck) {
+        id currentKey = [[self.dictOfFoldersToBeCheck allKeys] objectAtIndex:self.indexOfFoldersToBeCheck];
         [self checkFolderByIdKey:currentKey];
     }
-    self.indexDict++;
+    self.indexOfFoldersToBeCheck++;
 
 }
 
@@ -63,7 +63,7 @@
     
     __block AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    FolderSyncDto *currentFolderSync = [self.dictOfFilesAndFoldersToBeDownloaded objectForKey:idKey];
+    FolderSyncDto *currentFolderSync = [self.dictOfFoldersToBeCheck objectForKey:idKey];
     
     FileDto *currentFolder = currentFolderSync.file;
     currentFolder = [ManageFilesDB getFileDtoByFileName:currentFolder.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFolder.filePath andUser:app.activeUser] andUser:app.activeUser];
@@ -147,7 +147,7 @@
                         DLog(@"folderSync 1: %@", folderSync.file.fileName);
                         DLog(@"folderSync 2: %@", folderSync.file.localFolder);
                         
-                        [self.dictOfFilesAndFoldersToBeDownloaded setObject:folderSync forKey:folderSync.file.localFolder];
+                        [self.dictOfFoldersToBeCheck setObject:folderSync forKey:folderSync.file.localFolder];
                     } else {
                         [self addFileToDownload:currentFile];
                     }
