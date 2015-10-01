@@ -805,7 +805,6 @@
          [ssuvc setSelectedItems:self.sharedUsersOrGroups];
         [self.navigationController pushViewController:ssuvc animated:true];
        
-       
     }
     
     if (indexPath.section == 2 && indexPath.row == 0 && self.isExpirationDateEnabled == true){
@@ -828,7 +827,6 @@
 {
     
     if (indexPath.section == 1 && indexPath.row != self.sharedUsersOrGroups.count) {
-        //DLog(@"section: %ld, row:%ld", indexPath.section, indexPath.row);
         return true;
     }
     

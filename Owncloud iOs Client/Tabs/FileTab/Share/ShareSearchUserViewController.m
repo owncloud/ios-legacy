@@ -28,11 +28,14 @@
 #define heightOfShareWithUserRow 55.0
 #define shareUserCellIdentifier @"ShareUserCellIdentifier"
 #define shareUserCellNib @"ShareUserCell"
+#define loadingVisibleSearchDelay 2.0
+#define loadingVisibleSortDelay 0.1
 
 @interface ShareSearchUserViewController ()
 
 @property (strong, nonatomic) NSMutableArray *filteredItems;
 @property (strong, nonatomic) NSMutableArray *selectedItems;
+@property (nonatomic, strong) MBProgressHUD* loadingView;
 
 @end
 
@@ -51,7 +54,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = NSLocalizedString(@"add_user_or_group_title", nil);
+     self.title = NSLocalizedString(@"add_user_or_group_title", nil);
     
 }
 
@@ -107,6 +110,38 @@
 
 }
 
+- (void) initLoadingWithDelay:(CGFloat)delay {
+    
+    if (self.loadingView == nil) {
+        self.loadingView = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
+        self.loadingView.delegate = self;
+    }
+    
+    self.loadingView.hidden = true;
+    
+    [self.view addSubview:self.loadingView];
+    
+    self.loadingView.labelText = NSLocalizedString(@"loading", nil);
+    self.loadingView.dimBackground = false;
+    
+    [self.loadingView show:true];
+    
+    [self performSelector:@selector(setLoadingViewVisible) withObject:nil afterDelay:delay];
+    
+}
+
+- (void) setLoadingViewVisible {
+    
+    if (self.loadingView != nil) {
+        self.loadingView.hidden = true;
+    }
+}
+
+- (void) endLoading {
+    
+    [self.loadingView removeFromSuperview];
+}
+
 #pragma mark - TableView methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -123,7 +158,6 @@
     }
     
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -183,15 +217,7 @@
 
 - (void) sendSearchRequestToUpdateTheUsersListWith: (NSString *)searchString {
     
-   // AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    //  [self initLoading];
-    
-    //In iPad set the global variable
-    /* if (!IS_IPHONE) {
-     //Set global loading screen global flag to YES (only for iPad)
-     app.isLoadingVisible = YES;
-     }*/
+     [self initLoadingWithDelay:loadingVisibleSearchDelay];
     
     if (searchString) {
         [self.filteredItems removeAllObjects];
@@ -210,6 +236,9 @@
     
     [[AppDelegate sharedOCCommunication] searchUsersAndGroupsWith: searchString ofServer: APP_DELEGATE.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *itemList, NSString *redirectedServer) {
         
+        [self endLoading];
+        
+        [self.filteredItems removeAllObjects];
         [self.filteredItems addObjectsFromArray:itemList];
         
         [self.searchDisplayController.searchResultsTableView reloadData];
@@ -217,6 +246,7 @@
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         
+        [self endLoading];
         
         
     }];
@@ -224,6 +254,8 @@
 }
 
 - (void) sendShareWithRequestWithUserOrGroup: (OCShareUser *)userOrGroup{
+    
+    [self initLoadingWithDelay:loadingVisibleSortDelay];
     
     //Set the right credentials
     if (k_is_sso_active) {
@@ -241,6 +273,8 @@
     
     [[AppDelegate sharedOCCommunication] shareWith:userOrGroup.name isGroup:userOrGroup.isGroup inServer:APP_DELEGATE.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
+        [self endLoading];
+        
         [self insertUseroOrGroupObjectInSelectedItems:userOrGroup];
         
         [self.searchDisplayController setActive:NO animated:YES];
@@ -249,6 +283,8 @@
 
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        
+        [self endLoading];
         
         DLog(@"Failure in the share with process: %@", error);
         
