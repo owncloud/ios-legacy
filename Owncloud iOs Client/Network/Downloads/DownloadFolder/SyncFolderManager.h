@@ -13,8 +13,6 @@
 
 @interface SyncFolderManager : NSObject
 
-@property NSInteger indexOfFoldersToBeCheck;
-
 @property (nonatomic, strong) CWLOrderedDictionary *dictOfFoldersToBeCheck;
 @property (nonatomic, strong) CWLOrderedDictionary *dictOfFilesAndFoldersToBeDownloaded;
 

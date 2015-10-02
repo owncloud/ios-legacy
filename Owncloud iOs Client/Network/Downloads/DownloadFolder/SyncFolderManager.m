@@ -28,7 +28,7 @@
     self = [super init];
     if (self) {
         self.dictOfFoldersToBeCheck = [CWLOrderedDictionary new];
-        self.indexOfFoldersToBeCheck = 0;
+        self.dictOfFilesAndFoldersToBeDownloaded = [CWLOrderedDictionary new];
     }
     return self;
 }
@@ -51,11 +51,10 @@
 
 - (void) continueWithNextFolder {
     
-    if (self.dictOfFoldersToBeCheck.count > self.indexOfFoldersToBeCheck) {
-        id currentKey = [[self.dictOfFoldersToBeCheck allKeys] objectAtIndex:self.indexOfFoldersToBeCheck];
+    if (self.dictOfFoldersToBeCheck.count > 0) {
+        id currentKey = [[self.dictOfFoldersToBeCheck allKeys] objectAtIndex:0];
         [self checkFolderByIdKey:currentKey];
     }
-    self.indexOfFoldersToBeCheck++;
 
 }
 
@@ -151,13 +150,16 @@
                     } else {
                         [self addFileToDownload:currentFile];
                     }
+                    
+                    [self.dictOfFilesAndFoldersToBeDownloaded setObject:currentFile forKeyedSubscript:currentFile.localFolder];
 
                 } else {
-                    
+                    //Parent folder
                 }
             }
             
             //Continue with the next
+            [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
             [self continueWithNextFolder];
             
         } else {
@@ -229,6 +231,7 @@
     
     NSURLSessionDownloadTask *downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFileSession:serverUrl  toDestiny:file.localFolder defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunicationDownloadFolder] withProgress:&progressValue successRequest:^(NSURLResponse *response, NSURL *filePath) {
         
+        DLog(@"file: %@", file.localFolder);
         DLog(@"File downloaded");
         
         /*[self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
