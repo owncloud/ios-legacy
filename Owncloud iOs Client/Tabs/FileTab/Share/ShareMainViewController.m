@@ -620,7 +620,7 @@
                 shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
             }
             
-            NSString *name = NSLocalizedString(@"no_share_with_users_or_groups_yet", nil);
+            NSString *name = NSLocalizedString(@"not_share_with_users_yet", nil);
             
             shareUserCell.itemName.text = name;
             
@@ -803,7 +803,7 @@
         }
         
         if (section == 1) {
-            shareLinkHeaderCell.titleSection.text = @"Share with users and groups";
+            shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"share_with_users_or_groups", nil);
             shareLinkHeaderCell.switchSection.hidden = true;
         }else{
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"share_link_long_press", nil);
