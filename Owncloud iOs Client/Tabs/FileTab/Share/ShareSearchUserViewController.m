@@ -28,6 +28,8 @@
 #define heightOfShareWithUserRow 55.0
 #define shareUserCellIdentifier @"ShareUserCellIdentifier"
 #define shareUserCellNib @"ShareUserCell"
+#define shareLoadingCellIdentifier @"ShareUserCellIdentifier"
+#define shareLoadingCellNib @"ShareLoadingCell"
 #define loadingVisibleSearchDelay 2.0
 #define loadingVisibleSortDelay 0.1
 #define searchResultsPerPage 30
@@ -155,7 +157,13 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return self.filteredItems.count;
+        
+        if (self.filteredItems.count % searchResultsPerPage == 0) {
+            return self.filteredItems.count + 1;
+        }else{
+            return self.filteredItems.count;
+        }
+        
     }else {
         return self.selectedItems.count;
     }
@@ -164,35 +172,57 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    UITableViewCell *cell = nil;
     
-    ShareUserCell* shareUserCell = (ShareUserCell*)[tableView dequeueReusableCellWithIdentifier:shareUserCellIdentifier];
-    
-    if (shareUserCell == nil) {
-        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareUserCellNib owner:self options:nil];
-        shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
-    }
-    
-    OCShareUser *userOrGroup = nil;
-    
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        userOrGroup = [self.filteredItems objectAtIndex:indexPath.row];
+    if (tableView == self.searchDisplayController.searchResultsTableView && self.filteredItems.count == indexPath.row) {
+        
+        ShareLoadingCell *shareLoadingCell = (ShareLoadingCell*)[tableView dequeueReusableCellWithIdentifier:shareLoadingCellIdentifier];
+        
+        if (shareLoadingCell == nil) {
+            NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLoadingCellNib owner:self options:nil];
+            shareLoadingCell = (ShareLoadingCell *)[topLevelObjects objectAtIndex:0];
+        }
+        
+        cell = shareLoadingCell;
+        
     }else{
-        userOrGroup = [self.selectedItems objectAtIndex:indexPath.row];
-        shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
+        
+        ShareUserCell* shareUserCell = (ShareUserCell*)[tableView dequeueReusableCellWithIdentifier:shareUserCellIdentifier];
+        
+        if (shareUserCell == nil) {
+            NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareUserCellNib owner:self options:nil];
+            shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
+        }
+        
+        OCShareUser *userOrGroup = nil;
+        
+        if (tableView == self.searchDisplayController.searchResultsTableView) {
+            userOrGroup = [self.filteredItems objectAtIndex:indexPath.row];
+        }else{
+            userOrGroup = [self.selectedItems objectAtIndex:indexPath.row];
+            shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
+        }
+        NSString *name = userOrGroup.name;
+        
+        if (userOrGroup.isGroup) {
+            name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_group_indicator", nil)];
+        }
+        
+        shareUserCell.itemName.text = name;
+        
+        cell = shareUserCell;
+        
     }
-    NSString *name = userOrGroup.name;
-    
-    if (userOrGroup.isGroup) {
-        name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_group_indicator", nil)];
-    }
-    
-    shareUserCell.itemName.text = name;
-    
-    cell = shareUserCell;
     
     return cell;
     
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (tableView == self.searchDisplayController.searchResultsTableView && self.filteredItems.count - 1 == indexPath.row && self.filteredItems.count % searchResultsPerPage == 0){
+        [self sendSearchRequestToUpdateTheUsersListWith:nil];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -333,7 +363,7 @@
 
 #pragma mark - UIScrollView Delegate Methods
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
+/*- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
                   willDecelerate:(BOOL)decelerate
 {
     CGPoint offset = aScrollView.contentOffset;
@@ -347,7 +377,7 @@
     if (y > h + reload_distance) {
         [self sendSearchRequestToUpdateTheUsersListWith:nil];
     }
-}
+}*/
 
 
 
