@@ -39,7 +39,8 @@
     folderSync.file = folder;
     folderSync.isRead = NO;
 
-    [self.dictOfFoldersToBeCheck setObject:folderSync forKey:folder.localFolder];
+    NSString *key = [UtilsUrls getKeyByLocalPath:folder.localFolder];
+    [self.dictOfFoldersToBeCheck setObject:folderSync forKey:key];
     
     if (self.dictOfFoldersToBeCheck.count == 1) {
         //id currentKey = [[self.dictOfFoldersToBeCheck allKeys] objectAtIndex:0];
@@ -146,7 +147,8 @@
                         DLog(@"folderSync 1: %@", folderSync.file.fileName);
                         DLog(@"folderSync 2: %@", folderSync.file.localFolder);
                         
-                        [self.dictOfFoldersToBeCheck setObject:folderSync forKey:folderSync.file.localFolder];
+                        NSString *key = [UtilsUrls getKeyByLocalPath:folderSync.file.localFolder];
+                        [self.dictOfFoldersToBeCheck setObject:folderSync forKey:key];
                     } else {
                         [self addFileToDownload:currentFile];
                     }
