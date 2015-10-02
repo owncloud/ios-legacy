@@ -564,7 +564,12 @@
     if (section == 0) {
         return 1;
     }else if (section == 1){
-        return self.sharedUsersOrGroups.count + 1;
+        if (self.sharedUsersOrGroups.count == 0) {
+           return self.sharedUsersOrGroups.count + 2;
+        }else{
+           return self.sharedUsersOrGroups.count + 1;
+        }
+        
     }else{
         return self.optionsShownWithShareLink;
     }
@@ -606,7 +611,24 @@
         
     } else if (indexPath.section == 1) {
         
-        if (indexPath.row == self.sharedUsersOrGroups.count) {
+        if (indexPath.row == 0 && self.sharedUsersOrGroups.count == 0){
+            
+            ShareUserCell* shareUserCell = (ShareUserCell*)[tableView dequeueReusableCellWithIdentifier:shareUserCellIdentifier];
+            
+            if (shareUserCell == nil) {
+                NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareUserCellNib owner:self options:nil];
+                shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
+            }
+            
+            NSString *name = NSLocalizedString(@"no_share_with_users_or_groups_yet", nil);
+            
+            shareUserCell.itemName.text = name;
+            
+            shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
+            
+            cell = shareUserCell;
+            
+        } else if ((indexPath.row == 1 && self.sharedUsersOrGroups.count == 0) || (indexPath.row == self.sharedUsersOrGroups.count)){
             
             ShareLinkButtonCell *shareLinkButtonCell = [tableView dequeueReusableCellWithIdentifier:shareLinkButtonIdentifier];
             
@@ -630,6 +652,7 @@
                 shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
             }
             
+            
             OCSharedDto *shareWith = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
             
             NSString *name = shareWith.shareWith;
@@ -645,7 +668,6 @@
             cell = shareUserCell;
             
         }
-        
         
     }else {
         
@@ -735,7 +757,9 @@
         
     }else if (indexPath.section == 1){
         
-        if (indexPath.row == self.sharedUsersOrGroups.count) {
+        if (indexPath.row == 0 && self.sharedUsersOrGroups.count == 0){
+            height = heightOfShareWithUserRow;
+        }else if ((indexPath.row == 1 && self.sharedUsersOrGroups.count == 0) || (indexPath.row == self.sharedUsersOrGroups.count)){
             height = heightOfShareLinkButtonRow;
         }else{
             height = heightOfShareWithUserRow;
@@ -799,7 +823,7 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:true];
     
-    if (indexPath.section == 1 && indexPath.row == self.sharedUsersOrGroups.count) {
+    if ((indexPath.section == 1) && ((indexPath.row == 1 && self.sharedUsersOrGroups.count == 0) || (indexPath.row == self.sharedUsersOrGroups.count))) {
         ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
         ssuvc.shareFileDto = self.sharedItem;
          [ssuvc setSelectedItems:self.sharedUsersOrGroups];
