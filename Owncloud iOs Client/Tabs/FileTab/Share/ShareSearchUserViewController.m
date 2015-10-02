@@ -343,7 +343,7 @@
     float y = offset.y + bounds.size.height - inset.bottom;
     float h = size.height;
     
-    float reload_distance = 50;
+    float reload_distance = heightOfShareWithUserRow;
     if (y > h + reload_distance) {
         [self sendSearchRequestToUpdateTheUsersListWith:nil];
     }
