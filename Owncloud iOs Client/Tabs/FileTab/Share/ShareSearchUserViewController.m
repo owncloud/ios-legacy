@@ -23,6 +23,7 @@
 #import "UtilsUrls.h"
 #import "OCShareUser.h"
 #import "OCSharedDto.h"
+#import "TSMessageView.h"
 
 
 #define heightOfShareWithUserRow 55.0
@@ -33,6 +34,8 @@
 #define loadingVisibleSearchDelay 2.0
 #define loadingVisibleSortDelay 0.1
 #define searchResultsPerPage 30
+#define messageAlpha 0.96
+#define messageDuration 2.5
 
 @interface ShareSearchUserViewController ()
 
@@ -287,6 +290,10 @@
         
         [self endLoading];
         
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+            [self showWarningMessageWithText:error.localizedDescription];
+        });
+        
         
     }];
     
@@ -325,7 +332,9 @@
         
         [self endLoading];
         
-        DLog(@"Failure in the share with process: %@", error);
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+            [self showWarningMessageWithText:error.localizedDescription];
+        });
         
     }];
     
@@ -361,23 +370,23 @@
     tableView.rowHeight = self.searchTableView.rowHeight;
 }
 
-#pragma mark - UIScrollView Delegate Methods
+#pragma mark - TSMessages
 
-/*- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView
-                  willDecelerate:(BOOL)decelerate
-{
-    CGPoint offset = aScrollView.contentOffset;
-    CGRect bounds = aScrollView.bounds;
-    CGSize size = aScrollView.contentSize;
-    UIEdgeInsets inset = aScrollView.contentInset;
-    float y = offset.y + bounds.size.height - inset.bottom;
-    float h = size.height;
+- (void)showWarningMessageWithText: (NSString *) message {
     
-    float reload_distance = heightOfShareWithUserRow;
-    if (y > h + reload_distance) {
-        [self sendSearchRequestToUpdateTheUsersListWith:nil];
-    }
-}*/
+    //Run UI Updates
+    [TSMessage setDelegate:self];
+    [TSMessage showNotificationInViewController:self title:message subtitle:nil type:TSMessageNotificationTypeWarning];
+    
+}
+
+#pragma mark - TSMessage Delegate
+
+- (void)customizeMessageView:(TSMessageView *)messageView
+{
+    messageView.alpha = messageAlpha;
+    messageView.duration = messageDuration;
+}
 
 
 

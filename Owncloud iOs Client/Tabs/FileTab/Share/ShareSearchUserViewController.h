@@ -17,9 +17,10 @@
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 #import "FileDto.h"
+#import "TSMessage.h"
 
 
-@interface ShareSearchUserViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate, UISearchDisplayDelegate>
+@interface ShareSearchUserViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate, UISearchDisplayDelegate, TSMessageViewProtocol>
 
 @property (nonatomic, weak) IBOutlet UITableView* searchTableView;
 @property (nonatomic, strong) IBOutlet UISearchBar *itemSearchBar;
