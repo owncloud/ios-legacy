@@ -833,6 +833,8 @@
             [self.navigationController pushViewController:ssuvc animated:true];
         }else{
             DLog(@"Not supported");
+            [self showErrorWithTitle:NSLocalizedString(@"not_sharee_api_supported", nil)];
+            
         }
         
     }
@@ -1007,13 +1009,19 @@
 
 - (void) showErrorAccount {
     
-     if (k_is_sso_active) {
-         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"session_expired", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-         [alertView show];
-     } else{
-         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error_login_message", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-         [alertView show];
-     }
+    if (k_is_sso_active) {
+        [self showErrorWithTitle:NSLocalizedString(@"session_expired", nil)];
+    }else{
+        [self showErrorWithTitle:NSLocalizedString(@"error_login_message", nil)];
+    }
+    
+}
+
+- (void)showErrorWithTitle: (NSString *)title {
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+    [alertView show];
+    
     
 }
 
