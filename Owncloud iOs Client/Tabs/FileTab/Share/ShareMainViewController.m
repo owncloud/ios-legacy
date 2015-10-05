@@ -824,11 +824,17 @@
     [tableView deselectRowAtIndexPath:indexPath animated:true];
     
     if ((indexPath.section == 1) && ((indexPath.row == 1 && self.sharedUsersOrGroups.count == 0) || (indexPath.row == self.sharedUsersOrGroups.count))) {
-        ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
-        ssuvc.shareFileDto = self.sharedItem;
-         [ssuvc setSelectedItems:self.sharedUsersOrGroups];
-        [self.navigationController pushViewController:ssuvc animated:true];
-       
+        
+        //Check if the server has Sharee support
+        if (APP_DELEGATE.activeUser.hasShareeApiSupport == serverFunctionalitySupported) {
+            ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
+            ssuvc.shareFileDto = self.sharedItem;
+            [ssuvc setSelectedItems:self.sharedUsersOrGroups];
+            [self.navigationController pushViewController:ssuvc animated:true];
+        }else{
+            DLog(@"Not supported");
+        }
+        
     }
     
     if (indexPath.section == 2 && indexPath.row == 0 && self.isExpirationDateEnabled == true){
