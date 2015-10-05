@@ -9,7 +9,9 @@
 #import "CWLOrderedDictionary.h"
 @class FileDto;
 
-@interface IndexedForest : CWLOrderedDictionary
+@interface IndexedForest : NSObject
+
+@property (nonatomic, strong) CWLOrderedDictionary *treeDictionary;
 
 - (void) addFileToTheForest:(FileDto*) file;
 

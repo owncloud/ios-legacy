@@ -10,11 +10,12 @@
 
 @class FileDto;
 @class CWLOrderedDictionary;
+@class IndexedForest;
 
 @interface SyncFolderManager : NSObject
 
 @property (nonatomic, strong) CWLOrderedDictionary *dictOfFoldersToBeCheck;
-@property (nonatomic, strong) CWLOrderedDictionary *dictOfFilesAndFoldersToBeDownloaded;
+@property (nonatomic, strong) IndexedForest *forestOfFilesAndFoldersToBeDownloaded;
 
 - (void) addFolderToBeDownloaded: (FileDto *) folder;
 

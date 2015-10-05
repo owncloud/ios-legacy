@@ -20,6 +20,7 @@
 #import "FolderSyncDto.h"
 #import "FileDto.h"
 #import "CWLOrderedDictionary.h"
+#import "IndexedForest.h"
 
 @implementation SyncFolderManager
 
@@ -28,7 +29,7 @@
     self = [super init];
     if (self) {
         self.dictOfFoldersToBeCheck = [CWLOrderedDictionary new];
-        self.dictOfFilesAndFoldersToBeDownloaded = [CWLOrderedDictionary new];
+        self.forestOfFilesAndFoldersToBeDownloaded = [IndexedForest new];
     }
     return self;
 }
@@ -39,7 +40,7 @@
     folderSync.file = folder;
     folderSync.isRead = NO;
 
-    NSString *key = [UtilsUrls getKeyByLocalPath:folder.localFolder];
+    NSString *key = [UtilsUrls getKeyByLocalFolder:folder.localFolder];
     [self.dictOfFoldersToBeCheck setObject:folderSync forKey:key];
     
     if (self.dictOfFoldersToBeCheck.count == 1) {
@@ -147,14 +148,15 @@
                         DLog(@"folderSync 1: %@", folderSync.file.fileName);
                         DLog(@"folderSync 2: %@", folderSync.file.localFolder);
                         
-                        NSString *key = [UtilsUrls getKeyByLocalPath:folderSync.file.localFolder];
+                        NSString *key = [UtilsUrls getKeyByLocalFolder:folderSync.file.localFolder];
                         [self.dictOfFoldersToBeCheck setObject:folderSync forKey:key];
                     } else {
+                        
+                        //Add the file to the indexed forest of files downloading
+                        [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:currentFile];
                         [self addFileToDownload:currentFile];
                     }
                     
-                    [self.dictOfFilesAndFoldersToBeDownloaded setObject:currentFile forKeyedSubscript:currentFile.localFolder];
-
                 } else {
                     //Parent folder
                 }

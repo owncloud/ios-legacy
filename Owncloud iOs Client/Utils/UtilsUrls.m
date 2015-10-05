@@ -524,14 +524,12 @@
  * @return  pathWithAppName -> Documents/
  *                          -> Documents/File.pdf
  */
-+ (NSString *) getKeyByLocalPath:(NSString *) localPath {
++ (NSString *) getKeyByLocalFolder:(NSString *) localFolder {
     
-    NSString *key = [localPath substringFromIndex:[[self getOwnCloudFilePath] length]];
-    
+    NSString *key = [localFolder substringFromIndex:[[self getOwnCloudFilePath] length]];
     NSArray *pathDivided = [key componentsSeparatedByString:@"/"];
-
-    key = [key substringFromIndex:[[pathDivided objectAtIndex:0] length] + 1];
     
+    key = [key substringFromIndex:[[pathDivided objectAtIndex:0] length] + 1];
     
     return key;
 }
