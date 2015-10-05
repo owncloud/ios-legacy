@@ -832,7 +832,6 @@
             [ssuvc setSelectedItems:self.sharedUsersOrGroups];
             [self.navigationController pushViewController:ssuvc animated:true];
         }else{
-            DLog(@"Not supported");
             [self showErrorWithTitle:NSLocalizedString(@"not_sharee_api_supported", nil)];
             
         }

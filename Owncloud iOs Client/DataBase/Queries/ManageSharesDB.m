@@ -17,11 +17,22 @@
 #import "FMDatabaseQueue.h"
 #import "FMDatabase.h"
 #import "UserDto.h"
-#import "AppDelegate.h"
 #import "OCSharedDto.h"
 #import "UtilsDtos.h"
 #import "NSString+Encoding.h"
+#import "ManageUsersDB.h"
+
+#ifdef CONTAINER_APP
 #import "Owncloud_iOs_Client-Swift.h"
+#elif FILE_PICKER
+#import "ownCloudExtApp-Swift.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
+#else
+#import "ownCloudExtAppFileProvider-Swift.h"
+#endif
+
+
 
 @implementation ManageSharesDB
 
@@ -36,8 +47,7 @@
  */
 + (void) insertSharedList:(NSArray *)elements{
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UserDto *mUser = app.activeUser;
+    UserDto *mUser =  [ManageUsersDB getActiveUser];
 
     FMDatabaseQueue *queue = Managers.sharedDatabase;
 
@@ -553,8 +563,7 @@
  */
 + (OCSharedDto *) getSharedEqualWithFileDtoPath:(NSString*)path{
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UserDto *mUser = app.activeUser;
+    UserDto *mUser = [ManageUsersDB getActiveUser];
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
