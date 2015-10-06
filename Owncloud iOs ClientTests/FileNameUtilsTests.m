@@ -4,7 +4,14 @@
 //
 //  Created by Noelia Alvarez on 24/8/15.
 //
-//
+
+/*
+ Copyright (C) 2015, ownCloud, Inc.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
 
 // Under test
 #import "FileNameUtils.h"
@@ -113,32 +120,6 @@
     XCTAssertNotEqualObjects(expectedReturn, returnValue, @"The return value match the expected return value");
     
 }
-
-/*
-- (void) testIsImageSupportedThisFile {
-    
-    //FileNameUtils *obj = [[FileNameUtils alloc] init];
-    id mock = [OCMockObject partialMockForObject:self.oFileNameUtils];
-    [[[mock stub] andReturn:@"JPG"] getExtension:@"name.JPG"];
-     long expectedReturn = 0;
-    
-    long returnValue = [mock isImageSupportedThisFile:@"name"];
-    //
-    //tell the mock object what you expect
-//    [[mock expect] isImageSupportedThisFile:@"name.JPG"];
-//    //call the second method
-//    [mock checkTheTypeOfFile];
-//    //verify if the first method expected is in invoked in the second one
-//    [mock verify];
-    
-     XCTAssertEqual(expectedReturn, returnValue, @"The return value did not match the expected return value");
-    
-    
-}*/
-
-
-
-
 
 
 @end
