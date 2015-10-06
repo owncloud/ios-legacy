@@ -34,6 +34,14 @@
     NSString *bundleSecurityGroup = [self getBundleOfSecurityGroup];
     
     output = [[[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:bundleSecurityGroup] path];
+    
+    if (!output) {
+        NSLog(@"ERROR Getting the AppGroup: You will not be able to use neither the Document Provider or other extensions. This problem is related to the generation of certificates, provisioning profiles and the AppGroup. Please, read the Documentation of the project to fix it (https://github.com/owncloud/ios/blob/develop/SETUP.md)");
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        output = paths.firstObject;
+    }
+        
     output = [NSString stringWithFormat:@"%@/%@",output, k_owncloud_folder];
     
     BOOL isDirectory;
