@@ -830,6 +830,7 @@
             ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
             ssuvc.shareFileDto = self.sharedItem;
             [ssuvc setSelectedItems:self.sharedUsersOrGroups];
+            self.activityView = nil;
             [self.navigationController pushViewController:ssuvc animated:true];
         }else{
             [self showErrorWithTitle:NSLocalizedString(@"not_sharee_api_supported", nil)];
