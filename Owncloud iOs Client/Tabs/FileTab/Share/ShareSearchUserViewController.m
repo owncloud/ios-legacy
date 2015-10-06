@@ -61,8 +61,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-     self.title = NSLocalizedString(@"add_user_or_group_title", nil);
+    
+    if (IS_IPHONE == false) {
+         self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+    
+    
+    self.title = NSLocalizedString(@"add_user_or_group_title", nil);
     
 }
 
