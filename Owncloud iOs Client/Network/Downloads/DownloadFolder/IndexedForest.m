@@ -28,34 +28,31 @@
     NSArray *keyDivided = [key componentsSeparatedByString:@"/"];
     NSString *keyConstructed = @"";
     
-    CWLOrderedDictionary *tmpTreeDictionary = self.treeDictionary;
+    CWLOrderedDictionary *structuredDict = self.treeDictionary;
     
     //Every keyDivided is a diferent level of the tree
     for (NSString *current in keyDivided) {
         
         keyConstructed = [keyConstructed stringByAppendingString:current];
-    
-        //Check if is one of the parts of the structure of the file Ex: /Documents/Folder/
+        
         if (keyConstructed.length < key.length) {
             keyConstructed = [keyConstructed stringByAppendingString:@"/"];
             
-            CWLOrderedDictionary *tempFakeDictFolder = [tmpTreeDictionary objectForKeyedSubscript:keyConstructed];
+            CWLOrderedDictionary *tmpDict = [structuredDict objectForKey:keyConstructed];
             
-            //If not exist we have to get it from the DB to have all the tree in memory
-            if (!tempFakeDictFolder) {
-                tempFakeDictFolder = [CWLOrderedDictionary new];
-                [tmpTreeDictionary setObject:tempFakeDictFolder forKey:keyConstructed];
+            if (!tmpDict) {
+                //Not exist so we create a new one
+                tmpDict = [CWLOrderedDictionary new];
+                [structuredDict setObject:tmpDict forKey:keyConstructed];
             }
+            
+            structuredDict = [structuredDict objectForKey:keyConstructed];
+            
+        } else {
+            //Is the file
+            [structuredDict setObject:file forKey:keyConstructed];
         }
     }
-    
-    self.treeDictionary = tmpTreeDictionary;
-    
-    //Now we have the tree constructed
-    //Is the file so this is the last level of the tree
-    CWLOrderedDictionary *tempFakeDictFolder = [tmpTreeDictionary objectForKeyedSubscript:keyConstructed];
-    [tempFakeDictFolder setObject:file forKey:keyConstructed];
-
 }
 
 @end
