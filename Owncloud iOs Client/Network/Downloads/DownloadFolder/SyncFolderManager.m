@@ -152,9 +152,11 @@
                         [self.dictOfFoldersToBeCheck setObject:folderSync forKey:key];
                     } else {
                         
-                        //Add the file to the indexed forest of files downloading
-                        [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:currentFile];
-                        [self addFileToDownload:currentFile];
+                        if (currentFile.isDownload == notDownload || currentFile.isNecessaryUpdate) {
+                            //Add the file to the indexed forest of files downloading
+                            [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:currentFile];
+                            [self downloadTheFile:currentFile];
+                        }
                     }
                     
                 } else {
@@ -213,108 +215,15 @@
 
 #pragma mark - Download Process
 
-- (void) addFileToDownload:(FileDto *) file {
+- (void) downloadTheFile:(FileDto *) file {
+    Download *download = nil;
+    download = [[Download alloc]init];
+    download.delegate = nil;
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    NSString *serverUrl = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:app.activeUser];
+    NSString *currentLocalFolder = [file.localFolder substringToIndex:[file.localFolder length] - file.fileName.length];
+    download.currentLocalFolder = currentLocalFolder;
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunicationDownloadFolder] setCredentialsWithCookie:app.activeUser.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunicationDownloadFolder] setCredentialsOauthWithToken:app.activeUser.password];
-    } else {
-        [[AppDelegate sharedOCCommunicationDownloadFolder] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-    }
-    
-    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-    
-    DLog(@"serverUrl: %@", serverUrl);
-    
-    NSProgress *progressValue;
-    
-    NSURLSessionDownloadTask *downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFileSession:serverUrl  toDestiny:file.localFolder defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunicationDownloadFolder] withProgress:&progressValue successRequest:^(NSURLResponse *response, NSURL *filePath) {
-        
-        DLog(@"file: %@", file.localFolder);
-        DLog(@"File downloaded");
-        
-        /*[self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
-         
-         //Finalized the download
-         [weakSelf updateDataDownload];
-         [weakSelf setDownloadTaskIdentifierValid:NO];*/
-        
-    } failureRequest:^(NSURLResponse *response, NSError *error) {
-        
-        DLog(@"Error: %@", error);
-        DLog(@"error.code: %ld", (long)error.code);
-        
-        /*[self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
-         
-         DLog(@"Error: %@", error);
-         DLog(@"error.code: %ld", (long)error.code);
-         
-         if (!self.isForceCanceling) {
-         
-         [weakSelf setDownloadTaskIdentifierValid:NO];
-         NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-         DLog(@"Operation error: %ld", (long)httpResponse.statusCode);
-         
-         //Update the fileDto
-         _fileDto = [ManageFilesDB getFileDtoByIdFile:_fileDto.idFile];
-         
-         [self failureDownloadProcess];
-         
-         if ([error code] != NSURLErrorCancelled && weakSelf.isCancel==NO) {
-         
-         switch (error.code) {
-         case kCFURLErrorUserCancelledAuthentication: { //-1012
-         
-         [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
-         
-         CheckAccessToServer *mCheckAccessToServer = [CheckAccessToServer new];
-         [mCheckAccessToServer isConnectionToTheServerByUrl:app.activeUser.url];
-         
-         break;
-         }
-         case kCFURLErrorUserAuthenticationRequired:{
-         [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
-         [weakSelf.delegate errorLogin];
-         
-         break;
-         }
-         default:
-         
-         switch (httpResponse.statusCode) {
-         case kOCErrorServerUnauthorized:
-         [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
-         [weakSelf.delegate errorLogin];
-         break;
-         case kOCErrorServerForbidden:
-         [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
-         break;
-         case kOCErrorProxyAuth:
-         [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
-         break;
-         case kOCErrorServerPathNotFound:
-         [weakSelf.delegate downloadFailed:NSLocalizedString(@"download_file_exist", nil) andFile:weakSelf.fileDto];
-         break;
-         default:
-         [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
-         break;
-         }
-         }
-         }
-         
-         //Erase cache and cookies
-         [UtilsCookies eraseURLCache];
-         
-         }*/
-        
-    }];
-    
-    [downloadTask resume];
+    [download fileToDownload:file];
 }
-
 
 @end
