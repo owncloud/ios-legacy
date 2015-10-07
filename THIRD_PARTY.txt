@@ -136,6 +136,6 @@ The third party software included and used by this project is:
    	Copyright (c) 2014 Toursprung, Felix Krause <krausefx@gmail.com>
    	Licensed under MIT License.
    	Placed at ExternalLibreries/TTMessages.
-	Original license document included at ExternalLibreries/TTMesages/LICENSE.
+	Original license document included at ExternalLibreries/TTMesages/LICENSE.txt
    	See https://github.com/KrauseFx/TSMessages/
 
