@@ -22,7 +22,7 @@
     return self;
 }
 
-- (void) addFileToTheForest:(FileDto*) file {
+- (void) addFileToTheForest:(FileDto *) file {
     
     NSString *key = [UtilsUrls getKeyByLocalFolder:file.localFolder];
     NSArray *keyDivided = [key componentsSeparatedByString:@"/"];
@@ -53,6 +53,33 @@
             [structuredDict setObject:file forKey:keyConstructed];
         }
     }
+}
+
+- (void) removeFileFromTheForest:(FileDto *) file {
+    
+    NSString *key = [UtilsUrls getKeyByLocalFolder:file.localFolder];
+    NSArray *keyDivided = [key componentsSeparatedByString:@"/"];
+    NSString *keyConstructed = @"";
+    
+    CWLOrderedDictionary *structuredDict = self.treeDictionary;
+    
+    //Every keyDivided is a diferent level of the tree
+    for (NSString *current in keyDivided) {
+        
+        keyConstructed = [keyConstructed stringByAppendingString:current];
+        
+        if (keyConstructed.length < key.length) {
+            
+            keyConstructed = [keyConstructed stringByAppendingString:@"/"];
+            structuredDict = [structuredDict objectForKey:keyConstructed];
+            
+        } else {
+            //Is the file
+            [structuredDict removeObjectForKey:keyConstructed];
+        }
+    }
+    
+    DLog(@"File removed from the tree");
 }
 
 @end

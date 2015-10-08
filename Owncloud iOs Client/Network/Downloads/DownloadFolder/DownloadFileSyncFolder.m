@@ -13,6 +13,10 @@
 #import "Customization.h"
 #import "UtilsUrls.h"
 #import "DownloadUtils.h"
+#import "SyncFolderManager.h"
+#import "IndexedForest.h"
+
+#define k_task_identifier_invalid -1
 
 @implementation DownloadFileSyncFolder
 
@@ -63,6 +67,7 @@
                                                           
                                                           //Finalized the download
                                                           [weakSelf updateDataDownload:file];
+                                                          [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded removeFileFromTheForest:file];
                                                           
                                                       } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                                                           DLog(@"Error: %@", error);
@@ -81,15 +86,19 @@
             
             //Finalized the download
             [weakSelf updateDataDownload:file];
+            [ManageFilesDB updateFile:file.idFile withTaskIdentifier:k_task_identifier_invalid];
+            [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded removeFileFromTheForest:file];
             
         } failureRequest:^(NSURLResponse *response, NSError *error) {
             
             DLog(@"Error: %@", error);
             DLog(@"error.code: %ld", (long)error.code);
+            [ManageFilesDB updateFile:file.idFile withTaskIdentifier:k_task_identifier_invalid];
             
         }];
         
         [self.downloadTask resume];
+        [ManageFilesDB updateFile:file.idFile withTaskIdentifier:self.downloadTask.taskIdentifier];
     }
 }
 

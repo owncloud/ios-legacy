@@ -14,5 +14,6 @@
 @property (nonatomic, strong) CWLOrderedDictionary *treeDictionary;
 
 - (void) addFileToTheForest:(FileDto*) file;
+- (void) removeFileFromTheForest:(FileDto *) file ;
 
 @end
