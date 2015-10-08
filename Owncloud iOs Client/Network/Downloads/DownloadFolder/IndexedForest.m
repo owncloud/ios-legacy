@@ -76,10 +76,11 @@
         } else {
             //Is the file
             [structuredDict removeObjectForKey:keyConstructed];
+            
+            //Now we have to check the structure in the reverse way
+            
         }
     }
-    
-    DLog(@"File removed from the tree");
 }
 
 @end
