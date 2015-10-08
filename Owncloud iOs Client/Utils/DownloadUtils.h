@@ -41,5 +41,16 @@
  */
 + (void) removeDownloadFileWithPath:(NSString *)path;
 
+///-----------------------------------
+/// @name Update a file with the temporal one
+///-----------------------------------
+
+/**
+ * This method updates a file because there is a new version in the server
+ *
+ * @param file > (FileDto) the file to be updated
+ * @param temporalFile > (NSString) the path of the temporal file
+ */
++ (void) updateFile:(FileDto *)file withTemporalFile:(NSString *)temporalFile;
 
 @end

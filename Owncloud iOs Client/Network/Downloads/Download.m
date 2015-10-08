@@ -30,6 +30,7 @@
 #import "FilesViewController.h"
 #import "UploadUtils.h"
 #import "UtilsCookies.h"
+#import "DownloadUtils.h"
 
 #define k_task_identifier_invalid -1
 
@@ -422,7 +423,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     if (isNecessaryUpdate) {
         //Delete the temporal file
-        [self updateFile:_fileDto withTemporalFile:_deviceLocalPath];
+        [DownloadUtils updateFile:_fileDto withTemporalFile:_deviceLocalPath];
     }
     
     //Update the datas of the new file
@@ -787,39 +788,6 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         //Erase cache
         [UtilsCookies eraseURLCache];
     }];
-}
-
-
-///-----------------------------------
-/// @name Update a file with the temporal one
-///-----------------------------------
-
-/**
- * This method updates a file because there is a new version in the server
- *
- * @param file > (FileDto) the file to be updated
- * @param temporalFile > (NSString) the path of the temporal file
- */
-- (void) updateFile:(FileDto *)file withTemporalFile:(NSString *)temporalFile {
-    
-    //If the file has been updated
-    DLog(@"Temporal local path: %@", temporalFile);
-    DLog(@"Old local path: %@", file.localFolder);
-    
-    //Delete the old file
-    DeleteFile *mDeleteFile = [[DeleteFile alloc] init];
-    [mDeleteFile deleteItemFromDeviceByFileDto:file];
-    
-    //Change the name of the new updated file
-    NSFileManager *filecopy=nil;
-    filecopy =[NSFileManager defaultManager];
-    NSError *error;
-    if(![filecopy moveItemAtPath:temporalFile toPath:file.localFolder error:&error]){
-        DLog(@"Error: %@",[error localizedDescription]);
-    }
-    else{
-        DLog(@"All ok");
-    }
 }
 
 

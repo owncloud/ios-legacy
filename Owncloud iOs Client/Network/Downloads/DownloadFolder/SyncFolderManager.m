@@ -21,6 +21,7 @@
 #import "FileDto.h"
 #import "CWLOrderedDictionary.h"
 #import "IndexedForest.h"
+#import "DownloadFileSyncFolder.h"
 
 @implementation SyncFolderManager
 
@@ -126,6 +127,7 @@
                     //We update the current folder with the new etag
                     [ManageFilesDB updateEtagOfFileDtoByid:currentFolder.idFile andNewEtag: currentFolder.etag];
                     
+                    //break;
                 }
             }
             
@@ -134,9 +136,12 @@
             //Send the data to DB and refresh the table
             [self deleteOldDataFromDBBeforeRefresh:directoryList ofFolder:currentFolder];
       
+            //TODO: get the etag from directoryList for each file to make the download
             NSMutableArray *tmpFilesAndFolderToSync = [ManageFilesDB getFilesByFileIdForActiveUser:currentFolder.idFile];
             
+            int indexEtag = 0;
             for (FileDto *currentFile in tmpFilesAndFolderToSync) {
+                indexEtag++;
                 //Add the folder to the queue of sync and the file to the queue of downloads
                 if (currentFile.fileName != nil) {
 
@@ -152,10 +157,13 @@
                         [self.dictOfFoldersToBeCheck setObject:folderSync forKey:key];
                     } else {
                         
+                        DLog(@"folderSync 1: %@", currentFile.fileName);
+                        
                         if (currentFile.isDownload == notDownload || currentFile.isNecessaryUpdate) {
                             //Add the file to the indexed forest of files downloading
                             [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:currentFile];
-                            [self downloadTheFile:currentFile];
+                            FileDto *fileRemote = [directoryList objectAtIndex:indexEtag];
+                            [self downloadTheFile:currentFile andNewEtag:fileRemote.etag];
                         }
                     }
                     
@@ -215,15 +223,11 @@
 
 #pragma mark - Download Process
 
-- (void) downloadTheFile:(FileDto *) file {
-    Download *download = nil;
-    download = [[Download alloc]init];
-    download.delegate = nil;
-    
-    NSString *currentLocalFolder = [file.localFolder substringToIndex:[file.localFolder length] - file.fileName.length];
-    download.currentLocalFolder = currentLocalFolder;
-    
-    [download fileToDownload:file];
+- (void) downloadTheFile:(FileDto *) file andNewEtag:(NSString *) currentFileEtag {
+    DownloadFileSyncFolder *download = [DownloadFileSyncFolder new];
+    download.currentFileEtag = currentFileEtag;
+    [download addFileToDownload:file];
 }
+
 
 @end
