@@ -51,8 +51,30 @@
     __weak typeof(self) weakSelf = self;
     
     if (k_is_sso_active || !k_is_background_active) {
+        
+        //Create the block of NSOperation to download.
+        self.operation = [[AppDelegate sharedOCCommunication] downloadFile:serverUrl toDestiny:localPath withLIFOSystem:NO onCommunication:[AppDelegate sharedOCCommunication]
+                                                      progressDownload:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+                                                          
+                                                      } successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+                                                          
+                                                          DLog(@"file: %@", file.localFolder);
+                                                          DLog(@"File downloaded");
+                                                          
+                                                          //Finalized the download
+                                                          [weakSelf updateDataDownload:file];
+                                                          
+                                                      } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+                                                          DLog(@"Error: %@", error);
+                                                          DLog(@"error.code: %ld", (long)error.code);
+                                                          
+                                                      } shouldExecuteAsBackgroundTaskWithExpirationHandler:^{
+                                                          //Cancel download
+                                                          [weakSelf cancelDownload];
+                                                      }];
+        
     } else {
-        NSURLSessionDownloadTask *downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFileSession:serverUrl  toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunicationDownloadFolder] withProgress:nil successRequest:^(NSURLResponse *response, NSURL *filePath) {
+        self.downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFileSession:serverUrl  toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunicationDownloadFolder] withProgress:nil successRequest:^(NSURLResponse *response, NSURL *filePath) {
             
             DLog(@"file: %@", file.localFolder);
             DLog(@"File downloaded");
@@ -67,7 +89,7 @@
             
         }];
         
-        [downloadTask resume];
+        [self.downloadTask resume];
     }
 }
 
@@ -86,6 +108,17 @@
     [ManageFilesDB setFileIsDownloadState:file.idFile andState:downloaded];
     
     [ManageFilesDB updateEtagOfFileDtoByid:file.idFile andNewEtag:self.currentFileEtag];
+}
+
+- (void) cancelDownload {
+    
+    if (self.operation) {
+        [self.operation cancel];
+    }
+    
+    if (self.downloadTask) {
+        [self.downloadTask cancel];
+    }
 }
 
 @end

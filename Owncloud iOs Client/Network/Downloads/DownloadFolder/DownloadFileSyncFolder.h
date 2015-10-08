@@ -13,6 +13,10 @@
 @property (nonatomic, strong) NSString *currentFileEtag;
 @property (nonatomic, strong) NSString *tmpUpdatePath;
 
+@property (nonatomic, strong) NSOperation *operation;
+@property (nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
+
 - (void) addFileToDownload:(FileDto *) file;
+- (void) cancelDownload;
 
 @end
