@@ -63,6 +63,7 @@
     
     CWLOrderedDictionary *structuredDict = self.treeDictionary;
     
+    //1. Remove the file from the tree
     //Every keyDivided is a diferent level of the tree
     for (NSString *current in keyDivided) {
         
@@ -76,11 +77,81 @@
         } else {
             //Is the file
             [structuredDict removeObjectForKey:keyConstructed];
-            
-            //Now we have to check the structure in the reverse way
-            
         }
     }
+    
+    //2. Remove the full structure of the tree if there is not any other file or folder on that tree
+    //Now we have to check the structure in the reverse way
+    BOOL isCheckingStructure = YES;
+    
+    //Remove the file from the key
+    key = [key substringToIndex:[key length] - [key lastPathComponent].length];
+    
+    do {
+        NSString *parentKey = [key substringToIndex:[key length] - ([key lastPathComponent].length+1)];
+        if (![parentKey hasSuffix:@"/"]) {
+            parentKey = [parentKey stringByAppendingString:@"/"];
+        }
+        
+        CWLOrderedDictionary *parentDict;
+        CWLOrderedDictionary *currentDict = [self getDictionaryOfTreebyKey:key];
+        
+        if ([parentKey isEqualToString:@"/"]) {
+            //Parent is the treeDictionary
+            parentDict = self.treeDictionary;
+        } else {
+            parentDict = [self getDictionaryOfTreebyKey:parentKey];
+        }
+        
+        if (currentDict.count == 0) {
+            //The folder is empty
+            
+            //Remove current one from the parent
+            [parentDict removeObjectForKey:key];
+            
+            //Continue with parent dictionary
+            NSString *stringToRemove = [key lastPathComponent];
+            key = [key substringToIndex:[key length] - (stringToRemove.length+1)];
+            
+            //We check if key is empty to not continue. The next to check is the root (treeDictionary)
+            if (key.length == 0) {
+                if (self.treeDictionary.count == 0) {
+                    self.treeDictionary = nil;
+                    isCheckingStructure = NO;
+                }
+            }
+            
+        } else {
+            //The folder is not empty
+            isCheckingStructure = NO;
+        }
+        
+        
+    } while (isCheckingStructure);
+}
+
+- (CWLOrderedDictionary *) getDictionaryOfTreebyKey:(NSString *) key {
+    
+    NSMutableArray *keyDivided = [[key componentsSeparatedByString:@"/"] mutableCopy];
+    [keyDivided removeLastObject];
+    NSString *keyConstructed = @"";
+    
+    CWLOrderedDictionary *structuredDict = self.treeDictionary;
+    
+    //Every keyDivided is a diferent level of the tree
+    while (keyDivided.count > 0) {
+        
+        NSString *current = [keyDivided objectAtIndex:0];
+        [keyDivided removeObjectAtIndex:0];
+        
+        keyConstructed = [keyConstructed stringByAppendingString:current];
+        keyConstructed = [keyConstructed stringByAppendingString:@"/"];
+        
+        structuredDict = [structuredDict objectForKey:keyConstructed];
+        
+    }
+    
+    return structuredDict;
 }
 
 @end
