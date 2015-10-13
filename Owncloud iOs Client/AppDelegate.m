@@ -58,6 +58,7 @@
 #import "CheckHasForbiddenCharactersSupport.h"
 #import "HelpGuideViewController.h"
 #import "SyncFolderManager.h"
+#import "DownloadFileSyncFolder.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -1221,6 +1222,40 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
+- (void) restoreDownloadsInProccessFromDownloadFolderFromSystemWithIdentificator: (NSString*)identifier withCompletionHandler:(void (^)())completionHandler{
+    
+    NSURLSessionConfiguration *configuration = nil;
+    
+    if (IS_IOS8) {
+        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
+    } else {
+        configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
+    }
+    
+    NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:configuration];
+    
+    [urlSession getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        
+        //Get downloads in progress from the DataBase
+        NSMutableArray *downloadsFromDB = [NSMutableArray new];
+        
+        [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading]];
+        
+        for (NSURLSessionDownloadTask *downloadTask in downloadTasks) {
+            
+            for (FileDto *file in downloadsFromDB) {
+                
+                if (file.taskIdentifier == downloadTask.taskIdentifier) {
+                    
+                    [[AppDelegate sharedSyncFolderManager] simpleDownloadTheFile:file];
+                }
+            }
+        }
+        
+        [self getDownloadsFromDownloadFolderTaskFinish];
+    }];
+}
+
 - (void) restoreDownloadsInProccessFromSystemWithIdentificator: (NSString*)identifier withCompletionHandler:(void (^)())completionHandler{
     
     NSURLSessionConfiguration *configuration = nil;
@@ -1265,33 +1300,71 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             }
         }
         
-        if (downloadsFromDB.count > 0) {
-            
-            NSMutableArray *tempArray = [NSMutableArray new];
-            
-            for (Download *download in [self.downloadManager getDownloads]) {
-                for (FileDto *file in downloadsFromDB) {
-                    if ([file.filePath isEqualToString:download.fileDto.filePath] && [file.fileName isEqualToString:download.fileDto.fileName]){
-                        [tempArray addObject:file];
-                    }
-                }
-            }
-            
-            for (FileDto *file in tempArray) {
-                [downloadsFromDB removeObjectIdenticalTo:file];
-            }
-            
-            //Put "notdownload" state files are not in the background session
-            for (FileDto *file in downloadsFromDB) {
-                [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
-            }
-            
-        }
-        
         [self getCallBacksOfDownloads];
         [self getDownloadsTaskFinish];
-        
        
+    }];
+}
+
+/*
+ *  Method to set the files that are not on the Background but they should be downloading to not download state
+ */
+- (void) removeDownloadStatusFromFilesLosesOnBackground {
+    
+    //Get downloads in progress from the DataBase
+    NSMutableArray *downloadsFromDB = [NSMutableArray new];
+    
+    [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading]];
+    
+    if (downloadsFromDB.count > 0) {
+        
+        NSMutableArray *tempArray = [NSMutableArray new];
+        
+        for (Download *download in [self.downloadManager getDownloads]) {
+            for (FileDto *file in downloadsFromDB) {
+                if ([file.filePath isEqualToString:download.fileDto.filePath] && [file.fileName isEqualToString:download.fileDto.fileName]){
+                    [tempArray addObject:file];
+                }
+            }
+        }
+        
+        for (FileDto *file in tempArray) {
+            [downloadsFromDB removeObjectIdenticalTo:file];
+        }
+        
+        //Put "notdownload" state files are not in the background session
+        for (FileDto *file in downloadsFromDB) {
+            [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
+        }
+        
+    }
+}
+
+- (void) getDownloadsFromDownloadFolderTaskFinish {
+    
+    DLog(@"Download in background task finish");
+    [[AppDelegate sharedOCCommunicationDownloadFolder] setDownloadTaskComleteBlock:^NSURL *(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location) {
+        
+        for (DownloadFileSyncFolder *download in [AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded) {
+            
+            if (download.file.taskIdentifier == downloadTask.taskIdentifier /*&& download.file.isFromBackground*/) {
+                
+                NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)downloadTask.response;
+                DLog(@"HTTP Error: %ld", (long)httpResponse.statusCode);
+                
+                if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+                    
+                    // dispatch_async(dispatch_get_main_queue(), ^{
+                    [download updateDataDownloadSuccess];
+                    //  });
+                    
+                } else {
+                    //Failure
+                    [download failureDownloadProcess];
+                }
+            }
+        }
+        return nil;
     }];
 }
 
@@ -1596,7 +1669,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 {
   [self.downloadManager changeBehaviourForBackgroundFetch:YES];
     
-    if ([self.downloadManager getDownloads].count > 0) {
+    if (([self.downloadManager getDownloads].count > 0) ||
+        ([AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count > 0)) {
         completionHandler(UIBackgroundFetchResultNewData);
     } else {
         completionHandler(UIBackgroundFetchResultNoData);
@@ -2023,8 +2097,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [self performSelectorInBackground:@selector(initUploadsOffline) withObject:nil];
         [self updateTheDownloadState:downloading to:notDownload];
     } else {
+        [AppDelegate sharedOCCommunicationDownloadFolder];
         [self restoreUploadsInProccessFromSystemWithIdentificator:k_session_name withCompletionHandler:nil];
         [self restoreDownloadsInProccessFromSystemWithIdentificator:k_download_session_name withCompletionHandler:nil];
+        [self restoreDownloadsInProccessFromDownloadFolderFromSystemWithIdentificator:k_download_folder_session_name withCompletionHandler:nil];
+        
+        //TODO: On this method take into account the array that we have to fill on restoreDownloadsInProccessFromDownloadFolderFromSystemWithIdentificator
+        [self removeDownloadStatusFromFilesLosesOnBackground];
 
     }
     

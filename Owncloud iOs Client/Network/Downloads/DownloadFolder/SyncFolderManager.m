@@ -31,6 +31,7 @@
     if (self) {
         self.dictOfFoldersToBeCheck = [CWLOrderedDictionary new];
         self.forestOfFilesAndFoldersToBeDownloaded = [IndexedForest new];
+        self.listOfFilesToBeDownloaded = [NSMutableArray new];
     }
     return self;
 }
@@ -227,6 +228,17 @@
     DownloadFileSyncFolder *download = [DownloadFileSyncFolder new];
     download.currentFileEtag = currentFileEtag;
     [download addFileToDownload:file];
+    
+    [self.listOfFilesToBeDownloaded addObject:download];
+}
+
+- (void) simpleDownloadTheFile:(FileDto *) file {
+    DownloadFileSyncFolder *download = [DownloadFileSyncFolder new];
+    download.currentFileEtag = nil;
+    download.file = file;
+    
+    [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:file];
+    [self.listOfFilesToBeDownloaded addObject:download];
 }
 
 
