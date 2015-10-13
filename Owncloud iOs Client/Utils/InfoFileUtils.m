@@ -18,6 +18,10 @@
 #import "constants.h"
 #import "CustomCellFileAndDirectory.h"
 #import "FileNameUtils.h"
+#import "IndexedForest.h"
+#import "UtilsUrls.h"
+#import "SyncFolderManager.h"
+#import "CWLOrderedDictionary.h"
 
 @implementation InfoFileUtils
 
@@ -150,7 +154,19 @@
         } else {
             fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
         }
+        
+#ifdef CONTAINER_APP
+        NSString *key = [UtilsUrls getKeyByLocalFolder:currentFolder.localFolder];
+        CWLOrderedDictionary *dict = [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded getDictionaryOfTreebyKey:key];
+        if ([dict count] != 0) {
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon.png"];
+        } else {
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+        }
+#else
         fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+#endif   
+        
     } else {
         NSString *imageFile= [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         fileCell.fileImageView.image=[UIImage imageNamed:imageFile];

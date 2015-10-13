@@ -15,5 +15,7 @@
 
 - (void) addFileToTheForest:(FileDto*) file;
 - (void) removeFileFromTheForest:(FileDto *) file ;
+- (CWLOrderedDictionary *) getDictionaryOfTreebyKey:(NSString *) key;
+
 
 @end
