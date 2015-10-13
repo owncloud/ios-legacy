@@ -17,6 +17,10 @@
 @property (nonatomic, strong) CWLOrderedDictionary *dictOfFoldersToBeCheck;
 @property (nonatomic, strong) IndexedForest *forestOfFilesAndFoldersToBeDownloaded;
 
+@property (nonatomic, strong) NSMutableArray *listOfFilesToBeDownloaded;
+
 - (void) addFolderToBeDownloaded: (FileDto *) folder;
+//Method to add the file to the array just to take into account when we come back from background
+- (void) simpleDownloadTheFile:(FileDto *) file;
 
 @end

@@ -23,6 +23,16 @@
 
 - (void) addFileToDownload:(FileDto *) file {
     
+    self.file = file;
+    
+    if (!self.file.isNecessaryUpdate && (self.file.isDownload != overwriting)) {
+        //Change file status in Data Base to downloading
+        [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloading];
+    } else if (self.file.isNecessaryUpdate) {
+        //Change file status in Data Base to updating
+        [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:updating];
+    }
+    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSString *serverUrl = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:app.activeUser];
     serverUrl = [serverUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -36,7 +46,7 @@
         [[AppDelegate sharedOCCommunicationDownloadFolder] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
     }
     
-    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+    [[AppDelegate sharedOCCommunicationDownloadFolder] setUserAgent:[UtilsUrls getUserAgent]];
     
     DLog(@"serverUrl: %@", serverUrl);
     
@@ -57,7 +67,7 @@
     if (k_is_sso_active || !k_is_background_active) {
         
         //Create the block of NSOperation to download.
-        self.operation = [[AppDelegate sharedOCCommunication] downloadFile:serverUrl toDestiny:localPath withLIFOSystem:NO onCommunication:[AppDelegate sharedOCCommunication]
+        self.operation = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFile:serverUrl toDestiny:localPath withLIFOSystem:NO onCommunication:[AppDelegate sharedOCCommunication]
                                                       progressDownload:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
                                                           
                                                       } successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
@@ -66,12 +76,12 @@
                                                           DLog(@"File downloaded");
                                                           
                                                           //Finalized the download
-                                                          [weakSelf updateDataDownload:file];
-                                                          [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded removeFileFromTheForest:file];
+                                                          [weakSelf updateDataDownloadSuccess];
                                                           
                                                       } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                                                           DLog(@"Error: %@", error);
                                                           DLog(@"error.code: %ld", (long)error.code);
+                                                          [weakSelf failureDownloadProcess];
                                                           
                                                       } shouldExecuteAsBackgroundTaskWithExpirationHandler:^{
                                                           //Cancel download
@@ -85,15 +95,13 @@
             DLog(@"File downloaded");
             
             //Finalized the download
-            [weakSelf updateDataDownload:file];
-            [ManageFilesDB updateFile:file.idFile withTaskIdentifier:k_task_identifier_invalid];
-            [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded removeFileFromTheForest:file];
+            [weakSelf updateDataDownloadSuccess];
             
         } failureRequest:^(NSURLResponse *response, NSError *error) {
             
             DLog(@"Error: %@", error);
             DLog(@"error.code: %ld", (long)error.code);
-            [ManageFilesDB updateFile:file.idFile withTaskIdentifier:k_task_identifier_invalid];
+            [weakSelf failureDownloadProcess];
             
         }];
         
@@ -102,21 +110,32 @@
     }
 }
 
-- (void) updateDataDownload:(FileDto *) file {
+#pragma mark - Success/Failure/Cancel
+
+- (void) updateDataDownloadSuccess {
     
-    if (file.isNecessaryUpdate) {
-        [DownloadUtils updateFile:file withTemporalFile:self.tmpUpdatePath];
+    if (self.file.isNecessaryUpdate) {
+        [DownloadUtils updateFile:self.file withTemporalFile:self.tmpUpdatePath];
     }
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Update the datas of the new file
-    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
+    self.file = [ManageFilesDB getFileDtoByFileName:self.file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     //Set file status like downloaded in Data Base
-    [ManageFilesDB setFileIsDownloadState:file.idFile andState:downloaded];
+    [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
     
-    [ManageFilesDB updateEtagOfFileDtoByid:file.idFile andNewEtag:self.currentFileEtag];
+    [ManageFilesDB updateEtagOfFileDtoByid:self.file.idFile andNewEtag:self.currentFileEtag];
+    [ManageFilesDB updateFile:self.file.idFile withTaskIdentifier:k_task_identifier_invalid];
+    [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded removeFileFromTheForest:self.file];
+}
+
+- (void) failureDownloadProcess {
+    
+    [ManageFilesDB updateFile:self.file.idFile withTaskIdentifier:k_task_identifier_invalid];
+    [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded removeFileFromTheForest:self.file];
+    
 }
 
 - (void) cancelDownload {
@@ -128,6 +147,8 @@
     if (self.downloadTask) {
         [self.downloadTask cancel];
     }
+    
+    [self failureDownloadProcess];
 }
 
 @end

@@ -10,6 +10,8 @@
 
 @interface DownloadFileSyncFolder : NSObject
 
+@property (nonatomic, strong) FileDto *file;
+
 @property (nonatomic, strong) NSString *currentFileEtag;
 @property (nonatomic, strong) NSString *tmpUpdatePath;
 
@@ -18,5 +20,7 @@
 
 - (void) addFileToDownload:(FileDto *) file;
 - (void) cancelDownload;
+- (void) failureDownloadProcess;
+- (void) updateDataDownloadSuccess;
 
 @end
