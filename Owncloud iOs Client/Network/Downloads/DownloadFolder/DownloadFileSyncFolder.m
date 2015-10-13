@@ -136,6 +136,12 @@
     [ManageFilesDB updateFile:self.file.idFile withTaskIdentifier:k_task_identifier_invalid];
     [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded removeFileFromTheForest:self.file];
     
+    if (self.file.isDownload == downloading) {
+        [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:notDownload];
+    } else if (self.file.isDownload == updating) {
+        [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
+    }
+    
 }
 
 - (void) cancelDownload {
