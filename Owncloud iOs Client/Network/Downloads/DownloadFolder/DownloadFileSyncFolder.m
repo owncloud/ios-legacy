@@ -15,6 +15,7 @@
 #import "DownloadUtils.h"
 #import "SyncFolderManager.h"
 #import "IndexedForest.h"
+#import "FilesViewController.h"
 
 #define k_task_identifier_invalid -1
 
@@ -129,6 +130,8 @@
     [ManageFilesDB updateEtagOfFileDtoByid:self.file.idFile andNewEtag:self.currentFileEtag];
     [ManageFilesDB updateFile:self.file.idFile withTaskIdentifier:k_task_identifier_invalid];
     [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded removeFileFromTheForest:self.file];
+    
+    [self reloadFileListForDataBase];
 }
 
 - (void) failureDownloadProcess {
@@ -142,6 +145,7 @@
         [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
     }
     
+    [self reloadFileListForDataBase];
 }
 
 - (void) cancelDownload {
@@ -155,6 +159,11 @@
     }
     
     [self failureDownloadProcess];
+}
+
+- (void)reloadFileListForDataBase{
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    [app reloadTableFromDataBaseIfFileIsVisibleOnList:self.file];
 }
 
 @end

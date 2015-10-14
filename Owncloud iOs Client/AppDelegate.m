@@ -1384,11 +1384,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     
                     // dispatch_async(dispatch_get_main_queue(), ^{
                     [download updateDataDownloadSuccess];
+                    [self reloadTableFromDataBaseIfFileIsVisibleOnList:download.file];
                     //  });
                     
                 } else {
                     //Failure
                     [download failureDownloadProcess];
+                    [self reloadTableFromDataBaseIfFileIsVisibleOnList:download.file];
                 }
             }
         }
@@ -2761,6 +2763,25 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
+//-----------------------------------
+/// @name reloadTableFromDataBaseIfFileIsVisibleOnList
+///-----------------------------------
+
+/**
+ * Method that check if the file is visible on the file list before reload the table from the database
+ *
+ * @param file -> FileDto visible
+ */
+- (void) reloadTableFromDataBaseIfFileIsVisibleOnList:(FileDto *) file {
+    
+    //Update the file and folder to be sure that the ids are right
+    FileDto *folder = [ManageFilesDB getFileDtoByFileName:self.presentFilesViewController.fileIdToShowFiles.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.presentFilesViewController.fileIdToShowFiles.filePath andUser:self.activeUser] andUser:self.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:self.activeUser] andUser:self.activeUser];
+    
+    if (folder.idFile == file.fileId) {
+        [_presentFilesViewController reloadTableFromDataBase];
+    }
+}
 
 
 #pragma mark - Singletons of Server Version Checks
