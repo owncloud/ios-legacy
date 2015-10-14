@@ -241,5 +241,15 @@
     [self.listOfFilesToBeDownloaded addObject:download];
 }
 
+- (void) cancelDownload: (FileDto *) file {
+    for (DownloadFileSyncFolder *current in self.listOfFilesToBeDownloaded) {
+        if ([current.file.localFolder isEqualToString:file.localFolder]) {
+            [current cancelDownload];
+            [self.listOfFilesToBeDownloaded removeObjectIdenticalTo:current];
+            break;
+        }
+    }
+}
+
 
 @end

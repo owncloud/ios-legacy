@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSMutableArray *listOfFilesToBeDownloaded;
 
 - (void) addFolderToBeDownloaded: (FileDto *) folder;
+- (void) cancelDownload: (FileDto *) file;
 //Method to add the file to the array just to take into account when we come back from background
 - (void) simpleDownloadTheFile:(FileDto *) file;
 

@@ -39,6 +39,7 @@
 #import "ShareMainViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
+#import "SyncFolderManager.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -58,6 +59,9 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 #pragma mark - Init methods
 - (id) initWithNibName:(NSString *) nibNameOrNil selectedFile:(FileDto *) file
 {
+    
+    [[AppDelegate sharedSyncFolderManager] cancelDownload:file];
+    
     //Assing the file
     _file = file;
     
