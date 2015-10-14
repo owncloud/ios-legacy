@@ -1335,9 +1335,22 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         NSMutableArray *tempArray = [NSMutableArray new];
         
+        //Files selected manually pending to be download
         for (Download *download in [self.downloadManager getDownloads]) {
             for (FileDto *file in downloadsFromDB) {
                 if ([file.filePath isEqualToString:download.fileDto.filePath] && [file.fileName isEqualToString:download.fileDto.fileName]){
+                    [tempArray addObject:file];
+                }
+            }
+        }
+        
+        //Files download folder pending to be download
+        
+        NSMutableArray *listOfFilesToBeDownloaded = [AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded;
+        
+        for (DownloadFileSyncFolder *download in listOfFilesToBeDownloaded) {
+            for (FileDto *file in downloadsFromDB) {
+                if ([file.filePath isEqualToString:download.file.filePath] && [file.fileName isEqualToString:download.file.fileName]){
                     [tempArray addObject:file];
                 }
             }
@@ -2117,9 +2130,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [self restoreDownloadsInProccessFromSystemWithIdentificator:k_download_session_name withCompletionHandler:nil];
         [self restoreDownloadsInProccessFromDownloadFolderFromSystemWithIdentificator:k_download_folder_session_name withCompletionHandler:nil];
         
-        //TODO: On this method take into account the array that we have to fill on restoreDownloadsInProccessFromDownloadFolderFromSystemWithIdentificator
-        [self removeDownloadStatusFromFilesLosesOnBackground];
-
+        //We use a delay to have time to restoreDownloadsInProccess methods that works in an async way
+        [self performSelector:@selector(removeDownloadStatusFromFilesLosesOnBackground) withObject:nil afterDelay:3.0];
     }
     
     [self addErrorUploadsToRecentsTab];
