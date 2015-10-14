@@ -2169,7 +2169,7 @@
                     [self didSelectMoveOption];
                     break;
                 case 2:
-                    [self didSelectDownloadFolder];
+                    [self performSelectorInBackground:@selector(didSelectDownloadFolder) withObject:nil];
                     break;
                 default:
                     break;
