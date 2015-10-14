@@ -484,8 +484,12 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
+        if (!self.user) {
+            self.user = app.activeUser;
+        }
+        
         //Get FileDto
-        _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+        _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileDto.filePath andUser:self.user] andUser:self.user];
         
         //If is downloaded or not
         if ([_fileDto isDownload] == downloaded && !_fileDto.isNecessaryUpdate) {

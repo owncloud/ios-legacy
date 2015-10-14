@@ -92,6 +92,9 @@ extern NSString * fileWasDownloadNotification;
 
 @property(nonatomic, strong) NSProgress *progressValueGlobal;
 
+//user is needed when we cancel all the downloads in a change of user
+@property (nonatomic, strong) UserDto *user;
+
 ///-----------------------------------
 /// @name File to Download
 ///-----------------------------------

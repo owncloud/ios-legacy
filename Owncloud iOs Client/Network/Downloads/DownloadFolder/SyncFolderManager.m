@@ -22,6 +22,7 @@
 #import "CWLOrderedDictionary.h"
 #import "IndexedForest.h"
 #import "DownloadFileSyncFolder.h"
+#import "ManageUsersDB.h"
 
 @implementation SyncFolderManager
 
@@ -245,11 +246,27 @@
     for (DownloadFileSyncFolder *current in self.listOfFilesToBeDownloaded) {
         if ([current.file.localFolder isEqualToString:file.localFolder]) {
             [current cancelDownload];
-            [self.listOfFilesToBeDownloaded removeObjectIdenticalTo:current];
             break;
         }
     }
 }
 
+- (void) cancelAllDownloads {
+    
+    NSArray *listOfFilesToBeDownloadedCopy = self.listOfFilesToBeDownloaded.copy;
+    
+    //We set the user before the loop to update the FildDto canceled with the right user
+    UserDto *user = nil;
+    
+    for (DownloadFileSyncFolder *current in listOfFilesToBeDownloadedCopy) {
+        
+        if (!user) {
+            user = [ManageUsersDB getUserByIdUser:current.file.userId];
+        }
+        
+        current.user = user;
+        [current cancelDownload];
+    }
+}
 
 @end
