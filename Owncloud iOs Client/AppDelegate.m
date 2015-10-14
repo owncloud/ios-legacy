@@ -1011,6 +1011,21 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_presentFilesViewController.folderView) {
         [_presentFilesViewController.folderView dismissWithClickedButtonIndex:0 animated:NO];
     }
+    
+    
+    if([[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)]) {
+        DLog(@"Multitasking Supported");
+        
+        __block UIBackgroundTaskIdentifier background_task;
+        background_task = [application beginBackgroundTaskWithExpirationHandler:^ {
+            
+            //Clean up code. Tell the system that we are done.
+            [application endBackgroundTask: background_task];
+            background_task = UIBackgroundTaskInvalid;
+        }];
+    } else {
+        DLog(@"Multitasking Not Supported");
+    }
 
 }
 
@@ -1320,9 +1335,22 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         NSMutableArray *tempArray = [NSMutableArray new];
         
+        //Files selected manually pending to be download
         for (Download *download in [self.downloadManager getDownloads]) {
             for (FileDto *file in downloadsFromDB) {
                 if ([file.filePath isEqualToString:download.fileDto.filePath] && [file.fileName isEqualToString:download.fileDto.fileName]){
+                    [tempArray addObject:file];
+                }
+            }
+        }
+        
+        //Files download folder pending to be download
+        
+        NSMutableArray *listOfFilesToBeDownloaded = [AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded;
+        
+        for (DownloadFileSyncFolder *download in listOfFilesToBeDownloaded) {
+            for (FileDto *file in downloadsFromDB) {
+                if ([file.filePath isEqualToString:download.file.filePath] && [file.fileName isEqualToString:download.file.fileName]){
                     [tempArray addObject:file];
                 }
             }
@@ -1356,11 +1384,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     
                     // dispatch_async(dispatch_get_main_queue(), ^{
                     [download updateDataDownloadSuccess];
+                    [self reloadTableFromDataBaseIfFileIsVisibleOnList:download.file];
                     //  });
                     
                 } else {
                     //Failure
                     [download failureDownloadProcess];
+                    [self reloadTableFromDataBaseIfFileIsVisibleOnList:download.file];
                 }
             }
         }
@@ -2102,9 +2132,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [self restoreDownloadsInProccessFromSystemWithIdentificator:k_download_session_name withCompletionHandler:nil];
         [self restoreDownloadsInProccessFromDownloadFolderFromSystemWithIdentificator:k_download_folder_session_name withCompletionHandler:nil];
         
-        //TODO: On this method take into account the array that we have to fill on restoreDownloadsInProccessFromDownloadFolderFromSystemWithIdentificator
-        [self removeDownloadStatusFromFilesLosesOnBackground];
-
+        //We use a delay to have time to restoreDownloadsInProccess methods that works in an async way
+        [self performSelector:@selector(removeDownloadStatusFromFilesLosesOnBackground) withObject:nil afterDelay:3.0];
     }
     
     [self addErrorUploadsToRecentsTab];
@@ -2734,6 +2763,25 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
+//-----------------------------------
+/// @name reloadTableFromDataBaseIfFileIsVisibleOnList
+///-----------------------------------
+
+/**
+ * Method that check if the file is visible on the file list before reload the table from the database
+ *
+ * @param file -> FileDto visible
+ */
+- (void) reloadTableFromDataBaseIfFileIsVisibleOnList:(FileDto *) file {
+    
+    //Update the file and folder to be sure that the ids are right
+    FileDto *folder = [ManageFilesDB getFileDtoByFileName:self.presentFilesViewController.fileIdToShowFiles.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.presentFilesViewController.fileIdToShowFiles.filePath andUser:self.activeUser] andUser:self.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:self.activeUser] andUser:self.activeUser];
+    
+    if (folder.idFile == file.fileId) {
+        [_presentFilesViewController reloadTableFromDataBase];
+    }
+}
 
 
 #pragma mark - Singletons of Server Version Checks

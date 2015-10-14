@@ -118,6 +118,8 @@
                 if (self.treeDictionary.count == 0) {
                     self.treeDictionary = nil;
                     isCheckingStructure = NO;
+                } else {
+                    isCheckingStructure = NO;
                 }
             }
             

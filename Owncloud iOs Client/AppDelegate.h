@@ -278,6 +278,16 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 + (CheckHasShareSupport*) sharedCheckHasShareSupport;
 
+//-----------------------------------
+/// @name reloadTableFromDataBaseIfFileIsVisibleOnList
+///-----------------------------------
+
+/**
+ * Method that check if the file is visible on the file list before reload the table from the database
+ *
+ * @param file -> FileDto visible
+ */
+- (void) reloadTableFromDataBaseIfFileIsVisibleOnList:(FileDto *) file;
 
 
 @property (strong, nonatomic) UIWindow *window;
