@@ -1011,6 +1011,21 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_presentFilesViewController.folderView) {
         [_presentFilesViewController.folderView dismissWithClickedButtonIndex:0 animated:NO];
     }
+    
+    
+    if([[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)]) {
+        DLog(@"Multitasking Supported");
+        
+        __block UIBackgroundTaskIdentifier background_task;
+        background_task = [application beginBackgroundTaskWithExpirationHandler:^ {
+            
+            //Clean up code. Tell the system that we are done.
+            [application endBackgroundTask: background_task];
+            background_task = UIBackgroundTaskInvalid;
+        }];
+    } else {
+        DLog(@"Multitasking Not Supported");
+    }
 
 }
 
