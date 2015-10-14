@@ -155,10 +155,12 @@
             fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
         }
         
+        
 #ifdef CONTAINER_APP
-        NSString *key = [UtilsUrls getKeyByLocalFolder:currentFolder.localFolder];
-        CWLOrderedDictionary *dict = [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded getDictionaryOfTreebyKey:key];
-        if ([dict count] != 0) {
+        NSString *key = [UtilsUrls getKeyByLocalFolder:fileForSetTheStatusIcon.localFolder];
+        CWLOrderedDictionary *downloadingTreeForThisFolder = [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded getDictionaryOfTreebyKey:key];
+        
+        if ([downloadingTreeForThisFolder count] > 0) {
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon.png"];
         } else {
             fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
