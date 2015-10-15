@@ -14,8 +14,9 @@
 @property (nonatomic, strong) CWLOrderedDictionary *treeDictionary;
 
 - (void) addFileToTheForest:(FileDto*) file;
-- (void) removeFileFromTheForest:(FileDto *) file ;
+- (void) removeFileFromTheForest:(FileDto *) file;
 - (CWLOrderedDictionary *) getDictionaryOfTreebyKey:(NSString *) key;
+- (BOOL) isFolderPendingToBeDownload:(FileDto *) folder;
 
 
 @end

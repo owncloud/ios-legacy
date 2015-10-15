@@ -241,5 +241,47 @@
     [self.listOfFilesToBeDownloaded addObject:download];
 }
 
+#pragma mark - Cancel Download Folder
+
+- (void) cancelDownloadsByFolder:(FileDto *) folder {
+    
+    //1. Remove the folders to be check
+    [self removeFoldersPendingToBeCheck:folder];
+    
+    //2. Cancel the downloads folder by folder
+    CWLOrderedDictionary *rootDictionary = [self.forestOfFilesAndFoldersToBeDownloaded getDictionaryOfTreebyKey:[UtilsUrls getKeyByLocalFolder:folder.localFolder]];
+    [self cancelDownloadTaskByForestOfFilesAndFolders:rootDictionary];
+    
+}
+
+- (void) removeFoldersPendingToBeCheck:(FileDto *) folder {
+    
+    CWLOrderedDictionary *dictOfFoldersToBeCheckCopy = self.dictOfFoldersToBeCheck.copy;
+    NSString *key = [UtilsUrls getKeyByLocalFolder:folder.localFolder];
+    
+    for (FolderSyncDto *current in dictOfFoldersToBeCheckCopy) {
+        if ([[UtilsUrls getKeyByLocalFolder:current.file.localFolder] hasPrefix:key]) {
+            [self.dictOfFoldersToBeCheck removeObjectForKey:[UtilsUrls getKeyByLocalFolder:current.file.localFolder]];
+        }
+    }
+    
+}
+
+- (void) cancelDownloadTaskByForestOfFilesAndFolders:(CWLOrderedDictionary *) forestOfFilesAndFolders {
+    
+    for (id current in forestOfFilesAndFolders) {
+        if ([current classForClassName:@"CWLOrderedDictionary"]) {
+            //It is a dictionary
+            CWLOrderedDictionary *currentDict = current;
+            [self cancelDownloadTaskByForestOfFilesAndFolders:currentDict];
+        } else {
+            //It is a file
+            FileDto *currentFile = current;
+            //TODO: cancel  the file
+            
+        }
+    }
+}
+
 
 @end

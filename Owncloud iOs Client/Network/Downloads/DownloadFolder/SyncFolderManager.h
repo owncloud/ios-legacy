@@ -22,5 +22,6 @@
 - (void) addFolderToBeDownloaded: (FileDto *) folder;
 //Method to add the file to the array just to take into account when we come back from background
 - (void) simpleDownloadTheFile:(FileDto *) file;
+- (void) cancelDownloadsByFolder:(FileDto *) folder;
 
 @end

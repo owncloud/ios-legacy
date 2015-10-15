@@ -156,4 +156,18 @@
     return structuredDict;
 }
 
+- (BOOL) isFolderPendingToBeDownload:(FileDto *)folder {
+    
+    BOOL isFolderPending = NO;
+    
+    NSString *key = [UtilsUrls getKeyByLocalFolder:folder.localFolder];
+    CWLOrderedDictionary *downloadingTreeForThisFolder = [self getDictionaryOfTreebyKey:key];
+    
+    if ([downloadingTreeForThisFolder count] > 0) {
+        isFolderPending = YES;
+    }
+    
+    return isFolderPending;
+}
+
 @end

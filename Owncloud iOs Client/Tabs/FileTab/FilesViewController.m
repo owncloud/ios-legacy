@@ -59,6 +59,7 @@
 #import "UtilsFramework.h"
 #import "ShareMainViewController.h"
 #import "SyncFolderManager.h"
+#import "IndexedForest.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -2200,6 +2201,16 @@
             }
         }
     }
+    
+    if (actionSheet.tag==210) {
+        switch (buttonIndex) {
+            case 0:
+                [self didSelectCancelDownloadFolder];
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 #pragma mark - File/Folder
@@ -2374,7 +2385,7 @@
         self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"file_is_downloading", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
         [self.alert show];
         
-    } else if ([self.selectedFileDto isDirectory]&& [DownloadUtils thereAreDownloadingFilesOnTheFolder: self.selectedFileDto]) {
+    } else if (([self.selectedFileDto isDirectory] && [DownloadUtils thereAreDownloadingFilesOnTheFolder: self.selectedFileDto]) || ([self.selectedFileDto isDirectory] && [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:self.selectedFileDto])) {
         //if the user are downloading files from the server
         self.alert = nil;
         self.alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"msg_while_downloads", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
@@ -2527,6 +2538,21 @@
     self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     [[AppDelegate sharedSyncFolderManager] addFolderToBeDownloaded:self.selectedFileDto];
+}
+
+/*
+ *
+ */
+
+- (void) didSelectCancelDownloadFolder {
+    DLog(@"Cancel Download Folder");
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    //Update fileDto
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+    
+    [[AppDelegate sharedSyncFolderManager] cancelDownloadsByFolder:self.selectedFileDto];
 }
 
 /*
@@ -3161,12 +3187,17 @@
     
     NSString *title = [self.selectedFileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    if(_selectedFileDto.isDirectory) {
+    if(self.selectedFileDto.isDirectory) {
         
         title = [title substringToIndex:[title length]-1];
         
-        self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), NSLocalizedString(@"download_folder", nil), nil];
-        self.moreActionSheet.tag=200;
+        if ([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:self.selectedFileDto]) {
+            self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"cancel_download", nil), nil];
+            self.moreActionSheet.tag=210;
+        } else {
+            self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), NSLocalizedString(@"download_folder", nil), nil];
+            self.moreActionSheet.tag=200;
+        }
         
         if (IS_IPHONE) {
             [self.moreActionSheet showInView:self.tabBarController.view];
