@@ -1,3 +1,9 @@
+## 3.4.5 (October 2015)
+- New share interface, adding support to share with password protect and expiration time
+- iOS9 compatibility issues
+- Updated file tape icons 
+- Added Help guide, shown the first time the app is open
+
 ## 3.4.4 (July 2015)
 - Updated networking library to address security issues
 - New navigation drawer on iPad
@@ -7,7 +13,7 @@
 - Added new languages
 - Bugs fixed
 
-## 3.4.1 ( March 2015)
+## 3.4.1 (March 2015)
 - Share link, share your files with password enforced
 - Get the app ready for oc 8.1
 
