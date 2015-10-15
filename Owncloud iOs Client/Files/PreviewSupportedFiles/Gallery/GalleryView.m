@@ -25,7 +25,7 @@
 #import "constants.h"
 #import "Customization.h"
 #import "UtilsUrls.h"
-
+#import "SyncFolderManager.h"
 
 @interface GalleryView ()
 
@@ -856,6 +856,9 @@
         
         
         [_delegate selectThisFile:_file];
+        
+        [[AppDelegate sharedSyncFolderManager] cancelDownload:currentFile];
+        currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:app.activeUser] andUser:app.activeUser];
         
         if (_file.isDownload == updating) {
             [self putUpdateProgressInNavBar];

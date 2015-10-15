@@ -56,9 +56,9 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 @property(nonatomic, strong) IBOutlet UITableView *tableView;
 
 // Array that contains the files ordered alphabetically
-@property(nonatomic, strong) NSArray *sortedArray;
+@property(nonatomic, strong) NSMutableArray *sortedArray;
 //The current directory array
-@property(nonatomic, strong) NSArray *currentDirectoryArray;
+@property(nonatomic, strong) NSMutableArray *currentDirectoryArray;
 //Path for remote folder for upload
 @property(nonatomic, strong) NSString *remoteFolderToUpload;
 //Path for remote folder
@@ -142,6 +142,7 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 - (void)refreshTableFromWebDav;
 - (void)reloadTableFromDataBase;
 - (void)reloadTableFileList;
+- (void)reloadCellByFile:(FileDto *) file;
 
 - (void) goToSelectedFileOrFolder:(FileDto *) selectedFile;
 

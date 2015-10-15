@@ -1921,6 +1921,42 @@
     }];
 }
 
+- (void) reloadCellByFile:(FileDto *) file {
+   
+    NSIndexPath* indexPath;
+    BOOL isFound = NO;
+    
+    for (int i = 0; i < self.sortedArray.count; i++) {;
+        
+        NSMutableArray *currentListOfFilesOnSection = [[self.sortedArray objectAtIndex:i] mutableCopy];
+        
+        for (int j = 0 ; j < currentListOfFilesOnSection.count ; j++) {
+            FileDto *current = [currentListOfFilesOnSection objectAtIndex:j];
+            
+            if ([current.localFolder isEqualToString: file.localFolder]) {
+                indexPath = [NSIndexPath indexPathForRow:j inSection:i];
+                [currentListOfFilesOnSection replaceObjectAtIndex:j withObject:file];
+                [self.sortedArray replaceObjectAtIndex:i withObject:currentListOfFilesOnSection.copy];
+                isFound = YES;
+                break;
+            }
+        }
+        
+        if (isFound) {
+            break;
+        }
+    }
+    
+    NSArray* indexArray = [NSArray arrayWithObjects:indexPath, nil];
+    
+    dispatch_queue_t mainThreadQueue = dispatch_get_main_queue();
+    dispatch_async(mainThreadQueue, ^{
+        [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView endUpdates];
+    });
+}
+
 /*
  * Method used for quit the flag about the refresh
  * and the system can be a new refresh action
@@ -2107,7 +2143,7 @@
  * Method that sorts alphabetically array by selector
  *@array -> array of sections and rows of tableview
  */
-- (NSArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector {
+- (NSMutableArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector {
     UILocalizedIndexedCollation *collation = [UILocalizedIndexedCollation currentCollation];
     
     NSInteger sectionCount = [[collation sectionTitles] count]; //section count is take from sectionTitles and not sectionIndexTitles
