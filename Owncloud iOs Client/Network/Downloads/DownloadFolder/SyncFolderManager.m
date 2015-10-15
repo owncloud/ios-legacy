@@ -58,7 +58,7 @@
     
     if (self.dictOfFoldersToBeCheck.count > 0) {
         id currentKey = [[self.dictOfFoldersToBeCheck allKeys] objectAtIndex:0];
-        [self checkFolderByIdKey:currentKey];
+        [self performSelectorInBackground:@selector(checkFolderByIdKey:) withObject:currentKey];
     }
 
 }
@@ -103,84 +103,88 @@
             isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
         }
         
-        if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError) {
+        //We execute this in other thread because if not it froze the app
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
-            
-            //Pass the items with OCFileDto to FileDto Array
-            NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
-            
-            //Change the filePath from the library to our format
-            for (FileDto *currentFile in directoryList) {
-                //Remove part of the item file path
-                NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
-                if([currentFile.filePath length] >= [partToRemove length]){
-                    currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
-                }
-            }
-            
-            for (int i = 0 ; i < directoryList.count ; i++) {
+            if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError) {
                 
-                FileDto *currentFile = [directoryList objectAtIndex:i];
                 
-                if (currentFile.fileName == nil) {
-                    //This is the fileDto of the current father folder
-                    currentFolder.etag = currentFile.etag;
-                    
-                    //We update the current folder with the new etag
-                    [ManageFilesDB updateEtagOfFileDtoByid:currentFolder.idFile andNewEtag: currentFolder.etag];
-                    
-                    //break;
-                }
-            }
-            
-            [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:currentFolder.idFile];
-            
-            //Send the data to DB and refresh the table
-            [self deleteOldDataFromDBBeforeRefresh:directoryList ofFolder:currentFolder];
-      
-            //TODO: get the etag from directoryList for each file to make the download
-            NSMutableArray *tmpFilesAndFolderToSync = [ManageFilesDB getFilesByFileIdForActiveUser:currentFolder.idFile];
-            
-            int indexEtag = 0;
-            for (FileDto *currentFile in tmpFilesAndFolderToSync) {
-                indexEtag++;
-                //Add the folder to the queue of sync and the file to the queue of downloads
-                if (currentFile.fileName != nil) {
-
-                    if (currentFile.isDirectory) {
-                        FolderSyncDto *folderSync = [FolderSyncDto new];
-                        folderSync.file = currentFile;
-                        folderSync.isRead = NO;
-                        
-                        DLog(@"folderSync 1: %@", folderSync.file.fileName);
-                        DLog(@"folderSync 2: %@", folderSync.file.localFolder);
-                        
-                        NSString *key = [UtilsUrls getKeyByLocalFolder:folderSync.file.localFolder];
-                        [self.dictOfFoldersToBeCheck setObject:folderSync forKey:key];
-                    } else {
-                        
-                        DLog(@"folderSync 1: %@", currentFile.fileName);
-                        
-                        if (currentFile.isDownload == notDownload || currentFile.isNecessaryUpdate) {
-                            //Add the file to the indexed forest of files downloading
-                            [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:currentFile];
-                            FileDto *fileRemote = [directoryList objectAtIndex:indexEtag];
-                            [self downloadTheFile:currentFile andNewEtag:fileRemote.etag];
-                        }
+                //Pass the items with OCFileDto to FileDto Array
+                NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
+                
+                //Change the filePath from the library to our format
+                for (FileDto *currentFile in directoryList) {
+                    //Remove part of the item file path
+                    NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
+                    if([currentFile.filePath length] >= [partToRemove length]){
+                        currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
                     }
-                    
-                } else {
-                    //Parent folder
                 }
+                
+                for (int i = 0 ; i < directoryList.count ; i++) {
+                    
+                    FileDto *currentFile = [directoryList objectAtIndex:i];
+                    
+                    if (currentFile.fileName == nil) {
+                        //This is the fileDto of the current father folder
+                        currentFolder.etag = currentFile.etag;
+                        
+                        //We update the current folder with the new etag
+                        [ManageFilesDB updateEtagOfFileDtoByid:currentFolder.idFile andNewEtag: currentFolder.etag];
+                        
+                        //break;
+                    }
+                }
+                
+                [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:currentFolder.idFile];
+                
+                //Send the data to DB and refresh the table
+                [self deleteOldDataFromDBBeforeRefresh:directoryList ofFolder:currentFolder];
+                
+                //TODO: get the etag from directoryList for each file to make the download
+                NSMutableArray *tmpFilesAndFolderToSync = [ManageFilesDB getFilesByFileIdForActiveUser:currentFolder.idFile];
+                
+                int indexEtag = 0;
+                for (FileDto *currentFile in tmpFilesAndFolderToSync) {
+                    indexEtag++;
+                    //Add the folder to the queue of sync and the file to the queue of downloads
+                    if (currentFile.fileName != nil) {
+                        
+                        if (currentFile.isDirectory) {
+                            FolderSyncDto *folderSync = [FolderSyncDto new];
+                            folderSync.file = currentFile;
+                            folderSync.isRead = NO;
+                            
+                            DLog(@"folderSync 1: %@", folderSync.file.fileName);
+                            DLog(@"folderSync 2: %@", folderSync.file.localFolder);
+                            
+                            NSString *key = [UtilsUrls getKeyByLocalFolder:folderSync.file.localFolder];
+                            [self.dictOfFoldersToBeCheck setObject:folderSync forKey:key];
+                        } else {
+                            
+                            DLog(@"folderSync 1: %@", currentFile.fileName);
+                            
+                            if (currentFile.isDownload == notDownload || currentFile.isNecessaryUpdate) {
+                                //Add the file to the indexed forest of files downloading
+                                [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:currentFile];
+                                FileDto *fileRemote = [directoryList objectAtIndex:indexEtag];
+                                [self downloadTheFile:currentFile andNewEtag:fileRemote.etag];
+                            }
+                        }
+                        
+                    } else {
+                        //Parent folder
+                    }
+                }
+                
+                //Continue with the next
+                [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
+                [self continueWithNextFolder];
+                
+            } else {
+                //TODO: cancel all downloads because we have a credential error
             }
-            
-            //Continue with the next
-            [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
-            [self continueWithNextFolder];
-            
-        } else {
-            //TODO: cancel all downloads because we have a credential error
-        }
+        });
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
         

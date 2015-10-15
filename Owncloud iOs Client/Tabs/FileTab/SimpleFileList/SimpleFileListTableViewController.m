@@ -305,7 +305,7 @@
  * Method that sorts alphabetically array by selector
  *@array -> array of sections and rows of tableview
  */
-- (NSArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector {
+- (NSMutableArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector {
     UILocalizedIndexedCollation *collation = [UILocalizedIndexedCollation currentCollation];
     
     NSInteger sectionCount = [[collation sectionTitles] count]; //section count is take from sectionTitles and not sectionIndexTitles
