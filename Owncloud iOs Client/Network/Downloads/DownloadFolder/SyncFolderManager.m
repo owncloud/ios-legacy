@@ -22,6 +22,7 @@
 #import "CWLOrderedDictionary.h"
 #import "IndexedForest.h"
 #import "DownloadFileSyncFolder.h"
+#import "ManageUsersDB.h"
 
 @implementation SyncFolderManager
 
@@ -241,6 +242,33 @@
     [self.listOfFilesToBeDownloaded addObject:download];
 }
 
+- (void) cancelDownload: (FileDto *) file {
+    for (DownloadFileSyncFolder *current in self.listOfFilesToBeDownloaded) {
+        if ([current.file.localFolder isEqualToString:file.localFolder]) {
+            [current cancelDownload];
+            break;
+        }
+    }
+}
+
+- (void) cancelAllDownloads {
+    
+    NSArray *listOfFilesToBeDownloadedCopy = self.listOfFilesToBeDownloaded.copy;
+    
+    //We set the user before the loop to update the FildDto canceled with the right user
+    UserDto *user = nil;
+    
+    for (DownloadFileSyncFolder *current in listOfFilesToBeDownloadedCopy) {
+        
+        if (!user) {
+            user = [ManageUsersDB getUserByIdUser:current.file.userId];
+        }
+        
+        current.user = user;
+        [current cancelDownload];
+    }
+}
+
 #pragma mark - Cancel Download Folder
 
 - (void) cancelDownloadsByFolder:(FileDto *) folder {
@@ -269,19 +297,22 @@
 
 - (void) cancelDownloadTaskByForestOfFilesAndFolders:(CWLOrderedDictionary *) forestOfFilesAndFolders {
     
-    for (id current in forestOfFilesAndFolders) {
-        if ([current classForClassName:@"CWLOrderedDictionary"]) {
+    CWLOrderedDictionary *forestOfFilesAndFoldersCopy = forestOfFilesAndFolders.copy;
+    
+    for (NSString *currentKey in forestOfFilesAndFoldersCopy) {
+        
+        id current = [forestOfFilesAndFolders objectForKey:currentKey];
+        
+        if ([current isKindOfClass:[CWLOrderedDictionary class]]) {
             //It is a dictionary
             CWLOrderedDictionary *currentDict = current;
             [self cancelDownloadTaskByForestOfFilesAndFolders:currentDict];
         } else {
             //It is a file
             FileDto *currentFile = current;
-            //TODO: cancel  the file
-            
+            [self cancelDownload:currentFile];
         }
     }
 }
-
 
 @end

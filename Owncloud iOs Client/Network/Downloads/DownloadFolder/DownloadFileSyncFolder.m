@@ -132,9 +132,18 @@
     [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded removeFileFromTheForest:self.file];
     
     [self reloadFileListForDataBase];
+    [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
 }
 
 - (void) failureDownloadProcess {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    if (!self.user) {
+        self.user = app.activeUser;
+    }
+    
+    self.file = [ManageFilesDB getFileDtoByFileName:self.file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.file.filePath andUser:self.user] andUser:self.user];
     
     [ManageFilesDB updateFile:self.file.idFile withTaskIdentifier:k_task_identifier_invalid];
     [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded removeFileFromTheForest:self.file];
@@ -146,6 +155,7 @@
     }
     
     [self reloadFileListForDataBase];
+    [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
 }
 
 - (void) cancelDownload {
