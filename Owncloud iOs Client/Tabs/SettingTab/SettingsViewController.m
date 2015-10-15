@@ -39,6 +39,7 @@
 #import "UtilsCookies.h"
 #import "ManageCookiesStorageDB.h"
 #import "Accessibility.h"
+#import "SyncFolderManager.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -218,7 +219,8 @@
     
     NSError *error;     
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-    [app.downloadManager cancelDownloads];
+    UserDto *user = app.activeUser;
+    [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
     app.uploadArray=[[NSMutableArray alloc]init];
     [app updateRecents];
     [app restartAppAfterDeleteAllAccounts];
@@ -892,10 +894,8 @@
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
         
-        //Cancel downloads of the active user
-        if (selectedUser.idUser == app.activeUser.idUser) {
-            [self cancelAllDownloadsOfActiveUser];
-        }
+        UserDto *user = app.activeUser;
+        [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
         
         //Delete the tables of this user
         [ManageUsersDB removeUserAndDataByIdUser: selectedUser.idUser];
@@ -936,12 +936,12 @@
             
             self.settingsTableView.editing = NO;
             
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
-            [appDelegate.downloadManager cancelDownloads];
-            appDelegate.uploadArray=[[NSMutableArray alloc]init];
-            [appDelegate updateRecents];
-            [appDelegate restartAppAfterDeleteAllAccounts];
+            [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
+            app.uploadArray=[[NSMutableArray alloc]init];
+            [app updateRecents];
+            [app restartAppAfterDeleteAllAccounts];
         }
         
         
@@ -1117,8 +1117,6 @@
 
 - (void) didPressOnAccountIndexPath:(NSIndexPath*)indexPath {
     
-    [self cancelAllDownloadsOfActiveUser];
-    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     app.userSessionCurrentToken = nil;
     
@@ -1136,7 +1134,7 @@
     
     if (app.activeUser.idUser != selectedUser.idUser) {
         //Cancel downloads of the previous user
-        [self cancelAllDownloadsOfActiveUser];
+        [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
         
         app.userSessionCurrentToken = nil;
         
@@ -1263,10 +1261,12 @@
 
 #pragma mark - Utils
 
-- (void) cancelAllDownloadsOfActiveUser {
+- (void) cancelAllDownloads {
     //Cancel downloads in ipad
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     [appDelegate.downloadManager cancelDownloads];
+    
+    [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
 }
 
 #pragma mark - Check Server version in order to use chunks to upload or not

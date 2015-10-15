@@ -1373,7 +1373,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     DLog(@"Download in background task finish");
     [[AppDelegate sharedOCCommunicationDownloadFolder] setDownloadTaskComleteBlock:^NSURL *(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location) {
         
-        for (DownloadFileSyncFolder *download in [AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded) {
+        NSMutableArray *listOfFilesToBeDownloaded = [AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.copy;
+        
+        for (DownloadFileSyncFolder *download in listOfFilesToBeDownloaded) {
             
             if (download.file.taskIdentifier == downloadTask.taskIdentifier /*&& download.file.isFromBackground*/) {
                 

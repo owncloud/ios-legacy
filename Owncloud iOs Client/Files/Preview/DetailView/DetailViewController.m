@@ -39,6 +39,7 @@
 #import "ReaderViewController.h"
 #import "OCSplitViewController.h"
 #import "ShareMainViewController.h"
+#import "SyncFolderManager.h"
 
 
 NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
@@ -215,6 +216,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 - (void) handleFile:(FileDto*)myFile fromController:(NSInteger)controller {
     DLog(@"HandleFile _file.fileName: %@", _file.fileName);
+    
+    [[AppDelegate sharedSyncFolderManager] cancelDownload:myFile];
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
