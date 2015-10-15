@@ -141,6 +141,7 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 - (void)endLoading;
 - (void)refreshTableFromWebDav;
 - (void)reloadTableFromDataBase;
+- (void)reloadTableFileList;
 
 - (void) goToSelectedFileOrFolder:(FileDto *) selectedFile;
 

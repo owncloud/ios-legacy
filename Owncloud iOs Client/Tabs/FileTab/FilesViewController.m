@@ -1746,6 +1746,10 @@
     }*/
 }
 
+-(void)reloadTableFileList {
+    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+}
+
 /*
  * Method that prepare the data of the database and
  * show this data in the tableview but not remove the loading view.
@@ -2521,12 +2525,15 @@
  */
 - (void) didSelectDownloadFolder {
     DLog(@"Download Folder");
+    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //Update fileDto
     self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     [[AppDelegate sharedSyncFolderManager] addFolderToBeDownloaded:self.selectedFileDto];
+
+    [self reloadTableFileList];
 }
 
 /*

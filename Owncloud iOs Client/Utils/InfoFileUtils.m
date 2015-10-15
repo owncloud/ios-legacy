@@ -159,8 +159,9 @@
 #ifdef CONTAINER_APP
         NSString *key = [UtilsUrls getKeyByLocalFolder:fileForSetTheStatusIcon.localFolder];
         CWLOrderedDictionary *downloadingTreeForThisFolder = [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded getDictionaryOfTreebyKey:key];
+        CWLOrderedDictionary *pendingToCheckTreeForThisFolder = [[AppDelegate sharedSyncFolderManager].dictOfFoldersToBeCheck objectForKey:key];
         
-        if ([downloadingTreeForThisFolder count] > 0) {
+        if ([downloadingTreeForThisFolder count] > 0 || pendingToCheckTreeForThisFolder!=nil) {
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon.png"];
         } else {
             fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
