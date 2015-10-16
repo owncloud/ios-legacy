@@ -108,8 +108,6 @@
         
         [self.downloadTask resume];
         [ManageFilesDB updateFile:file.idFile withTaskIdentifier:self.downloadTask.taskIdentifier];
-        
-        [self reloadCellFromDataBase];
     }
 }
 
