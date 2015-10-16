@@ -179,10 +179,15 @@
                 
                 //Continue with the next
                 [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
+
+                if (tmpFilesAndFolderToSync.count > 0) {
+                    [app reloadTableFromDataBaseIfFileIsVisibleOnList:[tmpFilesAndFolderToSync objectAtIndex:0]];
+                }
+                
                 [self continueWithNextFolder];
                 
             } else {
-                //TODO: cancel all downloads because we have a credential error
+                //Credential error
             }
         });
         
