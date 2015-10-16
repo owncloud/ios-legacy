@@ -288,6 +288,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  * @param file -> FileDto visible
  */
 - (void) reloadTableFromDataBaseIfFileIsVisibleOnList:(FileDto *) file;
+- (void) reloadCellByFile:(FileDto *) file;
 
 
 @property (strong, nonatomic) UIWindow *window;

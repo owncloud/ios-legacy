@@ -131,7 +131,7 @@
     [ManageFilesDB updateFile:self.file.idFile withTaskIdentifier:k_task_identifier_invalid];
     [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded removeFileFromTheForest:self.file];
     
-    [self reloadFileListForDataBase];
+    [self reloadCellFromDataBase];
     [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
 }
 
@@ -154,7 +154,7 @@
         [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
     }
     
-    [self reloadFileListForDataBase];
+    [self reloadCellFromDataBase];
     [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
 }
 
@@ -171,9 +171,9 @@
     [self failureDownloadProcess];
 }
 
-- (void)reloadFileListForDataBase{
+- (void)reloadCellFromDataBase{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    [app reloadTableFromDataBaseIfFileIsVisibleOnList:self.file];
+    [app reloadCellByFile:self.file];
 }
 
 @end
