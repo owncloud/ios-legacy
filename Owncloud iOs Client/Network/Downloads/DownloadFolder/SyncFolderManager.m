@@ -296,9 +296,9 @@
     CWLOrderedDictionary *dictOfFoldersToBeCheckCopy = self.dictOfFoldersToBeCheck.copy;
     NSString *key = [UtilsUrls getKeyByLocalFolder:folder.localFolder];
     
-    for (FolderSyncDto *current in dictOfFoldersToBeCheckCopy) {
-        if ([[UtilsUrls getKeyByLocalFolder:current.file.localFolder] hasPrefix:key]) {
-            [self.dictOfFoldersToBeCheck removeObjectForKey:[UtilsUrls getKeyByLocalFolder:current.file.localFolder]];
+    for (NSString *currentKey in dictOfFoldersToBeCheckCopy) {
+        if ([currentKey hasPrefix:key]) {
+            [self.dictOfFoldersToBeCheck removeObjectForKey:currentKey];
         }
     }
     

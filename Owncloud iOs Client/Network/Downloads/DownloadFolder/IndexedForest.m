@@ -10,6 +10,8 @@
 #import "UtilsUrls.h"
 #import "FolderSyncDto.h"
 #import "ManageFilesDB.h"
+#import "AppDelegate.h"
+#import "SyncFolderManager.h"
 
 @implementation IndexedForest
 
@@ -162,8 +164,9 @@
     
     NSString *key = [UtilsUrls getKeyByLocalFolder:folder.localFolder];
     CWLOrderedDictionary *downloadingTreeForThisFolder = [self getDictionaryOfTreebyKey:key];
+    CWLOrderedDictionary *pendingToCheckTreeForThisFolder = [[AppDelegate sharedSyncFolderManager].dictOfFoldersToBeCheck objectForKey:key];
     
-    if ([downloadingTreeForThisFolder count] > 0) {
+    if ([downloadingTreeForThisFolder count] > 0 || pendingToCheckTreeForThisFolder!=nil) {
         isFolderPending = YES;
     }
     
