@@ -95,12 +95,18 @@
         
         CWLOrderedDictionary *parentDict;
         CWLOrderedDictionary *currentDict = [self getDictionaryOfTreebyKey:key];
+
+        NSString *folderToRemovePath;
+        NSString *folderToRemoveName = [NSString stringWithFormat:@"%@/",[key lastPathComponent]];
         
         if ([parentKey isEqualToString:@"/"]) {
             //Parent is the treeDictionary
             parentDict = self.treeDictionary;
+            folderToRemovePath = @"";
+            
         } else {
             parentDict = [self getDictionaryOfTreebyKey:parentKey];
+            folderToRemovePath = parentKey;
         }
         
         if (currentDict.count == 0) {
@@ -109,6 +115,11 @@
             //Remove current one from the parent
             [parentDict removeObjectForKey:key];
             
+            //Refresh list to update the arrow
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:folderToRemoveName andFilePath:folderToRemovePath andUser:app.activeUser];
+            [app reloadTableFromDataBaseIfFileIsVisibleOnList:folderRemoved];
+
             //Continue with parent dictionary
             NSString *stringToRemove = [key lastPathComponent];
             key = [key substringToIndex:[key length] - (stringToRemove.length+1)];
