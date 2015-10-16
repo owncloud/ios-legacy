@@ -37,6 +37,21 @@
     return self;
 }
 
+/*
+ *  Method to keep the downloads while the app is in background and the user have the System PassCode
+ */
+- (void) setThePermissionsOnDownloadCacheFolder {
+    NSString* path = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    path = [path stringByAppendingPathComponent:@"Caches/com.apple.nsurlsessiond/Downloads"];
+    
+    
+    NSString *appInfoPlist = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
+    NSDictionary *dictionary = [[NSDictionary alloc]initWithContentsOfFile:appInfoPlist];
+    
+    path = [path stringByAppendingPathComponent:dictionary[@"CFBundleIdentifier"]];
+    [[NSFileManager defaultManager] setAttributes:@{NSFileProtectionKey: NSFileProtectionCompleteUntilFirstUserAuthentication} ofItemAtPath:path error:nil];
+}
+
 - (void) addFolderToBeDownloaded: (FileDto *) folder {
     
     FolderSyncDto *folderSync = [FolderSyncDto new];
