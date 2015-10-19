@@ -2595,7 +2595,10 @@
     //Update fileDto
     self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    [[AppDelegate sharedSyncFolderManager] cancelDownloadsByFolder:self.selectedFileDto];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[AppDelegate sharedSyncFolderManager] cancelDownloadsByFolder:self.selectedFileDto];
+    });
+
 }
 
 /*
