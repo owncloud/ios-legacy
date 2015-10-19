@@ -129,7 +129,7 @@
             //We check if key is empty to not continue. The next to check is the root (treeDictionary)
             if (key.length == 0) {
                 if (self.treeDictionary.count == 0) {
-                    self.treeDictionary = nil;
+                    self.treeDictionary = [CWLOrderedDictionary new];
                     isCheckingStructure = NO;
                 } else {
                     isCheckingStructure = NO;
