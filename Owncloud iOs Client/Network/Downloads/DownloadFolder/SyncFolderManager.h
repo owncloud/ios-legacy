@@ -19,6 +19,7 @@
 
 @property (nonatomic, strong) NSMutableArray *listOfFilesToBeDownloaded;
 
+- (void) setThePermissionsOnDownloadCacheFolder;
 - (void) addFolderToBeDownloaded: (FileDto *) folder;
 - (void) cancelDownload: (FileDto *) file;
 - (void) cancelAllDownloads;
