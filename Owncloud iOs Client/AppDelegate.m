@@ -338,6 +338,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void) initAppWithEtagRequest:(BOOL)isEtagRequestNecessary {
     
     [InitializeDatabase initDataBase];
+    [[AppDelegate sharedSyncFolderManager] setThePermissionsOnDownloadCacheFolder];
     
     //First Call when init the app
      _activeUser = [ManageUsersDB getActiveUser];
