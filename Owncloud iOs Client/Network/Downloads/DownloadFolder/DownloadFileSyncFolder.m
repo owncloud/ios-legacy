@@ -106,12 +106,9 @@
             
         }];
         
+        [self.downloadTask resume];
         [ManageFilesDB updateFile:file.idFile withTaskIdentifier:self.downloadTask.taskIdentifier];
     }
-}
-
-- (void) resumeDownload {
-    [self.downloadTask resume];
 }
 
 #pragma mark - Success/Failure/Cancel

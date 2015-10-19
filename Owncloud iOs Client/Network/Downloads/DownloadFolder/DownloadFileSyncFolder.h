@@ -23,7 +23,6 @@
 @property (nonatomic, strong) UserDto *user;
 
 - (void) addFileToDownload:(FileDto *) file;
-- (void) resumeDownload;
 - (void) cancelDownload;
 - (void) failureDownloadProcess;
 - (void) updateDataDownloadSuccess;

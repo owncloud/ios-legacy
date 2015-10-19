@@ -97,12 +97,6 @@
     if (self.dictOfFoldersToBeCheck.count > 0) {
         id currentKey = [[self.dictOfFoldersToBeCheck allKeys] objectAtIndex:0];
         [self performSelectorInBackground:@selector(checkFolderByIdKey:) withObject:currentKey];
-    } else {
-        //All folders checked, start the downloads
-        for (DownloadFileSyncFolder *current in self.listOfFilesToBeDownloaded) {
-            [current resumeDownload];
-        }
-        
     }
 
 }
