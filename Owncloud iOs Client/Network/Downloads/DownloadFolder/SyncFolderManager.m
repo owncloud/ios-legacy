@@ -41,15 +41,38 @@
  *  Method to keep the downloads while the app is in background and the user have the System PassCode
  */
 - (void) setThePermissionsOnDownloadCacheFolder {
-    NSString* path = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    path = [path stringByAppendingPathComponent:@"Caches/com.apple.nsurlsessiond/Downloads"];
     
+    //1. Create the full path structure
+    NSString *cacheDirPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+    cacheDirPath = [cacheDirPath stringByAppendingString:@"/com.apple.nsurlsessiond/Downloads/"];
     
     NSString *appInfoPlist = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
     NSDictionary *dictionary = [[NSDictionary alloc]initWithContentsOfFile:appInfoPlist];
     
-    path = [path stringByAppendingPathComponent:dictionary[@"CFBundleIdentifier"]];
-    [[NSFileManager defaultManager] setAttributes:@{NSFileProtectionKey: NSFileProtectionCompleteUntilFirstUserAuthentication} ofItemAtPath:path error:nil];
+    cacheDirPath = [cacheDirPath stringByAppendingPathComponent:dictionary[@"CFBundleIdentifier"]];
+    
+    NSError *error;
+    
+    DLog(@"Perssions cache: %@", cacheDirPath);
+    
+    //2. Check if the folder exist
+    NSError *errorCreate = nil;
+    if (![[NSFileManager defaultManager] fileExistsAtPath:cacheDirPath]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingString:@"/com.apple.nsurlsessiond"] withIntermediateDirectories:NO attributes:nil error:&errorCreate];
+        [[NSFileManager defaultManager] createDirectoryAtPath:[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingString:@"/com.apple.nsurlsessiond/Downloads"] withIntermediateDirectories:NO attributes:nil error:&errorCreate];
+        [[NSFileManager defaultManager] createDirectoryAtPath:cacheDirPath withIntermediateDirectories:NO attributes:nil error:&errorCreate];
+    }
+    
+    if (errorCreate) {
+        DLog(@"Error creating folder: %@", errorCreate);
+    }
+    
+    //3. Give the permissions to the folder
+    [[NSFileManager defaultManager] setAttributes:@{NSFileProtectionKey: NSFileProtectionCompleteUntilFirstUserAuthentication} ofItemAtPath:cacheDirPath error:&error];
+    
+    if (error) {
+        DLog(@"Error setting permissions: %@", error);
+    }
 }
 
 - (void) addFolderToBeDownloaded: (FileDto *) folder {
