@@ -157,8 +157,13 @@
         
         
 #ifdef CONTAINER_APP
-        
-        if ([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon]) {
+        if (fileForSetTheStatusIcon.isFavorite) {
+            if([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon]) {
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
+            } else {
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
+            }
+        } else if ([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon]) {
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon.png"];
         } else {
             fileCell.imageDownloaded.image=[UIImage imageNamed:@""];

@@ -1333,6 +1333,9 @@
             fileCell.labelInfoFile.text = [NSString stringWithFormat:@"%@", fileDateString];
         }
         
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
+        
         fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.fileIdToShowFiles];
         
         //Custom cell for SWTableViewCell with right swipe options
@@ -2212,6 +2215,13 @@
                 case 2:
                     [self performSelectorInBackground:@selector(didSelectDownloadFolder) withObject:nil];
                     break;
+                case 3:
+                    if (self.selectedFileDto.isFavorite) {
+                        [self didSelectCancelFavoriteFolder];
+                    } else {
+                        [self didSelectFavoriteFolder];
+                    }
+                    break;
                 default:
                     break;
             }
@@ -2246,6 +2256,16 @@
         switch (buttonIndex) {
             case 0:
                 [self didSelectCancelDownloadFolder];
+                break;
+            default:
+                break;
+        }
+    }
+    
+    if (actionSheet.tag==220) {
+        switch (buttonIndex) {
+            case 0:
+                [self didSelectCancelFavoriteFolder];
                 break;
             default:
                 break;
@@ -2599,6 +2619,34 @@
         [[AppDelegate sharedSyncFolderManager] cancelDownloadsByFolder:self.selectedFileDto];
     });
 
+}
+
+- (void) didSelectFavoriteFolder {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    //Update fileDto
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+    self.selectedFileDto.isFavorite = YES;
+    
+    [ManageFilesDB updateTheFileID:self.selectedFileDto.idFile asFavorite:self.selectedFileDto.isFavorite];
+    
+    [self didSelectDownloadFolder];
+}
+
+- (void) didSelectCancelFavoriteFolder {
+    DLog(@"Cancel Download Folder");
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    //Update fileDto
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+    self.selectedFileDto.isFavorite = NO;
+    
+    [ManageFilesDB updateTheFileID:self.selectedFileDto.idFile asFavorite:self.selectedFileDto.isFavorite];
+    
+    [self didSelectCancelDownloadFolder];
+    
 }
 
 /*
@@ -3238,11 +3286,21 @@
         title = [title substringToIndex:[title length]-1];
         
         if ([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:self.selectedFileDto]) {
-            self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"cancel_download", nil), nil];
-            self.moreActionSheet.tag=210;
+            if (self.selectedFileDto.isFavorite) {
+                self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"unfavorite", nil), nil];
+                self.moreActionSheet.tag=220;
+            } else {
+                self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"cancel_download", nil), nil];
+                self.moreActionSheet.tag=210;
+            }
         } else {
-            self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), NSLocalizedString(@"download_folder", nil), nil];
-            self.moreActionSheet.tag=200;
+            if (self.selectedFileDto.isFavorite) {
+                self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), NSLocalizedString(@"download_folder", nil), NSLocalizedString(@"unfavorite", nil), nil];
+                self.moreActionSheet.tag=200;
+            } else {
+                self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), NSLocalizedString(@"download_folder", nil), NSLocalizedString(@"favorite", nil), nil];
+                self.moreActionSheet.tag=200;
+            }
         }
         
         if (IS_IPHONE) {
