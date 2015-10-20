@@ -166,9 +166,15 @@
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         
-        if (self.filteredItems.count % searchResultsPerPage == 0) {
-            return self.filteredItems.count + 1;
+        if (self.filteredItems.count == 0) {
+            return self.filteredItems.count;
+            
+        }else if (self.filteredItems.count % searchResultsPerPage == 0){
+            
+             return self.filteredItems.count + 1;
+            
         }else{
+            
             return self.filteredItems.count;
         }
         
