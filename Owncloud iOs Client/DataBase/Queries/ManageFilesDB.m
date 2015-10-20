@@ -158,6 +158,8 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
+    UserDto *mUser = [ManageUsersDB getActiveUser];
+    
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
@@ -177,7 +179,7 @@
             currentFile.date = [rs longForColumn:@"date"];
             currentFile.etag = [rs stringForColumn:@"etag"];
             currentFile.isFavorite = [rs intForColumn:@"is_favorite"];
-            currentFile.localFolder = @"";
+            currentFile.localFolder = [UtilsUrls getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:mUser];
             currentFile.isNecessaryUpdate = [rs boolForColumn:@"is_necessary_update"];
             currentFile.sharedFileSource = [rs intForColumn:@"shared_file_source"];
             currentFile.permissions = [rs stringForColumn:@"permissions"];

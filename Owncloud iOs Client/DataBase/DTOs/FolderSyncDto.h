@@ -12,7 +12,7 @@
 
 @property NSInteger idFolderSync;
 @property (nonatomic, strong) FileDto *file;
-@property BOOL isRead;
+@property BOOL isReadFromDatabase;
 @property NSInteger taskIdentifier;
 
 @end
