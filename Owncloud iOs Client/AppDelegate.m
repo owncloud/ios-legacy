@@ -2798,6 +2798,34 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 }
 
 
+///-----------------------------------
+/// @name reloadCellByKey
+///-----------------------------------
+
+/**
+ * This method refresh the folder cell if is visible
+ *
+ * @param key -> key,
+ */
+-(void)reloadCellByKey:(NSString *)key{
+    
+    //Refresh list to update the arrow
+    NSString *folderToRemovePath;
+    NSString *folderToRemoveName = [NSString stringWithFormat:@"%@/",[key lastPathComponent]];
+    NSString *parentKey = [key substringToIndex:[key length] - ([key lastPathComponent].length+1)];
+    if (![parentKey hasSuffix:@"/"]) {
+        parentKey = [parentKey stringByAppendingString:@"/"];
+    }
+    if ([parentKey isEqualToString:@"/"]) {
+        folderToRemovePath = @"";
+    } else {
+        folderToRemovePath = parentKey;
+    }
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:folderToRemoveName andFilePath:folderToRemovePath andUser:app.activeUser];
+    [app reloadTableFromDataBaseIfFileIsVisibleOnList:folderRemoved];
+}
+
 #pragma mark - Singletons of Server Version Checks
 
 //-----------------------------------
