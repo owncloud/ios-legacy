@@ -718,6 +718,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     return sharedSyncFolderManager;
 }
 
++ (ManageFavorites*)sharedManageFavorites {
+    
+    static ManageFavorites* manageFavorites = nil;
+    
+    if (manageFavorites == nil) {
+        manageFavorites = [ManageFavorites new];
+    }
+    
+    return manageFavorites;
+}
+
 
 #pragma mark - ManageFavorites
 
@@ -725,13 +736,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  * This method is for launch the syncAllFavoritesOfUser in background
  */
 - (void) launchProcessToSyncAllFavorites {
-
-    if (!self.manageFavorites) {
-        self.manageFavorites = [ManageFavorites new];
-    }
     
     //Do operations in background thread
-    [self.manageFavorites syncAllFavoritesOfUser:_activeUser.idUser];
+    [[AppDelegate sharedManageFavorites] syncAllFavoritesOfUser:_activeUser.idUser];
     
 }
 

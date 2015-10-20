@@ -27,6 +27,7 @@
 #import "FileNameUtils.h"
 #import "OCErrorMsg.h"
 #import "UtilsUrls.h"
+#import "SyncFolderManager.h"
 
 NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 
@@ -41,7 +42,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     if (self) {
         
         //Init Favorites Array
-        _favoritesSyncing = [NSMutableArray new];
+        self.favoritesSyncing = [NSMutableArray new];
     }
     
     return self;
@@ -120,23 +121,27 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 - (void) syncFavoritesOfFolder:(NSInteger)idFolder withUser:(NSInteger)userId{
     
     NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesOfUserId:userId];
-    NSMutableArray *tempArray = [NSMutableArray new];
+    NSMutableArray *tempFilesFavorites = [NSMutableArray new];
     
     for (FileDto *file in dataBaseFavorites) {
         
         if (file.fileId == idFolder) {
-            [tempArray addObject:file];
+            if (file.isDirectory) {
+                [[AppDelegate sharedSyncFolderManager] addFolderToBeDownloaded:file];
+            } else {
+                [tempFilesFavorites addObject:file];
+            }
         }
     }
     
     //If there are favorites the path, sync
-    if (tempArray.count >= 1) {
-        NSArray *favorites = [NSArray arrayWithArray:tempArray];
+    if (tempFilesFavorites.count >= 1) {
+        NSArray *favorites = [NSArray arrayWithArray:tempFilesFavorites];
         [self syncFavoritesOfList:favorites ofThisUser:userId];
     }
     
     //Free memory
-    tempArray = nil;
+    tempFilesFavorites = nil;
     
 }
 

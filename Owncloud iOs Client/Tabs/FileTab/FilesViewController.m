@@ -1834,15 +1834,15 @@
  */
 - (void) syncFavoritesOfFolderId:(NSNumber*)idFolder{
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         //Do operations in background thread
         NSInteger folder = [idFolder integerValue];
         
         //Launch the method to sync the favorites files with specific path
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        [app.manageFavorites syncFavoritesOfFolder:folder withUser:app.activeUser.idUser];
+        [[AppDelegate sharedManageFavorites] syncFavoritesOfFolder:folder withUser:app.activeUser.idUser];
         
-    });
+    //});
     
 }
 
@@ -2646,7 +2646,7 @@
     [ManageFilesDB updateTheFileID:self.selectedFileDto.idFile asFavorite:self.selectedFileDto.isFavorite];
     
     [self didSelectCancelDownloadFolder];
-    
+    [app reloadCellByFile:self.selectedFileDto];
 }
 
 /*

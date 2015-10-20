@@ -591,8 +591,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
  * Remove _fileDto of the sync process
  */
 - (void) removeFileOfFavorites{
-    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    [app.manageFavorites removeOfSyncProcessFile:_fileDto];
+    [[AppDelegate sharedManageFavorites] removeOfSyncProcessFile:_fileDto];
 }
 
 #pragma mark - FilesViewController callBacks
