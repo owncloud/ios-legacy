@@ -130,6 +130,9 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 
 @property (nonatomic) BOOL isLoadingForNavigate;
 
+//This flag help us to have the UX as a favorite files and folders because are son of a favorite folder
+@property (nonatomic) BOOL isCurrentFolderSonOfFavoriteFolder;
+
 //Favorites
 @property(nonatomic, strong) ManageFavorites *manageFavorites;
 

@@ -1600,6 +1600,13 @@
     
     filesViewController.isEtagRequestNecessary = YES;
     
+    //Set if the selected folder is favorite or if we are in a son of a favorite one
+    if (self.isCurrentFolderSonOfFavoriteFolder) {
+        filesViewController.isCurrentFolderSonOfFavoriteFolder = self.isCurrentFolderSonOfFavoriteFolder;
+    } else {
+        self.isCurrentFolderSonOfFavoriteFolder = self.selectedFileDto.isFavorite;
+    }
+    
     [[self navigationController] pushViewController:filesViewController animated:YES];
 }
 
