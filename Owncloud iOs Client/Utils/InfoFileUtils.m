@@ -139,7 +139,7 @@
  * @param fileCell -> CustomCellFileAndDirectory, the cell where the file is located
  * @param currentFolder -> FileDto, of the folder that contain the fileForSetTheStatusIcon
  */
-+ (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder {
++ (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder andIsSonOfFavoriteFolder:(BOOL)isCurrentFolderSonOfFavoriteFolder {
     
     if (fileForSetTheStatusIcon.isDirectory) {
         //We only show the shared icon if the folder is shared and the father is not shared
@@ -176,7 +176,7 @@
         NSString *imageFile= [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         fileCell.fileImageView.image=[UIImage imageNamed:imageFile];
         
-        if (fileForSetTheStatusIcon.isFavorite) {
+        if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
             if(fileForSetTheStatusIcon.isDownload == downloaded && !fileForSetTheStatusIcon.isNecessaryUpdate) {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
             } else {

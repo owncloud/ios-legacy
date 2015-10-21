@@ -1336,7 +1336,7 @@
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser] andUser:app.activeUser];
         
-        fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.fileIdToShowFiles];
+        fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.fileIdToShowFiles andIsSonOfFavoriteFolder:self.isCurrentFolderSonOfFavoriteFolder];
         
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
@@ -1604,7 +1604,7 @@
     if (self.isCurrentFolderSonOfFavoriteFolder) {
         filesViewController.isCurrentFolderSonOfFavoriteFolder = self.isCurrentFolderSonOfFavoriteFolder;
     } else {
-        self.isCurrentFolderSonOfFavoriteFolder = self.selectedFileDto.isFavorite;
+        filesViewController.isCurrentFolderSonOfFavoriteFolder = self.selectedFileDto.isFavorite;
     }
     
     [[self navigationController] pushViewController:filesViewController animated:YES];

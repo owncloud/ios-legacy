@@ -169,7 +169,7 @@
             FileDto *currentFile = [[FileDto alloc] init];
             
             currentFile.idFile = [rs intForColumn:@"id"];
-            currentFile.filePath = [rs stringForColumn:@"file_path"];
+            currentFile.filePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:mUser],[rs stringForColumn:@"file_path"]];
             currentFile.fileName = [rs stringForColumn:@"file_name"];
             currentFile.isDirectory = [rs intForColumn:@"is_directory"];
             currentFile.userId = [rs intForColumn:@"user_id"];

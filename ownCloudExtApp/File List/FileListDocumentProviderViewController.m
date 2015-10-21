@@ -353,7 +353,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
         }
         
         
-        fileCell = (DocumentPickerCell*)[InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder];
+        fileCell = (DocumentPickerCell*)[InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder andIsSonOfFavoriteFolder:NO];
         
         
         //Lock apperance
