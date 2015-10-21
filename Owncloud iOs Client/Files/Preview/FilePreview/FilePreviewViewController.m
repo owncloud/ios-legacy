@@ -379,12 +379,10 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     currentOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     BOOL isPotrait = UIDeviceOrientationIsPortrait(currentOrientation);
     
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
-        if (isPotrait == YES) {
-            [self potraitView];
-        } else {
-            [self landscapeView];
-        }
+    if (isPotrait == YES) {
+        [self potraitView];
+    } else {
+        [self landscapeView];
     }
 }
 
@@ -396,13 +394,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [_readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
     
-    if (toInterfaceOrientation  == UIInterfaceOrientationPortrait) {
+  /*  if (toInterfaceOrientation  == UIInterfaceOrientationPortrait) {
          //Portrait
          [self potraitView];
     } else {
         //Landscape
         [self landscapeView];
-    }
+    }*/
 }
 
 -(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -422,6 +420,14 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
     } else {
         _toolBar.hidden = NO;
+    }
+    
+    if (toInterfaceOrientation  == UIInterfaceOrientationPortrait) {
+        //Portrait
+        [self potraitView];
+    } else {
+        //Landscape
+        [self landscapeView];
     }
 }
 
@@ -483,7 +489,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             if (_file.isDownload == updating) {
                 //Preview the file
                 if (_typeOfFile == videoFileType || _typeOfFile == audioFileType) {
-                    [self performSelectorOnMainThread:@selector(playMediaFile) withObject:nil waitUntilDone:YES];
+                    [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.0];
                 } else if (_typeOfFile == officeFileType) {
                     [self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
                 } else {
@@ -524,7 +530,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             //Preview the file
             if ((!_file.isFavorite)||(_file.isFavorite && !_file.isNecessaryUpdate)) {
                 if (_typeOfFile == videoFileType || _typeOfFile == audioFileType) {
-                    [self performSelectorOnMainThread:@selector(playMediaFile) withObject:nil waitUntilDone:YES];
+                    [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.0];
                 } else if (_typeOfFile == officeFileType) {
                     [self performSelector:@selector(openFileOffice) withObject:nil afterDelay:0.1];
                     //[self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
@@ -850,32 +856,9 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 - (void)playMediaFile{
     
-    //The next commented code is for the streaming case, but not works yet.
-    
-    /* UserDto *activeUser = [ExecuteManager getActiveUser];
-     NSArray *splitedUrl = [activeUser.url componentsSeparatedByString:@"/"];
-     
-     NSString *serverUrl = [NSString stringWithFormat:@"%@%@%@",[NSString stringWithFormat:@"%@/%@/%@",[splitedUrl objectAtIndex:0],[splitedUrl objectAtIndex:1],[splitedUrl objectAtIndex:2]], _file.filePath, _file.fileName];
-     
-     DLog(@"remote url: %@", serverUrl);
-     
-     NSURL *url = [NSURL URLWithString:serverUrl];
-     
-     NSURLCredential *cred= [NSURLCredential credentialWithUser:activeUser.username password:activeUser.password persistence:NSURLCredentialPersistenceForSession];
-     
-     NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc]
-     initWithHost: @"192.168.1.162/owncloud/"
-     port: 8080
-     protocol: @"http"
-     realm: serverUrl
-     authenticationMethod: NSURLAuthenticationMethodDefault];
-     
-     [[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential: cred forProtectionSpace: protectionSpace];*/
-    
-    
-        
     //Know if mediaplayer is used
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
     BOOL isNewMediaPlayer = YES;
     
     if (appDelegate.mediaPlayer != nil) {
@@ -894,14 +877,16 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     } else {
         isNewMediaPlayer = YES;
     }
+    
+    
     if (isNewMediaPlayer == NO) {
         
         _moviePlayer = appDelegate.mediaPlayer;
         _moviePlayer.delegate = self;
         
-        [self configureView];
+        [self.view addSubview: _moviePlayer.moviePlayer.view];
         
-        [self.view addSubview:_moviePlayer.moviePlayer.view];
+        [self configureView];
         
     } else {
         //If is audio file create a AVAudioSession objetct to enable the music in background
@@ -929,16 +914,18 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [_moviePlayer.moviePlayer setFullscreen:NO];
         _moviePlayer.moviePlayer.shouldAutoplay = NO;
         _moviePlayer.delegate = self;
+        
+        appDelegate.mediaPlayer = _moviePlayer;
+        [self.view addSubview:_moviePlayer.moviePlayer.view];
+        
+        
         [self configureView];
         
         [_moviePlayer initHudView];
         [_moviePlayer.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
         [_moviePlayer.moviePlayer prepareToPlay];
         [_moviePlayer playFile];
-        
- 
-        appDelegate.mediaPlayer = _moviePlayer;
-        [self.view addSubview:_moviePlayer.moviePlayer.view];
+
     }
 }
 
