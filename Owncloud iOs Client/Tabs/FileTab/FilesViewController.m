@@ -1647,10 +1647,6 @@
     } else {
         [self navigateToUrl:_nextRemoteFolder andFileId:selectedFile.idFile];
     }
-    
-    //Launch the method to sync the favorites files with specific path
-    NSNumber *folderId = [NSNumber numberWithInteger:selectedFile.idFile];
-    [self performSelectorInBackground:@selector(syncFavoritesOfFolderId:) withObject:folderId];
 }
 
 /*
@@ -1841,7 +1837,7 @@
  */
 - (void) syncFavoritesOfFolderId:(NSNumber*)idFolder{
     
-    //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         //Do operations in background thread
         NSInteger folder = [idFolder integerValue];
         
@@ -1849,7 +1845,7 @@
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         [[AppDelegate sharedManageFavorites] syncFavoritesOfFolder:folder withUser:app.activeUser.idUser];
         
-    //});
+    });
     
 }
 
@@ -1863,10 +1859,6 @@
     
     //Refresh the shared data
     [self performSelector:@selector(refreshSharedPath) withObject:nil];
-    
-    //Pass NSInteger to NSNumber in order to pass an object with performselectorinbackground
-    NSNumber *folderId = [NSNumber numberWithInteger:self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile];
-    [self performSelectorInBackground:@selector(syncFavoritesOfFolderId:) withObject:folderId];
 }
 
 /*
@@ -2990,6 +2982,10 @@
             //This end loading is necessary when you change to a user with empty folder
             [self endLoading];
         }
+        
+        //Pass NSInteger to NSNumber in order to pass an object with performselectorinbackground
+        NSNumber *folderId = [NSNumber numberWithInteger:self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile];
+        [self performSelectorInBackground:@selector(syncFavoritesOfFolderId:) withObject:folderId];
     }
 }
 
