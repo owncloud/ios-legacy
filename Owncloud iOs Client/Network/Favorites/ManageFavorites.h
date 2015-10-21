@@ -97,4 +97,15 @@ extern NSString *FavoriteFileIsSync;
  */
 - (void) thereIsANewVersionAvailableOfThisFile: (FileDto *)favoriteFile;
 
+///-----------------------------------
+/// @name isInsideAFavoriteFolderThisFile
+///-----------------------------------
+
+/**
+ * This method checks if the file own to a folder that it is favorite
+ *
+ * @param file > FileDto. The file which is going to be checked
+ */
+- (BOOL) isInsideAFavoriteFolderThisFile:(FileDto *) file;
+
 @end

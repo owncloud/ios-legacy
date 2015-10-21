@@ -388,6 +388,27 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     }];
 }
 
+- (BOOL) isInsideAFavoriteFolderThisFile:(FileDto *) file {
+    
+    BOOL isAllTreeChecked = NO;
+    BOOL isSonOfFavorite = NO;
+    
+    while (!isAllTreeChecked) {
+        file = [ManageFilesDB getFileDtoByIdFile:file.fileId];
+        
+        if (file.isFavorite) {
+            isAllTreeChecked = YES;
+            isSonOfFavorite = YES;
+        }
+        
+        if (file.isRootFolder) {
+            isAllTreeChecked = YES;
+        }
+    }
+    
+    return isSonOfFavorite;
+}
+
 #pragma mark - Download Delegate Methods
 
 
