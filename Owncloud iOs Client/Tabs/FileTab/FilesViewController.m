@@ -2215,11 +2215,17 @@
                     [self performSelectorInBackground:@selector(didSelectDownloadFolder) withObject:nil];
                     break;
                 case 3:
-                    if (self.selectedFileDto.isFavorite) {
-                        [self didSelectCancelFavoriteFolder];
+                    
+                    if (self.isCurrentFolderSonOfFavoriteFolder) {
+                        [self showAlertView:NSLocalizedString(@"parent_folder_is_favorite", nil)];
                     } else {
-                        [self didSelectFavoriteFolder];
+                        if (self.selectedFileDto.isFavorite) {
+                            [self didSelectCancelFavoriteFolder];
+                        } else {
+                            [self didSelectFavoriteFolder];
+                        }
                     }
+                    
                     break;
                 default:
                     break;
@@ -2243,7 +2249,11 @@
                     [self didSelectMoveOption];
                     break;
                 case 3:
-                    [self didSelectFavoriteOption];
+                    if (self.isCurrentFolderSonOfFavoriteFolder) {
+                        [self showAlertView:NSLocalizedString(@"parent_folder_is_favorite", nil)];
+                    } else {
+                        [self didSelectFavoriteOption];
+                    }
                     break;
                 default:
                     break;
@@ -3297,13 +3307,17 @@
                 self.moreActionSheet.tag=210;
             }
         } else {
-            if (self.selectedFileDto.isFavorite) {
-                self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), NSLocalizedString(@"download_folder", nil), NSLocalizedString(@"unfavorite", nil), nil];
-                self.moreActionSheet.tag=200;
+            
+            NSString *favoriteOrUnfavoriteString = @"";
+            
+            if (_selectedFileDto.isFavorite && !self.isCurrentFolderSonOfFavoriteFolder) {
+                favoriteOrUnfavoriteString = NSLocalizedString(@"unfavorite", nil);
             } else {
-                self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), NSLocalizedString(@"download_folder", nil), NSLocalizedString(@"favorite", nil), nil];
-                self.moreActionSheet.tag=200;
+                favoriteOrUnfavoriteString = NSLocalizedString(@"favorite", nil);
             }
+            
+            self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), NSLocalizedString(@"download_folder", nil), favoriteOrUnfavoriteString, nil];
+            self.moreActionSheet.tag=200;
         }
         
         if (IS_IPHONE) {
@@ -3320,7 +3334,7 @@
         
         NSString *favoriteOrUnfavoriteString = @"";
         
-        if (_selectedFileDto.isFavorite) {
+        if (_selectedFileDto.isFavorite && !self.isCurrentFolderSonOfFavoriteFolder) {
             favoriteOrUnfavoriteString = NSLocalizedString(@"unfavorite", nil);
         } else {
             favoriteOrUnfavoriteString = NSLocalizedString(@"favorite", nil);
