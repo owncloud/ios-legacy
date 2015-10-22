@@ -339,6 +339,7 @@
 		400A63821B4FD94C00890579 /* iphoneAccounts.png in Resources */ = {isa = PBXBuildFile; fileRef = 400A63811B4FD94C00890579 /* iphoneAccounts.png */; };
 		4016E5C51A0CE9410022163C /* MainAppIcon_76_76@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4016E5C41A0CE9410022163C /* MainAppIcon_76_76@3x.png */; };
 		401AAA371B57C4F70047EA27 /* owncloudLogoFiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 401AAA361B57C4F70047EA27 /* owncloudLogoFiles.png */; };
+		402183C11B8B12F100975520 /* FileNameUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 402183C01B8B12F100975520 /* FileNameUtilsTests.m */; };
 		4026610C1A07926000517663 /* MainAppIcon_76-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4026610B1A07926000517663 /* MainAppIcon_76-76@2x.png */; };
 		402661141A07C66A00517663 /* Default-Landscape_375h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 402661121A07C66A00517663 /* Default-Landscape_375h@2x.png */; };
 		402661151A07C66A00517663 /* Default-Landscape_414h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 402661131A07C66A00517663 /* Default-Landscape_414h@3x.png */; };
@@ -391,6 +392,7 @@
 		40E354E11A14FE36000E7FE4 /* sound_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354E01A14FE36000E7FE4 /* sound_icon@3x.png */; };
 		40EDF89F1B4D123500700E3A /* HelpGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EDF89E1B4D123500700E3A /* HelpGuideViewController.m */; };
 		40EDF8A31B4D152300700E3A /* MyCustomAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EDF8A21B4D152300700E3A /* MyCustomAnimation.m */; };
+		40FE44EA1BA020E40021C13A /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D924DCBC1B973E88008B4BE7 /* libOCMock.a */; };
 		40FF874319F81396008B7C62 /* OCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FF874219F81396008B7C62 /* OCKeychain.m */; };
 		590849EF1A0A7D6000D3E842 /* CustomCellFileAndDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5C0177850B100FB9977 /* CustomCellFileAndDirectory.m */; };
 		590849F01A0A7D6D00D3E842 /* CustomCellFileAndDirectory.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD5C1177850B100FB9977 /* CustomCellFileAndDirectory.xib */; };
@@ -1405,6 +1407,7 @@
 		400A63811B4FD94C00890579 /* iphoneAccounts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneAccounts.png; sourceTree = "<group>"; };
 		4016E5C41A0CE9410022163C /* MainAppIcon_76_76@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76_76@3x.png"; sourceTree = "<group>"; };
 		401AAA361B57C4F70047EA27 /* owncloudLogoFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = owncloudLogoFiles.png; sourceTree = "<group>"; };
+		402183C01B8B12F100975520 /* FileNameUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileNameUtilsTests.m; sourceTree = "<group>"; };
 		4026610B1A07926000517663 /* MainAppIcon_76-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76-76@2x.png"; sourceTree = "<group>"; };
 		402661121A07C66A00517663 /* Default-Landscape_375h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape_375h@2x.png"; sourceTree = "<group>"; };
 		402661131A07C66A00517663 /* Default-Landscape_414h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape_414h@3x.png"; sourceTree = "<group>"; };
@@ -1563,6 +1566,16 @@
 		EA0599901BB94F3F002C2864 /* ShareSearchUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareSearchUserViewController.h; path = Tabs/FileTab/Share/ShareSearchUserViewController.h; sourceTree = "<group>"; };
 		EA0599911BB94F3F002C2864 /* ShareSearchUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareSearchUserViewController.m; path = Tabs/FileTab/Share/ShareSearchUserViewController.m; sourceTree = "<group>"; };
 		EA0599921BB94F3F002C2864 /* ShareSearchUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareSearchUserViewController.xib; path = Tabs/FileTab/Share/ShareSearchUserViewController.xib; sourceTree = "<group>"; };
+		D924DCBC1B973E88008B4BE7 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
+		D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
+		D924DCBF1B973E98008B4BE7 /* OCMArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
+		D924DCC01B973E98008B4BE7 /* OCMConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMConstraint.h; sourceTree = "<group>"; };
+		D924DCC11B973E98008B4BE7 /* OCMLocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMLocation.h; sourceTree = "<group>"; };
+		D924DCC21B973E98008B4BE7 /* OCMMacroState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMMacroState.h; sourceTree = "<group>"; };
+		D924DCC31B973E98008B4BE7 /* OCMock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMock.h; sourceTree = "<group>"; };
+		D924DCC41B973E98008B4BE7 /* OCMockObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMockObject.h; sourceTree = "<group>"; };
+		D924DCC51B973E98008B4BE7 /* OCMRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMRecorder.h; sourceTree = "<group>"; };
+		D924DCC61B973E98008B4BE7 /* OCMStubRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMStubRecorder.h; sourceTree = "<group>"; };
 		EA17629E1B78B50100D36186 /* ShareMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareMainViewController.h; path = Tabs/FileTab/Share/ShareMainViewController.h; sourceTree = "<group>"; };
 		EA17629F1B78B50100D36186 /* ShareMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareMainViewController.m; path = Tabs/FileTab/Share/ShareMainViewController.m; sourceTree = "<group>"; };
 		EA1787AA17E33BB9005171AB /* OCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCNavigationController.h; path = Tabs/FileTab/OCNavigationController.h; sourceTree = "<group>"; };
@@ -1751,6 +1764,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40FE44EA1BA020E40021C13A /* libOCMock.a in Frameworks */,
 				132429B015ADBB3800DF823E /* UIKit.framework in Frameworks */,
 				132429B115ADBB3800DF823E /* Foundation.framework in Frameworks */,
 			);
@@ -1903,6 +1917,8 @@
 		132429B415ADBB3800DF823E /* Owncloud iOs ClientTests */ = {
 			isa = PBXGroup;
 			children = (
+				40DAF1A31B8C7D3400D100D3 /* ExternalLibraries */,
+				402183C01B8B12F100975520 /* FileNameUtilsTests.m */,
 				132429BA15ADBB3800DF823E /* Owncloud_iOs_ClientTests.h */,
 				132429BB15ADBB3800DF823E /* Owncloud_iOs_ClientTests.m */,
 				132429B515ADBB3800DF823E /* Supporting Files */,
@@ -2812,6 +2828,14 @@
 			path = InstantUpload;
 			sourceTree = "<group>";
 		};
+		40DAF1A31B8C7D3400D100D3 /* ExternalLibraries */ = {
+			isa = PBXGroup;
+			children = (
+				D924DCAF1B973D7E008B4BE7 /* OCMock_3.1.5 */,
+			);
+			path = ExternalLibraries;
+			sourceTree = "<group>";
+		};
 		40EDF89D1B4D112900700E3A /* HelpGuide */ = {
 			isa = PBXGroup;
 			children = (
@@ -3056,6 +3080,32 @@
 				148DD6B61778693000FB9977 /* RecentViewController.xib */,
 			);
 			name = "Recent Tab";
+			sourceTree = "<group>";
+		};
+		D924DCAF1B973D7E008B4BE7 /* OCMock_3.1.5 */ = {
+			isa = PBXGroup;
+			children = (
+				D924DCBC1B973E88008B4BE7 /* libOCMock.a */,
+				D924DCB21B973E3A008B4BE7 /* OCMock */,
+			);
+			name = OCMock_3.1.5;
+			path = "Owncloud iOs ClientTests/ExternalLibraries/OCMock_3.1.5";
+			sourceTree = SOURCE_ROOT;
+		};
+		D924DCB21B973E3A008B4BE7 /* OCMock */ = {
+			isa = PBXGroup;
+			children = (
+				D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */,
+				D924DCBF1B973E98008B4BE7 /* OCMArg.h */,
+				D924DCC01B973E98008B4BE7 /* OCMConstraint.h */,
+				D924DCC11B973E98008B4BE7 /* OCMLocation.h */,
+				D924DCC21B973E98008B4BE7 /* OCMMacroState.h */,
+				D924DCC31B973E98008B4BE7 /* OCMock.h */,
+				D924DCC41B973E98008B4BE7 /* OCMockObject.h */,
+				D924DCC51B973E98008B4BE7 /* OCMRecorder.h */,
+				D924DCC61B973E98008B4BE7 /* OCMStubRecorder.h */,
+			);
+			path = OCMock;
 			sourceTree = "<group>";
 		};
 		EA10B3661615B15000548F0C /* Select Folder */ = {
@@ -4457,6 +4507,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				402183C11B8B12F100975520 /* FileNameUtilsTests.m in Sources */,
 				132429BC15ADBB3800DF823E /* Owncloud_iOs_ClientTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4803,13 +4854,14 @@
 				HEADER_SEARCH_PATHS = (
 					"include/**",
 					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
+					"$(PROJECT_DIR)/**",
 				);
 				INFOPLIST_FILE = "Owncloud iOs Client/Owncloud iOs Client-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
+					"$(SRCROOT)",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4847,13 +4899,14 @@
 				HEADER_SEARCH_PATHS = (
 					"include/**",
 					"$(SRCROOT)/OCCommunicationLib/OCCommunicationLib/OCCommunicationLib/**",
+					"$(PROJECT_DIR)/**",
 				);
 				INFOPLIST_FILE = "Owncloud iOs Client/Owncloud iOs Client-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
+					"$(SRCROOT)",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4874,8 +4927,23 @@
 				FRAMEWORK_SEARCH_PATHS = "$(SDKROOT)/Developer/Library/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/**",
+				);
 				INFOPLIST_FILE = "Owncloud iOs ClientTests/Owncloud iOs ClientTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/**",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
@@ -4888,8 +4956,23 @@
 				FRAMEWORK_SEARCH_PATHS = "$(SDKROOT)/Developer/Library/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/**",
+				);
 				INFOPLIST_FILE = "Owncloud iOs ClientTests/Owncloud iOs ClientTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/**",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
