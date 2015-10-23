@@ -45,6 +45,8 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void) viewWillAppear:(BOOL)animated {
     
+    self.user = [ManageUsersDB getActiveUser];
+    
     //We need to catch the rotation notifications only in iPhone.
     if (IS_IPHONE && self.isNecessaryAdjustThePositionAndTheSizeOfTheNavigationBar) {
         [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
@@ -353,7 +355,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
         }
         
         
-        fileCell = (DocumentPickerCell*)[InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder];
+        fileCell = (DocumentPickerCell*)[InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder ofUser:self.user];
         
         
         //Lock apperance
