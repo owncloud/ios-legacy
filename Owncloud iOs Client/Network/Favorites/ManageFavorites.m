@@ -406,6 +406,27 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     return isSonOfFavorite;
 }
 
+/**
+ * This method mark all files and folders behind "folder" as not favorites
+ *
+ * @param folder > FileDto. The folder parent
+ */
+- (void) setAllFilesAndFoldersAsNoFavoriteBehindFolder:(FileDto *) folder {
+    NSMutableArray *listOfFoldersToMarkAsNotFavorite = [NSMutableArray new];
+    [listOfFoldersToMarkAsNotFavorite addObject:folder];
+    
+    while (listOfFoldersToMarkAsNotFavorite.count > 0) {
+        
+        FileDto *current = [listOfFoldersToMarkAsNotFavorite objectAtIndex:0];
+        
+        [ManageFilesDB setNoFavoritesAllFilesOfAFolder:current];
+        [listOfFoldersToMarkAsNotFavorite addObjectsFromArray: [ManageFilesDB getFoldersByFileIdForActiveUser:current.idFile]];
+        
+        [listOfFoldersToMarkAsNotFavorite removeObjectAtIndex:0];
+    }
+    
+}
+
 #pragma mark - Download Delegate Methods
 
 

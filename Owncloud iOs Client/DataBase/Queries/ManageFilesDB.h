@@ -32,7 +32,7 @@
  * Method that give all folders from a single folder
  * @fileId -> id of the folder father and we want all his files and folders
  */
-+ (NSMutableArray *) getFoldersByFileIdForActiveUser:(int) fileId;
++ (NSMutableArray *) getFoldersByFileIdForActiveUser:(NSInteger) fileId;
 
 ///-----------------------------------
 /// @name Get Files by idFile
@@ -523,6 +523,18 @@
  * @return NSArray -> Array of favorites items
  */
 + (NSArray*) getAllFavoritesByFolder:(FileDto *) folder;
+
+///-----------------------------------
+/// @name setNoFavoritesAllFilesOfAFolder
+///-----------------------------------
+
+/**
+ * This method set all files and folders of a folder as no favorite
+ *
+ * @param folder -> FolderDto
+ *
+ */
++ (void) setNoFavoritesAllFilesOfAFolder:(FileDto *) folder;
 
 #pragma mark - TaskIdentifier methods
 

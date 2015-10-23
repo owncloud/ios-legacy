@@ -108,4 +108,15 @@ extern NSString *FavoriteFileIsSync;
  */
 - (BOOL) isInsideAFavoriteFolderThisFile:(FileDto *) file;
 
+///-----------------------------------
+/// @name setAllFilesAndFoldersAsNoFavoriteBehindFolder
+///-----------------------------------
+
+/**
+ * This method mark all files and folders behind "folder" as not favorites
+ *
+ * @param folder > FileDto. The folder parent
+ */
+- (void) setAllFilesAndFoldersAsNoFavoriteBehindFolder:(FileDto *) folder;
+
 @end

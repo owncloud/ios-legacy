@@ -2636,6 +2636,7 @@
     self.selectedFileDto.isFavorite = YES;
     
     [ManageFilesDB updateTheFileID:self.selectedFileDto.idFile asFavorite:self.selectedFileDto.isFavorite];
+    [[AppDelegate sharedManageFavorites] setAllFilesAndFoldersAsNoFavoriteBehindFolder:self.selectedFileDto];
     
     [self didSelectDownloadFolder];
 }

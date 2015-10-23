@@ -92,7 +92,7 @@
  * Method that give all folders from a single folder
  * @fileId -> id of the folder father and we want all his files and folders
  */
-+ (NSMutableArray *) getFoldersByFileIdForActiveUser:(int) fileId {
++ (NSMutableArray *) getFoldersByFileIdForActiveUser:(NSInteger) fileId {
     
     UserDto *mUser;
     
@@ -1777,7 +1777,6 @@
     }];
 }
 
-
 ///-----------------------------------
 /// @name getAllFavoritesOfUserId:userId
 ///-----------------------------------
@@ -1888,6 +1887,30 @@
     
     return output;
     
+}
+
+///-----------------------------------
+/// @name setNoFavoritesAllFilesOfAFolder
+///-----------------------------------
+
+/**
+ * This method set all files and folders of a folder as no favorite
+ *
+ * @param folder -> FolderDto
+ *
+ */
++ (void) setNoFavoritesAllFilesOfAFolder:(FileDto *) folder {
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE files SET is_favorite = 0 WHERE file_id = ?", [NSNumber numberWithInteger:folder.idFile]];
+        
+        if (!correctQuery) {
+            DLog(@"Error in setNoFavoritesAllFilesOfAFolder");
+        }
+    }];
 }
 
 
