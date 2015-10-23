@@ -53,4 +53,10 @@
  */
 + (void) updateFile:(FileDto *)file withTemporalFile:(NSString *)temporalFile;
 
+
+
++ (void) setThePermissionsForFolderPathByFile:(FileDto *)file;
++ (void) setThePermissionsForFolderPath:(NSString *)folderPath;
+
+
 @end
