@@ -201,4 +201,16 @@
  */
 + (void) updateDBVersion13To14;
 
+///-----------------------------------
+/// @name Update Database version with 13 version to 14
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter users table, added new field to store that the server has sharee API support.
+ *
+ */
++ (void) updateDBVersion14To15;
+
 @end
