@@ -33,6 +33,7 @@ typedef enum {
 @property long storageOccupied;
 @property long storage;
 @property NSInteger hasShareApiSupport;
+@property NSInteger hasShareeApiSupport;
 @property NSInteger hasCookiesSupport;
 @property NSInteger hasForbiddenCharactersSupport;
 @property BOOL instantUpload;

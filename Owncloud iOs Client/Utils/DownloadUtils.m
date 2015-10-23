@@ -14,6 +14,7 @@
  */
 
 #import "DownloadUtils.h"
+#import "UtilsUrls.h"
 
 @implementation DownloadUtils
 
@@ -87,5 +88,21 @@
         DLog(@"All ok");
     }
 }
+
+
++ (void) setThePermissionsForFolderPath:(NSString *)folderPath {
+    
+    NSError *error;
+    
+    DLog(@"setting permissions to folder: %@", folderPath);
+    
+    // Give the permissions to the folder
+    [[NSFileManager defaultManager] setAttributes:@{NSFileProtectionKey: NSFileProtectionCompleteUntilFirstUserAuthentication} ofItemAtPath:folderPath error:&error];
+    
+    if (error) {
+        DLog(@"Error setting permissions: %@", error);
+    }
+}
+
 
 @end
