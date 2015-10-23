@@ -67,11 +67,11 @@ extern NSString *FavoriteFileIsSync;
 /**
  * Method that begin a process to sync favorites of a specific path and user
  *
- * @param idFolder -> NSInteger
+ * @param folder -> FileDto
  * @param userId -> NSInteger
  *
  */
-- (void) syncFavoritesOfFolder:(NSInteger)idFolder withUser:(NSInteger)userId;
+- (void) syncFavoritesOfFolder:(FileDto *)folder withUser:(NSInteger)userId;
 
 
 ///-----------------------------------

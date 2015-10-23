@@ -511,6 +511,18 @@
  */
 + (NSArray*) getAllFavoritesOfUserId:(NSInteger)userId;
 
+///-----------------------------------
+/// @name getAllFavoritesOfUserId:userId
+///-----------------------------------
+
+/**
+ * This method returned all favorites files of a specific user
+ *
+ * @param folder -> FolderDto
+ *
+ * @return NSArray -> Array of favorites items
+ */
++ (NSArray*) getAllFavoritesByFolder:(FileDto *) folder;
 
 #pragma mark - TaskIdentifier methods
 

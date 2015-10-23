@@ -1815,6 +1815,7 @@
     refresh.attributedTitle = nil;
     
     [self performSelector:@selector(refreshTableFromWebDav) withObject:nil];
+    [self performSelectorInBackground:@selector(syncFavoritesByFolder:) withObject:self.fileIdToShowFiles];
 }
 
 ///-----------------------------------
@@ -1826,7 +1827,6 @@
  * terminate the pull refresh animation
  */
 - (void)stopPullRefresh{
-    
     //_refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"pull_down_refresh", nil)];
     [_refreshControl endRefreshing];
 }
@@ -1835,12 +1835,9 @@
  * Method to sync favorites of the current path. 
  * Usually we call this method in a background mode
  */
-- (void) syncFavoritesOfFolderId:(NSNumber*)idFolder{
+- (void) syncFavoritesByFolder:(FileDto *) folder {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        //Do operations in background thread
-        NSInteger folder = [idFolder integerValue];
-        
         //Launch the method to sync the favorites files with specific path
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         [[AppDelegate sharedManageFavorites] syncFavoritesOfFolder:folder withUser:app.activeUser.idUser];
@@ -2993,9 +2990,7 @@
             [self endLoading];
         }
         
-        //Pass NSInteger to NSNumber in order to pass an object with performselectorinbackground
-        NSNumber *folderId = [NSNumber numberWithInteger:self.currentFileShowFilesOnTheServerToUpdateTheLocalFile.idFile];
-        [self performSelectorInBackground:@selector(syncFavoritesOfFolderId:) withObject:folderId];
+        [self performSelectorInBackground:@selector(syncFavoritesByFolder:) withObject:self.fileIdToShowFiles];
     }
 }
 

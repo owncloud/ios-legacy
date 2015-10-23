@@ -118,19 +118,16 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
  * @param userId -> NSInteger
  *
  */
-- (void) syncFavoritesOfFolder:(NSInteger)idFolder withUser:(NSInteger)userId{
+- (void) syncFavoritesOfFolder:(FileDto *)folder withUser:(NSInteger)userId {
     
-    NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesOfUserId:userId];
+    NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesByFolder:folder];
     NSMutableArray *tempFilesFavorites = [NSMutableArray new];
     
     for (FileDto *file in dataBaseFavorites) {
-        
-        if (file.fileId == idFolder) {
-            if (file.isDirectory) {
-                [[AppDelegate sharedSyncFolderManager] addFolderToBeDownloaded:file];
-            } else {
-                [tempFilesFavorites addObject:file];
-            }
+        if (file.isDirectory) {
+            [[AppDelegate sharedSyncFolderManager] addFolderToBeDownloaded:file];
+        } else {
+            [tempFilesFavorites addObject:file];
         }
     }
     

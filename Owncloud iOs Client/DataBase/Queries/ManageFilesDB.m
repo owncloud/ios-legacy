@@ -1834,6 +1834,62 @@
 
 }
 
+///-----------------------------------
+/// @name getAllFavoritesOfUserId:userId
+///-----------------------------------
+
+/**
+ * This method returned all favorites files of a specific user
+ *
+ * @param folder -> FolderDto
+ *
+ * @return NSArray -> Array of favorites items
+ */
++ (NSArray*) getAllFavoritesByFolder:(FileDto *) folder {
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    NSMutableArray *tempArray = [NSMutableArray new];
+    //Get the user
+    UserDto *mUser = [ManageUsersDB getActiveUser];
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE is_favorite = 1 AND file_id = ?", [NSNumber numberWithInteger:folder.idFile]];
+        while ([rs next]) {
+            
+            FileDto *currentFile = [[FileDto alloc] init];
+            
+            currentFile.idFile = [rs intForColumn:@"id"];
+            currentFile.filePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:mUser],[rs stringForColumn:@"file_path"]];
+            currentFile.fileName = [rs stringForColumn:@"file_name"];
+            currentFile.isDirectory = [rs intForColumn:@"is_directory"];
+            currentFile.userId = [rs intForColumn:@"user_id"];
+            currentFile.isDownload = [rs intForColumn:@"is_download"];
+            currentFile.size = [rs longForColumn:@"size"];
+            currentFile.fileId = [rs intForColumn:@"file_id"];
+            currentFile.date = [rs longForColumn:@"date"];
+            currentFile.etag = [rs stringForColumn:@"etag"];
+            currentFile.isFavorite = [rs intForColumn:@"is_favorite"];
+            currentFile.localFolder = [UtilsUrls getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:mUser];
+            currentFile.isNecessaryUpdate = [rs boolForColumn:@"is_necessary_update"];
+            currentFile.sharedFileSource = [rs intForColumn:@"shared_file_source"];
+            currentFile.permissions = [rs stringForColumn:@"permissions"];
+            currentFile.taskIdentifier = [rs intForColumn:@"task_identifier"];
+            currentFile.providingFileId = [rs intForColumn:@"providing_file_id"];
+            
+            [tempArray addObject:currentFile];
+            
+        }
+        [rs close];
+    }];
+    
+    NSArray *output = [NSArray arrayWithArray:tempArray];
+    tempArray = nil;
+    
+    return output;
+    
+}
+
 
 ///-----------------------------------
 /// @name getFavoriteOfPath:path andUserId:userId

@@ -157,7 +157,7 @@
         
         
 #ifdef CONTAINER_APP
-        if (fileForSetTheStatusIcon.isFavorite) {
+        if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
             if([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon]) {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
             } else {
