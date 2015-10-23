@@ -17,11 +17,22 @@
 #import "FMDatabaseQueue.h"
 #import "FMDatabase.h"
 #import "UserDto.h"
-#import "AppDelegate.h"
 #import "OCSharedDto.h"
 #import "UtilsDtos.h"
 #import "NSString+Encoding.h"
+#import "ManageUsersDB.h"
+
+#ifdef CONTAINER_APP
 #import "Owncloud_iOs_Client-Swift.h"
+#elif FILE_PICKER
+#import "ownCloudExtApp-Swift.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
+#else
+#import "ownCloudExtAppFileProvider-Swift.h"
+#endif
+
+
 
 @implementation ManageSharesDB
 
@@ -36,8 +47,7 @@
  */
 + (void) insertSharedList:(NSArray *)elements{
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UserDto *mUser = app.activeUser;
+    UserDto *mUser =  [ManageUsersDB getActiveUser];
 
     FMDatabaseQueue *queue = Managers.sharedDatabase;
 
@@ -225,6 +235,52 @@
             }
             
             
+        }
+        [rs close];
+    }];
+    
+    return output;
+}
+
+///-----------------------------------
+/// @name Get Shares From User And Group By Path
+///-----------------------------------
+
+/**
+ * Get the shared items of a specific path
+ *
+ * @param path -> NSString
+ *
+ * @return NSMutableArray
+ *
+ */
++ (NSMutableArray*) getSharesFromUserAndGroupByPath:(NSString *) path {
+    
+    __block NSMutableArray *output = [NSMutableArray new];
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE path = ?", path];
+        
+        while ([rs next]) {
+            
+            OCSharedDto *sharedDto = [OCSharedDto new];
+            
+            sharedDto.fileSource = [rs intForColumn:@"file_source"];
+            sharedDto.itemSource = [rs intForColumn:@"item_source"];
+            sharedDto.shareType = [rs intForColumn:@"share_type"];
+            sharedDto.shareWith = [rs stringForColumn:@"share_with"];
+            sharedDto.path = [rs stringForColumn:@"path"];
+            sharedDto.permissions = [rs intForColumn:@"permissions"];
+            sharedDto.sharedDate = [rs longForColumn:@"shared_date"];
+            sharedDto.expirationDate = [rs longForColumn:@"expiration_date"];
+            sharedDto.token = [rs stringForColumn:@"token"];
+            sharedDto.shareWithDisplayName = [rs stringForColumn:@"share_with_display_name"];
+            sharedDto.isDirectory = [rs boolForColumn:@"is_directory"];
+            sharedDto.idRemoteShared = [rs intForColumn:@"id_remote_shared"];
+            
+            [output addObject:sharedDto];
         }
         [rs close];
     }];
@@ -495,8 +551,7 @@
  */
 + (OCSharedDto *) getSharedEqualWithFileDtoPath:(NSString*)path{
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UserDto *mUser = app.activeUser;
+    UserDto *mUser = [ManageUsersDB getActiveUser];
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     

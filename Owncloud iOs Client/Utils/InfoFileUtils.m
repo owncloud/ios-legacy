@@ -22,6 +22,8 @@
 #import "UtilsUrls.h"
 #import "SyncFolderManager.h"
 #import "CWLOrderedDictionary.h"
+#import "UtilsUrls.h"
+#import "ManageSharesDB.h"
 
 @implementation InfoFileUtils
 
@@ -138,8 +140,10 @@
  * @param fileForSetTheStatusIcon -> FileDto, the file for set the status
  * @param fileCell -> CustomCellFileAndDirectory, the cell where the file is located
  * @param currentFolder -> FileDto, of the folder that contain the fileForSetTheStatusIcon
+ * @param isCurrentFolderSonOfFavoriteFolder -> BOOL, indicate if the current cell is from a favorit folder
+ * @param user -> UserDto.
  */
-+ (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder andIsSonOfFavoriteFolder:(BOOL)isCurrentFolderSonOfFavoriteFolder {
++ (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder andIsSonOfFavoriteFolder:(BOOL)isCurrentFolderSonOfFavoriteFolder ofUser:(UserDto *)user {
     
     if (fileForSetTheStatusIcon.isDirectory) {
         //We only show the shared icon if the folder is shared and the father is not shared
@@ -200,10 +204,16 @@
         }
     }
     
+    //Check share with users or groups
+    NSString *path = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:fileForSetTheStatusIcon.filePath andUser:user], fileForSetTheStatusIcon.fileName];
+    NSArray *sharesWith = [ManageSharesDB getSharesFromUserAndGroupByPath:path];
+    
     //Shared -> Shared Image (SharedType = 1|2|3) || UnShared (SharedType = 0) -> Empty image
     if (fileForSetTheStatusIcon.sharedFileSource > 0) {
         fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
-    } else {
+    } else if(sharesWith.count > 0) {
+        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
+    } else{
         fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
     }
     

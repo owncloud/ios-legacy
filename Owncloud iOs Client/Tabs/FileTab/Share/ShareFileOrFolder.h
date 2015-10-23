@@ -113,4 +113,6 @@
  * @param FileDto -> The file/folder object
  */
 - (void) checkSharedStatusOfFile:(FileDto *) file;
+
+- (void) getUsersOrGroupsUsingSearchString:(NSString *)searchString;
 @end

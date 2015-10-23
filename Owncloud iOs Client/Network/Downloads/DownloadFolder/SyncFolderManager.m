@@ -24,6 +24,7 @@
 #import "DownloadFileSyncFolder.h"
 #import "ManageUsersDB.h"
 #import "InfoFileUtils.h"
+#import "DownloadUtils.h"
 
 @implementation SyncFolderManager
 
@@ -238,19 +239,21 @@
                                 FolderSyncDto *folderSync = [FolderSyncDto new];
                                 folderSync.file = currentFile;
                                 folderSync.isReadFromDatabase = NO;
-                                
+                            
                                 FileDto *fileRemote = [directoryList objectAtIndex:indexEtag];
                                 if ([fileRemote.etag isEqual:currentFile.etag]) {
                                     folderSync.isReadFromDatabase = YES;
                                 }
                                 
-                                
-                                
                                 NSString *key = [UtilsUrls getKeyByLocalFolder:folderSync.file.localFolder];
                                 [self.dictOfFoldersToBeCheck setObject:folderSync forKey:key];
+                                
                             } else {
                                 
                                 if (currentFile.isDownload == notDownload || currentFile.isNecessaryUpdate) {
+                                    
+                                    [DownloadUtils setThePermissionsForFolderPath:currentFolder.localFolder];
+                                    
                                     //Add the file to the indexed forest of files downloading
                                     [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:currentFile];
                                     FileDto *fileRemote = [directoryList objectAtIndex:indexEtag];
