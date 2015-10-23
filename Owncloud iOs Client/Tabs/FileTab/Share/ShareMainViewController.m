@@ -806,7 +806,7 @@
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"share_with_users_or_groups", nil);
             shareLinkHeaderCell.switchSection.hidden = true;
         }else{
-            shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"share_link_long_press", nil);
+            shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"share_link_title", nil);
             [shareLinkHeaderCell.switchSection setOn:self.isShareLinkEnabled animated:false];
             [shareLinkHeaderCell.switchSection addTarget:self action:@selector(sharedLinkSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
         }
