@@ -226,21 +226,6 @@
                 //Refresh list to update the arrow
                 AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
                 [app reloadCellByKey:idKey];
-                
-//                NSString *folderToRemovePath;
-//                NSString *folderToRemoveName = [NSString stringWithFormat:@"%@/",[idKey lastPathComponent]];
-//                NSString *parentKey = [idKey substringToIndex:[idKey length] - ([idKey lastPathComponent].length+1)];
-//                if (![parentKey hasSuffix:@"/"]) {
-//                    parentKey = [parentKey stringByAppendingString:@"/"];
-//                }
-//                if ([parentKey isEqualToString:@"/"]) {
-//                    folderToRemovePath = @"";
-//                } else {
-//                    folderToRemovePath = parentKey;
-//                }
-//                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-//                FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:folderToRemoveName andFilePath:folderToRemovePath andUser:app.activeUser];
-//                [app reloadTableFromDataBaseIfFileIsVisibleOnList:folderRemoved];
 
                 if (tmpFilesAndFolderToSync.count > 0) {
                     [app reloadTableFromDataBaseIfFileIsVisibleOnList:[tmpFilesAndFolderToSync objectAtIndex:0]];
@@ -259,6 +244,15 @@
         DLog(@"error: %@", error);
         
         //TODO: continue with next or remove all from the list if we can not manage the problem
+        
+        //Removed failed folder
+        [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
+        
+        //Refresh cell to update the arrow
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        [app reloadCellByKey:idKey];
+        
+
     }];
 }
 
