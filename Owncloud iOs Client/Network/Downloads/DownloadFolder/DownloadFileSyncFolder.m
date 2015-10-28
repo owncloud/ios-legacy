@@ -167,8 +167,6 @@
     if (self.downloadTask) {
         [self.downloadTask cancel];
     }
-    
-    [self failureDownloadProcess];
 }
 
 - (void)reloadCellFromDataBase{
