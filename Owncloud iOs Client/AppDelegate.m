@@ -2822,7 +2822,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         folderToRemovePath = parentKey;
     }
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:folderToRemoveName andFilePath:folderToRemovePath andUser:app.activeUser];
+    FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:[folderToRemoveName encodeString:NSUTF8StringEncoding] andFilePath:[folderToRemovePath encodeString:NSUTF8StringEncoding] andUser:app.activeUser];
     [app reloadTableFromDataBaseIfFileIsVisibleOnList:folderRemoved];
 }
 
