@@ -1333,7 +1333,7 @@
             fileCell.labelInfoFile.text = [NSString stringWithFormat:@"%@", fileDateString];
         }
         
-        fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.fileIdToShowFiles];
+        fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.fileIdToShowFiles ofUser:APP_DELEGATE.activeUser];
         
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;

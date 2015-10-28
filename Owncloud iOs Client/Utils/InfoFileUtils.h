@@ -53,7 +53,9 @@
  * @param fileForSetTheStatusIcon -> FileDto, the file for set the status
  * @param fileCell -> CustomCellFileAndDirectory, the cell where the file is located
  * @param currentFolder -> FileDto, of the folder that contain the fileForSetTheStatusIcon
+ * @param user -> UserDto.
  */
-+ (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder;
+
++ (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder ofUser:(UserDto *)user;
 
 @end

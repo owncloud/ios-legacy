@@ -41,12 +41,18 @@
     
     if (app.activeUser) {
         
-        [[AppDelegate sharedOCCommunication] hasServerShareSupport:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, BOOL hasSupport, NSString *redirectedServer) {
+        [[AppDelegate sharedOCCommunication] hasServerShareAndShareeSupport:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, BOOL hasShareSupport, BOOL hasShareeSupport, NSString *redirectedServer) {
             
-            if (hasSupport) {
+            if (hasShareSupport) {
                 app.activeUser.hasShareApiSupport = serverFunctionalitySupported;
             } else {
                 app.activeUser.hasShareApiSupport = serverFunctionalityNotSupported;
+            }
+            
+            if (hasShareeSupport) {
+                app.activeUser.hasShareeApiSupport = serverFunctionalitySupported;
+            } else {
+                app.activeUser.hasShareeApiSupport = serverFunctionalityNotSupported;
             }
             
             [ManageUsersDB updateUserByUserDto:app.activeUser];
