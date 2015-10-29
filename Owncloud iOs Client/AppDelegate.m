@@ -2823,7 +2823,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:[folderToRemoveName encodeString:NSUTF8StringEncoding] andFilePath:[folderToRemovePath encodeString:NSUTF8StringEncoding] andUser:app.activeUser];
-    [app reloadTableFromDataBaseIfFileIsVisibleOnList:folderRemoved];
+    [self reloadCellByFile:folderRemoved];
 }
 
 #pragma mark - Singletons of Server Version Checks

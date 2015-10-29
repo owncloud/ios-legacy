@@ -170,9 +170,17 @@
     
     NSString *key = [UtilsUrls getKeyByLocalFolder:folder.localFolder];
     CWLOrderedDictionary *downloadingTreeForThisFolder = [self getDictionaryOfTreebyKey:key];
-    CWLOrderedDictionary *pendingToCheckTreeForThisFolder = [[AppDelegate sharedSyncFolderManager].dictOfFoldersToBeCheck objectForKey:key];
+    NSArray *allKeysToCheck = [[AppDelegate sharedSyncFolderManager].dictOfFoldersToBeCheck allKeys];
+    BOOL isPendingToBeCheck = NO;
     
-    if ([downloadingTreeForThisFolder count] > 0 || pendingToCheckTreeForThisFolder!=nil) {
+    for (NSString *currentKey in allKeysToCheck) {
+        if ([currentKey hasPrefix:key]) {
+            isPendingToBeCheck = YES;
+            break;
+        }
+    }
+    
+    if ([downloadingTreeForThisFolder count] > 0 || isPendingToBeCheck) {
         isFolderPending = YES;
     }
     
