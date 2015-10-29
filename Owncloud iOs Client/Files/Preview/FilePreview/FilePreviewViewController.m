@@ -393,14 +393,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     } else if (_readerPDFViewController) {
         [_readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
-    
-  /*  if (toInterfaceOrientation  == UIInterfaceOrientationPortrait) {
-         //Portrait
-         [self potraitView];
-    } else {
-        //Landscape
-        [self landscapeView];
-    }*/
+ 
 }
 
 -(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
