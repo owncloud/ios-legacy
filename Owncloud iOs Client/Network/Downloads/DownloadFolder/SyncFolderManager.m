@@ -298,10 +298,11 @@
     [self.listOfFilesToBeDownloaded addObject:download];
 }
 
-- (void) simpleDownloadTheFile:(FileDto *) file {
+- (void) simpleDownloadTheFile:(FileDto *) file andTask:(NSURLSessionDownloadTask *) task {
     DownloadFileSyncFolder *download = [DownloadFileSyncFolder new];
     download.currentFileEtag = nil;
     download.file = file;
+    download.downloadTask = task;
     
     [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:file];
     [self.listOfFilesToBeDownloaded addObject:download];

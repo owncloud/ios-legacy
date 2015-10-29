@@ -102,8 +102,10 @@
             
             DLog(@"Error: %@", error);
             DLog(@"error.code: %ld", (long)error.code);
-            [weakSelf failureDownloadProcess];
             
+            if (error.code != kCFURLErrorCancelled) {
+                [weakSelf failureDownloadProcess];
+            }
         }];
         
         [self.downloadTask resume];
@@ -167,6 +169,8 @@
     if (self.downloadTask) {
         [self.downloadTask cancel];
     }
+    
+    [self failureDownloadProcess];
 }
 
 - (void)reloadCellFromDataBase{

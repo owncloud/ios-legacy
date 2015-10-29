@@ -1093,6 +1093,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
      if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active){
          [self.downloadManager cancelDownloads];
+         [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
      }
     
     //Remove inbox folder if aren't uploads pending
@@ -1262,8 +1263,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             for (FileDto *file in downloadsFromDB) {
                 
                 if (file.taskIdentifier == downloadTask.taskIdentifier) {
-                    
-                    [[AppDelegate sharedSyncFolderManager] simpleDownloadTheFile:file];
+                    [[AppDelegate sharedSyncFolderManager] simpleDownloadTheFile:file andTask:downloadTask];
                 }
             }
         }
