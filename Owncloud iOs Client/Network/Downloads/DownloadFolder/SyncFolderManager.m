@@ -239,7 +239,7 @@
                                 FolderSyncDto *folderSync = [FolderSyncDto new];
                                 folderSync.file = currentFile;
                                 folderSync.isReadFromDatabase = NO;
-                            
+                                
                                 FileDto *fileRemote = [directoryList objectAtIndex:indexEtag];
                                 if ([fileRemote.etag isEqual:currentFile.etag]) {
                                     folderSync.isReadFromDatabase = YES;
@@ -283,12 +283,22 @@
                     //Credential error
                 }
             });
-            
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
+            
             DLog(@"response: %@", response);
             DLog(@"error: %@", error);
+            
+            //TODO: continue with next or remove all from the list if we can not manage the problem
+            
+            //Removed failed folder
+            [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
+            
+            //Refresh cell to update the arrow
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            [app reloadCellByKey:idKey];
+            
+            
         }];
-        
     }
 }
 
@@ -334,10 +344,11 @@
     [self.listOfFilesToBeDownloaded addObject:download];
 }
 
-- (void) simpleDownloadTheFile:(FileDto *) file {
+- (void) simpleDownloadTheFile:(FileDto *) file andTask:(NSURLSessionDownloadTask *) task {
     DownloadFileSyncFolder *download = [DownloadFileSyncFolder new];
     download.currentFileEtag = nil;
     download.file = file;
+    download.downloadTask = task;
     
     [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:file];
     [self.listOfFilesToBeDownloaded addObject:download];

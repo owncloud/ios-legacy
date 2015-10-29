@@ -1100,6 +1100,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
      if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active){
          [self.downloadManager cancelDownloads];
+         [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
      }
     
     //Remove inbox folder if aren't uploads pending
@@ -1269,8 +1270,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             for (FileDto *file in downloadsFromDB) {
                 
                 if (file.taskIdentifier == downloadTask.taskIdentifier) {
-                    
-                    [[AppDelegate sharedSyncFolderManager] simpleDownloadTheFile:file];
+                    [[AppDelegate sharedSyncFolderManager] simpleDownloadTheFile:file andTask:downloadTask];
                 }
             }
         }
@@ -2829,8 +2829,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         folderToRemovePath = parentKey;
     }
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:folderToRemoveName andFilePath:folderToRemovePath andUser:app.activeUser];
-    [app reloadTableFromDataBaseIfFileIsVisibleOnList:folderRemoved];
+    FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:[folderToRemoveName encodeString:NSUTF8StringEncoding] andFilePath:[folderToRemovePath encodeString:NSUTF8StringEncoding] andUser:app.activeUser];
+    [self reloadCellByFile:folderRemoved];
 }
 
 #pragma mark - Singletons of Server Version Checks
