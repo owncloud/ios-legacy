@@ -188,11 +188,10 @@
                 isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
             }
             
-            //We execute this in other thread because if not it froze the app
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError) {
                 
-                if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError) {
-                    
+                //We execute this in other thread because if not it froze the app
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     
                     //Pass the items with OCFileDto to FileDto Array
                     NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
@@ -266,23 +265,21 @@
                         }
                     }
                     
+                    [self reloadCellAndRemovedFolderToBeCheckByKey:idKey];
+                    
                     //Continue with the next
-                    [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
-                    
-                    //Refresh list to update the arrow
-                    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                    [app reloadCellByKey:idKey];
-                    
                     if (tmpFilesAndFolderToSync.count > 0) {
                         [app reloadTableFromDataBaseIfFileIsVisibleOnList:[tmpFilesAndFolderToSync objectAtIndex:0]];
                     }
                     
                     [self continueWithNextFolder];
                     
-                } else {
-                    //Credential error
-                }
-            });
+                    
+                });
+            } else {
+                //Credential error
+                [self reloadCellAndRemovedFolderToBeCheckByKey:idKey];
+            }
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
             
             DLog(@"response: %@", response);
@@ -291,17 +288,21 @@
             //TODO: continue with next or remove all from the list if we can not manage the problem
             
             //Removed failed folder
-            [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
-            
-            //Refresh cell to update the arrow
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            [app reloadCellByKey:idKey];
+            [self reloadCellAndRemovedFolderToBeCheckByKey:idKey];
             
             
         }];
     }
 }
 
+- (void) reloadCellAndRemovedFolderToBeCheckByKey:(NSString *)idKey {
+    //Removed failed folder
+    [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
+    
+    //Refresh cell to update the arrow
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    [app reloadCellByKey:idKey];
+}
 
 /*
  * This method receive the new array of the server and store the changes
