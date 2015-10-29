@@ -218,13 +218,10 @@
                     }
                 }
                 
+                [self reloadCellAndRemovedFolderToBeCheckByKey:idKey];
+
                 //Continue with the next
-                [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
-                
-                //Refresh list to update the arrow
-                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                [app reloadCellByKey:idKey];
-                
+
                 if (tmpFilesAndFolderToSync.count > 0) {
                     [app reloadTableFromDataBaseIfFileIsVisibleOnList:[tmpFilesAndFolderToSync objectAtIndex:0]];
                 }
@@ -236,13 +233,7 @@
         } else {
             //Credential error
             
-            //Removed failed folder
-            [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
-            
-            //Refresh cell to update the arrow
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            [app reloadCellByKey:idKey];
-
+            [self reloadCellAndRemovedFolderToBeCheckByKey:idKey];
         }
         
         
@@ -253,17 +244,19 @@
         
         //TODO: continue with next or remove all from the list if we can not manage the problem
         
-        //Removed failed folder
-        [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
-        
-        //Refresh cell to update the arrow
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        [app reloadCellByKey:idKey];
-        
+        [self reloadCellAndRemovedFolderToBeCheckByKey:idKey];
 
     }];
 }
 
+- (void) reloadCellAndRemovedFolderToBeCheckByKey:(NSString *)idKey {
+    //Removed failed folder
+    [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
+    
+    //Refresh cell to update the arrow
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    [app reloadCellByKey:idKey];
+}
 
 /*
  * This method receive the new array of the server and store the changes
