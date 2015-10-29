@@ -104,14 +104,16 @@ import AVFoundation
         let rightBarButton = UIBarButtonItem (title:NSLocalizedString("upload_label", comment: ""), style: .Plain, target: self, action:"sendTheFilesToOwnCloud")
         let leftBarButton = UIBarButtonItem (title:NSLocalizedString("cancel", comment: ""), style: .Plain, target: self, action:"cancelView")
         
-        self.navigationItem.title = k_app_name
+        let appName = NSBundle.mainBundle().infoDictionary?["CFBundleDisplayName"] as! String
+
+        self.navigationItem.title = appName
 
         
         self.navigationItem.leftBarButtonItem = leftBarButton
         self.navigationItem.rightBarButtonItem = rightBarButton
         self.navigationItem.hidesBackButton = true
         
-        self.changeTheDestinyFolderWith(k_app_name)
+        self.changeTheDestinyFolderWith(appName)
 
 
     }
@@ -121,7 +123,8 @@ import AVFoundation
         var nameFolder = folder
         let location = NSLocalizedString("location", comment: "comment")
         if folder.isEmpty {
-            nameFolder = k_app_name
+            let appName = NSBundle.mainBundle().infoDictionary?["CFBundleDisplayName"] as! String
+            nameFolder = appName
         }
 
         if (nameFolder.characters.count > 20) {
