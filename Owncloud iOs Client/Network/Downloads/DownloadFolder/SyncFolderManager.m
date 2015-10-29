@@ -142,12 +142,10 @@
             //Check if there are fragmens of saml in url, in this case there are a credential error
             isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
         }
-        
-        //We execute this in other thread because if not it froze the app
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            
-            if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError) {
-                
+        if((response.statusCode != kOCErrorServerUnauthorized) && !isSamlCredentialsError) {
+
+            //We execute this in other thread because if not it froze the app
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 
                 //Pass the items with OCFileDto to FileDto Array
                 NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
@@ -207,7 +205,7 @@
                             if (currentFile.isDownload == notDownload || currentFile.isNecessaryUpdate) {
                                 
                                 [DownloadUtils setThePermissionsForFolderPath:currentFolder.localFolder];
-
+                                
                                 //Add the file to the indexed forest of files downloading
                                 [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:currentFile];
                                 FileDto *fileRemote = [directoryList objectAtIndex:indexEtag];
@@ -226,17 +224,27 @@
                 //Refresh list to update the arrow
                 AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
                 [app reloadCellByKey:idKey];
-
+                
                 if (tmpFilesAndFolderToSync.count > 0) {
                     [app reloadTableFromDataBaseIfFileIsVisibleOnList:[tmpFilesAndFolderToSync objectAtIndex:0]];
                 }
                 
                 [self continueWithNextFolder];
                 
-            } else {
-                //Credential error
-            }
-        });
+            });
+            
+        } else {
+            //Credential error
+            
+            //Removed failed folder
+            [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
+            
+            //Refresh cell to update the arrow
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            [app reloadCellByKey:idKey];
+
+        }
+        
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
         
