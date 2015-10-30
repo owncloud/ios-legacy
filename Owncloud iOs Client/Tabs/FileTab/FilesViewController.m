@@ -1359,6 +1359,11 @@
         
         //Set the table footer
         [self setTheLabelOnTheTableFooter];
+        
+        //Put the new files son of favorites to download
+        if (self.isCurrentFolderSonOfFavoriteFolder && !file.isDirectory && (file.isDownload == notDownload || file.isNecessaryUpdate)) {
+            [[AppDelegate sharedManageFavorites] downloadSingleFavoriteFileSonOfFavoriteFolder:file];
+        }
     }
     return cell;
 }
@@ -1840,7 +1845,7 @@
         //Launch the method to sync the favorites files with specific path
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         [[AppDelegate sharedManageFavorites] syncFavoritesOfFolder:folder withUser:app.activeUser.idUser];
-        
+    
     });
     
 }

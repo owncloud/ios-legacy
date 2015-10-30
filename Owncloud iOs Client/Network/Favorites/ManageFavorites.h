@@ -119,4 +119,15 @@ extern NSString *FavoriteFileIsSync;
  */
 - (void) setAllFilesAndFoldersAsNoFavoriteBehindFolder:(FileDto *) folder;
 
+///-----------------------------------
+/// @name downloadSingleFavoriteFileSonOfFavoriteFolder
+///-----------------------------------
+
+/**
+ * Method force the download of a favorite file son of a favorite folder
+ *
+ * @param file > FileDto. File to be updated or downloaded
+ */
+- (void) downloadSingleFavoriteFileSonOfFavoriteFolder:(FileDto *) file;
+
 @end

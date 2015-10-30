@@ -28,6 +28,8 @@
 #import "OCErrorMsg.h"
 #import "UtilsUrls.h"
 #import "SyncFolderManager.h"
+#import "DownloadFileSyncFolder.h"
+#import "IndexedForest.h"
 
 NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 
@@ -468,6 +470,92 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 - (void)updateOrCancelTheDownload:(id)download{
     
     
+}
+
+#pragma mark - Update just single file
+
+///-----------------------------------
+/// @name downloadSingleFavoriteFileSonOfFavoriteFolder
+///-----------------------------------
+
+/**
+ * Method force the download of a favorite file son of a favorite folder
+ */
+- (void) downloadSingleFavoriteFileSonOfFavoriteFolder:(FileDto *) file {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
+    }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+    
+    //FileName full path
+    NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser], file.fileName];
+    
+    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+        
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                DLog(@"error login updating the etag");
+                //Set not download or downloaded in database
+                if (file.isNecessaryUpdate) {
+                    [ManageFilesDB setFileIsDownloadState:file.idFile andState:downloaded];
+                    
+                } else {
+                    [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
+                }
+            }
+        }
+        if(response.statusCode < kOCErrorServerUnauthorized && !isSamlCredentialsError) {
+            
+            //Change the filePath from the library to our format
+            for (FileDto *currentFile in items) {
+                //Remove part of the item file path
+                NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
+                if([currentFile.filePath length] >= [partToRemove length]){
+                    currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
+                }
+            }
+            
+            DLog(@"The directory List have: %lu elements", (unsigned long)items.count);
+            
+            //Check if there are almost one item in the array
+            if (items.count >= 1) {
+                DLog(@"Directoy list: %@", items);
+                FileDto *currentFileDto = [items objectAtIndex:0];
+                DLog(@"currentFileDto: %@", currentFileDto.etag);
+                
+                [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:file];
+                
+                DownloadFileSyncFolder *download = [DownloadFileSyncFolder new];
+                download.currentFileEtag = currentFileDto.etag;
+                [download addFileToDownload:file];
+                
+                [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded addObject:download];
+                
+            }
+            
+        }
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        
+        DLog(@"error: %@", error);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
+    }];
 }
 
 
