@@ -1819,7 +1819,7 @@
     refresh.attributedTitle = nil;
     
     [self performSelector:@selector(refreshTableFromWebDav) withObject:nil];
-    [self performSelectorInBackground:@selector(syncFavoritesByFolder:) withObject:self.fileIdToShowFiles];
+    //[self performSelectorInBackground:@selector(syncFavoritesByFolder:) withObject:self.fileIdToShowFiles];
 }
 
 ///-----------------------------------
@@ -1841,6 +1841,10 @@
  */
 - (void) syncFavoritesByFolder:(FileDto *) folder {
     
+    NSArray *files = [ManageFilesDB getAllFavoritesByFolder:folder];
+    
+    DLog(@"Files: %lu", (unsigned long)files.count);
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         //Launch the method to sync the favorites files with specific path
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -1860,6 +1864,8 @@
     
     //Refresh the shared data
     [self performSelector:@selector(refreshSharedPath) withObject:nil];
+    
+    [self performSelectorInBackground:@selector(syncFavoritesByFolder:) withObject:self.fileIdToShowFiles];
 }
 
 /*
@@ -1956,7 +1962,7 @@
     dispatch_queue_t mainThreadQueue = dispatch_get_main_queue();
     dispatch_async(mainThreadQueue, ^{
         [self.tableView beginUpdates];
-        [self.tableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationNone];
         [self.tableView endUpdates];
     });
 }
@@ -1965,7 +1971,7 @@
  * Method used for quit the flag about the refresh
  * and the system can be a new refresh action
  */
-- (void)disableRefreshInProgress{
+- (void)disableRefreshInProgress {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     app.isRefreshInProgress=NO;
@@ -2994,8 +3000,6 @@
             //This end loading is necessary when you change to a user with empty folder
             [self endLoading];
         }
-        
-        [self performSelectorInBackground:@selector(syncFavoritesByFolder:) withObject:self.fileIdToShowFiles];
     }
 }
 

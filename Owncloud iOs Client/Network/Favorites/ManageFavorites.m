@@ -102,7 +102,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 
 - (void) syncAllFavoritesOfUser:(NSInteger)userId{
    
-    NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesOfUserId:userId];
+    NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesFilesOfUserId:userId];
     
     [self syncFavoritesOfList:dataBaseFavorites ofThisUser:userId];
     
@@ -123,7 +123,9 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 - (void) syncFavoritesOfFolder:(FileDto *)folder withUser:(NSInteger)userId {
     
     NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesByFolder:folder];
-    NSMutableArray *tempFilesFavorites = [NSMutableArray new];
+    [self syncFavoritesOfList:dataBaseFavorites ofThisUser:userId];
+    
+    /*NSMutableArray *tempFilesFavorites = [NSMutableArray new];
     
     for (FileDto *file in dataBaseFavorites) {
         if (file.isDirectory) {
@@ -140,7 +142,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     }
     
     //Free memory
-    tempFilesFavorites = nil;
+    tempFilesFavorites = nil;*/
     
 }
 
@@ -153,12 +155,12 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
  * check each file and download if is necessary.
  *
  */
-- (void) syncFavoritesOfList:(NSArray*)favoritesFiles ofThisUser:(NSInteger)userId{
+- (void) syncFavoritesOfList:(NSArray*)favoritesFilesAndFolders ofThisUser:(NSInteger)userId{
     
     UserDto *user = [ManageUsersDB getUserByIdUser:userId];
     
     //Loop for favorites
-    for (FileDto *file in favoritesFiles) {
+    for (FileDto *file in favoritesFilesAndFolders) {
         
         //FileName full path
         NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:user];
@@ -198,40 +200,48 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                         //Update the file data
                         FileDto *updatedFile = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:user] andUser:user];
                         
-                        //Check if the etag has changed
-                        if (((![item.etag isEqual: updatedFile.etag] && updatedFile.isDownload != downloading && updatedFile.isDownload != updating) || (updatedFile.isDownload == notDownload)) && updatedFile) {
+                        if (updatedFile.isDirectory) {
                             
-                            //Update the info of the file
-                            if (updatedFile.isDownload == downloaded) {
-                                updatedFile.isNecessaryUpdate = YES;
-                                [ManageFilesDB setFile:updatedFile.idFile isNecessaryUpdate:YES];
+                            if (![item.etag isEqual: updatedFile.etag]) {
+                                [[AppDelegate sharedSyncFolderManager] addFolderToBeDownloaded:file];
                             }
                             
-                            //Send notification in order to update the file list
-                            [[NSNotificationCenter defaultCenter] postNotificationName:FavoriteFileIsSync object:updatedFile];
-                            
-                            //Control this files in array
-                            [_favoritesSyncing addObject:updatedFile];
-                            
-                            
-                            //Data to download
-                            //Get the current local folder
-                            AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                            NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:updatedFile.filePath andUser:user]];
-                            currentLocalFolder = [currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                            
-                            Download *download = [Download new];
-                            download.delegate =self;
-                            download.currentLocalFolder = currentLocalFolder;
-                            //Set FIFO queue for favorites
-                            download.isLIFO = NO;
-                            [download fileToDownload:updatedFile];
-                            
-                            //Update iPad Detail View
-                            if (!IS_IPHONE && [app.detailViewController.file.localFolder isEqualToString:updatedFile.localFolder]) {
-                                [app.detailViewController handleFile:updatedFile fromController:app.detailViewController.controllerManager];
+                        } else {
+                            //Check if the etag has changed
+                            if (((![item.etag isEqual: updatedFile.etag] && updatedFile.isDownload != downloading && updatedFile.isDownload != updating) || (updatedFile.isDownload == notDownload)) && updatedFile) {
+                                
+                                //Update the info of the file
+                                if (updatedFile.isDownload == downloaded) {
+                                    updatedFile.isNecessaryUpdate = YES;
+                                    [ManageFilesDB setFile:updatedFile.idFile isNecessaryUpdate:YES];
+                                }
+                                
+                                //Send notification in order to update the file list
+                                [[NSNotificationCenter defaultCenter] postNotificationName:FavoriteFileIsSync object:updatedFile];
+                                
+                                //Control this files in array
+                                [_favoritesSyncing addObject:updatedFile];
+                                
+                                
+                                //Data to download
+                                //Get the current local folder
+                                AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+                                NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:updatedFile.filePath andUser:user]];
+                                currentLocalFolder = [currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                                
+                                Download *download = [Download new];
+                                download.delegate =self;
+                                download.currentLocalFolder = currentLocalFolder;
+                                //Set FIFO queue for favorites
+                                download.isLIFO = NO;
+                                [download fileToDownload:updatedFile];
+                                
+                                //Update iPad Detail View
+                                if (!IS_IPHONE && [app.detailViewController.file.localFolder isEqualToString:updatedFile.localFolder]) {
+                                    [app.detailViewController handleFile:updatedFile fromController:app.detailViewController.controllerManager];
+                                }
+                                
                             }
-                            
                         }
                     }
                     

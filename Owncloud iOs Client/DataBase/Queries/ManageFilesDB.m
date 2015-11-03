@@ -589,7 +589,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT files.id, back.file_id, back.etag FROM files, (SELECT DISTINCT files.file_id, files_backup.file_path, files_backup.file_name, files_backup.etag FROM files_backup, files WHERE files.file_id = files_backup.id AND files_backup.is_directory = 1) back WHERE user_id = ? AND files.file_path = back.file_path AND files.file_name = back.file_name ORDER BY id DESC", [NSNumber numberWithInteger:mUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT files.id, back.file_id, back.etag, back.is_favorite FROM files, (SELECT DISTINCT files.file_id, files_backup.file_path, files_backup.file_name, files_backup.etag, files_backup.is_favorite FROM files_backup, files WHERE files.file_id = files_backup.id AND files_backup.is_directory = 1) back WHERE user_id = ? AND files.file_path = back.file_path AND files.file_name = back.file_name ORDER BY id DESC", [NSNumber numberWithInteger:mUser.idUser]];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];
@@ -597,6 +597,7 @@
             currentFile.idFile = [rs intForColumn:@"id"];
             currentFile.fileId = [rs intForColumn:@"file_id"];
             currentFile.etag = [rs stringForColumn:@"etag"];
+            currentFile.isFavorite = [rs boolForColumn:@"is_favorite"];
             
             DLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
             DLog(@"currentFile.fileId %ld", (long)currentFile.fileId);
@@ -615,7 +616,11 @@
 
             FileDto *currentFile = [listFilesToUpdate objectAtIndex:i];
         
-            correctQuery = [db executeUpdate:@"UPDATE files SET id = ?, etag = ? WHERE id = ?", [NSNumber numberWithInteger:currentFile.fileId], currentFile.etag, [NSNumber numberWithInteger:currentFile.idFile]];
+            //if (currentFile.isFavorite) {
+            //    correctQuery = [db executeUpdate:@"UPDATE files SET id = ? WHERE id = ?", [NSNumber numberWithInteger:currentFile.fileId], [NSNumber numberWithInteger:currentFile.idFile]];
+            //} else {
+                correctQuery = [db executeUpdate:@"UPDATE files SET id = ?, etag = ? WHERE id = ?", [NSNumber numberWithInteger:currentFile.fileId], currentFile.etag, [NSNumber numberWithInteger:currentFile.idFile]];
+            //}
         }
         
         if (!correctQuery) {
@@ -711,7 +716,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT file_name, etag, is_download FROM files_backup WHERE is_download = 1 OR is_download = 2 OR is_download = 3"];
+        FMResultSet *rs = [db executeQuery:@"SELECT file_name, etag, is_download, is_directory, is_favorite FROM files_backup WHERE is_download = 1 OR is_download = 2 OR is_download = 3 OR (is_directory = 1 AND is_favorite = 1)"];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];
@@ -1778,7 +1783,7 @@
 }
 
 ///-----------------------------------
-/// @name getAllFavoritesOfUserId:userId
+/// @name getAllFavoritesFilesOfUserId:userId
 ///-----------------------------------
 
 /**
@@ -1788,7 +1793,7 @@
  *
  * @return NSArray -> Array of favorites items
  */
-+ (NSArray*) getAllFavoritesOfUserId:(NSInteger)userId {
++ (NSArray*) getAllFavoritesFilesOfUserId:(NSInteger)userId {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -1797,7 +1802,7 @@
     UserDto *mUser = [ManageUsersDB getUserByIdUser:userId];
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE is_favorite = 1 AND user_id = ?", [NSNumber numberWithInteger:userId]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE is_favorite = 1 AND user_id = ? AND is_directory = 0", [NSNumber numberWithInteger:userId]];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];
@@ -1834,7 +1839,7 @@
 }
 
 ///-----------------------------------
-/// @name getAllFavoritesOfUserId:userId
+/// @name getAllFavoritesByFolder:userId
 ///-----------------------------------
 
 /**

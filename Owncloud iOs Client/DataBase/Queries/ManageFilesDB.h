@@ -499,7 +499,7 @@
 + (void) updateTheFileID: (NSInteger)idFile asFavorite: (BOOL) isFavorite;
 
 ///-----------------------------------
-/// @name getAllFavoritesOfUserId:userId
+/// @name getAllFavoritesFilesOfUserId:userId
 ///-----------------------------------
 
 /**
@@ -509,10 +509,10 @@
  *
  * @return NSArray -> Array of favorites items
  */
-+ (NSArray*) getAllFavoritesOfUserId:(NSInteger)userId;
++ (NSArray*) getAllFavoritesFilesOfUserId:(NSInteger)userId;
 
 ///-----------------------------------
-/// @name getAllFavoritesOfUserId:userId
+/// @name getAllFavoritesByFolder:userId
 ///-----------------------------------
 
 /**
