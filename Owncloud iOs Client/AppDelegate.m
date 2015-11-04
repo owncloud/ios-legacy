@@ -57,6 +57,7 @@
 #import "InitializeDatabase.h"
 #import "CheckHasForbiddenCharactersSupport.h"
 #import "HelpGuideViewController.h"
+#import "CheckCapabilities.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -795,6 +796,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //Check if the server has forbidden characters supports
     [[AppDelegate sharedCheckHasForbiddenCharactersSupport] checkIfServerHasForbiddenCharactersSupport];
+    
+    //Update capabilities of the active account
+    [[AppDelegate sharedCheckCapabilities] updateServerCapabilitiesOfActiveAccount];
   
 }
 
@@ -2661,6 +2665,20 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
     return sharedCheckHasForbiddenCharactersSupport;
 }
+
++ (CheckCapabilities *) sharedCheckCapabilities {
+    
+    static CheckCapabilities* sharedCheckCapabilities = nil;
+    if (sharedCheckCapabilities == nil)
+    {
+        sharedCheckCapabilities = [CheckCapabilities new];
+        
+    }
+    return sharedCheckCapabilities;
+    
+}
+
+
 
 
 #pragma mark - Location

@@ -39,6 +39,7 @@
 @class SharedViewController;
 @class ManageFavorites;
 @class CheckHasShareSupport;
+@class CheckCapabilities;
 
 extern NSString * CloseAlertViewWhenApplicationDidEnterBackground;
 extern NSString * RefreshSharesItemsAfterCheckServerVersion;
@@ -266,6 +267,13 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  *
  */
 + (CheckHasShareSupport*) sharedCheckHasShareSupport;
+
+
+/**
+ * Singleton to check capabilities API
+ *
+ */
++ (CheckCapabilities *) sharedCheckCapabilities;
 
 
 
