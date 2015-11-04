@@ -15,6 +15,7 @@
 
 #import "DownloadUtils.h"
 #import "UtilsUrls.h"
+#import "ManageFilesDB.h"
 
 @implementation DownloadUtils
 
@@ -104,5 +105,58 @@
     }
 }
 
+///-----------------------------------
+/// @name Update a file with the temporal one
+///-----------------------------------
+
+/**
+ * This method check if one of the folders that contains a file is favorite
+ *
+ * @param file > (FileDto) the file to be checked
+ *
+ * @return BOOL -> return YES if there is a folder favorite that contains the file
+ */
++ (BOOL) isSonOfFavoriteFolder:(FileDto *) file {
+    
+    BOOL isSonOfFavoriteFolder = NO;
+    BOOL isFolderPending = YES;
+    
+    FileDto *folder = file;
+    
+    do {
+        folder = [ManageFilesDB getFileDtoByIdFile:folder.fileId];
+        
+        if (folder.isFavorite) {
+            isSonOfFavoriteFolder = YES;
+            isFolderPending = NO;
+        }
+        
+        if (folder.isRootFolder) {
+            isFolderPending = NO;
+        }
+        
+    } while (isFolderPending);
+    
+    
+    return isSonOfFavoriteFolder;
+}
+
++ (void) setEtagNegativeToAllTheFoldersThatContainsFile:(FileDto *) file {
+    
+    BOOL isFolderPending = YES;
+    
+    FileDto *folder = file;
+    
+    do {
+        folder = [ManageFilesDB getFileDtoByIdFile:folder.fileId];
+        [ManageFilesDB updateEtagOfFileDtoByid:folder.idFile andNewEtag:@"-1"];
+        
+        if (folder.isFavorite) {
+            isFolderPending = NO;
+        }
+        
+    } while (isFolderPending);
+    
+}
 
 @end

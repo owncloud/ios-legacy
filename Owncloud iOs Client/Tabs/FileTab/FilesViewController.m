@@ -1841,10 +1841,6 @@
  */
 - (void) syncFavoritesByFolder:(FileDto *) folder {
     
-    NSArray *files = [ManageFilesDB getAllFavoritesByFolder:folder];
-    
-    DLog(@"Files: %lu", (unsigned long)files.count);
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         //Launch the method to sync the favorites files with specific path
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];

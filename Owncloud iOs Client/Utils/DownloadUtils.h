@@ -53,10 +53,32 @@
  */
 + (void) updateFile:(FileDto *)file withTemporalFile:(NSString *)temporalFile;
 
-
-
-+ (void) setThePermissionsForFolderPathByFile:(FileDto *)file;
 + (void) setThePermissionsForFolderPath:(NSString *)folderPath;
 
+
+///-----------------------------------
+/// @name Get if the file is contained by any favorite folder
+///-----------------------------------
+
+/**
+ * This method check if one of the folders that contains a file is favorite
+ *
+ * @param file > (FileDto) the file to be checked
+ *
+ * @return BOOL -> return YES if there is a folder favorite that contains the file
+ */
++ (BOOL) isSonOfFavoriteFolder:(FileDto *) file;
+
+///-----------------------------------
+/// @name Update all the folders of file contained in a favorite folder
+///-----------------------------------
+
+/**
+ * This method check if one of the folders that contains a file is favorite
+ *
+ * @param file > (FileDto) the file son to search the folders
+ *
+ */
++ (void) setEtagNegativeToAllTheFoldersThatContainsFile:(FileDto *) file;
 
 @end

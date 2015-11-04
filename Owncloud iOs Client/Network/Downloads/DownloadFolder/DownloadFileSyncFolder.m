@@ -156,6 +156,11 @@
         [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
     }
     
+    //For sons of favorites to force again to be checked and downloaded again
+    if ([DownloadUtils isSonOfFavoriteFolder:self.file]) {
+        [DownloadUtils setEtagNegativeToAllTheFoldersThatContainsFile:self.file];
+    }
+    
     [self reloadCellFromDataBase];
     [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
 }
