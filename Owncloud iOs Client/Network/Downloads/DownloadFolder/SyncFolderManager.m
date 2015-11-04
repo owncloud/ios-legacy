@@ -112,10 +112,10 @@
     FileDto *currentFolder = currentFolderSync.file;
     currentFolder = [ManageFilesDB getFileDtoByFileName:currentFolder.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFolder.filePath andUser:app.activeUser] andUser:app.activeUser];
     
+    NSMutableArray *filesFromCurrentFolder = [ManageFilesDB getFilesByFileId:currentFolder.idFile];
+
     
-    if (currentFolderSync.isReadFromDatabase) {
-        
-        NSMutableArray *filesFromCurrentFolder = [ManageFilesDB getFilesByFileId:currentFolder.idFile];
+    if (currentFolderSync.isReadFromDatabase && filesFromCurrentFolder.count >0) {
         
         for (FileDto *currentFile in filesFromCurrentFolder) {
             //Add the folder to the queue of sync and the file to the queue of downloads
@@ -142,12 +142,9 @@
             }
         }
         
-        //Continue with the next
-        [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
+        [self reloadCellAndRemovedFolderToBeCheckByKey:idKey];
         
-        //Refresh list to update the arrow
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        [app reloadCellByKey:idKey];
+        //Continue with the next
         
         if (filesFromCurrentFolder.count > 0) {
             [app reloadTableFromDataBaseIfFileIsVisibleOnList:[filesFromCurrentFolder objectAtIndex:0]];
