@@ -2645,6 +2645,14 @@
     [[AppDelegate sharedManageFavorites] setAllFilesAndFoldersAsNoFavoriteBehindFolder:self.selectedFileDto];
     
     [self didSelectDownloadFolder];
+    
+    if (!IS_IPHONE) {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        if (app.detailViewController.file) {
+            [app.detailViewController updateFavoriteIconWhenAFolderIsSelectedFavorite];
+        }
+    }
 }
 
 - (void) didSelectCancelFavoriteFolder {
@@ -2660,6 +2668,14 @@
     
     [self didSelectCancelDownloadFolder];
     [app reloadCellByFile:self.selectedFileDto];
+    
+    if (!IS_IPHONE) {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        if (app.detailViewController.file) {
+            [app.detailViewController updateFavoriteIconWhenAFolderIsSelectedFavorite];
+        }
+    }
 }
 
 /*

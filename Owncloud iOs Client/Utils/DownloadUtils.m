@@ -131,7 +131,7 @@
             isFolderPending = NO;
         }
         
-        if (folder.isRootFolder) {
+        if (folder.isRootFolder || folder == nil) {
             isFolderPending = NO;
         }
         
