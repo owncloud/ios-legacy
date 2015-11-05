@@ -106,6 +106,12 @@
             DLog(@"Error in createDataBase table cookies_storage");
         }
         
+        correctQuery = [db executeQuery:@"CREATE TABLE IF NOT EXISTS 'capabilities' ('id' INTEGER PRIMARY KEY, 'id_user' INTEGER, 'version_major' INTEGER, 'version_minor' INTEGER, 'version_micro' INTEGER, 'version_string' VARCHAR, 'version_edition' VARCHAR, 'core_poll_intervall' INTEGER, 'is_files_sharing_api_enabled' BOOL, 'is_files_sharing_share_link_enabled' BOOL, 'is_files_sharing_password_enforced_enabled' BOOL, 'is_files_sharing_expire_date_by_default_enabled' BOOL, 'is_files_sharing_expire_date_enforce_enabled' BOOL, 'files_sharing_expire_date_days_number' INTEGER, 'is_files_sharing_allow_user_send_mail_notification_about_share_link_enabled' BOOL, 'is_files_sharing_allow_public_uploads_enabled' BOOL, 'is_files_sharing_allow_user_send_mail_notification_about_other_users_enabled' BOOL, 'is_files_sharing_re_sharing_enabled' BOOL, 'is_files_sharing_allow_user_send_shares_to_other_servers_enabled' BOOL, 'is_files_sharing_allow_user_receive_shares_to_other_servers_enabled' BOOL, 'is_file_big_file_chunking_enabled' BOOL, 'is_file_undelete_enabled' BOOL, 'is_file_versioning_enabled' BOOL)"];
+        
+        if (!correctQuery) {
+            DLog(@"Error in createDataBase table capabilities");
+        }
+        
     }];    
 }
 

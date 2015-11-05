@@ -11,6 +11,8 @@
 #import "ManageUsersDB.h"
 #import "OCCommunication.h"
 #import "OCCapabilities.h"
+#import "CapabilitiesDto.h"
+#import "ManageCapabilitiesDB.h"
 
 @implementation CheckCapabilities
 
@@ -27,6 +29,16 @@
         [[AppDelegate sharedOCCommunication] getCapabilitiesOfServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, OCCapabilities *capabilities, NSString *redirectedServer) {
             
             NSLog(@"capabilities: %@", capabilities);
+            
+            CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId: app.activeUser.idUser];
+            
+            if (cap == nil) {
+                cap = [ManageCapabilitiesDB insertCapabilities:capabilities ofUserId: app.activeUser.idUser];
+            }else{
+                cap = [ManageCapabilitiesDB updateCapabilitiesWith:capabilities ofUserId: app.activeUser.idUser];
+            }
+            
+            
             
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
             
