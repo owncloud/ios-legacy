@@ -293,12 +293,21 @@
 }
 
 - (void) reloadCellAndRemovedFolderToBeCheckByKey:(NSString *)idKey {
-    //Removed failed folder
+    
+    //Remove folder
     [self.dictOfFoldersToBeCheck removeObjectForKey:idKey];
     
-    //Refresh cell to update the arrow
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    [app reloadCellByKey:idKey];
+    NSArray *listOfKeysSplited = [idKey componentsSeparatedByString:@"/"];
+    NSString *completedKey = @"";
+    
+    for (NSString *current in listOfKeysSplited) {
+        
+        completedKey = [NSString stringWithFormat:@"%@%@/", completedKey, current];
+        
+        //Refresh cell to update the arrow
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        [app reloadCellByKey:completedKey];
+    }
 }
 
 /*
