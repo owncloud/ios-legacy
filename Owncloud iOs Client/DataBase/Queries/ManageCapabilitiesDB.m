@@ -124,4 +124,15 @@
     
 }
 
++ (BOOL) isShareAPIEnabledOfUserId:(NSInteger) userId {
+    
+    CapabilitiesDto *cap = [self getCapabilitiesOfUserId:userId];
+    
+    if (cap.isFilesSharingAPIEnabled == true) {
+        return true;
+    }
+    
+    return false;
+}
+
 @end

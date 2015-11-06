@@ -39,6 +39,7 @@
 #import "ReaderViewController.h"
 #import "OCSplitViewController.h"
 #import "ShareMainViewController.h"
+#import "ManageCapabilitiesDB.h"
 
 
 NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
@@ -176,7 +177,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [items insertObject:_favoriteButtonBar atIndex:3];
         [items insertObject:_spaceBar2 atIndex:4];
         
-        if (k_hide_share_options) {
+        if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == true && [ManageCapabilitiesDB isShareAPIEnabledOfUserId:APP_DELEGATE.activeUser.idUser]== false)) {
              [items insertObject:_deleteButtonBar atIndex:5];
         }else{
             [items insertObject:_shareLinkButtonBar atIndex:5];

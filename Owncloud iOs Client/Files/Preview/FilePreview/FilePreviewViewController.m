@@ -39,6 +39,7 @@
 #import "ShareMainViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
+#import "ManageCapabilitiesDB.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -112,11 +113,12 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
     //Check if share link button should be appear.
-    if (k_hide_share_options) {
+    if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == true && [ManageCapabilitiesDB isShareAPIEnabledOfUserId:APP_DELEGATE.activeUser.idUser]== false)) {
         NSMutableArray *customItems = [NSMutableArray arrayWithArray:self.toolBar.items];
         [customItems removeObjectIdenticalTo:_shareButtonBar];
         [customItems removeObjectIdenticalTo:_flexibleSpaceAfterShareButtonBar];
         self.toolBar.items = customItems;
+        
     }
     
     //Method that managed every type of file

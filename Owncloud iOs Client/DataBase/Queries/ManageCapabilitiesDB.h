@@ -19,6 +19,6 @@
 
 +(CapabilitiesDto *) updateCapabilitiesWith:(OCCapabilities *)capabilities ofUserId:(NSInteger)userId;
 
-
++ (BOOL) isShareAPIEnabledOfUserId:(NSInteger) userId;
 
 @end
