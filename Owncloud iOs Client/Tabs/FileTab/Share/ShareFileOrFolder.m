@@ -25,9 +25,9 @@
 #import "ManageSharesDB.h"
 #import "Customization.h"
 #import "FileNameUtils.h"
-#import "CheckHasShareSupport.h"
 #import "UtilsUrls.h"
 #import "OCSharedDto.h"
+
 
 #define server_version_with_new_shared_schema 8
 #define password_alert_view_tag 600
@@ -310,7 +310,7 @@
                     if (!isSamlCredentialsError) {
                         
                         //Ok we have the token but we also need all the information of the file in order to populate the database
-                        [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+                        [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
                         
                         [self endLoading];
                         
@@ -375,7 +375,7 @@
                 
                
                 //Ok we have the token but we also need all the information of the file in order to populate the database
-                [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+                [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
                 
                 //Present
                 [self presentShareActionSheetForToken:token withPassword:true];
@@ -483,7 +483,7 @@
         }
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-        [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+        [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
         [self endLoading];
         
         DLog(@"error.code: %ld", (long)error.code);
@@ -615,7 +615,7 @@
             }
         }
         if (!isSamlCredentialsError) {
-            [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+            [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
             
             [self endLoading];
             
@@ -627,7 +627,7 @@
 
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-        [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+        [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
         [self endLoading];
         
         DLog(@"error.code: %ld", (long)error.code);

@@ -516,8 +516,6 @@
 		59A9A721196E89170042FEAC /* ManageCookiesStorageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A9A720196E89170042FEAC /* ManageCookiesStorageDB.m */; };
 		59A9A725196E8A370042FEAC /* CookiesStorageDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A9A724196E8A370042FEAC /* CookiesStorageDto.m */; };
 		59A9A72A196E8E3C0042FEAC /* UtilsCookies.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A9A729196E8E3C0042FEAC /* UtilsCookies.m */; };
-		59AE9EB21990FEC2003380A8 /* CheckHasShareSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 59AE9EB11990FEC2003380A8 /* CheckHasShareSupport.m */; };
-		59AF279E19920A1100359151 /* CheckHasCookiesSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 59AF279D19920A1100359151 /* CheckHasCookiesSupport.m */; };
 		59BF57CB1B04C8E7000EB221 /* Managers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7217C1AAF2E0D009F5596 /* Managers.swift */; };
 		59BF9B2D1A2C5A5B009D9CF0 /* KKPasscodeLock.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */; };
 		59BF9B361A2C8BEA009D9CF0 /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */; };
@@ -618,6 +616,7 @@
 		EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F146177C315D004A1A5A /* FileDto.m */; };
 		EA2243EA1B71276D00F62E2A /* ShareLinkHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2243E81B71276D00F62E2A /* ShareLinkHeaderCell.swift */; };
 		EA2243EB1B71276D00F62E2A /* ShareLinkHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA2243E91B71276D00F62E2A /* ShareLinkHeaderCell.xib */; };
+		EA2527551BECCA3500C1EB14 /* CheckFeaturesSupported.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2527541BECCA3500C1EB14 /* CheckFeaturesSupported.m */; settings = {ASSET_TAGS = (); }; };
 		EA2678FF1876E4B8008678DE /* notSharedItem.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FB1876E4B8008678DE /* notSharedItem.png */; };
 		EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */; };
 		EA2B4FB017FAFF69001766BB /* company_empty_screen_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */; };
@@ -697,7 +696,6 @@
 		EABD89321BBE82D900DA5281 /* TSBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD89291BBE82D900DA5281 /* TSBlurView.m */; settings = {ASSET_TAGS = (); }; };
 		EABD89361BBE82D900DA5281 /* TSMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD892B1BBE82D900DA5281 /* TSMessage.m */; settings = {ASSET_TAGS = (); }; };
 		EABD893A1BBE82D900DA5281 /* TSMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD892D1BBE82D900DA5281 /* TSMessageView.m */; settings = {ASSET_TAGS = (); }; };
-		EABD9BC71B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD9BC61B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m */; };
 		EABE4BE3187D5AE6006DEC96 /* ManageSharesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EABE4BE2187D5AE6006DEC96 /* ManageSharesDB.m */; };
 		EABF68D61889339200A2217C /* SharedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF68D41889339200A2217C /* SharedViewController.m */; };
 		EABF68D71889339200A2217C /* SharedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EABF68D51889339200A2217C /* SharedViewController.xib */; };
@@ -1492,10 +1490,6 @@
 		59A9A724196E8A370042FEAC /* CookiesStorageDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CookiesStorageDto.m; path = DataBase/DTOs/CookiesStorageDto.m; sourceTree = "<group>"; };
 		59A9A728196E8E3C0042FEAC /* UtilsCookies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsCookies.h; path = Utils/UtilsCookies.h; sourceTree = "<group>"; };
 		59A9A729196E8E3C0042FEAC /* UtilsCookies.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsCookies.m; path = Utils/UtilsCookies.m; sourceTree = "<group>"; };
-		59AE9EB01990FEC2003380A8 /* CheckHasShareSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckHasShareSupport.h; path = "Network/Server Version Checks/CheckHasShareSupport.h"; sourceTree = "<group>"; };
-		59AE9EB11990FEC2003380A8 /* CheckHasShareSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckHasShareSupport.m; path = "Network/Server Version Checks/CheckHasShareSupport.m"; sourceTree = "<group>"; };
-		59AF279C19920A1100359151 /* CheckHasCookiesSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckHasCookiesSupport.h; path = "Network/Server Version Checks/CheckHasCookiesSupport.h"; sourceTree = "<group>"; };
-		59AF279D19920A1100359151 /* CheckHasCookiesSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckHasCookiesSupport.m; path = "Network/Server Version Checks/CheckHasCookiesSupport.m"; sourceTree = "<group>"; };
 		59C0F2B01A963670007FE71B /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		59C0F2B11A963670007FE71B /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
 		59C71CEA1A9216AE00F66166 /* CGPDFDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPDFDocument.h; sourceTree = "<group>"; };
@@ -1589,6 +1583,8 @@
 		EA1787AB17E33BB9005171AB /* OCNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCNavigationController.m; path = Tabs/FileTab/OCNavigationController.m; sourceTree = "<group>"; };
 		EA2243E81B71276D00F62E2A /* ShareLinkHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareLinkHeaderCell.swift; path = Tabs/FileTab/Share/Cells/ShareLinkHeaderCell.swift; sourceTree = "<group>"; };
 		EA2243E91B71276D00F62E2A /* ShareLinkHeaderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareLinkHeaderCell.xib; path = Tabs/FileTab/Share/Cells/ShareLinkHeaderCell.xib; sourceTree = "<group>"; };
+		EA2527531BECCA3500C1EB14 /* CheckFeaturesSupported.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckFeaturesSupported.h; path = "Network/Server Version Checks/CheckFeaturesSupported.h"; sourceTree = "<group>"; };
+		EA2527541BECCA3500C1EB14 /* CheckFeaturesSupported.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckFeaturesSupported.m; path = "Network/Server Version Checks/CheckFeaturesSupported.m"; sourceTree = "<group>"; };
 		EA2678FB1876E4B8008678DE /* notSharedItem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notSharedItem.png; sourceTree = "<group>"; };
 		EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notSharedItem@2x.png"; sourceTree = "<group>"; };
 		EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = company_empty_screen_ipad.png; sourceTree = "<group>"; };
@@ -1687,8 +1683,6 @@
 		EABD892B1BBE82D900DA5281 /* TSMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSMessage.m; path = ExternalLibreries/TSMessages/Classes/TSMessage.m; sourceTree = "<group>"; };
 		EABD892C1BBE82D900DA5281 /* TSMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSMessageView.h; path = ExternalLibreries/TSMessages/Classes/TSMessageView.h; sourceTree = "<group>"; };
 		EABD892D1BBE82D900DA5281 /* TSMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSMessageView.m; path = ExternalLibreries/TSMessages/Classes/TSMessageView.m; sourceTree = "<group>"; };
-		EABD9BC51B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckHasForbiddenCharactersSupport.h; path = "Network/Server Version Checks/CheckHasForbiddenCharactersSupport.h"; sourceTree = "<group>"; };
-		EABD9BC61B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckHasForbiddenCharactersSupport.m; path = "Network/Server Version Checks/CheckHasForbiddenCharactersSupport.m"; sourceTree = "<group>"; };
 		EABE4BE1187D5AE6006DEC96 /* ManageSharesDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageSharesDB.h; path = DataBase/Queries/ManageSharesDB.h; sourceTree = "<group>"; };
 		EABE4BE2187D5AE6006DEC96 /* ManageSharesDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageSharesDB.m; path = DataBase/Queries/ManageSharesDB.m; sourceTree = "<group>"; };
 		EABF68D31889339200A2217C /* SharedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SharedViewController.h; path = Tabs/SharedTap/SharedViewController.h; sourceTree = "<group>"; };
@@ -2997,14 +2991,10 @@
 		59AE9EAE1990FE74003380A8 /* Server Version Checks */ = {
 			isa = PBXGroup;
 			children = (
-				59AE9EB01990FEC2003380A8 /* CheckHasShareSupport.h */,
-				59AE9EB11990FEC2003380A8 /* CheckHasShareSupport.m */,
-				59AF279C19920A1100359151 /* CheckHasCookiesSupport.h */,
-				59AF279D19920A1100359151 /* CheckHasCookiesSupport.m */,
-				EABD9BC51B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.h */,
-				EABD9BC61B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m */,
 				EAF13F7B1BE8F5EA00F87E9F /* CheckCapabilities.h */,
 				EAF13F7C1BE8F5EA00F87E9F /* CheckCapabilities.m */,
+				EA2527531BECCA3500C1EB14 /* CheckFeaturesSupported.h */,
+				EA2527541BECCA3500C1EB14 /* CheckFeaturesSupported.m */,
 			);
 			name = "Server Version Checks";
 			sourceTree = "<group>";
@@ -4402,10 +4392,10 @@
 				EABD892E1BBE82D900DA5281 /* HexColors.m in Sources */,
 				148DD6951778663100FB9977 /* DownloadViewController.m in Sources */,
 				400A63691B4FD75600890579 /* IFTTTColorAnimation.m in Sources */,
+				EA2527551BECCA3500C1EB14 /* CheckFeaturesSupported.m in Sources */,
 				40EDF8A31B4D152300700E3A /* MyCustomAnimation.m in Sources */,
 				59C71D141A9216AE00F66166 /* ReaderContentPage.m in Sources */,
 				400A63701B4FD75600890579 /* IFTTTFrameAnimation.m in Sources */,
-				59AF279E19920A1100359151 /* CheckHasCookiesSupport.m in Sources */,
 				14987092187D6702000D9C49 /* CWStatusBarNotification.m in Sources */,
 				EAF13F7D1BE8F5EA00F87E9F /* CheckCapabilities.m in Sources */,
 				59A9A72A196E8E3C0042FEAC /* UtilsCookies.m in Sources */,
@@ -4445,7 +4435,6 @@
 				400A63671B4FD75600890579 /* IFTTTAnimation.m in Sources */,
 				EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */,
 				EA2243EA1B71276D00F62E2A /* ShareLinkHeaderCell.swift in Sources */,
-				59AE9EB21990FEC2003380A8 /* CheckHasShareSupport.m in Sources */,
 				EABF69191891379C00A2217C /* SWUtilityButtonView.m in Sources */,
 				400A636E1B4FD75600890579 /* IFTTTFillColorAnimation.m in Sources */,
 				148DD6D9177869C800FB9977 /* ImpressumViewController.m in Sources */,
@@ -4495,7 +4484,6 @@
 				14A50E9E18F3FC9100506E2B /* SelectedFolderCell.m in Sources */,
 				400A63761B4FD75600890579 /* IFTTTScrollViewPageConstraintAnimation.m in Sources */,
 				EAD281BC1A38BB2E00A00D54 /* DPDownload.m in Sources */,
-				EABD9BC71B1332CE0094BDA9 /* CheckHasForbiddenCharactersSupport.m in Sources */,
 				1428F675178422AE0092F42A /* UploadsOfflineDto.m in Sources */,
 				EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */,
 				EA1762A01B78B50100D36186 /* ShareMainViewController.m in Sources */,

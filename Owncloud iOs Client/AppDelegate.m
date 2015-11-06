@@ -47,17 +47,15 @@
 #import "OCErrorMsg.h"
 #import "OCFrameworkConstants.h"
 #import "UtilsDtos.h"
-#import "CheckHasShareSupport.h"
-#import "CheckHasCookiesSupport.h"
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
 #import "ManageLocation.h"
 #import "ManageAsset.h"
 #import "OCSplitViewController.h"
 #import "InitializeDatabase.h"
-#import "CheckHasForbiddenCharactersSupport.h"
 #import "HelpGuideViewController.h"
-#import "CheckCapabilities.h"
+#import "CheckFeaturesSupported.h"
+
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -783,23 +781,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 /**
  * This method check if the server support multipple things:
  * - If support Share
+ * - If support Sharee API
  * - If support Cookies
+ * - If support Forbidden Characters
+ * - If support Capabilities API
  *
  */
 - (void)checkIfServerSupportThings {
     
-    //Check if the server support share
-    [[AppDelegate sharedCheckHasShareSupport] checkIfServerHasShareSupport];
+    //Check and updated the features supported by the server
+    [[CheckFeaturesSupported sharedCheckFeaturesSupported]updateServerFeaturesOfActiveUser];
     
-    //Check if the server support cookies
-    [[AppDelegate sharedCheckHasCookiesSupport] checkIfServerHasCookiesSupport];
-    
-    //Check if the server has forbidden characters supports
-    [[AppDelegate sharedCheckHasForbiddenCharactersSupport] checkIfServerHasForbiddenCharactersSupport];
-    
-    //Update capabilities of the active account
-    [[AppDelegate sharedCheckCapabilities] updateServerCapabilitiesOfActiveAccount];
-  
 }
 
 /*
@@ -2607,78 +2599,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         }
     }
 }
-
-
-
-#pragma mark - Singletons of Server Version Checks
-
-//-----------------------------------
-/// @name sharedCheckHasShareSupport
-///-----------------------------------
-
-/**
- * Singleton to check if a server support share API
- *
- */
-+ (CheckHasShareSupport*) sharedCheckHasShareSupport {
-	static CheckHasShareSupport* sharedCheckHasShareSupport = nil;
-	if (sharedCheckHasShareSupport == nil)
-	{
-        sharedCheckHasShareSupport = [CheckHasShareSupport new];
-        
-	}
-	return sharedCheckHasShareSupport;
-}
-
-//-----------------------------------
-/// @name sharedCheckHasCookiesSupport
-///-----------------------------------
-
-/**
- * Singleton to check if a server support cookies for sessions
- *
- */
-+ (CheckHasCookiesSupport*) sharedCheckHasCookiesSupport {
-	static CheckHasCookiesSupport* sharedCheckHasCookiesSupport = nil;
-	if (sharedCheckHasCookiesSupport == nil)
-	{
-        sharedCheckHasCookiesSupport = [CheckHasCookiesSupport new];
-        
-	}
-	return sharedCheckHasCookiesSupport;
-}
-
-//-----------------------------------
-/// @name sharedForbiddenCharactersSupport
-///-----------------------------------
-
-/**
- * Singleton to check if a server has forbidden characters supports
- *
- */
-+ (CheckHasForbiddenCharactersSupport *) sharedCheckHasForbiddenCharactersSupport {
-    static CheckHasForbiddenCharactersSupport* sharedCheckHasForbiddenCharactersSupport = nil;
-    if (sharedCheckHasForbiddenCharactersSupport == nil)
-    {
-        sharedCheckHasForbiddenCharactersSupport = [CheckHasForbiddenCharactersSupport new];
-        
-    }
-    return sharedCheckHasForbiddenCharactersSupport;
-}
-
-+ (CheckCapabilities *) sharedCheckCapabilities {
-    
-    static CheckCapabilities* sharedCheckCapabilities = nil;
-    if (sharedCheckCapabilities == nil)
-    {
-        sharedCheckCapabilities = [CheckCapabilities new];
-        
-    }
-    return sharedCheckCapabilities;
-    
-}
-
-
 
 
 #pragma mark - Location

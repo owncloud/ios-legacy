@@ -16,6 +16,17 @@
 
 @implementation CheckCapabilities
 
++ (id)sharedCheckCapabilities{
+    
+    static CheckCapabilities *sharedCheckCapabilities = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedCheckCapabilities = [[self alloc] init];
+    });
+    return sharedCheckCapabilities;
+    
+}
+
 - (void) updateServerCapabilitiesOfActiveAccount {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -28,8 +39,6 @@
         
         [[AppDelegate sharedOCCommunication] getCapabilitiesOfServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, OCCapabilities *capabilities, NSString *redirectedServer) {
             
-            NSLog(@"capabilities: %@", capabilities);
-            
             CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId: app.activeUser.idUser];
             
             if (cap == nil) {
@@ -38,16 +47,12 @@
                 cap = [ManageCapabilitiesDB updateCapabilitiesWith:capabilities ofUserId: app.activeUser.idUser];
             }
             
-            
-            
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
             
              DLog(@"error when try to get server capabilities: %@", error);
             
         }];
-        
     }
-    
     
 }
 

@@ -10,6 +10,8 @@
 
 @interface CheckCapabilities : NSObject
 
++ (id)sharedCheckCapabilities;
+
 - (void) updateServerCapabilitiesOfActiveAccount;
 
 @end
