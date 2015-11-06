@@ -104,7 +104,6 @@
             
             [ManageUsersDB updateUserByUserDto:app.activeUser];
             
-            
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
             DLog(@"error when try to get server features: %@", error);
             [self updateSharedView];
