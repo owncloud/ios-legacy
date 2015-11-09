@@ -3315,7 +3315,11 @@
         title = [title substringToIndex:[title length]-1];
         
         if ([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:self.selectedFileDto]) {
-            if (self.selectedFileDto.isFavorite) {
+            if (self.isCurrentFolderSonOfFavoriteFolder) {
+                NSString *msg = NSLocalizedString(@"msg_while_downloads", nil);
+                _alert = [[UIAlertView alloc] initWithTitle:msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+                [_alert show];
+            } else if (self.selectedFileDto.isFavorite) {
                 self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"unfavorite", nil), nil];
                 self.moreActionSheet.tag=220;
             } else {
