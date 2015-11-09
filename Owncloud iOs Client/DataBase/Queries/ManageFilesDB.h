@@ -57,13 +57,6 @@
 + (FileDto *) getFileDtoByIdFile:(NSInteger) idFile ;
 
 /*
- * Method that give the file with the idFile
- * @idFile -> id of the file that we want
- * @user -> user owner of the file
- */
-+ (FileDto *) getFileDtoByIdFile:(NSInteger) idFile andUser:(UserDto *) user;
-
-/*
  * Method that give a file without the idFile but we know the name, the user and where is the file
  * @fileName -> name of the file
  * @filePath -> where is the file
