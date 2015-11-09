@@ -124,7 +124,7 @@
     FileDto *folder = file;
     
     do {
-        folder = [ManageFilesDB getFileDtoByIdFile:folder.fileId];
+        folder = [ManageFilesDB getFileDtoByIdFile:folder.fileId andUser:APP_DELEGATE.activeUser];
         
         if (folder.isFavorite) {
             isSonOfFavoriteFolder = YES;
@@ -148,11 +148,14 @@
     FileDto *folder = file;
     
     do {
-        folder = [ManageFilesDB getFileDtoByIdFile:folder.fileId];
+        folder = [ManageFilesDB getFileDtoByIdFile:folder.fileId andUser:APP_DELEGATE.activeUser];
         [ManageFilesDB updateEtagOfFileDtoByid:folder.idFile andNewEtag:@"-1"];
         
         if (folder.isFavorite) {
             isFolderPending = NO;
+            //Also we change the father in order to force the refresh
+            folder = [ManageFilesDB getFileDtoByIdFile:folder.fileId andUser:APP_DELEGATE.activeUser];
+            [ManageFilesDB updateEtagOfFileDtoByid:folder.idFile andNewEtag:@"-1"];
         }
         
     } while (isFolderPending);

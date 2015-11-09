@@ -238,6 +238,47 @@
     return output;
 }
 
++ (FileDto *) getFileDtoByIdFile:(NSInteger) idFile andUser:(UserDto *) user {
+    
+    __block FileDto *output = nil;
+    
+    DLog(@"getFileDtoByIdFile: %ld", (long)idFile);
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        FMResultSet *rs = [db executeQuery:@"SELECT id, file_path, file_name, is_directory, user_id, is_download, size, file_id, date, is_favorite, etag, is_root_folder, is_necessary_update, shared_file_source, permissions, task_identifier, providing_file_id FROM files WHERE id = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:idFile], [NSNumber numberWithInteger:user.idUser]];
+        
+        while ([rs next]) {
+            
+            output = [FileDto new];
+            
+            output.idFile = [rs intForColumn:@"id"];
+            output.filePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:user],[rs stringForColumn:@"file_path"]];
+            output.fileName = [rs stringForColumn:@"file_name"];
+            output.isDirectory = [rs intForColumn:@"is_directory"];
+            output.userId = [rs intForColumn:@"user_id"];
+            output.isDownload = [rs intForColumn:@"is_download"];
+            output.size = [rs longForColumn:@"size"];
+            output.fileId = [rs intForColumn:@"file_id"];
+            output.date = [rs longForColumn:@"date"];
+            output.isFavorite = [rs intForColumn:@"is_favorite"];
+            output.localFolder = [UtilsUrls getLocalFolderByFilePath:output.filePath andFileName:output.fileName andUserDto:user];
+            output.etag = [rs stringForColumn:@"etag"];
+            output.isRootFolder = [rs intForColumn:@"is_root_folder"];
+            output.isNecessaryUpdate = [rs intForColumn:@"is_necessary_update"];
+            output.sharedFileSource = [rs intForColumn:@"shared_file_source"];
+            output.permissions = [rs stringForColumn:@"permissions"];
+            output.taskIdentifier = [rs intForColumn:@"task_identifier"];
+            output.providingFileId = [rs intForColumn:@"providing_file_id"];
+        }
+        [rs close];
+    }];
+    
+    return output;
+}
+
 +(FileDto *) getFileDtoByFileName:(NSString *) fileName andFilePath:(NSString *) filePath andUser:(UserDto *) user {
     
     __block FileDto *output = nil;
