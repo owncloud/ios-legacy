@@ -27,6 +27,8 @@
 #import "Customization.h"
 #import "ShareSearchUserViewController.h"
 #import "ManageSharesDB.h"
+#import "CapabilitiesDto.h"
+#import "ManageCapabilitiesDB.h"
 
 //tools
 #define standardDelay 0.2
@@ -102,9 +104,6 @@
 
 - (void) viewDidLoad{
     [super viewDidLoad];
-    
-    
-    
 }
 
 - (void) viewWillAppear:(BOOL)animated{
@@ -161,9 +160,7 @@
     recognizer.delegate = self;
     recognizer.cancelsTouchesInView = true;
     [self.datePickerContainerView addGestureRecognizer:recognizer];
-    
 
-  
     UIToolbar *controlToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, controlToolBarHeight)];
     [controlToolbar sizeToFit];
     
@@ -375,6 +372,18 @@
 
 - (void) sharedLinkSwithValueChanged: (UISwitch*)sender {
     
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport == true ) {
+        
+        CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.idUser];
+        
+        if (cap.isFilesSharingShareLinkEnabled == false) {
+            sender.on = false;
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_share_link_enabled_capabilities", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+            [alertView show];
+            return;
+        }
+    }
+    
     self.isShareLinkEnabled = sender.on;
     
     if (self.isShareLinkEnabled == true) {
@@ -383,6 +392,7 @@
         [self unShareByLink];
     }
 }
+
 
 - (void) passwordProtectedSwithValueChanged:(UISwitch*) sender{
     
