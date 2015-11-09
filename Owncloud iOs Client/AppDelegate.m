@@ -338,10 +338,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [InitializeDatabase initDataBase];
     
     //First Call when init the app
-     _activeUser = [ManageUsersDB getActiveUser];
+     self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
     
     //if is null we do not have any active user on the database
-    if(_activeUser.username == nil) {
+    if(!self.activeUser) {
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         
@@ -443,7 +443,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) generateAppInterfaceFromLoginScreen:(BOOL)isFromLogin{
     
-    _activeUser=[ManageUsersDB getActiveUser];
+    self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
     
     NSString *wevDavString = [UtilsUrls getFullRemoteServerPathWithWebDav:_activeUser];
     NSString *localSystemPath = nil;
@@ -552,7 +552,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         self.window.rootViewController = _ocTabBarController;
         [self.window makeKeyAndVisible];
         //Select the first item of the tabBar
-        _ocTabBarController.selectedIndex = 0;
+        self.ocTabBarController.selectedIndex = 0;
     } else {
         //iPad
         
@@ -572,15 +572,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         // Add the split view controller's view to the window and display.
         self.window.rootViewController = _splitViewController;
-        [_window makeKeyAndVisible];
-         _ocTabBarController.selectedIndex = 0;
+        [self.window makeKeyAndVisible];
+         self.ocTabBarController.selectedIndex = 0;
         
-        [_detailViewController performSelector:@selector(configureView) withObject:nil afterDelay:0];
+        [self.detailViewController performSelector:@selector(configureView) withObject:nil afterDelay:0];
         
     }
     
+    self.activeUser = [ManageUsersDB getActiveUser];
+    
     //if is file from other app wainting, present the upload from other app view
-    if (_isFileFromOtherAppWaitting==YES) {
+    if (self.isFileFromOtherAppWaitting==YES) {
         [self presentUploadFromOtherApp];
     }
     

@@ -199,15 +199,10 @@
     [ManageDB insertVersionToDataBase:dbVersion];
     
     /*Reset keychain items when db need to be updated or when db first init after app has been removed and reinstalled */
-    NSMutableArray * users = [ManageUsersDB getAllUsers];
-    if (![users count]) {
+    if (![ManageUsersDB isUsers]) {
         //delete all keychain items
         [OCKeychain resetKeychain];
     }
-    
-    CredentialsDto *credDto = [OCKeychain getCredentialsById:@"1"];
-    DLog(@"User: %@", credDto.userName);
-    DLog(@"Password: %@", credDto.password);
 }
 
 #pragma mark - System Updates

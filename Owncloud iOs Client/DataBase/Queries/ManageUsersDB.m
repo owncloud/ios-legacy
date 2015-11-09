@@ -125,6 +125,57 @@
     return output;
 }
 
+/*
+ * This method return the active user of the app without user name and password
+ */
++ (UserDto *) getActiveUserWithoutUserNameAndPassword {
+    
+    DLog(@"getActiveUser");
+    
+    __block UserDto *output = nil;
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, instant_upload, path_instant_upload, only_wifi_instant_upload, date_instant_upload, url_redirected FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
+        
+        DLog(@"RSColumnt count: %d", rs.columnCount);
+        
+        
+        while ([rs next]) {
+            
+            output=[UserDto new];
+            
+            output.idUser = [rs intForColumn:@"id"];
+            output.url = [rs stringForColumn:@"url"];
+            output.ssl = [rs intForColumn:@"ssl"];
+            output.activeaccount = [rs intForColumn:@"activeaccount"];
+            output.storageOccupied = [rs longForColumn:@"storage_occupied"];
+            output.storage = [rs longForColumn:@"storage"];
+            output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
+            output.hasShareeApiSupport = [rs intForColumn:@"has_sharee_api_support"];
+            output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            output.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
+            
+            output.instantUpload = [rs intForColumn:@"instant_upload"];
+            output.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
+            output.onlyWifiInstantUpload = [rs intForColumn:@"only_wifi_instant_upload"];
+            output.dateInstantUpload = [rs longForColumn:@"date_instant_upload"];
+            
+            output.urlRedirected = [rs stringForColumn:@"url_redirected"];
+            
+            output.username = nil;
+            output.password = nil;
+        }
+        
+        [rs close];
+        
+    }];
+    
+    
+    return output;
+}
+
 
 /*
  * This method change the password of the an user
@@ -663,6 +714,34 @@
         }];
         
     return output;
+}
+
+/*
+ * Method that return if exist any user on the DB
+ */
++(BOOL)isUsers {
+    
+    __block BOOL output = NO;
+    __block int size = 0;
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT count(*) FROM users"];
+        
+        while ([rs next]) {
+            
+            size = [rs intForColumnIndex:0];
+        }
+        
+        if(size > 0) {
+            output = YES;
+        }
+        
+    }];
+    
+    return output;
+    
 }
 
 @end
