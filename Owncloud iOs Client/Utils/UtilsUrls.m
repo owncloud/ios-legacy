@@ -313,21 +313,16 @@
  *                          -> subfolders  -> /(subfoldersServer)/k_url_webdav_server/(subfoldersDB)
  * @param user
  *
- * @return pathOnDB -> root folder -> @"text.pdf"
- *                  -> subfolders  -> @"(subfoldersDB)/text.pdf"
+ * @return pathOnDB -> root folder -> @"/text.pdf"
+ *                  -> subfolders  -> @"/(subfoldersDB)/text.pdf"
  *
  */
 + (NSString *) getFilePathOnDBWithFileName:(NSString *)fileName ByFilePathOnFileDto:(NSString *)filePathOnFileDto andUser:(UserDto *) user {
     
-    NSString *pathOnDB = @"";
-    
-    NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:user];
-    if([filePathOnFileDto length] >= [partToRemove length]){
-        pathOnDB = [filePathOnFileDto substringFromIndex:[partToRemove length]];
-    }
-    pathOnDB = [NSString stringWithFormat: @"%@%@", pathOnDB, fileName];
-    
-    return pathOnDB;
+    NSString *filePath = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:filePathOnFileDto andUser:user]];
+    filePath = [NSString stringWithFormat: @"%@%@", filePath, fileName];
+
+    return filePath;
 }
 
 

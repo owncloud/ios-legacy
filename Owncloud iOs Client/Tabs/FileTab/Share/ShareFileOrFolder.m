@@ -215,12 +215,13 @@
     
     NSString *filePath = @"";
     
-    filePath = [UtilsUrls getFilePathOnDBWithFileName:self.file.fileName ByFilePathOnFileDto:self.file.filePath andUser:app.activeUser];
-    
     NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:self.file.sharedFileSource forUser:app.activeUser.idUser];
     
     if (isFileDto) {
         //From fileDto
+        NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
+        filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
+        
         for (OCSharedDto *current in sharesOfFile) {
             if (current.shareType == shareTypeLink) {
                 self.shareDto = current;
@@ -237,147 +238,11 @@
         CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.idUser];
         
         if (cap.isFilesSharingPasswordEnforcedEnabled) {
-             [self showAlertEnterPassword];
+            [self showAlertEnterPassword];
+            return;
         }
     
-    } else {
-        
-        [self initLoading];
-        
-        //In iPad set the global variable
-        if (!IS_IPHONE) {
-            //Set global loading screen global flag to YES (only for iPad)
-            app.isLoadingVisible = YES;
-        }
-        
-        //Set the right credentials
-        if (k_is_sso_active) {
-            [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
-        } else if (k_is_oauth_active) {
-            [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
-        } else {
-            [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-        }
-        
-        [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-        
-        __block OCSharedDto *blockShareDto = _shareDto;
-        
-        [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:_shareDto.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared, id shareObjc) {
-            
-            BOOL isSamlCredentialsError=NO;
-            
-            //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
-                //Check if there are fragmens of saml in url, in this case there are a credential error
-                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-                if (isSamlCredentialsError) {
-                    [self endLoading];
-                    [self errorLogin];
-                    
-                    if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
-                        [self.delegate finishShareWithStatus:false andWithOptions:nil];
-                    }
-                }
-            }
-            
-            if (!isSamlCredentialsError) {
-                
-                if (isShared) {
-                    
-                    //Present
-                    [self presentShareActionSheetForToken:blockShareDto.token withPassword:false];
-                    
-                }else{
-                    
-                    DLog(@"The file is not shared so we need to share it again");
-                    
-                    //Set the right credentials
-                    if (k_is_sso_active) {
-                        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
-                    } else if (k_is_oauth_active) {
-                        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
-                    } else {
-                        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-                    }
-                    
-                    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-                    
-                    //Checking the Shared files and folders
-                    [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *shareLink, NSString *redirectedServer) {
-                        
-                        BOOL isSamlCredentialsError=NO;
-                        
-                        //Check the login error in shibboleth
-                        if (k_is_sso_active && redirectedServer) {
-                            //Check if there are fragmens of saml in url, in this case there are a credential error
-                            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-                            if (isSamlCredentialsError) {
-                                [self endLoading];
-                                
-                                [self errorLogin];
-                            }
-                        }
-                        if (!isSamlCredentialsError) {
-                            
-                            //Ok we have the token but we also need all the information of the file in order to populate the database
-                            [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
-                            
-                            [self endLoading];
-                            
-                            //Present
-                            [self presentShareActionSheetForToken:shareLink withPassword:false];
-                        }
-                        
-                    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-                        
-                        [self endLoading];
-                        
-                        DLog(@"error.code: %ld", (long)error.code);
-                        DLog(@"server error: %ld", (long)response.statusCode);
-                        NSInteger code = response.statusCode;
-                        
-                        [self manageServerErrors:code and:error withPasswordSupport:true];
-                        
-                        if (error.code != kOCErrorSharedAPIUploadDisabled) {
-                            
-                            if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
-                                [self.delegate finishShareWithStatus:false andWithOptions:nil];
-                            }
-                        }
-                        
-                    }];
-                    
-                }
-            }
-            
-        } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-            [self endLoading];
-            
-            DLog(@"error.code: %ld", (long)error.code);
-            DLog(@"server error: %ld", (long)response.statusCode);
-            NSInteger code = response.statusCode;
-            
-            [self manageServerErrors:code and:error withPasswordSupport:true];
-            
-            if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
-                [self.delegate finishShareWithStatus:false andWithOptions:nil];
-            }
-            
-        }];
-
-        
-        
     }
-}
-
-
-///-----------------------------------------------
-/// @name doRequestSharedLinkWithPath:andPassword
-///-----------------------------------------------
-
--(void)doRequestSharedLinkWithPath: (NSString *)path andPassword: (NSString *)password{
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     [self initLoading];
     
@@ -387,6 +252,140 @@
         app.isLoadingVisible = YES;
     }
     
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
+    }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+    
+    __block OCSharedDto *blockShareDto = _shareDto;
+    
+    [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:_shareDto.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared, id shareObjc) {
+        
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self endLoading];
+                [self errorLogin];
+                
+                if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+                    [self.delegate finishShareWithStatus:false andWithOptions:nil];
+                }
+            }
+        }
+        
+        if (!isSamlCredentialsError) {
+            
+            if (isShared) {
+                
+                //Present
+                [self presentShareActionSheetForToken:blockShareDto.token withPassword:false];
+                
+            }else{
+                
+                DLog(@"The file is not shared so we need to share it again");
+                
+                //Set the right credentials
+                if (k_is_sso_active) {
+                    [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
+                } else if (k_is_oauth_active) {
+                    [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
+                } else {
+                    [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
+                }
+                
+                [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+                
+                //Checking the Shared files and folders
+                [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *shareLink, NSString *redirectedServer) {
+                    
+                    BOOL isSamlCredentialsError=NO;
+                    
+                    //Check the login error in shibboleth
+                    if (k_is_sso_active && redirectedServer) {
+                        //Check if there are fragmens of saml in url, in this case there are a credential error
+                        isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                        if (isSamlCredentialsError) {
+                            [self endLoading];
+                            
+                            [self errorLogin];
+                        }
+                    }
+                    if (!isSamlCredentialsError) {
+                        
+                        //Ok we have the token but we also need all the information of the file in order to populate the database
+                        [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
+                        
+                        [self endLoading];
+                        
+                        //Present
+                        [self presentShareActionSheetForToken:shareLink withPassword:false];
+                    }
+                    
+                } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+                    
+                    [self endLoading];
+                    
+                    DLog(@"error.code: %ld", (long)error.code);
+                    DLog(@"server error: %ld", (long)response.statusCode);
+                    NSInteger code = response.statusCode;
+                    
+                    [self manageServerErrors:code and:error withPasswordSupport:true];
+                    
+                    if (error.code != kOCErrorSharedAPIUploadDisabled) {
+                        
+                        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+                            [self.delegate finishShareWithStatus:false andWithOptions:nil];
+                        }
+                    }
+                    
+                }];
+                
+            }
+        }
+        
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        [self endLoading];
+        
+        DLog(@"error.code: %ld", (long)error.code);
+        DLog(@"server error: %ld", (long)response.statusCode);
+        NSInteger code = response.statusCode;
+        
+        [self manageServerErrors:code and:error withPasswordSupport:true];
+        
+        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+            [self.delegate finishShareWithStatus:false andWithOptions:nil];
+        }
+        
+    }];
+
+}
+
+
+///-----------------------------------------------
+/// @name doRequestSharedLinkWithPath:andPassword
+///-----------------------------------------------
+
+-(void)doRequestSharedLinkWithPath: (NSString *)path andPassword: (NSString *)password{
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    [self initLoading];
+    
+    //In iPad set the global variable
+    if (!IS_IPHONE) {
+        //Set global loading screen global flag to YES (only for iPad)
+        app.isLoadingVisible = YES;
+    }
     
     password = [self getPasswordEncodingWithPassword:password];
     
@@ -492,8 +491,7 @@
     }
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-    //TODO: check capabilities
-    
+
     password = [self getPasswordEncodingWithPassword:password];
     
     [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
@@ -947,11 +945,10 @@
             UITextField * passwordTextField = [alertView textFieldAtIndex:0];
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             NSString *filePath = @"";
-            //TODO:path utils
             NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
             filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
             NSString *passwordText = passwordTextField.text;
-            [self doRequestSharedLinkWithPath:filePath andPassword:[self getPasswordEncodingWithPassword:passwordText]];
+            [self doRequestSharedLinkWithPath:filePath andPassword:passwordText];
 
         }else{
             if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {

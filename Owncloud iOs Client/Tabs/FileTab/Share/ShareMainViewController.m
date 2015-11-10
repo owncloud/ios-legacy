@@ -407,6 +407,19 @@
         //Update with password protected
         [self showPasswordView];
     } else{
+
+        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+            
+            CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.idUser];
+            
+            if (cap.isFilesSharingPasswordEnforcedEnabled) {
+                sender.on = true;
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_cannot_remove_password", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+                [alertView show];
+                return;
+            }
+        }
+        
         //Remove password Protected
         [self updateSharedLinkWithPassword:@"" andExpirationDate:nil];
     }
