@@ -387,6 +387,9 @@
         app.isLoadingVisible = YES;
     }
     
+    
+    password = [self getPasswordEncodingWithPassword:password];
+    
     //Checking the Shared files and folders
     [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:path andPassword:password onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
         
@@ -490,6 +493,7 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     //TODO: check capabilities
+    
     password = [self getPasswordEncodingWithPassword:password];
     
     [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
