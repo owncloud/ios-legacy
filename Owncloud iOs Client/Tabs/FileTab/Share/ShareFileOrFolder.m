@@ -217,21 +217,19 @@
     
     if (isFileDto) {
         //From fileDto
-        //TODO: PATH to utils
-        NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
-        filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
+        filePath = [UtilsUrls getFilePathOnDBWithFileName:self.file.fileName ByFilePathOnFileDto:self.file.filePath andUser:app.activeUser];
         
         NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:_file.sharedFileSource forUser:app.activeUser.idUser];
         
         for (OCSharedDto *current in sharesOfFile) {
             if (current.shareType == shareTypeLink) {
-                _shareDto = current;
+                self.shareDto = current;
             }
         }
         
     } else {
         //From shareDto
-        filePath = _shareDto.path;
+        filePath = self.shareDto.path;
     }
     
     if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {

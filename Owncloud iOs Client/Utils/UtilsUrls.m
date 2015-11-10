@@ -178,7 +178,7 @@
 }
 
 ///-----------------------------------
-/// @name getLocalFolderByFilePath
+/// @name getLocalFolderByFilePath:andFileName:andUserDto
 ///-----------------------------------
 /**
  * Return the file path without
@@ -298,6 +298,34 @@
     if([filePathOnFileDto length] >= [partToRemove length]){
         pathOnDB = [filePathOnFileDto substringFromIndex:[partToRemove length]];
     }
+    
+    return pathOnDB;
+}
+
+//----------------------------------------------
+/// @name getFilePathOnDBWithFileName:ByFilePathOnFileDto:andUser
+///---------------------------------------------
+/**
+ * Return the part of file path that is valid in the data base with also the fileName by filePath on FileDto andUser
+ *
+ * @param fileName -> text.pdf
+ * @param filePathOnFileDto -> root folder -> /(subfoldersServer)/k_url_webdav_server/
+ *                          -> subfolders  -> /(subfoldersServer)/k_url_webdav_server/(subfoldersDB)
+ * @param user
+ *
+ * @return pathOnDB -> root folder -> @"text.pdf"
+ *                  -> subfolders  -> @"(subfoldersDB)/text.pdf"
+ *
+ */
++ (NSString *) getFilePathOnDBWithFileName:(NSString *)fileName ByFilePathOnFileDto:(NSString *)filePathOnFileDto andUser:(UserDto *) user {
+    
+    NSString *pathOnDB = @"";
+    
+    NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:user];
+    if([filePathOnFileDto length] >= [partToRemove length]){
+        pathOnDB = [filePathOnFileDto substringFromIndex:[partToRemove length]];
+    }
+    pathOnDB = [NSString stringWithFormat: @"%@%@", pathOnDB, fileName];
     
     return pathOnDB;
 }
