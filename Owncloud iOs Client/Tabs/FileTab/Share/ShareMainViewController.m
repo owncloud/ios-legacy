@@ -63,6 +63,9 @@
 //Date server format
 #define dateServerFormat @"YYYY-MM-dd"
 
+//alert share password
+#define password_alert_view_tag 601
+
 @interface ShareMainViewController ()
 
 @property (nonatomic, strong) FileDto* sharedItem;
@@ -127,8 +130,12 @@
         self.passwordView = nil;
     }
     
-    self.passwordView = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil) message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
+    self.passwordView = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil)
+                                                  message:nil delegate:self
+                                        cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                                        otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
     
+    self.passwordView.tag = password_alert_view_tag;
     self.passwordView.alertViewStyle = UIAlertViewStylePlainTextInput;
     [self.passwordView textFieldAtIndex:0].delegate = self;
     [[self.passwordView textFieldAtIndex:0] setAutocorrectionType:UITextAutocorrectionTypeNo];
@@ -539,25 +546,13 @@
 - (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView
 {
     BOOL output = YES;
-    
-    NSString *stringNow = [alertView textFieldAtIndex:0].text;
-    
-    
-    //Active button of folderview only when the textfield has something.
-    NSString *rawString = stringNow;
-    NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-    NSString *trimmed = [rawString stringByTrimmingCharactersInSet:whitespace];
-    
-    if ([trimmed length] == 0) {
-        // Text was empty or only whitespace.
-        output = NO;
+    if (alertView.tag == password_alert_view_tag) {
+        UITextField *textField = [alertView textFieldAtIndex:0];
+        if ([textField.text length] == 0){
+            output = NO;
+        }
     }
-    
-    //Button save disable when the textfield is empty
-    if ([stringNow isEqualToString:@""]) {
-        output = NO;
-    }
-    
+
     return output;
 }
 

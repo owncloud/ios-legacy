@@ -215,12 +215,12 @@
     
     NSString *filePath = @"";
     
+    filePath = [UtilsUrls getFilePathOnDBWithFileName:self.file.fileName ByFilePathOnFileDto:self.file.filePath andUser:app.activeUser];
+    
+    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:self.file.sharedFileSource forUser:app.activeUser.idUser];
+    
     if (isFileDto) {
         //From fileDto
-        filePath = [UtilsUrls getFilePathOnDBWithFileName:self.file.fileName ByFilePathOnFileDto:self.file.filePath andUser:app.activeUser];
-        
-        NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:_file.sharedFileSource forUser:app.activeUser.idUser];
-        
         for (OCSharedDto *current in sharesOfFile) {
             if (current.shareType == shareTypeLink) {
                 self.shareDto = current;
@@ -232,7 +232,7 @@
         filePath = self.shareDto.path;
     }
     
-    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
         
         CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.idUser];
         
@@ -387,55 +387,47 @@
         app.isLoadingVisible = YES;
     }
     
-    if (![password length]) {
-        [self showError:NSLocalizedString(@"no_pasword", nil)];
-    } else {
-        if (![[password stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]) {
-            [self showError:NSLocalizedString(@"pasword_empty", nil)];
-        } else {
-            //Checking the Shared files and folders
-            [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:path andPassword:password onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
+    //Checking the Shared files and folders
+    [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:path andPassword:password onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
+        
+        [self endLoading];
+        
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
                 
-                [self endLoading];
-                
-                BOOL isSamlCredentialsError=NO;
-                
-                //Check the login error in shibboleth
-                if (k_is_sso_active && redirectedServer) {
-                    //Check if there are fragmens of saml in url, in this case there are a credential error
-                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-                    if (isSamlCredentialsError) {
-                        
-                        [self errorLogin];
-                    }
-                }
-                if (!isSamlCredentialsError) {
-                    
-                    //Ok we have the token but we also need all the information of the file in order to populate the database
-                    [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
-                    
-                    //Present
-                    [self presentShareActionSheetForToken:token withPassword:true];
-                }
-                
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-                
-                [self endLoading];
-                
-                DLog(@"error.code: %ld", (long)error.code);
-                DLog(@"server error: %ld", (long)response.statusCode);
-                NSInteger code = response.statusCode;
-                
-                [self manageServerErrors:code and:error withPasswordSupport:false];
-                
-                if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
-                    [self.delegate finishShareWithStatus:false andWithOptions:nil];
-                }
-                
-            }];
-
+                [self errorLogin];
+            }
         }
-    }
+        if (!isSamlCredentialsError) {
+            
+            //Ok we have the token but we also need all the information of the file in order to populate the database
+            [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
+            
+            //Present
+            [self presentShareActionSheetForToken:token withPassword:true];
+        }
+        
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        
+        [self endLoading];
+        
+        DLog(@"error.code: %ld", (long)error.code);
+        DLog(@"server error: %ld", (long)response.statusCode);
+        NSInteger code = response.statusCode;
+        
+        [self manageServerErrors:code and:error withPasswordSupport:false];
+        
+        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+            [self.delegate finishShareWithStatus:false andWithOptions:nil];
+        }
+        
+    }];
+
     
 }
 
@@ -497,7 +489,7 @@
     }
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-    
+    //TODO: check capabilities
     password = [self getPasswordEncodingWithPassword:password];
     
     [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
@@ -922,14 +914,22 @@
 
 - (void)showAlertEnterPassword {
     
-    _shareProtectedAlertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil)
+    self.shareProtectedAlertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil)
                                                     message:NSLocalizedString(@"shared_link_protected_message", nil)
                                                    delegate:self
                                           cancelButtonTitle:NSLocalizedString(@"cancel", nil)
                                           otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
-    _shareProtectedAlertView.tag = password_alert_view_tag;
-    _shareProtectedAlertView.alertViewStyle = UIAlertViewStyleSecureTextInput;
-    [_shareProtectedAlertView show];
+    
+    self.shareProtectedAlertView.tag = password_alert_view_tag;
+    self.shareProtectedAlertView.alertViewStyle = UIAlertViewStyleSecureTextInput;
+     [self.shareProtectedAlertView textFieldAtIndex:0].delegate = self;
+    [[self.shareProtectedAlertView textFieldAtIndex:0] setAutocorrectionType:UITextAutocorrectionTypeNo];
+    [[self.shareProtectedAlertView textFieldAtIndex:0] setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+    [[self.shareProtectedAlertView textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeDefault];
+    [[self.shareProtectedAlertView textFieldAtIndex:0] setKeyboardAppearance:UIKeyboardAppearanceLight];
+    [[self.shareProtectedAlertView textFieldAtIndex:0] setSecureTextEntry:true];
+    
+    [self.shareProtectedAlertView show];
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -943,6 +943,7 @@
             UITextField * passwordTextField = [alertView textFieldAtIndex:0];
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             NSString *filePath = @"";
+            //TODO:path utils
             NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
             filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
             NSString *passwordText = passwordTextField.text;
@@ -967,6 +968,20 @@
         }
         
     }
+}
+
+- (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView
+{
+    BOOL output = YES;
+    if (alertView.tag == password_alert_view_tag) {
+        UITextField *textField = [alertView textFieldAtIndex:0];
+        if ([textField.text length] == 0){
+            output = NO;
+        }
+    }
+    
+    return output;
+
 }
 
 
