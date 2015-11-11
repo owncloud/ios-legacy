@@ -379,11 +379,10 @@
 
 - (void) sharedLinkSwithValueChanged: (UISwitch*)sender {
     
-    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport == true ) {
-        
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
         CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.idUser];
         
-        if (cap.isFilesSharingShareLinkEnabled == false) {
+        if (!cap.isFilesSharingShareLinkEnabled) {
             sender.on = false;
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_share_link_enabled_capabilities", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alertView show];
@@ -393,9 +392,9 @@
     
     self.isShareLinkEnabled = sender.on;
     
-    if (self.isShareLinkEnabled == true) {
+    if (self.isShareLinkEnabled) {
         [self getShareLinkView];
-    } else{
+    } else {
         [self unShareByLink];
     }
 }
@@ -403,16 +402,13 @@
 
 - (void) passwordProtectedSwithValueChanged:(UISwitch*) sender{
     
-    if (self.isPasswordProtectEnabled == false) {
-        //Update with password protected
-        [self showPasswordView];
-    } else{
+     if (self.isPasswordProtectEnabled){
 
         if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
-            
             CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.idUser];
             
             if (cap.isFilesSharingPasswordEnforcedEnabled) {
+                //not remove, is enforced password
                 sender.on = true;
                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_cannot_remove_password", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
                 [alertView show];
@@ -422,17 +418,36 @@
         
         //Remove password Protected
         [self updateSharedLinkWithPassword:@"" andExpirationDate:nil];
-    }
+         
+     } else {
+         //Update with password protected
+         [self showPasswordView];
+     }
 }
 
 - (void) expirationTimeSwithValueChanged:(UISwitch*) sender{
     
-    if (self.isExpirationDateEnabled == false) {
-        [self launchDatePicker];
-    }else{
-        //Remove exipration time
+    if (self.isExpirationDateEnabled) {
+        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+            CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.idUser];
+            
+            if (cap.isFilesSharingExpireDateEnforceEnabled) {
+                //not remove, is enforced expiration date
+                sender.on = true;
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_cannot_remove_expiration_date", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+                [alertView show];
+                return;
+            }
+        }
+        
+        //Remove expiration date
         [self updateSharedLinkWithPassword:nil andExpirationDate:@""];
+        
+    } else {
+        //Update with expiration date
+        [self launchDatePicker];
     }
+    
 }
 
 #pragma mark - Actions with ShareFileOrFolder class
