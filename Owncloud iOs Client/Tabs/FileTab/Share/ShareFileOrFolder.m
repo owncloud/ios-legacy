@@ -219,8 +219,8 @@
     
     if (isFileDto) {
         //From fileDto
-        NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
-        filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
+
+        filePath = [UtilsUrls getFilePathOnDBwithRootSlashAndWithFileName:self.file.fileName ByFilePathOnFileDto:self.file.filePath andUser:app.activeUser];
         
         for (OCSharedDto *current in sharesOfFile) {
             if (current.shareType == shareTypeLink) {
@@ -942,13 +942,10 @@
         //alert share link enter password
         if (buttonIndex != 0) {
             
-            UITextField * passwordTextField = [alertView textFieldAtIndex:0];
+            UITextField *passwordTextField = [alertView textFieldAtIndex:0];
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            NSString *filePath = @"";
-            NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
-            filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
-            NSString *passwordText = passwordTextField.text;
-            [self doRequestSharedLinkWithPath:filePath andPassword:passwordText];
+            NSString *filePath = [UtilsUrls getFilePathOnDBwithRootSlashAndWithFileName:self.file.fileName ByFilePathOnFileDto:self.file.filePath andUser:app.activeUser];
+            [self doRequestSharedLinkWithPath:filePath andPassword:passwordTextField.text];
 
         }else{
             if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
