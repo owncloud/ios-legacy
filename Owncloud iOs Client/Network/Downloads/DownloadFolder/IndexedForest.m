@@ -110,25 +110,30 @@
         if (currentDict.count == 0) {
             //The folder is empty
             
-            //Remove current one from the parent
-            [parentDict removeObjectForKey:key];
-            
-            //Refresh list to update the arrow
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            [app reloadCellByKey:key];
-
-            //Continue with parent dictionary
-            NSString *stringToRemove = [key lastPathComponent];
-            key = [key substringToIndex:[key length] - (stringToRemove.length+1)];
-            
-            //We check if key is empty to not continue. The next to check is the root (treeDictionary)
-            if (key.length == 0) {
-                if (self.treeDictionary.count == 0) {
-                    self.treeDictionary = [CWLOrderedDictionary new];
-                    isCheckingStructure = NO;
-                } else {
-                    isCheckingStructure = NO;
+            //If we are changing the users and cancelling everything sometimes the key is nil
+            if (key) {
+                //Remove current one from the parent
+                [parentDict removeObjectForKey:key];
+                
+                //Refresh list to update the arrow
+                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                [app reloadCellByKey:key];
+                
+                //Continue with parent dictionary
+                NSString *stringToRemove = [key lastPathComponent];
+                key = [key substringToIndex:[key length] - (stringToRemove.length+1)];
+                
+                //We check if key is empty to not continue. The next to check is the root (treeDictionary)
+                if (key.length == 0) {
+                    if (self.treeDictionary.count == 0) {
+                        self.treeDictionary = [CWLOrderedDictionary new];
+                        isCheckingStructure = NO;
+                    } else {
+                        isCheckingStructure = NO;
+                    }
                 }
+            } else {
+                isCheckingStructure = NO;
             }
             
         } else {

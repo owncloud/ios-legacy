@@ -12,12 +12,18 @@
 @class CWLOrderedDictionary;
 @class IndexedForest;
 
+@protocol SyncFolderManagerDelegate
+
+@optional
+- (void) releaseSemaphoreToContinueChangingUser;
+@end
+
 @interface SyncFolderManager : NSObject
 
 @property (nonatomic, strong) CWLOrderedDictionary *dictOfFoldersToBeCheck;
 @property (nonatomic, strong) IndexedForest *forestOfFilesAndFoldersToBeDownloaded;
-
 @property (nonatomic, strong) NSMutableArray *listOfFilesToBeDownloaded;
+@property (nonatomic,weak) __weak id<SyncFolderManagerDelegate> delegate;
 
 - (void) setThePermissionsOnDownloadCacheFolder;
 - (void) addFolderToBeDownloaded: (FileDto *) folder;
@@ -26,5 +32,6 @@
 //Method to add the file to the array just to take into account when we come back from background
 - (void) simpleDownloadTheFile:(FileDto *) file andTask:(NSURLSessionDownloadTask *) task;
 - (void) cancelDownloadsByFolder:(FileDto *) folder;
+
 
 @end

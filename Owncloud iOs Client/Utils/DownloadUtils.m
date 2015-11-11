@@ -16,6 +16,7 @@
 #import "DownloadUtils.h"
 #import "UtilsUrls.h"
 #import "ManageFilesDB.h"
+#import "constants.h"
 
 @implementation DownloadUtils
 
@@ -149,13 +150,13 @@
     
     do {
         folder = [ManageFilesDB getFileDtoByIdFile:folder.fileId];
-        [ManageFilesDB updateEtagOfFileDtoByid:folder.idFile andNewEtag:@"-1"];
+        [ManageFilesDB updateEtagOfFileDtoByid:folder.idFile andNewEtag:k_negative_etag];
         
         if (folder.isFavorite) {
             isFolderPending = NO;
             //Also we change the father in order to force the refresh
             folder = [ManageFilesDB getFileDtoByIdFile:folder.fileId];
-            [ManageFilesDB updateEtagOfFileDtoByid:folder.idFile andNewEtag:@"-1"];
+            [ManageFilesDB updateEtagOfFileDtoByid:folder.idFile andNewEtag:k_negative_etag];
         }
         
     } while (isFolderPending);
