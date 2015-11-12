@@ -276,7 +276,7 @@
     self.tabBarController.tabBar.hidden=NO;
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UserDto *currentUser = app.activeUser;
+    UserDto *currentUser = [ManageUsersDB getActiveUser];
     //ErrorLogin
     app.isErrorLoginShown = NO;
     
@@ -376,27 +376,32 @@
         
         [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
             
-            DLog(@"Operation response code: %ld", (long)response.statusCode);
-            
-            BOOL isSamlCredentialsError = NO;
-            
-            //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
-                //Check if there are fragmens of saml in url, in this case there are a credential error
-                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-                if (isSamlCredentialsError) {
-                    [self errorLogin];
-                }
-            }
-            if(response.statusCode < kOCErrorServerUnauthorized && !isSamlCredentialsError) {
-                //Pass the items with OCFileDto to FileDto Array
-                NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
-                [self checkEtagBeforeMakeRefreshFolderRequest:directoryList];
+            if (currentUser.idUser == app.activeUser.idUser) {
+                DLog(@"Operation response code: %ld", (long)response.statusCode);
                 
+                BOOL isSamlCredentialsError = NO;
+                
+                //Check the login error in shibboleth
+                if (k_is_sso_active && redirectedServer) {
+                    //Check if there are fragmens of saml in url, in this case there are a credential error
+                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                    if (isSamlCredentialsError) {
+                        [self errorLogin];
+                    }
+                }
+                if(response.statusCode < kOCErrorServerUnauthorized && !isSamlCredentialsError) {
+                    //Pass the items with OCFileDto to FileDto Array
+                    NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
+                    [self checkEtagBeforeMakeRefreshFolderRequest:directoryList];
+                    
+                } else {
+                    [self endLoading];
+                    [self stopPullRefresh];
+                    _showLoadingAfterChangeUser = NO;
+                }
             } else {
-                [self endLoading];
-                [self stopPullRefresh];
-                _showLoadingAfterChangeUser = NO;
+                DLog(@"User changed while check a folder");
+                [UtilsFramework deleteAllCookies];
             }
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
             
