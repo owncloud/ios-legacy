@@ -76,7 +76,7 @@
 - (void)errorLogin {
     //[self endLoading];
     
-    [self.delegate errorLogin];
+    //[self.delegate errorLogin];
 }
 
 @end
