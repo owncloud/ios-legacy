@@ -13,6 +13,8 @@
 #import "OCCapabilities.h"
 #import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
+#import "FileNameUtils.h"
+#import "Customization.h"
 
 @implementation CheckCapabilities
 
@@ -39,14 +41,29 @@
         
         [[AppDelegate sharedOCCommunication] getCapabilitiesOfServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, OCCapabilities *capabilities, NSString *redirectedServer) {
             
-            CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId: app.activeUser.idUser];
+            BOOL isSamlCredentialsError=NO;
             
-            if (cap == nil) {
-                cap = [ManageCapabilitiesDB insertCapabilities:capabilities ofUserId: app.activeUser.idUser];
-            }else{
-                cap = [ManageCapabilitiesDB updateCapabilitiesWith:capabilities ofUserId: app.activeUser.idUser];
+            //Check the login error in shibboleth
+            if (k_is_sso_active && redirectedServer) {
+                //Check if there are fragmens of saml in url, in this case there are a credential error
+                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                if (isSamlCredentialsError) {
+                    //TODO: show the login view 
+                     //[self errorLogin];
+                }
             }
             
+            if (!isSamlCredentialsError) {
+                CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId: app.activeUser.idUser];
+                
+                if (cap == nil) {
+                    cap = [ManageCapabilitiesDB insertCapabilities:capabilities ofUserId: app.activeUser.idUser];
+                }else{
+                    cap = [ManageCapabilitiesDB updateCapabilitiesWith:capabilities ofUserId: app.activeUser.idUser];
+                }
+
+            }
+
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
             
              DLog(@"error when try to get server capabilities: %@", error);
@@ -54,6 +71,12 @@
         }];
     }
     
+}
+
+- (void)errorLogin {
+    //[self endLoading];
+    
+    [self.delegate errorLogin];
 }
 
 @end
