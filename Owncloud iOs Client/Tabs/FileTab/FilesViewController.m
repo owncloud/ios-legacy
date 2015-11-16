@@ -206,12 +206,10 @@
     
     [_tableView addSubview:_refreshControl];
 
-    //Only for iOS 7
-    if (IS_IOS7) {
-        //This new feature of iOS 7 indicate the extend of the edges of the view
-        self.edgesForExtendedLayout = UIRectEdgeAll;//UIRectCornerAllCorners;
-    }
 }
+
+
+
 
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -262,6 +260,13 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    if (IS_IOS8) {
+        self.edgesForExtendedLayout = UIRectCornerAllCorners;
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }else{
+        self.edgesForExtendedLayout = UIRectEdgeAll;
+    }
     
     //Set the navigation bar to translucent
     if (IS_IOS7){
@@ -525,6 +530,7 @@
 
 -(void)viewDidLayoutSubviews
 {
+     [super viewDidLayoutSubviews];
     
     if (IS_IOS8) {
         if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
@@ -534,6 +540,12 @@
         if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
             [self.tableView setLayoutMargins:UIEdgeInsetsZero];
         }
+        
+        
+        CGRect rect = self.navigationController.navigationBar.frame;
+        float y = rect.size.height + rect.origin.y;
+        self.tableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+
         
     }
 }
