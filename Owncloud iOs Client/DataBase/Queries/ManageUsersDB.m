@@ -144,7 +144,7 @@
         
 #ifdef CONTAINER_APP
         //Set the user password
-        if (user.activeaccount == YES) {
+        if (user.activeaccount) {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             app.activeUser = user;
             

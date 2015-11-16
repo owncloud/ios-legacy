@@ -47,10 +47,6 @@
             if (k_is_sso_active && redirectedServer) {
                 //Check if there are fragmens of saml in url, in this case there are a credential error
                 isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-                if (isSamlCredentialsError) {
-                    //TODO: show the login view 
-                     //[self errorLogin];
-                }
             }
             
             if (!isSamlCredentialsError) {
@@ -61,7 +57,6 @@
                 }else{
                     cap = [ManageCapabilitiesDB updateCapabilitiesWith:capabilities ofUserId: app.activeUser.idUser];
                 }
-
             }
 
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
@@ -73,10 +68,5 @@
     
 }
 
-- (void)errorLogin {
-    //[self endLoading];
-    
-    //[self.delegate errorLogin];
-}
 
 @end
