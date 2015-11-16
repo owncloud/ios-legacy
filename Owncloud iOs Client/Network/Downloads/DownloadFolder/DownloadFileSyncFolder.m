@@ -76,8 +76,12 @@
                                                           DLog(@"file: %@", file.localFolder);
                                                           DLog(@"File downloaded");
                                                           
-                                                          //Finalized the download
-                                                          [weakSelf updateDataDownloadSuccess];
+                                                           if (k_is_sso_active && redirectedServer) {
+                                                               [weakSelf failureDownloadProcess];
+                                                           } else {
+                                                               //Finalized the download
+                                                               [weakSelf updateDataDownloadSuccess];
+                                                           }
                                                           
                                                       } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
                                                           DLog(@"Error: %@", error);
