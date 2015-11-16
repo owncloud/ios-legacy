@@ -76,4 +76,3 @@
 
 //Negative etag used to force pending to update
 #define k_negative_etag @"-1"
-
