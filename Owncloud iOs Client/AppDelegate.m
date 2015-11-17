@@ -1391,11 +1391,14 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 DLog(@"HTTP Error: %ld", (long)httpResponse.statusCode);
                 
                 if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-                    
-                    // dispatch_async(dispatch_get_main_queue(), ^{
-                    [download updateDataDownloadSuccess];
+                
+                    if ([[NSFileManager defaultManager] fileExistsAtPath:download.file.localFolder]) {
+                        [download updateDataDownloadSuccess];
+                    } else {
+                        [download failureDownloadProcess];
+                    }
+                
                     [self reloadTableFromDataBaseIfFileIsVisibleOnList:download.file];
-                    //  });
                     
                 } else {
                     //Failure

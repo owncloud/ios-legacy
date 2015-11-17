@@ -80,7 +80,11 @@
                                                                [weakSelf failureDownloadProcess];
                                                            } else {
                                                                //Finalized the download
-                                                               [weakSelf updateDataDownloadSuccess];
+                                                               if ([[NSFileManager defaultManager] fileExistsAtPath:self.file.localFolder]) {
+                                                                   [weakSelf updateDataDownloadSuccess];
+                                                               } else {
+                                                                   [weakSelf failureDownloadProcess];
+                                                               }
                                                            }
                                                           
                                                       } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
@@ -100,7 +104,11 @@
             DLog(@"File downloaded");
             
             //Finalized the download
-            [weakSelf updateDataDownloadSuccess];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:self.file.localFolder]) {
+                [weakSelf updateDataDownloadSuccess];
+            } else {
+                [weakSelf failureDownloadProcess];
+            }
             
         } failureRequest:^(NSURLResponse *response, NSError *error) {
             
