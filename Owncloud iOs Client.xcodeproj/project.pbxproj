@@ -363,6 +363,12 @@
 		4052B4E31B4ECF35000788DA /* btnHelpPage4.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4DF1B4ECF35000788DA /* btnHelpPage4.png */; };
 		4052B4E41B4ECF35000788DA /* btnHelpPage5.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4E01B4ECF35000788DA /* btnHelpPage5.png */; };
 		405AD0C11B56C26A00271424 /* iphoneShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 405AD0C01B56C26A00271424 /* iphoneShare.png */; };
+		405D06C51BFB670100591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
+		405D06C71BFB670200591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
+		405D06C81BFB670800591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
+		405D06C91BFB678800591604 /* CapabilitiesDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1A1BEA66A1009971AF /* CapabilitiesDto.m */; };
+		405D06CA1BFB678800591604 /* CapabilitiesDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1A1BEA66A1009971AF /* CapabilitiesDto.m */; };
+		405D06CB1BFB678900591604 /* CapabilitiesDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1A1BEA66A1009971AF /* CapabilitiesDto.m */; };
 		40A969E41A5EEAC80046A36C /* ManageAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A969E31A5EEAC80046A36C /* ManageAsset.m */; };
 		40AB1F5B1A12392E003E7397 /* cancel_download_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F591A12392E003E7397 /* cancel_download_white@3x.png */; };
 		40AB1F5C1A12392E003E7397 /* cancel_download@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F5A1A12392E003E7397 /* cancel_download@3x.png */; };
@@ -587,17 +593,17 @@
 		59E58B751B04ED15004E9739 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0816034C2200A95EAD /* libcrypto.a */; };
 		59E58B761B04ED15004E9739 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0916034C2200A95EAD /* libssl.a */; };
 		59E58B771B04ED20004E9739 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
-		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; settings = {ASSET_TAGS = (); }; };
-		EA0599861BB92B19002C2864 /* ShareUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599841BB92B19002C2864 /* ShareUserCell.xib */; settings = {ASSET_TAGS = (); }; };
-		EA0599931BB94F3F002C2864 /* ShareSearchUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0599911BB94F3F002C2864 /* ShareSearchUserViewController.m */; settings = {ASSET_TAGS = (); }; };
-		EA0599941BB94F3F002C2864 /* ShareSearchUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599921BB94F3F002C2864 /* ShareSearchUserViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		EA0EFA1B1BEA66A1009971AF /* CapabilitiesDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1A1BEA66A1009971AF /* CapabilitiesDto.m */; settings = {ASSET_TAGS = (); }; };
-		EA0EFA1F1BEA6C6E009971AF /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; settings = {ASSET_TAGS = (); }; };
+		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; };
+		EA0599861BB92B19002C2864 /* ShareUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599841BB92B19002C2864 /* ShareUserCell.xib */; };
+		EA0599931BB94F3F002C2864 /* ShareSearchUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0599911BB94F3F002C2864 /* ShareSearchUserViewController.m */; };
+		EA0599941BB94F3F002C2864 /* ShareSearchUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599921BB94F3F002C2864 /* ShareSearchUserViewController.xib */; };
+		EA0EFA1B1BEA66A1009971AF /* CapabilitiesDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1A1BEA66A1009971AF /* CapabilitiesDto.m */; };
+		EA0EFA1F1BEA6C6E009971AF /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
 		EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA1762A01B78B50100D36186 /* ShareMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA17629F1B78B50100D36186 /* ShareMainViewController.m */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
-		EA1C3B5C1BC29B260085F540 /* ManageSharesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EABE4BE2187D5AE6006DEC96 /* ManageSharesDB.m */; settings = {ASSET_TAGS = (); }; };
-		EA1C3B601BC29B7F0085F540 /* ManageSharesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EABE4BE2187D5AE6006DEC96 /* ManageSharesDB.m */; settings = {ASSET_TAGS = (); }; };
+		EA1C3B5C1BC29B260085F540 /* ManageSharesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EABE4BE2187D5AE6006DEC96 /* ManageSharesDB.m */; };
+		EA1C3B601BC29B7F0085F540 /* ManageSharesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EABE4BE2187D5AE6006DEC96 /* ManageSharesDB.m */; };
 		EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
 		EA1F62CE1A5EBC2A00D6346F /* UserDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F148177C315D004A1A5A /* UserDto.m */; };
 		EA1F62CF1A5EBCA800D6346F /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F155177C3392004A1A5A /* FMDatabaseQueue.m */; };
@@ -616,7 +622,7 @@
 		EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F146177C315D004A1A5A /* FileDto.m */; };
 		EA2243EA1B71276D00F62E2A /* ShareLinkHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2243E81B71276D00F62E2A /* ShareLinkHeaderCell.swift */; };
 		EA2243EB1B71276D00F62E2A /* ShareLinkHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA2243E91B71276D00F62E2A /* ShareLinkHeaderCell.xib */; };
-		EA2527551BECCA3500C1EB14 /* CheckFeaturesSupported.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2527541BECCA3500C1EB14 /* CheckFeaturesSupported.m */; settings = {ASSET_TAGS = (); }; };
+		EA2527551BECCA3500C1EB14 /* CheckFeaturesSupported.m in Sources */ = {isa = PBXBuildFile; fileRef = EA2527541BECCA3500C1EB14 /* CheckFeaturesSupported.m */; };
 		EA2678FF1876E4B8008678DE /* notSharedItem.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FB1876E4B8008678DE /* notSharedItem.png */; };
 		EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */; };
 		EA2B4FB017FAFF69001766BB /* company_empty_screen_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */; };
@@ -673,29 +679,29 @@
 		EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB4619ED356A00764C31 /* FileProvider.m */; };
 		EAB0AB4A19ED356A00764C31 /* ownCloudExtAppFileProvider.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EAB0AB4019ED356A00764C31 /* ownCloudExtAppFileProvider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EAB0AB4F19ED356A00764C31 /* ownCloudExtApp.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EAB0AB3219ED356A00764C31 /* ownCloudExtApp.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		EABD88C91BBE638300DA5281 /* ShareLoadingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABD88C71BBE638300DA5281 /* ShareLoadingCell.swift */; settings = {ASSET_TAGS = (); }; };
-		EABD88CA1BBE638300DA5281 /* ShareLoadingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EABD88C81BBE638300DA5281 /* ShareLoadingCell.xib */; settings = {ASSET_TAGS = (); }; };
-		EABD88E11BBE82C400DA5281 /* NotificationBackgroundError.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D01BBE82C400DA5281 /* NotificationBackgroundError.png */; settings = {ASSET_TAGS = (); }; };
-		EABD88E51BBE82C400DA5281 /* NotificationBackgroundError@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D11BBE82C400DA5281 /* NotificationBackgroundError@2x.png */; settings = {ASSET_TAGS = (); }; };
-		EABD88E91BBE82C400DA5281 /* NotificationBackgroundErrorIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D21BBE82C400DA5281 /* NotificationBackgroundErrorIcon.png */; settings = {ASSET_TAGS = (); }; };
-		EABD88ED1BBE82C400DA5281 /* NotificationBackgroundErrorIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D31BBE82C400DA5281 /* NotificationBackgroundErrorIcon@2x.png */; settings = {ASSET_TAGS = (); }; };
-		EABD88F11BBE82C400DA5281 /* NotificationBackgroundMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D41BBE82C400DA5281 /* NotificationBackgroundMessage.png */; settings = {ASSET_TAGS = (); }; };
-		EABD88F51BBE82C400DA5281 /* NotificationBackgroundMessage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D51BBE82C400DA5281 /* NotificationBackgroundMessage@2x.png */; settings = {ASSET_TAGS = (); }; };
-		EABD88F91BBE82C400DA5281 /* NotificationBackgroundSuccess.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D61BBE82C400DA5281 /* NotificationBackgroundSuccess.png */; settings = {ASSET_TAGS = (); }; };
-		EABD88FD1BBE82C400DA5281 /* NotificationBackgroundSuccess@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D71BBE82C400DA5281 /* NotificationBackgroundSuccess@2x.png */; settings = {ASSET_TAGS = (); }; };
-		EABD89011BBE82C400DA5281 /* NotificationBackgroundSuccessIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D81BBE82C400DA5281 /* NotificationBackgroundSuccessIcon.png */; settings = {ASSET_TAGS = (); }; };
-		EABD89051BBE82C400DA5281 /* NotificationBackgroundSuccessIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D91BBE82C400DA5281 /* NotificationBackgroundSuccessIcon@2x.png */; settings = {ASSET_TAGS = (); }; };
-		EABD89091BBE82C400DA5281 /* NotificationBackgroundWarning.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88DA1BBE82C400DA5281 /* NotificationBackgroundWarning.png */; settings = {ASSET_TAGS = (); }; };
-		EABD890D1BBE82C400DA5281 /* NotificationBackgroundWarning@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88DB1BBE82C400DA5281 /* NotificationBackgroundWarning@2x.png */; settings = {ASSET_TAGS = (); }; };
-		EABD89111BBE82C400DA5281 /* NotificationBackgroundWarningIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88DC1BBE82C400DA5281 /* NotificationBackgroundWarningIcon.png */; settings = {ASSET_TAGS = (); }; };
-		EABD89151BBE82C400DA5281 /* NotificationBackgroundWarningIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88DD1BBE82C400DA5281 /* NotificationBackgroundWarningIcon@2x.png */; settings = {ASSET_TAGS = (); }; };
-		EABD89191BBE82C400DA5281 /* NotificationButtonBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88DE1BBE82C400DA5281 /* NotificationButtonBackground.png */; settings = {ASSET_TAGS = (); }; };
-		EABD891D1BBE82C400DA5281 /* NotificationButtonBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88DF1BBE82C400DA5281 /* NotificationButtonBackground@2x.png */; settings = {ASSET_TAGS = (); }; };
-		EABD89211BBE82C400DA5281 /* TSMessagesDefaultDesign.json in Resources */ = {isa = PBXBuildFile; fileRef = EABD88E01BBE82C400DA5281 /* TSMessagesDefaultDesign.json */; settings = {ASSET_TAGS = (); }; };
-		EABD892E1BBE82D900DA5281 /* HexColors.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD89271BBE82D900DA5281 /* HexColors.m */; settings = {ASSET_TAGS = (); }; };
-		EABD89321BBE82D900DA5281 /* TSBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD89291BBE82D900DA5281 /* TSBlurView.m */; settings = {ASSET_TAGS = (); }; };
-		EABD89361BBE82D900DA5281 /* TSMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD892B1BBE82D900DA5281 /* TSMessage.m */; settings = {ASSET_TAGS = (); }; };
-		EABD893A1BBE82D900DA5281 /* TSMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD892D1BBE82D900DA5281 /* TSMessageView.m */; settings = {ASSET_TAGS = (); }; };
+		EABD88C91BBE638300DA5281 /* ShareLoadingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABD88C71BBE638300DA5281 /* ShareLoadingCell.swift */; };
+		EABD88CA1BBE638300DA5281 /* ShareLoadingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EABD88C81BBE638300DA5281 /* ShareLoadingCell.xib */; };
+		EABD88E11BBE82C400DA5281 /* NotificationBackgroundError.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D01BBE82C400DA5281 /* NotificationBackgroundError.png */; };
+		EABD88E51BBE82C400DA5281 /* NotificationBackgroundError@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D11BBE82C400DA5281 /* NotificationBackgroundError@2x.png */; };
+		EABD88E91BBE82C400DA5281 /* NotificationBackgroundErrorIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D21BBE82C400DA5281 /* NotificationBackgroundErrorIcon.png */; };
+		EABD88ED1BBE82C400DA5281 /* NotificationBackgroundErrorIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D31BBE82C400DA5281 /* NotificationBackgroundErrorIcon@2x.png */; };
+		EABD88F11BBE82C400DA5281 /* NotificationBackgroundMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D41BBE82C400DA5281 /* NotificationBackgroundMessage.png */; };
+		EABD88F51BBE82C400DA5281 /* NotificationBackgroundMessage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D51BBE82C400DA5281 /* NotificationBackgroundMessage@2x.png */; };
+		EABD88F91BBE82C400DA5281 /* NotificationBackgroundSuccess.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D61BBE82C400DA5281 /* NotificationBackgroundSuccess.png */; };
+		EABD88FD1BBE82C400DA5281 /* NotificationBackgroundSuccess@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D71BBE82C400DA5281 /* NotificationBackgroundSuccess@2x.png */; };
+		EABD89011BBE82C400DA5281 /* NotificationBackgroundSuccessIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D81BBE82C400DA5281 /* NotificationBackgroundSuccessIcon.png */; };
+		EABD89051BBE82C400DA5281 /* NotificationBackgroundSuccessIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88D91BBE82C400DA5281 /* NotificationBackgroundSuccessIcon@2x.png */; };
+		EABD89091BBE82C400DA5281 /* NotificationBackgroundWarning.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88DA1BBE82C400DA5281 /* NotificationBackgroundWarning.png */; };
+		EABD890D1BBE82C400DA5281 /* NotificationBackgroundWarning@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88DB1BBE82C400DA5281 /* NotificationBackgroundWarning@2x.png */; };
+		EABD89111BBE82C400DA5281 /* NotificationBackgroundWarningIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88DC1BBE82C400DA5281 /* NotificationBackgroundWarningIcon.png */; };
+		EABD89151BBE82C400DA5281 /* NotificationBackgroundWarningIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88DD1BBE82C400DA5281 /* NotificationBackgroundWarningIcon@2x.png */; };
+		EABD89191BBE82C400DA5281 /* NotificationButtonBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88DE1BBE82C400DA5281 /* NotificationButtonBackground.png */; };
+		EABD891D1BBE82C400DA5281 /* NotificationButtonBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EABD88DF1BBE82C400DA5281 /* NotificationButtonBackground@2x.png */; };
+		EABD89211BBE82C400DA5281 /* TSMessagesDefaultDesign.json in Resources */ = {isa = PBXBuildFile; fileRef = EABD88E01BBE82C400DA5281 /* TSMessagesDefaultDesign.json */; };
+		EABD892E1BBE82D900DA5281 /* HexColors.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD89271BBE82D900DA5281 /* HexColors.m */; };
+		EABD89321BBE82D900DA5281 /* TSBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD89291BBE82D900DA5281 /* TSBlurView.m */; };
+		EABD89361BBE82D900DA5281 /* TSMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD892B1BBE82D900DA5281 /* TSMessage.m */; };
+		EABD893A1BBE82D900DA5281 /* TSMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = EABD892D1BBE82D900DA5281 /* TSMessageView.m */; };
 		EABE4BE3187D5AE6006DEC96 /* ManageSharesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EABE4BE2187D5AE6006DEC96 /* ManageSharesDB.m */; };
 		EABF68D61889339200A2217C /* SharedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF68D41889339200A2217C /* SharedViewController.m */; };
 		EABF68D71889339200A2217C /* SharedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EABF68D51889339200A2217C /* SharedViewController.xib */; };
@@ -749,7 +755,7 @@
 		EAEDC0931AB197A0004836EB /* SelectFolderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6A51778668A00FB9977 /* SelectFolderViewController.xib */; };
 		EAEDC0941AB197D1004836EB /* SelectedFolderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14A50E9D18F3FC9100506E2B /* SelectedFolderCell.xib */; };
 		EAEDC0951AB19869004836EB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 145EA7CA17786FAC0087CDDB /* Localizable.strings */; };
-		EAF13F7D1BE8F5EA00F87E9F /* CheckCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF13F7C1BE8F5EA00F87E9F /* CheckCapabilities.m */; settings = {ASSET_TAGS = (); }; };
+		EAF13F7D1BE8F5EA00F87E9F /* CheckCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF13F7C1BE8F5EA00F87E9F /* CheckCapabilities.m */; };
 		EAF721191AADCC73009F5596 /* pdf_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F18E177C35AA004A1A5A /* pdf_icon.png */; };
 		EAF7211A1AADCC9B009F5596 /* BackRootFolderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F176177C35AA004A1A5A /* BackRootFolderIcon.png */; };
 		EAF7211B1AADCC9B009F5596 /* BackRootFolderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F177177C35AA004A1A5A /* BackRootFolderIcon@2x.png */; };
@@ -4544,6 +4550,7 @@
 				59E20C7F1AEFB45900554D7E /* ManageDB.m in Sources */,
 				EAC6E5F71AB097B800CCF8C4 /* ManageAppSettingsDB.m in Sources */,
 				EAC6E5F81AB097F500CCF8C4 /* UtilsDtos.m in Sources */,
+				405D06C51BFB670100591604 /* ManageCapabilitiesDB.m in Sources */,
 				EAF721851AAF3C86009F5596 /* UtilsUrls.m in Sources */,
 				EA4B8E1D1AC92DCF004F335E /* KKPasscodeSettingsViewController.m in Sources */,
 				EACA74731AADB1EB0074BA2D /* FileNameUtils.m in Sources */,
@@ -4565,6 +4572,7 @@
 				EAF7217E1AAF2E49009F5596 /* FMDatabaseQueue.m in Sources */,
 				EAC6E5FB1AB0986D00CCF8C4 /* SelectedFolderCell.m in Sources */,
 				EAC6E5FA1AB0985B00CCF8C4 /* SelectFolderNavigation.m in Sources */,
+				405D06C91BFB678800591604 /* CapabilitiesDto.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4596,6 +4604,7 @@
 				599E5C2C1A0CF42700E83C03 /* ImageUtils.m in Sources */,
 				599E5C2B1A0CF3C000E83C03 /* OCNavigationController.m in Sources */,
 				599E5C271A0CD0E500E83C03 /* EmptyCell.m in Sources */,
+				405D06C81BFB670800591604 /* ManageCapabilitiesDB.m in Sources */,
 				59990A271A0BD74000D3B842 /* FileNameUtils.m in Sources */,
 				59990A251A0BD67A00D3B842 /* InfoFileUtils.m in Sources */,
 				590849F11A0A811000D3E842 /* NSMutableArray+SWUtilityButtons.m in Sources */,
@@ -4615,6 +4624,7 @@
 				EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */,
 				599E57351A08E62700744EC9 /* FileDto.m in Sources */,
 				599D99F81A026004008A9DB3 /* UserDto.m in Sources */,
+				405D06CB1BFB678900591604 /* CapabilitiesDto.m in Sources */,
 				599D99F71A025F24008A9DB3 /* ManageUsersDB.m in Sources */,
 				599D99F11A0256F1008A9DB3 /* FMDatabaseAdditions.m in Sources */,
 				599D80A31A23366D0071B66E /* SimpleFileListTableViewController.m in Sources */,
@@ -4643,10 +4653,12 @@
 				EA1F62D41A5EBDA700D6346F /* FMDatabasePool.m in Sources */,
 				EA1F62CE1A5EBC2A00D6346F /* UserDto.m in Sources */,
 				EA1F62D01A5EBCAE00D6346F /* FMDatabase.m in Sources */,
+				405D06CA1BFB678800591604 /* CapabilitiesDto.m in Sources */,
 				EA1F62D81A5EBFC700D6346F /* ManageUsersDB.m in Sources */,
 				EAE80E261A6D317C0061BD86 /* ManageUploadsDB.m in Sources */,
 				EA1F62D71A5EBF8500D6346F /* ManageFilesDB.m in Sources */,
 				EA1F62D91A5EBFDF00D6346F /* OCKeychain.m in Sources */,
+				405D06C71BFB670200591604 /* ManageCapabilitiesDB.m in Sources */,
 				EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */,
 				EA1F62D31A5EBDA100D6346F /* FMResultSet.m in Sources */,
 				EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */,

@@ -22,6 +22,7 @@
 #import "CredentialsDto.h"
 #import "UtilsCookies.h"
 #import "constants.h"
+#import "ManageCapabilitiesDB.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -122,7 +123,9 @@
         
     }];
     
-    
+    output.capabilitiesDto = [CapabilitiesDto new];
+    output.capabilitiesDto = [ManageCapabilitiesDB getCapabilitiesOfUserId: output.idUser];
+
     return output;
 }
 
