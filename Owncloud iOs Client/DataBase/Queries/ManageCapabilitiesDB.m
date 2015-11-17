@@ -128,7 +128,7 @@
     
     CapabilitiesDto *cap = [self getCapabilitiesOfUserId:userId];
     
-    if (cap.isFilesSharingAPIEnabled == true) {
+    if (cap.isFilesSharingAPIEnabled) {
         return true;
     }
     

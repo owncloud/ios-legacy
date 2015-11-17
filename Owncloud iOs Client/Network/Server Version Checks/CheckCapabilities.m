@@ -57,6 +57,10 @@
                 }else{
                     cap = [ManageCapabilitiesDB updateCapabilitiesWith:capabilities ofUserId: app.activeUser.idUser];
                 }
+                
+                //update active userDto
+                app.activeUser.capabilitiesDto = [CapabilitiesDto new];
+                app.activeUser.capabilitiesDto = cap;
             }
 
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {

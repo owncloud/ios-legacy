@@ -14,6 +14,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "CapabilitiesDto.h"
 
 typedef enum {
     serverFunctionalityNotChecked = 0,
@@ -42,5 +43,6 @@ typedef enum {
 @property BOOL onlyWifiInstantUpload;
 @property long dateInstantUpload;
 @property (nonatomic, copy) NSString *urlRedirected;
+@property (nonatomic, strong) CapabilitiesDto *capabilitiesDto;
 
 @end
