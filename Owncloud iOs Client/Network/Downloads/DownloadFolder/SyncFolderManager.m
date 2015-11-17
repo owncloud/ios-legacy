@@ -25,6 +25,7 @@
 #import "ManageUsersDB.h"
 #import "InfoFileUtils.h"
 #import "DownloadUtils.h"
+#import "constants.h"
 
 @implementation SyncFolderManager
 
@@ -283,7 +284,14 @@
                         
                     });
                 } else {
-                    //Credential error
+                    //For sons of favorites to force again to be checked and downloaded again
+                    if ([DownloadUtils isSonOfFavoriteFolder:currentFolder]) {
+                        [DownloadUtils setEtagNegativeToAllTheFoldersThatContainsFile:currentFolder];
+                    } else if (currentFolder.isFavorite) {
+                        [ManageFilesDB updateEtagOfFileDtoByid:currentFolder.idFile andNewEtag:k_negative_etag];
+                    }
+                    
+                    //Credential error//SAML expiration
                     [self reloadCellAndRemovedFolderToBeCheckByKey:idKey];
                 }
             } else {
@@ -295,12 +303,13 @@
             DLog(@"response: %@", response);
             DLog(@"error: %@", error);
             
-            //TODO: continue with next or remove all from the list if we can not manage the problem
-            
             //Removed failed folder
             [self reloadCellAndRemovedFolderToBeCheckByKey:idKey];
             
-            
+            //For sons of favorites to force again to be checked and downloaded again
+            if ([DownloadUtils isSonOfFavoriteFolder:currentFolder]) {
+                [DownloadUtils setEtagNegativeToAllTheFoldersThatContainsFile:currentFolder];
+            }
         }];
     }
 }

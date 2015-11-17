@@ -1097,11 +1097,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [standardUserDefaults setBool:YES forKey:k_app_killed_by_user];
     [standardUserDefaults synchronize];
     
-    
-     if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active){
-         [self.downloadManager cancelDownloads];
-         [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
-     }
+    [self.downloadManager cancelDownloads];
+    [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
     
     //Remove inbox folder if aren't uploads pending
     if (![ManageUploadsDB isFilesInUploadProcess]) {
