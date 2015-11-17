@@ -49,19 +49,20 @@
                 isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
             }
             
+            CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId: app.activeUser.idUser];
+
             if (!isSamlCredentialsError) {
-                CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId: app.activeUser.idUser];
                 
                 if (cap == nil) {
                     cap = [ManageCapabilitiesDB insertCapabilities:capabilities ofUserId: app.activeUser.idUser];
                 }else{
                     cap = [ManageCapabilitiesDB updateCapabilitiesWith:capabilities ofUserId: app.activeUser.idUser];
                 }
-                
-                //update active userDto
-                app.activeUser.capabilitiesDto = [CapabilitiesDto new];
-                app.activeUser.capabilitiesDto = cap;
             }
+            
+            //update active userDto
+            app.activeUser.capabilitiesDto = [CapabilitiesDto new];
+            app.activeUser.capabilitiesDto = cap;
 
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
             
