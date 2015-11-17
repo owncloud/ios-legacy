@@ -1286,7 +1286,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         if (downloadIsInProgress) {
             
-            if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
+            if (!k_is_sso_active) {
                 
                 if (_file.isNecessaryUpdate) {
                     [self putUpdateProgressInNavBar];
@@ -1959,7 +1959,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         CGFloat deltaWidth = k_delta_width_for_split_transition;
         
 
-        if (IS_IOS8) {
+        if (IS_IOS8 || IS_IOS9) {
             
             selfFrame.size.width += deltaWidth;
             selfFrame.origin.x -= deltaWidth;
@@ -1980,7 +1980,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         self.hideMaster = !self.hideMaster;
         
-        [self.splitViewController viewWillTransitionToSize:self.splitViewController.view.frame.size withTransitionCoordinator:self.splitViewController.transitionCoordinator];
+        if (IS_IOS9) {
+            [self.splitViewController viewWillTransitionToSize:self.splitViewController.view.frame.size withTransitionCoordinator:self.splitViewController.transitionCoordinator];
+        }
+        
         [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
         
         [self hideContainerView];
@@ -2014,7 +2017,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             CGFloat deltaWidth = k_delta_width_for_split_transition;
             
-            if (IS_IOS8) {
+            if (IS_IOS8 || IS_IOS9) {
                 
                 selfFrame.size.width -= deltaWidth;
                 selfFrame.origin.x += deltaWidth;
@@ -2078,7 +2081,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     if (self.hideMaster) {
         
-        if (IS_IOS8) {
+        if (IS_IOS8 || IS_IOS9) {
             frame = self.view.window.bounds;
         }else{
             
@@ -2127,7 +2130,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
                      animations:^(void)
      {
        
-         if (!self.hideMaster && IS_IOS8) {
+         if (!self.hideMaster && IS_IOS9) {
              [self.splitViewController.view setNeedsLayout];
              self.splitViewController.delegate = nil;
              self.splitViewController.delegate = self;
@@ -2137,7 +2140,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
          
          CGFloat deltaWidth = k_delta_width_for_split_transition;
          
-         if (IS_IOS8) {
+         if (IS_IOS8 || IS_IOS9) {
              
              if (self.hideMaster)
              {
@@ -2180,7 +2183,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
          [self.splitViewController.view setFrame:selfFrame];
          
-         if (!self.hideMaster && IS_IOS8) {
+         if (!self.hideMaster && IS_IOS9) {
               [self.splitViewController.view layoutIfNeeded];
          }
          

@@ -1072,7 +1072,7 @@
                     [self.popupQuery showInView:[self.view window]];
                 }else {
                     
-                    if (IS_IOS8) {
+                    if (IS_IOS8 || IS_IOS9) {
                         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
                         [self.popupQuery showInView:app.splitViewController.view];
                     } else {

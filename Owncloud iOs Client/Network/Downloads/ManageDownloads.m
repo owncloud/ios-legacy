@@ -163,7 +163,7 @@
 
 - (void) removeDownload:(Download *)download{
     
-    if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active){
+    if (!k_is_sso_active){
         
         BOOL exist = NO;
         

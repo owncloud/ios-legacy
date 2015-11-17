@@ -134,7 +134,7 @@
 -(void)viewDidLayoutSubviews
 {
     
-    if (IS_IOS8) {
+    if (IS_IOS8 || IS_IOS9) {
         if ([self.sharedTableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 9, 0, 0)];
         }
@@ -149,7 +149,7 @@
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    if (IS_IOS8) {
+    if (IS_IOS8 || IS_IOS9) {
         if ([self.sharedTableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 9, 0, 0)];
         }

@@ -53,9 +53,9 @@
     }
     
     CGFloat statusBarHeight;
-    if (IS_IOS8 && IS_IPHONE && !IS_PORTRAIT ) {
+    if ((IS_IOS8 || IS_IOS9) && IS_IPHONE && !IS_PORTRAIT ) {
         statusBarHeight = SIZE_NOTIFICATION_LANDSCAPE;
-    } else if ((IS_IOS8) || (!IS_IOS8 && UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))) {
+    } else if ((IS_IOS8 || IS_IOS9) || (IS_IOS7 && UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))) {
         statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
     } else {
         statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.width;
@@ -66,9 +66,9 @@
 - (CGFloat)getStatusBarWidth {
     CGFloat statusBarWidth;
     
-    if (IS_IPHONE && !IS_PORTRAIT && IS_IOS8) {
+    if (IS_IPHONE && !IS_PORTRAIT && (IS_IOS8 || IS_IOS9)) {
         statusBarWidth = SIZE_NOTIFICATION_LANDSCAPE;
-    } else if ((IS_IOS8) || (!IS_IOS8 && UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))) {
+    } else if ((IS_IOS8 || IS_IOS9) || (IS_IOS7 && UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))) {
         statusBarWidth = [UIScreen mainScreen].bounds.size.width;
     } else {
         statusBarWidth = [UIScreen mainScreen].bounds.size.height;

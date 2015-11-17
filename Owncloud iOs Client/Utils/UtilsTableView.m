@@ -44,37 +44,26 @@
     CGFloat tableViewHeight = 0.0;
     if (!IS_IPHONE) {
         
-        if (IS_IOS7 || IS_IOS8) {
-            
-            if (IS_PORTRAIT) {
-                tableViewHeight = k_tableViewHeight_portrait;
-            } else {
-                tableViewHeight = k_tableViewHeight_landscape;
-            }
-            
-            height = tableViewHeight - tabBarControllerHeight - navigationBarHeight;
+        if (IS_PORTRAIT) {
+            tableViewHeight = k_tableViewHeight_portrait;
         } else {
-            
-            if (IS_PORTRAIT) {
-                height = k_tableViewHeight_portrait_ios6;
-            } else {
-                height = k_tableViewHeight_landscape_ios6;
-            }
+            tableViewHeight = k_tableViewHeight_landscape;
         }
+        
+        height = tableViewHeight - tabBarControllerHeight - navigationBarHeight;
+        
     } else {
         tableViewHeight = tableViewHeightForIphone;
         
         if (IS_IOS7) {
             height = tableViewHeight- tabBarControllerHeight - navigationBarHeight - k_status_bar_height;
-        }else if (IS_IOS8){
+        }else{
             
             if (IS_PORTRAIT) {
                  height = tableViewHeight- tabBarControllerHeight - navigationBarHeight - k_status_bar_height;
             }else{
                 height = tableViewHeight- tabBarControllerHeight - navigationBarHeight;
             }
-        }else{
-            height = tableViewHeight;
         }
     }
     
