@@ -235,7 +235,7 @@
     
     if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
         
-        CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.idUser];
+        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
         
         if (cap.isFilesSharingPasswordEnforcedEnabled) {
             [self showAlertEnterPassword];

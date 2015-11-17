@@ -3064,7 +3064,7 @@
         }
         case 1:
         {
-            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == true && [ManageCapabilitiesDB isShareAPIEnabledOfUserId:APP_DELEGATE.activeUser.idUser]== false)) {
+            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
                 DLog(@"Click on index 2 - Delete");
                 [self didSelectDeleteOption];
                 break;
@@ -3077,7 +3077,7 @@
         }
         case 2:
         {
-            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == true && [ManageCapabilitiesDB isShareAPIEnabledOfUserId:APP_DELEGATE.activeUser.idUser]== false)) {
+            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
             }else{
                 DLog(@"Click on index 2 - Delete");
                 [self didSelectDeleteOption];

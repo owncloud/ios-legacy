@@ -177,15 +177,13 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [items insertObject:_favoriteButtonBar atIndex:3];
         [items insertObject:_spaceBar2 atIndex:4];
         
-        if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == true && [ManageCapabilitiesDB isShareAPIEnabledOfUserId:APP_DELEGATE.activeUser.idUser]== false)) {
+        if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
              [items insertObject:_deleteButtonBar atIndex:5];
         }else{
             [items insertObject:_shareLinkButtonBar atIndex:5];
             [items insertObject:_spaceBar3 atIndex:6];
             [items insertObject:_deleteButtonBar atIndex:7];
         }
-        
-        
     }
     [toolbar setItems:items animated:YES];
     

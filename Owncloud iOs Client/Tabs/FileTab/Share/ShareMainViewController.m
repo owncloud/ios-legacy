@@ -380,7 +380,7 @@
 - (void) sharedLinkSwithValueChanged: (UISwitch*)sender {
     
     if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
-        CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.idUser];
+        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
         
         if (!cap.isFilesSharingShareLinkEnabled) {
             sender.on = false;
@@ -405,7 +405,7 @@
      if (self.isPasswordProtectEnabled){
 
         if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
-            CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.idUser];
+            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
             
             if (cap.isFilesSharingPasswordEnforcedEnabled) {
                 //not remove, is enforced password
@@ -429,7 +429,7 @@
     
     if (self.isExpirationDateEnabled) {
         if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
-            CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.idUser];
+            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
             
             if (cap.isFilesSharingExpireDateEnforceEnabled) {
                 //not remove, is enforced expiration date
