@@ -337,6 +337,8 @@
                             [self manageServerErrors:code and:error withPasswordSupport:false];
                         }
                         
+                    } else {
+                        [self manageServerErrors:code and:error withPasswordSupport:true];
                     }
                     
                     
@@ -359,7 +361,19 @@
         DLog(@"server error: %ld", (long)response.statusCode);
         NSInteger code = response.statusCode;
         
-        [self manageServerErrors:code and:error withPasswordSupport:true];
+        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
+            
+            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+            
+            if (cap.isFilesSharingPasswordEnforcedEnabled) {
+                [self manageServerErrors:code and:error withPasswordSupport:true];
+            } else {
+                [self manageServerErrors:code and:error withPasswordSupport:false];
+            }
+            
+        } else {
+            [self manageServerErrors:code and:error withPasswordSupport:true];
+        }
         
         if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
             [self.delegate finishShareWithStatus:false andWithOptions:nil];
