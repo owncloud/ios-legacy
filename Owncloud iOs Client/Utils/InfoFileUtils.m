@@ -162,7 +162,7 @@
         
 #ifdef CONTAINER_APP
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
-            if([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon] || [fileForSetTheStatusIcon.etag isEqualToString:k_negative_etag]) {
+            if([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon] || [fileForSetTheStatusIcon.etag isEqualToString:k_negative_etag] || fileForSetTheStatusIcon.isNecessaryUpdate) {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
             } else {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];

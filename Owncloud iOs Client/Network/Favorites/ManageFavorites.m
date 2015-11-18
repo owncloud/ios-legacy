@@ -202,7 +202,8 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                         
                         if (updatedFile.isDirectory) {
                             
-                            if (![item.etag isEqual: updatedFile.etag]) {
+                            if (![item.etag isEqual: updatedFile.etag] || updatedFile.isNecessaryUpdate) {
+                                [ManageFilesDB setFile:updatedFile.idFile isNecessaryUpdate:NO];
                                 [[AppDelegate sharedSyncFolderManager] addFolderToBeDownloaded:file];
                             }
                             
