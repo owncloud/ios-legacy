@@ -39,8 +39,7 @@
 
 - (void) showShareActionSheetForFile:(FileDto *)file {
     
-    if ((APP_DELEGATE.activeUser.hasShareApiSupport == serverFunctionalitySupported || APP_DELEGATE
-         .activeUser.hasShareApiSupport == serverFunctionalityNotChecked)) {
+    if ((APP_DELEGATE.activeUser.hasShareApiSupport == serverFunctionalitySupported || APP_DELEGATE.activeUser.hasShareApiSupport == serverFunctionalityNotChecked)) {
         _file = file;
         
         //We check if the file is shared
@@ -233,17 +232,6 @@
         filePath = self.shareDto.path;
     }
     
-    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
-        
-        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
-        
-        if (cap.isFilesSharingPasswordEnforcedEnabled) {
-            [self showAlertEnterPassword];
-            return;
-        }
-    
-    }
-    
     [self initLoading];
     
     //In iPad set the global variable
@@ -339,7 +327,18 @@
                     DLog(@"server error: %ld", (long)response.statusCode);
                     NSInteger code = response.statusCode;
                     
-                    [self manageServerErrors:code and:error withPasswordSupport:true];
+                    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
+                        
+                        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+                        
+                        if (cap.isFilesSharingPasswordEnforcedEnabled) {
+                            [self manageServerErrors:code and:error withPasswordSupport:true];
+                        } else {
+                            [self manageServerErrors:code and:error withPasswordSupport:false];
+                        }
+                        
+                    }
+                    
                     
                     if (error.code != kOCErrorSharedAPIUploadDisabled) {
                         
