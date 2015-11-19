@@ -178,7 +178,7 @@
 }
 
 ///-----------------------------------
-/// @name getLocalFolderByFilePath
+/// @name getLocalFolderByFilePath:andFileName:andUserDto
 ///-----------------------------------
 /**
  * Return the file path without
@@ -300,6 +300,50 @@
     }
     
     return pathOnDB;
+}
+
+//----------------------------------------------
+/// @name getFilePathOnDBWithFileName:ByFilePathOnFileDto:andUser
+///---------------------------------------------
+/**
+ * Return the part of file path that is valid in the data base with also the fileName by filePath on FileDto andUser
+ *
+ * @param fileName -> text.pdf
+ * @param filePathOnFileDto -> root folder -> /(subfoldersServer)/k_url_webdav_server/
+ *                          -> subfolders  -> /(subfoldersServer)/k_url_webdav_server/(subfoldersDB)
+ * @param user
+ *
+ * @return pathOnDB -> root folder -> @"text.pdf"
+ *                  -> subfolders  -> @"(subfoldersDB)/text.pdf"
+ *
+ */
++ (NSString *) getFilePathOnDBWithFileName:(NSString *)fileName ByFilePathOnFileDto:(NSString *)filePathOnFileDto andUser:(UserDto *) user {
+    
+    NSString *filePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:filePathOnFileDto andUser:user], fileName];
+    
+    return filePath;
+}
+
+//----------------------------------------------
+/// @name getFilePathOnDBwithRootSlashAndWithFileName:ByFilePathOnFileDto:andUser
+///---------------------------------------------
+/**
+ * Return the part of file path that is valid in the data base with a root slash and also the fileName by filePath on FileDto andUser
+ *
+ * @param fileName -> text.pdf
+ * @param filePathOnFileDto -> root folder -> /(subfoldersServer)/k_url_webdav_server/
+ *                          -> subfolders  -> /(subfoldersServer)/k_url_webdav_server/(subfoldersDB)
+ * @param user
+ *
+ * @return pathOnDB -> root folder -> @"/text.pdf"
+ *                  -> subfolders  -> @"/(subfoldersDB)/text.pdf"
+ *
+ */
++ (NSString *) getFilePathOnDBwithRootSlashAndWithFileName:(NSString *)fileName ByFilePathOnFileDto:(NSString *)filePathOnFileDto andUser:(UserDto *) user {
+    
+    NSString *filePath = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:filePathOnFileDto andUser:user], fileName];
+
+    return filePath;
 }
 
 
