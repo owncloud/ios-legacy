@@ -47,18 +47,16 @@
 #import "OCErrorMsg.h"
 #import "OCFrameworkConstants.h"
 #import "UtilsDtos.h"
-#import "CheckHasShareSupport.h"
-#import "CheckHasCookiesSupport.h"
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
 #import "ManageLocation.h"
 #import "ManageAsset.h"
 #import "OCSplitViewController.h"
 #import "InitializeDatabase.h"
-#import "CheckHasForbiddenCharactersSupport.h"
 #import "HelpGuideViewController.h"
 #import "SyncFolderManager.h"
 #import "DownloadFileSyncFolder.h"
+#import "CheckFeaturesSupported.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -341,10 +339,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [[AppDelegate sharedSyncFolderManager] setThePermissionsOnDownloadCacheFolder];
     
     //First Call when init the app
-     _activeUser = [ManageUsersDB getActiveUser];
+     self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
     
     //if is null we do not have any active user on the database
-    if(_activeUser.username == nil) {
+    if(!self.activeUser) {
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         
@@ -446,7 +444,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) generateAppInterfaceFromLoginScreen:(BOOL)isFromLogin{
     
-    _activeUser=[ManageUsersDB getActiveUser];
+    self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
     
     NSString *wevDavString = [UtilsUrls getFullRemoteServerPathWithWebDav:_activeUser];
     NSString *localSystemPath = nil;
@@ -555,7 +553,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         self.window.rootViewController = _ocTabBarController;
         [self.window makeKeyAndVisible];
         //Select the first item of the tabBar
-        _ocTabBarController.selectedIndex = 0;
+        self.ocTabBarController.selectedIndex = 0;
     } else {
         //iPad
         
@@ -575,15 +573,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         // Add the split view controller's view to the window and display.
         self.window.rootViewController = _splitViewController;
-        [_window makeKeyAndVisible];
-         _ocTabBarController.selectedIndex = 0;
+        [self.window makeKeyAndVisible];
+         self.ocTabBarController.selectedIndex = 0;
         
-        [_detailViewController performSelector:@selector(configureView) withObject:nil afterDelay:0];
+        [self.detailViewController performSelector:@selector(configureView) withObject:nil afterDelay:0];
         
     }
     
+    self.activeUser = [ManageUsersDB getActiveUser];
+    
     //if is file from other app wainting, present the upload from other app view
-    if (_isFileFromOtherAppWaitting==YES) {
+    if (self.isFileFromOtherAppWaitting==YES) {
         [self presentUploadFromOtherApp];
     }
     
@@ -842,20 +842,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 /**
  * This method check if the server support multipple things:
  * - If support Share
+ * - If support Sharee API
  * - If support Cookies
+ * - If support Forbidden Characters
+ * - If support Capabilities API
  *
  */
 - (void)checkIfServerSupportThings {
     
-    //Check if the server support share
-    [[AppDelegate sharedCheckHasShareSupport] checkIfServerHasShareSupport];
+    //Check and updated the features supported by the server
+    [[CheckFeaturesSupported sharedCheckFeaturesSupported]updateServerFeaturesOfActiveUser];
     
-    //Check if the server support cookies
-    [[AppDelegate sharedCheckHasCookiesSupport] checkIfServerHasCookiesSupport];
-    
-    //Check if the server has forbidden characters supports
-    [[AppDelegate sharedCheckHasForbiddenCharactersSupport] checkIfServerHasForbiddenCharactersSupport];
-  
 }
 
 /*
@@ -2804,7 +2801,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-
 ///-----------------------------------
 /// @name reloadCellByKey
 ///-----------------------------------
@@ -2832,63 +2828,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:[folderToRemoveName encodeString:NSUTF8StringEncoding] andFilePath:[folderToRemovePath encodeString:NSUTF8StringEncoding] andUser:app.activeUser];
     [self reloadCellByFile:folderRemoved];
 }
-
-#pragma mark - Singletons of Server Version Checks
-
-//-----------------------------------
-/// @name sharedCheckHasShareSupport
-///-----------------------------------
-
-/**
- * Singleton to check if a server support share API
- *
- */
-+ (CheckHasShareSupport*) sharedCheckHasShareSupport {
-	static CheckHasShareSupport* sharedCheckHasShareSupport = nil;
-	if (sharedCheckHasShareSupport == nil)
-	{
-        sharedCheckHasShareSupport = [CheckHasShareSupport new];
-        
-	}
-	return sharedCheckHasShareSupport;
-}
-
-//-----------------------------------
-/// @name sharedCheckHasCookiesSupport
-///-----------------------------------
-
-/**
- * Singleton to check if a server support cookies for sessions
- *
- */
-+ (CheckHasCookiesSupport*) sharedCheckHasCookiesSupport {
-	static CheckHasCookiesSupport* sharedCheckHasCookiesSupport = nil;
-	if (sharedCheckHasCookiesSupport == nil)
-	{
-        sharedCheckHasCookiesSupport = [CheckHasCookiesSupport new];
-        
-	}
-	return sharedCheckHasCookiesSupport;
-}
-
-//-----------------------------------
-/// @name sharedForbiddenCharactersSupport
-///-----------------------------------
-
-/**
- * Singleton to check if a server has forbidden characters supports
- *
- */
-+ (CheckHasForbiddenCharactersSupport *) sharedCheckHasForbiddenCharactersSupport {
-    static CheckHasForbiddenCharactersSupport* sharedCheckHasForbiddenCharactersSupport = nil;
-    if (sharedCheckHasForbiddenCharactersSupport == nil)
-    {
-        sharedCheckHasForbiddenCharactersSupport = [CheckHasForbiddenCharactersSupport new];
-        
-    }
-    return sharedCheckHasForbiddenCharactersSupport;
-}
-
 
 #pragma mark - Location
 

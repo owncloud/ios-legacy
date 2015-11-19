@@ -40,6 +40,7 @@
 @class SharedViewController;
 @class ManageFavorites;
 @class CheckHasShareSupport;
+@class CheckCapabilities;
 
 extern NSString * CloseAlertViewWhenApplicationDidEnterBackground;
 extern NSString * RefreshSharesItemsAfterCheckServerVersion;
@@ -273,15 +274,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 - (void)checkIfServerSupportThings;
 
-//-----------------------------------
-/// @name sharedCheckHasShareSupport
-///-----------------------------------
 
-/**
- * Singleton to check if a server support share API
- *
- */
-+ (CheckHasShareSupport*) sharedCheckHasShareSupport;
 
 //-----------------------------------
 /// @name reloadTableFromDataBaseIfFileIsVisibleOnList

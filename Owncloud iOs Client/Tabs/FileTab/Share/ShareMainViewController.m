@@ -27,6 +27,8 @@
 #import "Customization.h"
 #import "ShareSearchUserViewController.h"
 #import "ManageSharesDB.h"
+#import "CapabilitiesDto.h"
+#import "ManageCapabilitiesDB.h"
 
 //tools
 #define standardDelay 0.2
@@ -60,6 +62,9 @@
 
 //Date server format
 #define dateServerFormat @"YYYY-MM-dd"
+
+//alert share password
+#define password_alert_view_tag 601
 
 @interface ShareMainViewController ()
 
@@ -102,9 +107,6 @@
 
 - (void) viewDidLoad{
     [super viewDidLoad];
-    
-    
-    
 }
 
 - (void) viewWillAppear:(BOOL)animated{
@@ -128,8 +130,12 @@
         self.passwordView = nil;
     }
     
-    self.passwordView = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil) message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
+    self.passwordView = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil)
+                                                  message:nil delegate:self
+                                        cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                                        otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
     
+    self.passwordView.tag = password_alert_view_tag;
     self.passwordView.alertViewStyle = UIAlertViewStylePlainTextInput;
     [self.passwordView textFieldAtIndex:0].delegate = self;
     [[self.passwordView textFieldAtIndex:0] setAutocorrectionType:UITextAutocorrectionTypeNo];
@@ -161,9 +167,7 @@
     recognizer.delegate = self;
     recognizer.cancelsTouchesInView = true;
     [self.datePickerContainerView addGestureRecognizer:recognizer];
-    
 
-  
     UIToolbar *controlToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, controlToolBarHeight)];
     [controlToolbar sizeToFit];
     
@@ -375,34 +379,75 @@
 
 - (void) sharedLinkSwithValueChanged: (UISwitch*)sender {
     
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+        
+        if (!cap.isFilesSharingShareLinkEnabled) {
+            sender.on = false;
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_share_link_enabled_capabilities", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+            [alertView show];
+            return;
+        }
+    }
+    
     self.isShareLinkEnabled = sender.on;
     
-    if (self.isShareLinkEnabled == true) {
+    if (self.isShareLinkEnabled) {
         [self getShareLinkView];
-    } else{
+    } else {
         [self unShareByLink];
     }
 }
 
+
 - (void) passwordProtectedSwithValueChanged:(UISwitch*) sender{
     
-    if (self.isPasswordProtectEnabled == false) {
-        //Update with password protected
-        [self showPasswordView];
-    } else{
+     if (self.isPasswordProtectEnabled){
+
+        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+            
+            if (cap.isFilesSharingPasswordEnforcedEnabled) {
+                //not remove, is enforced password
+                sender.on = true;
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_cannot_remove_password", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+                [alertView show];
+                return;
+            }
+        }
+        
         //Remove password Protected
         [self updateSharedLinkWithPassword:@"" andExpirationDate:nil];
-    }
+         
+     } else {
+         //Update with password protected
+         [self showPasswordView];
+     }
 }
 
 - (void) expirationTimeSwithValueChanged:(UISwitch*) sender{
     
-    if (self.isExpirationDateEnabled == false) {
-        [self launchDatePicker];
-    }else{
-        //Remove exipration time
+    if (self.isExpirationDateEnabled) {
+        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+            
+            if (cap.isFilesSharingExpireDateEnforceEnabled) {
+                //not remove, is enforced expiration date
+                sender.on = true;
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_cannot_remove_expiration_date", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+                [alertView show];
+                return;
+            }
+        }
+        
+        //Remove expiration date
         [self updateSharedLinkWithPassword:nil andExpirationDate:@""];
+        
+    } else {
+        //Update with expiration date
+        [self launchDatePicker];
     }
+    
 }
 
 #pragma mark - Actions with ShareFileOrFolder class
@@ -529,25 +574,13 @@
 - (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView
 {
     BOOL output = YES;
-    
-    NSString *stringNow = [alertView textFieldAtIndex:0].text;
-    
-    
-    //Active button of folderview only when the textfield has something.
-    NSString *rawString = stringNow;
-    NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-    NSString *trimmed = [rawString stringByTrimmingCharactersInSet:whitespace];
-    
-    if ([trimmed length] == 0) {
-        // Text was empty or only whitespace.
-        output = NO;
+    if (alertView.tag == password_alert_view_tag) {
+        UITextField *textField = [alertView textFieldAtIndex:0];
+        if ([textField.text length] == 0){
+            output = NO;
+        }
     }
-    
-    //Button save disable when the textfield is empty
-    if ([stringNow isEqualToString:@""]) {
-        output = NO;
-    }
-    
+
     return output;
 }
 

@@ -60,6 +60,7 @@
 #import "ShareMainViewController.h"
 #import "SyncFolderManager.h"
 #import "IndexedForest.h"
+#import "ManageCapabilitiesDB.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -3168,14 +3169,13 @@
     //Share gray button
     NSMutableArray *rightUtilityButtons = [NSMutableArray new];
     
-    BOOL areTwoButtonsInTheSwipe = NO;
-    
-    if (!k_hide_share_options) {
-        //Three buttons
-        areTwoButtonsInTheSwipe = NO;
-    }else{
+    BOOL areTwoButtonsInTheSwipe = false;
+    if ( (k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled == false) ) {
         //Two buttons
-        areTwoButtonsInTheSwipe = YES;
+        areTwoButtonsInTheSwipe = true;
+    }else{
+        //Three buttons
+        areTwoButtonsInTheSwipe = false;
     }
     
     UIColor *normalColor = [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0f];
@@ -3227,10 +3227,6 @@
     
     [cell hideUtilityButtonsAnimated:YES];
     
-     if (!k_hide_share_options) {
-         
-     }
-    
     switch (index) {
         case 0:
         {
@@ -3240,24 +3236,26 @@
         }
         case 1:
         {
-            if (!k_hide_share_options) {
-                DLog(@"Click on index 1 - Share");
-                [self didSelectShareLinkOption];
-                break;
-            }else{
+            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
                 DLog(@"Click on index 2 - Delete");
                 [self didSelectDeleteOption];
+                break;
+            }else{
+                DLog(@"Click on index 1 - Share");
+                [self didSelectShareLinkOption];
                 break;
             }
 
         }
         case 2:
         {
-            if (!k_hide_share_options) {
+            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
+            }else{
                 DLog(@"Click on index 2 - Delete");
                 [self didSelectDeleteOption];
                 break;
             }
+            
         }
         default:
             break;

@@ -1,12 +1,12 @@
 //
-//  CheckHasCookiesSupport.h
+//  CheckFeaturesSupported.h
 //  Owncloud iOs Client
 //
-//  Created by Javier Gonzalez on 06/08/14.
+//  Created by Gonzalo Gonzalez on 6/11/15.
 //
 
 /*
- Copyright (C) 2014, ownCloud, Inc.
+ Copyright (C) 2015, ownCloud, Inc.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -15,8 +15,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CheckHasCookiesSupport : NSObject
+@interface CheckFeaturesSupported : NSObject
 
-- (void)checkIfServerHasCookiesSupport;
+#pragma mark - Singleton
+
++ (id)sharedCheckFeaturesSupported;
+
+- (void) updateServerFeaturesOfActiveUser;
 
 @end
