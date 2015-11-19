@@ -545,7 +545,7 @@
     
     if (IS_IOS8 || IS_IOS9) {
         if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 9, 0, 0)];
+            [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
         }
         
         if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
@@ -581,7 +581,7 @@
     
     if (IS_IOS8 || IS_IOS9) {
         if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 9, 0, 0)];
+            [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
         }
         
         if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {

@@ -115,12 +115,19 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    self.edgesForExtendedLayout = UIRectCornerAllCorners;
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    if (IS_IOS8 || IS_IOS9) {
+        self.edgesForExtendedLayout = UIRectCornerAllCorners;
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }else{
+        self.edgesForExtendedLayout = UIRectCornerAllCorners;
+    }
+    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Relaunch the uploads that failed before
@@ -141,6 +148,28 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+}
+
+-(void)viewDidLayoutSubviews
+{
+    
+    if (IS_IOS8 || IS_IOS9) {
+        
+        if ([self.settingsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+            [self.settingsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
+        }
+        
+        if ([self.settingsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+            [self.settingsTableView setLayoutMargins:UIEdgeInsetsZero];
+        }
+        
+        
+        CGRect rect = self.navigationController.navigationBar.frame;
+        float y = rect.size.height + rect.origin.y;
+        self.settingsTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+        
+    }
     
 }
 
