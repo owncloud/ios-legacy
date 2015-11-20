@@ -114,5 +114,4 @@
  */
 - (void) checkSharedStatusOfFile:(FileDto *) file;
 
-- (void) getUsersOrGroupsUsingSearchString:(NSString *)searchString;
 @end

@@ -35,6 +35,7 @@
 #import "UtilsUrls.h"
 #import "ShareMainViewController.h"
 #import "OCNavigationController.h"
+#import "ManageCapabilitiesDB.h"
 
 
 //Three sections {shared items - not shared items msg - not share api support msg}
@@ -1129,7 +1130,7 @@
 - (NSArray *)setSwipeLeftButtons
 {
     //Check the share options should be presented
-    if (k_hide_share_options) {
+    if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
         
         return nil;
         

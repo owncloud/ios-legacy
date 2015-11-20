@@ -37,7 +37,7 @@
     __weak id parent;
     
     //Folders
-    NSArray *_sortedArray;
+    NSMutableArray *_sortedArray;
     NSArray *_currentDirectoryArray;    
     NSString *_currentRemoteFolder;
     NSString *_currentLocalFolder;
@@ -60,7 +60,7 @@
 @property(nonatomic, retain) CheckAccessToServer *mCheckAccessToServer;
 @property(nonatomic, strong) FileDto *selectedFileDto;
 @property (nonatomic, weak) id parent;
-@property(nonatomic, strong) NSArray *sortedArray;
+@property(nonatomic, strong) NSMutableArray *sortedArray;
 @property(nonatomic, strong) NSArray *currentDirectoryArray;
 @property(nonatomic, strong) NSString *currentRemoteFolder;
 @property(nonatomic, strong) NSString *currentLocalFolder;

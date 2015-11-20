@@ -109,7 +109,7 @@
  *
  * @warning This method should not be overwritten
  */
-- (NSArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector;
+- (NSMutableArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector;
 
 //Loading methods
 - (void)initLoading;
