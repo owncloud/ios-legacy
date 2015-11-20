@@ -616,11 +616,8 @@
 
             FileDto *currentFile = [listFilesToUpdate objectAtIndex:i];
         
-            //if (currentFile.isFavorite) {
-            //    correctQuery = [db executeUpdate:@"UPDATE files SET id = ? WHERE id = ?", [NSNumber numberWithInteger:currentFile.fileId], [NSNumber numberWithInteger:currentFile.idFile]];
-            //} else {
-                correctQuery = [db executeUpdate:@"UPDATE files SET id = ?, etag = ? WHERE id = ?", [NSNumber numberWithInteger:currentFile.fileId], currentFile.etag, [NSNumber numberWithInteger:currentFile.idFile]];
-            //}
+            correctQuery = [db executeUpdate:@"UPDATE files SET id = ?, etag = ? WHERE id = ?", [NSNumber numberWithInteger:currentFile.fileId], currentFile.etag, [NSNumber numberWithInteger:currentFile.idFile]];
+            
         }
         
         if (!correctQuery) {
