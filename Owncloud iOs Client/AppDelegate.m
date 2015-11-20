@@ -143,7 +143,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
     
     //Needed to use on background tasks
-    if (!k_is_sso_active) {
+    if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
         [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     }
     
@@ -603,7 +603,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         NSURLSessionConfiguration *configuration = nil;
         
 
-        if (IS_IOS8 || IS_IOS9) {
+        if (IS_IOS8) {
             configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_session_name];
         } else {
             configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:k_session_name];
@@ -634,7 +634,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         NSURLSessionConfiguration *configurationDownload = nil;
         
-        if (IS_IOS8 || IS_IOS9) {
+        if (IS_IOS8) {
             configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_session_name];
         }else{
             configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_session_name];
@@ -1096,7 +1096,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     [self.downloadManager cancelDownloads];
     [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
-
     
     //Remove inbox folder if aren't uploads pending
     if (![ManageUploadsDB isFilesInUploadProcess]) {
@@ -1122,7 +1121,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     NSURLSessionConfiguration *configuration = nil;
     
     
-    if (IS_IOS8 || IS_IOS9) {
+    if (IS_IOS8) {
         configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
     } else {
         configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
@@ -1278,7 +1277,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     NSURLSessionConfiguration *configuration = nil;
     
-    if (IS_IOS8 || IS_IOS9) {
+    if (IS_IOS8) {
         configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
     } else {
         configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
@@ -2196,7 +2195,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     
     NSUserDefaults * standardUserDefaults = [NSUserDefaults standardUserDefaults];
-    if ([standardUserDefaults boolForKey:k_app_killed_by_user] || k_is_sso_active) {
+    if ([standardUserDefaults boolForKey:k_app_killed_by_user] || !IS_IOS7 || !IS_IOS8 || k_is_sso_active) {
         //We set all the UploadsOfflineDto that are not uploading but should as ready to be uploaded
         [ManageUploadsDB updateNotFinalizeUploadsOfflineBy:allUploadsToBeModified];
     } else {
