@@ -354,9 +354,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
             fileCell.labelInfoFile.text = [NSString stringWithFormat:@"%@", fileDateString];
         }
         
-        
-        fileCell = (DocumentPickerCell*)[InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder ofUser:self.user];
-        
+        fileCell = (DocumentPickerCell*)[InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder andIsSonOfFavoriteFolder:NO ofUser:self.user];
         
         //Lock apperance
         if (self.isLockedApperance && file.idFile != self.selectedFile.idFile) {

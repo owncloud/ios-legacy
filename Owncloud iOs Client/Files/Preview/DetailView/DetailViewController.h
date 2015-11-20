@@ -243,4 +243,6 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
 
 - (void)contiueDownloadIfTheFileisDownloading;
 
+- (void)updateFavoriteIconWhenAFolderIsSelectedFavorite;
+
 @end

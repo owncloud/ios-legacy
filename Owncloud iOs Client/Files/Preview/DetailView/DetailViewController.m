@@ -39,6 +39,8 @@
 #import "ReaderViewController.h"
 #import "OCSplitViewController.h"
 #import "ShareMainViewController.h"
+#import "SyncFolderManager.h"
+#import "DownloadUtils.h"
 #import "ManageCapabilitiesDB.h"
 
 
@@ -214,6 +216,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 - (void) handleFile:(FileDto*)myFile fromController:(NSInteger)controller {
     DLog(@"HandleFile _file.fileName: %@", _file.fileName);
+    
+    [[AppDelegate sharedSyncFolderManager] cancelDownload:myFile];
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
@@ -661,7 +665,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  * This method puts the favorite star on starred or unstarred state on the preview view
  */
 - (void) putTheFavoriteStatus {
-    if (_file.isFavorite) {
+    if (_file.isFavorite || [DownloadUtils isSonOfFavoriteFolder:self.file]) {
         //Change the image to unstarred
         _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
     } else {
@@ -990,25 +994,29 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if (_file.isFavorite) {
-        _file.isFavorite = NO;
-        //Change the image to unstarred
-        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+    if ([DownloadUtils isSonOfFavoriteFolder:self.file]) {
+        [self showAlertView:NSLocalizedString(@"parent_folder_is_favorite", nil)];
     } else {
-        _file.isFavorite = YES;
-        _isCancelDownloadClicked = NO;
-        //Change the image to starred
-        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
-        //Download the file if it's not downloaded and not pending to be download
-        [self downloadTheFileIfIsnotDownloadingInOtherProcess];
-    }
-    
-    //Update the DB
-    [ManageFilesDB updateTheFileID:_file.idFile asFavorite:_file.isFavorite];
-    [app.presentFilesViewController reloadTableFromDataBase];
-    
-    if (_file.isFavorite && _file.isDownload == downloaded) {
-        [self checkIfThereIsANewFavoriteVersion];
+        if (_file.isFavorite) {
+            _file.isFavorite = NO;
+            //Change the image to unstarred
+            _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+        } else {
+            _file.isFavorite = YES;
+            _isCancelDownloadClicked = NO;
+            //Change the image to starred
+            _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
+            //Download the file if it's not downloaded and not pending to be download
+            [self downloadTheFileIfIsnotDownloadingInOtherProcess];
+        }
+        
+        //Update the DB
+        [ManageFilesDB updateTheFileID:_file.idFile asFavorite:_file.isFavorite];
+        [app.presentFilesViewController reloadTableFromDataBase];
+        
+        if (_file.isFavorite && _file.isDownload == downloaded) {
+            [self checkIfThereIsANewFavoriteVersion];
+        }
     }
 }
 
@@ -2307,5 +2315,14 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     }
 }
 
+- (void)updateFavoriteIconWhenAFolderIsSelectedFavorite {
+    if ([DownloadUtils isSonOfFavoriteFolder:self.file]) {
+        //Change the image to unstarred
+        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
+    } else {
+        //Change the image to starred
+        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+    }
+}
 
 @end

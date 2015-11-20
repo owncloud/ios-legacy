@@ -414,6 +414,7 @@
 		593F7CAA19EFDE96004136F7 /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
 		595333FB1A1DF26000C57ED5 /* UIAlertView+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 595333FA1A1DF26000C57ED5 /* UIAlertView+Blocks.m */; };
 		597A87981A0143000071F2AF /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
+		59915D9E1BBC00930015FBF3 /* CWLOrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 59915D9D1BBC00930015FBF3 /* CWLOrderedDictionary.m */; settings = {ASSET_TAGS = (); }; };
 		59990A251A0BD67A00D3B842 /* InfoFileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 14AB382D18C8E35200B34697 /* InfoFileUtils.m */; };
 		59990A271A0BD74000D3B842 /* FileNameUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6FC17786BF200FB9977 /* FileNameUtils.m */; };
 		59990A281A0BDB5000D3B842 /* BackRootFolderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F176177C35AA004A1A5A /* BackRootFolderIcon.png */; };
@@ -593,10 +594,14 @@
 		59E58B751B04ED15004E9739 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0816034C2200A95EAD /* libcrypto.a */; };
 		59E58B761B04ED15004E9739 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13824C0916034C2200A95EAD /* libssl.a */; };
 		59E58B771B04ED20004E9739 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAC3AC3F15ED2B4E00B59805 /* MobileCoreServices.framework */; };
-		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; };
-		EA0599861BB92B19002C2864 /* ShareUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599841BB92B19002C2864 /* ShareUserCell.xib */; };
-		EA0599931BB94F3F002C2864 /* ShareSearchUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0599911BB94F3F002C2864 /* ShareSearchUserViewController.m */; };
-		EA0599941BB94F3F002C2864 /* ShareSearchUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599921BB94F3F002C2864 /* ShareSearchUserViewController.xib */; };
+		59EA36211BBE6B5700C6CED0 /* SyncFolderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 59EA36201BBE6B5700C6CED0 /* SyncFolderManager.m */; settings = {ASSET_TAGS = (); }; };
+		59EA36241BBE6C1E00C6CED0 /* IndexedForest.m in Sources */ = {isa = PBXBuildFile; fileRef = 59EA36231BBE6C1E00C6CED0 /* IndexedForest.m */; settings = {ASSET_TAGS = (); }; };
+		59EA98941BC5718600C3125D /* DownloadFileSyncFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 59EA98931BC5718600C3125D /* DownloadFileSyncFolder.m */; settings = {ASSET_TAGS = (); }; };
+		59EC94E81BBAA0210085190F /* FolderSyncDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 59EC94E71BBAA0210085190F /* FolderSyncDto.m */; settings = {ASSET_TAGS = (); }; };
+		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; settings = {ASSET_TAGS = (); }; };
+		EA0599861BB92B19002C2864 /* ShareUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599841BB92B19002C2864 /* ShareUserCell.xib */; settings = {ASSET_TAGS = (); }; };
+		EA0599931BB94F3F002C2864 /* ShareSearchUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0599911BB94F3F002C2864 /* ShareSearchUserViewController.m */; settings = {ASSET_TAGS = (); }; };
+		EA0599941BB94F3F002C2864 /* ShareSearchUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599921BB94F3F002C2864 /* ShareSearchUserViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		EA0EFA1B1BEA66A1009971AF /* CapabilitiesDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1A1BEA66A1009971AF /* CapabilitiesDto.m */; };
 		EA0EFA1F1BEA6C6E009971AF /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
 		EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
@@ -1480,6 +1485,8 @@
 		593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Owncloud iOs Client.entitlements"; sourceTree = "<group>"; };
 		595333F91A1DF26000C57ED5 /* UIAlertView+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Blocks.h"; sourceTree = "<group>"; };
 		595333FA1A1DF26000C57ED5 /* UIAlertView+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Blocks.m"; sourceTree = "<group>"; };
+		59915D9C1BBC00930015FBF3 /* CWLOrderedDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWLOrderedDictionary.h; sourceTree = "<group>"; };
+		59915D9D1BBC00930015FBF3 /* CWLOrderedDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWLOrderedDictionary.m; sourceTree = "<group>"; };
 		599D809F1A23366D0071B66E /* SimpleFileListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleFileListTableViewController.h; sourceTree = "<group>"; };
 		599D80A01A23366D0071B66E /* SimpleFileListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleFileListTableViewController.m; sourceTree = "<group>"; };
 		599D80A11A23366D0071B66E /* SimpleFileListTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleFileListTableViewController.xib; sourceTree = "<group>"; };
@@ -1564,6 +1571,19 @@
 		59E48E931B3AAE72008FAAE0 /* th-TH */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "th-TH"; path = "th-TH.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		59E48E941B3AAE87008FAAE0 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		59E52E7F1B0B666100F5B1B3 /* Accessibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Accessibility.h; path = SupportingFiles/Accessibility/Accessibility.h; sourceTree = "<group>"; };
+		59EA361F1BBE6B5700C6CED0 /* SyncFolderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SyncFolderManager.h; path = "Owncloud iOs Client/Network/Downloads/DownloadFolder/SyncFolderManager.h"; sourceTree = "<group>"; };
+		59EA36201BBE6B5700C6CED0 /* SyncFolderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SyncFolderManager.m; path = "Owncloud iOs Client/Network/Downloads/DownloadFolder/SyncFolderManager.m"; sourceTree = "<group>"; };
+		59EA36221BBE6C1E00C6CED0 /* IndexedForest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IndexedForest.h; path = "Owncloud iOs Client/Network/Downloads/DownloadFolder/IndexedForest.h"; sourceTree = "<group>"; };
+		59EA36231BBE6C1E00C6CED0 /* IndexedForest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IndexedForest.m; path = "Owncloud iOs Client/Network/Downloads/DownloadFolder/IndexedForest.m"; sourceTree = "<group>"; };
+		59EA98921BC5718600C3125D /* DownloadFileSyncFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadFileSyncFolder.h; path = "Owncloud iOs Client/Network/Downloads/DownloadFolder/DownloadFileSyncFolder.h"; sourceTree = "<group>"; };
+		59EA98931BC5718600C3125D /* DownloadFileSyncFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadFileSyncFolder.m; path = "Owncloud iOs Client/Network/Downloads/DownloadFolder/DownloadFileSyncFolder.m"; sourceTree = "<group>"; };
+		59EC94E61BBAA0210085190F /* FolderSyncDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FolderSyncDto.h; path = DataBase/DTOs/FolderSyncDto.h; sourceTree = "<group>"; };
+		59EC94E71BBAA0210085190F /* FolderSyncDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FolderSyncDto.m; path = DataBase/DTOs/FolderSyncDto.m; sourceTree = "<group>"; };
+		EA0599831BB92B19002C2864 /* ShareUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareUserCell.swift; path = Tabs/FileTab/Share/Cells/ShareUserCell.swift; sourceTree = "<group>"; };
+		EA0599841BB92B19002C2864 /* ShareUserCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareUserCell.xib; path = Tabs/FileTab/Share/Cells/ShareUserCell.xib; sourceTree = "<group>"; };
+		EA0599901BB94F3F002C2864 /* ShareSearchUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareSearchUserViewController.h; path = Tabs/FileTab/Share/ShareSearchUserViewController.h; sourceTree = "<group>"; };
+		EA0599911BB94F3F002C2864 /* ShareSearchUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareSearchUserViewController.m; path = Tabs/FileTab/Share/ShareSearchUserViewController.m; sourceTree = "<group>"; };
+		EA0599921BB94F3F002C2864 /* ShareSearchUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareSearchUserViewController.xib; path = Tabs/FileTab/Share/ShareSearchUserViewController.xib; sourceTree = "<group>"; };
 		D924DCBC1B973E88008B4BE7 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
 		D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
 		D924DCBF1B973E98008B4BE7 /* OCMArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
@@ -2037,6 +2057,8 @@
 				59A9A724196E8A370042FEAC /* CookiesStorageDto.m */,
 				EAC598581A56A150003192B2 /* ProvidingFileDto.h */,
 				EAC598591A56A150003192B2 /* ProvidingFileDto.m */,
+				59EC94E61BBAA0210085190F /* FolderSyncDto.h */,
+				59EC94E71BBAA0210085190F /* FolderSyncDto.m */,
 				EA0EFA191BEA66A1009971AF /* CapabilitiesDto.h */,
 				EA0EFA1A1BEA66A1009971AF /* CapabilitiesDto.m */,
 			);
@@ -2678,6 +2700,7 @@
 		148DD5DD1778549700FB9977 /* ExternalLibreries */ = {
 			isa = PBXGroup;
 			children = (
+				59915D9B1BBC00930015FBF3 /* CWLOrderedDictionary */,
 				EABD88CE1BBE827D00DA5281 /* TSMessages */,
 				40EDF8AB1B4D1E9600700E3A /* JazzHands */,
 				EA4914661AC0344800BECF0B /* TTOpenInAppActivity */,
@@ -2954,6 +2977,16 @@
 			path = ExternalLibreries/UIAlertViewWithBlocks;
 			sourceTree = "<group>";
 		};
+		59915D9B1BBC00930015FBF3 /* CWLOrderedDictionary */ = {
+			isa = PBXGroup;
+			children = (
+				59915D9C1BBC00930015FBF3 /* CWLOrderedDictionary.h */,
+				59915D9D1BBC00930015FBF3 /* CWLOrderedDictionary.m */,
+			);
+			name = CWLOrderedDictionary;
+			path = ExternalLibreries/CWLOrderedDictionary;
+			sourceTree = "<group>";
+		};
 		599D809E1A23366D0071B66E /* SimpleFileList */ = {
 			isa = PBXGroup;
 			children = (
@@ -3079,6 +3112,19 @@
 				149D98BC195AAD08005E0C73 /* fileSharedWithUs@2x.png */,
 			);
 			name = Files;
+			sourceTree = "<group>";
+		};
+		59EA361D1BBE6AE500C6CED0 /* DownloadFolder */ = {
+			isa = PBXGroup;
+			children = (
+				59EA361F1BBE6B5700C6CED0 /* SyncFolderManager.h */,
+				59EA36201BBE6B5700C6CED0 /* SyncFolderManager.m */,
+				59EA36221BBE6C1E00C6CED0 /* IndexedForest.h */,
+				59EA36231BBE6C1E00C6CED0 /* IndexedForest.m */,
+				59EA98921BC5718600C3125D /* DownloadFileSyncFolder.h */,
+				59EA98931BC5718600C3125D /* DownloadFileSyncFolder.m */,
+			);
+			name = DownloadFolder;
 			sourceTree = "<group>";
 		};
 		A9267F1815D04C1B004D4403 /* Recent Tab */ = {
@@ -3496,6 +3542,7 @@
 				EA707222199CC59E00CE7079 /* ManageDownloads.m */,
 				148DD6671778627200FB9977 /* Download.h */,
 				148DD6681778627200FB9977 /* Download.m */,
+				59EA361D1BBE6AE500C6CED0 /* DownloadFolder */,
 			);
 			name = Download;
 			path = ..;
@@ -4331,8 +4378,10 @@
 				EABD89361BBE82D900DA5281 /* TSMessage.m in Sources */,
 				59C71D231A9216AE00F66166 /* ThumbsMainToolbar.m in Sources */,
 				59C71D1A1A9216AE00F66166 /* ReaderMainToolbar.m in Sources */,
+				59EA36241BBE6C1E00C6CED0 /* IndexedForest.m in Sources */,
 				1324298D15ADBB3700DF823E /* AppDelegate.m in Sources */,
 				148DD5B51778436A00FB9977 /* UIColor+Constants.m in Sources */,
+				59EC94E81BBAA0210085190F /* FolderSyncDto.m in Sources */,
 				148DD5C2177850B100FB9977 /* CustomCellFileAndDirectory.m in Sources */,
 				59C71D1D1A9216AE00F66166 /* ReaderThumbQueue.m in Sources */,
 				400A63731B4FD75600890579 /* IFTTTLabelAnimation.m in Sources */,
@@ -4362,6 +4411,7 @@
 				400A636C1B4FD75600890579 /* IFTTTCornerRadiusAnimation.m in Sources */,
 				148DD616177855B600FB9977 /* RetrieveRefreshAndAccessTokenTask.m in Sources */,
 				EAD774F31AD2B01E0007C4DB /* OCSplitViewController.m in Sources */,
+				59EA98941BC5718600C3125D /* DownloadFileSyncFolder.m in Sources */,
 				EA68968D17F599060033B3C1 /* KKKeychain.m in Sources */,
 				148DD619177855D900FB9977 /* Reachability.m in Sources */,
 				148DD62517785D6900FB9977 /* DetailViewController.m in Sources */,
@@ -4408,6 +4458,7 @@
 				400A63681B4FD75600890579 /* IFTTTAnimator.m in Sources */,
 				59C71D1B1A9216AE00F66166 /* ReaderThumbCache.m in Sources */,
 				148DD6971778663100FB9977 /* OpenWith.m in Sources */,
+				59EA36211BBE6B5700C6CED0 /* SyncFolderManager.m in Sources */,
 				13AD22B318311A26007E0F1A /* ManageUploadRequest.m in Sources */,
 				148DD69A1778664400FB9977 /* OverwriteFileOptions.m in Sources */,
 				148DD6A01778667000FB9977 /* RenameFile.m in Sources */,
@@ -4445,6 +4496,7 @@
 				400A636E1B4FD75600890579 /* IFTTTFillColorAnimation.m in Sources */,
 				148DD6D9177869C800FB9977 /* ImpressumViewController.m in Sources */,
 				400A636D1B4FD75600890579 /* IFTTTEasingFunction.m in Sources */,
+				59915D9E1BBC00930015FBF3 /* CWLOrderedDictionary.m in Sources */,
 				148DD6E817786A1400FB9977 /* SettingsViewController.m in Sources */,
 				59D774CE1910EE0F004322BA /* UtilsTableView.m in Sources */,
 				148DD6EA17786A1400FB9977 /* WebViewController.m in Sources */,
