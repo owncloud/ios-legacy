@@ -16,7 +16,8 @@
 #import "AppDelegate.h"
 
 #define IS_IOS7 ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7 && [[[UIDevice currentDevice] systemVersion] floatValue] < 8)
-#define IS_IOS8 ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8)
+#define IS_IOS8 ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8 && [[[UIDevice currentDevice] systemVersion] floatValue] < 9)
+#define IS_IOS9 ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9)
 #define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 #define IS_PORTRAIT (([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) || [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortraitUpsideDown)
 #define APP_DELEGATE ((AppDelegate *)[[UIApplication sharedApplication] delegate])
