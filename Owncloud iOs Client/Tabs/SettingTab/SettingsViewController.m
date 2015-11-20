@@ -1143,7 +1143,6 @@
         [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
     
         [self continueChangingUser:selectedUser];
-        //[self performSelector:@selector(continueChangingUser:) withObject:selectedUser afterDelay:25.0];
     }
 }
 

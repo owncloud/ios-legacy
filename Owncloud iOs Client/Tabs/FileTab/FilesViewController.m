@@ -1938,11 +1938,11 @@
     NSIndexPath* indexPath;
     BOOL isFound = NO;
     
-    for (int i = 0; i < self.sortedArray.count; i++) {;
+    for (NSInteger i = 0; i < self.sortedArray.count; i++) {
         
         NSMutableArray *currentListOfFilesOnSection = [[self.sortedArray objectAtIndex:i] mutableCopy];
         
-        for (int j = 0 ; j < currentListOfFilesOnSection.count ; j++) {
+        for (NSInteger j = 0 ; j < currentListOfFilesOnSection.count ; j++) {
             FileDto *current = [currentListOfFilesOnSection objectAtIndex:j];
             
             if ([current.localFolder isEqualToString: file.localFolder]) {
