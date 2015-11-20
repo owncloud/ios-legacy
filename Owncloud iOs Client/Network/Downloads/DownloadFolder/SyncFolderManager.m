@@ -35,6 +35,8 @@
 #import "DownloadUtils.h"
 #import "constants.h"
 
+static float const kDelayAfterCancelAll = 3.0;
+
 @implementation SyncFolderManager
 
 - (id) init{
@@ -421,7 +423,7 @@
     if (self.delegate) {
         if (listOfFilesToBeDownloadedCopy.count > 0) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self performSelector:@selector(releaseSemaphoreToContinueChangingUser) withObject:nil afterDelay:3.0];
+                [self performSelector:@selector(releaseSemaphoreToContinueChangingUser) withObject:nil afterDelay:kDelayAfterCancelAll];
             });
         } else {
             [self releaseSemaphoreToContinueChangingUser];
