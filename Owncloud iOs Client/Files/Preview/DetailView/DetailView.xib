@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="9059" systemVersion="14F27" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DetailViewController">
@@ -76,9 +76,9 @@
                         <action selector="didPressCancelButton:" destination="-1" eventType="touchUpInside" id="100"/>
                     </connections>
                 </button>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="85">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="85">
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="63" customClass="OCToolBar">
@@ -159,7 +159,7 @@
                 <constraint firstAttribute="trailing" secondItem="63" secondAttribute="trailing" id="1e3-ov-4hM"/>
                 <constraint firstItem="63" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="1tP-NB-mJ5"/>
                 <constraint firstItem="112" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="26q-qR-A3X"/>
-                <constraint firstItem="85" firstAttribute="top" secondItem="82" secondAttribute="bottom" constant="-596" id="3PW-AE-3Hz"/>
+                <constraint firstItem="85" firstAttribute="top" secondItem="82" secondAttribute="bottom" constant="25" id="3PW-AE-3Hz"/>
                 <constraint firstAttribute="centerY" secondItem="80" secondAttribute="centerY" constant="10" id="3Sq-kx-drL"/>
                 <constraint firstAttribute="centerY" secondItem="82" secondAttribute="centerY" constant="-83" id="3hY-dZ-W3e"/>
                 <constraint firstAttribute="trailing" secondItem="BV7-Lz-cFn" secondAttribute="trailing" constant="210" id="4g2-Br-Gll"/>
@@ -167,7 +167,7 @@
                 <constraint firstItem="1eq-mt-JYf" firstAttribute="top" secondItem="8" secondAttribute="top" constant="32" id="5IR-2P-Sff"/>
                 <constraint firstItem="82" firstAttribute="top" secondItem="80" secondAttribute="bottom" constant="28" id="7bH-w7-UjE"/>
                 <constraint firstAttribute="trailing" secondItem="112" secondAttribute="trailing" id="BhR-id-DyS"/>
-                <constraint firstAttribute="centerX" secondItem="85" secondAttribute="centerX" constant="384" id="C2r-2t-fGS"/>
+                <constraint firstAttribute="centerX" secondItem="85" secondAttribute="centerX" constant="-6" id="C2r-2t-fGS"/>
                 <constraint firstAttribute="bottom" secondItem="112" secondAttribute="bottom" id="E2n-qO-LdM"/>
                 <constraint firstAttribute="centerX" secondItem="RhM-9d-K2q" secondAttribute="centerX" id="FdE-Oh-T1r"/>
                 <constraint firstAttribute="centerY" secondItem="83" secondAttribute="centerY" constant="-83" id="HPt-0F-QbD"/>
@@ -177,7 +177,7 @@
                 <constraint firstItem="BV7-Lz-cFn" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="62" id="Vsl-8p-I3W"/>
                 <constraint firstItem="112" firstAttribute="top" secondItem="63" secondAttribute="bottom" id="Wo6-z4-XgU"/>
                 <constraint firstAttribute="trailing" secondItem="1eq-mt-JYf" secondAttribute="trailing" constant="210" id="dtc-mg-Qfz"/>
-                <constraint firstAttribute="centerY" secondItem="85" secondAttribute="centerY" constant="512" id="fcI-W2-MVH"/>
+                <constraint firstAttribute="centerY" secondItem="85" secondAttribute="centerY" constant="-120" id="fcI-W2-MVH"/>
                 <constraint firstItem="BV7-Lz-cFn" firstAttribute="top" secondItem="8" secondAttribute="top" constant="10" id="jWd-pP-iNs"/>
                 <constraint firstItem="1eq-mt-JYf" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="62" id="nEk-l1-bFG"/>
                 <constraint firstItem="63" firstAttribute="top" secondItem="8" secondAttribute="top" id="wvX-GC-a9Z"/>
@@ -193,4 +193,9 @@
         <image name="openWithTB.png" width="25" height="25"/>
         <image name="sharedItem.png" width="25" height="25"/>
     </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
 </document>

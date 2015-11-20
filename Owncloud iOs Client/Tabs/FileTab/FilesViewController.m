@@ -73,8 +73,6 @@
 
 @property (nonatomic, strong) ELCAlbumPickerController *albumController;
 @property (nonatomic, strong) ELCImagePickerController *elcPicker;
-@property (nonatomic) BOOL didLayoutSubviews;
-@property (nonatomic) BOOL willLayoutSubviews;
 
 @end
 
@@ -152,9 +150,6 @@
         self.currentFileShowFilesOnTheServerToUpdateTheLocalFile = [ManageFilesDB getFileDtoByIdFile:fileIdToShowFiles];
     }
     
-    self.didLayoutSubviews = false;
-    self.willLayoutSubviews = false;
-    
     DLog(@"currentRemoteFolder: %@ and fileIdToShowFiles: %ld", currentFolder, (long)self.fileIdToShowFiles.idFile);
     self = [super initWithNibName:nibNameOrNil bundle:nil];
     return self;
@@ -213,16 +208,16 @@
     
     [_tableView addSubview:_refreshControl];
 
+    //Only for iOS 7
+    if (IS_IOS7) {
+        //This new feature of iOS 7 indicate the extend of the edges of the view
+        self.edgesForExtendedLayout = UIRectEdgeAll;//UIRectCornerAllCorners;
+    }
 }
-
-
-
 
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    self.didLayoutSubviews = true;
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -269,15 +264,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    self.willLayoutSubviews = true;
-    
-    if (IS_IOS8 || IS_IOS9) {
-        self.edgesForExtendedLayout = UIRectCornerAllCorners;
-        self.automaticallyAdjustsScrollViewInsets = NO;
-    }else{
-        self.edgesForExtendedLayout = UIRectEdgeAll;
-    }
     
     //Set the navigation bar to translucent
     if (IS_IOS7){
@@ -533,8 +519,6 @@
 {
     [super viewDidDisappear:animated];
     
-    self.didLayoutSubviews = true;
-    
     _isEtagRequestNecessary = YES;
 }
 
@@ -548,47 +532,25 @@
 
 -(void)viewDidLayoutSubviews
 {
-     [super viewDidLayoutSubviews];
     
-    if (IS_IOS8 || IS_IOS9) {
+    if (IS_IOS8) {
         if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
+            [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 9, 0, 0)];
         }
         
         if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
             [self.tableView setLayoutMargins:UIEdgeInsetsZero];
         }
         
-        
-        CGRect rect = self.navigationController.navigationBar.frame;
-        float y = rect.size.height + rect.origin.y;
-        self.tableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
-        
-        if (self.didLayoutSubviews == false){
-            self.didLayoutSubviews = true;
-            [self viewDidAppear:true];
-        }
     }
-}
-
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-    
-    if (self.willLayoutSubviews == false){
-        self.willLayoutSubviews = true;
-        [self viewWillAppear:true];
-    }
-    
-    
-    
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    if (IS_IOS8 || IS_IOS9) {
+    if (IS_IOS8) {
         if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
+            [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 9, 0, 0)];
         }
         
         if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
@@ -1066,7 +1028,7 @@
         
         self.elcPicker.modalPresentationStyle = UIModalPresentationFormSheet;
        
-        if (IS_IOS8 || IS_IOS9)  {
+        if (IS_IOS8) {
             [app.detailViewController presentViewController:self.elcPicker animated:YES completion:nil];
         } else {
             [app.splitViewController presentViewController:self.elcPicker animated:YES completion:nil];
@@ -1100,7 +1062,7 @@
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
-        if (IS_IOS8 || IS_IOS9)  {
+        if (IS_IOS8) {
             [self.plusActionSheet showInView:app.splitViewController.view];
         } else {
             [self.plusActionSheet showInView:app.detailViewController.view];
@@ -1201,7 +1163,7 @@
     if (IS_IPHONE){
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
-        if (IS_IOS8 || IS_IOS9)  {
+        if (IS_IOS8) {
             [app.detailViewController dismissViewControllerAnimated:YES completion:nil];
         } else {
             [app.splitViewController dismissViewControllerAnimated:YES completion:nil];
@@ -2404,7 +2366,13 @@
         
         _downloadView.delegate=self;
         
-         _downloadView.view.frame = _tableView.frame;
+        //Only iOS6
+        if (IS_IOS7 || IS_IOS8) {
+            _downloadView.view.frame = _tableView.frame;
+            
+        } else {
+            _downloadView.view.frame = self.view.window.frame;
+        }
         
         _downloadView.view.opaque=YES;
         _downloadView.view.backgroundColor=[[UIColor blackColor] colorWithAlphaComponent:0.5f];
@@ -2622,7 +2590,7 @@
             self.selectFolderNavigation.modalTransitionStyle=UIModalTransitionStyleCoverVertical;
             self.selectFolderNavigation.modalPresentationStyle = UIModalPresentationFormSheet;
             
-            if (IS_IOS8 || IS_IOS9) {
+            if (IS_IOS8) {
                 //Remove all the views in the main screen for the iOS8 bug
                 if (self.moreActionSheet) {
                     [self.moreActionSheet dismissWithClickedButtonIndex:0 animated:YES];
@@ -3379,7 +3347,7 @@
             [self.moreActionSheet showInView:self.tabBarController.view];
         }else {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            if (IS_IOS8 || IS_IOS9) {
+            if (IS_IOS8) {
                 [self.moreActionSheet showInView:app.splitViewController.view];
             } else {
                 [self.moreActionSheet showInView:app.detailViewController.view];
@@ -3402,7 +3370,7 @@
             [self.moreActionSheet showInView:self.tabBarController.view];
         }else {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            if (IS_IOS8 || IS_IOS9) {
+            if (IS_IOS8) {
                 [self.moreActionSheet showInView:app.splitViewController.view];
             } else {
                 [self.moreActionSheet showInView:app.detailViewController.view];

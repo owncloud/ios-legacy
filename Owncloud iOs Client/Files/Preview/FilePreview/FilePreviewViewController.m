@@ -1228,7 +1228,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
         if (downloadIsInProgress) {
             
-            if (!k_is_sso_active) {
+            if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
                 
                 if (_file.isNecessaryUpdate) {
                     [self putUpdateProgressInNavBar];

@@ -92,13 +92,6 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if (IS_IOS8 || IS_IOS9) {
-        self.edgesForExtendedLayout = UIRectCornerAllCorners;
-        self.automaticallyAdjustsScrollViewInsets = NO;
-    }else{
-        self.edgesForExtendedLayout = UIRectCornerAllCorners;
-    }
-    
     //Get offline data
     [self refreshWithDataBaseSharedItems];
 
@@ -142,29 +135,9 @@
 -(void)viewDidLayoutSubviews
 {
     
-    if (IS_IOS8 || IS_IOS9) {
-        
+    if (IS_IOS8) {
         if ([self.sharedTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
-        }
-        
-        if ([self.sharedTableView respondsToSelector:@selector(setLayoutMargins:)]) {
-            [self.sharedTableView setLayoutMargins:UIEdgeInsetsZero];
-        }
-        
-        
-        CGRect rect = self.navigationController.navigationBar.frame;
-        float y = rect.size.height + rect.origin.y;
-        self.sharedTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
-        
-    }}
-
--(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-    if (IS_IOS8 || IS_IOS9) {
-        if ([self.sharedTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
+            [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 9, 0, 0)];
         }
         
         if ([self.sharedTableView respondsToSelector:@selector(setLayoutMargins:)]) {
@@ -172,7 +145,21 @@
         }
         
     }
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
     
+    if (IS_IOS8) {
+        if ([self.sharedTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+            [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 9, 0, 0)];
+        }
+        
+        if ([self.sharedTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+            [self.sharedTableView setLayoutMargins:UIEdgeInsetsZero];
+        }
+        
+    }
 }
 
 
