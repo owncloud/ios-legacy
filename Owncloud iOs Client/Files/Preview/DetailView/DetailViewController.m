@@ -128,14 +128,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self setNotificationForCommunicationBetweenViews];
     
     
-   // if (([[[UIDevice currentDevice] systemVersion] floatValue] < 9)) {
-        //Add gesture for the full screen support
-        self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(launchTransitionProcessForFullScreen)];
-        self.singleTap.numberOfTapsRequired = 1;
-        self.singleTap.numberOfTouchesRequired = 1;
-        self.singleTap.delegate = self;
-  //  }
-    
+    self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(launchTransitionProcessForFullScreen)];
+    self.singleTap.numberOfTapsRequired = 1;
+    self.singleTap.numberOfTouchesRequired = 1;
+    self.singleTap.delegate = self;
+
     
     [self.splitViewController setPresentsWithGesture:NO];
     
