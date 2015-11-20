@@ -200,11 +200,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     CGRect originFrame = self.mainScrollView.frame;
     CGRect sizeFrame = self.view.bounds;
     
-   /* if (self.hideMaster == false) {
-        originFrame.origin.x = 320.0;
-        sizeFrame.size.width = 447.5;
-    }*/
-    
     CGRect correctFrame = CGRectMake(originFrame.origin.x, originFrame.origin.y, sizeFrame.size.width, (sizeFrame.size.height - originFrame.origin.y));
     
  
