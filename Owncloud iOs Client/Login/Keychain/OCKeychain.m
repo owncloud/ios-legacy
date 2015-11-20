@@ -20,8 +20,6 @@
 #import "ManageUsersDB.h"
 #import "UserDto.h"
 
-static int const numberOfRetries = 10;
-
 @implementation OCKeychain
 
 
@@ -62,44 +60,37 @@ static int const numberOfRetries = 10;
     
     CredentialsDto *output = nil;
     
+    NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
-    for (int i = 0; i < numberOfRetries; i++) {
+    [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
+    [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
+    [keychainItem setObject:idUser forKey:(__bridge id)kSecAttrAccount];
+    [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
+    
+    [keychainItem setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
+    [keychainItem setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnAttributes];
+    
+    CFDictionaryRef result = nil;
+    
+    DLog(@"keychainItem: %@", keychainItem);
+    
+    OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, (CFTypeRef *)&result);
+    
+    DLog(@"(getCredentials)Error Code %d", (int)stsExist);
+    
+    if (stsExist != errSecSuccess) {
+        NSLog(@"Unable to get the item with id =%@ ",idUser);
         
-        NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
+    } else {
         
-        [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
-        [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
-        [keychainItem setObject:idUser forKey:(__bridge id)kSecAttrAccount];
-        [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
+        NSDictionary *resultDict = (__bridge_transfer NSDictionary *)result;
         
-        [keychainItem setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
-        [keychainItem setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnAttributes];
+        NSData *pswd = resultDict[(__bridge id)kSecValueData];
+        NSString *password = [[NSString alloc] initWithData:pswd encoding:NSUTF8StringEncoding];
+        output = [CredentialsDto new];
         
-        CFDictionaryRef result = nil;
-        
-        DLog(@"keychainItem: %@", keychainItem);
-        
-        OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, (CFTypeRef *)&result);
-        
-        DLog(@"(getCredentials)Error Code %d", (int)stsExist);
-        
-        if (stsExist != errSecSuccess) {
-            NSLog(@"Unable to get the item with id =%@ ",idUser);
-            
-        } else {
-            
-            NSDictionary *resultDict = (__bridge_transfer NSDictionary *)result;
-            
-            NSData *pswd = resultDict[(__bridge id)kSecValueData];
-            NSString *password = [[NSString alloc] initWithData:pswd encoding:NSUTF8StringEncoding];
-            output = [CredentialsDto new];
-            
-            output.password = password;
-            output.userName = resultDict[(__bridge id)kSecAttrDescription];
-            
-            break;
-        }
-        
+        output.password = password;
+        output.userName = resultDict[(__bridge id)kSecAttrDescription];
     }
     
     return output;
