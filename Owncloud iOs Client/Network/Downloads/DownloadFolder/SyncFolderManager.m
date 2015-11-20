@@ -240,7 +240,7 @@
                         
                         NSMutableArray *tmpFilesAndFolderToSync = [ManageFilesDB getFilesByFileIdForActiveUser:currentFolder.idFile];
                         
-                        int indexEtag = 0;
+                        NSInteger indexEtag = 0;
                         for (FileDto *currentFile in tmpFilesAndFolderToSync) {
                             indexEtag++;
                             //Add the folder to the queue of sync and the file to the queue of downloads
