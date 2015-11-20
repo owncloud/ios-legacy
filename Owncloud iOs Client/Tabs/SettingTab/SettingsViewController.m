@@ -1156,7 +1156,7 @@
     // Run loop
     while (dispatch_semaphore_wait(self.semaphoreChangeUser, DISPATCH_TIME_NOW)) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
-                                 beforeDate:[NSDate dateWithTimeIntervalSinceNow:30.0]];
+                                 beforeDate:[NSDate dateWithTimeIntervalSinceNow:k_timeout_upload]];
     }
     
     DLog(@"continueChangingUser");
