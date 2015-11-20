@@ -125,25 +125,6 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesByFolder:folder];
     [self syncFavoritesOfList:dataBaseFavorites ofThisUser:userId];
     
-    /*NSMutableArray *tempFilesFavorites = [NSMutableArray new];
-    
-    for (FileDto *file in dataBaseFavorites) {
-        if (file.isDirectory) {
-            [[AppDelegate sharedSyncFolderManager] addFolderToBeDownloaded:file];
-        } else {
-            [tempFilesFavorites addObject:file];
-        }
-    }
-    
-    //If there are favorites the path, sync
-    if (tempFilesFavorites.count >= 1) {
-        NSArray *favorites = [NSArray arrayWithArray:tempFilesFavorites];
-        [self syncFavoritesOfList:favorites ofThisUser:userId];
-    }
-    
-    //Free memory
-    tempFilesFavorites = nil;*/
-    
 }
 
 ///-----------------------------------
