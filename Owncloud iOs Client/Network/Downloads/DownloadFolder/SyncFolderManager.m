@@ -361,10 +361,6 @@
     
     NSArray *listOfRemoteFilesAndFolders = [ManageFilesDB getFilesByFileIdForActiveUser:(int) file.idFile];
     
-    for (FileDto *current in listOfRemoteFilesAndFolders) {
-        DLog(@"current: %@", current.fileName);
-    }
-    
     NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:app.activeUser];
     
     [FileListDBOperations createAllFoldersByArrayOfFilesDto:listOfRemoteFilesAndFolders andLocalFolder:path];
