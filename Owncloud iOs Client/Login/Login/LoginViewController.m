@@ -242,22 +242,16 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     //to set the scroll
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 260, 0);
     
-    //Padding correction in case of versions lower that iOS 7
-    float leftPaddingCorrection = 0.0;
-    if (!IS_IOS7 && !IS_IOS8) {
-        leftPaddingCorrection = - 10.0;
-    }
-    
 //FIRST SECTION
     
     //Frame for url field
-     _urlFrame = CGRectMake(60 + leftPaddingCorrection,14,200,20);
+     _urlFrame = CGRectMake(60,14,200,20);
     
     //Server image - User image - Password image
-    _imageTextFieldLeftFrame = CGRectMake(20.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    _imageTextFieldLeftFrame = CGRectMake(20.0, 10.0, 25.0, 25.0);
     
     //Refresh button
-    refreshButtonFrame = CGRectMake(260.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    refreshButtonFrame = CGRectMake(260.0, 10.0, 25.0, 25.0);
     
     
     
@@ -273,10 +267,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 //SECOND SECTION
     
     //user and password text fields frame
-    _userAndPasswordFrame = CGRectMake(60 + leftPaddingCorrection,14,200,20);
+    _userAndPasswordFrame = CGRectMake(60,14,200,20);
     
     //image about show/hide the password
-    showPasswordButtonFrame = CGRectMake(260.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    showPasswordButtonFrame = CGRectMake(260.0, 10.0, 25.0, 25.0);
     
 
 //FOOTER FOR SECOND SECTION
@@ -298,7 +292,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     _txtWithLogoWhenNoURLFrame = CGRectMake(0,0,320,90);
     
     //Frame used for reconection icon
-    syncImageFrameForNoURL = CGRectMake(280.0 + leftPaddingCorrection, 5.0, 25.0, 25.0);
+    syncImageFrameForNoURL = CGRectMake(280.0, 5.0, 25.0, 25.0);
 
 
     
@@ -311,22 +305,16 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     //to set the scroll
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 260, 0);
     
-    //Padding correction in case of versions lower that iOS 7
-    float leftPaddingCorrection = 0.0;
-    if (!IS_IOS7 && !IS_IOS8) {
-        leftPaddingCorrection = - 10.0;
-    }
-    
     //FIRST SECTION
     
     //Frame for url field
-    _urlFrame = CGRectMake(60 + leftPaddingCorrection,14,420,20);
+    _urlFrame = CGRectMake(60,14,420,20);
     
     //Server image - User image - Password image
-    _imageTextFieldLeftFrame = CGRectMake(20.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    _imageTextFieldLeftFrame = CGRectMake(20.0, 10.0, 25.0, 25.0);
     
     //Refresh button
-    refreshButtonFrame = CGRectMake(480.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    refreshButtonFrame = CGRectMake(480.0, 10.0, 25.0, 25.0);
     
     
     
@@ -342,10 +330,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     //SECOND SECTION
     
     //user and password text fields frame
-    _userAndPasswordFrame = CGRectMake(60 + leftPaddingCorrection,14,420,20);
+    _userAndPasswordFrame = CGRectMake(60 ,14,420,20);
     
     //image about show/hide the password
-    showPasswordButtonFrame = CGRectMake(480.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    showPasswordButtonFrame = CGRectMake(480.0, 10.0, 25.0, 25.0);
     
     
     //FOOTER FOR SECOND SECTION
@@ -367,7 +355,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     _txtWithLogoWhenNoURLFrame = CGRectMake(0,0,320,90);
     
     //Frame used for reconection icon
-    syncImageFrameForNoURL = CGRectMake(280.0 + leftPaddingCorrection, 5.0, 25.0, 25.0);
+    syncImageFrameForNoURL = CGRectMake(280.0, 5.0, 25.0, 25.0);
     
     
     
@@ -380,23 +368,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     //to set the scroll
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 170, 0);
     
-    //Padding correction in case of versions lower that iOS 7
-    float leftPaddingCorrection = 0.0;
-    if (!IS_IOS7 && !IS_IOS8) {
-        leftPaddingCorrection = - 10.0;
-    }
-    
     
 //FIRST SECTION
     
     //Frame for url field
-    _urlFrame = CGRectMake(60 + leftPaddingCorrection,14,340,20);
+    _urlFrame = CGRectMake(60,14,340,20);
     
     //Server image - User image - Password image
-     _imageTextFieldLeftFrame = CGRectMake(20.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+     _imageTextFieldLeftFrame = CGRectMake(20.0, 10.0, 25.0, 25.0);
     
     //Refresh button
-    refreshButtonFrame = CGRectMake(420.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    refreshButtonFrame = CGRectMake(420.0, 10.0, 25.0, 25.0);
     
     
 //FOOTER FOR FIRST SECTION
@@ -411,10 +393,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 //SECOND SECTION
     
     //user and password text fields frame
-    _userAndPasswordFrame = CGRectMake(60 + leftPaddingCorrection,14,340,20);
+    _userAndPasswordFrame = CGRectMake(60,14,340,20);
     
     //image about show/hide the password
-    showPasswordButtonFrame = CGRectMake(420.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    showPasswordButtonFrame = CGRectMake(420.0, 10.0, 25.0, 25.0);
     
 
 //FOOTER FOR SECOND SECTION
@@ -435,7 +417,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     _txtWithLogoWhenNoURLFrame = CGRectMake(0,0,480,90);
     
     //Frame used for reconection icon
-    syncImageFrameForNoURL = CGRectMake(420.0 + leftPaddingCorrection, 5.0, 25.0, 25.0);
+    syncImageFrameForNoURL = CGRectMake(420.0, 5.0, 25.0, 25.0);
 
    
 }
@@ -446,23 +428,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 170, 0);
     
-    //Padding correction in case of versions lower that iOS 7
-    float leftPaddingCorrection = 0.0;
-    if (!IS_IOS7 && !IS_IOS8) {
-        leftPaddingCorrection = - 10.0;
-    }
-    
     
 //FIRST SECTION
     
     //Frame for url field
-    _urlFrame = CGRectMake(60 + leftPaddingCorrection,14,430,20);
+    _urlFrame = CGRectMake(60,14,430,20);
     
     //Server image - User image - Password image
-    _imageTextFieldLeftFrame = CGRectMake(20.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    _imageTextFieldLeftFrame = CGRectMake(20.0, 10.0, 25.0, 25.0);
     
     //Refresh button
-    refreshButtonFrame = CGRectMake(510.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    refreshButtonFrame = CGRectMake(510.0, 10.0, 25.0, 25.0);
     
 
 //FOOTER FOR FIRST SECTION
@@ -478,10 +454,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 //SECOND SECTION
     
     //user and password text fields frame
-    _userAndPasswordFrame = CGRectMake(60 + leftPaddingCorrection,14,430,20);
+    _userAndPasswordFrame = CGRectMake(60,14,430,20);
     
     //image about show/hide the password
-    showPasswordButtonFrame = CGRectMake(510.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    showPasswordButtonFrame = CGRectMake(510.0, 10.0, 25.0, 25.0);
     
 
 //FOOTER FOR SECOND SECTION
@@ -503,7 +479,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     _txtWithLogoWhenNoURLFrame = CGRectMake(0,0,568,90);
     
     //Frame used for reconection icon
-    syncImageFrameForNoURL = CGRectMake(510.0 + leftPaddingCorrection, 5.0, 25.0, 25.0);
+    syncImageFrameForNoURL = CGRectMake(510.0, 5.0, 25.0, 25.0);
     
     
 }
@@ -515,24 +491,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     [self.tableView setBackgroundView:nil];
     [self.tableView setBackgroundView:[[UIView alloc] init]];
     
-    //Padding correction in case of versions lower that iOS 7
-    float leftPaddingCorrection = 0.0;
-    
-    if (!IS_IOS7 && !IS_IOS8) {
-        leftPaddingCorrection = - 45.0;
-    }
-
     
 //FIRST SECTION
     
     //Frame for url field
-    _urlFrame = CGRectMake(280 + leftPaddingCorrection,14,420,20);
+    _urlFrame = CGRectMake(280,14,420,20);
     
     //Server image - User image - Password image
-    _imageTextFieldLeftFrame = CGRectMake(235.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    _imageTextFieldLeftFrame = CGRectMake(235.0, 10.0, 25.0, 25.0);
     
     //Refresh button
-    refreshButtonFrame = CGRectMake(680.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    refreshButtonFrame = CGRectMake(680.0, 10.0, 25.0, 25.0);
     
     
 //FOOTER FOR FIRST SECTION
@@ -547,10 +516,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 //SECOND SECTION
     
     //user and password text fields frame
-    _userAndPasswordFrame = CGRectMake(280 + leftPaddingCorrection,14,220,20);
+    _userAndPasswordFrame = CGRectMake(280,14,220,20);
     
     //image about show/hide the password
-    showPasswordButtonFrame = CGRectMake(500.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    showPasswordButtonFrame = CGRectMake(500.0, 10.0, 25.0, 25.0);
     
     
 //FOOTER FOR SECOND SECTION
@@ -587,23 +556,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     [self.tableView setBackgroundView:nil];
     [self.tableView setBackgroundView:[[UIView alloc] init]];
     
-    //Padding correction in case of versions lower that iOS 7
-    float leftPaddingCorrection = 0.0;
-    if (!IS_IOS7 && !IS_IOS8) {
-        leftPaddingCorrection = - 45.0;
-    }
-    
     
 //FIRST SECTION
     
     //Frame for url field
-    _urlFrame = CGRectMake(408.0 + leftPaddingCorrection,14,420,20);
+    _urlFrame = CGRectMake(408.0,14,420,20);
     
     //Server image - User image - Password image
-    _imageTextFieldLeftFrame = CGRectMake(368.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    _imageTextFieldLeftFrame = CGRectMake(368.0, 10.0, 25.0, 25.0);
     
     //Refresh button
-    refreshButtonFrame = CGRectMake(828.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    refreshButtonFrame = CGRectMake(828.0 , 10.0, 25.0, 25.0);
     
     
 //FOOTER FOR FIRST SECTION
@@ -619,11 +582,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 //SECOND SECTION
     
     //user and password text fields frame
-    _userAndPasswordFrame = CGRectMake(408 + leftPaddingCorrection,14,220,20);
+    _userAndPasswordFrame = CGRectMake(408,14,220,20);
     
     
     //image about show/hide the password
-    showPasswordButtonFrame = CGRectMake(628.0 + leftPaddingCorrection, 10.0, 25.0, 25.0);
+    showPasswordButtonFrame = CGRectMake(628.0, 10.0, 25.0, 25.0);
     
     
 //FOOTER FOR SECOND SECTION

@@ -131,7 +131,7 @@
             
             openInAppActivity.superViewController = self.activityPopoverController;
             
-            if (_isTheParentViewACell && IS_PORTRAIT && IS_IOS8) {
+            if (_isTheParentViewACell && IS_PORTRAIT && (IS_IOS8 || IS_IOS9)) {
               
                 [self.activityPopoverController presentPopoverFromRect:CGRectMake(app.detailViewController.view.frame.size.width/2, app.detailViewController.view.frame.size.width/2, 100, 100) inView:app.detailViewController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
                 

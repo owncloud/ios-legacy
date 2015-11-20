@@ -894,7 +894,7 @@
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         
-        if (IS_IOS8) {
+        if (IS_IOS8 || IS_IOS9) {
             [self presentViewController:navController animated:YES completion:nil];
         }else{
             [app.splitViewController presentViewController:navController animated:YES completion:nil];

@@ -113,6 +113,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     _progressViewHeightConstraint.constant = 2;
     _fileTypeCenterHeightConstraint.constant = -40;
     
+    
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
 
     //Set title and the font of the label of the toolBar
     [_titleLabel setFont:[UIFont systemFontOfSize:18.0]];
@@ -125,14 +128,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self setNotificationForCommunicationBetweenViews];
     
     
-    if (([[[UIDevice currentDevice] systemVersion] floatValue] < 9)) {
-        //Add gesture for the full screen support
-        self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(launchTransitionProcessForFullScreen)];
-        self.singleTap.numberOfTapsRequired = 1;
-        self.singleTap.numberOfTouchesRequired = 1;
-        self.singleTap.delegate = self;
-    }
-    
+    self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(launchTransitionProcessForFullScreen)];
+    self.singleTap.numberOfTapsRequired = 1;
+    self.singleTap.numberOfTouchesRequired = 1;
+    self.singleTap.delegate = self;
+
     
     [self.splitViewController setPresentsWithGesture:NO];
     
@@ -141,16 +141,20 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    
+    
     _isViewBlocked = NO;
     _isCancelDownloadClicked = NO;
     //Configure view
     [self configureView];
+    
 }
 
 
@@ -198,6 +202,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     CGRect correctFrame = CGRectMake(originFrame.origin.x, originFrame.origin.y, sizeFrame.size.width, (sizeFrame.size.height - originFrame.origin.y));
     
+ 
     return correctFrame;
 }
 
@@ -1280,7 +1285,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         if (downloadIsInProgress) {
             
-            if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
+            if (!k_is_sso_active) {
                 
                 if (_file.isNecessaryUpdate) {
                     [self putUpdateProgressInNavBar];
@@ -1952,7 +1957,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         CGFloat deltaWidth = k_delta_width_for_split_transition;
         
-        if (IS_IOS8) {
+
+        if (IS_IOS8 || IS_IOS9) {
             
             selfFrame.size.width += deltaWidth;
             selfFrame.origin.x -= deltaWidth;
@@ -1973,6 +1979,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         self.hideMaster = !self.hideMaster;
         
+        if (IS_IOS9) {
+            [self.splitViewController viewWillTransitionToSize:self.splitViewController.view.frame.size withTransitionCoordinator:self.splitViewController.transitionCoordinator];
+        }
+        
         [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
         
         [self hideContainerView];
@@ -1980,8 +1990,13 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [self toggleHideMaster:nil];
         
         [self toggleHideToolBar:^{
-              [self showContainerView];
+            
+            [self showContainerView];
+            
+           
         }];
+        
+        
         
     }else{
         
@@ -2001,7 +2016,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             CGFloat deltaWidth = k_delta_width_for_split_transition;
             
-            if (IS_IOS8) {
+            if (IS_IOS8 || IS_IOS9) {
                 
                 selfFrame.size.width -= deltaWidth;
                 selfFrame.origin.x += deltaWidth;
@@ -2019,7 +2034,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             }
             
             [self.splitViewController.view setFrame:selfFrame];
-            
             [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
             
             [self convertMasterViewInvisible:YES];
@@ -2061,11 +2075,12 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void) showContainerView{
     
+   
     CGRect frame;
     
     if (self.hideMaster) {
         
-        if (IS_IOS8) {
+        if (IS_IOS8 || IS_IOS9) {
             frame = self.view.window.bounds;
         }else{
             
@@ -2074,11 +2089,13 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             }else{
                 frame = CGRectMake(0.0, 0.0, self.view.window.bounds.size.height, self.view.window.bounds.size.width);
             }
-            
         }
         
     }else{
+        
         frame = [self getTheCorrectSize];
+        
+        
     }
     
     if (self.galleryView) {
@@ -2111,22 +2128,30 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^(void)
      {
+       
+         if (!self.hideMaster && IS_IOS9) {
+             [self.splitViewController.view setNeedsLayout];
+             self.splitViewController.delegate = nil;
+             self.splitViewController.delegate = self;
+         }
          
          CGRect selfFrame = self.splitViewController.view.frame;
          
          CGFloat deltaWidth = k_delta_width_for_split_transition;
          
-         if (IS_IOS8) {
+         if (IS_IOS8 || IS_IOS9) {
              
              if (self.hideMaster)
              {
                  selfFrame.size.width += deltaWidth;
                  selfFrame.origin.x -= deltaWidth;
+                 
              }
              else
              {
                  selfFrame.size.width -= deltaWidth;
                  selfFrame.origin.x += deltaWidth;
+
              }
 
          }else{
@@ -2154,8 +2179,12 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
              }
 
          }
-         
+
          [self.splitViewController.view setFrame:selfFrame];
+         
+         if (!self.hideMaster && IS_IOS9) {
+              [self.splitViewController.view layoutIfNeeded];
+         }
          
          
      }completion:^(BOOL finished){
@@ -2222,6 +2251,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         if (self.moviePlayer) {
             self.moviePlayer.view.frame = [self getTheCorrectSize];
         }
+        
  
         
     } completion:^(BOOL finished) {
