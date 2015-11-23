@@ -119,7 +119,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
     //Check if share link button should be appear.
-    if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
+    if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
         NSMutableArray *customItems = [NSMutableArray arrayWithArray:self.toolBar.items];
         [customItems removeObjectIdenticalTo:_shareButtonBar];
         [customItems removeObjectIdenticalTo:_flexibleSpaceAfterShareButtonBar];

@@ -15,6 +15,9 @@
 #import "ManageCapabilitiesDB.h"
 #import "FileNameUtils.h"
 #import "Customization.h"
+#import "FilesViewController.h"
+
+NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
 
 @implementation CheckCapabilities
 
@@ -62,6 +65,10 @@
                 //update active userDto
                 app.activeUser.capabilitiesDto = [CapabilitiesDto new];
                 app.activeUser.capabilitiesDto = cap;
+                
+                //update file list view
+                [self reloadFileList];
+
             }
 
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
@@ -73,5 +80,14 @@
     
 }
 
+
+#pragma mark - FilesViewController callBacks
+
+/*
+ * Method to reload the data of the file list.
+ */
+- (void)reloadFileList{
+    [[NSNotificationCenter defaultCenter] postNotificationName: CapabilitiesUpdatedNotification object: nil];
+}
 
 @end

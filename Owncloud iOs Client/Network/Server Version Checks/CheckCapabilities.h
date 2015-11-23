@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * CapabilitiesUpdatedNotification;
+
+
 @interface CheckCapabilities : NSObject
 
 + (id)sharedCheckCapabilities;

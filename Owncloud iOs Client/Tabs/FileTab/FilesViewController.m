@@ -61,6 +61,7 @@
 #import "SyncFolderManager.h"
 #import "IndexedForest.h"
 #import "ManageCapabilitiesDB.h"
+#import "CheckCapabilities.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -783,6 +784,10 @@
     
     //Add an observer for update the file sync
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFromDataBaseWithFileDto:) name:FavoriteFileIsSync object:nil];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFileList) name:CapabilitiesUpdatedNotification object:nil];
+
 }
 
 
@@ -1384,6 +1389,7 @@
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
         [fileCell setCellHeight:fileCell.frame.size.height];
+        //TODO:check capabiliteis and store number buttons
         fileCell.leftUtilityButtons = [self setSwipeLeftButtons];
         
         fileCell.rightUtilityButtons = nil;
@@ -1801,6 +1807,7 @@
         [self endLoading];
     }*/
 }
+
 
 -(void)reloadTableFileList {
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
@@ -3203,7 +3210,7 @@
     NSMutableArray *rightUtilityButtons = [NSMutableArray new];
     
     BOOL areTwoButtonsInTheSwipe = false;
-    if ( (k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled == false) ) {
+    if ( (k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled) ) {
         //Two buttons
         areTwoButtonsInTheSwipe = true;
     }else{
@@ -3269,7 +3276,7 @@
         }
         case 1:
         {
-            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
+            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
                 DLog(@"Click on index 2 - Delete");
                 [self didSelectDeleteOption];
                 break;
@@ -3282,7 +3289,7 @@
         }
         case 2:
         {
-            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
+            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
             }else{
                 DLog(@"Click on index 2 - Delete");
                 [self didSelectDeleteOption];
