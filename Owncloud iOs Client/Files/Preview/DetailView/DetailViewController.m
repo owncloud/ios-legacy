@@ -42,6 +42,7 @@
 #import "SyncFolderManager.h"
 #import "DownloadUtils.h"
 #import "ManageCapabilitiesDB.h"
+#import "DownloadFileSyncFolder.h"
 
 
 NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
@@ -1784,6 +1785,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updatePreviewFileWithNewIdFromDBWhenAFileISDelete:) name:fileDeleteInAOverwriteProcess object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cleanView) name:IpadCleanPreviewNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNotConnectionWithServerMessage) name:IpadShowNotConnectionWithServerMessageNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadFileInView:) name:PreviewFileNotificationUpdated object:nil];
 }
 
 
@@ -1807,17 +1809,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [self handleFile:_file fromController:_controllerManager];
         DLog(@"id file: %ld", (long)_file.idFile);
     }    
-}
-
-
-- (void) receiveTestNotification:(NSNotification *) notification
-{
-    if ([notification.name isEqualToString:@"TestNotification"])
-    {
-        NSDictionary* userInfo = notification.userInfo;
-        int messageTotal = [[userInfo objectForKey:@"total"] intValue];
-        NSLog (@"Successfully received test notification! %i", messageTotal);
-    }
 }
 
 /*
@@ -1854,6 +1845,17 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     }
 }
 
+- (void) reloadFileInView:(NSNotification *)notification {
+    
+    self.file = (FileDto*)[notification object];
+    
+    if (_typeOfFile == imageFileType) {
+        self.galleryView = nil;
+        [self initGallery];
+    } else {
+        [self downloadCompleted:self.file];
+    }
+}
 
 
 ///-----------------------------------

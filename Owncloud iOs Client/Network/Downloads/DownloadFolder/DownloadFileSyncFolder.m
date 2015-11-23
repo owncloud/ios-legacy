@@ -26,6 +26,7 @@
 #import "FilesViewController.h"
 
 #define k_task_identifier_invalid -1
+NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
 
 @implementation DownloadFileSyncFolder
 
@@ -137,11 +138,11 @@
 
 - (void) updateDataDownloadSuccess {
     
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
     if (self.file.isNecessaryUpdate) {
         [DownloadUtils updateFile:self.file withTemporalFile:self.tmpUpdatePath];
     }
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Update the datas of the new file
     self.file = [ManageFilesDB getFileDtoByFileName:self.file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.file.filePath andUser:app.activeUser] andUser:app.activeUser];
@@ -155,6 +156,12 @@
     
     [self reloadCellFromDataBase];
     [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
+    
+    //On Ipad reload the preview if the file is the same has been updated
+    if (!IS_IPHONE && [app.detailViewController.file.localFolder isEqualToString: self.file.localFolder]) {
+        self.file = [ManageFilesDB getFileDtoByFileName:self.file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.file.filePath andUser:app.activeUser] andUser:app.activeUser];
+        [[NSNotificationCenter defaultCenter] postNotificationName:PreviewFileNotificationUpdated object:self.file];
+    }
 }
 
 - (void) failureDownloadProcess {

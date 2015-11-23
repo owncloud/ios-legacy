@@ -16,6 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *PreviewFileNotificationUpdated;
+
 @class UserDto;
 
 @interface DownloadFileSyncFolder : NSObject
