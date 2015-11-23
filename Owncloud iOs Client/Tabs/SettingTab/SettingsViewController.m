@@ -950,6 +950,8 @@
             
             [self setCookiesOfActiveAccount];
             
+            [self createFolderForUser:app.activeUser];
+            
             //If ipad, clean the detail view
             if (!IS_IPHONE) {
                 AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -1226,9 +1228,15 @@
     self.listUsers = [ManageUsersDB getAllUsers];
     [self.settingsTableView reloadData];
     
+    [self createFolderForUser:selectedUser];
+    
+    app.isNewUser = YES;
+}
+
+- (void) createFolderForUser:(UserDto *) user {
     //We get the current folder to create the local tree
     //we create the user folder to haver multiuser
-    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)selectedUser.idUser];
+    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)user.idUser];
     DLog(@"current: %@", currentLocalFileToCreateFolder);
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:currentLocalFileToCreateFolder]) {
@@ -1236,7 +1244,6 @@
         [[NSFileManager defaultManager] createDirectoryAtPath:currentLocalFileToCreateFolder withIntermediateDirectories:NO attributes:nil error:&error];
         DLog(@"Error: %@", [error localizedDescription]);
     }
-    app.isNewUser = YES;
 }
 
 #pragma mark - AddAccountDelegate
