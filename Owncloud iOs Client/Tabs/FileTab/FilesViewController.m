@@ -1389,7 +1389,6 @@
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
         [fileCell setCellHeight:fileCell.frame.size.height];
-        //TODO:check capabiliteis and store number buttons
         fileCell.leftUtilityButtons = [self setSwipeLeftButtons];
         
         fileCell.rightUtilityButtons = nil;

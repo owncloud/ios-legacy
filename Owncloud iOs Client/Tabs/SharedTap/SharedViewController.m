@@ -878,7 +878,6 @@
         //Custom cell for SWTableViewCell with right swipe options
         sharedLinkCell.containingTableView = tableView;
         [sharedLinkCell setCellHeight:sharedLinkCell.frame.size.height];
-        //TODO:check capabiliteis and store number buttons
         sharedLinkCell.leftUtilityButtons = [self setSwipeLeftButtons];
         
         sharedLinkCell.rightUtilityButtons = nil;
