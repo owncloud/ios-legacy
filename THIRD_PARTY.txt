@@ -110,7 +110,7 @@ The third party software included and used by this project is:
 	Original license document included at Supporting Files/FMDB/LICENSE.
    	See https://github.com/ccgus/fmdb
    	
-* 	VFR Pdf Reader
+ * 	VFR Pdf Reader
 	Copyright (c) 2011-2014 Julius Oklamcak. All rights reserved.
    	Placed at ExternalLibreries/VFR Pdf Reader
 	Original license document included at ExternalLibreries/VFR Pdf Reader/LICENSE.
@@ -131,14 +131,14 @@ The third party software included and used by this project is:
 	Original license document included at ExternalLibreries/TTOpenInAppActivity/LICENSE.
    	See https://github.com/honkmaster/TTOpenInAppActivity
  
-  * 	TSMessages
+ * 	TSMessages
    	Copyright (c) 2014 Toursprung, Felix Krause <krausefx@gmail.com>
    	Licensed under MIT License.
    	Placed at ExternalLibreries/TTMessages.
 	Original license document included at ExternalLibreries/TTMesages/LICENSE.txt
    	See https://github.com/KrauseFx/TSMessages/
 
- 	cwl-ordered-dictionary
+ *	cwl-ordered-dictionary
     	Copyright (c) 2012-2014 Matt Gallagher & Kazuto Yamasaki
     	Placed at ExternalLibreries/CWLOrderedDictionary.
     	Original license document included at Class Headers.
