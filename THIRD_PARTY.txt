@@ -138,11 +138,11 @@ The third party software included and used by this project is:
 	Original license document included at ExternalLibreries/TTMesages/LICENSE.txt
    	See https://github.com/KrauseFx/TSMessages/
 
- *  cwl-ordered-dictionary
-    Copyright (c) 2012-2014 Matt Gallagher & Kazuto Yamasaki
-    Placed at ExternalLibreries/CWLOrderedDictionary.
-    Original license document included at Class Headers.
-    See https://github.com/pokelabo/cwl-ordered-dictionary
+ 	cwl-ordered-dictionary
+    	Copyright (c) 2012-2014 Matt Gallagher & Kazuto Yamasaki
+    	Placed at ExternalLibreries/CWLOrderedDictionary.
+    	Original license document included at Class Headers.
+    	See https://github.com/pokelabo/cwl-ordered-dictionary
 
  * 	ocmock v 3.1.5
    	Copyright (c) 2004-2015 by Erik Dörnenburg  (http://ocmock.org) 
