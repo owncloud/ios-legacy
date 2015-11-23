@@ -17,6 +17,7 @@ DerivedData
 *.hmap
 *.xccheckout
 *.pyc
+"Owncloud iOs Client.xcodeproj/project.xcworkspace/xcshareddata/"
 
 #CocoaPods
 Pods
