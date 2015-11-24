@@ -130,6 +130,8 @@ static float const kDelayAfterCancelAll = 3.0;
     
     if (currentFolderSync.isReadFromDatabase && filesFromCurrentFolder.count > 0) {
         
+        [self createAllFoldersInFileSystemByFileDto:currentFolder];
+        
         for (FileDto *currentFile in filesFromCurrentFolder) {
             //Add the folder to the queue of sync and the file to the queue of downloads
             if (currentFile.fileName != nil) {
@@ -145,12 +147,17 @@ static float const kDelayAfterCancelAll = 3.0;
                 } else {
                     
                     if (currentFile.isDownload == notDownload || currentFile.isNecessaryUpdate) {
+                        
+                        [DownloadUtils setThePermissionsForFolderPath:currentFolder.localFolder];
+
                         //Add the file to the indexed forest of files downloading
                         //We check if the user is the same that when we started to check
                         if (currentUser.idUser == app.activeUser.idUser) {
                             [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:currentFile];
                             [self downloadTheFile:currentFile andNewEtag:currentFile .etag];
                         }
+                        
+
                     }
                 }
             } else {
@@ -238,7 +245,7 @@ static float const kDelayAfterCancelAll = 3.0;
                         [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:currentFolder.idFile];
                         
                         //Send the data to DB and refresh the table
-                        [self deleteOldDataFromDBBeforeRefresh:directoryList ofFolder:currentFolder];
+                        [self createAllFoldersInFileSystemByFileDto:currentFolder];
                         
                         NSMutableArray *tmpFilesAndFolderToSync = [ManageFilesDB getFilesByFileIdForActiveUser:currentFolder.idFile];
                         
@@ -341,27 +348,12 @@ static float const kDelayAfterCancelAll = 3.0;
     }
 }
 
-/*
- * This method receive the new array of the server and store the changes
- * in the Database and in the tableview
- * @param requestArray -> NSArray of path items
- */
--(void)deleteOldDataFromDBBeforeRefresh:(NSArray *) requestArray ofFolder:(FileDto *) file {
+
+-(void)createAllFoldersInFileSystemByFileDto:(FileDto *) file {
 
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    NSMutableArray *directoryList = [NSMutableArray arrayWithArray:requestArray];
-    
-    //Change the filePath from the library to our format
-    for (FileDto *currentFile in directoryList) {
-        //Remove part of the item file path
-        NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
-        if([currentFile.filePath length] >= [partToRemove length]){
-            currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
-        }
-    }
-    
-    NSArray *listOfRemoteFilesAndFolders = [ManageFilesDB getFilesByFileIdForActiveUser:(int) file.idFile];
+    NSMutableArray *listOfRemoteFilesAndFolders = [ManageFilesDB getFilesByFileIdForActiveUser:(int) file.idFile];
     
     NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:app.activeUser];
     
