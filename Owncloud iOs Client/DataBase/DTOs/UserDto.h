@@ -14,6 +14,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "CapabilitiesDto.h"
 
 typedef enum {
     serverFunctionalityNotChecked = 0,
@@ -33,12 +34,15 @@ typedef enum {
 @property long storageOccupied;
 @property long storage;
 @property NSInteger hasShareApiSupport;
+@property NSInteger hasShareeApiSupport;
 @property NSInteger hasCookiesSupport;
 @property NSInteger hasForbiddenCharactersSupport;
+@property NSInteger hasCapabilitiesSupport;
 @property BOOL instantUpload;
 @property (nonatomic, copy) NSString *pathInstantUpload;
 @property BOOL onlyWifiInstantUpload;
 @property long dateInstantUpload;
 @property (nonatomic, copy) NSString *urlRedirected;
+@property (nonatomic, strong) CapabilitiesDto *capabilitiesDto;
 
 @end

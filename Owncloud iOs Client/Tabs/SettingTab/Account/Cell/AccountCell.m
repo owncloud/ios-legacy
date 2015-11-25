@@ -55,7 +55,6 @@
         app.activeUser.password = @"";
         [ManageUsersDB updatePassword:app.activeUser];
     }
-    [UtilsFramework deleteAllCookies];
     
     [self.delegate activeAccountByPosition:self.activeButton.tag];
 

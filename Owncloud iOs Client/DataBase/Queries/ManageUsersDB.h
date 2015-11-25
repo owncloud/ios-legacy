@@ -34,6 +34,11 @@
 + (UserDto *) getActiveUser;
 
 /*
+ * This method return the active user of the app without user name and password
+ */
++ (UserDto *) getActiveUserWithoutUserNameAndPassword;
+
+/*
  * This method change the password of the an user
  * @user -> user object
  */
@@ -128,5 +133,16 @@
 + (void)updateUrlRedirected:(NSString *)newValue byUserDto:(UserDto *)user;
 
 + (NSString *) getUrlRedirectedByUserDto:(UserDto *)user;
+
+//-----------------------------------
+/// @name isUsers
+///-----------------------------------
+
+/**
+ * Method that return if exist any user on the DB.
+ *
+ * @return BOOL
+ */
++(BOOL)isUsers;
 
 @end

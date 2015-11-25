@@ -35,10 +35,12 @@
 @class HelpGuideViewController;
 @class Download;
 @class OCCommunication;
+@class SyncFolderManager;
 @class UploadFromOtherAppViewController;
 @class SharedViewController;
 @class ManageFavorites;
 @class CheckHasShareSupport;
+@class CheckCapabilities;
 
 extern NSString * CloseAlertViewWhenApplicationDidEnterBackground;
 extern NSString * RefreshSharesItemsAfterCheckServerVersion;
@@ -112,8 +114,8 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (strong, nonatomic) HelpGuideViewController *helpGuideWindowViewController;
 
 - (void) initAppWithEtagRequest:(BOOL)isEtagRequestNecessary;
-- (void)presentUploadFromOtherApp;
-- (void)updateRecents;
+- (void) presentUploadFromOtherApp;
+- (void) updateRecents;
 - (void) updateProgressView:(NSUInteger)num withPercent:(float)percent;
 - (void) restartAppAfterDeleteAllAccounts;
 - (void) showLoginView;
@@ -125,6 +127,21 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  * Method to get a Singleton of the OCCommunication to manage all the communications
  */
 + (OCCommunication*)sharedOCCommunication;
+
+/*
+* Method to get a Singleton of the OCCommunication to manage the communications to download a folder
+*/
++ (OCCommunication*)sharedOCCommunicationDownloadFolder;
+
+/*
+ * Method to get a Singleton of the SyncFolderManager to manage the download of a folder process
+ */
++ (SyncFolderManager*)sharedSyncFolderManager;
+
+/*
+ * Method to get a Singleton of the sharedManageFavorites to manage the favorites
+ */
++ (ManageFavorites*)sharedManageFavorites;
 
 - (void)doLoginWithOauthToken;
 
@@ -257,15 +274,21 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 - (void)checkIfServerSupportThings;
 
+
+
 //-----------------------------------
-/// @name sharedCheckHasShareSupport
+/// @name reloadTableFromDataBaseIfFileIsVisibleOnList
 ///-----------------------------------
 
 /**
- * Singleton to check if a server support share API
+ * Method that check if the file is visible on the file list before reload the table from the database
  *
+ * @param file -> FileDto visible
  */
-+ (CheckHasShareSupport*) sharedCheckHasShareSupport;
+- (void) reloadTableFromDataBaseIfFileIsVisibleOnList:(FileDto *) file;
+- (void) reloadCellByFile:(FileDto *) file;
+
+- (void) reloadCellByKey:(NSString *) key;
 
 
 
@@ -314,7 +337,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 //Url of the server redirected to be used on uploads in background
 @property (nonatomic, strong) NSString *urlServerRedirected;
 @property (nonatomic, strong) ManageDownloads *downloadManager;
-@property (nonatomic, strong) ManageFavorites *manageFavorites;
 @property (nonatomic, strong) NSString *userSessionCurrentToken;
 
 

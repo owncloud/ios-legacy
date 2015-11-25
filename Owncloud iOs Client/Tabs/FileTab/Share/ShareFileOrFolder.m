@@ -25,9 +25,11 @@
 #import "ManageSharesDB.h"
 #import "Customization.h"
 #import "FileNameUtils.h"
-#import "CheckHasShareSupport.h"
 #import "UtilsUrls.h"
 #import "OCSharedDto.h"
+#import "CapabilitiesDto.h"
+#import "ManageCapabilitiesDB.h"
+
 
 #define server_version_with_new_shared_schema 8
 #define password_alert_view_tag 600
@@ -37,8 +39,7 @@
 
 - (void) showShareActionSheetForFile:(FileDto *)file {
     
-    if ((APP_DELEGATE.activeUser.hasShareApiSupport == serverFunctionalitySupported || APP_DELEGATE
-         .activeUser.hasShareApiSupport == serverFunctionalityNotChecked)) {
+    if ((APP_DELEGATE.activeUser.hasShareApiSupport == serverFunctionalitySupported || APP_DELEGATE.activeUser.hasShareApiSupport == serverFunctionalityNotChecked)) {
         _file = file;
         
         //We check if the file is shared
@@ -211,32 +212,32 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
+    NSString *filePath = @"";
+    
+    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:self.file.sharedFileSource forUser:app.activeUser.idUser];
+    
+    if (isFileDto) {
+        //From fileDto
+
+        filePath = [UtilsUrls getFilePathOnDBwithRootSlashAndWithFileName:self.file.fileName ByFilePathOnFileDto:self.file.filePath andUser:app.activeUser];
+        
+        for (OCSharedDto *current in sharesOfFile) {
+            if (current.shareType == shareTypeLink) {
+                self.shareDto = current;
+            }
+        }
+        
+    } else {
+        //From shareDto
+        filePath = self.shareDto.path;
+    }
+    
     [self initLoading];
     
     //In iPad set the global variable
     if (!IS_IPHONE) {
         //Set global loading screen global flag to YES (only for iPad)
         app.isLoadingVisible = YES;
-    }
-    
-    NSString *filePath = @"";
-    
-    if (isFileDto) {
-        //From fileDto
-        NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
-        filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
-        
-        NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:_file.sharedFileSource forUser:app.activeUser.idUser];
-        
-        for (OCSharedDto *current in sharesOfFile) {
-            if (current.shareType == shareTypeLink) {
-                _shareDto = current;
-            }
-        }
-        
-    } else {
-        //From shareDto
-        filePath = _shareDto.path;
     }
     
     //Set the right credentials
@@ -250,7 +251,7 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-     __block OCSharedDto *blockShareDto = _shareDto;
+    __block OCSharedDto *blockShareDto = _shareDto;
     
     [[AppDelegate sharedOCCommunication] isShareFileOrFolderByServer:app.activeUser.url andIdRemoteShared:_shareDto.idRemoteShared onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, BOOL isShared, id shareObjc) {
         
@@ -271,7 +272,7 @@
         }
         
         if (!isSamlCredentialsError) {
-        
+            
             if (isShared) {
                 
                 //Present
@@ -310,7 +311,7 @@
                     if (!isSamlCredentialsError) {
                         
                         //Ok we have the token but we also need all the information of the file in order to populate the database
-                        [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+                        [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
                         
                         [self endLoading];
                         
@@ -326,7 +327,20 @@
                     DLog(@"server error: %ld", (long)response.statusCode);
                     NSInteger code = response.statusCode;
                     
-                    [self manageServerErrors:code and:error withPasswordSupport:true];
+                    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
+                        
+                        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+                        
+                        if (cap.isFilesSharingPasswordEnforcedEnabled) {
+                            [self manageServerErrors:code and:error withPasswordSupport:true];
+                        } else {
+                            [self manageServerErrors:code and:error withPasswordSupport:false];
+                        }
+                        
+                    } else {
+                        [self manageServerErrors:code and:error withPasswordSupport:true];
+                    }
+                    
                     
                     if (error.code != kOCErrorSharedAPIUploadDisabled) {
                         
@@ -335,8 +349,8 @@
                         }
                     }
                     
-               }];
-
+                }];
+                
             }
         }
         
@@ -347,13 +361,26 @@
         DLog(@"server error: %ld", (long)response.statusCode);
         NSInteger code = response.statusCode;
         
-        [self manageServerErrors:code and:error withPasswordSupport:true];
+        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
+            
+            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+            
+            if (cap.isFilesSharingPasswordEnforcedEnabled) {
+                [self manageServerErrors:code and:error withPasswordSupport:true];
+            } else {
+                [self manageServerErrors:code and:error withPasswordSupport:false];
+            }
+            
+        } else {
+            [self manageServerErrors:code and:error withPasswordSupport:true];
+        }
         
         if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
             [self.delegate finishShareWithStatus:false andWithOptions:nil];
         }
         
     }];
+
 }
 
 
@@ -362,40 +389,60 @@
 ///-----------------------------------------------
 
 -(void)doRequestSharedLinkWithPath: (NSString *)path andPassword: (NSString *)password{
+    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    if (![password length]) {
-        [self showError:NSLocalizedString(@"no_pasword", nil)];
-    } else {
-        if (![[password stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]) {
-            [self showError:NSLocalizedString(@"pasword_empty", nil)];
-        } else {
-            //Checking the Shared files and folders
-            [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:path andPassword:password onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
-                
-               
-                //Ok we have the token but we also need all the information of the file in order to populate the database
-                [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
-                
-                //Present
-                [self presentShareActionSheetForToken:token withPassword:true];
-                
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-                
-                DLog(@"error.code: %ld", (long)error.code);
-                DLog(@"server error: %ld", (long)response.statusCode);
-                NSInteger code = response.statusCode;
-                
-                [self manageServerErrors:code and:error withPasswordSupport:false];
-                
-                if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
-                    [self.delegate finishShareWithStatus:false andWithOptions:nil];
-                }
-                
-            }];
-
-        }
+    [self initLoading];
+    
+    //In iPad set the global variable
+    if (!IS_IPHONE) {
+        //Set global loading screen global flag to YES (only for iPad)
+        app.isLoadingVisible = YES;
     }
+    
+    password = [self getPasswordEncodingWithPassword:password];
+    
+    //Checking the Shared files and folders
+    [[AppDelegate sharedOCCommunication] shareFileOrFolderByServer:app.activeUser.url andFileOrFolderPath:path andPassword:password onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
+        
+        [self endLoading];
+        
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                
+                [self errorLogin];
+            }
+        }
+        if (!isSamlCredentialsError) {
+            
+            //Ok we have the token but we also need all the information of the file in order to populate the database
+            [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
+            
+            //Present
+            [self presentShareActionSheetForToken:token withPassword:true];
+        }
+        
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        
+        [self endLoading];
+        
+        DLog(@"error.code: %ld", (long)error.code);
+        DLog(@"server error: %ld", (long)response.statusCode);
+        NSInteger code = response.statusCode;
+        
+        [self manageServerErrors:code and:error withPasswordSupport:false];
+        
+        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+            [self.delegate finishShareWithStatus:false andWithOptions:nil];
+        }
+        
+    }];
+
     
 }
 
@@ -457,7 +504,7 @@
     }
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-    
+
     password = [self getPasswordEncodingWithPassword:password];
     
     [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
@@ -483,7 +530,7 @@
         }
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-        [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+        [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
         [self endLoading];
         
         DLog(@"error.code: %ld", (long)error.code);
@@ -615,7 +662,7 @@
             }
         }
         if (!isSamlCredentialsError) {
-            [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+            [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
             
             [self endLoading];
             
@@ -627,7 +674,7 @@
 
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-        [[AppDelegate sharedCheckHasShareSupport] updateSharesFromServer];
+        [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
         [self endLoading];
         
         DLog(@"error.code: %ld", (long)error.code);
@@ -843,8 +890,7 @@
                     [self errorLogin];
                     break;
                 case kOCErrorSharedAPIUploadDisabled:
-                    
-                    if (isPasswordSupported == true) {
+                    if (isPasswordSupported) {
                         //Share whith password maybe enabled, ask for password and try to do the request again with it
                         [self showAlertEnterPassword];
                     }else{
@@ -868,6 +914,8 @@
     
 }
 
+
+
 /*
  * Show the standar message of the error connection.
  */
@@ -881,14 +929,22 @@
 
 - (void)showAlertEnterPassword {
     
-    _shareProtectedAlertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil)
+    self.shareProtectedAlertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil)
                                                     message:NSLocalizedString(@"shared_link_protected_message", nil)
                                                    delegate:self
                                           cancelButtonTitle:NSLocalizedString(@"cancel", nil)
                                           otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
-    _shareProtectedAlertView.tag = password_alert_view_tag;
-    _shareProtectedAlertView.alertViewStyle = UIAlertViewStyleSecureTextInput;
-    [_shareProtectedAlertView show];
+    
+    self.shareProtectedAlertView.tag = password_alert_view_tag;
+    self.shareProtectedAlertView.alertViewStyle = UIAlertViewStyleSecureTextInput;
+     [self.shareProtectedAlertView textFieldAtIndex:0].delegate = self;
+    [[self.shareProtectedAlertView textFieldAtIndex:0] setAutocorrectionType:UITextAutocorrectionTypeNo];
+    [[self.shareProtectedAlertView textFieldAtIndex:0] setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+    [[self.shareProtectedAlertView textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeDefault];
+    [[self.shareProtectedAlertView textFieldAtIndex:0] setKeyboardAppearance:UIKeyboardAppearanceLight];
+    [[self.shareProtectedAlertView textFieldAtIndex:0] setSecureTextEntry:true];
+    
+    [self.shareProtectedAlertView show];
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -899,13 +955,10 @@
         //alert share link enter password
         if (buttonIndex != 0) {
             
-            UITextField * passwordTextField = [alertView textFieldAtIndex:0];
+            UITextField *passwordTextField = [alertView textFieldAtIndex:0];
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            NSString *filePath = @"";
-            NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
-            filePath = [NSString stringWithFormat: @"%@%@", path, _file.fileName];
-            NSString *passwordText = passwordTextField.text;
-            [self doRequestSharedLinkWithPath:filePath andPassword:[self getPasswordEncodingWithPassword:passwordText]];
+            NSString *filePath = [UtilsUrls getFilePathOnDBwithRootSlashAndWithFileName:self.file.fileName ByFilePathOnFileDto:self.file.filePath andUser:app.activeUser];
+            [self doRequestSharedLinkWithPath:filePath andPassword:passwordTextField.text];
 
         }else{
             if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
@@ -926,6 +979,20 @@
         }
         
     }
+}
+
+- (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView
+{
+    BOOL output = YES;
+    if (alertView.tag == password_alert_view_tag) {
+        UITextField *textField = [alertView textFieldAtIndex:0];
+        if ([textField.text length] == 0){
+            output = NO;
+        }
+    }
+    
+    return output;
+
 }
 
 

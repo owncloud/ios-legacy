@@ -113,4 +113,5 @@
  * @param FileDto -> The file/folder object
  */
 - (void) checkSharedStatusOfFile:(FileDto *) file;
+
 @end

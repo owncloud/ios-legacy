@@ -1,6 +1,6 @@
 ###################################################################
 
-	Copyright (C) 2014, ownCloud Inc.
+	Copyright (C) 2015, ownCloud Inc.
 
 
   	This code is covered by the GNU Public License Version 3.
@@ -110,15 +110,14 @@ The third party software included and used by this project is:
 	Original license document included at Supporting Files/FMDB/LICENSE.
    	See https://github.com/ccgus/fmdb
    	
-* 	VFR Pdf Reader
+ * 	VFR Pdf Reader
 	Copyright (c) 2011-2014 Julius Oklamcak. All rights reserved.
    	Placed at ExternalLibreries/VFR Pdf Reader
 	Original license document included at ExternalLibreries/VFR Pdf Reader/LICENSE.
    	See https://github.com/vfr/Reader
 
 
- * 	ownCloud iOS Library v 1.1.4
-
+ * 	ownCloud iOS Library v 1.1.5
    	Copyright (c) 2014 ownCloud Inc. (http://www.owncloud.org/)
    	Licensed under MIT License.
    	Placed at OCCommunicationLib
@@ -131,4 +130,24 @@ The third party software included and used by this project is:
    	Placed at ExternalLibreries/TTOpenInAppActivity.
 	Original license document included at ExternalLibreries/TTOpenInAppActivity/LICENSE.
    	See https://github.com/honkmaster/TTOpenInAppActivity
+ 
+ * 	TSMessages
+   	Copyright (c) 2014 Toursprung, Felix Krause <krausefx@gmail.com>
+   	Licensed under MIT License.
+   	Placed at ExternalLibreries/TTMessages.
+	Original license document included at ExternalLibreries/TTMesages/LICENSE.txt
+   	See https://github.com/KrauseFx/TSMessages/
+
+ *	cwl-ordered-dictionary
+    	Copyright (c) 2012-2014 Matt Gallagher & Kazuto Yamasaki
+    	Placed at ExternalLibreries/CWLOrderedDictionary.
+    	Original license document included at Class Headers.
+    	See https://github.com/pokelabo/cwl-ordered-dictionary
+
+ * 	ocmock v 3.1.5
+   	Copyright (c) 2004-2015 by Erik Dörnenburg  (http://ocmock.org) 
+   	Licensed under Apache License, Version 2.0.
+   	Placed at Owncloud iOs ClientTests/ExternalLibraries/OCMock_3.1.5
+	Original license document included at Owncloud iOs ClientTests/ExternalLibraries/OCMock_3.1.5/LICENSE
+	See https://github.com/erikdoe/ocmock
 

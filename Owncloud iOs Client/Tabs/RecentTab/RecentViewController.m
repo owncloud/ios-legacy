@@ -74,15 +74,17 @@
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
     
-    //Only for iOS 7
-    if (IS_IOS7) {
-        //This new feature of iOS 7 indicate the extend of the edges of the view
-        self.edgesForExtendedLayout = UIRectCornerAllCorners; //UIRectEdgeBottom
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    if (IS_IOS8 || IS_IOS9) {
+        self.edgesForExtendedLayout = UIRectCornerAllCorners;
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }else{
+        self.edgesForExtendedLayout = UIRectCornerAllCorners;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -100,7 +102,8 @@
 -(void)viewDidLayoutSubviews
 {
     
-    if (IS_IOS8) {
+    if (IS_IOS8 || IS_IOS9) {
+        
         if ([self.uploadsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [self.uploadsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
         }
@@ -109,13 +112,19 @@
             [self.uploadsTableView setLayoutMargins:UIEdgeInsetsZero];
         }
         
+        
+        CGRect rect = self.navigationController.navigationBar.frame;
+        float y = rect.size.height + rect.origin.y;
+        self.uploadsTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+        
     }
+
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    if (IS_IOS8) {
+    if (IS_IOS8 || IS_IOS9) {
         if ([self.uploadsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [self.uploadsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
         }

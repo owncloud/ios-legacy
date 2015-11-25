@@ -20,7 +20,6 @@
 #import "ManageUsersDB.h"
 #import "UserDto.h"
 
-
 @implementation OCKeychain
 
 
@@ -78,14 +77,14 @@
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, (CFTypeRef *)&result);
     
     DLog(@"(getCredentials)Error Code %d", (int)stsExist);
-
-    if(stsExist != errSecSuccess) {
+    
+    if (stsExist != errSecSuccess) {
         NSLog(@"Unable to get the item with id =%@ ",idUser);
         
-    }else {
+    } else {
         
         NSDictionary *resultDict = (__bridge_transfer NSDictionary *)result;
-       
+        
         NSData *pswd = resultDict[(__bridge id)kSecValueData];
         NSString *password = [[NSString alloc] initWithData:pswd encoding:NSUTF8StringEncoding];
         output = [CredentialsDto new];

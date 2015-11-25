@@ -269,7 +269,7 @@
             fileCell.labelInfoFile.text = [NSString stringWithFormat:@"%@", fileDateString];
         }
         
-        fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder];
+        fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder andIsSonOfFavoriteFolder:NO ofUser:self.user];
         
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
@@ -305,7 +305,7 @@
  * Method that sorts alphabetically array by selector
  *@array -> array of sections and rows of tableview
  */
-- (NSArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector {
+- (NSMutableArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector {
     UILocalizedIndexedCollation *collation = [UILocalizedIndexedCollation currentCollation];
     
     NSInteger sectionCount = [[collation sectionTitles] count]; //section count is take from sectionTitles and not sectionIndexTitles
@@ -384,10 +384,6 @@
     remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
      [sharedCommunication readFolder:remotePath withUserSessionToken:nil onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
-        
-        for (OCFileDto *file in items) {
-            DLog(@"File: %@", file.fileName);
-        }
         
         DLog(@"Operation response code: %d", (int)response.statusCode);
         BOOL isSamlCredentialsError=NO;

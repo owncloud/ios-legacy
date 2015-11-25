@@ -71,10 +71,28 @@
 
 + (NSString *) getFilePathOnDBByFilePathOnFileDto:(NSString *) filePathOnFileDto andUser:(UserDto *) user;
 
++ (NSString *) getFilePathOnDBWithFileName:(NSString *)fileName ByFilePathOnFileDto:(NSString *)filePathOnFileDto andUser:(UserDto *) user;
+
++ (NSString *) getFilePathOnDBwithRootSlashAndWithFileName:(NSString *)fileName ByFilePathOnFileDto:(NSString *)filePathOnFileDto andUser:(UserDto *) user;
+
 + (NSString *) getFullRemoteServerFilePathByFile:(FileDto *) file andUser:(UserDto *) user;
 
 + (NSString *) getUserAgent;
 
 + (BOOL) isFileUploadingWithPath:(NSString *)path andUser: (UserDto *) user;
+
+///-----------------------------------
+/// @name getKeyByLocalFolder
+///-----------------------------------
+/**
+ * Return the key that identify a file in the dictionary for download a full folder
+ *
+ * @param localFolder -> /Users/Javi/Library/Developer/CoreSimulator/Devices/3A4FE170-2053-4D9E-9FF0-D2F5FC65C2D4/data/Containers/Shared/AppGroup/8F60BA9F-0A8B-472E-AC05-00A8A66F6CFC/cache_folder/3/Documents/
+ *                    -> /Users/Javi/Library/Developer/CoreSimulator/Devices/3A4FE170-2053-4D9E-9FF0-D2F5FC65C2D4/data/Containers/Shared/AppGroup/8F60BA9F-0A8B-472E-AC05-00A8A66F6CFC/cache_folder/3/Documents/File.pdf
+ *
+ * @return  pathWithAppName -> Documents/
+ *                          -> Documents/File.pdf
+ */
++ (NSString *) getKeyByLocalFolder:(NSString *) localFolder;
 
 @end
