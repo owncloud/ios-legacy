@@ -61,6 +61,7 @@
 #import "SyncFolderManager.h"
 #import "IndexedForest.h"
 #import "ManageCapabilitiesDB.h"
+#import "CheckCapabilities.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -783,6 +784,10 @@
     
     //Add an observer for update the file sync
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFromDataBaseWithFileDto:) name:FavoriteFileIsSync object:nil];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFileList) name:CapabilitiesUpdatedNotification object:nil];
+
 }
 
 
@@ -1735,6 +1740,7 @@
             //Check if there are fragmens of saml in url, in this case there are a credential error
             isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
             if (isSamlCredentialsError) {
+                self.isLoadingForNavigate = NO;
                 [self errorLogin];
             }
         }
@@ -1800,6 +1806,7 @@
         [self endLoading];
     }*/
 }
+
 
 -(void)reloadTableFileList {
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
@@ -3202,7 +3209,7 @@
     NSMutableArray *rightUtilityButtons = [NSMutableArray new];
     
     BOOL areTwoButtonsInTheSwipe = false;
-    if ( (k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled == false) ) {
+    if ( (k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled) ) {
         //Two buttons
         areTwoButtonsInTheSwipe = true;
     }else{
@@ -3268,7 +3275,7 @@
         }
         case 1:
         {
-            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
+            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
                 DLog(@"Click on index 2 - Delete");
                 [self didSelectDeleteOption];
                 break;
@@ -3281,7 +3288,7 @@
         }
         case 2:
         {
-            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
+            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
             }else{
                 DLog(@"Click on index 2 - Delete");
                 [self didSelectDeleteOption];

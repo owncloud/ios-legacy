@@ -379,7 +379,7 @@
 
 - (void) sharedLinkSwithValueChanged: (UISwitch*)sender {
     
-    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto) {
         CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
         
         if (!cap.isFilesSharingShareLinkEnabled) {
