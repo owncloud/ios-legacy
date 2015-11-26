@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.4.5</string>
+	<string>3.4.6</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -43,6 +43,17 @@
 			<key>UIDocumentPickerSupportedFileTypes</key>
 			<array>
 				<string>public.content</string>
+				<string>public.text</string>
+				<string>public.plain-text</string>
+				<string>public.html</string>
+				<string>public.presentation</string>
+				<string>public.video</string>
+				<string>public.mpeg</string>
+				<string>public.audio</string>
+				<string>public.image</string>
+				<string>public.jpeg</string>
+				<string>public.tiff</string>
+				<string>public.data</string>
 			</array>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>

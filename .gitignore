@@ -17,6 +17,7 @@ DerivedData
 *.hmap
 *.xccheckout
 *.pyc
+xcshareddata/
 
 #CocoaPods
 Pods

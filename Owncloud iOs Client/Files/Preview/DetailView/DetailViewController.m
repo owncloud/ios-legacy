@@ -39,6 +39,10 @@
 #import "ReaderViewController.h"
 #import "OCSplitViewController.h"
 #import "ShareMainViewController.h"
+#import "SyncFolderManager.h"
+#import "DownloadUtils.h"
+#import "ManageCapabilitiesDB.h"
+#import "DownloadFileSyncFolder.h"
 
 
 NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
@@ -110,6 +114,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     _progressViewHeightConstraint.constant = 2;
     _fileTypeCenterHeightConstraint.constant = -40;
     
+    
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
 
     //Set title and the font of the label of the toolBar
     [_titleLabel setFont:[UIFont systemFontOfSize:18.0]];
@@ -122,14 +129,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [self setNotificationForCommunicationBetweenViews];
     
     
-    if (([[[UIDevice currentDevice] systemVersion] floatValue] < 9)) {
-        //Add gesture for the full screen support
-        self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(launchTransitionProcessForFullScreen)];
-        self.singleTap.numberOfTapsRequired = 1;
-        self.singleTap.numberOfTouchesRequired = 1;
-        self.singleTap.delegate = self;
-    }
-    
+    self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(launchTransitionProcessForFullScreen)];
+    self.singleTap.numberOfTapsRequired = 1;
+    self.singleTap.numberOfTouchesRequired = 1;
+    self.singleTap.delegate = self;
+
     
     [self.splitViewController setPresentsWithGesture:NO];
     
@@ -138,16 +142,20 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    
+    
     _isViewBlocked = NO;
     _isCancelDownloadClicked = NO;
     //Configure view
     [self configureView];
+    
 }
 
 
@@ -176,15 +184,13 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [items insertObject:_favoriteButtonBar atIndex:3];
         [items insertObject:_spaceBar2 atIndex:4];
         
-        if (k_hide_share_options) {
+        if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
              [items insertObject:_deleteButtonBar atIndex:5];
         }else{
             [items insertObject:_shareLinkButtonBar atIndex:5];
             [items insertObject:_spaceBar3 atIndex:6];
             [items insertObject:_deleteButtonBar atIndex:7];
         }
-        
-        
     }
     [toolbar setItems:items animated:YES];
     
@@ -197,6 +203,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     CGRect correctFrame = CGRectMake(originFrame.origin.x, originFrame.origin.y, sizeFrame.size.width, (sizeFrame.size.height - originFrame.origin.y));
     
+ 
     return correctFrame;
 }
 
@@ -215,6 +222,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 - (void) handleFile:(FileDto*)myFile fromController:(NSInteger)controller {
     DLog(@"HandleFile _file.fileName: %@", _file.fileName);
+    
+    [[AppDelegate sharedSyncFolderManager] cancelDownload:myFile];
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
@@ -662,7 +671,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  * This method puts the favorite star on starred or unstarred state on the preview view
  */
 - (void) putTheFavoriteStatus {
-    if (_file.isFavorite) {
+    if (_file.isFavorite || [DownloadUtils isSonOfFavoriteFolder:self.file]) {
         //Change the image to unstarred
         _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
     } else {
@@ -991,25 +1000,29 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if (_file.isFavorite) {
-        _file.isFavorite = NO;
-        //Change the image to unstarred
-        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+    if ([DownloadUtils isSonOfFavoriteFolder:self.file]) {
+        [self showAlertView:NSLocalizedString(@"parent_folder_is_favorite", nil)];
     } else {
-        _file.isFavorite = YES;
-        _isCancelDownloadClicked = NO;
-        //Change the image to starred
-        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
-        //Download the file if it's not downloaded and not pending to be download
-        [self downloadTheFileIfIsnotDownloadingInOtherProcess];
-    }
-    
-    //Update the DB
-    [ManageFilesDB updateTheFileID:_file.idFile asFavorite:_file.isFavorite];
-    [app.presentFilesViewController reloadTableFromDataBase];
-    
-    if (_file.isFavorite && _file.isDownload == downloaded) {
-        [self checkIfThereIsANewFavoriteVersion];
+        if (_file.isFavorite) {
+            _file.isFavorite = NO;
+            //Change the image to unstarred
+            _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+        } else {
+            _file.isFavorite = YES;
+            _isCancelDownloadClicked = NO;
+            //Change the image to starred
+            _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
+            //Download the file if it's not downloaded and not pending to be download
+            [self downloadTheFileIfIsnotDownloadingInOtherProcess];
+        }
+        
+        //Update the DB
+        [ManageFilesDB updateTheFileID:_file.idFile asFavorite:_file.isFavorite];
+        [app.presentFilesViewController reloadTableFromDataBase];
+        
+        if (_file.isFavorite && _file.isDownload == downloaded) {
+            [self checkIfThereIsANewFavoriteVersion];
+        }
     }
 }
 
@@ -1273,7 +1286,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         if (downloadIsInProgress) {
             
-            if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
+            if (!k_is_sso_active) {
                 
                 if (_file.isNecessaryUpdate) {
                     [self putUpdateProgressInNavBar];
@@ -1772,6 +1785,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updatePreviewFileWithNewIdFromDBWhenAFileISDelete:) name:fileDeleteInAOverwriteProcess object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cleanView) name:IpadCleanPreviewNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNotConnectionWithServerMessage) name:IpadShowNotConnectionWithServerMessageNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadFileInView:) name:PreviewFileNotificationUpdated object:nil];
 }
 
 
@@ -1795,17 +1809,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [self handleFile:_file fromController:_controllerManager];
         DLog(@"id file: %ld", (long)_file.idFile);
     }    
-}
-
-
-- (void) receiveTestNotification:(NSNotification *) notification
-{
-    if ([notification.name isEqualToString:@"TestNotification"])
-    {
-        NSDictionary* userInfo = notification.userInfo;
-        int messageTotal = [[userInfo objectForKey:@"total"] intValue];
-        NSLog (@"Successfully received test notification! %i", messageTotal);
-    }
 }
 
 /*
@@ -1842,6 +1845,17 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     }
 }
 
+- (void) reloadFileInView:(NSNotification *)notification {
+    
+    self.file = (FileDto*)[notification object];
+    
+    if (_typeOfFile == imageFileType) {
+        self.galleryView = nil;
+        [self initGallery];
+    } else {
+        [self downloadCompleted:self.file];
+    }
+}
 
 
 ///-----------------------------------
@@ -1945,7 +1959,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         CGFloat deltaWidth = k_delta_width_for_split_transition;
         
-        if (IS_IOS8) {
+
+        if (IS_IOS8 || IS_IOS9) {
             
             selfFrame.size.width += deltaWidth;
             selfFrame.origin.x -= deltaWidth;
@@ -1966,6 +1981,10 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         
         self.hideMaster = !self.hideMaster;
         
+        if (IS_IOS9) {
+            [self.splitViewController viewWillTransitionToSize:self.splitViewController.view.frame.size withTransitionCoordinator:self.splitViewController.transitionCoordinator];
+        }
+        
         [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
         
         [self hideContainerView];
@@ -1973,8 +1992,13 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [self toggleHideMaster:nil];
         
         [self toggleHideToolBar:^{
-              [self showContainerView];
+            
+            [self showContainerView];
+            
+           
         }];
+        
+        
         
     }else{
         
@@ -1994,7 +2018,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             
             CGFloat deltaWidth = k_delta_width_for_split_transition;
             
-            if (IS_IOS8) {
+            if (IS_IOS8 || IS_IOS9) {
                 
                 selfFrame.size.width -= deltaWidth;
                 selfFrame.origin.x += deltaWidth;
@@ -2012,7 +2036,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             }
             
             [self.splitViewController.view setFrame:selfFrame];
-            
             [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
             
             [self convertMasterViewInvisible:YES];
@@ -2054,11 +2077,12 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void) showContainerView{
     
+   
     CGRect frame;
     
     if (self.hideMaster) {
         
-        if (IS_IOS8) {
+        if (IS_IOS8 || IS_IOS9) {
             frame = self.view.window.bounds;
         }else{
             
@@ -2067,11 +2091,13 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             }else{
                 frame = CGRectMake(0.0, 0.0, self.view.window.bounds.size.height, self.view.window.bounds.size.width);
             }
-            
         }
         
     }else{
+        
         frame = [self getTheCorrectSize];
+        
+        
     }
     
     if (self.galleryView) {
@@ -2104,22 +2130,30 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^(void)
      {
+       
+         if (!self.hideMaster && IS_IOS9) {
+             [self.splitViewController.view setNeedsLayout];
+             self.splitViewController.delegate = nil;
+             self.splitViewController.delegate = self;
+         }
          
          CGRect selfFrame = self.splitViewController.view.frame;
          
          CGFloat deltaWidth = k_delta_width_for_split_transition;
          
-         if (IS_IOS8) {
+         if (IS_IOS8 || IS_IOS9) {
              
              if (self.hideMaster)
              {
                  selfFrame.size.width += deltaWidth;
                  selfFrame.origin.x -= deltaWidth;
+                 
              }
              else
              {
                  selfFrame.size.width -= deltaWidth;
                  selfFrame.origin.x += deltaWidth;
+
              }
 
          }else{
@@ -2147,8 +2181,12 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
              }
 
          }
-         
+
          [self.splitViewController.view setFrame:selfFrame];
+         
+         if (!self.hideMaster && IS_IOS9) {
+              [self.splitViewController.view layoutIfNeeded];
+         }
          
          
      }completion:^(BOOL finished){
@@ -2215,6 +2253,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         if (self.moviePlayer) {
             self.moviePlayer.view.frame = [self getTheCorrectSize];
         }
+        
  
         
     } completion:^(BOOL finished) {
@@ -2308,5 +2347,14 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     }
 }
 
+- (void)updateFavoriteIconWhenAFolderIsSelectedFavorite {
+    if ([DownloadUtils isSonOfFavoriteFolder:self.file]) {
+        //Change the image to unstarred
+        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
+    } else {
+        //Change the image to starred
+        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+    }
+}
 
 @end

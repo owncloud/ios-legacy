@@ -18,6 +18,10 @@
 #import "constants.h"
 #import "CustomCellFileAndDirectory.h"
 #import "FileNameUtils.h"
+#import "IndexedForest.h"
+#import "UtilsUrls.h"
+#import "SyncFolderManager.h"
+#import "CWLOrderedDictionary.h"
 #import "UtilsUrls.h"
 #import "ManageSharesDB.h"
 
@@ -136,9 +140,10 @@
  * @param fileForSetTheStatusIcon -> FileDto, the file for set the status
  * @param fileCell -> CustomCellFileAndDirectory, the cell where the file is located
  * @param currentFolder -> FileDto, of the folder that contain the fileForSetTheStatusIcon
+ * @param isCurrentFolderSonOfFavoriteFolder -> BOOL, indicate if the current cell is from a favorit folder
  * @param user -> UserDto.
  */
-+ (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder ofUser:(UserDto *)user {
++ (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder andIsSonOfFavoriteFolder:(BOOL)isCurrentFolderSonOfFavoriteFolder ofUser:(UserDto *)user {
     
     if (fileForSetTheStatusIcon.isDirectory) {
         //We only show the shared icon if the folder is shared and the father is not shared
@@ -153,12 +158,29 @@
         } else {
             fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
         }
+        
+        
+#ifdef CONTAINER_APP
+        if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
+            if([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon] || [fileForSetTheStatusIcon.etag isEqualToString:k_negative_etag] || fileForSetTheStatusIcon.isNecessaryUpdate) {
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
+            } else {
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
+            }
+        } else if ([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon]) {
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon.png"];
+        } else {
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+        }
+#else
         fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+#endif   
+        
     } else {
         NSString *imageFile= [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         fileCell.fileImageView.image=[UIImage imageNamed:imageFile];
         
-        if (fileForSetTheStatusIcon.isFavorite) {
+        if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
             if(fileForSetTheStatusIcon.isDownload == downloaded && !fileForSetTheStatusIcon.isNecessaryUpdate) {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
             } else {

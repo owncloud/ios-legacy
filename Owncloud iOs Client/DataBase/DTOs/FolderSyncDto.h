@@ -1,8 +1,9 @@
 //
-//  CheckHasCookiesSupport.h
+//  FolderSyncDto.h
 //  Owncloud iOs Client
 //
-//  Created by Javier Gonzalez on 06/08/14.
+//  Created by Javier Gonzalez on 29/09/15.
+//
 //
 
 /*
@@ -13,10 +14,13 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
-#import <Foundation/Foundation.h>
+#import "FileDto.h"
 
-@interface CheckHasCookiesSupport : NSObject
+@interface FolderSyncDto : NSObject
 
-- (void)checkIfServerHasCookiesSupport;
+@property NSInteger idFolderSync;
+@property (nonatomic, strong) FileDto *file;
+@property BOOL isReadFromDatabase;
+@property NSInteger taskIdentifier;
 
 @end

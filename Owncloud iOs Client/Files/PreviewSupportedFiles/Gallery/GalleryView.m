@@ -25,7 +25,7 @@
 #import "constants.h"
 #import "Customization.h"
 #import "UtilsUrls.h"
-
+#import "SyncFolderManager.h"
 
 @interface GalleryView ()
 
@@ -539,7 +539,7 @@
         
         if (download) {
             
-            if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
+            if (!k_is_sso_active) {
                 
                 download.delegate = self;
                 
@@ -856,6 +856,9 @@
         
         
         [_delegate selectThisFile:_file];
+        
+        [[AppDelegate sharedSyncFolderManager] cancelDownload:currentFile];
+        currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:app.activeUser] andUser:app.activeUser];
         
         if (_file.isDownload == updating) {
             [self putUpdateProgressInNavBar];
