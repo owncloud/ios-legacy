@@ -789,6 +789,7 @@
     DLog(@"user: %ld", (long)app.activeUser.idUser);
     DLog(@"user: %ld", (long)selectedUpload.userId);
     
+    
     if(selectedUpload.userId == app.activeUser.idUser){
         
         _selectedUploadToResolveTheConflict=selectedUpload;
@@ -1072,6 +1073,21 @@
 - (void)folderSelected:(NSString*)folder{
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    if (self.selectedFileDtoToResolveNotPermission) {
+        
+        //If exist file related with the select upload put in downloaded state
+        UserDto *user = [ManageUsersDB getUserByIdUser:self.selectedFileDtoToResolveNotPermission.userId];
+        
+        NSString *parentFolder = [UtilsUrls getFilePathOnDBByFullPath:self.selectedFileDtoToResolveNotPermission.destinyFolder andUser:user];
+        
+        FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.selectedFileDtoToResolveNotPermission.uploadFileName andFilePath:parentFolder andUser:user];
+        
+        if (uploadFile && uploadFile.isDownload == overwriting) {
+            [ManageFilesDB setFileIsDownloadState:uploadFile.idFile andState:downloaded];
+        }
+
+    }
     
     DLog(@"Change Folder");
     //TODO. Change current Remote Folder
