@@ -24,6 +24,8 @@
 #import "CWLOrderedDictionary.h"
 #import "UtilsUrls.h"
 #import "ManageSharesDB.h"
+#import "ManageFilesDB.h"
+#import "FileListDBOperations.h"
 
 @implementation InfoFileUtils
 
@@ -226,6 +228,16 @@
     }
     
     return fileCell;
+}
+
+
++(void)createAllFoldersInFileSystemByFileDto:(FileDto *)file andUserDto:(UserDto *)user {
+    
+    NSMutableArray *listOfRemoteFilesAndFolders = [ManageFilesDB getFilesByFileIdForActiveUser:(int) file.idFile];
+    
+    NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:user];
+    
+    [FileListDBOperations createAllFoldersByArrayOfFilesDto:listOfRemoteFilesAndFolders andLocalFolder:path];
 }
 
 @end
