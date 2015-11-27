@@ -994,12 +994,7 @@
 - (void) setNewNameToSaveFile:(NSString *)name {
     DLog(@"setNewNameToSaveFile: %@", name);
     
-    //Get the file related with the upload file if exist and remove the download
-    UserDto *user = [ManageUsersDB getUserByIdUser:self.selectedUploadToResolveTheConflict.userId];
-    
-    NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:_selectedUploadToResolveTheConflict.destinyFolder andUser:user];
-
-    FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.selectedUploadToResolveTheConflict.uploadFileName andFilePath:folderName andUser:user];
+    FileDto *uploadFile = [UploadUtils getFileDtoByUploadOffline:self.selectedUploadToResolveTheConflict];
     
     if (uploadFile) {
         [ManageFilesDB setFileIsDownloadState:uploadFile.idFile andState:notDownload];
@@ -1031,13 +1026,7 @@
     //A overwrite process is in progress
     app.isOverwriteProcess = YES;
     
-    //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
-    //The folder Name: A/
-    NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:_selectedUploadToResolveTheConflict.destinyFolder andUser:app.activeUser];
-    
-    //Obtain the file that the user wants overwrite    
-    FileDto *file = nil;
-    file = [ManageFilesDB getFileDtoByFileName:_selectedUploadToResolveTheConflict.uploadFileName andFilePath:folderName andUser:app.activeUser];
+    FileDto *file = [UploadUtils getFileDtoByUploadOffline:self.selectedUploadToResolveTheConflict];
     
     //Check if this file is being updated and cancel it
     Download *downloadFile;
@@ -1077,11 +1066,13 @@
     if (self.selectedFileDtoToResolveNotPermission) {
         
         //If exist file related with the select upload put in downloaded state
-        UserDto *user = [ManageUsersDB getUserByIdUser:self.selectedFileDtoToResolveNotPermission.userId];
+        //UserDto *user = [ManageUsersDB getUserByIdUser:self.selectedFileDtoToResolveNotPermission.userId];
         
-        NSString *parentFolder = [UtilsUrls getFilePathOnDBByFullPath:self.selectedFileDtoToResolveNotPermission.destinyFolder andUser:user];
+       // NSString *parentFolder = [UtilsUrls getFilePathOnDBByFullPath:self.selectedFileDtoToResolveNotPermission.destinyFolder andUser:user];
         
-        FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.selectedFileDtoToResolveNotPermission.uploadFileName andFilePath:parentFolder andUser:user];
+      //  FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.selectedFileDtoToResolveNotPermission.uploadFileName andFilePath:parentFolder andUser:user];
+        
+        FileDto *uploadFile = [UploadUtils getFileDtoByUploadOffline:self.selectedFileDtoToResolveNotPermission];
         
         if (uploadFile && uploadFile.isDownload == overwriting) {
             [ManageFilesDB setFileIsDownloadState:uploadFile.idFile andState:downloaded];
