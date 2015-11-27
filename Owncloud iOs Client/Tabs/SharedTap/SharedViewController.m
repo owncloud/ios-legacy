@@ -697,7 +697,7 @@
 
         //Obtain the path where the folder will be created in the file system
         NSString *rootPath = [NSString stringWithFormat:@"%@", newFolder.filePath];
-        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         //Remove the "/"
         NSString *name = [newFolder.fileName substringToIndex:[newFolder.fileName length]-1];
         
