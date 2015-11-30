@@ -688,7 +688,7 @@
             
             OCSharedDto *shareWith = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
             
-            NSString *name = shareWith.shareWith;
+            NSString *name = shareWith.shareWithDisplayName;
             
             if (shareWith.shareType == 1) {
                 name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_group_indicator", nil)];
