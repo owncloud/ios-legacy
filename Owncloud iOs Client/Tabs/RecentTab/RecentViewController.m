@@ -994,13 +994,6 @@
 - (void) setNewNameToSaveFile:(NSString *)name {
     DLog(@"setNewNameToSaveFile: %@", name);
     
-    FileDto *uploadFile = [UploadUtils getFileDtoByUploadOffline:self.selectedUploadToResolveTheConflict];
-    
-    if (uploadFile) {
-        [ManageFilesDB setFileIsDownloadState:uploadFile.idFile andState:notDownload];
-        [DownloadUtils removeDownloadFileWithPath:uploadFile.localFolder];
-    }
-    
     _selectedUploadToResolveTheConflict.uploadFileName = name;
     
     [ManageUploadsDB updateErrorConflictFilesSetNewName:[name encodeString:NSUTF8StringEncoding] forUploadOffline:_selectedUploadToResolveTheConflict];
@@ -1010,7 +1003,6 @@
     _selectedUploadToResolveTheConflict.kindOfError=notAnError;
     [self updateRecents];
     
-    
     //Relaunch the uploads that failed before
     [app performSelectorInBackground:@selector(relaunchUploadsFailedForced) withObject:nil];
 }
@@ -1019,7 +1011,6 @@
 - (void) overWriteFile {
      AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     _selectedUploadToResolveTheConflict.isNotNecessaryCheckIfExist = YES;
-    
     
     [ManageUploadsDB updateErrorConflictFilesSetOverwrite:YES forUploadOffline: _selectedUploadToResolveTheConflict];
     

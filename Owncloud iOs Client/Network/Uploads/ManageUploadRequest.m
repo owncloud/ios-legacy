@@ -727,6 +727,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
 }
 
+//Method called when the overwrite process is cancelled
 - (void)finishOverwriteProcess{
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -745,7 +746,11 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     }
     
     if (!deleteOverwriteFile.isFavorite){
-         [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:notDownload];
+        
+        if (deleteOverwriteFile.isDownload == overwriting){
+             [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:downloaded];
+        }
+ 
     }else{
         [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:downloaded];
         [ManageFilesDB setFile:deleteOverwriteFile.idFile isNecessaryUpdate:false];
