@@ -72,22 +72,3 @@ The Settings screen also has links to Help, Recommend to a Friend, Send
 Feedback, and your app version number.
 
 .. image:: images/ios-settings.png
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
