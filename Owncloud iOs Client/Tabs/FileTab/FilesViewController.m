@@ -901,14 +901,6 @@
                     }
                 }
                 if (!isSamlCredentialsError) {
-                    
-                    //Obtain the path where the folder will be created in the file system
-                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-                    
-                    DLog(@"Name of the folder: %@ to create in: %@",name, currentLocalFileToCreateFolder);
-                    
-                    //Create the new folder in the file system
-                    [FileListDBOperations createAFolder:name inLocalFolder:currentLocalFileToCreateFolder];
                     [self refreshTableFromWebDav];
                 }
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
