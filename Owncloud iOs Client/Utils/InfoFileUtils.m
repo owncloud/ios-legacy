@@ -26,6 +26,7 @@
 #import "ManageSharesDB.h"
 #import "ManageFilesDB.h"
 #import "FileListDBOperations.h"
+#import "UIImage+Thumbnail.h"
 
 @implementation InfoFileUtils
 
@@ -179,9 +180,29 @@
 #endif   
         
     } else {
-        NSString *imageFile= [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        fileCell.fileImageView.image=[UIImage imageNamed:imageFile];
         
+        if (fileForSetTheStatusIcon.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:fileForSetTheStatusIcon.fileName]) {
+            
+            NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            fileCell.fileImageView.image = [UIImage imageNamed:imageFile];
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                UIImage *fullImage = [UIImage imageWithContentsOfFile: fileForSetTheStatusIcon.localFolder];
+                UIImage *thumbnail = [fullImage getThumbnail];
+                
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    fileCell.fileImageView.image = thumbnail;
+                });
+            });
+            
+            
+        }else{
+            NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            fileCell.fileImageView.image = [UIImage imageNamed:imageFile];
+        }
+        
+
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
             if(fileForSetTheStatusIcon.isDownload == downloaded && !fileForSetTheStatusIcon.isNecessaryUpdate) {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
