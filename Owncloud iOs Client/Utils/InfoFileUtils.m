@@ -27,6 +27,7 @@
 #import "ManageFilesDB.h"
 #import "FileListDBOperations.h"
 #import "UIImage+Thumbnail.h"
+#import "NSObject+AssociatedObject.h"
 
 @implementation InfoFileUtils
 
@@ -181,10 +182,13 @@
         
     } else {
         
+        NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        fileCell.fileImageView.image = [UIImage imageNamed:imageFile];
+
+        
         if (fileForSetTheStatusIcon.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:fileForSetTheStatusIcon.fileName]) {
             
-            NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-            fileCell.fileImageView.image = [UIImage imageNamed:imageFile];
+            fileCell.fileImageView.associatedObject = fileForSetTheStatusIcon.localFolder;
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                 UIImage *fullImage = [UIImage imageWithContentsOfFile: fileForSetTheStatusIcon.localFolder];
@@ -193,13 +197,12 @@
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     fileCell.fileImageView.image = thumbnail;
+                    
+                    [fileCell.fileImageView.layer setMasksToBounds:YES];
+                    [fileCell setNeedsLayout];
                 });
             });
             
-            
-        }else{
-            NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-            fileCell.fileImageView.image = [UIImage imageNamed:imageFile];
         }
         
 

@@ -634,6 +634,8 @@
 		EA2B4FB217FC2CCE001766BB /* company_empty_screen_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FB117FC2CCE001766BB /* company_empty_screen_ipad@2x.png */; };
 		EA4070FE1C11B82B008B1507 /* UIImage+Thumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4070FD1C11B82B008B1507 /* UIImage+Thumbnail.m */; };
 		EA4070FF1C11B82B008B1507 /* UIImage+Thumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4070FD1C11B82B008B1507 /* UIImage+Thumbnail.m */; };
+		EA4071031C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4071021C11CAA0008B1507 /* NSObject+AssociatedObject.m */; };
+		EA4071041C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4071021C11CAA0008B1507 /* NSObject+AssociatedObject.m */; };
 		EA42FA4B18041E2F0006DB7C /* PassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4A18041E2F0006DB7C /* PassthroughView.m */; };
 		EA42FA4E1804217D0006DB7C /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA42FA51180539E70006DB7C /* ImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA50180539E70006DB7C /* ImageUtils.m */; };
@@ -1607,6 +1609,8 @@
 		EA2B4FB117FC2CCE001766BB /* company_empty_screen_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "company_empty_screen_ipad@2x.png"; sourceTree = "<group>"; };
 		EA4070FC1C11B82B008B1507 /* UIImage+Thumbnail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Thumbnail.h"; path = "Utils/ImagenScale/UIImage+Thumbnail.h"; sourceTree = "<group>"; };
 		EA4070FD1C11B82B008B1507 /* UIImage+Thumbnail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Thumbnail.m"; path = "Utils/ImagenScale/UIImage+Thumbnail.m"; sourceTree = "<group>"; };
+		EA4071011C11CAA0008B1507 /* NSObject+AssociatedObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+AssociatedObject.h"; path = "Utils/NSObject+AssociatedObject.h"; sourceTree = "<group>"; };
+		EA4071021C11CAA0008B1507 /* NSObject+AssociatedObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+AssociatedObject.m"; path = "Utils/NSObject+AssociatedObject.m"; sourceTree = "<group>"; };
 		EA42197F1A94F6850081D400 /* Owncloud iOs Client-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Owncloud iOs Client-Bridging-Header.h"; sourceTree = "<group>"; };
 		EA42FA4918041E2F0006DB7C /* PassthroughView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PassthroughView.h; path = Tabs/FileTab/PassthroughView.h; sourceTree = "<group>"; };
 		EA42FA4A18041E2F0006DB7C /* PassthroughView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PassthroughView.m; path = Tabs/FileTab/PassthroughView.m; sourceTree = "<group>"; };
@@ -2072,6 +2076,8 @@
 				EAEE0830192B35CC00E1AA25 /* SystemConstants.h */,
 				EAF771301B73523800ED6E6E /* SystemConstants-swift.swift */,
 				148DD6EC17786BAF00FB9977 /* constants.h */,
+				EA4071011C11CAA0008B1507 /* NSObject+AssociatedObject.h */,
+				EA4071021C11CAA0008B1507 /* NSObject+AssociatedObject.m */,
 				1467037319372ACC00087289 /* DownloadUtils.h */,
 				1467037419372ACC00087289 /* DownloadUtils.m */,
 				148DD6FB17786BF200FB9977 /* FileNameUtils.h */,
@@ -4502,6 +4508,7 @@
 				148DD6E817786A1400FB9977 /* SettingsViewController.m in Sources */,
 				59D774CE1910EE0F004322BA /* UtilsTableView.m in Sources */,
 				148DD6EA17786A1400FB9977 /* WebViewController.m in Sources */,
+				EA4071031C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */,
 				EABF69151891379C00A2217C /* SWCellScrollView.m in Sources */,
 				EABF69141891379C00A2217C /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */,
@@ -4667,6 +4674,7 @@
 				590849F21A0A811000D3E842 /* SWCellScrollView.m in Sources */,
 				EAD281BB1A38A2F900A00D54 /* DPDownload.m in Sources */,
 				590849F31A0A811000D3E842 /* SWLongPressGestureRecognizer.m in Sources */,
+				EA4071041C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */,
 				590849F41A0A811000D3E842 /* SWTableViewCell.m in Sources */,
 				590849F51A0A811000D3E842 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				590849F61A0A811000D3E842 /* SWUtilityButtonView.m in Sources */,
