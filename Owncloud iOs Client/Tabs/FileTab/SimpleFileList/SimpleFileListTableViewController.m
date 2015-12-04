@@ -428,7 +428,12 @@
             [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:file.idFile];
             
             //Send the data to DB and refresh the table
-            [self deleteOldDataFromDBBeforeRefresh:directoryList ofFolder:file];
+            
+            //This process can not be executed twice at the same time
+            if (self.isRefreshInProgress == NO) {
+                self.isRefreshInProgress=YES;
+                [InfoFileUtils createAllFoldersInFileSystemByFileDto:file andUserDto:self.user];
+            }
             
             if (isNecessaryNavigate) {
                 
@@ -462,39 +467,6 @@
     }];
 }
 
-/*
- * This method receive the new array of the server and store the changes
- * in the Database and in the tableview
- * @param requestArray -> NSArray of path items
- */
--(void)deleteOldDataFromDBBeforeRefresh:(NSArray *) requestArray ofFolder:(FileDto *) file {
-    
-    //This process can not be executed twice at the same time
-    if (self.isRefreshInProgress == NO) {
-        self.isRefreshInProgress=YES;
-        
-        NSMutableArray *directoryList = [NSMutableArray arrayWithArray:requestArray];
-        
-        //Change the filePath from the library to our format
-        for (FileDto *currentFile in directoryList) {
-            //Remove part of the item file path
-            NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:self.user];
-            if([currentFile.filePath length] >= [partToRemove length]){
-                currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
-            }
-        }
-        
-        NSArray *listOfRemoteFilesAndFolders = [ManageFilesDB getFilesByFileIdForActiveUser:(int) self.currentFolder.idFile];
-        
-        for (FileDto *current in listOfRemoteFilesAndFolders) {
-            DLog(@"current: %@", current.fileName);
-        }
-        
-        NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:self.user];
-        
-        [FileListDBOperations createAllFoldersByArrayOfFilesDto:listOfRemoteFilesAndFolders andLocalFolder:path];
-    }
-}
 
 #pragma mark Loading view methods
 

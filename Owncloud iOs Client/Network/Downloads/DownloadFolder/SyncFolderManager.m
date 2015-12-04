@@ -34,6 +34,7 @@
 #import "InfoFileUtils.h"
 #import "DownloadUtils.h"
 #import "constants.h"
+#import "InfoFileUtils.h"
 
 static float const kDelayAfterCancelAll = 3.0;
 
@@ -130,7 +131,7 @@ static float const kDelayAfterCancelAll = 3.0;
     
     if (currentFolderSync.isReadFromDatabase && filesFromCurrentFolder.count > 0) {
         
-        [self createAllFoldersInFileSystemByFileDto:currentFolder];
+        [InfoFileUtils createAllFoldersInFileSystemByFileDto:currentFolder andUserDto:currentUser];
         
         for (FileDto *currentFile in filesFromCurrentFolder) {
             //Add the folder to the queue of sync and the file to the queue of downloads
@@ -245,7 +246,8 @@ static float const kDelayAfterCancelAll = 3.0;
                         [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:currentFolder.idFile];
                         
                         //Send the data to DB and refresh the table
-                        [self createAllFoldersInFileSystemByFileDto:currentFolder];
+                        
+                        [InfoFileUtils createAllFoldersInFileSystemByFileDto:currentFolder andUserDto:currentUser];
                         
                         NSMutableArray *tmpFilesAndFolderToSync = [ManageFilesDB getFilesByFileIdForActiveUser:currentFolder.idFile];
                         
@@ -346,18 +348,6 @@ static float const kDelayAfterCancelAll = 3.0;
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         [app reloadCellByKey:completedKey];
     }
-}
-
-
--(void)createAllFoldersInFileSystemByFileDto:(FileDto *) file {
-
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    NSMutableArray *listOfRemoteFilesAndFolders = [ManageFilesDB getFilesByFileIdForActiveUser:(int) file.idFile];
-    
-    NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:app.activeUser];
-    
-    [FileListDBOperations createAllFoldersByArrayOfFilesDto:listOfRemoteFilesAndFolders andLocalFolder:path];
 }
 
 #pragma mark - Download Process
