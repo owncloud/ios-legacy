@@ -1665,13 +1665,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 }
 
 -(NSString *)stripIndexPhpOrAppsFilesFromUrl:(NSString *)url {
-    NSString *lastPath = k_remove_to_suffix;
-    NSString *containsPath = k_remove_to_contains_path;
     
-    NSRange range = [url rangeOfString:containsPath];
+    NSRange range = [url rangeOfString:k_remove_to_contains_path];
     
-    if ([url hasSuffix:lastPath]) {
-        url = [url substringToIndex:[url length] - [lastPath length]];
+    if ([url hasSuffix:k_remove_to_suffix]) {
+        url = [url substringToIndex:[url length] - [(NSString *)k_remove_to_suffix length]];
         self.urlTextField.text = url;
     } else if (range.length > 0) {
         url = [url substringToIndex:range.location];
