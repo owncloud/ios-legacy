@@ -2802,6 +2802,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
+- (void) reloadCellByUploadOffline:(UploadsOfflineDto *) uploadOffline {
+    
+    //Update the file and folder to be sure that the ids are right
+    FileDto *folder = [ManageFilesDB getFileDtoByFileName:self.presentFilesViewController.fileIdToShowFiles.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.presentFilesViewController.fileIdToShowFiles.filePath andUser:self.activeUser] andUser:self.activeUser];
+    FileDto *file = [ManageFilesDB getFileDtoByFileName:uploadOffline.uploadFileName andFilePath:[UtilsUrls getFilePathOnDBByFullPath:uploadOffline.destinyFolder andUser:self.activeUser] andUser:self.activeUser];
+    
+    if (folder.idFile == file.fileId) {
+        [_presentFilesViewController reloadCellByFile:file];
+    }
+}
+
 ///-----------------------------------
 /// @name reloadCellByKey
 ///-----------------------------------
