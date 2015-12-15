@@ -272,7 +272,7 @@
     
     DLog(@"setStatus: %ld andKindOfError: %ld currentUpload: %@", (long)status, (long)kindOfError, currentUpload.uploadFileName);
     
-    if (status == 4) { //error uploading, refresh cell to remove uploading yellow arrow
+    if (status == errorUploading) { //Refresh cell to remove uploading yellow arrow
 
         #ifdef CONTAINER_APP
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
