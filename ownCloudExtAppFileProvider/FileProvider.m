@@ -102,7 +102,9 @@
         
         DLog(@"File name %@", file.fileName);
         
-        [self copyFileOnTheFileSystemByOrigin:url.path andDestiny:file.localFolder];
+         NSString *temp = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], file.fileName];
+        
+        [self copyFileOnTheFileSystemByOrigin:url.path andDestiny:temp];
         
         [self createUploadOfflineWithFile:file fromPath:url.path withUser:file.userId];
         
@@ -170,8 +172,6 @@
     long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
     
     NSString *temp = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], file.fileName];
-    
-    [self copyFileOnTheFileSystemByOrigin:file.localFolder andDestiny:temp];
     
     NSString *checkPath = [NSString stringWithFormat:@"%@%@", remotePath, file.fileName];
     

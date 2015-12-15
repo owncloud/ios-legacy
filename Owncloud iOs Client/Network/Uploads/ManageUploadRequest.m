@@ -727,11 +727,12 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
 }
 
+//Method called when the overwrite process is cancelled
 - (void)finishOverwriteProcess{
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     DLog(@"Overwriten process active: Cancel a file");
-    NSString *localFolder=[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.currentUpload.destinyFolder andUser:self.userUploading];
+    NSString *localFolder = [UtilsUrls getFilePathOnDBByFullPath:self.currentUpload.destinyFolder andUser:self.userUploading];
     DLog(@"Local folder:%@",localFolder);
     
     FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:self.currentUpload.uploadFileName andFilePath:localFolder andUser:self.userUploading];
@@ -744,8 +745,17 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:self.currentUpload.destinyFolder];
     }
     
-    [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:notDownload];
-    
+    if (!deleteOverwriteFile.isFavorite){
+        
+        if (deleteOverwriteFile.isDownload == overwriting){
+             [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:downloaded];
+        }
+ 
+    }else{
+        [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:downloaded];
+        [ManageFilesDB setFile:deleteOverwriteFile.idFile isNecessaryUpdate:false];
+    }
+   
 }
 
 - (void) cancelUpload {

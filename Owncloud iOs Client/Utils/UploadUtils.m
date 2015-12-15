@@ -111,12 +111,13 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
  */
 + (FileDto *) getFileDtoByUploadOffline:(UploadsOfflineDto *) uploadsOfflineDto {
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    NSString *partToRemoveOfPah = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
+    UserDto *user = [ManageUsersDB getUserByIdUser:uploadsOfflineDto.userId];
+    
+    NSString *partToRemoveOfPah = [UtilsUrls getFullRemoteServerPathWithWebDav:user];
     
     NSString *filePath = [uploadsOfflineDto.destinyFolder substringFromIndex:partToRemoveOfPah.length];
     
-    FileDto *output = [ManageFilesDB getFileDtoByFileName:uploadsOfflineDto.uploadFileName andFilePath:filePath andUser:app.activeUser];
+    FileDto *output = [ManageFilesDB getFileDtoByFileName:uploadsOfflineDto.uploadFileName andFilePath:filePath andUser:user];
     
     return output;
 }
