@@ -765,6 +765,7 @@
 		EAEDC0941AB197D1004836EB /* SelectedFolderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14A50E9D18F3FC9100506E2B /* SelectedFolderCell.xib */; };
 		EAEDC0951AB19869004836EB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 145EA7CA17786FAC0087CDDB /* Localizable.strings */; };
 		EAF13F7D1BE8F5EA00F87E9F /* CheckCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF13F7C1BE8F5EA00F87E9F /* CheckCapabilities.m */; };
+		EAF33C891C2AF5EE003A5AA2 /* ManageThumbnails.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */; };
 		EAF721191AADCC73009F5596 /* pdf_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F18E177C35AA004A1A5A /* pdf_icon.png */; };
 		EAF7211A1AADCC9B009F5596 /* BackRootFolderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F176177C35AA004A1A5A /* BackRootFolderIcon.png */; };
 		EAF7211B1AADCC9B009F5596 /* BackRootFolderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F177177C35AA004A1A5A /* BackRootFolderIcon@2x.png */; };
@@ -1753,6 +1754,8 @@
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
 		EAF13F7B1BE8F5EA00F87E9F /* CheckCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckCapabilities.h; path = "Network/Server Version Checks/CheckCapabilities.h"; sourceTree = "<group>"; };
 		EAF13F7C1BE8F5EA00F87E9F /* CheckCapabilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckCapabilities.m; path = "Network/Server Version Checks/CheckCapabilities.m"; sourceTree = "<group>"; };
+		EAF33C871C2AF5EE003A5AA2 /* ManageThumbnails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageThumbnails.h; path = FileSystem/ManageThumbnails.h; sourceTree = "<group>"; };
+		EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageThumbnails.m; path = FileSystem/ManageThumbnails.m; sourceTree = "<group>"; };
 		EAF7217C1AAF2E0D009F5596 /* Managers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Managers.swift; sourceTree = "<group>"; };
 		EAF771281B72691100ED6E6E /* OCExtensions-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCExtensions-Bridging-Header.h"; sourceTree = "<group>"; };
 		EAF7712A1B7340C400ED6E6E /* ShareLinkButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareLinkButtonCell.swift; path = Tabs/FileTab/Share/Cells/ShareLinkButtonCell.swift; sourceTree = "<group>"; };
@@ -1916,6 +1919,7 @@
 				148DD5B11778425400FB9977 /* Branding */,
 				148DD5B81778501B00FB9977 /* Cells */,
 				40EDF89D1B4D112900700E3A /* HelpGuide */,
+				EAF33C851C2AF5AD003A5AA2 /* FileSystem */,
 				137E485115B6A37F00628EB1 /* Database */,
 				148DD5DD1778549700FB9977 /* ExternalLibreries */,
 				148DD61D17785D4200FB9977 /* Files */,
@@ -3597,6 +3601,15 @@
 			name = Queries;
 			sourceTree = "<group>";
 		};
+		EAF33C851C2AF5AD003A5AA2 /* FileSystem */ = {
+			isa = PBXGroup;
+			children = (
+				EAF33C871C2AF5EE003A5AA2 /* ManageThumbnails.h */,
+				EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */,
+			);
+			name = FileSystem;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -4565,6 +4578,7 @@
 				EABF68D61889339200A2217C /* SharedViewController.m in Sources */,
 				59C71D131A9216AE00F66166 /* ReaderConstants.m in Sources */,
 				148BEA62178C01C300696246 /* FailedUploadCell.m in Sources */,
+				EAF33C891C2AF5EE003A5AA2 /* ManageThumbnails.m in Sources */,
 				40AC24D219FE725600582867 /* CredentialsDto.m in Sources */,
 				1339D939178DA3FC00002156 /* UtilsNetworkRequest.m in Sources */,
 				134D71B11797E7240060F0AB /* UploadUtils.m in Sources */,
