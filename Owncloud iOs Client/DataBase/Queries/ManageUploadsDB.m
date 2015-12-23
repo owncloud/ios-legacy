@@ -272,6 +272,14 @@
     
     DLog(@"setStatus: %ld andKindOfError: %ld currentUpload: %@", (long)status, (long)kindOfError, currentUpload.uploadFileName);
     
+    if (status == errorUploading) { //Refresh cell to remove uploading yellow arrow
+
+        #ifdef CONTAINER_APP
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            [app reloadCellByUploadOffline:currentUpload];
+        #endif
+    }
+    
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {

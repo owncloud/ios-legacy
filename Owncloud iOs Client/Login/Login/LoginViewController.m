@@ -42,6 +42,9 @@
 #define k_http_prefix @"http://"
 #define k_https_prefix @"https://"
 
+#define k_remove_to_suffix @"/index.php"
+#define k_remove_to_contains_path @"/index.php/apps/"
+
 NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 
 @interface LoginViewController ()
@@ -1565,7 +1568,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     DLog(@"6- self.urlTextField.text %@", self.urlTextField.text);
     
     if(self.urlTextField != nil) {
-        self.auxUrlForReloadTable = self.urlTextField.text;
+        self.auxUrlForReloadTable = [self stripIndexPhpOrAppsFilesFromUrl:self.urlTextField.text];
     } else {
         //This is when we deleted the last account and go to the login screen
         self.urlTextField = [[UITextField alloc]initWithFrame:_urlFrame];
@@ -1659,6 +1662,21 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     mCheckAccessToServer.delegate = self;
     
     [mCheckAccessToServer isConnectionToTheServerByUrl:[self getUrlToCheck]];
+}
+
+-(NSString *)stripIndexPhpOrAppsFilesFromUrl:(NSString *)url {
+    
+    NSRange range = [url rangeOfString:k_remove_to_contains_path];
+    
+    if ([url hasSuffix:k_remove_to_suffix]) {
+        url = [url substringToIndex:[url length] - [(NSString *)k_remove_to_suffix length]];
+        self.urlTextField.text = url;
+    } else if (range.length > 0) {
+        url = [url substringToIndex:range.location];
+        self.urlTextField.text = url;
+    }
+    
+    return url;
 }
 
 -(NSString *)getUrlToCheck {
