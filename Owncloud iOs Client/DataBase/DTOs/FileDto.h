@@ -49,6 +49,34 @@ typedef enum {
 @property NSInteger taskIdentifier;
 @property (nonatomic) NSInteger providingFileId;
 
+///-----------------------------------
+/// @name Init with OCFileDto
+///-----------------------------------
+
+/**
+ * This method catch the data of OCFileDto in order to create
+ * a FileDto object
+ *
+ * @param ocFileDto -> OCFileDto
+ *
+ * @return FileDto
+ *
+ */
 - (id)initWithOCFileDto:(OCFileDto*)ocFileDto;
+
+///-----------------------------------
+/// @name Init with OCFileDto
+///-----------------------------------
+
+/**
+ * This method generate a hash identifier 
+ * using userId + localfolder + filename
+ *
+ * @return NSUInteger
+ *
+ */
+
+-(NSUInteger )getHashIdentifier;
+
 
 @end
