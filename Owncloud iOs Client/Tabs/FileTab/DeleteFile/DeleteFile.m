@@ -27,6 +27,8 @@
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
 #import "UtilsUrls.h"
+#import "ManageThumbnails.h"
+#import "ManageUsersDB.h"
 
 
 @implementation DeleteFile
@@ -170,10 +172,7 @@
         
         [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
         
-        //Delete the folder and the files that it contains
-        NSError *error;
-        NSFileManager *fileMgr = [[NSFileManager alloc] init];
-        [fileMgr removeItemAtPath:[self filePath] error:&error];
+        [self removeFileOfPath:[self filePath]];
         
         //Create the folder again for a correct navigation
         //We obtain the name of the folder in folderName
@@ -226,6 +225,7 @@
         }
         
     } else {
+        [self removeThumbnailIfExistWithFile:file];
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
         [ManageFilesDB setFile:file.idFile isNecessaryUpdate:NO];
         if (_deleteFromFilePreview == YES && _deleteFromFlag == deleteFromServerAndLocal) {
@@ -311,11 +311,7 @@
             
             if([_file isDirectory]) {
                 DLog(@"Is directory");
-                NSError *error;
-                
-                //First delete of file system
-                NSFileManager *fileMgr = [[NSFileManager alloc] init];
-               [fileMgr removeItemAtPath:[self filePath] error:&error];
+                [self removeFileOfPath:[self filePath]];
                 
                 //Then delete folder of BD.
                 [self deleteFolderChildsWithIdFile:_file.idFile];
@@ -380,6 +376,27 @@
     DLog(@"File Name: %@", _file.fileName);
     DLog(@"Local URL: %@", localUrl);
     return localUrl;
+}
+
+#pragma mark - File System
+
+- (void) removeFileOfPath:(NSString *) filePath {
+    NSError *error;
+    NSFileManager *fileMgr = [[NSFileManager alloc] init];
+    [fileMgr removeItemAtPath:filePath error:&error];
+    
+    [self removeThumbnailIfExistWithFile:self.file];
+    
+}
+
+- (void) removeThumbnailIfExistWithFile:(FileDto *)theFile {
+    
+    if (!theFile.isDirectory) {
+        ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
+        UserDto *user = [ManageUsersDB getActiveUser];
+        [manageThumbnails removeStoredThumbnailWithHash:[theFile getHashIdentifierOfUserID:user.idUser]];
+    }
+    
 }
 
 
