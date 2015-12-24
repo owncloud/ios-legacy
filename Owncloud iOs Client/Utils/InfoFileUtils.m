@@ -184,10 +184,9 @@
         
     } else {
         
+        fileCell.fileImageView.associatedObject = fileForSetTheStatusIcon.localFolder;
     
         if (fileForSetTheStatusIcon.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:fileForSetTheStatusIcon.fileName]) {
-            
-            fileCell.fileImageView.associatedObject = fileForSetTheStatusIcon.localFolder;
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                 
