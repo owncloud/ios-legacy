@@ -12,5 +12,10 @@
 
 + (id) sharedManager;
 
+- (BOOL) isStoredThumbnailWithHash:(NSUInteger) hash;
+- (BOOL) storeThumbnail:(NSData *)thumbnail withHash:(NSUInteger) hash;
+- (BOOL) removeStoredThumbnailWithHash:(NSUInteger) hash;
+- (NSString *) getThumbnailPathForFileHash:(NSUInteger) hash;
+- (BOOL) renameStoredThumbnailWithOldHash:(NSUInteger) oldHash withNewHash:(NSUInteger) newHash;
 
 @end

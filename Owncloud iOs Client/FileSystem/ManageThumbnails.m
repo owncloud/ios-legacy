@@ -36,6 +36,8 @@ static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
 
 - (BOOL) storeThumbnail:(NSData *)thumbnail withHash:(NSUInteger) hash {
     
+    [self createThumbnailCacheFolderIfNotExist];
+    
    return [[NSFileManager defaultManager] createFileAtPath:[self getThumbnailPathForFileHash:hash] contents:thumbnail attributes:nil];
     
 }

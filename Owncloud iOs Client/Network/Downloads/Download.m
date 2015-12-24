@@ -31,6 +31,8 @@
 #import "UploadUtils.h"
 #import "UtilsCookies.h"
 #import "DownloadUtils.h"
+#import "UIImage+Thumbnail.h"
+#import "ManageThumbnails.h"
 
 #define k_task_identifier_invalid -1
 
@@ -458,8 +460,10 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     //Remove file of favorites sync
     [self removeFileOfFavorites];
     
+    
     //Send that download is complete
     if ([(NSObject*)self.delegate respondsToSelector:@selector(downloadCompleted:)]) {
+        
         [self.delegate downloadCompleted:self.fileDto];
     }
     

@@ -766,6 +766,8 @@
 		EAEDC0951AB19869004836EB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 145EA7CA17786FAC0087CDDB /* Localizable.strings */; };
 		EAF13F7D1BE8F5EA00F87E9F /* CheckCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF13F7C1BE8F5EA00F87E9F /* CheckCapabilities.m */; };
 		EAF33C891C2AF5EE003A5AA2 /* ManageThumbnails.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */; };
+		EAF33C8A1C2B12E6003A5AA2 /* ManageThumbnails.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */; };
+		EAF33C8B1C2B1313003A5AA2 /* ManageThumbnails.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */; };
 		EAF721191AADCC73009F5596 /* pdf_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F18E177C35AA004A1A5A /* pdf_icon.png */; };
 		EAF7211A1AADCC9B009F5596 /* BackRootFolderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F176177C35AA004A1A5A /* BackRootFolderIcon.png */; };
 		EAF7211B1AADCC9B009F5596 /* BackRootFolderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F177177C35AA004A1A5A /* BackRootFolderIcon@2x.png */; };
@@ -4616,6 +4618,7 @@
 				EAEDC0911AB196B0004836EB /* InfoFileUtils.m in Sources */,
 				EAEDC08B1AB19498004836EB /* FileListDBOperations.m in Sources */,
 				EAEDC0901AB19643004836EB /* SimpleFileListTableViewController.m in Sources */,
+				EAF33C8A1C2B12E6003A5AA2 /* ManageThumbnails.m in Sources */,
 				EAF7217B1AAF200A009F5596 /* FileDto.m in Sources */,
 				EA4B8E1E1AC92FCC004F335E /* KKPasscodeViewController.m in Sources */,
 				EAEDC0921AB196C6004836EB /* EmptyCell.m in Sources */,
@@ -4710,6 +4713,7 @@
 				599D99F01A0256D9008A9DB3 /* FMDatabase.m in Sources */,
 				599D99EF1A0256AF008A9DB3 /* UtilsUrls.m in Sources */,
 				599D99EE1A02566B008A9DB3 /* FMDatabaseQueue.m in Sources */,
+				EAF33C8B1C2B1313003A5AA2 /* ManageThumbnails.m in Sources */,
 				EAC5985B1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
 				EAB0AB3919ED356A00764C31 /* DocumentPickerViewController.m in Sources */,
 			);
