@@ -66,7 +66,7 @@ typedef enum {
 - (id)initWithOCFileDto:(OCFileDto*)ocFileDto;
 
 ///-----------------------------------
-/// @name Init with OCFileDto
+/// @name Get Hash Identifier Of User ID
 ///-----------------------------------
 
 /**
