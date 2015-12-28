@@ -139,6 +139,7 @@
             if (oneFile.isDirectory==NO) {
                 //Delete file of DB
                 [ManageFilesDB deleteFileByIdFileOfActiveUser:oneFile.idFile];
+               // [self removeThumbnailIfExistWithFile:oneFile];
             } else {
                 //If is a folder delete items inside
                 [self deleteFolderChildsWithIdFile:oneFile.idFile];
@@ -147,6 +148,26 @@
     }
     //Finally we delete this folder of DB
     [ManageFilesDB deleteFileByIdFileOfActiveUser:idFile];
+}
+
+/*
+ * Recursive method that delete all thumbnails of a directory by idFile
+ */
+
+- (void)deleteThumbnailsInFolder:(NSInteger)idFile{
+    
+    NSArray *files = [ManageFilesDB getFilesByFileIdForActiveUser:idFile];
+    
+    for (FileDto *file in files) {
+        if (file.isDirectory) {
+            //If is a folder delete items inside
+            [self deleteThumbnailsInFolder:file.idFile];
+        } else {
+            //delete thumbnail
+            [self removeThumbnailIfExistWithFile:file];
+        }
+    }
+    
 }
 
 /*
@@ -172,6 +193,7 @@
         
         [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
         
+         //Delete the folder and the files that it contains
         [self removeFileOfPath:[self filePath]];
         
         //Create the folder again for a correct navigation
@@ -225,7 +247,13 @@
         }
         
     } else {
-        [self removeThumbnailIfExistWithFile:file];
+        
+        if (self.file.isDirectory) {
+            [self deleteThumbnailsInFolder:self.file.idFile];
+        } else {
+            [self removeThumbnailIfExistWithFile:self.file];
+        }
+        
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
         [ManageFilesDB setFile:file.idFile isNecessaryUpdate:NO];
         if (_deleteFromFilePreview == YES && _deleteFromFlag == deleteFromServerAndLocal) {
@@ -315,9 +343,12 @@
                 
                 //Then delete folder of BD.
                 [self deleteFolderChildsWithIdFile:_file.idFile];
+                //TODO:Delete all thumbnails inside this folder
             } else {
                 //if a file
                 [ManageFilesDB deleteFileByIdFileOfActiveUser:_file.idFile];
+                //TODO:Delete thumbnail
+                
             }
             //The end of delete
             [self endLoading];
@@ -385,7 +416,12 @@
     NSFileManager *fileMgr = [[NSFileManager alloc] init];
     [fileMgr removeItemAtPath:filePath error:&error];
     
-    [self removeThumbnailIfExistWithFile:self.file];
+    if (self.file.isDirectory) {
+        [self deleteThumbnailsInFolder:self.file.idFile];
+    } else {
+        [self removeThumbnailIfExistWithFile:self.file];
+    }
+  
     
 }
 
