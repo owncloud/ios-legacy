@@ -190,8 +190,6 @@
         
         [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
         
-        //[self removeFilesAndThumbnailsFromFileSystemByFilePath:[self filePath]];
-        
         //Create the folder again for a correct navigation
         //We obtain the name of the folder in folderName
         pathFolder = [NSString stringWithFormat:@"%@%@",_file.filePath,_file.fileName];
@@ -336,15 +334,11 @@
             if([_file isDirectory]) {
                 DLog(@"Is directory");
                 
-                //[self removeFilesAndThumbnailsFromFileSystemByFilePath:[self filePath]];
-                
                 //Then delete folder of BD.
                 [self deleteFolderChildsWithIdFile:_file.idFile];
             } else {
                 //if a file
                 [ManageFilesDB deleteFileByIdFileOfActiveUser:_file.idFile];
-             
-                //[self removeThumbnailIfExistWithFile:self.file];
             }
             //The end of delete
             [self endLoading];
@@ -406,19 +400,6 @@
 }
 
 #pragma mark - File System
-
-- (void) removeFilesAndThumbnailsFromFileSystemByFilePath:(NSString *) filePath {
-    NSError *error;
-    NSFileManager *fileMgr = [[NSFileManager alloc] init];
-    [fileMgr removeItemAtPath:filePath error:&error];
-    
-//    if (self.file.isDirectory) {
-//        [self deleteThumbnailsInFolder:self.file.idFile];
-//    } else {
-//        [self removeThumbnailIfExistWithFile:self.file];
-//    }
-    
-}
 
 - (void) removeThumbnailIfExistWithFile:(FileDto *)theFile {
     
