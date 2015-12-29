@@ -125,7 +125,6 @@
 /*
  * Recursive method that delete a directory and its file of DB
  */
-
 - (void)deleteFolderChildsWithIdFile:(NSInteger)idFile{
     
     //Rename local url and server url of files
@@ -139,7 +138,6 @@
             if (oneFile.isDirectory==NO) {
                 //Delete file of DB
                 [ManageFilesDB deleteFileByIdFileOfActiveUser:oneFile.idFile];
-               // [self removeThumbnailIfExistWithFile:oneFile];
             } else {
                 //If is a folder delete items inside
                 [self deleteFolderChildsWithIdFile:oneFile.idFile];
@@ -153,7 +151,6 @@
 /*
  * Recursive method that delete all thumbnails of a directory by idFile
  */
-
 - (void)deleteThumbnailsInFolder:(NSInteger)idFile{
     
     NSArray *files = [ManageFilesDB getFilesByFileIdForActiveUser:idFile];
@@ -174,8 +171,8 @@
  *Deletes items in the server
  */
 - (void)executeDeleteItemInServer{
-    [self deleteItemFromDeviceByFileDto:_file];
-    [self deleteItemFromServerAndDeviceByFileDto:_file];
+    [self deleteItemFromDeviceByFileDto:self.file];
+    [self deleteItemFromServerAndDeviceByFileDto:self.file];
 }
 
 /*
@@ -193,7 +190,7 @@
         
         [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
         
-        [self removeFilesAndThumbnailsFromFileSystemByFilePath:[self filePath]];
+        //[self removeFilesAndThumbnailsFromFileSystemByFilePath:[self filePath]];
         
         //Create the folder again for a correct navigation
         //We obtain the name of the folder in folderName
@@ -203,6 +200,7 @@
         NSString *folderName = [UtilsDtos getDbFolderNameFromFilePath:pathFolder];
         DLog(@"folder name: %@ in this location: %@",folderName,_currentLocalFolder);
         [FileListDBOperations createAFolder:folderName inLocalFolder:_currentLocalFolder];
+        
     }
 }
 
@@ -338,7 +336,7 @@
             if([_file isDirectory]) {
                 DLog(@"Is directory");
                 
-                [self removeFilesAndThumbnailsFromFileSystemByFilePath:[self filePath]];
+                //[self removeFilesAndThumbnailsFromFileSystemByFilePath:[self filePath]];
                 
                 //Then delete folder of BD.
                 [self deleteFolderChildsWithIdFile:_file.idFile];
@@ -346,7 +344,7 @@
                 //if a file
                 [ManageFilesDB deleteFileByIdFileOfActiveUser:_file.idFile];
              
-                [self removeThumbnailIfExistWithFile:self.file];
+                //[self removeThumbnailIfExistWithFile:self.file];
             }
             //The end of delete
             [self endLoading];
@@ -414,23 +412,19 @@
     NSFileManager *fileMgr = [[NSFileManager alloc] init];
     [fileMgr removeItemAtPath:filePath error:&error];
     
-    if (self.file.isDirectory) {
-        [self deleteThumbnailsInFolder:self.file.idFile];
-    } else {
-        [self removeThumbnailIfExistWithFile:self.file];
-    }
-  
+//    if (self.file.isDirectory) {
+//        [self deleteThumbnailsInFolder:self.file.idFile];
+//    } else {
+//        [self removeThumbnailIfExistWithFile:self.file];
+//    }
     
 }
 
 - (void) removeThumbnailIfExistWithFile:(FileDto *)theFile {
     
-    if (!theFile.isDirectory) {
-        ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
-        UserDto *user = [ManageUsersDB getActiveUser];
-        [manageThumbnails removeStoredThumbnailWithHash:[theFile getHashIdentifierOfUserID:user.idUser]];
-    }
-    
+    ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
+    UserDto *user = [ManageUsersDB getActiveUser];
+    [manageThumbnails removeStoredThumbnailWithHash:[theFile getHashIdentifierOfUserID:user.idUser]];
 }
 
 
