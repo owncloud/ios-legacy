@@ -193,8 +193,7 @@
         
         [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
         
-         //Delete the folder and the files that it contains
-        [self removeFileOfPath:[self filePath]];
+        [self removeFilesAndThumbnailsFromFileSystemByFilePath:[self filePath]];
         
         //Create the folder again for a correct navigation
         //We obtain the name of the folder in folderName
@@ -287,13 +286,12 @@
  *
  */
 - (void) deleteItemFromServerAndDeviceByFileDto:(FileDto *) file {
-    //TODO delete from server
+    
     DLog(@"Delete item from devices and server");
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:app.activeUser] componentsSeparatedByString:@"/"];
-    NSString *pathToDelete = [NSString stringWithFormat:@"%@//%@%@%@", [splitedUrl objectAtIndex:0], [splitedUrl objectAtIndex:2], file.filePath,file.fileName];
+
+    NSString *pathToDelete = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:app.activeUser];
     pathToDelete = [pathToDelete stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     DLog(@"Path for delete: %@", pathToDelete);
@@ -339,16 +337,16 @@
             
             if([_file isDirectory]) {
                 DLog(@"Is directory");
-                [self removeFileOfPath:[self filePath]];
+                
+                [self removeFilesAndThumbnailsFromFileSystemByFilePath:[self filePath]];
                 
                 //Then delete folder of BD.
                 [self deleteFolderChildsWithIdFile:_file.idFile];
-                //TODO:Delete all thumbnails inside this folder
             } else {
                 //if a file
                 [ManageFilesDB deleteFileByIdFileOfActiveUser:_file.idFile];
-                //TODO:Delete thumbnail
-                
+             
+                [self removeThumbnailIfExistWithFile:self.file];
             }
             //The end of delete
             [self endLoading];
@@ -411,7 +409,7 @@
 
 #pragma mark - File System
 
-- (void) removeFileOfPath:(NSString *) filePath {
+- (void) removeFilesAndThumbnailsFromFileSystemByFilePath:(NSString *) filePath {
     NSError *error;
     NSFileManager *fileMgr = [[NSFileManager alloc] init];
     [fileMgr removeItemAtPath:filePath error:&error];
