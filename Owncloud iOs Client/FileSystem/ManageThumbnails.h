@@ -26,5 +26,5 @@
 - (BOOL) renameStoredThumbnailWithOldHash:(NSUInteger) oldHash withNewHash:(NSUInteger) newHash;
 - (void) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile;
 - (void) removeThumbnailIfExistWithFile:(FileDto *)theFile;
-
+- (void) deleteThumbnailsInFolder:(NSInteger)idFile;
 @end

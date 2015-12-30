@@ -16,6 +16,7 @@
 #import "ManageThumbnails.h"
 #import "UtilsUrls.h"
 #import "ManageUsersDB.h"
+#import "ManageFilesDB.h"
 
 
 static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
@@ -122,4 +123,24 @@ static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
     UserDto *user = [ManageUsersDB getActiveUser];
     [self removeStoredThumbnailWithHash:[theFile getHashIdentifierOfUserID:user.idUser]];
 }
+
+/*
+ * Recursive method that delete all thumbnails of a directory by idFile
+ */
+- (void) deleteThumbnailsInFolder:(NSInteger)idFile {
+    
+    NSArray *files = [ManageFilesDB getFilesByFileIdForActiveUser:idFile];
+    
+    for (FileDto *file in files) {
+        if (file.isDirectory) {
+            //If is a folder delete items inside
+            [self deleteThumbnailsInFolder:file.idFile];
+        } else {
+            //delete thumbnail
+            [self removeThumbnailIfExistWithFile:file];
+        }
+    }
+    
+}
+
 @end

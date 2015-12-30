@@ -149,26 +149,6 @@
 }
 
 /*
- * Recursive method that delete all thumbnails of a directory by idFile
- */
-- (void)deleteThumbnailsInFolder:(NSInteger)idFile{
-    
-    NSArray *files = [ManageFilesDB getFilesByFileIdForActiveUser:idFile];
-    
-    for (FileDto *file in files) {
-        if (file.isDirectory) {
-            //If is a folder delete items inside
-            [self deleteThumbnailsInFolder:file.idFile];
-        } else {
-            //delete thumbnail
-            ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
-            [manageThumbnails removeThumbnailIfExistWithFile:file];
-        }
-    }
-    
-}
-
-/*
  *Deletes items in the server
  */
 - (void)executeDeleteItemInServer{
@@ -243,11 +223,11 @@
         }
         
     } else {
+        ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
         
         if (self.file.isDirectory) {
-            [self deleteThumbnailsInFolder:self.file.idFile];
+            [manageThumbnails deleteThumbnailsInFolder:self.file.idFile];
         } else {
-            ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
             [manageThumbnails removeThumbnailIfExistWithFile:self.file];
         }
         
