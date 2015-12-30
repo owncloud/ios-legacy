@@ -71,7 +71,7 @@ typedef enum {
 
 /**
  * This method generate a hash identifier 
- * using userId + localfolder + filename
+ * using userId + filePath + fileName
  *
  * @param userId -> NSInteger
  *
