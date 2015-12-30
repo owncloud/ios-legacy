@@ -30,6 +30,7 @@
 #import "UtilsNetworkRequest.h"
 #import "UtilsUrls.h"
 #import "ManageUsersDB.h"
+#import "ManageThumbnails.h"
 
 @interface RenameFile ()
 
@@ -179,8 +180,6 @@
     
     //Get the file database path of the item without utf8
     fileDBPathToDestination  = [UtilsUrls getFilePathOnDBByFullPath:self.currentRemoteFolder andUser:app.activeUser];
-    DLog(@"FilePath: %@", fileDBPathToCheck);
-    DLog(@"FilePath: %@", fileDBPathToDestination);
     
     if ([_selectedFileDto isDirectory]) {
         //If is directory quit the "/"
@@ -191,6 +190,8 @@
         fileDBPathToCheck  = [UtilsUrls getFilePathOnDBByFullPath:[NSString stringWithFormat:@"%@%@", self.currentRemoteFolder,self.selectedFileDto.fileName] andUser:app.activeUser];
     }
     
+    DLog(@"FilePath: %@", fileDBPathToCheck);
+    DLog(@"FilePath: %@", fileDBPathToDestination);
     DLog(@"Destination file: %@%@", self.currentRemoteFolder, self.selectedFileDto.fileName);
     
     //Create the path of the destination
@@ -239,9 +240,8 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:app.activeUser] componentsSeparatedByString:@"/"];
-    NSString *newURLString = [NSString stringWithFormat:@"%@%@%@", [UtilsUrls getFullRemoteServerPath:app.activeUser] , k_url_webdav_server, self.destinationFile];
-    NSString *originalURLString = [NSString stringWithFormat:@"%@//%@%@", [splitedUrl objectAtIndex:0], [splitedUrl objectAtIndex:2],[NSString stringWithFormat:@"%@%@",self.selectedFileDto.filePath, self.selectedFileDto.fileName]];
+    NSString *newURLString = [NSString stringWithFormat:@"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser], self.destinationFile];
+    NSString *originalURLString = [UtilsUrls getFullRemoteServerFilePathByFile:self.selectedFileDto andUser:app.activeUser];
     
     originalURLString = [originalURLString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     newURLString = [newURLString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -441,7 +441,7 @@
             isError=YES;
         }
         
-        if (isError==NO) {
+        if (!isError) {
             if ([fileMgr moveItemAtPath:tempUrl toPath:newFile error:&error] != YES) {
                 DLog(@"Unable to move file: %@", [error localizedDescription]);
             }
@@ -479,6 +479,10 @@
             // Attempt the move
             if ([fileMgr moveItemAtPath:self.selectedFileDto.localFolder toPath:newFile error:&error] != YES) {
                 DLog(@"Unable to move file: %@", [error localizedDescription]);
+            } else {
+                //update thumbnail name
+                FileDto *newFileDtoUpdatedName = [ManageFilesDB getFileDtoByIdFile:self.selectedFileDto.idFile];
+               [self renameThumbnailOfFile:self.selectedFileDto withNewFile:newFileDtoUpdatedName];
             }
         }
     }
@@ -540,6 +544,17 @@
     app.isLoadingVisible = NO;
     //Send notification to indicate to close the loading view
     [[NSNotificationCenter defaultCenter] postNotificationName:EndLoadingFileListNotification object: nil];
+}
+
+
+#pragma mark - Thumbnail
+
+- (void) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile {
+    
+    ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
+    UserDto *user = [ManageUsersDB getActiveUser];
+    
+    [manageThumbnails renameStoredThumbnailWithOldHash:[oldFile getHashIdentifierOfUserID:user.idUser] withNewHash:[newFile getHashIdentifierOfUserID:user.idUser] ];
 }
 
 @end

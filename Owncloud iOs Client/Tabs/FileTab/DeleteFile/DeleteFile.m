@@ -399,7 +399,7 @@
     return localUrl;
 }
 
-#pragma mark - File System
+#pragma mark - Thumbnail 
 
 - (void) removeThumbnailIfExistWithFile:(FileDto *)theFile {
     
