@@ -478,7 +478,7 @@
             
             // Attempt the move
             if ([fileMgr moveItemAtPath:self.selectedFileDto.localFolder toPath:newFile error:&error] != YES) {
-                DLog(@"Unable to move file: %@", [error localizedDescription]);
+                DLog(@"Unable to rename file: %@", [error localizedDescription]);
             } else {
                 //update thumbnail name
                 FileDto *newFileDtoUpdatedName = [ManageFilesDB getFileDtoByIdFile:self.selectedFileDto.idFile];

@@ -28,6 +28,7 @@
 #import "UploadUtils.h"
 #import "UtilsUrls.h"
 #import "ManageUsersDB.h"
+#import "ManageThumbnails.h"
 
 
 @implementation MoveFile
@@ -263,11 +264,11 @@
     //If the origin and the destiny is the same we do not do anything
     if(![destinyFolder isEqualToString:self.selectedFileDto.localFolder]) {
         //delete the old file because if it exist will be override
-        [ManageFilesDB deleteFileByFilePath:newFilePath andFileName:_destinyFilename];
+        [ManageFilesDB deleteFileByFilePath:newFilePath andFileName:self.destinyFilename];
         
-        DLog(@"self.selectedFileDto.fileName: %@", _destinyFilename);
+        DLog(@"self.selectedFileDto.fileName: %@", self.destinyFilename);
         
-        [ManageFilesDB updateFolderOfFileDtoByNewFilePath:newFilePath andDestinationFileDto:destinationFolderFileDto andNewFileName:_destinyFilename andFileDto:_selectedFileDto];
+        [ManageFilesDB updateFolderOfFileDtoByNewFilePath:newFilePath andDestinationFileDto:destinationFolderFileDto andNewFileName:self.destinyFilename andFileDto:self.selectedFileDto];
         
         //We move the file
         if(!self.selectedFileDto.isDirectory) {
@@ -459,6 +460,8 @@
     DLog(@"origin: %@",origin);
     DLog(@"destiny: %@", destiny);
     
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
     NSFileManager *filemgr;
     
     filemgr = [NSFileManager defaultManager];
@@ -467,11 +470,17 @@
     
     NSError *error;
     
-    [filemgr moveItemAtPath:origin toPath:destiny error:&error];
-    
-    if (error) {
-        DLog(@"Error: %@", error);
+    // Attempt the move
+    if ([filemgr moveItemAtPath:origin toPath:destiny error:&error] != YES) {
+        DLog(@"Unable to move file: %@", [error localizedDescription]);
+    } else {
+        //update thumbnail name
+        
+        NSString *newFilePath = [UtilsUrls getFilePathOnDBByFullPath:self.destinationFolder andUser:app.activeUser];
+        FileDto *newFileDto = [ManageFilesDB getFileDtoByFileName:self.destinyFilename andFilePath:newFilePath andUser:app.activeUser];
+        [self renameThumbnailOfFile:self.selectedFileDto withNewFile:newFileDto];
     }
+
 }
 
 #pragma mark - Delete Folder
@@ -595,5 +604,15 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:EndLoadingFileListNotification object: nil];
 }
 
+
+#pragma mark - Thumbnail
+
+- (void) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile {
+    
+    ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
+    UserDto *user = [ManageUsersDB getActiveUser];
+    
+    [manageThumbnails renameStoredThumbnailWithOldHash:[oldFile getHashIdentifierOfUserID:user.idUser] withNewHash:[newFile getHashIdentifierOfUserID:user.idUser] ];
+}
 
 @end
