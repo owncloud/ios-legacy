@@ -482,7 +482,8 @@
             } else {
                 //update thumbnail name
                 FileDto *newFileDtoUpdatedName = [ManageFilesDB getFileDtoByIdFile:self.selectedFileDto.idFile];
-               [self renameThumbnailOfFile:self.selectedFileDto withNewFile:newFileDtoUpdatedName];
+                ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
+                [manageThumbnails renameThumbnailOfFile:self.selectedFileDto withNewFile:newFileDtoUpdatedName];
             }
         }
     }
@@ -544,17 +545,6 @@
     app.isLoadingVisible = NO;
     //Send notification to indicate to close the loading view
     [[NSNotificationCenter defaultCenter] postNotificationName:EndLoadingFileListNotification object: nil];
-}
-
-
-#pragma mark - Thumbnail
-
-- (void) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile {
-    
-    ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
-    UserDto *user = [ManageUsersDB getActiveUser];
-    
-    [manageThumbnails renameStoredThumbnailWithOldHash:[oldFile getHashIdentifierOfUserID:user.idUser] withNewHash:[newFile getHashIdentifierOfUserID:user.idUser] ];
 }
 
 @end

@@ -478,7 +478,8 @@
         
         NSString *newFilePath = [UtilsUrls getFilePathOnDBByFullPath:self.destinationFolder andUser:app.activeUser];
         FileDto *newFileDto = [ManageFilesDB getFileDtoByFileName:self.destinyFilename andFilePath:newFilePath andUser:app.activeUser];
-        [self renameThumbnailOfFile:self.selectedFileDto withNewFile:newFileDto];
+        ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
+        [manageThumbnails renameThumbnailOfFile:self.selectedFileDto withNewFile:newFileDto];
     }
 
 }
@@ -602,17 +603,6 @@
     app.isLoadingVisible = NO;
     //Send notification to indicate to close the loading view
     [[NSNotificationCenter defaultCenter] postNotificationName:EndLoadingFileListNotification object: nil];
-}
-
-
-#pragma mark - Thumbnail
-
-- (void) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile {
-    
-    ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
-    UserDto *user = [ManageUsersDB getActiveUser];
-    
-    [manageThumbnails renameStoredThumbnailWithOldHash:[oldFile getHashIdentifierOfUserID:user.idUser] withNewHash:[newFile getHashIdentifierOfUserID:user.idUser] ];
 }
 
 @end

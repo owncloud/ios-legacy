@@ -15,6 +15,7 @@
 
 #import "ManageThumbnails.h"
 #import "UtilsUrls.h"
+#import "ManageUsersDB.h"
 
 
 static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
@@ -107,4 +108,18 @@ static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
     
 }
 
+
+- (void) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile {
+    
+    UserDto *user = [ManageUsersDB getActiveUser];
+    
+    [self renameStoredThumbnailWithOldHash:[oldFile getHashIdentifierOfUserID:user.idUser] withNewHash:[newFile getHashIdentifierOfUserID:user.idUser] ];
+}
+
+
+- (void) removeThumbnailIfExistWithFile:(FileDto *)theFile {
+
+    UserDto *user = [ManageUsersDB getActiveUser];
+    [self removeStoredThumbnailWithHash:[theFile getHashIdentifierOfUserID:user.idUser]];
+}
 @end

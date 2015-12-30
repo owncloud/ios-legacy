@@ -161,7 +161,8 @@
             [self deleteThumbnailsInFolder:file.idFile];
         } else {
             //delete thumbnail
-            [self removeThumbnailIfExistWithFile:file];
+            ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
+            [manageThumbnails removeThumbnailIfExistWithFile:file];
         }
     }
     
@@ -246,7 +247,8 @@
         if (self.file.isDirectory) {
             [self deleteThumbnailsInFolder:self.file.idFile];
         } else {
-            [self removeThumbnailIfExistWithFile:self.file];
+            ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
+            [manageThumbnails removeThumbnailIfExistWithFile:self.file];
         }
         
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
@@ -398,16 +400,6 @@
     DLog(@"Local URL: %@", localUrl);
     return localUrl;
 }
-
-#pragma mark - Thumbnail 
-
-- (void) removeThumbnailIfExistWithFile:(FileDto *)theFile {
-    
-    ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
-    UserDto *user = [ManageUsersDB getActiveUser];
-    [manageThumbnails removeStoredThumbnailWithHash:[theFile getHashIdentifierOfUserID:user.idUser]];
-}
-
 
 #pragma mark - View lifecycle
 - (BOOL)testErrorAction:(id)sender {
