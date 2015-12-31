@@ -39,6 +39,7 @@
 #import "DownloadUtils.h"
 #import "UtilsUrls.h"
 #import "RenameFile.h"
+#import "ManageThumbnails.h"
 
 @interface RecentViewController ()
 
@@ -1009,6 +1010,7 @@
 
 
 - (void) overWriteFile {
+        
      AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     _selectedUploadToResolveTheConflict.isNotNecessaryCheckIfExist = YES;
     
@@ -1018,6 +1020,9 @@
     app.isOverwriteProcess = YES;
     
     FileDto *file = [UploadUtils getFileDtoByUploadOffline:self.selectedUploadToResolveTheConflict];
+    
+    ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
+    [manageThumbnails removeThumbnailIfExistWithFile:file];
     
     //Check if this file is being updated and cancel it
     Download *downloadFile;
