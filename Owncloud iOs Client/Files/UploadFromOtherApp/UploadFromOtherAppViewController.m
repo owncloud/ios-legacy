@@ -39,6 +39,7 @@
 #import "OCNavigationController.h"
 #import "UtilsUrls.h"
 #import "ManageUsersDB.h"
+#import "ManageThumbnails.h"
 
 #define kOFFSET_FOR_KEYBOARD_iPhone5 160.0
 #define kOFFSET_FOR_KEYBOARD_iPhone 200.0
@@ -985,6 +986,8 @@
         //Set this file as an overwritten state
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
         [UploadUtils updateOverwritenFile:file FromPath:_filePath];
+        ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
+        [manageThumbnails removeThumbnailIfExistWithFile:file];
     }
     
     [self saveTheFileOnOwncloud:YES];
