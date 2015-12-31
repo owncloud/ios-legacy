@@ -17,6 +17,7 @@
 #import "UtilsUrls.h"
 #import "ManageUsersDB.h"
 #import "ManageFilesDB.h"
+#import "UIImage+Thumbnail.h"
 
 
 static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
@@ -109,6 +110,7 @@ static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
     
 }
 
+#pragma mark - Manage thumbnails
 
 - (void) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile {
     
