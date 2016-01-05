@@ -40,6 +40,8 @@
 #import "UtilsUrls.h"
 #import "RenameFile.h"
 
+#define k_cell_height 72
+
 @interface RecentViewController ()
 
 @end
@@ -698,29 +700,6 @@
 
 
 
-// Returns the table view managed by the controller object.
-/*- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
- {
- //Only show the section title if there are rows in it
- 
- }*/
-
-// Asks the data source to return the titles for the sections for a table view.
-/*- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
- {
- // The commented part is for the version with searchField
- 
- 
- return ;
- }*/
-
-// Asks the data source to return the index of the section having the given title and section title index.
-/*- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
- {
- 
- 
- return ;
- }*/
 
 #pragma mark - UITableView delegate
 
@@ -775,8 +754,25 @@
     if (indexPath.section == 3) {
         height = [UtilsTableView getUITableViewHeightForSingleRowByNavigationBatHeight:self.navigationController.navigationBar.bounds.size.height andTabBarControllerHeight:self.tabBarController.tabBar.bounds.size.height andTableViewHeight:_uploadsTableView.bounds.size.height];
     } else {
-        height = 72;
+        height = k_cell_height;
     }
+    return height;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    
+    CGFloat height = 0;
+    
+    switch (section) {
+        case 3:
+            height = k_cell_height;
+            break;
+            
+        default:
+            height = 0;
+            break;
+    }
+    
     return height;
 }
 
