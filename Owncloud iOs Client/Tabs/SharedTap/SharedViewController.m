@@ -93,8 +93,9 @@
     [super viewWillAppear:animated];
     
     if (IS_IOS8 || IS_IOS9) {
-        self.edgesForExtendedLayout = UIRectCornerAllCorners;
-        self.automaticallyAdjustsScrollViewInsets = NO;
+        self.edgesForExtendedLayout = UIRectEdgeAll;
+        self.extendedLayoutIncludesOpaqueBars = true;
+        self.automaticallyAdjustsScrollViewInsets = true;
     }else{
         self.edgesForExtendedLayout = UIRectCornerAllCorners;
     }
@@ -979,7 +980,8 @@
     [self obtainTheQuantityOfFilesAndFolders];
     
     //Set the text of the footer section
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _sharedTableView.bounds.size.width, 40)];
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _sharedTableView.bounds.size.width, 40 + self.tabBarController.tabBar.frame.size.height)];
+    footerView.backgroundColor = [UIColor clearColor];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, _sharedTableView.bounds.size.width, 40)];
     
     UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:16];
