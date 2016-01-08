@@ -27,4 +27,6 @@
 - (void) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile;
 - (void) removeThumbnailIfExistWithFile:(FileDto *)theFile;
 - (void) deleteThumbnailsInFolder:(NSInteger)idFile;
+- (void) deleteThumbnailCacheFolderOfActiveUser;
+- (void) deleteThumbnailCacheFolderOfUserId:(NSInteger) userId ;
 @end

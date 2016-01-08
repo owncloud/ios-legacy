@@ -77,14 +77,22 @@ static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
 
 - (NSString *) getThumbnailPathForFileHash:(NSUInteger) hash {
     
-    return [NSString stringWithFormat:@"%@%ld", [self getThumbnailLocalSystemPath], (long)hash];
+    return [NSString stringWithFormat:@"%@%ld", [self getThumbnailLocalSystemPathOfActiveUser], (long)hash];
     
 }
 
 
-- (NSString *) getThumbnailLocalSystemPath {
+- (NSString *) getThumbnailLocalSystemPathOfActiveUser {
     
-    return [NSString stringWithFormat:@"%@%@/", [UtilsUrls getOwnCloudFilePath], thumbnailsCacheFolderName];
+    return [self getThumbnailLocalSystemPathOfUserId:(long)[ManageUsersDB getActiveUser].idUser];
+    
+}
+
+- (NSString *) getThumbnailLocalSystemPathOfUserId: (NSInteger)userId {
+    
+    DLog(@"%@", [NSString stringWithFormat:@"%@%@/%ld/", [UtilsUrls getOwnCloudFilePath], thumbnailsCacheFolderName, (long)[ManageUsersDB getActiveUser].idUser]);
+    
+    return [NSString stringWithFormat:@"%@%@/%ld/", [UtilsUrls getOwnCloudFilePath], thumbnailsCacheFolderName, userId];
     
 }
 
@@ -94,18 +102,27 @@ static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
 
 - (void) createThumbnailCacheFolderIfNotExist {
 
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[self getThumbnailLocalSystemPath]]) {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[self getThumbnailLocalSystemPathOfActiveUser]]) {
          NSError *error = nil;
-        [[NSFileManager defaultManager] createDirectoryAtPath:[self getThumbnailLocalSystemPath] withIntermediateDirectories:NO attributes:nil error:&error];
+        [[NSFileManager defaultManager] createDirectoryAtPath:[self getThumbnailLocalSystemPathOfActiveUser] withIntermediateDirectories:YES attributes:nil error:&error];
     }
 }
 
 
-- (void) deleteThumbnailCacheFolder {
+- (void) deleteThumbnailCacheFolderOfActiveUser {
     
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[self getThumbnailLocalSystemPath]]) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[self getThumbnailLocalSystemPathOfActiveUser]]) {
          NSError *error = nil;
-        [[NSFileManager defaultManager] removeItemAtPath:[self getThumbnailLocalSystemPath] error:&error];
+        [[NSFileManager defaultManager] removeItemAtPath:[self getThumbnailLocalSystemPathOfActiveUser] error:&error];
+    }
+    
+}
+
+- (void) deleteThumbnailCacheFolderOfUserId:(NSInteger) userId {
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[self getThumbnailLocalSystemPathOfUserId: userId]]) {
+        NSError *error = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:[self getThumbnailLocalSystemPathOfUserId: userId] error:&error];
     }
     
 }
