@@ -387,7 +387,10 @@
 
 
 -(void) moveTheFileOrFolderOnTheDBAndFileSystem {
+    
     if (self.selectedFileDto.isDirectory) {
+        
+        [[ManageThumbnails sharedManager] deleteThumbnailsInFolder:self.selectedFileDto.idFile];
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
@@ -450,6 +453,8 @@
             //Error
         }
     } else {
+        
+        [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:self.selectedFileDto];
         
         [ManageFilesDB renameFileByFileDto:self.selectedFileDto andNewName:[self.mNewName encodeString:NSUTF8StringEncoding]];
         
