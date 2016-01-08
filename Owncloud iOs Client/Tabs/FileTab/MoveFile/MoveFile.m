@@ -480,8 +480,7 @@
         
         NSString *newFilePath = [UtilsUrls getFilePathOnDBByFullPath:self.destinationFolder andUser:app.activeUser];
         FileDto *newFileDto = [ManageFilesDB getFileDtoByFileName:self.destinyFilename andFilePath:newFilePath andUser:app.activeUser];
-        ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
-        [manageThumbnails renameThumbnailOfFile:self.selectedFileDto withNewFile:newFileDto];
+        [[ManageThumbnails sharedManager] renameThumbnailOfFile:self.selectedFileDto withNewFile:newFileDto];
     }
 
 }

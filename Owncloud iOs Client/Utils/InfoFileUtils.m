@@ -190,20 +190,18 @@
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                 
-                ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
-                
                 UserDto *user = [ManageUsersDB getActiveUser];
                 
                 UIImage *thumbnail;
                 
-                if ([manageThumbnails isStoredThumbnailWithHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID: user.idUser]]){
+                if ([[ManageThumbnails sharedManager] isStoredThumbnailWithHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID: user.idUser]]){
                     
-                    thumbnail = [UIImage imageWithContentsOfFile:[manageThumbnails getThumbnailPathForFileHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID: user.idUser]]];
+                    thumbnail = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFileHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID: user.idUser]]];
 
                 }else{
                     
                     thumbnail = [[UIImage imageWithContentsOfFile: fileForSetTheStatusIcon.localFolder] getThumbnail];
-                    [manageThumbnails storeThumbnail:UIImagePNGRepresentation(thumbnail) withHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID:user.idUser]];
+                    [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnail) withHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID:user.idUser]];
                     
                 }
                 

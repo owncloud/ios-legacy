@@ -1021,8 +1021,7 @@
     
     FileDto *file = [UploadUtils getFileDtoByUploadOffline:self.selectedUploadToResolveTheConflict];
     
-    ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
-    [manageThumbnails removeThumbnailIfExistWithFile:file];
+    [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:file];
     
     //Check if this file is being updated and cancel it
     Download *downloadFile;

@@ -487,8 +487,7 @@
             } else {
                 //update thumbnail name
                 FileDto *newFileDtoUpdatedName = [ManageFilesDB getFileDtoByIdFile:self.selectedFileDto.idFile];
-                ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
-                [manageThumbnails renameThumbnailOfFile:self.selectedFileDto withNewFile:newFileDtoUpdatedName];
+                [[ManageThumbnails sharedManager] renameThumbnailOfFile:self.selectedFileDto withNewFile:newFileDtoUpdatedName];
             }
         }
     }

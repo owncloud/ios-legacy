@@ -986,8 +986,7 @@
         //Set this file as an overwritten state
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
         [UploadUtils updateOverwritenFile:file FromPath:_filePath];
-        ManageThumbnails *manageThumbnails = [ManageThumbnails sharedManager];
-        [manageThumbnails removeThumbnailIfExistWithFile:file];
+        [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:file];
     }
     
     [self saveTheFileOnOwncloud:YES];
