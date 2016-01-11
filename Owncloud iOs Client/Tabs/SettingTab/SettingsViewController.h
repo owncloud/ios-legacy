@@ -23,9 +23,10 @@
 #import "ManageLocation.h"
 #import "AccountCell.h"
 #import "AddAccountViewController.h"
+#import "cocos2d.h"
+#import "EasterEggNavigationController.h"
 #import "MBProgressHUD.h"
 #import "SyncFolderManager.h"
-
 
 typedef enum {
     help = 0,
@@ -52,6 +53,11 @@ typedef enum {
 @property (nonatomic,strong) SLComposeViewController *facebook;
 @property (nonatomic,strong) MFMailComposeViewController *mailer;
 @property (nonatomic) BOOL isMailComposeVisible;
+
+//Easter Egg
+@property (nonatomic, strong) CCDirectorIOS *director;
+@property (nonatomic, strong) EasterEggNavigationController *navControllerEasterEgg;
+@property (nonatomic, strong) CCScene *gameScene;
 
 //View for loading screen
 @property(nonatomic, strong) MBProgressHUD  *HUD;

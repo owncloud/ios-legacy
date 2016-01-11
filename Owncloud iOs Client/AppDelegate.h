@@ -290,8 +290,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 - (void) reloadCellByUploadOffline:(UploadsOfflineDto *) uploadOffline;
 - (void) reloadCellByKey:(NSString *) key;
 
-
-
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) LoginViewController *loginViewController;
 @property (strong, nonatomic) UserDto *activeUser;
