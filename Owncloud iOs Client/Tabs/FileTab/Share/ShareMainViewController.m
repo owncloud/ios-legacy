@@ -698,6 +698,8 @@
             
             shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
             
+            shareUserCell.accessoryType = UITableViewCellAccessoryDetailButton;
+            
             cell = shareUserCell;
             
         }
