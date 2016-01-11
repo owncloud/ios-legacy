@@ -55,7 +55,6 @@ typedef enum {
 @property (nonatomic) BOOL isMailComposeVisible;
 
 //Easter Egg
-@property (nonatomic) NSInteger counterTapsForEasterEgg;
 @property (nonatomic, strong) CCDirectorIOS *director;
 @property (nonatomic, strong) EasterEggNavigationController *navControllerEasterEgg;
 @property (nonatomic, strong) CCScene *gameScene;

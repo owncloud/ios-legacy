@@ -117,95 +117,88 @@
     
     [self.view setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
     
-    UITapGestureRecognizer *navSingleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapButton)];
-    navSingleTap.numberOfTapsRequired = 1;
+    UITapGestureRecognizer *navivationTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapEaternEggLaunchButton)];
+    navivationTap.numberOfTapsRequired = k_number_op_taps_to_show_easter_egg;
     [[self.navigationController.navigationBar.subviews objectAtIndex:1] setUserInteractionEnabled:YES];
-    [[self.navigationController.navigationBar.subviews objectAtIndex:1] addGestureRecognizer:navSingleTap];
+    [[self.navigationController.navigationBar.subviews objectAtIndex:1] addGestureRecognizer:navivationTap];
 
 }
 
-- (void) didTapButton {
+- (void) didTapEaternEggLaunchButton {
     
     if ([FileNameUtils isOwnCloudOfficialApp]) {
-        self.counterTapsForEasterEgg++;
+        DLog(@"Launch easter egg");
+        //Force to be in Portrait
+        NSNumber *value = [NSNumber numberWithInt:UIDeviceOrientationPortrait];
+        [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
         
-        if (self.counterTapsForEasterEgg >= k_number_op_taps_to_show_easter_egg) {
-            DLog(@"Launch easter egg");
-            self.counterTapsForEasterEgg = 0;
+        // Create an CCGLView with a RGB565 color buffer, and a depth buffer of 0-bits
+        CCGLView *glView = [CCGLView viewWithFrame:[[UIScreen mainScreen] bounds]
+                                       pixelFormat:kEAGLColorFormatRGB565	//kEAGLColorFormatRGBA8
+                                       depthFormat:0	//GL_DEPTH_COMPONENT24_OES
+                                preserveBackbuffer:NO
+                                        sharegroup:nil
+                                     multiSampling:NO
+                                   numberOfSamples:0];
+        
+        if (!self.director) {
+            self.director = (CCDirectorIOS*) [CCDirector sharedDirector]; //Here is where the director is setup
             
-            //Force to be in Portrait
-            NSNumber *value = [NSNumber numberWithInt:UIDeviceOrientationPortrait];
-            [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+            //self.director.wantsFullScreenLayout = YES; //deprecated
+            self.director.edgesForExtendedLayout = UIRectEdgeNone;
             
-            // Create an CCGLView with a RGB565 color buffer, and a depth buffer of 0-bits
-            CCGLView *glView = [CCGLView viewWithFrame:[[UIScreen mainScreen] bounds]
-                                           pixelFormat:kEAGLColorFormatRGB565	//kEAGLColorFormatRGBA8
-                                           depthFormat:0	//GL_DEPTH_COMPONENT24_OES
-                                    preserveBackbuffer:NO
-                                            sharegroup:nil
-                                         multiSampling:NO
-                                       numberOfSamples:0];
+            // Display FSP and SPF
+            [self.director setDisplayStats:YES];
             
-            if (!self.director) {
-                self.director = (CCDirectorIOS*) [CCDirector sharedDirector]; //Here is where the director is setup
-                
-                //self.director.wantsFullScreenLayout = YES; //deprecated
-                self.director.edgesForExtendedLayout = UIRectEdgeNone;
-                
-                // Display FSP and SPF
-                [self.director setDisplayStats:YES];
-                
-                // set FPS at 60
-                [self.director setAnimationInterval:1.0/60];
-                
-                // attach the openglView to the director
-                [self.director setView:glView];
-                
-                // for rotation and other messages
-                [self.director setDelegate:nil];
-                
-                // 2D projection
-                [self.director setProjection:kCCDirectorProjection2D];
-            }
+            // set FPS at 60
+            [self.director setAnimationInterval:1.0/60];
             
+            // attach the openglView to the director
+            [self.director setView:glView];
             
-            // Enables High Res mode (Retina Display) on iPhone 4 and maintains low res on all other devices
-            if( ! [self.director enableRetinaDisplay:YES] )
-                CCLOG(@"Retina Display Not supported");
+            // for rotation and other messages
+            [self.director setDelegate:nil];
             
-            // Create a Navigation Controller with the Director
-            self.navControllerEasterEgg = [[EasterEggNavigationController alloc] initWithRootViewController:self.director];
-            self.navControllerEasterEgg.navigationBarHidden = YES;
-            
-            // set the Navigation Controller as a subview
-            [self.navigationController presentViewController:self.navControllerEasterEgg animated:YES completion:nil];
-            //[self.navigationController pushViewController:self.director animated:YES];
-            
-            
-            // Default texture format for PNG/BMP/TIFF/JPEG/GIF images
-            // It can be RGBA8888, RGBA4444, RGB5_A1, RGB565
-            // You can change anytime.
-            [CCTexture2D setDefaultAlphaPixelFormat:kCCTexture2DPixelFormat_RGBA8888];
-            
-            // When in iPhone RetinaDisplay, iPad, iPad RetinaDisplay mode, CCFileUtils will append the "-hd", "-ipad", "-ipadhd" to all loaded files
-            // If the -hd, -ipad, -ipadhd files are not found, it will load the non-suffixed version
-            [CCFileUtils setiPhoneRetinaDisplaySuffix:@"-hd"];		// Default on iPhone RetinaDisplay is "-hd"
-            [CCFileUtils setiPadSuffix:@"-ipad"];					// Default on iPad is "" (empty string)
-            [CCFileUtils setiPadRetinaDisplaySuffix:@"-ipadhd"];	// Default on iPad RetinaDisplay is "-ipadhd"
-            
-            // Assume that PVR images have premultiplied alpha
-            [CCTexture2D PVRImagesHavePremultipliedAlpha:YES];
-            
-            // and add the scene to the stack. The director will run it when it automatically when the view is displayed.
-            
-            if (!self.gameScene) {
-                self.gameScene = [MenuLayer sceneWithMenuType:menuTypeWelcome];
-            }
-            
-            
-            [self.director pushScene:self.gameScene]; //Here is where we add the scene to the director.
-            
+            // 2D projection
+            [self.director setProjection:kCCDirectorProjection2D];
         }
+        
+        
+        // Enables High Res mode (Retina Display) on iPhone 4 and maintains low res on all other devices
+        if( ! [self.director enableRetinaDisplay:YES] )
+            CCLOG(@"Retina Display Not supported");
+        
+        // Create a Navigation Controller with the Director
+        self.navControllerEasterEgg = [[EasterEggNavigationController alloc] initWithRootViewController:self.director];
+        self.navControllerEasterEgg.navigationBarHidden = YES;
+        
+        // set the Navigation Controller as a subview
+        [self.navigationController presentViewController:self.navControllerEasterEgg animated:YES completion:nil];
+        //[self.navigationController pushViewController:self.director animated:YES];
+        
+        
+        // Default texture format for PNG/BMP/TIFF/JPEG/GIF images
+        // It can be RGBA8888, RGBA4444, RGB5_A1, RGB565
+        // You can change anytime.
+        [CCTexture2D setDefaultAlphaPixelFormat:kCCTexture2DPixelFormat_RGBA8888];
+        
+        // When in iPhone RetinaDisplay, iPad, iPad RetinaDisplay mode, CCFileUtils will append the "-hd", "-ipad", "-ipadhd" to all loaded files
+        // If the -hd, -ipad, -ipadhd files are not found, it will load the non-suffixed version
+        [CCFileUtils setiPhoneRetinaDisplaySuffix:@"-hd"];		// Default on iPhone RetinaDisplay is "-hd"
+        [CCFileUtils setiPadSuffix:@"-ipad"];					// Default on iPad is "" (empty string)
+        [CCFileUtils setiPadRetinaDisplaySuffix:@"-ipadhd"];	// Default on iPad RetinaDisplay is "-ipadhd"
+        
+        // Assume that PVR images have premultiplied alpha
+        [CCTexture2D PVRImagesHavePremultipliedAlpha:YES];
+        
+        // and add the scene to the stack. The director will run it when it automatically when the view is displayed.
+        
+        if (!self.gameScene) {
+            self.gameScene = [MenuLayer sceneWithMenuType:menuTypeWelcome];
+        }
+        
+        
+        [self.director pushScene:self.gameScene]; //Here is where we add the scene to the director.
     }
 }
 
@@ -246,8 +239,6 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    self.counterTapsForEasterEgg = 0;
 }
 
 -(void)viewDidLayoutSubviews
