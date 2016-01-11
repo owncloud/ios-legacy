@@ -18,6 +18,7 @@
 #import "MBProgressHUD.h"
 #import "CheckAccessToServer.h"
 #import "ManageNetworkErrors.h"
+#import "EditAccountViewController.h"
 
 @class UserDto;
 @class FileDto;
@@ -108,7 +109,7 @@
  *
  * @warning This method should not be overwritten
  */
-- (NSArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector;
+- (NSMutableArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector;
 
 //Loading methods
 - (void)initLoading;
@@ -128,6 +129,8 @@
 @property BOOL isRefreshInProgress;
 //Next List of files to navigate
 @property (nonatomic, strong) SimpleFileListTableViewController *simpleFilesViewController;
+
+@property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
 
 //View for loading screen
 @property(nonatomic, strong) MBProgressHUD  *HUD;

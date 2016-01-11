@@ -92,7 +92,7 @@
  * Method that give all folders from a single folder
  * @fileId -> id of the folder father and we want all his files and folders
  */
-+ (NSMutableArray *) getFoldersByFileIdForActiveUser:(int) fileId {
++ (NSMutableArray *) getFoldersByFileIdForActiveUser:(NSInteger) fileId {
     
     UserDto *mUser;
     
@@ -158,6 +158,8 @@
     
     __block NSMutableArray *output = [NSMutableArray new];
     
+    UserDto *mUser = [ManageUsersDB getActiveUser];
+    
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
@@ -167,7 +169,7 @@
             FileDto *currentFile = [[FileDto alloc] init];
             
             currentFile.idFile = [rs intForColumn:@"id"];
-            currentFile.filePath = [rs stringForColumn:@"file_path"];
+            currentFile.filePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:mUser],[rs stringForColumn:@"file_path"]];
             currentFile.fileName = [rs stringForColumn:@"file_name"];
             currentFile.isDirectory = [rs intForColumn:@"is_directory"];
             currentFile.userId = [rs intForColumn:@"user_id"];
@@ -177,7 +179,7 @@
             currentFile.date = [rs longForColumn:@"date"];
             currentFile.etag = [rs stringForColumn:@"etag"];
             currentFile.isFavorite = [rs intForColumn:@"is_favorite"];
-            currentFile.localFolder = @"";
+            currentFile.localFolder = [UtilsUrls getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:mUser];
             currentFile.isNecessaryUpdate = [rs boolForColumn:@"is_necessary_update"];
             currentFile.sharedFileSource = [rs intForColumn:@"shared_file_source"];
             currentFile.permissions = [rs stringForColumn:@"permissions"];
@@ -587,7 +589,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT files.id, back.file_id, back.etag FROM files, (SELECT DISTINCT files.file_id, files_backup.file_path, files_backup.file_name, files_backup.etag FROM files_backup, files WHERE files.file_id = files_backup.id AND files_backup.is_directory = 1) back WHERE user_id = ? AND files.file_path = back.file_path AND files.file_name = back.file_name ORDER BY id DESC", [NSNumber numberWithInteger:mUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT files.id, back.file_id, back.etag, back.is_favorite FROM files, (SELECT DISTINCT files.file_id, files_backup.file_path, files_backup.file_name, files_backup.etag, files_backup.is_favorite FROM files_backup, files WHERE files.file_id = files_backup.id AND files_backup.is_directory = 1) back WHERE user_id = ? AND files.file_path = back.file_path AND files.file_name = back.file_name ORDER BY id DESC", [NSNumber numberWithInteger:mUser.idUser]];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];
@@ -595,6 +597,7 @@
             currentFile.idFile = [rs intForColumn:@"id"];
             currentFile.fileId = [rs intForColumn:@"file_id"];
             currentFile.etag = [rs stringForColumn:@"etag"];
+            currentFile.isFavorite = [rs boolForColumn:@"is_favorite"];
             
             DLog(@"currentFile.idFile: %ld", (long)currentFile.idFile);
             DLog(@"currentFile.fileId %ld", (long)currentFile.fileId);
@@ -614,6 +617,7 @@
             FileDto *currentFile = [listFilesToUpdate objectAtIndex:i];
         
             correctQuery = [db executeUpdate:@"UPDATE files SET id = ?, etag = ? WHERE id = ?", [NSNumber numberWithInteger:currentFile.fileId], currentFile.etag, [NSNumber numberWithInteger:currentFile.idFile]];
+            
         }
         
         if (!correctQuery) {
@@ -709,7 +713,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT file_name, etag, is_download FROM files_backup WHERE is_download = 1 OR is_download = 2 OR is_download = 3"];
+        FMResultSet *rs = [db executeQuery:@"SELECT file_name, etag, is_download, is_directory, is_favorite FROM files_backup WHERE is_download = 1 OR is_download = 2 OR is_download = 3 OR (is_directory = 1 AND is_favorite = 1)"];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];
@@ -1775,9 +1779,8 @@
     }];
 }
 
-
 ///-----------------------------------
-/// @name getAllFavoritesOfUserId:userId
+/// @name getAllFavoritesFilesOfUserId:userId
 ///-----------------------------------
 
 /**
@@ -1787,7 +1790,7 @@
  *
  * @return NSArray -> Array of favorites items
  */
-+ (NSArray*) getAllFavoritesOfUserId:(NSInteger)userId {
++ (NSArray*) getAllFavoritesFilesOfUserId:(NSInteger)userId {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -1796,7 +1799,7 @@
     UserDto *mUser = [ManageUsersDB getUserByIdUser:userId];
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE is_favorite = 1 AND user_id = ?", [NSNumber numberWithInteger:userId]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE is_favorite = 1 AND user_id = ? AND is_directory = 0", [NSNumber numberWithInteger:userId]];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];
@@ -1830,6 +1833,86 @@
     
     return output;
 
+}
+
+///-----------------------------------
+/// @name getAllFavoritesByFolder:userId
+///-----------------------------------
+
+/**
+ * This method returned all favorites files of a specific user
+ *
+ * @param folder -> FolderDto
+ *
+ * @return NSArray -> Array of favorites items
+ */
++ (NSArray*) getAllFavoritesByFolder:(FileDto *) folder {
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    NSMutableArray *tempArray = [NSMutableArray new];
+    //Get the user
+    UserDto *mUser = [ManageUsersDB getActiveUser];
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE is_favorite = 1 AND file_id = ?", [NSNumber numberWithInteger:folder.idFile]];
+        while ([rs next]) {
+            
+            FileDto *currentFile = [[FileDto alloc] init];
+            
+            currentFile.idFile = [rs intForColumn:@"id"];
+            currentFile.filePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:mUser],[rs stringForColumn:@"file_path"]];
+            currentFile.fileName = [rs stringForColumn:@"file_name"];
+            currentFile.isDirectory = [rs intForColumn:@"is_directory"];
+            currentFile.userId = [rs intForColumn:@"user_id"];
+            currentFile.isDownload = [rs intForColumn:@"is_download"];
+            currentFile.size = [rs longForColumn:@"size"];
+            currentFile.fileId = [rs intForColumn:@"file_id"];
+            currentFile.date = [rs longForColumn:@"date"];
+            currentFile.etag = [rs stringForColumn:@"etag"];
+            currentFile.isFavorite = [rs intForColumn:@"is_favorite"];
+            currentFile.localFolder = [UtilsUrls getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:mUser];
+            currentFile.isNecessaryUpdate = [rs boolForColumn:@"is_necessary_update"];
+            currentFile.sharedFileSource = [rs intForColumn:@"shared_file_source"];
+            currentFile.permissions = [rs stringForColumn:@"permissions"];
+            currentFile.taskIdentifier = [rs intForColumn:@"task_identifier"];
+            currentFile.providingFileId = [rs intForColumn:@"providing_file_id"];
+            
+            [tempArray addObject:currentFile];
+            
+        }
+        [rs close];
+    }];
+    
+    NSArray *output = [NSArray arrayWithArray:tempArray];
+    tempArray = nil;
+    
+    return output;
+    
+}
+
+///-----------------------------------
+/// @name setNoFavoritesAllFilesOfAFolder
+///-----------------------------------
+
+/**
+ * This method set all files and folders of a folder as no favorite
+ *
+ * @param folder -> FolderDto
+ *
+ */
++ (void) setNoFavoritesAllFilesOfAFolder:(FileDto *) folder {
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE files SET is_favorite = 0 WHERE file_id = ?", [NSNumber numberWithInteger:folder.idFile]];
+        
+        if (!correctQuery) {
+            DLog(@"Error in setNoFavoritesAllFilesOfAFolder");
+        }
+    }];
 }
 
 

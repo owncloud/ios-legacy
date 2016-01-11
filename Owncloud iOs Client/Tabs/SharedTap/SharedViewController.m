@@ -33,6 +33,9 @@
 #import "FileListDBOperations.h"
 #import "UtilsTableView.h"
 #import "UtilsUrls.h"
+#import "ShareMainViewController.h"
+#import "OCNavigationController.h"
+#import "ManageCapabilitiesDB.h"
 
 
 //Three sections {shared items - not shared items msg - not share api support msg}
@@ -89,6 +92,13 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
+    if (IS_IOS8 || IS_IOS9) {
+        self.edgesForExtendedLayout = UIRectCornerAllCorners;
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }else{
+        self.edgesForExtendedLayout = UIRectCornerAllCorners;
+    }
+    
     //Get offline data
     [self refreshWithDataBaseSharedItems];
 
@@ -132,24 +142,29 @@
 -(void)viewDidLayoutSubviews
 {
     
-    if (IS_IOS8) {
+    if (IS_IOS8 || IS_IOS9) {
+        
         if ([self.sharedTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 9, 0, 0)];
+            [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
         }
         
         if ([self.sharedTableView respondsToSelector:@selector(setLayoutMargins:)]) {
             [self.sharedTableView setLayoutMargins:UIEdgeInsetsZero];
         }
         
-    }
-}
+        
+        CGRect rect = self.navigationController.navigationBar.frame;
+        float y = rect.size.height + rect.origin.y;
+        self.sharedTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+        
+    }}
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    if (IS_IOS8) {
+    if (IS_IOS8 || IS_IOS9) {
         if ([self.sharedTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 9, 0, 0)];
+            [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
         }
         
         if ([self.sharedTableView respondsToSelector:@selector(setLayoutMargins:)]) {
@@ -157,6 +172,7 @@
         }
         
     }
+    
 }
 
 
@@ -166,15 +182,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Rotate Support
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
-    
-    //Close the sharelink option in iPad when rotate
-    if (!IS_IPHONE && _mShareFileOrFolder && _mShareFileOrFolder.activityPopoverController) {
-        [_mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
-    }
-}
 
 #pragma mark - Data Base Data
 
@@ -414,6 +421,8 @@
         }
     }
 }
+
+
 
 
 #pragma mark - Error Messages about credentials of newtwork fails
@@ -688,7 +697,7 @@
 
         //Obtain the path where the folder will be created in the file system
         NSString *rootPath = [NSString stringWithFormat:@"%@", newFolder.filePath];
-        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         //Remove the "/"
         NSString *name = [newFolder.fileName substringToIndex:[newFolder.fileName length]-1];
         
@@ -1121,7 +1130,7 @@
 - (NSArray *)setSwipeLeftButtons
 {
     //Check the share options should be presented
-    if (k_hide_share_options) {
+    if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
         
         return nil;
         
@@ -1159,18 +1168,6 @@
  * @param index -> NSInteger (order of the button tapped)
  */
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
-    //Check if mShareFileOrfFolder object exists
-  
-    
-    if (_mShareFileOrFolder) {
-        //Create new object
-        self.mShareFileOrFolder = nil;
-    }
-    
-    //Create new object
-    self.mShareFileOrFolder = [ShareFileOrFolder new];
-    self.mShareFileOrFolder.delegate = self;
-    
     
     //Get shared token and create the url
     NSIndexPath *cellIndexPath = [self.sharedTableView indexPathForCell:cell];
@@ -1179,22 +1176,32 @@
     
     switch (index) {
         case 0: {
-            DLog(@"Share button pressed");
-            if (IS_IPHONE) {
-                //iPhone
-                self.mShareFileOrFolder.parentView = self.tabBarController.view;
-            } else {
-                //iPad
-                self.mShareFileOrFolder.parentView=_sharedTableView;
-                self.mShareFileOrFolder.cellFrame = cell.frame;
-                self.mShareFileOrFolder.isTheParentViewACell = YES;
+            DLog(@"Share Link Option");
+            
+            //Get the FileDto
+            FileDto *file = [ManageFilesDB getFileEqualWithShareDtoPath:sharedDto.path andByUser:APP_DELEGATE.activeUser];
+            
+            if (!file) {
+                file = [self getFileNotCatchedBySharedPath:sharedDto];
             }
             
-            //Share
+            if (file) {
+                
+                ShareMainViewController *share = [[ShareMainViewController alloc] initWithFileDto:file];
+                OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
+                
+                if (IS_IPHONE) {
+                    [self presentViewController:nav animated:YES completion:nil];
+                } else {
+                    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+                    nav.modalPresentationStyle = UIModalPresentationFormSheet;
+                    [app.splitViewController presentViewController:nav animated:YES completion:nil];
+                }
+                
+            }else{
+                [self showError:NSLocalizedString(@"default_not_possible_msg", nil)];
+            }
             
-            //Present info in Activity Screen
-            self.mShareFileOrFolder.shareDto = sharedDto;
-            [self.mShareFileOrFolder clickOnShareLinkFromFileDto:NO];
             [cell hideUtilityButtonsAnimated:YES];
             
             [self performSelector:@selector(refreshSharedItems) withObject:nil afterDelay:0.5];
@@ -1202,6 +1209,15 @@
             break;
         } case 1: {
             DLog(@"Unshare button pressed");
+            
+            if (_mShareFileOrFolder) {
+                //Create new object
+                self.mShareFileOrFolder = nil;
+            }
+            
+            //Create new object
+            self.mShareFileOrFolder = [ShareFileOrFolder new];
+            self.mShareFileOrFolder.delegate = self;
             
             [self.mShareFileOrFolder unshareTheFile:sharedDto];
             [cell hideUtilityButtonsAnimated:YES];

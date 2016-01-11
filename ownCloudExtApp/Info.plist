@@ -17,11 +17,18 @@
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>3.4.6</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>1.0</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict/>
+	</dict>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
@@ -30,10 +37,23 @@
 			<array>
 				<string>UIDocumentPickerModeOpen</string>
 				<string>UIDocumentPickerModeImport</string>
+				<string>UIDocumentPickerModeMoveToService</string>
+				<string>UIDocumentPickerModeExportToService</string>
 			</array>
 			<key>UIDocumentPickerSupportedFileTypes</key>
 			<array>
 				<string>public.content</string>
+				<string>public.text</string>
+				<string>public.plain-text</string>
+				<string>public.html</string>
+				<string>public.presentation</string>
+				<string>public.video</string>
+				<string>public.mpeg</string>
+				<string>public.audio</string>
+				<string>public.image</string>
+				<string>public.jpeg</string>
+				<string>public.tiff</string>
+				<string>public.data</string>
 			</array>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>

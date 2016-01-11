@@ -30,3 +30,7 @@
 #import "KKPasscodeViewController.h"
 #import "ManageAppSettingsDB.h"
 #import "InitializeDatabase.h"
+#import "MBProgressHUD.h"
+#import "AppDelegate.h"
+#import "ManageFilesDB.h"
+

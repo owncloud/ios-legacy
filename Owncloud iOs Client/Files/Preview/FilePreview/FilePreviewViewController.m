@@ -15,7 +15,6 @@
 
 #import "FilePreviewViewController.h"
 #import "FileDto.h"
-
 #import "MBProgressHUD.h"
 #import "UIColor+Constants.h"
 #import "constants.h"
@@ -31,17 +30,19 @@
 #import "UploadUtils.h"
 #import "CWStatusBarNotification.h"
 #import "UIAlertView+Blocks.h"
-#import "ShareFileOrFolder.h"
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
 #import "ManageFavorites.h"
 #import "UtilsUrls.h"
-
 #import "ReaderDocument.h"
 #import "ReaderViewController.h"
-
+#import "ShareMainViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
+#import "SyncFolderManager.h"
+#import "DownloadUtils.h"
+#import "ManageCapabilitiesDB.h"
+
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -61,6 +62,9 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 #pragma mark - Init methods
 - (id) initWithNibName:(NSString *) nibNameOrNil selectedFile:(FileDto *) file
 {
+    
+    [[AppDelegate sharedSyncFolderManager] cancelDownload:file];
+    
     //Assing the file
     _file = file;
     
@@ -115,7 +119,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
     //Check if share link button should be appear.
-    if (k_hide_share_options) {
+    if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
         NSMutableArray *customItems = [NSMutableArray arrayWithArray:self.toolBar.items];
         [customItems removeObjectIdenticalTo:_shareButtonBar];
         [customItems removeObjectIdenticalTo:_flexibleSpaceAfterShareButtonBar];
@@ -224,7 +228,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  * This method puts the favorite star on starred or unstarred state on the preview view
  */
 - (void) putTheFavoriteStatus {
-    if (_file.isFavorite) {
+    if (_file.isFavorite || [DownloadUtils isSonOfFavoriteFolder:self.file]) {
         //Change the image to unstarred
         _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
     } else {
@@ -382,12 +386,10 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     currentOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     BOOL isPotrait = UIDeviceOrientationIsPortrait(currentOrientation);
     
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
-        if (isPotrait == YES) {
-            [self potraitView];
-        } else {
-            [self landscapeView];
-        }
+    if (isPotrait == YES) {
+        [self potraitView];
+    } else {
+        [self landscapeView];
     }
 }
 
@@ -398,14 +400,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     } else if (_readerPDFViewController) {
         [_readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
-    
-    if (toInterfaceOrientation  == UIInterfaceOrientationPortrait) {
-         //Portrait
-         [self potraitView];
-    } else {
-        //Landscape
-        [self landscapeView];
-    }
+ 
 }
 
 -(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -425,6 +420,14 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
     } else {
         _toolBar.hidden = NO;
+    }
+    
+    if (toInterfaceOrientation  == UIInterfaceOrientationPortrait) {
+        //Portrait
+        [self potraitView];
+    } else {
+        //Landscape
+        [self landscapeView];
     }
 }
 
@@ -477,7 +480,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         DLog(@"is Donwloaded: %ld",(long)_file.isDownload);
         
         //Check if the file is in the device
-        if (([_file isDownload] == notDownload) && _typeOfFile != otherFileType) {
+        if ([_file isDownload] == notDownload) {
 
             //Download the file
             [self downloadTheFile];
@@ -486,7 +489,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             if (_file.isDownload == updating) {
                 //Preview the file
                 if (_typeOfFile == videoFileType || _typeOfFile == audioFileType) {
-                    [self performSelectorOnMainThread:@selector(playMediaFile) withObject:nil waitUntilDone:YES];
+                    [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.0];
                 } else if (_typeOfFile == officeFileType) {
                     [self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
                 } else {
@@ -527,7 +530,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             //Preview the file
             if ((!_file.isFavorite)||(_file.isFavorite && !_file.isNecessaryUpdate)) {
                 if (_typeOfFile == videoFileType || _typeOfFile == audioFileType) {
-                    [self performSelectorOnMainThread:@selector(playMediaFile) withObject:nil waitUntilDone:YES];
+                    [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.0];
                 } else if (_typeOfFile == officeFileType) {
                     [self performSelector:@selector(openFileOffice) withObject:nil afterDelay:0.1];
                     //[self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
@@ -853,32 +856,9 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 - (void)playMediaFile{
     
-    //The next commented code is for the streaming case, but not works yet.
-    
-    /* UserDto *activeUser = [ExecuteManager getActiveUser];
-     NSArray *splitedUrl = [activeUser.url componentsSeparatedByString:@"/"];
-     
-     NSString *serverUrl = [NSString stringWithFormat:@"%@%@%@",[NSString stringWithFormat:@"%@/%@/%@",[splitedUrl objectAtIndex:0],[splitedUrl objectAtIndex:1],[splitedUrl objectAtIndex:2]], _file.filePath, _file.fileName];
-     
-     DLog(@"remote url: %@", serverUrl);
-     
-     NSURL *url = [NSURL URLWithString:serverUrl];
-     
-     NSURLCredential *cred= [NSURLCredential credentialWithUser:activeUser.username password:activeUser.password persistence:NSURLCredentialPersistenceForSession];
-     
-     NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc]
-     initWithHost: @"192.168.1.162/owncloud/"
-     port: 8080
-     protocol: @"http"
-     realm: serverUrl
-     authenticationMethod: NSURLAuthenticationMethodDefault];
-     
-     [[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential: cred forProtectionSpace: protectionSpace];*/
-    
-    
-        
     //Know if mediaplayer is used
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
     BOOL isNewMediaPlayer = YES;
     
     if (appDelegate.mediaPlayer != nil) {
@@ -897,14 +877,16 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     } else {
         isNewMediaPlayer = YES;
     }
+    
+    
     if (isNewMediaPlayer == NO) {
         
         _moviePlayer = appDelegate.mediaPlayer;
         _moviePlayer.delegate = self;
         
-        [self configureView];
+        [self.view addSubview: _moviePlayer.moviePlayer.view];
         
-        [self.view addSubview:_moviePlayer.moviePlayer.view];
+        [self configureView];
         
     } else {
         //If is audio file create a AVAudioSession objetct to enable the music in background
@@ -932,16 +914,18 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [_moviePlayer.moviePlayer setFullscreen:NO];
         _moviePlayer.moviePlayer.shouldAutoplay = NO;
         _moviePlayer.delegate = self;
+        
+        appDelegate.mediaPlayer = _moviePlayer;
+        [self.view addSubview:_moviePlayer.moviePlayer.view];
+        
+        
         [self configureView];
         
         [_moviePlayer initHudView];
         [_moviePlayer.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
         [_moviePlayer.moviePlayer prepareToPlay];
         [_moviePlayer playFile];
-        
- 
-        appDelegate.mediaPlayer = _moviePlayer;
-        [self.view addSubview:_moviePlayer.moviePlayer.view];
+
     }
 }
 
@@ -1025,14 +1009,20 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 - (IBAction)didPressShareLinkButton:(id)sender
 {
-    DLog(@"didPressShareLinkButton");
     
-    _mShareFileOrFolder = [ShareFileOrFolder new];
-    _mShareFileOrFolder.delegate = self;
-    _mShareFileOrFolder.viewToShow = self.view;
+    DLog(@"Share Link Option");
+    self.file = [ManageFilesDB getFileDtoByIdFile:self.file.idFile];
+    ShareMainViewController *share = [[ShareMainViewController alloc] initWithFileDto:self.file];
     
-    _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
-    [_mShareFileOrFolder showShareActionSheetForFile:_file];
+    OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
+    
+    if (IS_IPHONE) {
+        [self presentViewController:nav animated:YES completion:nil];
+    } else {
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:nav animated:YES completion:nil];
+    }
     
 }
 
@@ -1044,25 +1034,29 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
-    if (_file.isFavorite) {
-        _file.isFavorite = NO;
-        //Change the image to unstarred
-        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+    if ([DownloadUtils isSonOfFavoriteFolder:self.file]) {
+        [self showErrorMessageIfNotIsShowingWithString:NSLocalizedString(@"parent_folder_is_favorite", nil)];
     } else {
-        _file.isFavorite = YES;
-        _isCancelDownloadClicked = NO;
-        //Change the image to starred
-        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
-        //Download the file if it's not downloaded and not pending to be download
-        [self downloadTheFileIfIsnotDownloadingInOtherProcess];
-    }
-    
-    //Update the DB
-    [ManageFilesDB updateTheFileID:_file.idFile asFavorite:_file.isFavorite];
-    [app.presentFilesViewController reloadTableFromDataBase];
-    
-    if (_file.isFavorite && _file.isDownload == downloaded) {
-        [self checkIfThereIsANewFavoriteVersion];
+        if (_file.isFavorite) {
+            _file.isFavorite = NO;
+            //Change the image to unstarred
+            _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+        } else {
+            _file.isFavorite = YES;
+            _isCancelDownloadClicked = NO;
+            //Change the image to starred
+            _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
+            //Download the file if it's not downloaded and not pending to be download
+            [self downloadTheFileIfIsnotDownloadingInOtherProcess];
+        }
+        
+        //Update the DB
+        [ManageFilesDB updateTheFileID:_file.idFile asFavorite:_file.isFavorite];
+        [app.presentFilesViewController reloadTableFromDataBase];
+        
+        if (_file.isFavorite && _file.isDownload == downloaded) {
+            [self checkIfThereIsANewFavoriteVersion];
+        }
     }
 }
 
@@ -1234,7 +1228,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
         if (downloadIsInProgress) {
             
-            if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
+            if (!k_is_sso_active) {
                 
                 if (_file.isNecessaryUpdate) {
                     [self putUpdateProgressInNavBar];

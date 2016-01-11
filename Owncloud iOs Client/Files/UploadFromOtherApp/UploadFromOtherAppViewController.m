@@ -112,7 +112,7 @@
     
     _userName = app.activeUser.username;
     
-    _serverName = [UtilsUrls getFullRemoteServerPathWithoutProtocol:app.activeUser];
+    _serverName = app.activeUser.url;
     
     _remoteFolder = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     
@@ -894,7 +894,7 @@
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         
-        if (IS_IOS8) {
+        if (IS_IOS8 || IS_IOS9) {
             [self presentViewController:navController animated:YES completion:nil];
         }else{
             [app.splitViewController presentViewController:navController animated:YES completion:nil];

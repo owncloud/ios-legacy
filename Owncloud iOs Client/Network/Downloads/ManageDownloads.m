@@ -26,6 +26,7 @@
 #import "DetailViewController.h"
 #import "OCCommunication.h"
 #import "OCURLSessionManager.h"
+#import "ManageUsersDB.h"
 
 
 @interface ManageDownloads()
@@ -78,10 +79,15 @@
 - (void)cancelDownloads {
     
     self.isCancelingAllDownloads = YES;
-    
     NSArray *temp = [NSArray arrayWithArray:self.downloads];
     
+    UserDto *user = nil;
+    
     for (Download *download in temp) {
+        if (!user) {
+            user = [ManageUsersDB getUserByIdUser:download.fileDto.userId];
+        }
+        download.user = user;
         [download cancelDownload];
     }
     
@@ -163,7 +169,7 @@
 
 - (void) removeDownload:(Download *)download{
     
-    if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active){
+    if (!k_is_sso_active){
         
         BOOL exist = NO;
         
@@ -306,8 +312,8 @@
 #pragma mark - FileList
 
 - (void)reloadFileList{
-      AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-       [appDelegate.presentFilesViewController reloadTableFromDataBase];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    [app.presentFilesViewController reloadTableFromDataBase];
 }
 
 

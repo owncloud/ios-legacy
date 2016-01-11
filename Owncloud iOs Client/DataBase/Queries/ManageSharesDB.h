@@ -78,6 +78,20 @@
 + (NSMutableArray*) getSharesByFolderPath:(NSString *) path;
 
 ///-----------------------------------
+/// @name Get Shares From User And Group By Path
+///-----------------------------------
+
+/**
+ * Get the shared items of a specific path
+ *
+ * @param path -> NSString
+ *
+ * @return NSMutableArray
+ *
+ */
++ (NSMutableArray*) getSharesFromUserAndGroupByPath:(NSString *) path;
+
+///-----------------------------------
 /// @name Get All Shares for user
 ///-----------------------------------
 

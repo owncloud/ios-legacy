@@ -47,7 +47,7 @@
         
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'has_forbidden_characters_support' INTEGER NOT NULL DEFAULT 0, 'instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0, 'date_instant_upload' LONG, 'url_redirected' VARCHAR )"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_sharee_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'has_forbidden_characters_support' INTEGER NOT NULL DEFAULT 0, 'has_capabilities_support' INTEGER NOT NULL DEFAULT 0, 'instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0, 'date_instant_upload' LONG, 'url_redirected' VARCHAR )"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table users");
@@ -77,8 +77,7 @@
             DLog(@"Error in createDataBase table certificates");
         }
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'db_version' ('id' INTEGER PRIMARY KEY, 'version' INTEGER)"];
-        
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'db_version' ('id' INTEGER PRIMARY KEY, 'version' INTEGER, 'show_help_guide' BOOL NOT NULL DEFAULT 1)"];
         if (!correctQuery) {
             DLog(@"Error in createDataBase table db_version");
         }
@@ -107,27 +106,15 @@
             DLog(@"Error in createDataBase table cookies_storage");
         }
         
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'capabilities' ('id' INTEGER PRIMARY KEY, 'id_user' INTEGER, 'version_major' INTEGER, 'version_minor' INTEGER, 'version_micro' INTEGER, 'version_string' VARCHAR, 'version_edition' VARCHAR, 'core_poll_intervall' INTEGER, 'is_files_sharing_api_enabled' BOOL, 'is_files_sharing_share_link_enabled' BOOL, 'is_files_sharing_password_enforced_enabled' BOOL, 'is_files_sharing_expire_date_by_default_enabled' BOOL, 'is_files_sharing_expire_date_enforce_enabled' BOOL, 'files_sharing_expire_date_days_number' INTEGER, 'is_files_sharing_allow_user_send_mail_notification_about_share_link_enabled' BOOL, 'is_files_sharing_allow_public_uploads_enabled' BOOL, 'is_files_sharing_allow_user_send_mail_notification_about_other_users_enabled' BOOL, 'is_files_sharing_re_sharing_enabled' BOOL, 'is_files_sharing_allow_user_send_shares_to_other_servers_enabled' BOOL, 'is_files_sharing_allow_user_receive_shares_to_other_servers_enabled' BOOL, 'is_file_big_file_chunking_enabled' BOOL, 'is_file_undelete_enabled' BOOL, 'is_file_versioning_enabled' BOOL)"];
+        
+        if (!correctQuery) {
+            DLog(@"Error in createDataBase table capabilities");
+        }
+        
     }];    
 }
 
-/*
- * Delete table of database version
- */
-+ (void)clearTableDbVersion {
-    
-    FMDatabaseQueue *queue = Managers.sharedDatabase;
-    
-    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-        BOOL correctQuery=NO;
-        
-       correctQuery = [db executeUpdate:@"DELETE FROM db_version"];
-        
-        if (!correctQuery) {
-            DLog(@"Error in clearTableDbVersion");
-        }
-    }];
-    
-}
 
 /*
  * Insert version of the database
@@ -136,20 +123,56 @@
 
 + (void) insertVersionToDataBase:(int) version {
     
-    [self clearTableDbVersion];
+    __block BOOL hasRow = NO;
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
+
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT COUNT(*) as NUM from db_version"];
+        while ([rs next]) {
+            int num = [rs intForColumn:@"NUM"];
+            if (num>0) {
+                 hasRow = YES;
+            }
+        }
+    }];
+    
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"INSERT INTO db_version(version) Values(?)", [NSNumber numberWithInt:version]];
+        if (hasRow) {
+            correctQuery = [db executeUpdate:@"UPDATE db_version SET version=?", [NSNumber numberWithInt:version]];
+        } else {
+            correctQuery = [db executeUpdate:@"INSERT INTO db_version(version) Values(?)", [NSNumber numberWithInt:version]];
+        }
         
         if (!correctQuery) {
             DLog(@"Error in insertVersionToDataBase");
         }
         
     }];
+}
+
+/*
+ * Update show help guide
+ * @showHelp -> value YES,NO
+ */
+
++ (void) updateShowHelpGuide:(BOOL) newValue {
+   
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE db_version SET show_help_guide=? ",[NSNumber numberWithBool:newValue]];
+        
+        if (!correctQuery) {
+            DLog(@"Error update show help guide");
+        }
+        
+    }];
+     DLog(@"Se ha actualizado helpGuide a:%d",newValue);
 }
 
 /*
@@ -219,6 +242,31 @@
     DLog(@"DataBase Version is: %d", output);
     return output;
 }
+
+/*
+ * This method return the show help guide
+ */
+
++(BOOL) getShowHelpGuide {
+    
+    __block BOOL output = NO;
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT show_help_guide FROM db_version LIMIT 1"];
+        
+        while ([rs next]) {
+            output = [rs boolForColumn:@"show_help_guide"];
+        }
+        
+       [rs close];
+    }];
+    
+    DLog(@"getShowHelpGuide: %d", output);
+    return output;
+}
+
 
 /*
  * Method that make the update the version of the dataBase
@@ -822,6 +870,63 @@
         }
         
     }];
+}
+
+///-----------------------------------
+/// @name Update Database version with 13 version to 14
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter users table, added new fields to forbidden characters support and to redirected url.
+ *
+ */
++ (void) updateDBVersion13To14{
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"ALTER TABLE db_version ADD show_help_guide BOOL NOT NULL DEFAULT 0"];
+        if (!correctQuery) {
+            DLog(@"Error update version 13 to 14 table db_version show_help_guide");
+        }
+        
+    }];
+}
+
+///-----------------------------------
+/// @name Update Database version with 13 version to 14
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter users table, added new field to store that the server has sharee API support.
+ *
+ */
++ (void) updateDBVersion14To15{
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"ALTER TABLE users ADD has_sharee_api_support INTEGER NOT NULL DEFAULT 0"];
+        if (!correctQuery) {
+            DLog(@"Error update version 14 to 15 table users has_sharee_api_support");
+        }
+        
+        correctQuery = [db executeUpdate:@"ALTER TABLE users ADD has_capabilities_support INTEGER NOT NULL DEFAULT 0"];
+        if (!correctQuery) {
+            DLog(@"Error update version 14 to 15 table users has_capabilities_support");
+        }
+        
+    }];
+
+    
 }
 
 @end

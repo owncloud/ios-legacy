@@ -30,6 +30,7 @@
 #import "FilesViewController.h"
 #import "UploadUtils.h"
 #import "UtilsCookies.h"
+#import "DownloadUtils.h"
 
 #define k_task_identifier_invalid -1
 
@@ -422,7 +423,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     if (isNecessaryUpdate) {
         //Delete the temporal file
-        [self updateFile:_fileDto withTemporalFile:_deviceLocalPath];
+        [DownloadUtils updateFile:_fileDto withTemporalFile:_deviceLocalPath];
     }
     
     //Update the datas of the new file
@@ -483,8 +484,12 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
+        if (!self.user) {
+            self.user = app.activeUser;
+        }
+        
         //Get FileDto
-        _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+        _fileDto = [ManageFilesDB getFileDtoByFileName:_fileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileDto.filePath andUser:self.user] andUser:self.user];
         
         //If is downloaded or not
         if ([_fileDto isDownload] == downloaded && !_fileDto.isNecessaryUpdate) {
@@ -586,8 +591,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
  * Remove _fileDto of the sync process
  */
 - (void) removeFileOfFavorites{
-    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    [app.manageFavorites removeOfSyncProcessFile:_fileDto];
+    [[AppDelegate sharedManageFavorites] removeOfSyncProcessFile:_fileDto];
 }
 
 #pragma mark - FilesViewController callBacks
@@ -787,39 +791,6 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         //Erase cache
         [UtilsCookies eraseURLCache];
     }];
-}
-
-
-///-----------------------------------
-/// @name Update a file with the temporal one
-///-----------------------------------
-
-/**
- * This method updates a file because there is a new version in the server
- *
- * @param file > (FileDto) the file to be updated
- * @param temporalFile > (NSString) the path of the temporal file
- */
-- (void) updateFile:(FileDto *)file withTemporalFile:(NSString *)temporalFile {
-    
-    //If the file has been updated
-    DLog(@"Temporal local path: %@", temporalFile);
-    DLog(@"Old local path: %@", file.localFolder);
-    
-    //Delete the old file
-    DeleteFile *mDeleteFile = [[DeleteFile alloc] init];
-    [mDeleteFile deleteItemFromDeviceByFileDto:file];
-    
-    //Change the name of the new updated file
-    NSFileManager *filecopy=nil;
-    filecopy =[NSFileManager defaultManager];
-    NSError *error;
-    if(![filecopy moveItemAtPath:temporalFile toPath:file.localFolder error:&error]){
-        DLog(@"Error: %@",[error localizedDescription]);
-    }
-    else{
-        DLog(@"All ok");
-    }
 }
 
 

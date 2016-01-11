@@ -25,6 +25,8 @@
 #import "AddAccountViewController.h"
 #import "cocos2d.h"
 #import "EasterEggNavigationController.h"
+#import "MBProgressHUD.h"
+#import "SyncFolderManager.h"
 
 typedef enum {
     help = 0,
@@ -34,7 +36,7 @@ typedef enum {
     
 } enumInfoSetting;
 
-@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, ManageLocationDelegate, AccountCellDelegate, AddAccountDelegate>
+@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, ManageLocationDelegate, AccountCellDelegate, AddAccountDelegate, MBProgressHUDDelegate, SyncFolderManagerDelegate>
 
 @property(nonatomic,strong)IBOutlet UITableView *settingsTableView;
 @property(nonatomic,strong)UISwitch *switchPasscode;
@@ -57,6 +59,10 @@ typedef enum {
 @property (nonatomic, strong) CCDirectorIOS *director;
 @property (nonatomic, strong) EasterEggNavigationController *navControllerEasterEgg;
 @property (nonatomic, strong) CCScene *gameScene;
+
+//View for loading screen
+@property(nonatomic, strong) MBProgressHUD  *HUD;
+@property(nonatomic, strong) dispatch_semaphore_t semaphoreChangeUser;
 
 - (IBAction)changeSwitchPasscode:(id)sender;
 - (IBAction)changeSwitchInstantUpload:(id)sender;

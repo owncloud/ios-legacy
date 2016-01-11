@@ -34,6 +34,8 @@
 #import "ManageAppSettingsDB.h"
 #import "UtilsCookies.h"
 
+#define k_delay_after_check_instant_uploads_folders 2.0
+
 NSString *fileDeleteInAOverwriteProcess=@"fileDeleteInAOverwriteProcess";
 NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 
@@ -193,10 +195,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         if (!isSamlCredentialsError) {
             
             //Upload ready, continue
-            [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+            [self performSelector:@selector(startUploadFile) withObject:nil afterDelay:k_delay_after_check_instant_uploads_folders];
             
         }
-        
         
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
@@ -205,7 +206,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         switch (response.statusCode) {
             case kOCErrorServerMethodNotPermitted:
                 //405 Method not permitted "not_possible_create_folder"
-                [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
+                [self performSelector:@selector(startUploadFile) withObject:nil afterDelay:k_delay_after_check_instant_uploads_folders];
                 break;
             default:
                 //"not_possible_connect_to_server"
@@ -516,6 +517,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             
             if (!isSamlCredentialsError) {
                 
+                NSLog(@"response: %@", response);
+                
                 [ManageUploadsDB setStatus:uploaded andKindOfError:notAnError byUploadOffline:weakSelf.currentUpload];
                 
                 DLog(@"Transfer complete, next file if exists");
@@ -724,11 +727,12 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
 }
 
+//Method called when the overwrite process is cancelled
 - (void)finishOverwriteProcess{
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     DLog(@"Overwriten process active: Cancel a file");
-    NSString *localFolder=[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.currentUpload.destinyFolder andUser:self.userUploading];
+    NSString *localFolder = [UtilsUrls getFilePathOnDBByFullPath:self.currentUpload.destinyFolder andUser:self.userUploading];
     DLog(@"Local folder:%@",localFolder);
     
     FileDto *deleteOverwriteFile = [ManageFilesDB getFileDtoByFileName:self.currentUpload.uploadFileName andFilePath:localFolder andUser:self.userUploading];
@@ -741,8 +745,17 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:self.currentUpload.destinyFolder];
     }
     
-    [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:notDownload];
-    
+    if (!deleteOverwriteFile.isFavorite){
+        
+        if (deleteOverwriteFile.isDownload == overwriting){
+             [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:downloaded];
+        }
+ 
+    }else{
+        [ManageFilesDB setFileIsDownloadState:deleteOverwriteFile.idFile andState:downloaded];
+        [ManageFilesDB setFile:deleteOverwriteFile.idFile isNecessaryUpdate:false];
+    }
+   
 }
 
 - (void) cancelUpload {

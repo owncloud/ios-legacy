@@ -67,7 +67,7 @@
             //Obtains the number of the downloaded files in DB which filepath contains the folder that the user want delete
             _isFilesDownloadedInFolder=[ManageFilesDB isGetFilesByDownloadState:downloaded andByUser:app.activeUser andFolder:pathFolder];
         }
-        if((_file.isDownload || _isFilesDownloadedInFolder == YES) && !_file.isFavorite) {
+        if((_file.isDownload || _isFilesDownloadedInFolder == YES) && (!_file.isFavorite && ![[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.file])) {
             DLog(@"Delete downloaded files or folder with downloaded files");
             
             if (self.popupQuery) {
@@ -164,7 +164,10 @@
     if (_isFilesDownloadedInFolder == YES) {
         //If the item deleted is a directory update the is_download state to notDownload in the files contains in the folder for deleted
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        NSString *pathFolder= [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
+        
+        NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
+        pathFolder = [pathFolder stringByAppendingString:_file.fileName];
+        
         [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
         
         //Delete the folder and the files that it contains
@@ -397,7 +400,7 @@
 #pragma mark - UIActionSheetDelegate
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
-    if ((_file.isDownload || _isFilesDownloadedInFolder == YES) && !_file.isFavorite) {
+    if ((_file.isDownload || _isFilesDownloadedInFolder == YES) && (!_file.isFavorite && ![[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.file])) {
         switch (buttonIndex) {
             case 0:
                 DLog(@"Delete from server");

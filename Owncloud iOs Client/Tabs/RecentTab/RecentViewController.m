@@ -74,15 +74,17 @@
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
     
-    //Only for iOS 7
-    if (IS_IOS7) {
-        //This new feature of iOS 7 indicate the extend of the edges of the view
-        self.edgesForExtendedLayout = UIRectCornerAllCorners; //UIRectEdgeBottom
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    if (IS_IOS8 || IS_IOS9) {
+        self.edgesForExtendedLayout = UIRectCornerAllCorners;
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }else{
+        self.edgesForExtendedLayout = UIRectCornerAllCorners;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -100,7 +102,8 @@
 -(void)viewDidLayoutSubviews
 {
     
-    if (IS_IOS8) {
+    if (IS_IOS8 || IS_IOS9) {
+        
         if ([self.uploadsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [self.uploadsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
         }
@@ -109,13 +112,19 @@
             [self.uploadsTableView setLayoutMargins:UIEdgeInsetsZero];
         }
         
+        
+        CGRect rect = self.navigationController.navigationBar.frame;
+        float y = rect.size.height + rect.origin.y;
+        self.uploadsTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+        
     }
+
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    if (IS_IOS8) {
+    if (IS_IOS8 || IS_IOS9) {
         if ([self.uploadsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [self.uploadsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
         }
@@ -780,6 +789,7 @@
     DLog(@"user: %ld", (long)app.activeUser.idUser);
     DLog(@"user: %ld", (long)selectedUpload.userId);
     
+    
     if(selectedUpload.userId == app.activeUser.idUser){
         
         _selectedUploadToResolveTheConflict=selectedUpload;
@@ -908,7 +918,9 @@
             file.fileName = [_selectedUploadToResolveTheConflict.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             file.isDirectory = NO;
             
-            _overWritteOption = [OverwriteFileOptions new];
+            if (!self.overWritteOption) {
+                _overWritteOption = [OverwriteFileOptions new];
+            }
             
             if (IS_IPHONE) {
                 _overWritteOption.viewToShow = self.view;
@@ -982,18 +994,6 @@
 - (void) setNewNameToSaveFile:(NSString *)name {
     DLog(@"setNewNameToSaveFile: %@", name);
     
-    //Get the file related with the upload file if exist and remove the download
-    UserDto *user = [ManageUsersDB getUserByIdUser:self.selectedUploadToResolveTheConflict.userId];
-    
-    NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:_selectedUploadToResolveTheConflict.destinyFolder andUser:user];
-
-    FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.selectedUploadToResolveTheConflict.uploadFileName andFilePath:folderName andUser:user];
-    
-    if (uploadFile) {
-        [ManageFilesDB setFileIsDownloadState:uploadFile.idFile andState:notDownload];
-        [DownloadUtils removeDownloadFileWithPath:uploadFile.localFolder];
-    }
-    
     _selectedUploadToResolveTheConflict.uploadFileName = name;
     
     [ManageUploadsDB updateErrorConflictFilesSetNewName:[name encodeString:NSUTF8StringEncoding] forUploadOffline:_selectedUploadToResolveTheConflict];
@@ -1002,7 +1002,6 @@
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     _selectedUploadToResolveTheConflict.kindOfError=notAnError;
     [self updateRecents];
-    
     
     //Relaunch the uploads that failed before
     [app performSelectorInBackground:@selector(relaunchUploadsFailedForced) withObject:nil];
@@ -1013,19 +1012,12 @@
      AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     _selectedUploadToResolveTheConflict.isNotNecessaryCheckIfExist = YES;
     
-    
     [ManageUploadsDB updateErrorConflictFilesSetOverwrite:YES forUploadOffline: _selectedUploadToResolveTheConflict];
     
     //A overwrite process is in progress
     app.isOverwriteProcess = YES;
     
-    //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
-    //The folder Name: A/
-    NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:_selectedUploadToResolveTheConflict.destinyFolder andUser:app.activeUser];
-    
-    //Obtain the file that the user wants overwrite    
-    FileDto *file = nil;
-    file = [ManageFilesDB getFileDtoByFileName:_selectedUploadToResolveTheConflict.uploadFileName andFilePath:folderName andUser:app.activeUser];
+    FileDto *file = [UploadUtils getFileDtoByUploadOffline:self.selectedUploadToResolveTheConflict];
     
     //Check if this file is being updated and cancel it
     Download *downloadFile;
@@ -1061,6 +1053,23 @@
 - (void)folderSelected:(NSString*)folder{
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    if (self.selectedFileDtoToResolveNotPermission) {
+        
+        //If exist file related with the select upload put in downloaded state
+        //UserDto *user = [ManageUsersDB getUserByIdUser:self.selectedFileDtoToResolveNotPermission.userId];
+        
+       // NSString *parentFolder = [UtilsUrls getFilePathOnDBByFullPath:self.selectedFileDtoToResolveNotPermission.destinyFolder andUser:user];
+        
+      //  FileDto *uploadFile = [ManageFilesDB getFileDtoByFileName:self.selectedFileDtoToResolveNotPermission.uploadFileName andFilePath:parentFolder andUser:user];
+        
+        FileDto *uploadFile = [UploadUtils getFileDtoByUploadOffline:self.selectedFileDtoToResolveNotPermission];
+        
+        if (uploadFile && uploadFile.isDownload == overwriting) {
+            [ManageFilesDB setFileIsDownloadState:uploadFile.idFile andState:downloaded];
+        }
+
+    }
     
     DLog(@"Change Folder");
     //TODO. Change current Remote Folder
