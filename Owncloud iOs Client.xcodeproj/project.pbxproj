@@ -632,6 +632,10 @@
 		EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */; };
 		EA2B4FB017FAFF69001766BB /* company_empty_screen_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */; };
 		EA2B4FB217FC2CCE001766BB /* company_empty_screen_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FB117FC2CCE001766BB /* company_empty_screen_ipad@2x.png */; };
+		EA4070FE1C11B82B008B1507 /* UIImage+Thumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4070FD1C11B82B008B1507 /* UIImage+Thumbnail.m */; };
+		EA4070FF1C11B82B008B1507 /* UIImage+Thumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4070FD1C11B82B008B1507 /* UIImage+Thumbnail.m */; };
+		EA4071031C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4071021C11CAA0008B1507 /* NSObject+AssociatedObject.m */; };
+		EA4071041C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4071021C11CAA0008B1507 /* NSObject+AssociatedObject.m */; };
 		EA42FA4B18041E2F0006DB7C /* PassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4A18041E2F0006DB7C /* PassthroughView.m */; };
 		EA42FA4E1804217D0006DB7C /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA42FA51180539E70006DB7C /* ImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA50180539E70006DB7C /* ImageUtils.m */; };
@@ -761,6 +765,9 @@
 		EAEDC0941AB197D1004836EB /* SelectedFolderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14A50E9D18F3FC9100506E2B /* SelectedFolderCell.xib */; };
 		EAEDC0951AB19869004836EB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 145EA7CA17786FAC0087CDDB /* Localizable.strings */; };
 		EAF13F7D1BE8F5EA00F87E9F /* CheckCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF13F7C1BE8F5EA00F87E9F /* CheckCapabilities.m */; };
+		EAF33C891C2AF5EE003A5AA2 /* ManageThumbnails.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */; };
+		EAF33C8A1C2B12E6003A5AA2 /* ManageThumbnails.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */; };
+		EAF33C8B1C2B1313003A5AA2 /* ManageThumbnails.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */; };
 		EAF721191AADCC73009F5596 /* pdf_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F18E177C35AA004A1A5A /* pdf_icon.png */; };
 		EAF7211A1AADCC9B009F5596 /* BackRootFolderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F176177C35AA004A1A5A /* BackRootFolderIcon.png */; };
 		EAF7211B1AADCC9B009F5596 /* BackRootFolderIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F177177C35AA004A1A5A /* BackRootFolderIcon@2x.png */; };
@@ -1603,6 +1610,10 @@
 		EA2678FC1876E4B8008678DE /* notSharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notSharedItem@2x.png"; sourceTree = "<group>"; };
 		EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = company_empty_screen_ipad.png; sourceTree = "<group>"; };
 		EA2B4FB117FC2CCE001766BB /* company_empty_screen_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "company_empty_screen_ipad@2x.png"; sourceTree = "<group>"; };
+		EA4070FC1C11B82B008B1507 /* UIImage+Thumbnail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Thumbnail.h"; path = "Utils/ImagenScale/UIImage+Thumbnail.h"; sourceTree = "<group>"; };
+		EA4070FD1C11B82B008B1507 /* UIImage+Thumbnail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Thumbnail.m"; path = "Utils/ImagenScale/UIImage+Thumbnail.m"; sourceTree = "<group>"; };
+		EA4071011C11CAA0008B1507 /* NSObject+AssociatedObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+AssociatedObject.h"; path = "Utils/NSObject+AssociatedObject.h"; sourceTree = "<group>"; };
+		EA4071021C11CAA0008B1507 /* NSObject+AssociatedObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+AssociatedObject.m"; path = "Utils/NSObject+AssociatedObject.m"; sourceTree = "<group>"; };
 		EA42197F1A94F6850081D400 /* Owncloud iOs Client-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Owncloud iOs Client-Bridging-Header.h"; sourceTree = "<group>"; };
 		EA42FA4918041E2F0006DB7C /* PassthroughView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PassthroughView.h; path = Tabs/FileTab/PassthroughView.h; sourceTree = "<group>"; };
 		EA42FA4A18041E2F0006DB7C /* PassthroughView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PassthroughView.m; path = Tabs/FileTab/PassthroughView.m; sourceTree = "<group>"; };
@@ -1745,6 +1756,8 @@
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
 		EAF13F7B1BE8F5EA00F87E9F /* CheckCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckCapabilities.h; path = "Network/Server Version Checks/CheckCapabilities.h"; sourceTree = "<group>"; };
 		EAF13F7C1BE8F5EA00F87E9F /* CheckCapabilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckCapabilities.m; path = "Network/Server Version Checks/CheckCapabilities.m"; sourceTree = "<group>"; };
+		EAF33C871C2AF5EE003A5AA2 /* ManageThumbnails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageThumbnails.h; path = FileSystem/ManageThumbnails.h; sourceTree = "<group>"; };
+		EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageThumbnails.m; path = FileSystem/ManageThumbnails.m; sourceTree = "<group>"; };
 		EAF7217C1AAF2E0D009F5596 /* Managers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Managers.swift; sourceTree = "<group>"; };
 		EAF771281B72691100ED6E6E /* OCExtensions-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCExtensions-Bridging-Header.h"; sourceTree = "<group>"; };
 		EAF7712A1B7340C400ED6E6E /* ShareLinkButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareLinkButtonCell.swift; path = Tabs/FileTab/Share/Cells/ShareLinkButtonCell.swift; sourceTree = "<group>"; };
@@ -1908,6 +1921,7 @@
 				148DD5B11778425400FB9977 /* Branding */,
 				148DD5B81778501B00FB9977 /* Cells */,
 				40EDF89D1B4D112900700E3A /* HelpGuide */,
+				EAF33C851C2AF5AD003A5AA2 /* FileSystem */,
 				137E485115B6A37F00628EB1 /* Database */,
 				148DD5DD1778549700FB9977 /* ExternalLibreries */,
 				148DD61D17785D4200FB9977 /* Files */,
@@ -2068,6 +2082,8 @@
 				EAEE0830192B35CC00E1AA25 /* SystemConstants.h */,
 				EAF771301B73523800ED6E6E /* SystemConstants-swift.swift */,
 				148DD6EC17786BAF00FB9977 /* constants.h */,
+				EA4071011C11CAA0008B1507 /* NSObject+AssociatedObject.h */,
+				EA4071021C11CAA0008B1507 /* NSObject+AssociatedObject.m */,
 				1467037319372ACC00087289 /* DownloadUtils.h */,
 				1467037419372ACC00087289 /* DownloadUtils.m */,
 				148DD6FB17786BF200FB9977 /* FileNameUtils.h */,
@@ -2113,6 +2129,8 @@
 				148DD6F317786BDA00FB9977 /* UIImage+Resize.m */,
 				148DD6F417786BDA00FB9977 /* UIImage+RoundedCorner.h */,
 				148DD6F517786BDA00FB9977 /* UIImage+RoundedCorner.m */,
+				EA4070FC1C11B82B008B1507 /* UIImage+Thumbnail.h */,
+				EA4070FD1C11B82B008B1507 /* UIImage+Thumbnail.m */,
 			);
 			name = "Image Scale";
 			sourceTree = "<group>";
@@ -3585,6 +3603,15 @@
 			name = Queries;
 			sourceTree = "<group>";
 		};
+		EAF33C851C2AF5AD003A5AA2 /* FileSystem */ = {
+			isa = PBXGroup;
+			children = (
+				EAF33C871C2AF5EE003A5AA2 /* ManageThumbnails.h */,
+				EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */,
+			);
+			name = FileSystem;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -4370,6 +4397,7 @@
 				59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */,
 				EAD0EBA317FAF811000005A1 /* OCELCAssetTablePicker.m in Sources */,
 				1324298915ADBB3700DF823E /* main.m in Sources */,
+				EA4070FE1C11B82B008B1507 /* UIImage+Thumbnail.m in Sources */,
 				EABD89361BBE82D900DA5281 /* TSMessage.m in Sources */,
 				59C71D231A9216AE00F66166 /* ThumbsMainToolbar.m in Sources */,
 				59C71D1A1A9216AE00F66166 /* ReaderMainToolbar.m in Sources */,
@@ -4495,6 +4523,7 @@
 				148DD6E817786A1400FB9977 /* SettingsViewController.m in Sources */,
 				59D774CE1910EE0F004322BA /* UtilsTableView.m in Sources */,
 				148DD6EA17786A1400FB9977 /* WebViewController.m in Sources */,
+				EA4071031C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */,
 				EABF69151891379C00A2217C /* SWCellScrollView.m in Sources */,
 				EABF69141891379C00A2217C /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */,
@@ -4551,6 +4580,7 @@
 				EABF68D61889339200A2217C /* SharedViewController.m in Sources */,
 				59C71D131A9216AE00F66166 /* ReaderConstants.m in Sources */,
 				148BEA62178C01C300696246 /* FailedUploadCell.m in Sources */,
+				EAF33C891C2AF5EE003A5AA2 /* ManageThumbnails.m in Sources */,
 				40AC24D219FE725600582867 /* CredentialsDto.m in Sources */,
 				1339D939178DA3FC00002156 /* UtilsNetworkRequest.m in Sources */,
 				134D71B11797E7240060F0AB /* UploadUtils.m in Sources */,
@@ -4588,6 +4618,7 @@
 				EAEDC0911AB196B0004836EB /* InfoFileUtils.m in Sources */,
 				EAEDC08B1AB19498004836EB /* FileListDBOperations.m in Sources */,
 				EAEDC0901AB19643004836EB /* SimpleFileListTableViewController.m in Sources */,
+				EAF33C8A1C2B12E6003A5AA2 /* ManageThumbnails.m in Sources */,
 				EAF7217B1AAF200A009F5596 /* FileDto.m in Sources */,
 				EA4B8E1E1AC92FCC004F335E /* KKPasscodeViewController.m in Sources */,
 				EAEDC0921AB196C6004836EB /* EmptyCell.m in Sources */,
@@ -4633,6 +4664,7 @@
 				EA1C3B601BC29B7F0085F540 /* ManageSharesDB.m in Sources */,
 				59C3AC1A1A287DE3005433A1 /* KKKeychain.m in Sources */,
 				59C3AC1B1A287DE3005433A1 /* KKPasscodeLock.m in Sources */,
+				EA4070FF1C11B82B008B1507 /* UIImage+Thumbnail.m in Sources */,
 				EAE80E271A6D31810061BD86 /* ManageUploadsDB.m in Sources */,
 				59C3AC1C1A287DE3005433A1 /* KKPasscodeSettingsViewController.m in Sources */,
 				59C3AC1D1A287DE3005433A1 /* KKPasscodeViewController.m in Sources */,
@@ -4659,6 +4691,7 @@
 				590849F21A0A811000D3E842 /* SWCellScrollView.m in Sources */,
 				EAD281BB1A38A2F900A00D54 /* DPDownload.m in Sources */,
 				590849F31A0A811000D3E842 /* SWLongPressGestureRecognizer.m in Sources */,
+				EA4071041C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */,
 				590849F41A0A811000D3E842 /* SWTableViewCell.m in Sources */,
 				590849F51A0A811000D3E842 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				590849F61A0A811000D3E842 /* SWUtilityButtonView.m in Sources */,
@@ -4680,6 +4713,7 @@
 				599D99F01A0256D9008A9DB3 /* FMDatabase.m in Sources */,
 				599D99EF1A0256AF008A9DB3 /* UtilsUrls.m in Sources */,
 				599D99EE1A02566B008A9DB3 /* FMDatabaseQueue.m in Sources */,
+				EAF33C8B1C2B1313003A5AA2 /* ManageThumbnails.m in Sources */,
 				EAC5985B1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
 				EAB0AB3919ED356A00764C31 /* DocumentPickerViewController.m in Sources */,
 			);

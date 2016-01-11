@@ -39,6 +39,7 @@
 #import "DownloadUtils.h"
 #import "UtilsUrls.h"
 #import "RenameFile.h"
+#import "ManageThumbnails.h"
 
 #define k_cell_height 72
 
@@ -1006,6 +1007,7 @@
 
 
 - (void) overWriteFile {
+        
      AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     _selectedUploadToResolveTheConflict.isNotNecessaryCheckIfExist = YES;
     
@@ -1015,6 +1017,8 @@
     app.isOverwriteProcess = YES;
     
     FileDto *file = [UploadUtils getFileDtoByUploadOffline:self.selectedUploadToResolveTheConflict];
+    
+    [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:file];
     
     //Check if this file is being updated and cancel it
     Download *downloadFile;

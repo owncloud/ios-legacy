@@ -40,6 +40,7 @@
 #import "ManageCookiesStorageDB.h"
 #import "Accessibility.h"
 #import "SyncFolderManager.h"
+#import "ManageThumbnails.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -237,8 +238,10 @@
 
 -(void)disconnectUser {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
+    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: APP_DELEGATE.activeUser.idUser];
     
-    [ManageUsersDB removeUserAndDataByIdUser: app.activeUser.idUser];
+    [ManageUsersDB removeUserAndDataByIdUser: APP_DELEGATE.activeUser.idUser];
     
     [UtilsFramework deleteAllCookies];
     
@@ -250,7 +253,6 @@
     
     NSError *error;     
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-    UserDto *user = app.activeUser;
     [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
     app.uploadArray=[[NSMutableArray alloc]init];
     [app updateRecents];
@@ -943,11 +945,11 @@
     DLog(@"DELETE!!! %ld", (long)indexPath.row);
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
         
-        UserDto *user = app.activeUser;
         [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
+        
+        [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: selectedUser.idUser];
         
         //Delete the tables of this user
         [ManageUsersDB removeUserAndDataByIdUser: selectedUser.idUser];
@@ -969,11 +971,11 @@
             [ManageUsersDB setActiveAccountAutomatically];
             
             //Update in appDelegate the active user
-            app.activeUser = [ManageUsersDB getActiveUser];
+            APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
             
             [self setCookiesOfActiveAccount];
             
-            [self createFolderForUser:app.activeUser];
+            [self createFolderForUser:APP_DELEGATE.activeUser];
             
             //If ipad, clean the detail view
             if (!IS_IPHONE) {
