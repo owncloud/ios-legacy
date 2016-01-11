@@ -43,6 +43,7 @@
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
+#define k_padding_last_section 40.0
 #define k_padding_under_section 5.0
 
 //Settings custom font
@@ -123,8 +124,9 @@
     [super viewWillAppear:animated];
     
     if (IS_IOS8 || IS_IOS9) {
-        self.edgesForExtendedLayout = UIRectCornerAllCorners;
-        self.automaticallyAdjustsScrollViewInsets = NO;
+        self.edgesForExtendedLayout = UIRectEdgeAll;
+        self.extendedLayoutIncludesOpaqueBars = true;
+        self.automaticallyAdjustsScrollViewInsets = true;
     }else{
         self.edgesForExtendedLayout = UIRectCornerAllCorners;
     }
@@ -437,7 +439,9 @@
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     //Set the text of the footer section
-    UILabel *label = [[UILabel alloc] init];
+    UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.settingsTableView.frame.size.width, k_padding_last_section + self.tabBarController.tabBar.frame.size.height)];
+    container.backgroundColor = [UIColor clearColor];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.settingsTableView.frame.size.width, k_padding_last_section)];
     UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:13];
     
     NSInteger sectionToShowFooter = 3;
@@ -458,7 +462,10 @@
         label.backgroundColor = [UIColor clearColor];
         label.text = @"";
     }
-    return label;
+    
+    [container addSubview:label];
+    
+    return container;
 }
 
 
@@ -478,7 +485,7 @@
                 height = k_padding_normal_section;
             }
             break;
-            
+      
         default:
             height = k_padding_normal_section;
             break;
@@ -495,6 +502,22 @@
         case 0:
             if (k_multiaccount_available) {
                 height = k_padding_under_section;
+            }else{
+                height = k_padding_normal_section;
+            }
+            break;
+            
+        case 3:
+            if (k_multiaccount_available) {
+                height = k_padding_normal_section;
+            }else{
+                height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
+            }
+            break;
+            
+        case 4:
+            if (k_multiaccount_available) {
+                height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
             }else{
                 height = k_padding_normal_section;
             }

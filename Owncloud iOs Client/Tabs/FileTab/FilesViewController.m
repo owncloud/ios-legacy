@@ -67,8 +67,6 @@
 #define k_status_bar_height 20
 #define k_navigation_bar_height 44
 #define k_navigation_bar_height_in_iphone_landscape 32
-#define k_footer_label_width 320
-
 
 @interface FilesViewController ()
 
@@ -271,8 +269,9 @@
     self.willLayoutSubviews = true;
     
     if (IS_IOS8 || IS_IOS9) {
-        self.edgesForExtendedLayout = UIRectCornerAllCorners;
-        self.automaticallyAdjustsScrollViewInsets = NO;
+        self.edgesForExtendedLayout = UIRectEdgeAll;
+        self.extendedLayoutIncludesOpaqueBars = true;
+        self.automaticallyAdjustsScrollViewInsets = true;
     }else{
         self.edgesForExtendedLayout = UIRectEdgeAll;
     }
@@ -1513,8 +1512,10 @@
     [self obtainTheQuantityOfFilesAndFolders];
     
     //Set the text of the footer section
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, k_footer_label_width, 40)];
-    UILabel *footerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, k_footer_label_width, 40)];
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 40 + self.tabBarController.tabBar.frame.size.height)];
+    footerView.backgroundColor = [UIColor clearColor];
+    
+    UILabel *footerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 40)];
     
     UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:16];
     
