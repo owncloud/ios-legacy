@@ -62,7 +62,7 @@
 #define optionsShownWithShareLinkDisable 0
 
 #define optionsShownIfFileIsDirectory 3
-#define optionsShownIfFileIsNotDirectory 1
+#define optionsShownIfFileIsNotDirectory 0
 
 
 //Date server format
@@ -497,7 +497,8 @@
         
         cell = shareFileCell;
         
-    } else if (indexPath.row == 1) {
+    } else if (indexPath.section == 1) {
+        
             
             ShareLinkOptionCell* shareLinkOptionCell = [tableView dequeueReusableCellWithIdentifier:shareLinkOptionIdentifer];
             
@@ -542,7 +543,7 @@
                     
                     break;
                 case 2:
-                    shareLinkOptionCell.optionName.text = NSLocalizedString(@"usesr_can_delete", nil);
+                    shareLinkOptionCell.optionName.text = NSLocalizedString(@"user_can_delete", nil);
                     
                     if (self.isPasswordProtectEnabled == true) {
                         shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
@@ -567,7 +568,7 @@
             
             cell = shareLinkOptionCell;
         
-    } else {
+    } else if (indexPath.section == 2) {
             
             ShareLinkButtonCell *shareLinkButtonCell = [tableView dequeueReusableCellWithIdentifier:shareLinkButtonIdentifier];
             
@@ -581,6 +582,19 @@
             shareLinkButtonCell.titleButton.text = NSLocalizedString(@"stop_share_with_user", nil);
             
             cell = shareLinkButtonCell;
+    } else {
+        ShareLinkButtonCell *shareLinkButtonCell = [tableView dequeueReusableCellWithIdentifier:shareLinkButtonIdentifier];
+        
+        if (shareLinkButtonCell == nil) {
+            NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkButtonNib owner:self options:nil];
+            shareLinkButtonCell = (ShareLinkButtonCell *)[topLevelObjects objectAtIndex:0];
+        }
+        
+        shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
+        shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
+        shareLinkButtonCell.titleButton.text = NSLocalizedString(@"stop_share_with_user", nil);
+        
+        cell = shareLinkButtonCell;
     }
     
     return cell;
