@@ -77,10 +77,13 @@
 @property (nonatomic, strong) UserDto* sharedUser;
 
 @property (nonatomic, strong) OCSharedDto *updatedOCShare;
-@property (nonatomic) NSInteger optionsShownWithShareLink;
-@property (nonatomic) BOOL isShareLinkEnabled;
-@property (nonatomic) BOOL isPasswordProtectEnabled;
-@property (nonatomic) BOOL isExpirationDateEnabled;
+@property (nonatomic) NSInteger optionsShownWithCanEdit;
+@property (nonatomic) BOOL canEditEnabled;
+@property (nonatomic) BOOL canCreateEnabled;
+@property (nonatomic) BOOL canChangeEnabled;
+@property (nonatomic) BOOL canDeleteEnabled;
+@property (nonatomic) BOOL canShareEnabled;
+
 @property (nonatomic, strong) NSString* sharedToken;
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
@@ -88,7 +91,6 @@
 @property (nonatomic, strong) UIActivityViewController *activityView;
 @property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
-@property (nonatomic, strong) NSMutableArray *sharedUsersOrGroups;
 
 @end
 
@@ -102,11 +104,12 @@
     {
         self.sharedItem = fileDto;
         self.sharedUser = userDto;
-        self.optionsShownWithShareLink = 0;
-        self.isShareLinkEnabled = false;
-        self.isPasswordProtectEnabled = false;
-        self.isExpirationDateEnabled = false;
-        self.sharedUsersOrGroups = [NSMutableArray new];
+        self.optionsShownWithCanEdit = 0;
+        self.canEditEnabled = false;
+        self.canCreateEnabled = false;
+        self.canChangeEnabled = false;
+        self.canDeleteEnabled = false;
+        self.canShareEnabled = false;
     }
     
     return self;
@@ -120,38 +123,12 @@
     [super viewWillAppear:animated];
     [self setStyleView];
     
-    [self checkSharedStatusOFile];
+    //[self checkSharedStatusOFile];
 }
 
 - (void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-}
-
-
-#pragma mark - Accessory alert views
-
-- (void) showPasswordView {
-    
-    if (self.passwordView != nil) {
-        self.passwordView = nil;
-    }
-    
-    self.passwordView = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"shared_link_protected_title", nil)
-                                                  message:nil delegate:self
-                                        cancelButtonTitle:NSLocalizedString(@"cancel", nil)
-                                        otherButtonTitles:NSLocalizedString(@"ok", nil), nil];
-    
-    self.passwordView.tag = password_alert_view_tag;
-    self.passwordView.alertViewStyle = UIAlertViewStylePlainTextInput;
-    [self.passwordView textFieldAtIndex:0].delegate = self;
-    [[self.passwordView textFieldAtIndex:0] setAutocorrectionType:UITextAutocorrectionTypeNo];
-    [[self.passwordView textFieldAtIndex:0] setAutocapitalizationType:UITextAutocapitalizationTypeNone];
-    [[self.passwordView textFieldAtIndex:0] setKeyboardType:UIKeyboardTypeDefault];
-    [[self.passwordView textFieldAtIndex:0] setKeyboardAppearance:UIKeyboardAppearanceLight];
-    [[self.passwordView textFieldAtIndex:0] setSecureTextEntry:true];
-    
-    [self.passwordView show];
 }
 
 
@@ -173,12 +150,10 @@
 
 - (void) reloadView {
     
-    if (self.isShareLinkEnabled == true){
-        self.optionsShownWithShareLink = optionsShownWithShareLinkEnable;
+    if (self.canEditEnabled == true && self.sharedItem.isDirectory){
+        self.optionsShownWithCanEdit = optionsShownIfFileIsDirectory;
     }else{
-        self.optionsShownWithShareLink = optionsShownWithShareLinkDisable;
-        self.isPasswordProtectEnabled = false;
-        self.isExpirationDateEnabled = false;
+        self.optionsShownWithCanEdit = optionsShownIfFileIsNotDirectory;
     }
     
     [self.shareEditUserTableView reloadData];
@@ -186,185 +161,12 @@
 
 #pragma mark - Action Methods
 
-- (void) updateInterfaceWithShareLinkStatus {
-    
-    self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
-    
-    if (self.sharedItem.sharedFileSource > 0) {
-        
-        self.isShareLinkEnabled = true;
-        
-        self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
-        
-        if (self.sharedFileOrFolder == nil) {
-            self.sharedFileOrFolder = [ShareFileOrFolder new];
-            self.sharedFileOrFolder.delegate = self;
-        }
-        
-        self.updatedOCShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
-        
-        if (![ self.updatedOCShare.shareWith isEqualToString:@""] && ![ self.updatedOCShare.shareWith isEqualToString:@"NULL"]  &&  self.updatedOCShare.shareType == shareTypeLink) {
-            self.isPasswordProtectEnabled = true;
-        }else{
-            self.isPasswordProtectEnabled = false;
-        }
-        
-        if (self.updatedOCShare.expirationDate == 0.0) {
-            self.isExpirationDateEnabled = false;
-        }else {
-            self.isExpirationDateEnabled = true;
-        }
-        
-        
-    }else{
-        self.isShareLinkEnabled = false;
-    }
-    
-    [self checkForShareWithUsersOrGroups];
-    
-    [self reloadView];
-    
-}
-
-- (void) checkForShareWithUsersOrGroups {
-    
-    NSString *path = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser], self.sharedItem.fileName];
-    
-    NSArray *sharesWith = [ManageSharesDB getSharesFromUserAndGroupByPath:path];
-    
-    DLog(@"SharesWith: %@", sharesWith);
-    
-    [self.sharedUsersOrGroups removeAllObjects];
-    
-    for (OCSharedDto *shareWith in sharesWith) {
-        if (shareWith.shareType == 0 || shareWith.shareType == 1) {
-            [self.sharedUsersOrGroups addObject:shareWith];
-        }
-    }
-}
-
 - (void) didSelectCloseView {
     
     [self dismissViewControllerAnimated:true completion:nil];
 }
 
-- (void) sharedLinkSwithValueChanged: (UISwitch*)sender {
-    
-    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto) {
-        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
-        
-        if (!cap.isFilesSharingShareLinkEnabled) {
-            sender.on = false;
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_share_link_enabled_capabilities", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-            [alertView show];
-            return;
-        }
-    }
-    
-    self.isShareLinkEnabled = sender.on;
-    
-    if (self.isShareLinkEnabled) {
-        [self getShareLinkView];
-    } else {
-        [self unShareByLink];
-    }
-}
-
-
-- (void) passwordProtectedSwithValueChanged:(UISwitch*) sender{
-    
-    if (self.isPasswordProtectEnabled){
-        
-        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
-            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
-            
-            if (cap.isFilesSharingPasswordEnforcedEnabled) {
-                //not remove, is enforced password
-                sender.on = true;
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_cannot_remove_password", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-                [alertView show];
-                return;
-            }
-        }
-        
-        //Remove password Protected
-        [self updateSharedLinkWithPassword:@"" andExpirationDate:nil];
-        
-    } else {
-        //Update with password protected
-        [self showPasswordView];
-    }
-}
-
-- (void) expirationTimeSwithValueChanged:(UISwitch*) sender{
-    
-    if (self.isExpirationDateEnabled) {
-        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
-            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
-            
-            if (cap.isFilesSharingExpireDateEnforceEnabled) {
-                //not remove, is enforced expiration date
-                sender.on = true;
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_cannot_remove_expiration_date", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-                [alertView show];
-                return;
-            }
-        }
-        
-        //Remove expiration date
-        [self updateSharedLinkWithPassword:nil andExpirationDate:@""];
-        
-    } else {
-        //Update with expiration date
-        //[self launchDatePicker];
-    }
-    
-}
-
-#pragma mark - Actions with ShareFileOrFolder class
-
-- (void) getShareLinkView {
-    
-    if (self.sharedFileOrFolder == nil) {
-        self.sharedFileOrFolder = [ShareFileOrFolder new];
-        self.sharedFileOrFolder.delegate = self;
-    }
-    
-    if (IS_IPHONE) {
-        self.sharedFileOrFolder.viewToShow = self.view;
-        self.sharedFileOrFolder.parentViewController = self;
-    }else{
-        self.sharedFileOrFolder.viewToShow = self.view;
-        self.sharedFileOrFolder.parentViewController = self;
-        self.sharedFileOrFolder.parentView = self.view;
-    }
-    
-    if (self.sharedItem.sharedFileSource > 0){
-        self.sharedFileOrFolder.file = self.sharedItem;
-        [self.sharedFileOrFolder clickOnShareLinkFromFileDto:true];
-    }else{
-        [self.sharedFileOrFolder showShareActionSheetForFile:self.sharedItem];
-    }
-}
-
-- (void) unShareByLink {
-    
-    if (self.sharedFileOrFolder == nil) {
-        self.sharedFileOrFolder = [ShareFileOrFolder new];
-        self.sharedFileOrFolder.delegate = self;
-    }
-    
-    self.sharedFileOrFolder.parentViewController = self;
-    
-    self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
-    
-    OCSharedDto *ocShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
-    
-    if (ocShare != nil) {
-        [self.sharedFileOrFolder unshareTheFile:ocShare];
-    }
-    
-}
+#pragma mark - Actions with ShareWith class
 
 - (void) unShareWith:(OCSharedDto *) share{
     
@@ -379,6 +181,7 @@
     
 }
 
+//TODO: update with privileges
 - (void) updateSharedLinkWithPassword:(NSString*) password andExpirationDate:(NSString*)expirationDate {
     
     if (self.sharedFileOrFolder == nil) {
@@ -396,65 +199,6 @@
     
 }
 
-- (void) checkSharedStatusOFile {
-    
-    if (self.sharedFileOrFolder == nil) {
-        self.sharedFileOrFolder = [ShareFileOrFolder new];
-        self.sharedFileOrFolder.delegate = self;
-    }
-    
-    self.sharedFileOrFolder.parentViewController = self;
-    
-    self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
-    
-    [self.sharedFileOrFolder checkSharedStatusOfFile:self.sharedItem];
-    
-}
-
-#pragma mark - UITextField delegate methods
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
-    
-    return YES;
-}
-
-#pragma mark - UIAlertView delegate methods
-
-
-- (void) alertView: (UIAlertView *) alertView willDismissWithButtonIndex: (NSInteger) buttonIndex
-{
-    
-    if( buttonIndex == 1 ){
-        //Update share item with password
-        
-        NSString* password = [alertView textFieldAtIndex:0].text;
-        [self initLoading];
-        [self updateSharedLinkWithPassword:password andExpirationDate:nil];
-        
-    }else if (buttonIndex == 0) {
-        //Cancel
-        [self reloadView];
-        
-    }else {
-        //Nothing
-    }
-    
-}
-
-
-- (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView
-{
-    BOOL output = YES;
-    if (alertView.tag == password_alert_view_tag) {
-        UITextField *textField = [alertView textFieldAtIndex:0];
-        if ([textField.text length] == 0){
-            output = NO;
-        }
-    }
-    
-    return output;
-}
-
 
 #pragma mark - TableView methods
 
@@ -468,7 +212,7 @@
     if (section == 0) {
         return 1;
     }else if (section == 1){
-        if (self.sharedItem.isDirectory) {
+        if (self.canEditEnabled && self.sharedItem.isDirectory) {
             return optionsShownIfFileIsDirectory;
         } else {
             return optionsShownIfFileIsNotDirectory;
@@ -511,52 +255,35 @@
                 case 0:
                     shareLinkOptionCell.optionName.text = NSLocalizedString(@"user_can_create", nil);
                     
-                    if (self.isExpirationDateEnabled == true) {
+                    if (self.canEditEnabled == true) {
+                        //TODO:create new type of cell with only one label
                         shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
-                        shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
-                        //shareLinkOptionCell.optionDetail.text = [self converDateInCorrectFormat:[NSDate dateWithTimeIntervalSince1970: self.updatedOCShare.expirationDate]];
                     }else{
                         shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
-                        shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
-                        shareLinkOptionCell.optionDetail.text = @"";
                     }
-                    [shareLinkOptionCell.optionSwith setOn:self.isExpirationDateEnabled animated:false];
-                    
-                    [shareLinkOptionCell.optionSwith addTarget:self action:@selector(expirationTimeSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+                    [shareLinkOptionCell.optionSwith setOn:self.canCreateEnabled animated:false];
                     
                     break;
                 case 1:
                     shareLinkOptionCell.optionName.text = NSLocalizedString(@"user_can_change", nil);
                     
-                    if (self.isPasswordProtectEnabled == true) {
+                    if (self.canChangeEnabled == true) {
                         shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
-                        shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
-                        shareLinkOptionCell.optionDetail.text = @"Secured";
                     } else {
                         shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
-                        shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
-                        shareLinkOptionCell.optionDetail.text = @"";
                     }
-                    [shareLinkOptionCell.optionSwith setOn:self.isPasswordProtectEnabled animated:false];
-                    
-                    [shareLinkOptionCell.optionSwith addTarget:self action:@selector(passwordProtectedSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+                    [shareLinkOptionCell.optionSwith setOn:self.canChangeEnabled animated:false];
                     
                     break;
                 case 2:
                     shareLinkOptionCell.optionName.text = NSLocalizedString(@"user_can_delete", nil);
                     
-                    if (self.isPasswordProtectEnabled == true) {
+                    if (self.canDeleteEnabled == true) {
                         shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
-                        shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
-                        shareLinkOptionCell.optionDetail.text = @"Secured";
                     } else {
                         shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
-                        shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
-                        shareLinkOptionCell.optionDetail.text = @"";
                     }
-                    [shareLinkOptionCell.optionSwith setOn:self.isPasswordProtectEnabled animated:false];
-                    
-                    [shareLinkOptionCell.optionSwith addTarget:self action:@selector(passwordProtectedSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+                    [shareLinkOptionCell.optionSwith setOn:self.canDeleteEnabled animated:false];
                     
                     break;
                     
@@ -579,7 +306,7 @@
             
             shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
             shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
-            shareLinkButtonCell.titleButton.text = NSLocalizedString(@"stop_share_with_user", nil);
+            shareLinkButtonCell.titleButton.text = NSLocalizedString(@"stop_share_with_user___", nil);
             
             cell = shareLinkButtonCell;
     } else {
@@ -627,6 +354,14 @@
     return height;
 }
 
+-(void) canEditSwithValueChanged:(UISwitch*) sender {
+    
+    self.canEditEnabled = sender.on;
+
+   [self reloadView];
+}
+
+
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.shareEditUserTableView.frame.size.width, 1)];
@@ -643,11 +378,12 @@
         
         if (section == 1) {
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"title_user_can_edit", nil);
-            shareLinkHeaderCell.switchSection.hidden = false;
+            [shareLinkHeaderCell.switchSection setOn:self.canEditEnabled animated:false];
+            [shareLinkHeaderCell.switchSection addTarget:self action:@selector(canEditSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+
         }else{
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"title_user_can_share", nil);
-            [shareLinkHeaderCell.switchSection setOn:self.isShareLinkEnabled animated:false];
-            [shareLinkHeaderCell.switchSection addTarget:self action:@selector(sharedLinkSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+            [shareLinkHeaderCell.switchSection setOn:self.canShareEnabled animated:false];
         }
         
         
@@ -662,44 +398,17 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:true];
     
-    if (indexPath.section == 1 && indexPath.row == 0){
-        //Change expiration time
-        //[self launchDatePicker];
+    if (indexPath.section == 1) {
+        
     }
-    
-    if (indexPath.section == 1 && indexPath.row == 1) {
-        //Change the password
-        //[self showPasswordView];
-    }
-    
-    if (indexPath.section == 1 && indexPath.row == 2) {
-        //[self getShareLinkView];
-    }
+
 }
 
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-//    if (indexPath.section == 1 && indexPath.row != self.sharedUsersOrGroups.count) {
-//        return true;
-//    }
-    
     return false;
-}
-
-
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
-        OCSharedDto *shareWith = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
-        
-        [self unShareWith:shareWith];
-        
-    }
 }
 
 
@@ -745,44 +454,6 @@
     
     [self performSelector:@selector(showErrorAccount) withObject:nil afterDelay:largeDelay];
     
-}
-
-- (void) finishShareWithStatus:(BOOL)successful andWithOptions:(UIActivityViewController*) activityView{
-    
-    if (successful == true) {
-        self.activityView = activityView;
-        [self checkSharedStatusOFile];
-        
-    }else{
-        [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
-    }
-}
-
-- (void) finishUnShareWithStatus:(BOOL)successful {
-    
-    if (successful == true) {
-        self.activityView = nil;
-        [self checkSharedStatusOFile];
-    }else{
-        [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
-    }
-    
-}
-
-- (void) finishUpdateShareWithStatus:(BOOL)successful {
-    
-    [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
-    
-}
-
-- (void) finishCheckSharedStatusOfFile:(BOOL)successful {
-    
-    if (successful == true && self.activityView != nil) {
-        [self updateInterfaceWithShareLinkStatus];
-        [self performSelector:@selector(presentShareOptions) withObject:nil afterDelay:standardDelay];
-    }else{
-        [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
-    }
 }
 
 
