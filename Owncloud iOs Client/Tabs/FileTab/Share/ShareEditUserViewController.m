@@ -643,7 +643,7 @@
         
         if (section == 1) {
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"title_user_can_edit", nil);
-            shareLinkHeaderCell.switchSection.hidden = true;
+            shareLinkHeaderCell.switchSection.hidden = false;
         }else{
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"title_user_can_share", nil);
             [shareLinkHeaderCell.switchSection setOn:self.isShareLinkEnabled animated:false];
@@ -662,34 +662,18 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:true];
     
-    if ((indexPath.section == 1) && ((indexPath.row == 1 && self.sharedUsersOrGroups.count == 0) || (indexPath.row == self.sharedUsersOrGroups.count))) {
-        
-        //Check if the server has Sharee support
-        if (APP_DELEGATE.activeUser.hasShareeApiSupport == serverFunctionalitySupported) {
-            ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
-            ssuvc.shareFileDto = self.sharedItem;
-            [ssuvc setSelectedItems:self.sharedUsersOrGroups];
-            self.activityView = nil;
-            [self.navigationController pushViewController:ssuvc animated:true];
-        }else{
-            [self showErrorWithTitle:NSLocalizedString(@"not_sharee_api_supported", nil)];
-            
-        }
-        
-    }
-    
-    if (indexPath.section == 2 && indexPath.row == 0 && self.isExpirationDateEnabled == true){
+    if (indexPath.section == 1 && indexPath.row == 0){
         //Change expiration time
         //[self launchDatePicker];
     }
     
-    if (indexPath.section == 2 && indexPath.row == 1 && self.isPasswordProtectEnabled == true) {
+    if (indexPath.section == 1 && indexPath.row == 1) {
         //Change the password
-        [self showPasswordView];
+        //[self showPasswordView];
     }
     
-    if (indexPath.section == 2 && indexPath.row == 2) {
-        [self getShareLinkView];
+    if (indexPath.section == 1 && indexPath.row == 2) {
+        //[self getShareLinkView];
     }
 }
 
@@ -697,9 +681,9 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    if (indexPath.section == 1 && indexPath.row != self.sharedUsersOrGroups.count) {
-        return true;
-    }
+//    if (indexPath.section == 1 && indexPath.row != self.sharedUsersOrGroups.count) {
+//        return true;
+//    }
     
     return false;
 }
