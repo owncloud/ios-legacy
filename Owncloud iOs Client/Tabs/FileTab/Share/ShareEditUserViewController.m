@@ -61,9 +61,6 @@
 #define shareTableViewSectionsNumber  4
 
 //Nº of Rows
-#define optionsShownWithShareLinkEnable 3
-#define optionsShownWithShareLinkDisable 0
-
 #define optionsShownIfFileIsDirectory 3
 #define optionsShownIfFileIsNotDirectory 0
 
@@ -133,7 +130,7 @@
 
 - (void) setStyleView {
     
-    self.navigationItem.title = NSLocalizedString(@"share_link_long_press", nil);
+    self.navigationItem.title = NSLocalizedString(@"title_view_edit_user_privileges", nil);
     [self setBarButtonStyle];
     
 }
@@ -191,7 +188,7 @@
             }
         }
         
-        [self dismissViewControllerAnimated:true completion:nil];
+        [[self navigationController] popViewControllerAnimated:YES];
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
@@ -203,7 +200,7 @@
         
         [self manageServerErrors:code and:error withPasswordSupport:false];
         
-        [self dismissViewControllerAnimated:true completion:nil];
+        [[self navigationController] popViewControllerAnimated:YES];
         
     }];
     
@@ -428,7 +425,8 @@
     [tableView deselectRowAtIndexPath:indexPath animated:true];
     
     if (indexPath.section == 1) {
-        
+        if (indexPath.row == 1) {
+        }
     }
 
 }
