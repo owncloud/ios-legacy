@@ -46,20 +46,19 @@
 //Cells and Sections
 #define shareFileCellIdentifier @"ShareFileIdentifier"
 #define shareFileCellNib @"ShareFileCell"
-#define shareLinkOptionIdentifer @"ShareLinkOptionIdentifier"
-#define shareLinkOptionNib @"ShareLinkOptionCell"
 #define shareLinkHeaderIdentifier @"ShareLinkHeaderIdentifier"
 #define shareLinkHeaderNib @"ShareLinkHeaderCell"
+#define sharePrivilegeIdentifier @"SharePrivilegeIdentifier"
+#define sharePrivilegeNib @"SharePrivilegeCell"
 #define shareLinkButtonIdentifier @"ShareLinkButtonIdentifier"
 #define shareLinkButtonNib @"ShareLinkButtonCell"
-#define shareUserCellIdentifier @"ShareUserCellIdentifier"
-#define shareUserCellNib @"ShareUserCell"
 #define heighOfFileDetailrow 120.0
 #define heightOfShareLinkOptionRow 55.0
 #define heightOfShareLinkButtonRow 40.0
 #define heightOfShareLinkHeader 45.0
 #define heightOfShareWithUserRow 55.0
-#define shareTableViewSectionsNumber  3
+
+#define shareTableViewSectionsNumber  4
 
 //Nº of Rows
 #define optionsShownWithShareLinkEnable 3
@@ -68,12 +67,6 @@
 #define optionsShownIfFileIsDirectory 3
 #define optionsShownIfFileIsNotDirectory 0
 
-
-//Date server format
-#define dateServerFormat @"YYYY-MM-dd"
-
-//alert share password
-#define password_alert_view_tag 601
 
 @interface ShareEditUserViewController ()
 
@@ -231,23 +224,6 @@
     
 }
 
-//TODO: update with privileges
-- (void) updateSharedLinkWithPassword:(NSString*) password andExpirationDate:(NSString*)expirationDate {
-    
-    if (self.sharedFileOrFolder == nil) {
-        self.sharedFileOrFolder = [ShareFileOrFolder new];
-        self.sharedFileOrFolder.delegate = self;
-    }
-    
-    self.sharedFileOrFolder.parentViewController = self;
-    
-    self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
-    
-    OCSharedDto *ocShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
-    
-    [self.sharedFileOrFolder updateShareLink:ocShare withPassword:password andExpirationTime:expirationDate];
-    
-}
 
 
 #pragma mark - TableView methods
@@ -268,6 +244,8 @@
             return optionsShownIfFileIsNotDirectory;
         }
         
+    }else if (section == 2) {
+        return 0;
     }else {
         return 1;
     }
@@ -292,48 +270,46 @@
         cell = shareFileCell;
         
     } else if (indexPath.section == 1) {
-        
             
-            ShareLinkOptionCell* shareLinkOptionCell = [tableView dequeueReusableCellWithIdentifier:shareLinkOptionIdentifer];
+            SharePrivilegeCell* sharePrivilegeCell = [tableView dequeueReusableCellWithIdentifier:sharePrivilegeIdentifier];
             
-            if (shareLinkOptionCell == nil) {
-                NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkOptionNib owner:self options:nil];
-                shareLinkOptionCell = (ShareLinkOptionCell *)[topLevelObjects objectAtIndex:0];
+            if (sharePrivilegeCell == nil) {
+                NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:sharePrivilegeNib owner:self options:nil];
+                sharePrivilegeCell = (SharePrivilegeCell *)[topLevelObjects objectAtIndex:0];
             }
             
             switch (indexPath.row) {
                 case 0:
-                    shareLinkOptionCell.optionName.text = NSLocalizedString(@"user_can_create", nil);
+                    sharePrivilegeCell.optionName.text = NSLocalizedString(@"user_can_create", nil);
                     
                     if (self.canEditEnabled == true) {
-                        //TODO:create new type of cell with only one label
-                        shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
+                        sharePrivilegeCell.optionName.textColor = [UIColor blackColor];
                     }else{
-                        shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
+                        sharePrivilegeCell.optionName.textColor = [UIColor grayColor];
                     }
-                    [shareLinkOptionCell.optionSwith setOn:self.canCreateEnabled animated:false];
+                    [sharePrivilegeCell.optionSwitch setOn:self.canCreateEnabled animated:false];
                     
                     break;
                 case 1:
-                    shareLinkOptionCell.optionName.text = NSLocalizedString(@"user_can_change", nil);
+                    sharePrivilegeCell.optionName.text = NSLocalizedString(@"user_can_change", nil);
                     
                     if (self.canChangeEnabled == true) {
-                        shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
+                        sharePrivilegeCell.optionName.textColor = [UIColor blackColor];
                     } else {
-                        shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
+                        sharePrivilegeCell.optionName.textColor = [UIColor grayColor];
                     }
-                    [shareLinkOptionCell.optionSwith setOn:self.canChangeEnabled animated:false];
+                    [sharePrivilegeCell.optionSwitch setOn:self.canChangeEnabled animated:false];
                     
                     break;
                 case 2:
-                    shareLinkOptionCell.optionName.text = NSLocalizedString(@"user_can_delete", nil);
+                    sharePrivilegeCell.optionName.text = NSLocalizedString(@"user_can_delete", nil);
                     
                     if (self.canDeleteEnabled == true) {
-                        shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
+                        sharePrivilegeCell.optionName.textColor = [UIColor blackColor];
                     } else {
-                        shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
+                        sharePrivilegeCell.optionName.textColor = [UIColor grayColor];
                     }
-                    [shareLinkOptionCell.optionSwith setOn:self.canDeleteEnabled animated:false];
+                    [sharePrivilegeCell.optionSwitch setOn:self.canDeleteEnabled animated:false];
                     
                     break;
                     
@@ -343,23 +319,9 @@
                     break;
             }
             
-            cell = shareLinkOptionCell;
+            cell = sharePrivilegeCell;
         
-    } else if (indexPath.section == 2) {
-            
-            ShareLinkButtonCell *shareLinkButtonCell = [tableView dequeueReusableCellWithIdentifier:shareLinkButtonIdentifier];
-            
-            if (shareLinkButtonCell == nil) {
-                NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkButtonNib owner:self options:nil];
-                shareLinkButtonCell = (ShareLinkButtonCell *)[topLevelObjects objectAtIndex:0];
-            }
-            
-            shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
-            shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
-            shareLinkButtonCell.titleButton.text = NSLocalizedString(@"stop_share_with_user___", nil);
-            
-            cell = shareLinkButtonCell;
-    } else {
+    } else if (indexPath.section == 3){
         ShareLinkButtonCell *shareLinkButtonCell = [tableView dequeueReusableCellWithIdentifier:shareLinkButtonIdentifier];
         
         if (shareLinkButtonCell == nil) {
@@ -407,10 +369,26 @@
 -(void) canEditSwithValueChanged:(UISwitch*) sender {
     
     self.canEditEnabled = sender.on;
+    
+    if (sender.on) {
+        [self setOptionsCanEditTo:true];
+    } else {
+        [self setOptionsCanEditTo:false];
+    }
 
    [self reloadView];
 }
 
+-(void) setOptionsCanEditTo:(BOOL)value {
+    self.canCreateEnabled = value;
+    self.canChangeEnabled = value;
+    self.canDeleteEnabled = value;
+}
+
+-(void) canShareSwithValueChanged:(UISwitch*) sender {
+    
+    self.canShareEnabled = sender.on;
+}
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     
@@ -434,6 +412,7 @@
         }else{
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"title_user_can_share", nil);
             [shareLinkHeaderCell.switchSection setOn:self.canShareEnabled animated:false];
+            [shareLinkHeaderCell.switchSection addTarget:self action:@selector(canShareSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
         }
         
         
