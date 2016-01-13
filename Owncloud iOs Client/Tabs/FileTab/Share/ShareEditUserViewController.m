@@ -30,6 +30,10 @@
 #import "ManageSharesDB.h"
 #import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
+#import "UtilsFramework.h"
+#import "AppDelegate.h"
+#import "OCCommunication.h"
+#import "OCErrorMsg.h"
 
 //tools
 #define standardDelay 0.2
@@ -163,7 +167,53 @@
 
 - (void) didSelectCloseView {
     
-    [self dismissViewControllerAnimated:true completion:nil];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    [self initLoading];
+    
+    NSInteger permissionValue = [UtilsFramework getPermissionsValueByCanEdit:self.canEditEnabled andCanCreate:self.canCreateEnabled andCanChange:self.canChangeEnabled andCanDelete:self.canDeleteEnabled andCanShare:self.canShareEnabled];
+    
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:APP_DELEGATE.activeUser.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:APP_DELEGATE.activeUser.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:APP_DELEGATE.activeUser.username andPassword:APP_DELEGATE.activeUser.password];
+    }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+    
+    [[AppDelegate sharedOCCommunication] updateShare:self.sharedFileOrFolder.shareDto.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:nil andExpirationTime:nil andPermissions:permissionValue onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+        
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self endLoading];
+                [self errorLogin];
+            }
+        }
+        
+        [self dismissViewControllerAnimated:true completion:nil];
+        
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
+        [self endLoading];
+        
+        DLog(@"error.code: %ld", (long)error.code);
+        DLog(@"server error: %ld", (long)response.statusCode);
+        NSInteger code = response.statusCode;
+        
+        [self manageServerErrors:code and:error withPasswordSupport:false];
+        
+        [self dismissViewControllerAnimated:true completion:nil];
+        
+    }];
+    
 }
 
 #pragma mark - Actions with ShareWith class
@@ -528,6 +578,66 @@
 //        return NO;
 //    }
     return YES;
+}
+
+#pragma mark - Manage Error methods
+
+- (void)manageServerErrors: (NSInteger)code and:(NSError *)error withPasswordSupport:(BOOL)isPasswordSupported{
+    
+    //Select the correct msg and action for this error
+    switch (code) {
+            //Switch with response https
+        case kOCErrorServerPathNotFound:
+            [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
+            break;
+        case kOCErrorServerUnauthorized:
+            [self errorLogin];
+            break;
+        case kOCErrorServerForbidden:
+            [self showError:NSLocalizedString(@"error_not_permission", nil)];
+            break;
+        case kOCErrorServerTimeout:
+            [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+            break;
+        default:
+            //Switch with API response errors
+            switch (error.code) {
+                    //Switch with response https
+                case kOCErrorSharedAPINotUpdateShare:
+                    [self showError:error.localizedDescription];
+                    break;
+                case kOCErrorServerUnauthorized:
+                    [self errorLogin];
+                    break;
+                case kOCErrorSharedAPIUploadDisabled:
+                    [self showError:error.localizedDescription];
+                    break;
+                case kOCErrorServerTimeout:
+                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                    break;
+                case kOCErrorSharedAPIWrong:
+                    [self showError:error.localizedDescription];
+                    break;
+                default:
+                    //Switch with API response errors
+                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                    break;
+            }
+            break;
+    }
+    
+}
+
+
+
+/*
+ * Show the standar message of the error connection.
+ */
+- (void)showError:(NSString *) message {
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:message
+                                                    message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+    [alert show];
 }
 
 @end
