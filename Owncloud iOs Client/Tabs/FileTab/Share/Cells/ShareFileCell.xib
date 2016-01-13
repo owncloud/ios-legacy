@@ -15,7 +15,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="119"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3Ov-PO-1rQ">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Ov-PO-1rQ">
                         <rect key="frame" x="10" y="15" width="90" height="90"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="90" id="Fcu-Ir-Zlh"/>
@@ -57,6 +57,12 @@
                     <constraint firstItem="Yje-bh-jmU" firstAttribute="leading" secondItem="3Ov-PO-1rQ" secondAttribute="trailing" constant="8" id="sFg-JT-yE6"/>
                     <constraint firstItem="3Ov-PO-1rQ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="2" id="wnk-da-vhU"/>
                 </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="TMJ-kQ-yF4"/>
+                        <exclude reference="UlH-Vg-HKA"/>
+                    </mask>
+                </variation>
             </tableViewCellContentView>
             <connections>
                 <outlet property="fileImage" destination="3Ov-PO-1rQ" id="fvV-MB-NAY"/>
