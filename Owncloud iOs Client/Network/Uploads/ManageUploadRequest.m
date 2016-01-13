@@ -200,7 +200,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         }
         
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         //Web Dav Error Code
         switch (response.statusCode) {
