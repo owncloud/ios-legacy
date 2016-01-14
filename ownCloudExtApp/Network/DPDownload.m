@@ -311,7 +311,6 @@
             [self.progressView setProgress:0.0];
         });
         
-        
         BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
