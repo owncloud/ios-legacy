@@ -594,5 +594,38 @@
     
 }
 
++ (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file andShareType:(NSInteger) shareType andUser:(UserDto *) user {
+    
+    __block OCSharedDto *sharedDto;
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ? AND file_source = ? AND share_type = ?", [NSNumber numberWithInteger:user.idUser], [NSNumber numberWithInteger:file.sharedFileSource], [NSNumber numberWithInteger:shareType]];
+        while ([rs next]) {
+            
+            sharedDto = [OCSharedDto new];
+            
+            sharedDto.fileSource = [rs intForColumn:@"file_source"];
+            sharedDto.itemSource = [rs intForColumn:@"item_source"];
+            sharedDto.shareType = [rs intForColumn:@"share_type"];
+            sharedDto.shareWith = [rs stringForColumn:@"share_with"];
+            sharedDto.path = [rs stringForColumn:@"path"];
+            sharedDto.permissions = [rs intForColumn:@"permissions"];
+            sharedDto.sharedDate = [rs longForColumn:@"shared_date"];
+            sharedDto.expirationDate = [rs longForColumn:@"expiration_date"];
+            sharedDto.token = [rs stringForColumn:@"token"];
+            sharedDto.shareWithDisplayName = [rs stringForColumn:@"share_with_display_name"];
+            sharedDto.isDirectory = [rs boolForColumn:@"is_directory"];
+            sharedDto.idRemoteShared = [rs intForColumn:@"id_remote_shared"];
+            
+        }
+        [rs close];
+    }];
+    
+    return sharedDto;
+}
+
 
 @end

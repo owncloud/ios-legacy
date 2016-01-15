@@ -221,6 +221,23 @@
     
 }
 
+//TODO: update with privileges
+- (void) updateSharedLinkWithPassword:(NSString*) password andExpirationDate:(NSString*)expirationDate {
+    
+    if (self.sharedFileOrFolder == nil) {
+        self.sharedFileOrFolder = [ShareFileOrFolder new];
+        self.sharedFileOrFolder.delegate = self;
+    }
+    
+    self.sharedFileOrFolder.parentViewController = self;
+    
+    self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
+    
+    OCSharedDto *ocShare = [ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeLink andUser:APP_DELEGATE.activeUser];
+    
+    [self.sharedFileOrFolder updateShareLink:ocShare withPassword:password andExpirationTime:expirationDate];
+    
+}
 
 
 #pragma mark - TableView methods

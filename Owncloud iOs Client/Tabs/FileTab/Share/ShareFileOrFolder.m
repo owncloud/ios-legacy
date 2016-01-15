@@ -794,21 +794,6 @@
     [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
 }
 
-- (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file{
-    
-    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:file.sharedFileSource forUser:APP_DELEGATE.activeUser.idUser];
-    
-    OCSharedDto *sharedByLink;
-    
-    for (OCSharedDto *current in sharesOfFile) {
-        if (current.shareType == shareTypeLink) {
-            sharedByLink = current;
-        }
-    }
-    
-    return sharedByLink;
-}
-
 - (NSString *) getPasswordEncodingWithPassword:(NSString *)password{
     
     NSString *encodePassword = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
