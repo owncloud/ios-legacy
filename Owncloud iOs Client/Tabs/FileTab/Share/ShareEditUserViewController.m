@@ -68,8 +68,6 @@
 @interface ShareEditUserViewController ()
 
 @property (nonatomic, strong) FileDto* sharedItem;
-@property (nonatomic, strong) UserDto* sharedUser;
-
 @property (nonatomic, strong) OCSharedDto *updatedOCShare;
 @property (nonatomic) NSInteger optionsShownWithCanEdit;
 @property (nonatomic) BOOL canEditEnabled;
@@ -81,7 +79,6 @@
 @property (nonatomic, strong) NSString* sharedToken;
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
-@property (nonatomic, strong) UIAlertView *passwordView;
 @property (nonatomic, strong) UIActivityViewController *activityView;
 @property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
@@ -97,13 +94,13 @@
     if ((self = [super initWithNibName:shareMainViewNibName bundle:nil]))
     {
         self.sharedItem = fileDto;
+        self.updatedOCShare = sharedDto;
         self.optionsShownWithCanEdit = 0;
         self.canEditEnabled = false;
         self.canCreateEnabled = false;
         self.canChangeEnabled = false;
         self.canDeleteEnabled = false;
         self.canShareEnabled = false;
-        self.updatedOCShare = sharedDto;
     }
     
     return self;
