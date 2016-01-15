@@ -919,8 +919,10 @@
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
     
     //Edit share with user Privileges
-    //TODO: get user row
-    ShareEditUserViewController *viewController = [[ShareEditUserViewController alloc] initWithFileDto:self.sharedItem andUserDto:APP_DELEGATE.activeUser];
+    
+    OCSharedDto *shareWith = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
+    
+    ShareEditUserViewController *viewController = [[ShareEditUserViewController alloc] initWithFileDto:self.sharedItem andOCSharedDto:shareWith];
     
     if (IS_IPHONE)
     {

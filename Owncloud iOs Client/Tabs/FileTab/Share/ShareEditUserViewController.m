@@ -92,19 +92,18 @@
 @implementation ShareEditUserViewController
 
 
-- (id) initWithFileDto:(FileDto *)fileDto andUserDto:(UserDto *)userDto{
+- (id) initWithFileDto:(FileDto *)fileDto andOCSharedDto:(OCSharedDto *)sharedDto{
     
     if ((self = [super initWithNibName:shareMainViewNibName bundle:nil]))
     {
         self.sharedItem = fileDto;
-        self.sharedUser = userDto;
         self.optionsShownWithCanEdit = 0;
         self.canEditEnabled = false;
         self.canCreateEnabled = false;
         self.canChangeEnabled = false;
         self.canDeleteEnabled = false;
         self.canShareEnabled = false;
-        self.updatedOCShare = [ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeUser andUser:APP_DELEGATE.activeUser];
+        self.updatedOCShare = sharedDto;
     }
     
     return self;
@@ -280,7 +279,7 @@
             shareUserPrivilegeCell = (ShareUserPrivilegeCell *)[topLevelObjects objectAtIndex:0];
         }
         
-        shareUserPrivilegeCell.fileName.text = [self.sharedUser.username stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        shareUserPrivilegeCell.fileName.text = [self.updatedOCShare.shareWithDisplayName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
         cell = shareUserPrivilegeCell;
         
