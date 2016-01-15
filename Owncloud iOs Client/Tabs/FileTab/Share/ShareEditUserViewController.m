@@ -299,6 +299,7 @@
                         sharePrivilegeCell.optionName.textColor = [UIColor grayColor];
                     }
                     [sharePrivilegeCell.optionSwitch setOn:self.canCreateEnabled animated:false];
+                    [sharePrivilegeCell.optionSwitch addTarget:self action:@selector(canCreateSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
                     
                     break;
                 case 1:
@@ -310,7 +311,8 @@
                         sharePrivilegeCell.optionName.textColor = [UIColor grayColor];
                     }
                     [sharePrivilegeCell.optionSwitch setOn:self.canChangeEnabled animated:false];
-                    
+                    [sharePrivilegeCell.optionSwitch addTarget:self action:@selector(canChangeSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
+
                     break;
                 case 2:
                     sharePrivilegeCell.optionName.text = NSLocalizedString(@"user_can_delete", nil);
@@ -321,6 +323,8 @@
                         sharePrivilegeCell.optionName.textColor = [UIColor grayColor];
                     }
                     [sharePrivilegeCell.optionSwitch setOn:self.canDeleteEnabled animated:false];
+                    [sharePrivilegeCell.optionSwitch addTarget:self action:@selector(canDeleteSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
+
                     
                     break;
                     
@@ -377,7 +381,13 @@
     return height;
 }
 
--(void) canEditSwithValueChanged:(UISwitch*) sender {
+-(void) setOptionsCanEditTo:(BOOL)value {
+    self.canCreateEnabled = value;
+    self.canChangeEnabled = value;
+    self.canDeleteEnabled = value;
+}
+
+-(void) canEditSwitchValueChanged:(UISwitch*) sender {
     
     self.canEditEnabled = sender.on;
     
@@ -390,15 +400,24 @@
    [self reloadView];
 }
 
--(void) setOptionsCanEditTo:(BOOL)value {
-    self.canCreateEnabled = value;
-    self.canChangeEnabled = value;
-    self.canDeleteEnabled = value;
-}
-
--(void) canShareSwithValueChanged:(UISwitch*) sender {
+-(void) canShareSwitchValueChanged:(UISwitch*) sender {
     
     self.canShareEnabled = sender.on;
+}
+
+-(void) canCreateSwitchValueChanged:(UISwitch*) sender {
+    
+    self.canCreateEnabled = sender.on;
+}
+
+-(void) canChangeSwitchValueChanged:(UISwitch*) sender {
+    
+    self.canChangeEnabled = sender.on;
+}
+
+-(void) canDeleteSwitchValueChanged:(UISwitch*) sender {
+    
+    self.canDeleteEnabled = sender.on;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -418,12 +437,12 @@
         if (section == 1) {
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"title_user_can_edit", nil);
             [shareLinkHeaderCell.switchSection setOn:self.canEditEnabled animated:false];
-            [shareLinkHeaderCell.switchSection addTarget:self action:@selector(canEditSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+            [shareLinkHeaderCell.switchSection addTarget:self action:@selector(canEditSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
 
         }else{
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"title_user_can_share", nil);
             [shareLinkHeaderCell.switchSection setOn:self.canShareEnabled animated:false];
-            [shareLinkHeaderCell.switchSection addTarget:self action:@selector(canShareSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+            [shareLinkHeaderCell.switchSection addTarget:self action:@selector(canShareSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
         }
         
         
