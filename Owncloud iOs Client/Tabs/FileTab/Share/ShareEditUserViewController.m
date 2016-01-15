@@ -104,6 +104,7 @@
         self.canChangeEnabled = false;
         self.canDeleteEnabled = false;
         self.canShareEnabled = false;
+        self.updatedOCShare = [ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeUser andUser:APP_DELEGATE.activeUser];
     }
     
     return self;
