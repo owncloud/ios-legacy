@@ -15,7 +15,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="119"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Ov-PO-1rQ">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3Ov-PO-1rQ">
                         <rect key="frame" x="10" y="15" width="90" height="90"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="90" id="Fcu-Ir-Zlh"/>
@@ -55,6 +55,7 @@
                     <constraint firstItem="Bqj-YB-hKp" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="41" id="gZ8-7D-jWP"/>
                     <constraint firstAttribute="bottomMargin" secondItem="Bqj-YB-hKp" secondAttribute="bottom" constant="41" id="guG-Bi-Rnq"/>
                     <constraint firstItem="Yje-bh-jmU" firstAttribute="leading" secondItem="3Ov-PO-1rQ" secondAttribute="trailing" constant="8" id="sFg-JT-yE6"/>
+                    <constraint firstItem="3Ov-PO-1rQ" firstAttribute="centerY" secondItem="Bqj-YB-hKp" secondAttribute="centerY" id="uCU-R5-KR0"/>
                     <constraint firstItem="3Ov-PO-1rQ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="2" id="wnk-da-vhU"/>
                 </constraints>
                 <variation key="default">
@@ -68,9 +69,9 @@
                 <outlet property="fileImage" destination="3Ov-PO-1rQ" id="fvV-MB-NAY"/>
                 <outlet property="fileName" destination="Yje-bh-jmU" id="A8X-J2-agA"/>
                 <outlet property="fileSize" destination="5i0-Uz-NhM" id="mDs-JE-Xom"/>
-                <outlet property="folderName" destination="Bqj-YB-hKp" id="vC3-yA-HHn"/>
+                <outlet property="folderName" destination="Bqj-YB-hKp" id="UU5-wt-5kg"/>
             </connections>
-            <point key="canvasLocation" x="419" y="421"/>
+            <point key="canvasLocation" x="414" y="287"/>
         </tableViewCell>
     </objects>
 </document>

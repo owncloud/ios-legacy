@@ -44,8 +44,8 @@
 #define shareMainViewNibName @"ShareEditUserViewController"
 
 //Cells and Sections
-#define shareFileCellIdentifier @"ShareFileIdentifier"
-#define shareFileCellNib @"ShareFileCell"
+#define shareUserPrivilegeIdentifier @"ShareUserPrivilegeIdentifier"
+#define shareUserPrivilegeNib @"ShareUserPrivilegeCell"
 #define shareLinkHeaderIdentifier @"ShareLinkHeaderIdentifier"
 #define shareLinkHeaderNib @"ShareLinkHeaderCell"
 #define sharePrivilegeIdentifier @"SharePrivilegeIdentifier"
@@ -273,16 +273,16 @@
     
     if (indexPath.section == 0) {
         
-        ShareFileCell* shareFileCell = (ShareFileCell*)[tableView dequeueReusableCellWithIdentifier:shareFileCellIdentifier];
+        ShareUserPrivilegeCell *shareUserPrivilegeCell = (ShareUserPrivilegeCell *)[tableView dequeueReusableCellWithIdentifier:shareUserPrivilegeIdentifier];
         
-        if (shareFileCell == nil) {
-            NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareFileCellNib owner:self options:nil];
-            shareFileCell = (ShareFileCell *)[topLevelObjects objectAtIndex:0];
+        if (shareUserPrivilegeCell == nil) {
+            NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareUserPrivilegeNib owner:self options:nil];
+            shareUserPrivilegeCell = (ShareUserPrivilegeCell *)[topLevelObjects objectAtIndex:0];
         }
         
-        shareFileCell.fileName.hidden = [self.sharedUser.username stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        shareUserPrivilegeCell.fileName.text = [self.sharedUser.username stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
-        cell = shareFileCell;
+        cell = shareUserPrivilegeCell;
         
     } else if (indexPath.section == 1) {
             
