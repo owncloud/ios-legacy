@@ -382,26 +382,50 @@
                 //Finish the refresh
                 _isRefreshSharedInProgress = NO;
                 
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-                _sharedLinkItems = [ManageSharesDB getAllSharesByUser:app.activeUser.idUser anTypeOfShare:shareTypeLink];
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                 
-                //Sorted by share time
-                _sharedLinkItems = [self getArraySortByShareDate:_sharedLinkItems];
+                BOOL isSamlCredentialsError=NO;
                 
-                //Refresh the list of share items
-                [_sharedTableView reloadData];
-                
-                DLog(@"error: %@", error);
-                DLog(@"Operation error: %ld", (long)response.statusCode);
-                
-                //Only if the user do refresh manually, same behaviour like in Foi
-                if (_refreshControl.refreshing) {
-                    //Manage Server error
-                    [self manageServerErrors:response.statusCode and:error];
+                //Check the login error in shibboleth
+                if (k_is_sso_active) {
+                    NSURL *samlRedirectUrl = [NSURL URLWithString:redirectedServer];
+                    NSHTTPURLResponse *responseCopyWithSamlRedirectUrl = [[NSHTTPURLResponse alloc]initWithURL:samlRedirectUrl statusCode:response.statusCode HTTPVersion:nil headerFields:[response allHeaderFields]];
+                    
+                    //Check if there are fragmens of saml in url, in this case there are a credential error
+                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:responseCopyWithSamlRedirectUrl.URL.absoluteString];
+                    
+                    if (isSamlCredentialsError) {
+                        
+                        if (_refreshControl.refreshing) {
+                            //Manage Server error
+                            [self errorLogin];
+                        }
+                    }
                 }
                 
-                //Stop loading pull refresh
-                [self stopPullRefresh];
+                if (!isSamlCredentialsError) {
+                
+                    _sharedLinkItems = [ManageSharesDB getAllSharesByUser:app.activeUser.idUser anTypeOfShare:shareTypeLink];
+                    
+                    //Sorted by share time
+                    _sharedLinkItems = [self getArraySortByShareDate:_sharedLinkItems];
+                    
+                    //Refresh the list of share items
+                    [_sharedTableView reloadData];
+                    
+                    DLog(@"error: %@", error);
+                    DLog(@"Operation error: %ld", (long)response.statusCode);
+                    
+                    //Only if the user do refresh manually, same behaviour like in Foi
+                    if (_refreshControl.refreshing) {
+                        //Manage Server error
+                        [self manageServerErrors:response.statusCode and:error];
+                    }
+                    
+                    //Stop loading pull refresh
+                    [self stopPullRefresh];
+                
+                }
                 
                 //Finish the refresh
                 _isRefreshSharedInProgress = NO;
