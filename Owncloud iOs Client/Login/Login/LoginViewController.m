@@ -1866,17 +1866,19 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     // if user component was set on the server URL, move it to the user field
     if(components.user.length > 0) {
+        [self.usernameTextField setText:components.user];
         self.auxUsernameForReloadTable = components.user;
         components.user = nil;
     }
     
     // if password component was set on the server URL, move it to the password field
     if(components.password.length > 0) {
+        [self.passwordTextField setText:components.password];
         self.auxPasswordForReloadTable = components.password;
         components.password = nil;
     }
     
-    self.auxUrlForReloadTable = [components string];
+    self.auxUrlForReloadTable = [self stripIndexPhpOrAppsFilesFromUrl:[components string]];
     
     // append webdav server path to existing path
     components.path = [NSString stringWithFormat:@"%@%@", components.path, k_url_webdav_server];
