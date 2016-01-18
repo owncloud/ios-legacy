@@ -392,9 +392,9 @@
     self.canEditEnabled = sender.on;
     
     if (sender.on) {
-        [self setOptionsCanEditTo:true];
+        [self setOptionsCanEditTo:YES];
     } else {
-        [self setOptionsCanEditTo:false];
+        [self setOptionsCanEditTo:NO];
     }
 
    [self reloadView];
@@ -408,16 +408,29 @@
 -(void) canCreateSwitchValueChanged:(UISwitch*) sender {
     
     self.canCreateEnabled = sender.on;
+    
+    if (!self.canChangeEnabled && !self.canDeleteEnabled) {
+        self.canEditEnabled = false;
+        [self reloadView];
+    }
 }
 
 -(void) canChangeSwitchValueChanged:(UISwitch*) sender {
     
     self.canChangeEnabled = sender.on;
+    if (!self.canCreateEnabled && !self.canDeleteEnabled) {
+        self.canEditEnabled = false;
+        [self reloadView];
+    }
 }
 
 -(void) canDeleteSwitchValueChanged:(UISwitch*) sender {
     
     self.canDeleteEnabled = sender.on;
+    if (!self.canCreateEnabled && !self.canChangeEnabled) {
+        self.canEditEnabled = false;
+        [self reloadView];
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
