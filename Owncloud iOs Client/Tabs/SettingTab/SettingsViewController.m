@@ -42,6 +42,8 @@
 #import "SyncFolderManager.h"
 #import "ManageThumbnails.h"
 
+#import <LocalAuthentication/LocalAuthentication.h>
+
 //Settings table view size separator
 #define k_padding_normal_section 20.0
 #define k_padding_last_section 40.0
@@ -328,7 +330,7 @@
             break;
             
         case 2:
-            n = 1;
+            n = [self isTouchIDAvailable]? 2:1;
             break;
             
         case 3:
@@ -1731,6 +1733,77 @@
     
 }
 
+
+#pragma mark - Touch ID methods
+
+- (BOOL) isTouchIDAvailable {
+    
+    NSError *error = nil;
+    if([[[LAContext alloc] init] canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]){
+        return true;
+    }
+    else{
+        DLog(@"touchID error: %@", error.description);
+        return false;
+    }
+}
+
+- (void)touchIDStart {
+    
+    LAContext *context = [[LAContext alloc] init];
+    NSError *error = nil;
+    
+    if([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]){
+        
+    }
+    
+    else{
+        DLog(@"error: %@", error.description);
+    }
+    
+    if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
+        [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:@"Put your " reply:^(BOOL success, NSError * error) {
+            
+            if (error) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                message:@"There was a problem verifying your identity."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Ok"
+                                                      otherButtonTitles:nil];
+                [alert show];
+                return;
+            }
+            
+            if (success) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success"
+                                                                message:@"You are the device owner!"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Ok"
+                                                      otherButtonTitles:nil];
+                [alert show];
+                
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                message:@"You are not the device owner."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Ok"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            }
+        }];
+        
+    } else {
+        
+        //TODO depending on error do one thing or another
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Your device cannot authenticate using TouchID."
+                                                        message:error.description
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+    
+}
 
 #pragma mark - Instant Upload - Location Support
 
