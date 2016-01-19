@@ -237,6 +237,12 @@
     }
 }
 
+-(IBAction)changeSwitchTouchID:(id)sender {
+    if (self.switchTouchID.on) {
+        [self touchIDStart];
+    }
+}
+
 
 -(void)disconnectUser {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -745,6 +751,19 @@
             
             //Add accesibility label for Automation
             self.switchPasscode.accessibilityLabel = ACS_SETTINGS_PASSCODE_SWITCH;
+            
+            break;
+            
+        case 1:
+            cell.textLabel.text=NSLocalizedString(@"title_app_touchID", nil);
+            self.switchTouchID = [[UISwitch alloc] initWithFrame:CGRectZero];
+            cell.accessoryView = self.switchTouchID;
+            [self.switchTouchID setOn:nil animated:YES];
+            [self.switchTouchID addTarget:self action:@selector(changeSwitchTouchID:) forControlEvents:UIControlEventValueChanged];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            
+            //Add accesibility label for Automation
+            self.switchTouchID.accessibilityLabel = ACS_SETTINGS_TOUCH_ID_SWITCH;
             
             break;
             
@@ -1736,14 +1755,14 @@
 
 #pragma mark - Touch ID methods
 
-- (BOOL) isTouchIDAvailable {
+- (BOOL)isTouchIDAvailable {
     
     NSError *error = nil;
     if([[[LAContext alloc] init] canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]){
         return true;
     }
     else{
-        DLog(@"touchID error: %@", error.description);
+        DLog(@"touchID not available: %@", error.description);
         return false;
     }
 }
@@ -1762,7 +1781,7 @@
     }
     
     if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
-        [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:@"Put your " reply:^(BOOL success, NSError * error) {
+        [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:@"Unlock ownCloud" reply:^(BOOL success, NSError * error) {
             
             if (error) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
