@@ -34,6 +34,7 @@
 #import "AppDelegate.h"
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
+#import "constants.h"
 
 //tools
 #define standardDelay 0.2
@@ -83,6 +84,17 @@
 @property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
 
+//Enum to restore the option after get an error
+typedef NS_ENUM (NSInteger, enumUpload){
+    optionPermissionNothingYet=0,
+    optionPermissionCanEdit=1,
+    optionPermissionCanCreate=2,
+    optionPermissionCanChange=3,
+    optionPermissionCanDelete=4,
+    optionPermissionCanShare=5
+};
+@property (nonatomic) NSInteger optionTryingToEnabling;
+
 @end
 
 
@@ -96,11 +108,12 @@
         self.sharedItem = fileDto;
         self.updatedOCShare = sharedDto;
         self.optionsShownWithCanEdit = 0;
-        self.canEditEnabled = false;
-        self.canCreateEnabled = false;
-        self.canChangeEnabled = false;
-        self.canDeleteEnabled = false;
-        self.canShareEnabled = false;
+        self.canEditEnabled = [UtilsFramework isPermissionToCanEdit:self.updatedOCShare.permissions];
+        self.canCreateEnabled = [UtilsFramework isPermissionToCanCreate:self.updatedOCShare.permissions];
+        self.canChangeEnabled = [UtilsFramework isPermissionToCanChange:self.updatedOCShare.permissions];
+        self.canDeleteEnabled = [UtilsFramework isPermissionToCanDelete:self.updatedOCShare.permissions];
+        self.canShareEnabled = [UtilsFramework isPermissionToCanShare:self.updatedOCShare.permissions];
+        self.optionTryingToEnabling = optionPermissionNothingYet;
     }
     
     return self;
@@ -139,6 +152,10 @@
     
 }
 
+- (void) didSelectCloseView {
+    [[self navigationController] popViewControllerAnimated:YES];
+}
+
 - (void) reloadView {
     
     if (self.canEditEnabled == true && self.sharedItem.isDirectory){
@@ -152,7 +169,7 @@
 
 #pragma mark - Action Methods
 
-- (void) didSelectCloseView {
+- (void) updatePermissionOnServer {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -185,7 +202,8 @@
             }
         }
         
-        [[self navigationController] popViewControllerAnimated:YES];
+        [self endLoading];
+        [self reloadView];
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
         [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
@@ -197,7 +215,29 @@
         
         [self manageServerErrors:code and:error withPasswordSupport:false];
         
-        [[self navigationController] popViewControllerAnimated:YES];
+        switch (self.optionTryingToEnabling) {
+            case optionPermissionCanEdit:
+                self.canEditEnabled = NO;
+                break;
+            case optionPermissionCanCreate:
+                self.canCreateEnabled = NO;
+                break;
+            case optionPermissionCanChange:
+                self.canChangeEnabled = NO;
+                break;
+            case optionPermissionCanDelete:
+                self.canDeleteEnabled = NO;
+                break;
+            case optionPermissionCanShare:
+                self.canShareEnabled = NO;
+                break;
+            default:
+                break;
+        }
+        
+        //Reset the last permission option
+        self.optionTryingToEnabling = optionPermissionNothingYet;
+        [self reloadView];
         
     }];
     
@@ -378,18 +418,22 @@
     
     self.canEditEnabled = sender.on;
     
-    if (sender.on) {
+    if (sender.on && ([self.sharedItem.permissions rangeOfString:k_permission_shared].location == NSNotFound)) {
         [self setOptionsCanEditTo:YES];
     } else {
         [self setOptionsCanEditTo:NO];
     }
-
-   [self reloadView];
+    
+    self.optionTryingToEnabling = optionPermissionCanEdit;
+    [self updatePermissionOnServer];
 }
 
 -(void) canShareSwitchValueChanged:(UISwitch*) sender {
     
     self.canShareEnabled = sender.on;
+    
+    self.optionTryingToEnabling = optionPermissionCanShare;
+    [self updatePermissionOnServer];
 }
 
 -(void) canCreateSwitchValueChanged:(UISwitch*) sender {
@@ -400,6 +444,9 @@
         self.canEditEnabled = false;
         [self reloadView];
     }
+    
+    self.optionTryingToEnabling = optionPermissionCanCreate;
+    [self updatePermissionOnServer];
 }
 
 -(void) canChangeSwitchValueChanged:(UISwitch*) sender {
@@ -409,6 +456,9 @@
         self.canEditEnabled = false;
         [self reloadView];
     }
+    
+    self.optionTryingToEnabling = optionPermissionCanChange;
+    [self updatePermissionOnServer];
 }
 
 -(void) canDeleteSwitchValueChanged:(UISwitch*) sender {
@@ -418,6 +468,9 @@
         self.canEditEnabled = false;
         [self reloadView];
     }
+    
+    self.optionTryingToEnabling = optionPermissionCanDelete;
+    [self updatePermissionOnServer];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
