@@ -58,7 +58,7 @@
 #define heightOfShareLinkHeader 45.0
 #define heightOfShareWithUserRow 55.0
 
-#define shareTableViewSectionsNumber  4
+#define shareTableViewSectionsNumber  3
 
 //Nº of Rows
 #define optionsShownIfFileIsDirectory 3
@@ -336,19 +336,6 @@
             
             cell = sharePrivilegeCell;
         
-    } else if (indexPath.section == 3){
-        ShareLinkButtonCell *shareLinkButtonCell = [tableView dequeueReusableCellWithIdentifier:shareLinkButtonIdentifier];
-        
-        if (shareLinkButtonCell == nil) {
-            NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkButtonNib owner:self options:nil];
-            shareLinkButtonCell = (ShareLinkButtonCell *)[topLevelObjects objectAtIndex:0];
-        }
-        
-        shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
-        shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
-        shareLinkButtonCell.titleButton.text = NSLocalizedString(@"stop_share_with_user", nil);
-        
-        cell = shareLinkButtonCell;
     }
     
     return cell;
