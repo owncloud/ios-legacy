@@ -102,6 +102,7 @@
     for (OCSharedDto *shareWith in selectedItems) {
         OCShareUser *shareUser = [OCShareUser new];
         shareUser.name = shareWith.shareWith;
+        shareUser.displayName = shareWith.shareWithDisplayName;
         
         shareUser.isGroup = false;
         
@@ -209,10 +210,12 @@
             shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
         }
 
-        NSString *name = userOrGroup.name;
+        NSString *name;
         
         if (userOrGroup.isGroup) {
-            name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_group_indicator", nil)];
+            name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.name, NSLocalizedString(@"share_user_group_indicator", nil)];
+        } else {
+            name = userOrGroup.displayName;
         }
         
         shareUserCell.itemName.text = name;

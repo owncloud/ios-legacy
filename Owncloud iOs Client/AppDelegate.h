@@ -287,7 +287,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 - (void) reloadTableFromDataBaseIfFileIsVisibleOnList:(FileDto *) file;
 - (void) reloadCellByFile:(FileDto *) file;
-
+- (void) reloadCellByUploadOffline:(UploadsOfflineDto *) uploadOffline;
 - (void) reloadCellByKey:(NSString *) key;
 
 

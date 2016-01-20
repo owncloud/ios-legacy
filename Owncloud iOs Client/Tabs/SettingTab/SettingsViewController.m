@@ -40,9 +40,11 @@
 #import "ManageCookiesStorageDB.h"
 #import "Accessibility.h"
 #import "SyncFolderManager.h"
+#import "ManageThumbnails.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
+#define k_padding_last_section 40.0
 #define k_padding_under_section 5.0
 
 //Settings custom font
@@ -123,8 +125,9 @@
     [super viewWillAppear:animated];
     
     if (IS_IOS8 || IS_IOS9) {
-        self.edgesForExtendedLayout = UIRectCornerAllCorners;
-        self.automaticallyAdjustsScrollViewInsets = NO;
+        self.edgesForExtendedLayout = UIRectEdgeAll;
+        self.extendedLayoutIncludesOpaqueBars = true;
+        self.automaticallyAdjustsScrollViewInsets = true;
     }else{
         self.edgesForExtendedLayout = UIRectCornerAllCorners;
     }
@@ -235,8 +238,10 @@
 
 -(void)disconnectUser {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
+    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: APP_DELEGATE.activeUser.idUser];
     
-    [ManageUsersDB removeUserAndDataByIdUser: app.activeUser.idUser];
+    [ManageUsersDB removeUserAndDataByIdUser: APP_DELEGATE.activeUser.idUser];
     
     [UtilsFramework deleteAllCookies];
     
@@ -248,7 +253,6 @@
     
     NSError *error;     
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-    UserDto *user = app.activeUser;
     [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
     app.uploadArray=[[NSMutableArray alloc]init];
     [app updateRecents];
@@ -437,7 +441,9 @@
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     //Set the text of the footer section
-    UILabel *label = [[UILabel alloc] init];
+    UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.settingsTableView.frame.size.width, k_padding_last_section + self.tabBarController.tabBar.frame.size.height)];
+    container.backgroundColor = [UIColor clearColor];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.settingsTableView.frame.size.width, k_padding_last_section)];
     UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:13];
     
     NSInteger sectionToShowFooter = 3;
@@ -458,7 +464,10 @@
         label.backgroundColor = [UIColor clearColor];
         label.text = @"";
     }
-    return label;
+    
+    [container addSubview:label];
+    
+    return container;
 }
 
 
@@ -478,7 +487,7 @@
                 height = k_padding_normal_section;
             }
             break;
-            
+      
         default:
             height = k_padding_normal_section;
             break;
@@ -495,6 +504,22 @@
         case 0:
             if (k_multiaccount_available) {
                 height = k_padding_under_section;
+            }else{
+                height = k_padding_normal_section;
+            }
+            break;
+            
+        case 3:
+            if (k_multiaccount_available) {
+                height = k_padding_normal_section;
+            }else{
+                height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
+            }
+            break;
+            
+        case 4:
+            if (k_multiaccount_available) {
+                height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
             }else{
                 height = k_padding_normal_section;
             }
@@ -920,11 +945,11 @@
     DLog(@"DELETE!!! %ld", (long)indexPath.row);
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
         
-        UserDto *user = app.activeUser;
         [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
+        
+        [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: selectedUser.idUser];
         
         //Delete the tables of this user
         [ManageUsersDB removeUserAndDataByIdUser: selectedUser.idUser];
@@ -946,11 +971,11 @@
             [ManageUsersDB setActiveAccountAutomatically];
             
             //Update in appDelegate the active user
-            app.activeUser = [ManageUsersDB getActiveUser];
+            APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
             
             [self setCookiesOfActiveAccount];
             
-            [self createFolderForUser:app.activeUser];
+            [self createFolderForUser:APP_DELEGATE.activeUser];
             
             //If ipad, clean the detail view
             if (!IS_IPHONE) {

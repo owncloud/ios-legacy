@@ -27,6 +27,8 @@
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
 #import "UtilsUrls.h"
+#import "ManageThumbnails.h"
+#import "ManageUsersDB.h"
 
 
 @implementation DeleteFile
@@ -123,7 +125,6 @@
 /*
  * Recursive method that delete a directory and its file of DB
  */
-
 - (void)deleteFolderChildsWithIdFile:(NSInteger)idFile{
     
     //Rename local url and server url of files
@@ -151,8 +152,8 @@
  *Deletes items in the server
  */
 - (void)executeDeleteItemInServer{
-    [self deleteItemFromDeviceByFileDto:_file];
-    [self deleteItemFromServerAndDeviceByFileDto:_file];
+    [self deleteItemFromDeviceByFileDto:self.file];
+    [self deleteItemFromServerAndDeviceByFileDto:self.file];
 }
 
 /*
@@ -170,11 +171,6 @@
         
         [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
         
-        //Delete the folder and the files that it contains
-        NSError *error;
-        NSFileManager *fileMgr = [[NSFileManager alloc] init];
-        [fileMgr removeItemAtPath:[self filePath] error:&error];
-        
         //Create the folder again for a correct navigation
         //We obtain the name of the folder in folderName
         pathFolder = [NSString stringWithFormat:@"%@%@",_file.filePath,_file.fileName];
@@ -183,6 +179,7 @@
         NSString *folderName = [UtilsDtos getDbFolderNameFromFilePath:pathFolder];
         DLog(@"folder name: %@ in this location: %@",folderName,_currentLocalFolder);
         [FileListDBOperations createAFolder:folderName inLocalFolder:_currentLocalFolder];
+        
     }
 }
 
@@ -226,6 +223,13 @@
         }
         
     } else {
+               
+        if (self.file.isDirectory) {
+            [[ManageThumbnails sharedManager] deleteThumbnailsInFolder:self.file.idFile];
+        } else {
+            [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:self.file];
+        }
+        
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
         [ManageFilesDB setFile:file.idFile isNecessaryUpdate:NO];
         if (_deleteFromFilePreview == YES && _deleteFromFlag == deleteFromServerAndLocal) {
@@ -259,13 +263,12 @@
  *
  */
 - (void) deleteItemFromServerAndDeviceByFileDto:(FileDto *) file {
-    //TODO delete from server
+    
     DLog(@"Delete item from devices and server");
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:app.activeUser] componentsSeparatedByString:@"/"];
-    NSString *pathToDelete = [NSString stringWithFormat:@"%@//%@%@%@", [splitedUrl objectAtIndex:0], [splitedUrl objectAtIndex:2], file.filePath,file.fileName];
+
+    NSString *pathToDelete = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:app.activeUser];
     pathToDelete = [pathToDelete stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     DLog(@"Path for delete: %@", pathToDelete);
@@ -311,11 +314,6 @@
             
             if([_file isDirectory]) {
                 DLog(@"Is directory");
-                NSError *error;
-                
-                //First delete of file system
-                NSFileManager *fileMgr = [[NSFileManager alloc] init];
-               [fileMgr removeItemAtPath:[self filePath] error:&error];
                 
                 //Then delete folder of BD.
                 [self deleteFolderChildsWithIdFile:_file.idFile];
@@ -381,7 +379,6 @@
     DLog(@"Local URL: %@", localUrl);
     return localUrl;
 }
-
 
 #pragma mark - View lifecycle
 - (BOOL)testErrorAction:(id)sender {

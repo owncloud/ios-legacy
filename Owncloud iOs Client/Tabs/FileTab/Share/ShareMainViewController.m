@@ -689,10 +689,12 @@
             
             OCSharedDto *shareWith = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
             
-            NSString *name = shareWith.shareWith;
+            NSString *name;
             
-            if (shareWith.shareType == 1) {
-                name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_group_indicator", nil)];
+            if (shareWith.shareType == shareTypeGroup) {
+                name = [NSString stringWithFormat:@"%@ (%@)",shareWith.shareWith, NSLocalizedString(@"share_user_group_indicator", nil)];
+            } else {
+                name = shareWith.shareWithDisplayName;
             }
             
             shareUserCell.itemName.text = name;

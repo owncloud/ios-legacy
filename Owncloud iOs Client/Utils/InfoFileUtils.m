@@ -24,6 +24,12 @@
 #import "CWLOrderedDictionary.h"
 #import "UtilsUrls.h"
 #import "ManageSharesDB.h"
+#import "ManageFilesDB.h"
+#import "FileListDBOperations.h"
+#import "UIImage+Thumbnail.h"
+#import "ManageThumbnails.h"
+#import "ManageUsersDB.h"
+#import "NSObject+AssociatedObject.h"
 
 @implementation InfoFileUtils
 
@@ -177,9 +183,42 @@
 #endif   
         
     } else {
-        NSString *imageFile= [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        fileCell.fileImageView.image=[UIImage imageNamed:imageFile];
         
+        fileCell.fileImageView.associatedObject = fileForSetTheStatusIcon.localFolder;
+    
+        if (fileForSetTheStatusIcon.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:fileForSetTheStatusIcon.fileName]) {
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                
+                UserDto *user = [ManageUsersDB getActiveUser];
+                
+                UIImage *thumbnail;
+                
+                if ([[ManageThumbnails sharedManager] isStoredThumbnailWithHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID: user.idUser]]){
+                    
+                    thumbnail = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFileHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID: user.idUser]]];
+
+                }else{
+                    
+                    thumbnail = [[UIImage imageWithContentsOfFile: fileForSetTheStatusIcon.localFolder] getThumbnail];
+                    [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnail) withHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID:user.idUser]];
+                    
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    fileCell.fileImageView.image = thumbnail;
+                    [fileCell.fileImageView.layer setMasksToBounds:YES];
+                    [fileCell setNeedsLayout];
+                });
+               
+            });
+            
+        }else{
+            NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            fileCell.fileImageView.image = [UIImage imageNamed:imageFile];
+        }
+        
+
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
             if(fileForSetTheStatusIcon.isDownload == downloaded && !fileForSetTheStatusIcon.isNecessaryUpdate) {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
@@ -226,6 +265,16 @@
     }
     
     return fileCell;
+}
+
+
++(void)createAllFoldersInFileSystemByFileDto:(FileDto *)file andUserDto:(UserDto *)user {
+    
+    NSMutableArray *listOfRemoteFilesAndFolders = [ManageFilesDB getFilesByFileIdForActiveUser:file.idFile];
+    
+    NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:user];
+    
+    [FileListDBOperations createAllFoldersByArrayOfFilesDto:listOfRemoteFilesAndFolders andLocalFolder:path];
 }
 
 @end

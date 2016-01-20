@@ -93,8 +93,9 @@
     [super viewWillAppear:animated];
     
     if (IS_IOS8 || IS_IOS9) {
-        self.edgesForExtendedLayout = UIRectCornerAllCorners;
-        self.automaticallyAdjustsScrollViewInsets = NO;
+        self.edgesForExtendedLayout = UIRectEdgeAll;
+        self.extendedLayoutIncludesOpaqueBars = true;
+        self.automaticallyAdjustsScrollViewInsets = true;
     }else{
         self.edgesForExtendedLayout = UIRectCornerAllCorners;
     }
@@ -697,7 +698,7 @@
 
         //Obtain the path where the folder will be created in the file system
         NSString *rootPath = [NSString stringWithFormat:@"%@", newFolder.filePath];
-        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         //Remove the "/"
         NSString *name = [newFolder.fileName substringToIndex:[newFolder.fileName length]-1];
         
@@ -979,7 +980,8 @@
     [self obtainTheQuantityOfFilesAndFolders];
     
     //Set the text of the footer section
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _sharedTableView.bounds.size.width, 40)];
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _sharedTableView.bounds.size.width, 40 + self.tabBarController.tabBar.frame.size.height)];
+    footerView.backgroundColor = [UIColor clearColor];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, _sharedTableView.bounds.size.width, 40)];
     
     UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:16];
