@@ -139,8 +139,9 @@
     //Relaunch the uploads that failed before
     [app performSelector:@selector(relaunchUploadsFailedNoForced) withObject:nil afterDelay:5.0];
     
-    //Set the passcode swith asking to database
-   [self.switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:NO];
+    //Set the passcode and touch ID swithes asking to database
+    [self.switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:NO];
+    [self.switchTouchID setOn:[ManageAppSettingsDB isTouchID] animated:NO];
     
     self.user = app.activeUser;
     
@@ -238,8 +239,24 @@
 }
 
 -(IBAction)changeSwitchTouchID:(id)sender {
+    
     if (self.switchTouchID.on) {
-        [self touchIDStart];
+        
+        if(self.switchPasscode.on){
+            //TODO: enable Touch ID
+            [self setPropertiesTouchIDToState:YES];
+        }
+        
+        else{
+            [self switchTouchIDTo:NO];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"passcode_not_enabled", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+            [alertView show];
+        }
+    }
+    
+    else{
+        //TODO: disable Touch ID
+        [self setPropertiesTouchIDToState:NO];
     }
 }
 
@@ -1755,6 +1772,25 @@
 
 #pragma mark - Touch ID methods
 
+- (void)switchTouchIDTo:(BOOL)value {
+    [self.switchTouchID setOn:value animated:NO];
+}
+
+-(void)initStateTouchID {
+    [self switchTouchIDTo:[ManageAppSettingsDB isTouchID]];
+}
+
+-(void)setPropertiesTouchIDToState:(BOOL)isTocuhIDActive{
+    
+    if (isTocuhIDActive) {
+        [self switchTouchIDTo:YES];
+        [ManageAppSettingsDB updateTouchIDTo:YES];
+    } else {
+        [self switchTouchIDTo:NO];
+        [ManageAppSettingsDB updateTouchIDTo:NO];
+    }
+}
+
 - (BOOL)isTouchIDAvailable {
     
     NSError *error = nil;
@@ -1767,6 +1803,7 @@
     }
 }
 
+// TODO: used where/when necessary
 - (void)touchIDStart {
     
     LAContext *context = [[LAContext alloc] init];

@@ -65,7 +65,7 @@
             DLog(@"Error in createDataBase table files_backup");
         }
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'passcode' ('id' INTEGER PRIMARY KEY, 'passcode' VARCHAR)"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'passcode' ('id' INTEGER PRIMARY KEY, 'passcode' VARCHAR, 'is_touch_id' BOOL)"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table passcode");
@@ -898,7 +898,7 @@
 }
 
 ///-----------------------------------
-/// @name Update Database version with 13 version to 14
+/// @name Update Database version with 14 version to 15
 ///-----------------------------------
 
 /**
@@ -926,6 +926,32 @@
         
     }];
 
+    
+}
+
+///-----------------------------------
+/// @name Update Database version with 15 version to 16
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter passcode table, added new field to store if Touch ID is active or not.
+ *
+ */
++ (void) updateDBVersion15To16{
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"ALTER TABLE passcode ADD is_touch_id BOOL DEFAULT 0"];
+        if (!correctQuery) {
+            DLog(@"Error update version 15 to 16 table passcode is_touch_id");
+        }
+
+    }];
     
 }
 

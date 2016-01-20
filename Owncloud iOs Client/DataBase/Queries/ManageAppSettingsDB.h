@@ -39,6 +39,7 @@
  */
 +(void) removePasscode;
 
+
 /*
  * Method that insert certificate
  * @certificateLocation -> path of certificate
@@ -50,6 +51,13 @@
  * Method that return an array with all of certifications
  */
 +(NSMutableArray*) getAllCertificatesLocation;
+
+
+/*
+ * Methods that manage Touh ID
+ */
++(BOOL) isTouchID;
++(void) updateTouchIDTo:(BOOL)newValue;
 
 
 /*
