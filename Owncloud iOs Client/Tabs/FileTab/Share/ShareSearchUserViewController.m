@@ -98,19 +98,8 @@
 
 - (void) setSelectedItems:(NSMutableArray *) selectedItems {
     
-    for (OCSharedDto *shareWith in selectedItems) {
-        OCShareUser *shareUser = [OCShareUser new];
-        shareUser.name = shareWith.shareWith;
-        shareUser.displayName = shareWith.shareWithDisplayName;
-        
-        shareUser.isGroup = false;
-        
-        if (shareWith.shareType == 1) {
-            shareUser.isGroup = true;
-        }
-        
-        [self.selectedItems addObject:shareUser];
-        
+    for (OCShareUser *item in selectedItems) {
+        [self.selectedItems addObject:item];
     }
 
 }
