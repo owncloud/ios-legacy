@@ -138,11 +138,7 @@
     
     //Relaunch the uploads that failed before
     [app performSelector:@selector(relaunchUploadsFailedNoForced) withObject:nil afterDelay:5.0];
-    
-    //Set the passcode and touch ID swithes asking to database
-    [self.switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:NO];
-    [self.switchTouchID setOn:[ManageAppSettingsDB isTouchID] animated:NO];
-    
+
     self.user = app.activeUser;
     
     self.listUsers = [ManageUsersDB getAllUsers];
@@ -775,7 +771,7 @@
             cell.textLabel.text=NSLocalizedString(@"title_app_touchID", nil);
             self.switchTouchID = [[UISwitch alloc] initWithFrame:CGRectZero];
             cell.accessoryView = self.switchTouchID;
-            [self.switchTouchID setOn:nil animated:YES];
+            [self.switchTouchID setOn:[ManageAppSettingsDB isTouchID] animated:YES];
             [self.switchTouchID addTarget:self action:@selector(changeSwitchTouchID:) forControlEvents:UIControlEventValueChanged];
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             
@@ -1776,7 +1772,7 @@
     [self.switchTouchID setOn:value animated:NO];
 }
 
--(void)initStateTouchID {
+-(void)isTouchID {
     [self switchTouchIDTo:[ManageAppSettingsDB isTouchID]];
 }
 

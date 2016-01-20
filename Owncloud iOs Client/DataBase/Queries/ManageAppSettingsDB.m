@@ -138,11 +138,11 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT is_touch_id FROM passcode WHERE activeaccount=1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT is_touch_id FROM passcode"];
         
         while ([rs next]) {
             
-            output =[rs boolForColumn:@"touch_id"];
+            output =[rs boolForColumn:@"is_touch_id"];
             
         }
         
@@ -165,7 +165,7 @@
         correctQuery = [db executeUpdate:@"UPDATE passcode SET is_touch_id=? ", [NSNumber numberWithBool:newValue]];
         
         if (!correctQuery) {
-            DLog(@"Error updating touch_id");
+            DLog(@"Error updating is_touch_id");
         }
     }];
 }
