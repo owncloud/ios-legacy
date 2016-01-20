@@ -214,7 +214,12 @@
         if (userOrGroup.isGroup) {
             name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.name, NSLocalizedString(@"share_user_group_indicator", nil)];
         } else {
-            name = userOrGroup.displayName;
+            
+            if (userOrGroup.isDisplayNameDuplicated) {
+                name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
+            }else{
+                name = userOrGroup.displayName;
+            }
         }
         
         shareUserCell.itemName.text = name;
@@ -288,6 +293,7 @@
         }
         
         [self.filteredItems addObjectsFromArray:itemList];
+        self.filteredItems = [self manageTheDuplicatedUsers:self.filteredItems];
         
         [self.searchDisplayController.searchResultsTableView reloadData];
         
@@ -302,6 +308,23 @@
         
         
     }];
+    
+}
+
+- (NSMutableArray *) manageTheDuplicatedUsers: (NSMutableArray*) items{
+    
+    for (OCShareUser *userOrGroup in items) {
+        NSMutableArray *restOfItems = [NSMutableArray arrayWithArray:items];
+        [restOfItems removeObjectIdenticalTo:userOrGroup];
+        for (OCShareUser *tempItem in restOfItems) {
+            if ([userOrGroup.displayName isEqualToString:tempItem.displayName]){
+                userOrGroup.isDisplayNameDuplicated = true;
+                break;
+            }
+        }
+    }
+    
+    return items;
     
 }
 
