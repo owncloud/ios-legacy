@@ -173,74 +173,80 @@ typedef NS_ENUM (NSInteger, enumUpload){
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    [self initLoading];
-    
     NSInteger permissionValue = [UtilsFramework getPermissionsValueByCanEdit:self.canEditEnabled andCanCreate:self.canCreateEnabled andCanChange:self.canChangeEnabled andCanDelete:self.canDeleteEnabled andCanShare:self.canShareEnabled andIsFolder:self.sharedItem.isDirectory];
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:APP_DELEGATE.activeUser.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:APP_DELEGATE.activeUser.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:APP_DELEGATE.activeUser.username andPassword:APP_DELEGATE.activeUser.password];
-    }
-    
-    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-    
-    [[AppDelegate sharedOCCommunication] updateShare:self.updatedOCShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:nil andExpirationTime:nil andPermissions:permissionValue onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    //We update the permission only if the permissions are differents than the current ones
+    if (permissionValue != self.updatedOCShare.permissions) {
         
-        BOOL isSamlCredentialsError=NO;
+        [self initLoading];
         
-        //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
-            //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-            if (isSamlCredentialsError) {
-                [self endLoading];
-                [self errorLogin];
+        //Set the right credentials
+        if (k_is_sso_active) {
+            [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:APP_DELEGATE.activeUser.password];
+        } else if (k_is_oauth_active) {
+            [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:APP_DELEGATE.activeUser.password];
+        } else {
+            [[AppDelegate sharedOCCommunication] setCredentialsWithUser:APP_DELEGATE.activeUser.username andPassword:APP_DELEGATE.activeUser.password];
+        }
+        
+        [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+        
+        [[AppDelegate sharedOCCommunication] updateShare:self.updatedOCShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:nil andExpirationTime:nil andPermissions:permissionValue onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+            
+            BOOL isSamlCredentialsError=NO;
+            
+            //Check the login error in shibboleth
+            if (k_is_sso_active && redirectedServer) {
+                //Check if there are fragmens of saml in url, in this case there are a credential error
+                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                if (isSamlCredentialsError) {
+                    [self endLoading];
+                    [self errorLogin];
+                }
             }
-        }
-        
-        [self endLoading];
+            
+            self.updatedOCShare.permissions = permissionValue;
+            [self endLoading];
+            [self reloadView];
+            
+        } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
+            [self endLoading];
+            
+            DLog(@"error.code: %ld", (long)error.code);
+            DLog(@"server error: %ld", (long)response.statusCode);
+            NSInteger code = response.statusCode;
+            
+            [self manageServerErrors:code and:error withPasswordSupport:false];
+            
+            switch (self.optionTryingToEnabling) {
+                case optionPermissionCanEdit:
+                    self.canEditEnabled = NO;
+                    break;
+                case optionPermissionCanCreate:
+                    self.canCreateEnabled = NO;
+                    break;
+                case optionPermissionCanChange:
+                    self.canChangeEnabled = NO;
+                    break;
+                case optionPermissionCanDelete:
+                    self.canDeleteEnabled = NO;
+                    break;
+                case optionPermissionCanShare:
+                    self.canShareEnabled = NO;
+                    break;
+                default:
+                    break;
+            }
+            
+            //Reset the last permission option
+            self.optionTryingToEnabling = optionPermissionNothingYet;
+            [self reloadView];
+            
+        }];
+    } else {
         [self reloadView];
-        
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-        [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
-        [self endLoading];
-        
-        DLog(@"error.code: %ld", (long)error.code);
-        DLog(@"server error: %ld", (long)response.statusCode);
-        NSInteger code = response.statusCode;
-        
-        [self manageServerErrors:code and:error withPasswordSupport:false];
-        
-        switch (self.optionTryingToEnabling) {
-            case optionPermissionCanEdit:
-                self.canEditEnabled = NO;
-                break;
-            case optionPermissionCanCreate:
-                self.canCreateEnabled = NO;
-                break;
-            case optionPermissionCanChange:
-                self.canChangeEnabled = NO;
-                break;
-            case optionPermissionCanDelete:
-                self.canDeleteEnabled = NO;
-                break;
-            case optionPermissionCanShare:
-                self.canShareEnabled = NO;
-                break;
-            default:
-                break;
-        }
-        
-        //Reset the last permission option
-        self.optionTryingToEnabling = optionPermissionNothingYet;
-        [self reloadView];
-        
-    }];
-    
+    }
 }
 
 #pragma mark - Actions with ShareWith class
