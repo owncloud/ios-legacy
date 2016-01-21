@@ -925,18 +925,22 @@
     OCSharedDto *shareWith = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
     
     ShareEditUserViewController *viewController = [[ShareEditUserViewController alloc] initWithFileDto:self.sharedItem andOCSharedDto:shareWith];
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
     
     if (IS_IPHONE)
     {
         viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:YES];
+        [self presentViewController:navController animated:YES completion:nil];
     } else {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+       // AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        OCNavigationController *navController = nil;
+        navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [app.splitViewController presentViewController:navController animated:YES completion:nil];
+        
+        [APP_DELEGATE.splitViewController presentViewController:navController animated:YES completion:nil];
     }
+
     
 }
 
