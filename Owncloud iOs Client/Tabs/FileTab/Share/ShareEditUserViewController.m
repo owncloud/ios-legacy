@@ -175,7 +175,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
     
     [self initLoading];
     
-    NSInteger permissionValue = [UtilsFramework getPermissionsValueByCanEdit:self.canEditEnabled andCanCreate:self.canCreateEnabled andCanChange:self.canChangeEnabled andCanDelete:self.canDeleteEnabled andCanShare:self.canShareEnabled];
+    NSInteger permissionValue = [UtilsFramework getPermissionsValueByCanEdit:self.canEditEnabled andCanCreate:self.canCreateEnabled andCanChange:self.canChangeEnabled andCanDelete:self.canDeleteEnabled andCanShare:self.canShareEnabled andIsFolder:self.sharedItem.isDirectory];
     
     //Set the right credentials
     if (k_is_sso_active) {
