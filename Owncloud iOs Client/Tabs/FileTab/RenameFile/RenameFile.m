@@ -284,14 +284,27 @@
             [self moveTheFileOrFolderOnTheDBAndFileSystem];
         }
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         [self endLoading];
         
         DLog(@"error.code: %ld", (long)error.code);
         DLog(@"server error: %ld", (long)response.statusCode);
         
-        [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self errorLogin];
+            }
+        }
+        
+        if (!isSamlCredentialsError) {
+            [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
+        }
         
     } errorBeforeRequest:^(NSError *error) {
         

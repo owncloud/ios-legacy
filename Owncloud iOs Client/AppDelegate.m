@@ -2258,7 +2258,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 FileDto *currentFile = [items objectAtIndex:0];
                 [self theFileWasUploadedByCurrentUploadInBackground:currentUploadBackground andCurrentFile:currentFile];
                 
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                 //Check the error for to know if there is a server connection error
                 if (error.code == kCFURLErrorCannotConnectToHost) {
                     //The connection of the server is down. Set the status of the file to: "Pending to be check"
@@ -2299,7 +2299,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
                 FileDto *currentFile = [items objectAtIndex:0];
                 [self theFileWasUploadedByCurrentUploadInBackground:currentUploadBackground andCurrentFile:currentFile];
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
 //                //Do nothing
 //                [ManageUploadsDB setStatus:pendingToBeCheck andKindOfError:notAnError byUploadOffline:currentUploadBackground];
 //                [self addPendingToCheckUploadsToRecentsTab];

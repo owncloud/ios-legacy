@@ -96,7 +96,7 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
                                                                }
                                                            }
                                                           
-                                                      } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+                                                      } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                                                           DLog(@"Error: %@", error);
                                                           DLog(@"error.code: %ld", (long)error.code);
                                                           [weakSelf failureDownloadProcess];
