@@ -31,61 +31,82 @@
     }
 }
 
-
-// TODO: used where/when necessary
-+ (void)touchIDStart {
+/* Use isTouchIDAvailable before */
++ (void)showTouchIDAuth {
     
     LAContext *context = [[LAContext alloc] init];
     NSError *error = nil;
     
-    if([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]){
-        
-    }
-    
-    else{
-        DLog(@"touchID error: %@", error.description);
-    }
-    
     if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
-        [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:@"Unlock ownCloud" reply:^(BOOL success, NSError * error) {
-            
-            if (error) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                message:@"There was a problem verifying your identity."
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"Ok"
-                                                      otherButtonTitles:nil];
-                [alert show];
-                return;
-            }
-            
-            if (success) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success"
-                                                                message:@"You are the device owner!"
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"Ok"
-                                                      otherButtonTitles:nil];
-                [alert show];
-                
+        [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:@"Unlock ownCloud" reply:^(BOOL success, NSError * error){
+//
+//            if (error) {
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                message:@"There was a problem verifying your identity."
+//                                                               delegate:nil
+//                                                      cancelButtonTitle:@"Ok"
+//                                                      otherButtonTitles:nil];
+//                [alert show];
+//                return;
+//            }
+//            
+//            if (success) {
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success"
+//                                                                message:@"You are the device owner!"
+//                                                               delegate:nil
+//                                                      cancelButtonTitle:@"Ok"
+//                                                      otherButtonTitles:nil];
+//                [alert show];
+//                
+//            } else {
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                message:@"You are not the device owner."
+//                                                               delegate:nil
+//                                                      cancelButtonTitle:@"Ok"
+//                                                      otherButtonTitles:nil];
+//                [alert show];
+//            }
+//        }];
+         
+            if(success) {
+                //show logged in
+                DLog(@"Successfully Touch ID authenticated");
             } else {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                message:@"You are not the device owner."
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"Ok"
-                                                      otherButtonTitles:nil];
-                [alert show];
+                NSString *failureReason;
+                //depending on error show what exactly has failed
+                switch (error.code) {
+                    case LAErrorAuthenticationFailed:
+                        failureReason = @"Touch ID authentication failed";
+                        break;
+                        
+                    case LAErrorUserCancel:
+                        failureReason = @"Touch ID authentication cancelled";
+                        break;
+                        
+                    case LAErrorUserFallback:
+                        failureReason =  @"UTouch ID authentication choose password selected";
+                        break;
+                        
+                    default:
+                        failureReason = @"Touch ID has not been setup or system has cancelled";
+                        break;
+                }
+                
+                DLog(@"Authentication failed: %@", failureReason);
+                
             }
         }];
         
     } else {
         
         //TODO depending on error do one thing or another
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Your device cannot authenticate using TouchID."
-                                                        message:error.description
-                                                       delegate:nil
-                                              cancelButtonTitle:@"Ok"
-                                              otherButtonTitles:nil];
-        [alert show];
+        DLog(@"Your device cannot authenticate using TouchID.");
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Your device cannot authenticate using TouchID."
+//                                                        message:error.description
+//                                                       delegate:nil
+//                                              cancelButtonTitle:@"Ok"
+//                                              otherButtonTitles:nil];
+//        [alert show];
     }
     
 }

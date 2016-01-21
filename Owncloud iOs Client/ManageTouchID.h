@@ -18,6 +18,6 @@
 @interface ManageTouchID : NSObject
 
 + (BOOL)isTouchIDAvailable;
-+ (void)touchIDStart;
++ (void)showTouchIDAuth;
 
 @end

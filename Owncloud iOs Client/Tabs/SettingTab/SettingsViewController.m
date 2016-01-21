@@ -245,24 +245,8 @@
  * @return IBAction
  *
  */
--(IBAction)changeSwitchTouchID:(id)sender {
-    
-    if (self.switchTouchID.on) {
-        
-        if(self.switchPasscode.on){
-            //TODO: enable Touch ID
-            [self setPropertiesTouchIDToState:YES];
-        }
-        
-        else{
-            [self switchTouchIDTo:NO];
-        }
-    }
-    
-    else{
-        //TODO: disable Touch ID
-        [self setPropertiesTouchIDToState:NO];
-    }
+-(IBAction)changeSwitchTouchID:(UISwitch*)touchIDSwitch {
+    [self setPropertiesTouchIDToState:touchIDSwitch.on];
 }
 
 

@@ -57,6 +57,7 @@
 #import "SyncFolderManager.h"
 #import "DownloadFileSyncFolder.h"
 #import "CheckFeaturesSupported.h"
+#import "ManageTouchID.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -173,6 +174,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         self.window.rootViewController = self.helpGuideWindowViewController;
     }
    
+    //Show TouchID dialog if active
+    if([ManageAppSettingsDB isTouchID])
+        [ManageTouchID showTouchIDAuth];
+
     return YES;
 }
 
@@ -1075,6 +1080,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_activeUser && self.presentFilesViewController) {
         [_presentFilesViewController reloadTableFromDataBase];
     }
+    
+    //Show TouchID dialog if active
+    if([ManageAppSettingsDB isTouchID])
+        [ManageTouchID showTouchIDAuth];
+
 }
 
 

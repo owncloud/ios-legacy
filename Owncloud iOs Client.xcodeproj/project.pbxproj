@@ -598,6 +598,8 @@
 		59EA36241BBE6C1E00C6CED0 /* IndexedForest.m in Sources */ = {isa = PBXBuildFile; fileRef = 59EA36231BBE6C1E00C6CED0 /* IndexedForest.m */; };
 		59EA98941BC5718600C3125D /* DownloadFileSyncFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 59EA98931BC5718600C3125D /* DownloadFileSyncFolder.m */; };
 		59EC94E81BBAA0210085190F /* FolderSyncDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 59EC94E71BBAA0210085190F /* FolderSyncDto.m */; };
+		905C594F1C50DA490051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
+		905C59501C50DA680051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
 		906177E21C4FABF600BBE648 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
 		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; };
 		EA0599861BB92B19002C2864 /* ShareUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599841BB92B19002C2864 /* ShareUserCell.xib */; };
@@ -3147,8 +3149,8 @@
 		906177DF1C4FA9CD00BBE648 /* Touch ID */ = {
 			isa = PBXGroup;
 			children = (
-				906177E11C4FABF600BBE648 /* ManageTouchID.m */,
 				906177E31C4FAC0B00BBE648 /* ManageTouchID.h */,
+				906177E11C4FABF600BBE648 /* ManageTouchID.m */,
 			);
 			name = "Touch ID";
 			sourceTree = "<group>";
@@ -4619,6 +4621,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				905C594F1C50DA490051D223 /* ManageTouchID.m in Sources */,
 				EAF721821AAF3402009F5596 /* CredentialsDto.m in Sources */,
 				EAC6E5F91AB0985200CCF8C4 /* UINavigationController+KeyboardDismiss.m in Sources */,
 				EAF7216F1AADE7EE009F5596 /* UIColor+Constants.m in Sources */,
@@ -4672,6 +4675,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				905C59501C50DA680051D223 /* ManageTouchID.m in Sources */,
 				59DF586D1B04B35B00EEFA84 /* Managers.swift in Sources */,
 				59E20C7E1AEFB45900554D7E /* ManageDB.m in Sources */,
 				59C3AC1F1A287E3B005433A1 /* OCPortraitNavigationViewController.m in Sources */,
