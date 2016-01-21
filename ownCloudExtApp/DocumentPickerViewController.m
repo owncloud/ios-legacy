@@ -40,6 +40,7 @@
 #import "UploadsOfflineDto.h"
 #import "ManageUploadsDB.h"
 #import "UtilsDtos.h"
+#import "ManageTouchID.h"
 
 @interface DocumentPickerViewController ()
 
@@ -75,6 +76,8 @@
     
     if ([ManageAppSettingsDB isPasscode]) {
         [self showPassCode];
+        if([ManageAppSettingsDB isTouchID])
+            [ManageTouchID showTouchIDAuth];
     } else {
         [self showOwnCloudNavigationOrShowErrorLogin];
     }
