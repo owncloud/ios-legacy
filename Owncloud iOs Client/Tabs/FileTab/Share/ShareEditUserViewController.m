@@ -153,7 +153,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
 }
 
 - (void) didSelectCloseView {
-    [[self navigationController] popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:true completion:nil];
 }
 
 - (void) reloadView {
