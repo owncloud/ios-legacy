@@ -440,9 +440,16 @@ typedef NS_ENUM (NSInteger, enumUpload){
     
     self.canCreateEnabled = sender.on;
     
-    if (!self.canChangeEnabled && !self.canDeleteEnabled) {
-        self.canEditEnabled = false;
-        [self reloadView];
+    if (self.sharedItem.isDirectory) {
+        if (self.canChangeEnabled || self.canCreateEnabled || self.canDeleteEnabled) {
+            self.canEditEnabled = YES;
+            [self reloadView];
+        }
+    } else {
+        if (!self.canChangeEnabled && !self.canDeleteEnabled) {
+            self.canEditEnabled = NO;
+            [self reloadView];
+        }
     }
     
     self.optionTryingToEnabling = optionPermissionCanCreate;
@@ -452,9 +459,17 @@ typedef NS_ENUM (NSInteger, enumUpload){
 -(void) canChangeSwitchValueChanged:(UISwitch*) sender {
     
     self.canChangeEnabled = sender.on;
-    if (!self.canCreateEnabled && !self.canDeleteEnabled) {
-        self.canEditEnabled = false;
-        [self reloadView];
+    
+    if (self.sharedItem.isDirectory) {
+        if (self.canChangeEnabled || self.canCreateEnabled || self.canDeleteEnabled) {
+            self.canEditEnabled = YES;
+            [self reloadView];
+        }
+    } else {
+        if (!self.canCreateEnabled && !self.canDeleteEnabled) {
+            self.canEditEnabled = NO;
+            [self reloadView];
+        }
     }
     
     self.optionTryingToEnabling = optionPermissionCanChange;
@@ -464,11 +479,19 @@ typedef NS_ENUM (NSInteger, enumUpload){
 -(void) canDeleteSwitchValueChanged:(UISwitch*) sender {
     
     self.canDeleteEnabled = sender.on;
-    if (!self.canCreateEnabled && !self.canChangeEnabled) {
-        self.canEditEnabled = false;
-        [self reloadView];
-    }
     
+    if (self.sharedItem.isDirectory) {
+        if (self.canChangeEnabled || self.canCreateEnabled || self.canDeleteEnabled) {
+            self.canEditEnabled = YES;
+            [self reloadView];
+        }
+    } else {
+        if (!self.canCreateEnabled && !self.canChangeEnabled) {
+            self.canEditEnabled = false;
+            [self reloadView];
+        }
+    }
+
     self.optionTryingToEnabling = optionPermissionCanDelete;
     [self updatePermissionOnServer];
 }
