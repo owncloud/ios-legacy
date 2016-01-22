@@ -71,7 +71,7 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
 
             }
 
-        } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
             
              DLog(@"error when try to get server capabilities: %@", error);
             

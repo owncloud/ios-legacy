@@ -420,7 +420,7 @@
         
         dispatch_semaphore_signal(semaphore);
         
-    } failure:^(NSHTTPURLResponse *response, NSError *error) {
+    } failure:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         DLog(@"Error: %@", error);
         

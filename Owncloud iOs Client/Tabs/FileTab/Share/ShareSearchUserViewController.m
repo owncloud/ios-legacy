@@ -296,7 +296,7 @@
         [self.searchDisplayController.searchResultsTableView reloadData];
         
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         [self endLoading];
         
@@ -355,7 +355,7 @@
         [self.searchTableView reloadData];
 
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         [self endLoading];
         
