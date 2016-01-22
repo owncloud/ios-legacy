@@ -17,7 +17,6 @@
 #import "ShareEditUserViewController.h"
 #import "ManageFilesDB.h"
 #import "UtilsUrls.h"
-#import "UserDto.h"
 #import "OCSharedDto.h"
 #import "Owncloud_iOs_Client-Swift.h"
 #import "FileNameUtils.h"
@@ -26,10 +25,7 @@
 #import "ManageUsersDB.h"
 #import "EditAccountViewController.h"
 #import "Customization.h"
-#import "ShareSearchUserViewController.h"
 #import "ManageSharesDB.h"
-#import "CapabilitiesDto.h"
-#import "ManageCapabilitiesDB.h"
 #import "UtilsFramework.h"
 #import "AppDelegate.h"
 #import "OCCommunication.h"
@@ -55,9 +51,7 @@
 #define shareLinkButtonNib @"ShareLinkButtonCell"
 #define heighOfFileDetailrow 120.0
 #define heightOfShareLinkOptionRow 55.0
-#define heightOfShareLinkButtonRow 40.0
 #define heightOfShareLinkHeader 45.0
-#define heightOfShareWithUserRow 55.0
 
 #define shareTableViewSectionsNumber  3
 
@@ -77,7 +71,6 @@
 @property (nonatomic) BOOL canDeleteEnabled;
 @property (nonatomic) BOOL canShareEnabled;
 
-@property (nonatomic, strong) NSString* sharedToken;
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
 @property (nonatomic, strong) UIActivityViewController *activityView;
@@ -249,39 +242,6 @@ typedef NS_ENUM (NSInteger, enumUpload){
     }
 }
 
-#pragma mark - Actions with ShareWith class
-
-- (void) unShareWith:(OCSharedDto *) share{
-    
-    if (self.sharedFileOrFolder == nil) {
-        self.sharedFileOrFolder = [ShareFileOrFolder new];
-        self.sharedFileOrFolder.delegate = self;
-    }
-    
-    self.sharedFileOrFolder.parentViewController = self;
-    
-    [self.sharedFileOrFolder unshareTheFile:share];
-    
-}
-
-//TODO: update with privileges
-- (void) updateSharedLinkWithPassword:(NSString*) password andExpirationDate:(NSString*)expirationDate {
-    
-    if (self.sharedFileOrFolder == nil) {
-        self.sharedFileOrFolder = [ShareFileOrFolder new];
-        self.sharedFileOrFolder.delegate = self;
-    }
-    
-    self.sharedFileOrFolder.parentViewController = self;
-    
-    self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
-    
-    OCSharedDto *ocShare = [ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeLink andUser:APP_DELEGATE.activeUser];
-    
-    [self.sharedFileOrFolder updateShareLink:ocShare withPassword:password andExpirationTime:expirationDate];
-    
-}
-
 
 #pragma mark - TableView methods
 
@@ -413,6 +373,8 @@ typedef NS_ENUM (NSInteger, enumUpload){
     
     return height;
 }
+
+#pragma mark - Handle switch values
 
 -(void) setOptionsCanEditTo:(BOOL)value {
     self.canCreateEnabled = value;
@@ -554,7 +516,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
 }
 
 
-#pragma mark - ShareFileOrFolder Delegate Methods
+#pragma mark - Loading Methods
 
 - (void) initLoading {
     
@@ -598,24 +560,6 @@ typedef NS_ENUM (NSInteger, enumUpload){
     
 }
 
-
-- (void) presentShareOptions{
-    
-    if (IS_IPHONE) {
-        [self presentViewController:self.activityView animated:true completion:nil];
-        [self performSelector:@selector(reloadView) withObject:nil afterDelay:standardDelay];
-    }else{
-        [self reloadView];
-        
-        self.activityPopoverController = [[UIPopoverController alloc]initWithContentViewController:self.activityView];
-        
-        NSIndexPath* indexPath = [NSIndexPath indexPathForRow:2 inSection:1];
-        UITableViewCell* cell = [self.shareEditUserTableView cellForRowAtIndexPath:indexPath];
-        
-        [self.activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareEditUserTableView permittedArrowDirections:UIPopoverArrowDirectionAny animated:true];
-    }
-    
-}
 
 #pragma mark - Error Login Methods
 
@@ -664,11 +608,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
 #pragma mark - UIGestureRecognizer delegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    // test if our control subview is on-screen
-//    if ([touch.view isDescendantOfView:self.pickerView]) {
-//        // we touched our control surface
-//        return NO;
-//    }
+
     return YES;
 }
 
