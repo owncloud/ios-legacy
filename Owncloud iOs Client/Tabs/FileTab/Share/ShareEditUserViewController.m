@@ -145,6 +145,9 @@ typedef NS_ENUM (NSInteger, enumUpload){
     
 }
 
+
+#pragma mark - Action Methods
+
 - (void) didSelectCloseView {
     [self dismissViewControllerAnimated:true completion:nil];
 }
@@ -160,7 +163,6 @@ typedef NS_ENUM (NSInteger, enumUpload){
     [self.shareEditUserTableView reloadData];
 }
 
-#pragma mark - Action Methods
 
 - (void) updatePermissionOnServer {
     
@@ -374,95 +376,6 @@ typedef NS_ENUM (NSInteger, enumUpload){
     return height;
 }
 
-#pragma mark - Handle switch values
-
--(void) setOptionsCanEditTo:(BOOL)value {
-    self.canCreateEnabled = value;
-    self.canChangeEnabled = value;
-    self.canDeleteEnabled = value;
-}
-
--(void) canEditSwitchValueChanged:(UISwitch*) sender {
-    
-    self.canEditEnabled = sender.on;
-    
-    if (sender.on && ([self.sharedItem.permissions rangeOfString:k_permission_shared].location == NSNotFound)) {
-        [self setOptionsCanEditTo:YES];
-    } else {
-        [self setOptionsCanEditTo:NO];
-    }
-    
-    self.optionTryingToEnabling = optionPermissionCanEdit;
-    [self updatePermissionOnServer];
-}
-
--(void) canShareSwitchValueChanged:(UISwitch*) sender {
-    
-    self.canShareEnabled = sender.on;
-    
-    self.optionTryingToEnabling = optionPermissionCanShare;
-    [self updatePermissionOnServer];
-}
-
--(void) canCreateSwitchValueChanged:(UISwitch*) sender {
-    
-    self.canCreateEnabled = sender.on;
-    
-    if (self.sharedItem.isDirectory) {
-        if (self.canChangeEnabled || self.canCreateEnabled || self.canDeleteEnabled) {
-            self.canEditEnabled = YES;
-            [self reloadView];
-        }
-    } else {
-        if (!self.canChangeEnabled && !self.canDeleteEnabled) {
-            self.canEditEnabled = NO;
-            [self reloadView];
-        }
-    }
-    
-    self.optionTryingToEnabling = optionPermissionCanCreate;
-    [self updatePermissionOnServer];
-}
-
--(void) canChangeSwitchValueChanged:(UISwitch*) sender {
-    
-    self.canChangeEnabled = sender.on;
-    
-    if (self.sharedItem.isDirectory) {
-        if (self.canChangeEnabled || self.canCreateEnabled || self.canDeleteEnabled) {
-            self.canEditEnabled = YES;
-            [self reloadView];
-        }
-    } else {
-        if (!self.canCreateEnabled && !self.canDeleteEnabled) {
-            self.canEditEnabled = NO;
-            [self reloadView];
-        }
-    }
-    
-    self.optionTryingToEnabling = optionPermissionCanChange;
-    [self updatePermissionOnServer];
-}
-
--(void) canDeleteSwitchValueChanged:(UISwitch*) sender {
-    
-    self.canDeleteEnabled = sender.on;
-    
-    if (self.sharedItem.isDirectory) {
-        if (self.canChangeEnabled || self.canCreateEnabled || self.canDeleteEnabled) {
-            self.canEditEnabled = YES;
-            [self reloadView];
-        }
-    } else {
-        if (!self.canCreateEnabled && !self.canChangeEnabled) {
-            self.canEditEnabled = false;
-            [self reloadView];
-        }
-    }
-
-    self.optionTryingToEnabling = optionPermissionCanDelete;
-    [self updatePermissionOnServer];
-}
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     
@@ -513,6 +426,97 @@ typedef NS_ENUM (NSInteger, enumUpload){
 {
     
     return false;
+}
+
+
+#pragma mark - Handle switch values
+
+-(void) setOptionsCanEditTo:(BOOL)value {
+    self.canCreateEnabled = value;
+    self.canChangeEnabled = value;
+    self.canDeleteEnabled = value;
+}
+
+-(void) canEditSwitchValueChanged:(UISwitch*) sender {
+    
+    self.canEditEnabled = sender.on;
+    
+    if (sender.on && ([self.sharedItem.permissions rangeOfString:k_permission_shared].location == NSNotFound)) {
+        [self setOptionsCanEditTo:true];
+    } else {
+        [self setOptionsCanEditTo:false];
+    }
+    
+    self.optionTryingToEnabling = optionPermissionCanEdit;
+    [self updatePermissionOnServer];
+}
+
+-(void) canShareSwitchValueChanged:(UISwitch*) sender {
+    
+    self.canShareEnabled = sender.on;
+    
+    self.optionTryingToEnabling = optionPermissionCanShare;
+    [self updatePermissionOnServer];
+}
+
+-(void) canCreateSwitchValueChanged:(UISwitch*) sender {
+    
+    self.canCreateEnabled = sender.on;
+    
+    if (self.sharedItem.isDirectory) {
+        if (!self.canChangeEnabled && !self.canCreateEnabled && !self.canDeleteEnabled) {
+            self.canEditEnabled = false;
+            [self reloadView];
+        }
+    } else {
+        if (!self.canChangeEnabled && !self.canDeleteEnabled) {
+            self.canEditEnabled = false;
+            [self reloadView];
+        }
+    }
+    
+    self.optionTryingToEnabling = optionPermissionCanCreate;
+    [self updatePermissionOnServer];
+}
+
+-(void) canChangeSwitchValueChanged:(UISwitch*) sender {
+    
+    self.canChangeEnabled = sender.on;
+    
+    if (self.sharedItem.isDirectory) {
+        if (!self.canChangeEnabled && !self.canCreateEnabled && !self.canDeleteEnabled) {
+            self.canEditEnabled = false;
+            [self reloadView];
+        }
+    } else {
+        if (!self.canCreateEnabled && !self.canDeleteEnabled) {
+            self.canEditEnabled = false;
+            [self reloadView];
+        }
+    }
+    
+    self.optionTryingToEnabling = optionPermissionCanChange;
+    [self updatePermissionOnServer];
+}
+
+-(void) canDeleteSwitchValueChanged:(UISwitch*) sender {
+    
+    self.canDeleteEnabled = sender.on;
+    
+    if (self.sharedItem.isDirectory) {
+        if (!self.canChangeEnabled && !self.canCreateEnabled && !self.canDeleteEnabled) {
+            self.canEditEnabled = false;
+            [self reloadView];
+        }
+    } else {
+        if (!self.canCreateEnabled && !self.canChangeEnabled) {
+            self.canEditEnabled = false;
+            [self reloadView];
+        }
+    }
+    
+    self.optionTryingToEnabling = optionPermissionCanDelete;
+    [self updatePermissionOnServer];
 }
 
 
