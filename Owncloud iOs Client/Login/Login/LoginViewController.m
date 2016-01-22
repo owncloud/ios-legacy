@@ -1854,7 +1854,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  *
  */
 - (void) updateConnectString{
-    NSURLComponents *components = [NSURLComponents componentsWithString:[self getUrlChecked: _urlTextField.text]];
+    NSURLComponents *components = [NSURLComponents componentsWithString:[self getUrlToCheck]];
     
     if(isHttps) {
         // remove :// from prefix when setting scheme
