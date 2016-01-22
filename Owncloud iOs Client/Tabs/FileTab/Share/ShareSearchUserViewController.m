@@ -327,7 +327,7 @@
     NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.shareFileDto.filePath andUser:APP_DELEGATE.activeUser]];
     NSString *filePath = [NSString stringWithFormat: @"%@%@", path, self.shareFileDto.fileName];
     
-    NSInteger permissions = k_defaul_share_permission;
+    NSInteger permissions = k_read_share_permission;
     
     //File is shared to me by others or not
     if (([self.shareFileDto.permissions rangeOfString:k_permission_shared].location != NSNotFound)) {
