@@ -199,45 +199,60 @@ typedef NS_ENUM (NSInteger, enumUpload){
                     [self errorLogin];
                 }
             }
+            if (!isSamlCredentialsError) {
+                self.updatedOCShare.permissions = permissionValue;
+                [self endLoading];
+                [self reloadView];
+            }
             
-            self.updatedOCShare.permissions = permissionValue;
-            [self endLoading];
-            [self reloadView];
-            
-        } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
             [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
             [self endLoading];
             
-            DLog(@"error.code: %ld", (long)error.code);
-            DLog(@"server error: %ld", (long)response.statusCode);
-            NSInteger code = response.statusCode;
+            BOOL isSamlCredentialsError=NO;
             
-            [self manageServerErrors:code and:error withPasswordSupport:false];
-            
-            switch (self.optionTryingToEnabling) {
-                case optionPermissionCanEdit:
-                    self.canEditEnabled = NO;
-                    break;
-                case optionPermissionCanCreate:
-                    self.canCreateEnabled = NO;
-                    break;
-                case optionPermissionCanChange:
-                    self.canChangeEnabled = NO;
-                    break;
-                case optionPermissionCanDelete:
-                    self.canDeleteEnabled = NO;
-                    break;
-                case optionPermissionCanShare:
-                    self.canShareEnabled = NO;
-                    break;
-                default:
-                    break;
+            //Check the login error in shibboleth
+            if (k_is_sso_active && redirectedServer) {
+                //Check if there are fragmens of saml in url, in this case there are a credential error
+                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                if (isSamlCredentialsError) {
+                    [self errorLogin];
+                }
             }
-            
-            //Reset the last permission option
-            self.optionTryingToEnabling = optionPermissionNothingYet;
-            [self reloadView];
-            
+            //If it is not SAML
+            if (!isSamlCredentialsError) {
+                
+                DLog(@"error.code: %ld", (long)error.code);
+                DLog(@"server error: %ld", (long)response.statusCode);
+                NSInteger code = response.statusCode;
+                
+                [self manageServerErrors:code and:error withPasswordSupport:false];
+                
+                switch (self.optionTryingToEnabling) {
+                    case optionPermissionCanEdit:
+                        self.canEditEnabled = NO;
+                        break;
+                    case optionPermissionCanCreate:
+                        self.canCreateEnabled = NO;
+                        break;
+                    case optionPermissionCanChange:
+                        self.canChangeEnabled = NO;
+                        break;
+                    case optionPermissionCanDelete:
+                        self.canDeleteEnabled = NO;
+                        break;
+                    case optionPermissionCanShare:
+                        self.canShareEnabled = NO;
+                        break;
+                    default:
+                        break;
+                }
+                
+                //Reset the last permission option
+                self.optionTryingToEnabling = optionPermissionNothingYet;
+                [self reloadView];
+                
+            }
         }];
     } else {
         [self reloadView];
