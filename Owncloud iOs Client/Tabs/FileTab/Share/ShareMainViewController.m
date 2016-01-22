@@ -932,13 +932,10 @@
         viewController.hidesBottomBarWhenPushed = YES;
         [self presentViewController:navController animated:YES completion:nil];
     } else {
-       // AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         OCNavigationController *navController = nil;
         navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        
-        [APP_DELEGATE.splitViewController presentViewController:navController animated:YES completion:nil];
+        [self presentViewController:navController animated:YES completion:nil];
     }
 
     
