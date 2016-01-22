@@ -233,7 +233,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                 dispatch_semaphore_signal(semaphore);
                 
                 
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                 
                 //Finish with this file
                 DLog(@"error: %@", error);
@@ -370,7 +370,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                 }
             }
         }
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
@@ -543,7 +543,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
             }
             
         }
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);

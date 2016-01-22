@@ -319,66 +319,103 @@
                         [self presentShareActionSheetForToken:shareLink withPassword:false];
                     }
                     
-                } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+                } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                     
                     [self endLoading];
                     
-                    DLog(@"error.code: %ld", (long)error.code);
-                    DLog(@"server error: %ld", (long)response.statusCode);
-                    NSInteger code = response.statusCode;
                     
-                    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
+                    BOOL isSamlCredentialsError=NO;
+                    
+                    //Check the login error in shibboleth
+                    if (k_is_sso_active && redirectedServer) {
+                        //Check if there are fragmens of saml in url, in this case there are a credential error
+                        isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                        if (isSamlCredentialsError) {
+         
+                            [self errorLogin];
+                        }
+                    }
+                    if (!isSamlCredentialsError) {
                         
-                        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+                        DLog(@"error.code: %ld", (long)error.code);
+                        DLog(@"server error: %ld", (long)response.statusCode);
+                        NSInteger code = response.statusCode;
                         
-                        if (cap.isFilesSharingPasswordEnforcedEnabled) {
-                            [self manageServerErrors:code and:error withPasswordSupport:true];
+                        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
+                            
+                            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+                            
+                            if (cap.isFilesSharingPasswordEnforcedEnabled) {
+                                [self manageServerErrors:code and:error withPasswordSupport:true];
+                            } else {
+                                [self manageServerErrors:code and:error withPasswordSupport:false];
+                            }
+                            
                         } else {
-                            [self manageServerErrors:code and:error withPasswordSupport:false];
+                            [self manageServerErrors:code and:error withPasswordSupport:true];
                         }
                         
-                    } else {
-                        [self manageServerErrors:code and:error withPasswordSupport:true];
-                    }
-                    
-                    
-                    if (error.code != kOCErrorSharedAPIUploadDisabled) {
                         
-                        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
-                            [self.delegate finishShareWithStatus:false andWithOptions:nil];
+                        if (error.code != kOCErrorSharedAPIUploadDisabled) {
+                            
+                            if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+                                [self.delegate finishShareWithStatus:false andWithOptions:nil];
+                            }
                         }
                     }
-                    
+
                 }];
                 
             }
         }
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-        [self endLoading];
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         DLog(@"error.code: %ld", (long)error.code);
         DLog(@"server error: %ld", (long)response.statusCode);
-        NSInteger code = response.statusCode;
         
-        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
+        [self endLoading];
+    
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self errorLogin];
+                
+                if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+                    [self.delegate finishShareWithStatus:false andWithOptions:nil];
+                }
+            }
+        }
+        
+        if (!isSamlCredentialsError) {
+        
+            NSInteger code = response.statusCode;
             
-            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
-            
-            if (cap.isFilesSharingPasswordEnforcedEnabled) {
-                [self manageServerErrors:code and:error withPasswordSupport:true];
+            if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
+                
+                CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+                
+                if (cap.isFilesSharingPasswordEnforcedEnabled) {
+                    [self manageServerErrors:code and:error withPasswordSupport:true];
+                } else {
+                    [self manageServerErrors:code and:error withPasswordSupport:false];
+                }
+                
             } else {
-                [self manageServerErrors:code and:error withPasswordSupport:false];
+                [self manageServerErrors:code and:error withPasswordSupport:true];
             }
             
-        } else {
-            [self manageServerErrors:code and:error withPasswordSupport:true];
-        }
+            if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+                [self.delegate finishShareWithStatus:false andWithOptions:nil];
+            }
+
         
-        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
-            [self.delegate finishShareWithStatus:false andWithOptions:nil];
         }
-        
+
     }];
 
 }
@@ -427,26 +464,38 @@
             [self presentShareActionSheetForToken:token withPassword:true];
         }
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-        
-        [self endLoading];
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         DLog(@"error.code: %ld", (long)error.code);
         DLog(@"server error: %ld", (long)response.statusCode);
-        NSInteger code = response.statusCode;
         
-        [self manageServerErrors:code and:error withPasswordSupport:false];
+        [self endLoading];
         
-        if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
-            [self.delegate finishShareWithStatus:false andWithOptions:nil];
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                
+                [self errorLogin];
+            }
         }
+        if (!isSamlCredentialsError) {
         
+            NSInteger code = response.statusCode;
+            
+            [self manageServerErrors:code and:error withPasswordSupport:false];
+            
+            if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
+                [self.delegate finishShareWithStatus:false andWithOptions:nil];
+            }
+        }
+
     }];
 
-    
 }
-
-
 
 
 ///-----------------------------------
@@ -529,20 +578,40 @@
             [self updateLocalShareLink:ocShare];
         }
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
+        DLog(@"error.code: %ld", (long)error.code);
+        DLog(@"server error: %ld", (long)response.statusCode);
+        
         [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
         [self endLoading];
         
-        DLog(@"error.code: %ld", (long)error.code);
-        DLog(@"server error: %ld", (long)response.statusCode);
-        NSInteger code = response.statusCode;
+        BOOL isSamlCredentialsError=NO;
         
-        [self manageServerErrors:code and:error withPasswordSupport:false];
-        
-        if([self.delegate respondsToSelector:@selector(finishUpdateShareWithStatus:)]) {
-            [self.delegate finishUpdateShareWithStatus:false];
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self endLoading];
+                [self errorLogin];
+                
+                if([self.delegate respondsToSelector:@selector(finishUpdateShareWithStatus:)]) {
+                    [self.delegate finishUpdateShareWithStatus:false];
+                }
+            }
         }
-        
+        if (!isSamlCredentialsError) {
+      
+            NSInteger code = response.statusCode;
+            
+            [self manageServerErrors:code and:error withPasswordSupport:false];
+            
+            if([self.delegate respondsToSelector:@selector(finishUpdateShareWithStatus:)]) {
+                [self.delegate finishUpdateShareWithStatus:false];
+            }
+
+        }
+
     }];
 }
 
@@ -594,15 +663,32 @@
             
         }
         
-      } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-          
-          [self endLoading];
+      } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
           
           DLog(@"error.code: %ld", (long)error.code);
           DLog(@"server error: %ld", (long)response.statusCode);
-          NSInteger code = response.statusCode;
           
-          [self manageServerErrors:code and:error withPasswordSupport:false];
+          [self endLoading];
+          
+          BOOL isSamlCredentialsError=NO;
+          
+          //Check the login error in shibboleth
+          if (k_is_sso_active && redirectedServer) {
+              //Check if there are fragmens of saml in url, in this case there are a credential error
+              isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+              if (isSamlCredentialsError) {
+                  [self errorLogin];
+
+              }
+          }
+          
+          if (!isSamlCredentialsError) {
+              
+              NSInteger code = response.statusCode;
+              
+              [self manageServerErrors:code and:error withPasswordSupport:false];
+              
+          }
           
           if([self.delegate respondsToSelector:@selector(finishUpdateShareWithStatus:)]) {
               [self.delegate finishUpdateShareWithStatus:false];
@@ -673,16 +759,30 @@
         }
 
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
+        DLog(@"error.code: %ld", (long)error.code);
+        DLog(@"server error: %ld", (long)response.statusCode);
+        
         [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
         [self endLoading];
         
-        DLog(@"error.code: %ld", (long)error.code);
-        DLog(@"server error: %ld", (long)response.statusCode);
-        NSInteger code = response.statusCode;
+        BOOL isSamlCredentialsError=NO;
         
-        [self manageServerErrors:code and:error withPasswordSupport:false];
-
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self errorLogin];
+                
+            }
+        }
+        if (!isSamlCredentialsError) {
+           
+            NSInteger code = response.statusCode;
+            [self manageServerErrors:code and:error withPasswordSupport:false];
+        
+        }
         
         if([self.delegate respondsToSelector:@selector(finishUnShareWithStatus:)]) {
             [self.delegate finishUnShareWithStatus:false];
@@ -762,15 +862,29 @@
         }
 
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
-        [self endLoading];
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         DLog(@"error.code: %ld", (long)error.code);
         DLog(@"server error: %ld", (long)response.statusCode);
-        NSInteger code = response.statusCode;
         
-        [self manageServerErrors:code and:error withPasswordSupport:false];
+        [self endLoading];
         
+        BOOL isSamlCredentialsError = NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self errorLogin];
+            }
+        }
+        
+        if (!isSamlCredentialsError) {
+            
+            NSInteger code = response.statusCode;
+            [self manageServerErrors:code and:error withPasswordSupport:false];
+            
+        }
         
         if([self.delegate respondsToSelector:@selector(finishCheckSharedStatusOfFile:)]) {
             [self.delegate finishCheckSharedStatusOfFile:false];

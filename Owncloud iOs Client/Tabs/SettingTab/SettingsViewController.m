@@ -1970,11 +1970,14 @@
         if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
             //check location
             if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-                //upload new photos
-                ManageAsset * manageAsset = [[ManageAsset alloc] init];
-                newItemsToUpload = [manageAsset getCameraRollNewItems];
-                if (newItemsToUpload != nil && [newItemsToUpload count] != 0) {
-                    [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
+                //Check keychain access
+                if ([ManageUsersDB getActiveUser].username != nil) {
+                    //upload new photos
+                    ManageAsset * manageAsset = [[ManageAsset alloc] init];
+                    newItemsToUpload = [manageAsset getCameraRollNewItems];
+                    if (newItemsToUpload != nil && [newItemsToUpload count] != 0) {
+                        [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
+                    }
                 }
             }
         } else {
