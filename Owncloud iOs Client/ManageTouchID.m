@@ -18,8 +18,21 @@
 #import "ManageTouchID.h"
 
 @implementation ManageTouchID
+@synthesize delegate;
 
-+ (BOOL)isTouchIDAvailable {
+
++ (ManageTouchID *)sharedSingleton {
+    static ManageTouchID *sharedSingleton;
+    @synchronized(self)
+    {
+        if (!sharedSingleton){
+            sharedSingleton = [[ManageTouchID alloc] init];
+        }
+        return sharedSingleton;
+    }
+}
+
+- (BOOL)isTouchIDAvailable {
     
     NSError *error = nil;
     if([[[LAContext alloc] init] canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]){
@@ -32,7 +45,7 @@
 }
 
 /* Use isTouchIDAvailable before */
-+ (void)showTouchIDAuth {
+- (void)showTouchIDAuth {
     
     LAContext *context = [[LAContext alloc] init];
     NSError *error = nil;
@@ -71,6 +84,7 @@
             if(success) {
                 //show logged in
                 DLog(@"Successfully Touch ID authenticated");
+                [self.delegate didBiometricAuthenticationSucceed];
             } else {
                 NSString *failureReason;
                 //depending on error show what exactly has failed

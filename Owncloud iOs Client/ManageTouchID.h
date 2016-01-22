@@ -14,10 +14,22 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
+@class ManageTouchID;
+@protocol TouchIDDelegate <NSObject>
 
-@interface ManageTouchID : NSObject
+@optional
+- (void)didBiometricAuthenticationSucceed;
+@end
 
-+ (BOOL)isTouchIDAvailable;
-+ (void)showTouchIDAuth;
+
+@interface ManageTouchID : NSObject{
+    __weak id <TouchIDDelegate> delegate;
+}
+
++ (ManageTouchID *)sharedSingleton;
+- (BOOL)isTouchIDAvailable;
+- (void)showTouchIDAuth;
+
+@property (nonatomic, weak) id delegate;
 
 @end

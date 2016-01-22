@@ -176,7 +176,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
    
     //Show TouchID dialog if active
     if([ManageAppSettingsDB isTouchID])
-        [ManageTouchID showTouchIDAuth];
+        [[ManageTouchID sharedSingleton] showTouchIDAuth];
 
     return YES;
 }
@@ -1083,7 +1083,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //Show TouchID dialog if active
     if([ManageAppSettingsDB isTouchID])
-        [ManageTouchID showTouchIDAuth];
+        [[ManageTouchID sharedSingleton] showTouchIDAuth];
 
 }
 

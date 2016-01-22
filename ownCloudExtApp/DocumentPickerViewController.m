@@ -77,7 +77,7 @@
     if ([ManageAppSettingsDB isPasscode]) {
         [self showPassCode];
         if([ManageAppSettingsDB isTouchID])
-            [ManageTouchID showTouchIDAuth];
+            [[ManageTouchID sharedSingleton] showTouchIDAuth];
     } else {
         [self showOwnCloudNavigationOrShowErrorLogin];
     }

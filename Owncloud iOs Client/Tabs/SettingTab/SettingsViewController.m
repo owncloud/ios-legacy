@@ -342,7 +342,7 @@
             break;
             
         case 2:
-            n = (self.switchPasscode.on && [ManageTouchID isTouchIDAvailable])? 2:1;
+            n = (self.switchPasscode.on && [[ManageTouchID sharedSingleton] isTouchIDAvailable])? 2:1;
             break;
             
         case 3:

@@ -131,6 +131,8 @@
     
     _shouldReleaseFirstResponser = NO;
     
+    [ManageTouchID sharedSingleton].delegate = self;
+    
 }
 
 - (void)viewDidLoad{
@@ -979,6 +981,27 @@
     CGSize size = [_failedAttemptsLabel.text sizeWithAttributes:attributes];
     _failedAttemptsLabel.frame = _failedAttemptsView.frame = CGRectMake((self.view.bounds.size.width - (size.width + (self.isSmallLandscape ? 20.0f : 40.0f))) / 2, self.isSmallLandscape ? 75.0f : 150.0f, size.width + (self.isSmallLandscape ? 20.0f : 40.0f), size.height + (self.isSmallLandscape ? 5.0f : 10.0f));
 }
+
+#pragma mark - TouchID Delegate
+-(void) didBiometricAuthenticationSucceed{
+    //TODO. close this view
+    DLog(@"KKPasscodeController. Biometric Succeedd");
+    
+    if ([_delegate respondsToSelector:@selector(didPasscodeEnteredCorrectly:)]) {
+        //CLose keyboards. Change for OC
+//        [self closeKeyboards];
+        [_delegate performSelector:@selector(didPasscodeEnteredCorrectly:) withObject:self];
+    }
+    
+    //Change the behaviour for OC
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
+    // [self dismissModalViewControllerAnimated:YES];
+#else
+    [self dismissViewControllerAnimated:YES completion:nil];
+#endif
+
+}
+
 
 #pragma mark -
 #pragma mark Memory management
