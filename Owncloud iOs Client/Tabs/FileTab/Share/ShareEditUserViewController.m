@@ -151,7 +151,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
 
 - (void) reloadView {
     
-    if (self.canEditEnabled == true && self.sharedItem.isDirectory){
+    if (self.canEditEnabled && self.sharedItem.isDirectory){
         self.optionsShownWithCanEdit = optionsShownIfFileIsDirectory;
     }else{
         self.optionsShownWithCanEdit = optionsShownIfFileIsNotDirectory;
@@ -299,7 +299,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
                 case 0:
                     sharePrivilegeCell.optionName.text = NSLocalizedString(@"user_can_create", nil);
                     
-                    if (self.canEditEnabled == true) {
+                    if (self.canCreateEnabled) {
                         sharePrivilegeCell.optionName.textColor = [UIColor blackColor];
                     }else{
                         sharePrivilegeCell.optionName.textColor = [UIColor grayColor];
@@ -311,7 +311,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
                 case 1:
                     sharePrivilegeCell.optionName.text = NSLocalizedString(@"user_can_change", nil);
                     
-                    if (self.canChangeEnabled == true) {
+                    if (self.canChangeEnabled) {
                         sharePrivilegeCell.optionName.textColor = [UIColor blackColor];
                     } else {
                         sharePrivilegeCell.optionName.textColor = [UIColor grayColor];
@@ -323,7 +323,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
                 case 2:
                     sharePrivilegeCell.optionName.text = NSLocalizedString(@"user_can_delete", nil);
                     
-                    if (self.canDeleteEnabled == true) {
+                    if (self.canDeleteEnabled) {
                         sharePrivilegeCell.optionName.textColor = [UIColor blackColor];
                     } else {
                         sharePrivilegeCell.optionName.textColor = [UIColor grayColor];
