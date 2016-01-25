@@ -30,6 +30,7 @@
 #import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
 #import "OCShareUser.h"
+#import "ShareUtils.h"
 
 //tools
 #define standardDelay 0.2
@@ -388,26 +389,11 @@
         }
     }
     
-    self.sharedUsersOrGroups = [self manageTheDuplicatedUsers:self.sharedUsersOrGroups];
+    self.sharedUsersOrGroups = [ShareUtils manageTheDuplicatedUsers:self.sharedUsersOrGroups]; 
  
 }
 
-- (NSMutableArray *) manageTheDuplicatedUsers: (NSMutableArray*) items{
-    
-    for (OCShareUser *userOrGroup in items) {
-        NSMutableArray *restOfItems = [NSMutableArray arrayWithArray:items];
-        [restOfItems removeObjectIdenticalTo:userOrGroup];
-        for (OCShareUser *tempItem in restOfItems) {
-            if ([userOrGroup.displayName isEqualToString:tempItem.displayName]){
-                userOrGroup.isDisplayNameDuplicated = true;
-                break;
-            }
-        }
-    }
-    
-    return items;
-    
-}
+
 
 - (void) didSelectCloseView {
     

@@ -24,6 +24,7 @@
 #import "OCShareUser.h"
 #import "OCSharedDto.h"
 #import "TSMessageView.h"
+#import "ShareUtils.h"
 
 
 #define heightOfShareWithUserRow 55.0
@@ -282,7 +283,7 @@
         }
         
         [self.filteredItems addObjectsFromArray:itemList];
-        self.filteredItems = [self manageTheDuplicatedUsers:self.filteredItems];
+        self.filteredItems = [ShareUtils manageTheDuplicatedUsers:self.filteredItems];
         
         [self.searchDisplayController.searchResultsTableView reloadData];
         
@@ -297,23 +298,6 @@
         
         
     }];
-    
-}
-
-- (NSMutableArray *) manageTheDuplicatedUsers: (NSMutableArray*) items{
-    
-    for (OCShareUser *userOrGroup in items) {
-        NSMutableArray *restOfItems = [NSMutableArray arrayWithArray:items];
-        [restOfItems removeObjectIdenticalTo:userOrGroup];
-        for (OCShareUser *tempItem in restOfItems) {
-            if ([userOrGroup.displayName isEqualToString:tempItem.displayName]){
-                userOrGroup.isDisplayNameDuplicated = true;
-                break;
-            }
-        }
-    }
-    
-    return items;
     
 }
 
