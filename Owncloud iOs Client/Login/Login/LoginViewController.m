@@ -1854,27 +1854,36 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  *
  */
 - (void) updateConnectString{
-    
-    NSString *httpOrHttps = @"";
+    NSURLComponents *components = [NSURLComponents componentsWithString:[self getUrlToCheck]];
     
     if(isHttps) {
-        if([_urlTextField.text hasPrefix:k_https_prefix]) {
-            httpOrHttps = @"";
-        } else {
-            httpOrHttps = k_https_prefix;
-            
-        }
+        // remove :// from prefix when setting scheme
+        components.scheme = [k_https_prefix substringToIndex:[k_https_prefix length] - 3];
     } else {
-        if([_urlTextField.text hasPrefix:k_http_prefix]) {
-            httpOrHttps = @"";
-        } else {
-            httpOrHttps = k_http_prefix;
-        }
+        // remove :// from prefix when setting scheme
+        components.scheme = [k_http_prefix substringToIndex:[k_http_prefix length] - 3];
     }
     
-    NSString *connectURL =[NSString stringWithFormat:@"%@%@%@",httpOrHttps,[self getUrlChecked: _urlTextField.text], k_url_webdav_server];
-    _connectString=connectURL;
-   
+    // if user component was set on the server URL, move it to the user field
+    if(components.user.length > 0) {
+        [self.usernameTextField setText:components.user];
+        self.auxUsernameForReloadTable = components.user;
+        components.user = nil;
+    }
+    
+    // if password component was set on the server URL, move it to the password field
+    if(components.password.length > 0) {
+        [self.passwordTextField setText:components.password];
+        self.auxPasswordForReloadTable = components.password;
+        components.password = nil;
+    }
+    
+    self.auxUrlForReloadTable = [self stripIndexPhpOrAppsFilesFromUrl:[components string]];
+    
+    // append webdav server path to existing path
+    components.path = [NSString stringWithFormat:@"%@%@", components.path, k_url_webdav_server];
+    
+    _connectString = [components string];
 }
 
 
@@ -1919,14 +1928,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     [[AppDelegate sharedOCCommunication] checkServer:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
         BOOL isInvalid = NO;
-        
-        if (k_is_sso_active == YES) {
-            isInvalid = NO;
-            isLoginButtonEnabled = YES;
-        } else {
-            //Unkown, must be invalid
-            isInvalid = YES;
-        }
+        isLoginButtonEnabled = YES;
         
         //Update the interface depend of if isInvalid or not
         if (isInvalid) {
