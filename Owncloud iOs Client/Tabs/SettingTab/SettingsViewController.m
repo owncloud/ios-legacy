@@ -52,7 +52,6 @@
 #define k_settings_normal_font [UIFont fontWithName:@"HelveticaNeue" size:17]
 #define k_settings_bold_font [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
 
-#import <LocalAuthentication/LocalAuthentication.h>
 
 ///-----------------------------------
 /// @name MFMailComposeViewController Category for iOS 7 Status Style

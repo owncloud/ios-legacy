@@ -46,12 +46,8 @@
 
 /* Use isTouchIDAvailable before */
 - (void)showTouchIDAuth {
-    
-    LAContext *context = [[LAContext alloc] init];
-    NSError *error = nil;
-    
-    if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
-        [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:@"Unlock ownCloud" reply:^(BOOL success, NSError * error){
+    if (self.isTouchIDAvailable) {
+        [[[LAContext alloc] init] evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:@"Unlock ownCloud" reply:^(BOOL success, NSError * error){
 //
 //            if (error) {
 //                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
@@ -80,47 +76,70 @@
 //                [alert show];
 //            }
 //        }];
-         
-            if(success) {
-                //show logged in
-                DLog(@"Successfully Touch ID authenticated");
-                [self.delegate didBiometricAuthenticationSucceed];
-            } else {
+            
+            if(error) {
                 NSString *failureReason;
                 //depending on error show what exactly has failed
                 switch (error.code) {
+                        
+                        // Authentication was not successful, because user failed to provide valid credentials.
                     case LAErrorAuthenticationFailed:
-                        failureReason = @"Touch ID authentication failed";
+                        failureReason = @"Touch ID authentication failed because user failed to provide valid credentials";
                         break;
                         
+                        // Authentication was canceled by user (e.g. tapped Cancel button).
                     case LAErrorUserCancel:
                         failureReason = @"Touch ID authentication cancelled";
                         break;
                         
+                        // Authentication was canceled, because the user tapped the fallback button (Enter Password)
                     case LAErrorUserFallback:
-                        failureReason =  @"UTouch ID authentication choose password selected";
+                        failureReason =  @"Touch ID authentication choose password selected";
+                        break;
+                        
+                        // Authentication was canceled by system (e.g. another application went to foreground).
+                    case LAErrorSystemCancel:
+                        failureReason =  @"Touch ID authentication was canceled by system";
+                        break;
+                        
+                        // Authentication could not start, because passcode is not set on the device.
+                    case LAErrorPasscodeNotSet:
+                        failureReason =  @"Touch ID authentication failed because passcode is not set on the device";
+                        break;
+                        
+                        // Authentication could not start, because Touch ID is not available on the device.
+                    case LAErrorTouchIDNotAvailable:
+                        failureReason =  @"Touch ID authentication is not available on the device";
+                        break;
+                        
+                        // Authentication could not start, because Touch ID has no enrolled fingers.
+                    case LAErrorTouchIDNotEnrolled:
+                        failureReason =  @"Touch ID authentication failed because has no enrolled fingers";
                         break;
                         
                     default:
-                        failureReason = @"Touch ID has not been setup or system has cancelled";
+                        failureReason = (error.code == -1000)? @"Touch ID time out":@"Touch ID unknown error";
                         break;
                 }
                 
                 DLog(@"Authentication failed: %@", failureReason);
                 
+                
+            }
+            if(success) {
+                DLog(@"Successfully Touch ID authenticated");
+                [self.delegate didBiometricAuthenticationSucceed];
+                
+            }
+            
+            else{
+                DLog(@"Touch ID. The finger print doesn't match");
             }
         }];
         
     } else {
-        
-        //TODO depending on error do one thing or another
         DLog(@"Your device cannot authenticate using TouchID.");
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Your device cannot authenticate using TouchID."
-//                                                        message:error.description
-//                                                       delegate:nil
-//                                              cancelButtonTitle:@"Ok"
-//                                              otherButtonTitles:nil];
-//        [alert show];
+        
     }
     
 }

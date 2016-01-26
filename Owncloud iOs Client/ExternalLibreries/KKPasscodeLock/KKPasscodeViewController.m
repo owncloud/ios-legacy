@@ -984,21 +984,22 @@
 
 #pragma mark - TouchID Delegate
 -(void) didBiometricAuthenticationSucceed{
-    //TODO. close this view
-    DLog(@"KKPasscodeController. Biometric Succeedd");
-    
-    if ([_delegate respondsToSelector:@selector(didPasscodeEnteredCorrectly:)]) {
-        //CLose keyboards. Change for OC
-//        [self closeKeyboards];
-        [_delegate performSelector:@selector(didPasscodeEnteredCorrectly:) withObject:self];
-    }
-    
-    //Change the behaviour for OC
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        DLog(@"KKPasscodeController. Biometric Succeedd");
+        
+        if ([_delegate respondsToSelector:@selector(didPasscodeEnteredCorrectly:)]) {
+            [_delegate performSelector:@selector(didPasscodeEnteredCorrectly:) withObject:self];
+        }
+        
+        //Change the behaviour for OC
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-    // [self dismissModalViewControllerAnimated:YES];
+        // [self dismissModalViewControllerAnimated:YES];
 #else
-    [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:nil];
 #endif
+    });
 
 }
 

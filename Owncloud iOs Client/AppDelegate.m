@@ -1778,7 +1778,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             oc.modalPresentationStyle = UIModalPresentationFormSheet;
             [rootController presentViewController:oc animated:NO completion:nil];
         }
-    } else {
+    } else {        
         [self initAppWithEtagRequest:YES];
     }
 }
