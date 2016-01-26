@@ -24,6 +24,7 @@
 #import "OCShareUser.h"
 #import "OCSharedDto.h"
 #import "TSMessageView.h"
+#import "ShareUtils.h"
 
 
 #define heightOfShareWithUserRow 55.0
@@ -98,19 +99,8 @@
 
 - (void) setSelectedItems:(NSMutableArray *) selectedItems {
     
-    for (OCSharedDto *shareWith in selectedItems) {
-        OCShareUser *shareUser = [OCShareUser new];
-        shareUser.name = shareWith.shareWith;
-        shareUser.displayName = shareWith.shareWithDisplayName;
-        
-        shareUser.isGroup = false;
-        
-        if (shareWith.shareType == 1) {
-            shareUser.isGroup = true;
-        }
-        
-        [self.selectedItems addObject:shareUser];
-        
+    for (OCShareUser *item in selectedItems) {
+        [self.selectedItems addObject:item];
     }
 
 }
@@ -214,7 +204,12 @@
         if (userOrGroup.isGroup) {
             name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.name, NSLocalizedString(@"share_user_group_indicator", nil)];
         } else {
-            name = userOrGroup.displayName;
+            
+            if (userOrGroup.isDisplayNameDuplicated) {
+                name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
+            }else{
+                name = userOrGroup.displayName;
+            }
         }
         
         shareUserCell.itemName.text = name;
@@ -288,6 +283,7 @@
         }
         
         [self.filteredItems addObjectsFromArray:itemList];
+        self.filteredItems = [ShareUtils manageTheDuplicatedUsers:self.filteredItems];
         
         [self.searchDisplayController.searchResultsTableView reloadData];
         
