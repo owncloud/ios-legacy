@@ -29,10 +29,12 @@
 #import "OCSharedDto.h"
 #import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
+#import "ManageUsersDB.h"
 
 
 #define server_version_with_new_shared_schema 8
 #define password_alert_view_tag 600
+#define k_subject_key_activityView @"subject"
 
 
 @implementation ShareFileOrFolder
@@ -121,6 +123,9 @@
     UIActivityViewController *activityView = [[UIActivityViewController alloc]
                                               initWithActivityItems:items
                                               applicationActivities:activities];
+    
+    NSString *subject = [NSString stringWithFormat:NSLocalizedString(@"shared_link_mail_subject", nil),[ManageUsersDB getActiveUser].username, self.file.fileName];
+    [activityView setValue:subject forKey:k_subject_key_activityView];
     [activityView setExcludedActivityTypes:
      @[UIActivityTypeAssignToContact,
        UIActivityTypeCopyToPasteboard,
