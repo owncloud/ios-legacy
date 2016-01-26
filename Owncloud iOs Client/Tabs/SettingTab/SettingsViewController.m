@@ -141,6 +141,7 @@
     self.user = app.activeUser;
     
     self.listUsers = [ManageUsersDB getAllUsers];
+    [self.settingsTableView reloadData];
 
 }
 
