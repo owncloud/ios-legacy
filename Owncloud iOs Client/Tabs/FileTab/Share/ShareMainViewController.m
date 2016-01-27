@@ -66,6 +66,9 @@
 //alert share password
 #define password_alert_view_tag 601
 
+//mail subject key
+#define k_subject_key_activityView @"subject"
+
 @interface ShareMainViewController ()
 
 @property (nonatomic, strong) FileDto* sharedItem;
@@ -967,7 +970,10 @@
         
     }else{
        [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
+
     }
+
+
 }
 
 - (void) finishUnShareWithStatus:(BOOL)successful {
@@ -995,10 +1001,14 @@
     }else{
         [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
     }
+
 }
 
 
 - (void) presentShareOptions{
+    
+        NSString *subject = [NSString stringWithFormat:NSLocalizedString(@"shared_link_mail_subject", nil),[ManageUsersDB getActiveUser].username, self.sharedItem.fileName];
+        [self.activityView setValue:subject forKey:k_subject_key_activityView];
     
     if (IS_IPHONE) {
         [self presentViewController:self.activityView animated:true completion:nil];
@@ -1013,7 +1023,6 @@
         
         [self.activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareTableView permittedArrowDirections:UIPopoverArrowDirectionAny animated:true];
     }
-    
 }
 
 #pragma mark - Error Login Methods
