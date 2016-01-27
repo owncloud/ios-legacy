@@ -605,6 +605,8 @@
 		EA0EFA1B1BEA66A1009971AF /* CapabilitiesDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1A1BEA66A1009971AF /* CapabilitiesDto.m */; };
 		EA0EFA1F1BEA6C6E009971AF /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
 		EA123C781C58E9C500926398 /* MainAppIcon_167-167.png in Resources */ = {isa = PBXBuildFile; fileRef = EA123C771C58E9C500926398 /* MainAppIcon_167-167.png */; };
+		EA123C7F1C58FA7B00926398 /* Default-Landscape-1336@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA123C7D1C58FA7B00926398 /* Default-Landscape-1336@2x.png */; };
+		EA123C831C58FA7B00926398 /* Default-Portrait-1336@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA123C7E1C58FA7B00926398 /* Default-Portrait-1336@2x.png */; };
 		EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA1762A01B78B50100D36186 /* ShareMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA17629F1B78B50100D36186 /* ShareMainViewController.m */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
@@ -1601,6 +1603,8 @@
 		EA0EFA1D1BEA6C6E009971AF /* ManageCapabilitiesDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageCapabilitiesDB.h; path = DataBase/Queries/ManageCapabilitiesDB.h; sourceTree = "<group>"; };
 		EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageCapabilitiesDB.m; path = DataBase/Queries/ManageCapabilitiesDB.m; sourceTree = "<group>"; };
 		EA123C771C58E9C500926398 /* MainAppIcon_167-167.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_167-167.png"; sourceTree = "<group>"; };
+		EA123C7D1C58FA7B00926398 /* Default-Landscape-1336@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape-1336@2x.png"; sourceTree = "<group>"; };
+		EA123C7E1C58FA7B00926398 /* Default-Portrait-1336@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait-1336@2x.png"; sourceTree = "<group>"; };
 		EA17629E1B78B50100D36186 /* ShareMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareMainViewController.h; path = Tabs/FileTab/Share/ShareMainViewController.h; sourceTree = "<group>"; };
 		EA17629F1B78B50100D36186 /* ShareMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareMainViewController.m; path = Tabs/FileTab/Share/ShareMainViewController.m; sourceTree = "<group>"; };
 		EA1787AA17E33BB9005171AB /* OCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCNavigationController.h; path = Tabs/FileTab/OCNavigationController.h; sourceTree = "<group>"; };
@@ -2361,6 +2365,8 @@
 		1487F15F177C35AA004A1A5A /* Branding */ = {
 			isa = PBXGroup;
 			children = (
+				EA123C7D1C58FA7B00926398 /* Default-Landscape-1336@2x.png */,
+				EA123C7E1C58FA7B00926398 /* Default-Portrait-1336@2x.png */,
 				400904D41A02AE3300E3DD15 /* Default-667h@2x.png */,
 				400904D51A02AE3300E3DD15 /* Default-736h@3x.png */,
 				142C3FAE177C575E00FE0690 /* Default-568h@2x.png */,
@@ -4059,10 +4065,12 @@
 				40AB1F5F1A123B03003E7397 /* BackRootFolderIcon@3x.png in Resources */,
 				40AB1F671A123D03003E7397 /* TABrecents@3x.png in Resources */,
 				40E354D71A14FD53000E7FE4 /* doc_icon@3x.png in Resources */,
+				EA123C831C58FA7B00926398 /* Default-Portrait-1336@2x.png in Resources */,
 				1487F270177C35AA004A1A5A /* Button.png in Resources */,
 				1487F271177C35AA004A1A5A /* Button@2x.png in Resources */,
 				1487F272177C35AA004A1A5A /* gradImage.png in Resources */,
 				59C0F2B21A963670007FE71B /* iTunesArtwork in Resources */,
+				EA123C7F1C58FA7B00926398 /* Default-Landscape-1336@2x.png in Resources */,
 				14A7F7A818ED578E009AF347 /* spreadsheet_icon.png in Resources */,
 				1487F273177C35AA004A1A5A /* password.png in Resources */,
 				1487F274177C35AA004A1A5A /* password@2x.png in Resources */,
