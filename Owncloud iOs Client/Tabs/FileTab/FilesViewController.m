@@ -415,11 +415,24 @@
                 DLog(@"User changed while check a folder");
                 [UtilsFramework deleteAllCookies];
             }
-        } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
             
             DLog(@"error: %@", error);
             DLog(@"Operation error: %ld", (long)response.statusCode);
-            [self manageServerErrors:response.statusCode and:error];
+            
+            BOOL isSamlCredentialsError = NO;
+            
+            //Check the login error in shibboleth
+            if (k_is_sso_active && redirectedServer) {
+                //Check if there are fragmens of saml in url, in this case there are a credential error
+                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                if (isSamlCredentialsError) {
+                    [self errorLogin];
+                }
+            }
+            if (!isSamlCredentialsError) {
+                [self manageServerErrors:response.statusCode and:error];
+            }
         
         }];
         
@@ -902,10 +915,24 @@
                 if (!isSamlCredentialsError) {
                     [self refreshTableFromWebDav];
                 }
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                 DLog(@"error: %@", error);
                 DLog(@"Operation error: %ld", (long)response.statusCode);
-                [self manageServerErrors:response.statusCode and:error];
+                
+                BOOL isSamlCredentialsError = NO;
+                
+                //Check the login error in shibboleth
+                if (k_is_sso_active && redirectedServer) {
+                    //Check if there are fragmens of saml in url, in this case there are a credential error
+                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                    if (isSamlCredentialsError) {
+                        [self errorLogin];
+                    }
+                }
+                if (!isSamlCredentialsError) {
+                    [self manageServerErrors:response.statusCode and:error];
+                }
+ 
             } errorBeforeRequest:^(NSError *error) {
                 if (error.code == OCErrorForbidenCharacters) {
                     [self endLoading];
@@ -1739,13 +1766,27 @@
            NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
            [self prepareForNavigationWithData:directoryList];
         }
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token, NSString *redirectedServer) {
         
         _isLoadingForNavigate = NO;
         
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
-        [self manageServerErrors:response.statusCode and:error];
+        
+        BOOL isSamlCredentialsError = NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self errorLogin];
+            }
+        }
+        if (!isSamlCredentialsError) {
+            [self manageServerErrors:response.statusCode and:error];
+        }
+        
     }];
 }
 
@@ -1959,11 +2000,24 @@
             _showLoadingAfterChangeUser = NO;
         }
 
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token, NSString *redirectedServer) {
         
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
-        [self manageServerErrors:response.statusCode and:error];
+        
+        BOOL isSamlCredentialsError = NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self errorLogin];
+            }
+        }
+        if (!isSamlCredentialsError) {
+            [self manageServerErrors:response.statusCode and:error];
+        }
         
     }];
 }
@@ -2172,7 +2226,7 @@
                     });
                 });
             }
-        } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+        } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
             
             DLog(@"error: %@", error);
             DLog(@"Operation error: %ld", (long)response.statusCode);

@@ -331,11 +331,27 @@
             [self quitMoviePlayerIsDeleteFileIsRunning];
         }
         
-    } failureRquest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRquest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         DLog(@"error: %@ with code: %ld", error, (long)error.code);
         
-        [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
+        BOOL isSamlCredentialsError = NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self errorLogin];
+            }
+        }
+        //If it is not SAML
+        if (!isSamlCredentialsError) {
+
+            [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
+        
+        }
+
     }];
 }
 

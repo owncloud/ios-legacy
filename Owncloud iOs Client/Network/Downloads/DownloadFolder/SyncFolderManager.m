@@ -316,7 +316,7 @@ static float const kDelayAfterCancelAll = 3.0;
                 DLog(@"User changed while check a folder");
                 [UtilsFramework deleteAllCookies];
             }
-        } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token) {
+        } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token, NSString *redirectedServer) {
             
             DLog(@"response: %@", response);
             DLog(@"error: %@", error);

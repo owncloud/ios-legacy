@@ -401,7 +401,7 @@
                 if (!isSamlCredentialsError) {
                     [self reloadCurrentFolder];
                 }
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                 DLog(@"error: %@", error);
                 [self endLoading];
                 DLog(@"Operation error: %ld", (long)response.statusCode);
