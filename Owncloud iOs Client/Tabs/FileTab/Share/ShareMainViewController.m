@@ -1007,8 +1007,14 @@
 
 - (void) presentShareOptions{
     
-        NSString *subject = [NSString stringWithFormat:NSLocalizedString(@"shared_link_mail_subject", nil),[ManageUsersDB getActiveUser].username, self.sharedItem.fileName];
-        [self.activityView setValue:subject forKey:k_subject_key_activityView];
+    
+    NSString *fileOrFolderName = self.sharedItem.fileName;
+    if(fileOrFolderName){
+        fileOrFolderName = [fileOrFolderName substringToIndex:fileOrFolderName.length -1];
+    }
+    
+    NSString *subject = [NSString stringWithFormat:NSLocalizedString(@"shared_link_mail_subject", nil),[ManageUsersDB getActiveUser].username, fileOrFolderName];
+    [self.activityView setValue:subject forKey:k_subject_key_activityView];
     
     if (IS_IPHONE) {
         [self presentViewController:self.activityView animated:true completion:nil];
