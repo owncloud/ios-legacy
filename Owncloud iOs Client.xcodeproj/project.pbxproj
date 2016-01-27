@@ -604,6 +604,7 @@
 		EA0599941BB94F3F002C2864 /* ShareSearchUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599921BB94F3F002C2864 /* ShareSearchUserViewController.xib */; };
 		EA0EFA1B1BEA66A1009971AF /* CapabilitiesDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1A1BEA66A1009971AF /* CapabilitiesDto.m */; };
 		EA0EFA1F1BEA6C6E009971AF /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
+		EA123C781C58E9C500926398 /* MainAppIcon_167-167.png in Resources */ = {isa = PBXBuildFile; fileRef = EA123C771C58E9C500926398 /* MainAppIcon_167-167.png */; };
 		EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EA42FA4D1804217D0006DB7C /* OCToolBar.m */; };
 		EA1762A01B78B50100D36186 /* ShareMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA17629F1B78B50100D36186 /* ShareMainViewController.m */; };
 		EA1787AC17E33BB9005171AB /* OCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA1787AB17E33BB9005171AB /* OCNavigationController.m */; };
@@ -1599,6 +1600,7 @@
 		EA0EFA1A1BEA66A1009971AF /* CapabilitiesDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CapabilitiesDto.m; path = DataBase/DTOs/CapabilitiesDto.m; sourceTree = "<group>"; };
 		EA0EFA1D1BEA6C6E009971AF /* ManageCapabilitiesDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManageCapabilitiesDB.h; path = DataBase/Queries/ManageCapabilitiesDB.h; sourceTree = "<group>"; };
 		EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManageCapabilitiesDB.m; path = DataBase/Queries/ManageCapabilitiesDB.m; sourceTree = "<group>"; };
+		EA123C771C58E9C500926398 /* MainAppIcon_167-167.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_167-167.png"; sourceTree = "<group>"; };
 		EA17629E1B78B50100D36186 /* ShareMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareMainViewController.h; path = Tabs/FileTab/Share/ShareMainViewController.h; sourceTree = "<group>"; };
 		EA17629F1B78B50100D36186 /* ShareMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareMainViewController.m; path = Tabs/FileTab/Share/ShareMainViewController.m; sourceTree = "<group>"; };
 		EA1787AA17E33BB9005171AB /* OCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCNavigationController.h; path = Tabs/FileTab/OCNavigationController.h; sourceTree = "<group>"; };
@@ -2386,6 +2388,7 @@
 				14EFCAEA17FAFEAA007A38B6 /* MainAppIcon_76-76.png */,
 				4026610B1A07926000517663 /* MainAppIcon_76-76@2x.png */,
 				4016E5C41A0CE9410022163C /* MainAppIcon_76_76@3x.png */,
+				EA123C771C58E9C500926398 /* MainAppIcon_167-167.png */,
 			);
 			path = Branding;
 			sourceTree = "<group>";
@@ -4133,6 +4136,7 @@
 				14CB98AA19657B7700F6FF4E /* folder-public@2x.png in Resources */,
 				4052B4DC1B4ECD74000788DA /* btnHelpPage1.png in Resources */,
 				4016E5C51A0CE9410022163C /* MainAppIcon_76_76@3x.png in Resources */,
+				EA123C781C58E9C500926398 /* MainAppIcon_167-167.png in Resources */,
 				148BEA64178C027400696246 /* FailedUploadCell.xib in Resources */,
 				1339D935178D5DA900002156 /* genericFile_icon_error@2x.png in Resources */,
 				1339D936178D5DA900002156 /* genericFile_icon_error.png in Resources */,
