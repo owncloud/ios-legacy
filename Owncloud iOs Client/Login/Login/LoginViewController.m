@@ -1568,10 +1568,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     DLog(@"6- self.urlTextField.text %@", self.urlTextField.text);
     
     if(self.urlTextField != nil) {
-        self.auxUrlForReloadTable = [self stripIndexPhpOrAppsFilesFromUrl:self.urlTextField.text];
+        NSString *urlWithoutUserPassword = [self stripUsernameAndPassword:self.urlTextField.text];
+        self.auxUrlForReloadTable = [self stripIndexPhpOrAppsFilesFromUrl:urlWithoutUserPassword];
     } else {
         //This is when we deleted the last account and go to the login screen
-        self.urlTextField = [[UITextField alloc]initWithFrame:_urlFrame];
+        self.urlTextField = [[UITextField alloc]initWithFrame:self.urlFrame];
         self.urlTextField.text = self.auxUrlForReloadTable;
         textField = self.urlTextField;
     }
@@ -1674,6 +1675,32 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     } else if (range.length > 0) {
         url = [url substringToIndex:range.location];
         self.urlTextField.text = url;
+    }
+    
+    return url;
+}
+
+- (NSString *)stripUsernameAndPassword:(NSString *)url {
+    
+    NSURLComponents *components = [NSURLComponents componentsWithString:[self getUrlToCheck]];
+    
+    // if user component was set on the server URL, move it to the user field
+    if(components.user.length > 0) {
+        [self.usernameTextField setText:components.user];
+    }
+    
+    // if password component was set on the server URL, move it to the password field
+    if(components.password.length > 0) {
+        [self.passwordTextField setText:components.password];
+    }
+    
+    if (components.user.length > 0 || components.password.length >0) {
+        
+        components.user = nil;
+        components.password = nil;
+
+        [self.urlTextField setText:[components.URL absoluteString]];
+        url = [components.URL absoluteString];
     }
     
     return url;
@@ -1854,36 +1881,26 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  *
  */
 - (void) updateConnectString{
-    NSURLComponents *components = [NSURLComponents componentsWithString:[self getUrlToCheck]];
+    
+    NSString *httpOrHttps = @"";
     
     if(isHttps) {
-        // remove :// from prefix when setting scheme
-        components.scheme = [k_https_prefix substringToIndex:[k_https_prefix length] - 3];
+        if([_urlTextField.text hasPrefix:k_https_prefix]) {
+            httpOrHttps = @"";
+        } else {
+            httpOrHttps = k_https_prefix;
+            
+        }
     } else {
-        // remove :// from prefix when setting scheme
-        components.scheme = [k_http_prefix substringToIndex:[k_http_prefix length] - 3];
+        if([_urlTextField.text hasPrefix:k_http_prefix]) {
+            httpOrHttps = @"";
+        } else {
+            httpOrHttps = k_http_prefix;
+        }
     }
     
-    // if user component was set on the server URL, move it to the user field
-    if(components.user.length > 0) {
-        [self.usernameTextField setText:components.user];
-        self.auxUsernameForReloadTable = components.user;
-        components.user = nil;
-    }
-    
-    // if password component was set on the server URL, move it to the password field
-    if(components.password.length > 0) {
-        [self.passwordTextField setText:components.password];
-        self.auxPasswordForReloadTable = components.password;
-        components.password = nil;
-    }
-    
-    self.auxUrlForReloadTable = [self stripIndexPhpOrAppsFilesFromUrl:[components string]];
-    
-    // append webdav server path to existing path
-    components.path = [NSString stringWithFormat:@"%@%@", components.path, k_url_webdav_server];
-    
-    _connectString = [components string];
+    NSString *connectURL =[NSString stringWithFormat:@"%@%@%@",httpOrHttps,[self getUrlChecked: _urlTextField.text], k_url_webdav_server];
+    _connectString=connectURL;
 }
 
 
