@@ -30,6 +30,8 @@
 #import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
 #import "ShareEditUserViewController.h"
+#import "OCShareUser.h"
+#import "ShareUtils.h"
 
 //tools
 #define standardDelay 0.2
@@ -83,6 +85,7 @@
 @property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
 @property (nonatomic, strong) NSMutableArray *sharedUsersOrGroups;
+@property (nonatomic, strong) NSMutableArray *sharesOfFile;
 
 @end
 
@@ -100,7 +103,9 @@
         self.isPasswordProtectEnabled = false;
         self.isExpirationDateEnabled = false;
         self.sharedUsersOrGroups = [NSMutableArray new];
-        
+        self.sharesOfFile = [NSMutableArray new];
+
+
     }
     
     return self;
@@ -365,13 +370,31 @@
     DLog(@"SharesWith: %@", sharesWith);
     
     [self.sharedUsersOrGroups removeAllObjects];
+    [self.sharesOfFile removeAllObjects];
     
     for (OCSharedDto *shareWith in sharesWith) {
         if (shareWith.shareType == 0 || shareWith.shareType == 1) {
-            [self.sharedUsersOrGroups addObject:shareWith];
+            
+            OCShareUser *shareUser = [OCShareUser new];
+            shareUser.name = shareWith.shareWith;
+            shareUser.displayName = shareWith.shareWithDisplayName;
+            
+            if (shareWith.shareType == shareTypeGroup) {
+                shareUser.isGroup = true;
+            }else{
+                shareUser.isGroup = false;
+            }
+            
+            [self.sharedUsersOrGroups addObject:shareUser];
+            [self.sharesOfFile addObject:shareWith];
         }
     }
+    
+    self.sharedUsersOrGroups = [ShareUtils manageTheDuplicatedUsers:self.sharedUsersOrGroups]; 
+ 
 }
+
+
 
 - (void) didSelectCloseView {
     
@@ -687,14 +710,19 @@
             }
             
             
-            OCSharedDto *shareWith = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
+            OCShareUser *shareUser = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
             
             NSString *name;
             
-            if (shareWith.shareType == shareTypeGroup) {
-                name = [NSString stringWithFormat:@"%@ (%@)",shareWith.shareWith, NSLocalizedString(@"share_user_group_indicator", nil)];
+            if (shareUser.isGroup) {
+                name = [NSString stringWithFormat:@"%@ (%@)",shareUser.name, NSLocalizedString(@"share_user_group_indicator", nil)];
             } else {
-                name = shareWith.shareWithDisplayName;
+                
+                if (shareUser.isDisplayNameDuplicated) {
+                    name = [NSString stringWithFormat:@"%@ (%@)", shareUser.displayName, shareUser.name];
+                }else{
+                    name = shareUser.displayName;
+                }
             }
             
             shareUserCell.itemName.text = name;
@@ -910,9 +938,14 @@
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
-        OCSharedDto *shareWith = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
+        OCShareUser *shareUser = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
         
-        [self unShareWith:shareWith];
+        for (OCSharedDto *shareWith in self.sharesOfFile) {
+            if ([shareUser.name isEqualToString:shareWith.shareWith]) {
+                [self unShareWith:shareWith];
+                break;
+            }
+        }
         
     }
 }
