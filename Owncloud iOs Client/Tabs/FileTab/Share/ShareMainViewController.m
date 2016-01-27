@@ -1009,11 +1009,12 @@
     
     
     NSString *fileOrFolderName = self.sharedItem.fileName;
-    if(fileOrFolderName){
+    if(self.sharedItem.isDirectory){
+        //Remove the last character (folderName/ -> folderName)
         fileOrFolderName = [fileOrFolderName substringToIndex:fileOrFolderName.length -1];
     }
     
-    NSString *subject = [NSString stringWithFormat:NSLocalizedString(@"shared_link_mail_subject", nil),[ManageUsersDB getActiveUser].username, fileOrFolderName];
+    NSString *subject = [NSString stringWithFormat:NSLocalizedString(@"shared_link_mail_subject", nil),[ManageUsersDB getActiveUser].username, [fileOrFolderName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [self.activityView setValue:subject forKey:k_subject_key_activityView];
     
     if (IS_IPHONE) {
