@@ -378,7 +378,7 @@
             OCShareUser *shareUser = [OCShareUser new];
             shareUser.name = shareWith.shareWith;
             shareUser.displayName = shareWith.shareWithDisplayName;
-            
+            shareUser.sharedDto = shareWith;
             if (shareWith.shareType == shareTypeGroup) {
                 shareUser.isGroup = true;
             }else{
@@ -955,9 +955,11 @@
     
     //Edit share with user Privileges
     
-    OCSharedDto *shareWith = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
+    OCShareUser *shareUser = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
+    OCSharedDto *sharedDto = shareUser.sharedDto;
+
     
-    ShareEditUserViewController *viewController = [[ShareEditUserViewController alloc] initWithFileDto:self.sharedItem andOCSharedDto:shareWith];
+    ShareEditUserViewController *viewController = [[ShareEditUserViewController alloc] initWithFileDto:self.sharedItem andOCSharedDto:sharedDto];
     OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
     
     if (IS_IPHONE)
