@@ -1005,8 +1005,6 @@
        [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
 
     }
-
-
 }
 
 - (void) finishUnShareWithStatus:(BOOL)successful {
