@@ -1047,7 +1047,7 @@
         fileOrFolderName = [fileOrFolderName substringToIndex:fileOrFolderName.length -1];
     }
     
-    NSString *subject = [NSString stringWithFormat:NSLocalizedString(@"shared_link_mail_subject", nil),[ManageUsersDB getActiveUser].username, [fileOrFolderName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *subject = [[NSLocalizedString(@"shared_link_mail_subject", nil)stringByReplacingOccurrencesOfString:@"$userName" withString:[ManageUsersDB getActiveUser].username]stringByReplacingOccurrencesOfString:@"$fileOrFolderName"  withString:[fileOrFolderName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [self.activityView setValue:subject forKey:k_subject_key_activityView];
     
     if (IS_IPHONE) {
