@@ -1701,8 +1701,13 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         NSString *fullURLWithoutUsernamePassword = [self.urlTextField.text substringFromIndex:[self.urlTextField.text rangeOfString: @"@"].location+1];
         
-        [self.urlTextField setText:fullURLWithoutUsernamePassword];
-        url = fullURLWithoutUsernamePassword;
+        if (components.scheme != nil) {
+            url = [NSString stringWithFormat:@"%@://%@",components.scheme,fullURLWithoutUsernamePassword];
+        } else {
+            url = fullURLWithoutUsernamePassword;
+        }
+        
+        [self.urlTextField setText:url];
     }
     
     return url;
