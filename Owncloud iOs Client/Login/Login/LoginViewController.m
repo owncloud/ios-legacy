@@ -1701,7 +1701,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         NSString *fullURLWithoutUsernamePassword = [self.urlTextField.text substringFromIndex:[self.urlTextField.text rangeOfString: @"@"].location+1];
         
-        if (components.scheme != nil) {
+        if ([url hasPrefix:k_https_prefix] || [url hasPrefix:k_http_prefix]) {
             url = [NSString stringWithFormat:@"%@://%@",components.scheme,fullURLWithoutUsernamePassword];
         } else {
             url = fullURLWithoutUsernamePassword;
