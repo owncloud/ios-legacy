@@ -161,7 +161,11 @@
                    ([currentFolder.permissions rangeOfString:k_permission_shared].location == NSNotFound)) {
             fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
         } else if (fileForSetTheStatusIcon.sharedFileSource > 0) {
-            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
+            if ([ManageSharesDB getTheOCShareByFileDto:fileForSetTheStatusIcon andShareType:shareTypeLink andUser:user]) {
+                fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
+            } else {
+                fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
+            }
         } else {
             fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
         }
