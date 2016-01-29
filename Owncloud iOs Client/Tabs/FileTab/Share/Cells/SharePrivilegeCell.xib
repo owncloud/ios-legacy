@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -16,7 +16,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="0EM-W9-wfT" userLabel="option switch">
-                        <rect key="frame" x="260" y="6" width="51" height="31"/>
+                        <rect key="frame" x="259" y="7" width="51" height="31"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="49" id="Ian-vh-Srb"/>
                             <constraint firstAttribute="height" constant="31" id="dxb-kE-jAk"/>
@@ -38,16 +38,16 @@
                 <constraints>
                     <constraint firstItem="0EM-W9-wfT" firstAttribute="top" secondItem="mcU-f6-ESE" secondAttribute="topMargin" constant="-2" id="0TO-bI-Tpd"/>
                     <constraint firstAttribute="bottomMargin" secondItem="06q-8S-Bc9" secondAttribute="bottom" constant="3" id="0Zz-DH-3fb"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="0EM-W9-wfT" secondAttribute="trailing" constant="4" id="7b8-Jk-CBE"/>
                     <constraint firstAttribute="bottomMargin" secondItem="0EM-W9-wfT" secondAttribute="bottom" constant="-1" id="7wK-RI-qiV"/>
-                    <constraint firstItem="0EM-W9-wfT" firstAttribute="leading" secondItem="06q-8S-Bc9" secondAttribute="trailing" constant="7" id="Fy4-iD-6hQ"/>
                     <constraint firstItem="06q-8S-Bc9" firstAttribute="leading" secondItem="mcU-f6-ESE" secondAttribute="leadingMargin" id="Jfz-zL-xsP"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="0EM-W9-wfT" secondAttribute="trailing" constant="3" id="Uo6-mj-Dt2"/>
+                    <constraint firstItem="0EM-W9-wfT" firstAttribute="centerY" secondItem="06q-8S-Bc9" secondAttribute="centerY" id="MUC-yF-Yc9"/>
                     <constraint firstItem="06q-8S-Bc9" firstAttribute="top" secondItem="mcU-f6-ESE" secondAttribute="topMargin" constant="4" id="cWE-xH-4wP"/>
                     <constraint firstAttribute="trailingMargin" secondItem="0EM-W9-wfT" secondAttribute="trailing" constant="3" id="khm-Bo-2b1"/>
                     <constraint firstItem="06q-8S-Bc9" firstAttribute="centerY" secondItem="mcU-f6-ESE" secondAttribute="centerY" id="pP6-nZ-RiR"/>
                     <constraint firstItem="0EM-W9-wfT" firstAttribute="leading" secondItem="06q-8S-Bc9" secondAttribute="trailing" constant="7" id="raJ-kf-RGN"/>
                     <constraint firstItem="06q-8S-Bc9" firstAttribute="leading" secondItem="mcU-f6-ESE" secondAttribute="leadingMargin" id="ruD-KD-wB1"/>
-                    <constraint firstItem="0EM-W9-wfT" firstAttribute="centerY" secondItem="mcU-f6-ESE" secondAttribute="centerY" id="tBP-KC-6Nd"/>
+                    <constraint firstItem="0EM-W9-wfT" firstAttribute="leading" secondItem="06q-8S-Bc9" secondAttribute="trailing" constant="6" id="v8G-rv-2Eh"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">

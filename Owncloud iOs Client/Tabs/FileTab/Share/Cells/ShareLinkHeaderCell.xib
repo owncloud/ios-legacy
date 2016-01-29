@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -22,21 +22,16 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3Bs-cg-B5z">
-                        <rect key="frame" x="260" y="6" width="51" height="31"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="31" id="42z-Rd-PJf"/>
-                            <constraint firstAttribute="width" constant="49" id="VLD-0E-HAu"/>
-                        </constraints>
+                        <rect key="frame" x="259" y="7" width="51" height="31"/>
                     </switch>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottomMargin" secondItem="3Bs-cg-B5z" secondAttribute="bottom" constant="-1" id="Heq-2Y-rN6"/>
-                    <constraint firstItem="3Bs-cg-B5z" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-2" id="JTP-Ux-8FQ"/>
                     <constraint firstItem="z8Q-Tn-uNb" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="4" id="LRO-Bo-uaa"/>
                     <constraint firstItem="z8Q-Tn-uNb" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="Rao-tc-WkG"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="3Bs-cg-B5z" secondAttribute="trailing" constant="3" id="cGW-2v-Tjc"/>
+                    <constraint firstItem="3Bs-cg-B5z" firstAttribute="centerY" secondItem="z8Q-Tn-uNb" secondAttribute="centerY" id="aKA-2v-OwU"/>
                     <constraint firstAttribute="bottomMargin" secondItem="z8Q-Tn-uNb" secondAttribute="bottom" constant="3" id="clB-47-np9"/>
-                    <constraint firstItem="3Bs-cg-B5z" firstAttribute="leading" secondItem="z8Q-Tn-uNb" secondAttribute="trailing" constant="7" id="s3U-r0-d8h"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="3Bs-cg-B5z" secondAttribute="trailing" constant="4" id="vHG-Rv-O3W"/>
+                    <constraint firstItem="3Bs-cg-B5z" firstAttribute="leading" secondItem="z8Q-Tn-uNb" secondAttribute="trailing" constant="6" id="vQM-DS-pvH"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
