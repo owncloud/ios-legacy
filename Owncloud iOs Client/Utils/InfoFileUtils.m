@@ -30,6 +30,7 @@
 #import "ManageThumbnails.h"
 #import "ManageUsersDB.h"
 #import "NSObject+AssociatedObject.h"
+#import "OCSharedDto.h"
 
 @implementation InfoFileUtils
 
@@ -249,7 +250,11 @@
     
     //Shared -> Shared Image (SharedType = 1|2|3) || UnShared (SharedType = 0) -> Empty image
     if (fileForSetTheStatusIcon.sharedFileSource > 0) {
-        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
+        if ([ManageSharesDB getTheOCShareByFileDto:fileForSetTheStatusIcon andShareType:shareTypeLink andUser:user]) {
+            fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
+        } else {
+            fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
+        }
     } else if(sharesWith.count > 0) {
         fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
     } else{
