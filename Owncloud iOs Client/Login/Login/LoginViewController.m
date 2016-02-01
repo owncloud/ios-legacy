@@ -1682,7 +1682,14 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 
 - (NSString *)stripUsernameAndPassword:(NSString *)url {
     
-    NSURLComponents *components = [NSURLComponents componentsWithString:[self getUrlToCheck]];
+    NSString *fakeUrl = url;
+    
+    //fake url to compose full url propertly without use getUrlToCheck to compose components propertly
+    if (!([url hasPrefix:k_https_prefix] || [url hasPrefix:k_http_prefix])) {
+        fakeUrl = [NSString stringWithFormat:@"%@%@",k_https_prefix ,url];
+    }
+    
+    NSURLComponents *components = [NSURLComponents componentsWithString:fakeUrl];
     
     // if user component was set on the server URL, move it to the user field
     if(components.user.length > 0) {
@@ -1701,11 +1708,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         NSString *fullURLWithoutUsernamePassword = [self.urlTextField.text substringFromIndex:[self.urlTextField.text rangeOfString: @"@"].location+1];
         
-        if ([url hasPrefix:k_https_prefix] || [url hasPrefix:k_http_prefix]) {
-            url = [NSString stringWithFormat:@"%@://%@",components.scheme,fullURLWithoutUsernamePassword];
-        } else {
-            url = fullURLWithoutUsernamePassword;
-        }
+        url = fullURLWithoutUsernamePassword;
         
         [self.urlTextField setText:url];
     }
