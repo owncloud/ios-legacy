@@ -1695,8 +1695,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         url = [NSString stringWithFormat:@"%@", [self getUrlChecked: self.urlTextField.text]];
     } else if (isNeedToCheckAgain) {
         isNeedToCheckAgain = YES;
-        isHttps = YES;
-        url = [NSString stringWithFormat:@"%@%@",k_https_prefix,[self getUrlChecked: self.urlTextField.text]];
+        isHttps = NO;
+        url = [NSString stringWithFormat:@"%@%@",k_http_prefix,[self getUrlChecked: self.urlTextField.text]];
     } else {
         isNeedToCheckAgain = NO;
         isHttps = NO;
