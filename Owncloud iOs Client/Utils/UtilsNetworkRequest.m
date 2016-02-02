@@ -63,7 +63,7 @@
             DLog(@"The name of the item exists");
             [_delegate theFileIsInThePathResponse:isInThePath];
         }
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         DLog(@"error: %@", error);
         

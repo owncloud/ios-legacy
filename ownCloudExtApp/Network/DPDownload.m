@@ -160,12 +160,36 @@
             }
             
         }
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         [self.progressView stopSpinProgressBackgroundLayer];
         
-        [self failureInDownloadProcessWithError:error andResponse:response];
         
+        BOOL isSamlCredentialsError = NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                DLog(@"error login updating the etag");
+                //Set not download or downloaded in database
+                if (self.file.isNecessaryUpdate) {
+                    [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
+                    
+                } else {
+                    [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:notDownload];
+                }
+                
+                [self.progressView stopSpinProgressBackgroundLayer];
+                
+                [self deleteFileFromLocalFolder];
+                [self.delegate downloadFailed:NSLocalizedString(@"session_expired", nil) andFile:self.file];
+            }
+        }
+        if (!isSamlCredentialsError) {
+            [self failureInDownloadProcessWithError:error andResponse:response];
+        }
         
     }];
 }
@@ -279,16 +303,36 @@
             });
         }
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         [self.progressView stopSpinProgressBackgroundLayer];
-        self.state = downloadFailed;
+         self.state = downloadFailed;
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.progressView setProgress:0.0];
         });
         
-        [self failureInDownloadProcessWithError:error andResponse:response];
+        BOOL isSamlCredentialsError = NO;
         
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                //Set not download or downloaded in database
+                if (self.file.isNecessaryUpdate) {
+                    [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:downloaded];
+                    
+                } else {
+                    [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:notDownload];
+                }
+                [self deleteFileFromLocalFolder];
+                [self.delegate downloadFailed:NSLocalizedString(@"session_expired", nil) andFile:self.file];
+            }
+        }
+        if (!isSamlCredentialsError) {
+            [self failureInDownloadProcessWithError:error andResponse:response];
+        }
+ 
     } shouldExecuteAsBackgroundTaskWithExpirationHandler:^{
        [self.delegate downloadFailed:@"" andFile:self.file];
     }];
