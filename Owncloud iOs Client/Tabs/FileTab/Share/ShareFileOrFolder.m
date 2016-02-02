@@ -159,22 +159,6 @@
                 [self.activityPopoverController presentPopoverFromRect:CGRectMake(100, 100, 200, 400) inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
             }
         }
-        
-        [activityView setCompletionHandler:^(NSString *act, BOOL done) {
-            
-//            [self.activityPopoverController dismissPopoverAnimated:YES];
-            
-            /*NSString *serviceMsg = nil;
-             if ( [act isEqualToString:UIActivityTypeMail] )                    ServiceMsg = @"Mail sended!";
-             if ( [act isEqualToString:UIActivityTypePostToTwitter] )           ServiceMsg = @"Post on twitter, ok!";
-             if ( [act isEqualToString:UIActivityTypePostToFacebook] )          ServiceMsg = @"Post on facebook, ok!";
-             if ( [act isEqualToString:UIActivityTypeMessage] )                 ServiceMsg = @"SMS sended!";
-             if ( [act isEqualToString:UIActivityTypeCopyToPasteboard] && done) {
-             serviceMsg = NSLocalizedString(@"link_copied_on_pasteboard", nil);
-             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:serviceMsg message:@"" delegate:nil cancelButtonTitle: NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-             [alert show];
-             }*/
-        }];
        
     }
   
