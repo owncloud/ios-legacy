@@ -134,13 +134,13 @@
 #define k_is_background_active YES
 
 //Hide the share options
-#define k_hide_share_options NO
+#define k_hide_share_options YES
 
 //Help Guide init app
 #define k_show_main_help_guide YES
 
 //Show share with users
-#define k_is_share_with_users_available YES
+#define k_is_share_with_users_available NO
 
 //Show share by link
-#define k_is_share_by_link_available YES
+#define k_is_share_by_link_available NO

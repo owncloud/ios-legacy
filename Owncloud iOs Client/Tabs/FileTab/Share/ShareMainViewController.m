@@ -611,22 +611,34 @@
 #pragma mark - TableView methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-
-    return k_is_share_with_users_available;
+    
+    NSInteger numberOfSections = shareTableViewSectionsNumber;
+    
+    if (!k_is_share_with_users_available) {
+        numberOfSections--;
+    }
+    
+    if (!k_is_share_by_link_available) {
+        numberOfSections--;
+    }
+    
+    return numberOfSections;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     if (section == 0) {
         return 1;
-    }else if (section == 1){
+    }else if (section == 1 && k_is_share_with_users_available){
         if (self.sharedUsersOrGroups.count == 0) {
            return self.sharedUsersOrGroups.count + 2;
         }else{
            return self.sharedUsersOrGroups.count + 1;
         }
-    }else{
+    } else if (section == 1 && k_is_share_by_link_available){
         return self.optionsShownWithShareLink;
+    } else {
+        return 0;
     }
 }
 
@@ -639,7 +651,7 @@
         
         cell = [self getCellOfFileOrFolderInformationByTableView:tableView];
         
-    } else if (indexPath.section == 1) {
+    } else if (indexPath.section == 1 && k_is_share_with_users_available) {
         
         if (indexPath.row == 0 && self.sharedUsersOrGroups.count == 0){
             
@@ -655,7 +667,7 @@
             
         }
         
-    }else {
+    } else if (indexPath.section == 1 && k_is_share_by_link_available) {
         
         if (indexPath.row == 2) {
             
@@ -663,7 +675,7 @@
             
         } else {
             
-            [self getCellOptionShareLinkByTableView:tableView andIndex:indexPath];
+           cell = [self getCellOptionShareLinkByTableView:tableView andIndex:indexPath];
             
         }
     }
@@ -903,10 +915,10 @@
             shareLinkHeaderCell = (ShareLinkHeaderCell *)[topLevelObjects objectAtIndex:0];
         }
         
-        if (section == 1) {
+        if (section == 1 && k_is_share_with_users_available) {
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"share_with_users_or_groups", nil);
             shareLinkHeaderCell.switchSection.hidden = true;
-        }else{
+        } else if (section == 1 && k_is_share_by_link_available){
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"share_link_title", nil);
             [shareLinkHeaderCell.switchSection setOn:self.isShareLinkEnabled animated:false];
             [shareLinkHeaderCell.switchSection addTarget:self action:@selector(sharedLinkSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
