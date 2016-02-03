@@ -611,8 +611,8 @@
 #pragma mark - TableView methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    
-    return shareTableViewSectionsNumber;
+
+    return k_is_share_with_users_available;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -625,7 +625,6 @@
         }else{
            return self.sharedUsersOrGroups.count + 1;
         }
-        
     }else{
         return self.optionsShownWithShareLink;
     }
@@ -638,97 +637,21 @@
     
     if (indexPath.section == 0) {
         
-        ShareFileCell* shareFileCell = (ShareFileCell*)[tableView dequeueReusableCellWithIdentifier:shareFileCellIdentifier];
-        
-        if (shareFileCell == nil) {
-            NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareFileCellNib owner:self options:nil];
-            shareFileCell = (ShareFileCell *)[topLevelObjects objectAtIndex:0];
-        }
-        
-        NSString *itemName = [self.sharedItem.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        
-        shareFileCell.fileName.hidden = self.sharedItem.isDirectory;
-        shareFileCell.fileSize.hidden = self.sharedItem.isDirectory;
-        shareFileCell.folderName.hidden = !self.sharedItem.isDirectory;
-        
-        if (self.sharedItem.isDirectory == true) {
-            shareFileCell.fileImage.image = [UIImage imageNamed:@"folder_icon"];
-            shareFileCell.folderName.text = @"";
-            //Remove the last character (folderName/ -> folderName)
-            shareFileCell.folderName.text = [itemName substringToIndex:[itemName length]-1];
-            
-        }else{
-            shareFileCell.fileImage.image = [UIImage imageNamed:[FileNameUtils getTheNameOfTheImagePreviewOfFileName:[self.sharedItem.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-            shareFileCell.fileSize.text = [NSByteCountFormatter stringFromByteCount:[NSNumber numberWithLong:self.sharedItem.size].longLongValue countStyle:NSByteCountFormatterCountStyleMemory];
-            shareFileCell.fileName.text = itemName;
-        }
-        
-        cell = shareFileCell;
+        cell = [self getCellOfFileOrFolderInformationByTableView:tableView];
         
     } else if (indexPath.section == 1) {
         
         if (indexPath.row == 0 && self.sharedUsersOrGroups.count == 0){
             
-            ShareUserCell* shareUserCell = (ShareUserCell*)[tableView dequeueReusableCellWithIdentifier:shareUserCellIdentifier];
-            
-            if (shareUserCell == nil) {
-                NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareUserCellNib owner:self options:nil];
-                shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
-            }
-            
-            NSString *name = NSLocalizedString(@"not_share_with_users_yet", nil);
-            
-            shareUserCell.itemName.text = name;
-            
-            shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
-            
-            cell = shareUserCell;
+            cell = [self getCellShareUserByTableView:tableView];
             
         } else if ((indexPath.row == 1 && self.sharedUsersOrGroups.count == 0) || (indexPath.row == self.sharedUsersOrGroups.count)){
             
-            ShareLinkButtonCell *shareLinkButtonCell = [tableView dequeueReusableCellWithIdentifier:shareLinkButtonIdentifier];
-            
-            if (shareLinkButtonCell == nil) {
-                NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkButtonNib owner:self options:nil];
-                shareLinkButtonCell = (ShareLinkButtonCell *)[topLevelObjects objectAtIndex:0];
-            }
-            
-            shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
-            shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
-            shareLinkButtonCell.titleButton.text = NSLocalizedString(@"add_user_or_group_title", nil);
-            
-            cell = shareLinkButtonCell;
+            cell = [self getCellShareWithUserOrGroupButtonByTableView:tableView];
             
         }else{
             
-            ShareUserCell* shareUserCell = (ShareUserCell*)[tableView dequeueReusableCellWithIdentifier:shareUserCellIdentifier];
-            
-            if (shareUserCell == nil) {
-                NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareUserCellNib owner:self options:nil];
-                shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
-            }
-            
-            
-            OCShareUser *shareUser = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
-            
-            NSString *name;
-            
-            if (shareUser.isGroup) {
-                name = [NSString stringWithFormat:@"%@ (%@)",shareUser.name, NSLocalizedString(@"share_user_group_indicator", nil)];
-            } else {
-                
-                if (shareUser.isDisplayNameDuplicated) {
-                    name = [NSString stringWithFormat:@"%@ (%@)", shareUser.displayName, shareUser.name];
-                }else{
-                    name = shareUser.displayName;
-                }
-            }
-            
-            shareUserCell.itemName.text = name;
-            
-            shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
-            
-            cell = shareUserCell;
+            cell = [self getCellOfUserOrGroupNameSharedByTableView:tableView andIndexPath:indexPath];
             
         }
         
@@ -736,72 +659,11 @@
         
         if (indexPath.row == 2) {
             
-            ShareLinkButtonCell *shareLinkButtonCell = [tableView dequeueReusableCellWithIdentifier:shareLinkButtonIdentifier];
-            
-            if (shareLinkButtonCell == nil) {
-                NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkButtonNib owner:self options:nil];
-                shareLinkButtonCell = (ShareLinkButtonCell *)[topLevelObjects objectAtIndex:0];
-            }
-            
-            shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
-            shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
-            shareLinkButtonCell.titleButton.text = NSLocalizedString(@"get_share_link", nil);
-            
-            cell = shareLinkButtonCell;
-            
+            cell = [self getCellShareLinkButtonByTableView:tableView];
             
         } else {
             
-            ShareLinkOptionCell* shareLinkOptionCell = [tableView dequeueReusableCellWithIdentifier:shareLinkOptionIdentifer];
-            
-            if (shareLinkOptionCell == nil) {
-                NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkOptionNib owner:self options:nil];
-                shareLinkOptionCell = (ShareLinkOptionCell *)[topLevelObjects objectAtIndex:0];
-            }
-            
-            switch (indexPath.row) {
-                case 0:
-                    shareLinkOptionCell.optionName.text = NSLocalizedString(@"set_expiration_time", nil);
-                    
-                    if (self.isExpirationDateEnabled == true) {
-                        shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
-                        shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
-                        shareLinkOptionCell.optionDetail.text = [self converDateInCorrectFormat:[NSDate dateWithTimeIntervalSince1970: self.updatedOCShare.expirationDate]];
-                    }else{
-                        shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
-                        shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
-                        shareLinkOptionCell.optionDetail.text = @"";
-                    }
-                    [shareLinkOptionCell.optionSwith setOn:self.isExpirationDateEnabled animated:false];
-                    
-                    [shareLinkOptionCell.optionSwith addTarget:self action:@selector(expirationTimeSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
-                    
-                    break;
-                case 1:
-                    shareLinkOptionCell.optionName.text = NSLocalizedString(@"password_protect", nil);
-                    
-                    if (self.isPasswordProtectEnabled == true) {
-                        shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
-                        shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
-                        shareLinkOptionCell.optionDetail.text = @"Secured";
-                    } else {
-                        shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
-                        shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
-                        shareLinkOptionCell.optionDetail.text = @"";
-                    }
-                    [shareLinkOptionCell.optionSwith setOn:self.isPasswordProtectEnabled animated:false];
-                    
-                    [shareLinkOptionCell.optionSwith addTarget:self action:@selector(passwordProtectedSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
-                    
-                    break;
-                    
-                default:
-                    //Not expected
-                    DLog(@"Not expected");
-                    break;
-            }
-            
-            cell = shareLinkOptionCell;
+            [self getCellOptionShareLinkByTableView:tableView andIndex:indexPath];
             
         }
     }
@@ -809,6 +671,182 @@
     return cell;
     
 }
+
+#pragma mark - Cells
+
+- (UITableViewCell *) getCellOfFileOrFolderInformationByTableView:(UITableView *) tableView {
+    
+    ShareFileCell* shareFileCell = (ShareFileCell*)[tableView dequeueReusableCellWithIdentifier:shareFileCellIdentifier];
+    
+    if (shareFileCell == nil) {
+        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareFileCellNib owner:self options:nil];
+        shareFileCell = (ShareFileCell *)[topLevelObjects objectAtIndex:0];
+    }
+    
+    NSString *itemName = [self.sharedItem.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    shareFileCell.fileName.hidden = self.sharedItem.isDirectory;
+    shareFileCell.fileSize.hidden = self.sharedItem.isDirectory;
+    shareFileCell.folderName.hidden = !self.sharedItem.isDirectory;
+    
+    if (self.sharedItem.isDirectory == true) {
+        shareFileCell.fileImage.image = [UIImage imageNamed:@"folder_icon"];
+        shareFileCell.folderName.text = @"";
+        //Remove the last character (folderName/ -> folderName)
+        shareFileCell.folderName.text = [itemName substringToIndex:[itemName length]-1];
+        
+    }else{
+        shareFileCell.fileImage.image = [UIImage imageNamed:[FileNameUtils getTheNameOfTheImagePreviewOfFileName:[self.sharedItem.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+        shareFileCell.fileSize.text = [NSByteCountFormatter stringFromByteCount:[NSNumber numberWithLong:self.sharedItem.size].longLongValue countStyle:NSByteCountFormatterCountStyleMemory];
+        shareFileCell.fileName.text = itemName;
+    }
+    
+    return shareFileCell;
+    
+}
+
+- (UITableViewCell *) getCellShareUserByTableView:(UITableView *) tableView {
+    
+    ShareUserCell* shareUserCell = (ShareUserCell*)[tableView dequeueReusableCellWithIdentifier:shareUserCellIdentifier];
+    
+    if (shareUserCell == nil) {
+        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareUserCellNib owner:self options:nil];
+        shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
+    }
+    
+    NSString *name = NSLocalizedString(@"not_share_with_users_yet", nil);
+    
+    shareUserCell.itemName.text = name;
+    
+    shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
+    
+    return shareUserCell;
+    
+}
+
+- (UITableViewCell *) getCellShareWithUserOrGroupButtonByTableView:(UITableView *) tableView {
+    
+    ShareLinkButtonCell *shareLinkButtonCell = [tableView dequeueReusableCellWithIdentifier:shareLinkButtonIdentifier];
+    
+    if (shareLinkButtonCell == nil) {
+        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkButtonNib owner:self options:nil];
+        shareLinkButtonCell = (ShareLinkButtonCell *)[topLevelObjects objectAtIndex:0];
+    }
+    
+    shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
+    shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
+    shareLinkButtonCell.titleButton.text = NSLocalizedString(@"add_user_or_group_title", nil);
+    
+    return shareLinkButtonCell;
+}
+
+- (UITableViewCell *) getCellOfUserOrGroupNameSharedByTableView:(UITableView *) tableView andIndexPath:(NSIndexPath *) indexPath {
+    
+    ShareUserCell* shareUserCell = (ShareUserCell*)[tableView dequeueReusableCellWithIdentifier:shareUserCellIdentifier];
+    
+    if (shareUserCell == nil) {
+        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareUserCellNib owner:self options:nil];
+        shareUserCell = (ShareUserCell *)[topLevelObjects objectAtIndex:0];
+    }
+    
+    
+    OCShareUser *shareUser = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
+    
+    NSString *name;
+    
+    if (shareUser.isGroup) {
+        name = [NSString stringWithFormat:@"%@ (%@)",shareUser.name, NSLocalizedString(@"share_user_group_indicator", nil)];
+    } else {
+        
+        if (shareUser.isDisplayNameDuplicated) {
+            name = [NSString stringWithFormat:@"%@ (%@)", shareUser.displayName, shareUser.name];
+        }else{
+            name = shareUser.displayName;
+        }
+    }
+    
+    shareUserCell.itemName.text = name;
+    
+    shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
+    
+    return shareUserCell;
+    
+}
+
+- (UITableViewCell *) getCellShareLinkButtonByTableView:(UITableView *) tableView {
+    ShareLinkButtonCell *shareLinkButtonCell = [tableView dequeueReusableCellWithIdentifier:shareLinkButtonIdentifier];
+    
+    if (shareLinkButtonCell == nil) {
+        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkButtonNib owner:self options:nil];
+        shareLinkButtonCell = (ShareLinkButtonCell *)[topLevelObjects objectAtIndex:0];
+    }
+    
+    shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
+    shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
+    shareLinkButtonCell.titleButton.text = NSLocalizedString(@"get_share_link", nil);
+    
+    return shareLinkButtonCell;
+}
+
+- (UITableViewCell *) getCellOptionShareLinkByTableView:(UITableView *) tableView andIndex:(NSIndexPath *) indexPath {
+    
+    ShareLinkOptionCell* shareLinkOptionCell = [tableView dequeueReusableCellWithIdentifier:shareLinkOptionIdentifer];
+    
+    if (shareLinkOptionCell == nil) {
+        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkOptionNib owner:self options:nil];
+        shareLinkOptionCell = (ShareLinkOptionCell *)[topLevelObjects objectAtIndex:0];
+    }
+    
+    switch (indexPath.row) {
+        case 0:
+            shareLinkOptionCell.optionName.text = NSLocalizedString(@"set_expiration_time", nil);
+            
+            if (self.isExpirationDateEnabled == true) {
+                shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
+                shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
+                shareLinkOptionCell.optionDetail.text = [self converDateInCorrectFormat:[NSDate dateWithTimeIntervalSince1970: self.updatedOCShare.expirationDate]];
+            }else{
+                shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
+                shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
+                shareLinkOptionCell.optionDetail.text = @"";
+            }
+            [shareLinkOptionCell.optionSwith setOn:self.isExpirationDateEnabled animated:false];
+            
+            [shareLinkOptionCell.optionSwith addTarget:self action:@selector(expirationTimeSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+            
+            break;
+        case 1:
+            shareLinkOptionCell.optionName.text = NSLocalizedString(@"password_protect", nil);
+            
+            if (self.isPasswordProtectEnabled == true) {
+                shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
+                shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
+                shareLinkOptionCell.optionDetail.text = @"Secured";
+            } else {
+                shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
+                shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
+                shareLinkOptionCell.optionDetail.text = @"";
+            }
+            [shareLinkOptionCell.optionSwith setOn:self.isPasswordProtectEnabled animated:false];
+            
+            [shareLinkOptionCell.optionSwith addTarget:self action:@selector(passwordProtectedSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+            
+            break;
+            
+        default:
+            //Not expected
+            DLog(@"Not expected");
+            break;
+    }
+    
+    return shareLinkOptionCell;
+    
+}
+
+
+
+
+
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
