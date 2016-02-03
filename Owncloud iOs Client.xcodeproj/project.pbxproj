@@ -599,6 +599,18 @@
 		59EA36241BBE6C1E00C6CED0 /* IndexedForest.m in Sources */ = {isa = PBXBuildFile; fileRef = 59EA36231BBE6C1E00C6CED0 /* IndexedForest.m */; };
 		59EA98941BC5718600C3125D /* DownloadFileSyncFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 59EA98931BC5718600C3125D /* DownloadFileSyncFolder.m */; };
 		59EC94E81BBAA0210085190F /* FolderSyncDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 59EC94E71BBAA0210085190F /* FolderSyncDto.m */; };
+		59EDC41C1C611C630050939C /* owncloudLogoFiles@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC41B1C611C630050939C /* owncloudLogoFiles@2x.png */; };
+		59EDC41E1C611CE10050939C /* iphoneInstantUpload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC41D1C611CE10050939C /* iphoneInstantUpload@2x.png */; };
+		59EDC4201C611D6C0050939C /* iphoneFiles@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC41F1C611D6C0050939C /* iphoneFiles@2x.png */; };
+		59EDC4221C611E670050939C /* iphoneAccounts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC4211C611E670050939C /* iphoneAccounts@2x.png */; };
+		59EDC4241C611E700050939C /* iphoneShare@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC4231C611E700050939C /* iphoneShare@2x.png */; };
+		59EDC42C1C611F9A0050939C /* btnAllHelpGrey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC4251C611F9A0050939C /* btnAllHelpGrey@2x.png */; };
+		59EDC42D1C611F9A0050939C /* btnHelpPage0@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC4261C611F9A0050939C /* btnHelpPage0@2x.png */; };
+		59EDC42E1C611F9A0050939C /* btnHelpPage1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC4271C611F9A0050939C /* btnHelpPage1@2x.png */; };
+		59EDC42F1C611F9A0050939C /* btnHelpPage2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC4281C611F9A0050939C /* btnHelpPage2@2x.png */; };
+		59EDC4301C611F9A0050939C /* btnHelpPage3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC4291C611F9A0050939C /* btnHelpPage3@2x.png */; };
+		59EDC4311C611F9A0050939C /* btnHelpPage4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC42A1C611F9A0050939C /* btnHelpPage4@2x.png */; };
+		59EDC4321C611F9A0050939C /* btnHelpPage5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC42B1C611F9A0050939C /* btnHelpPage5@2x.png */; };
 		59F470321C5F97BA005B6091 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 59F470311C5F97BA005B6091 /* Launch Screen.storyboard */; };
 		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; };
 		EA0599861BB92B19002C2864 /* ShareUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599841BB92B19002C2864 /* ShareUserCell.xib */; };
@@ -1586,6 +1598,18 @@
 		59EA98931BC5718600C3125D /* DownloadFileSyncFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadFileSyncFolder.m; path = "Owncloud iOs Client/Network/Downloads/DownloadFolder/DownloadFileSyncFolder.m"; sourceTree = "<group>"; };
 		59EC94E61BBAA0210085190F /* FolderSyncDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FolderSyncDto.h; path = DataBase/DTOs/FolderSyncDto.h; sourceTree = "<group>"; };
 		59EC94E71BBAA0210085190F /* FolderSyncDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FolderSyncDto.m; path = DataBase/DTOs/FolderSyncDto.m; sourceTree = "<group>"; };
+		59EDC41B1C611C630050939C /* owncloudLogoFiles@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "owncloudLogoFiles@2x.png"; sourceTree = "<group>"; };
+		59EDC41D1C611CE10050939C /* iphoneInstantUpload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iphoneInstantUpload@2x.png"; sourceTree = "<group>"; };
+		59EDC41F1C611D6C0050939C /* iphoneFiles@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iphoneFiles@2x.png"; sourceTree = "<group>"; };
+		59EDC4211C611E670050939C /* iphoneAccounts@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iphoneAccounts@2x.png"; sourceTree = "<group>"; };
+		59EDC4231C611E700050939C /* iphoneShare@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iphoneShare@2x.png"; sourceTree = "<group>"; };
+		59EDC4251C611F9A0050939C /* btnAllHelpGrey@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnAllHelpGrey@2x.png"; sourceTree = "<group>"; };
+		59EDC4261C611F9A0050939C /* btnHelpPage0@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnHelpPage0@2x.png"; sourceTree = "<group>"; };
+		59EDC4271C611F9A0050939C /* btnHelpPage1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnHelpPage1@2x.png"; sourceTree = "<group>"; };
+		59EDC4281C611F9A0050939C /* btnHelpPage2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnHelpPage2@2x.png"; sourceTree = "<group>"; };
+		59EDC4291C611F9A0050939C /* btnHelpPage3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnHelpPage3@2x.png"; sourceTree = "<group>"; };
+		59EDC42A1C611F9A0050939C /* btnHelpPage4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnHelpPage4@2x.png"; sourceTree = "<group>"; };
+		59EDC42B1C611F9A0050939C /* btnHelpPage5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnHelpPage5@2x.png"; sourceTree = "<group>"; };
 		59F470311C5F97BA005B6091 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		D924DCBC1B973E88008B4BE7 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
 		D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
@@ -2855,10 +2879,15 @@
 				4052B4AC1B4E951F000788DA /* HelpPageButtons */,
 				40CC7F0C1B4E665400231D73 /* Images.xcassets */,
 				40F2F60E1C5A17B600129F92 /* iphoneFiles.png */,
+				59EDC41F1C611D6C0050939C /* iphoneFiles@2x.png */,
 				40F2F6121C5A180700129F92 /* owncloudLogoFiles.png */,
+				59EDC41B1C611C630050939C /* owncloudLogoFiles@2x.png */,
 				40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */,
+				59EDC41D1C611CE10050939C /* iphoneInstantUpload@2x.png */,
 				405AD0C01B56C26A00271424 /* iphoneShare.png */,
+				59EDC4231C611E700050939C /* iphoneShare@2x.png */,
 				400A63811B4FD94C00890579 /* iphoneAccounts.png */,
+				59EDC4211C611E670050939C /* iphoneAccounts@2x.png */,
 			);
 			path = HelpGuide;
 			sourceTree = "<group>";
@@ -2876,12 +2905,19 @@
 			isa = PBXGroup;
 			children = (
 				4052B4D71B4ECC75000788DA /* btnAllHelpGrey.png */,
+				59EDC4251C611F9A0050939C /* btnAllHelpGrey@2x.png */,
 				4052B4D91B4ECD3A000788DA /* btnHelpPage0.png */,
+				59EDC4261C611F9A0050939C /* btnHelpPage0@2x.png */,
 				4052B4DB1B4ECD74000788DA /* btnHelpPage1.png */,
+				59EDC4271C611F9A0050939C /* btnHelpPage1@2x.png */,
 				4052B4DD1B4ECF35000788DA /* btnHelpPage2.png */,
+				59EDC4281C611F9A0050939C /* btnHelpPage2@2x.png */,
 				4052B4DE1B4ECF35000788DA /* btnHelpPage3.png */,
+				59EDC4291C611F9A0050939C /* btnHelpPage3@2x.png */,
 				4052B4DF1B4ECF35000788DA /* btnHelpPage4.png */,
+				59EDC42A1C611F9A0050939C /* btnHelpPage4@2x.png */,
 				4052B4E01B4ECF35000788DA /* btnHelpPage5.png */,
+				59EDC42B1C611F9A0050939C /* btnHelpPage5@2x.png */,
 			);
 			path = HelpPageButtons;
 			sourceTree = "<group>";
@@ -3888,6 +3924,7 @@
 				40E354C51A14D671000E7FE4 /* ownCloud-xmas@3x.png in Resources */,
 				40E354E11A14FE36000E7FE4 /* sound_icon@3x.png in Resources */,
 				148DD62417785D6900FB9977 /* DetailView.xib in Resources */,
+				59EDC4241C611E700050939C /* iphoneShare@2x.png in Resources */,
 				148DD62B17785D9800FB9977 /* FilePreviewViewController.xib in Resources */,
 				40E354D31A14D8B5000E7FE4 /* CompanyLogo@3x.png in Resources */,
 				148DD63917785E2200FB9977 /* UploadFromOtherAppViewController.xib in Resources */,
@@ -3910,10 +3947,12 @@
 				148DD6DA177869C800FB9977 /* ImpressumViewController.xib in Resources */,
 				148DD6E917786A1400FB9977 /* SettingsViewController.xib in Resources */,
 				EABF68E31889595100A2217C /* ShareLinkCell.xib in Resources */,
+				59EDC42F1C611F9A0050939C /* btnHelpPage2@2x.png in Resources */,
 				148DD6EB17786A1400FB9977 /* WebViewController.xib in Resources */,
 				EA4914741AC0346100BECF0B /* TTOpenInAppActivity7.png in Resources */,
 				EABD88FD1BBE82C400DA5281 /* NotificationBackgroundSuccess@2x.png in Resources */,
 				145EA7D117786FAC0087CDDB /* Localizable.strings in Resources */,
+				59EDC4201C611D6C0050939C /* iphoneFiles@2x.png in Resources */,
 				13A5ADB418883C77000EB617 /* CopyLinkShareipad@2x.png in Resources */,
 				145EA7D217786FAC0087CDDB /* InfoPlist.strings in Resources */,
 				1487F203177C35AA004A1A5A /* CompanyLogo.png in Resources */,
@@ -3921,10 +3960,12 @@
 				14A87ADF1933390900D0D5AD /* FileDownloadingIcon.png in Resources */,
 				EA2243EB1B71276D00F62E2A /* ShareLinkHeaderCell.xib in Resources */,
 				1487F208177C35AA004A1A5A /* MainAppIcon_29-29.png in Resources */,
+				59EDC4321C611F9A0050939C /* btnHelpPage5@2x.png in Resources */,
 				1487F209177C35AA004A1A5A /* MainAppIcon_29-29@2x.png in Resources */,
 				400A63821B4FD94C00890579 /* iphoneAccounts.png in Resources */,
 				14A7F7A018ED5781009AF347 /* presentation_icon@2x.png in Resources */,
 				EA5C6F7F1B70BA880088071B /* ShareViewController.xib in Resources */,
+				59EDC4221C611E670050939C /* iphoneAccounts@2x.png in Resources */,
 				EA42FA5A180C13710006DB7C /* cancel_download_white.png in Resources */,
 				1487F218177C35AA004A1A5A /* BackRootFolderIcon.png in Resources */,
 				400904DC1A02B54600E3DD15 /* MainAppIcon_60-60@3x.png in Resources */,
@@ -4000,6 +4041,7 @@
 				1487F23F177C35AA004A1A5A /* TABsettings@2x.png in Resources */,
 				4052B4E21B4ECF35000788DA /* btnHelpPage3.png in Resources */,
 				1487F240177C35AA004A1A5A /* zip_icon.png in Resources */,
+				59EDC4301C611F9A0050939C /* btnHelpPage3@2x.png in Resources */,
 				14A7F79F18ED5781009AF347 /* presentation_icon.png in Resources */,
 				40AB1F691A123D0E003E7397 /* TABsettings@3x.png in Resources */,
 				1487F241177C35AA004A1A5A /* zip_icon@2x.png in Resources */,
@@ -4018,6 +4060,7 @@
 				EA0599941BB94F3F002C2864 /* ShareSearchUserViewController.xib in Resources */,
 				EA4914721AC0346100BECF0B /* TTOpenInAppActivity.png in Resources */,
 				1487F249177C35AA004A1A5A /* NonSecureConnectionIcon@2x.png in Resources */,
+				59EDC42C1C611F9A0050939C /* btnAllHelpGrey@2x.png in Resources */,
 				1487F24A177C35AA004A1A5A /* ReconnectIcon.png in Resources */,
 				1487F24B177C35AA004A1A5A /* ReconnectIcon@2x.png in Resources */,
 				1487F24C177C35AA004A1A5A /* RevealPasswordIcon.png in Resources */,
@@ -4037,6 +4080,7 @@
 				400904D71A02AE3300E3DD15 /* Default-736h@3x.png in Resources */,
 				1487F251177C35AA004A1A5A /* cancel_download@2x.png in Resources */,
 				14EFCAEB17FAFEAA007A38B6 /* MainAppIcon_76-76.png in Resources */,
+				59EDC4311C611F9A0050939C /* btnHelpPage4@2x.png in Resources */,
 				EABD890D1BBE82C400DA5281 /* NotificationBackgroundWarning@2x.png in Resources */,
 				14A4796218EBF174003500BA /* favoriteTB@2x.png in Resources */,
 				4052B4DA1B4ECD3A000788DA /* btnHelpPage0.png in Resources */,
@@ -4051,11 +4095,13 @@
 				40E30ED61B59105D00D36B07 /* iphoneInstantUpload.png in Resources */,
 				1487F258177C35AA004A1A5A /* radio_unchecked.png in Resources */,
 				1487F259177C35AA004A1A5A /* radio_unchecked@2x.png in Resources */,
+				59EDC41C1C611C630050939C /* owncloudLogoFiles@2x.png in Resources */,
 				13A5ADB618883C77000EB617 /* CopyLinkShareiphone@2x.png in Resources */,
 				1487F25A177C35AA004A1A5A /* arrow_button.png in Resources */,
 				40F2F6131C5A180700129F92 /* owncloudLogoFiles.png in Resources */,
 				1487F25B177C35AA004A1A5A /* arrow_button@2x.png in Resources */,
 				1487F25C177C35AA004A1A5A /* conarrow_button.png in Resources */,
+				59EDC41E1C611CE10050939C /* iphoneInstantUpload@2x.png in Resources */,
 				402661151A07C66A00517663 /* Default-Landscape_414h@3x.png in Resources */,
 				1487F25D177C35AA004A1A5A /* conarrow_button@2x.png in Resources */,
 				14A7F7AE18ED5C06009AF347 /* folder_icon@2x~ipad.png in Resources */,
@@ -4119,6 +4165,7 @@
 				1487F28A177C35AA004A1A5A /* popover_backgroud.png in Resources */,
 				1487F28B177C35AA004A1A5A /* ASMoveFile.png in Resources */,
 				40AB1F6B1A123D1B003E7397 /* TABShares@3x.png in Resources */,
+				59EDC42E1C611F9A0050939C /* btnHelpPage1@2x.png in Resources */,
 				1487F28C177C35AA004A1A5A /* ASMoveFile@2x.png in Resources */,
 				400560751A03B1190030D502 /* MainAppIcon_40-40@2x.png in Resources */,
 				1487F28D177C35AA004A1A5A /* ASOpenWith.png in Resources */,
@@ -4173,6 +4220,7 @@
 				149D98C2195AAD54005E0C73 /* fileSharedByLink@2x.png in Resources */,
 				EA2679001876E4B8008678DE /* notSharedItem@2x.png in Resources */,
 				149532FB17DA09DA00E77D71 /* topBar.png in Resources */,
+				59EDC42D1C611F9A0050939C /* btnHelpPage0@2x.png in Resources */,
 				EA68968E17F599060033B3C1 /* KKPasscodeLock.bundle in Resources */,
 				402661141A07C66A00517663 /* Default-Landscape_375h@2x.png in Resources */,
 				149532FC17DA09DA00E77D71 /* topBar@2x.png in Resources */,
