@@ -287,7 +287,12 @@
         }
         
         [self.filteredItems addObjectsFromArray:itemList];
-        [self.filteredItems addObject:[self getFederateOCSharedUserByName:filterString]];
+        
+        //TODO: On this if add the capability to federate share
+        if ([filterString containsString:@"@"]) {
+            [self.filteredItems addObject:[self getFederatedOCSharedUserByName:filterString]];
+        }
+        
         self.filteredItems = [ShareUtils manageTheDuplicatedUsers:self.filteredItems];
         
         [self.searchDisplayController.searchResultsTableView reloadData];
@@ -413,8 +418,9 @@
     OCShareUser *federatedUser = [OCShareUser new];
     federatedUser.isGroup = NO;
     federatedUser.isDisplayNameDuplicated = NO;
+    federatedUser.isFederatedUser = YES;
     federatedUser.name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federated_indicator", nil)];
-    federatedUser.displayName = name;
+    federatedUser.displayName = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federated_indicator", nil)];;
     
     return federatedUser;
 }
