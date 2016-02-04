@@ -40,7 +40,8 @@
 #define k_percent_for_check_the_uploads 0.1
 
 //Share link middle part url
-#define k_share_link_middle_part_url @"public.php?service=files&t="
+#define k_share_link_middle_part_url_before_version_8 @"public.php?service=files&t="
+#define k_share_link_middle_part_url_after_version_8 @"index.php/s/"
 
 //Alert view tags
 #define k_alertview_for_login 1
@@ -80,3 +81,5 @@
 #define k_widget_parameter_shared @"shared"
 #define k_widget_parameter_settings @"settings"
 
+//Negative etag used to force pending to update
+#define k_negative_etag @"-1"

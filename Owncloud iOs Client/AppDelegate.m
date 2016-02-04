@@ -47,15 +47,16 @@
 #import "OCErrorMsg.h"
 #import "OCFrameworkConstants.h"
 #import "UtilsDtos.h"
-#import "CheckHasShareSupport.h"
-#import "CheckHasCookiesSupport.h"
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
 #import "ManageLocation.h"
 #import "ManageAsset.h"
 #import "OCSplitViewController.h"
 #import "InitializeDatabase.h"
-#import "CheckHasForbiddenCharactersSupport.h"
+#import "HelpGuideViewController.h"
+#import "SyncFolderManager.h"
+#import "DownloadFileSyncFolder.h"
+#import "CheckFeaturesSupported.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -142,7 +143,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
     
     //Needed to use on background tasks
-    if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active) {
+    if (!k_is_sso_active) {
         [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     }
     
@@ -166,7 +167,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [NSURLCache setSharedURLCache:sharedCache];
     sleep(1); //Important sleep. Very ugly but neccesarry.
     
-    
+    DLog(@"showHelp_:%d",[ManageDB getShowHelpGuide]);
+    if (k_show_main_help_guide && [ManageDB getShowHelpGuide] && !_activeUser) {
+        self.helpGuideWindowViewController = [HelpGuideViewController new];        
+        self.window.rootViewController = self.helpGuideWindowViewController;
+    }
+   
     return YES;
 }
 
@@ -349,12 +355,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void) initAppWithEtagRequest:(BOOL)isEtagRequestNecessary {
     
     [InitializeDatabase initDataBase];
+    [[AppDelegate sharedSyncFolderManager] setThePermissionsOnDownloadCacheFolder];
     
     //First Call when init the app
-     _activeUser = [ManageUsersDB getActiveUser];
+     self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
     
     //if is null we do not have any active user on the database
-    if(_activeUser.username == nil) {
+    if(!self.activeUser) {
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         
@@ -456,7 +463,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) generateAppInterfaceFromLoginScreen:(BOOL)isFromLogin{
     
-    _activeUser=[ManageUsersDB getActiveUser];
+    self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
     
     NSString *wevDavString = [UtilsUrls getFullRemoteServerPathWithWebDav:_activeUser];
     NSString *localSystemPath = nil;
@@ -565,7 +572,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         self.window.rootViewController = _ocTabBarController;
         [self.window makeKeyAndVisible];
         //Select the first item of the tabBar
-        _ocTabBarController.selectedIndex = 0;
+        self.ocTabBarController.selectedIndex = 0;
     } else {
         //iPad
         
@@ -585,15 +592,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         // Add the split view controller's view to the window and display.
         self.window.rootViewController = _splitViewController;
-        [_window makeKeyAndVisible];
-         _ocTabBarController.selectedIndex = 0;
+        [self.window makeKeyAndVisible];
+         self.ocTabBarController.selectedIndex = 0;
         
-        [_detailViewController performSelector:@selector(configureView) withObject:nil afterDelay:0];
+        [self.detailViewController performSelector:@selector(configureView) withObject:nil afterDelay:0];
         
     }
     
+    self.activeUser = [ManageUsersDB getActiveUser];
+    
     //if is file from other app wainting, present the upload from other app view
-    if (_isFileFromOtherAppWaitting==YES) {
+    if (self.isFileFromOtherAppWaitting==YES) {
         [self presentUploadFromOtherApp];
     }
     
@@ -613,7 +622,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         NSURLSessionConfiguration *configuration = nil;
         
 
-        if (IS_IOS8) {
+        if (IS_IOS8 || IS_IOS9) {
             configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_session_name];
         } else {
             configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:k_session_name];
@@ -644,7 +653,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         NSURLSessionConfiguration *configurationDownload = nil;
         
-        if (IS_IOS8) {
+        if (IS_IOS8 || IS_IOS9) {
             configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_session_name];
         }else{
             configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_session_name];
@@ -678,6 +687,67 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 	return sharedOCCommunication;
 }
 
++ (OCCommunication*)sharedOCCommunicationDownloadFolder {
+    static OCCommunication* sharedOCCommunicationDownloadFolder = nil;
+    if (sharedOCCommunicationDownloadFolder == nil)
+    {
+        
+        NSURLSessionConfiguration *configurationDownload = nil;
+        
+        if (IS_IOS8) {
+            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_folder_session_name];
+        }else{
+            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_folder_session_name];
+        }
+        
+        configurationDownload.HTTPMaximumConnectionsPerHost = 1;
+        configurationDownload.requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
+        configurationDownload.timeoutIntervalForRequest = k_timeout_upload;
+        configurationDownload.sessionSendsLaunchEvents = YES;
+        [configurationDownload setAllowsCellularAccess:YES];
+        OCURLSessionManager *downloadSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:configurationDownload];
+        [downloadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
+        [downloadSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
+            return NSURLSessionAuthChallengePerformDefaultHandling;
+        }];
+        
+        sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager];
+        
+        
+        //Acive the cookies functionality if the server supports it
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        if (appDelegate.activeUser) {
+            if (appDelegate.activeUser.hasCookiesSupport == serverFunctionalitySupported) {
+                sharedOCCommunicationDownloadFolder.isCookiesAvailable = YES;
+            }
+        }
+        
+    }
+    return sharedOCCommunicationDownloadFolder;
+}
+
++ (SyncFolderManager*)sharedSyncFolderManager {
+    
+    static SyncFolderManager* sharedSyncFolderManager = nil;
+    
+    if (sharedSyncFolderManager == nil) {
+        sharedSyncFolderManager = [SyncFolderManager new];
+    }
+    
+    return sharedSyncFolderManager;
+}
+
++ (ManageFavorites*)sharedManageFavorites {
+    
+    static ManageFavorites* manageFavorites = nil;
+    
+    if (manageFavorites == nil) {
+        manageFavorites = [ManageFavorites new];
+    }
+    
+    return manageFavorites;
+}
+
 
 #pragma mark - ManageFavorites
 
@@ -685,13 +755,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  * This method is for launch the syncAllFavoritesOfUser in background
  */
 - (void) launchProcessToSyncAllFavorites {
-
-    if (!self.manageFavorites) {
-        self.manageFavorites = [ManageFavorites new];
-    }
     
     //Do operations in background thread
-    [self.manageFavorites syncAllFavoritesOfUser:_activeUser.idUser];
+    [[AppDelegate sharedManageFavorites] syncAllFavoritesOfUser:_activeUser.idUser];
     
 }
 
@@ -795,20 +861,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 /**
  * This method check if the server support multipple things:
  * - If support Share
+ * - If support Sharee API
  * - If support Cookies
+ * - If support Forbidden Characters
+ * - If support Capabilities API
  *
  */
 - (void)checkIfServerSupportThings {
     
-    //Check if the server support share
-    [[AppDelegate sharedCheckHasShareSupport] checkIfServerHasShareSupport];
+    //Check and updated the features supported by the server
+    [[CheckFeaturesSupported sharedCheckFeaturesSupported]updateServerFeaturesOfActiveUser];
     
-    //Check if the server support cookies
-    [[AppDelegate sharedCheckHasCookiesSupport] checkIfServerHasCookiesSupport];
-    
-    //Check if the server has forbidden characters supports
-    [[AppDelegate sharedCheckHasForbiddenCharactersSupport] checkIfServerHasForbiddenCharactersSupport];
-  
 }
 
 /*
@@ -972,9 +1035,20 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_presentFilesViewController.folderView) {
         [_presentFilesViewController.folderView dismissWithClickedButtonIndex:0 animated:NO];
     }
-    //Close the pop-up of share link with password
-    if (_presentFilesViewController.mShareFileOrFolder.shareProtectedAlertView) {
-        [_presentFilesViewController.mShareFileOrFolder.shareProtectedAlertView dismissWithClickedButtonIndex:0 animated:NO];
+    
+    
+    if([[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)]) {
+        DLog(@"Multitasking Supported");
+        
+        __block UIBackgroundTaskIdentifier background_task;
+        background_task = [application beginBackgroundTaskWithExpirationHandler:^ {
+            
+            //Clean up code. Tell the system that we are done.
+            [application endBackgroundTask: background_task];
+            background_task = UIBackgroundTaskInvalid;
+        }];
+    } else {
+        DLog(@"Multitasking Not Supported");
     }
 
 }
@@ -1039,10 +1113,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [standardUserDefaults setBool:YES forKey:k_app_killed_by_user];
     [standardUserDefaults synchronize];
     
-    
-     if ((IS_IOS7 || IS_IOS8) && !k_is_sso_active){
-         [self.downloadManager cancelDownloads];
-     }
+    [self.downloadManager cancelDownloads];
+    [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
+
     
     //Remove inbox folder if aren't uploads pending
     if (![ManageUploadsDB isFilesInUploadProcess]) {
@@ -1068,7 +1141,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     NSURLSessionConfiguration *configuration = nil;
     
     
-    if (IS_IOS8) {
+    if (IS_IOS8 || IS_IOS9) {
         configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
     } else {
         configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
@@ -1187,11 +1260,44 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-- (void) restoreDownloadsInProccessFromSystemWithIdentificator: (NSString*)identifier withCompletionHandler:(void (^)())completionHandler{
+- (void) restoreDownloadsInProccessFromDownloadFolderFromSystemWithIdentificator: (NSString*)identifier withCompletionHandler:(void (^)())completionHandler{
     
     NSURLSessionConfiguration *configuration = nil;
     
     if (IS_IOS8) {
+        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
+    } else {
+        configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
+    }
+    
+    NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:configuration];
+    
+    [urlSession getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        
+        //Get downloads in progress from the DataBase
+        NSMutableArray *downloadsFromDB = [NSMutableArray new];
+        
+        [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading]];
+        
+        for (NSURLSessionDownloadTask *downloadTask in downloadTasks) {
+            
+            for (FileDto *file in downloadsFromDB) {
+                
+                if (file.taskIdentifier == downloadTask.taskIdentifier) {
+                    [[AppDelegate sharedSyncFolderManager] simpleDownloadTheFile:file andTask:downloadTask];
+                }
+            }
+        }
+        
+        [self getDownloadsFromDownloadFolderTaskFinish];
+    }];
+}
+
+- (void) restoreDownloadsInProccessFromSystemWithIdentificator: (NSString*)identifier withCompletionHandler:(void (^)())completionHandler{
+    
+    NSURLSessionConfiguration *configuration = nil;
+    
+    if (IS_IOS8 || IS_IOS9) {
         configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
     } else {
         configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
@@ -1231,33 +1337,91 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             }
         }
         
-        if (downloadsFromDB.count > 0) {
-            
-            NSMutableArray *tempArray = [NSMutableArray new];
-            
-            for (Download *download in [self.downloadManager getDownloads]) {
-                for (FileDto *file in downloadsFromDB) {
-                    if ([file.filePath isEqualToString:download.fileDto.filePath] && [file.fileName isEqualToString:download.fileDto.fileName]){
-                        [tempArray addObject:file];
-                    }
-                }
-            }
-            
-            for (FileDto *file in tempArray) {
-                [downloadsFromDB removeObjectIdenticalTo:file];
-            }
-            
-            //Put "notdownload" state files are not in the background session
-            for (FileDto *file in downloadsFromDB) {
-                [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
-            }
-            
-        }
-        
         [self getCallBacksOfDownloads];
         [self getDownloadsTaskFinish];
-        
        
+    }];
+}
+
+/*
+ *  Method to set the files that are not on the Background but they should be downloading to not download state
+ */
+- (void) removeDownloadStatusFromFilesLosesOnBackground {
+    
+    //Get downloads in progress from the DataBase
+    NSMutableArray *downloadsFromDB = [NSMutableArray new];
+    
+    [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading]];
+    
+    if (downloadsFromDB.count > 0) {
+        
+        NSMutableArray *tempArray = [NSMutableArray new];
+        
+        //Files selected manually pending to be download
+        for (Download *download in [self.downloadManager getDownloads]) {
+            for (FileDto *file in downloadsFromDB) {
+                if ([file.filePath isEqualToString:download.fileDto.filePath] && [file.fileName isEqualToString:download.fileDto.fileName]){
+                    [tempArray addObject:file];
+                }
+            }
+        }
+        
+        //Files download folder pending to be download
+        
+        NSMutableArray *listOfFilesToBeDownloaded = [AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded;
+        
+        for (DownloadFileSyncFolder *download in listOfFilesToBeDownloaded) {
+            for (FileDto *file in downloadsFromDB) {
+                if ([file.filePath isEqualToString:download.file.filePath] && [file.fileName isEqualToString:download.file.fileName]){
+                    [tempArray addObject:file];
+                }
+            }
+        }
+        
+        for (FileDto *file in tempArray) {
+            [downloadsFromDB removeObjectIdenticalTo:file];
+        }
+        
+        //Put "notdownload" state files are not in the background session
+        for (FileDto *file in downloadsFromDB) {
+            [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
+        }
+        
+    }
+}
+
+- (void) getDownloadsFromDownloadFolderTaskFinish {
+    
+    DLog(@"Download in background task finish");
+    [[AppDelegate sharedOCCommunicationDownloadFolder] setDownloadTaskComleteBlock:^NSURL *(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location) {
+        
+        NSMutableArray *listOfFilesToBeDownloaded = [AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.copy;
+        
+        for (DownloadFileSyncFolder *download in listOfFilesToBeDownloaded) {
+            
+            if (download.file.taskIdentifier == downloadTask.taskIdentifier /*&& download.file.isFromBackground*/) {
+                
+                NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)downloadTask.response;
+                DLog(@"HTTP Error: %ld", (long)httpResponse.statusCode);
+                
+                if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+                
+                    if ([[NSFileManager defaultManager] fileExistsAtPath:download.file.localFolder]) {
+                        [download updateDataDownloadSuccess];
+                    } else {
+                        [download failureDownloadProcess];
+                    }
+                
+                    [self reloadTableFromDataBaseIfFileIsVisibleOnList:download.file];
+                    
+                } else {
+                    //Failure
+                    [download failureDownloadProcess];
+                    [self reloadTableFromDataBaseIfFileIsVisibleOnList:download.file];
+                }
+            }
+        }
+        return nil;
     }];
 }
 
@@ -1562,7 +1726,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 {
   [self.downloadManager changeBehaviourForBackgroundFetch:YES];
     
-    if ([self.downloadManager getDownloads].count > 0) {
+    if (([self.downloadManager getDownloads].count > 0) ||
+        ([AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count > 0)) {
         completionHandler(UIBackgroundFetchResultNewData);
     } else {
         completionHandler(UIBackgroundFetchResultNoData);
@@ -1691,10 +1856,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_settingsViewController.vc) {
         [_settingsViewController.vc dismissViewControllerAnimated:NO completion:nil];
     }
-    //Close the openWith option in FileViewController
-    if (_presentFilesViewController.mShareFileOrFolder) {
-        [_presentFilesViewController.mShareFileOrFolder.activityPopoverController dismissPopoverAnimated:NO];
-    }
+    
 }
 
 
@@ -1714,6 +1876,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //If it's first open
         if (!_filesViewController) {
             [self initAppWithEtagRequest:YES];
+            
 
         } else {
             if (_splitViewController) {
@@ -1991,9 +2154,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [self performSelectorInBackground:@selector(initUploadsOffline) withObject:nil];
         [self updateTheDownloadState:downloading to:notDownload];
     } else {
+        [AppDelegate sharedOCCommunicationDownloadFolder];
         [self restoreUploadsInProccessFromSystemWithIdentificator:k_session_name withCompletionHandler:nil];
         [self restoreDownloadsInProccessFromSystemWithIdentificator:k_download_session_name withCompletionHandler:nil];
-
+        [self restoreDownloadsInProccessFromDownloadFolderFromSystemWithIdentificator:k_download_folder_session_name withCompletionHandler:nil];
+        
+        //We use a delay to have time to restoreDownloadsInProccess methods that works in an async way
+        [self performSelector:@selector(removeDownloadStatusFromFilesLosesOnBackground) withObject:nil afterDelay:3.0];
     }
     
     [self addErrorUploadsToRecentsTab];
@@ -2048,7 +2215,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     
     NSUserDefaults * standardUserDefaults = [NSUserDefaults standardUserDefaults];
-    if ([standardUserDefaults boolForKey:k_app_killed_by_user] || !IS_IOS7 || !IS_IOS8 || k_is_sso_active) {
+    if ([standardUserDefaults boolForKey:k_app_killed_by_user] || k_is_sso_active) {
         //We set all the UploadsOfflineDto that are not uploading but should as ready to be uploaded
         [ManageUploadsDB updateNotFinalizeUploadsOfflineBy:allUploadsToBeModified];
     } else {
@@ -2110,7 +2277,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 FileDto *currentFile = [items objectAtIndex:0];
                 [self theFileWasUploadedByCurrentUploadInBackground:currentUploadBackground andCurrentFile:currentFile];
                 
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                 //Check the error for to know if there is a server connection error
                 if (error.code == kCFURLErrorCannotConnectToHost) {
                     //The connection of the server is down. Set the status of the file to: "Pending to be check"
@@ -2151,7 +2318,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
                 FileDto *currentFile = [items objectAtIndex:0];
                 [self theFileWasUploadedByCurrentUploadInBackground:currentUploadBackground andCurrentFile:currentFile];
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
 //                //Do nothing
 //                [ManageUploadsDB setStatus:pendingToBeCheck andKindOfError:notAnError byUploadOffline:currentUploadBackground];
 //                [self addPendingToCheckUploadsToRecentsTab];
@@ -2185,7 +2352,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self createAManageRequestUploadWithTheUploadOffline:fileForUpload];
     DLog(@"The file is on server");
     
-    currentFile = [ManageFilesDB getFileDtoByFileName:currentFile.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:self.activeUser] andUser:self.activeUser];
+    currentFile = [ManageFilesDB getFileDtoByFileName:currentUploadBackground.uploadFileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:currentFile.filePath andUser:self.activeUser] andUser:self.activeUser];
     
     if (currentFile.isDownload == overwriting) {
         [ManageFilesDB setFileIsDownloadState:currentFile.idFile andState:downloaded];
@@ -2623,64 +2790,75 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-
-
-#pragma mark - Singletons of Server Version Checks
-
 //-----------------------------------
-/// @name sharedCheckHasShareSupport
+/// @name reloadTableFromDataBaseIfFileIsVisibleOnList
 ///-----------------------------------
 
 /**
- * Singleton to check if a server support share API
+ * Method that check if the file is visible on the file list before reload the table from the database
  *
+ * @param file -> FileDto visible
  */
-+ (CheckHasShareSupport*) sharedCheckHasShareSupport {
-	static CheckHasShareSupport* sharedCheckHasShareSupport = nil;
-	if (sharedCheckHasShareSupport == nil)
-	{
-        sharedCheckHasShareSupport = [CheckHasShareSupport new];
-        
-	}
-	return sharedCheckHasShareSupport;
-}
-
-//-----------------------------------
-/// @name sharedCheckHasCookiesSupport
-///-----------------------------------
-
-/**
- * Singleton to check if a server support cookies for sessions
- *
- */
-+ (CheckHasCookiesSupport*) sharedCheckHasCookiesSupport {
-	static CheckHasCookiesSupport* sharedCheckHasCookiesSupport = nil;
-	if (sharedCheckHasCookiesSupport == nil)
-	{
-        sharedCheckHasCookiesSupport = [CheckHasCookiesSupport new];
-        
-	}
-	return sharedCheckHasCookiesSupport;
-}
-
-//-----------------------------------
-/// @name sharedForbiddenCharactersSupport
-///-----------------------------------
-
-/**
- * Singleton to check if a server has forbidden characters supports
- *
- */
-+ (CheckHasForbiddenCharactersSupport *) sharedCheckHasForbiddenCharactersSupport {
-    static CheckHasForbiddenCharactersSupport* sharedCheckHasForbiddenCharactersSupport = nil;
-    if (sharedCheckHasForbiddenCharactersSupport == nil)
-    {
-        sharedCheckHasForbiddenCharactersSupport = [CheckHasForbiddenCharactersSupport new];
-        
+- (void) reloadTableFromDataBaseIfFileIsVisibleOnList:(FileDto *) file {
+    
+    //Update the file and folder to be sure that the ids are right
+    FileDto *folder = [ManageFilesDB getFileDtoByFileName:self.presentFilesViewController.fileIdToShowFiles.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.presentFilesViewController.fileIdToShowFiles.filePath andUser:self.activeUser] andUser:self.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:self.activeUser] andUser:self.activeUser];
+    
+    if (folder.idFile == file.fileId) {
+        [_presentFilesViewController reloadTableFromDataBase];
     }
-    return sharedCheckHasForbiddenCharactersSupport;
 }
 
+- (void) reloadCellByFile:(FileDto *) file {
+    
+    //Update the file and folder to be sure that the ids are right
+    FileDto *folder = [ManageFilesDB getFileDtoByFileName:self.presentFilesViewController.fileIdToShowFiles.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.presentFilesViewController.fileIdToShowFiles.filePath andUser:self.activeUser] andUser:self.activeUser];
+    file = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:self.activeUser] andUser:self.activeUser];
+    
+    if (folder.idFile == file.fileId) {
+        [_presentFilesViewController reloadCellByFile:file];
+    }
+}
+
+- (void) reloadCellByUploadOffline:(UploadsOfflineDto *) uploadOffline {
+    
+    //Update the file and folder to be sure that the ids are right
+    FileDto *folder = [ManageFilesDB getFileDtoByFileName:self.presentFilesViewController.fileIdToShowFiles.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.presentFilesViewController.fileIdToShowFiles.filePath andUser:self.activeUser] andUser:self.activeUser];
+    FileDto *file = [ManageFilesDB getFileDtoByFileName:uploadOffline.uploadFileName andFilePath:[UtilsUrls getFilePathOnDBByFullPath:uploadOffline.destinyFolder andUser:self.activeUser] andUser:self.activeUser];
+    
+    if (folder.idFile == file.fileId) {
+        [_presentFilesViewController reloadCellByFile:file];
+    }
+}
+
+///-----------------------------------
+/// @name reloadCellByKey
+///-----------------------------------
+
+/**
+ * This method refresh the folder cell if is visible
+ *
+ * @param key -> key,
+ */
+-(void)reloadCellByKey:(NSString *)key{
+    
+    //Refresh list to update the arrow
+    NSString *folderToRemovePath;
+    NSString *folderToRemoveName = [NSString stringWithFormat:@"%@/",[key lastPathComponent]];
+    NSString *parentKey = [key substringToIndex:[key length] - ([key lastPathComponent].length+1)];
+    if (![parentKey hasSuffix:@"/"]) {
+        parentKey = [parentKey stringByAppendingString:@"/"];
+    }
+    if ([parentKey isEqualToString:@"/"]) {
+        folderToRemovePath = @"";
+    } else {
+        folderToRemovePath = parentKey;
+    }
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:[folderToRemoveName encodeString:NSUTF8StringEncoding] andFilePath:[folderToRemovePath encodeString:NSUTF8StringEncoding] andUser:app.activeUser];
+    [self reloadCellByFile:folderRemoved];
+}
 
 #pragma mark - Location
 
@@ -2708,5 +2886,21 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
 }
 
+
+
+- (void) showLoginView {
+    DLog(@"ShowLoginView");
+    
+    if (IS_IPHONE) {
+        _loginWindowViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPhone" bundle:[NSBundle mainBundle]];
+    } else {
+        _loginWindowViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPad" bundle:[NSBundle mainBundle]];
+    }
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    self.window.rootViewController = self.loginWindowViewController;
+    [self.window makeKeyAndVisible];
+}
 
 @end

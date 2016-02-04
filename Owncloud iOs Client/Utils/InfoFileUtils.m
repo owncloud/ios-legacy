@@ -18,6 +18,18 @@
 #import "constants.h"
 #import "CustomCellFileAndDirectory.h"
 #import "FileNameUtils.h"
+#import "IndexedForest.h"
+#import "UtilsUrls.h"
+#import "SyncFolderManager.h"
+#import "CWLOrderedDictionary.h"
+#import "UtilsUrls.h"
+#import "ManageSharesDB.h"
+#import "ManageFilesDB.h"
+#import "FileListDBOperations.h"
+#import "UIImage+Thumbnail.h"
+#import "ManageThumbnails.h"
+#import "ManageUsersDB.h"
+#import "NSObject+AssociatedObject.h"
 
 @implementation InfoFileUtils
 
@@ -134,8 +146,10 @@
  * @param fileForSetTheStatusIcon -> FileDto, the file for set the status
  * @param fileCell -> CustomCellFileAndDirectory, the cell where the file is located
  * @param currentFolder -> FileDto, of the folder that contain the fileForSetTheStatusIcon
+ * @param isCurrentFolderSonOfFavoriteFolder -> BOOL, indicate if the current cell is from a favorit folder
+ * @param user -> UserDto.
  */
-+ (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder {
++ (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder andIsSonOfFavoriteFolder:(BOOL)isCurrentFolderSonOfFavoriteFolder ofUser:(UserDto *)user {
     
     if (fileForSetTheStatusIcon.isDirectory) {
         //We only show the shared icon if the folder is shared and the father is not shared
@@ -150,12 +164,62 @@
         } else {
             fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
         }
-        fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
-    } else {
-        NSString *imageFile= [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        fileCell.fileImageView.image=[UIImage imageNamed:imageFile];
         
-        if (fileForSetTheStatusIcon.isFavorite) {
+        
+#ifdef CONTAINER_APP
+        if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
+            if([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon] || [fileForSetTheStatusIcon.etag isEqualToString:k_negative_etag] || fileForSetTheStatusIcon.isNecessaryUpdate) {
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
+            } else {
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
+            }
+        } else if ([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon]) {
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon.png"];
+        } else {
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+        }
+#else
+        fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+#endif   
+        
+    } else {
+        
+        fileCell.fileImageView.associatedObject = fileForSetTheStatusIcon.localFolder;
+    
+        if (fileForSetTheStatusIcon.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:fileForSetTheStatusIcon.fileName]) {
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                
+                UserDto *user = [ManageUsersDB getActiveUser];
+                
+                UIImage *thumbnail;
+                
+                if ([[ManageThumbnails sharedManager] isStoredThumbnailWithHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID: user.idUser]]){
+                    
+                    thumbnail = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFileHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID: user.idUser]]];
+
+                }else{
+                    
+                    thumbnail = [[UIImage imageWithContentsOfFile: fileForSetTheStatusIcon.localFolder] getThumbnail];
+                    [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnail) withHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID:user.idUser]];
+                    
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    fileCell.fileImageView.image = thumbnail;
+                    [fileCell.fileImageView.layer setMasksToBounds:YES];
+                    [fileCell setNeedsLayout];
+                });
+               
+            });
+            
+        }else{
+            NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            fileCell.fileImageView.image = [UIImage imageNamed:imageFile];
+        }
+        
+
+        if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
             if(fileForSetTheStatusIcon.isDownload == downloaded && !fileForSetTheStatusIcon.isNecessaryUpdate) {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
             } else {
@@ -179,10 +243,16 @@
         }
     }
     
+    //Check share with users or groups
+    NSString *path = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:fileForSetTheStatusIcon.filePath andUser:user], fileForSetTheStatusIcon.fileName];
+    NSArray *sharesWith = [ManageSharesDB getSharesFromUserAndGroupByPath:path];
+    
     //Shared -> Shared Image (SharedType = 1|2|3) || UnShared (SharedType = 0) -> Empty image
     if (fileForSetTheStatusIcon.sharedFileSource > 0) {
         fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
-    } else {
+    } else if(sharesWith.count > 0) {
+        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
+    } else{
         fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
     }
     
@@ -195,6 +265,16 @@
     }
     
     return fileCell;
+}
+
+
++(void)createAllFoldersInFileSystemByFileDto:(FileDto *)file andUserDto:(UserDto *)user {
+    
+    NSMutableArray *listOfRemoteFilesAndFolders = [ManageFilesDB getFilesByFileIdForActiveUser:file.idFile];
+    
+    NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:user];
+    
+    [FileListDBOperations createAllFoldersByArrayOfFilesDto:listOfRemoteFilesAndFolders andLocalFolder:path];
 }
 
 @end

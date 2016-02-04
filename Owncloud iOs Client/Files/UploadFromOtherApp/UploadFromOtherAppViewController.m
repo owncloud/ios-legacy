@@ -39,6 +39,7 @@
 #import "OCNavigationController.h"
 #import "UtilsUrls.h"
 #import "ManageUsersDB.h"
+#import "ManageThumbnails.h"
 
 #define kOFFSET_FOR_KEYBOARD_iPhone5 160.0
 #define kOFFSET_FOR_KEYBOARD_iPhone 200.0
@@ -112,7 +113,7 @@
     
     _userName = app.activeUser.username;
     
-    _serverName = [UtilsUrls getFullRemoteServerPathWithoutProtocol:app.activeUser];
+    _serverName = app.activeUser.url;
     
     _remoteFolder = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     
@@ -894,7 +895,7 @@
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         
-        if (IS_IOS8) {
+        if (IS_IOS8 || IS_IOS9) {
             [self presentViewController:navController animated:YES completion:nil];
         }else{
             [app.splitViewController presentViewController:navController animated:YES completion:nil];
@@ -985,6 +986,7 @@
         //Set this file as an overwritten state
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
         [UploadUtils updateOverwritenFile:file FromPath:_filePath];
+        [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:file];
     }
     
     [self saveTheFileOnOwncloud:YES];

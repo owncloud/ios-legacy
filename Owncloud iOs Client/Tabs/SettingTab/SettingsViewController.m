@@ -39,9 +39,12 @@
 #import "UtilsCookies.h"
 #import "ManageCookiesStorageDB.h"
 #import "Accessibility.h"
+#import "SyncFolderManager.h"
+#import "ManageThumbnails.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
+#define k_padding_last_section 40.0
 #define k_padding_under_section 5.0
 
 //Settings custom font
@@ -115,12 +118,20 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    self.edgesForExtendedLayout = UIRectCornerAllCorners;
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    if (IS_IOS8 || IS_IOS9) {
+        self.edgesForExtendedLayout = UIRectEdgeAll;
+        self.extendedLayoutIncludesOpaqueBars = true;
+        self.automaticallyAdjustsScrollViewInsets = true;
+    }else{
+        self.edgesForExtendedLayout = UIRectCornerAllCorners;
+    }
+    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Relaunch the uploads that failed before
@@ -141,6 +152,28 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+}
+
+-(void)viewDidLayoutSubviews
+{
+    
+    if (IS_IOS8 || IS_IOS9) {
+        
+        if ([self.settingsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+            [self.settingsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
+        }
+        
+        if ([self.settingsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+            [self.settingsTableView setLayoutMargins:UIEdgeInsetsZero];
+        }
+        
+        
+        CGRect rect = self.navigationController.navigationBar.frame;
+        float y = rect.size.height + rect.origin.y;
+        self.settingsTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+        
+    }
     
 }
 
@@ -205,8 +238,10 @@
 
 -(void)disconnectUser {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
+    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: APP_DELEGATE.activeUser.idUser];
     
-    [ManageUsersDB removeUserAndDataByIdUser: app.activeUser.idUser];
+    [ManageUsersDB removeUserAndDataByIdUser: APP_DELEGATE.activeUser.idUser];
     
     [UtilsFramework deleteAllCookies];
     
@@ -218,7 +253,7 @@
     
     NSError *error;     
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-    [app.downloadManager cancelDownloads];
+    [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
     app.uploadArray=[[NSMutableArray alloc]init];
     [app updateRecents];
     [app restartAppAfterDeleteAllAccounts];
@@ -406,7 +441,9 @@
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     //Set the text of the footer section
-    UILabel *label = [[UILabel alloc] init];
+    UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.settingsTableView.frame.size.width, k_padding_last_section + self.tabBarController.tabBar.frame.size.height)];
+    container.backgroundColor = [UIColor clearColor];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.settingsTableView.frame.size.width, k_padding_last_section)];
     UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:13];
     
     NSInteger sectionToShowFooter = 3;
@@ -427,7 +464,10 @@
         label.backgroundColor = [UIColor clearColor];
         label.text = @"";
     }
-    return label;
+    
+    [container addSubview:label];
+    
+    return container;
 }
 
 
@@ -447,7 +487,7 @@
                 height = k_padding_normal_section;
             }
             break;
-            
+      
         default:
             height = k_padding_normal_section;
             break;
@@ -464,6 +504,22 @@
         case 0:
             if (k_multiaccount_available) {
                 height = k_padding_under_section;
+            }else{
+                height = k_padding_normal_section;
+            }
+            break;
+            
+        case 3:
+            if (k_multiaccount_available) {
+                height = k_padding_normal_section;
+            }else{
+                height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
+            }
+            break;
+            
+        case 4:
+            if (k_multiaccount_available) {
+                height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
             }else{
                 height = k_padding_normal_section;
             }
@@ -889,13 +945,11 @@
     DLog(@"DELETE!!! %ld", (long)indexPath.row);
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
         
-        //Cancel downloads of the active user
-        if (selectedUser.idUser == app.activeUser.idUser) {
-            [self cancelAllDownloadsOfActiveUser];
-        }
+        [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
+        
+        [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: selectedUser.idUser];
         
         //Delete the tables of this user
         [ManageUsersDB removeUserAndDataByIdUser: selectedUser.idUser];
@@ -917,9 +971,11 @@
             [ManageUsersDB setActiveAccountAutomatically];
             
             //Update in appDelegate the active user
-            app.activeUser = [ManageUsersDB getActiveUser];
+            APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
             
             [self setCookiesOfActiveAccount];
+            
+            [self createFolderForUser:APP_DELEGATE.activeUser];
             
             //If ipad, clean the detail view
             if (!IS_IPHONE) {
@@ -936,12 +992,13 @@
             
             self.settingsTableView.editing = NO;
             
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
-            [appDelegate.downloadManager cancelDownloads];
-            appDelegate.uploadArray=[[NSMutableArray alloc]init];
-            [appDelegate updateRecents];
-            [appDelegate restartAppAfterDeleteAllAccounts];
+            [self cancelAllDownloads];
+            //[self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
+            app.uploadArray=[[NSMutableArray alloc]init];
+            [app updateRecents];
+            [app restartAppAfterDeleteAllAccounts];
         }
         
         
@@ -1072,7 +1129,7 @@
                     [self.popupQuery showInView:[self.view window]];
                 }else {
                     
-                    if (IS_IOS8) {
+                    if (IS_IOS8 || IS_IOS9) {
                         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
                         [self.popupQuery showInView:app.splitViewController.view];
                     } else {
@@ -1117,7 +1174,8 @@
 
 - (void) didPressOnAccountIndexPath:(NSIndexPath*)indexPath {
     
-    [self cancelAllDownloadsOfActiveUser];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    app.userSessionCurrentToken = nil;
     
     //Method to change the account
     AccountCell *cell = (AccountCell *) [self.settingsTableView cellForRowAtIndexPath:indexPath];
@@ -1133,49 +1191,83 @@
     
     if (app.activeUser.idUser != selectedUser.idUser) {
         //Cancel downloads of the previous user
-        [self cancelAllDownloadsOfActiveUser];
+    
+        [self initLoading];
+    
+        [AppDelegate sharedSyncFolderManager].delegate = self;
         
-        //If ipad, clean the detail view
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-            [app presentWithView];
-        }
-        
-        [ManageUsersDB setAllUsersNoActive];
-        [ManageUsersDB setActiveAccountByIdUser:selectedUser.idUser];
-        selectedUser.activeaccount = YES;
-        
-        //Restore the cookies of the future activeUser
-        //1- Storage the new cookies on the Database
-        [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
-        //2- Clean the cookies storage
-        [UtilsFramework deleteAllCookies];
-        //3- We restore the previous cookies of the active user on the System cookies storage
-        [UtilsCookies setOnSystemStorageCookiesByUser:selectedUser];
-        //4- We delete the cookies of the active user on the databse because it could change and it is not necessary keep them there
-        [ManageCookiesStorageDB deleteCookiesByUser:selectedUser];
-        
-        //Change the active user in appDelegate global variable
-        app.activeUser = selectedUser;
-        
-        //Check if the server is Chunk
-        [self performSelectorInBackground:@selector(checkShareItemsInAppDelegate) withObject:nil];
-        
-        [UtilsCookies eraseURLCache];
-        
-        self.listUsers = [ManageUsersDB getAllUsers];
-        [self.settingsTableView reloadData];
-        
-        //We get the current folder to create the local tree
-        //we create the user folder to haver multiuser
-        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)selectedUser.idUser];
-        DLog(@"current: %@", currentLocalFileToCreateFolder);
-        
-        if (![[NSFileManager defaultManager] fileExistsAtPath:currentLocalFileToCreateFolder]) {
-            NSError *error = nil;
-            [[NSFileManager defaultManager] createDirectoryAtPath:currentLocalFileToCreateFolder withIntermediateDirectories:NO attributes:nil error:&error];
-            DLog(@"Error: %@", [error localizedDescription]);
-        }
-        app.isNewUser = YES;
+        [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
+    
+        [self continueChangingUser:selectedUser];
+    }
+}
+
+- (void) continueChangingUser:(UserDto *) selectedUser {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    app.userSessionCurrentToken = nil;
+    
+    self.semaphoreChangeUser = dispatch_semaphore_create(0);
+    
+    // Run loop
+    while (dispatch_semaphore_wait(self.semaphoreChangeUser, DISPATCH_TIME_NOW)) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
+                                 beforeDate:[NSDate dateWithTimeIntervalSinceNow:k_timeout_upload]];
+    }
+    
+    DLog(@"continueChangingUser");
+    
+    [self endLoading];
+    
+    [UtilsFramework deleteAllCookies];
+    
+    //[self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
+    
+    //If ipad, clean the detail view
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        [app presentWithView];
+    }
+    
+    [ManageUsersDB setAllUsersNoActive];
+    [ManageUsersDB setActiveAccountByIdUser:selectedUser.idUser];
+    selectedUser.activeaccount = YES;
+    
+    //Restore the cookies of the future activeUser
+    //1- Storage the new cookies on the Database
+    [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
+    //2- Clean the cookies storage
+    [UtilsFramework deleteAllCookies];
+    //3- We restore the previous cookies of the active user on the System cookies storage
+    [UtilsCookies setOnSystemStorageCookiesByUser:selectedUser];
+    //4- We delete the cookies of the active user on the databse because it could change and it is not necessary keep them there
+    [ManageCookiesStorageDB deleteCookiesByUser:selectedUser];
+    
+    //Change the active user in appDelegate global variable
+    app.activeUser = selectedUser;
+    
+    //Check if the server is Chunk
+    [self performSelectorInBackground:@selector(checkShareItemsInAppDelegate) withObject:nil];
+    
+    [UtilsCookies eraseURLCache];
+    
+    self.listUsers = [ManageUsersDB getAllUsers];
+    [self.settingsTableView reloadData];
+    
+    [self createFolderForUser:selectedUser];
+    
+    app.isNewUser = YES;
+}
+
+- (void) createFolderForUser:(UserDto *) user {
+    //We get the current folder to create the local tree
+    //we create the user folder to haver multiuser
+    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)user.idUser];
+    DLog(@"current: %@", currentLocalFileToCreateFolder);
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:currentLocalFileToCreateFolder]) {
+        NSError *error = nil;
+        [[NSFileManager defaultManager] createDirectoryAtPath:currentLocalFileToCreateFolder withIntermediateDirectories:NO attributes:nil error:&error];
+        DLog(@"Error: %@", [error localizedDescription]);
     }
 }
 
@@ -1258,10 +1350,12 @@
 
 #pragma mark - Utils
 
-- (void) cancelAllDownloadsOfActiveUser {
+- (void) cancelAllDownloads {
     //Cancel downloads in ipad
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     [appDelegate.downloadManager cancelDownloads];
+    
+    [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
 }
 
 #pragma mark - Check Server version in order to use chunks to upload or not
@@ -1520,7 +1614,12 @@
         [self.mailer.navigationBar setTintColor:[UIColor colorOfNavigationItems]];
         
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-        [self.mailer setSubject:[NSLocalizedString(@"mail_feedback_subject", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName]];
+        NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+
+        NSString *subject = [NSString stringWithFormat:@"%@ - iOS v%@", NSLocalizedString(@"mail_feedback_subject", nil), version];
+        subject = [subject stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
+
+        [self.mailer setSubject:subject];
         
         NSArray *toRecipients = [NSArray arrayWithObjects:k_mail_feedback,nil];
         [self.mailer setToRecipients:toRecipients];
@@ -1871,11 +1970,14 @@
         if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
             //check location
             if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-                //upload new photos
-                ManageAsset * manageAsset = [[ManageAsset alloc] init];
-                newItemsToUpload = [manageAsset getCameraRollNewItems];
-                if (newItemsToUpload != nil && [newItemsToUpload count] != 0) {
-                    [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
+                //Check keychain access
+                if ([ManageUsersDB getActiveUser].username != nil) {
+                    //upload new photos
+                    ManageAsset * manageAsset = [[ManageAsset alloc] init];
+                    newItemsToUpload = [manageAsset getCameraRollNewItems];
+                    if (newItemsToUpload != nil && [newItemsToUpload count] != 0) {
+                        [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
+                    }
                 }
             }
         } else {
@@ -1884,10 +1986,73 @@
     }
 }
 
+#pragma mark Loading view methods
+
+/*
+ * Method that launch the loading screen and block the view
+ */
+-(void)initLoading {
+    
+    if (_HUD) {
+        [_HUD removeFromSuperview];
+        _HUD=nil;
+    }
+    
+    if (IS_IPHONE) {
+        _HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
+        _HUD.delegate = self;
+        [self.view.window addSubview:_HUD];
+    } else {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        
+        _HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
+        _HUD.delegate = self;
+        [app.splitViewController.view.window addSubview:_HUD];
+    }
+    
+    _HUD.labelText = NSLocalizedString(@"loading", nil);
+    
+    if (IS_IPHONE) {
+        _HUD.dimBackground = NO;
+    }else {
+        _HUD.dimBackground = NO;
+    }
+    
+    [_HUD show:YES];
+    
+    self.view.userInteractionEnabled = NO;
+    self.navigationController.navigationBar.userInteractionEnabled = NO;
+    self.tabBarController.tabBar.userInteractionEnabled = NO;
+    [self.view.window setUserInteractionEnabled:NO];
+}
+
+
+/*
+ * Method that quit the loading screen and unblock the view
+ */
+- (void)endLoading {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    //Check if the loading should be visible
+    if (app.isLoadingVisible==NO) {
+        // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
+        [_HUD removeFromSuperview];
+        self.view.userInteractionEnabled = YES;
+        self.navigationController.navigationBar.userInteractionEnabled = YES;
+        self.tabBarController.tabBar.userInteractionEnabled = YES;
+        [self.view.window setUserInteractionEnabled:YES];
+    }
+}
+
+#pragma mark - 
+
+- (void) releaseSemaphoreToContinueChangingUser {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_semaphore_signal(self.semaphoreChangeUser);
+        
+        [AppDelegate sharedSyncFolderManager].delegate = nil;
+    });
+}
+
+
 @end
-
-
-
-
-
-

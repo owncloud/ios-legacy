@@ -25,6 +25,7 @@
 #import "ManageFilesDB.h"
 #import "ManageUsersDB.h"
 #import "UtilsUrls.h"
+#import "ManageThumbnails.h"
 
 NSString * PreviewFileNotification=@"PreviewFileNotification";
 
@@ -63,6 +64,8 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     //Delete the file in the device
     DeleteFile *mDeleteFile = [[DeleteFile alloc] init];
     [mDeleteFile deleteItemFromDeviceByFileDto:file];
+    
+    [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:file];
     
     //Update the file
     DLog(@"oldPath: %@",path);
@@ -111,12 +114,13 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
  */
 + (FileDto *) getFileDtoByUploadOffline:(UploadsOfflineDto *) uploadsOfflineDto {
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    NSString *partToRemoveOfPah = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
+    UserDto *user = [ManageUsersDB getUserByIdUser:uploadsOfflineDto.userId];
+    
+    NSString *partToRemoveOfPah = [UtilsUrls getFullRemoteServerPathWithWebDav:user];
     
     NSString *filePath = [uploadsOfflineDto.destinyFolder substringFromIndex:partToRemoveOfPah.length];
     
-    FileDto *output = [ManageFilesDB getFileDtoByFileName:uploadsOfflineDto.uploadFileName andFilePath:filePath andUser:app.activeUser];
+    FileDto *output = [ManageFilesDB getFileDtoByFileName:uploadsOfflineDto.uploadFileName andFilePath:filePath andUser:user];
     
     return output;
 }

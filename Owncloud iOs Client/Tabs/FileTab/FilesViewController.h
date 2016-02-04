@@ -41,7 +41,6 @@
 #import "RenameFile.h"
 #import "MoveFile.h"
 #import "EditAccountViewController.h"
-#import "ShareFileOrFolder.h"
 #import "SWTableViewCell.h"
 #import "OverwriteFileOptions.h"
 #import "ManageNetworkErrors.h"
@@ -51,15 +50,15 @@
 
 @interface FilesViewController : UIViewController
 <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate,
-ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBProgressHUDDelegate, UITextFieldDelegate, DeleteFileDelegate, OpenWithDelegate, DownloadViewControllerDelegate, CheckAccessToServerDelegate, RenameDelegate, MoveFileDelegate, ShareFileOrFolderDelegate, SWTableViewCellDelegate, ManageNetworkErrorsDelegate, ManageFavoritesDelegate>
+ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBProgressHUDDelegate, UITextFieldDelegate, DeleteFileDelegate, OpenWithDelegate, DownloadViewControllerDelegate, CheckAccessToServerDelegate, RenameDelegate, MoveFileDelegate, SWTableViewCellDelegate, ManageNetworkErrorsDelegate, ManageFavoritesDelegate>
 
 //Table view
 @property(nonatomic, strong) IBOutlet UITableView *tableView;
 
 // Array that contains the files ordered alphabetically
-@property(nonatomic, strong) NSArray *sortedArray;
+@property(nonatomic, strong) NSMutableArray *sortedArray;
 //The current directory array
-@property(nonatomic, strong) NSArray *currentDirectoryArray;
+@property(nonatomic, strong) NSMutableArray *currentDirectoryArray;
 //Path for remote folder for upload
 @property(nonatomic, strong) NSString *remoteFolderToUpload;
 //Path for remote folder
@@ -80,8 +79,6 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 @property(nonatomic, strong) DeleteFile *mDeleteFile;
 //OpenWith option
 @property(nonatomic, strong) OpenWith *openWith;
-//Share file/folder option
-@property(nonatomic, strong) ShareFileOrFolder *mShareFileOrFolder;
 //Download view for the open with option
 @property(nonatomic, strong) DownloadViewController *downloadView;
 //Rename file/folder option
@@ -133,6 +130,9 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 
 @property (nonatomic) BOOL isLoadingForNavigate;
 
+//This flag help us to have the UX as a favorite files and folders because are son of a favorite folder
+@property (nonatomic) BOOL isCurrentFolderSonOfFavoriteFolder;
+
 //Favorites
 @property(nonatomic, strong) ManageFavorites *manageFavorites;
 
@@ -144,7 +144,8 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 - (void)endLoading;
 - (void)refreshTableFromWebDav;
 - (void)reloadTableFromDataBase;
-
+- (void)reloadCellByFile:(FileDto *) file;
+- (void)reloadTableFileList;
 - (void) goToSelectedFileOrFolder:(FileDto *) selectedFile;
 
 @end;

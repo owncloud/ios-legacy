@@ -23,6 +23,8 @@
 #import "ManageLocation.h"
 #import "AccountCell.h"
 #import "AddAccountViewController.h"
+#import "MBProgressHUD.h"
+#import "SyncFolderManager.h"
 
 
 typedef enum {
@@ -33,7 +35,7 @@ typedef enum {
     
 } enumInfoSetting;
 
-@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, ManageLocationDelegate, AccountCellDelegate, AddAccountDelegate>
+@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, ManageLocationDelegate, AccountCellDelegate, AddAccountDelegate, MBProgressHUDDelegate, SyncFolderManagerDelegate>
 
 @property(nonatomic,strong)IBOutlet UITableView *settingsTableView;
 @property(nonatomic,strong)UISwitch *switchPasscode;
@@ -51,6 +53,9 @@ typedef enum {
 @property (nonatomic,strong) MFMailComposeViewController *mailer;
 @property (nonatomic) BOOL isMailComposeVisible;
 
+//View for loading screen
+@property(nonatomic, strong) MBProgressHUD  *HUD;
+@property(nonatomic, strong) dispatch_semaphore_t semaphoreChangeUser;
 
 - (IBAction)changeSwitchPasscode:(id)sender;
 - (IBAction)changeSwitchInstantUpload:(id)sender;

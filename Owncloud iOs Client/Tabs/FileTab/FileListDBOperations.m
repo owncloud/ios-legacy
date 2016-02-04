@@ -35,7 +35,7 @@
         
         if(currentFile.isDirectory) {
             
-            DLog(@"Current folder to create: %@", currentFile.fileName);
+            DLog(@"Current folder to create: %@%@",currentFile.filePath, currentFile.fileName);
             
             NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%@",localFolder,[currentFile.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
             

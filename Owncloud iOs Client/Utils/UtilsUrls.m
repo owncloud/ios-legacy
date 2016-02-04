@@ -20,6 +20,7 @@
 #import "ManageUsersDB.h"
 #import "Customization.h"
 #import "FileDto.h"
+#import "ManageUploadsDB.h"
 
 
 @implementation UtilsUrls
@@ -33,6 +34,14 @@
     NSString *bundleSecurityGroup = [self getBundleOfSecurityGroup];
     
     output = [[[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:bundleSecurityGroup] path];
+    
+    if (!output) {
+        NSLog(@"ERROR Getting the AppGroup: You will not be able to use neither the Document Provider or other extensions. This problem is related to the generation of certificates, provisioning profiles and the AppGroup. Please, read the Documentation of the project to fix it (https://github.com/owncloud/ios/blob/develop/SETUP.md)");
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        output = paths.firstObject;
+    }
+        
     output = [NSString stringWithFormat:@"%@/%@",output, k_owncloud_folder];
     
     BOOL isDirectory;
@@ -169,7 +178,7 @@
 }
 
 ///-----------------------------------
-/// @name getLocalFolderByFilePath
+/// @name getLocalFolderByFilePath:andFileName:andUserDto
 ///-----------------------------------
 /**
  * Return the file path without
@@ -291,6 +300,50 @@
     }
     
     return pathOnDB;
+}
+
+//----------------------------------------------
+/// @name getFilePathOnDBWithFileName:ByFilePathOnFileDto:andUser
+///---------------------------------------------
+/**
+ * Return the part of file path that is valid in the data base with also the fileName by filePath on FileDto andUser
+ *
+ * @param fileName -> text.pdf
+ * @param filePathOnFileDto -> root folder -> /(subfoldersServer)/k_url_webdav_server/
+ *                          -> subfolders  -> /(subfoldersServer)/k_url_webdav_server/(subfoldersDB)
+ * @param user
+ *
+ * @return pathOnDB -> root folder -> @"text.pdf"
+ *                  -> subfolders  -> @"(subfoldersDB)/text.pdf"
+ *
+ */
++ (NSString *) getFilePathOnDBWithFileName:(NSString *)fileName ByFilePathOnFileDto:(NSString *)filePathOnFileDto andUser:(UserDto *) user {
+    
+    NSString *filePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:filePathOnFileDto andUser:user], fileName];
+    
+    return filePath;
+}
+
+//----------------------------------------------
+/// @name getFilePathOnDBwithRootSlashAndWithFileName:ByFilePathOnFileDto:andUser
+///---------------------------------------------
+/**
+ * Return the part of file path that is valid in the data base with a root slash and also the fileName by filePath on FileDto andUser
+ *
+ * @param fileName -> text.pdf
+ * @param filePathOnFileDto -> root folder -> /(subfoldersServer)/k_url_webdav_server/
+ *                          -> subfolders  -> /(subfoldersServer)/k_url_webdav_server/(subfoldersDB)
+ * @param user
+ *
+ * @return pathOnDB -> root folder -> @"/text.pdf"
+ *                  -> subfolders  -> @"/(subfoldersDB)/text.pdf"
+ *
+ */
++ (NSString *) getFilePathOnDBwithRootSlashAndWithFileName:(NSString *)fileName ByFilePathOnFileDto:(NSString *)filePathOnFileDto andUser:(UserDto *) user {
+    
+    NSString *filePath = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:filePathOnFileDto andUser:user], fileName];
+
+    return filePath;
 }
 
 
@@ -487,5 +540,50 @@
     
 }
 
++ (BOOL) isFileUploadingWithPath:(NSString *)path andUser: (UserDto *) user {
+    
+    BOOL isFileUploading = NO;
+    
+    //Check remote path and user with current uploads
+    NSMutableArray *uploads = [ManageUploadsDB getUploadsByStatus:generatedByDocumentProvider];
+    
+     NSString *checkPath = nil;
+    
+    for (UploadsOfflineDto *current in uploads) {
+        
+        checkPath = [NSString stringWithFormat:@"%@%@", current.destinyFolder, current.uploadFileName];
+        
+        if ([checkPath isEqualToString:path] && current.userId == user.idUser) {
+            
+            isFileUploading = YES;
+            break;
+        }
+
+    }
+    
+    return isFileUploading;
+}
+
+///-----------------------------------
+/// @name getKeyByLocalPath
+///-----------------------------------
+/**
+ * Return the key that identify a file in the dictionary for download a full folder
+ *
+ * @param localPath -> /Users/Javi/Library/Developer/CoreSimulator/Devices/3A4FE170-2053-4D9E-9FF0-D2F5FC65C2D4/data/Containers/Shared/AppGroup/8F60BA9F-0A8B-472E-AC05-00A8A66F6CFC/cache_folder/3/Documents/
+ *                    -> /Users/Javi/Library/Developer/CoreSimulator/Devices/3A4FE170-2053-4D9E-9FF0-D2F5FC65C2D4/data/Containers/Shared/AppGroup/8F60BA9F-0A8B-472E-AC05-00A8A66F6CFC/cache_folder/3/Documents/File.pdf
+ *
+ * @return  pathWithAppName -> Documents/
+ *                          -> Documents/File.pdf
+ */
++ (NSString *) getKeyByLocalFolder:(NSString *) localFolder {
+    
+    NSString *key = [localFolder substringFromIndex:[[self getOwnCloudFilePath] length]];
+    NSArray *pathDivided = [key componentsSeparatedByString:@"/"];
+    
+    key = [key substringFromIndex:[[pathDivided objectAtIndex:0] length] + 1];
+    
+    return key;
+}
 
 @end

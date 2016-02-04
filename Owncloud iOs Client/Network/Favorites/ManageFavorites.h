@@ -67,11 +67,11 @@ extern NSString *FavoriteFileIsSync;
 /**
  * Method that begin a process to sync favorites of a specific path and user
  *
- * @param idFolder -> NSInteger
+ * @param folder -> FileDto
  * @param userId -> NSInteger
  *
  */
-- (void) syncFavoritesOfFolder:(NSInteger)idFolder withUser:(NSInteger)userId;
+- (void) syncFavoritesOfFolder:(FileDto *)folder withUser:(NSInteger)userId;
 
 
 ///-----------------------------------
@@ -96,5 +96,38 @@ extern NSString *FavoriteFileIsSync;
  * @param favoriteFile -> FileDto
  */
 - (void) thereIsANewVersionAvailableOfThisFile: (FileDto *)favoriteFile;
+
+///-----------------------------------
+/// @name isInsideAFavoriteFolderThisFile
+///-----------------------------------
+
+/**
+ * This method checks if the file own to a folder that it is favorite
+ *
+ * @param file > FileDto. The file which is going to be checked
+ */
+- (BOOL) isInsideAFavoriteFolderThisFile:(FileDto *) file;
+
+///-----------------------------------
+/// @name setAllFilesAndFoldersAsNoFavoriteBehindFolder
+///-----------------------------------
+
+/**
+ * This method mark all files and folders behind "folder" as not favorites
+ *
+ * @param folder > FileDto. The folder parent
+ */
+- (void) setAllFilesAndFoldersAsNoFavoriteBehindFolder:(FileDto *) folder;
+
+///-----------------------------------
+/// @name downloadSingleFavoriteFileSonOfFavoriteFolder
+///-----------------------------------
+
+/**
+ * Method force the download of a favorite file son of a favorite folder
+ *
+ * @param file > FileDto. File to be updated or downloaded
+ */
+- (void) downloadSingleFavoriteFileSonOfFavoriteFolder:(FileDto *) file;
 
 @end

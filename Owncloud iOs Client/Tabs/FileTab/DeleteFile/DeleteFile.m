@@ -27,6 +27,8 @@
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
 #import "UtilsUrls.h"
+#import "ManageThumbnails.h"
+#import "ManageUsersDB.h"
 
 
 @implementation DeleteFile
@@ -67,7 +69,7 @@
             //Obtains the number of the downloaded files in DB which filepath contains the folder that the user want delete
             _isFilesDownloadedInFolder=[ManageFilesDB isGetFilesByDownloadState:downloaded andByUser:app.activeUser andFolder:pathFolder];
         }
-        if((_file.isDownload || _isFilesDownloadedInFolder == YES) && !_file.isFavorite) {
+        if((_file.isDownload || _isFilesDownloadedInFolder == YES) && (!_file.isFavorite && ![[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.file])) {
             DLog(@"Delete downloaded files or folder with downloaded files");
             
             if (self.popupQuery) {
@@ -123,7 +125,6 @@
 /*
  * Recursive method that delete a directory and its file of DB
  */
-
 - (void)deleteFolderChildsWithIdFile:(NSInteger)idFile{
     
     //Rename local url and server url of files
@@ -151,8 +152,8 @@
  *Deletes items in the server
  */
 - (void)executeDeleteItemInServer{
-    [self deleteItemFromDeviceByFileDto:_file];
-    [self deleteItemFromServerAndDeviceByFileDto:_file];
+    [self deleteItemFromDeviceByFileDto:self.file];
+    [self deleteItemFromServerAndDeviceByFileDto:self.file];
 }
 
 /*
@@ -164,13 +165,11 @@
     if (_isFilesDownloadedInFolder == YES) {
         //If the item deleted is a directory update the is_download state to notDownload in the files contains in the folder for deleted
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        NSString *pathFolder= [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
-        [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
         
-        //Delete the folder and the files that it contains
-        NSError *error;
-        NSFileManager *fileMgr = [[NSFileManager alloc] init];
-        [fileMgr removeItemAtPath:[self filePath] error:&error];
+        NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
+        pathFolder = [pathFolder stringByAppendingString:_file.fileName];
+        
+        [ManageFilesDB updateFilesByUser:app.activeUser andFolder:pathFolder toDownloadState:notDownload andIsNecessaryUpdate:NO];
         
         //Create the folder again for a correct navigation
         //We obtain the name of the folder in folderName
@@ -180,6 +179,7 @@
         NSString *folderName = [UtilsDtos getDbFolderNameFromFilePath:pathFolder];
         DLog(@"folder name: %@ in this location: %@",folderName,_currentLocalFolder);
         [FileListDBOperations createAFolder:folderName inLocalFolder:_currentLocalFolder];
+        
     }
 }
 
@@ -223,6 +223,13 @@
         }
         
     } else {
+               
+        if (self.file.isDirectory) {
+            [[ManageThumbnails sharedManager] deleteThumbnailsInFolder:self.file.idFile];
+        } else {
+            [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:self.file];
+        }
+        
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
         [ManageFilesDB setFile:file.idFile isNecessaryUpdate:NO];
         if (_deleteFromFilePreview == YES && _deleteFromFlag == deleteFromServerAndLocal) {
@@ -256,13 +263,12 @@
  *
  */
 - (void) deleteItemFromServerAndDeviceByFileDto:(FileDto *) file {
-    //TODO delete from server
+    
     DLog(@"Delete item from devices and server");
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:app.activeUser] componentsSeparatedByString:@"/"];
-    NSString *pathToDelete = [NSString stringWithFormat:@"%@//%@%@%@", [splitedUrl objectAtIndex:0], [splitedUrl objectAtIndex:2], file.filePath,file.fileName];
+
+    NSString *pathToDelete = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:app.activeUser];
     pathToDelete = [pathToDelete stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     DLog(@"Path for delete: %@", pathToDelete);
@@ -308,11 +314,6 @@
             
             if([_file isDirectory]) {
                 DLog(@"Is directory");
-                NSError *error;
-                
-                //First delete of file system
-                NSFileManager *fileMgr = [[NSFileManager alloc] init];
-               [fileMgr removeItemAtPath:[self filePath] error:&error];
                 
                 //Then delete folder of BD.
                 [self deleteFolderChildsWithIdFile:_file.idFile];
@@ -330,11 +331,27 @@
             [self quitMoviePlayerIsDeleteFileIsRunning];
         }
         
-    } failureRquest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRquest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         DLog(@"error: %@ with code: %ld", error, (long)error.code);
         
-        [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
+        BOOL isSamlCredentialsError = NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self errorLogin];
+            }
+        }
+        //If it is not SAML
+        if (!isSamlCredentialsError) {
+
+            [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
+        
+        }
+
     }];
 }
 
@@ -379,7 +396,6 @@
     return localUrl;
 }
 
-
 #pragma mark - View lifecycle
 - (BOOL)testErrorAction:(id)sender {
     return YES;
@@ -397,7 +413,7 @@
 #pragma mark - UIActionSheetDelegate
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
-    if ((_file.isDownload || _isFilesDownloadedInFolder == YES) && !_file.isFavorite) {
+    if ((_file.isDownload || _isFilesDownloadedInFolder == YES) && (!_file.isFavorite && ![[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.file])) {
         switch (buttonIndex) {
             case 0:
                 DLog(@"Delete from server");

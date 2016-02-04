@@ -25,6 +25,8 @@
 #import "ownCloudExtApp-Swift.h"
 #elif SHARE_IN
 #import "OC_Share_Sheet-Swift.h"
+#elif TODAY_WIDGET
+#import "OCTodayWidget-Swift.h"
 #else
 #import "ownCloudExtAppFileProvider-Swift.h"
 #endif
@@ -271,6 +273,14 @@
 +(void) setStatus:(NSInteger) status andKindOfError:(NSInteger) kindOfError byUploadOffline:(UploadsOfflineDto *) currentUpload {
     
     DLog(@"setStatus: %ld andKindOfError: %ld currentUpload: %@", (long)status, (long)kindOfError, currentUpload.uploadFileName);
+    
+    if (status == errorUploading) { //Refresh cell to remove uploading yellow arrow
+
+        #ifdef CONTAINER_APP
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            [app reloadCellByUploadOffline:currentUpload];
+        #endif
+    }
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     

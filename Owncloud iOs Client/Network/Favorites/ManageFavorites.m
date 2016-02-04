@@ -27,6 +27,9 @@
 #import "FileNameUtils.h"
 #import "OCErrorMsg.h"
 #import "UtilsUrls.h"
+#import "SyncFolderManager.h"
+#import "DownloadFileSyncFolder.h"
+#import "IndexedForest.h"
 
 NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 
@@ -41,7 +44,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     if (self) {
         
         //Init Favorites Array
-        _favoritesSyncing = [NSMutableArray new];
+        self.favoritesSyncing = [NSMutableArray new];
     }
     
     return self;
@@ -99,7 +102,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 
 - (void) syncAllFavoritesOfUser:(NSInteger)userId{
    
-    NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesOfUserId:userId];
+    NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesFilesOfUserId:userId];
     
     [self syncFavoritesOfList:dataBaseFavorites ofThisUser:userId];
     
@@ -117,26 +120,10 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
  * @param userId -> NSInteger
  *
  */
-- (void) syncFavoritesOfFolder:(NSInteger)idFolder withUser:(NSInteger)userId{
+- (void) syncFavoritesOfFolder:(FileDto *)folder withUser:(NSInteger)userId {
     
-    NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesOfUserId:userId];
-    NSMutableArray *tempArray = [NSMutableArray new];
-    
-    for (FileDto *file in dataBaseFavorites) {
-        
-        if (file.fileId == idFolder) {
-            [tempArray addObject:file];
-        }
-    }
-    
-    //If there are favorites the path, sync
-    if (tempArray.count >= 1) {
-        NSArray *favorites = [NSArray arrayWithArray:tempArray];
-        [self syncFavoritesOfList:favorites ofThisUser:userId];
-    }
-    
-    //Free memory
-    tempArray = nil;
+    NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesByFolder:folder];
+    [self syncFavoritesOfList:dataBaseFavorites ofThisUser:userId];
     
 }
 
@@ -149,12 +136,12 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
  * check each file and download if is necessary.
  *
  */
-- (void) syncFavoritesOfList:(NSArray*)favoritesFiles ofThisUser:(NSInteger)userId{
+- (void) syncFavoritesOfList:(NSArray*)favoritesFilesAndFolders ofThisUser:(NSInteger)userId{
     
     UserDto *user = [ManageUsersDB getUserByIdUser:userId];
     
     //Loop for favorites
-    for (FileDto *file in favoritesFiles) {
+    for (FileDto *file in favoritesFilesAndFolders) {
         
         //FileName full path
         NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:user];
@@ -194,40 +181,49 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                         //Update the file data
                         FileDto *updatedFile = [ManageFilesDB getFileDtoByFileName:file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:user] andUser:user];
                         
-                        //Check if the etag has changed
-                        if (((![item.etag isEqual: updatedFile.etag] && updatedFile.isDownload != downloading && updatedFile.isDownload != updating) || (updatedFile.isDownload == notDownload)) && updatedFile) {
+                        if (updatedFile.isDirectory) {
                             
-                            //Update the info of the file
-                            if (updatedFile.isDownload == downloaded) {
-                                updatedFile.isNecessaryUpdate = YES;
-                                [ManageFilesDB setFile:updatedFile.idFile isNecessaryUpdate:YES];
+                            if (![item.etag isEqual: updatedFile.etag] || updatedFile.isNecessaryUpdate) {
+                                [ManageFilesDB setFile:updatedFile.idFile isNecessaryUpdate:NO];
+                                [[AppDelegate sharedSyncFolderManager] addFolderToBeDownloaded:file];
                             }
                             
-                            //Send notification in order to update the file list
-                            [[NSNotificationCenter defaultCenter] postNotificationName:FavoriteFileIsSync object:updatedFile];
-                            
-                            //Control this files in array
-                            [_favoritesSyncing addObject:updatedFile];
-                            
-                            
-                            //Data to download
-                            //Get the current local folder
-                            AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                            NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:updatedFile.filePath andUser:user]];
-                            currentLocalFolder = [currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                            
-                            Download *download = [Download new];
-                            download.delegate =self;
-                            download.currentLocalFolder = currentLocalFolder;
-                            //Set FIFO queue for favorites
-                            download.isLIFO = NO;
-                            [download fileToDownload:updatedFile];
-                            
-                            //Update iPad Detail View
-                            if (!IS_IPHONE && [app.detailViewController.file.localFolder isEqualToString:updatedFile.localFolder]) {
-                                [app.detailViewController handleFile:updatedFile fromController:app.detailViewController.controllerManager];
+                        } else {
+                            //Check if the etag has changed
+                            if (((![item.etag isEqual: updatedFile.etag] && updatedFile.isDownload != downloading && updatedFile.isDownload != updating) || (updatedFile.isDownload == notDownload)) && updatedFile) {
+                                
+                                //Update the info of the file
+                                if (updatedFile.isDownload == downloaded) {
+                                    updatedFile.isNecessaryUpdate = YES;
+                                    [ManageFilesDB setFile:updatedFile.idFile isNecessaryUpdate:YES];
+                                }
+                                
+                                //Send notification in order to update the file list
+                                [[NSNotificationCenter defaultCenter] postNotificationName:FavoriteFileIsSync object:updatedFile];
+                                
+                                //Control this files in array
+                                [_favoritesSyncing addObject:updatedFile];
+                                
+                                
+                                //Data to download
+                                //Get the current local folder
+                                AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+                                NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:updatedFile.filePath andUser:user]];
+                                currentLocalFolder = [currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                                
+                                Download *download = [Download new];
+                                download.delegate =self;
+                                download.currentLocalFolder = currentLocalFolder;
+                                //Set FIFO queue for favorites
+                                download.isLIFO = NO;
+                                [download fileToDownload:updatedFile];
+                                
+                                //Update iPad Detail View
+                                if (!IS_IPHONE && [app.detailViewController.file.localFolder isEqualToString:updatedFile.localFolder]) {
+                                    [app.detailViewController handleFile:updatedFile fromController:app.detailViewController.controllerManager];
+                                }
+                                
                             }
-                            
                         }
                     }
                     
@@ -237,7 +233,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                 dispatch_semaphore_signal(semaphore);
                 
                 
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                 
                 //Finish with this file
                 DLog(@"error: %@", error);
@@ -374,13 +370,55 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                 }
             }
         }
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
         
         [self.delegate fileHaveNewVersion:NO];
     }];
+}
+
+- (BOOL) isInsideAFavoriteFolderThisFile:(FileDto *) file {
+    
+    BOOL isAllTreeChecked = NO;
+    BOOL isSonOfFavorite = NO;
+    
+    while (!isAllTreeChecked) {
+        file = [ManageFilesDB getFileDtoByIdFile:file.fileId];
+        
+        if (file.isFavorite) {
+            isAllTreeChecked = YES;
+            isSonOfFavorite = YES;
+        }
+        
+        if (file.isRootFolder) {
+            isAllTreeChecked = YES;
+        }
+    }
+    
+    return isSonOfFavorite;
+}
+
+/**
+ * This method mark all files and folders behind "folder" as not favorites
+ *
+ * @param folder > FileDto. The folder parent
+ */
+- (void) setAllFilesAndFoldersAsNoFavoriteBehindFolder:(FileDto *) folder {
+    NSMutableArray *listOfFoldersToMarkAsNotFavorite = [NSMutableArray new];
+    [listOfFoldersToMarkAsNotFavorite addObject:folder];
+    
+    while (listOfFoldersToMarkAsNotFavorite.count > 0) {
+        
+        FileDto *current = [listOfFoldersToMarkAsNotFavorite objectAtIndex:0];
+        
+        [ManageFilesDB setNoFavoritesAllFilesOfAFolder:current];
+        [listOfFoldersToMarkAsNotFavorite addObjectsFromArray: [ManageFilesDB getFoldersByFileIdForActiveUser:current.idFile]];
+        
+        [listOfFoldersToMarkAsNotFavorite removeObjectAtIndex:0];
+    }
+    
 }
 
 #pragma mark - Download Delegate Methods
@@ -424,6 +462,92 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 - (void)updateOrCancelTheDownload:(id)download{
     
     
+}
+
+#pragma mark - Update just single file
+
+///-----------------------------------
+/// @name downloadSingleFavoriteFileSonOfFavoriteFolder
+///-----------------------------------
+
+/**
+ * Method force the download of a favorite file son of a favorite folder
+ */
+- (void) downloadSingleFavoriteFileSonOfFavoriteFolder:(FileDto *) file {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
+    }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+    
+    //FileName full path
+    NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
+    NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser], file.fileName];
+    
+    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+        
+        DLog(@"Operation response code: %ld", (long)response.statusCode);
+        BOOL isSamlCredentialsError=NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                DLog(@"error login updating the etag");
+                //Set not download or downloaded in database
+                if (file.isNecessaryUpdate) {
+                    [ManageFilesDB setFileIsDownloadState:file.idFile andState:downloaded];
+                    
+                } else {
+                    [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
+                }
+            }
+        }
+        if(response.statusCode < kOCErrorServerUnauthorized && !isSamlCredentialsError) {
+            
+            //Change the filePath from the library to our format
+            for (FileDto *currentFile in items) {
+                //Remove part of the item file path
+                NSString *partToRemove = [UtilsUrls getRemovedPartOfFilePathAnd:app.activeUser];
+                if([currentFile.filePath length] >= [partToRemove length]){
+                    currentFile.filePath = [currentFile.filePath substringFromIndex:[partToRemove length]];
+                }
+            }
+            
+            DLog(@"The directory List have: %lu elements", (unsigned long)items.count);
+            
+            //Check if there are almost one item in the array
+            if (items.count >= 1) {
+                DLog(@"Directoy list: %@", items);
+                FileDto *currentFileDto = [items objectAtIndex:0];
+                DLog(@"currentFileDto: %@", currentFileDto.etag);
+                
+                [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:file];
+                
+                DownloadFileSyncFolder *download = [DownloadFileSyncFolder new];
+                download.currentFileEtag = currentFileDto.etag;
+                [download addFileToDownload:file];
+                
+                [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded addObject:download];
+                
+            }
+            
+        }
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
+        
+        DLog(@"error: %@", error);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
+    }];
 }
 
 

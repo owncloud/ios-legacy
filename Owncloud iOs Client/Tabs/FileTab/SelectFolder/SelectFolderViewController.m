@@ -94,7 +94,7 @@
 -(void)viewDidLayoutSubviews
 {
     
-    if (IS_IOS8) {
+    if (IS_IOS8 || IS_IOS9) {
         if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 15, 0, 0)];
         }
@@ -114,7 +114,7 @@
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    if (IS_IOS8) {
+    if (IS_IOS8 || IS_IOS9) {
         if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 15, 0, 0)];
         }
@@ -399,16 +399,9 @@
                     }
                 }
                 if (!isSamlCredentialsError) {
-                    //Obtain the path where the folder will be created in the file system
-                    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@/%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-                    
-                    DLog(@"Name of the folder: %@ to create in: %@",name, currentLocalFileToCreateFolder);
-                    
-                    //Create the new folder in the file system
-                    [FileListDBOperations createAFolder:name inLocalFolder:currentLocalFileToCreateFolder];
                     [self reloadCurrentFolder];
                 }
-            } failureRequest:^(NSHTTPURLResponse *response, NSError *error) {
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                 DLog(@"error: %@", error);
                 [self endLoading];
                 DLog(@"Operation error: %ld", (long)response.statusCode);
