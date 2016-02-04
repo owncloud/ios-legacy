@@ -418,7 +418,7 @@
     OCShareUser *federatedUser = [OCShareUser new];
     federatedUser.shareeType = shareTypeRemote;
     federatedUser.isDisplayNameDuplicated = NO;
-    federatedUser.name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federated_indicator", nil)];
+    federatedUser.name = name;
     federatedUser.displayName = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federated_indicator", nil)];;
     
     return federatedUser;
