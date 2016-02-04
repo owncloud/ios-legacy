@@ -379,11 +379,7 @@
             shareUser.name = shareWith.shareWith;
             shareUser.displayName = shareWith.shareWithDisplayName;
             shareUser.sharedDto = shareWith;
-            if (shareWith.shareType == shareTypeGroup) {
-                shareUser.isGroup = true;
-            }else{
-                shareUser.isGroup = false;
-            }
+            shareUser.shareeType = shareWith.shareType;
             
             [self.sharedUsersOrGroups addObject:shareUser];
             [self.sharesOfFile addObject:shareWith];
@@ -714,7 +710,7 @@
             
             NSString *name;
             
-            if (shareUser.isGroup) {
+            if (shareUser.shareeType == shareTypeGroup) {
                 name = [NSString stringWithFormat:@"%@ (%@)",shareUser.name, NSLocalizedString(@"share_user_group_indicator", nil)];
             } else {
                 

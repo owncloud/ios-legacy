@@ -87,7 +87,7 @@
     
     for (OCShareUser *tempItem in self.selectedItems) {
         
-        if ([tempItem.name isEqualToString:item.name] && tempItem.isGroup == item.isGroup) {
+        if ([tempItem.name isEqualToString:item.name] && tempItem.shareeType == item.shareeType) {
             exist = true;
             break;
         }
@@ -202,7 +202,7 @@
 
         NSString *name;
         
-        if (userOrGroup.isGroup) {
+        if (userOrGroup.shareeType == shareTypeGroup) {
             name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.name, NSLocalizedString(@"share_user_group_indicator", nil)];
         } else {
             
@@ -346,7 +346,7 @@
         }
     }
     
-    [[AppDelegate sharedOCCommunication] shareWith:userOrGroup.name isGroup:userOrGroup.isGroup inServer:APP_DELEGATE.activeUser.url andFileOrFolderPath:filePath andPermissions:permissions onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    [[AppDelegate sharedOCCommunication] shareWith:userOrGroup.name shareeType:userOrGroup.shareeType inServer:APP_DELEGATE.activeUser.url andFileOrFolderPath:filePath andPermissions:permissions onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
         [self endLoading];
         
@@ -416,9 +416,8 @@
 - (OCShareUser *) getFederatedOCSharedUserByName:(NSString *) name {
     
     OCShareUser *federatedUser = [OCShareUser new];
-    federatedUser.isGroup = NO;
+    federatedUser.shareeType = shareTypeRemote;
     federatedUser.isDisplayNameDuplicated = NO;
-    federatedUser.isFederatedUser = YES;
     federatedUser.name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federated_indicator", nil)];
     federatedUser.displayName = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federated_indicator", nil)];;
     
