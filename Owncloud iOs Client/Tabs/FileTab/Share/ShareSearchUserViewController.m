@@ -408,16 +408,15 @@
 }
 
 #pragma mark - Fake Federating user
-- (OCShareUser *) getFederateOCSharedUserByName:(NSString *) name {
+- (OCShareUser *) getFederatedOCSharedUserByName:(NSString *) name {
     
-    OCShareUser *federateUser = [OCShareUser new];
-    federateUser.isGroup = NO;
-    federateUser.isDisplayNameDuplicated = NO;
-    federateUser.name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federate_indicator", nil)];
-    federateUser.displayName = name;
+    OCShareUser *federatedUser = [OCShareUser new];
+    federatedUser.isGroup = NO;
+    federatedUser.isDisplayNameDuplicated = NO;
+    federatedUser.name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federated_indicator", nil)];
+    federatedUser.displayName = name;
     
-    return federateUser;
-    
+    return federatedUser;
 }
 
 
