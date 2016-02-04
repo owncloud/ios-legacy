@@ -265,6 +265,16 @@
         self.indexSearchPage++;
     }
     
+    BOOL supportFederatedSharing = NO;
+    
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+        
+        if (cap.isFilesSharingAllowUserSendSharesToOtherServersEnabled) {
+            supportFederatedSharing = YES;
+        }
+    }
+    
      [self initLoadingWithDelay:loadingVisibleSearchDelay];
     
     //Set the right credentials
@@ -288,11 +298,12 @@
         
         [self.filteredItems addObjectsFromArray:itemList];
         
-        //TODO: On this if add the capability to federate share
-        if ([filterString containsString:@"@"]) {
-            [self.filteredItems addObject:[self getFederatedOCSharedUserByName:filterString]];
+        if (supportFederatedSharing) {
+            if ([filterString containsString:@"@"]) {
+                [self.filteredItems addObject:[self getFederatedOCSharedUserByName:filterString]];
+            }
         }
-        
+
         self.filteredItems = [ShareUtils manageTheDuplicatedUsers:self.filteredItems];
         
         [self.searchDisplayController.searchResultsTableView reloadData];
