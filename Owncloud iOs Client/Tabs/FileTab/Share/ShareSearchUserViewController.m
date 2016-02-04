@@ -287,6 +287,7 @@
         }
         
         [self.filteredItems addObjectsFromArray:itemList];
+        [self.filteredItems addObject:[self getFederateOCSharedUserByName:filterString]];
         self.filteredItems = [ShareUtils manageTheDuplicatedUsers:self.filteredItems];
         
         [self.searchDisplayController.searchResultsTableView reloadData];
@@ -406,7 +407,18 @@
     messageView.duration = messageDuration;
 }
 
-
+#pragma mark - Fake Federating user
+- (OCShareUser *) getFederateOCSharedUserByName:(NSString *) name {
+    
+    OCShareUser *federateUser = [OCShareUser new];
+    federateUser.isGroup = NO;
+    federateUser.isDisplayNameDuplicated = NO;
+    federateUser.name = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federate_indicator", nil)];
+    federateUser.displayName = name;
+    
+    return federateUser;
+    
+}
 
 
 
