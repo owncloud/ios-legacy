@@ -373,7 +373,7 @@
     [self.sharesOfFile removeAllObjects];
     
     for (OCSharedDto *shareWith in sharesWith) {
-        if (shareWith.shareType == 0 || shareWith.shareType == 1) {
+        if (shareWith.shareType == shareTypeUser || shareWith.shareType == shareTypeGroup || shareWith.shareType == shareTypeRemote) {
             
             OCShareUser *shareUser = [OCShareUser new];
             shareUser.name = shareWith.shareWith;
