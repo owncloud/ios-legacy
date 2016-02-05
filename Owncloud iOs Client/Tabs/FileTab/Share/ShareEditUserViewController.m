@@ -70,6 +70,9 @@
 @property (nonatomic) BOOL canChangeEnabled;
 @property (nonatomic) BOOL canDeleteEnabled;
 @property (nonatomic) BOOL canShareEnabled;
+@property (nonatomic) BOOL canCreateOldValue;
+@property (nonatomic) BOOL canChangeOldValue;
+@property (nonatomic) BOOL canDeleteOldValue;
 
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
@@ -201,6 +204,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
             }
             if (!isSamlCredentialsError) {
                 self.updatedOCShare.permissions = permissionValue;
+                [ManageSharesDB updateTheRemoteShared:self.updatedOCShare.idRemoteShared withPermissions:permissionValue];
                 [self endLoading];
                 [self reloadView];
             }
@@ -230,19 +234,22 @@ typedef NS_ENUM (NSInteger, enumUpload){
                 
                 switch (self.optionTryingToEnabling) {
                     case optionPermissionCanEdit:
-                        self.canEditEnabled = NO;
+                        self.canEditEnabled = !self.canEditEnabled;
+                        if(self.canEditEnabled){
+                            [self restoreEditOptionValues];
+                        }
                         break;
                     case optionPermissionCanCreate:
-                        self.canCreateEnabled = NO;
+                        self.canCreateEnabled = !self.canCreateEnabled;
                         break;
                     case optionPermissionCanChange:
-                        self.canChangeEnabled = NO;
+                        self.canChangeEnabled = !self.canChangeEnabled;
                         break;
                     case optionPermissionCanDelete:
-                        self.canDeleteEnabled = NO;
+                        self.canDeleteEnabled = !self.canDeleteEnabled;
                         break;
                     case optionPermissionCanShare:
-                        self.canShareEnabled = NO;
+                        self.canShareEnabled = !self.canShareEnabled;
                         break;
                     default:
                         break;
@@ -447,9 +454,22 @@ typedef NS_ENUM (NSInteger, enumUpload){
 #pragma mark - Handle switch values
 
 -(void) setOptionsCanEditTo:(BOOL)value {
+    [self saveEditOptionValues];
     self.canCreateEnabled = value;
     self.canChangeEnabled = value;
     self.canDeleteEnabled = value;
+}
+
+-(void) saveEditOptionValues{
+    self.canCreateOldValue  = self.canCreateEnabled;
+    self.canChangeOldValue  = self.canChangeEnabled;
+    self.canDeleteOldValue  = self.canDeleteEnabled;
+}
+
+-(void) restoreEditOptionValues{
+    self.canCreateEnabled = self.canCreateOldValue;
+    self.canChangeEnabled = self.canChangeOldValue;
+    self.canDeleteEnabled = self.canDeleteOldValue;
 }
 
 -(void) canEditSwitchValueChanged:(UISwitch*) sender {

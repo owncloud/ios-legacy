@@ -628,4 +628,31 @@
 }
 
 
+
+
+///-----------------------------------
+/// @name updateTheRemoteSharedwithPermissions:
+///-----------------------------------
+
+/**
+ * This method updates the permissions of the file
+ *
+ * @param idRemoteShared    -> int
+ * @param permissions       -> NSInteger
+ */
++ (void) updateTheRemoteShared: (NSInteger)idRemoteShared withPermissions: (NSInteger)permissions{
+    DLog(@"updateTheFileIDwithPermissions");
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE shared SET permissions = ? WHERE id_remote_shared = ?", [NSNumber numberWithInt:permissions], [NSNumber numberWithInteger:idRemoteShared]];
+        
+        if (!correctQuery) {
+            DLog(@"Error in update file with permissions");
+        }
+    }];
+}
+
 @end
