@@ -338,7 +338,6 @@
 		400A637E1B4FD75600890579 /* UIView+IFTTTJazzHands.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A63631B4FD75600890579 /* UIView+IFTTTJazzHands.m */; };
 		400A63821B4FD94C00890579 /* iphoneAccounts.png in Resources */ = {isa = PBXBuildFile; fileRef = 400A63811B4FD94C00890579 /* iphoneAccounts.png */; };
 		4016E5C51A0CE9410022163C /* MainAppIcon_76_76@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4016E5C41A0CE9410022163C /* MainAppIcon_76_76@3x.png */; };
-		401AAA371B57C4F70047EA27 /* owncloudLogoFiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 401AAA361B57C4F70047EA27 /* owncloudLogoFiles.png */; };
 		402183C11B8B12F100975520 /* FileNameUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 402183C01B8B12F100975520 /* FileNameUtilsTests.m */; };
 		4026610C1A07926000517663 /* MainAppIcon_76-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4026610B1A07926000517663 /* MainAppIcon_76-76@2x.png */; };
 		402661141A07C66A00517663 /* Default-Landscape_375h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 402661121A07C66A00517663 /* Default-Landscape_375h@2x.png */; };
@@ -381,7 +380,6 @@
 		40AC24D219FE725600582867 /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
 		40CC7F0D1B4E665400231D73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40CC7F0C1B4E665400231D73 /* Images.xcassets */; };
 		40E30ED61B59105D00D36B07 /* iphoneInstantUpload.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */; };
-		40E30EDA1B5911A400D36B07 /* iphoneFiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E30ED91B5911A400D36B07 /* iphoneFiles.png */; };
 		40E354C51A14D671000E7FE4 /* ownCloud-xmas@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */; };
 		40E354C71A14D6A2000E7FE4 /* sharedItem@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C61A14D6A2000E7FE4 /* sharedItem@3x.png */; };
 		40E354C91A14D6B2000E7FE4 /* openWithTB@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C81A14D6B2000E7FE4 /* openWithTB@3x.png */; };
@@ -398,6 +396,8 @@
 		40E354E11A14FE36000E7FE4 /* sound_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354E01A14FE36000E7FE4 /* sound_icon@3x.png */; };
 		40EDF89F1B4D123500700E3A /* HelpGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EDF89E1B4D123500700E3A /* HelpGuideViewController.m */; };
 		40EDF8A31B4D152300700E3A /* MyCustomAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EDF8A21B4D152300700E3A /* MyCustomAnimation.m */; };
+		40F2F6101C5A17B600129F92 /* iphoneFiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 40F2F60E1C5A17B600129F92 /* iphoneFiles.png */; };
+		40F2F6131C5A180700129F92 /* owncloudLogoFiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 40F2F6121C5A180700129F92 /* owncloudLogoFiles.png */; };
 		40FE44EA1BA020E40021C13A /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D924DCBC1B973E88008B4BE7 /* libOCMock.a */; };
 		40FF874319F81396008B7C62 /* OCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FF874219F81396008B7C62 /* OCKeychain.m */; };
 		590849EF1A0A7D6000D3E842 /* CustomCellFileAndDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5C0177850B100FB9977 /* CustomCellFileAndDirectory.m */; };
@@ -1428,7 +1428,6 @@
 		400A63631B4FD75600890579 /* UIView+IFTTTJazzHands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+IFTTTJazzHands.m"; sourceTree = "<group>"; };
 		400A63811B4FD94C00890579 /* iphoneAccounts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneAccounts.png; sourceTree = "<group>"; };
 		4016E5C41A0CE9410022163C /* MainAppIcon_76_76@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76_76@3x.png"; sourceTree = "<group>"; };
-		401AAA361B57C4F70047EA27 /* owncloudLogoFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = owncloudLogoFiles.png; sourceTree = "<group>"; };
 		402183C01B8B12F100975520 /* FileNameUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileNameUtilsTests.m; sourceTree = "<group>"; };
 		4026610B1A07926000517663 /* MainAppIcon_76-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76-76@2x.png"; sourceTree = "<group>"; };
 		402661121A07C66A00517663 /* Default-Landscape_375h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape_375h@2x.png"; sourceTree = "<group>"; };
@@ -1466,7 +1465,6 @@
 		40AC24D119FE725600582867 /* CredentialsDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CredentialsDto.m; path = DataBase/DTOs/CredentialsDto.m; sourceTree = "<group>"; };
 		40CC7F0C1B4E665400231D73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneInstantUpload.png; sourceTree = "<group>"; };
-		40E30ED91B5911A400D36B07 /* iphoneFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneFiles.png; sourceTree = "<group>"; };
 		40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ownCloud-xmas@3x.png"; sourceTree = "<group>"; };
 		40E354C61A14D6A2000E7FE4 /* sharedItem@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@3x.png"; sourceTree = "<group>"; };
 		40E354C81A14D6B2000E7FE4 /* openWithTB@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "openWithTB@3x.png"; sourceTree = "<group>"; };
@@ -1485,6 +1483,8 @@
 		40EDF8A01B4D125A00700E3A /* HelpGuideViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HelpGuideViewController.h; sourceTree = "<group>"; };
 		40EDF8A11B4D152300700E3A /* MyCustomAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCustomAnimation.h; sourceTree = "<group>"; };
 		40EDF8A21B4D152300700E3A /* MyCustomAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCustomAnimation.m; sourceTree = "<group>"; };
+		40F2F60E1C5A17B600129F92 /* iphoneFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneFiles.png; sourceTree = "<group>"; };
+		40F2F6121C5A180700129F92 /* owncloudLogoFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = owncloudLogoFiles.png; sourceTree = "<group>"; };
 		40FF874119F81396008B7C62 /* OCKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCKeychain.h; sourceTree = "<group>"; };
 		40FF874219F81396008B7C62 /* OCKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCKeychain.m; sourceTree = "<group>"; };
 		593D531A17BF701800191846 /* SSOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSOViewController.h; path = Login/SSO/SSOViewController.h; sourceTree = "<group>"; };
@@ -2845,9 +2845,9 @@
 			children = (
 				4052B4AC1B4E951F000788DA /* HelpPageButtons */,
 				40CC7F0C1B4E665400231D73 /* Images.xcassets */,
+				40F2F60E1C5A17B600129F92 /* iphoneFiles.png */,
+				40F2F6121C5A180700129F92 /* owncloudLogoFiles.png */,
 				40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */,
-				40E30ED91B5911A400D36B07 /* iphoneFiles.png */,
-				401AAA361B57C4F70047EA27 /* owncloudLogoFiles.png */,
 				405AD0C01B56C26A00271424 /* iphoneShare.png */,
 				400A63811B4FD94C00890579 /* iphoneAccounts.png */,
 			);
@@ -3927,7 +3927,6 @@
 				1487F21C177C35AA004A1A5A /* doc_icon@2x~ipad.png in Resources */,
 				1487F21D177C35AA004A1A5A /* doc_icon~ipad.png in Resources */,
 				EABD89211BBE82C400DA5281 /* TSMessagesDefaultDesign.json in Resources */,
-				401AAA371B57C4F70047EA27 /* owncloudLogoFiles.png in Resources */,
 				40E354CB1A14D6C2000E7FE4 /* favoriteTB-filled@3x.png in Resources */,
 				13A726C918B399EC00795A90 /* ownCloud-xmas@2x.png in Resources */,
 				1487F222177C35AA004A1A5A /* FileDownloadedIcon.png in Resources */,
@@ -3935,6 +3934,7 @@
 				1487F223177C35AA004A1A5A /* FileDownloadedIcon@2x.png in Resources */,
 				14EC1956195B297F00B02AB6 /* sharedItem@2x.png in Resources */,
 				1487F226177C35AA004A1A5A /* folder_icon.png in Resources */,
+				40F2F6101C5A17B600129F92 /* iphoneFiles.png in Resources */,
 				1487F227177C35AA004A1A5A /* folder_icon@2x.png in Resources */,
 				1487F228177C35AA004A1A5A /* image_icon.png in Resources */,
 				EABD88E51BBE82C400DA5281 /* NotificationBackgroundError@2x.png in Resources */,
@@ -3974,7 +3974,6 @@
 				1487F238177C35AA004A1A5A /* sound_icon@2x~ipad.png in Resources */,
 				EABD89191BBE82C400DA5281 /* NotificationButtonBackground.png in Resources */,
 				13A726C818B399EC00795A90 /* ownCloud-xmas.png in Resources */,
-				40E30EDA1B5911A400D36B07 /* iphoneFiles.png in Resources */,
 				13A5ADB518883C77000EB617 /* CopyLinkShareiphone.png in Resources */,
 				40AB1F611A123B17003E7397 /* RootFolderIcon@3x.png in Resources */,
 				EABD89151BBE82C400DA5281 /* NotificationBackgroundWarningIcon@2x.png in Resources */,
@@ -4044,6 +4043,7 @@
 				1487F259177C35AA004A1A5A /* radio_unchecked@2x.png in Resources */,
 				13A5ADB618883C77000EB617 /* CopyLinkShareiphone@2x.png in Resources */,
 				1487F25A177C35AA004A1A5A /* arrow_button.png in Resources */,
+				40F2F6131C5A180700129F92 /* owncloudLogoFiles.png in Resources */,
 				1487F25B177C35AA004A1A5A /* arrow_button@2x.png in Resources */,
 				1487F25C177C35AA004A1A5A /* conarrow_button.png in Resources */,
 				402661151A07C66A00517663 /* Default-Landscape_414h@3x.png in Resources */,
