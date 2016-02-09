@@ -123,7 +123,6 @@ typedef NS_ENUM (NSInteger, enumUpload){
     [super viewWillAppear:animated];
     [self setStyleView];
     
-    //[self checkSharedStatusOFile];
 }
 
 - (void) viewDidAppear:(BOOL)animated{
