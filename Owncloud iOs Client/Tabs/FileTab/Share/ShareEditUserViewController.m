@@ -52,6 +52,7 @@
 #define heighOfFileDetailrow 120.0
 #define heightOfShareLinkOptionRow 55.0
 #define heightOfShareLinkHeader 45.0
+#define heightOfHeader 10.0
 
 #define shareTableViewSectionsNumber  3
 
@@ -388,7 +389,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    CGFloat height = 10.0;
+    CGFloat height = heightOfHeader;
     
     if (section == 1 || section == 2) {
         height = heightOfShareLinkHeader;
