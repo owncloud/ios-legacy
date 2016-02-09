@@ -215,9 +215,6 @@
         
         shareUserCell.itemName.text = name;
         
-        //shareUserCell.accessoryType = UITableViewCellAccessoryDetailButton;
-
-        
         cell = shareUserCell;
         
     }
