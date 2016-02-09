@@ -1752,9 +1752,32 @@
     }];
 }
 
-
-
 #pragma mark - Favorites method
+
+///-----------------------------------
+/// @name updateTheFileID:asFavorite:
+///-----------------------------------
+
+/**
+ * This method updates the favorite field of the file
+ *
+ * @param idFile -> int
+ * @param isFavorite -> BOOL
+ */
++ (void) updateTheFileID: (NSInteger)idFile asFavorite: (BOOL) isFavorite {
+    DLog(@"updateTheFavoriteFile");
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE files SET is_favorite = ? WHERE id = ?", [NSNumber numberWithInt:isFavorite], [NSNumber numberWithInteger:idFile]];
+        
+        if (!correctQuery) {
+            DLog(@"Error in update favorite file source");
+        }
+    }];
+}
 
 ///-----------------------------------
 /// @name getAllFavoritesFilesOfUserId:userId
