@@ -434,12 +434,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    [tableView deselectRowAtIndexPath:indexPath animated:true];
-    
-    if (indexPath.section == 1) {
-        if (indexPath.row == 1) {
-        }
-    }
+  //  [tableView deselectRowAtIndexPath:indexPath animated:true];
 
 }
 
