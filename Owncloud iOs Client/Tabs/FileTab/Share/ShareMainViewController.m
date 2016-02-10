@@ -896,28 +896,39 @@
     
     CGFloat height = 0.0;
     
-    if (indexPath.section == 0) {
-        
-        height = heighOfFileDetailrow;
-        
-    }else if (indexPath.section == 1){
-        
-        if (indexPath.row == 0 && self.sharedUsersOrGroups.count == 0){
-            height = heightOfShareWithUserRow;
-        }else if ((indexPath.row == 1 && self.sharedUsersOrGroups.count == 0) || (indexPath.row == self.sharedUsersOrGroups.count)){
-            height = heightOfShareLinkButtonRow;
-        }else{
-            height = heightOfShareWithUserRow;
-        }
-        
-    }else{
-        
-        if (indexPath.row == 2) {
-            height = heightOfShareLinkButtonRow;
-        }else{
-            height = heightOfShareLinkOptionRow;
-        }
-
+    switch (indexPath.section) {
+        case 0:
+            height = heighOfFileDetailrow;
+            break;
+        case 1:
+            if (k_is_share_with_users_available) {
+                
+                if (indexPath.row == 0 && self.sharedUsersOrGroups.count == 0){
+                    height = heightOfShareWithUserRow;
+                }else if ((indexPath.row == 1 && self.sharedUsersOrGroups.count == 0) || (indexPath.row == self.sharedUsersOrGroups.count)){
+                    height = heightOfShareLinkButtonRow;
+                }else{
+                    height = heightOfShareWithUserRow;
+                }
+                
+            } else {
+                if (indexPath.row == 2) {
+                    height = heightOfShareLinkButtonRow;
+                }else{
+                    height = heightOfShareLinkOptionRow;
+                }
+            }
+            break;
+        case 2:
+            if (indexPath.row == 2) {
+                height = heightOfShareLinkButtonRow;
+            }else{
+                height = heightOfShareLinkOptionRow;
+            }
+            break;
+            
+        default:
+            break;
     }
     
     return height;
@@ -999,37 +1010,82 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:true];
     
-    if ((indexPath.section == 1) && ((indexPath.row == 1 && self.sharedUsersOrGroups.count == 0) || (indexPath.row == self.sharedUsersOrGroups.count))) {
-        
-        //Check if the server has Sharee support
-        if (APP_DELEGATE.activeUser.hasShareeApiSupport == serverFunctionalitySupported) {
-            ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
-            ssuvc.shareFileDto = self.sharedItem;
-            [ssuvc setSelectedItems:self.sharedUsersOrGroups];
-            self.activityView = nil;
-            [self.navigationController pushViewController:ssuvc animated:true];
-        }else{
-            [self showErrorWithTitle:NSLocalizedString(@"not_sharee_api_supported", nil)];
+    switch (indexPath.section) {
+        case 1:
+            if (k_is_share_with_users_available && (self.sharedUsersOrGroups.count == 0 && indexPath.row == self.sharedUsersOrGroups.count + 1) || (self.sharedUsersOrGroups.count > 0 && indexPath.row == self.sharedUsersOrGroups.count)) {
+                [self didSelectAddUserOrGroup];
+            } else {
+                switch (indexPath.row) {
+                    case 0:
+                        if (self.isExpirationDateEnabled) {
+                            [self didSelectSetExpirationDateLink];
+                        }
+                        break;
+                    case 1:
+                        if (self.isPasswordProtectEnabled) {
+                            [self didSelectSetPasswordLink];
+                        }
+                        break;
+                    case 2:
+                        [self didSelectGetShareLink];
+                        break;
+                    default:
+                        break;
+                }
+            }
             
-        }
-        
-    }
-    
-    if (indexPath.section == 2 && indexPath.row == 0 && self.isExpirationDateEnabled == true){
-        //Change expiration time
-        [self launchDatePicker];
-    }
-    
-    if (indexPath.section == 2 && indexPath.row == 1 && self.isPasswordProtectEnabled == true) {
-        //Change the password
-        [self showPasswordView];
-    }
-    
-    if (indexPath.section == 2 && indexPath.row == 2) {
-        [self getShareLinkView];
+            break;
+        case 2:
+            
+            switch (indexPath.row) {
+                case 0:
+                    if (self.isExpirationDateEnabled) {
+                        [self didSelectSetExpirationDateLink];
+                    }
+                    break;
+                case 1:
+                    if (self.isPasswordProtectEnabled) {
+                        [self didSelectSetPasswordLink];
+                    }
+                    break;
+                case 2:
+                    [self didSelectGetShareLink];
+                    break;
+                default:
+                    break;
+            }
+            
+            break;
+        default:
+            break;
     }
 }
 
+- (void) didSelectAddUserOrGroup {
+    //Check if the server has Sharee support
+    if (APP_DELEGATE.activeUser.hasShareeApiSupport == serverFunctionalitySupported) {
+        ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
+        ssuvc.shareFileDto = self.sharedItem;
+        [ssuvc setSelectedItems:self.sharedUsersOrGroups];
+        self.activityView = nil;
+        [self.navigationController pushViewController:ssuvc animated:true];
+    }else{
+        [self showErrorWithTitle:NSLocalizedString(@"not_sharee_api_supported", nil)];
+        
+    }
+}
+
+- (void) didSelectSetExpirationDateLink {
+    [self launchDatePicker];
+}
+
+- (void) didSelectSetPasswordLink {
+    [self showPasswordView];
+}
+
+- (void) didSelectGetShareLink {
+    [self getShareLinkView];
+}
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
