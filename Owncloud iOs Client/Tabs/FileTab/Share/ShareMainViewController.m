@@ -29,6 +29,7 @@
 #import "ManageSharesDB.h"
 #import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
+#import "ShareEditUserViewController.h"
 #import "OCShareUser.h"
 #import "ShareUtils.h"
 
@@ -67,6 +68,9 @@
 
 //alert share password
 #define password_alert_view_tag 601
+
+//mail subject key
+#define k_subject_key_activityView @"subject"
 
 @interface ShareMainViewController ()
 
@@ -324,7 +328,7 @@
     
     self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
     
-    if (self.sharedItem.sharedFileSource > 0) {
+    if ([ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeLink andUser:APP_DELEGATE.activeUser]) {
         
         self.isShareLinkEnabled = true;
         
@@ -335,7 +339,7 @@
             self.sharedFileOrFolder.delegate = self;
         }
         
-        self.updatedOCShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
+        self.updatedOCShare = [ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeLink andUser:APP_DELEGATE.activeUser];
         
         if (![ self.updatedOCShare.shareWith isEqualToString:@""] && ![ self.updatedOCShare.shareWith isEqualToString:@"NULL"]  &&  self.updatedOCShare.shareType == shareTypeLink) {
             self.isPasswordProtectEnabled = true;
@@ -377,7 +381,7 @@
             OCShareUser *shareUser = [OCShareUser new];
             shareUser.name = shareWith.shareWith;
             shareUser.displayName = shareWith.shareWithDisplayName;
-            
+            shareUser.sharedDto = shareWith;
             if (shareWith.shareType == shareTypeGroup) {
                 shareUser.isGroup = true;
             }else{
@@ -510,7 +514,7 @@
     
     self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
     
-    OCSharedDto *ocShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
+    OCSharedDto *ocShare = [ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeLink andUser:APP_DELEGATE.activeUser];
     
     if (ocShare != nil) {
         [self.sharedFileOrFolder unshareTheFile:ocShare];
@@ -542,7 +546,7 @@
     
     self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
     
-    OCSharedDto *ocShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
+    OCSharedDto *ocShare = [ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeLink andUser:APP_DELEGATE.activeUser];
 
     [self.sharedFileOrFolder updateShareLink:ocShare withPassword:password andExpirationTime:expirationDate];
     
@@ -664,7 +668,7 @@
         }else{
             
             cell = [self getCellOfUserOrGroupNameSharedByTableView:tableView andIndexPath:indexPath];
-            
+
         }
         
     } else if (indexPath.section == 1 && k_is_share_by_link_available) {
@@ -780,6 +784,8 @@
     shareUserCell.itemName.text = name;
     
     shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
+    
+    shareUserCell.accessoryType = UITableViewCellAccessoryDetailButton;
     
     return shareUserCell;
     
@@ -998,6 +1004,32 @@
 }
 
 
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
+    
+    //Edit share with user Privileges
+    
+    OCShareUser *shareUser = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
+    OCSharedDto *sharedDto = shareUser.sharedDto;
+
+    
+    ShareEditUserViewController *viewController = [[ShareEditUserViewController alloc] initWithFileDto:self.sharedItem andOCSharedDto:sharedDto];
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+    
+    if (IS_IPHONE)
+    {
+        viewController.hidesBottomBarWhenPushed = YES;
+        [self presentViewController:navController animated:YES completion:nil];
+    } else {
+        OCNavigationController *navController = nil;
+        navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:navController animated:YES completion:nil];
+    }
+
+    
+}
+
+
 #pragma mark - ShareFileOrFolder Delegate Methods
 
 - (void) initLoading {
@@ -1050,6 +1082,7 @@
         
     }else{
        [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
+
     }
 }
 
@@ -1078,10 +1111,21 @@
     }else{
         [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
     }
+
 }
 
 
 - (void) presentShareOptions{
+    
+    
+    NSString *fileOrFolderName = self.sharedItem.fileName;
+    if(self.sharedItem.isDirectory){
+        //Remove the last character (folderName/ -> folderName)
+        fileOrFolderName = [fileOrFolderName substringToIndex:fileOrFolderName.length -1];
+    }
+    
+    NSString *subject = [[NSLocalizedString(@"shared_link_mail_subject", nil)stringByReplacingOccurrencesOfString:@"$userName" withString:[ManageUsersDB getActiveUser].username]stringByReplacingOccurrencesOfString:@"$fileOrFolderName"  withString:[fileOrFolderName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    [self.activityView setValue:subject forKey:k_subject_key_activityView];
     
     if (IS_IPHONE) {
         [self presentViewController:self.activityView animated:true completion:nil];
@@ -1096,7 +1140,6 @@
         
         [self.activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareTableView permittedArrowDirections:UIPopoverArrowDirectionAny animated:true];
     }
-    
 }
 
 #pragma mark - Error Login Methods
