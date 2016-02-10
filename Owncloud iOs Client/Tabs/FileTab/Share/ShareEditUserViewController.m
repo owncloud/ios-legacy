@@ -52,6 +52,7 @@
 #define heighOfFileDetailrow 120.0
 #define heightOfShareLinkOptionRow 55.0
 #define heightOfShareLinkHeader 45.0
+#define heightOfHeader 10.0
 
 #define shareTableViewSectionsNumber  3
 
@@ -70,6 +71,9 @@
 @property (nonatomic) BOOL canChangeEnabled;
 @property (nonatomic) BOOL canDeleteEnabled;
 @property (nonatomic) BOOL canShareEnabled;
+@property (nonatomic) BOOL canCreateOldValue;
+@property (nonatomic) BOOL canChangeOldValue;
+@property (nonatomic) BOOL canDeleteOldValue;
 
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
@@ -120,7 +124,6 @@ typedef NS_ENUM (NSInteger, enumUpload){
     [super viewWillAppear:animated];
     [self setStyleView];
     
-    //[self checkSharedStatusOFile];
 }
 
 - (void) viewDidAppear:(BOOL)animated{
@@ -201,6 +204,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
             }
             if (!isSamlCredentialsError) {
                 self.updatedOCShare.permissions = permissionValue;
+                [ManageSharesDB updateTheRemoteShared:self.updatedOCShare.idRemoteShared withPermissions:permissionValue];
                 [self endLoading];
                 [self reloadView];
             }
@@ -230,19 +234,22 @@ typedef NS_ENUM (NSInteger, enumUpload){
                 
                 switch (self.optionTryingToEnabling) {
                     case optionPermissionCanEdit:
-                        self.canEditEnabled = NO;
+                        self.canEditEnabled = !self.canEditEnabled;
+                        if(self.canEditEnabled){
+                            [self restoreEditOptionValues];
+                        }
                         break;
                     case optionPermissionCanCreate:
-                        self.canCreateEnabled = NO;
+                        self.canCreateEnabled = !self.canCreateEnabled;
                         break;
                     case optionPermissionCanChange:
-                        self.canChangeEnabled = NO;
+                        self.canChangeEnabled = !self.canChangeEnabled;
                         break;
                     case optionPermissionCanDelete:
-                        self.canDeleteEnabled = NO;
+                        self.canDeleteEnabled = !self.canDeleteEnabled;
                         break;
                     case optionPermissionCanShare:
-                        self.canShareEnabled = NO;
+                        self.canShareEnabled = !self.canShareEnabled;
                         break;
                     default:
                         break;
@@ -382,7 +389,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    CGFloat height = 10.0;
+    CGFloat height = heightOfHeader;
     
     if (section == 1 || section == 2) {
         height = heightOfShareLinkHeader;
@@ -427,12 +434,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    [tableView deselectRowAtIndexPath:indexPath animated:true];
-    
-    if (indexPath.section == 1) {
-        if (indexPath.row == 1) {
-        }
-    }
+  //  [tableView deselectRowAtIndexPath:indexPath animated:true];
 
 }
 
@@ -447,9 +449,22 @@ typedef NS_ENUM (NSInteger, enumUpload){
 #pragma mark - Handle switch values
 
 -(void) setOptionsCanEditTo:(BOOL)value {
+    [self saveEditOptionValues];
     self.canCreateEnabled = value;
     self.canChangeEnabled = value;
     self.canDeleteEnabled = value;
+}
+
+-(void) saveEditOptionValues{
+    self.canCreateOldValue  = self.canCreateEnabled;
+    self.canChangeOldValue  = self.canChangeEnabled;
+    self.canDeleteOldValue  = self.canDeleteEnabled;
+}
+
+-(void) restoreEditOptionValues{
+    self.canCreateEnabled = self.canCreateOldValue;
+    self.canChangeEnabled = self.canChangeOldValue;
+    self.canDeleteEnabled = self.canDeleteOldValue;
 }
 
 -(void) canEditSwitchValueChanged:(UISwitch*) sender {

@@ -69,6 +69,9 @@
 //alert share password
 #define password_alert_view_tag 601
 
+//mail subject key
+#define k_subject_key_activityView @"subject"
+
 @interface ShareMainViewController ()
 
 @property (nonatomic, strong) FileDto* sharedItem;
@@ -1025,6 +1028,7 @@
         
     }else{
        [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
+
     }
 }
 
@@ -1053,10 +1057,21 @@
     }else{
         [self performSelector:@selector(updateInterfaceWithShareLinkStatus) withObject:nil afterDelay:standardDelay];
     }
+
 }
 
 
 - (void) presentShareOptions{
+    
+    
+    NSString *fileOrFolderName = self.sharedItem.fileName;
+    if(self.sharedItem.isDirectory){
+        //Remove the last character (folderName/ -> folderName)
+        fileOrFolderName = [fileOrFolderName substringToIndex:fileOrFolderName.length -1];
+    }
+    
+    NSString *subject = [[NSLocalizedString(@"shared_link_mail_subject", nil)stringByReplacingOccurrencesOfString:@"$userName" withString:[ManageUsersDB getActiveUser].username]stringByReplacingOccurrencesOfString:@"$fileOrFolderName"  withString:[fileOrFolderName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    [self.activityView setValue:subject forKey:k_subject_key_activityView];
     
     if (IS_IPHONE) {
         [self presentViewController:self.activityView animated:true completion:nil];
@@ -1071,7 +1086,6 @@
         
         [self.activityPopoverController presentPopoverFromRect:cell.frame inView:self.shareTableView permittedArrowDirections:UIPopoverArrowDirectionAny animated:true];
     }
-    
 }
 
 #pragma mark - Error Login Methods
