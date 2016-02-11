@@ -1014,7 +1014,7 @@
         case 1:
             if (k_is_share_with_users_available && (self.sharedUsersOrGroups.count == 0 && indexPath.row == self.sharedUsersOrGroups.count + 1) || (self.sharedUsersOrGroups.count > 0 && indexPath.row == self.sharedUsersOrGroups.count)) {
                 [self didSelectAddUserOrGroup];
-            } else {
+            } else if(!k_is_share_with_users_available && k_is_share_by_link_available) {
                 switch (indexPath.row) {
                     case 0:
                         if (self.isExpirationDateEnabled) {
@@ -1090,11 +1090,24 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    if (indexPath.section == 1 && indexPath.row != self.sharedUsersOrGroups.count) {
-        return true;
+    switch (indexPath.section) {
+        case 0:
+            return NO;
+            break;
+        case 1:
+            if (k_is_share_with_users_available && self.sharedUsersOrGroups.count > 0) {
+                return YES;
+            } else {
+                return NO;
+            }
+            break;
+        case 2:
+            return NO;
+            break;
+        default:
+            return NO;
+            break;
     }
-    
-    return false;
 }
 
 
