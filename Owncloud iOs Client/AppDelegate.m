@@ -196,7 +196,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     [[UINavigationBar appearance] setTintColor:[UIColor colorOfNavigationItems]];
     
-    //Set the title color
+    //Set the title color 
     NSShadow *shadow = [[NSShadow alloc] init];
     shadow.shadowColor = [UIColor colorOfNavigationTitle];
     shadow.shadowOffset = CGSizeMake(0.5, 0);
