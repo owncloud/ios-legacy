@@ -469,7 +469,8 @@
     if (section == sectionToShowFooter) {
         NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-        label.text = [NSString stringWithFormat:@"%@ %d    iOS %@", appName, k_year, appVersion];
+        NSString *lastGitCommit = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"LastGitCommit"];
+        label.text = [NSString stringWithFormat:@"%@ %d    iOS %@ (%@)", appName, k_year, appVersion, lastGitCommit];
         label.font = appFont;
         label.textColor = [UIColor grayColor];
         label.backgroundColor = [UIColor clearColor];

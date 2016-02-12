@@ -29,6 +29,7 @@
 #import "OCSharedDto.h"
 #import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
+#import "OCConstants.h"
 #import "ManageUsersDB.h"
 
 
@@ -541,7 +542,7 @@
 
     password = [self getPasswordEncodingWithPassword:password];
     
-    [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime andPermissions:k_read_share_permission onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
         BOOL isSamlCredentialsError=NO;
         
@@ -890,21 +891,6 @@
     [ManageSharesDB insertSharedList:items];
     
     [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
-}
-
-- (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file{
-    
-    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:file.sharedFileSource forUser:APP_DELEGATE.activeUser.idUser];
-    
-    OCSharedDto *sharedByLink;
-    
-    for (OCSharedDto *current in sharesOfFile) {
-        if (current.shareType == shareTypeLink) {
-            sharedByLink = current;
-        }
-    }
-    
-    return sharedByLink;
 }
 
 - (NSString *) getPasswordEncodingWithPassword:(NSString *)password{

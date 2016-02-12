@@ -29,6 +29,7 @@
 #import "ManageSharesDB.h"
 #import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
+#import "ShareEditUserViewController.h"
 #import "OCShareUser.h"
 #import "ShareUtils.h"
 
@@ -327,7 +328,7 @@
     
     self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
     
-    if (self.sharedItem.sharedFileSource > 0) {
+    if ([ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeLink andUser:APP_DELEGATE.activeUser]) {
         
         self.isShareLinkEnabled = true;
         
@@ -338,7 +339,7 @@
             self.sharedFileOrFolder.delegate = self;
         }
         
-        self.updatedOCShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
+        self.updatedOCShare = [ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeLink andUser:APP_DELEGATE.activeUser];
         
         if (![ self.updatedOCShare.shareWith isEqualToString:@""] && ![ self.updatedOCShare.shareWith isEqualToString:@"NULL"]  &&  self.updatedOCShare.shareType == shareTypeLink) {
             self.isPasswordProtectEnabled = true;
@@ -380,7 +381,7 @@
             OCShareUser *shareUser = [OCShareUser new];
             shareUser.name = shareWith.shareWith;
             shareUser.displayName = shareWith.shareWithDisplayName;
-            
+            shareUser.sharedDto = shareWith;
             if (shareWith.shareType == shareTypeGroup) {
                 shareUser.isGroup = true;
             }else{
@@ -513,7 +514,7 @@
     
     self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
     
-    OCSharedDto *ocShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
+    OCSharedDto *ocShare = [ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeLink andUser:APP_DELEGATE.activeUser];
     
     if (ocShare != nil) {
         [self.sharedFileOrFolder unshareTheFile:ocShare];
@@ -545,7 +546,7 @@
     
     self.sharedItem = [ManageFilesDB getFileDtoByFileName:self.sharedItem.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
     
-    OCSharedDto *ocShare = [self.sharedFileOrFolder getTheOCShareByFileDto:self.sharedItem];
+    OCSharedDto *ocShare = [ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeLink andUser:APP_DELEGATE.activeUser];
 
     [self.sharedFileOrFolder updateShareLink:ocShare withPassword:password andExpirationTime:expirationDate];
     
@@ -730,6 +731,8 @@
             shareUserCell.itemName.text = name;
             
             shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
+            
+            shareUserCell.accessoryType = UITableViewCellAccessoryDetailButton;
             
             cell = shareUserCell;
             
@@ -948,6 +951,32 @@
         }
         
     }
+}
+
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
+    
+    //Edit share with user Privileges
+    
+    OCShareUser *shareUser = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
+    OCSharedDto *sharedDto = shareUser.sharedDto;
+
+    
+    ShareEditUserViewController *viewController = [[ShareEditUserViewController alloc] initWithFileDto:self.sharedItem andOCSharedDto:sharedDto];
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+    
+    if (IS_IPHONE)
+    {
+        viewController.hidesBottomBarWhenPushed = YES;
+        [self presentViewController:navController animated:YES completion:nil];
+    } else {
+        OCNavigationController *navController = nil;
+        navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:navController animated:YES completion:nil];
+    }
+
+    
 }
 
 

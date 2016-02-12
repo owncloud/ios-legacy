@@ -483,7 +483,6 @@
  */
 + (void) setUnShareFilesOfFolder:(FileDto *) folder;
 
-
 #pragma mark - Favorite methods
 
 ///-----------------------------------
