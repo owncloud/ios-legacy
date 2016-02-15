@@ -304,7 +304,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 }
 
 /*
- * Begin with the screen to upload a file from other app 
+ * Begin with the screen to upload a file from other app
  */
 
 - (void)presentUploadFromOtherApp{
