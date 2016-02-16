@@ -183,4 +183,31 @@
  */
 + (OCSharedDto *) getSharedEqualWithFileDtoPath:(NSString*)path;
 
+///-----------------------------------
+/// @name getTheOCShareByFileDto
+///-----------------------------------
+
+/**
+ * Method that to get the OCSharedDto by a filedto and the type of share
+ *
+ * @param file -> FileDto
+ * @param shareType -> NSInteger
+ * @param user -> UserDto
+ *
+ * @return OCSharedDto
+ */
++ (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file andShareType:(NSInteger) shareType andUser:(UserDto *) user;
+
+///-----------------------------------
+/// @name updateTheRemoteSharedwithPermissions:
+///-----------------------------------
+
+/**
+ * This method updates the permissions of the file
+ *
+ * @param idRemoteShared    -> int
+ * @param permissions       -> NSInteger
+ */
++ (void) updateTheRemoteShared: (NSInteger)idRemoteShared withPermissions: (NSInteger)permissions;
+
 @end

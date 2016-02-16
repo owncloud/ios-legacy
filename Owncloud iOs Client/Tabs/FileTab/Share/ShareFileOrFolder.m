@@ -29,6 +29,8 @@
 #import "OCSharedDto.h"
 #import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
+#import "OCConstants.h"
+#import "ManageUsersDB.h"
 
 
 #define server_version_with_new_shared_schema 8
@@ -121,6 +123,7 @@
     UIActivityViewController *activityView = [[UIActivityViewController alloc]
                                               initWithActivityItems:items
                                               applicationActivities:activities];
+    
     [activityView setExcludedActivityTypes:
      @[UIActivityTypeAssignToContact,
        UIActivityTypeCopyToPasteboard,
@@ -157,23 +160,6 @@
                 [self.activityPopoverController presentPopoverFromRect:CGRectMake(100, 100, 200, 400) inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
             }
         }
-        
-        
-        [activityView setCompletionHandler:^(NSString *act, BOOL done) {
-            
-            [self.activityPopoverController dismissPopoverAnimated:YES];
-            
-            /*NSString *serviceMsg = nil;
-             if ( [act isEqualToString:UIActivityTypeMail] )                    ServiceMsg = @"Mail sended!";
-             if ( [act isEqualToString:UIActivityTypePostToTwitter] )           ServiceMsg = @"Post on twitter, ok!";
-             if ( [act isEqualToString:UIActivityTypePostToFacebook] )          ServiceMsg = @"Post on facebook, ok!";
-             if ( [act isEqualToString:UIActivityTypeMessage] )                 ServiceMsg = @"SMS sended!";
-             if ( [act isEqualToString:UIActivityTypeCopyToPasteboard] && done) {
-             serviceMsg = NSLocalizedString(@"link_copied_on_pasteboard", nil);
-             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:serviceMsg message:@"" delegate:nil cancelButtonTitle: NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-             [alert show];
-             }*/
-        }];
        
     }
   
@@ -556,7 +542,7 @@
 
     password = [self getPasswordEncodingWithPassword:password];
     
-    [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime andPermissions:k_read_share_permission onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
         BOOL isSamlCredentialsError=NO;
         
@@ -905,21 +891,6 @@
     [ManageSharesDB insertSharedList:items];
     
     [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
-}
-
-- (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file{
-    
-    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:file.sharedFileSource forUser:APP_DELEGATE.activeUser.idUser];
-    
-    OCSharedDto *sharedByLink;
-    
-    for (OCSharedDto *current in sharesOfFile) {
-        if (current.shareType == shareTypeLink) {
-            sharedByLink = current;
-        }
-    }
-    
-    return sharedByLink;
 }
 
 - (NSString *) getPasswordEncodingWithPassword:(NSString *)password{

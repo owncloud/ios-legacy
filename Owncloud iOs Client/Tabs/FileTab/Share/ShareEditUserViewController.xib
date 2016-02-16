@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ShareEditUserViewController">
+            <connections>
+                <outlet property="shareEditUserTableView" destination="lyt-r5-Pf0" id="gjS-k6-km6"/>
+                <outlet property="view" destination="iN0-l3-epB" id="rwO-5Y-dpz"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="lyt-r5-Pf0" userLabel="Share Edit User Table View">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="600" id="cIS-bb-jMD"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="cIS-bb-jMD"/>
+                        </mask>
+                    </variation>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="V3w-cu-Er8"/>
+                        <outlet property="delegate" destination="-1" id="shR-g5-qbY"/>
+                    </connections>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="lyt-r5-Pf0" secondAttribute="bottom" id="5po-LZ-qba"/>
+                <constraint firstAttribute="trailing" secondItem="lyt-r5-Pf0" secondAttribute="trailing" id="CVn-Lt-mmn"/>
+                <constraint firstItem="lyt-r5-Pf0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="qUS-yH-XgN"/>
+                <constraint firstItem="lyt-r5-Pf0" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ucq-J4-S17"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

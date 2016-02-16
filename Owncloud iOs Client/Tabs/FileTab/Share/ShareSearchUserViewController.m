@@ -24,6 +24,7 @@
 #import "OCShareUser.h"
 #import "OCSharedDto.h"
 #import "TSMessageView.h"
+#import "OCConstants.h"
 #import "ShareUtils.h"
 
 
@@ -319,7 +320,24 @@
     NSString *path = [NSString stringWithFormat:@"/%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.shareFileDto.filePath andUser:APP_DELEGATE.activeUser]];
     NSString *filePath = [NSString stringWithFormat: @"%@%@", path, self.shareFileDto.fileName];
     
-    [[AppDelegate sharedOCCommunication] shareWith:userOrGroup.name isGroup:userOrGroup.isGroup inServer:APP_DELEGATE.activeUser.url andFileOrFolderPath:filePath onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    NSInteger permissions = k_read_share_permission;
+    
+    //File is shared to me by others or not
+    if (([self.shareFileDto.permissions rangeOfString:k_permission_shared].location != NSNotFound)) {
+        if (self.shareFileDto.isDirectory) {
+            permissions = k_min_folder_share_permission;
+        } else {
+            permissions = k_min_file_share_permission;
+        }
+    } else {
+        if (self.shareFileDto.isDirectory) {
+            permissions = k_max_folder_share_permission;
+        } else {
+            permissions = k_max_file_share_permission;
+        }
+    }
+    
+    [[AppDelegate sharedOCCommunication] shareWith:userOrGroup.name isGroup:userOrGroup.isGroup inServer:APP_DELEGATE.activeUser.url andFileOrFolderPath:filePath andPermissions:permissions onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
         [self endLoading];
         

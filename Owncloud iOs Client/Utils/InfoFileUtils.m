@@ -30,6 +30,7 @@
 #import "ManageThumbnails.h"
 #import "ManageUsersDB.h"
 #import "NSObject+AssociatedObject.h"
+#import "OCSharedDto.h"
 
 @implementation InfoFileUtils
 
@@ -160,7 +161,11 @@
                    ([currentFolder.permissions rangeOfString:k_permission_shared].location == NSNotFound)) {
             fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
         } else if (fileForSetTheStatusIcon.sharedFileSource > 0) {
-            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
+            if ([ManageSharesDB getTheOCShareByFileDto:fileForSetTheStatusIcon andShareType:shareTypeLink andUser:user]) {
+                fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
+            } else {
+                fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
+            }
         } else {
             fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
         }
@@ -249,7 +254,11 @@
     
     //Shared -> Shared Image (SharedType = 1|2|3) || UnShared (SharedType = 0) -> Empty image
     if (fileForSetTheStatusIcon.sharedFileSource > 0) {
-        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
+        if ([ManageSharesDB getTheOCShareByFileDto:fileForSetTheStatusIcon andShareType:shareTypeLink andUser:user]) {
+            fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
+        } else {
+            fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
+        }
     } else if(sharesWith.count > 0) {
         fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
     } else{
