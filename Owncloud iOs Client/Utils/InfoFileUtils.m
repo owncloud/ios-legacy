@@ -156,7 +156,15 @@
         //We only show the shared icon if the folder is shared and the father is not shared
         if (([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) &&
             ([currentFolder.permissions rangeOfString:k_permission_shared].location == NSNotFound) && (fileForSetTheStatusIcon.sharedFileSource > 0)) {
-            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
+            
+            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
+            
+            NSMutableArray *allShares = [ManageSharesDB getSharesBySharedFileSource:fileForSetTheStatusIcon.sharedFileSource forUser:[ManageUsersDB getActiveUser].idUser];
+            for (OCSharedDto *current in allShares) {
+                if (current.shareType == shareTypeLink) {
+                    fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
+                }
+            }
         } else if (([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) &&
                    ([currentFolder.permissions rangeOfString:k_permission_shared].location == NSNotFound)) {
             fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
