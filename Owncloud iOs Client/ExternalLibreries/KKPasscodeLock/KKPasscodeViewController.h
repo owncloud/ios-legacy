@@ -16,7 +16,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "ManageTouchID.h"
 
 #define kPasscodeBoxesCount        4
 
@@ -68,7 +68,7 @@ typedef NSUInteger KKPasscodeMode;
 @end
 
 
-@interface KKPasscodeViewController : UIViewController <UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource> {
+@interface KKPasscodeViewController : UIViewController <UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, TouchIDDelegate> {
 	
     // delegate which called when major events happens
 	id<KKPasscodeViewControllerDelegate> __unsafe_unretained _delegate;
