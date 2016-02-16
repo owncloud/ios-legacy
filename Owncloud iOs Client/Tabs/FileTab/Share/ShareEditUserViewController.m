@@ -57,8 +57,8 @@
 #define shareTableViewSectionsNumber  3
 
 //Nº of Rows
-#define optionsShownIfFileIsDirectory 3
-#define optionsShownIfFileIsNotDirectory 0
+#define fullOptionsForCanEditOption 3
+#define minOptionsForCanEditOption 0
 
 
 @interface ShareEditUserViewController ()
@@ -157,10 +157,10 @@ typedef NS_ENUM (NSInteger, enumUpload){
 
 - (void) reloadView {
     
-    if (self.canEditEnabled && self.sharedItem.isDirectory){
-        self.optionsShownWithCanEdit = optionsShownIfFileIsDirectory;
+    if (self.canEditEnabled && self.sharedItem.isDirectory && self.updatedOCShare.shareType != shareTypeRemote){
+        self.optionsShownWithCanEdit = fullOptionsForCanEditOption;
     }else{
-        self.optionsShownWithCanEdit = optionsShownIfFileIsNotDirectory;
+        self.optionsShownWithCanEdit = minOptionsForCanEditOption;
     }
     
     [self.shareEditUserTableView reloadData];
@@ -279,10 +279,10 @@ typedef NS_ENUM (NSInteger, enumUpload){
     if (section == 0) {
         return 1;
     }else if (section == 1){
-        if (self.canEditEnabled && self.sharedItem.isDirectory) {
-            return optionsShownIfFileIsDirectory;
+        if (self.canEditEnabled && self.sharedItem.isDirectory && self.updatedOCShare.shareType != shareTypeRemote) {
+            return fullOptionsForCanEditOption;
         } else {
-            return optionsShownIfFileIsNotDirectory;
+            return minOptionsForCanEditOption;
         }
         
     }else if (section == 2) {
@@ -421,6 +421,10 @@ typedef NS_ENUM (NSInteger, enumUpload){
         }else{
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"title_user_can_share", nil);
             [shareLinkHeaderCell.switchSection setOn:self.canShareEnabled animated:false];
+            
+            if (self.updatedOCShare.shareType == shareTypeRemote) {
+                shareLinkHeaderCell.switchSection.enabled = NO;
+            }
             [shareLinkHeaderCell.switchSection addTarget:self action:@selector(canShareSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
         }
         
