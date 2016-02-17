@@ -41,6 +41,7 @@
 #import "Accessibility.h"
 #import "SyncFolderManager.h"
 #import "ManageThumbnails.h"
+#import "ManageTouchID.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -136,13 +137,11 @@
     
     //Relaunch the uploads that failed before
     [app performSelector:@selector(relaunchUploadsFailedNoForced) withObject:nil afterDelay:5.0];
-    
-    //Set the passcode swith asking to database
-   [self.switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:NO];
-    
+
     self.user = app.activeUser;
     
     self.listUsers = [ManageUsersDB getAllUsers];
+    [self.settingsTableView reloadData];
 
 }
 
@@ -233,6 +232,21 @@
         oc.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:oc animated:YES completion:nil];
     }
+    
+    [self.settingsTableView reloadData];
+
+}
+
+/**
+ * This method is called when the touch ID swicth changes
+ *
+ * @param id -> UISwitch sender
+ 
+ * @return IBAction
+ *
+ */
+-(IBAction)changeSwitchTouchID:(UISwitch*)touchIDSwitch {
+    [self setPropertiesTouchIDToState:touchIDSwitch.on];
 }
 
 
@@ -328,7 +342,7 @@
             break;
             
         case 2:
-            n = 1;
+            n = (self.switchPasscode.on && [[ManageTouchID sharedSingleton] isTouchIDAvailable])? 2:1;
             break;
             
         case 3:
@@ -455,7 +469,8 @@
     if (section == sectionToShowFooter) {
         NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-        label.text = [NSString stringWithFormat:@"%@ %d    iOS %@", appName, k_year, appVersion];
+        NSString *lastGitCommit = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"LastGitCommit"];
+        label.text = [NSString stringWithFormat:@"%@ %d    iOS %@ (%@)", appName, k_year, appVersion, lastGitCommit];
         label.font = appFont;
         label.textColor = [UIColor grayColor];
         label.backgroundColor = [UIColor clearColor];
@@ -743,6 +758,19 @@
             
             //Add accesibility label for Automation
             self.switchPasscode.accessibilityLabel = ACS_SETTINGS_PASSCODE_SWITCH;
+            
+            break;
+            
+        case 1:
+            cell.textLabel.text=NSLocalizedString(@"title_app_touchID", nil);
+            self.switchTouchID = [[UISwitch alloc] initWithFrame:CGRectZero];
+            cell.accessoryView = self.switchTouchID;
+            [self.switchTouchID setOn:[ManageAppSettingsDB isTouchID] animated:YES];
+            [self.switchTouchID addTarget:self action:@selector(changeSwitchTouchID:) forControlEvents:UIControlEventValueChanged];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            
+            //Add accesibility label for Automation
+            self.switchTouchID.accessibilityLabel = ACS_SETTINGS_TOUCH_ID_SWITCH;
             
             break;
             
@@ -1729,6 +1757,28 @@
     //Refresh the switch pass code
     [self.switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:NO];
     
+}
+
+
+#pragma mark - Touch ID methods
+
+- (void)switchTouchIDTo:(BOOL)value {
+    [self.switchTouchID setOn:value animated:NO];
+}
+
+-(void)isTouchID {
+    [self switchTouchIDTo:[ManageAppSettingsDB isTouchID]];
+}
+
+-(void)setPropertiesTouchIDToState:(BOOL)isTocuhIDActive{
+    
+    if (isTocuhIDActive) {
+        [self switchTouchIDTo:YES];
+        [ManageAppSettingsDB updateTouchIDTo:YES];
+    } else {
+        [self switchTouchIDTo:NO];
+        [ManageAppSettingsDB updateTouchIDTo:NO];
+    }
 }
 
 

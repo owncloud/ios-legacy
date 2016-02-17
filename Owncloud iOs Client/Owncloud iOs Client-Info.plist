@@ -228,5 +228,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>LastGitCommit</key>
+	<string></string>
 </dict>
 </plist>
