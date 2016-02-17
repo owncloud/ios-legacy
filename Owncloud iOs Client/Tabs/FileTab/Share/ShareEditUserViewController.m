@@ -204,7 +204,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
             }
             if (!isSamlCredentialsError) {
                 self.updatedOCShare.permissions = permissionValue;
-                [ManageSharesDB updateTheRemoteShared:self.updatedOCShare.idRemoteShared withPermissions:permissionValue];
+                [ManageSharesDB updateTheRemoteShared:self.updatedOCShare.idRemoteShared forUser:APP_DELEGATE.activeUser.idUser withPermissions:permissionValue];
                 [self endLoading];
                 [self reloadView];
             }
