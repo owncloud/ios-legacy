@@ -639,9 +639,7 @@
         }else{
            return self.sharedUsersOrGroups.count + 1;
         }
-    } else if (section == 1 && k_is_share_by_link_available){
-        return self.optionsShownWithShareLink;
-    } else if (section == 2 && k_is_share_by_link_available){
+    } else if ((section == 1 || section == 2) && k_is_share_by_link_available){
         return self.optionsShownWithShareLink;
     } else {
         return 0;
@@ -650,8 +648,6 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    DLog(@"indexPath.section: %d", indexPath.section);
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     
@@ -865,7 +861,7 @@
             if (self.isPasswordProtectEnabled == true) {
                 shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
                 shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
-                shareLinkOptionCell.optionDetail.text = @"Secured";
+                shareLinkOptionCell.optionDetail.text = NSLocalizedString(@"secured_link", nil);
             } else {
                 shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
                 shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
@@ -1015,46 +1011,32 @@
             if (k_is_share_with_users_available && (self.sharedUsersOrGroups.count == 0 && indexPath.row == self.sharedUsersOrGroups.count + 1) || (self.sharedUsersOrGroups.count > 0 && indexPath.row == self.sharedUsersOrGroups.count)) {
                 [self didSelectAddUserOrGroup];
             } else if(!k_is_share_with_users_available && k_is_share_by_link_available) {
-                switch (indexPath.row) {
-                    case 0:
-                        if (self.isExpirationDateEnabled) {
-                            [self didSelectSetExpirationDateLink];
-                        }
-                        break;
-                    case 1:
-                        if (self.isPasswordProtectEnabled) {
-                            [self didSelectSetPasswordLink];
-                        }
-                        break;
-                    case 2:
-                        [self didSelectGetShareLink];
-                        break;
-                    default:
-                        break;
-                }
+                [self didSelectShareLinkOptionSection:indexPath.row];
             }
             
             break;
         case 2:
-            
-            switch (indexPath.row) {
-                case 0:
-                    if (self.isExpirationDateEnabled) {
-                        [self didSelectSetExpirationDateLink];
-                    }
-                    break;
-                case 1:
-                    if (self.isPasswordProtectEnabled) {
-                        [self didSelectSetPasswordLink];
-                    }
-                    break;
-                case 2:
-                    [self didSelectGetShareLink];
-                    break;
-                default:
-                    break;
+            [self didSelectShareLinkOptionSection:indexPath.row];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void) didSelectShareLinkOptionSection:(NSInteger) row {
+    switch (row) {
+        case 0:
+            if (self.isExpirationDateEnabled) {
+                [self didSelectSetExpirationDateLink];
             }
-            
+            break;
+        case 1:
+            if (self.isPasswordProtectEnabled) {
+                [self didSelectSetPasswordLink];
+            }
+            break;
+        case 2:
+            [self didSelectGetShareLink];
             break;
         default:
             break;
