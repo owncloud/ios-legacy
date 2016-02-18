@@ -1518,6 +1518,8 @@
 		40FF874119F81396008B7C62 /* OCKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCKeychain.h; sourceTree = "<group>"; };
 		40FF874219F81396008B7C62 /* OCKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCKeychain.m; sourceTree = "<group>"; };
 		593D14881C60BE1E005161E2 /* SplashImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SplashImage.png; sourceTree = "<group>"; };
+		590F1FF91C7474AE00AAF1C7 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
+		590F1FFA1C7474B700AAF1C7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		593D531A17BF701800191846 /* SSOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSOViewController.h; path = Login/SSO/SSOViewController.h; sourceTree = "<group>"; };
 		593D531B17BF701800191846 /* SSOViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSOViewController.m; path = Login/SSO/SSOViewController.m; sourceTree = "<group>"; };
 		593D531C17BF701800191846 /* SSOViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SSOViewController.xib; path = Login/SSO/SSOViewController.xib; sourceTree = "<group>"; };
@@ -3898,6 +3900,8 @@
 				cs,
 				"th-TH",
 				nb,
+				he,
+				ja,
 			);
 			mainGroup = 1324296D15ADBB3700DF823E;
 			productRefGroup = 1324297915ADBB3700DF823E /* Products */;
@@ -4977,6 +4981,8 @@
 				EA5DFA991C0F017000BA0C06 /* cs */,
 				EA5DFA9A1C0F01C200BA0C06 /* th-TH */,
 				EA5DFA9B1C0F031000BA0C06 /* nb */,
+				590F1FF91C7474AE00AAF1C7 /* he */,
+				590F1FFA1C7474B700AAF1C7 /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
