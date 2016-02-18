@@ -306,7 +306,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             //Make operations in main thread
             //Do reload data in safe mode (in this way the tableview not broken)
-            [_uploadsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+            [_uploadsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];            
+            [self setTheTableFooter];
         });
     });
 
@@ -760,22 +761,15 @@
     return height;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+
+- (void) setTheTableFooter {
     
-    CGFloat height = 0;
-    
-    switch (section) {
-        case 3:
-            height = k_cell_height;
-            break;
-            
-        default:
-            height = 0;
-            break;
-    }
-    
-    return height;
+    //Set the footer section so that user can tap latest file if it's under the tabBar
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.uploadsTableView.frame.size.width, 40 + self.tabBarController.tabBar.frame.size.height)];
+    footerView.backgroundColor = [UIColor clearColor];
+    [self.uploadsTableView setTableFooterView:footerView];
 }
+
 
 #pragma mark - Methods to resolve the Failed Uploads
 
