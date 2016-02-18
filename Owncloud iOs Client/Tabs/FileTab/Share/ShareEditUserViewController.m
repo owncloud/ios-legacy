@@ -55,6 +55,7 @@
 #define heightOfHeader 10.0
 
 #define shareTableViewSectionsNumber  3
+#define shareTableViewSectionsNumberRemote  2
 
 //Nº of Rows
 #define fullOptionsForCanEditOption 3
@@ -271,7 +272,11 @@ typedef NS_ENUM (NSInteger, enumUpload){
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
-    return shareTableViewSectionsNumber;
+    if (self.updatedOCShare.shareType == shareTypeRemote) {
+        return shareTableViewSectionsNumberRemote;
+    } else {
+        return shareTableViewSectionsNumber;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -418,13 +423,9 @@ typedef NS_ENUM (NSInteger, enumUpload){
             [shareLinkHeaderCell.switchSection setOn:self.canEditEnabled animated:false];
             [shareLinkHeaderCell.switchSection addTarget:self action:@selector(canEditSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
 
-        }else{
+        } else {
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"title_user_can_share", nil);
             [shareLinkHeaderCell.switchSection setOn:self.canShareEnabled animated:false];
-            
-            if (self.updatedOCShare.shareType == shareTypeRemote) {
-                shareLinkHeaderCell.switchSection.enabled = NO;
-            }
             [shareLinkHeaderCell.switchSection addTarget:self action:@selector(canShareSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
         }
         
