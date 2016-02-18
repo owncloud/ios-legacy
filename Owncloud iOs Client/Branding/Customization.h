@@ -138,3 +138,9 @@
 
 //Help Guide init app
 #define k_show_main_help_guide YES
+
+//Show share with users
+#define k_is_share_with_users_available YES
+
+//Show share by link
+#define k_is_share_by_link_available YES

@@ -1327,6 +1327,11 @@
             fileCell = (CustomCellFileAndDirectory *)[topLevelObjects objectAtIndex:0];
         }
         
+        if (!IS_IPHONE) {
+            fileCell.labelTitle.adjustsFontSizeToFitWidth=YES;
+            fileCell.labelTitle.minimumScaleFactor=0.7;
+        }
+        
         fileCell.indexPath = indexPath;
         
         //Autoresizing width when the iphone is landscape. Not in iPad.
