@@ -30,3 +30,4 @@
 #import "KKPasscodeViewController.h"
 #import "ManageAppSettingsDB.h"
 #import "InitializeDatabase.h"
+#import "ManageTouchID.h"

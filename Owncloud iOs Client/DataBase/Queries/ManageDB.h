@@ -202,7 +202,7 @@
 + (void) updateDBVersion13To14;
 
 ///-----------------------------------
-/// @name Update Database version with 13 version to 14
+/// @name Update Database version with 14 version to 15
 ///-----------------------------------
 
 /**
@@ -212,5 +212,17 @@
  *
  */
 + (void) updateDBVersion14To15;
+
+///-----------------------------------
+/// @name Update Database version with 15 version to 16
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter passcode table, added new field to store if Touch ID is active or not.
+ *
+ */
++ (void) updateDBVersion15To16;
 
 @end
