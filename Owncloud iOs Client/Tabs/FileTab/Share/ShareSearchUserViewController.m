@@ -341,7 +341,12 @@
     
     //File is shared to me by others or not
     if (userOrGroup.shareeType == shareTypeRemote) {
-        permissions = k_defaul_remote_share_permission;
+        if (self.shareFileDto.isDirectory) {
+            permissions = k_defaul_folder_remote_share_permission;
+        } else {
+            permissions = k_defaul_file_remote_share_permission;
+        }
+        
     } else if (([self.shareFileDto.permissions rangeOfString:k_permission_shared].location != NSNotFound)) {
         if (self.shareFileDto.isDirectory) {
             permissions = k_min_folder_share_permission;
