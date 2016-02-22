@@ -648,7 +648,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE shared SET permissions = ? WHERE id_remote_shared = ? AND user_id = ?", [NSNumber numberWithInt:permissions], [NSNumber numberWithInteger:idRemoteShared], [NSNumber numberWithInteger:userId]];
+        correctQuery = [db executeUpdate:@"UPDATE shared SET permissions = ? WHERE id_remote_shared = ? AND user_id = ?", [NSNumber numberWithInteger:permissions],[NSNumber numberWithInteger:idRemoteShared], [NSNumber numberWithInteger:userId]];
         
         if (!correctQuery) {
             DLog(@"Error in update file with permissions");
