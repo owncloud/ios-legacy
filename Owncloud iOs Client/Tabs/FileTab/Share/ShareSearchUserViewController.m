@@ -200,6 +200,7 @@
             shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
         }
 
+
         NSString *name;
         
         if (userOrGroup.shareeType == shareTypeGroup) {
@@ -368,6 +369,8 @@
         [self insertUseroOrGroupObjectInSelectedItems:userOrGroup];
         
         [self.searchDisplayController setActive:NO animated:YES];
+        
+        [ShareUtils manageTheDuplicatedUsers:self.selectedItems];
         
         [self.searchTableView reloadData];
 
