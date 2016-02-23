@@ -55,17 +55,17 @@
 #define heightOfHeader 10.0
 
 #define shareTableViewSectionsNumber  3
+#define shareTableViewSectionsNumberRemote  2
 
 //Nº of Rows
-#define optionsShownIfFileIsDirectory 3
-#define optionsShownIfFileIsNotDirectory 0
+#define fullOptionsForCanEditOption 3
+#define minOptionsForCanEditOption 0
 
 
 @interface ShareEditUserViewController ()
 
 @property (nonatomic, strong) FileDto* sharedItem;
 @property (nonatomic, strong) OCSharedDto *updatedOCShare;
-@property (nonatomic) NSInteger optionsShownWithCanEdit;
 @property (nonatomic) BOOL canEditEnabled;
 @property (nonatomic) BOOL canCreateEnabled;
 @property (nonatomic) BOOL canChangeEnabled;
@@ -104,7 +104,6 @@ typedef NS_ENUM (NSInteger, enumUpload){
     {
         self.sharedItem = fileDto;
         self.updatedOCShare = sharedDto;
-        self.optionsShownWithCanEdit = 0;
         self.canEditEnabled = [UtilsFramework isPermissionToCanEdit:self.updatedOCShare.permissions];
         self.canCreateEnabled = [UtilsFramework isPermissionToCanCreate:self.updatedOCShare.permissions];
         self.canChangeEnabled = [UtilsFramework isPermissionToCanChange:self.updatedOCShare.permissions];
@@ -156,13 +155,6 @@ typedef NS_ENUM (NSInteger, enumUpload){
 }
 
 - (void) reloadView {
-    
-    if (self.canEditEnabled && self.sharedItem.isDirectory){
-        self.optionsShownWithCanEdit = optionsShownIfFileIsDirectory;
-    }else{
-        self.optionsShownWithCanEdit = optionsShownIfFileIsNotDirectory;
-    }
-    
     [self.shareEditUserTableView reloadData];
 }
 
@@ -204,7 +196,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
             }
             if (!isSamlCredentialsError) {
                 self.updatedOCShare.permissions = permissionValue;
-                [ManageSharesDB updateTheRemoteShared:self.updatedOCShare.idRemoteShared withPermissions:permissionValue];
+                [ManageSharesDB updateTheRemoteShared:self.updatedOCShare.idRemoteShared forUser:APP_DELEGATE.activeUser.idUser withPermissions:permissionValue];
                 [self endLoading];
                 [self reloadView];
             }
@@ -271,7 +263,11 @@ typedef NS_ENUM (NSInteger, enumUpload){
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
-    return shareTableViewSectionsNumber;
+    if (self.updatedOCShare.shareType == shareTypeRemote) {
+        return shareTableViewSectionsNumberRemote;
+    } else {
+        return shareTableViewSectionsNumber;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -279,10 +275,10 @@ typedef NS_ENUM (NSInteger, enumUpload){
     if (section == 0) {
         return 1;
     }else if (section == 1){
-        if (self.canEditEnabled && self.sharedItem.isDirectory) {
-            return optionsShownIfFileIsDirectory;
+        if (self.canEditEnabled && self.sharedItem.isDirectory && self.updatedOCShare.shareType != shareTypeRemote) {
+            return fullOptionsForCanEditOption;
         } else {
-            return optionsShownIfFileIsNotDirectory;
+            return minOptionsForCanEditOption;
         }
         
     }else if (section == 2) {
@@ -418,7 +414,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
             [shareLinkHeaderCell.switchSection setOn:self.canEditEnabled animated:false];
             [shareLinkHeaderCell.switchSection addTarget:self action:@selector(canEditSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
 
-        }else{
+        } else {
             shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"title_user_can_share", nil);
             [shareLinkHeaderCell.switchSection setOn:self.canShareEnabled animated:false];
             [shareLinkHeaderCell.switchSection addTarget:self action:@selector(canShareSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
@@ -452,7 +448,10 @@ typedef NS_ENUM (NSInteger, enumUpload){
     [self saveEditOptionValues];
     self.canCreateEnabled = value;
     self.canChangeEnabled = value;
-    self.canDeleteEnabled = value;
+    if (self.updatedOCShare.shareType != shareTypeRemote) {
+        //On shareTypeRemote canDeleteEnabled is NO and can not change
+        self.canDeleteEnabled = value;
+    }
 }
 
 -(void) saveEditOptionValues{
