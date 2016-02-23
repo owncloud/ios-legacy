@@ -66,7 +66,6 @@
 
 @property (nonatomic, strong) FileDto* sharedItem;
 @property (nonatomic, strong) OCSharedDto *updatedOCShare;
-@property (nonatomic) NSInteger optionsShownWithCanEdit;
 @property (nonatomic) BOOL canEditEnabled;
 @property (nonatomic) BOOL canCreateEnabled;
 @property (nonatomic) BOOL canChangeEnabled;
@@ -105,7 +104,6 @@ typedef NS_ENUM (NSInteger, enumUpload){
     {
         self.sharedItem = fileDto;
         self.updatedOCShare = sharedDto;
-        self.optionsShownWithCanEdit = 0;
         self.canEditEnabled = [UtilsFramework isPermissionToCanEdit:self.updatedOCShare.permissions];
         self.canCreateEnabled = [UtilsFramework isPermissionToCanCreate:self.updatedOCShare.permissions];
         self.canChangeEnabled = [UtilsFramework isPermissionToCanChange:self.updatedOCShare.permissions];
@@ -157,13 +155,6 @@ typedef NS_ENUM (NSInteger, enumUpload){
 }
 
 - (void) reloadView {
-    
-    if (self.canEditEnabled && self.sharedItem.isDirectory && self.updatedOCShare.shareType != shareTypeRemote){
-        self.optionsShownWithCanEdit = fullOptionsForCanEditOption;
-    }else{
-        self.optionsShownWithCanEdit = minOptionsForCanEditOption;
-    }
-    
     [self.shareEditUserTableView reloadData];
 }
 
