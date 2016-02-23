@@ -198,16 +198,17 @@
  */
 + (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file andShareType:(NSInteger) shareType andUser:(UserDto *) user;
 
-///-----------------------------------
-/// @name updateTheRemoteSharedwithPermissions:
-///-----------------------------------
+///---------------------------------------------------
+/// @name updateTheRemoteSharedforUserWithPermissions
+///---------------------------------------------------
 
 /**
- * This method updates the permissions of the file
+ * This method updates the permissions of an user's file
  *
  * @param idRemoteShared    -> int
  * @param permissions       -> NSInteger
+ * @param userId            -> NSInteger
  */
-+ (void) updateTheRemoteShared: (NSInteger)idRemoteShared withPermissions: (NSInteger)permissions;
++ (void) updateTheRemoteShared: (NSInteger)idRemoteShared forUser: (NSInteger)userId withPermissions: (NSInteger)permissions;
 
 @end

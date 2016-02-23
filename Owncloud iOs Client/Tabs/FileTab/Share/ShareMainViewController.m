@@ -376,17 +376,13 @@
     [self.sharesOfFile removeAllObjects];
     
     for (OCSharedDto *shareWith in sharesWith) {
-        if (shareWith.shareType == 0 || shareWith.shareType == 1) {
+        if (shareWith.shareType == shareTypeUser || shareWith.shareType == shareTypeGroup || shareWith.shareType == shareTypeRemote) {
             
             OCShareUser *shareUser = [OCShareUser new];
             shareUser.name = shareWith.shareWith;
             shareUser.displayName = shareWith.shareWithDisplayName;
             shareUser.sharedDto = shareWith;
-            if (shareWith.shareType == shareTypeGroup) {
-                shareUser.isGroup = true;
-            }else{
-                shareUser.isGroup = false;
-            }
+            shareUser.shareeType = shareWith.shareType;
             
             [self.sharedUsersOrGroups addObject:shareUser];
             [self.sharesOfFile addObject:shareWith];
@@ -689,13 +685,12 @@
                 }
                 
             }
-            
             break;
         case 2:
             if (indexPath.row == 2) {
                 
                 cell = [self getCellShareLinkButtonByTableView:tableView];
-                
+
             } else {
                 
                 cell = [self getCellOptionShareLinkByTableView:tableView andIndex:indexPath];
@@ -792,7 +787,7 @@
     
     NSString *name;
     
-    if (shareUser.isGroup) {
+    if (shareUser.shareeType == shareTypeGroup) {
         name = [NSString stringWithFormat:@"%@ (%@)",shareUser.name, NSLocalizedString(@"share_user_group_indicator", nil)];
     } else {
         

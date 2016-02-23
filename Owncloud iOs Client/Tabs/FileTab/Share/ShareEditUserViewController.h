@@ -23,6 +23,6 @@
 
 @property (weak, nonatomic) IBOutlet UITableView* shareEditUserTableView;
 
-- (id) initWithFileDto:(FileDto *)fileDto andOCSharedDto:(OCSharedDto *)userDto;
+- (id) initWithFileDto:(FileDto *)fileDto andOCSharedDto:(OCSharedDto *)sharedDto;
 
 @end
