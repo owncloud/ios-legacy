@@ -427,7 +427,7 @@
     messageView.duration = messageDuration;
 }
 
-#pragma mark - Fake Federating user
+#pragma mark - Federating user
 - (OCShareUser *) getFederatedOCSharedUserByName:(NSString *) name {
     
     OCShareUser *federatedUser = [OCShareUser new];
