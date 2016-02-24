@@ -159,8 +159,9 @@
     NSArray *sharesByLink = [allShares filteredArrayUsingPredicate:predicateShareByLink];
     
     if (fileForSetTheStatusIcon.isDirectory) {
-        
-        if (allShares.count > 0 && allShares !=nil) {
+        if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) {
+            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
+        } else if (allShares.count > 0 && allShares !=nil) {
             if (sharesByLink.count > 0 && sharesByLink !=nil) {
                 fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
             } else {
@@ -254,6 +255,12 @@
         
     } else {
         fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
+    }
+    
+    if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) {
+        fileCell.sharedWithUsImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
+    } else {
+        fileCell.sharedWithUsImage.image=[UIImage imageNamed:@""];
     }
     
     return fileCell;
