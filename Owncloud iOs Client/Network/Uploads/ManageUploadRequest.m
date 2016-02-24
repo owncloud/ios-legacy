@@ -532,7 +532,6 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 
                 [weakSelf updateRecentsTab];
                 [weakSelf dismissTransferProgress:weakSelf];
-                [weakSelf removeTheFileOnFileSystem];
                 
                 if(weakSelf.currentUpload.isLastUploadFileOfThisArray) {
                     DLog(@"self.currentUpload: %@", weakSelf.currentUpload.uploadFileName);
@@ -547,8 +546,10 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 if (uploadFile.isDownload == overwriting) {
                     //Update the etag
                     [self updateTheEtagOfTheFile:uploadFile];
+                    [self moveTheFileOnFileSystemFromTemporalFolder:uploadFile];
                 }
                 
+                [weakSelf removeTheFileOnFileSystem];
                 
             }
             
@@ -905,6 +906,18 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate updateProgressView:_progressTag withPercent:per];
+}
+
+/*
+ * Move the file from temp folder to the original
+ */
+- (void) moveTheFileOnFileSystemFromTemporalFolder:(FileDto *) file {
+    
+    if (self.currentUpload.originPath) {
+        NSError *error;
+        [[NSFileManager defaultManager] removeItemAtPath:file.localFolder error:&error];
+        [[NSFileManager defaultManager] moveItemAtPath:self.currentUpload.originPath toPath:file.localFolder error:&error];
+    }
 }
 
 /*
