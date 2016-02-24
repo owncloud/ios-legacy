@@ -1043,7 +1043,7 @@
     if (APP_DELEGATE.activeUser.hasShareeApiSupport == serverFunctionalitySupported) {
         ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
         ssuvc.shareFileDto = self.sharedItem;
-        [ssuvc setSelectedItems:self.sharedUsersOrGroups];
+        [ssuvc setAndAddSelectedItems:self.sharedUsersOrGroups];
         self.activityView = nil;
         [self.navigationController pushViewController:ssuvc animated:true];
     }else{

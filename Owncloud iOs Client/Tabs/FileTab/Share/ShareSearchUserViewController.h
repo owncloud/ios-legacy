@@ -26,6 +26,6 @@
 @property (nonatomic, strong) IBOutlet UISearchBar *itemSearchBar;
 @property (nonatomic, strong) FileDto *shareFileDto;
 
-- (void) setSelectedItems:(NSMutableArray *) selectedItems;
+- (void) setAndAddSelectedItems:(NSMutableArray *) selectedItems;
 
 @end

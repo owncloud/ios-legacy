@@ -98,7 +98,7 @@
     }
 }
 
-- (void) setSelectedItems:(NSMutableArray *) selectedItems {
+- (void) setAndAddSelectedItems:(NSMutableArray *) selectedItems {
     
     for (OCShareUser *item in selectedItems) {
         [self.selectedItems addObject:item];
@@ -370,7 +370,7 @@
         
         [self.searchDisplayController setActive:NO animated:YES];
         
-        [ShareUtils manageTheDuplicatedUsers:self.selectedItems];
+        self.selectedItems = [ShareUtils manageTheDuplicatedUsers:self.selectedItems];
         
         [self.searchTableView reloadData];
 
