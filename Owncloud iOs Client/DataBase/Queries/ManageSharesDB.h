@@ -78,32 +78,33 @@
 + (NSMutableArray*) getSharesByFolderPath:(NSString *) path;
 
 ///-----------------------------------
-/// @name Get Shares From User And Group By Path
+/// @name Get Shares by User and Path
 ///-----------------------------------
 
 /**
- * Get the shared items of a specific path
+ * Get the shared items of a specific user and path
  *
+ * @param idUser -> NSInteger
  * @param path -> NSString
  *
  * @return NSMutableArray
  *
  */
-+ (NSMutableArray*) getSharesFromUserAndGroupByPath:(NSString *) path;
++ (NSMutableArray*) getSharesByUser:(NSInteger)idUser andPath:(NSString *) path;
 
-///-----------------------------------
-/// @name Get All Shares for user
-///-----------------------------------
-
-/**
- * Get the shared items of a specific user
- *
- * @param idUser -> NSInteger
- *
- * @return NSArray
- *
- */
-+ (NSArray*) getAllSharesforUser:(NSInteger)idUser;
+/////-----------------------------------
+///// @name Get All Shares for user
+/////-----------------------------------
+//
+///**
+// * Get the shared items of a specific user
+// *
+// * @param idUser -> NSInteger
+// *
+// * @return NSArray
+// *
+// */
+//+ (NSArray*) getAllSharesforUser:(NSInteger)idUser;
 
 
 ///-----------------------------------
@@ -184,11 +185,11 @@
 + (OCSharedDto *) getSharedEqualWithFileDtoPath:(NSString*)path;
 
 ///-----------------------------------
-/// @name getTheOCShareByFileDto
+/// @name getTheOCShareByFileDto:andShareType:andUser
 ///-----------------------------------
 
 /**
- * Method that to get the OCSharedDto by a filedto and the type of share
+ * Method to get the OCSharedDto by a filedto and by type of share and by user
  *
  * @param file -> FileDto
  * @param shareType -> NSInteger
@@ -197,6 +198,20 @@
  * @return OCSharedDto
  */
 + (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file andShareType:(NSInteger) shareType andUser:(UserDto *) user;
+
+///-----------------------------------
+/// @name getOCShareTypeUserOrTypeGroupByFileDto
+///-----------------------------------
+
+/**
+ * Method to get the OCSharedDto with sharedType user or group by a filedto and by user
+ *
+ * @param file -> FileDto
+ * @param user -> UserDto
+ *
+ * @return OCSharedDto
+ */
+//+ (OCSharedDto *) getOCShareTypeUserOrTypeGroupByFileDto:(FileDto*)file andUser:(UserDto *) user;
 
 ///---------------------------------------------------
 /// @name updateTheRemoteSharedforUserWithPermissions

@@ -152,24 +152,16 @@
  */
 + (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder andIsSonOfFavoriteFolder:(BOOL)isCurrentFolderSonOfFavoriteFolder ofUser:(UserDto *)user {
     
+    NSString *path = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:fileForSetTheStatusIcon.filePath andUser:user], fileForSetTheStatusIcon.fileName];
+    
+    NSMutableArray *allShares = [ManageSharesDB getSharesByUser:user.idUser andPath:path];
+    NSPredicate *predicateShareByLink = [NSPredicate predicateWithFormat:@"shareType == %i", shareTypeLink];
+    NSArray *sharesByLink = [allShares filteredArrayUsingPredicate:predicateShareByLink];
+    
     if (fileForSetTheStatusIcon.isDirectory) {
-        //We only show the shared icon if the folder is shared and the father is not shared
-        if (([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) &&
-            ([currentFolder.permissions rangeOfString:k_permission_shared].location == NSNotFound) && (fileForSetTheStatusIcon.sharedFileSource > 0)) {
-            
-            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
-            
-            NSMutableArray *allShares = [ManageSharesDB getSharesBySharedFileSource:fileForSetTheStatusIcon.sharedFileSource forUser:[ManageUsersDB getActiveUser].idUser];
-            for (OCSharedDto *current in allShares) {
-                if (current.shareType == shareTypeLink) {
-                    fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
-                }
-            }
-        } else if (([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) &&
-                   ([currentFolder.permissions rangeOfString:k_permission_shared].location == NSNotFound)) {
-            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
-        } else if (fileForSetTheStatusIcon.sharedFileSource > 0) {
-            if ([ManageSharesDB getTheOCShareByFileDto:fileForSetTheStatusIcon andShareType:shareTypeLink andUser:user]) {
+        
+        if (allShares.count > 0 && allShares !=nil) {
+            if (sharesByLink.count > 0 && sharesByLink !=nil) {
                 fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
             } else {
                 fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
@@ -177,7 +169,6 @@
         } else {
             fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
         }
-        
         
 #ifdef CONTAINER_APP
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
@@ -202,8 +193,6 @@
         if (fileForSetTheStatusIcon.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:fileForSetTheStatusIcon.fileName]) {
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                
-                UserDto *user = [ManageUsersDB getActiveUser];
                 
                 UIImage *thumbnail;
                 
@@ -256,29 +245,15 @@
         }
     }
     
-    //Check share with users or groups
-    NSString *path = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:fileForSetTheStatusIcon.filePath andUser:user], fileForSetTheStatusIcon.fileName];
-    NSArray *sharesWith = [ManageSharesDB getSharesFromUserAndGroupByPath:path];
-    
-    //Shared -> Shared Image (SharedType = 1|2|3) || UnShared (SharedType = 0) -> Empty image
-    if (fileForSetTheStatusIcon.sharedFileSource > 0) {
-        if ([ManageSharesDB getTheOCShareByFileDto:fileForSetTheStatusIcon andShareType:shareTypeLink andUser:user]) {
+    if (allShares.count > 0 && allShares !=nil) {
+        if (sharesByLink.count > 0 && sharesByLink !=nil) {
             fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
         } else {
             fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
         }
-    } else if(sharesWith.count > 0) {
-        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
-    } else{
-        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
-    }
-    
-    //We only show the shared icon if the folder is shared and the father is not shared
-    if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound &&
-        [currentFolder.permissions rangeOfString:k_permission_shared].location == NSNotFound) {
-        fileCell.sharedWithUsImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
+        
     } else {
-        fileCell.sharedWithUsImage.image=[UIImage imageNamed:@""];
+        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
     }
     
     return fileCell;

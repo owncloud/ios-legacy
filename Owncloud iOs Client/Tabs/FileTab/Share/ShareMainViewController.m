@@ -368,7 +368,7 @@
     
     NSString *path = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser], self.sharedItem.fileName];
     
-    NSArray *sharesWith = [ManageSharesDB getSharesFromUserAndGroupByPath:path];
+    NSArray *sharesWith = [ManageSharesDB getSharesByUser:APP_DELEGATE.activeUser.idUser andPath:path];
     
     DLog(@"SharesWith: %@", sharesWith);
     
