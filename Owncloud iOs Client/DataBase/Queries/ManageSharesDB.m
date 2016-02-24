@@ -287,64 +287,6 @@
     
     return output;
 }
-//
-/////-----------------------------------
-///// @name Get All Shares for user
-/////-----------------------------------
-//
-///**
-// * Get the shared items of a specific user
-// *
-// * @param idUser -> NSInteger
-// *
-// * @return NSArray
-// *
-// */
-//
-//+ (NSArray*) getAllSharesforUser:(NSInteger)idUser{
-//    
-//    __block NSMutableArray *items = [NSMutableArray new];
-//    NSArray *output = nil;
-//    
-//    FMDatabaseQueue *queue = Managers.sharedDatabase;
-//    
-//    [queue inDatabase:^(FMDatabase *db) {
-//
-//        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
-//        while ([rs next]) {
-//            
-//            //only stored share type 3 (Shared with link)
-//            if ([rs intForColumn:@"share_type"] == 3) {
-//                
-//                OCSharedDto *sharedDto = [OCSharedDto new];
-//                
-//                sharedDto.fileSource = [rs intForColumn:@"file_source"];
-//                sharedDto.itemSource = [rs intForColumn:@"item_source"];
-//                sharedDto.shareType = [rs intForColumn:@"share_type"];
-//                sharedDto.shareWith = [rs stringForColumn:@"share_with"];
-//                sharedDto.path = [rs stringForColumn:@"path"];
-//                sharedDto.permissions = [rs intForColumn:@"permissions"];
-//                sharedDto.sharedDate = [rs longForColumn:@"shared_date"];
-//                sharedDto.expirationDate = [rs longForColumn:@"expiration_date"];
-//                sharedDto.token = [rs stringForColumn:@"token"];
-//                sharedDto.shareWithDisplayName = [rs stringForColumn:@"share_with_display_name"];
-//                sharedDto.isDirectory = [rs boolForColumn:@"is_directory"];
-//                sharedDto.idRemoteShared = [rs intForColumn:@"id_remote_shared"];
-//                
-//                [items addObject:sharedDto];
-//            }
-//        }
-//        [rs close];
-//    }];
-//    
-//    
-//    output = [NSArray arrayWithArray:items];
-//    items = nil;
-//    
-//    
-//    return output;
-//    
-//}
 
 
 ///-----------------------------------

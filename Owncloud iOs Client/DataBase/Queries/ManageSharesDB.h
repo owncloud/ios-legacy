@@ -92,20 +92,6 @@
  */
 + (NSMutableArray*) getSharesByUser:(NSInteger)idUser andPath:(NSString *) path;
 
-/////-----------------------------------
-///// @name Get All Shares for user
-/////-----------------------------------
-//
-///**
-// * Get the shared items of a specific user
-// *
-// * @param idUser -> NSInteger
-// *
-// * @return NSArray
-// *
-// */
-//+ (NSArray*) getAllSharesforUser:(NSInteger)idUser;
-
 
 ///-----------------------------------
 ///
