@@ -331,7 +331,6 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 
                 [weakSelf updateRecentsTab];
                 [weakSelf dismissTransferProgress:weakSelf];
-                [weakSelf removeTheFileOnFileSystem];
                 
                 if(weakSelf.currentUpload.isLastUploadFileOfThisArray) {
                     DLog(@"self.currentUpload: %@", weakSelf.currentUpload.uploadFileName);
@@ -345,7 +344,10 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 if (uploadFile.isDownload == overwriting) {
                     //Update the etag
                     [self updateTheEtagOfTheFile:uploadFile];
+                    [self moveTheFileOnFileSystemFromTemporalFolder:uploadFile];
                 }
+                
+                [weakSelf removeTheFileOnFileSystem];
                 
                 [_operation finalize];
                 _operation = nil;
