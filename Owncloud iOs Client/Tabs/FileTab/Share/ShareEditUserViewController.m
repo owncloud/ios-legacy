@@ -448,10 +448,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
     [self saveEditOptionValues];
     self.canCreateEnabled = value;
     self.canChangeEnabled = value;
-    if (self.updatedOCShare.shareType != shareTypeRemote) {
-        //On shareTypeRemote canDeleteEnabled is NO and can not change
-        self.canDeleteEnabled = value;
-    }
+    self.canDeleteEnabled = value;
 }
 
 -(void) saveEditOptionValues{
@@ -470,7 +467,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
     
     self.canEditEnabled = sender.on;
     
-    if (sender.on && ([self.sharedItem.permissions rangeOfString:k_permission_shared].location == NSNotFound)) {
+    if (sender.on) {
         [self setOptionsCanEditTo:true];
     } else {
         [self setOptionsCanEditTo:false];
