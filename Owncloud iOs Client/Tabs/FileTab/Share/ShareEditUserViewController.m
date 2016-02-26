@@ -467,7 +467,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
     
     self.canEditEnabled = sender.on;
     
-    if (sender.on) {
+    if (sender.on && ([self.sharedItem.permissions rangeOfString:k_permission_shared].location == NSNotFound)) {
         [self setOptionsCanEditTo:true];
     } else {
         [self setOptionsCanEditTo:false];
