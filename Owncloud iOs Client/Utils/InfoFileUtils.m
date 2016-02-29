@@ -157,20 +157,30 @@
     NSMutableArray *allShares = [ManageSharesDB getSharesByUser:user.idUser andPath:path];
     NSPredicate *predicateShareByLink = [NSPredicate predicateWithFormat:@"shareType == %i", shareTypeLink];
     NSArray *sharesByLink = [allShares filteredArrayUsingPredicate:predicateShareByLink];
+    NSPredicate *predicateRemoteShare = [NSPredicate predicateWithFormat:@"shareType == %i", shareTypeRemote];
+    NSArray *sharesByRemote = [allShares filteredArrayUsingPredicate:predicateRemoteShare];
+    
+    BOOL isShareAPIActive = [ManageUsersDB getActiveUser].hasCapabilitiesSupport && [ManageUsersDB getActiveUser].capabilitiesDto && [ManageUsersDB getActiveUser].capabilitiesDto.isFilesSharingAPIEnabled;
+    
     
     if (fileForSetTheStatusIcon.isDirectory) {
-        if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) {
-            fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
-        } else if (allShares.count > 0 && allShares !=nil) {
-            if (sharesByLink.count > 0 && sharesByLink !=nil) {
-                fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
-            } else {
-                fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
-            }
-        } else {
-            fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
-        }
         
+            if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) {
+                fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
+                
+            } else if (allShares.count > 0 && allShares !=nil) {
+                
+                if (sharesByLink.count > 0 && sharesByLink !=nil && isShareAPIActive) {
+                    fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
+                } else if((sharesByRemote.count > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
+                    fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
+                } else{
+                    fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
+                }
+            } else {
+                fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
+            }
+
 #ifdef CONTAINER_APP
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
             if([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon] || [fileForSetTheStatusIcon.etag isEqualToString:k_negative_etag] || fileForSetTheStatusIcon.isNecessaryUpdate) {
@@ -247,17 +257,21 @@
     }
     
     if (allShares.count > 0 && allShares !=nil) {
-        if (sharesByLink.count > 0 && sharesByLink !=nil) {
+        if (sharesByLink.count > 0 && sharesByLink !=nil && isShareAPIActive) {
             fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
-        } else {
+        } else if((sharesByRemote.count > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
             fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
+        }
+        else {
+            fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
         }
         
     } else {
         fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
     }
     
-    if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) {
+    
+    if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound){
         fileCell.sharedWithUsImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
     } else {
         fileCell.sharedWithUsImage.image=[UIImage imageNamed:@""];
