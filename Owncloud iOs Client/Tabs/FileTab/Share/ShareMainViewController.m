@@ -368,7 +368,7 @@
     
     NSString *path = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.sharedItem.filePath andUser:APP_DELEGATE.activeUser], self.sharedItem.fileName];
     
-    NSArray *sharesWith = [ManageSharesDB getSharesFromUserAndGroupByPath:path];
+    NSArray *sharesWith = [ManageSharesDB getSharesByUser:APP_DELEGATE.activeUser.idUser andPath:path];
     
     DLog(@"SharesWith: %@", sharesWith);
     
@@ -1043,7 +1043,7 @@
     if (APP_DELEGATE.activeUser.hasShareeApiSupport == serverFunctionalitySupported) {
         ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
         ssuvc.shareFileDto = self.sharedItem;
-        [ssuvc setSelectedItems:self.sharedUsersOrGroups];
+        [ssuvc setAndAddSelectedItems:self.sharedUsersOrGroups];
         self.activityView = nil;
         [self.navigationController pushViewController:ssuvc animated:true];
     }else{

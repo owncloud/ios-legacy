@@ -1756,6 +1756,8 @@
     
     //Refresh the switch pass code
     [self.switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:NO];
+    [self.settingsTableView reloadData];
+
     
 }
 

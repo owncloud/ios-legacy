@@ -33,7 +33,7 @@
 
 @interface ShareFileOrFolder : NSObject <UIActionSheetDelegate,UITextFieldDelegate,UIAlertViewDelegate>
 
-@property (nonatomic, assign) FileDto *file;
+@property (nonatomic, strong) FileDto *file;
 @property (nonatomic, strong) OCSharedDto *shareDto;
 @property (nonatomic, strong) UIActionSheet *shareActionSheet;
 //This view is to show the shareActionSheet

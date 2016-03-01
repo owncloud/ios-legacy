@@ -98,7 +98,7 @@
     }
 }
 
-- (void) setSelectedItems:(NSMutableArray *) selectedItems {
+- (void) setAndAddSelectedItems:(NSMutableArray *) selectedItems {
     
     for (OCShareUser *item in selectedItems) {
         [self.selectedItems addObject:item];
@@ -199,6 +199,7 @@
             userOrGroup = [self.selectedItems objectAtIndex:indexPath.row];
             shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
         }
+
 
         NSString *name;
         
@@ -368,6 +369,8 @@
         [self insertUseroOrGroupObjectInSelectedItems:userOrGroup];
         
         [self.searchDisplayController setActive:NO animated:YES];
+        
+        self.selectedItems = [ShareUtils manageTheDuplicatedUsers:self.selectedItems];
         
         [self.searchTableView reloadData];
 
