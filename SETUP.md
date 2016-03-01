@@ -54,7 +54,7 @@ NOTE: You must sign the [Contributor Agreement][1] or contribute your code under
 
 To make sure your new pull request does not contain commits which are already contained in previous PRs, create a new branch which is a clone of upstream/master.
 
-* ```git fetch upstream``
+* ```git fetch upstream```
 * ```git checkout -b my_new_master_branch upstream/master```
 * If you want to rename that branch later: ```git checkout -b my_new_master_branch_with_new_name```
 * Push branch to server: ```git push -u origin name_of_local_master_branch```
