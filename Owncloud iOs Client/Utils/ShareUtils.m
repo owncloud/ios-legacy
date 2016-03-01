@@ -17,10 +17,16 @@
     for (OCShareUser *userOrGroup in items) {
         NSMutableArray *restOfItems = [NSMutableArray arrayWithArray:items];
         [restOfItems removeObjectIdenticalTo:userOrGroup];
-        for (OCShareUser *tempItem in restOfItems) {
-            if ([userOrGroup.displayName isEqualToString:tempItem.displayName]){
-                userOrGroup.isDisplayNameDuplicated = true;
-                break;
+        
+        if(restOfItems.count == 0)
+            userOrGroup.isDisplayNameDuplicated = false;
+        
+        else{
+            for (OCShareUser *tempItem in restOfItems) {
+                if ([userOrGroup.displayName isEqualToString:tempItem.displayName]){
+                    userOrGroup.isDisplayNameDuplicated = true;
+                    break;
+                }
             }
         }
     }

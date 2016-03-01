@@ -309,6 +309,7 @@
                     
                     [self endLoading];
                     
+                    [self.delegate finishUpdateShareWithStatus:NO];
                     
                     BOOL isSamlCredentialsError=NO;
                     
