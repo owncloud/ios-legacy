@@ -181,8 +181,7 @@
     //Store the new active user, maybe can be different in the future in this same view
     _mUser = app.activeUser;
     
-    //Add a plus button
-    //UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showOptions)];
+    //Add a more button
     UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more-filled"] style:UIBarButtonItemStylePlain target:self action:@selector(showOptions)];
     self.navigationItem.rightBarButtonItem = addButtonItem;
     
@@ -656,6 +655,10 @@
         [self.plusActionSheet dismissWithClickedButtonIndex:2 animated:NO];
     }
     
+    if(self.sortingActionSheet){
+        [self.sortingActionSheet dismissWithClickedButtonIndex:2 animated:NO];
+    }
+    
     DLog(@"Files view Controller willRotate");
     if (IS_PORTRAIT) {
         //Vertical
@@ -970,6 +973,40 @@
     }
 }
 
+#pragma mark - Sorting methods
+/*
+ * This method show an action sheet to sort the files and folders list
+ */
+- (void)showSortingOptions{
+    NSString * sortByTitle = NSLocalizedString(@"sort_menu_title", nil);
+    
+    if (self.sortingActionSheet) {
+        self.sortingActionSheet = nil;
+    }
+    
+    self.sortingActionSheet = [[UIActionSheet alloc]
+                            initWithTitle:sortByTitle
+                            delegate:self
+                            cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                            destructiveButtonTitle:nil
+                            otherButtonTitles:NSLocalizedString(@"sort_menu_by_name_option", nil), NSLocalizedString(@"sort_menu_by_modification_date_option", nil), nil];
+    
+    self.sortingActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
+    self.sortingActionSheet.tag=300;
+    
+    if (IS_IPHONE) {
+        [self.sortingActionSheet showInView:self.tabBarController.view];
+    } else {
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        if (IS_IOS8 || IS_IOS9)  {
+            [self.sortingActionSheet showInView:app.splitViewController.view];
+        } else {
+            [self.sortingActionSheet showInView:app.detailViewController.view];
+        }
+    }
+}
 
 #pragma mark - UIAlertViewDelegate
 - (void) alertView: (UIAlertView *) alertView willDismissWithButtonIndex: (NSInteger) buttonIndex
@@ -2301,6 +2338,9 @@
                 break;
             case 1:
                 [self showCreateFolder];
+                break;
+            case 2:
+                [self showSortingOptions];
                 break;
             default:
                 break;
