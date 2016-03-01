@@ -686,6 +686,63 @@
     return isForbiddenCharacterSupport;
 }
 
+//-----------------------------------
+/// @name Update sorting choice by user
+///-----------------------------------
+
+/**
+ * Method to update a user sorting choice for a user
+ *
+ * @param UserDto -> user
+ */
++ (void) updateSortingWayTo:(enumSortingType)sortingType byUserDto:(UserDto *)user {
+    
+    DLog(@"updateSortingTypeTo");
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE users SET sorting_type=? WHERE id = ?", [NSNumber numberWithInteger:sortingType], [NSNumber numberWithInteger:user.idUser]];
+        
+        if (!correctQuery) {
+            DLog(@"Error updating sorting type");
+        }
+    }];
+}
+
+//-----------------------------------
+/// @name Get sorting choice by user
+///-----------------------------------
+
+/**
+ * Method that returns the sorting choice for a user
+ *
+ * @param UserDto -> user
+ *
+ * @return enumSortingType
+ */
++ (enumSortingType) getSortingWayByUserDto:(UserDto *) user{
+    
+    DLog(@"getSortingTypeByUserDto");
+    
+    __block NSString *output;
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT sorting_type FROM users  WHERE id = ?", [NSNumber numberWithInteger:user.idUser]];
+        
+        while ([rs next]) {
+            
+            output = [rs stringForColumn:@"sorting_type"];
+        }
+        
+    }];
+    
+    return (enumSortingType)[output integerValue];
+}
 
 #pragma mark - urlRedirected
 

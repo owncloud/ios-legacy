@@ -1008,6 +1008,21 @@
     }
 }
 
+
+/*
+ * This method reads the sorting option selected by the user
+ */
+- (enumSortingType) getUserSortingType{
+    return [ManageUsersDB getSortingWayByUserDto:[ManageUsersDB getActiveUser]];
+}
+
+- (void) updateActiveUserSortingChoiceTo: (enumSortingType)sortingChoice{
+    
+    [ManageUsersDB updateSortingWayTo:sortingChoice byUserDto:[ManageUsersDB getActiveUser]];
+    // TODO show sorted files
+}
+
+
 #pragma mark - UIAlertViewDelegate
 - (void) alertView: (UIAlertView *) alertView willDismissWithButtonIndex: (NSInteger) buttonIndex
 {
@@ -2421,6 +2436,20 @@
         switch (buttonIndex) {
             case 0:
                 [self didSelectCancelFavoriteFolder];
+                break;
+            default:
+                break;
+        }
+    }
+    
+    //Sorting options
+    if (actionSheet.tag==300) {
+        switch (buttonIndex) {
+            case 0:
+                [self updateActiveUserSortingChoiceTo:sortByName];
+                break;
+            case 1:
+                [self updateActiveUserSortingChoiceTo:sortByModificationDate];
                 break;
             default:
                 break;

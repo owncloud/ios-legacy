@@ -22,76 +22,83 @@
 
 @interface ManageUsersDB : NSObject
 
+
+typedef enum {
+    sortByName = 0,
+    sortByModificationDate = 1
+} enumSortingType;
+
+
 /*
- * Method that add user into database
+ * Method that adds user into database
  * @userDto -> userDto (Object of a user info)
  */
 +(void) insertUser:(UserDto *)userDto;
 
 /*
- * This method return the active user of the app
+ * This method returns the active user of the app
  */
 + (UserDto *) getActiveUser;
 
 /*
- * This method return the active user of the app without user name and password
+ * This method returns the active user of the app without user name and password
  */
 + (UserDto *) getActiveUserWithoutUserNameAndPassword;
 
 /*
- * This method change the password of the an user
+ * This method changes the password of the an user
  * @user -> user object
  */
 +(void) updatePassword: (UserDto *) user;
 
 /*
- * Method that return the user object of the idUser
+ * Method that returns the user object of the idUser
  * @idUser -> id User.
  */
 + (UserDto *) getUserByIdUser:(NSInteger) idUser;
 
 /*
- * Method that return if the user exist or not
+ * Method that returns if the user exist or not
  * @userDto -> user object
  */
 + (BOOL) isExistUser: (UserDto *) userDto;
 
 /*
- * Method that return an array with all users
+ * Method that returns an array with all users
  */
 + (NSMutableArray *) getAllUsers;
 
 /*
- * Method that return an array with all users without credentials info
+ * Method that returns an array with all users without credentials info
  */
 + (NSMutableArray *) getAllUsersWithOutCredentialInfo;
 
 /*
- * Method that return an array with all users.
+ * Method that returns an array with all users.
  * This method is only used with the old structure of the table used until version 9
  * And is only used in the update database method
  */
 + (NSMutableArray *) getAllOldUsersUntilVersion10;
 
 /*
- * Method that set a user like a active account
+ * Method that sets a user like a active account
  * @idUser -> id user
  */
 +(void) setActiveAccountByIdUser: (NSInteger) idUser;
 
 /*
- * Method that set all acount as a no active.
+ * Method that sets all acount as a no active.
  * This method is used before that set active account.
  */
 +(void) setAllUsersNoActive;
 
 /*
- * Method that select one account active automatically
+ * Method that selects one account active automatically
  */
 +(void) setActiveAccountAutomatically;
 
 /*
- * Method that remove user data in all tables
+ * Method that removes user data in all tables
  * @idUser -> id user
  */
 +(void) removeUserAndDataByIdUser:(NSInteger)idUser;
@@ -102,9 +109,20 @@
 +(void) updateStorageByUserDto:(UserDto *) user;
 
 /*
- * Method that return last user inserted on the Database
+ * Method that returns last user inserted on the Database
  */
 + (UserDto *) getLastUserInserted;
+
+/*
+ * Method that returns the sorting choice for a user
+ */
++ (enumSortingType) getSortingWayByUserDto:(UserDto *) user;
+
+/*
+ * Method to updates a user sorting choice for a user
+ */
++ (void) updateSortingWayTo:(enumSortingType)sortingType byUserDto:(UserDto *)user;
+
 
 //-----------------------------------
 /// @name Update user by user
