@@ -182,7 +182,8 @@
     _mUser = app.activeUser;
     
     //Add a plus button
-    UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showOptions)];
+    //UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showOptions)];
+    UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more-filled"] style:UIBarButtonItemStylePlain target:self action:@selector(showOptions)];
     self.navigationItem.rightBarButtonItem = addButtonItem;
     
     // Create a searchBar and a displayController "Future Option"
@@ -1096,9 +1097,11 @@
 }
 
 /*
- * Method that show the options when the user tap + button
+ * Method that show the options when the user tap ... button
  */
 - (void)showOptions {
+    
+    NSString * sortByTitle = NSLocalizedString(@"sort_menu_title", nil);
     
     if (self.plusActionSheet) {
         self.plusActionSheet = nil;
@@ -1109,7 +1112,7 @@
                             delegate:self
                             cancelButtonTitle:NSLocalizedString(@"cancel", nil)
                             destructiveButtonTitle:nil
-                            otherButtonTitles:NSLocalizedString(@"menu_upload", nil), NSLocalizedString(@"menu_folder", nil), nil];
+                            otherButtonTitles:NSLocalizedString(@"menu_upload", nil), NSLocalizedString(@"menu_folder", nil), sortByTitle, nil];
     
     self.plusActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
     self.plusActionSheet.tag=100;
