@@ -9,6 +9,7 @@
 
 
 ## 3.4.6 (December 2015)
+
 - Share privately with users or groups in your server
 - Set folder as favorite so that it's content is always downloaded and updated
 - Download a folder
