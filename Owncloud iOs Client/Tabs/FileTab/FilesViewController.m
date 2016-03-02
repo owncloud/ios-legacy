@@ -520,7 +520,11 @@
     //Add loading screen if it's necessary (Used by restoring the loading view after a rotate when the uploading processing)
     if (app.isLoadingVisible==YES) {
         [self initLoading];
+        
     }
+    
+    [self showSortedList];
+
 }
 
 // Notifies the view controller that its view is about to be removed from a view hierarchy.
@@ -973,55 +977,6 @@
     }
 }
 
-#pragma mark - Sorting methods
-/*
- * This method show an action sheet to sort the files and folders list
- */
-- (void)showSortingOptions{
-    NSString * sortByTitle = NSLocalizedString(@"sort_menu_title", nil);
-    
-    if (self.sortingActionSheet) {
-        self.sortingActionSheet = nil;
-    }
-    
-    self.sortingActionSheet = [[UIActionSheet alloc]
-                            initWithTitle:sortByTitle
-                            delegate:self
-                            cancelButtonTitle:NSLocalizedString(@"cancel", nil)
-                            destructiveButtonTitle:nil
-                            otherButtonTitles:NSLocalizedString(@"sort_menu_by_name_option", nil), NSLocalizedString(@"sort_menu_by_modification_date_option", nil), nil];
-    
-    self.sortingActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
-    self.sortingActionSheet.tag=300;
-    
-    if (IS_IPHONE) {
-        [self.sortingActionSheet showInView:self.tabBarController.view];
-    } else {
-        
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        if (IS_IOS8 || IS_IOS9)  {
-            [self.sortingActionSheet showInView:app.splitViewController.view];
-        } else {
-            [self.sortingActionSheet showInView:app.detailViewController.view];
-        }
-    }
-}
-
-
-/*
- * This method reads the sorting option selected by the user
- */
-- (enumSortingType) getUserSortingType{
-    return [ManageUsersDB getSortingWayByUserDto:[ManageUsersDB getActiveUser]];
-}
-
-- (void) updateActiveUserSortingChoiceTo: (enumSortingType)sortingChoice{
-    
-    [ManageUsersDB updateSortingWayTo:sortingChoice byUserDto:[ManageUsersDB getActiveUser]];
-    // TODO show sorted files
-}
-
 
 #pragma mark - UIAlertViewDelegate
 - (void) alertView: (UIAlertView *) alertView willDismissWithButtonIndex: (NSInteger) buttonIndex
@@ -1395,7 +1350,6 @@
             [fileCell.labelInfoFile setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         }
         
-        
         FileDto *file = (FileDto *)[[_sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
         
         NSDate* date = [NSDate dateWithTimeIntervalSince1970:file.date];
@@ -1497,8 +1451,16 @@
 {
     //If the _currentDirectoryArray doesn't have object it will have one section
     NSInteger sections = 1;
-    if ([_currentDirectoryArray count] > 0) {
-        sections = [[[UILocalizedIndexedCollation currentCollation] sectionTitles] count];
+    
+    if([_currentDirectoryArray count] > 0){
+        
+        enumSortingType sortingWay = [ManageUsersDB getSortingWayByUserDto:[ManageUsersDB getActiveUser]];
+        if (sortingWay!= sortByModificationDate) {
+            sections = [[[UILocalizedIndexedCollation currentCollation] sectionTitles] count];
+        }
+        if(sortingWay == sortByModificationDate){
+            sections = _currentDirectoryArray.count;
+        }
     }
     return sections;
 }
@@ -1506,10 +1468,11 @@
 // Returns the table view managed by the controller object.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //If the _currentDirectoryArray doesn't have object it will have one row
+    //If the _currentDirectoryArray doesn't have object it will have one row. Also if no alphabetical order is required
     NSInteger rows = 1;
-    if ([_currentDirectoryArray count] > 0) {
-        rows = [[_sortedArray objectAtIndex:section] count];
+    
+    if([_currentDirectoryArray count] > 0 && [ManageUsersDB getSortingWayByUserDto:[ManageUsersDB getActiveUser]]!= sortByModificationDate){
+            rows = [[_sortedArray objectAtIndex:section] count];
     }
     return rows;
 }
@@ -1881,7 +1844,7 @@
    // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    _sortedArray = [self partitionObjects: _currentDirectoryArray collationStringSelector:@selector(fileName)];
+    [self showSortedList];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -1916,7 +1879,7 @@
     // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    _sortedArray = [self partitionObjects: _currentDirectoryArray collationStringSelector:@selector(fileName)];
+    [self showSortedList];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -2178,7 +2141,7 @@
         [FileListDBOperations createAllFoldersByArrayOfFilesDto:_currentDirectoryArray andLocalFolder:_currentLocalFolder];
         
         //Sorted the files array
-        _sortedArray = [self partitionObjects: _currentDirectoryArray collationStringSelector:@selector(fileName)];
+        [self showSortedList];
         
         //update gallery array
         [self updateArrayImagesInGallery];
@@ -2298,13 +2261,14 @@
     }
 }
 
-#pragma mark - Order methods
+#pragma mark - Sorting methods
 
 /*
  * Method that sorts alphabetically array by selector
  *@array -> array of sections and rows of tableview
  */
 - (NSMutableArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector {
+    
     UILocalizedIndexedCollation *collation = [UILocalizedIndexedCollation currentCollation];
     
     NSInteger sectionCount = [[collation sectionTitles] count]; //section count is take from sectionTitles and not sectionIndexTitles
@@ -2326,6 +2290,93 @@
         [sections addObject:[collation sortedArrayFromArray:section collationStringSelector:selector]];
     }
     return sections;
+}
+
+/*
+ * This method sorts an array to be shown in the files/folders list
+ */
+- (NSMutableArray*) sortByModificationDate:(NSArray*)array {
+    
+    DLog(@"sortByModificationDate");
+    NSSortDescriptor *descriptor=[[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
+    NSArray *descriptors=[NSArray arrayWithObject: descriptor];
+    array = [array sortedArrayUsingDescriptors:descriptors];
+    
+    // an array with another array is needed to follow alphabetical sorting mode
+    NSMutableArray *sortedArrayWithArray = [[NSMutableArray alloc]init];
+    
+    for (int i=0; i<array.count; i++) {
+        [sortedArrayWithArray addObject:[NSArray arrayWithObject:array[i]]];
+    }
+    
+    return sortedArrayWithArray;
+}
+
+
+/*
+ * This method shows an action sheet to sort the files and folders list
+ */
+- (void)showSortingOptions{
+    NSString * sortByTitle = NSLocalizedString(@"sort_menu_title", nil);
+    
+    if (self.sortingActionSheet) {
+        self.sortingActionSheet = nil;
+    }
+    
+    self.sortingActionSheet = [[UIActionSheet alloc]
+                               initWithTitle:sortByTitle
+                               delegate:self
+                               cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                               destructiveButtonTitle:nil
+                               otherButtonTitles:NSLocalizedString(@"sort_menu_by_name_option", nil), NSLocalizedString(@"sort_menu_by_modification_date_option", nil), nil];
+    
+    self.sortingActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
+    self.sortingActionSheet.tag=300;
+    
+    if (IS_IPHONE) {
+        [self.sortingActionSheet showInView:self.tabBarController.view];
+    } else {
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        if (IS_IOS8 || IS_IOS9)  {
+            [self.sortingActionSheet showInView:app.splitViewController.view];
+        } else {
+            [self.sortingActionSheet showInView:app.detailViewController.view];
+        }
+    }
+}
+
+
+/*
+ * This method reads the sorting option selected by the user
+ */
+- (enumSortingType) getUserSortingType{
+    return [ManageUsersDB getSortingWayByUserDto:[ManageUsersDB getActiveUser]];
+}
+
+- (void) updateActiveUserSortingChoiceTo: (enumSortingType)sortingChoice{
+    [ManageUsersDB updateSortingWayTo:sortingChoice byUserDto:[ManageUsersDB getActiveUser]];
+}
+
+/*
+ * This shows the files/folder list with the correct sorting option selected by the user
+ */
+- (void) showSortedList {
+    [_sortedArray removeAllObjects];
+    
+    switch ([self getUserSortingType]) {
+        case sortByName:
+            _sortedArray = [self partitionObjects: _currentDirectoryArray collationStringSelector:@selector(fileName)];
+            break;
+        case sortByModificationDate:
+            _sortedArray = [self sortByModificationDate:_currentDirectoryArray];
+            break;
+            
+        default:
+            break;
+    }
+    [_tableView reloadData];
 }
 
 
@@ -2455,6 +2506,7 @@
                 break;
         }
     }
+    [self showSortedList];
 }
 
 #pragma mark - File/Folder
