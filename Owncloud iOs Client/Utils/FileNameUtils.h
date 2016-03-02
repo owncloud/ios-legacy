@@ -46,6 +46,13 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
 + (BOOL)isImageSupportedThisFile:(NSString*)fileName;
 
 /*
+ * Method to know if the file is supported by the API of the thumbnail
+ * Only JPG, PNG and JPEG images files are supported for the moment.
+ * @fileName -> file name
+ */
++ (BOOL)isRemoteThumbnailSupportThiFile:(NSString*)fileName;
+
+/*
  * Method to know if the file is an video file support for the system
  * Only MOV, MP4, M4V and 3GP video files are supported natively for iOS.
  * @fileName -> file name 

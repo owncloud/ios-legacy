@@ -307,6 +307,8 @@
                 [imageViewToBeUpdated.layer setMasksToBounds:YES];
                 [imageViewToBeUpdated setNeedsLayout];
             });
+    } else if (file.isDownload != downloaded && [FileNameUtils isRemoteThumbnailSupportThiFile:file.fileName]) {
+        
     }
 }
 

@@ -83,6 +83,26 @@
     
 }
 
+/*
+ * Method to know if the file is supported by the API of the thumbnail
+ * Only JPG, PNG and JPEG images files are supported for the moment.
+ * @fileName -> file name
+ */
++ (BOOL)isRemoteThumbnailSupportThiFile:(NSString*)fileName{
+    
+    
+    NSString *ext=[self getExtension:fileName];
+    
+    if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"JPEG"])
+    {
+        
+        return YES;
+    }
+    
+    return NO;
+    
+}
+
 
 /*
  * Method to know if the file is an video file support for the system
