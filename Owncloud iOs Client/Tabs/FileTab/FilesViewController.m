@@ -1408,7 +1408,7 @@
         
         //Thumbnail
         dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [InfoFileUtils updateThumbnail:file andUser:APP_DELEGATE.activeUser andImage:fileCell.fileImageView];
+            [InfoFileUtils updateThumbnail:file andUser:APP_DELEGATE.activeUser tableView:tableView cellForRowAtIndexPath:indexPath];
         });
         
         //Custom cell for SWTableViewCell with right swipe options

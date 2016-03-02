@@ -31,6 +31,10 @@
 #import "ManageUsersDB.h"
 #import "NSObject+AssociatedObject.h"
 #import "OCSharedDto.h"
+#import "CustomCellFileAndDirectory.h"
+#import "AppDelegate.h"
+#import "OCCommunication.h"
+#import "Customization.h"
 
 @implementation InfoFileUtils
 
@@ -285,29 +289,72 @@
 /*
  *  Method update the thumbnail of an icon after read it
  */
-+ (void) updateThumbnail:(FileDto *) file andUser:(UserDto *) user andImage:(UIImageView *) imageViewToBeUpdated {
++ (void) updateThumbnail:(FileDto *) file andUser:(UserDto *) user tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (file.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:file.fileName]) {
         
-            UIImage *thumbnail;
+            UIImage *thumbnailImage;
             
             if ([[ManageThumbnails sharedManager] isStoredThumbnailWithHash:[file getHashIdentifierOfUserID: user.idUser]]){
                 
-                thumbnail = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFileHash:[file getHashIdentifierOfUserID: user.idUser]]];
+                thumbnailImage = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFileHash:[file getHashIdentifierOfUserID: user.idUser]]];
                 
             }else{
                 
-                thumbnail = [[UIImage imageWithContentsOfFile: file.localFolder] getThumbnail];
-                [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnail) withHash:[file getHashIdentifierOfUserID:user.idUser]];
+                thumbnailImage = [[UIImage imageWithContentsOfFile: file.localFolder] getThumbnail];
+                [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) withHash:[file getHashIdentifierOfUserID:user.idUser]];
                 
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                imageViewToBeUpdated.image = thumbnail;
-                [imageViewToBeUpdated.layer setMasksToBounds:YES];
-                [imageViewToBeUpdated setNeedsLayout];
+                CustomCellFileAndDirectory *updateCell = (id)[tableView cellForRowAtIndexPath:indexPath];
+
+                updateCell.fileImageView.image = thumbnailImage;
+                [updateCell.fileImageView.layer setMasksToBounds:YES];
+                [updateCell.fileImageView setNeedsLayout];
             });
     } else if (file.isDownload != downloaded && [FileNameUtils isRemoteThumbnailSupportThiFile:file.fileName]) {
+        
+        #ifdef CONTAINER_APP
+        
+        //Set the right credentials
+        if (k_is_sso_active) {
+            [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:user.password];
+        } else if (k_is_oauth_active) {
+            [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:user.password];
+        } else {
+            [[AppDelegate sharedOCCommunication] setCredentialsWithUser:user.username andPassword:user.password];
+        }
+        
+        [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+        
+        NSString *path = [UtilsUrls getFilePathOnDBWithFileName:file.fileName ByFilePathOnFileDto:file.filePath andUser:user];
+        
+        [[AppDelegate sharedOCCommunication] getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:64 andHeight:64 onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
+            DLog(@"thumbnail: %@", thumbnail);
+            
+            UIImage *thumbnailImage = [UIImage imageWithData:thumbnail];
+            
+            if ([[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) withHash:[file getHashIdentifierOfUserID:user.idUser]]) {
+                
+                thumbnailImage = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFileHash:[file getHashIdentifierOfUserID: user.idUser]]];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    CustomCellFileAndDirectory *updateCell = (id)[tableView cellForRowAtIndexPath:indexPath];
+                    
+                    updateCell.fileImageView.image = thumbnailImage;
+                    [updateCell.fileImageView.layer setMasksToBounds:YES];
+                    [updateCell.fileImageView setNeedsLayout];
+                });
+            }
+            
+            
+            
+        } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
+            DLog(@"Error: %@",error);
+        }];
+        
+        #endif
         
     }
 }
