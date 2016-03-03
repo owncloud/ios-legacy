@@ -227,7 +227,7 @@
         if (self.file.isDirectory) {
             [[ManageThumbnails sharedManager] deleteThumbnailsInFolder:self.file.idFile];
         } else {
-            [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:self.file];
+            [[ManageThumbnails sharedManager] removeStoredThumbnailForFile:self.file];
         }
         
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];

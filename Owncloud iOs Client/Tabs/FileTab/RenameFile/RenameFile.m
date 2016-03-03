@@ -467,7 +467,7 @@
         }
     } else {
         
-        [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:self.selectedFileDto];
+        [[ManageThumbnails sharedManager] removeStoredThumbnailForFile:self.selectedFileDto];
         
         [ManageFilesDB renameFileByFileDto:self.selectedFileDto andNewName:[self.mNewName encodeString:NSUTF8StringEncoding]];
         

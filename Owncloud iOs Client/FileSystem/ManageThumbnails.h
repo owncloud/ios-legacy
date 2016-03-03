@@ -19,14 +19,11 @@
 
 + (id) sharedManager;
 
-- (BOOL) isStoredThumbnailWithHash:(NSUInteger) hash;
-- (BOOL) storeThumbnail:(NSData *)thumbnail withHash:(NSUInteger) hash;
-- (BOOL) removeStoredThumbnailWithHash:(NSUInteger) hash;
-- (NSString *) getThumbnailPathForFileHash:(NSUInteger) hash;
-- (BOOL) renameStoredThumbnailWithOldHash:(NSUInteger) oldHash withNewHash:(NSUInteger) newHash;
-- (void) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile;
-- (void) removeThumbnailIfExistWithFile:(FileDto *)theFile;
+- (BOOL) isStoredThumbnailForFile:(FileDto *)file;
+- (BOOL) storeThumbnail:(NSData *)thumbnail forFile:(FileDto *)file;
+- (BOOL) removeStoredThumbnailForFile:(FileDto *)file;
+- (NSString *) getThumbnailPathForFile:(FileDto *)file;
+- (BOOL) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile;
 - (void) deleteThumbnailsInFolder:(NSInteger)idFile;
-- (void) deleteThumbnailCacheFolderOfActiveUser;
 - (void) deleteThumbnailCacheFolderOfUserId:(NSInteger) userId ;
 @end

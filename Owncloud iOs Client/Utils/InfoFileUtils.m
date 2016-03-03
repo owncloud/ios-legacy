@@ -280,9 +280,9 @@
     UIImage *output;
     NSUInteger hashOfFile = [file getHashIdentifierOfUserID:user.idUser];
     
-    if ([[ManageThumbnails sharedManager] isStoredThumbnailWithHash:[file getHashIdentifierOfUserID:user.idUser]]) {
+    if ([[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
         
-        output = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFileHash:[file getHashIdentifierOfUserID: user.idUser]]];
+        output = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
         
     } else {
         NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -301,14 +301,14 @@
         
             UIImage *thumbnailImage;
             
-            if ([[ManageThumbnails sharedManager] isStoredThumbnailWithHash:[file getHashIdentifierOfUserID: user.idUser]]){
+            if ([[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]){
                 
-                thumbnailImage = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFileHash:[file getHashIdentifierOfUserID: user.idUser]]];
+                thumbnailImage = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
                 
             }else{
                 
                 thumbnailImage = [[UIImage imageWithContentsOfFile: file.localFolder] getThumbnail];
-                [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) withHash:[file getHashIdentifierOfUserID:user.idUser]];
+                [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) forFile:file];
                 
             }
             
@@ -341,9 +341,9 @@
             
             UIImage *thumbnailImage = [UIImage imageWithData:thumbnail];
             
-            if ([[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) withHash:[file getHashIdentifierOfUserID:user.idUser]]) {
+            if ([[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) forFile:file]) {
                 
-                thumbnailImage = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFileHash:[file getHashIdentifierOfUserID: user.idUser]]];
+                thumbnailImage = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     CustomCellFileAndDirectory *updateCell = (id)[tableView cellForRowAtIndexPath:indexPath];

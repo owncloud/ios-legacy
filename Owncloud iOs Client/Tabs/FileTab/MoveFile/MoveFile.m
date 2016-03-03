@@ -165,7 +165,7 @@
                 //Move the folder on the DB
                 [self performSelector:@selector(moveTheFolderOnTheDB) withObject:nil afterDelay:0.5];
             } else {
-                [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:self.selectedFileDto];
+                [[ManageThumbnails sharedManager] removeStoredThumbnailForFile:self.selectedFileDto];
                 [self moveTheFileOnTheDB];
             }
         }

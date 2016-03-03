@@ -923,7 +923,7 @@
     for (FileDto *current in listFilesToDelete) {
 #ifdef CONTAINER_APP
         //TODO: make it works in the Extensions
-        [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:current];
+        [[ManageThumbnails sharedManager] removeStoredThumbnailForFile:current];
 #endif
     }
 }

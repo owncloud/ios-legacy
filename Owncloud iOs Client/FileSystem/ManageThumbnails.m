@@ -42,55 +42,47 @@ static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
 }
 
 
-#pragma mark - Store
+#pragma mark - Store, remove, rename thumbnails
 
-- (BOOL) storeThumbnail:(NSData *)thumbnail withHash:(NSUInteger) hash {
+- (BOOL) storeThumbnail:(NSData *)thumbnail forFile:(FileDto *)file {
     
-    [self createThumbnailCacheFolderIfNotExist];
+    [self createThumbnailCacheFolderIfNotExistForUser:file.userId];
     
-   return [[NSFileManager defaultManager] createFileAtPath:[self getThumbnailPathForFileHash:hash] contents:thumbnail attributes:nil];
+   return [[NSFileManager defaultManager] createFileAtPath:[self getThumbnailPathForFile:file] contents:thumbnail attributes:nil];
     
 }
 
-- (BOOL) isStoredThumbnailWithHash:(NSUInteger) hash {
+- (BOOL) isStoredThumbnailForFile:(FileDto *)file {
     
-    return [[NSFileManager defaultManager] fileExistsAtPath:[self getThumbnailPathForFileHash:hash]];
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self getThumbnailPathForFile:file]];
     
 }
 
 
-- (BOOL) removeStoredThumbnailWithHash:(NSUInteger) hash {
+- (BOOL) removeStoredThumbnailForFile:(FileDto *)file {
     
-    return [[NSFileManager defaultManager] removeItemAtPath:[self getThumbnailPathForFileHash:hash] error:nil];
+    return [[NSFileManager defaultManager] removeItemAtPath:[self getThumbnailPathForFile:file] error:nil];
 }
 
 
-- (BOOL) renameStoredThumbnailWithOldHash:(NSUInteger) oldHash withNewHash:(NSUInteger) newHash {
+- (BOOL) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile {
     
-    return [[NSFileManager defaultManager] moveItemAtPath:[self getThumbnailPathForFileHash:oldHash] toPath:[self getThumbnailPathForFileHash:newHash] error:nil];
+    return [[NSFileManager defaultManager] moveItemAtPath:[self getThumbnailPathForFile:oldFile] toPath:[self getThumbnailPathForFile:newFile] error:nil];
     
 }
 
 
 #pragma mark - Paths
 
-
-- (NSString *) getThumbnailPathForFileHash:(NSUInteger) hash {
+- (NSString *) getThumbnailPathForFile:(FileDto *)file {
     
-    return [NSString stringWithFormat:@"%@%ld", [self getThumbnailLocalSystemPathOfActiveUser], (long)hash];
-    
-}
-
-
-- (NSString *) getThumbnailLocalSystemPathOfActiveUser {
-    
-    return [self getThumbnailLocalSystemPathOfUserId:(long)[ManageUsersDB getActiveUser].idUser];
+    return [NSString stringWithFormat:@"%@%ld", [self getThumbnailLocalSystemPathOfUserId:file.userId], (long)[file getHashIdentifierOfUserID:file.userId]];
     
 }
 
-- (NSString *) getThumbnailLocalSystemPathOfUserId: (NSInteger)userId {
+- (NSString *) getThumbnailLocalSystemPathOfUserId:(NSInteger)userId {
     
-    DLog(@"%@", [NSString stringWithFormat:@"%@%@/%ld/", [UtilsUrls getOwnCloudFilePath], thumbnailsCacheFolderName, (long)[ManageUsersDB getActiveUser].idUser]);
+    DLog(@"%@", [NSString stringWithFormat:@"%@%@/%ld/", [UtilsUrls getOwnCloudFilePath], thumbnailsCacheFolderName, (long)userId]);
     
     return [NSString stringWithFormat:@"%@%@/%ld/", [UtilsUrls getOwnCloudFilePath], thumbnailsCacheFolderName, userId];
     
@@ -100,22 +92,14 @@ static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
 #pragma mark - File System
 
 
-- (void) createThumbnailCacheFolderIfNotExist {
+- (void) createThumbnailCacheFolderIfNotExistForUser:(NSInteger)userId {
 
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[self getThumbnailLocalSystemPathOfActiveUser]]) {
-         NSError *error = nil;
-        [[NSFileManager defaultManager] createDirectoryAtPath:[self getThumbnailLocalSystemPathOfActiveUser] withIntermediateDirectories:YES attributes:nil error:&error];
-    }
-}
-
-
-- (void) deleteThumbnailCacheFolderOfActiveUser {
+    NSString *path = [self getThumbnailLocalSystemPathOfUserId:userId];
     
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[self getThumbnailLocalSystemPathOfActiveUser]]) {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
          NSError *error = nil;
-        [[NSFileManager defaultManager] removeItemAtPath:[self getThumbnailLocalSystemPathOfActiveUser] error:&error];
+        [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error];
     }
-    
 }
 
 - (void) deleteThumbnailCacheFolderOfUserId:(NSInteger) userId {
@@ -127,21 +111,6 @@ static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
     
 }
 
-#pragma mark - Manage thumbnails
-
-- (void) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile {
-    
-    UserDto *user = [ManageUsersDB getActiveUser];
-    
-    [self renameStoredThumbnailWithOldHash:[oldFile getHashIdentifierOfUserID:user.idUser] withNewHash:[newFile getHashIdentifierOfUserID:user.idUser] ];
-}
-
-
-- (void) removeThumbnailIfExistWithFile:(FileDto *)theFile {
-
-    UserDto *user = [ManageUsersDB getActiveUser];
-    [self removeStoredThumbnailWithHash:[theFile getHashIdentifierOfUserID:user.idUser]];
-}
 
 /*
  * Recursive method that delete all thumbnails of a directory by idFile
@@ -156,7 +125,7 @@ static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
             [self deleteThumbnailsInFolder:file.idFile];
         } else {
             //delete thumbnail
-            [self removeThumbnailIfExistWithFile:file];
+            [self removeStoredThumbnailForFile:file];
         }
     }
     
