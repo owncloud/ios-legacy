@@ -159,12 +159,15 @@
     NSString *path = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:fileForSetTheStatusIcon.filePath andUser:user], fileForSetTheStatusIcon.fileName];
     
     NSMutableArray *allShares = [ManageSharesDB getSharesByUser:user.idUser andPath:path];
+    NSInteger numberOfShares = allShares.count;
     NSPredicate *predicateShareByLink = [NSPredicate predicateWithFormat:@"shareType == %i", shareTypeLink];
     NSArray *sharesByLink = [allShares filteredArrayUsingPredicate:predicateShareByLink];
-    NSPredicate *predicateRemoteShare = [NSPredicate predicateWithFormat:@"shareType == %i", shareTypeRemote];
-    NSArray *sharesByRemote = [allShares filteredArrayUsingPredicate:predicateRemoteShare];
+    NSInteger numberOfSharesByLink = sharesByLink.count;
+    NSPredicate *predicateShareByRemote = [NSPredicate predicateWithFormat:@"shareType == %i", shareTypeRemote];
+    NSArray *sharesByRemote = [allShares filteredArrayUsingPredicate:predicateShareByRemote];
+    NSInteger numberOfSharesByRemote = sharesByLink.count;
     
-    BOOL isShareAPIActive = [ManageUsersDB getActiveUser].hasCapabilitiesSupport && [ManageUsersDB getActiveUser].capabilitiesDto && [ManageUsersDB getActiveUser].capabilitiesDto.isFilesSharingAPIEnabled;
+    BOOL isShareAPIActive = user.hasCapabilitiesSupport && user.capabilitiesDto && user.capabilitiesDto.isFilesSharingAPIEnabled;
     
     
     if (fileForSetTheStatusIcon.isDirectory) {
@@ -172,11 +175,11 @@
             if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) {
                 fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
                 
-            } else if (allShares.count > 0 && allShares !=nil) {
+            } else if (numberOfShares > 0 && allShares != nil) {
                 
-                if (sharesByLink.count > 0 && sharesByLink !=nil && isShareAPIActive) {
+                if (numberOfSharesByLink > 0 && sharesByLink !=nil && isShareAPIActive) {
                     fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
-                } else if((sharesByRemote.count > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
+                } else if((numberOfSharesByRemote > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
                     fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
                 } else{
                     fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
@@ -186,19 +189,21 @@
             }
 
 #ifdef CONTAINER_APP
+        BOOL isFolderPendingToBeDownload = [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon];
+
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
-            if([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon] || [fileForSetTheStatusIcon.etag isEqualToString:k_negative_etag] || fileForSetTheStatusIcon.isNecessaryUpdate) {
+            if(isFolderPendingToBeDownload || [fileForSetTheStatusIcon.etag isEqualToString:k_negative_etag] || fileForSetTheStatusIcon.isNecessaryUpdate) {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
             } else {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
             }
-        } else if ([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon]) {
+        } else if (isFolderPendingToBeDownload) {
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon.png"];
         } else {
-            fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+            fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
         }
 #else
-        fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+        fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
 #endif   
         
     } else {
@@ -228,30 +233,30 @@
             } else if (fileForSetTheStatusIcon.isDownload == downloading) {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon"];
             } else {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+                fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
             }
         }
     }
     
-    if (allShares.count > 0 && allShares !=nil) {
-        if (sharesByLink.count > 0 && sharesByLink !=nil && isShareAPIActive) {
+    if (numberOfShares > 0 && allShares !=nil) {
+        if (numberOfSharesByLink > 0 && sharesByLink !=nil && isShareAPIActive) {
             fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
-        } else if((sharesByRemote.count > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
+        } else if((numberOfSharesByRemote > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
             fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
         }
         else {
-            fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
+            fileCell.sharedByLinkImage.image= [UIImage imageNamed:@""];
         }
         
     } else {
-        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
+        fileCell.sharedByLinkImage.image= [UIImage imageNamed:@""];
     }
     
     
     if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound){
         fileCell.sharedWithUsImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
     } else {
-        fileCell.sharedWithUsImage.image=[UIImage imageNamed:@""];
+        fileCell.sharedWithUsImage.image= [UIImage imageNamed:@""];
     }
     
     return fileCell;
@@ -273,11 +278,12 @@
 + (UIImage *) getIconOfFile:(FileDto *) file andUser:(UserDto *) user {
     
     UIImage *output;
+    NSUInteger hashOfFile = [file getHashIdentifierOfUserID:user.idUser];
     
     if ([[ManageThumbnails sharedManager] isStoredThumbnailWithHash:[file getHashIdentifierOfUserID:user.idUser]]) {
         
         output = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFileHash:[file getHashIdentifierOfUserID: user.idUser]]];
-            
+        
     } else {
         NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         output = [UIImage imageNamed:imageFile];
