@@ -21,6 +21,7 @@
 #import "OCSharedDto.h"
 #import "ManageUsersDB.h"
 #import "UserDto.h"
+#import "ManageThumbnails.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -565,7 +566,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"INSERT INTO files_backup SELECT * FROM files WHERE user_id =? and file_id=? and (is_download != 0 or is_directory = 1 or is_favorite = 1 or shared_file_source != 0 or providing_file_id != 0)", [NSNumber numberWithInteger:mUser.idUser], [NSNumber numberWithInteger:fileId]];
+        correctQuery = [db executeUpdate:@"INSERT INTO files_backup SELECT * FROM files WHERE user_id =? and file_id=?", [NSNumber numberWithInteger:mUser.idUser], [NSNumber numberWithInteger:fileId]];
         
         if (!correctQuery) {
             DLog(@"Error in backupFoldersDownloadedFavoritesByFileId");
@@ -884,6 +885,46 @@
         } else {
             DLog(@"Deleted");
         }
+    }
+}
+
++(void) deleteAllThumbnailsWithDifferentEtagFromBackup {
+    
+    DLog(@"deleteAllThumbnailsWithDifferentEtagFromBackup");
+    
+    UserDto *mUser;
+    
+#ifdef CONTAINER_APP
+    mUser = APP_DELEGATE.activeUser;
+#else
+    mUser = [ManageUsersDB getActiveUser];
+#endif
+    
+    NSMutableArray *listFilesToDelete = [NSMutableArray new];
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    //userId,self.filePath,self.fileName
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT b.file_name, b.file_path FROM files_backup b, files f WHERE b.user_id=f.user_id AND b.file_path=f.file_path AND b.file_name=f.file_name AND b.etag!=f.etag)", [NSNumber numberWithInteger:mUser.idUser]];
+        while ([rs next]) {
+            
+            FileDto *currentFile = [[FileDto alloc] init];
+            
+            currentFile.filePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:mUser],[rs stringForColumn:@"file_path"]];
+            currentFile.fileName = [rs stringForColumn:@"file_name"];
+            
+            [listFilesToDelete addObject:currentFile];
+        }
+        [rs close];
+    }];
+    
+    for (FileDto *current in listFilesToDelete) {
+#ifdef CONTAINER_APP
+        //TODO: make it works in the Extensions
+        [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:current];
+#endif
     }
 }
 
