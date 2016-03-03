@@ -56,6 +56,8 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
 
             if (!isSamlCredentialsError) {
                 
+                BOOL capabilitiesShareAPIChanged = (cap.isFilesSharingAPIEnabled == capabilities.isFilesSharingAPIEnabled)? NO:YES;
+                
                 if (cap == nil) {
                     cap = [ManageCapabilitiesDB insertCapabilities:capabilities ofUserId: app.activeUser.idUser];
                 }else{
@@ -66,8 +68,9 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
                 app.activeUser.capabilitiesDto = [CapabilitiesDto new];
                 app.activeUser.capabilitiesDto = cap;
                 
-                //update file list view
-                [self reloadFileList];
+                //update file list view if needed
+                if(capabilitiesShareAPIChanged)
+                    [self reloadFileList];
 
             }
 

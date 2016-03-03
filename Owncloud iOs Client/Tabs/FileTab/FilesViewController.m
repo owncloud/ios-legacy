@@ -522,8 +522,6 @@
         [self initLoading];
         
     }
-    
-    [self showSortedList];
 
 }
 
@@ -803,7 +801,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFromDataBaseWithFileDto:) name:FavoriteFileIsSync object:nil];
     
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFileList) name:CapabilitiesUpdatedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFileListAfterCapabilitiesUpdated) name:CapabilitiesUpdatedNotification object:nil];
 
 }
 
@@ -1454,11 +1452,10 @@
     
     if([_currentDirectoryArray count] > 0){
         
-        enumSortingType sortingWay = [ManageUsersDB getSortingWayByUserDto:[ManageUsersDB getActiveUser]];
-        if (sortingWay!= sortByModificationDate) {
+        if ([self getUserSortingType] == sortByName) {
             sections = [[[UILocalizedIndexedCollation currentCollation] sectionTitles] count];
         }
-        if(sortingWay == sortByModificationDate){
+        else{
             sections = _currentDirectoryArray.count;
         }
     }
@@ -1471,7 +1468,7 @@
     //If the _currentDirectoryArray doesn't have object it will have one row. Also if no alphabetical order is required
     NSInteger rows = 1;
     
-    if([_currentDirectoryArray count] > 0 && [ManageUsersDB getSortingWayByUserDto:[ManageUsersDB getActiveUser]]!= sortByModificationDate){
+    if([_currentDirectoryArray count] > 0 && [self getUserSortingType] == sortByName){
             rows = [[_sortedArray objectAtIndex:section] count];
     }
     return rows;
@@ -1494,14 +1491,16 @@
 // Returns the table view managed by the controller object.
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    //Only show the section title if there are rows in it
-    BOOL showSection = [[_sortedArray objectAtIndex:section] count] != 0;
-    NSArray *titles = [[UILocalizedIndexedCollation currentCollation] sectionTitles];
-    
-    if(k_minimun_files_to_show_separators > [_currentDirectoryArray count]) {
-        showSection = NO;
-    }
-    return (showSection) ? [titles objectAtIndex:section] : nil;
+    if([self getUserSortingType] == sortByName){
+        //Only show the section title if there are rows in it
+        BOOL showSection = [[_sortedArray objectAtIndex:section] count] != 0;
+        NSArray *titles = [[UILocalizedIndexedCollation currentCollation] sectionTitles];
+        
+        if(k_minimun_files_to_show_separators > [_currentDirectoryArray count]) {
+            showSection = NO;
+        }
+        return (showSection) ? [titles objectAtIndex:section] : nil;}
+    else return nil;
 }
 
 
@@ -1515,11 +1514,11 @@
      [array insertObject:UITableViewIndexSearch atIndex:0];
      return [NSArray arrayWithArray:array];*/
     
-    if(k_minimun_files_to_show_separators > [_currentDirectoryArray count]) {
-        return nil;
-    } else {
+    if(k_minimun_files_to_show_separators < [_currentDirectoryArray count] && [self getUserSortingType] == sortByName) {
         tableView.sectionIndexColor = [UIColor colorOfSectionIndexColorFileList];
         return [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
+    } else {
+        return nil;
     }
 }
 
@@ -1844,7 +1843,7 @@
    // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    [self showSortedList];
+    [self updateSortedArray];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -1853,7 +1852,7 @@
     [self setTheLabelOnTheTableFooter];
         
     //Reload data in the table
-    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+    [self reloadTableFileList];
     
     //TODO: Remove this to prevent duplicate files
     /*if([_currentDirectoryArray count] != 0) {
@@ -1862,7 +1861,12 @@
 }
 
 
--(void)reloadTableFileList {
+-(void)reloadTableFileListAfterCapabilitiesUpdated {
+    _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
+    [self updateSortedArray];
+    [self reloadTableFileList];
+}
+-(void)reloadTableFileList{
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 }
 
@@ -1879,7 +1883,7 @@
     // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    [self showSortedList];
+    [self updateSortedArray];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -2141,7 +2145,7 @@
         [FileListDBOperations createAllFoldersByArrayOfFilesDto:_currentDirectoryArray andLocalFolder:_currentLocalFolder];
         
         //Sorted the files array
-        [self showSortedList];
+        [self updateSortedArray];
         
         //update gallery array
         [self updateArrayImagesInGallery];
@@ -2360,9 +2364,9 @@
 }
 
 /*
- * This shows the files/folder list with the correct sorting option selected by the user
+ * This updates the files/folder list with the correct sorting option selected by the user
  */
-- (void) showSortedList {
+- (void) updateSortedArray {
     [_sortedArray removeAllObjects];
     
     switch ([self getUserSortingType]) {
@@ -2376,7 +2380,6 @@
         default:
             break;
     }
-    [_tableView reloadData];
 }
 
 
@@ -2495,18 +2498,26 @@
     
     //Sorting options
     if (actionSheet.tag==300) {
+        enumSortingType storedSorting = [self getUserSortingType];
         switch (buttonIndex) {
             case 0:
-                [self updateActiveUserSortingChoiceTo:sortByName];
+                if(storedSorting != sortByName){
+                    [self updateActiveUserSortingChoiceTo:sortByName];
+                    [self updateSortedArray];
+                    [self reloadTableFileList];
+                }
                 break;
             case 1:
-                [self updateActiveUserSortingChoiceTo:sortByModificationDate];
+                if(storedSorting != sortByModificationDate){
+                    [self updateActiveUserSortingChoiceTo:sortByModificationDate];
+                    [self updateSortedArray];
+                    [self reloadTableFileList];
+                }
                 break;
             default:
                 break;
         }
     }
-    [self showSortedList];
 }
 
 #pragma mark - File/Folder
