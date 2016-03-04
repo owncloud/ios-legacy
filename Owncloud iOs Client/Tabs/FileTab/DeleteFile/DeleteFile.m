@@ -223,12 +223,6 @@
         }
         
     } else {
-               
-        if (self.file.isDirectory) {
-            [[ManageThumbnails sharedManager] deleteThumbnailsInFolder:self.file.idFile];
-        } else {
-            [[ManageThumbnails sharedManager] removeStoredThumbnailForFile:self.file];
-        }
         
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
         [ManageFilesDB setFile:file.idFile isNecessaryUpdate:NO];
