@@ -20,7 +20,6 @@
 #import "FileDto.h"
 #import "OCToolBar.h"
 #import "SimpleFileListTableViewController.h"
-#import "SortManager.h"
 
 
 @interface SelectFolderViewController : SimpleFileListTableViewController <CheckAccessToServerDelegate, UIAlertViewDelegate, UITextFieldDelegate>{

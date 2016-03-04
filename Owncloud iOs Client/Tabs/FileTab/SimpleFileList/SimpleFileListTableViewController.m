@@ -104,7 +104,7 @@
 - (void) fillTheArraysFromDatabase {
     
     self.currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser: (int)self.currentFolder.idFile];
-    self.sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
+    self.sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:self.currentDirectoryArray];
 }
 
 
@@ -113,24 +113,24 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [SortManager numberOfSectionsInTableViewWithFolderList:_currentDirectoryArray];
+    return [SortManager numberOfSectionsInTableViewWithFolderList:self.currentDirectoryArray];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [SortManager numberOfRowsInSection:section withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray];
+    return [SortManager numberOfRowsInSection:section withCurrentDirectoryArray:self.currentDirectoryArray andSortedArray:self.sortedArray];
 }
 
 // Returns the table view managed by the controller object.
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [SortManager titleForHeaderInTableViewSection:section withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray];
+    return [SortManager titleForHeaderInTableViewSection:section withCurrentDirectoryArray:self.currentDirectoryArray andSortedArray:self.sortedArray];
 }
 
 // Asks the data source to return the titles for the sections for a table view.
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
-    return [SortManager sectionIndexTitlesForTableView:tableView WithCurrentDirectoryArray:_currentDirectoryArray];
+    return [SortManager sectionIndexTitlesForTableView:tableView WithCurrentDirectoryArray:self.currentDirectoryArray];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
