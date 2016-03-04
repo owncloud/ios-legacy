@@ -337,7 +337,6 @@
         NSString *path = [UtilsUrls getFilePathOnDBWithFileName:file.fileName ByFilePathOnFileDto:file.filePath andUser:user];
         
         [[AppDelegate sharedOCCommunication] getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:64 andHeight:64 onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
-            DLog(@"thumbnail: %@", thumbnail);
             
             UIImage *thumbnailImage = [UIImage imageWithData:thumbnail];
             
