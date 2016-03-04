@@ -108,7 +108,7 @@
 
 - (void) fillTheArraysFromDatabase {
     self.currentDirectoryArray = [ManageFilesDB getFoldersByFileIdForActiveUser: (NSInteger)self.currentFolder.idFile];
-    self.sortedArray = [self partitionObjects:self.currentDirectoryArray collationStringSelector:@selector(fileName)];
+    self.sortedArray = [SortManager partitionObjects:self.currentDirectoryArray collationStringSelector:@selector(fileName)];
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath

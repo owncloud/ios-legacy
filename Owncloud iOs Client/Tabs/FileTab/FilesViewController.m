@@ -62,6 +62,7 @@
 #import "IndexedForest.h"
 #import "ManageCapabilitiesDB.h"
 #import "CheckCapabilities.h"
+#import "SortManager.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -976,7 +977,7 @@
 }
 
 
-#pragma mark - UIAlertViewDelegate
+#pragma mark - UIAlertView and UIAlertViewDelegate
 - (void) alertView: (UIAlertView *) alertView willDismissWithButtonIndex: (NSInteger) buttonIndex
 {
     switch (alertView.tag) {
@@ -1031,6 +1032,13 @@
     }
     
     return output;
+}
+
+- (void) showAlertView:(NSString*)string {
+    
+    _alert = nil;
+    _alert = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+    [_alert show];
 }
 
 #pragma mark - UITextFieldDelegate methods
@@ -1447,31 +1455,13 @@
 // Asks the data source to return the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //If the _currentDirectoryArray doesn't have object it will have one section
-    NSInteger sections = 1;
-    
-    if([_currentDirectoryArray count] > 0){
-        
-        if ([self getUserSortingType] == sortByName) {
-            sections = [[[UILocalizedIndexedCollation currentCollation] sectionTitles] count];
-        }
-        else{
-            sections = _currentDirectoryArray.count;
-        }
-    }
-    return sections;
+    return [SortManager numberOfSectionsInTableViewWithFolderList:_currentDirectoryArray];
 }
 
 // Returns the table view managed by the controller object.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //If the _currentDirectoryArray doesn't have object it will have one row. Also if no alphabetical order is required
-    NSInteger rows = 1;
-    
-    if([_currentDirectoryArray count] > 0 && [self getUserSortingType] == sortByName){
-            rows = [[_sortedArray objectAtIndex:section] count];
-    }
-    return rows;
+    return [SortManager numberOfRowsInSection:section withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray];
 }
 
 //Return the row height
@@ -1491,20 +1481,11 @@
 // Returns the table view managed by the controller object.
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if([self getUserSortingType] == sortByName){
-        //Only show the section title if there are rows in it
-        BOOL showSection = [[_sortedArray objectAtIndex:section] count] != 0;
-        NSArray *titles = [[UILocalizedIndexedCollation currentCollation] sectionTitles];
-        
-        if(k_minimun_files_to_show_separators > [_currentDirectoryArray count]) {
-            showSection = NO;
-        }
-        return (showSection) ? [titles objectAtIndex:section] : nil;}
-    else return nil;
+   return [SortManager titleForHeaderInTableViewSection:section withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray];
 }
 
 
-// Asks the data source to return the titles for the sections for a table view.
+// Returns the titles for the sections for a table view.
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
     // The commented part is for the version with searchField
@@ -1514,12 +1495,9 @@
      [array insertObject:UITableViewIndexSearch atIndex:0];
      return [NSArray arrayWithArray:array];*/
     
-    if(k_minimun_files_to_show_separators < [_currentDirectoryArray count] && [self getUserSortingType] == sortByName) {
-        tableView.sectionIndexColor = [UIColor colorOfSectionIndexColorFileList];
-        return [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
-    } else {
-        return nil;
-    }
+    return [SortManager sectionIndexTitlesForTableView:tableView WithCurrentDirectoryArray:_currentDirectoryArray];
+    
+
 }
 
 // Change the color of the header section on the table
@@ -1843,7 +1821,7 @@
    // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    [self updateSortedArray];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -1863,7 +1841,7 @@
 
 -(void)reloadTableFileListAfterCapabilitiesUpdated {
     _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
-    [self updateSortedArray];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
     [self reloadTableFileList];
 }
 -(void)reloadTableFileList{
@@ -1883,7 +1861,7 @@
     // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    [self updateSortedArray];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -2145,7 +2123,7 @@
         [FileListDBOperations createAllFoldersByArrayOfFilesDto:_currentDirectoryArray andLocalFolder:_currentLocalFolder];
         
         //Sorted the files array
-        [self updateSortedArray];
+        _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
         
         //update gallery array
         [self updateArrayImagesInGallery];
@@ -2268,56 +2246,6 @@
 #pragma mark - Sorting methods
 
 /*
- * Method that sorts alphabetically array by selector
- *@array -> array of sections and rows of tableview
- */
-- (NSMutableArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector {
-    
-    UILocalizedIndexedCollation *collation = [UILocalizedIndexedCollation currentCollation];
-    
-    NSInteger sectionCount = [[collation sectionTitles] count]; //section count is take from sectionTitles and not sectionIndexTitles
-    NSMutableArray *unsortedSections = [NSMutableArray arrayWithCapacity:sectionCount];
-    
-    //create an array to hold the data for each section
-    for(int i = 0; i < sectionCount; i++) {
-        [unsortedSections addObject:[NSMutableArray array]];
-    }
-    //put each object into a section
-    for (id object in array) {
-        NSInteger index = [collation sectionForObject:object collationStringSelector:selector];
-        [[unsortedSections objectAtIndex:index] addObject:object];
-    }
-    NSMutableArray *sections = [NSMutableArray arrayWithCapacity:sectionCount];
-    
-    //sort each section
-    for (NSMutableArray *section in unsortedSections) {
-        [sections addObject:[collation sortedArrayFromArray:section collationStringSelector:selector]];
-    }
-    return sections;
-}
-
-/*
- * This method sorts an array to be shown in the files/folders list
- */
-- (NSMutableArray*) sortByModificationDate:(NSArray*)array {
-    
-    DLog(@"sortByModificationDate");
-    NSSortDescriptor *descriptor=[[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO];
-    NSArray *descriptors=[NSArray arrayWithObject: descriptor];
-    array = [array sortedArrayUsingDescriptors:descriptors];
-    
-    // an array with another array is needed to follow alphabetical sorting mode
-    NSMutableArray *sortedArrayWithArray = [[NSMutableArray alloc]init];
-    
-    for (int i=0; i<array.count; i++) {
-        [sortedArrayWithArray addObject:[NSArray arrayWithObject:array[i]]];
-    }
-    
-    return sortedArrayWithArray;
-}
-
-
-/*
  * This method shows an action sheet to sort the files and folders list
  */
 - (void)showSortingOptions{
@@ -2353,47 +2281,12 @@
 
 
 /*
- * This method reads the sorting option selected by the user
+ * This method stores in the DB the sorting option selected by the user
  */
-- (enumSortingType) getUserSortingType{
-    return [ManageUsersDB getSortingWayByUserDto:[ManageUsersDB getActiveUser]];
-}
-
 - (void) updateActiveUserSortingChoiceTo: (enumSortingType)sortingChoice{
     [ManageUsersDB updateSortingWayTo:sortingChoice byUserDto:[ManageUsersDB getActiveUser]];
 }
 
-/*
- * This updates the files/folder list with the correct sorting option selected by the user
- */
-- (void) updateSortedArray {
-    [_sortedArray removeAllObjects];
-    
-    switch ([self getUserSortingType]) {
-        case sortByName:
-            _sortedArray = [self partitionObjects: _currentDirectoryArray collationStringSelector:@selector(fileName)];
-            break;
-        case sortByModificationDate:
-            _sortedArray = [self sortByModificationDate:_currentDirectoryArray];
-            break;
-            
-        default:
-            break;
-    }
-}
-
-
-/*
- * This method is for show alert view in main thread.
- * @string -> string wiht the message of the alert view.
- */
-
-- (void) showAlertView:(NSString*)string {
-    
-    _alert = nil;
-    _alert = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-    [_alert show];
-}
 
 #pragma mark - UIActionSheetDelegate
 
@@ -2498,19 +2391,19 @@
     
     //Sorting options
     if (actionSheet.tag==300) {
-        enumSortingType storedSorting = [self getUserSortingType];
+        enumSortingType storedSorting = [SortManager getUserSortingType];
         switch (buttonIndex) {
             case 0:
                 if(storedSorting != sortByName){
                     [self updateActiveUserSortingChoiceTo:sortByName];
-                    [self updateSortedArray];
+                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
                     [self reloadTableFileList];
                 }
                 break;
             case 1:
                 if(storedSorting != sortByModificationDate){
                     [self updateActiveUserSortingChoiceTo:sortByModificationDate];
-                    [self updateSortedArray];
+                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
                     [self reloadTableFileList];
                 }
                 break;
