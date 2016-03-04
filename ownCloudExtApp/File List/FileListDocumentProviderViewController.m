@@ -405,7 +405,6 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 }
 
 
-
 #pragma mark - Check User
 
 - (BOOL) isTheSameUserHereAndOnTheDatabase {
