@@ -32,9 +32,16 @@
 #import "NSObject+AssociatedObject.h"
 #import "OCSharedDto.h"
 #import "CustomCellFileAndDirectory.h"
-#import "AppDelegate.h"
 #import "OCCommunication.h"
 #import "Customization.h"
+
+#ifdef CONTAINER_APP
+#import "AppDelegate.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
+#else
+#import "DocumentPickerViewController.h"
+#endif
 
 @implementation InfoFileUtils
 
@@ -324,22 +331,30 @@
         });
     } else if (file.isDownload != downloaded && [FileNameUtils isRemoteThumbnailSupportThiFile:file.fileName]) {
         
-        #ifdef CONTAINER_APP
+        OCCommunication *sharedCommunication;
+        
+#ifdef CONTAINER_APP
+        sharedCommunication = [AppDelegate sharedOCCommunication];
+#elif SHARE_IN
+        sharedCommunication = Managers.sharedOCCommunication;
+#else
+        sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
+#endif
         
         //Set the right credentials
         if (k_is_sso_active) {
-            [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:user.password];
+            [sharedCommunication setCredentialsWithCookie:user.password];
         } else if (k_is_oauth_active) {
-            [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:user.password];
+            [sharedCommunication setCredentialsOauthWithToken:user.password];
         } else {
-            [[AppDelegate sharedOCCommunication] setCredentialsWithUser:user.username andPassword:user.password];
+            [sharedCommunication setCredentialsWithUser:user.username andPassword:user.password];
         }
         
-        [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+        [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
         
         NSString *path = [UtilsUrls getFilePathOnDBWithFileName:file.fileName ByFilePathOnFileDto:file.filePath andUser:user];
         
-        thumbnailOperation = [[AppDelegate sharedOCCommunication] getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:64 andHeight:64 onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
+        thumbnailOperation = [sharedCommunication getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:64 andHeight:64 onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
             
             UIImage *thumbnailImage = [UIImage imageWithData:thumbnail];
             
@@ -361,8 +376,6 @@
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
             DLog(@"Error: %@",error);
         }];
-        
-        #endif
         
     }
     
