@@ -82,8 +82,6 @@ static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
 
 - (NSString *) getThumbnailLocalSystemPathOfUserId:(NSInteger)userId {
     
-    DLog(@"%@", [NSString stringWithFormat:@"%@%@/%ld/", [UtilsUrls getOwnCloudFilePath], thumbnailsCacheFolderName, (long)userId]);
-    
     return [NSString stringWithFormat:@"%@%@/%ld/", [UtilsUrls getOwnCloudFilePath], thumbnailsCacheFolderName, userId];
     
 }

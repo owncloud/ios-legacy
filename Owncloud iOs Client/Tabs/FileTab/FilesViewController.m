@@ -1407,9 +1407,9 @@
         fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.fileIdToShowFiles andIsSonOfFavoriteFolder:self.isCurrentFolderSonOfFavoriteFolder ofUser:APP_DELEGATE.activeUser];
         
         //Thumbnail
-        dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [InfoFileUtils updateThumbnail:file andUser:APP_DELEGATE.activeUser tableView:tableView cellForRowAtIndexPath:indexPath];
-        });
+        //dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        fileCell.thumbnailOperation = [InfoFileUtils updateThumbnail:file andUser:APP_DELEGATE.activeUser tableView:tableView cellForRowAtIndexPath:indexPath];
+        //});
         
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
@@ -1536,6 +1536,22 @@
      }*/
     
     return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index];
+}
+
+- (void) tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    @try {
+        CustomCellFileAndDirectory *customCell = (CustomCellFileAndDirectory *) cell;
+        
+        if ([customCell isKindOfClass:[CustomCellFileAndDirectory class]] && customCell.thumbnailOperation) {
+            DLog(@"Cancel thumbnailOperation");
+            [customCell.thumbnailOperation cancel];
+        }
+    }
+    @catch (NSException *exception) {
+        DLog(@"Exception: %@", exception);
+    }
+    @finally {
+    }
 }
 
 ///-----------------------------------

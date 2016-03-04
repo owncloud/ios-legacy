@@ -295,10 +295,12 @@
 /*
  *  Method update the thumbnail of an icon after read it
  */
-+ (void) updateThumbnail:(FileDto *) file andUser:(UserDto *) user tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
++ (NSOperation *) updateThumbnail:(FileDto *) file andUser:(UserDto *) user tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSOperation *thumbnailOperation;
     
     if (file.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:file.fileName]) {
-        
+        dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             UIImage *thumbnailImage;
             
             if ([[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]){
@@ -319,6 +321,7 @@
                 [updateCell.fileImageView.layer setMasksToBounds:YES];
                 [updateCell.fileImageView setNeedsLayout];
             });
+        });
     } else if (file.isDownload != downloaded && [FileNameUtils isRemoteThumbnailSupportThiFile:file.fileName]) {
         
         #ifdef CONTAINER_APP
@@ -336,7 +339,7 @@
         
         NSString *path = [UtilsUrls getFilePathOnDBWithFileName:file.fileName ByFilePathOnFileDto:file.filePath andUser:user];
         
-        [[AppDelegate sharedOCCommunication] getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:64 andHeight:64 onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
+        thumbnailOperation = [[AppDelegate sharedOCCommunication] getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:64 andHeight:64 onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
             
             UIImage *thumbnailImage = [UIImage imageWithData:thumbnail];
             
@@ -362,6 +365,8 @@
         #endif
         
     }
+    
+    return thumbnailOperation;
 }
 
 @end
