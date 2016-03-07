@@ -64,6 +64,7 @@
     
     FileDto *initialRootFolder = [[FileDto alloc] init];
     
+    initialRootFolder.ocId = @"";
     initialRootFolder.filePath = @"";
     initialRootFolder.fileName = @"";
     initialRootFolder.userId = user.idUser;
