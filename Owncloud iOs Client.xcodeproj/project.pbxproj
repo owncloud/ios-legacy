@@ -1517,9 +1517,9 @@
 		40F2F6121C5A180700129F92 /* owncloudLogoFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = owncloudLogoFiles.png; sourceTree = "<group>"; };
 		40FF874119F81396008B7C62 /* OCKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCKeychain.h; sourceTree = "<group>"; };
 		40FF874219F81396008B7C62 /* OCKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCKeychain.m; sourceTree = "<group>"; };
-		593D14881C60BE1E005161E2 /* SplashImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SplashImage.png; sourceTree = "<group>"; };
 		590F1FF91C7474AE00AAF1C7 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		590F1FFA1C7474B700AAF1C7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		593D14881C60BE1E005161E2 /* SplashImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SplashImage.png; sourceTree = "<group>"; };
 		593D531A17BF701800191846 /* SSOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSOViewController.h; path = Login/SSO/SSOViewController.h; sourceTree = "<group>"; };
 		593D531B17BF701800191846 /* SSOViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSOViewController.m; path = Login/SSO/SSOViewController.m; sourceTree = "<group>"; };
 		593D531C17BF701800191846 /* SSOViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SSOViewController.xib; path = Login/SSO/SSOViewController.xib; sourceTree = "<group>"; };
@@ -3227,8 +3227,8 @@
 			);
 			name = SplashScreen;
 			path = ImageBranding/SplashScreen;
-            sourceTree = "<group>";
-        };
+			sourceTree = "<group>";
+		};
 		906177DF1C4FA9CD00BBE648 /* Touch ID */ = {
 			isa = PBXGroup;
 			children = (
@@ -3826,7 +3826,7 @@
 				LastUpgradeCheck = 0610;
 				TargetAttributes = {
 					1324297715ADBB3700DF823E = {
-						DevelopmentTeam = 9B5WD74GWJ;
+						DevelopmentTeam = MFV94X25EG;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -3838,7 +3838,7 @@
 					};
 					EA6606941AA767F700BA2C65 = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = 9B5WD74GWJ;
+						DevelopmentTeam = MFV94X25EG;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -3850,7 +3850,7 @@
 					};
 					EAB0AB3119ED356A00764C31 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = 9B5WD74GWJ;
+						DevelopmentTeam = MFV94X25EG;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -3862,7 +3862,7 @@
 					};
 					EAB0AB3F19ED356A00764C31 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = 9B5WD74GWJ;
+						DevelopmentTeam = MFV94X25EG;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -5110,6 +5110,7 @@
 					"$(SRCROOT)",
 				);
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.netcast.ncstore.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -5155,6 +5156,7 @@
 					"$(SRCROOT)",
 				);
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.netcast.ncstore.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -5261,6 +5263,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.netcast.ncstore.ios.OC-Share-Sheet";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -5303,6 +5306,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.netcast.ncstore.ios.OC-Share-Sheet";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -5363,6 +5367,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-Obj-C";
+				PRODUCT_BUNDLE_IDENTIFIER = com.netcast.ncstore.ios.ownCloudExtApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -5418,6 +5423,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-Obj-C";
+				PRODUCT_BUNDLE_IDENTIFIER = com.netcast.ncstore.ios.ownCloudExtApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -5472,6 +5478,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.netcast.ncstore.ios.ownCloudExtAppFileProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -5521,6 +5528,7 @@
 					"$(PROJECT_DIR)",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.netcast.ncstore.ios.ownCloudExtAppFileProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;

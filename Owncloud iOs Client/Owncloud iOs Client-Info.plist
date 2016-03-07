@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>ownCloud</string>
+	<string>NetCast Cloud Admin</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -60,7 +60,7 @@
 		<string>Default-Landscape_414h@3x.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
-	<string>com.owncloud.iOSmobileapp</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -90,6 +90,8 @@
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LastGitCommit</key>
+	<string></string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -145,7 +147,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>LastGitCommit</key>
-	<string></string>
 </dict>
 </plist>
