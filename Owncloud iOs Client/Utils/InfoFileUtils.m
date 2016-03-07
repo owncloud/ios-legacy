@@ -353,6 +353,7 @@
         [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
         
         NSString *path = [UtilsUrls getFilePathOnDBWithFileName:file.fileName ByFilePathOnFileDto:file.filePath andUser:user];
+        path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
         thumbnailOperation = [sharedCommunication getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:64 andHeight:64 onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
             
