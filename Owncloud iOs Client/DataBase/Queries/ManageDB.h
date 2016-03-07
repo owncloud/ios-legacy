@@ -225,4 +225,16 @@
  */
 + (void) updateDBVersion15To16;
 
+///-----------------------------------
+/// @name Update Database version with 16 version to 17
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter files and files_backup table, added new field to store oc:id
+ *
+ */
++ (void) updateDBVersion16To17;
+
 @end

@@ -47,6 +47,7 @@
         _taskIdentifier = -1;
         _sharedFileSource = 0;
         _providingFileId = 0;
+        _ocId = ocFileDto.ocId;
         
     }
     return self;

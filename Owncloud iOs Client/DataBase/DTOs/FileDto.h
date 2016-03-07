@@ -48,6 +48,7 @@ typedef enum {
 @property (nonatomic, copy) NSString *permissions;
 @property NSInteger taskIdentifier;
 @property (nonatomic) NSInteger providingFileId;
+@property (nonatomic, copy) NSString *ocId;
 
 ///-----------------------------------
 /// @name Init with OCFileDto

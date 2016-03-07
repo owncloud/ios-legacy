@@ -955,4 +955,30 @@
     
 }
 
+///-----------------------------------
+/// @name Update Database version with 16 version to 17
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter files and files_backup table, added new field to store oc:id
+ *
+ */
++ (void) updateDBVersion16To17{
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"ALTER TABLE files ADD oc_id VARCHAR NOT NULL DEFAULT"];
+        if (!correctQuery) {
+            DLog(@"Error update version 16 to 17 table files oc_id");
+        }
+        
+    }];
+    
+}
+
 @end
