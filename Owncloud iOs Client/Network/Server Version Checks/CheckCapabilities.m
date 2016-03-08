@@ -69,8 +69,9 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
                 app.activeUser.capabilitiesDto = cap;
                 
                 //update file list view if needed
-                if(capabilitiesShareAPIChanged)
+                if(capabilitiesShareAPIChanged){
                     [self reloadFileList];
+                }
 
             }
 

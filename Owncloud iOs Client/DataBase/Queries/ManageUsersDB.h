@@ -23,12 +23,6 @@
 @interface ManageUsersDB : NSObject
 
 
-typedef enum {
-    sortByName = 0,
-    sortByModificationDate = 1
-} enumSortingType;
-
-
 /*
  * Method that adds user into database
  * @userDto -> userDto (Object of a user info)
