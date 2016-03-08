@@ -76,3 +76,6 @@
 
 //Negative etag used to force pending to update
 #define k_negative_etag @"-1"
+
+//Folder where we store
+#define k_thumbnails_cache_folder_name @"thumbnails_cache"

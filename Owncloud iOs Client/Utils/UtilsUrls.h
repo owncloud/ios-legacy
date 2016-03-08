@@ -24,6 +24,7 @@
 + (NSString *) getBundleOfSecurityGroup;
 + (NSString *) bundleSeedID;
 + (NSString *) getFullBundleSecurityGroup;
++ (NSString *) getThumbnailFolderPath;
 
 //Method to skip a file to a iCloud backup
 + (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;

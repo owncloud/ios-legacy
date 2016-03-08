@@ -18,9 +18,7 @@
 #import "ManageUsersDB.h"
 #import "ManageFilesDB.h"
 #import "UIImage+Thumbnail.h"
-
-
-static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
+#import "constants.h"
 
 
 @interface ManageThumbnails ()
@@ -82,7 +80,7 @@ static NSString *thumbnailsCacheFolderName = @"thumbnails_cache";
 
 - (NSString *) getThumbnailLocalSystemPathOfUserId:(NSInteger)userId {
     
-    return [NSString stringWithFormat:@"%@%@/%ld/", [UtilsUrls getOwnCloudFilePath], thumbnailsCacheFolderName, userId];
+    return [NSString stringWithFormat:@"%@/%ld/", [UtilsUrls getThumbnailFolderPath], userId];
     
 }
 

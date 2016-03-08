@@ -13,6 +13,7 @@
 #import "ManageFilesDB.h"
 #import "ManageUsersDB.h"
 #import "UtilsUrls.h"
+#import "ManageThumbnails.h"
 
 #define k_DB_version_1 1
 #define k_DB_version_2 2
@@ -74,6 +75,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_2:
                 [ManageDB updateDBVersion2To3];
@@ -91,6 +93,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_3:
                 [ManageDB updateDBVersion3To4];
@@ -106,6 +109,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_4:
                 [ManageDB updateDBVersion4To5];
@@ -120,6 +124,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_5:
                 [ManageDB updateDBVersion5To6];
@@ -133,6 +138,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_6:
                 [ManageDB updateDBVersion6To7];
@@ -145,6 +151,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_7:
                 [self updateDBVersion7To8];
@@ -156,6 +163,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_8:
                 [ManageDB updateDBVersion8To9];
@@ -166,6 +174,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_9:
                 [ManageDB updateDBVersion9To10];
@@ -175,6 +184,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_10:
                 [ManageDB updateDBVersion10To11];
@@ -183,6 +193,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_11:
                 [ManageDB updateDBVersion11To12];
@@ -190,6 +201,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_12:
                 [ManageDB updateDBVersion12To13];
@@ -199,21 +211,25 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_13:
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_14:
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_15:
                 [ManageDB updateDBVersion15To16];
+                [self updateDBVersion16To17];
                 break;
             case k_DB_version_16:
-                [ManageDB updateDBVersion16To17];
+                [self updateDBVersion16To17];
                 break;
         }
     }
@@ -272,6 +288,21 @@
 + (void) updateDBVersion7To8 {
     [ManageDB updateDBVersion7To8];
     [ManageFilesDB deleteAlleTagOfTheDirectoties];
+}
+
+///-----------------------------------
+/// @name updateDBVersion16To17
+///-----------------------------------
+
+/**
+ * This method updates the DB from 16 to 17 version and delete the folder of the thumbnails to force the generation of the thumbnails Offline
+ */
++ (void) updateDBVersion16To17 {
+    [ManageDB updateDBVersion16To17];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[UtilsUrls getThumbnailFolderPath]]) {
+        NSError *error = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:[UtilsUrls getThumbnailFolderPath] error:&error];
+    }
 }
 
 @end
