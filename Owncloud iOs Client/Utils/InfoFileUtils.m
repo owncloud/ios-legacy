@@ -286,7 +286,7 @@
     
     UIImage *output;
     
-    if ([[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
+    if ([FileNameUtils isRemoteThumbnailSupportThiFile:file.fileName] && [[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
         
         output = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
         
@@ -305,7 +305,7 @@
     
     NSOperation *thumbnailOperation;
     
-    if ([FileNameUtils isImageSupportedThisFile:file.fileName] && ![[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
+    if ([FileNameUtils isRemoteThumbnailSupportThiFile:file.fileName] && ![[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
         
         OCCommunication *sharedCommunication;
         
