@@ -284,18 +284,22 @@
  */
 + (UIImage *) getIconOfFile:(FileDto *) file andUser:(UserDto *) user {
     
-    UIImage *output;
+    UIImage *imageForCell;
     
-    if ([FileNameUtils isRemoteThumbnailSupportThiFile:file.fileName] && [[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
+    if ([[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
         
-        output = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
+        imageForCell = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
+        
+    } else if ([FileNameUtils isImageSupportedThisFile:file.fileName]){
+        imageForCell = [[UIImage imageWithContentsOfFile: file.localFolder] getThumbnail];
+        [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(imageForCell) forFile:file];
         
     } else {
         NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        output = [UIImage imageNamed:imageFile];
+        imageForCell = [UIImage imageNamed:imageFile];
     }
     
-    return output;
+    return imageForCell;
 }
 
 /*
