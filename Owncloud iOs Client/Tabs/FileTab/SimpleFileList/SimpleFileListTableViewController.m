@@ -118,7 +118,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [SortManager numberOfRowsInSection:section withCurrentDirectoryArray:self.currentDirectoryArray andSortedArray:self.sortedArray];
+    return [SortManager numberOfRowsInSection:section withCurrentDirectoryArray:self.currentDirectoryArray andSortedArray:self.sortedArray needsExtraEmptyRow:YES];
 }
 
 // Returns the table view managed by the controller object.

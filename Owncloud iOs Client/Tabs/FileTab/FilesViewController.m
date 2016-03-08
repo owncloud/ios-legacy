@@ -1461,7 +1461,7 @@
 // Returns the table view managed by the controller object.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [SortManager numberOfRowsInSection:section withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray];
+    return [SortManager numberOfRowsInSection:section withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray needsExtraEmptyRow:YES];
 }
 
 //Return the row height

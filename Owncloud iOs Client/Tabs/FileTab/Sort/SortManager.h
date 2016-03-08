@@ -23,7 +23,7 @@
 + (NSInteger)numberOfSectionsInTableViewWithFolderList: (NSArray *)currentDirectoryArray;
 
 // Returns the table view managed by the controller object.
-+ (NSInteger)numberOfRowsInSection: (NSInteger) section withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray;
++ (NSInteger)numberOfRowsInSection: (NSInteger) section withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray needsExtraEmptyRow:(BOOL) emptyMessageRow;
 
 // Returns the table view managed by the controller object.
 + (NSString *)titleForHeaderInTableViewSection:(NSInteger)section withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray;

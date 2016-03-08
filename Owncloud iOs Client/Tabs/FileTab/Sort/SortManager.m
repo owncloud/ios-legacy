@@ -32,13 +32,19 @@
 }
 
 // Returns the table view managed by the controller object.
-+ (NSInteger)numberOfRowsInSection: (NSInteger) section withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray
++ (NSInteger)numberOfRowsInSection: (NSInteger) section withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray needsExtraEmptyRow:(BOOL) emptyMessageRow
 {
-    //If the _currentDirectoryArray doesn't have object it will have one row. Also if no alphabetical order is required
-    NSInteger rows = 1;
+    NSInteger rows = 0;
     
     if([currentDirectoryArray count] > 0 && [self getUserSortingType] == sortByName){
         rows = [[sortedArray objectAtIndex:section] count];
+    }
+    
+    else{
+        //If the _currentDirectoryArray is empty it will have one extra row to show a message in FilesViewController and SimpleFileListTableViewController. If no alphabetical order is required will also be used one row for each section for usual contents
+        if (([currentDirectoryArray count] == 0 && emptyMessageRow) || ([currentDirectoryArray count] > 0 && [self getUserSortingType] == sortByModificationDate)) {
+            rows = 1;
+        }
     }
     return rows;
 }
