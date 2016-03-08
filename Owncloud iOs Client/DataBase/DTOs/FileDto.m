@@ -53,10 +53,5 @@
     return self;
 }
 
-- (NSUInteger )getHashIdentifierOfUserID:(NSInteger)userId {
-    
-    return [NSString stringWithFormat:@"%ld%@%@",(long)userId,self.filePath,self.fileName].hash;
-    
-}
 
 @end

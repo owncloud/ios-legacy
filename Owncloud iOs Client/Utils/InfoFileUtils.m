@@ -285,7 +285,6 @@
 + (UIImage *) getIconOfFile:(FileDto *) file andUser:(UserDto *) user {
     
     UIImage *output;
-    NSUInteger hashOfFile = [file getHashIdentifierOfUserID:user.idUser];
     
     if ([[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
         

@@ -74,7 +74,7 @@
 
 - (NSString *) getThumbnailPathForFile:(FileDto *)file {
     
-    return [NSString stringWithFormat:@"%@%ld", [self getThumbnailLocalSystemPathOfUserId:file.userId], (long)[file getHashIdentifierOfUserID:file.userId]];
+    return [NSString stringWithFormat:@"%@%@", [self getThumbnailLocalSystemPathOfUserId:file.userId], file.ocId];
     
 }
 

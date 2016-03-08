@@ -66,21 +66,5 @@ typedef enum {
  */
 - (id)initWithOCFileDto:(OCFileDto*)ocFileDto;
 
-///-----------------------------------
-/// @name Get Hash Identifier Of User ID
-///-----------------------------------
-
-/**
- * This method generate a hash identifier 
- * using userId + filePath + fileName
- *
- * @param userId -> NSInteger
- *
- * @return NSUInteger
- *
- */
-
-- (NSUInteger )getHashIdentifierOfUserID:(NSInteger)userId;
-
 
 @end
