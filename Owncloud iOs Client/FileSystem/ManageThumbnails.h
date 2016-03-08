@@ -23,7 +23,6 @@
 - (BOOL) storeThumbnail:(NSData *)thumbnail forFile:(FileDto *)file;
 - (BOOL) removeStoredThumbnailForFile:(FileDto *)file;
 - (NSString *) getThumbnailPathForFile:(FileDto *)file;
-- (BOOL) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile;
 - (void) deleteThumbnailsInFolder:(NSInteger)idFile;
 - (void) deleteThumbnailCacheFolderOfUserId:(NSInteger) userId ;
 @end

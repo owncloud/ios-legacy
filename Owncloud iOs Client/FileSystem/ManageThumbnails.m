@@ -60,17 +60,9 @@
     
 }
 
-
 - (BOOL) removeStoredThumbnailForFile:(FileDto *)file {
     
     return [[NSFileManager defaultManager] removeItemAtPath:[self getThumbnailPathForFile:file] error:nil];
-}
-
-
-- (BOOL) renameThumbnailOfFile:(FileDto *)oldFile withNewFile:(FileDto *)newFile {
-    
-    return [[NSFileManager defaultManager] moveItemAtPath:[self getThumbnailPathForFile:oldFile] toPath:[self getThumbnailPathForFile:newFile] error:nil];
-    
 }
 
 
