@@ -305,30 +305,7 @@
     
     NSOperation *thumbnailOperation;
     
-    if (file.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:file.fileName]) {
-        dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            UIImage *thumbnailImage;
-            
-            if ([[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]){
-                
-                thumbnailImage = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
-                
-            }else{
-                
-                thumbnailImage = [[UIImage imageWithContentsOfFile: file.localFolder] getThumbnail];
-                [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) forFile:file];
-                
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                CustomCellFileAndDirectory *updateCell = (id)[tableView cellForRowAtIndexPath:indexPath];
-
-                updateCell.fileImageView.image = thumbnailImage;
-                [updateCell.fileImageView.layer setMasksToBounds:YES];
-                [updateCell.fileImageView setNeedsLayout];
-            });
-        });
-    } else if (file.isDownload != downloaded && [FileNameUtils isRemoteThumbnailSupportThiFile:file.fileName]) {
+    if ([FileNameUtils isImageSupportedThisFile:file.fileName] && ![[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
         
         OCCommunication *sharedCommunication;
         
@@ -370,8 +347,6 @@
                     [updateCell.fileImageView setNeedsLayout];
                 });
             }
-            
-            
             
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
             DLog(@"Error: %@",error);
