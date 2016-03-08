@@ -977,6 +977,10 @@
             DLog(@"Error update version 16 to 17 table files oc_id");
         }
         
+        correctQuery = [db executeUpdate:@"ALTER TABLE files_backup ADD oc_id VARCHAR NOT NULL DEFAULT ''"];
+        if (!correctQuery) {
+            DLog(@"Error update version 16 to 17 table files_backup oc_id");
+        }
     }];
     
 }
