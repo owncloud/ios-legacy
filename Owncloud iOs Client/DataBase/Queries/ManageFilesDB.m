@@ -401,8 +401,7 @@
                 
                 //to jump the first becouse it is not necesary (is the same directory) and the other if is to insert 450 by 450
                 if(numberOfInsertEachTime == 0) {
-                    sql = [NSString stringWithFormat:@"INSERT INTO files SELECT null as id, '%@' as 'oc_id', '%@' as 'file_path','%@' as 'file_name', %ld as 'user_id', %d as 'is_directory',%ld as 'is_download', %ld as 'file_id', %@ as 'size', %@ as 'date', %d as 'is_favorite','%@' as 'etag', %d as 'is_root_folder', %d as 'is_necessary_update', %ld as 'shared_file_source', '%@' as 'permissions', %ld as 'task_identifier', %ld as 'providing_file_id'",
-                           current.ocId,
+                    sql = [NSString stringWithFormat:@"INSERT INTO files SELECT null as id, '%@' as 'file_path','%@' as 'file_name', %ld as 'user_id', %d as 'is_directory',%ld as 'is_download', %ld as 'file_id', %@ as 'size', %@ as 'date', %d as 'is_favorite','%@' as 'etag', %d as 'is_root_folder', %d as 'is_necessary_update', %ld as 'shared_file_source', '%@' as 'permissions', %ld as 'task_identifier', %ld as 'providing_file_id', '%@' as 'oc_id'",
                            current.filePath,
                            current.fileName,
                            (long)current.userId,
@@ -418,13 +417,13 @@
                            (long)current.sharedFileSource,
                            current.permissions,
                            (long)current.taskIdentifier,
-                           (long)current.providingFileId];
+                           (long)current.providingFileId,
+                           current.ocId];
 
                     //DLog(@"sql!!!: %@", sql);
                 } else {
-                    sql = [NSString stringWithFormat:@"%@ UNION SELECT null, '%@','%@','%@',%ld,%d,%ld,%ld,%@,%@,%d,'%@',%d,%d,%ld,'%@',%ld,%ld",
+                    sql = [NSString stringWithFormat:@"%@ UNION SELECT null, '%@','%@',%ld,%d,%ld,%ld,%@,%@,%d,'%@',%d,%d,%ld,'%@',%ld,%ld,'%@'",
                            sql,
-                           current.ocId,
                            current.filePath,
                            current.fileName,
                            (long)current.userId,
@@ -440,7 +439,8 @@
                            (long)current.sharedFileSource,
                            current.permissions,
                            (long)current.taskIdentifier,
-                           (long)current.providingFileId];
+                           (long)current.providingFileId,
+                           current.ocId];
 
                 }
                 
