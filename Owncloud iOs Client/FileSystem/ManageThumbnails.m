@@ -52,7 +52,11 @@
 
 - (BOOL) isStoredThumbnailForFile:(FileDto *)file {
     
-    return [[NSFileManager defaultManager] fileExistsAtPath:[self getThumbnailPathForFile:file]];
+    if ([file.ocId isEqualToString:@""]) {
+        return NO;
+    } else {
+        return [[NSFileManager defaultManager] fileExistsAtPath:[self getThumbnailPathForFile:file]];
+    }
     
 }
 
