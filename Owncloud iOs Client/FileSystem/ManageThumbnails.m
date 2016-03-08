@@ -104,9 +104,10 @@
 
 - (void) deleteThumbnailCacheFolderOfUserId:(NSInteger) userId {
     
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[self getThumbnailLocalSystemPathOfUserId: userId]]) {
+    NSString *path = [self getThumbnailLocalSystemPathOfUserId: userId];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         NSError *error = nil;
-        [[NSFileManager defaultManager] removeItemAtPath:[self getThumbnailLocalSystemPathOfUserId: userId] error:&error];
+        [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
     }
     
 }

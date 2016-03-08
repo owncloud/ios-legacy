@@ -466,9 +466,7 @@
             //Error
         }
     } else {
-        
-        [[ManageThumbnails sharedManager] removeStoredThumbnailForFile:self.selectedFileDto];
-        
+                
         [ManageFilesDB renameFileByFileDto:self.selectedFileDto andNewName:[self.mNewName encodeString:NSUTF8StringEncoding]];
         
         if(self.selectedFileDto.isDownload) {
