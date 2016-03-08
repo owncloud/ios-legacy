@@ -298,6 +298,7 @@
  * This method updates the DB from 16 to 17 version and delete the folder of the thumbnails to force the generation of the thumbnails Offline
  */
 + (void) updateDBVersion16To17 {
+    [ManageFilesDB deleteAlleTagOfTheDirectoties];
     [ManageDB updateDBVersion16To17];
     if ([[NSFileManager defaultManager] fileExistsAtPath:[UtilsUrls getThumbnailFolderPath]]) {
         NSError *error = nil;
