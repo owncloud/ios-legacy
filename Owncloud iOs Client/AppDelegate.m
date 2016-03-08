@@ -58,7 +58,6 @@
 #import "DownloadFileSyncFolder.h"
 #import "CheckFeaturesSupported.h"
 #import "ManageTouchID.h"
-#import "ManageThumbnails.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -346,8 +345,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     //First Call when init the app
      self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
-    //TODO: remove the next line
-    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId:self.activeUser.idUser];
     
     //if is null we do not have any active user on the database
     if(!self.activeUser) {
