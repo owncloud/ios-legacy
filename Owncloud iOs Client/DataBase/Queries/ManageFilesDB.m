@@ -899,28 +899,18 @@
     
     DLog(@"deleteAllThumbnailsWithDifferentEtagFromBackup");
     
-    UserDto *mUser;
-    
-#ifdef CONTAINER_APP
-    mUser = APP_DELEGATE.activeUser;
-#else
-    mUser = [ManageUsersDB getActiveUser];
-#endif
-    
     NSMutableArray *listFilesToDelete = [NSMutableArray new];
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
-    //userId,self.filePath,self.fileName
-    
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT b.user_id, b.oc_id, b.file_name, b.file_path FROM files_backup b, files f WHERE b.user_id=f.user_id AND b.file_path=f.file_path AND b.file_name=f.file_name AND b.etag!=f.etag)", [NSNumber numberWithInteger:mUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT b.user_id, b.oc_id, b.file_name, b.file_path FROM files_backup b, files f WHERE b.user_id=f.user_id AND b.file_path=f.file_path AND b.file_name=f.file_name AND b.etag!=f.etag"];
         while ([rs next]) {
             
-            FileDto *currentFile = [[FileDto alloc] init];
+            FileDto *currentFile = [FileDto new];
             
-            currentFile.userId = [rs intForColumn:@"b.user_id"];
-            currentFile.ocId = [rs stringForColumn:@"b.oc_id"];
+            currentFile.userId = [rs intForColumn:@"user_id"];
+            currentFile.ocId = [rs stringForColumn:@"oc_id"];
             
             [listFilesToDelete addObject:currentFile];
         }
