@@ -23,6 +23,11 @@ typedef enum {
     
 } enumHasShareApiSupport;
 
+typedef enum {
+    sortByName = 0,
+    sortByModificationDate = 1
+} enumSortingType;
+
 @interface UserDto : NSObject
 
 @property NSInteger idUser;

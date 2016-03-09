@@ -233,7 +233,7 @@
  * Changes:
  *
  * Alter files and files_backup table, added new field to store oc:id
- *
+ * Alter users table, added new field to store the sorting choice for showing folders/files in file list.
  */
 + (void) updateDBVersion16To17;
 
