@@ -358,7 +358,7 @@
         } else if (file.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:file.fileName]){
             
             UIImage *thumbnailImage;
-            thumbnailImage = [[UIImage imageWithContentsOfFile: file.localFolder] getThumbnail];
+            thumbnailImage = [[UIImage imageWithContentsOfFile: file.localFolder] getThumbnailFromDownloadedImage];
             [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) forFile:file];
             
             dispatch_async(dispatch_get_main_queue(), ^{

@@ -309,10 +309,16 @@
             if([_file isDirectory]) {
                 DLog(@"Is directory");
                 
+                [[ManageThumbnails sharedManager] deleteThumbnailsInFolder:_file.idFile];
+                
                 //Then delete folder of BD.
                 [self deleteFolderChildsWithIdFile:_file.idFile];
+                
             } else {
                 //if a file
+                
+                [[ManageThumbnails sharedManager] removeStoredThumbnailForFile:_file];
+
                 [ManageFilesDB deleteFileByIdFileOfActiveUser:_file.idFile];
             }
             //The end of delete

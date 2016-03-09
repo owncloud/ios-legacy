@@ -403,8 +403,6 @@
     
     if (self.selectedFileDto.isDirectory) {
         
-        [[ManageThumbnails sharedManager] deleteThumbnailsInFolder:self.selectedFileDto.idFile];
-        
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         DLog(@"Change folder name");
