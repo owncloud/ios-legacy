@@ -225,4 +225,12 @@
  */
 + (void) updateDBVersion15To16;
 
+/**
+ * Changes:
+ *
+ * Alter users table, added new field to store the sorting choice for showing folders/files in file list.
+ *
+ */
++ (void) updateDBVersion16To17;
+
 @end

@@ -6,6 +6,14 @@
 //
 //
 
+/*
+ Copyright (C) 2015, ownCloud, Inc.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
+
 #import "InitializeDatabase.h"
 #import "CredentialsDto.h"
 #import "OCKeychain.h"
@@ -30,6 +38,7 @@
 #define k_DB_version_14 14
 #define k_DB_version_15 15
 #define k_DB_version_16 16
+#define k_DB_version_17 17
 
 @implementation InitializeDatabase
 
@@ -43,7 +52,7 @@
 + (void) initDataBase {
     
     //New version
-    static int dbVersion = k_DB_version_16;
+    static int dbVersion = k_DB_version_17;
     
     //This method make a new database
     [ManageDB createDataBase];
@@ -72,6 +81,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_2:
                 [ManageDB updateDBVersion2To3];
@@ -89,6 +99,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_3:
                 [ManageDB updateDBVersion3To4];
@@ -104,6 +115,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_4:
                 [ManageDB updateDBVersion4To5];
@@ -118,6 +130,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_5:
                 [ManageDB updateDBVersion5To6];
@@ -131,6 +144,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_6:
                 [ManageDB updateDBVersion6To7];
@@ -143,6 +157,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_7:
                 [self updateDBVersion7To8];
@@ -154,6 +169,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_8:
                 [ManageDB updateDBVersion8To9];
@@ -164,6 +180,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_9:
                 [ManageDB updateDBVersion9To10];
@@ -173,6 +190,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_10:
                 [ManageDB updateDBVersion10To11];
@@ -181,6 +199,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_11:
                 [ManageDB updateDBVersion11To12];
@@ -188,6 +207,7 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_12:
                 [ManageDB updateDBVersion12To13];
@@ -197,18 +217,25 @@
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_13:
                 [ManageDB updateDBVersion13To14];
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_14:
                 [ManageDB updateDBVersion14To15];
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
                 break;
             case k_DB_version_15:
                 [ManageDB updateDBVersion15To16];
+                [ManageDB updateDBVersion16To17];
+                break;
+            case k_DB_version_16:
+                [ManageDB updateDBVersion16To17];
                 break;                
         }
     }

@@ -32,6 +32,7 @@
 #import "UtilsUrls.h"
 #import "FileListDBOperations.h"
 #import "UIColor+Constants.h"
+#import "SortManager.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -103,53 +104,33 @@
 - (void) fillTheArraysFromDatabase {
     
     self.currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser: (int)self.currentFolder.idFile];
-    self.sortedArray = [self partitionObjects:self.currentDirectoryArray collationStringSelector:@selector(fileName)];
+    self.sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:self.currentDirectoryArray];
 }
+
+
 
 #pragma mark - TableView dataSource
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    //If the _currentDirectoryArray doesn't have object it will have one section
-    NSInteger sections = 1;
-    if ([_currentDirectoryArray count] > 0) {
-        sections = [[[UILocalizedIndexedCollation currentCollation] sectionTitles] count];
-    }
-    return sections;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return [SortManager numberOfSectionsInTableViewWithFolderList:self.currentDirectoryArray];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    //If the _currentDirectoryArray doesn't have object it will have one row
-    NSInteger rows = 1;
-    if ([_currentDirectoryArray count] > 0) {
-        rows = [[_sortedArray objectAtIndex:section] count];
-    }
-    return rows;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [SortManager numberOfRowsInSection:section withCurrentDirectoryArray:self.currentDirectoryArray andSortedArray:self.sortedArray needsExtraEmptyRow:YES];
 }
 
 // Returns the table view managed by the controller object.
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    //Only show the section title if there are rows in it
-    BOOL showSection = [[_sortedArray objectAtIndex:section] count] != 0;
-    NSArray *titles = [[UILocalizedIndexedCollation currentCollation] sectionTitles];
-    
-    if(k_minimun_files_to_show_separators > [_currentDirectoryArray count]) {
-        showSection = NO;
-    }
-    return (showSection) ? [titles objectAtIndex:section] : nil;
+    return [SortManager titleForHeaderInTableViewSection:section withCurrentDirectoryArray:self.currentDirectoryArray andSortedArray:self.sortedArray];
 }
 
 // Asks the data source to return the titles for the sections for a table view.
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
-    // The commented part is for the version with searchField
-    
-    if(k_minimun_files_to_show_separators > [_currentDirectoryArray count]) {
-        return nil;
-    } else {
-        tableView.sectionIndexColor = [UIColor colorOfSectionIndexColorFileList];
-        return [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
-    }
+    return [SortManager sectionIndexTitlesForTableView:tableView WithCurrentDirectoryArray:self.currentDirectoryArray];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -299,35 +280,6 @@
     }
     return height;
     
-}
-
-/*
- * Method that sorts alphabetically array by selector
- *@array -> array of sections and rows of tableview
- */
-- (NSMutableArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector {
-    UILocalizedIndexedCollation *collation = [UILocalizedIndexedCollation currentCollation];
-    
-    NSInteger sectionCount = [[collation sectionTitles] count]; //section count is take from sectionTitles and not sectionIndexTitles
-    NSMutableArray *unsortedSections = [NSMutableArray arrayWithCapacity:sectionCount];
-    
-    //create an array to hold the data for each section
-    for(int i = 0; i < sectionCount; i++) {
-        [unsortedSections addObject:[NSMutableArray array]];
-    }
-    //put each object into a section
-    for (id object in array) {
-        NSInteger index = [collation sectionForObject:object collationStringSelector:selector];
-        [[unsortedSections objectAtIndex:index] addObject:object];
-    }
-    NSMutableArray *sections = [NSMutableArray arrayWithCapacity:sectionCount];
-    
-    //sort each section
-    for (NSMutableArray *section in unsortedSections) {
-        [sections addObject:[collation sortedArrayFromArray:section collationStringSelector:selector]];
-    }
-    
-    return sections;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

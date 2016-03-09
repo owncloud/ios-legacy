@@ -62,6 +62,7 @@
 #import "IndexedForest.h"
 #import "ManageCapabilitiesDB.h"
 #import "CheckCapabilities.h"
+#import "SortManager.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -181,8 +182,8 @@
     //Store the new active user, maybe can be different in the future in this same view
     _mUser = app.activeUser;
     
-    //Add a plus button
-    UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showOptions)];
+    //Add a more button
+    UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more-filled"] style:UIBarButtonItemStylePlain target:self action:@selector(showOptions)];
     self.navigationItem.rightBarButtonItem = addButtonItem;
     
     // Create a searchBar and a displayController "Future Option"
@@ -520,7 +521,9 @@
     //Add loading screen if it's necessary (Used by restoring the loading view after a rotate when the uploading processing)
     if (app.isLoadingVisible==YES) {
         [self initLoading];
+        
     }
+
 }
 
 // Notifies the view controller that its view is about to be removed from a view hierarchy.
@@ -652,7 +655,11 @@
     }
     
     if (self.plusActionSheet) {
-        [self.plusActionSheet dismissWithClickedButtonIndex:2 animated:NO];
+        [self.plusActionSheet dismissWithClickedButtonIndex:3 animated:NO];
+    }
+    
+    if(self.sortingActionSheet){
+        [self.sortingActionSheet dismissWithClickedButtonIndex:2 animated:NO];
     }
     
     DLog(@"Files view Controller willRotate");
@@ -795,7 +802,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFromDataBaseWithFileDto:) name:FavoriteFileIsSync object:nil];
     
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFileList) name:CapabilitiesUpdatedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFileListAfterCapabilitiesUpdated) name:CapabilitiesUpdatedNotification object:nil];
 
 }
 
@@ -970,7 +977,7 @@
 }
 
 
-#pragma mark - UIAlertViewDelegate
+#pragma mark - UIAlertView and UIAlertViewDelegate
 - (void) alertView: (UIAlertView *) alertView willDismissWithButtonIndex: (NSInteger) buttonIndex
 {
     switch (alertView.tag) {
@@ -1025,6 +1032,13 @@
     }
     
     return output;
+}
+
+- (void) showAlertView:(NSString*)string {
+    
+    _alert = nil;
+    _alert = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+    [_alert show];
 }
 
 #pragma mark - UITextFieldDelegate methods
@@ -1096,9 +1110,11 @@
 }
 
 /*
- * Method that show the options when the user tap + button
+ * Method that show the options when the user tap ... button
  */
 - (void)showOptions {
+    
+    NSString * sortByTitle = NSLocalizedString(@"sort_menu_title", nil);
     
     if (self.plusActionSheet) {
         self.plusActionSheet = nil;
@@ -1109,7 +1125,7 @@
                             delegate:self
                             cancelButtonTitle:NSLocalizedString(@"cancel", nil)
                             destructiveButtonTitle:nil
-                            otherButtonTitles:NSLocalizedString(@"menu_upload", nil), NSLocalizedString(@"menu_folder", nil), nil];
+                            otherButtonTitles:NSLocalizedString(@"menu_upload", nil), NSLocalizedString(@"menu_folder", nil), sortByTitle, nil];
     
     self.plusActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
     self.plusActionSheet.tag=100;
@@ -1340,7 +1356,6 @@
             [fileCell.labelInfoFile setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         }
         
-        
         FileDto *file = (FileDto *)[[_sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
         
         NSDate* date = [NSDate dateWithTimeIntervalSince1970:file.date];
@@ -1440,23 +1455,13 @@
 // Asks the data source to return the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //If the _currentDirectoryArray doesn't have object it will have one section
-    NSInteger sections = 1;
-    if ([_currentDirectoryArray count] > 0) {
-        sections = [[[UILocalizedIndexedCollation currentCollation] sectionTitles] count];
-    }
-    return sections;
+    return [SortManager numberOfSectionsInTableViewWithFolderList:_currentDirectoryArray];
 }
 
 // Returns the table view managed by the controller object.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //If the _currentDirectoryArray doesn't have object it will have one row
-    NSInteger rows = 1;
-    if ([_currentDirectoryArray count] > 0) {
-        rows = [[_sortedArray objectAtIndex:section] count];
-    }
-    return rows;
+    return [SortManager numberOfRowsInSection:section withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray needsExtraEmptyRow:YES];
 }
 
 //Return the row height
@@ -1476,18 +1481,11 @@
 // Returns the table view managed by the controller object.
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    //Only show the section title if there are rows in it
-    BOOL showSection = [[_sortedArray objectAtIndex:section] count] != 0;
-    NSArray *titles = [[UILocalizedIndexedCollation currentCollation] sectionTitles];
-    
-    if(k_minimun_files_to_show_separators > [_currentDirectoryArray count]) {
-        showSection = NO;
-    }
-    return (showSection) ? [titles objectAtIndex:section] : nil;
+   return [SortManager titleForHeaderInTableViewSection:section withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray];
 }
 
 
-// Asks the data source to return the titles for the sections for a table view.
+// Returns the titles for the sections for a table view.
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
     // The commented part is for the version with searchField
@@ -1497,12 +1495,9 @@
      [array insertObject:UITableViewIndexSearch atIndex:0];
      return [NSArray arrayWithArray:array];*/
     
-    if(k_minimun_files_to_show_separators > [_currentDirectoryArray count]) {
-        return nil;
-    } else {
-        tableView.sectionIndexColor = [UIColor colorOfSectionIndexColorFileList];
-        return [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
-    }
+    return [SortManager sectionIndexTitlesForTableView:tableView WithCurrentDirectoryArray:_currentDirectoryArray];
+    
+
 }
 
 // Change the color of the header section on the table
@@ -1826,7 +1821,7 @@
    // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    _sortedArray = [self partitionObjects: _currentDirectoryArray collationStringSelector:@selector(fileName)];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -1835,7 +1830,7 @@
     [self setTheLabelOnTheTableFooter];
         
     //Reload data in the table
-    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+    [self reloadTableFileList];
     
     //TODO: Remove this to prevent duplicate files
     /*if([_currentDirectoryArray count] != 0) {
@@ -1844,7 +1839,12 @@
 }
 
 
--(void)reloadTableFileList {
+-(void)reloadTableFileListAfterCapabilitiesUpdated {
+    _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
+    [self reloadTableFileList];
+}
+-(void)reloadTableFileList{
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 }
 
@@ -1861,7 +1861,7 @@
     // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    _sortedArray = [self partitionObjects: _currentDirectoryArray collationStringSelector:@selector(fileName)];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -2123,7 +2123,7 @@
         [FileListDBOperations createAllFoldersByArrayOfFilesDto:_currentDirectoryArray andLocalFolder:_currentLocalFolder];
         
         //Sorted the files array
-        _sortedArray = [self partitionObjects: _currentDirectoryArray collationStringSelector:@selector(fileName)];
+        _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
         
         //update gallery array
         [self updateArrayImagesInGallery];
@@ -2243,48 +2243,50 @@
     }
 }
 
-#pragma mark - Order methods
+#pragma mark - Sorting methods
 
 /*
- * Method that sorts alphabetically array by selector
- *@array -> array of sections and rows of tableview
+ * This method shows an action sheet to sort the files and folders list
  */
-- (NSMutableArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector {
-    UILocalizedIndexedCollation *collation = [UILocalizedIndexedCollation currentCollation];
+- (void)showSortingOptions{
+    NSString * sortByTitle = NSLocalizedString(@"sort_menu_title", nil);
     
-    NSInteger sectionCount = [[collation sectionTitles] count]; //section count is take from sectionTitles and not sectionIndexTitles
-    NSMutableArray *unsortedSections = [NSMutableArray arrayWithCapacity:sectionCount];
+    if (self.sortingActionSheet) {
+        self.sortingActionSheet = nil;
+    }
     
-    //create an array to hold the data for each section
-    for(int i = 0; i < sectionCount; i++) {
-        [unsortedSections addObject:[NSMutableArray array]];
-    }
-    //put each object into a section
-    for (id object in array) {
-        NSInteger index = [collation sectionForObject:object collationStringSelector:selector];
-        [[unsortedSections objectAtIndex:index] addObject:object];
-    }
-    NSMutableArray *sections = [NSMutableArray arrayWithCapacity:sectionCount];
+    self.sortingActionSheet = [[UIActionSheet alloc]
+                               initWithTitle:sortByTitle
+                               delegate:self
+                               cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                               destructiveButtonTitle:nil
+                               otherButtonTitles:NSLocalizedString(@"sort_menu_by_name_option", nil), NSLocalizedString(@"sort_menu_by_modification_date_option", nil), nil];
     
-    //sort each section
-    for (NSMutableArray *section in unsortedSections) {
-        [sections addObject:[collation sortedArrayFromArray:section collationStringSelector:selector]];
+    self.sortingActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
+    self.sortingActionSheet.tag=300;
+    
+    if (IS_IPHONE) {
+        [self.sortingActionSheet showInView:self.tabBarController.view];
+    } else {
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        if (IS_IOS8 || IS_IOS9)  {
+            [self.sortingActionSheet showInView:app.splitViewController.view];
+        } else {
+            [self.sortingActionSheet showInView:app.detailViewController.view];
+        }
     }
-    return sections;
 }
 
 
 /*
- * This method is for show alert view in main thread.
- * @string -> string wiht the message of the alert view.
+ * This method stores in the DB the sorting option selected by the user
  */
-
-- (void) showAlertView:(NSString*)string {
-    
-    _alert = nil;
-    _alert = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-    [_alert show];
+- (void) updateActiveUserSortingChoiceTo: (enumSortingType)sortingChoice{
+    [ManageUsersDB updateSortingWayTo:sortingChoice byUserDto:[ManageUsersDB getActiveUser]];
 }
+
 
 #pragma mark - UIActionSheetDelegate
 
@@ -2298,6 +2300,9 @@
                 break;
             case 1:
                 [self showCreateFolder];
+                break;
+            case 2:
+                [self showSortingOptions];
                 break;
             default:
                 break;
@@ -2378,6 +2383,29 @@
         switch (buttonIndex) {
             case 0:
                 [self didSelectCancelFavoriteFolder];
+                break;
+            default:
+                break;
+        }
+    }
+    
+    //Sorting options
+    if (actionSheet.tag==300) {
+        enumSortingType storedSorting = [SortManager getUserSortingType];
+        switch (buttonIndex) {
+            case 0:
+                if(storedSorting != sortByName){
+                    [self updateActiveUserSortingChoiceTo:sortByName];
+                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
+                    [self reloadTableFileList];
+                }
+                break;
+            case 1:
+                if(storedSorting != sortByModificationDate){
+                    [self updateActiveUserSortingChoiceTo:sortByModificationDate];
+                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
+                    [self reloadTableFileList];
+                }
                 break;
             default:
                 break;
