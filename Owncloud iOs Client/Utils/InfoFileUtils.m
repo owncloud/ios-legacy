@@ -290,10 +290,6 @@
         
         imageForCell = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
         
-    } else if ([FileNameUtils isImageSupportedThisFile:file.fileName]){
-        imageForCell = [[UIImage imageWithContentsOfFile: file.localFolder] getThumbnail];
-        [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(imageForCell) forFile:file];
-        
     } else {
         NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         imageForCell = [UIImage imageNamed:imageFile];
@@ -309,54 +305,71 @@
     
     NSOperation *thumbnailOperation;
     
-    if ([FileNameUtils isRemoteThumbnailSupportThiFile:file.fileName] && ![[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
+    if (![[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
         
-        OCCommunication *sharedCommunication;
-        
+        if ([FileNameUtils isRemoteThumbnailSupportThiFile:file.fileName]) {
+            OCCommunication *sharedCommunication;
+            
 #ifdef CONTAINER_APP
-        sharedCommunication = [AppDelegate sharedOCCommunication];
+            sharedCommunication = [AppDelegate sharedOCCommunication];
 #elif SHARE_IN
-        sharedCommunication = Managers.sharedOCCommunication;
+            sharedCommunication = Managers.sharedOCCommunication;
 #else
-        sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
+            sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
 #endif
-        
-        //Set the right credentials
-        if (k_is_sso_active) {
-            [sharedCommunication setCredentialsWithCookie:user.password];
-        } else if (k_is_oauth_active) {
-            [sharedCommunication setCredentialsOauthWithToken:user.password];
-        } else {
-            [sharedCommunication setCredentialsWithUser:user.username andPassword:user.password];
-        }
-        
-        [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
-        
-        NSString *path = [UtilsUrls getFilePathOnDBWithFileName:file.fileName ByFilePathOnFileDto:file.filePath andUser:user];
-        path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        
-        thumbnailOperation = [sharedCommunication getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:64 andHeight:64 onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
             
-            UIImage *thumbnailImage = [UIImage imageWithData:thumbnail];
-            
-            if ([[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) forFile:file]) {
-                
-                thumbnailImage = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    CustomCellFileAndDirectory *updateCell = (id)[tableView cellForRowAtIndexPath:indexPath];
-                    
-                    updateCell.fileImageView.image = thumbnailImage;
-                    [updateCell.fileImageView.layer setMasksToBounds:YES];
-                    [updateCell.fileImageView setNeedsLayout];
-                });
+            //Set the right credentials
+            if (k_is_sso_active) {
+                [sharedCommunication setCredentialsWithCookie:user.password];
+            } else if (k_is_oauth_active) {
+                [sharedCommunication setCredentialsOauthWithToken:user.password];
+            } else {
+                [sharedCommunication setCredentialsWithUser:user.username andPassword:user.password];
             }
             
-        } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
-            DLog(@"Error: %@",error);
-        }];
-        
-    }
+            [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
+            
+            NSString *path = [UtilsUrls getFilePathOnDBWithFileName:file.fileName ByFilePathOnFileDto:file.filePath andUser:user];
+            path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
+            thumbnailOperation = [sharedCommunication getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:64 andHeight:64 onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
+                
+                UIImage *thumbnailImage = [UIImage imageWithData:thumbnail];
+                
+                if ([[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) forFile:file]) {
+                    
+                    thumbnailImage = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        CustomCellFileAndDirectory *updateCell = (id)[tableView cellForRowAtIndexPath:indexPath];
+                        
+                        updateCell.fileImageView.image = thumbnailImage;
+                        [updateCell.fileImageView.layer setMasksToBounds:YES];
+                        [updateCell.fileImageView setNeedsLayout];
+                    });
+                }
+                
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
+                DLog(@"Error: %@",error);
+            }];
+            
+
+            
+        } else if (file.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:file.fileName]){
+            
+            UIImage *thumbnailImage;
+            thumbnailImage = [[UIImage imageWithContentsOfFile: file.localFolder] getThumbnail];
+            [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) forFile:file];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                CustomCellFileAndDirectory *updateCell = (id)[tableView cellForRowAtIndexPath:indexPath];
+                
+                updateCell.fileImageView.image = thumbnailImage;
+                [updateCell.fileImageView.layer setMasksToBounds:YES];
+                [updateCell.fileImageView setNeedsLayout];
+            });
+        }
+     }
     
     return thumbnailOperation;
 }
