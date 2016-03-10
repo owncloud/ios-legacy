@@ -13,8 +13,5 @@ before_install:
 addons:
   sauce_connect: true
 
-# command to install dependencies
-install:
-  - pip install .
 script:
 - automation_Test/loginTest.py
