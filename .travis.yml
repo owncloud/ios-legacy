@@ -9,7 +9,7 @@ before_install:
   - chmod +x automation_Test/loginTest.py
 
 addons:
-sauce_connect: true
+  sauce_connect: true
 
 script:
 - automation_Test/loginTest.py
