@@ -6,3 +6,9 @@ xcode_sdk: iphonesimulator
 
 before_install:
   - brew update; brew update
+
+addons:
+sauce_connect: true
+
+script:
+- "automation_Test/loginTest.py"
