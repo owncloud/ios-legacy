@@ -85,15 +85,14 @@
 
 /*
  * Method to know if the file is supported by the API of the thumbnail
- * Only JPG, PNG and JPEG images files are supported for the moment.
- * @fileName -> file name
+ * @fileName -> file name, ex: image.JPG
  */
 + (BOOL)isRemoteThumbnailSupportThiFile:(NSString*)fileName{
     
     
     NSString *ext=[self getExtension:fileName];
     
-    if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"JPEG"] || [ext isEqualToString:@"GIF"] || [ext isEqualToString:@"BMP"] || [ext isEqualToString:@"MP3"])
+    if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"JPEG"] || [ext isEqualToString:@"GIF"] || [ext isEqualToString:@"BMP"] || [ext isEqualToString:@"MP3"]  || [ext isEqualToString:@"MP4"]  || [ext isEqualToString:@"MOV"]  || [ext isEqualToString:@"FLV"]  || [ext isEqualToString:@"AVI"]  || [ext isEqualToString:@"3GP"]  || [ext isEqualToString:@"WEBM"]  || [ext isEqualToString:@"OGV"]  || [ext isEqualToString:@"WMV"] )
     {
         
         return YES;
