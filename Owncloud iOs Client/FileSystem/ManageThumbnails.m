@@ -15,11 +15,7 @@
 
 #import "ManageThumbnails.h"
 #import "UtilsUrls.h"
-#import "ManageUsersDB.h"
 #import "ManageFilesDB.h"
-#import "UIImage+Thumbnail.h"
-#import "constants.h"
-
 
 @interface ManageThumbnails ()
 
