@@ -47,8 +47,7 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
-    CheckAccessToServer *mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-    [mCheckAccessToServer isConnectionToTheServerByUrl:self.urlServer.text];
+    [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.urlServer.text];
     
     //We delete the cookies on SAML
     if (k_is_sso_active) {

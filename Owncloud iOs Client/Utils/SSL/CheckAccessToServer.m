@@ -40,6 +40,16 @@
 
 @synthesize delegate = _delegate;
 
+//Singleton
++ (id)sharedManager {
+    static CheckAccessToServer *sharedCheckAccessToServer = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedCheckAccessToServer = [[self alloc] init];
+    });
+    return sharedCheckAccessToServer;
+}
+
 static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 // Returns the leaf certificate from a SecTrust object (that is always the 
 // certificate at index 0).

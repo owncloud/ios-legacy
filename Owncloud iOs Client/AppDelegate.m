@@ -68,7 +68,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 @synthesize window = _window;
 @synthesize loginViewController = _loginViewController;
-@synthesize mCheckAccessToServer = _mCheckAccessToServer;
 @synthesize uploadArray=_uploadArray;
 @synthesize webDavArray=_webDavArray;
 @synthesize recentViewController=_recentViewController;
@@ -366,9 +365,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         [self performSelector:@selector(launchUploadsOfflineFromDocumentProvider) withObject:nil afterDelay:0.3];
         
-        self.mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-        self.mCheckAccessToServer.delegate = self;
-        [self.mCheckAccessToServer isConnectionToTheServerByUrl:_activeUser.url];
+        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
         
         //Generate the interface of the app
         [self generateAppInterfaceFromLoginScreen:NO];
@@ -1054,9 +1051,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         _activeUser=[ManageUsersDB getActiveUser];
     }
     
-    self.mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-    self.mCheckAccessToServer.delegate = self;
-    [self.mCheckAccessToServer isConnectionToTheServerByUrl:_activeUser.url];
+    [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
     
     //Check if expieration time upload is called
     if (_isExpirationTimeInUpload) {
@@ -1881,25 +1876,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 - (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController{
     DLog(@"Did pass code entered incorrectly");
-}
-
-
-#pragma mark - CheckAccessToServerDelegate
--(void)connectionToTheServer:(BOOL)isConnection {
-    
-    if(isConnection) {
-        DLog(@"OK we can connect to the server");
-    } else {
-        DLog(@"We can not connect with the server. Certificate problems");
-    }
-}
-
--(void)repeatTheCheckToTheServer {
-    DLog(@"Ok, cert accepted");
-}
-
--(void)badCertificateNoAcceptedByUser {
-    DLog(@"The user does not accept the certificate");
 }
 
 #pragma mark - Items to upload from other apps

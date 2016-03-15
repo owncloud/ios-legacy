@@ -970,7 +970,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
     
     if (!_isDownloading && (_file.isDownload != -1)) {
-        CheckAccessToServer *mCheckAccessToServer = [[CheckAccessToServer alloc] init];
         //Update the file previewed
         _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
         
@@ -979,7 +978,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             DLog(@"The file is in the device");
             //Phase 2. Open the file with "Open with" class
             [self openFile];
-        } else  if([mCheckAccessToServer isNetworkIsReachable]) {
+        } else  if([[CheckAccessToServer sharedManager] isNetworkIsReachable]) {
             //Phase 1. Check if this file is in the device
             if ([_file isDownload] == notDownload) {
                 //File is not in the device

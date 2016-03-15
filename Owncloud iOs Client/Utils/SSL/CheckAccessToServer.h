@@ -28,7 +28,7 @@
     __weak id<CheckAccessToServerDelegate> _delegate;
 }
 
-
++ (id)sharedManager;
 - (void) isConnectionToTheServerByUrl:(NSString *) url;
 - (BOOL) isNetworkIsReachable;
 - (NSString *) getConnectionToTheServerByUrlAndCheckTheVersion:(NSString *)url;

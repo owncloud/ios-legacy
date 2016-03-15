@@ -19,7 +19,6 @@
 #import <UIKit/UIKit.h>
 #import "UserDto.h"
 #import "MediaViewController.h"
-#import "CheckAccessToServer.h"
 #import "PrepareFilesToUpload.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "FMDatabaseQueue.h"
@@ -48,7 +47,7 @@ extern NSString * NotReachableNetworkForUploadsNotification;
 extern NSString * NotReachableNetworkForDownloadsNotification;
 
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, CheckAccessToServerDelegate, PrepareFilesToUploadDelegate, KKPasscodeViewControllerDelegate> {
+@interface AppDelegate : UIResponder <UIApplicationDelegate, PrepareFilesToUploadDelegate, KKPasscodeViewControllerDelegate> {
   
     
     UserDto *_activeUser;
@@ -65,7 +64,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
     SettingsViewController *_settingsViewController;
     //OCTabBarController *_tabBarController;
    
-    CheckAccessToServer *_mCheckAccessToServer;
     UISplitViewController *_splitViewController;
     DetailViewController *_detailViewController;
     
@@ -296,7 +294,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (strong, nonatomic) LoginViewController *loginViewController;
 @property (strong, nonatomic) UserDto *activeUser;
 @property (strong, nonatomic) OCTabBarController *ocTabBarController;
-@property (nonatomic, retain) CheckAccessToServer *mCheckAccessToServer;
 @property (nonatomic, strong) NSMutableArray *uploadArray;
 @property (nonatomic, strong) NSMutableArray *webDavArray;
 @property (nonatomic, strong) SharedViewController *sharedViewController;

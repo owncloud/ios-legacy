@@ -37,8 +37,7 @@
             
             [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
             
-            CheckAccessToServer *mCheckAccessToServer = [CheckAccessToServer new];
-            [mCheckAccessToServer isConnectionToTheServerByUrl:user.url];
+            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
             
             break;
         }

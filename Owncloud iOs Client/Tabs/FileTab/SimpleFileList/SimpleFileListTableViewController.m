@@ -738,10 +738,9 @@
 
 -(void)repeatTheCheckToTheServer {
     //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
-    CheckAccessToServer *mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-    mCheckAccessToServer.viewControllerToShow = self;
-    mCheckAccessToServer.delegate = self;
-    [mCheckAccessToServer isConnectionToTheServerByUrl:self.user.url];
+    ((CheckAccessToServer *)[CheckAccessToServer sharedManager]).delegate = self;
+    ((CheckAccessToServer *)[CheckAccessToServer sharedManager]).viewControllerToShow = self;
+    [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.user.url];
 }
 
 -(void)badCertificateNoAcceptedByUser {

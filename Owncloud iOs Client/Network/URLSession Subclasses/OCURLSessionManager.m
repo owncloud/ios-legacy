@@ -39,12 +39,10 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
     protectionSpace = [challenge protectionSpace];
     trust = [protectionSpace serverTrust];
     
-    CheckAccessToServer *mCheck = [CheckAccessToServer new];
-    
-    [mCheck createFolderToSaveCertificates];
+    [[CheckAccessToServer sharedManager] createFolderToSaveCertificates];
     
     if(trust != nil) {
-        [mCheck saveCertificate:trust withName:@"tmp.der"];
+        [[CheckAccessToServer sharedManager] saveCertificate:trust withName:@"tmp.der"];
         
         NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
         
