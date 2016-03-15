@@ -3200,6 +3200,7 @@
     }
 }
 
+#pragma mark - CheckAccessToServer
 -(void)connectionToTheServer:(BOOL)isConnection {
     if(isConnection) {
         DLog(@"Ok, we have connection to the server");
@@ -3213,7 +3214,8 @@
 }
 
 -(void)repeatTheCheckToTheServer {
-    //ok, certificate accepted
+    DLog(@"Certificate accepted by the user");
+    [[CheckAccessToServer sharedManager]isConnectionToTheServerByUrl:APP_DELEGATE.activeUser.url];
 }
 
 -(void)badCertificateNoAcceptedByUser {

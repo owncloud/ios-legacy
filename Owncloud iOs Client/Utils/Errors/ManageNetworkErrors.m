@@ -35,8 +35,6 @@
     switch (errorConnection.code) {
         case kCFURLErrorUserCancelledAuthentication: { //-1012
             
-            [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-            
             [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
             
             break;
