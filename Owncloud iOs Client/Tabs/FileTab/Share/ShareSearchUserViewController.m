@@ -207,9 +207,15 @@
             name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.name, NSLocalizedString(@"share_user_group_indicator", nil)];
         } else {
             
-            if (userOrGroup.isDisplayNameDuplicated) {
+            if (userOrGroup.shareeType == shareTypeRemote && userOrGroup.server != nil ) {
+                
+                name = [NSString stringWithFormat:@"%@ (at %@)", userOrGroup.displayName, userOrGroup.server];
+                
+            }else if(userOrGroup.isDisplayNameDuplicated){
+                
                 name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
-            }else{
+            }
+            else{
                 name = userOrGroup.displayName;
             }
         }
@@ -298,7 +304,7 @@
         
         if (supportFederatedSharing) {
             if ([filterString containsString:@"@"]) {
-                [self.filteredItems addObject:[self getFederatedOCSharedUserByName:filterString]];
+                [self manageTheFederatedUsers];
             }
         }
 
@@ -437,12 +443,17 @@
     federatedUser.shareeType = shareTypeRemote;
     federatedUser.isDisplayNameDuplicated = NO;
     federatedUser.name = name;
-    federatedUser.displayName = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federated_indicator", nil)];;
+    federatedUser.displayName = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federated_indicator", nil)];
     
     return federatedUser;
 }
 
-
-
+- (void) manageTheFederatedUsers {
+    for (OCShareUser *federatedUser in self.filteredItems) {
+        if ([federatedUser.displayName containsString:@"@"]){
+            federatedUser.displayName = [NSString stringWithFormat:@"%@ (%@)",federatedUser.name, NSLocalizedString(@"share_user_federated_indicator", nil)];
+        }
+    }
+}
 
 @end
