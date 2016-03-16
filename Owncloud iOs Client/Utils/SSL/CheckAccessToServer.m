@@ -107,6 +107,10 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 
 
 -(void) isConnectionToTheServerByUrl:(NSString *) url {
+    [self isConnectionToTheServerByUrl:url withTimeout:k_timeout_webdav];
+}
+
+- (void)isConnectionToTheServerByUrl:(NSString *) url withTimeout:(NSInteger) timeout {
     
     //We save the url to later compare with urlServerRedirected in request
     self.urlUserToCheck = url;
@@ -116,7 +120,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     NSLog(@"URL Status: |%@|", _urlStatusCheck);
     
     
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:0 timeoutInterval:k_timeout_webdav];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:0 timeoutInterval:timeout];
     
     //Add the user agent
     [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
@@ -124,6 +128,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     
     [connection release];
+    
 }
 
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {

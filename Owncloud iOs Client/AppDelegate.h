@@ -26,6 +26,7 @@
 #import "OCTabBarController.h"
 #import "DetailViewController.h"
 #import "ManageDownloads.h"
+#import "CheckAccessToServer.h"
 
 @class FilesViewController;
 @class RecentViewController;
@@ -47,7 +48,7 @@ extern NSString * NotReachableNetworkForUploadsNotification;
 extern NSString * NotReachableNetworkForDownloadsNotification;
 
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, PrepareFilesToUploadDelegate, KKPasscodeViewControllerDelegate> {
+@interface AppDelegate : UIResponder <UIApplicationDelegate, PrepareFilesToUploadDelegate, KKPasscodeViewControllerDelegate, CheckAccessToServerDelegate> {
   
     
     UserDto *_activeUser;

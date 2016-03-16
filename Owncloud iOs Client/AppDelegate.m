@@ -132,7 +132,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
     
-    [self checkIfIsNecesaryShowPassCode];
+    //Init and update the DataBase
+    [InitializeDatabase initDataBase];
+    
+    [self showSplashScreenFake];
     
     //Check if the server support shared api
     [self performSelector:@selector(checkIfServerSupportThings) withObject:nil afterDelay:0.0];
@@ -339,7 +342,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 - (void) initAppWithEtagRequest:(BOOL)isEtagRequestNecessary {
     
-    [InitializeDatabase initDataBase];
     [[AppDelegate sharedSyncFolderManager] setThePermissionsOnDownloadCacheFolder];
     
     //First Call when init the app
@@ -369,7 +371,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         //Generate the interface of the app
         [self generateAppInterfaceFromLoginScreen:NO];
-        
     }
 }
 
@@ -2868,6 +2869,42 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     self.window.rootViewController = self.loginWindowViewController;
     [self.window makeKeyAndVisible];
+}
+
+#pragma mark - SplashScreenFake
+
+- (void) showSplashScreenFake {
+    
+    DLog(@"showSplashScreenFake");
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Launch Screen" bundle:nil];
+    UIViewController *splashScreenView = [storyboard instantiateViewControllerWithIdentifier:@"SplashScreen"];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    self.window.rootViewController = splashScreenView;
+    [self.window makeKeyAndVisible];
+    
+    UserDto *user = [ManageUsersDB getActiveUser];
+    
+    if (user) {
+        ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
+        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
+    } else {
+        [self checkIfIsNecesaryShowPassCode];
+    }
+}
+
+#pragma mark - CheckAccessToServerDelegate
+
+-(void)connectionToTheServer:(BOOL)isConnection {
+    [self checkIfIsNecesaryShowPassCode];
+}
+-(void)repeatTheCheckToTheServer {
+    [self checkIfIsNecesaryShowPassCode];
+}
+-(void)badCertificateNoAcceptedByUser {
+    [self checkIfIsNecesaryShowPassCode];
 }
 
 @end
