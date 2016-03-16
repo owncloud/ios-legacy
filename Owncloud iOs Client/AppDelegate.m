@@ -2898,12 +2898,15 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 #pragma mark - CheckAccessToServerDelegate
 
 -(void)connectionToTheServer:(BOOL)isConnection {
+    ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
     [self checkIfIsNecesaryShowPassCode];
 }
 -(void)repeatTheCheckToTheServer {
+    ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
     [self checkIfIsNecesaryShowPassCode];
 }
 -(void)badCertificateNoAcceptedByUser {
+    ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
     [self checkIfIsNecesaryShowPassCode];
 }
 
