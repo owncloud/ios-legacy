@@ -232,8 +232,6 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                                                                   switch (error.code) {
                                                                       case kCFURLErrorUserCancelledAuthentication: { //-1012
                                                                           
-                                                                          [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
-                                                                          
                                                                           [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:APP_DELEGATE.activeUser.url];
                                                                           
                                                                           break;
@@ -307,8 +305,6 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                     
                     switch (error.code) {
                         case kCFURLErrorUserCancelledAuthentication: { //-1012
-                            
-                            [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
                             
                             [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:APP_DELEGATE.activeUser.url];
                             
@@ -806,8 +802,6 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                 
                 switch (error.code) {
                     case kCFURLErrorUserCancelledAuthentication: { //-1012
-                        
-                        [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
                         
                         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:APP_DELEGATE.activeUser.url];
                         
