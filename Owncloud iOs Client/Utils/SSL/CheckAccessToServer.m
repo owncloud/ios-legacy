@@ -155,7 +155,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     if([error code] == -1202){
         NSLog(@"Error -1202");
 
-        if(self.delegate) {
+        //if(self.delegate) {
 
             #ifdef CONTAINER_APP
             
@@ -190,7 +190,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
             [self.viewControllerToShow presentViewController:alert animated:YES completion:nil];
             
             #endif
-        }
+        //}
 
     
 
