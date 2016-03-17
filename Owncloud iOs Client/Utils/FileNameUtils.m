@@ -92,7 +92,7 @@
     
     NSString *ext=[self getExtension:fileName];
     
-    if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"JPEG"] || [ext isEqualToString:@"GIF"] || [ext isEqualToString:@"BMP"] || [ext isEqualToString:@"MP3"]  || [ext isEqualToString:@"MP4"]  || [ext isEqualToString:@"MOV"]  || [ext isEqualToString:@"FLV"]  || [ext isEqualToString:@"AVI"]  || [ext isEqualToString:@"3GP"]  || [ext isEqualToString:@"WEBM"]  || [ext isEqualToString:@"OGV"]  || [ext isEqualToString:@"WMV"] )
+    if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"JPEG"] || [ext isEqualToString:@"GIF"] || [ext isEqualToString:@"BMP"] || [ext isEqualToString:@"MP3"]  || [ext isEqualToString:@"MOV"]  || [ext isEqualToString:@"MP4"]  || [ext isEqualToString:@"M4V"] || [ext isEqualToString:@"3GP"])
     {
         
         return YES;
