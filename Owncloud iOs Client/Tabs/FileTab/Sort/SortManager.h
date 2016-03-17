@@ -57,5 +57,6 @@
  * DB methods
  */
 + (enumSortingType) getUserSortingType;
+@property(nonatomic) UserDto* userToSort;
 
 @end

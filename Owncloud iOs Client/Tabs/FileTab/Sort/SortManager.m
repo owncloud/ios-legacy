@@ -20,6 +20,13 @@
 
 
 @implementation SortManager
+@synthesize userToSort;
+
+
+
+- (void)setUser: (UserDto*) user {
+    self.userToSort = user;
+}
 
 #pragma mark - TableView methods
 + (NSInteger)numberOfSectionsInTableViewWithFolderList: (NSArray *)currentDirectoryArray{
@@ -76,7 +83,7 @@
 // Returns the titles for the sections for a table view.
 + (NSArray *)sectionIndexTitlesForTableView: (UITableView*) tableView WithCurrentDirectoryArray:(NSArray*)currentDirectoryArray{
     
-    if(k_minimun_files_to_show_separators < [currentDirectoryArray count] && [SortManager getUserSortingType] == sortByName) {
+    if(k_minimun_files_to_show_separators < [currentDirectoryArray count] && [self getUserSortingType] == sortByName) {
         tableView.sectionIndexColor = [UIColor colorOfSectionIndexColorFileList];
         return [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
     } else {
@@ -157,8 +164,8 @@
 }
 
 # pragma -mark Data Base
-+ (enumSortingType) getUserSortingType{
-    return [ManageUsersDB getSortingWayByUserDto:[ManageUsersDB getActiveUser]];
++ (enumSortingType) getSortingTypeOfUser:(UserDto*) user{
+    return user.sortingType;
 }
 
 @end
