@@ -450,7 +450,7 @@
 
 - (void) manageTheFederatedUsers {
     for (OCShareUser *federatedUser in self.filteredItems) {
-        if ([federatedUser.displayName containsString:@"@"]){
+        if (federatedUser.shareeType == shareTypeRemote && federatedUser.server == nil){
             federatedUser.displayName = [NSString stringWithFormat:@"%@ (%@)",federatedUser.name, NSLocalizedString(@"share_user_federated_indicator", nil)];
         }
     }
