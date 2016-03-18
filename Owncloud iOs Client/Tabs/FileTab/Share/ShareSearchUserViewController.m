@@ -209,7 +209,7 @@
             
             if (userOrGroup.shareeType == shareTypeRemote && userOrGroup.server != nil ) {
                 
-                name = [NSString stringWithFormat:@"%@ (at %@)", userOrGroup.displayName, userOrGroup.server];
+                name = [NSString stringWithFormat:@"%@ (%@ %@)", userOrGroup.displayName, NSLocalizedString(@"at_federate_server", nil), userOrGroup.server];
                 
             }else if(userOrGroup.isDisplayNameDuplicated){
                 
