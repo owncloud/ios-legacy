@@ -336,7 +336,7 @@
                 
                 UIImage *thumbnailImage = [UIImage imageWithData:thumbnail];
                 
-                if ([[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) forFile:file]) {
+                if (thumbnailImage && [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) forFile:file]) {
                     
                     thumbnailImage = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
                     
