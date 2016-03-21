@@ -327,6 +327,8 @@ static float const kDelayAfterCancelAll = 3.0;
             //For sons of favorites to force again to be checked and downloaded again
             if ([DownloadUtils isSonOfFavoriteFolder:currentFolder]) {
                 [DownloadUtils setEtagNegativeToAllTheFoldersThatContainsFile:currentFolder];
+            } else if(currentFolder.isFavorite) {
+                [ManageFilesDB updateEtagOfFileDtoByid:currentFolder.idFile andNewEtag:k_negative_etag];
             }
         }];
     }
