@@ -17,6 +17,6 @@
 
 @interface UIImage (Thumbnail)
 
-- (UIImage *) getThumbnail;
+- (UIImage *) getThumbnailFromDownloadedImage;
 
 @end

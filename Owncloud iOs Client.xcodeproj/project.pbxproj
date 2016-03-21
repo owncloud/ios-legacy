@@ -617,6 +617,13 @@
 		59EDC4301C611F9A0050939C /* btnHelpPage3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC4291C611F9A0050939C /* btnHelpPage3@2x.png */; };
 		59EDC4311C611F9A0050939C /* btnHelpPage4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC42A1C611F9A0050939C /* btnHelpPage4@2x.png */; };
 		59EDC4321C611F9A0050939C /* btnHelpPage5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC42B1C611F9A0050939C /* btnHelpPage5@2x.png */; };
+		59F123DD1C89AEE20094CF70 /* ManageThumbnails.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */; };
+		59F123E11C89BFB50094CF70 /* CustomCellFileAndDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5C0177850B100FB9977 /* CustomCellFileAndDirectory.m */; };
+		59F123E21C89C0E00094CF70 /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF690F1891379C00A2217C /* SWTableViewCell.m */; };
+		59F123E31C89C1180094CF70 /* SWUtilityButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF69131891379C00A2217C /* SWUtilityButtonView.m */; };
+		59F123E41C89C1250094CF70 /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF690B1891379C00A2217C /* SWCellScrollView.m */; };
+		59F123E51C89C1250094CF70 /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF690D1891379C00A2217C /* SWLongPressGestureRecognizer.m */; };
+		59F123E61C89C14D0094CF70 /* SWUtilityButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF69111891379C00A2217C /* SWUtilityButtonTapGestureRecognizer.m */; };
 		59F470321C5F97BA005B6091 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 59F470311C5F97BA005B6091 /* Launch Screen.storyboard */; };
 		905B3D3B1C8867AA00BCC93B /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		905C594F1C50DA490051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
@@ -2110,8 +2117,6 @@
 				EAF028C317744CC20035084D /* Queries */,
 				137E486115B6A7B700628EB1 /* DTOs */,
 				137E485715B6A3A400628EB1 /* DB.sqlite */,
-				59E20C781AEFAA8E00554D7E /* InitializeDatabase.h */,
-				59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */,
 			);
 			name = Database;
 			sourceTree = "<group>";
@@ -3716,6 +3721,8 @@
 				EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */,
 				EA0EFA1D1BEA6C6E009971AF /* ManageCapabilitiesDB.h */,
 				EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */,
+				59E20C781AEFAA8E00554D7E /* InitializeDatabase.h */,
+				59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */,
 			);
 			name = Queries;
 			sourceTree = "<group>";
@@ -4764,6 +4771,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59F123E61C89C14D0094CF70 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
+				59F123E41C89C1250094CF70 /* SWCellScrollView.m in Sources */,
+				59F123E51C89C1250094CF70 /* SWLongPressGestureRecognizer.m in Sources */,
+				59F123E31C89C1180094CF70 /* SWUtilityButtonView.m in Sources */,
+				59F123E21C89C0E00094CF70 /* SWTableViewCell.m in Sources */,
+				59F123E11C89BFB50094CF70 /* CustomCellFileAndDirectory.m in Sources */,
 				90D608FC1C8984760049CCE4 /* SortManager.m in Sources */,
 				905C594F1C50DA490051D223 /* ManageTouchID.m in Sources */,
 				EAF721821AAF3402009F5596 /* CredentialsDto.m in Sources */,
@@ -4886,6 +4899,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59F123DD1C89AEE20094CF70 /* ManageThumbnails.m in Sources */,
 				59BF57CB1B04C8E7000EB221 /* Managers.swift in Sources */,
 				EAE80E241A6CFDE50061BD86 /* UploadsOfflineDto.m in Sources */,
 				EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */,

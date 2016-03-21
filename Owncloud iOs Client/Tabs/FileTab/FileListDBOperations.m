@@ -64,6 +64,7 @@
     
     FileDto *initialRootFolder = [[FileDto alloc] init];
     
+    initialRootFolder.ocId = @"";
     initialRootFolder.filePath = @"";
     initialRootFolder.fileName = @"";
     initialRootFolder.userId = user.idUser;
@@ -120,6 +121,7 @@
     [ManageFilesDB updateRelatedFilesFromBackup];
     //Delete the files and folders that not exist on the server
     [ManageFilesDB deleteAllFilesAndFoldersThatNotExistOnServerFromBackup];
+    [ManageFilesDB deleteAllThumbnailsWithDifferentEtagFromBackup];
     //Read all backups that need be marked as necessary update
     [ManageFilesDB setUpdateIsNecessaryFromBackup:idFolder];
     //Read all backups downloaded files and update the new registers with the downloaded/shared status and isNessesaryUpdate

@@ -99,6 +99,18 @@
     [self reloadFolderByEtag];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    //Cancel all the get thumbnails in visible cells
+    UITableView *tableView = self.tableView; // Or however you get your table view
+    NSArray *paths = [tableView indexPathsForVisibleRows];
+    
+    for (NSIndexPath *path in paths) {
+        [self cancelGetThumbnailByCell:[tableView cellForRowAtIndexPath:path]];
+    }
+}
+
 #pragma mark - Fill the arrays from Database
 
 - (void) fillTheArraysFromDatabase {
@@ -252,6 +264,9 @@
         
         fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.currentFolder andIsSonOfFavoriteFolder:NO ofUser:self.user];
         
+        //Thumbnail
+        fileCell.thumbnailOperation = [InfoFileUtils updateThumbnail:file andUser:self.user tableView:tableView cellForRowAtIndexPath:indexPath];
+        
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
         [fileCell setCellHeight:fileCell.frame.size.height];
@@ -284,6 +299,26 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     //Method to be overwritten
+}
+
+- (void) tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self cancelGetThumbnailByCell:cell];
+}
+
+- (void) cancelGetThumbnailByCell:(UITableViewCell *) cell {
+    @try {
+        CustomCellFileAndDirectory *customCell = (CustomCellFileAndDirectory *) cell;
+        
+        if ([customCell isKindOfClass:[CustomCellFileAndDirectory class]] && customCell.thumbnailOperation) {
+            DLog(@"Cancel thumbnailOperation");
+            [customCell.thumbnailOperation cancel];
+        }
+    }
+    @catch (NSException *exception) {
+        DLog(@"Exception: %@", exception);
+    }
+    @finally {
+    }
 }
 
 #pragma mark - Navigation
