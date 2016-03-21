@@ -339,6 +339,10 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
                     fileCell.labelInfoFile.text = [NSString stringWithFormat:@"%@, %@", fileDateString, fileSizeString];
                 }
             }
+            
+            //Thumbnail
+            fileCell.thumbnailOperation = [InfoFileUtils updateThumbnail:file andUser:self.user tableView:tableView cellForRowAtIndexPath:indexPath];
+            
         } else {
             //Is directory
             //Font for folder
@@ -399,7 +403,6 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     }
     return cell;
 }
-
 
 
 #pragma mark - Check User

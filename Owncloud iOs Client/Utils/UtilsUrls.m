@@ -107,6 +107,10 @@
     
 }
 
++ (NSString *) getThumbnailFolderPath {
+    return [NSString stringWithFormat:@"%@%@", [self getOwnCloudFilePath], k_thumbnails_cache_folder_name];
+}
+
 //Method to skip a file to a iCloud backup
 + (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
 {

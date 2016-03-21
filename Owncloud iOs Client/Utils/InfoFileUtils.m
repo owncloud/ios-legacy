@@ -31,6 +31,16 @@
 #import "ManageUsersDB.h"
 #import "NSObject+AssociatedObject.h"
 #import "OCSharedDto.h"
+#import "OCCommunication.h"
+#import "Customization.h"
+
+#ifdef CONTAINER_APP
+#import "AppDelegate.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
+#else
+#import "DocumentPickerViewController.h"
+#endif
 
 @implementation InfoFileUtils
 
@@ -155,12 +165,15 @@
     NSString *path = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:fileForSetTheStatusIcon.filePath andUser:user], fileForSetTheStatusIcon.fileName];
     
     NSMutableArray *allShares = [ManageSharesDB getSharesByUser:user.idUser andPath:path];
+    NSInteger numberOfShares = allShares.count;
     NSPredicate *predicateShareByLink = [NSPredicate predicateWithFormat:@"shareType == %i", shareTypeLink];
     NSArray *sharesByLink = [allShares filteredArrayUsingPredicate:predicateShareByLink];
-    NSPredicate *predicateRemoteShare = [NSPredicate predicateWithFormat:@"shareType == %i", shareTypeRemote];
-    NSArray *sharesByRemote = [allShares filteredArrayUsingPredicate:predicateRemoteShare];
+    NSInteger numberOfSharesByLink = sharesByLink.count;
+    NSPredicate *predicateShareByRemote = [NSPredicate predicateWithFormat:@"shareType == %i", shareTypeRemote];
+    NSArray *sharesByRemote = [allShares filteredArrayUsingPredicate:predicateShareByRemote];
+    NSInteger numberOfSharesByRemote = sharesByLink.count;
     
-    BOOL isShareAPIActive = [ManageUsersDB getActiveUser].hasCapabilitiesSupport && [ManageUsersDB getActiveUser].capabilitiesDto && [ManageUsersDB getActiveUser].capabilitiesDto.isFilesSharingAPIEnabled;
+    BOOL isShareAPIActive = user.hasCapabilitiesSupport && user.capabilitiesDto && user.capabilitiesDto.isFilesSharingAPIEnabled;
     
     
     if (fileForSetTheStatusIcon.isDirectory) {
@@ -168,11 +181,11 @@
             if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound) {
                 fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
                 
-            } else if (allShares.count > 0 && allShares !=nil) {
+            } else if (numberOfShares > 0 && allShares != nil) {
                 
-                if (sharesByLink.count > 0 && sharesByLink !=nil && isShareAPIActive) {
+                if (numberOfSharesByLink > 0 && sharesByLink !=nil && isShareAPIActive) {
                     fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
-                } else if((sharesByRemote.count > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
+                } else if((numberOfSharesByRemote > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
                     fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
                 } else{
                     fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
@@ -182,54 +195,29 @@
             }
 
 #ifdef CONTAINER_APP
+        BOOL isFolderPendingToBeDownload = [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon];
+
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
-            if([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon] || [fileForSetTheStatusIcon.etag isEqualToString:k_negative_etag] || fileForSetTheStatusIcon.isNecessaryUpdate) {
+            if(isFolderPendingToBeDownload || [fileForSetTheStatusIcon.etag isEqualToString:k_negative_etag] || fileForSetTheStatusIcon.isNecessaryUpdate) {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
             } else {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
             }
-        } else if ([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon]) {
+        } else if (isFolderPendingToBeDownload) {
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon.png"];
         } else {
-            fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+            fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
         }
 #else
-        fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+        fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
 #endif   
         
     } else {
         
         fileCell.fileImageView.associatedObject = fileForSetTheStatusIcon.localFolder;
     
-        if (fileForSetTheStatusIcon.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:fileForSetTheStatusIcon.fileName]) {
-            
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                
-                UIImage *thumbnail;
-                
-                if ([[ManageThumbnails sharedManager] isStoredThumbnailWithHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID: user.idUser]]){
-                    
-                    thumbnail = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFileHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID: user.idUser]]];
-
-                }else{
-                    
-                    thumbnail = [[UIImage imageWithContentsOfFile: fileForSetTheStatusIcon.localFolder] getThumbnail];
-                    [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnail) withHash:[fileForSetTheStatusIcon getHashIdentifierOfUserID:user.idUser]];
-                    
-                }
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    fileCell.fileImageView.image = thumbnail;
-                    [fileCell.fileImageView.layer setMasksToBounds:YES];
-                    [fileCell setNeedsLayout];
-                });
-               
-            });
-            
-        }else{
-            NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[fileForSetTheStatusIcon.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-            fileCell.fileImageView.image = [UIImage imageNamed:imageFile];
-        }
+        
+        fileCell.fileImageView.image = [self getIconOfFile:fileForSetTheStatusIcon andUser:user];
         
 
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
@@ -251,30 +239,30 @@
             } else if (fileForSetTheStatusIcon.isDownload == downloading) {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon"];
             } else {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@""];
+                fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
             }
         }
     }
     
-    if (allShares.count > 0 && allShares !=nil) {
-        if (sharesByLink.count > 0 && sharesByLink !=nil && isShareAPIActive) {
+    if (numberOfShares > 0 && allShares !=nil) {
+        if (numberOfSharesByLink > 0 && sharesByLink !=nil && isShareAPIActive) {
             fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
-        } else if((sharesByRemote.count > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
+        } else if((numberOfSharesByRemote > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
             fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
         }
         else {
-            fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
+            fileCell.sharedByLinkImage.image= [UIImage imageNamed:@""];
         }
         
     } else {
-        fileCell.sharedByLinkImage.image=[UIImage imageNamed:@""];
+        fileCell.sharedByLinkImage.image= [UIImage imageNamed:@""];
     }
     
     
     if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound){
         fileCell.sharedWithUsImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
     } else {
-        fileCell.sharedWithUsImage.image=[UIImage imageNamed:@""];
+        fileCell.sharedWithUsImage.image= [UIImage imageNamed:@""];
     }
     
     return fileCell;
@@ -288,6 +276,101 @@
     NSString *path = [UtilsUrls getLocalFolderByFilePath:file.filePath andFileName:file.fileName andUserDto:user];
     
     [FileListDBOperations createAllFoldersByArrayOfFilesDto:listOfRemoteFilesAndFolders andLocalFolder:path];
+}
+
+/*
+ *  Method to set the icon or the thumbnail when we create the cell
+ */
++ (UIImage *) getIconOfFile:(FileDto *) file andUser:(UserDto *) user {
+    
+    UIImage *imageForCell;
+    
+    if ([[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
+        
+        imageForCell = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
+        
+    } else {
+        NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        imageForCell = [UIImage imageNamed:imageFile];
+    }
+    
+    return imageForCell;
+}
+
+/*
+ *  Method update the thumbnail of an icon after read it
+ */
++ (NSOperation *) updateThumbnail:(FileDto *) file andUser:(UserDto *) user tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSOperation *thumbnailOperation;
+    
+    if (![[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
+        
+        if ([FileNameUtils isRemoteThumbnailSupportThiFile:file.fileName]) {
+            OCCommunication *sharedCommunication;
+            
+#ifdef CONTAINER_APP
+            sharedCommunication = [AppDelegate sharedOCCommunication];
+#elif SHARE_IN
+            sharedCommunication = Managers.sharedOCCommunication;
+#else
+            sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
+#endif
+            
+            //Set the right credentials
+            if (k_is_sso_active) {
+                [sharedCommunication setCredentialsWithCookie:user.password];
+            } else if (k_is_oauth_active) {
+                [sharedCommunication setCredentialsOauthWithToken:user.password];
+            } else {
+                [sharedCommunication setCredentialsWithUser:user.username andPassword:user.password];
+            }
+            
+            [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
+            
+            NSString *path = [UtilsUrls getFilePathOnDBWithFileName:file.fileName ByFilePathOnFileDto:file.filePath andUser:user];
+            path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
+            thumbnailOperation = [sharedCommunication getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:k_thumbnails_width andHeight:k_thumbnails_height onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
+                
+                UIImage *thumbnailImage = [UIImage imageWithData:thumbnail];
+                
+                if (thumbnailImage && [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) forFile:file]) {
+                    
+                    thumbnailImage = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        CustomCellFileAndDirectory *updateCell = (id)[tableView cellForRowAtIndexPath:indexPath];
+                        
+                        updateCell.fileImageView.image = thumbnailImage;
+                        [updateCell.fileImageView.layer setMasksToBounds:YES];
+                        [updateCell.fileImageView setNeedsLayout];
+                    });
+                }
+                
+            } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
+                DLog(@"Error: %@",error);
+            }];
+            
+
+            
+        } else if (file.isDownload == downloaded && [FileNameUtils isImageSupportedThisFile:file.fileName]){
+            
+            UIImage *thumbnailImage;
+            thumbnailImage = [[UIImage imageWithContentsOfFile: file.localFolder] getThumbnailFromDownloadedImage];
+            [[ManageThumbnails sharedManager] storeThumbnail:UIImagePNGRepresentation(thumbnailImage) forFile:file];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                CustomCellFileAndDirectory *updateCell = (id)[tableView cellForRowAtIndexPath:indexPath];
+                
+                updateCell.fileImageView.image = thumbnailImage;
+                [updateCell.fileImageView.layer setMasksToBounds:YES];
+                [updateCell.fileImageView setNeedsLayout];
+            });
+        }
+     }
+    
+    return thumbnailOperation;
 }
 
 @end

@@ -187,6 +187,16 @@
 + (void) deleteAllFilesAndFoldersThatNotExistOnServerFromBackup;
 
 /*
+ * Method to delete the thumbnails not updated after a refresh
+ */
++(void) deleteAllThumbnailsWithDifferentEtagFromBackup;
+
+/*
+ * Method to delete localy the files that was deleted from other App
+ */
++ (void) deleteAllFilesAndFoldersThatNotExistOnServerFromBackup;
+
+/*
  * Method to update the Favorite files from the backup after refresh
  */
 + (void) updateFavoriteFilesFromBackup;

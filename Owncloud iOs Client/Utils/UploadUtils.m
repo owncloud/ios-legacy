@@ -65,7 +65,7 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     DeleteFile *mDeleteFile = [[DeleteFile alloc] init];
     [mDeleteFile deleteItemFromDeviceByFileDto:file];
     
-    [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:file];
+    [[ManageThumbnails sharedManager] removeStoredThumbnailForFile:file];
     
     //Update the file
     DLog(@"oldPath: %@",path);
