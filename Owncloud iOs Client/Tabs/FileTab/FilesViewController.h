@@ -104,6 +104,8 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 //Class to manage the Network erros
 @property (nonatomic, strong) ManageNetworkErrors *manageNetworkErrors;
 @property (nonatomic, strong) UIView *viewToShow;
+//UIActionSheet for sorting files and folders
+@property(nonatomic, strong) UIActionSheet *sortingActionSheet;
 
 //Select folder views used by move options
 @property (nonatomic, strong) SelectFolderViewController *selectFolderViewController;

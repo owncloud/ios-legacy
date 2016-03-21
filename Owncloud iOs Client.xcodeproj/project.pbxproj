@@ -617,10 +617,20 @@
 		59EDC4301C611F9A0050939C /* btnHelpPage3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC4291C611F9A0050939C /* btnHelpPage3@2x.png */; };
 		59EDC4311C611F9A0050939C /* btnHelpPage4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC42A1C611F9A0050939C /* btnHelpPage4@2x.png */; };
 		59EDC4321C611F9A0050939C /* btnHelpPage5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC42B1C611F9A0050939C /* btnHelpPage5@2x.png */; };
+		59F123DD1C89AEE20094CF70 /* ManageThumbnails.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */; };
+		59F123E11C89BFB50094CF70 /* CustomCellFileAndDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5C0177850B100FB9977 /* CustomCellFileAndDirectory.m */; };
+		59F123E21C89C0E00094CF70 /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF690F1891379C00A2217C /* SWTableViewCell.m */; };
+		59F123E31C89C1180094CF70 /* SWUtilityButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF69131891379C00A2217C /* SWUtilityButtonView.m */; };
+		59F123E41C89C1250094CF70 /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF690B1891379C00A2217C /* SWCellScrollView.m */; };
+		59F123E51C89C1250094CF70 /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF690D1891379C00A2217C /* SWLongPressGestureRecognizer.m */; };
+		59F123E61C89C14D0094CF70 /* SWUtilityButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF69111891379C00A2217C /* SWUtilityButtonTapGestureRecognizer.m */; };
 		59F470321C5F97BA005B6091 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 59F470311C5F97BA005B6091 /* Launch Screen.storyboard */; };
+		905B3D3B1C8867AA00BCC93B /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		905C594F1C50DA490051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
 		905C59501C50DA680051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
 		906177E21C4FABF600BBE648 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
+		90D608FA1C89844E0049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
+		90D608FC1C8984760049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; };
 		EA0599861BB92B19002C2864 /* ShareUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599841BB92B19002C2864 /* ShareUserCell.xib */; };
 		EA0599931BB94F3F002C2864 /* ShareSearchUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0599911BB94F3F002C2864 /* ShareSearchUserViewController.m */; };
@@ -1517,9 +1527,9 @@
 		40F2F6121C5A180700129F92 /* owncloudLogoFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = owncloudLogoFiles.png; sourceTree = "<group>"; };
 		40FF874119F81396008B7C62 /* OCKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCKeychain.h; sourceTree = "<group>"; };
 		40FF874219F81396008B7C62 /* OCKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCKeychain.m; sourceTree = "<group>"; };
-		593D14881C60BE1E005161E2 /* SplashImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SplashImage.png; sourceTree = "<group>"; };
 		590F1FF91C7474AE00AAF1C7 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		590F1FFA1C7474B700AAF1C7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		593D14881C60BE1E005161E2 /* SplashImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SplashImage.png; sourceTree = "<group>"; };
 		593D531A17BF701800191846 /* SSOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSOViewController.h; path = Login/SSO/SSOViewController.h; sourceTree = "<group>"; };
 		593D531B17BF701800191846 /* SSOViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSOViewController.m; path = Login/SSO/SSOViewController.m; sourceTree = "<group>"; };
 		593D531C17BF701800191846 /* SSOViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SSOViewController.xib; path = Login/SSO/SSOViewController.xib; sourceTree = "<group>"; };
@@ -1629,6 +1639,8 @@
 		59EDC42A1C611F9A0050939C /* btnHelpPage4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnHelpPage4@2x.png"; sourceTree = "<group>"; };
 		59EDC42B1C611F9A0050939C /* btnHelpPage5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnHelpPage5@2x.png"; sourceTree = "<group>"; };
 		59F470311C5F97BA005B6091 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		905B3D3A1C8867AA00BCC93B /* SortManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SortManager.m; path = Tabs/FileTab/Sort/SortManager.m; sourceTree = "<group>"; };
+		905B3D3E1C88681000BCC93B /* SortManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SortManager.h; path = Tabs/FileTab/Sort/SortManager.h; sourceTree = "<group>"; };
 		906177E11C4FABF600BBE648 /* ManageTouchID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageTouchID.m; sourceTree = "<group>"; };
 		906177E31C4FAC0B00BBE648 /* ManageTouchID.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManageTouchID.h; sourceTree = "<group>"; };
 		D924DCBC1B973E88008B4BE7 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
@@ -2059,6 +2071,7 @@
 				13651DEF1624210F0063DB0B /* Rename File */,
 				EA10B3661615B15000548F0C /* Select Folder */,
 				13A9C663187FE8B300C6EEE8 /* Share */,
+				905B3D3D1C8867EE00BCC93B /* Sort */,
 			);
 			name = "Files Tab";
 			sourceTree = "<group>";
@@ -2104,8 +2117,6 @@
 				EAF028C317744CC20035084D /* Queries */,
 				137E486115B6A7B700628EB1 /* DTOs */,
 				137E485715B6A3A400628EB1 /* DB.sqlite */,
-				59E20C781AEFAA8E00554D7E /* InitializeDatabase.h */,
-				59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */,
 			);
 			name = Database;
 			sourceTree = "<group>";
@@ -3227,8 +3238,17 @@
 			);
 			name = SplashScreen;
 			path = ImageBranding/SplashScreen;
-            sourceTree = "<group>";
-        };
+			sourceTree = "<group>";
+		};
+		905B3D3D1C8867EE00BCC93B /* Sort */ = {
+			isa = PBXGroup;
+			children = (
+				905B3D3E1C88681000BCC93B /* SortManager.h */,
+				905B3D3A1C8867AA00BCC93B /* SortManager.m */,
+			);
+			name = Sort;
+			sourceTree = "<group>";
+		};
 		906177DF1C4FA9CD00BBE648 /* Touch ID */ = {
 			isa = PBXGroup;
 			children = (
@@ -3701,6 +3721,8 @@
 				EAC5985F1A56A486003192B2 /* ManageProvidingFilesDB.m */,
 				EA0EFA1D1BEA6C6E009971AF /* ManageCapabilitiesDB.h */,
 				EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */,
+				59E20C781AEFAA8E00554D7E /* InitializeDatabase.h */,
+				59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */,
 			);
 			name = Queries;
 			sourceTree = "<group>";
@@ -4544,6 +4566,7 @@
 				148DD5B51778436A00FB9977 /* UIColor+Constants.m in Sources */,
 				59EC94E81BBAA0210085190F /* FolderSyncDto.m in Sources */,
 				148DD5C2177850B100FB9977 /* CustomCellFileAndDirectory.m in Sources */,
+				905B3D3B1C8867AA00BCC93B /* SortManager.m in Sources */,
 				59C71D1D1A9216AE00F66166 /* ReaderThumbQueue.m in Sources */,
 				400A63731B4FD75600890579 /* IFTTTLabelAnimation.m in Sources */,
 				148DD5D9177851E700FB9977 /* UploadCell.m in Sources */,
@@ -4748,6 +4771,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59F123E61C89C14D0094CF70 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
+				59F123E41C89C1250094CF70 /* SWCellScrollView.m in Sources */,
+				59F123E51C89C1250094CF70 /* SWLongPressGestureRecognizer.m in Sources */,
+				59F123E31C89C1180094CF70 /* SWUtilityButtonView.m in Sources */,
+				59F123E21C89C0E00094CF70 /* SWTableViewCell.m in Sources */,
+				59F123E11C89BFB50094CF70 /* CustomCellFileAndDirectory.m in Sources */,
+				90D608FC1C8984760049CCE4 /* SortManager.m in Sources */,
 				905C594F1C50DA490051D223 /* ManageTouchID.m in Sources */,
 				EAF721821AAF3402009F5596 /* CredentialsDto.m in Sources */,
 				EAC6E5F91AB0985200CCF8C4 /* UINavigationController+KeyboardDismiss.m in Sources */,
@@ -4802,6 +4832,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90D608FA1C89844E0049CCE4 /* SortManager.m in Sources */,
 				905C59501C50DA680051D223 /* ManageTouchID.m in Sources */,
 				59DF586D1B04B35B00EEFA84 /* Managers.swift in Sources */,
 				59E20C7E1AEFB45900554D7E /* ManageDB.m in Sources */,
@@ -4868,6 +4899,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59F123DD1C89AEE20094CF70 /* ManageThumbnails.m in Sources */,
 				59BF57CB1B04C8E7000EB221 /* Managers.swift in Sources */,
 				EAE80E241A6CFDE50061BD86 /* UploadsOfflineDto.m in Sources */,
 				EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */,

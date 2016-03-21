@@ -6,6 +6,15 @@
 //
 //
 
+
+/*
+ Copyright (C) 2015, ownCloud, Inc.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
+
 #import "CheckCapabilities.h"
 #import "AppDelegate.h"
 #import "ManageUsersDB.h"
@@ -56,6 +65,8 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
 
             if (!isSamlCredentialsError) {
                 
+                BOOL capabilitiesShareAPIChanged = (cap.isFilesSharingAPIEnabled == capabilities.isFilesSharingAPIEnabled)? NO:YES;
+                
                 if (cap == nil) {
                     cap = [ManageCapabilitiesDB insertCapabilities:capabilities ofUserId: app.activeUser.idUser];
                 }else{
@@ -66,8 +77,10 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
                 app.activeUser.capabilitiesDto = [CapabilitiesDto new];
                 app.activeUser.capabilitiesDto = cap;
                 
-                //update file list view
-                [self reloadFileList];
+                //update file list view if needed
+                if(capabilitiesShareAPIChanged){
+                    [self reloadFileList];
+                }
 
             }
 

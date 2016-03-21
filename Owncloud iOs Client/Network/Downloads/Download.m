@@ -458,8 +458,6 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     _fileDto.isNecessaryUpdate = isNecessaryUpdate;
     
-    [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:_fileDto];
-    
     //Set the store etag
     [ManageFilesDB updateEtagOfFileDtoByid:_fileDto.idFile andNewEtag:_etagToUpdate];
     
