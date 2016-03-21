@@ -21,10 +21,6 @@
 @implementation FileNameUtils
 
 
-/*
- * Method to obtain the extension of the file in upper case
- * @fileName -> file name
- */
 + (NSString *)getExtension:(NSString*)fileName{
     
     NSMutableArray *fileNameArray =[[NSMutableArray alloc] initWithArray: [fileName componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"."]]];
@@ -40,11 +36,13 @@
             return extension;
         }
     }
+    
     return extension;
 }
 
 
 + (NSInteger) checkTheTypeOfFile: (NSString*)fileName {
+    
     NSInteger typeOfFile;
     if ([self isImageSupportedThisFile:fileName]) {
         typeOfFile = imageFileType;
@@ -59,99 +57,64 @@
             typeOfFile = otherFileType;
         }
     }
+    
     return typeOfFile;
 }
 
 
-/*
- * Method to know if the file is an image support for the system
- * Only JPG, PNG, GIF, TIFF, TIF, BMP, and JPEG images files are supported for the moment.
- * @fileName -> file name
- */
 + (BOOL)isImageSupportedThisFile:(NSString*)fileName{
-    
     
     NSString *ext=[self getExtension:fileName];
     
     if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"GIF"] || [ext isEqualToString:@"TIFF"] || [ext isEqualToString:@"TIF"] || [ext isEqualToString:@"BMP"] || [ext isEqualToString:@"JPEG"])
     {
-        
         return YES;
     }
     
     return NO;
-    
 }
 
-/*
- * Method to know if the file is supported by the API of the thumbnail
- * @fileName -> file name, ex: image.JPG
- */
+
 + (BOOL)isRemoteThumbnailSupportThiFile:(NSString*)fileName{
-    
     
     NSString *ext=[self getExtension:fileName];
     
     if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"JPEG"] || [ext isEqualToString:@"GIF"] || [ext isEqualToString:@"BMP"] || [ext isEqualToString:@"MP3"]  || [ext isEqualToString:@"MOV"]  || [ext isEqualToString:@"MP4"]  || [ext isEqualToString:@"M4V"] || [ext isEqualToString:@"3GP"])
     {
-        
         return YES;
     }
     
     return NO;
-    
 }
 
 
-/*
- * Method to know if the file is an video file support for the system
- * Only MOV, MP4, M4V and 3GP video files are supported natively for iOS.
- * @fileName -> file name
- */
 + (BOOL)isVideoFileSupportedThisFile:(NSString*)fileName{
-    
     
     NSString *ext=[self getExtension:fileName];
     
     if([ext isEqualToString:@"MOV"] || [ext isEqualToString:@"MP4"] || [ext isEqualToString:@"M4V"] || [ext isEqualToString:@"3GP"])
     {
-        
         return YES;
     }
     
     return NO;
-    
 }
 
-/*
- * Method to know if the file is an video file support for the system
- * Only MP3, AIFF, AAC, WAV and M4A audio files are supported natively for iOS.
- * @fileName -> file name
- */
+
 + (BOOL)isAudioSupportedThisFile:(NSString*)fileName{
-    
     
     NSString *ext=[self getExtension:fileName];
     
     if([ext isEqualToString:@"MP3"] || [ext isEqualToString:@"AIFF"] || [ext isEqualToString:@"AAC"] || [ext isEqualToString:@"WAV"]|| [ext isEqualToString:@"M4A"])
     {
-        
         return YES;
     }
     
     return NO;
-    
 }
 
 
-/*
- * Method to know if the file is an office file support for the system
- * Only NUMBERS.ZIP, NUMBERS, PAGES.ZIP, PAGES, KEY.ZIP, KEY, TXT, PDF, DOC, XLS, PPT, RTF, DOCX, PPTX, XLSX, XML, HTM and HTML type of files
- * are supported for the moment.
- * @fileName -> file name
- */
 + (BOOL)isOfficeSupportedThisFile:(NSString*)fileName{
-    
     
     NSString *ext=[self getExtension:fileName];
     
@@ -159,21 +122,17 @@
     {
         return YES;
     }
+    
     return NO;
 }
 
-/*
- * Method to know if the image file can be scaled.
- * Only JPG, PNG, BMP and JPEG images files can be scaled for the moment.
- * @fileName -> file name
- */
+
 + (BOOL)isScaledThisImageFile:(NSString*)fileName{
     
     NSString *ext=[self getExtension:fileName];
     
     if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"BMP"] || [ext isEqualToString:@"JPEG"])
     {
-        
         return YES;
     }
     
@@ -181,10 +140,7 @@
     
 }
 
-/*
- * Method that return the name of the preview Image file in accordance with file name.
- * @fileName -> file name
- */
+
 + (NSString*)getTheNameOfTheImagePreviewOfFileName:(NSString*)fileName{
     
     NSString *ext=@"";
@@ -235,17 +191,11 @@
     {
         previewFileName=@"file_icon";
     }
+    
     return previewFileName;
 }
 
 
-/*
- * Method that check the file name or folder name to find forbidden characters
- * This is the forbidden characters in server: "\", "/","<",">",":",""","|","?","*"
- * @fileName -> file name
- *
- * @isFCSupported -> From ownCloud 8.1 the forbidden characters are controller by the server except the '/'
- */
 + (BOOL) isForbiddenCharactersInFileName:(NSString*)fileName withForbiddenCharactersSupported:(BOOL)isFCSupported{
     BOOL thereAreForbiddenCharacters = NO;
     
@@ -286,18 +236,11 @@
                 thereAreForbiddenCharacters = YES;
             }
         }
-        
     }
     
     return thereAreForbiddenCharacters;
 }
 
-
-/*
- * This method check and url and look for a saml fragment
- * and return the bollean result
- @urlString -> url from redirect server
- */
 
 + (BOOL)isURLWithSamlFragment:(NSString*)urlString{
     
@@ -316,9 +259,6 @@
     return isSaml;
 }
 
-///-----------------------------------
-/// @name Get the Name of the Brand Image
-///-----------------------------------
 
 + (NSString *)getTheNameOfTheBrandImage{
     
@@ -341,23 +281,7 @@
     return imageName;
 }
 
-///-----------------------------------
-/// @name Get the Name of shared path
-///-----------------------------------
 
-/**
- * This method get the name of Share Path
- * Share path is like this: /documents/example.doc
- *
- * This method must be return "example.doc"
- *
- * @param sharePath -> NSString
- *
- * @param isDirectory -> BOOL
- *
- * @return NSString
- *
- */
 + (NSString*)getTheNameOfSharedPath:(NSString*)sharedPath isDirectory:(BOOL)isDirectory{
     
     NSString *output;
@@ -382,20 +306,6 @@
 
 }
 
-///-----------------------------------
-/// @name Get the Parent Path of the Full Shared Path
-///-----------------------------------
-
-/**
- * This method make the parent path using the full path
- *
- * @param sharedPath -> NSString (/parentPath/path)
- *
- * @param isDirectory -> BOOL
- *
- * @return output -> NSString
- *
- */
 
 + (NSString*)getTheParentPathOfFullSharedPath:(NSString*)sharedPath isDirectory:(BOOL)isDirectory{
    
@@ -438,15 +348,6 @@
 }
 
 
-///-----------------------------------
-/// @name markFileNameOnAlertView
-///-----------------------------------
-
-/**
- * This method marks the textField on an alert View
- *
- * @param textFieldToMark -> UITextField
- */
 + (void)markFileNameOnAlertView: (UITextField *) textFieldToMark {
     
     //1. Calculate lenght of name without extension
@@ -491,9 +392,7 @@
 
 #pragma mark - Filename Utils
 
-/*
- Method to generate the name of the file depending if it is a video or an image
- */
+
 + (NSString *)getComposeNameFromAsset:(ALAsset *)asset{
     
     NSString *output = @"";
@@ -529,9 +428,7 @@
     
 }
 
-/*
- Method to generate the name of the file depending if it is a video or an image
- */
+
 + (NSString *)getComposeNameFromPath:(NSString *) path {
     
     NSString *output = @"";
