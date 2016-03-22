@@ -161,11 +161,9 @@
             [self deleteDestinyFolderOnDatabaseAndFileSystem];
             
             if(self.selectedFileDto.isDirectory) {
-                [[ManageThumbnails sharedManager] deleteThumbnailsInFolder:self.selectedFileDto.idFile];
                 //Move the folder on the DB
                 [self performSelector:@selector(moveTheFolderOnTheDB) withObject:nil afterDelay:0.5];
             } else {
-                [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:self.selectedFileDto];
                 [self moveTheFileOnTheDB];
             }
         }
@@ -473,9 +471,7 @@
     
     DLog(@"origin: %@",origin);
     DLog(@"destiny: %@", destiny);
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
+        
     NSFileManager *filemgr;
     
     filemgr = [NSFileManager defaultManager];
@@ -487,12 +483,6 @@
     // Attempt the move
     if ([filemgr moveItemAtPath:origin toPath:destiny error:&error] != YES) {
         DLog(@"Unable to move file: %@", [error localizedDescription]);
-    } else {
-        //update thumbnail name
-        
-        NSString *newFilePath = [UtilsUrls getFilePathOnDBByFullPath:self.destinationFolder andUser:app.activeUser];
-        FileDto *newFileDto = [ManageFilesDB getFileDtoByFileName:self.destinyFilename andFilePath:newFilePath andUser:app.activeUser];
-        [[ManageThumbnails sharedManager] renameThumbnailOfFile:self.selectedFileDto withNewFile:newFileDto];
     }
 
 }

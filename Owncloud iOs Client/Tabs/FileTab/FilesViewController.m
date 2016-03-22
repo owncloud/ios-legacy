@@ -549,6 +549,14 @@
     self.didLayoutSubviews = true;
     
     _isEtagRequestNecessary = YES;
+    
+    //Cancel all the get thumbnails in visible cells
+    UITableView *tableView = self.tableView; // Or however you get your table view
+    NSArray *paths = [tableView indexPathsForVisibleRows];
+    
+    for (NSIndexPath *path in paths) {
+        [self cancelGetThumbnailByCell:[tableView cellForRowAtIndexPath:path]];
+    }
 }
 
 - (void)viewDidUnload
@@ -1421,6 +1429,9 @@
         
         fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.fileIdToShowFiles andIsSonOfFavoriteFolder:self.isCurrentFolderSonOfFavoriteFolder ofUser:APP_DELEGATE.activeUser];
         
+        //Thumbnail
+        fileCell.thumbnailOperation = [InfoFileUtils updateThumbnail:file andUser:APP_DELEGATE.activeUser tableView:tableView cellForRowAtIndexPath:indexPath];
+        
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
         [fileCell setCellHeight:fileCell.frame.size.height];
@@ -1526,6 +1537,26 @@
      }*/
     
     return [[UILocalizedIndexedCollation currentCollation] sectionForSectionIndexTitleAtIndex:index];
+}
+
+- (void) tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self cancelGetThumbnailByCell:cell];
+}
+
+- (void) cancelGetThumbnailByCell:(UITableViewCell *) cell {
+    @try {
+        CustomCellFileAndDirectory *customCell = (CustomCellFileAndDirectory *) cell;
+        
+        if ([customCell isKindOfClass:[CustomCellFileAndDirectory class]] && customCell.thumbnailOperation) {
+            DLog(@"Cancel thumbnailOperation");
+            [customCell.thumbnailOperation cancel];
+        }
+    }
+    @catch (NSException *exception) {
+        DLog(@"Exception: %@", exception);
+    }
+    @finally {
+    }
 }
 
 ///-----------------------------------

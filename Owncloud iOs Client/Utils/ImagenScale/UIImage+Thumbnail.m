@@ -22,7 +22,7 @@
 
 @implementation UIImage (Thumbnail)
 
-- (UIImage *) getThumbnail{
+- (UIImage *) getThumbnailFromDownloadedImage{
     
     return [self imageScaledToFillSize:CGSizeMake(kThumbnailWidth, kThumbnailHeight)];
 }

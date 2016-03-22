@@ -1012,7 +1012,7 @@
     
     FileDto *file = [UploadUtils getFileDtoByUploadOffline:self.selectedUploadToResolveTheConflict];
     
-    [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:file];
+    [[ManageThumbnails sharedManager] removeStoredThumbnailForFile:file];
     
     //Check if this file is being updated and cancel it
     Download *downloadFile;

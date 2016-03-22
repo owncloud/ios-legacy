@@ -48,6 +48,7 @@ typedef enum {
 @property (nonatomic, copy) NSString *permissions;
 @property NSInteger taskIdentifier;
 @property (nonatomic) NSInteger providingFileId;
+@property (nonatomic, copy) NSString *ocId;
 
 ///-----------------------------------
 /// @name Init with OCFileDto
@@ -64,22 +65,6 @@ typedef enum {
  *
  */
 - (id)initWithOCFileDto:(OCFileDto*)ocFileDto;
-
-///-----------------------------------
-/// @name Get Hash Identifier Of User ID
-///-----------------------------------
-
-/**
- * This method generate a hash identifier 
- * using userId + filePath + fileName
- *
- * @param userId -> NSInteger
- *
- * @return NSUInteger
- *
- */
-
-- (NSUInteger )getHashIdentifierOfUserID:(NSInteger)userId;
 
 
 @end
