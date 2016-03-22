@@ -151,6 +151,7 @@
             break;
             
         default:
+            DLog(@"Unknown sorted type");
             break;
     }
     

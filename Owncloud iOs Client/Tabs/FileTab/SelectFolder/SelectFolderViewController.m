@@ -93,9 +93,6 @@
 
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-    _activeUser = [ManageUsersDB getActiveUser];
-}
 
 -(void)viewDidLayoutSubviews
 {
@@ -113,6 +110,7 @@
 }
 
 - (void) fillTheArraysFromDatabase {
+    _activeUser = [ManageUsersDB getActiveUser];
     self.currentDirectoryArray = [ManageFilesDB getFoldersByFileIdForActiveUser: (NSInteger)self.currentFolder.idFile];
     self.sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:self.currentDirectoryArray  forUser:_activeUser];
 }
