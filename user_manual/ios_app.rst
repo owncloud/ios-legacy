@@ -33,8 +33,10 @@ Managing Your Files
 
 All your files on your ownCloud server are listed on the Files page, but are not 
 downloaded to your iPhone or iPad until you tap on them. Downloaded files are 
-marked with a little green arrow. Click the plus button at the top right to 
-upload files to your ownCloud server, or to create a new folder. 
+marked with a little green arrow. Image files display thumbnails after they have 
+been downloaded; image files that have not been downloaded display generic 
+icons. Click the plus button at the top right to upload files to your ownCloud 
+server, or to create a new folder. 
 
 The Files button at the bottom takes you back to your main Files page. The 
 Uploads button shows your history of uploads to your ownCloud server. The Shared 
