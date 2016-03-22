@@ -68,8 +68,6 @@
         DLog(@"Failed setting credentials");
     }
     
-   
-    
 }
 
 /*
@@ -666,7 +664,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_sharee_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, has_capabilities_support=?, instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, date_instant_upload=?, url_redirected=?, sorting_type=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport], [NSNumber numberWithInteger:user.hasShareeApiSupport], [NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:user.hasCapabilitiesSupport], [NSNumber numberWithBool:user.instantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.dateInstantUpload], user.urlRedirected, user.sortingType, [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_sharee_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, has_capabilities_support=?, instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, date_instant_upload=?, url_redirected=?, sorting_type=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport], [NSNumber numberWithInteger:user.hasShareeApiSupport], [NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:user.hasCapabilitiesSupport], [NSNumber numberWithBool:user.instantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.dateInstantUpload], user.urlRedirected, [NSNumber numberWithInteger:user.sortingType], [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error updating a user");
@@ -722,38 +720,6 @@
             DLog(@"Error updating sorting type");
         }
     }];
-}
-
-//-----------------------------------
-/// @name Get sorting choice by user
-///-----------------------------------
-
-/**
- * Method that returns the sorting choice for a user
- *
- * @param UserDto -> user
- *
- * @return enumSortingType
- */
-+ (enumSortingType) getSortingWayByUserDto:(UserDto *) user{
-    
-    DLog(@"getSortingTypeByUserDto");
-    
-    __block NSString *output;
-    
-    FMDatabaseQueue *queue = Managers.sharedDatabase;
-    
-    [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT sorting_type FROM users  WHERE id = ?", [NSNumber numberWithInteger:user.idUser]];
-        
-        while ([rs next]) {
-            
-            output = [rs stringForColumn:@"sorting_type"];
-        }
-        
-    }];
-    
-    return (enumSortingType)[output integerValue];
 }
 
 #pragma mark - urlRedirected

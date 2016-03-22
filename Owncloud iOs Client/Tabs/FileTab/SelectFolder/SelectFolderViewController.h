@@ -70,6 +70,7 @@
 @property(nonatomic, strong) UIAlertView *folderView;
 @property(nonatomic, strong) UIAlertView *alert;
 @property(nonatomic, strong) SelectFolderViewController *selectFolderViewController;
+@property(nonatomic, strong) UserDto *activeUser;
 
 
 //Actions

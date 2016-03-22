@@ -160,7 +160,7 @@
     NSPredicate *predicateRemoteShare = [NSPredicate predicateWithFormat:@"shareType == %i", shareTypeRemote];
     NSArray *sharesByRemote = [allShares filteredArrayUsingPredicate:predicateRemoteShare];
     
-    BOOL isShareAPIActive = [ManageUsersDB getActiveUser].hasCapabilitiesSupport && [ManageUsersDB getActiveUser].capabilitiesDto && [ManageUsersDB getActiveUser].capabilitiesDto.isFilesSharingAPIEnabled;
+    BOOL isShareAPIActive = user.hasCapabilitiesSupport && user.capabilitiesDto && user.capabilitiesDto.isFilesSharingAPIEnabled;
     
     
     if (fileForSetTheStatusIcon.isDirectory) {

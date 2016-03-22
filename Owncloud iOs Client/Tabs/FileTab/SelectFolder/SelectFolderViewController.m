@@ -65,6 +65,7 @@
 @synthesize folderView=_folderView;
 @synthesize toolBarLabelTxt = _toolBarLabelTxt;
 @synthesize alert = _alert;
+@synthesize activeUser = _activeUser;
 
 #pragma mark Load View Life
 
@@ -92,6 +93,10 @@
 
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    _activeUser = [ManageUsersDB getActiveUser];
+}
+
 -(void)viewDidLayoutSubviews
 {
     
@@ -109,7 +114,7 @@
 
 - (void) fillTheArraysFromDatabase {
     self.currentDirectoryArray = [ManageFilesDB getFoldersByFileIdForActiveUser: (NSInteger)self.currentFolder.idFile];
-    self.sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:self.currentDirectoryArray];
+    self.sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:self.currentDirectoryArray  forUser:_activeUser];
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -535,25 +540,25 @@
 // Asks the data source to return the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [SortManager numberOfSectionsInTableViewWithFolderList:_currentDirectoryArray];
+    return [SortManager numberOfSectionsInTableViewForUser:_activeUser withFolderList:_currentDirectoryArray];
 }
 
 // Returns the table view managed by the controller object.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [SortManager numberOfRowsInSection:section withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray needsExtraEmptyRow:NO];
+    return [SortManager numberOfRowsInSection:section forUser:_activeUser withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray needsExtraEmptyRow:NO];
 }
 
 // Returns the table view managed by the controller object.
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [SortManager titleForHeaderInTableViewSection:section withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray];
+    return [SortManager titleForHeaderInTableViewSection:section forUser:_activeUser withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray];
 }
 
 // Asks the data source to return the titles for the sections for a table view.
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
-    return [SortManager sectionIndexTitlesForTableView:tableView WithCurrentDirectoryArray:_currentDirectoryArray];
+    return [SortManager sectionIndexTitlesForTableView:tableView forUser:_activeUser withCurrentDirectoryArray:_currentDirectoryArray];
 }
 
 // Returns the table view managed by the controller object.

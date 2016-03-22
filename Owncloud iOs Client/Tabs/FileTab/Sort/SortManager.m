@@ -20,23 +20,17 @@
 
 
 @implementation SortManager
-@synthesize userToSort;
 
-
-
-- (void)setUser: (UserDto*) user {
-    self.userToSort = user;
-}
 
 #pragma mark - TableView methods
-+ (NSInteger)numberOfSectionsInTableViewWithFolderList: (NSArray *)currentDirectoryArray{
++ (NSInteger)numberOfSectionsInTableViewForUser:(UserDto*)user withFolderList: (NSArray *)currentDirectoryArray{
     
     //If the _currentDirectoryArray doesn't have object it will have one section
     NSInteger sections = 1;
     
     if([currentDirectoryArray count] > 0){
         
-        if ([ManageUsersDB getSortingWayByUserDto:[ManageUsersDB getActiveUser]] == sortByName) {
+        if (user.sortingType == sortByName) {
             sections = [[[UILocalizedIndexedCollation currentCollation] sectionTitles] count];
         }
         else{
@@ -47,17 +41,17 @@
 }
 
 // Returns the table view managed by the controller object.
-+ (NSInteger)numberOfRowsInSection: (NSInteger) section withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray needsExtraEmptyRow:(BOOL) emptyMessageRow
++ (NSInteger)numberOfRowsInSection: (NSInteger) section forUser:(UserDto*)user withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray needsExtraEmptyRow:(BOOL) emptyMessageRow
 {
     NSInteger rows = 0;
     
-    if([currentDirectoryArray count] > 0 && [self getUserSortingType] == sortByName){
+    if([currentDirectoryArray count] > 0 && user.sortingType == sortByName){
         rows = [[sortedArray objectAtIndex:section] count];
     }
     
     else{
         //If the _currentDirectoryArray is empty it will have one extra row to show a message in FilesViewController and SimpleFileListTableViewController. If no alphabetical order is required will also be used one row for each section for usual contents
-        if (([currentDirectoryArray count] == 0 && emptyMessageRow) || ([currentDirectoryArray count] > 0 && [self getUserSortingType] == sortByModificationDate)) {
+        if (([currentDirectoryArray count] == 0 && emptyMessageRow) || ([currentDirectoryArray count] > 0 && user.sortingType == sortByModificationDate)) {
             rows = 1;
         }
     }
@@ -65,10 +59,10 @@
 }
 
 // Returns the table view managed by the controller object.
-+ (NSString *)titleForHeaderInTableViewSection:(NSInteger)section withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray
++ (NSString *)titleForHeaderInTableViewSection:(NSInteger)section forUser:(UserDto*)user withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray
 
 {
-    if([self getUserSortingType] == sortByName){
+    if(user.sortingType == sortByName){
         //Only show the section title if there are rows in it
         BOOL showSection = [[sortedArray objectAtIndex:section] count] != 0;
         NSArray *titles = [[UILocalizedIndexedCollation currentCollation] sectionTitles];
@@ -81,9 +75,9 @@
 }
 
 // Returns the titles for the sections for a table view.
-+ (NSArray *)sectionIndexTitlesForTableView: (UITableView*) tableView WithCurrentDirectoryArray:(NSArray*)currentDirectoryArray{
++ (NSArray *)sectionIndexTitlesForTableView: (UITableView*) tableView forUser:(UserDto*)user withCurrentDirectoryArray:(NSArray*)currentDirectoryArray{
     
-    if(k_minimun_files_to_show_separators < [currentDirectoryArray count] && [self getUserSortingType] == sortByName) {
+    if(k_minimun_files_to_show_separators < [currentDirectoryArray count] && user.sortingType == sortByName) {
         tableView.sectionIndexColor = [UIColor colorOfSectionIndexColorFileList];
         return [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
     } else {
@@ -144,11 +138,11 @@
 /*
  * This method sorts an array to be shown in the files/folders list
  */
-+ (NSMutableArray*) getSortedArrayFromCurrentDirectoryArray:(NSArray*) currentDirectoryArray {
++ (NSMutableArray*) getSortedArrayFromCurrentDirectoryArray:(NSArray*) currentDirectoryArray forUser:(UserDto*)user {
     
     NSMutableArray * sortedArray = [[NSMutableArray alloc] init];
     
-    switch ([self getUserSortingType]) {
+    switch (user.sortingType) {
         case sortByName:
             sortedArray = [self partitionObjects: currentDirectoryArray collationStringSelector:@selector(fileName)];
             break;
@@ -163,9 +157,5 @@
     return sortedArray;
 }
 
-# pragma -mark Data Base
-+ (enumSortingType) getSortingTypeOfUser:(UserDto*) user{
-    return user.sortingType;
-}
 
 @end
