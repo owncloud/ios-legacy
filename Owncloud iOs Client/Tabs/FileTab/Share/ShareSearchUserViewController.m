@@ -207,16 +207,18 @@
             name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.name, NSLocalizedString(@"share_user_group_indicator", nil)];
         } else {
             
-            if (userOrGroup.shareeType == shareTypeRemote && userOrGroup.server != nil ) {
+            if (userOrGroup.shareeType == shareTypeRemote && userOrGroup.server != nil) {
                 
-                name = [NSString stringWithFormat:@"%@ (%@ %@)", userOrGroup.displayName, NSLocalizedString(@"at_federate_server", nil), userOrGroup.server];
-                
-            }else if(userOrGroup.isDisplayNameDuplicated){
-                
-                name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
+                name = (userOrGroup.isDisplayNameDuplicated)?
+                [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name]:
+                [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.server];
             }
+            
             else{
-                name = userOrGroup.displayName;
+                
+                name = (userOrGroup.isDisplayNameDuplicated)?
+                [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name]:
+                userOrGroup.displayName;
             }
         }
         
@@ -437,21 +439,22 @@
 }
 
 #pragma mark - Federating user
-- (OCShareUser *) getFederatedOCSharedUserByName:(NSString *) name {
-    
-    OCShareUser *federatedUser = [OCShareUser new];
-    federatedUser.shareeType = shareTypeRemote;
-    federatedUser.isDisplayNameDuplicated = NO;
-    federatedUser.name = name;
-    federatedUser.displayName = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federated_indicator", nil)];
-    
-    return federatedUser;
-}
+//- (OCShareUser *) getFederatedOCSharedUserByName:(NSString *) name {
+//    
+//    OCShareUser *federatedUser = [OCShareUser new];
+//    federatedUser.shareeType = shareTypeRemote;
+//    federatedUser.isDisplayNameDuplicated = NO;
+//    federatedUser.name = name;
+//    federatedUser.displayName = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federated_indicator", nil)];
+//    
+//    return federatedUser;
+//}
 
 - (void) manageTheFederatedUsers {
     for (OCShareUser *federatedUser in self.filteredItems) {
         if (federatedUser.shareeType == shareTypeRemote && federatedUser.server == nil){
             federatedUser.displayName = [NSString stringWithFormat:@"%@ (%@)",federatedUser.name, NSLocalizedString(@"share_user_federated_indicator", nil)];
+            federatedUser.isDisplayNameDuplicated = NO;
         }
     }
 }

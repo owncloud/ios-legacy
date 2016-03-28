@@ -15,8 +15,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface UploadsOfflineDto : NSObject
-
 typedef NS_ENUM (NSInteger, enumUpload){
     waitingAddToUploadList=0,
     waitingForUpload=1,
@@ -37,6 +35,8 @@ typedef NS_ENUM (NSInteger, enumKindOfError){
     errorUploadInBackground = 5,
     errorInvalidPath = 6
 };
+
+@interface UploadsOfflineDto : NSObject
 
 @property NSInteger idUploadsOffline;
 @property (nonatomic, copy) NSString *originPath;
