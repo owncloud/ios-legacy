@@ -34,16 +34,18 @@
     //Server connection error
     switch (errorConnection.code) {
         case kCFURLErrorUserCancelledAuthentication: { //-1012
-            
             [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
             [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
-            
             break;
         }
             
         case OCServerErrorForbiddenCharacters:
             //Forbidden characters from the server side
             [_delegate showError:NSLocalizedString(@"forbidden_characters_from_server", nil)];
+            break;
+            
+        case NSURLErrorServerCertificateUntrusted: //-1202
+            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
             break;
             
         default:
