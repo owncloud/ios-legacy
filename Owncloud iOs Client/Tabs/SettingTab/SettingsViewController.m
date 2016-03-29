@@ -338,17 +338,28 @@
             break;
             
         case 1:
-            n = 1;
+            
+            if (k_multiaccount_available) {
+                n = 1;
+            }
+            else{
+                n = (self.switchPasscode.on && [[ManageTouchID sharedSingleton] isTouchIDAvailable])? 2:1;
+            }
             break;
             
         case 2:
-            n = (self.switchPasscode.on && [[ManageTouchID sharedSingleton] isTouchIDAvailable])? 2:1;
+            if (k_multiaccount_available) {                
+                n = (self.switchPasscode.on && [[ManageTouchID sharedSingleton] isTouchIDAvailable])? 2:1;
+            }
+            else{
+                n =1;
+            }
             break;
             
         case 3:
             
             if (k_multiaccount_available) {
-               n = 1;
+                n = 1;
             }else{
                 if (k_show_help_option_on_settings) {
                     n = n + 1;
@@ -363,13 +374,13 @@
                     n = n + 1;
                 }
             }
-
+            
             break;
             
         case 4:
             n = 0;
             if (k_multiaccount_available) {
-               
+                
                 if (k_show_help_option_on_settings) {
                     n = n + 1;
                 }
