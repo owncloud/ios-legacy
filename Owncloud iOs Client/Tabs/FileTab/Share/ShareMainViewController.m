@@ -82,6 +82,7 @@
 @property (nonatomic) BOOL isPasswordProtectEnabled;
 @property (nonatomic) BOOL isExpirationDateEnabled;
 @property (nonatomic) BOOL isAllowEditingEnabled;
+@property (nonatomic) BOOL isAllowEditingShown;
 @property (nonatomic, strong) NSString* sharedToken;
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
@@ -107,6 +108,7 @@
         self.isShareLinkEnabled = false;
         self.isPasswordProtectEnabled = false;
         self.isExpirationDateEnabled = false;
+        self.isAllowEditingEnabled = false;
         self.sharedUsersOrGroups = [NSMutableArray new];
         self.sharesOfFile = [NSMutableArray new];
 
@@ -125,6 +127,7 @@
     [self setStyleView];
     
     [self checkSharedStatusOFile];
+    self.isAllowEditingShown = [self hasAllowEditingToBeShown];
 }
 
 - (void) viewDidAppear:(BOOL)animated{
@@ -132,10 +135,12 @@
     
 }
 
-- (BOOL) showAllowEditing {
+- (BOOL) hasAllowEditingToBeShown {
     
-    //TODO: check caps too
-    return self.sharedItem.isDirectory;
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && self.sharedItem.isDirectory) {
+        return APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAllowPublicUploadsEnabled;
+    }
+    else return false;
 }
 
 #pragma mark - Accessory alert views
@@ -319,11 +324,12 @@
 - (void) reloadView {
     
     if (self.isShareLinkEnabled == true){
-        self.optionsShownWithShareLink = [self showAllowEditing]? optionsShownWithShareLinkEnableAndAllowEditing:optionsShownWithShareLinkEnableWithoutAllowEditing;
+        self.optionsShownWithShareLink = self.isAllowEditingShown? optionsShownWithShareLinkEnableAndAllowEditing:optionsShownWithShareLinkEnableWithoutAllowEditing;
     }else{
         self.optionsShownWithShareLink = optionsShownWithShareLinkDisable;
         self.isPasswordProtectEnabled = false;
         self.isExpirationDateEnabled = false;
+        self.optionsShownWithShareLink = false;
     }
     
     [self.shareTableView reloadData];
@@ -488,13 +494,13 @@
             CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
             
             // TODO: update capabilities
-//            if (cap.isFilesSharingPasswordEnforcedEnabled) {
+            if (cap.isFilesSharingShareLinkEnabled) {
 //                //not remove, is enforced password
 //                sender.on = true;
 //                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_cannot_remove_password", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
 //                [alertView show];
 //                return;
-//            }
+            }
         }
         
 //        //Remove password Protected
@@ -706,7 +712,7 @@
                 }
               
             } else if (!k_is_share_with_users_available && k_is_share_by_link_available) {
-                if ((indexPath.row == 2 && ![self showAllowEditing]) || (indexPath.row == 3 && [self showAllowEditing])) {
+                if ((indexPath.row == 2 && !self.isAllowEditingShown) || (indexPath.row == 3 && self.isAllowEditingShown)) {
                     
                     cell = [self getCellShareLinkButtonByTableView:tableView];
                     
@@ -720,7 +726,7 @@
             break;
         case 2:
 
-            if ((indexPath.row == 2 && ![self showAllowEditing]) || (indexPath.row == 3 && [self showAllowEditing])) {
+            if ((indexPath.row == 2 && !self.isAllowEditingShown) || (indexPath.row == 3 && self.isAllowEditingShown)) {
                 
                 cell = [self getCellShareLinkButtonByTableView:tableView];
 
@@ -954,7 +960,7 @@
                 }
                 
             } else {
-                if ((indexPath.row == 2 && ![self showAllowEditing]) || (indexPath.row == 3 && [self showAllowEditing])) {
+                if ((indexPath.row == 2 && !self.isAllowEditingShown) || (indexPath.row == 3 && self.isAllowEditingShown)) {
                     height = heightOfShareLinkButtonRow;
                 }else{
                     height = heightOfShareLinkOptionRow;
@@ -962,7 +968,7 @@
             }
             break;
         case 2:
-            if ((indexPath.row == 2 && ![self showAllowEditing]) || (indexPath.row == 3 && [self showAllowEditing])) {
+            if ((indexPath.row == 2 && !self.isAllowEditingShown) || (indexPath.row == 3 && self.isAllowEditingShown)) {
                 height = heightOfShareLinkButtonRow;
             }else{
                 height = heightOfShareLinkOptionRow;
