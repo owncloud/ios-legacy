@@ -60,7 +60,8 @@
 #define shareTableViewSectionsNumber  3
 
 //Nº of Rows
-#define optionsShownWithShareLinkEnable 4
+#define optionsShownWithShareLinkEnableAndAllowEditing 4
+#define optionsShownWithShareLinkEnableWithoutAllowEditing 3
 #define optionsShownWithShareLinkDisable 0
 
 //Date server format
@@ -80,6 +81,7 @@
 @property (nonatomic) BOOL isShareLinkEnabled;
 @property (nonatomic) BOOL isPasswordProtectEnabled;
 @property (nonatomic) BOOL isExpirationDateEnabled;
+@property (nonatomic) BOOL isAllowEditingEnabled;
 @property (nonatomic, strong) NSString* sharedToken;
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
@@ -130,6 +132,11 @@
     
 }
 
+- (BOOL) showAllowEditing {
+    
+    //TODO: check caps too
+    return self.sharedItem.isDirectory;
+}
 
 #pragma mark - Accessory alert views
 
@@ -312,7 +319,7 @@
 - (void) reloadView {
     
     if (self.isShareLinkEnabled == true){
-        self.optionsShownWithShareLink = optionsShownWithShareLinkEnable;
+        self.optionsShownWithShareLink = [self showAllowEditing]? optionsShownWithShareLinkEnableAndAllowEditing:optionsShownWithShareLinkEnableWithoutAllowEditing;
     }else{
         self.optionsShownWithShareLink = optionsShownWithShareLinkDisable;
         self.isPasswordProtectEnabled = false;
@@ -471,6 +478,32 @@
         [self launchDatePicker];
     }
     
+}
+
+- (void) allowEditingSwithValueChanged:(UISwitch*) sender{
+    
+    if (self.isAllowEditingEnabled){
+        
+        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+            
+            // TODO: update capabilities
+//            if (cap.isFilesSharingPasswordEnforcedEnabled) {
+//                //not remove, is enforced password
+//                sender.on = true;
+//                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"shared_link_cannot_remove_password", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+//                [alertView show];
+//                return;
+//            }
+        }
+        
+//        //Remove password Protected
+//        [self updateSharedLinkWithPassword:@"" andExpirationDate:nil];
+//        
+//    } else {
+//        //Update with password protected
+//        [self showPasswordView];
+    }
 }
 
 #pragma mark - Actions with ShareFileOrFolder class
@@ -673,8 +706,7 @@
                 }
               
             } else if (!k_is_share_with_users_available && k_is_share_by_link_available) {
-                
-                if (indexPath.row == 3) {
+                if ((indexPath.row == 2 && ![self showAllowEditing]) || (indexPath.row == 3 && [self showAllowEditing])) {
                     
                     cell = [self getCellShareLinkButtonByTableView:tableView];
                     
@@ -687,7 +719,8 @@
             }
             break;
         case 2:
-            if (indexPath.row == 3) {
+
+            if ((indexPath.row == 2 && ![self showAllowEditing]) || (indexPath.row == 3 && [self showAllowEditing])) {
                 
                 cell = [self getCellShareLinkButtonByTableView:tableView];
 
@@ -850,6 +883,7 @@
             [shareLinkOptionCell.optionSwith addTarget:self action:@selector(expirationTimeSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
             
             break;
+            
         case 1:
             shareLinkOptionCell.optionName.text = NSLocalizedString(@"password_protect", nil);
             
@@ -869,20 +903,19 @@
             break;
             
         case 2:
-            shareLinkOptionCell.optionName.text = NSLocalizedString(@"password_protect", nil);
+            shareLinkOptionCell.optionName.text = NSLocalizedString(@"allow_editing", nil);
             
-            if (self.isPasswordProtectEnabled == true) {
+            if (self.isAllowEditingEnabled == true) {
                 shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
                 shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
-                shareLinkOptionCell.optionDetail.text = NSLocalizedString(@"secured_link", nil);
             } else {
                 shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
                 shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
-                shareLinkOptionCell.optionDetail.text = @"";
             }
-            [shareLinkOptionCell.optionSwith setOn:self.isPasswordProtectEnabled animated:false];
+            shareLinkOptionCell.optionDetail.text = @"";
+            [shareLinkOptionCell.optionSwith setOn:self.isAllowEditingEnabled animated:false];
             
-            [shareLinkOptionCell.optionSwith addTarget:self action:@selector(passwordProtectedSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+            [shareLinkOptionCell.optionSwith addTarget:self action:@selector(allowEditingSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
             
             break;
             
@@ -921,7 +954,7 @@
                 }
                 
             } else {
-                if (indexPath.row == 2) {
+                if ((indexPath.row == 2 && ![self showAllowEditing]) || (indexPath.row == 3 && [self showAllowEditing])) {
                     height = heightOfShareLinkButtonRow;
                 }else{
                     height = heightOfShareLinkOptionRow;
@@ -929,7 +962,7 @@
             }
             break;
         case 2:
-            if (indexPath.row == 2) {
+            if ((indexPath.row == 2 && ![self showAllowEditing]) || (indexPath.row == 3 && [self showAllowEditing])) {
                 height = heightOfShareLinkButtonRow;
             }else{
                 height = heightOfShareLinkOptionRow;
