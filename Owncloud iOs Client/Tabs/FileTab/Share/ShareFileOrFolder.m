@@ -343,7 +343,7 @@
                         }
                         
                         
-                        if (error.code != kOCErrorSharedAPIUploadDisabled) {
+                        if (error.code != kOCErrorServerForbidden) {
                             
                             if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
                                 [self.delegate finishShareWithStatus:false andWithOptions:nil];
@@ -969,13 +969,13 @@
             //Switch with API response errors
             switch (error.code) {
                     //Switch with response https
-                case kOCErrorSharedAPINotUpdateShare:
+                case kOCErrorServerPathNotFound:
                      [self showError:error.localizedDescription];
                     break;
                 case kOCErrorServerUnauthorized:
                     [self errorLogin];
                     break;
-                case kOCErrorSharedAPIUploadDisabled:
+                case kOCErrorServerForbidden:
                     if (isPasswordSupported) {
                         //Share whith password maybe enabled, ask for password and try to do the request again with it
                         [self showAlertEnterPassword];
