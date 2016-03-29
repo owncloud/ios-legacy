@@ -60,7 +60,7 @@
 #define shareTableViewSectionsNumber  3
 
 //Nº of Rows
-#define optionsShownWithShareLinkEnable 3
+#define optionsShownWithShareLinkEnable 4
 #define optionsShownWithShareLinkDisable 0
 
 //Date server format
@@ -674,7 +674,7 @@
               
             } else if (!k_is_share_with_users_available && k_is_share_by_link_available) {
                 
-                if (indexPath.row == 2) {
+                if (indexPath.row == 3) {
                     
                     cell = [self getCellShareLinkButtonByTableView:tableView];
                     
@@ -687,7 +687,7 @@
             }
             break;
         case 2:
-            if (indexPath.row == 2) {
+            if (indexPath.row == 3) {
                 
                 cell = [self getCellShareLinkButtonByTableView:tableView];
 
@@ -851,6 +851,24 @@
             
             break;
         case 1:
+            shareLinkOptionCell.optionName.text = NSLocalizedString(@"password_protect", nil);
+            
+            if (self.isPasswordProtectEnabled == true) {
+                shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
+                shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
+                shareLinkOptionCell.optionDetail.text = NSLocalizedString(@"secured_link", nil);
+            } else {
+                shareLinkOptionCell.optionName.textColor = [UIColor grayColor];
+                shareLinkOptionCell.optionDetail.textColor = [UIColor grayColor];
+                shareLinkOptionCell.optionDetail.text = @"";
+            }
+            [shareLinkOptionCell.optionSwith setOn:self.isPasswordProtectEnabled animated:false];
+            
+            [shareLinkOptionCell.optionSwith addTarget:self action:@selector(passwordProtectedSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+            
+            break;
+            
+        case 2:
             shareLinkOptionCell.optionName.text = NSLocalizedString(@"password_protect", nil);
             
             if (self.isPasswordProtectEnabled == true) {
