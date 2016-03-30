@@ -50,22 +50,9 @@
 @end
 
 @implementation SelectFolderViewController
-@synthesize createButton=_createButton;
-@synthesize chooseButton=_chooseButton;
-@synthesize toolBarLabel=_toolBarLabel;
-@synthesize toolBar=_toolBar;
-@synthesize sortedArray=_sortedArray;
-@synthesize currentDirectoryArray=_currentDirectoryArray;
-@synthesize currentLocalFolder=_currentLocalFolder;
-@synthesize nextRemoteFolder=_nextRemoteFolder;
-@synthesize mCheckAccessToServer=_mCheckAccessToServer;
-@synthesize fileIdToShowFiles=_fileIdToShowFiles;
-@synthesize selectedFileDto=_selectedFileDto;
+
 @synthesize parent;
-@synthesize folderView=_folderView;
-@synthesize toolBarLabelTxt = _toolBarLabelTxt;
-@synthesize alert = _alert;
-@synthesize activeUser = _activeUser;
+
 
 #pragma mark Load View Life
 
@@ -90,13 +77,11 @@
     //Set the observers of the notifications
      [self setNotificationForCommunicationBetweenViews];
    
-
 }
 
 
 -(void)viewDidLayoutSubviews
 {
-    
     if (IS_IOS8 || IS_IOS9) {
         if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 15, 0, 0)];
@@ -105,14 +90,12 @@
         if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
             [self.tableView setLayoutMargins:UIEdgeInsetsZero];
         }
-        
     }
 }
 
 - (void) fillTheArraysFromDatabase {
-    _activeUser = [ManageUsersDB getActiveUser];
     self.currentDirectoryArray = [ManageFilesDB getFoldersByFileIdForActiveUser: (NSInteger)self.currentFolder.idFile];
-    self.sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:self.currentDirectoryArray  forUser:_activeUser];
+    self.sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:self.currentDirectoryArray  forUser:self.user];
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -333,9 +316,9 @@
     NSString *dicName;
     FileDto *fileDto=nil;
     
-    for (int i=0; i<[_currentDirectoryArray count]; i++) {
+    for (int i=0; i<[self.currentDirectoryArray count]; i++) {
         
-        fileDto = [_currentDirectoryArray objectAtIndex:i];       
+        fileDto = [self.currentDirectoryArray objectAtIndex:i];       
         
         //DLog(@"%@", fileDto.fileName);
         dicName=[fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];
@@ -360,31 +343,27 @@
         if ([self checkForSameName:name] == NO) {
             
             OCCommunication *communication = nil;
-            UserDto *activeUser = nil;
             
 #ifdef SHARE_IN
             communication = Managers.sharedOCCommunication;
-            activeUser = [ManageUsersDB getActiveUser];
             [[Managers sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
 #else
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             communication = [AppDelegate sharedOCCommunication];
-            activeUser = app.activeUser;
             [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
 #endif
             
             NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:self.currentFolder andUser:self.user];
 
             NSString *newURL = [NSString stringWithFormat:@"%@%@",remotePath,[name encodeString:NSUTF8StringEncoding]];
-            NSString *rootPath = [UtilsUrls getFilePathOnDBByFullPath:newURL andUser:activeUser];
+            NSString *rootPath = [UtilsUrls getFilePathOnDBByFullPath:newURL andUser:self.user];
             
             //Set the right credentials
             if (k_is_sso_active) {
-                [communication setCredentialsWithCookie:activeUser.password];
+                [communication setCredentialsWithCookie:self.user.password];
             } else if (k_is_oauth_active) {
-                [communication setCredentialsOauthWithToken:activeUser.password];
+                [communication setCredentialsOauthWithToken:self.user.password];
             } else {
-                [communication setCredentialsWithUser:activeUser.username andPassword:activeUser.password];
+                [communication setCredentialsWithUser:self.user.username andPassword:self.user.password];
             }
             
             NSString *pathOfNewFolder = [newURL stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -538,25 +517,25 @@
 // Asks the data source to return the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [SortManager numberOfSectionsInTableViewForUser:_activeUser withFolderList:_currentDirectoryArray];
+    return [SortManager numberOfSectionsInTableViewForUser:self.user withFolderList:self.currentDirectoryArray];
 }
 
 // Returns the table view managed by the controller object.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [SortManager numberOfRowsInSection:section forUser:_activeUser withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray needsExtraEmptyRow:NO];
+    return [SortManager numberOfRowsInSection:section forUser:self.user withCurrentDirectoryArray:self.currentDirectoryArray andSortedArray:self.sortedArray needsExtraEmptyRow:NO];
 }
 
 // Returns the table view managed by the controller object.
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [SortManager titleForHeaderInTableViewSection:section forUser:_activeUser withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray];
+    return [SortManager titleForHeaderInTableViewSection:section forUser:self.user withCurrentDirectoryArray:self.currentDirectoryArray andSortedArray:self.sortedArray];
 }
 
 // Asks the data source to return the titles for the sections for a table view.
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
-    return [SortManager sectionIndexTitlesForTableView:tableView forUser:_activeUser withCurrentDirectoryArray:_currentDirectoryArray];
+    return [SortManager sectionIndexTitlesForTableView:tableView forUser:self.user withCurrentDirectoryArray:self.currentDirectoryArray];
 }
 
 // Returns the table view managed by the controller object.

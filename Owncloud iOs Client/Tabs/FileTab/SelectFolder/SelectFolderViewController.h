@@ -23,34 +23,7 @@
 
 
 @interface SelectFolderViewController : SimpleFileListTableViewController <CheckAccessToServerDelegate, UIAlertViewDelegate, UITextFieldDelegate>{
-    
-    //Inteface
-    UIBarButtonItem *_createButton;
-    UIBarButtonItem *_chooseButton;
-    UILabel *_toolBarLabel;
-    OCToolBar *_toolBar;
-    
-    //Info
-    UserDto *_mUser;
-    CheckAccessToServer *_mCheckAccessToServer; 
-    FileDto *_selectedFileDto;
     __weak id parent;
-    
-    //Folders
-    NSMutableArray *_sortedArray;
-    NSArray *_currentDirectoryArray;    
-    NSString *_currentRemoteFolder;
-    NSString *_currentLocalFolder;
-    NSString *_nextRemoteFolder; 
-    FileDto *_fileIdToShowFiles;
-    
-    NSString *_toolBarLabelTxt;
-    
-    //Create Folder    
-    UIAlertView *_folderView;
-    
-    //Alert
-    UIAlertView *_alert;
 }
 
 @property (nonatomic, strong) IBOutlet UIBarButtonItem *createButton;
@@ -60,8 +33,6 @@
 @property(nonatomic, retain) CheckAccessToServer *mCheckAccessToServer;
 @property(nonatomic, strong) FileDto *selectedFileDto;
 @property (nonatomic, weak) id parent;
-@property(nonatomic, strong) NSMutableArray *sortedArray;
-@property(nonatomic, strong) NSArray *currentDirectoryArray;
 @property(nonatomic, strong) NSString *currentRemoteFolder;
 @property(nonatomic, strong) NSString *currentLocalFolder;
 @property(nonatomic, strong) NSString *nextRemoteFolder;
@@ -70,8 +41,6 @@
 @property(nonatomic, strong) UIAlertView *folderView;
 @property(nonatomic, strong) UIAlertView *alert;
 @property(nonatomic, strong) SelectFolderViewController *selectFolderViewController;
-@property(nonatomic, strong) UserDto *activeUser;
-
 
 //Actions
 - (IBAction)chooseFolder;
