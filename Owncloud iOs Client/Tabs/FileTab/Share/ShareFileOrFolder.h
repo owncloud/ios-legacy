@@ -97,7 +97,7 @@
  *
  * @param OCSharedDto -> The shared file/folder
  */
-- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password andExpirationTime:(NSString*)expirationTime;
+- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password expirationTime:(NSString*)expirationTime andPermissions:(NSInteger)permissions;
 
 /**
  * Check if the file is shared in the server side. If yes, update the database with update data

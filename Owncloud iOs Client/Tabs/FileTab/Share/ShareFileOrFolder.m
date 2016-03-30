@@ -518,7 +518,7 @@
  *
  * @param OCSharedDto -> The shared file/folder
  */
-- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password andExpirationTime:(NSString*)expirationTime{
+- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password expirationTime:(NSString*)expirationTime andPermissions:(NSInteger)permissions{
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -543,7 +543,7 @@
 
     password = [self getPasswordEncodingWithPassword:password];
     
-    [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime andPermissions:k_read_share_permission onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime andPermissions:permissions onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
         BOOL isSamlCredentialsError=NO;
         
