@@ -333,25 +333,14 @@
                         DLog(@"error.code: %ld", (long)error.code);
                         DLog(@"server error: %ld", (long)response.statusCode);
                         
-                        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
+                        if (error.code == kOCErrorServerForbidden && sharesOfFile.count == 0 && [self isPasswordEnforcedCapabilityEnabled]) {
                             
-                            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
-                            
-                            if (cap.isFilesSharingPasswordEnforcedEnabled) {
-                                if (error.code == kOCErrorServerForbidden) {
-                                    //Share whith password maybe enabled, ask for password and try to do the request again with it
-                                    [self showAlertEnterPassword];
-                                } else {
-                                    [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
-                                }
-                            } else {
-                                [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
-                            }
+                            //Share whith password maybe enabled, ask for password and try to do the request again with it
+                            [self showAlertEnterPassword];
                             
                         } else {
                             [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
                         }
-                        
                         
                         if (error.code != kOCErrorServerForbidden) {
                             
@@ -390,21 +379,10 @@
         
         if (!isSamlCredentialsError) {
             
-            if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
-                
-                CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
-                
-                if (cap.isFilesSharingPasswordEnforcedEnabled) {
-                    if (error.code == kOCErrorServerForbidden) {
-                        //Share whith password maybe enabled, ask for password and try to do the request again with it
-                        [self showAlertEnterPassword];
-                    } else {
-                        [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
-                    }
-
-                } else {
-                    [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
-                }
+            if (error.code == kOCErrorServerForbidden && sharesOfFile.count == 0 && [self isPasswordEnforcedCapabilityEnabled]) {
+            
+                //Share whith password maybe enabled, ask for password and try to do the request again with it
+                [self showAlertEnterPassword];
                 
             } else {
                 [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
@@ -420,6 +398,23 @@
     }];
 
 }
+
+-(BOOL)isPasswordEnforcedCapabilityEnabled {
+    
+    BOOL output = NO;
+    
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+        
+        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+        
+        if (cap.isFilesSharingPasswordEnforcedEnabled) {
+            output = YES;
+        }
+    }
+    
+    return output;
+}
+
 
 
 ///-----------------------------------------------
