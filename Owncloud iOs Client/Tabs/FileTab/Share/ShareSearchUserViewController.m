@@ -209,16 +209,22 @@
             
             if (userOrGroup.shareeType == shareTypeRemote && userOrGroup.server != nil) {
                 
-                name = (userOrGroup.isDisplayNameDuplicated)?
-                [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name]:
-                [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.server];
+                if(userOrGroup.isDisplayNameDuplicated){
+                    name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
+                }
+                else{
+                    name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.server];
+                }
             }
             
             else{
                 
-                name = (userOrGroup.isDisplayNameDuplicated)?
-                [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name]:
-                userOrGroup.displayName;
+                if (userOrGroup.isDisplayNameDuplicated){
+                    name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
+                }
+                else{
+                    name = userOrGroup.displayName;
+                }
             }
         }
         
@@ -439,16 +445,6 @@
 }
 
 #pragma mark - Federating user
-//- (OCShareUser *) getFederatedOCSharedUserByName:(NSString *) name {
-//    
-//    OCShareUser *federatedUser = [OCShareUser new];
-//    federatedUser.shareeType = shareTypeRemote;
-//    federatedUser.isDisplayNameDuplicated = NO;
-//    federatedUser.name = name;
-//    federatedUser.displayName = [NSString stringWithFormat:@"%@ (%@)",name, NSLocalizedString(@"share_user_federated_indicator", nil)];
-//    
-//    return federatedUser;
-//}
 
 - (void) manageTheFederatedUsers {
     for (OCShareUser *federatedUser in self.filteredItems) {
