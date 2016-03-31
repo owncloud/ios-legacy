@@ -108,14 +108,9 @@
 + (UserDto *) getLastUserInserted;
 
 /*
- * Method that returns the sorting choice for a user
- */
-+ (enumSortingType) getSortingWayByUserDto:(UserDto *) user;
-
-/*
  * Method to updates a user sorting choice for a user
  */
-+ (void) updateSortingWayTo:(enumSortingType)sortingType byUserDto:(UserDto *)user;
++ (void) updateSortingWayForUserDto:(UserDto *)user;
 
 
 //-----------------------------------

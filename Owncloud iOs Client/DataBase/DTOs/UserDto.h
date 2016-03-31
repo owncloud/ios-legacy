@@ -49,5 +49,6 @@ typedef enum {
 @property long dateInstantUpload;
 @property (nonatomic, copy) NSString *urlRedirected;
 @property (nonatomic, strong) CapabilitiesDto *capabilitiesDto;
+@property enumSortingType sortingType;
 
 @end
