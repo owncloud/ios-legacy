@@ -388,7 +388,7 @@
         path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
         [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
-            
+
             if (currentUser.idUser == app.activeUser.idUser) {
                 DLog(@"Operation response code: %ld", (long)response.statusCode);
                 
@@ -1466,13 +1466,13 @@
 // Asks the data source to return the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [SortManager numberOfSectionsInTableViewWithFolderList:_currentDirectoryArray];
+    return [SortManager numberOfSectionsInTableViewForUser:APP_DELEGATE.activeUser withFolderList:_currentDirectoryArray];
 }
 
 // Returns the table view managed by the controller object.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [SortManager numberOfRowsInSection:section withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray needsExtraEmptyRow:YES];
+    return [SortManager numberOfRowsInSection:section forUser:APP_DELEGATE.activeUser  withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray needsExtraEmptyRow:YES];
 }
 
 //Return the row height
@@ -1492,7 +1492,7 @@
 // Returns the table view managed by the controller object.
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-   return [SortManager titleForHeaderInTableViewSection:section withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray];
+   return [SortManager titleForHeaderInTableViewSection:section forUser:APP_DELEGATE.activeUser  withCurrentDirectoryArray:_currentDirectoryArray andSortedArray:_sortedArray];
 }
 
 
@@ -1506,7 +1506,7 @@
      [array insertObject:UITableViewIndexSearch atIndex:0];
      return [NSArray arrayWithArray:array];*/
     
-    return [SortManager sectionIndexTitlesForTableView:tableView WithCurrentDirectoryArray:_currentDirectoryArray];
+    return [SortManager sectionIndexTitlesForTableView:tableView forUser:APP_DELEGATE.activeUser  withCurrentDirectoryArray:_currentDirectoryArray];
     
 
 }
@@ -1852,7 +1852,7 @@
    // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -1872,7 +1872,7 @@
 
 -(void)reloadTableFileListAfterCapabilitiesUpdated {
     _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
-    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
     [self reloadTableFileList];
 }
 -(void)reloadTableFileList{
@@ -1892,7 +1892,7 @@
     // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -2154,7 +2154,7 @@
         [FileListDBOperations createAllFoldersByArrayOfFilesDto:_currentDirectoryArray andLocalFolder:_currentLocalFolder];
         
         //Sorted the files array
-        _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
+        _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
         
         //update gallery array
         [self updateArrayImagesInGallery];
@@ -2315,7 +2315,8 @@
  * This method stores in the DB the sorting option selected by the user
  */
 - (void) updateActiveUserSortingChoiceTo: (enumSortingType)sortingChoice{
-    [ManageUsersDB updateSortingWayTo:sortingChoice byUserDto:[ManageUsersDB getActiveUser]];
+    APP_DELEGATE.activeUser.sortingType = sortingChoice;
+    [ManageUsersDB updateSortingWayForUserDto:APP_DELEGATE.activeUser];
 }
 
 
@@ -2422,19 +2423,19 @@
     
     //Sorting options
     if (actionSheet.tag==300) {
-        enumSortingType storedSorting = [SortManager getUserSortingType];
+        enumSortingType storedSorting = APP_DELEGATE.activeUser.sortingType;
         switch (buttonIndex) {
             case 0:
                 if(storedSorting != sortByName){
                     [self updateActiveUserSortingChoiceTo:sortByName];
-                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
+                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
                     [self reloadTableFileList];
                 }
                 break;
             case 1:
                 if(storedSorting != sortByModificationDate){
                     [self updateActiveUserSortingChoiceTo:sortByModificationDate];
-                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray];
+                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
                     [self reloadTableFileList];
                 }
                 break;
