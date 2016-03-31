@@ -2315,8 +2315,8 @@
  * This method stores in the DB the sorting option selected by the user
  */
 - (void) updateActiveUserSortingChoiceTo: (enumSortingType)sortingChoice{
-    [ManageUsersDB updateSortingWayTo:sortingChoice byUserDto:[ManageUsersDB getActiveUser]];
-    APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
+    APP_DELEGATE.activeUser.sortingType = sortingChoice;
+    [ManageUsersDB updateSortingWayForUserDto:APP_DELEGATE.activeUser];
 }
 
 

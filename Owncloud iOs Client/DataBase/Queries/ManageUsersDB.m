@@ -705,7 +705,7 @@
  *
  * @param UserDto -> user
  */
-+ (void) updateSortingWayTo:(enumSortingType)sortingType byUserDto:(UserDto *)user {
++ (void) updateSortingWayForUserDto:(UserDto *)user {
     
     DLog(@"updateSortingTypeTo");
     
@@ -714,7 +714,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET sorting_type=? WHERE id = ?", [NSNumber numberWithInteger:sortingType], [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET sorting_type=? WHERE id = ?", [NSNumber numberWithInteger:user.sortingType], [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error updating sorting type");

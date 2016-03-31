@@ -110,7 +110,7 @@
 /*
  * Method to updates a user sorting choice for a user
  */
-+ (void) updateSortingWayTo:(enumSortingType)sortingType byUserDto:(UserDto *)user;
++ (void) updateSortingWayForUserDto:(UserDto *)user;
 
 
 //-----------------------------------
