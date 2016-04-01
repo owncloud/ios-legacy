@@ -211,8 +211,7 @@
                 
                 if(userOrGroup.isDisplayNameDuplicated){
                     name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
-                }
-                else{
+                }else{
                     name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.server];
                 }
             }
@@ -221,8 +220,7 @@
                 
                 if (userOrGroup.isDisplayNameDuplicated){
                     name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
-                }
-                else{
+                }else{
                     name = userOrGroup.displayName;
                 }
             }
