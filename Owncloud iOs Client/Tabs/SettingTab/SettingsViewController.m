@@ -341,8 +341,7 @@
             
             if (k_multiaccount_available) {
                 n = 1;
-            }
-            else{
+            }else{
                 n = (self.switchPasscode.on && [[ManageTouchID sharedSingleton] isTouchIDAvailable])? 2:1;
             }
             break;
@@ -350,9 +349,8 @@
         case 2:
             if (k_multiaccount_available) {                
                 n = (self.switchPasscode.on && [[ManageTouchID sharedSingleton] isTouchIDAvailable])? 2:1;
-            }
-            else{
-                n =1;
+            }else{
+                n = 1;
             }
             break;
             
