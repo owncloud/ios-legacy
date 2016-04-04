@@ -20,6 +20,8 @@
 #import "CheckAccessToServer.h"
 #import "UtilsUrls.h"
 
+static NSString *const tmpFileName = @"tmp.der";
+
 @implementation OCURLSessionManager
  
 /*
@@ -42,7 +44,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
     [[CheckAccessToServer sharedManager] createFolderToSaveCertificates];
     
     if(trust != nil) {
-        [[CheckAccessToServer sharedManager] saveCertificate:trust withName:@"tmp.der"];
+        [[CheckAccessToServer sharedManager] saveCertificate:trust withName:tmpFileName];
         
         NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
         
@@ -54,7 +56,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
             
             NSString *currentLocalCertLocation = [listCertificateLocation objectAtIndex:i];
             NSFileManager *fileManager = [ NSFileManager defaultManager];
-            if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@tmp.der",localCertificatesFolder] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
+            if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder,tmpFileName] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
                 DLog(@"Is the same certificate!!!");
                 trusted = YES;
             }
