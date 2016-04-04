@@ -33,7 +33,7 @@
 #import "AppDelegate.h"
 #endif
 
-
+static NSString *const tmpFileName = @"tmp.der";
 
 @implementation CheckAccessToServer
 
@@ -215,7 +215,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     [self createFolderToSaveCertificates];
     
     if(trust != nil) {
-        [self saveCertificate:trust withName:@"tmp.der"];
+        [self saveCertificate:trust withName:tmpFileName];
         
         NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
         
@@ -227,7 +227,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
             
             NSString *currentLocalCertLocation = [listCertificateLocation objectAtIndex:i];
             NSFileManager *fileManager = [ NSFileManager defaultManager];
-            if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@tmp.der",localCertificatesFolder] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
+            if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder,tmpFileName] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
                 NSLog(@"Is the same certificate!!!");
                 trusted = YES;
             }
