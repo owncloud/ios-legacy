@@ -339,16 +339,17 @@
             
         case 1:
             
-            if (k_multiaccount_available) {
-                n = 1;
+            if (!k_multiaccount_available && self.switchPasscode.on && [[ManageTouchID sharedSingleton] isTouchIDAvailable]) {
+                n = 2;
             }else{
-                n = (self.switchPasscode.on && [[ManageTouchID sharedSingleton] isTouchIDAvailable])? 2:1;
+                n = 1;
             }
             break;
             
         case 2:
-            if (k_multiaccount_available) {                
-                n = (self.switchPasscode.on && [[ManageTouchID sharedSingleton] isTouchIDAvailable])? 2:1;
+
+            if (k_multiaccount_available && self.switchPasscode.on && [[ManageTouchID sharedSingleton] isTouchIDAvailable]) {
+                n = 2;
             }else{
                 n = 1;
             }
