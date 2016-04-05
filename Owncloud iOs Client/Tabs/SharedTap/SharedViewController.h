@@ -20,7 +20,7 @@
 #import "ShareFileOrFolder.h"
 #import "MBProgressHUD.h"
 
-@interface SharedViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, ShareFileOrFolderDelegate, MBProgressHUDDelegate> 
+@interface SharedViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, ShareFileOrFolderDelegate, MBProgressHUDDelegate, ManageNetworkErrorsDelegate>
 
 //Share Table
 @property (nonatomic,strong) IBOutlet UITableView *sharedTableView;
@@ -40,6 +40,9 @@
 //Number of folders and files in the share list
 @property (nonatomic) int numberOfFolders;
 @property (nonatomic) int numberOfFiles;
+
+@property (nonatomic, strong) ManageNetworkErrors *manageNetworkErrors;
+
 
 ///-----------------------------------
 /// @name Refresh Shared Path

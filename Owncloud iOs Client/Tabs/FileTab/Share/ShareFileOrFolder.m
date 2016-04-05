@@ -41,6 +41,12 @@
 
 - (void) showShareActionSheetForFile:(FileDto *)file {
     
+    //We init the ManageNetworkErrors
+    if (!_manageNetworkErrors) {
+        _manageNetworkErrors = [ManageNetworkErrors new];
+        _manageNetworkErrors.delegate = self;
+    }
+    
     if ((APP_DELEGATE.activeUser.hasShareApiSupport == serverFunctionalitySupported || APP_DELEGATE.activeUser.hasShareApiSupport == serverFunctionalityNotChecked)) {
         _file = file;
         
@@ -326,24 +332,17 @@
                         
                         DLog(@"error.code: %ld", (long)error.code);
                         DLog(@"server error: %ld", (long)response.statusCode);
-                        NSInteger code = response.statusCode;
                         
-                        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
+                        if (error.code == kOCErrorServerForbidden && sharesOfFile.count == 0 && [self isPasswordEnforcedCapabilityEnabled]) {
                             
-                            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
-                            
-                            if (cap.isFilesSharingPasswordEnforcedEnabled) {
-                                [self manageServerErrors:code and:error withPasswordSupport:true];
-                            } else {
-                                [self manageServerErrors:code and:error withPasswordSupport:false];
-                            }
+                            //Share whith password maybe enabled, ask for password and try to do the request again with it
+                            [self showAlertEnterPassword];
                             
                         } else {
-                            [self manageServerErrors:code and:error withPasswordSupport:true];
+                            [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
                         }
                         
-                        
-                        if (error.code != kOCErrorSharedAPIUploadDisabled) {
+                        if (error.code != kOCErrorServerForbidden) {
                             
                             if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
                                 [self.delegate finishShareWithStatus:false andWithOptions:nil];
@@ -379,21 +378,14 @@
         }
         
         if (!isSamlCredentialsError) {
-        
-            NSInteger code = response.statusCode;
             
-            if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && sharesOfFile.count == 0) {
-                
-                CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
-                
-                if (cap.isFilesSharingPasswordEnforcedEnabled) {
-                    [self manageServerErrors:code and:error withPasswordSupport:true];
-                } else {
-                    [self manageServerErrors:code and:error withPasswordSupport:false];
-                }
+            if (error.code == kOCErrorServerForbidden && sharesOfFile.count == 0 && [self isPasswordEnforcedCapabilityEnabled]) {
+            
+                //Share whith password maybe enabled, ask for password and try to do the request again with it
+                [self showAlertEnterPassword];
                 
             } else {
-                [self manageServerErrors:code and:error withPasswordSupport:true];
+                [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
             }
             
             if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
@@ -406,6 +398,23 @@
     }];
 
 }
+
+-(BOOL)isPasswordEnforcedCapabilityEnabled {
+    
+    BOOL output = NO;
+    
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+        
+        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+        
+        if (cap.isFilesSharingPasswordEnforcedEnabled) {
+            output = YES;
+        }
+    }
+    
+    return output;
+}
+
 
 
 ///-----------------------------------------------
@@ -470,10 +479,8 @@
             }
         }
         if (!isSamlCredentialsError) {
-        
-            NSInteger code = response.statusCode;
             
-            [self manageServerErrors:code and:error withPasswordSupport:false];
+            [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
             
             if([self.delegate respondsToSelector:@selector(finishShareWithStatus:andWithOptions:)]) {
                 [self.delegate finishShareWithStatus:false andWithOptions:nil];
@@ -588,10 +595,8 @@
             }
         }
         if (!isSamlCredentialsError) {
-      
-            NSInteger code = response.statusCode;
             
-            [self manageServerErrors:code and:error withPasswordSupport:false];
+            [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
             
             if([self.delegate respondsToSelector:@selector(finishUpdateShareWithStatus:)]) {
                 [self.delegate finishUpdateShareWithStatus:false];
@@ -671,10 +676,7 @@
           
           if (!isSamlCredentialsError) {
               
-              NSInteger code = response.statusCode;
-              
-              [self manageServerErrors:code and:error withPasswordSupport:false];
-              
+              [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
           }
           
           if([self.delegate respondsToSelector:@selector(finishUpdateShareWithStatus:)]) {
@@ -766,9 +768,7 @@
         }
         if (!isSamlCredentialsError) {
            
-            NSInteger code = response.statusCode;
-            [self manageServerErrors:code and:error withPasswordSupport:false];
-        
+            [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
         }
         
         if([self.delegate respondsToSelector:@selector(finishUnShareWithStatus:)]) {
@@ -868,9 +868,7 @@
         
         if (!isSamlCredentialsError) {
             
-            NSInteger code = response.statusCode;
-            [self manageServerErrors:code and:error withPasswordSupport:false];
-            
+            [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
         }
         
         if([self.delegate respondsToSelector:@selector(finishCheckSharedStatusOfFile:)]) {
@@ -944,62 +942,6 @@
     }
     
 }
-
-
-#pragma mark - Manage Error methods
-
-- (void)manageServerErrors: (NSInteger)code and:(NSError *)error withPasswordSupport:(BOOL)isPasswordSupported{
-    
-    //Select the correct msg and action for this error
-    switch (code) {
-            //Switch with response https
-        case kOCErrorServerPathNotFound:
-            [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
-            break;
-        case kOCErrorServerUnauthorized:
-            [self errorLogin];
-            break;
-        case kOCErrorServerForbidden:
-            [self showError:NSLocalizedString(@"error_not_permission", nil)];
-            break;
-        case kOCErrorServerTimeout:
-            [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-            break;
-        default:
-            //Switch with API response errors
-            switch (error.code) {
-                    //Switch with response https
-                case kOCErrorSharedAPINotUpdateShare:
-                     [self showError:error.localizedDescription];
-                    break;
-                case kOCErrorServerUnauthorized:
-                    [self errorLogin];
-                    break;
-                case kOCErrorSharedAPIUploadDisabled:
-                    if (isPasswordSupported) {
-                        //Share whith password maybe enabled, ask for password and try to do the request again with it
-                        [self showAlertEnterPassword];
-                    }else{
-                        [self showError:error.localizedDescription];
-                    }
-                    
-                    break;
-                case kOCErrorServerTimeout:
-                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                    break;
-                case kOCErrorSharedAPIWrong:
-                    [self showError:error.localizedDescription];
-                    break;
-                default:
-                    //Switch with API response errors
-                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                    break;
-            }
-            break;
-    }
-    
-}
-
 
 
 /*

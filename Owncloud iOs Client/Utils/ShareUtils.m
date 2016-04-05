@@ -23,7 +23,7 @@
         
         else{
             for (OCShareUser *tempItem in restOfItems) {
-                if ([userOrGroup.displayName isEqualToString:tempItem.displayName] && (!userOrGroup.server && !tempItem.server)){
+                if ([userOrGroup.displayName isEqualToString:tempItem.displayName] && ((!userOrGroup.server && !tempItem.server) || ([userOrGroup.server isEqualToString:tempItem.server]))){
                     userOrGroup.isDisplayNameDuplicated = YES;
                     break;
                 }

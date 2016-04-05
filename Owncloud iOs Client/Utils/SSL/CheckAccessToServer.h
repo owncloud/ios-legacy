@@ -28,8 +28,9 @@
     __weak id<CheckAccessToServerDelegate> _delegate;
 }
 
-
++ (id)sharedManager;
 - (void) isConnectionToTheServerByUrl:(NSString *) url;
+- (void)isConnectionToTheServerByUrl:(NSString *) url withTimeout:(NSInteger) timeout;
 - (BOOL) isNetworkIsReachable;
 - (NSString *) getConnectionToTheServerByUrlAndCheckTheVersion:(NSString *)url;
 - (void)createFolderToSaveCertificates;

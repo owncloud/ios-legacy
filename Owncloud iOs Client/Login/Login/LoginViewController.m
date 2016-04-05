@@ -124,10 +124,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 
 - (void)viewWillAppear:(BOOL)animated {
     
-     [super viewWillAppear:animated];
+    [super viewWillAppear:animated];
     
-    mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-    mCheckAccessToServer.delegate = self;
+    ((CheckAccessToServer *)[CheckAccessToServer sharedManager]).delegate = self;
     
     if(self.urlTextField.text.length > 0 && isConnectionToServer == NO) {
         [self checkUrlManually];
@@ -634,8 +633,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 }
 
 //Only for ios6
-- (NSUInteger)supportedInterfaceOrientations
-{
+- (NSUInteger)supportedInterfaceOrientations {
     if (IS_IPHONE) {
         return UIInterfaceOrientationMaskAllButUpsideDown;
     }else{
@@ -1197,7 +1195,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 -(UIView *) configureViewForFooterURLServer {
     UIView *view = [[UIView alloc] initWithFrame:textFooterFrame1];
     
-    if (!([self.auxUrlForReloadTable isEqualToString:@""] || mCheckAccessToServer.delegate == nil)) {
+    if (!([self.auxUrlForReloadTable isEqualToString:@""] || ((CheckAccessToServer *)[CheckAccessToServer sharedManager]).delegate == nil)) {
         
         UILabel *label = [self setTheDefaultStyleOfTheServerFooterLabel];
         UIImageView *errorImage;
@@ -1581,7 +1579,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     self.auxPasswordForReloadTable = self.passwordTextField.text;
     
     //if it is nill the screen is not here
-    if(mCheckAccessToServer.delegate != nil) {
+    if(((CheckAccessToServer *)[CheckAccessToServer sharedManager]).delegate != nil) {
         
         //[self undoAnimateTextField:textField up:YES];
         
@@ -1657,12 +1655,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     isCheckingTheServerRightNow = YES;
     isConnectionToServer = NO;
     
-    mCheckAccessToServer.delegate = nil;
-    
-    mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-    mCheckAccessToServer.delegate = self;
-    
-    [mCheckAccessToServer isConnectionToTheServerByUrl:[self getUrlToCheck]];
+    [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:[self getUrlToCheck]];
 }
 
 -(NSString *)stripIndexPhpOrAppsFilesFromUrl:(NSString *)url {
@@ -1839,7 +1832,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         if (isHttps && ![self.urlTextField.text hasPrefix:k_https_prefix]) {
             DLog(@"es HTTPS no hay conexión");
-            [mCheckAccessToServer isConnectionToTheServerByUrl:[self getUrlToCheck]];
+            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:[self getUrlToCheck]];
             
         } else {
             UIImage *currentImage = [UIImage imageNamed: @"CredentialsError.png"];
