@@ -1097,6 +1097,8 @@
                 [self didSelectGetShareLink];
             }
             break;
+        case 3:
+            [self didSelectGetShareLink];
         default:
             break;
     }
