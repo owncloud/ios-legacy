@@ -116,7 +116,7 @@
 - (void) fillTheArraysFromDatabase {
     
     self.currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser: (int)self.currentFolder.idFile];
-    self.sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:self.currentDirectoryArray];
+    self.sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:self.currentDirectoryArray forUser:self.user];
 }
 
 
@@ -125,24 +125,24 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [SortManager numberOfSectionsInTableViewWithFolderList:self.currentDirectoryArray];
+    return [SortManager numberOfSectionsInTableViewForUser:self.user withFolderList:self.currentDirectoryArray];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [SortManager numberOfRowsInSection:section withCurrentDirectoryArray:self.currentDirectoryArray andSortedArray:self.sortedArray needsExtraEmptyRow:YES];
+    return [SortManager numberOfRowsInSection:section forUser:self.user withCurrentDirectoryArray:self.currentDirectoryArray andSortedArray:self.sortedArray needsExtraEmptyRow:YES];
 }
 
 // Returns the table view managed by the controller object.
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [SortManager titleForHeaderInTableViewSection:section withCurrentDirectoryArray:self.currentDirectoryArray andSortedArray:self.sortedArray];
+    return [SortManager titleForHeaderInTableViewSection:section forUser:self.user withCurrentDirectoryArray:self.currentDirectoryArray andSortedArray:self.sortedArray];
 }
 
 // Asks the data source to return the titles for the sections for a table view.
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
-    return [SortManager sectionIndexTitlesForTableView:tableView WithCurrentDirectoryArray:self.currentDirectoryArray];
+    return [SortManager sectionIndexTitlesForTableView:tableView forUser:self.user withCurrentDirectoryArray:self.currentDirectoryArray];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -725,10 +725,9 @@
 
 -(void)repeatTheCheckToTheServer {
     //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
-    CheckAccessToServer *mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-    mCheckAccessToServer.viewControllerToShow = self;
-    mCheckAccessToServer.delegate = self;
-    [mCheckAccessToServer isConnectionToTheServerByUrl:self.user.url];
+    ((CheckAccessToServer *)[CheckAccessToServer sharedManager]).delegate = self;
+    ((CheckAccessToServer *)[CheckAccessToServer sharedManager]).viewControllerToShow = self;
+    [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.user.url];
 }
 
 -(void)badCertificateNoAcceptedByUser {

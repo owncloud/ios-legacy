@@ -348,10 +348,12 @@
         //If it is not SAML
         if (!isSamlCredentialsError) {
 
+            [self endLoading];
+            
             [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
-        
+            
         }
-
+        
     }];
 }
 

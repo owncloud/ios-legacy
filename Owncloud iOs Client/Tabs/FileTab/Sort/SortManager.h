@@ -28,16 +28,16 @@
 /*
  * TableViews methods
  */
-+ (NSInteger)numberOfSectionsInTableViewWithFolderList: (NSArray *)currentDirectoryArray;
++ (NSInteger)numberOfSectionsInTableViewForUser:(UserDto*)user withFolderList: (NSArray *)currentDirectoryArray;
 
 // Returns the table view managed by the controller object.
-+ (NSInteger)numberOfRowsInSection: (NSInteger) section withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray needsExtraEmptyRow:(BOOL) emptyMessageRow;
++ (NSInteger)numberOfRowsInSection: (NSInteger) section forUser:(UserDto*)user withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray needsExtraEmptyRow:(BOOL) emptyMessageRow;
 
 // Returns the table view managed by the controller object.
-+ (NSString *)titleForHeaderInTableViewSection:(NSInteger)section withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray;
++ (NSString *)titleForHeaderInTableViewSection:(NSInteger)section forUser:(UserDto*)user withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray;
 
 // Returns the titles for the sections for a table view.
-+ (NSArray *)sectionIndexTitlesForTableView: (UITableView*) tableView WithCurrentDirectoryArray:(NSArray*)currentDirectoryArray;
++ (NSArray *)sectionIndexTitlesForTableView: (UITableView*) tableView forUser:(UserDto*)user withCurrentDirectoryArray:(NSArray*)currentDirectoryArray;
 
 
 /*
@@ -50,12 +50,7 @@
 + (NSMutableArray*) sortByModificationDate:(NSArray*)array;
 
 // This method creates an array to be shown in the files/folders list
-+ (NSMutableArray*) getSortedArrayFromCurrentDirectoryArray:(NSArray*) currentDirectoryArray;
++ (NSMutableArray*) getSortedArrayFromCurrentDirectoryArray:(NSArray*) currentDirectoryArray forUser:(UserDto*)user;
 
-
-/*
- * DB methods
- */
-+ (enumSortingType) getUserSortingType;
 
 @end

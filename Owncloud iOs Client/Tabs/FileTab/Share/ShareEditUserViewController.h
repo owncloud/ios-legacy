@@ -19,9 +19,12 @@
 #import "MBProgressHUD.h"
 #import "FileDto.h"
 
-@interface ShareEditUserViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, ShareFileOrFolderDelegate, MBProgressHUDDelegate, UIAlertViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
+@interface ShareEditUserViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, ShareFileOrFolderDelegate, MBProgressHUDDelegate, UIAlertViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, ManageNetworkErrorsDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView* shareEditUserTableView;
+
+@property (nonatomic, strong) ManageNetworkErrors *manageNetworkErrors;
+
 
 - (id) initWithFileDto:(FileDto *)fileDto andOCSharedDto:(OCSharedDto *)sharedDto;
 

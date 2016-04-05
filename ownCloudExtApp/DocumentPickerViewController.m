@@ -115,10 +115,9 @@
 
         [self presentViewController:navigationViewController animated:NO completion:^{
             //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
-            CheckAccessToServer *mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-            mCheckAccessToServer.viewControllerToShow = fileListTableViewController;
-            mCheckAccessToServer.delegate = fileListTableViewController;
-            [mCheckAccessToServer isConnectionToTheServerByUrl:[UtilsUrls getFullRemoteServerPath:self.user]];
+            ((CheckAccessToServer *)[CheckAccessToServer sharedManager]).viewControllerToShow = fileListTableViewController;
+            ((CheckAccessToServer *)[CheckAccessToServer sharedManager]).delegate = fileListTableViewController;
+            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.user.url];
         }];
         
     } else {

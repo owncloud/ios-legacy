@@ -56,6 +56,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.manageNetworkErrors = [ManageNetworkErrors new];
+        self.manageNetworkErrors.delegate = self;
     }
     return self;
 }
@@ -418,8 +420,8 @@
                     
                     //Only if the user do refresh manually, same behaviour like in Foi
                     if (_refreshControl.refreshing) {
-                        //Manage Server error
-                        [self manageServerErrors:response.statusCode and:error];
+
+                        [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
                     }
                     
                     //Stop loading pull refresh
@@ -482,61 +484,6 @@
     [self performSelectorOnMainThread:@selector(showAlertView:)
                            withObject:message
                         waitUntilDone:YES];
-}
-
-/*
- * Method called when receive a fail from server side
- * @errorCodeFromServer -> WebDav Server Error of NSURLResponse
- * @error -> NSError of NSURLConnection
- */
-
-- (void)manageServerErrors: (NSInteger)errorCodeFromServer and:(NSError *)error{
-    
-    NSInteger code = errorCodeFromServer;
-    
-    DLog(@"Error code from  web dav server: %ld", (long)code);
-    DLog(@"Error code from server: %ld", (long)error.code);
-    
-    [self stopPullRefresh];
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    //Server connection error
-    switch (error.code) {
-        case NSURLErrorServerCertificateUntrusted: //-1202
-            [_mCheckAccessToServer isConnectionToTheServerByUrl:app.activeUser.url];
-            break;
-            
-        default:
-            
-            //Web Dav Error Code
-            switch (code) {
-                case kOCErrorServerUnauthorized:
-                    //Unauthorized (bad username or password)
-                    [self errorLogin];
-                    break;
-                case kOCErrorServerForbidden:
-                    //403 Forbidden
-                    [self showError:NSLocalizedString(@"error_not_permission", nil)];
-                    break;
-                case kOCErrorServerPathNotFound:
-                    //404 Not Found. When for example we try to access a path that now not exist
-                    [self showError:NSLocalizedString(@"error_path", nil)];
-                    break;
-                case kOCErrorServerMethodNotPermitted:
-                    //405 Method not permitted
-                    [self showError:NSLocalizedString(@"not_possible_create_folder", nil)];
-                    break;
-                case kOCErrorServerTimeout:
-                    //408 timeout
-                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                    break;
-                default:
-                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                    break;
-            }
-            break;
-    }
 }
 
 

@@ -387,7 +387,7 @@
     if (error.code == NSURLErrorCancelled) {
         [self.delegate downloadCancelled:self.file];
     }else if (error.code == NSURLErrorUserCancelledAuthentication && !response){
-        [self.delegate downloadFailed:NSLocalizedString(@"error_connecting_with_server", nil) andFile:self.file];
+        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.user.url];
     }else{
         switch (response.statusCode) {
             case kOCErrorServerUnauthorized:

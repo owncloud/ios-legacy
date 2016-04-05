@@ -26,7 +26,7 @@
  * @errorConnection -> NSError of NSURLConnection
  */
 
-- (void)manageErrorHttp:(NSInteger)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *) user {
+- (void)manageErrorHttp:(NSInteger)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *)user {
     
     DLog(@"Error code from  web dav server: %ld", (long) errorHttp);
     DLog(@"Error code from server: %ld", (long)errorConnection.code);
@@ -34,18 +34,23 @@
     //Server connection error
     switch (errorConnection.code) {
         case kCFURLErrorUserCancelledAuthentication: { //-1012
-            
             [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-            
-            CheckAccessToServer *mCheckAccessToServer = [CheckAccessToServer new];
-            [mCheckAccessToServer isConnectionToTheServerByUrl:user.url];
-            
+            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
             break;
         }
-            
         case OCServerErrorForbiddenCharacters:
             //Forbidden characters from the server side
             [_delegate showError:NSLocalizedString(@"forbidden_characters_from_server", nil)];
+            break;
+            
+        case NSURLErrorServerCertificateUntrusted: //-1202
+            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
+            break;
+            
+        case kOCErrorSharedAPIWrong:    
+        case kOCErrorServerForbidden:
+        case kOCErrorServerPathNotFound:
+                [self.delegate showError:errorConnection.localizedDescription];
             break;
             
         default:
