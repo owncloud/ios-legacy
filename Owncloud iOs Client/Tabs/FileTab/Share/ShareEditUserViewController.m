@@ -110,6 +110,9 @@ typedef NS_ENUM (NSInteger, enumUpload){
         self.canDeleteEnabled = [UtilsFramework isPermissionToCanDelete:self.updatedOCShare.permissions];
         self.canShareEnabled = [UtilsFramework isPermissionToCanShare:self.updatedOCShare.permissions];
         self.optionTryingToEnabling = optionPermissionNothingYet;
+        
+        self.manageNetworkErrors = [ManageNetworkErrors new];
+        self.manageNetworkErrors.delegate = self;
     }
     
     return self;
@@ -219,11 +222,10 @@ typedef NS_ENUM (NSInteger, enumUpload){
             if (!isSamlCredentialsError) {
                 
                 DLog(@"error.code: %ld", (long)error.code);
-                DLog(@"server error: %ld", (long)response.statusCode);
-                NSInteger code = response.statusCode;
+                DLog(@"server error http: %ld", (long)response.statusCode);
                 
-                [self manageServerErrors:code and:error withPasswordSupport:false];
-                
+                [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
+
                 switch (self.optionTryingToEnabling) {
                     case optionPermissionCanEdit:
                         self.canEditEnabled = !self.canEditEnabled;
@@ -641,55 +643,6 @@ typedef NS_ENUM (NSInteger, enumUpload){
 
     return YES;
 }
-
-#pragma mark - Manage Error methods
-
-- (void)manageServerErrors: (NSInteger)code and:(NSError *)error withPasswordSupport:(BOOL)isPasswordSupported{
-    
-    //Select the correct msg and action for this error
-    switch (code) {
-            //Switch with response https
-        case kOCErrorServerPathNotFound:
-            [self showError:NSLocalizedString(@"file_to_share_not_exist", nil)];
-            break;
-        case kOCErrorServerUnauthorized:
-            [self errorLogin];
-            break;
-        case kOCErrorServerForbidden:
-            [self showError:NSLocalizedString(@"error_not_permission", nil)];
-            break;
-        case kOCErrorServerTimeout:
-            [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-            break;
-        default:
-            //Switch with API response errors
-            switch (error.code) {
-                    //Switch with response https
-                case kOCErrorSharedAPINotUpdateShare:
-                    [self showError:error.localizedDescription];
-                    break;
-                case kOCErrorServerUnauthorized:
-                    [self errorLogin];
-                    break;
-                case kOCErrorSharedAPIUploadDisabled:
-                    [self showError:error.localizedDescription];
-                    break;
-                case kOCErrorServerTimeout:
-                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                    break;
-                case kOCErrorSharedAPIWrong:
-                    [self showError:error.localizedDescription];
-                    break;
-                default:
-                    //Switch with API response errors
-                    [self showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                    break;
-            }
-            break;
-    }
-    
-}
-
 
 
 /*

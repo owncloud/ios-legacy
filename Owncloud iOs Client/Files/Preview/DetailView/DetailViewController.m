@@ -936,13 +936,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     if (canOpenButton) {
         
-        CheckAccessToServer *mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-        
         if([_file isDownload]) {
             //This file is in the device
             DLog(@"The file is in the device");
             [self openFile];
-        } else  if ([mCheckAccessToServer isNetworkIsReachable]) {
+        } else  if ([[CheckAccessToServer sharedManager]isNetworkIsReachable]) {
             //File is not in the device
             //Phase 1.1. Download the file
             DLog(@"Download the file");

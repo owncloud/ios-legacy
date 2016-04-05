@@ -233,9 +233,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                                                                       case kCFURLErrorUserCancelledAuthentication: { //-1012
                                                                           
                                                                           [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
-                                                                          
-                                                                          CheckAccessToServer *mCheckAccessToServer = [CheckAccessToServer new];
-                                                                          [mCheckAccessToServer isConnectionToTheServerByUrl:app.activeUser.url];
+                                                                          [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:APP_DELEGATE.activeUser.url];
                                                                           
                                                                           break;
                                                                       }
@@ -310,9 +308,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                         case kCFURLErrorUserCancelledAuthentication: { //-1012
                             
                             [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
-                            
-                            CheckAccessToServer *mCheckAccessToServer = [CheckAccessToServer new];
-                            [mCheckAccessToServer isConnectionToTheServerByUrl:app.activeUser.url];
+                            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:APP_DELEGATE.activeUser.url];
                             
                             break;
                         }
@@ -808,9 +804,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                     case kCFURLErrorUserCancelledAuthentication: { //-1012
                         
                         [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
-                        
-                        CheckAccessToServer *mCheckAccessToServer = [CheckAccessToServer new];
-                        [mCheckAccessToServer isConnectionToTheServerByUrl:app.activeUser.url];
+                        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:APP_DELEGATE.activeUser.url];
                         
                         break;
                     }

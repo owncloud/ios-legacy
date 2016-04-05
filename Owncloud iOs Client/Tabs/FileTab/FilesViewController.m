@@ -130,11 +130,7 @@
     
     _showLoadingAfterChangeUser = NO;
     _checkingEtag = NO;
-    
-    if(_mCheckAccessToServer == nil) {
-        self.mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-        self.mCheckAccessToServer.delegate = self;
-    }
+    ((CheckAccessToServer *)[CheckAccessToServer sharedManager]).delegate = self;
     
     //We check if the user have root folder at true on the DB
     if(!self.fileIdToShowFiles || self.fileIdToShowFiles.isRootFolder) {
@@ -1736,7 +1732,7 @@
         _selectedFileDto = selectedFile;
         [_tableView deselectRowAtIndexPath:[_tableView indexPathForSelectedRow] animated:YES];
         
-        if ([_mCheckAccessToServer isNetworkIsReachable]){
+        if ([[CheckAccessToServer sharedManager]isNetworkIsReachable]){
             [self goToFolderWithoutCheck];
         } else {
             
@@ -2374,7 +2370,7 @@
             switch (buttonIndex) {
                 case 0:
                     
-                    if (_selectedFileDto.isDownload || [_mCheckAccessToServer isNetworkIsReachable]){
+                    if (_selectedFileDto.isDownload || [[CheckAccessToServer sharedManager] isNetworkIsReachable]){
                         [self didSelectOpenWithOptionAndFile:_selectedFileDto];
                     } else {
                         _alert = nil;
@@ -2473,7 +2469,7 @@
  */
 - (void)didSelectOpenWithOption{
     
-    if (_selectedFileDto.isDownload || [_mCheckAccessToServer isNetworkIsReachable]){
+    if (_selectedFileDto.isDownload || [[CheckAccessToServer sharedManager] isNetworkIsReachable]){
         [self didSelectOpenWithOptionAndFile:_selectedFileDto];
     } else {
         _alert = nil;
@@ -3264,6 +3260,7 @@
     }
 }
 
+#pragma mark - CheckAccessToServer
 -(void)connectionToTheServer:(BOOL)isConnection {
     if(isConnection) {
         DLog(@"Ok, we have connection to the server");
@@ -3277,7 +3274,8 @@
 }
 
 -(void)repeatTheCheckToTheServer {
-    //ok, certificate accepted
+    DLog(@"Certificate accepted by the user");
+    [[CheckAccessToServer sharedManager]isConnectionToTheServerByUrl:APP_DELEGATE.activeUser.url];
 }
 
 -(void)badCertificateNoAcceptedByUser {
