@@ -17,18 +17,28 @@ Tell us what should happen
 Tell us what happens instead
 
 ### Server configuration
-**Operating system**:
-
 **Web server:**
 
 **Database:**
 
 **PHP version:**
 
+### Client
+**iOS version:**
+
+**ownCloud app version:**
+
+**Device model:**
+
 ### Logs
 #### Web server error log
 ```
 Insert your webserver log here
+```
+
+#### ownCloud log (data/owncloud.log)
+```
+Insert your ownCloud log here
 ```
 
 ## If you have suggestions of enhancements
