@@ -39,13 +39,17 @@
 
 @implementation ShareFileOrFolder
 
-- (void) showShareActionSheetForFile:(FileDto *)file {
-    
+- (void) initManageErrors {
     //We init the ManageNetworkErrors
     if (!_manageNetworkErrors) {
         _manageNetworkErrors = [ManageNetworkErrors new];
         _manageNetworkErrors.delegate = self;
     }
+}
+
+- (void) showShareActionSheetForFile:(FileDto *)file {
+    
+    [self initManageErrors];
     
     if ((APP_DELEGATE.activeUser.hasShareApiSupport == serverFunctionalitySupported || APP_DELEGATE.activeUser.hasShareApiSupport == serverFunctionalityNotChecked)) {
         _file = file;
@@ -201,6 +205,8 @@
  * @param isFile -> BOOL. Distinct between is fileDto or shareDto
  */
 - (void) clickOnShareLinkFromFileDto:(BOOL)isFileDto {
+    
+    [self initManageErrors];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -423,6 +429,8 @@
 
 -(void)doRequestSharedLinkWithPath: (NSString *)path andPassword: (NSString *)password{
     
+    [self initManageErrors];
+    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     [self initLoading];
@@ -527,6 +535,8 @@
  */
 - (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password expirationTime:(NSString*)expirationTime andPermissions:(NSInteger)permissions{
     
+    [self initManageErrors];
+
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     [self initLoading];
@@ -608,6 +618,8 @@
 }
 
 - (void) updateLocalShareLink:(OCSharedDto *)ocShare{
+    
+    [self initManageErrors];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -698,6 +710,8 @@
  */
 - (void) unshareTheFile: (OCSharedDto *)sharedByLink {
     
+    [self initManageErrors];
+
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     [self initLoading];
@@ -780,6 +794,8 @@
 }
 
 - (void) checkSharedStatusOfFile:(FileDto *) file {
+    
+    [self initManageErrors];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     

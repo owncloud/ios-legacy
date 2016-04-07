@@ -26,7 +26,7 @@
 
 @interface ManageNetworkErrors : NSObject
 
-@property(nonatomic,weak) __weak id<ManageNetworkErrorsDelegate> delegate;
+@property(nonatomic,strong) id<ManageNetworkErrorsDelegate> delegate;
 
 /*
  * Method called when receive an error from server
