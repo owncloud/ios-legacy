@@ -335,7 +335,6 @@
         self.optionsShownWithShareLink = optionsShownWithShareLinkDisable;
         self.isPasswordProtectEnabled = false;
         self.isExpirationDateEnabled = false;
-        self.optionsShownWithShareLink = false;
         self.isShareLinkEnabled = false;
         self.isAllowEditingShown = false;
         self.isAllowEditingEnabled =false;
@@ -875,6 +874,8 @@
         NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkOptionNib owner:self options:nil];
         shareLinkOptionCell = (ShareLinkOptionCell *)[topLevelObjects objectAtIndex:0];
     }
+
+    [shareLinkOptionCell.optionSwith removeTarget:nil action:NULL forControlEvents:UIControlEventValueChanged];
     
     switch (indexPath.row) {
         case 0:
