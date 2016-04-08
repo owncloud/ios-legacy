@@ -533,7 +533,7 @@
  *
  * @param OCSharedDto -> The shared file/folder
  */
-- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password expirationTime:(NSString*)expirationTime andPermissions:(NSInteger)permissions{
+- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password expirationTime:(NSString*)expirationTime permissions:(NSInteger)permissions{
     
     [self initManageErrors];
 

@@ -144,9 +144,10 @@
     
     if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && self.sharedItem.isDirectory) {
         return APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAllowPublicUploadsEnabled;
-    } else {
-        return false;
     }
+    
+    return false;
+
 }
 
 #pragma mark - Accessory alert views
@@ -265,7 +266,7 @@
     
     NSString *dateString = [self convertDateInServerFormat:self.datePickerView.date];
     
-    [self updateSharedLinkWithPassword:nil expirationDate:dateString andPermissions:k_permissions_do_not_update];
+    [self updateSharedLinkWithPassword:nil expirationDate:dateString permissions:k_permissions_do_not_update];
     
 }
 
@@ -330,7 +331,13 @@
 - (void) reloadView {
     
     if (self.isShareLinkEnabled == true){
-        self.optionsShownWithShareLink = self.isAllowEditingShown? optionsShownWithShareLinkEnableAndAllowEditing:optionsShownWithShareLinkEnableWithoutAllowEditing;
+        
+        if (self.isAllowEditingShown){
+            self.optionsShownWithShareLink = optionsShownWithShareLinkEnableAndAllowEditing;
+        }else{
+            self.optionsShownWithShareLink = optionsShownWithShareLinkEnableWithoutAllowEditing;
+        }
+        
     }else{
         self.optionsShownWithShareLink = optionsShownWithShareLinkDisable;
         self.isPasswordProtectEnabled = false;
@@ -375,7 +382,7 @@
         }
         
         self.isAllowEditingShown = [self hasAllowEditingToBeShown];
-        self.isAllowEditingEnabled = [UtilsFramework isPermissionToCanEdit:self.updatedOCShare.permissions];
+        self.isAllowEditingEnabled = [UtilsFramework isPermissionToReadCreateUpdate:self.updatedOCShare.permissions];
         
     }else{
         self.isShareLinkEnabled = false;
@@ -463,7 +470,7 @@
         }
         
         //Remove password Protected
-        [self updateSharedLinkWithPassword:@"" expirationDate:nil andPermissions:k_permissions_do_not_update];
+        [self updateSharedLinkWithPassword:@"" expirationDate:nil permissions:k_permissions_do_not_update];
          
      } else {
          //Update with password protected
@@ -487,7 +494,7 @@
         }
         
         //Remove expiration date
-        [self updateSharedLinkWithPassword:nil expirationDate:@"" andPermissions:k_permissions_do_not_update];
+        [self updateSharedLinkWithPassword:nil expirationDate:@"" permissions:k_permissions_do_not_update];
         
     } else {
         //Update with expiration date
@@ -499,21 +506,13 @@
 - (void) allowEditingSwithValueChanged:(UISwitch*) sender{
     
     if (self.isAllowEditingEnabled) {
-        
-        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
-            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
-            
-            if (cap.isFilesSharingShareLinkEnabled) {
-                self.permissions = [UtilsFramework getPermissionsValueByCanEdit:NO andCanCreate:NO andCanChange:NO andCanDelete:NO andCanShare:NO andIsFolder:YES];
-            }
-        }
-        
+        self.permissions = [UtilsFramework getPermissionsValueByCanEdit:NO andCanCreate:NO andCanChange:NO andCanDelete:NO andCanShare:NO andIsFolder:YES];        
     } else {
         self.permissions = [UtilsFramework getPermissionsValueByCanEdit:YES andCanCreate:YES andCanChange:YES andCanDelete:NO andCanShare:NO andIsFolder:YES];
     }
     
     //update permissions
-    [self updateSharedLinkWithPassword:nil expirationDate:nil andPermissions:self.permissions];
+    [self updateSharedLinkWithPassword:nil expirationDate:nil permissions:self.permissions];
 }
 
 #pragma mark - Actions with ShareFileOrFolder class
@@ -574,7 +573,7 @@
     
 }
 
-- (void) updateSharedLinkWithPassword:(NSString*) password expirationDate:(NSString*)expirationDate andPermissions:(NSInteger)permissions{
+- (void) updateSharedLinkWithPassword:(NSString*) password expirationDate:(NSString*)expirationDate permissions:(NSInteger)permissions{
     
     if (self.sharedFileOrFolder == nil) {
         self.sharedFileOrFolder = [ShareFileOrFolder new];
@@ -587,7 +586,7 @@
     
     OCSharedDto *ocShare = [ManageSharesDB getTheOCShareByFileDto:self.sharedItem andShareType:shareTypeLink andUser:APP_DELEGATE.activeUser];
 
-    [self.sharedFileOrFolder updateShareLink:ocShare withPassword:password expirationTime:expirationDate andPermissions:permissions];
+    [self.sharedFileOrFolder updateShareLink:ocShare withPassword:password expirationTime:expirationDate permissions:permissions];
     
 }
 
@@ -624,7 +623,7 @@
         
         NSString* password = [alertView textFieldAtIndex:0].text;
         [self initLoading];
-        [self updateSharedLinkWithPassword:password expirationDate:nil andPermissions:k_permissions_do_not_update];
+        [self updateSharedLinkWithPassword:password expirationDate:nil permissions:k_permissions_do_not_update];
         
     }else if (buttonIndex == 0) {
         //Cancel
