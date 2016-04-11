@@ -19,12 +19,12 @@
         [restOfItems removeObjectIdenticalTo:userOrGroup];
         
         if(restOfItems.count == 0)
-            userOrGroup.isDisplayNameDuplicated = false;
+            userOrGroup.isDisplayNameDuplicated = NO;
         
         else{
             for (OCShareUser *tempItem in restOfItems) {
-                if ([userOrGroup.displayName isEqualToString:tempItem.displayName]){
-                    userOrGroup.isDisplayNameDuplicated = true;
+                if ([userOrGroup.displayName isEqualToString:tempItem.displayName] && ((!userOrGroup.server && !tempItem.server) || ([userOrGroup.server isEqualToString:tempItem.server]))){
+                    userOrGroup.isDisplayNameDuplicated = YES;
                     break;
                 }
             }

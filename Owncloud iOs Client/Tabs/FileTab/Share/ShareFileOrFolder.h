@@ -31,7 +31,7 @@
 @end
 
 
-@interface ShareFileOrFolder : NSObject <UIActionSheetDelegate,UITextFieldDelegate,UIAlertViewDelegate>
+@interface ShareFileOrFolder : NSObject <UIActionSheetDelegate,UITextFieldDelegate,UIAlertViewDelegate,ManageNetworkErrorsDelegate>
 
 @property (nonatomic, strong) FileDto *file;
 @property (nonatomic, strong) OCSharedDto *shareDto;
@@ -49,6 +49,7 @@
 @property (nonatomic, strong) UIView *parentView;
 @property (nonatomic, strong) UIViewController *parentViewController;
 @property(nonatomic, strong) UIAlertView *shareProtectedAlertView;
+@property (nonatomic, strong) ManageNetworkErrors *manageNetworkErrors;
 
 
 - (void) showShareActionSheetForFile:(FileDto *) file;

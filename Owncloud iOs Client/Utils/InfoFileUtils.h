@@ -58,7 +58,9 @@
  */
 + (CustomCellFileAndDirectory *) getTheStatusIconOntheFile: (FileDto *)fileForSetTheStatusIcon onTheCell: (CustomCellFileAndDirectory *)fileCell andCurrentFolder:(FileDto *)currentFolder andIsSonOfFavoriteFolder:(BOOL)isCurrentFolderSonOfFavoriteFolder ofUser:(UserDto *)user;
 
-+(void)createAllFoldersInFileSystemByFileDto:(FileDto *)file andUserDto:(UserDto *)user;
++ (void)createAllFoldersInFileSystemByFileDto:(FileDto *)file andUserDto:(UserDto *)user;
+
++ (NSOperation *) updateThumbnail:(FileDto *) file andUser:(UserDto *) user tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 
 @end

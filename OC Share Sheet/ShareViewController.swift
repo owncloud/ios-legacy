@@ -268,9 +268,9 @@ import AVFoundation
             self.presentViewController(navigation, animated: true) { () -> Void in
                 print("select folder presented")
                 //We check the connection here because we need to accept the certificate on the self signed server
-                let mCheckAccessToServer = CheckAccessToServer()
-                mCheckAccessToServer.delegate = selectFolderViewController
-                mCheckAccessToServer.isConnectionToTheServerByUrl(activeUser.url)
+                (CheckAccessToServer.sharedManager() as? CheckAccessToServer)!.delegate = selectFolderViewController
+                (CheckAccessToServer.sharedManager() as? CheckAccessToServer)!.viewControllerToShow = selectFolderViewController
+                CheckAccessToServer.sharedManager().isConnectionToTheServerByUrl(activeUser.url)
             }
         } else {
             showAlertView(NSLocalizedString("error_login_doc_provider", comment: ""))

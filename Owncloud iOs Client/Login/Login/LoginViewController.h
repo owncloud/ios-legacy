@@ -22,8 +22,6 @@
 extern NSString *loginViewControllerRotate;
 
 @interface LoginViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate, CheckAccessToServerDelegate, SSODelegate, CheckSSOServerDelegate> {
-
-    CheckAccessToServer *mCheckAccessToServer;
     
     UITapGestureRecognizer *tapRecognizer;
     

@@ -24,6 +24,8 @@
 @property(nonatomic, weak) IBOutlet UIImageView *sharedByLinkImage;
 @property(nonatomic, weak) IBOutlet UIImageView *sharedWithUsImage;
 
+@property(nonatomic, weak) NSOperation *thumbnailOperation;
+
 //Last position of the scroll of the swipe
 @property (nonatomic, assign) CGFloat lastContentOffset;
 
