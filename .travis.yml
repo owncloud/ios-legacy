@@ -9,8 +9,6 @@ xcode_sdk: iphonesimulator
 before_install:
   - brew update; brew update
   - chmod +x automation_Test/loginTest.py
-  - npm install appium
-  - pip install pytest
 
 addons:
   sauce_connect: true
