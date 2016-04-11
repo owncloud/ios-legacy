@@ -13,5 +13,9 @@ before_install:
 addons:
   sauce_connect: true
 
++before_script:
+- npm install appium
+- pip install pytest
+
 script:
 - python automation_Test/loginTest.py
