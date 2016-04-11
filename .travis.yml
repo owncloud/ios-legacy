@@ -14,4 +14,4 @@ addons:
   sauce_connect: true
 
 script:
-- automation_Test/loginTest.py
+- python automation_Test/loginTest.py

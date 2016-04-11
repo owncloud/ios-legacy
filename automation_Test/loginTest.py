@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/env/python3
+#!/usr/bin/env python
 
 from appium import webdriver
 import time
