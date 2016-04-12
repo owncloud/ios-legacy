@@ -330,7 +330,7 @@
 
 - (void) reloadView {
     
-    if (self.isShareLinkEnabled == true){
+    if (self.isShareLinkEnabled){
         
         if (self.isAllowEditingShown){
             self.optionsShownWithShareLink = optionsShownWithShareLinkEnableAndAllowEditing;
@@ -764,7 +764,7 @@
     shareFileCell.fileSize.hidden = self.sharedItem.isDirectory;
     shareFileCell.folderName.hidden = !self.sharedItem.isDirectory;
     
-    if (self.sharedItem.isDirectory == true) {
+    if (self.sharedItem.isDirectory) {
         shareFileCell.fileImage.image = [UIImage imageNamed:@"folder_icon"];
         shareFileCell.folderName.text = @"";
         //Remove the last character (folderName/ -> folderName)
@@ -880,7 +880,7 @@
         case 0:
             shareLinkOptionCell.optionName.text = NSLocalizedString(@"set_expiration_time", nil);
             
-            if (self.isExpirationDateEnabled == true) {
+            if (self.isExpirationDateEnabled) {
                 shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
                 shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
                 shareLinkOptionCell.optionDetail.text = [self converDateInCorrectFormat:[NSDate dateWithTimeIntervalSince1970: self.updatedOCShare.expirationDate]];
@@ -898,7 +898,7 @@
         case 1:
             shareLinkOptionCell.optionName.text = NSLocalizedString(@"password_protect", nil);
             
-            if (self.isPasswordProtectEnabled == true) {
+            if (self.isPasswordProtectEnabled) {
                 shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
                 shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
                 shareLinkOptionCell.optionDetail.text = NSLocalizedString(@"secured_link", nil);
@@ -916,7 +916,7 @@
         case 2:
             shareLinkOptionCell.optionName.text = NSLocalizedString(@"allow_editing", nil);
             
-            if (self.isAllowEditingEnabled == true) {
+            if (self.isAllowEditingEnabled) {
                 shareLinkOptionCell.optionName.textColor = [UIColor blackColor];
                 shareLinkOptionCell.optionDetail.textColor = [UIColor blackColor];
             } else {
@@ -1223,7 +1223,7 @@
 
 - (void) endLoading {
     
-    if (APP_DELEGATE.isLoadingVisible == false) {
+    if (!APP_DELEGATE.isLoadingVisible) {
         [self.loadingView removeFromSuperview];
         
         self.view.userInteractionEnabled = true;
@@ -1245,7 +1245,7 @@
 
 - (void) finishShareWithStatus:(BOOL)successful andWithOptions:(UIActivityViewController*) activityView{
     
-    if (successful == true) {
+    if (successful) {
          self.activityView = activityView;
          [self checkSharedStatusOFile];
         
@@ -1257,7 +1257,7 @@
 
 - (void) finishUnShareWithStatus:(BOOL)successful {
     
-    if (successful == true) {
+    if (successful) {
         self.activityView = nil;
         [self checkSharedStatusOFile];
     }else{
@@ -1274,7 +1274,7 @@
 
 - (void) finishCheckSharedStatusOfFile:(BOOL)successful {
     
-    if (successful == true && self.activityView != nil) {
+    if (successful && self.activityView != nil) {
         [self updateInterfaceWithShareLinkStatus];
         [self performSelector:@selector(presentShareOptions) withObject:nil afterDelay:standardDelay];
     }else{
