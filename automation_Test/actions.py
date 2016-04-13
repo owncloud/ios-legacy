@@ -8,6 +8,7 @@ import constants as const
 import loginView
 import helpGuideView
 import filesView
+from appium import webdriver
 
 def getWebDriver():
     wd = None
