@@ -8,7 +8,7 @@ import constants as const
 import loginView
 import helpGuideView
 import filesView
-from appium import webdriver
+from /usr/local/bin/appium  import webdriver
 
 def getWebDriver():
     wd = None
