@@ -7,7 +7,7 @@ xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
 
 install:
-  - pip install Appium-Python-Client
+  - pip install appium
   - python setup.py install
 
 before_script:
