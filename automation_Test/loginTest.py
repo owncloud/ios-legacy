@@ -10,7 +10,7 @@ import loginView
 import filesView
 import settingsView
 import actions
-from /usr/local/bin/appium  import webdriver
+from ./usr/local/bin/appium  import webdriver
 
 class loginTest(unittest.TestCase):
 
