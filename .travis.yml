@@ -7,10 +7,11 @@ xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
 
 install:
-  - npm install appium
   - python setup.py install
-  
+
 before_script:
+  - npm install appium
+  - pip install Appium-Python-Clien
   - brew update; brew update
   - chmod +x automation_Test/loginTest.py
 
