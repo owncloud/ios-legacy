@@ -9,7 +9,6 @@ xcode_sdk: iphonesimulator
 before_script:
   - rm -rf node_modules
   - npm install appium
-  - pip install pytest
 
 addons:
   sauce_connect: true
