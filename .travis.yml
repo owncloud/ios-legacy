@@ -8,7 +8,7 @@ xcode_sdk: iphonesimulator
 
 before_install:
   - export PATH=node_modules/.bin:$PATH
-  - pip install appium
+  - npm install appium
   
 before_script:
   - brew update; brew update
@@ -18,5 +18,5 @@ addons:
   sauce_connect: true
 
 script:
-  - node node_modules/appium &
+  - appium &
   - python automation_Test/loginTest.py
