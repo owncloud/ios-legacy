@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from appium import webdriver
 import time
 import os
 import unittest
