@@ -7,7 +7,7 @@ xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
 
 before_install:
-  - npm install appium
+  - pip install Appium-Python-Client
   - export PATH=node_modules/.bin:$PATH
 
 before_script:
