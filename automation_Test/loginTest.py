@@ -10,7 +10,7 @@ import loginView
 import filesView
 import settingsView
 import actions
-from selenium import webdriver
+from appium import webdriver
 
 class loginTest(unittest.TestCase):
 
