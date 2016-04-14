@@ -8,8 +8,8 @@ from datetime import datetime
 K_APP_FILE_NAME = '/../../ownCloud.app'
 K_APPIUM_VER = '0.22'
 K_APP_PLATFORM_NAME = 'iOS'
-K_APP_PLATFORM_VER = '8.4'
-K_DEVICE_NAME = 'iPhone 6'
+K_APP_PLATFORM_VER = '9.0'
+K_DEVICE_NAME = 'iPhone Simulator'
 
 #--Webdriver property
 
