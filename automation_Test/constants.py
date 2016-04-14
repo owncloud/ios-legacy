@@ -6,7 +6,7 @@ from datetime import datetime
 
 #--Generic Variables for use through Appium connection
 K_APP_FILE_NAME = '/../../ownCloud.app'
-K_APPIUM_VER = '1.4.1'
+K_APPIUM_VER = '0.22'
 K_APP_PLATFORM_NAME = 'iOS'
 K_APP_PLATFORM_VER = '8.4'
 K_DEVICE_NAME = 'iPhone 6'
