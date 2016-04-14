@@ -8,7 +8,7 @@ xcode_sdk: iphonesimulator
     
 install:
   - sudo easy_install pip
-  - sudo pip install Appium-Python-Client
+  - pip install Appium-Python-Client
   
 addons:
   sauce_connect: true
