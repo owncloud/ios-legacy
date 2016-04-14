@@ -11,9 +11,13 @@ K_APP_PLATFORM_NAME = 'iOS'
 K_APP_PLATFORM_VER = '8.4'
 K_DEVICE_NAME = 'iPhone 6'
 
-#--Webdriver property 
+#--Webdriver property
+
+SAUCE_USERNAME = os.environ.get('SAUCE_USERNAME')
+SAUCE_ACCESS_KEY = os.environ.get('SAUCE_ACCESS_KEY')
+
 K_WD_EXPLICITY_WAIT = 20
-K_WD_REMOTE_URL = 'http://YOUR_USERNAME:YOUR_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub'
+K_WD_REMOTE_URL = 'http://%s:%s@ondemand.saucelabs.com:80/wd/hub' % (SAUCE_USERNAME, SAUCE_ACCESS_KEY)
 
 #--Result Files
 K_RST_FILE = '/Result/test.txt'
