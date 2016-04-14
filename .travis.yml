@@ -6,10 +6,10 @@ xcode_project: Owncloud iOs Client.xcodeproj
 xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
     
-before_script:
-  - rm -rf node_modules
+install:
   - npm install appium
-
+  - pip install Appium-Python-Client
+  
 addons:
   sauce_connect: true
 
