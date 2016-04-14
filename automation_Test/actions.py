@@ -13,7 +13,6 @@ from appium import webdriver
 def getWebDriver():
     wd = None
     desired_caps = {}
-    desired_caps['appium-version'] = const.K_APPIUM_VER
     desired_caps['platformName'] = const.K_APP_PLATFORM_NAME
     desired_caps['platformVersion'] = const.K_APP_PLATFORM_VER
     desired_caps['deviceName'] = const.K_DEVICE_NAME
