@@ -10,6 +10,7 @@ K_APPIUM_VER = '0.22'
 K_APP_PLATFORM_NAME = 'iOS'
 K_APP_PLATFORM_VER = '9.0'
 K_DEVICE_NAME = 'iPhone Simulator'
+K_APP_BROWSER_NAME = ''
 
 #--Webdriver property
 
