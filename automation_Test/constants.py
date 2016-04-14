@@ -13,7 +13,7 @@ K_DEVICE_NAME = 'iPhone 6'
 
 #--Webdriver property 
 K_WD_EXPLICITY_WAIT = 20
-K_WD_REMOTE_URL = 'http://ondemand.saucelabs.com:80/wd/hub'
+K_WD_REMOTE_URL = 'http://YOUR_USERNAME:YOUR_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub'
 
 #--Result Files
 K_RST_FILE = '/Result/test.txt'
