@@ -8,7 +8,7 @@ xcode_sdk: iphonesimulator
     
 install:
   - sudo easy_install pip
-  - sudo chown -R $USER /Library/Python/2.7/site-packages/pync
+  - sudo chown -R $USER /Library/Python/2.7/site-packages/
   - npm install appium
   - pip install Appium-Python-Client
   
