@@ -10,6 +10,8 @@ install:
   - npm install appium
   - pip install Appium-Python-Client
   
+before_install: PATH=node_modules/.bin:$PATH
+  
 addons:
   sauce_connect: true
 
