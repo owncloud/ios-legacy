@@ -8,7 +8,6 @@ xcode_sdk: iphonesimulator
     
 install:
   - sudo easy_install pip
-  - npm install appium
   - sudo pip install Appium-Python-Client
   
 before_install: PATH=node_modules/.bin:$PATH
