@@ -7,6 +7,7 @@ xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
     
 install:
+  - PATH=$HOME/.local/bin:$PATH
   - sudo easy_install pip
   - pip install Appium-Python-Client
   
