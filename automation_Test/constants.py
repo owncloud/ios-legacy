@@ -5,19 +5,19 @@ import os
 from datetime import datetime
 
 #--Generic Variables for use through Appium connection
-K_APP_FILE_NAME = '/../../ownCloud.app'
+K_APP_FILE_NAME = 'my_app.zip'
 K_APPIUM_VER = '0.22'
 K_APP_PLATFORM_NAME = 'iOS'
-K_APP_PLATFORM_VER = '9.0'
+K_APP_PLATFORM_VER = '9.3'
 K_DEVICE_NAME = 'iPhone Simulator'
 K_APP_BROWSER_NAME = ''
 
 #--Webdriver property
-
 SAUCE_USERNAME = os.environ.get('SAUCE_USERNAME')
 SAUCE_ACCESS_KEY = os.environ.get('SAUCE_ACCESS_KEY')
 
 K_WD_EXPLICITY_WAIT = 20
+#K_WD_REMOTE_URL = 'http://ondemand.saucelabs.com:80/wd/hub'
 K_WD_REMOTE_URL = 'http://%s:%s@ondemand.saucelabs.com:80/wd/hub' % (SAUCE_USERNAME, SAUCE_ACCESS_KEY)
 
 #--Result Files

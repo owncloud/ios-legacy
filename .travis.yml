@@ -7,12 +7,22 @@ xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
     
 install:
-  - sudo easy_install pip
-  - sudo pip install Appium-Python-Client
+  easy_install pip
+  pip install nose
+  pip install Appium-Python-Client
+
   
 addons:
   sauce_connect: true
 
 script:
-  - node node_modules/appium &
-  - python automation_Test/loginTest.py
+xcodebuild -sdk iphonesimulator6.0 TARGETED_DEVICE_FAMILY=1
+#target_device:
+   #1 designates iPhone only
+    #2 designates iPad only
+    #1,2designates a Universal app, which Apple Instruments will always open in an iPad simulator.
+
+zip -r my_app.zip Owncloud\ iOS\ Client.app/
+curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST "http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true" -H "Content-Type: application/octet-stream" --data-binary @my_app.zip
+
+nosetests
