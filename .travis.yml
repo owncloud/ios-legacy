@@ -13,10 +13,15 @@ install:
 addons:
   sauce_connect: true
 
-script:	
-  #- xcodebuild -sdk iphonesimulator
+before_script:	
+  - xcodebuild -sdk iphonesimulator
   - zip -r my_app.zip -i build/release-iphonesimulator/Owncloud\ iOs\ Client.app
   - curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST "http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true" -H "Content-Type: application/octet-stream" --data-binary @my_app.zip
+
+script:
   - node node_modules/appium 
   - python automation_Test/loginTest.py
 
+after_failure:
+  - cat xcodebuild.log
+  - cat $TMPDIR/com.apple.dt.XCTest-status/Session*.log
