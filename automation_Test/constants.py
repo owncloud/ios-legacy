@@ -9,7 +9,7 @@ K_APP_FILE_NAME = 'my_app.zip'
 K_APPIUM_VER = '1.5.1'
 K_APP_PLATFORM_NAME = 'iOS'
 K_APP_PLATFORM_VER = '9.2'
-K_DEVICE_NAME = 'iPhone 6'
+K_DEVICE_NAME = 'iPhone Simulator'
 K_APP_BROWSER_NAME = ''
 
 #--Webdriver property

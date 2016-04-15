@@ -32,7 +32,7 @@ class loginTest(unittest.TestCase):
         actions.assert_is_in_files_view(self)
         #import ipdb; ipdb.set_trace()
 
-    def test_ui_login_incorrect_password(self):
+/*    def test_ui_login_incorrect_password(self):
         server_url = const.K_URL_1
         user = const.K_USER_1
         password = const.K_PASSWORD_WRONG_1
@@ -64,7 +64,7 @@ class loginTest(unittest.TestCase):
         actions.doLoginWith(self,const.K_URL_2,const.K_USER_2,const.K_PASSWORD_2,const.K_SELF_SIGNED_2)
         actions.assert_is_in_files_view(self)
 
-
+*/
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(loginTest)
