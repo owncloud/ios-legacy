@@ -5,13 +5,12 @@ osx_image: xcode7
 xcode_project: Owncloud iOs Client.xcodeproj
 xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
-    
-install:
-  - easy_install pip
-  - pip install nose
-  - pip install Appium-Python-Client
 
-  
+install:
+  - sudo easy_install pip
+  - sudo pip install Appium-Python-Client
+  - pip install nose
+
 addons:
   sauce_connect: true
 
