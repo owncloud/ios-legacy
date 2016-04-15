@@ -1,7 +1,7 @@
 language: objective-c
 python:
   - "2.7"
-osx_image: xcode7
+osx_image: xcode7.3
 xcode_project: Owncloud iOs Client.xcodeproj
 xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
@@ -15,7 +15,7 @@ addons:
   sauce_connect: true
 
 script:	
-  - xcodebuild -project 'Owncloud iOS Client/OwnCloud iOS Client.xcodeproj' -scheme 'OwnCloud iOS Client' -sdk iphonesimulator TARGETED_DEVICE_FAMILY=1
+  - xcodebuild -project 'Owncloud iOs Client.xcodeproj' -scheme 'Owncloud iOs Client' -sdk iphonesimulator TARGETED_DEVICE_FAMILY=1
   - zip -r my_app.zip 'build/release-iphonesimulator/Owncloud iOS Client.app'
   - curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST "http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true" -H "Content-Type: application/octet-stream" --data-binary @my_app.zip
   - node node_modules/appium 
