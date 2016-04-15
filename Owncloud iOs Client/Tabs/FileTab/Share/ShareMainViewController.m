@@ -767,7 +767,7 @@
     }
     
     shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
-    shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
+    shareLinkButtonCell.titleButton.textColor = [UIColor colorOfLoginButtonTextColor];
     shareLinkButtonCell.titleButton.text = NSLocalizedString(@"add_user_or_group_title", nil);
     
     return shareLinkButtonCell;
@@ -817,7 +817,7 @@
     }
     
     shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
-    shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
+    shareLinkButtonCell.titleButton.textColor = [UIColor colorOfLoginButtonTextColor];
     shareLinkButtonCell.titleButton.text = NSLocalizedString(@"get_share_link", nil);
     
     return shareLinkButtonCell;
