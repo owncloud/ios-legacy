@@ -104,7 +104,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
     {
         self.sharedItem = fileDto;
         self.updatedOCShare = sharedDto;
-        self.canEditEnabled = [UtilsFramework isPermissionToCanEdit:self.updatedOCShare.permissions];
+        self.canEditEnabled = [UtilsFramework isAnyPermissionToEdit:self.updatedOCShare.permissions];
         self.canCreateEnabled = [UtilsFramework isPermissionToCanCreate:self.updatedOCShare.permissions];
         self.canChangeEnabled = [UtilsFramework isPermissionToCanChange:self.updatedOCShare.permissions];
         self.canDeleteEnabled = [UtilsFramework isPermissionToCanDelete:self.updatedOCShare.permissions];

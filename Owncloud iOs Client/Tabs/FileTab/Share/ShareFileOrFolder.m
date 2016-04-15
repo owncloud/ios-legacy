@@ -39,13 +39,17 @@
 
 @implementation ShareFileOrFolder
 
-- (void) showShareActionSheetForFile:(FileDto *)file {
-    
+- (void) initManageErrors {
     //We init the ManageNetworkErrors
     if (!_manageNetworkErrors) {
         _manageNetworkErrors = [ManageNetworkErrors new];
         _manageNetworkErrors.delegate = self;
     }
+}
+
+- (void) showShareActionSheetForFile:(FileDto *)file {
+    
+    [self initManageErrors];
     
     if ((APP_DELEGATE.activeUser.hasShareApiSupport == serverFunctionalitySupported || APP_DELEGATE.activeUser.hasShareApiSupport == serverFunctionalityNotChecked)) {
         _file = file;
@@ -201,6 +205,8 @@
  * @param isFile -> BOOL. Distinct between is fileDto or shareDto
  */
 - (void) clickOnShareLinkFromFileDto:(BOOL)isFileDto {
+    
+    [self initManageErrors];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -423,6 +429,8 @@
 
 -(void)doRequestSharedLinkWithPath: (NSString *)path andPassword: (NSString *)password{
     
+    [self initManageErrors];
+    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     [self initLoading];
@@ -525,8 +533,10 @@
  *
  * @param OCSharedDto -> The shared file/folder
  */
-- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password andExpirationTime:(NSString*)expirationTime{
+- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password expirationTime:(NSString*)expirationTime permissions:(NSInteger)permissions{
     
+    [self initManageErrors];
+
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     [self initLoading];
@@ -550,7 +560,7 @@
 
     password = [self getPasswordEncodingWithPassword:password];
     
-    [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime andPermissions:k_read_share_permission onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:password andExpirationTime:expirationTime andPermissions:permissions onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
         BOOL isSamlCredentialsError=NO;
         
@@ -608,6 +618,8 @@
 }
 
 - (void) updateLocalShareLink:(OCSharedDto *)ocShare{
+    
+    [self initManageErrors];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -698,6 +710,8 @@
  */
 - (void) unshareTheFile: (OCSharedDto *)sharedByLink {
     
+    [self initManageErrors];
+
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     [self initLoading];
@@ -780,6 +794,8 @@
 }
 
 - (void) checkSharedStatusOfFile:(FileDto *) file {
+    
+    [self initManageErrors];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
