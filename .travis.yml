@@ -8,10 +8,7 @@ xcode_sdk: iphonesimulator
 
 install:
   - sudo easy_install pip
-  - sudo install nose
   - sudo pip install Appium-Python-Client
-  - sudo install request
-  - sudo install selenium
 
 addons:
   sauce_connect: true
@@ -22,4 +19,4 @@ script:
   - curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST "http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true" -H "Content-Type: application/octet-stream" --data-binary @my_app.zip
   - node node_modules/appium 
   - python automation_Test/loginTest.py
-  #nosetests -c config.ini
+
