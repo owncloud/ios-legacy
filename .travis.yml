@@ -14,7 +14,7 @@ addons:
   sauce_connect: true
 
 before_script:	
-  - xcodebuild -project 'Owncloud iOs Client.xcodeproj' -scheme 'Owncloud iOs Client' -sdk iphonesimulator TARGETED_DEVICE_FAMILY=1 -configuration Debug clean
+  - xcodebuild -project 'Owncloud iOs Client.xcodeproj' -scheme 'Owncloud iOs Client' -sdk iphonesimulator TARGETED_DEVICE_FAMILY=1 CODE_SIGNING_REQUIRED=NO -configuration Debug clean   
   - zip -r my_app.zip -i build/release-iphonesimulator/Owncloud\ iOs\ Client.app
   - curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST "http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true" -H "Content-Type: application/octet-stream" --data-binary @my_app.zip
 
