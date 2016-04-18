@@ -15,7 +15,7 @@ addons:
 
 before_script:	
 #  - xcodebuild -project 'Owncloud iOs Client.xcodeproj' -scheme 'Owncloud iOs Client' -sdk iphonesimulator -UseSanitizedBuildSystemEnvironment=YES -configuration Debug clean
-  - xcodebuild -sdk iphonesimulator TARGETED_DEVICE_FAMILY=1 CODE_SIGNING_REQUIRED=NO -configuration Debug clean   
+  - xcodebuild -sdk iphonesimulator TARGETED_DEVICE_FAMILY=1 CODE_SIGNING_REQUIRED=NO -configuration Debug   
   - ls
   - ls build/
   - ls 'build/Owncloud iOs Client.build'
