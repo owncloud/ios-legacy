@@ -19,7 +19,7 @@ before_script:
   - ls
   - ls build/
   - ls 'build/Owncloud iOs Client.build'
-  - ls build/Debug-iphonesimulator
+  - ls 'build/Owncloud iOs Client.build/Debug-iphonesimulator'
   - zip
 #  - zip -r my_app.zip -i 'build/release-iphonesimulator/Owncloud iOs Client.app'
 #  - curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST "http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true" -H "Content-Type: application/octet-stream" --data-binary @my_app.zip
