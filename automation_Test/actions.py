@@ -20,6 +20,7 @@ def getWebDriver():
     desired_caps['deviceName'] = const.K_DEVICE_NAME
     desired_caps['app'] = os.path.dirname(os.path.realpath(__file__)) + const.K_APP_FILE_NAME
     desired_caps['access-key'] = const.SAUCE_ACCESS_KEY
+    desired_caps['os'] = const.k_APP_OS
     #desired_caps['os'] = 'iOS' 
     wd = webdriver.Remote(const.K_WD_REMOTE_URL, desired_caps)
     wd.implicitly_wait(const.K_WD_EXPLICITY_WAIT)

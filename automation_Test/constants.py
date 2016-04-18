@@ -11,6 +11,7 @@ K_APP_PLATFORM_NAME = 'iOS'
 K_APP_PLATFORM_VER = '9.2'
 K_DEVICE_NAME = 'iPhone Simulator'
 K_APP_BROWSER_NAME = ''
+k_APP_OS = 'iOS'
 
 #--Webdriver property
 SAUCE_USERNAME = os.environ.get('SAUCE_USERNAME')
