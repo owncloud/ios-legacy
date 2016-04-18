@@ -18,7 +18,7 @@ before_script:
   - xcodebuild -sdk iphonesimulator TARGETED_DEVICE_FAMILY=1 CODE_SIGNING_REQUIRED=NO -configuration Debug clean   
   - ls
   - ls build/
-  - ls build/Owncloud iOs Client.build
+  - ls 'build/Owncloud iOs Client.build'
   - ls build/Debug-iphonesimulator
   - zip
 #  - zip -r my_app.zip -i 'build/release-iphonesimulator/Owncloud iOs Client.app'
