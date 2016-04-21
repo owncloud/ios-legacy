@@ -44,7 +44,6 @@ extern NSString * fileWasDownloadNotification;
 
 
 //Download operation
-@property(nonatomic, strong) NSOperation *operation;
 @property(nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
 
 //Current local folder

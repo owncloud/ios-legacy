@@ -139,7 +139,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     if (k_is_sso_active || !k_is_background_active) {
         
         //Create the block of NSOperation to download.
-        _operation = [[AppDelegate sharedOCCommunication] downloadFile:serverUrl toDestiny:localPath withLIFOSystem:_isLIFO onCommunication:[AppDelegate sharedOCCommunication]
+        self.downloadTask = [[AppDelegate sharedOCCommunication] downloadFile:serverUrl toDestiny:localPath withLIFOSystem:_isLIFO onCommunication:[AppDelegate sharedOCCommunication]
                                                       progressDownload:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
                                                           
                                                           //If is first input of download

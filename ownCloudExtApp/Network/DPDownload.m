@@ -250,7 +250,9 @@
         [self.progressView stopSpinProgressBackgroundLayer];
         
         BOOL isSamlCredentialsError = NO;
-        //TODO: We are not detecting the redirection. We have a problem here
+        //TODO: AF We are not detecting the redirection. We have a problem here
+        NSString *redirectedServer = nil;
+        
         //Check the login error in shibboleth
         if (k_is_sso_active && redirectedServer) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
@@ -311,6 +313,9 @@
         });
         
         BOOL isSamlCredentialsError = NO;
+        
+        //TODO: AF We are not detecting the redirection. We have a problem here
+        NSString *redirectedServer = nil;
         
         //Check the login error in shibboleth
         if (k_is_sso_active && redirectedServer) {
