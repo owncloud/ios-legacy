@@ -48,7 +48,7 @@
 - (void)showTouchIDAuth {
     if (self.isTouchIDAvailable) {
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-        [[[LAContext alloc] init] evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"unlock_app", nil), appName] reply:^(BOOL success, NSError * error){
+        [[[LAContext alloc] init] evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason: [NSLocalizedString(@"unlock_app", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName] reply:^(BOOL success, NSError * error){
             
             if(error) {
                 NSString *failureReason;
