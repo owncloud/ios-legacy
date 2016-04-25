@@ -89,8 +89,6 @@ extern NSString * fileWasDownloadNotification;
 
 @property(nonatomic) BOOL isForceCanceling;
 
-@property(nonatomic, strong) NSProgress *progressValueGlobal;
-
 //user is needed when we cancel all the downloads in a change of user
 @property (nonatomic, strong) UserDto *user;
 

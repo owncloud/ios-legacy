@@ -259,40 +259,11 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     if (k_is_sso_active || !k_is_background_active) {
         
-        //Create the block of NSOperation to upload.
-        _operation = [[AppDelegate sharedOCCommunication] uploadFile:_currentUpload.originPath toDestiny:urlClean onCommunication:[AppDelegate sharedOCCommunication] progressUpload:^(NSUInteger bytesWrote, long long totalBytesWrote, long long totalBytesExpectedToWrote) {
+        self.uploadTask = [[AppDelegate sharedOCCommunication] uploadFile:_currentUpload.originPath toDestiny:urlClean onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
             
-            DLog(@"Sent %lld of %lld bytes", totalBytesWrote, totalBytesExpectedToWrote);
+            [self calculateTheProgressBy:progress];
             
-            /*  DLog(@"----------------------------");
-             DLog(@"bytesWrote: %d", bytesWrote);
-             DLog(@"totalBytesWrote: %lld", totalBytesWrote);
-             DLog(@"totalBytesExpectedToWrote: %lld", totalBytesExpectedToWrote);*/
-            
-            if(totalBytesExpectedToWrote/1024 != 0) {
-                if (bytesWrote>0) {
-                    float percent;
-                    
-                    percent=totalBytesWrote*100/totalBytesExpectedToWrote;
-                    percent = percent / 100;
-                    
-                    DLog(@"percent: %f", percent);
-                    
-                    [weakSelf updateProgressWithPercent:percent];
-                }
-            }
-            
-            if (firstTime) {
-                
-                //Check if the first time the file is waiting for upload (the previous state of uploading)
-                if (weakSelf.currentUpload.status == waitingForUpload) {
-                    [ManageUploadsDB setStatus:uploading andKindOfError:notAnError byUploadOffline:weakSelf.currentUpload];
-                    weakSelf.currentUpload.status=uploading;
-                    [weakSelf updateRecentsTab];
-                    firstTime=NO;
-                }
-            }
-        } successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+        } successRequest:^(NSURLResponse *response, NSString *redirectedServer) {
             
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             
@@ -348,16 +319,15 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 }
                 
                 [weakSelf removeTheFileOnFileSystem];
-                
-                [_operation finalize];
-                _operation = nil;
             }
             
-        } failureRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer, NSError *error) {
+        } failureRequest:^(NSURLResponse *response, NSString *redirectedServer, NSError *error) {
+            
+            NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
             
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             
-            DLog(@"response.statusCode: %ld", (long)response.statusCode);
+            DLog(@"response.statusCode: %ld", (long)httpResponse.statusCode);
             DLog(@"Error: %@", error);
             DLog(@"error.code: %ld", (long)error.code);
             
@@ -392,7 +362,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                     }else{
                         
                         //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
-                        switch (response.statusCode) {
+                        switch (httpResponse.statusCode) {
                             case kOCErrorServerUnauthorized:
                                 weakSelf.currentUpload.status = errorUploading;
                                 weakSelf.currentUpload.kindOfError = errorCredentials;
@@ -425,13 +395,14 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                         }
                         
                     }
-
+                    
                     [weakSelf updateRecentsTab];
                 }
                 
             }
             
         } failureBeforeRequest:^(NSError *error) {
+            
             switch (error.code) {
                 case OCErrorFileToUploadDoesNotExist: {
                     //TODO: create a state to control if the file does not exist
@@ -460,37 +431,17 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             }
             [weakSelf updateRecentsTab];
             
-        } shouldExecuteAsBackgroundTaskWithExpirationHandler:^{
-            
-            
-            AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-            app.isExpirationTimeInUpload = YES;
-            
-            //Get the status
-            /* weakSelf.currentUpload =  [ManageUploadsDB getUploadOfflineById:weakSelf.currentUpload.idUploadsOffline];
-             
-             DLog(@"current upload status: %d", weakSelf.currentUpload.status);
-             //Check if the current Upload is not uploaded
-             if ( weakSelf.currentUpload.status != uploaded) {
-             weakSelf.currentUpload.status = errorUploading;
-             weakSelf.currentUpload.kindOfError = notAnError;
-             [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-             
-             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-             appDelegate.userUploadWithError=weakSelf.userUploading;
-             }*/
         }];
         
     } else {
         
-        NSProgress *progressValue;
-        
         [[AppDelegate sharedOCCommunication].uploadSessionManager.operationQueue cancelAllOperations];
         
-        
-        _uploadTask = [[AppDelegate sharedOCCommunication] uploadFileSession:_currentUpload.originPath toDestiny:urlClean onCommunication:[AppDelegate sharedOCCommunication] withProgress:&progressValue successRequest:^(NSURLResponse *response, NSString *redirectedServer) {
+        self.uploadTask = [[AppDelegate sharedOCCommunication] uploadFileSession:_currentUpload.originPath toDestiny:urlClean onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
             
-            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
+            [self calculateTheProgressBy:progress];
+            
+        } successRequest:^(NSURLResponse *response, NSString *redirectedServer) {
             
             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             
@@ -555,10 +506,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 
             }
             
-            
         } failureRequest:^(NSURLResponse *response, NSString *redirectedServer, NSError *error) {
-            
-            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
             
             NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
             
@@ -629,7 +577,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                                 appDelegate.userUploadWithError=weakSelf.userUploading;
                                 break;
                         }
-
+                        
                     }
                     
                     [weakSelf updateRecentsTab];
@@ -637,8 +585,6 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 
             }
         } failureBeforeRequest:^(NSError *error) {
-            
-            [self.progressValueGlobal removeObserver:self forKeyPath:@"fractionCompleted"];
             
             switch (error.code) {
                 case OCErrorFileToUploadDoesNotExist: {
@@ -667,19 +613,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 }
             }
             [weakSelf updateRecentsTab];
-            
         }];
-        
-        self.progressValueGlobal = progressValue;
-        progressValue = nil;
-        
-        // Observe fractionCompleted using KVO
-        [self.progressValueGlobal addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew context:NULL];
-        
-    }
-    
-    if (_isCanceled) {
-        [_operation cancel];
     }
     
     if (_currentUpload.isNotNecessaryCheckIfExist) {
@@ -702,29 +636,24 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 }
 
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:@"fractionCompleted"] && [object isKindOfClass:[NSProgress class]]) {
-        NSProgress *progress = (NSProgress *)object;
-        //DLog(@"Progress is %f", progress.fractionCompleted);
-        
-        float percent = roundf (progress.fractionCompleted * 100) / 100.0;
-        
-        DLog(@"Progress is %f", percent);
-        
-        //We make it on the main thread because we came from a delegate
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self updateProgressWithPercent:percent];
-        });
-        
-        if (progress.fractionCompleted > 0.000000 && !_isUploadBegan) {
-            _isUploadBegan = YES;
-            //Check if the first time the file is waiting for upload (the previous state of uploading)
-            if (self.currentUpload.status == waitingForUpload) {
-                [ManageUploadsDB setStatus:uploading andKindOfError:notAnError byUploadOffline:self.currentUpload];
-                self.currentUpload.status=uploading;
-                [self updateRecentsTab];
-            }
+- (void)calculateTheProgressBy:(NSProgress *) progress {
+    
+    float percent = roundf (progress.fractionCompleted * 100) / 100.0;
+    
+    DLog(@"Progress is %f", percent);
+    
+    //We make it on the main thread because we came from a delegate
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateProgressWithPercent:percent];
+    });
+    
+    if (progress.fractionCompleted > 0.000000 && !_isUploadBegan) {
+        _isUploadBegan = YES;
+        //Check if the first time the file is waiting for upload (the previous state of uploading)
+        if (self.currentUpload.status == waitingForUpload) {
+            [ManageUploadsDB setStatus:uploading andKindOfError:notAnError byUploadOffline:self.currentUpload];
+            self.currentUpload.status=uploading;
+            [self updateRecentsTab];
         }
     }
     
@@ -778,36 +707,24 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     //Quit the upload from the uploadArray
     [app.uploadArray removeObjectIdenticalTo:self];
     
-    //Quit the operation from the operation queue
-    if (self.operation) {
-        [[AppDelegate sharedOCCommunication].uploadOperationQueueArray removeObjectIdenticalTo:self.operation];
-    }
-    
     //Send this percent to remove the progressview of the array
     //[self updateProgressWithPercent:1.0];
     
     //Check if the operation exist (If possible that the upload stated in wainting state)
-    if (self.operation == nil && self.uploadTask == nil) {
+    if (self.uploadTask == nil) {
         //Check if the operation exist (If possible that the upload stated in wainting state)
         DLog(@"THE OPERATION DOES NOT EXIST!!!!");
         [self removeTheFileOnFileSystem];
         [_delegate uploadCanceled:self];
     } else {
-        //Current upload
-        if (self.operation) {
-            [self.operation cancel];
-            self.operation = nil;
-        }
         
         if (self.uploadTask) {
-            
             [self.uploadTask cancel];
-            
         }
         
         [self removeTheFileOnFileSystem];
         
-        if (_isFinishTransferLostServer==NO) {
+        if (_isFinishTransferLostServer == NO) {
             [_delegate uploadCompleted:_currentUpload.destinyFolder];
         }
     }
@@ -831,9 +748,6 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     
-    [_operation cancel];
-    _operation=nil;
-    
     //Like credential error
     _currentUpload.status = errorUploading;
     _currentUpload.kindOfError = errorCredentials;
@@ -845,11 +759,6 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 - (void) changeTheStatusToWaitingToServerConnection{
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    
-    if (self.operation) {
-        [self.operation cancel];
-        self.operation=nil;
-    }
     
     if (self.uploadTask) {
         [self.uploadTask cancel];
@@ -952,7 +861,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
  * Dismiss transfer progress
  */
 - (void)dismissTransferProgress:(id)sender {
-    _operation = nil;
+    //TODO: AF this was commented, maybe this method it is not necessary
+    //_operation = nil;
 }
 
 /*
