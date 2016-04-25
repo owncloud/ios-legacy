@@ -4542,7 +4542,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "GIT_RELEASE_VERSION=$(git describe --always)\nLASTGITCOMMIT=\"${GIT_RELEASE_VERSION#*g}\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"LastGitCommit\" \"${LASTGITCOMMIT}\"\n";
+			shellScript = "LASTGITCOMMIT=$(git rev-parse --short HEAD)\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"LastGitCommit\" \"${LASTGITCOMMIT}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
