@@ -1426,7 +1426,7 @@
         fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.fileIdToShowFiles andIsSonOfFavoriteFolder:self.isCurrentFolderSonOfFavoriteFolder ofUser:APP_DELEGATE.activeUser];
         
         //Thumbnail
-        fileCell.thumbnailOperation = [InfoFileUtils updateThumbnail:file andUser:APP_DELEGATE.activeUser tableView:tableView cellForRowAtIndexPath:indexPath];
+        fileCell.thumbnailSessionTask = [InfoFileUtils updateThumbnail:file andUser:APP_DELEGATE.activeUser tableView:tableView cellForRowAtIndexPath:indexPath];
         
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
@@ -1543,9 +1543,9 @@
     @try {
         CustomCellFileAndDirectory *customCell = (CustomCellFileAndDirectory *) cell;
         
-        if ([customCell isKindOfClass:[CustomCellFileAndDirectory class]] && customCell.thumbnailOperation) {
+        if ([customCell isKindOfClass:[CustomCellFileAndDirectory class]] && customCell.thumbnailSessionTask) {
             DLog(@"Cancel thumbnailOperation");
-            [customCell.thumbnailOperation cancel];
+            [customCell.thumbnailSessionTask cancel];
         }
     }
     @catch (NSException *exception) {

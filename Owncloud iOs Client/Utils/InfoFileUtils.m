@@ -300,9 +300,9 @@
 /*
  *  Method update the thumbnail of an icon after read it
  */
-+ (NSOperation *) updateThumbnail:(FileDto *) file andUser:(UserDto *) user tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
++ (NSURLSessionTask *) updateThumbnail:(FileDto *) file andUser:(UserDto *) user tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSOperation *thumbnailOperation;
+    NSURLSessionTask *thumbnailSessionTask;
     
     if (![[ManageThumbnails sharedManager] isStoredThumbnailForFile:file]) {
         
@@ -331,7 +331,7 @@
             NSString *path = [UtilsUrls getFilePathOnDBWithFileName:file.fileName ByFilePathOnFileDto:file.filePath andUser:user];
             path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
-            thumbnailOperation = [sharedCommunication getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:k_thumbnails_width andHeight:k_thumbnails_height onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
+            thumbnailSessionTask = [sharedCommunication getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:k_thumbnails_width andHeight:k_thumbnails_height onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
                 
                 UIImage *thumbnailImage = [UIImage imageWithData:thumbnail];
                 
@@ -370,7 +370,7 @@
         }
      }
     
-    return thumbnailOperation;
+    return thumbnailSessionTask;
 }
 
 @end
