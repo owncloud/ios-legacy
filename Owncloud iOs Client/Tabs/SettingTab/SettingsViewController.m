@@ -766,7 +766,7 @@
     
     switch (row) {
         case 0:
-            if([self isTouchIDAvailable] && ![ManageAppSettingsDB isPasscode]) {
+            if([self isTouchIDAvailable] && !self.switchPasscode.on) {
                 cell.textLabel.text = NSLocalizedString(@"title_app_pin_and_touchID", nil);
             }
             else{

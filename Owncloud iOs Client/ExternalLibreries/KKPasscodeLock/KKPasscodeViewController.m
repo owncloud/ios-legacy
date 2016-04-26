@@ -987,7 +987,7 @@
 
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        DLog(@"KKPasscodeController. Biometric Succeedd");
+        DLog(@"KKPasscodeController. Biometric Succeeded");
         
         if ([_delegate respondsToSelector:@selector(didPasscodeEnteredCorrectly:)]) {
             [_delegate performSelector:@selector(didPasscodeEnteredCorrectly:) withObject:self];
