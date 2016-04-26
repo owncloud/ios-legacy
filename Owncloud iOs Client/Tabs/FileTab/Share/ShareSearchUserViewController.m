@@ -385,6 +385,11 @@
         self.selectedItems = [ShareUtils manageTheDuplicatedUsers:self.selectedItems];
         
         [self.searchTableView reloadData];
+        
+        if (!IS_IPHONE) {
+        //Refresh the files view that is shown below 
+        [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
+        }
 
         
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
