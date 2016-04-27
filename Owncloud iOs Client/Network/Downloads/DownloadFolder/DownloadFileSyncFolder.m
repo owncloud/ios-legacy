@@ -76,7 +76,7 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
     
     if (k_is_sso_active || !k_is_background_active) {
         
-        self.downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFile:serverUrl toDestiny:localPath withLIFOSystem:NO defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
+        self.downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFile:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
             
         } successRequest:^(NSURLResponse *response, NSURL *filePath) {
             DLog(@"file: %@", file.localFolder);

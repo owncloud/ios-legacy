@@ -107,45 +107,38 @@
 
 - (void) addDownload:(Download *)download{
     
-    if (k_is_sso_active||!k_is_background_active) {
-        
-        [self.downloads addObject:download];
-        
-    } else {
-        
-        [[AppDelegate sharedOCCommunication].downloadSessionManager.operationQueue cancelAllOperations];
-        
-        if (self.downloads.count > 0) {
-            for (Download *temp in self.downloads) {
-                if (temp.downloadTask.state == NSURLSessionTaskStateRunning) {
-                    temp.isForceCanceling = YES;
-                    [temp.downloadTask cancel];
-                }
-            }
-            
-            NSMutableArray *downs = [NSMutableArray arrayWithArray:self.downloads];
-            
-            for (Download *temp in self.downloads) {
-                if ([temp.fileDto.localFolder isEqualToString:download.fileDto.localFolder]) {
-                    [downs removeObjectIdenticalTo:temp];
-                    break;
-                }
-            }
-            self.downloads = [NSMutableArray arrayWithArray:downs];
-        }
-        
-        if (!download.delegate) {
-            download.delegate = self;
-        }
-        
-        if (download.downloadTask) {
-            [self.downloads addObject:download];
-            if (download.downloadTask.state != NSURLSessionTaskStateRunning) {
-                [download.downloadTask resume];
+    [[AppDelegate sharedOCCommunication].downloadSessionManager.operationQueue cancelAllOperations];
+    [[AppDelegate sharedOCCommunication].downloadSessionManagerNoBackground.operationQueue cancelAllOperations];
+    
+    if (self.downloads.count > 0) {
+        for (Download *temp in self.downloads) {
+            if (temp.downloadTask.state == NSURLSessionTaskStateRunning) {
+                temp.isForceCanceling = YES;
+                [temp.downloadTask cancel];
             }
         }
+        
+        NSMutableArray *downs = [NSMutableArray arrayWithArray:self.downloads];
+        
+        for (Download *temp in self.downloads) {
+            if ([temp.fileDto.localFolder isEqualToString:download.fileDto.localFolder]) {
+                [downs removeObjectIdenticalTo:temp];
+                break;
+            }
+        }
+        self.downloads = [NSMutableArray arrayWithArray:downs];
     }
     
+    if (!download.delegate) {
+        download.delegate = self;
+    }
+    
+    if (download.downloadTask) {
+        [self.downloads addObject:download];
+        if (download.downloadTask.state != NSURLSessionTaskStateRunning) {
+            [download.downloadTask resume];
+        }
+    }
 }
 
 - (void) addSimpleDownload:(Download *)download{
@@ -169,7 +162,6 @@
 
 - (void) removeDownload:(Download *)download{
     
-    if (!k_is_sso_active){
         
         BOOL exist = NO;
         
@@ -190,27 +182,6 @@
                 [self resumeNextDownload];
             }
         }
-        
-    } else {
-        
-        BOOL exist = NO;
-        
-        for (Download *temp in self.downloads) {
-            if ([temp isEqual:download]) {
-                exist = YES;
-                break;
-            }
-        }
-        
-        if (exist) {
-            
-            NSMutableArray *downs = [NSMutableArray arrayWithArray:self.downloads];
-            [downs removeObjectIdenticalTo:download];
-            self.downloads = [NSMutableArray arrayWithArray:downs];
-            
-        }
-        
-    }
     
 }
 

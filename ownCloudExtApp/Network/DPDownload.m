@@ -236,7 +236,7 @@
     
    self.state = downloadWorking;
     
-    self.operationTask = [sharedCommunication downloadFile:serverUrl toDestiny:localPath withLIFOSystem:self.isLIFO defaultPriority:NO onCommunication:sharedCommunication progress:^(NSProgress *progress) {
+    self.operationTask = [sharedCommunication downloadFile:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:sharedCommunication progress:^(NSProgress *progress) {
         
         float percent = roundf (progress.fractionCompleted * 100);
         

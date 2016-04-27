@@ -139,7 +139,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     if (k_is_sso_active || !k_is_background_active) {
         
         //Create the block of NSOperation to download.
-        self.downloadTask = [[AppDelegate sharedOCCommunication] downloadFile:serverUrl toDestiny:localPath withLIFOSystem:self.isLIFO defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
+        self.downloadTask = [[AppDelegate sharedOCCommunication] downloadFile:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
             
             [self calculateTheProgressBy:progress];
             
@@ -175,11 +175,15 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             
         } failureRequest:^(NSURLResponse *response, NSError *error) {
             
+            
+            
             NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
             
             DLog(@"Error: %@", error);
             DLog(@"error.code: %ld", (long)error.code);
             DLog(@"response.statusCode: %ld", (long)httpResponse.statusCode);
+            
+            if (!self.isForceCanceling) {
             
             //Update the fileDto
             _fileDto = [ManageFilesDB getFileDtoByIdFile:_fileDto.idFile];
@@ -250,12 +254,12 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
             
             //Erase cache and cookies
             [UtilsCookies eraseURLCache];
-            
+            }
         }];
     
     } else {
         
-        _downloadTask = [[AppDelegate sharedOCCommunication] downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
+        self.downloadTask = [[AppDelegate sharedOCCommunication] downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
             [self calculateTheProgressBy:progress];
         } successRequest:^(NSURLResponse *response, NSURL *filePath) {
             
