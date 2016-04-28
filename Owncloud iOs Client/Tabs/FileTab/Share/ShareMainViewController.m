@@ -142,18 +142,15 @@
 
 - (BOOL) hasAllowEditingToBeShown {
 
-    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport != serverFunctionalitySupported){
+    if (((APP_DELEGATE.activeUser.hasCapabilitiesSupport != serverFunctionalitySupported) ||
+        (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAllowPublicUploadsEnabled))
+        && self.sharedItem.isDirectory){
         return true;
     }
     
     else{
-        if( APP_DELEGATE.activeUser.capabilitiesDto && self.sharedItem.isDirectory) {
-            return APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAllowPublicUploadsEnabled;
-        }
+        return false;
     }
-    
-    return false;
-
 }
 
 #pragma mark - Accessory alert views
