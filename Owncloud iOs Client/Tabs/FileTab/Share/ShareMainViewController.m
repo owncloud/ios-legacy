@@ -145,11 +145,11 @@
     if (((APP_DELEGATE.activeUser.hasCapabilitiesSupport != serverFunctionalitySupported) ||
         (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAllowPublicUploadsEnabled))
         && self.sharedItem.isDirectory){
-        return true;
-    }
-    
-    else{
-        return false;
+        return YES;
+        
+    } else {
+        
+        return NO;
     }
 }
 

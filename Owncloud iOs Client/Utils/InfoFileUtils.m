@@ -173,7 +173,7 @@
     NSArray *sharesByRemote = [allShares filteredArrayUsingPredicate:predicateShareByRemote];
     NSInteger numberOfSharesByRemote = sharesByRemote.count;
     
-    BOOL isShareAPIActive = (user.hasCapabilitiesSupport == serverFunctionalityNotSupported) || (user.hasCapabilitiesSupport == serverFunctionalitySupported && user.capabilitiesDto && user.capabilitiesDto.isFilesSharingAPIEnabled);
+    BOOL isShareAPIActive = (user.hasCapabilitiesSupport != serverFunctionalitySupported) || (user.hasCapabilitiesSupport == serverFunctionalitySupported && user.capabilitiesDto && user.capabilitiesDto.isFilesSharingAPIEnabled);
 
     if (fileForSetTheStatusIcon.isDirectory) {
         
