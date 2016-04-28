@@ -171,10 +171,11 @@
     NSInteger numberOfSharesByLink = sharesByLink.count;
     NSPredicate *predicateShareByRemote = [NSPredicate predicateWithFormat:@"shareType == %i", shareTypeRemote];
     NSArray *sharesByRemote = [allShares filteredArrayUsingPredicate:predicateShareByRemote];
-    NSInteger numberOfSharesByRemote = sharesByLink.count;
+    NSInteger numberOfSharesByRemote = sharesByRemote.count;
     
-    BOOL isShareAPIActive = user.hasCapabilitiesSupport && user.capabilitiesDto && user.capabilitiesDto.isFilesSharingAPIEnabled;
-    
+    BOOL isShareAPIActive = (!k_hide_share_options) || ( user.hasCapabilitiesSupport && user.capabilitiesDto && user.capabilitiesDto.isFilesSharingAPIEnabled);
+    //if ( (k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled) ) {
+
     
     if (fileForSetTheStatusIcon.isDirectory) {
         
