@@ -277,7 +277,7 @@
     
     BOOL supportFederatedSharing = NO;
     
-    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported) {
         CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
         
         if (cap.isFilesSharingAllowUserSendSharesToOtherServersEnabled) {
