@@ -407,15 +407,16 @@
 
 -(BOOL)isPasswordEnforcedCapabilityEnabled {
     
-    BOOL output = NO;
+    BOOL output;
     
-    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported) {
+    if ((APP_DELEGATE.activeUser.hasCapabilitiesSupport != serverFunctionalitySupported) ||
+        (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingPasswordEnforcedEnabled) ) {
         
-        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+        output = YES;
         
-        if (cap.isFilesSharingPasswordEnforcedEnabled) {
-            output = YES;
-        }
+    } else {
+        
+        output = NO;
     }
     
     return output;
