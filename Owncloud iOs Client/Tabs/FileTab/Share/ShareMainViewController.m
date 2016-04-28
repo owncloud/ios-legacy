@@ -141,9 +141,15 @@
 }
 
 - (BOOL) hasAllowEditingToBeShown {
+
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport != serverFunctionalitySupported){
+        return true;
+    }
     
-    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && self.sharedItem.isDirectory) {
-        return APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAllowPublicUploadsEnabled;
+    else{
+        if( APP_DELEGATE.activeUser.capabilitiesDto && self.sharedItem.isDirectory) {
+            return APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAllowPublicUploadsEnabled;
+        }
     }
     
     return false;
