@@ -24,7 +24,7 @@
 -(void)badCertificateNoAcceptedByUser;
 @end
 
-@interface CheckAccessToServer : NSObject <UIAlertViewDelegate, NSURLConnectionDataDelegate> {
+@interface CheckAccessToServer : NSObject <UIAlertViewDelegate, NSURLConnectionDataDelegate, NSURLSessionDataDelegate> {
     __weak id<CheckAccessToServerDelegate> _delegate;
 }
 

@@ -148,7 +148,8 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     }
 }
 
--(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+-(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+
     NSLog(@"Error: %ld - %@",(long)[error code] , [error localizedDescription]);
     
     //-1202 = self signed certificate
@@ -201,6 +202,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
         }
     }
 }
+
 
 -(void) connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
     NSLog(@"willSendRequestForAuthenticationChallenge");
