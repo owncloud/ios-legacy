@@ -136,198 +136,74 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     __weak typeof(self) weakSelf = self;
     
-    if (k_is_sso_active || !k_is_background_active) {
+    self.downloadTask = [[AppDelegate sharedOCCommunication] downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
+        [self calculateTheProgressBy:progress];
+    } successRequest:^(NSURLResponse *response, NSURL *filePath) {
         
-        //Create the block of NSOperation to download.
-        self.downloadTask = [[AppDelegate sharedOCCommunication] downloadFile:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
+        //Finalized the download
+        [weakSelf updateDataDownload];
+        [weakSelf setDownloadTaskIdentifierValid:NO];
+        
+    } failureRequest:^(NSURLResponse *response, NSError *error) {
+        
+        DLog(@"Error: %@", error);
+        DLog(@"error.code: %ld", (long)error.code);
+        
+        if (!self.isForceCanceling) {
             
-            [self calculateTheProgressBy:progress];
-            
-        } successRequest:^(NSURLResponse *response, NSURL *filePath) {
-            
-            //TODO: AF We are not detecting the redirection. We have a problem here
-            NSString *redirectedServer = nil;
-            BOOL isSamlCredentialsError=NO;
-            
-            //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
-                //Check if there are fragmens of saml in url, in this case there are a credential error
-                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-                if (isSamlCredentialsError) {
-                    //Set not download or downloaded in database
-                    if (_fileDto.isNecessaryUpdate) {
-                        [ManageFilesDB setFileIsDownloadState:weakSelf.fileDto.idFile andState:downloaded];
-                        
-                    } else {
-                        [ManageFilesDB setFileIsDownloadState:weakSelf.fileDto.idFile andState:notDownload];
-                    }
-                    [weakSelf deleteFileFromLocalFolder];
-                    [weakSelf removeDownloadOfGlobalArray];
-                    [weakSelf removeFileOfFavorites];
-                    [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
-                    [weakSelf.delegate errorLogin];
-                }
-            }
-            if (!isSamlCredentialsError) {
-                //Finalized the download
-                [weakSelf updateDataDownload];
-            }
-            
-        } failureRequest:^(NSURLResponse *response, NSError *error) {
-            
-            
-            
+            [weakSelf setDownloadTaskIdentifierValid:NO];
             NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-            
-            DLog(@"Error: %@", error);
-            DLog(@"error.code: %ld", (long)error.code);
-            DLog(@"response.statusCode: %ld", (long)httpResponse.statusCode);
-            
-            if (!self.isForceCanceling) {
+            DLog(@"Operation error: %ld", (long)httpResponse.statusCode);
             
             //Update the fileDto
             _fileDto = [ManageFilesDB getFileDtoByIdFile:_fileDto.idFile];
             
-            BOOL isSamlCredentialsError=NO;
+            [self failureDownloadProcess];
             
-            //TODO: AF We are not detecting the redirection. We have a problem here
-            NSString *redirectedServer = nil;
-            
-            //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
-                //Check if there are fragmens of saml in url, in this case there are a credential error
-                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-                if (isSamlCredentialsError) {
-                    //Set not download or downloaded in database
-                    if (_fileDto.isNecessaryUpdate) {
-                        [ManageFilesDB setFileIsDownloadState:weakSelf.fileDto.idFile andState:downloaded];
+            if ([error code] != NSURLErrorCancelled && weakSelf.isCancel==NO) {
+                
+                switch (error.code) {
+                    case kCFURLErrorUserCancelledAuthentication: { //-1012
                         
-                    } else {
-                        [ManageFilesDB setFileIsDownloadState:weakSelf.fileDto.idFile andState:notDownload];
+                        [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
+                        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:APP_DELEGATE.activeUser.url];
+                        
+                        break;
                     }
-                    [weakSelf deleteFileFromLocalFolder];
-                    [weakSelf removeDownloadOfGlobalArray];
-                    [weakSelf removeFileOfFavorites];
-                    [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
-                    [weakSelf.delegate errorLogin];
-                }
-            }
-            
-            if (!isSamlCredentialsError) {
-                
-                [self failureDownloadProcess];
-                
-                if ([error code] != NSURLErrorCancelled && weakSelf.isCancel==NO) {
-                    
-                    switch (error.code) {
-                        case kCFURLErrorUserCancelledAuthentication: { //-1012
-                            
-                            [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
-                            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:APP_DELEGATE.activeUser.url];
-                            
-                            break;
+                    case kCFURLErrorUserAuthenticationRequired:{
+                        [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
+                        [weakSelf.delegate errorLogin];
+                        
+                        break;
+                    }
+                    default:
+                        
+                        switch (httpResponse.statusCode) {
+                            case kOCErrorServerUnauthorized:
+                                [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
+                                [weakSelf.delegate errorLogin];
+                                break;
+                            case kOCErrorServerForbidden:
+                                [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
+                                break;
+                            case kOCErrorProxyAuth:
+                                [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
+                                break;
+                            case kOCErrorServerPathNotFound:
+                                [weakSelf.delegate downloadFailed:NSLocalizedString(@"download_file_exist", nil) andFile:weakSelf.fileDto];
+                                break;
+                            default:
+                                [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
+                                break;
                         }
-                        default:
-                            
-                            switch (httpResponse.statusCode) {
-                                case kOCErrorServerUnauthorized:
-                                    [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
-                                    [weakSelf.delegate errorLogin];
-                                    break;
-                                case kOCErrorServerForbidden:
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
-                                    break;
-                                case kOCErrorProxyAuth:
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
-                                    break;
-                                case kOCErrorServerPathNotFound:
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"download_file_exist", nil) andFile:weakSelf.fileDto];
-                                    break;
-                                default:
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
-                                    break;
-                            }
-                    }
                 }
-                
             }
             
             //Erase cache and cookies
             [UtilsCookies eraseURLCache];
-            }
-        }];
-    
-    } else {
-        
-        self.downloadTask = [[AppDelegate sharedOCCommunication] downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
-            [self calculateTheProgressBy:progress];
-        } successRequest:^(NSURLResponse *response, NSURL *filePath) {
             
-            //Finalized the download
-            [weakSelf updateDataDownload];
-            [weakSelf setDownloadTaskIdentifierValid:NO];
-            
-        } failureRequest:^(NSURLResponse *response, NSError *error) {
-            
-            DLog(@"Error: %@", error);
-            DLog(@"error.code: %ld", (long)error.code);
-            
-            if (!self.isForceCanceling) {
-                
-                [weakSelf setDownloadTaskIdentifierValid:NO];
-                NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-                DLog(@"Operation error: %ld", (long)httpResponse.statusCode);
-                
-                //Update the fileDto
-                _fileDto = [ManageFilesDB getFileDtoByIdFile:_fileDto.idFile];
-                
-                [self failureDownloadProcess];
-                
-                if ([error code] != NSURLErrorCancelled && weakSelf.isCancel==NO) {
-                    
-                    switch (error.code) {
-                        case kCFURLErrorUserCancelledAuthentication: { //-1012
-                            
-                            [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
-                            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:APP_DELEGATE.activeUser.url];
-                            
-                            break;
-                        }
-                        case kCFURLErrorUserAuthenticationRequired:{
-                            [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
-                            [weakSelf.delegate errorLogin];
-                            
-                            break;
-                        }
-                        default:
-                            
-                            switch (httpResponse.statusCode) {
-                                case kOCErrorServerUnauthorized:
-                                    [weakSelf.delegate downloadFailed:nil andFile:weakSelf.fileDto];
-                                    [weakSelf.delegate errorLogin];
-                                    break;
-                                case kOCErrorServerForbidden:
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
-                                    break;
-                                case kOCErrorProxyAuth:
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
-                                    break;
-                                case kOCErrorServerPathNotFound:
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"download_file_exist", nil) andFile:weakSelf.fileDto];
-                                    break;
-                                default:
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
-                                    break;
-                            }
-                    }
-                }
-                
-                //Erase cache and cookies
-                [UtilsCookies eraseURLCache];
-                
-            }
-        }];
-    }
+        }
+    }];
     
     if (_downloadTask) {
         [self setDownloadTaskIdentifierValid:YES];

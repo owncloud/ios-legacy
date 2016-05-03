@@ -74,58 +74,29 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
     
     __weak typeof(self) weakSelf = self;
     
-    if (k_is_sso_active || !k_is_background_active) {
+    self.downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunicationDownloadFolder] progress:^(NSProgress *progress) {
         
-        self.downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFile:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
-            
-        } successRequest:^(NSURLResponse *response, NSURL *filePath) {
-            DLog(@"file: %@", file.localFolder);
-            DLog(@"File downloaded");
-            
-            //TODO: AF We are not detecting the redirection. We have a problem here
-            NSString *redirectedServer = nil;
-            
-            if (k_is_sso_active && redirectedServer) {
-                [weakSelf failureDownloadProcess];
-            } else {
-                //Finalized the download
-                if ([[NSFileManager defaultManager] fileExistsAtPath:self.file.localFolder]) {
-                    [weakSelf updateDataDownloadSuccess];
-                } else {
-                    [weakSelf failureDownloadProcess];
-                }
-            }
-        } failureRequest:^(NSURLResponse *response, NSError *error) {
-            DLog(@"Error: %@", error);
-            DLog(@"error.code: %ld", (long)error.code);
+    } successRequest:^(NSURLResponse *response, NSURL *filePath) {
+        DLog(@"file: %@", file.localFolder);
+        DLog(@"File downloaded");
+        
+        //Finalized the download
+        if ([[NSFileManager defaultManager] fileExistsAtPath:self.file.localFolder]) {
+            [weakSelf updateDataDownloadSuccess];
+        } else {
             [weakSelf failureDownloadProcess];
-        }];
+        }
+    } failureRequest:^(NSURLResponse *response, NSError *error) {
+        DLog(@"Error: %@", error);
+        DLog(@"error.code: %ld", (long)error.code);
         
-    } else {
-        self.downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunicationDownloadFolder] progress:^(NSProgress *progress) {
-            
-        } successRequest:^(NSURLResponse *response, NSURL *filePath) {
-            DLog(@"file: %@", file.localFolder);
-            DLog(@"File downloaded");
-            
-            //Finalized the download
-            if ([[NSFileManager defaultManager] fileExistsAtPath:self.file.localFolder]) {
-                [weakSelf updateDataDownloadSuccess];
-            } else {
-                [weakSelf failureDownloadProcess];
-            }
-        } failureRequest:^(NSURLResponse *response, NSError *error) {
-            DLog(@"Error: %@", error);
-            DLog(@"error.code: %ld", (long)error.code);
-            
-            if (error.code != kCFURLErrorCancelled) {
-                [weakSelf failureDownloadProcess];
-            }
-        }];
-        
-        [self.downloadTask resume];
-        [ManageFilesDB updateFile:file.idFile withTaskIdentifier:self.downloadTask.taskIdentifier];
-    }
+        if (error.code != kCFURLErrorCancelled) {
+            [weakSelf failureDownloadProcess];
+        }
+    }];
+    
+    [self.downloadTask resume];
+    [ManageFilesDB updateFile:file.idFile withTaskIdentifier:self.downloadTask.taskIdentifier];
 }
 
 #pragma mark - Success/Failure/Cancel

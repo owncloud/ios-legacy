@@ -108,7 +108,6 @@
 - (void) addDownload:(Download *)download{
     
     [[AppDelegate sharedOCCommunication].downloadSessionManager.operationQueue cancelAllOperations];
-    [[AppDelegate sharedOCCommunication].downloadSessionManagerNoBackground.operationQueue cancelAllOperations];
     
     if (self.downloads.count > 0) {
         for (Download *temp in self.downloads) {

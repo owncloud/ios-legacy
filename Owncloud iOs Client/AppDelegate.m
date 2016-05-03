@@ -606,15 +606,16 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 		
         NSURLSessionConfiguration *configuration = nil;
         
-
-        if (IS_IOS8 || IS_IOS9) {
-            configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_session_name];
+        if (k_is_sso_active || !k_is_background_active) {
+            configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
         } else {
-            configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:k_session_name];
+            if (IS_IOS8 || IS_IOS9) {
+                configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_session_name];
+            } else {
+                configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:k_session_name];
+            }
         }
-        
-        
-      
+
         configuration.HTTPMaximumConnectionsPerHost = 1;
         configuration.requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
         configuration.timeoutIntervalForRequest = k_timeout_upload;
@@ -638,10 +639,14 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         NSURLSessionConfiguration *configurationDownload = nil;
         
-        if (IS_IOS8 || IS_IOS9) {
-            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_session_name];
-        }else{
-            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_session_name];
+        if (k_is_sso_active || !k_is_background_active) {
+            configurationDownload = [NSURLSessionConfiguration defaultSessionConfiguration];
+        } else {
+            if (IS_IOS8 || IS_IOS9) {
+                configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_session_name];
+            }else{
+                configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_session_name];
+            }
         }
      
         configurationDownload.HTTPMaximumConnectionsPerHost = 1;
@@ -674,15 +679,18 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 + (OCCommunication*)sharedOCCommunicationDownloadFolder {
     static OCCommunication* sharedOCCommunicationDownloadFolder = nil;
-    if (sharedOCCommunicationDownloadFolder == nil)
-    {
-        
+    if (sharedOCCommunicationDownloadFolder == nil) {
+
         NSURLSessionConfiguration *configurationDownload = nil;
         
-        if (IS_IOS8) {
-            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_folder_session_name];
-        }else{
-            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_folder_session_name];
+        if (k_is_sso_active || !k_is_background_active) {
+            configurationDownload = [NSURLSessionConfiguration defaultSessionConfiguration];
+        } else {
+            if (IS_IOS8) {
+                configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_folder_session_name];
+            }else{
+                configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_folder_session_name];
+            }
         }
         
         configurationDownload.HTTPMaximumConnectionsPerHost = 1;
@@ -691,10 +699,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         configurationDownload.sessionSendsLaunchEvents = YES;
         [configurationDownload setAllowsCellularAccess:YES];
         OCURLSessionManager *downloadSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:configurationDownload];
-        [downloadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
-        [downloadSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
-            return NSURLSessionAuthChallengePerformDefaultHandling;
-        }];
+        //[downloadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
+        //[downloadSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
+        //    return NSURLSessionAuthChallengePerformDefaultHandling;
+        //}];
         
         sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager];
         
@@ -1252,11 +1260,16 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     NSURLSessionConfiguration *configuration = nil;
     
-    if (IS_IOS8) {
-        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
+    if (k_is_sso_active || !k_is_background_active) {
+        configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     } else {
-        configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
+        if (IS_IOS8) {
+            configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
+        } else {
+            configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
+        }
     }
+    
     
     NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:configuration];
     
@@ -1285,10 +1298,14 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     NSURLSessionConfiguration *configuration = nil;
     
-    if (IS_IOS8 || IS_IOS9) {
-        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
+    if (k_is_sso_active || !k_is_background_active) {
+        configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     } else {
-        configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
+        if (IS_IOS8 || IS_IOS9) {
+            configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
+        } else {
+            configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
+        }
     }
     
     NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:configuration];
