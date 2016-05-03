@@ -26,7 +26,7 @@
 
 @interface ManageNetworkErrors : NSObject
 
-@property(nonatomic,weak) __weak id<ManageNetworkErrorsDelegate> delegate;
+@property(nonatomic,strong) id<ManageNetworkErrorsDelegate> delegate;
 
 /*
  * Method called when receive an error from server
@@ -35,7 +35,7 @@
  * @user -> UserDto
  */
 
-- (void)manageErrorHttp: (NSInteger)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *) user;
+- (void)manageErrorHttp:(NSInteger)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *)user;
 
 
 @end

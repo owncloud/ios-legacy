@@ -223,12 +223,6 @@
         }
         
     } else {
-               
-        if (self.file.isDirectory) {
-            [[ManageThumbnails sharedManager] deleteThumbnailsInFolder:self.file.idFile];
-        } else {
-            [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:self.file];
-        }
         
         [ManageFilesDB setFileIsDownloadState:file.idFile andState:notDownload];
         [ManageFilesDB setFile:file.idFile isNecessaryUpdate:NO];
@@ -315,10 +309,16 @@
             if([_file isDirectory]) {
                 DLog(@"Is directory");
                 
+                [[ManageThumbnails sharedManager] deleteThumbnailsInFolder:_file.idFile];
+                
                 //Then delete folder of BD.
                 [self deleteFolderChildsWithIdFile:_file.idFile];
+                
             } else {
                 //if a file
+                
+                [[ManageThumbnails sharedManager] removeStoredThumbnailForFile:_file];
+
                 [ManageFilesDB deleteFileByIdFileOfActiveUser:_file.idFile];
             }
             //The end of delete
@@ -348,10 +348,12 @@
         //If it is not SAML
         if (!isSamlCredentialsError) {
 
+            [self endLoading];
+            
             [_manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
-        
+            
         }
-
+        
     }];
 }
 

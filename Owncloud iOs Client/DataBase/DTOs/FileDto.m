@@ -47,15 +47,11 @@
         _taskIdentifier = -1;
         _sharedFileSource = 0;
         _providingFileId = 0;
+        _ocId = ocFileDto.ocId;
         
     }
     return self;
 }
 
-- (NSUInteger )getHashIdentifierOfUserID:(NSInteger)userId {
-    
-    return [NSString stringWithFormat:@"%ld%@%@",(long)userId,self.filePath,self.fileName].hash;
-    
-}
 
 @end

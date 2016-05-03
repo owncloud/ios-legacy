@@ -89,7 +89,7 @@
     
     [self restoreTheCookiesOfActiveUser];
     
-    mCheckAccessToServer.delegate = nil;
+    ((CheckAccessToServer *)[CheckAccessToServer sharedManager]).delegate = nil;
 }
 
 

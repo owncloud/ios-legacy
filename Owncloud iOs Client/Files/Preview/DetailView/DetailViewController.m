@@ -184,7 +184,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         [items insertObject:_favoriteButtonBar atIndex:3];
         [items insertObject:_spaceBar2 atIndex:4];
         
-        if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
+        if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
              [items insertObject:_deleteButtonBar atIndex:5];
         }else{
             [items insertObject:_shareLinkButtonBar atIndex:5];
@@ -936,13 +936,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     if (canOpenButton) {
         
-        CheckAccessToServer *mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-        
         if([_file isDownload]) {
             //This file is in the device
             DLog(@"The file is in the device");
             [self openFile];
-        } else  if ([mCheckAccessToServer isNetworkIsReachable]) {
+        } else  if ([[CheckAccessToServer sharedManager]isNetworkIsReachable]) {
             //File is not in the device
             //Phase 1.1. Download the file
             DLog(@"Download the file");

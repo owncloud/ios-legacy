@@ -1,3 +1,11 @@
+## 3.4.9 (May 2016)
+- New sort_by feature, now you can organice your files by name or by last updated
+- Thumbnails now also available for not downloaded images and videos
+- Updated to last SSL
+- Federating sharing now more comfortable with the autocompletion of users for yours remote trusted servers
+- Compatible with Xcode 7.3
+- New option added in share by link, now it is possible to allow editing the shared folder 
+
 ## 3.4.8 (February 2016)
 - Touch ID support
 - Federated sharing, you can create direct share links with users on other ownCloud servers within your iOS app

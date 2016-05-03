@@ -33,12 +33,22 @@
 #import "AppDelegate.h"
 #endif
 
-
+static NSString *const tmpFileName = @"tmp.der";
 
 @implementation CheckAccessToServer
 
 
 @synthesize delegate = _delegate;
+
+//Singleton
++ (id)sharedManager {
+    static CheckAccessToServer *sharedCheckAccessToServer = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedCheckAccessToServer = [[self alloc] init];
+    });
+    return sharedCheckAccessToServer;
+}
 
 static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 // Returns the leaf certificate from a SecTrust object (that is always the 
@@ -97,6 +107,10 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 
 
 -(void) isConnectionToTheServerByUrl:(NSString *) url {
+    [self isConnectionToTheServerByUrl:url withTimeout:k_timeout_webdav];
+}
+
+- (void)isConnectionToTheServerByUrl:(NSString *) url withTimeout:(NSInteger) timeout {
     
     //We save the url to later compare with urlServerRedirected in request
     self.urlUserToCheck = url;
@@ -106,7 +120,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     NSLog(@"URL Status: |%@|", _urlStatusCheck);
     
     
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:0 timeoutInterval:k_timeout_webdav];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:0 timeoutInterval:timeout];
     
     //Add the user agent
     [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
@@ -114,6 +128,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     
     [connection release];
+    
 }
 
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
@@ -140,7 +155,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     if([error code] == -1202){
         NSLog(@"Error -1202");
 
-        if(self.delegate) {
+        //if(self.delegate) {
 
             #ifdef CONTAINER_APP
             
@@ -175,7 +190,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
             [self.viewControllerToShow presentViewController:alert animated:YES completion:nil];
             
             #endif
-        }
+        //}
 
     
 
@@ -200,7 +215,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     [self createFolderToSaveCertificates];
     
     if(trust != nil) {
-        [self saveCertificate:trust withName:@"tmp.der"];
+        [self saveCertificate:trust withName:tmpFileName];
         
         NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
         
@@ -212,7 +227,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
             
             NSString *currentLocalCertLocation = [listCertificateLocation objectAtIndex:i];
             NSFileManager *fileManager = [ NSFileManager defaultManager];
-            if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@tmp.der",localCertificatesFolder] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
+            if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder,tmpFileName] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
                 NSLog(@"Is the same certificate!!!");
                 trusted = YES;
             }

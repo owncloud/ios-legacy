@@ -403,8 +403,6 @@
     
     if (self.selectedFileDto.isDirectory) {
         
-        [[ManageThumbnails sharedManager] deleteThumbnailsInFolder:self.selectedFileDto.idFile];
-        
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         DLog(@"Change folder name");
@@ -466,9 +464,7 @@
             //Error
         }
     } else {
-        
-        [[ManageThumbnails sharedManager] removeThumbnailIfExistWithFile:self.selectedFileDto];
-        
+                
         [ManageFilesDB renameFileByFileDto:self.selectedFileDto andNewName:[self.mNewName encodeString:NSUTF8StringEncoding]];
         
         if(self.selectedFileDto.isDownload) {
@@ -497,10 +493,6 @@
             // Attempt the move
             if ([fileMgr moveItemAtPath:self.selectedFileDto.localFolder toPath:newFile error:&error] != YES) {
                 DLog(@"Unable to rename file: %@", [error localizedDescription]);
-            } else {
-                //update thumbnail name
-                FileDto *newFileDtoUpdatedName = [ManageFilesDB getFileDtoByIdFile:self.selectedFileDto.idFile];
-                [[ManageThumbnails sharedManager] renameThumbnailOfFile:self.selectedFileDto withNewFile:newFileDtoUpdatedName];
             }
         }
     }
