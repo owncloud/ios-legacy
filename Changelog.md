@@ -1,10 +1,10 @@
 ## 3.4.9 (May 2016)
-- New sort_by feature, now you can organice your files by name or by last updated
-- Thumbnails now also available for not downloaded images and videos
-- Updated to last SSL
-- Federating sharing now more comfortable with the autocompletion of users for yours remote trusted servers
-- Compatible with Xcode 7.3
-- New option added in share by link, now it is possible to allow editing the shared folder 
+- Sort by date or alphabetically
+- Remote thumbnails, images and videos
+- Updated SSL library version
+- Federating sharing improvements, autocompletation of users taking into account defined remote trusted servers
+- Share by link, added a new option to define whether editing is enable or not
+- Bugs fixing
 
 ## 3.4.8 (February 2016)
 - Touch ID support
