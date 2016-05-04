@@ -839,6 +839,15 @@
     }
 }
 
+#pragma mark - Create Text File
+
+/*
+ * This method show a view to enter text for new text file
+ */
+- (void)showCreateTextFile{
+    
+
+}
 
 #pragma mark - Create Folder
 
@@ -1118,8 +1127,6 @@
  */
 - (void)showOptions {
     
-    NSString * sortByTitle = NSLocalizedString(@"sort_menu_title", nil);
-    
     if (self.plusActionSheet) {
         self.plusActionSheet = nil;
     }
@@ -1129,7 +1136,7 @@
                             delegate:self
                             cancelButtonTitle:NSLocalizedString(@"cancel", nil)
                             destructiveButtonTitle:nil
-                            otherButtonTitles:NSLocalizedString(@"menu_upload", nil), NSLocalizedString(@"menu_folder", nil), sortByTitle, nil];
+                            otherButtonTitles:NSLocalizedString(@"menu_upload", nil), NSLocalizedString(@"menu_folder", nil), NSLocalizedString(@"menu_text_file", nil), NSLocalizedString(@"sort_menu_title", nil), nil];
     
     self.plusActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
     self.plusActionSheet.tag=100;
@@ -2330,6 +2337,9 @@
                 [self showCreateFolder];
                 break;
             case 2:
+                [self showCreateTextFile];
+                break;
+            case 3:
                 [self showSortingOptions];
                 break;
             default:
