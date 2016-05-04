@@ -7,12 +7,34 @@
 //
 
 #import "EditFileViewController.h"
+#import "FileNameUtils.h"
+#import "ManageUsersDB.h"
+#import "ManageFilesDB.h"
+#import "constants.h"
+#import "Customization.h"
+#import "AppDelegate.h"
+#import "OCCommunication.h"
+#import "UtilsUrls.h"
+#import "NSString+Encoding.h"
+#import "ManageNetworkErrors.h"
+
 
 @interface EditFileViewController ()
 
 @end
 
 @implementation EditFileViewController
+
+- (id)initWithFileDto:(FileDto *)fileDto {
+   
+    if ((self = [super initWithNibName:shareMainViewNibName bundle:nil]))
+    {
+        self.currentFileDto = fileDto;
+    }
+    
+    return self;
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -33,5 +55,105 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (void) viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self setStyleView];
+}
+
+#pragma mark - Style Methods
+
+- (void) setStyleView {
+    
+    self.navigationItem.title = NSLocalizedString(@"title_view_edit_user_privileges", nil);
+    [self setBarButtonStyle];
+    
+}
+
+- (void) setBarButtonStyle {
+    
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(didSelectDoneView)];
+    self.navigationItem.rightBarButtonItem = doneButton;
+    
+}
+
+
+#pragma mark - Action Methods
+
+- (void) didSelectDoneView {
+    [self storeTextFile];
+    [self dismissViewControllerAnimated:true completion:nil];
+}
+
+- (BOOL) checkForSameName:(NSString*)name {
+    
+    BOOL existSameName = NO;
+    
+    self.currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:self.currentFileDto.idFile];
+
+    NSPredicate *predicateSameName = [NSPredicate predicateWithFormat:@"fileName == %@", name];
+    NSArray *filesSameName = [self.currentDirectoryArray filteredArrayUsingPredicate:predicateSameName];
+
+    if (filesSameName !=nil && filesSameName.count > 0) {
+        existSameName = YES;
+    }
+    
+    return existSameName;
+}
+
+- (void) storeTextFile {
+    
+    
+    
+   }
+
+-(void) errorLogin {
+
+}
+
+#pragma mark - Server connect methods
+
+/*
+ * Method called when receive a fail from server side
+ * @errorCodeFromServer -> WebDav Server Error of NSURLResponse
+ * @error -> NSError of NSURLConnection
+ */
+
+- (void)manageServerErrors: (NSInteger)errorCodeFromServer and:(NSError *)error {
+    
+//    [self stopPullRefresh];
+//    [self endLoading];
+    
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [_manageNetworkErrors manageErrorHttp:errorCodeFromServer andErrorConnection:error andUser:app.activeUser];
+}
+
+/*
+ * Method that quit the loading screen and unblock the view
+ */
+- (void)endLoading {
+    
+//    if (!_isLoadingForNavigate) {
+//        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//        //Check if the loading should be visible
+//        if (app.isLoadingVisible==NO) {
+//            // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
+//            [_HUD removeFromSuperview];
+//            self.view.userInteractionEnabled = YES;
+//            self.navigationController.navigationBar.userInteractionEnabled = YES;
+//            self.tabBarController.tabBar.userInteractionEnabled = YES;
+//            [self.view.window setUserInteractionEnabled:YES];
+//        }
+//        
+//        //Check if the app is wainting to show the upload from other app view
+//        if (app.isFileFromOtherAppWaitting && app.isPasscodeVisible == NO) {
+//            [app performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.3];
+//        }
+//        
+//        if (!_rename.renameAlertView.isVisible) {
+//            _rename = nil;
+//        }
+//    }
+}
 
 @end

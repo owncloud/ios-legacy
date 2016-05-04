@@ -7,6 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EditFileViewController">
             <connections>
+                <outlet property="bodyTextView" destination="xMh-ks-EIq" id="omn-PX-ML0"/>
+                <outlet property="titleTextField" destination="ij5-gI-oPC" id="2lc-88-OM5"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -15,29 +17,30 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ij5-gI-oPC">
-                    <rect key="frame" x="8" y="43" width="584" height="30"/>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="test.txt" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ij5-gI-oPC">
+                    <rect key="frame" x="8" y="70" width="584" height="30"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="xMh-ks-EIq">
-                    <rect key="frame" x="8" y="95" width="584" height="460"/>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="xMh-ks-EIq">
+                    <rect key="frame" x="8" y="113" width="584" height="479"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
-                <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C6R-Z0-qMn">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                    <items>
-                        <navigationItem title="Title" id="th5-6Z-i3G">
-                            <barButtonItem key="leftBarButtonItem" title="Cancel" id="YZL-5o-qtZ"/>
-                            <barButtonItem key="rightBarButtonItem" title="Done" id="xH7-pH-wtV"/>
-                        </navigationItem>
-                    </items>
-                </navigationBar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="xMh-ks-EIq" secondAttribute="bottom" constant="8" id="6ae-c9-35C"/>
+                <constraint firstItem="xMh-ks-EIq" firstAttribute="top" secondItem="ij5-gI-oPC" secondAttribute="bottom" constant="13" id="B3s-Yd-ibO"/>
+                <constraint firstItem="ij5-gI-oPC" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="L2G-Vl-gSL"/>
+                <constraint firstItem="xMh-ks-EIq" firstAttribute="top" secondItem="ij5-gI-oPC" secondAttribute="bottom" constant="13" id="VZ2-0X-P0K"/>
+                <constraint firstAttribute="trailing" secondItem="ij5-gI-oPC" secondAttribute="trailing" constant="8" id="mXo-5z-iax"/>
+                <constraint firstItem="ij5-gI-oPC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="70" id="o7Y-fq-ntp"/>
+                <constraint firstItem="xMh-ks-EIq" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="rcY-Mx-YiW"/>
+                <constraint firstAttribute="trailing" secondItem="xMh-ks-EIq" secondAttribute="trailing" constant="8" id="tYo-Ml-Lec"/>
+            </constraints>
         </view>
     </objects>
 </document>

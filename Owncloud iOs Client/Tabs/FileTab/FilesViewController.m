@@ -63,6 +63,7 @@
 #import "ManageCapabilitiesDB.h"
 #import "CheckCapabilities.h"
 #import "SortManager.h"
+#import "EditFileViewController.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -846,7 +847,19 @@
  */
 - (void)showCreateTextFile{
     
-
+    EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.fileIdToShowFiles];
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+    
+    if (IS_IPHONE)
+    {
+        viewController.hidesBottomBarWhenPushed = YES;
+        [self presentViewController:navController animated:YES completion:nil];
+    } else {
+        OCNavigationController *navController = nil;
+        navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:navController animated:YES completion:nil];
+    }
 }
 
 #pragma mark - Create Folder
