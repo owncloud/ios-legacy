@@ -11,7 +11,7 @@
 
 #define shareMainViewNibName @"EditFileViewController"
 
-@interface EditFileViewController : UIViewController <ManageNetworkErrorsDelegate>
+@interface EditFileViewController : UIViewController <ManageNetworkErrorsDelegate, UITextViewDelegate>
 
 @property (nonatomic, strong) ManageNetworkErrors *manageNetworkErrors;
 
@@ -24,6 +24,5 @@
 @property (weak, nonatomic) IBOutlet UITextView *bodyTextView;
 
 - (id)initWithFileDto:(FileDto *)fileDto;
-- (BOOL) checkForSameName:(NSString*)name;
 
 @end

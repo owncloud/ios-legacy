@@ -39,6 +39,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.titleTextField.placeholder = NSLocalizedString(@"title_text_file_placeholder", nil);
+    //self.bodyTextView.text = NSLocalizedString(@"body_text_file_placeholder", nil);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -61,6 +63,7 @@
     [self setStyleView];
 }
 
+
 #pragma mark - Style Methods
 
 - (void) setStyleView {
@@ -75,19 +78,36 @@
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(didSelectDoneView)];
     self.navigationItem.rightBarButtonItem = doneButton;
     
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"cancel", nil) style:UIBarButtonItemStylePlain target:self action:@selector(closeViewController)];
+    self.navigationItem.leftBarButtonItem = cancelButton;
+    
 }
 
 
 #pragma mark - Action Methods
 
 - (void) didSelectDoneView {
-    [self storeTextFile];
+   
+    NSString *name = [NSString stringWithFormat:@"%@.txt", self.titleTextField.text];
+    
+    if ([self isValidTitleName:name]) {
+        [self sendTextFileToUploads:name];
+        [self dismissViewControllerAnimated:true completion:nil];
+    }
+    
+}
+
+- (void) closeViewController {
+    
     [self dismissViewControllerAnimated:true completion:nil];
 }
 
-- (BOOL) checkForSameName:(NSString*)name {
+
+#pragma mark - Check title name
+
+- (BOOL) existSameName:(NSString*)name {
     
-    BOOL existSameName = NO;
+    BOOL sameName = NO;
     
     self.currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:self.currentFileDto.idFile];
 
@@ -95,17 +115,48 @@
     NSArray *filesSameName = [self.currentDirectoryArray filteredArrayUsingPredicate:predicateSameName];
 
     if (filesSameName !=nil && filesSameName.count > 0) {
-        existSameName = YES;
+        sameName = YES;
     }
     
-    return existSameName;
+    return sameName;
 }
 
-- (void) storeTextFile {
+- (BOOL) isValidTitleName:(NSString *)name {
     
+    BOOL valid = NO;
+    if (![name isEqualToString:@".txt"]) {
+        if (![FileNameUtils isForbiddenCharactersInFileName:name withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
+            
+            //Check if exist a file with the same name
+            if (![self existSameName:name]) {
+                valid = YES;
+                
+            } else {
+                DLog(@"Exist a file with the same name");
+                [self showAlertView:NSLocalizedString(@"text_file_exist", nil)];
+            }
+        } else {
+            [self showAlertView:NSLocalizedString(@"forbidden_characters_from_server", nil)];
+        }
+    } else {
+         [self showAlertView:NSLocalizedString(@"title_text_file_empty", nil)];
+    }
     
-    
+    return valid;
+}
 
+
+
+#pragma mark - Upload text file
+
+- (void) sendTextFileToUploads:(NSString *)name {
+
+    
+}
+
+- (void) showAlertView:(NSString*)string{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+    [alertView show];
 }
 
 -(void) errorLogin {
