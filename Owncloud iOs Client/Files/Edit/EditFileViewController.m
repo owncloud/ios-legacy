@@ -88,10 +88,12 @@
 
 - (void) didSelectDoneView {
    
-    NSString *name = [NSString stringWithFormat:@"%@.txt", self.titleTextField.text];
+    NSString *fileName = [NSString stringWithFormat:@"%@.txt", self.titleTextField.text];
+    NSString *bodyTextFile = self.bodyTextView.text;
     
-    if ([self isValidTitleName:name]) {
-        [self sendTextFileToUploads:name];
+    if ([self isValidTitleName:fileName]) {
+        [self storeFileWithTitle:fileName andBody:bodyTextFile];
+        [self sendTextFileToUploads:fileName];
         [self dismissViewControllerAnimated:true completion:nil];
     }
     
@@ -103,15 +105,38 @@
 }
 
 
+
+#pragma mark - store file
+
+- (void) storeFileWithTitle:(NSString *)fileName andBody:(NSString *)bodyTextFile {
+    DLog(@"New File with name: %@", fileName);
+
+    NSString *tempPath = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], fileName];
+    NSData* fileData = [bodyTextFile dataUsingEncoding:NSUTF8StringEncoding];
+    [self createFileOnTheFileSystem:tempPath withData:fileData];
+    
+}
+
+- (void) createFileOnTheFileSystem:(NSString *)tempPath withData:(NSData *)fileData {
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:tempPath]){
+        [[NSFileManager defaultManager] createFileAtPath:tempPath
+                                                contents:fileData
+                                              attributes:nil];
+    }
+    
+}
+
+
 #pragma mark - Check title name
 
-- (BOOL) existSameName:(NSString*)name {
+- (BOOL) existSameName:(NSString*)fileName {
     
     BOOL sameName = NO;
     
     self.currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:self.currentFileDto.idFile];
 
-    NSPredicate *predicateSameName = [NSPredicate predicateWithFormat:@"fileName == %@", name];
+    NSPredicate *predicateSameName = [NSPredicate predicateWithFormat:@"fileName == %@", fileName];
     NSArray *filesSameName = [self.currentDirectoryArray filteredArrayUsingPredicate:predicateSameName];
 
     if (filesSameName !=nil && filesSameName.count > 0) {
@@ -121,14 +146,14 @@
     return sameName;
 }
 
-- (BOOL) isValidTitleName:(NSString *)name {
+- (BOOL) isValidTitleName:(NSString *)fileName {
     
     BOOL valid = NO;
-    if (![name isEqualToString:@".txt"]) {
-        if (![FileNameUtils isForbiddenCharactersInFileName:name withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
+    if (![fileName isEqualToString:@".txt"]) {
+        if (![FileNameUtils isForbiddenCharactersInFileName:fileName withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
             
             //Check if exist a file with the same name
-            if (![self existSameName:name]) {
+            if (![self existSameName:fileName]) {
                 valid = YES;
                 
             } else {
@@ -149,7 +174,7 @@
 
 #pragma mark - Upload text file
 
-- (void) sendTextFileToUploads:(NSString *)name {
+- (void) sendTextFileToUploads:(NSString *)localPath {
 
     
 }
