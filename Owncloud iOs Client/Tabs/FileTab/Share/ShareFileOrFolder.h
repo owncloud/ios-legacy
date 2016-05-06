@@ -33,7 +33,7 @@
 
 @interface ShareFileOrFolder : NSObject <UIActionSheetDelegate,UITextFieldDelegate,UIAlertViewDelegate>
 
-@property (nonatomic, assign) FileDto *file;
+@property (nonatomic, strong) FileDto *file;
 @property (nonatomic, strong) OCSharedDto *shareDto;
 @property (nonatomic, strong) UIActionSheet *shareActionSheet;
 //This view is to show the shareActionSheet
@@ -91,14 +91,6 @@
 
 
 -(void)doRequestSharedLinkWithPath: (NSString *)filePath andPassword: (NSString *)password;
-
-
-/**
- * Method get the OCShareDto of a FileDto
- *
- * @param file -> FileDto. this object should be update with the DB.
- */
-- (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file;
 
 /**
  * This method unshares the file/folder

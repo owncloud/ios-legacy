@@ -15,7 +15,7 @@
 
 
 //app year
-#define k_year 2015
+#define k_year 2016
 
 //URLs Setting
 #define k_help_url @"http://owncloud.com/mobile/help"
@@ -138,3 +138,9 @@
 
 //Help Guide init app
 #define k_show_main_help_guide YES
+
+//Show share with users
+#define k_is_share_with_users_available YES
+
+//Show share by link
+#define k_is_share_by_link_available YES

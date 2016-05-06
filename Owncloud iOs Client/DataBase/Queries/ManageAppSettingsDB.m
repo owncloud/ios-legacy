@@ -126,10 +126,57 @@
     
 }
 
+
+/*
+ * Method that return if Touch ID is active or not
+ */
++(BOOL) isTouchID {
+    
+    __block BOOL output = NO;
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        FMResultSet *rs = [db executeQuery:@"SELECT is_touch_id FROM passcode"];
+        
+        while ([rs next]) {
+            
+            output =[rs boolForColumn:@"is_touch_id"];
+            
+        }
+        
+    }];
+    
+    return output;
+}
+
+
+/*
+ * Method that enable or disable Touch ID
+ */
++(void) updateTouchIDTo:(BOOL)newValue {
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE passcode SET is_touch_id=? ", [NSNumber numberWithBool:newValue]];
+        
+        if (!correctQuery) {
+            DLog(@"Error updating is_touch_id");
+        }
+    }];
+}
+
+
 /*
  * Method that insert certificate
  * @certificateLocation -> path of certificate
  */
+
+
 +(void) insertCertificate: (NSString *) certificateLocation {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;

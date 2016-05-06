@@ -78,32 +78,19 @@
 + (NSMutableArray*) getSharesByFolderPath:(NSString *) path;
 
 ///-----------------------------------
-/// @name Get Shares From User And Group By Path
+/// @name Get Shares by User and Path
 ///-----------------------------------
 
 /**
- * Get the shared items of a specific path
+ * Get the shared items of a specific user and path
  *
+ * @param idUser -> NSInteger
  * @param path -> NSString
  *
  * @return NSMutableArray
  *
  */
-+ (NSMutableArray*) getSharesFromUserAndGroupByPath:(NSString *) path;
-
-///-----------------------------------
-/// @name Get All Shares for user
-///-----------------------------------
-
-/**
- * Get the shared items of a specific user
- *
- * @param idUser -> NSInteger
- *
- * @return NSArray
- *
- */
-+ (NSArray*) getAllSharesforUser:(NSInteger)idUser;
++ (NSMutableArray*) getSharesByUser:(NSInteger)idUser andPath:(NSString *) path;
 
 
 ///-----------------------------------
@@ -182,5 +169,47 @@
  *
  */
 + (OCSharedDto *) getSharedEqualWithFileDtoPath:(NSString*)path;
+
+///-----------------------------------
+/// @name getTheOCShareByFileDto:andShareType:andUser
+///-----------------------------------
+
+/**
+ * Method to get the OCSharedDto by a filedto and by type of share and by user
+ *
+ * @param file -> FileDto
+ * @param shareType -> NSInteger
+ * @param user -> UserDto
+ *
+ * @return OCSharedDto
+ */
++ (OCSharedDto *) getTheOCShareByFileDto:(FileDto*)file andShareType:(NSInteger) shareType andUser:(UserDto *) user;
+
+///-----------------------------------
+/// @name getOCShareTypeUserOrTypeGroupByFileDto
+///-----------------------------------
+
+/**
+ * Method to get the OCSharedDto with sharedType user or group by a filedto and by user
+ *
+ * @param file -> FileDto
+ * @param user -> UserDto
+ *
+ * @return OCSharedDto
+ */
+//+ (OCSharedDto *) getOCShareTypeUserOrTypeGroupByFileDto:(FileDto*)file andUser:(UserDto *) user;
+
+///---------------------------------------------------
+/// @name updateTheRemoteSharedforUserWithPermissions
+///---------------------------------------------------
+
+/**
+ * This method updates the permissions of an user's file
+ *
+ * @param idRemoteShared    -> int
+ * @param permissions       -> NSInteger
+ * @param userId            -> NSInteger
+ */
++ (void) updateTheRemoteShared: (NSInteger)idRemoteShared forUser: (NSInteger)userId withPermissions: (NSInteger)permissions;
 
 @end
