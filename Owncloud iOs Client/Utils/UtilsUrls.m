@@ -394,7 +394,7 @@
 }
 
 ///-----------------------------------
-/// @name getFullRemoteWebDavPath
+/// @name getFullRemoteServerPathWithWebDav
 ///-----------------------------------
 /**
  * Return the full server path with webdav components

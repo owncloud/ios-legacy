@@ -17,6 +17,8 @@
 #import "UtilsUrls.h"
 #import "NSString+Encoding.h"
 #import "ManageNetworkErrors.h"
+#import "UploadsOfflineDto.h"
+#import "ManageUploadsDB.h"
 
 
 @interface EditFileViewController ()
@@ -92,8 +94,14 @@
     NSString *bodyTextFile = self.bodyTextView.text;
     
     if ([self isValidTitleName:fileName]) {
-        [self storeFileWithTitle:fileName andBody:bodyTextFile];
-        [self sendTextFileToUploads:fileName];
+        
+        NSString *tempLocalPath = [self storeFileWithTitle:fileName andBody:bodyTextFile];
+        if (tempLocalPath) {
+            [self sendTextFileToUploadsByTempLocalPath:tempLocalPath andFileName:fileName];
+            //TODO:move temp path and set as downloaded file
+        } else {
+            //TODO:error
+        }
         [self dismissViewControllerAnimated:true completion:nil];
     }
     
@@ -102,29 +110,6 @@
 - (void) closeViewController {
     
     [self dismissViewControllerAnimated:true completion:nil];
-}
-
-
-
-#pragma mark - store file
-
-- (void) storeFileWithTitle:(NSString *)fileName andBody:(NSString *)bodyTextFile {
-    DLog(@"New File with name: %@", fileName);
-
-    NSString *tempPath = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], fileName];
-    NSData* fileData = [bodyTextFile dataUsingEncoding:NSUTF8StringEncoding];
-    [self createFileOnTheFileSystem:tempPath withData:fileData];
-    
-}
-
-- (void) createFileOnTheFileSystem:(NSString *)tempPath withData:(NSData *)fileData {
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:tempPath]){
-        [[NSFileManager defaultManager] createFileAtPath:tempPath
-                                                contents:fileData
-                                              attributes:nil];
-    }
-    
 }
 
 
@@ -171,11 +156,59 @@
 }
 
 
+#pragma mark - store file
+
+- (NSString *) storeFileWithTitle:(NSString *)fileName andBody:(NSString *)bodyTextFile {
+    DLog(@"New File with name: %@", fileName);
+    
+    NSString *tempPath = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], fileName];
+    NSData* fileData = [bodyTextFile dataUsingEncoding:NSUTF8StringEncoding];
+    [self createFileOnTheFileSystem:tempPath withData:fileData];
+    
+    return tempPath;
+}
+
+- (void) createFileOnTheFileSystem:(NSString *)tempPath withData:(NSData *)fileData {
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:tempPath]){
+        [[NSFileManager defaultManager] createFileAtPath:tempPath
+                                                contents:fileData
+                                              attributes:nil];
+    }
+    
+}
+
 
 #pragma mark - Upload text file
 
-- (void) sendTextFileToUploads:(NSString *)localPath {
-
+- (void) sendTextFileToUploadsByTempLocalPath:(NSString *)tempLocalPath andFileName:(NSString *)fileName {
+   
+    UserDto *user = APP_DELEGATE.activeUser;
+    NSString *fullRemotePath = [NSString stringWithFormat:@"%@",[UtilsUrls getFullRemoteServerFilePathByFile:self.currentFileDto andUser:user]];
+    
+    long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:tempLocalPath error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
+    
+    if (![UtilsUrls isFileUploadingWithPath:fullRemotePath andUser:user]) {
+        
+        UploadsOfflineDto *upload = [UploadsOfflineDto new];
+        
+        upload.originPath = tempLocalPath;
+        upload.destinyFolder = fullRemotePath;
+        upload.uploadFileName = fileName;
+        upload.kindOfError = notAnError;
+        upload.estimateLength = (long)fileLength;
+        upload.userId = self.currentFileDto.userId;
+        upload.isLastUploadFileOfThisArray = YES;
+        upload.status = generatedByDocumentProvider;
+        upload.chunksLength = k_lenght_chunk;
+        upload.isNotNecessaryCheckIfExist = NO;
+        upload.isInternalUpload = NO;
+        upload.taskIdentifier = 0;
+        
+        [ManageUploadsDB insertUpload:upload];
+        //TODO:relaunch pending uploads
+    }
+    
     
 }
 
