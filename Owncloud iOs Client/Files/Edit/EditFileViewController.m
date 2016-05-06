@@ -121,7 +121,7 @@
     
     self.currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:self.currentFileDto.idFile];
 
-    NSPredicate *predicateSameName = [NSPredicate predicateWithFormat:@"fileName == %@", fileName];
+    NSPredicate *predicateSameName = [NSPredicate predicateWithFormat:@"fileName == %@", [fileName encodeString:NSUTF8StringEncoding]];
     NSArray *filesSameName = [self.currentDirectoryArray filteredArrayUsingPredicate:predicateSameName];
 
     if (filesSameName !=nil && filesSameName.count > 0) {
@@ -160,7 +160,10 @@
 - (NSString *) storeFileWithTitle:(NSString *)fileName andBody:(NSString *)bodyTextFile {
     DLog(@"New File with name: %@", fileName);
     
-    NSString *tempPath = [NSString stringWithFormat:@"%@%@", [UtilsUrls getTempFolderForUploadFiles], fileName];
+    //Use a temporal name with a date identification
+    NSString *temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *tempPath= [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:temporalFileName];
+    
     NSData* fileData = [bodyTextFile dataUsingEncoding:NSUTF8StringEncoding];
     [self createFileOnTheFileSystem:tempPath withData:fileData];
     
