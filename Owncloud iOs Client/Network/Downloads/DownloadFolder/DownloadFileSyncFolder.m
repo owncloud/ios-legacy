@@ -95,7 +95,12 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
         }
     }];
     
-    //[self.downloadTask resume];
+    if (k_is_sso_active || !k_is_background_active) {
+        //Will be resume by it self
+    } else {
+        [self.downloadTask resume];
+    }
+    
     [ManageFilesDB updateFile:file.idFile withTaskIdentifier:self.downloadTask.taskIdentifier];
 }
 
@@ -174,9 +179,11 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
 }
 
 - (void) resumeNextDownloadFromQueue {
-    if ([AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count > 0) {
-        DownloadFileSyncFolder *download = (DownloadFileSyncFolder *) [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded objectAtIndex:0];
-        [download.downloadTask resume];
+    if (k_is_sso_active || !k_is_background_active) {
+        if ([AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count > 0) {
+            DownloadFileSyncFolder *download = (DownloadFileSyncFolder *) [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded objectAtIndex:0];
+            [download.downloadTask resume];
+        }
     }
 }
 

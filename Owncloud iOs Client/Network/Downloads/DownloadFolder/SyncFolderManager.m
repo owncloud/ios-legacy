@@ -361,8 +361,10 @@ static float const kDelayAfterCancelAll = 3.0;
     
     [self.listOfFilesToBeDownloaded addObject:download];
     
-    if (self.listOfFilesToBeDownloaded.count == 1) {
-        [download.downloadTask resume];
+    if (k_is_sso_active || !k_is_background_active) {
+        if (self.listOfFilesToBeDownloaded.count == 1) {
+            [download.downloadTask resume];
+        }
     }
 }
 
