@@ -19,7 +19,6 @@
 @property(nonatomic, strong) FileDto *currentFileDto;
 @property(nonatomic) UIAlertView *alert;
 
-
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextView *bodyTextView;
 

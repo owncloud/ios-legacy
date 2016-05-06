@@ -115,7 +115,7 @@
 
 #pragma mark - Check title name
 
-- (BOOL) existSameName:(NSString*)fileName {
+- (BOOL) existFileWithSameName:(NSString*)fileName {
     
     BOOL sameName = NO;
     
@@ -137,8 +137,7 @@
     if (![fileName isEqualToString:@".txt"]) {
         if (![FileNameUtils isForbiddenCharactersInFileName:fileName withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
             
-            //Check if exist a file with the same name
-            if (![self existSameName:fileName]) {
+            if (![self existFileWithSameName:fileName]) {
                 valid = YES;
                 
             } else {
@@ -183,12 +182,13 @@
 
 - (void) sendTextFileToUploadsByTempLocalPath:(NSString *)tempLocalPath andFileName:(NSString *)fileName {
    
-    UserDto *user = APP_DELEGATE.activeUser;
-    NSString *fullRemotePath = [NSString stringWithFormat:@"%@",[UtilsUrls getFullRemoteServerFilePathByFile:self.currentFileDto andUser:user]];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
+    NSString *fullRemotePath = [NSString stringWithFormat:@"%@",[UtilsUrls getFullRemoteServerFilePathByFile:self.currentFileDto andUser:app.activeUser]];
     
     long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:tempLocalPath error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
     
-    if (![UtilsUrls isFileUploadingWithPath:fullRemotePath andUser:user]) {
+    if (![UtilsUrls isFileUploadingWithPath:fullRemotePath andUser:app.activeUser]) {
         
         UploadsOfflineDto *upload = [UploadsOfflineDto new];
         
@@ -199,14 +199,14 @@
         upload.estimateLength = (long)fileLength;
         upload.userId = self.currentFileDto.userId;
         upload.isLastUploadFileOfThisArray = YES;
-        upload.status = generatedByDocumentProvider;
+        upload.status = pendingToBeCheck;
         upload.chunksLength = k_lenght_chunk;
         upload.isNotNecessaryCheckIfExist = NO;
         upload.isInternalUpload = NO;
         upload.taskIdentifier = 0;
         
         [ManageUploadsDB insertUpload:upload];
-        //TODO:relaunch pending uploads
+        [app relaunchUploadsFailedForced];
     }
     
     
