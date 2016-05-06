@@ -68,7 +68,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 @synthesize window = _window;
 @synthesize loginViewController = _loginViewController;
-@synthesize mCheckAccessToServer = _mCheckAccessToServer;
 @synthesize uploadArray=_uploadArray;
 @synthesize webDavArray=_webDavArray;
 @synthesize recentViewController=_recentViewController;
@@ -92,6 +91,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @synthesize databaseOperationsQueue = _databaseOperationsQueue;
 @synthesize isUploadViewVisible = _isUploadViewVisible;
 @synthesize isLoadingVisible = _isLoadingVisible;
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     //init
@@ -133,7 +133,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
     
-    [self checkIfIsNecesaryShowPassCode];
+    //Init and update the DataBase
+    [InitializeDatabase initDataBase];
+    
+    [self showSplashScreenFake];
     
     //Check if the server support shared api
     [self performSelector:@selector(checkIfServerSupportThings) withObject:nil afterDelay:0.0];
@@ -359,7 +362,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 - (void) initAppWithEtagRequest:(BOOL)isEtagRequestNecessary {
     
-    [InitializeDatabase initDataBase];
     [[AppDelegate sharedSyncFolderManager] setThePermissionsOnDownloadCacheFolder];
     
     //First Call when init the app
@@ -385,13 +387,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         [self performSelector:@selector(launchUploadsOfflineFromDocumentProvider) withObject:nil afterDelay:0.3];
         
-        self.mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-        self.mCheckAccessToServer.delegate = self;
-        [self.mCheckAccessToServer isConnectionToTheServerByUrl:_activeUser.url];
+        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
         
         //Generate the interface of the app
         [self generateAppInterfaceFromLoginScreen:NO];
-        
     }
 }
 
@@ -1073,9 +1072,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         _activeUser=[ManageUsersDB getActiveUser];
     }
     
-    self.mCheckAccessToServer = [[CheckAccessToServer alloc] init];
-    self.mCheckAccessToServer.delegate = self;
-    [self.mCheckAccessToServer isConnectionToTheServerByUrl:_activeUser.url];
+    [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
     
     //Check if expieration time upload is called
     if (_isExpirationTimeInUpload) {
@@ -1900,25 +1897,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 - (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController{
     DLog(@"Did pass code entered incorrectly");
-}
-
-
-#pragma mark - CheckAccessToServerDelegate
--(void)connectionToTheServer:(BOOL)isConnection {
-    
-    if(isConnection) {
-        DLog(@"OK we can connect to the server");
-    } else {
-        DLog(@"We can not connect with the server. Certificate problems");
-    }
-}
-
--(void)repeatTheCheckToTheServer {
-    DLog(@"Ok, cert accepted");
-}
-
--(void)badCertificateNoAcceptedByUser {
-    DLog(@"The user does not accept the certificate");
 }
 
 #pragma mark - Items to upload from other apps
@@ -2911,6 +2889,45 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     self.window.rootViewController = self.loginWindowViewController;
     [self.window makeKeyAndVisible];
+}
+
+#pragma mark - SplashScreenFake
+
+- (void) showSplashScreenFake {
+    
+    DLog(@"showSplashScreenFake");
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Launch Screen" bundle:nil];
+    UIViewController *splashScreenView = [storyboard instantiateViewControllerWithIdentifier:@"SplashScreen"];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    self.window.rootViewController = splashScreenView;
+    [self.window makeKeyAndVisible];
+    
+    UserDto *user = [ManageUsersDB getActiveUser];
+    
+    if (user) {
+        ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
+        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
+    } else {
+        [self checkIfIsNecesaryShowPassCode];
+    }
+}
+
+#pragma mark - CheckAccessToServerDelegate
+
+-(void)connectionToTheServer:(BOOL)isConnection {
+    ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
+    [self checkIfIsNecesaryShowPassCode];
+}
+-(void)repeatTheCheckToTheServer {
+    ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
+    [self checkIfIsNecesaryShowPassCode];
+}
+-(void)badCertificateNoAcceptedByUser {
+    ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
+    [self checkIfIsNecesaryShowPassCode];
 }
 
 @end

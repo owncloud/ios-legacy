@@ -187,7 +187,7 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'ownCloudiOSAppManual.tex', u'ownCloud iOS App Manual',
-   u'The ownCloud developers', 'manual'),
+   u'The ownCloud developers', 'howto'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

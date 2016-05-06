@@ -94,23 +94,6 @@
 
 - (void) loadRemote:(FileDto *) file andNavigateIfIsNecessary:(BOOL) isNecessaryNavigate;
 
-///-----------------------------------
-/// @name partitionObjects
-///-----------------------------------
-
-/**
- * This method sort the array of files and folders alphabetically
- *
- * 
- * @param NSArray -> array of files and folders to be sorted
- * @param SEL -> object about what will be sorted
- *
- * @return NSArray of files sorted
- *
- * @warning This method should not be overwritten
- */
-- (NSMutableArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector;
-
 //Loading methods
 - (void)initLoading;
 - (void)endLoading;

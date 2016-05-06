@@ -89,8 +89,6 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 @property(nonatomic, strong) FileDto *currentFileShowFilesOnTheServerToUpdateTheLocalFile;
 //View for loading screen
 @property(nonatomic, strong) MBProgressHUD  *HUD;
-//To check if there are access with the server
-@property(nonatomic, retain) CheckAccessToServer *mCheckAccessToServer;
 //Move task in background
 @property(nonatomic)UIBackgroundTaskIdentifier moveTask;
 //Refresh Control
@@ -106,6 +104,8 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 //Class to manage the Network erros
 @property (nonatomic, strong) ManageNetworkErrors *manageNetworkErrors;
 @property (nonatomic, strong) UIView *viewToShow;
+//UIActionSheet for sorting files and folders
+@property(nonatomic, strong) UIActionSheet *sortingActionSheet;
 
 //Select folder views used by move options
 @property (nonatomic, strong) SelectFolderViewController *selectFolderViewController;

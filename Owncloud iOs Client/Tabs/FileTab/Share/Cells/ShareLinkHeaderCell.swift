@@ -39,7 +39,7 @@ class ShareLinkHeaderCell:UITableViewCell {
         switchSection.layer.cornerRadius = switchCornerRadious
         
         self.contentView.backgroundColor = UIColor.colorOfNavigationBar()
-        titleSection.textColor = UIColor.whiteColor()
+        titleSection.textColor = UIColor.colorOfNavigationTitle()
     }
     
 }

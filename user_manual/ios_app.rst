@@ -17,32 +17,33 @@ some advantages over the Web interface:
 Getting the ownCloud iOS App
 --------------------------------
 
-Open Safari, or any Web browser, and point it to your ownCloud server. Look on 
-your Personal page for a link to the ownCloud app on iTunes. When you install 
-the ownCloud app and open it you'll be prompted for your ownCloud 
+Open Safari, or any Web browser, and point it to your ownCloud server. Log in 
+and look on your Personal page for a link to the ownCloud app on iTunes. When 
+you install the ownCloud app and open it you'll be prompted for your ownCloud 
 server URL and login. When it connects it opens to your Files page.
 
 .. image:: images/ios-files.png
-   :scale: 75%
    :alt: Files listing.
 
 You'll also find links and information at the ownCloud `installation page 
-<https://owncloud.org/install/#install-clients>`_.
+<https://owncloud.org/install/>`_.
 
 Managing Your Files
 -------------------
 
 All your files on your ownCloud server are listed on the Files page, but are not 
 downloaded to your iPhone or iPad until you tap on them. Downloaded files are 
-marked with a little green arrow. Click the plus button at the top right to 
-upload files to your ownCloud server, or to create a new folder. 
+marked with a little green arrow. Image files display thumbnails after they have 
+been downloaded; image files that have not been downloaded display generic 
+icons. Click the plus button at the top right to upload files to your ownCloud 
+server, or to create a new folder. 
 
 The Files button at the bottom takes you back to your main Files page. The 
 Uploads button shows your history of uploads to your ownCloud server. The Shared 
 Links button shows how many files you have shared by link.
 
 When you're in the Files view, slide any filename to the right to expose your 
-file management options: Trash, create a Share link, and the More button has 
+file management options: Trash, Share, and the More button has 
 options for Open With, Rename, Move, or mark as Favorite.
 
 .. image:: images/ios-slider.png
@@ -69,17 +70,32 @@ start typing user or group names they will auto-complete. After you have shared
 files, click the Share button to see who you have shared with, and to remove 
 shares.
 
+You may also create Federation shares from your iOS app. If you are sharing 
+files with ownCloud 9.x users, you can enter their username and server URL in 
+the User and Groups dialog to create a direct share; for example 
+freda@example.com/owncloud. Your recipient will receive a notification asking 
+if they wish to accept the share, and then all they have to do is click an 
+"Accept" button.
+
 .. image:: images/ios-sharing.png
    :alt: File sharing dialog.
-   :scale: 75%
+   
+You may share files with people who are not using ownCloud, and with 
+older ownCloud servers by creating a share link. Tap "Get Share Link", and this 
+opens a menu with options to automatically create an email notification, or to 
+copy the link so that you can paste it wherever you like. You have options to 
+creating an expiration date on the share, and to password-protect it.
 
 Settings
 --------
+
 The Settings button (bottom right of any screen) takes you to the Settings 
 screen. You can add and edit new accounts, set a login PIN (personal 
 identification number), and it has links to Help, Recommend to a Friend, Send 
-Feedback, and your app version number.
+Feedback, and your app version number. Click the information button at the 
+right of your ownCloud accounts to change your password. Slide the account name 
+to the left to expose the Delete button.
 
 .. image:: images/ios-settings.png
-   :scale: 75%
    :alt: iOS app settings screen.
+   

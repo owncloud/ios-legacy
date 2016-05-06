@@ -23,6 +23,11 @@ typedef enum {
     
 } enumHasShareApiSupport;
 
+typedef enum {
+    sortByName = 0,
+    sortByModificationDate = 1
+} enumSortingType;
+
 @interface UserDto : NSObject
 
 @property NSInteger idUser;
@@ -44,5 +49,6 @@ typedef enum {
 @property long dateInstantUpload;
 @property (nonatomic, copy) NSString *urlRedirected;
 @property (nonatomic, strong) CapabilitiesDto *capabilitiesDto;
+@property enumSortingType sortingType;
 
 @end

@@ -31,14 +31,14 @@
 @end
 
 
-@interface ShareFileOrFolder : NSObject <UIActionSheetDelegate,UITextFieldDelegate,UIAlertViewDelegate>
+@interface ShareFileOrFolder : NSObject <UIActionSheetDelegate,UITextFieldDelegate,UIAlertViewDelegate,ManageNetworkErrorsDelegate>
 
 @property (nonatomic, strong) FileDto *file;
 @property (nonatomic, strong) OCSharedDto *shareDto;
 @property (nonatomic, strong) UIActionSheet *shareActionSheet;
 //This view is to show the shareActionSheet
 @property (nonatomic, strong) UIView *viewToShow;
-@property (nonatomic, weak) __weak id<ShareFileOrFolderDelegate> delegate;
+@property (nonatomic, strong) id<ShareFileOrFolderDelegate> delegate;
 @property (nonatomic, strong) UIPopoverController *activityPopoverController;
 //this bool is to indicate if the parent view is a cell
 @property (nonatomic)  BOOL isTheParentViewACell;
@@ -49,6 +49,7 @@
 @property (nonatomic, strong) UIView *parentView;
 @property (nonatomic, strong) UIViewController *parentViewController;
 @property(nonatomic, strong) UIAlertView *shareProtectedAlertView;
+@property (nonatomic, strong) ManageNetworkErrors *manageNetworkErrors;
 
 
 - (void) showShareActionSheetForFile:(FileDto *) file;
@@ -97,7 +98,7 @@
  *
  * @param OCSharedDto -> The shared file/folder
  */
-- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password andExpirationTime:(NSString*)expirationTime;
+- (void) updateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password expirationTime:(NSString*)expirationTime permissions:(NSInteger)permissions;
 
 /**
  * Check if the file is shared in the server side. If yes, update the database with update data

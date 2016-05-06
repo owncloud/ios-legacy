@@ -47,7 +47,8 @@
 /* Use isTouchIDAvailable before */
 - (void)showTouchIDAuth {
     if (self.isTouchIDAvailable) {
-        [[[LAContext alloc] init] evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:@"Unlock ownCloud" reply:^(BOOL success, NSError * error){
+        NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+        [[[LAContext alloc] init] evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason: [NSLocalizedString(@"unlock_app", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName] reply:^(BOOL success, NSError * error){
             
             if(error) {
                 NSString *failureReason;

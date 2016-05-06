@@ -142,11 +142,14 @@
     
     self.listUsers = [ManageUsersDB getAllUsers];
     [self.settingsTableView reloadData];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatesWhenEnteringForegroundMode) name:UIApplicationDidBecomeActiveNotification object:nil];
 
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver: self name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -188,6 +191,10 @@
     } else {
         return YES;
     }
+}
+
+- (void) updatesWhenEnteringForegroundMode {
+    [self.settingsTableView reloadData];
 }
 
 #pragma mark - Setting Actions
@@ -338,17 +345,27 @@
             break;
             
         case 1:
-            n = 1;
+            
+            if (!k_multiaccount_available && self.switchPasscode.on && [self isTouchIDAvailable]) {
+                n = 2;
+            }else{
+                n = 1;
+            }
             break;
             
         case 2:
-            n = (self.switchPasscode.on && [[ManageTouchID sharedSingleton] isTouchIDAvailable])? 2:1;
+
+            if (k_multiaccount_available && self.switchPasscode.on && [self isTouchIDAvailable]) {
+                n = 2;
+            }else{
+                n = 1;
+            }
             break;
             
         case 3:
             
             if (k_multiaccount_available) {
-               n = 1;
+                n = 1;
             }else{
                 if (k_show_help_option_on_settings) {
                     n = n + 1;
@@ -363,13 +380,13 @@
                     n = n + 1;
                 }
             }
-
+            
             break;
             
         case 4:
             n = 0;
             if (k_multiaccount_available) {
-               
+                
                 if (k_show_help_option_on_settings) {
                     n = n + 1;
                 }
@@ -749,7 +766,13 @@
     
     switch (row) {
         case 0:
-            cell.textLabel.text=NSLocalizedString(@"title_app_pin", nil);
+            if([self isTouchIDAvailable] && !self.switchPasscode.on) {
+                cell.textLabel.text = NSLocalizedString(@"title_app_pin_and_touchID", nil);
+            }
+            else{
+                cell.textLabel.text = NSLocalizedString(@"title_app_pin", nil);
+            }
+            
             self.switchPasscode = [[UISwitch alloc] initWithFrame:CGRectZero];
             cell.accessoryView = self.switchPasscode;
             [self.switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:YES];
@@ -762,7 +785,7 @@
             break;
             
         case 1:
-            cell.textLabel.text=NSLocalizedString(@"title_app_touchID", nil);
+            cell.textLabel.text = NSLocalizedString(@"title_app_touchID", nil);
             self.switchTouchID = [[UISwitch alloc] initWithFrame:CGRectZero];
             cell.accessoryView = self.switchTouchID;
             [self.switchTouchID setOn:[ManageAppSettingsDB isTouchID] animated:YES];
@@ -1768,8 +1791,8 @@
     [self.switchTouchID setOn:value animated:NO];
 }
 
--(void)isTouchID {
-    [self switchTouchIDTo:[ManageAppSettingsDB isTouchID]];
+-(BOOL)isTouchIDAvailable {
+    return [[ManageTouchID sharedSingleton] isTouchIDAvailable];
 }
 
 -(void)setPropertiesTouchIDToState:(BOOL)isTocuhIDActive{
