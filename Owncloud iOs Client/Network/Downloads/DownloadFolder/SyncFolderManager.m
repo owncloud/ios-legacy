@@ -360,6 +360,10 @@ static float const kDelayAfterCancelAll = 3.0;
     [download addFileToDownload:file];
     
     [self.listOfFilesToBeDownloaded addObject:download];
+    
+    if (self.listOfFilesToBeDownloaded.count == 1) {
+        [download.downloadTask resume];
+    }
 }
 
 - (void) simpleDownloadTheFile:(FileDto *) file andTask:(NSURLSessionDownloadTask *) task {

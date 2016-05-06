@@ -75,7 +75,7 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
     __weak typeof(self) weakSelf = self;
     
     self.downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunicationDownloadFolder] progress:^(NSProgress *progress) {
-        
+        NSLog(@"Progress: %f", progress.fractionCompleted);
     } successRequest:^(NSURLResponse *response, NSURL *filePath) {
         DLog(@"file: %@", file.localFolder);
         DLog(@"File downloaded");
@@ -95,7 +95,7 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
         }
     }];
     
-    [self.downloadTask resume];
+    //[self.downloadTask resume];
     [ManageFilesDB updateFile:file.idFile withTaskIdentifier:self.downloadTask.taskIdentifier];
 }
 
@@ -121,6 +121,7 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
     
     [self reloadCellFromDataBase];
     [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
+    [self resumeNextDownloadFromQueue];
     
     //On Ipad reload the preview if the file is the same has been updated
     if (!IS_IPHONE && [app.detailViewController.file.localFolder isEqualToString: self.file.localFolder]) {
@@ -155,6 +156,7 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
     
     [self reloadCellFromDataBase];
     [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
+    [self resumeNextDownloadFromQueue];
 }
 
 - (void) cancelDownload {
@@ -169,6 +171,13 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
 - (void)reloadCellFromDataBase{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     [app reloadCellByFile:self.file];
+}
+
+- (void) resumeNextDownloadFromQueue {
+    if ([AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count > 0) {
+        DownloadFileSyncFolder *download = (DownloadFileSyncFolder *) [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded objectAtIndex:0];
+        [download.downloadTask resume];
+    }
 }
 
 @end
