@@ -48,6 +48,10 @@
 #define k_padding_last_section 40.0
 #define k_padding_under_section 5.0
 
+//Number of sections in table
+#define k_sections_with_multi_account 5
+#define k_sections_with_single_account 4
+
 //Settings custom font
 #define k_settings_normal_font [UIFont fontWithName:@"HelveticaNeue" size:17]
 #define k_settings_bold_font [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
@@ -257,6 +261,10 @@
 }
 
 
+- (void) clearCache {
+    DLog(@"Clear cache");
+}
+
 -(void)disconnectUser {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
 
@@ -322,9 +330,9 @@
     NSInteger sections = 0;
     
     if (k_multiaccount_available) {
-        sections = 5;
+        sections = k_sections_with_multi_account;
      } else {
-        sections = 4;
+        sections = k_sections_with_single_account;
      }
     return sections;
 }
@@ -340,7 +348,7 @@
             if (k_multiaccount_available) {
                 n = self.listUsers.count;
             }else{
-                n = 1;
+                n = 2;
             }
             break;
             
@@ -424,7 +432,11 @@
             if (k_multiaccount_available) {
                 cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
             }else{
-                cell = [self getSectionDisconnectButton:cell byRow:indexPath.row];
+                if (indexPath.row == 0) {
+                    cell = [self getSectionClearCache:cell byRow:indexPath.row];
+                } else {
+                    cell = [self getSectionDisconnectButton:cell byRow:indexPath.row];
+                }
             }
             break;
             
@@ -901,6 +913,26 @@
     return addAccountCell;
 }
 
+- (UITableViewCell *) getSectionClearCache:(UITableViewCell *) cell byRow:(NSInteger) row {
+    
+    
+    static NSString *CellIdentifier = @"ClearCache";
+    
+    UITableViewCell *clearCacheCell;
+    
+    clearCacheCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    
+    clearCacheCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    clearCacheCell.textLabel.font = k_settings_bold_font;
+    clearCacheCell.textLabel.textAlignment = NSTextAlignmentCenter;
+    clearCacheCell.editing = NO;
+    clearCacheCell.textLabel.text = NSLocalizedString(@"clear_cache_button", nil);
+    clearCacheCell.backgroundColor = [UIColor colorOfBackgroundButtonOnList];
+    clearCacheCell.textLabel.textColor = [UIColor colorOfTextButtonOnList];
+    
+    return clearCacheCell;
+}
+
 - (UITableViewCell *) getSectionDisconnectButton:(UITableViewCell *) cell byRow:(NSInteger) row {
     
     
@@ -954,7 +986,11 @@
             if (k_multiaccount_available) {
                 [self didPressOnAccountIndexPath:indexPath];
             }else{
-                [self disconnectUser];
+                if (indexPath.row == 0) {
+                    [self clearCache];
+                } else {
+                    [self disconnectUser];
+                }
             }
             break;
             
