@@ -49,7 +49,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.titleTextField.placeholder = NSLocalizedString(@"title_text_file_placeholder", nil);
+    self.titleTextField.text = NSLocalizedString(@"default_text_file_title", nil);
     //self.bodyTextView.text = NSLocalizedString(@"body_text_file_placeholder", nil);
+  
 }
 
 - (void)didReceiveMemoryWarning {
@@ -58,6 +60,7 @@
 }
 
 - (void) viewWillAppear:(BOOL)animated{
+    [self.bodyTextView becomeFirstResponder];
     [super viewWillAppear:animated];
     [self setStyleView];
 }
@@ -67,7 +70,7 @@
 
 - (void) setStyleView {
     
-    self.navigationItem.title = NSLocalizedString(@"title_view_edit_file", nil);
+    self.navigationItem.title = NSLocalizedString(@"title_view_new_text_file", nil);
     [self setBarButtonStyle];
 }
 

@@ -24,7 +24,6 @@
                 </textField>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="xMh-ks-EIq">
                     <rect key="frame" x="8" y="113" width="584" height="479"/>
-                    <color key="backgroundColor" red="0.98867031105635972" green="0.98867031105635972" blue="0.98867031105635972" alpha="1" colorSpace="calibratedRGB"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                     <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES"/>
