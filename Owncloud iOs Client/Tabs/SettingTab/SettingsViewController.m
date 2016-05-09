@@ -42,6 +42,7 @@
 #import "SyncFolderManager.h"
 #import "ManageThumbnails.h"
 #import "ManageTouchID.h"
+#import "DeleteUtils.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -263,6 +264,8 @@
 
 - (void) clearCache {
     DLog(@"Clear cache");
+    
+    [DeleteUtils deleteAllDownloadedFilesByUser:APP_DELEGATE.activeUser];
 }
 
 -(void)disconnectUser {
