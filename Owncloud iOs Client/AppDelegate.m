@@ -232,7 +232,27 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     if ([[ url scheme] isEqualToString:scheme] ) {
         
-        [self performSelector:@selector(changeTabAfter:) withObject:url afterDelay:0.5];
+        NSString *urlString = [url absoluteString];
+        
+        if ([urlString containsString:k_widget_parameter]) {
+            if ([ManageUsersDB getActiveUser]) {
+                NSArray *urlSplit = [urlString componentsSeparatedByString:@"="];
+                if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_files]) {
+                    self.ocTabBarSelectedIndex = 0;
+                } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_recents]) {
+                    self.ocTabBarSelectedIndex = 1;
+                } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_shared]) {
+                    self.ocTabBarSelectedIndex = 2;
+                } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_settings]) {
+                    self.ocTabBarSelectedIndex = 3;
+                }
+                
+                if (self.ocTabBarController) {
+                    self.ocTabBarController.selectedIndex = self.ocTabBarSelectedIndex;
+                    self.ocTabBarSelectedIndex = 0;
+                }
+            }
+        }
         
         //OAuth
         /*if (dbService.isDebugLogEnabled) {
@@ -308,25 +328,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
     
     return YES;
-}
-
-- (void) changeTabAfter:(NSURL *) url {
-    NSString *urlString = [url absoluteString];
-    
-    if ([urlString containsString:k_widget_parameter]) {
-        if ([ManageUsersDB getActiveUser]) {
-            NSArray *urlSplit = [urlString componentsSeparatedByString:@"="];
-            if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_files]) {
-                _ocTabBarController.selectedIndex = 0;
-            } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_recents]) {
-                _ocTabBarController.selectedIndex = 1;
-            } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_shared]) {
-                _ocTabBarController.selectedIndex = 2;
-            } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_settings]) {
-                _ocTabBarController.selectedIndex = 3;
-            }
-        }
-    }
 }
 
 /*
@@ -580,7 +581,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         self.window.rootViewController = _ocTabBarController;
         [self.window makeKeyAndVisible];
         //Select the first item of the tabBar
-        self.ocTabBarController.selectedIndex = 0;
+        self.ocTabBarController.selectedIndex = self.ocTabBarSelectedIndex;
+        self.ocTabBarSelectedIndex = 0;
     } else {
         //iPad
         
@@ -601,7 +603,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         // Add the split view controller's view to the window and display.
         self.window.rootViewController = _splitViewController;
         [self.window makeKeyAndVisible];
-         self.ocTabBarController.selectedIndex = 0;
+        self.ocTabBarController.selectedIndex = self.ocTabBarSelectedIndex;
+        self.ocTabBarSelectedIndex = 0;
         
         [self.detailViewController performSelector:@selector(configureView) withObject:nil afterDelay:0];
         
