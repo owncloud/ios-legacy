@@ -1038,7 +1038,18 @@
     switch (indexPath.section) {
         case 0:
             if (k_multiaccount_available) {
-                [self didPressOnAccountIndexPath:indexPath];
+                switch (indexPath.row) {
+                    case 0:
+                        break;
+                    case 1:
+                        [self clearCache];
+                        break;
+                    case 2:
+                        [self disconnectUser];
+                        break;
+                    default:
+                        break;
+                }
             }else{
                 if (indexPath.row == 0) {
                     [self clearCache];
@@ -1050,22 +1061,26 @@
             
         case 1:
             if (k_multiaccount_available) {
+                [self didPressOnAccountIndexPath:indexPath];
+            }
+            break;
+        case 2:
+            if (k_multiaccount_available) {
                 [self didPressOnAddAccountButton];
             }
             break;
-            
-        case 3:
+        /*case 4:
             if (!k_multiaccount_available) {
                 [self didPressOnInfoBlock:indexPath.row];
             }
             break;
             
-        case 4:
+        case 5:
             if (k_multiaccount_available) {
                 [self didPressOnInfoBlock:indexPath.row];
             }
             break;
-            
+          */
         default:
             break;
     }
@@ -1328,7 +1343,7 @@
 -(void)activeAccountByPosition:(NSInteger)position {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:position];
+    UserDto *selectedUser = (UserDto *)[[self getUsersWithoutActiveUser] objectAtIndex:position];
     
     if (app.activeUser.idUser != selectedUser.idUser) {
         //Cancel downloads of the previous user
