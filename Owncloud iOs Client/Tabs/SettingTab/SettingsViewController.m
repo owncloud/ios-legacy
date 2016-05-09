@@ -49,8 +49,8 @@
 #define k_padding_under_section 5.0
 
 //Number of sections in table
-#define k_sections_with_multi_account 5
-#define k_sections_with_single_account 4
+#define k_sections_with_multi_account 6 //6
+#define k_sections_with_single_account 6
 
 //Settings custom font
 #define k_settings_normal_font [UIFont fontWithName:@"HelveticaNeue" size:17]
@@ -346,70 +346,50 @@
         case 0:
             
             if (k_multiaccount_available) {
-                n = self.listUsers.count;
+                n = 3;
             }else{
                 n = 2;
             }
             break;
             
         case 1:
-            
-            if (!k_multiaccount_available && self.switchPasscode.on && [self isTouchIDAvailable]) {
-                n = 2;
-            }else{
-                n = 1;
+            if (k_multiaccount_available) {
+                n = self.listUsers.count-1;
+            } else {
+                n = 0;
             }
             break;
-            
         case 2:
-
-            if (k_multiaccount_available && self.switchPasscode.on && [self isTouchIDAvailable]) {
+            if (k_multiaccount_available) {
+                n = 1;
+            } else {
+                n = 0;
+            }
+            break;
+        case 3:
+            if (self.switchPasscode.on && [self isTouchIDAvailable]) {
                 n = 2;
             }else{
                 n = 1;
             }
             break;
-            
-        case 3:
-            
-            if (k_multiaccount_available) {
-                n = 1;
-            }else{
-                if (k_show_help_option_on_settings) {
-                    n = n + 1;
-                }
-                if (k_show_recommend_option_on_settings) {
-                    n = n + 1;
-                }
-                if (k_show_feedback_option_on_settings) {
-                    n = n + 1;
-                }
-                if (k_show_imprint_option_on_settings) {
-                    n = n + 1;
-                }
-            }
-            
-            break;
-            
         case 4:
-            n = 0;
-            if (k_multiaccount_available) {
-                
-                if (k_show_help_option_on_settings) {
-                    n = n + 1;
-                }
-                if (k_show_recommend_option_on_settings) {
-                    n = n + 1;
-                }
-                if (k_show_feedback_option_on_settings) {
-                    n = n + 1;
-                }
-                if (k_show_imprint_option_on_settings) {
-                    n = n + 1;
-                }
+            n = 1;
+            break;
+        case 5:
+            if (k_show_help_option_on_settings) {
+                n = n + 1;
+            }
+            if (k_show_recommend_option_on_settings) {
+                n = n + 1;
+            }
+            if (k_show_feedback_option_on_settings) {
+                n = n + 1;
+            }
+            if (k_show_imprint_option_on_settings) {
+                n = n + 1;
             }
             break;
-            
         default:
             break;
     }
@@ -430,7 +410,19 @@
     switch (indexPath.section) {
         case 0:
             if (k_multiaccount_available) {
-                cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
+                switch (indexPath.row) {
+                    case 0:
+                        cell = [self getActiveAccountCell];
+                        break;
+                    case 1:
+                        cell = [self getSectionClearCache:cell byRow:indexPath.row];
+                        break;
+                    case 2:
+                        cell = [self getSectionDisconnectButton:cell byRow:indexPath.row];
+                        break;
+                    default:
+                        break;
+                }
             }else{
                 if (indexPath.row == 0) {
                     cell = [self getSectionClearCache:cell byRow:indexPath.row];
@@ -442,35 +434,22 @@
             
         case 1:
             if (k_multiaccount_available) {
-               cell = [self getSectionAddAccountButton:cell byRow:indexPath.row];
-            }else{
-                [self getSectionAppPinBlock:cell byRow:indexPath.row];
+                cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
             }
             break;
-            
         case 2:
-            if (k_multiaccount_available) {
-                [self getSectionAppPinBlock:cell byRow:indexPath.row];
-            }else{
-                [self getSectionAppInstantUpload:cell byRow:indexPath.row];
-            }
+            cell = [self getSectionAddAccountButton:cell byRow:indexPath.row];
             break;
-            
+
         case 3:
-            if (k_multiaccount_available) {
-                [self getSectionAppInstantUpload:cell byRow:indexPath.row];
-            }else{
-                [self getSectionInfoBlock:cell byRow:indexPath.row];
-            }
+            [self getSectionAppPinBlock:cell byRow:indexPath.row];
             break;
-            
+
         case 4:
-            if (k_multiaccount_available) {
-                [self getSectionInfoBlock:cell byRow:indexPath.row];
-            }else{
-                //Nothing
-            }
-            
+            [self getSectionAppInstantUpload:cell byRow:indexPath.row];
+            break;
+        case 5:
+            [self getSectionInfoBlock:cell byRow:indexPath.row];
             break;
             
         default:
@@ -489,13 +468,7 @@
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.settingsTableView.frame.size.width, k_padding_last_section)];
     UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:13];
     
-    NSInteger sectionToShowFooter = 3;
-    
-    if (k_multiaccount_available) {
-        sectionToShowFooter = 4;
-    }
-
-    if (section == sectionToShowFooter) {
+    if (section == (k_sections_with_single_account-1)) {
         NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
         NSString *lastGitCommit = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"LastGitCommit"];
@@ -526,12 +499,19 @@
             
         case 1:
             if (k_multiaccount_available) {
-                height = k_padding_under_section;
-            }else{
                 height = k_padding_normal_section;
+            } else {
+                height = 0;
             }
             break;
-      
+        case 2:
+            if (k_multiaccount_available) {
+                height = 0;
+            } else {
+                height = k_padding_under_section;
+            }
+            break;
+            
         default:
             height = k_padding_normal_section;
             break;
@@ -545,7 +525,7 @@
     CGFloat height = 0;
     
     switch (section) {
-        case 0:
+        /*case 0:
             if (k_multiaccount_available) {
                 height = k_padding_under_section;
             }else{
@@ -568,6 +548,17 @@
                 height = k_padding_normal_section;
             }
             break;
+            */
+        case 0:
+            height = k_padding_normal_section;
+            break;
+        case 1:
+            if (k_multiaccount_available) {
+                height = k_padding_normal_section;
+            } else {
+                height = 0;
+            }
+            break;
             
         default:
             height = k_padding_normal_section;
@@ -583,17 +574,35 @@
     
     switch (section) {
         case 0:
-            title = NSLocalizedString(@"accounts_section", nil);
-            break;
             
-        case 1:
-            
-            if (!k_multiaccount_available) {
-                title = NSLocalizedString(@"security_section", nil);
+            if (k_multiaccount_available) {
+                title = NSLocalizedString(@"selected_account", nil);
+            } else {
+                title = NSLocalizedString(@"accounts_section", nil);
             }
             
             break;
             
+        case 1:
+            
+            if (k_multiaccount_available) {
+                title = NSLocalizedString(@"accounts_section", nil);
+            }
+            
+            break;
+            
+        case 2:
+            break;
+        case 3:
+            title = NSLocalizedString(@"security_section", nil);
+            break;
+        case 4:
+            title = NSLocalizedString(@"instant_updloads_section", nil);
+            break;
+        case 5:
+            title = NSLocalizedString(@"more_section", nil);
+            break;
+        /*
         case 2:
             
             if (k_multiaccount_available) {
@@ -620,7 +629,7 @@
             }
     
             break;
-            
+            */
         default:
             break;
     }
@@ -840,6 +849,51 @@
     return cell;
 }
 
+- (AccountCell *) getActiveAccountCell {
+    
+    static NSString *CellIdentifier = @"AccountCell";
+    
+    AccountCell *accountCell = (AccountCell *) [self.settingsTableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    UserDto *user = [ManageUsersDB getActiveUser];
+    
+    
+    if (accountCell == nil) {
+        
+        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"AccountCell" owner:self options:nil];
+        
+        for (id currentObject in topLevelObjects){
+            if ([currentObject isKindOfClass:[UITableViewCell class]]){
+                accountCell =  (AccountCell *) currentObject;
+                break;
+            }
+        }
+    }
+    
+    accountCell.delegate = self;
+    accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
+    accountCell.userName.text = user.username;
+    
+    //If saml needs change the name to utf8
+    if (k_is_sso_active) {
+        accountCell.userName.text = [accountCell.userName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    }
+    
+    accountCell.urlServer.text = user.url;
+    accountCell.accessoryType = UITableViewCellAccessoryDetailButton;
+    [accountCell.activeButton setImage:[UIImage imageNamed:@"radio_checked.png"] forState:UIControlStateNormal];
+    
+    //Accesibility support for Automation
+    NSString *accesibilityCellString = ACS_SETTINGS_USER_ACCOUNT_CELL;
+    accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$user" withString:accountCell.userName.text];
+    accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
+    
+    [accountCell setAccessibilityLabel:accesibilityCellString];
+    
+    return accountCell;
+    
+}
+
 - (AccountCell *) getSectionManageAccountBlock:(UITableViewCell *) cell byRow:(NSInteger) row {
     
     static NSString *CellIdentifier = @"AccountCell";
@@ -862,17 +916,17 @@
     [accountCell.activeButton setTag:row];
     
     accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
-    accountCell.userName.text = ((UserDto *) [self.listUsers objectAtIndex:row]).username;
+    accountCell.userName.text = ((UserDto *) [[self getUsersWithoutActiveUser] objectAtIndex:row]).username;
     
     //If saml needs change the name to utf8
     if (k_is_sso_active) {
         accountCell.userName.text = [accountCell.userName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
     
-    accountCell.urlServer.text = ((UserDto *) [self.listUsers objectAtIndex:row]).url;
+    accountCell.urlServer.text = ((UserDto *) [[self getUsersWithoutActiveUser] objectAtIndex:row]).url;
     accountCell.accessoryType = UITableViewCellAccessoryDetailButton;
     
-    if(((UserDto *) [self.listUsers objectAtIndex:row]).activeaccount){
+    if(((UserDto *) [[self getUsersWithoutActiveUser] objectAtIndex:row]).activeaccount){
         [accountCell.activeButton setImage:[UIImage imageNamed:@"radio_checked.png"] forState:UIControlStateNormal];
         
     }else {
@@ -1443,6 +1497,18 @@
     [appDelegate.downloadManager cancelDownloads];
     
     [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
+}
+
+- (NSMutableArray *) getUsersWithoutActiveUser {
+    NSMutableArray *listOfUsersWithouActive = [NSMutableArray new];
+    
+    for (UserDto *current in self.listUsers) {
+        if (!current.activeaccount) {
+            [listOfUsersWithouActive addObject:current];
+        }
+    }
+    
+    return listOfUsersWithouActive;
 }
 
 #pragma mark - Check Server version in order to use chunks to upload or not
