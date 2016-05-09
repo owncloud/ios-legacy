@@ -606,6 +606,7 @@
 		59EDC4301C611F9A0050939C /* btnHelpPage3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC4291C611F9A0050939C /* btnHelpPage3@2x.png */; };
 		59EDC4311C611F9A0050939C /* btnHelpPage4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC42A1C611F9A0050939C /* btnHelpPage4@2x.png */; };
 		59EDC4321C611F9A0050939C /* btnHelpPage5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 59EDC42B1C611F9A0050939C /* btnHelpPage5@2x.png */; };
+		59EF1F0E1CE0BD8900184F8F /* DeleteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 59EF1F0D1CE0BD8900184F8F /* DeleteUtils.m */; };
 		59F123DD1C89AEE20094CF70 /* ManageThumbnails.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF33C881C2AF5EE003A5AA2 /* ManageThumbnails.m */; };
 		59F123E11C89BFB50094CF70 /* CustomCellFileAndDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5C0177850B100FB9977 /* CustomCellFileAndDirectory.m */; };
 		59F123E21C89C0E00094CF70 /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF690F1891379C00A2217C /* SWTableViewCell.m */; };
@@ -1614,6 +1615,8 @@
 		59EDC4291C611F9A0050939C /* btnHelpPage3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnHelpPage3@2x.png"; sourceTree = "<group>"; };
 		59EDC42A1C611F9A0050939C /* btnHelpPage4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnHelpPage4@2x.png"; sourceTree = "<group>"; };
 		59EDC42B1C611F9A0050939C /* btnHelpPage5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnHelpPage5@2x.png"; sourceTree = "<group>"; };
+		59EF1F0C1CE0BD8900184F8F /* DeleteUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeleteUtils.h; path = Utils/DeleteUtils.h; sourceTree = "<group>"; };
+		59EF1F0D1CE0BD8900184F8F /* DeleteUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeleteUtils.m; path = Utils/DeleteUtils.m; sourceTree = "<group>"; };
 		59F470311C5F97BA005B6091 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		905B3D3A1C8867AA00BCC93B /* SortManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SortManager.m; path = Tabs/FileTab/Sort/SortManager.m; sourceTree = "<group>"; };
 		905B3D3E1C88681000BCC93B /* SortManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SortManager.h; path = Tabs/FileTab/Sort/SortManager.h; sourceTree = "<group>"; };
@@ -2152,6 +2155,8 @@
 				593F7CA919EFDE96004136F7 /* UtilsUrls.m */,
 				EAAD688D1C560AF2005F3B28 /* ShareUtils.h */,
 				EAAD688E1C560AF2005F3B28 /* ShareUtils.m */,
+				59EF1F0C1CE0BD8900184F8F /* DeleteUtils.h */,
+				59EF1F0D1CE0BD8900184F8F /* DeleteUtils.m */,
 				138841D216E735E700053AAB /* Image Scale */,
 			);
 			name = Utils;
@@ -4671,6 +4676,7 @@
 				1487F158177C3392004A1A5A /* FMDatabase.m in Sources */,
 				1487F159177C3392004A1A5A /* FMDatabaseAdditions.m in Sources */,
 				906177E21C4FABF600BBE648 /* ManageTouchID.m in Sources */,
+				59EF1F0E1CE0BD8900184F8F /* DeleteUtils.m in Sources */,
 				13A9FCEF17E9858C00FF48D7 /* ELCAssetCell.m in Sources */,
 				1487F15A177C3392004A1A5A /* FMDatabasePool.m in Sources */,
 				59C71D1F1A9216AE00F66166 /* ReaderThumbRequest.m in Sources */,

@@ -280,7 +280,7 @@
     NSLog(@"Manage Downloads: ERROR LOGIN");
     
     NSMutableArray *downloadsFromDB = [NSMutableArray new];
-    [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading]];
+    [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading andUser:APP_DELEGATE.activeUser]];
     
     //Put "notdownload" state all files in download
     for (FileDto *file in downloadsFromDB) {

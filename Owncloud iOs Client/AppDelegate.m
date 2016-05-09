@@ -1265,7 +1265,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //Get downloads in progress from the DataBase
         NSMutableArray *downloadsFromDB = [NSMutableArray new];
         
-        [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading]];
+        [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading andUser:self.activeUser]];
         
         for (NSURLSessionDownloadTask *downloadTask in downloadTasks) {
             
@@ -1298,7 +1298,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //Get downloads in progress from the DataBase
         NSMutableArray *downloadsFromDB = [NSMutableArray new];
         
-        [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading]];
+        [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading andUser:self.activeUser]];
         
         for (NSURLSessionDownloadTask *downloadTask in downloadTasks) {
             
@@ -1339,7 +1339,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Get downloads in progress from the DataBase
     NSMutableArray *downloadsFromDB = [NSMutableArray new];
     
-    [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading]];
+    [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading andUser:self.activeUser]];
     
     if (downloadsFromDB.count > 0) {
         
@@ -2377,7 +2377,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) updateTheDownloadState: (int) previousState to:(int) newState {
     //Obtain all the file with previous status
-    NSMutableArray *listOfFiles = [ManageFilesDB getFilesByDownloadStatus:previousState];
+    NSMutableArray *listOfFiles = [ManageFilesDB getFilesByDownloadStatus:previousState andUser:self.activeUser];
     DLog(@"There are: %lu in the list of files", (unsigned long)listOfFiles.count);
     
     //First, check if there are
