@@ -525,30 +525,6 @@
     CGFloat height = 0;
     
     switch (section) {
-        /*case 0:
-            if (k_multiaccount_available) {
-                height = k_padding_under_section;
-            }else{
-                height = k_padding_normal_section;
-            }
-            break;
-            
-        case 3:
-            if (k_multiaccount_available) {
-                height = k_padding_normal_section;
-            }else{
-                height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
-            }
-            break;
-            
-        case 4:
-            if (k_multiaccount_available) {
-                height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
-            }else{
-                height = k_padding_normal_section;
-            }
-            break;
-            */
         case 0:
             height = k_padding_normal_section;
             break;
@@ -559,7 +535,9 @@
                 height = 0;
             }
             break;
-            
+        case 5:
+            height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
+            break;
         default:
             height = k_padding_normal_section;
             break;
@@ -1069,18 +1047,11 @@
                 [self didPressOnAddAccountButton];
             }
             break;
-        /*case 4:
-            if (!k_multiaccount_available) {
-                [self didPressOnInfoBlock:indexPath.row];
-            }
-            break;
-            
         case 5:
             if (k_multiaccount_available) {
                 [self didPressOnInfoBlock:indexPath.row];
             }
             break;
-          */
         default:
             break;
     }
