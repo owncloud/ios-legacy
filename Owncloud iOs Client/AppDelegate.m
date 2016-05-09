@@ -232,22 +232,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     if ([[ url scheme] isEqualToString:scheme] ) {
         
-        NSString *urlString = [url absoluteString];
-        
-        if ([urlString containsString:k_widget_parameter]) {
-            if ([ManageUsersDB getActiveUser]) {
-                NSArray *urlSplit = [urlString componentsSeparatedByString:@"="];
-                if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_files]) {
-                    _ocTabBarController.selectedIndex = 0;
-                } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_recents]) {
-                    _ocTabBarController.selectedIndex = 1;
-                } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_shared]) {
-                    _ocTabBarController.selectedIndex = 2;
-                } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_settings]) {
-                    _ocTabBarController.selectedIndex = 3;
-                }
-            }
-        }
+        [self performSelector:@selector(changeTabAfter:) withObject:url afterDelay:0.5];
         
         //OAuth
         /*if (dbService.isDebugLogEnabled) {
@@ -323,6 +308,25 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
     
     return YES;
+}
+
+- (void) changeTabAfter:(NSURL *) url {
+    NSString *urlString = [url absoluteString];
+    
+    if ([urlString containsString:k_widget_parameter]) {
+        if ([ManageUsersDB getActiveUser]) {
+            NSArray *urlSplit = [urlString componentsSeparatedByString:@"="];
+            if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_files]) {
+                _ocTabBarController.selectedIndex = 0;
+            } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_recents]) {
+                _ocTabBarController.selectedIndex = 1;
+            } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_shared]) {
+                _ocTabBarController.selectedIndex = 2;
+            } else if ([[urlSplit objectAtIndex:1] isEqualToString:k_widget_parameter_settings]) {
+                _ocTabBarController.selectedIndex = 3;
+            }
+        }
+    }
 }
 
 /*
