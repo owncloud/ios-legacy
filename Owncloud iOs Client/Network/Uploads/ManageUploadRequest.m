@@ -552,17 +552,18 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                     [self updateTheEtagOfTheFile:uploadFile];
                     [self moveTheFileOnFileSystemFromTemporalFolder:uploadFile];
                 }
+
+    //TODO:pending update DB propertly after exist the file on DB, until that not move temp files to local file system
+//                [self.delegate overwriteCompleted];
+//                NSString *fullRemoteFilePath = [NSString stringWithFormat:@"%@",weakSelf.currentUpload.destinyFolder];
+//                NSString *filePathOnDB = [UtilsUrls getFilePathOnDBByFullPath:fullRemoteFilePath andUser:appDelegate.activeUser];
                 
-                
-                //TODO:pending update DB propertly after exist the file on DB
-                [self.delegate overwriteCompleted];
-                NSString *fullRemoteFilePath = [NSString stringWithFormat:@"%@",weakSelf.currentUpload.destinyFolder];
-                NSString *filePathOnDB = [UtilsUrls getFilePathOnDBByFullPath:fullRemoteFilePath andUser:appDelegate.activeUser];
-                [ManageFilesDB updateDownloadStateOfFileDtoByFileName:weakSelf.currentUpload.uploadFileName andFilePath:filePathOnDB andActiveUser:appDelegate.activeUser withState:downloaded];
-                
-                //move to temp path to localSystem path
-                [UploadUtils moveFinishedUploadTempFileToLocalPathByUploadsOfflineDto:weakSelf.currentUpload];
-                //[weakSelf removeTheFileOnFileSystem];
+//                [ManageFilesDB updateDownloadStateOfFileDtoByFileName:weakSelf.currentUpload.uploadFileName andFilePath:filePathOnDB andActiveUser:appDelegate.activeUser withState:downloaded];
+//                
+//                //move to temp path to localSystem path
+//                [UploadUtils moveFinishedUploadTempFileToLocalPathByUploadsOfflineDto:weakSelf.currentUpload];
+             
+                [weakSelf removeTheFileOnFileSystem];
 
             }
             
