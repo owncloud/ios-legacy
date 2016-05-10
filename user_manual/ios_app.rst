@@ -32,10 +32,10 @@ Managing Your Files
 
 All your files on your ownCloud server are listed on the Files page, but are not 
 downloaded to your iPhone or iPad until you tap on them. Downloaded files are 
-marked with a little green arrow. Thumbnails are displayed for both 
-downloaded and not-downloaded files. Click the overflow button at the top right 
-(the three-dot button) to upload files to your server, create a new folder, or 
-sort your files alphabetically or by date.
+marked with a little green arrow. Thumbnails are displayed for both downloaded 
+and not-downloaded files (owncloud 8.0+ only). Click the overflow button at the 
+top right (the three-dot button) to upload files to your server, create a new 
+folder, or sort your files alphabetically or by date.
 
 The Files button at the bottom takes you back to your main Files page. The 
 Uploads button shows your history of uploads to your ownCloud server. The Shared 
@@ -75,10 +75,12 @@ shares.
 You may also create Federation shares from your iOS app. If you are sharing 
 files with ownCloud 9.x users, you can enter their username (auto-completion is 
 supported for Federation sharing) and server URL in the User and Groups dialog 
-to create a direct share; for example freda@example.com/owncloud. (The exact 
+to create a Federation share; for example freda@example.com/owncloud. (The exact 
 Federation share link is on every ownCloud user's Personal page in the ownCloud 
-Web interface.) Your recipient will receive a notification asking if they wish 
-to accept the share, and then all they have to do is click an "Accept" button.
+Web interface.) Please note that this is not yet fully-implemented in the iOS 
+app: your recipient needs to use their ownCloud Web interface to receive the 
+notification asking if they wish to accept the share, and then they must click 
+an "Accept" button.
 
 .. image:: images/ios-sharing.png
    :alt: File sharing dialog.
