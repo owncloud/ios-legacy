@@ -590,4 +590,49 @@
     return key;
 }
 
+//-----------------------------------
+/// @name getFileLocalSystemPathByFullPath
+///-----------------------------------
+
+/**
+ * Method used to get only the domain and the protocol (http/https)
+ *
+ * @param NSString -> fullRemotePath -->http://domain/(subfolders)/k_url_webdav_server/folderA/fileA.txt
+ * @param UserDto -> user
+ *
+ * @return NSString fullLocalDestiny --> /fullLocalSystemPath/idUser/folderA/fileA.txt
+ *
+ */
++ (NSString *) getFileLocalSystemPathByFullPath:(NSString *)fullRemotePath andUser:(UserDto *)user{
+
+    NSString *localDestiny = [UtilsUrls  getFilePathOnDBByFullPath:fullRemotePath andUser:user];
+    
+    NSString *ocLocalFolder = [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)user.idUser]];
+
+    NSString *fullLocalDestiny = [NSString stringWithFormat:@"%@/%@",ocLocalFolder,[localDestiny stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+
+    return fullLocalDestiny;
+}
+
+//-----------------------------------
+/// @name getFileLocalSystemPathByFileDto
+///-----------------------------------
+
+/**
+ * Method used to get only the domain and the protocol (http/https)
+ *
+ * @param FileDto ->  fileDto
+ *
+ * @return NSString fullLocalDestiny --> /fullLocalSystemPath/idUser/folderA/fileA.txt
+ *
+ */
++ (NSString *) getFileLocalSystemPathByFileDto:(FileDto *)fileDto andUser:(UserDto *)user{
+    
+    NSString *ocLocalFolder = [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)user.idUser]];
+    NSString *fullDBPath = [self getFilePathOnDBWithFileName:fileDto.fileName ByFilePathOnFileDto:fileDto.filePath andUser:user];
+    NSString *fullLocalDestiny = [NSString stringWithFormat:@"%@/%@",ocLocalFolder,[fullDBPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    
+    return fullLocalDestiny;
+}
+
 @end

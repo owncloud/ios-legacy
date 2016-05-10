@@ -352,6 +352,10 @@
 		4052B4E21B4ECF35000788DA /* btnHelpPage3.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4DE1B4ECF35000788DA /* btnHelpPage3.png */; };
 		4052B4E31B4ECF35000788DA /* btnHelpPage4.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4DF1B4ECF35000788DA /* btnHelpPage4.png */; };
 		4052B4E41B4ECF35000788DA /* btnHelpPage5.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4E01B4ECF35000788DA /* btnHelpPage5.png */; };
+		4056551B1CE0A204001266EE /* UtilsFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4056551A1CE0A204001266EE /* UtilsFileSystem.m */; };
+		4056551D1CE1DD5E001266EE /* UtilsFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4056551A1CE0A204001266EE /* UtilsFileSystem.m */; };
+		4056551E1CE1DD67001266EE /* UtilsFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4056551A1CE0A204001266EE /* UtilsFileSystem.m */; };
+		4056551F1CE1DD67001266EE /* UtilsFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4056551A1CE0A204001266EE /* UtilsFileSystem.m */; };
 		405AD0C11B56C26A00271424 /* iphoneShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 405AD0C01B56C26A00271424 /* iphoneShare.png */; };
 		405D06C51BFB670100591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
 		405D06C71BFB670200591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
@@ -1464,6 +1468,8 @@
 		4052B4DE1B4ECF35000788DA /* btnHelpPage3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage3.png; sourceTree = "<group>"; };
 		4052B4DF1B4ECF35000788DA /* btnHelpPage4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage4.png; sourceTree = "<group>"; };
 		4052B4E01B4ECF35000788DA /* btnHelpPage5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage5.png; sourceTree = "<group>"; };
+		405655191CE0A204001266EE /* UtilsFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsFileSystem.h; path = Utils/UtilsFileSystem.h; sourceTree = "<group>"; };
+		4056551A1CE0A204001266EE /* UtilsFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsFileSystem.m; path = Utils/UtilsFileSystem.m; sourceTree = "<group>"; };
 		405AD0C01B56C26A00271424 /* iphoneShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneShare.png; sourceTree = "<group>"; };
 		40A969E21A5EEAC80046A36C /* ManageAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageAsset.h; sourceTree = "<group>"; };
 		40A969E31A5EEAC80046A36C /* ManageAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageAsset.m; sourceTree = "<group>"; };
@@ -2157,6 +2163,8 @@
 				593F7CA919EFDE96004136F7 /* UtilsUrls.m */,
 				EAAD688D1C560AF2005F3B28 /* ShareUtils.h */,
 				EAAD688E1C560AF2005F3B28 /* ShareUtils.m */,
+				405655191CE0A204001266EE /* UtilsFileSystem.h */,
+				4056551A1CE0A204001266EE /* UtilsFileSystem.m */,
 				138841D216E735E700053AAB /* Image Scale */,
 			);
 			name = Utils;
@@ -4543,6 +4551,7 @@
 				400A636A1B4FD75600890579 /* IFTTTConstraintConstantAnimation.m in Sources */,
 				59A6B65719458F6E000B107D /* OCURLSessionManager.m in Sources */,
 				1493D8CF185702D70090FEFB /* CheckSSOServer.m in Sources */,
+				4056551B1CE0A204001266EE /* UtilsFileSystem.m in Sources */,
 				148DD5FD1778556500FB9977 /* MBProgressHUD.m in Sources */,
 				EAC5985A1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
 				400A63641B4FD75600890579 /* IFTTTAlphaAnimation.m in Sources */,
@@ -4787,6 +4796,7 @@
 				EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */,
 				EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */,
 				EAF7217D1AAF2E0D009F5596 /* Managers.swift in Sources */,
+				4056551D1CE1DD5E001266EE /* UtilsFileSystem.m in Sources */,
 				59C762341AB85B7C00A64C1F /* UploadsOfflineDto.m in Sources */,
 				EAF7217E1AAF2E49009F5596 /* FMDatabaseQueue.m in Sources */,
 				EAC6E5FB1AB0986D00CCF8C4 /* SelectedFolderCell.m in Sources */,
@@ -4851,6 +4861,7 @@
 				599D99F71A025F24008A9DB3 /* ManageUsersDB.m in Sources */,
 				599D99F11A0256F1008A9DB3 /* FMDatabaseAdditions.m in Sources */,
 				599D80A31A23366D0071B66E /* SimpleFileListTableViewController.m in Sources */,
+				4056551F1CE1DD67001266EE /* UtilsFileSystem.m in Sources */,
 				599D99F21A0256F1008A9DB3 /* FMDatabasePool.m in Sources */,
 				599D99F31A0256F1008A9DB3 /* FMResultSet.m in Sources */,
 				599D99F01A0256D9008A9DB3 /* FMDatabase.m in Sources */,
@@ -4876,6 +4887,7 @@
 				EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */,
 				EA1F62D11A5EBD2000D6346F /* ProvidingFileDto.m in Sources */,
 				EA1F62D41A5EBDA700D6346F /* FMDatabasePool.m in Sources */,
+				4056551E1CE1DD67001266EE /* UtilsFileSystem.m in Sources */,
 				EA1F62CE1A5EBC2A00D6346F /* UserDto.m in Sources */,
 				EA1F62D01A5EBCAE00D6346F /* FMDatabase.m in Sources */,
 				405D06CA1BFB678800591604 /* CapabilitiesDto.m in Sources */,

@@ -33,6 +33,7 @@
 #import "OCURLSessionManager.h"
 #import "ManageAppSettingsDB.h"
 #import "UtilsCookies.h"
+#import "UtilsFileSystem.h"
 
 #define k_delay_after_check_instant_uploads_folders 2.0
 
@@ -337,8 +338,9 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                     [weakSelf.delegate uploadCompleted:weakSelf.currentUpload.destinyFolder];
                 }
                 
-                //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
-                //The folder Name: A/
+                //The destinyfolder: https://domain/(subfoldersServer)/k_url_webdav_server/(subfoldersDB)/
+                //The folder Name: (subfoldersDB)/
+                
                 FileDto *uploadFile = [self getFileDtoOfTheUploadOffline];
                 
                 if (uploadFile.isDownload == overwriting) {
@@ -540,8 +542,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                     [weakSelf.delegate uploadCompleted:weakSelf.currentUpload.destinyFolder];
                 }
                 
-                //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
-                //The folder Name: A/
+                //The destinyfolder: https://domain/(subfoldersServer)/k_url_webdav_server/(subfoldersDB)/
+                //The folder Name: (subfoldersDB)/
                 
                 FileDto *uploadFile = [self getFileDtoOfTheUploadOffline];
                 
@@ -551,8 +553,17 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                     [self moveTheFileOnFileSystemFromTemporalFolder:uploadFile];
                 }
                 
-                [weakSelf removeTheFileOnFileSystem];
                 
+                //TODO:pending update DB propertly after exist the file on DB
+                [self.delegate overwriteCompleted];
+                NSString *fullRemoteFilePath = [NSString stringWithFormat:@"%@",weakSelf.currentUpload.destinyFolder];
+                NSString *filePathOnDB = [UtilsUrls getFilePathOnDBByFullPath:fullRemoteFilePath andUser:appDelegate.activeUser];
+                [ManageFilesDB updateDownloadStateOfFileDtoByFileName:weakSelf.currentUpload.uploadFileName andFilePath:filePathOnDB andActiveUser:appDelegate.activeUser withState:downloaded];
+                
+                //move to temp path to localSystem path
+                [UploadUtils moveFinishedUploadTempFileToLocalPathByUploadsOfflineDto:weakSelf.currentUpload];
+                //[weakSelf removeTheFileOnFileSystem];
+
             }
             
             

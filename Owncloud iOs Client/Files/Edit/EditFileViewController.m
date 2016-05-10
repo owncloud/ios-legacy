@@ -27,6 +27,7 @@
 #import "ManageNetworkErrors.h"
 #import "UploadsOfflineDto.h"
 #import "ManageUploadsDB.h"
+#import "UtilsFileSystem.h"
 
 
 @interface EditFileViewController ()
@@ -50,7 +51,6 @@
     // Do any additional setup after loading the view from its nib.
     self.titleTextField.placeholder = NSLocalizedString(@"title_text_file_placeholder", nil);
     self.titleTextField.text = NSLocalizedString(@"default_text_file_title", nil);
-    //self.bodyTextView.text = NSLocalizedString(@"body_text_file_placeholder", nil);
   
 }
 
@@ -96,9 +96,6 @@
         NSString *tempLocalPath = [self storeFileWithTitle:fileName andBody:bodyTextFile];
         if (tempLocalPath) {
             [self sendTextFileToUploadsByTempLocalPath:tempLocalPath andFileName:fileName];
-            //TODO:move temp path and set as downloaded file
-        } else {
-            //TODO:error
         }
         [self dismissViewControllerAnimated:true completion:nil];
     }
@@ -158,24 +155,13 @@
 - (NSString *) storeFileWithTitle:(NSString *)fileName andBody:(NSString *)bodyTextFile {
     DLog(@"New File with name: %@", fileName);
     
-    //Use a temporal name with a date identification
-    NSString *temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    NSString *tempPath= [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:temporalFileName];
-    
+    NSString *tempPath = [UtilsFileSystem temporalFileNameByName:fileName];
     NSData* fileData = [bodyTextFile dataUsingEncoding:NSUTF8StringEncoding];
-    [self createFileOnTheFileSystem:tempPath withData:fileData];
+    [UtilsFileSystem createFileOnTheFileSystemByPath:tempPath andData:fileData];
     
     return tempPath;
 }
 
-- (void) createFileOnTheFileSystem:(NSString *)tempPath withData:(NSData *)fileData {
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:tempPath]){
-        [[NSFileManager defaultManager] createFileAtPath:tempPath
-                                                contents:fileData
-                                              attributes:nil];
-    }
-}
 
 
 #pragma mark - Upload text file
