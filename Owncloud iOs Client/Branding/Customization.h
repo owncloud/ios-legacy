@@ -29,7 +29,7 @@
 #define k_default_url_server @""
 
 //Show multiaccount or disconnect
-#define k_multiaccount_available YES
+#define k_multiaccount_available NO
 
 //Have icon on backbutton
 #define k_have_icon_on_popover YES

@@ -50,8 +50,8 @@
 #define k_padding_under_section 5.0
 
 //Number of sections in table
-#define k_sections_with_multi_account 6 //6
-#define k_sections_with_single_account 6
+#define k_sections_with_multi_account 7 //6
+#define k_sections_with_single_account 7
 
 //Settings custom font
 #define k_settings_normal_font [UIFont fontWithName:@"HelveticaNeue" size:17]
@@ -349,37 +349,44 @@
         case 0:
             
             if (k_multiaccount_available) {
-                n = 3;
+                n = 1;
             }else{
                 n = 2;
             }
             break;
-            
         case 1:
+            if (k_multiaccount_available) {
+                n = 2;
+            }else{
+                n = 0;
+            }
+            break;
+            
+        case 2:
             if (k_multiaccount_available) {
                 n = self.listUsers.count-1;
             } else {
                 n = 0;
             }
             break;
-        case 2:
+        case 3:
             if (k_multiaccount_available) {
                 n = 1;
             } else {
                 n = 0;
             }
             break;
-        case 3:
+        case 4:
             if (self.switchPasscode.on && [self isTouchIDAvailable]) {
                 n = 2;
             }else{
                 n = 1;
             }
             break;
-        case 4:
+        case 5:
             n = 1;
             break;
-        case 5:
+        case 6:
             if (k_show_help_option_on_settings) {
                 n = n + 1;
             }
@@ -413,19 +420,7 @@
     switch (indexPath.section) {
         case 0:
             if (k_multiaccount_available) {
-                switch (indexPath.row) {
-                    case 0:
-                        cell = [self getActiveAccountCell];
-                        break;
-                    case 1:
-                        cell = [self getSectionClearCache:cell byRow:indexPath.row];
-                        break;
-                    case 2:
-                        cell = [self getSectionDisconnectButton:cell byRow:indexPath.row];
-                        break;
-                    default:
-                        break;
-                }
+                cell = [self getActiveAccountCell];
             }else{
                 if (indexPath.row == 0) {
                     cell = [self getSectionClearCache:cell byRow:indexPath.row];
@@ -436,22 +431,36 @@
             break;
             
         case 1:
+            switch (indexPath.row) {
+                case 0:
+                    cell = [self getSectionClearCache:cell byRow:indexPath.row];
+                    break;
+                case 1:
+                    cell = [self getSectionDisconnectButton:cell byRow:indexPath.row];
+                    break;
+                    
+                default:
+                    break;
+            }
+            break;
+            
+        case 2:
             if (k_multiaccount_available) {
                 cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
             }
             break;
-        case 2:
+        case 3:
             cell = [self getSectionAddAccountButton:cell byRow:indexPath.row];
             break;
 
-        case 3:
+        case 4:
             [self getSectionAppPinBlock:cell byRow:indexPath.row];
             break;
 
-        case 4:
+        case 5:
             [self getSectionAppInstantUpload:cell byRow:indexPath.row];
             break;
-        case 5:
+        case 6:
             [self getSectionInfoBlock:cell byRow:indexPath.row];
             break;
             
@@ -502,12 +511,20 @@
             
         case 1:
             if (k_multiaccount_available) {
+                height = k_padding_under_section;
+            } else {
+                height = 0;
+            }
+            break;
+            
+        case 2:
+            if (k_multiaccount_available) {
                 height = k_padding_normal_section;
             } else {
                 height = 0;
             }
             break;
-        case 2:
+        case 3:
             if (k_multiaccount_available) {
                 height = 0;
             } else {
@@ -538,7 +555,7 @@
                 height = 0;
             }
             break;
-        case 5:
+        case 6:
             height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
             break;
         default:
@@ -564,7 +581,7 @@
             
             break;
             
-        case 1:
+        case 2:
             
             if (k_multiaccount_available) {
                 title = NSLocalizedString(@"accounts_section", nil);
@@ -572,15 +589,15 @@
             
             break;
             
-        case 2:
-            break;
         case 3:
-            title = NSLocalizedString(@"security_section", nil);
             break;
         case 4:
-            title = NSLocalizedString(@"instant_updloads_section", nil);
+            title = NSLocalizedString(@"security_section", nil);
             break;
         case 5:
+            title = NSLocalizedString(@"instant_updloads_section", nil);
+            break;
+        case 6:
             title = NSLocalizedString(@"more_section", nil);
             break;
         /*
@@ -1041,16 +1058,19 @@
             break;
             
         case 1:
+            break;
+            
+        case 2:
             if (k_multiaccount_available) {
                 [self didPressOnAccountIndexPath:indexPath];
             }
             break;
-        case 2:
+        case 3:
             if (k_multiaccount_available) {
                 [self didPressOnAddAccountButton];
             }
             break;
-        case 5:
+        case 6:
             if (k_multiaccount_available) {
                 [self didPressOnInfoBlock:indexPath.row];
             }
@@ -1137,13 +1157,20 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    
+    UserDto *user;
+    
+    if (indexPath.section == 0) {
+        user = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
+    } else {
+        user = (UserDto *)[[self getUsersWithoutActiveUser] objectAtIndex:indexPath.row];
+    }
     
     //Edit Account
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:(UserDto *)[self.listUsers objectAtIndex:indexPath.row]];
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:user];
     
-    if (IS_IPHONE)
-    {
+    if (IS_IPHONE) {
         viewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:viewController animated:YES];
     } else {
