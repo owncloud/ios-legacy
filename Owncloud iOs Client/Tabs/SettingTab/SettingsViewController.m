@@ -573,54 +573,42 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    
-    NSString *title = nil;
-    
-    switch (section) {
-        case 0:
-            title = NSLocalizedString(@"accounts_section", nil);
-            break;
-            
-        case 1:
-            
-            if (!k_multiaccount_available) {
-                title = NSLocalizedString(@"security_section", nil);
+    if (k_multiaccount_available) {
+        switch (section) {
+            case 0: {
+                return NSLocalizedString(@"accounts_section", nil);
             }
-            
-            break;
-            
-        case 2:
-            
-            if (k_multiaccount_available) {
-                title = NSLocalizedString(@"security_section", nil);
-            }else{
-                title = NSLocalizedString(@"instant_updloads_section", nil);
+            case 2: {
+                return NSLocalizedString(@"security_section", nil);
             }
-            
-            break;
-            
-        case 3:
-            
-            if (k_multiaccount_available) {
-                title = NSLocalizedString(@"instant_updloads_section", nil);
-            }else{
-                title = NSLocalizedString(@"more_section", nil);
+            case 3: {
+                return NSLocalizedString(@"instant_updloads_section", nil);
             }
-            
-            break;
-            
-        case 4:
-            if (k_multiaccount_available) {
-                title = NSLocalizedString(@"more_section", nil);
+            case 4: {
+                return NSLocalizedString(@"more_section", nil);
             }
-    
-            break;
-            
-        default:
-            break;
+            default:
+                break;
+        }
+    } else {
+        switch (section) {
+            case 0: {
+                return NSLocalizedString(@"accounts_section", nil);
+            }
+            case 1: {
+                return NSLocalizedString(@"security_section", nil);
+            }
+            case 2: {
+                return NSLocalizedString(@"instant_updloads_section", nil);
+            }
+            case 3: {
+                return NSLocalizedString(@"more_section", nil);
+            }
+            default:
+                break;
+        }
     }
-    
-    return title;
+    return nil;
 }
 
 #pragma mark - Sections of TableView
