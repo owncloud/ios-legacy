@@ -328,83 +328,94 @@
 // Returns the table view managed by the controller object.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger n = 0;
-    
-    switch (section) {
-        case 0:
-            
-            if (k_multiaccount_available) {
-                n = self.listUsers.count;
-            }else{
-                n = 1;
+    if (k_multiaccount_available) {
+        switch (section) {
+            case 0: {
+                return self.listUsers.count;
+                break;
             }
-            break;
-            
-        case 1:
-            
-            if (!k_multiaccount_available && self.switchPasscode.on && [self isTouchIDAvailable]) {
-                n = 2;
-            }else{
-                n = 1;
+            case 1: {
+                return 1;
+                break;
             }
-            break;
-            
-        case 2:
-
-            if (k_multiaccount_available && self.switchPasscode.on && [self isTouchIDAvailable]) {
-                n = 2;
-            }else{
-                n = 1;
+            case 2: {
+                if (self.switchPasscode.on && [self isTouchIDAvailable]) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+                break;
             }
-            break;
-            
-        case 3:
-            
-            if (k_multiaccount_available) {
-                n = 1;
-            }else{
+            case 3: {
+                return 1;
+                break;
+            }
+            case 4: {
+                NSInteger n = 0;
                 if (k_show_help_option_on_settings) {
-                    n = n + 1;
+                    n++;
                 }
                 if (k_show_recommend_option_on_settings) {
-                    n = n + 1;
+                    n++;
                 }
                 if (k_show_feedback_option_on_settings) {
-                    n = n + 1;
+                    n++;
                 }
                 if (k_show_imprint_option_on_settings) {
-                    n = n + 1;
+                    n++;
                 }
+                return n;
+                break;
             }
-            
-            break;
-            
-        case 4:
-            n = 0;
-            if (k_multiaccount_available) {
-                
+            default:
+                break;
+        }
+    } else {
+        switch (section) {
+            case 0: {
+                return 1;
+                break;
+            }
+            case 1: {
+                if (self.switchPasscode.on && [self isTouchIDAvailable]) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+                break;
+            }
+            case 2: {
+                return 1;
+                break;
+            }
+            case 3: {
+                NSInteger n = 0;
                 if (k_show_help_option_on_settings) {
-                    n = n + 1;
+                    n++;
                 }
                 if (k_show_recommend_option_on_settings) {
-                    n = n + 1;
+                    n++;
                 }
                 if (k_show_feedback_option_on_settings) {
-                    n = n + 1;
+                    n++;
                 }
                 if (k_show_imprint_option_on_settings) {
-                    n = n + 1;
+                    n++;
                 }
+                return n;
+                break;
             }
-            break;
-            
-        default:
-            break;
+            case 4: {
+                return 0;
+                break;
+            }
+            default:
+                break;
+        }
+        
     }
-    
-    return n;
+    return 0;
 }
-
 
 // Returns the table view managed by the controller object.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
