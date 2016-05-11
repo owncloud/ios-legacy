@@ -120,7 +120,7 @@
 //Number of uploads shown in recents tab from the database
 #define k_number_uploads_shown 30
 
-//Set text of status bar white only for iOS 7. YES = White | NO = Black
+//Set text of status bar white. YES = White | NO = Black
 #define k_is_text_status_bar_white NO
 
 //Show the help link on login
