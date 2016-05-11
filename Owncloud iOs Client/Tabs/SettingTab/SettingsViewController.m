@@ -535,41 +535,32 @@
     return height;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    
-    CGFloat height = 0;
-    
-    switch (section) {
-        case 0:
-            if (k_multiaccount_available) {
-                height = k_padding_under_section;
-            }else{
-                height = k_padding_normal_section;
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    if (k_multiaccount_available) {
+        switch (section) {
+            case 0: {
+                return k_padding_under_section;
             }
-            break;
-            
-        case 3:
-            if (k_multiaccount_available) {
-                height = k_padding_normal_section;
-            }else{
-                height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
+            case 3: {
+                return k_padding_normal_section;
             }
-            break;
-            
-        case 4:
-            if (k_multiaccount_available) {
-                height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
-            }else{
-                height = k_padding_normal_section;
+            case 4: {
+                return k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
             }
-            break;
-            
-        default:
-            height = k_padding_normal_section;
-            break;
+            default: {
+                return k_padding_normal_section;
+            }
+        }
+    } else {
+        switch (section) {
+            case 3: {
+                return k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
+            }
+            default: {
+                return k_padding_normal_section;
+            }
+        }
     }
-    
-    return height;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
