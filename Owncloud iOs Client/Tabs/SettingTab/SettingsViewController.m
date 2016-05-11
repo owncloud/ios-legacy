@@ -956,35 +956,36 @@
 {   
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    switch (indexPath.section) {
-        case 0:
-            if (k_multiaccount_available) {
+    if (k_multiaccount_available) {
+        switch (indexPath.section) {
+            case 0: {
                 [self didPressOnAccountIndexPath:indexPath];
-            }else{
-                [self disconnectUser];
+                break;
             }
-            break;
-            
-        case 1:
-            if (k_multiaccount_available) {
+            case 1: {
                 [self didPressOnAddAccountButton];
+                break;
             }
-            break;
-            
-        case 3:
-            if (!k_multiaccount_available) {
+            case 4: {
                 [self didPressOnInfoBlock:indexPath.row];
+                break;
             }
-            break;
-            
-        case 4:
-            if (k_multiaccount_available) {
+            default:
+                break;
+        }
+    } else {
+        switch (indexPath.section) {
+            case 0: {
+                [self disconnectUser];
+                break;
+            }
+            case 3: {
                 [self didPressOnInfoBlock:indexPath.row];
+                break;
             }
-            break;
-            
-        default:
-            break;
+            default:
+                break;
+        }
     }
 }
 
