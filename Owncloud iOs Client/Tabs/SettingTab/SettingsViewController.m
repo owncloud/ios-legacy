@@ -318,15 +318,11 @@
 
 // Asks the data source to return the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    
-    NSInteger sections = 0;
-    
     if (k_multiaccount_available) {
-        sections = 5;
-     } else {
-        sections = 4;
-     }
-    return sections;
+        return 5;
+    } else {
+        return 4;
+    }
 }
 
 // Returns the table view managed by the controller object.
