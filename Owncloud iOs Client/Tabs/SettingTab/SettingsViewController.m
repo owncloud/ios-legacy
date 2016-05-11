@@ -420,58 +420,57 @@
 // Returns the table view managed by the controller object.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"SettingsCell";
-    
     UITableViewCell *cell;
     
-    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"SettingsCell"];
     
-    switch (indexPath.section) {
-        case 0:
-            if (k_multiaccount_available) {
+    if (k_multiaccount_available) {
+        switch (indexPath.section) {
+            case 0: {
                 cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
-            }else{
+                break;
+            }
+            case 1: {
+                cell = [self getSectionAddAccountButton:cell byRow:indexPath.row];
+                break;
+            }
+            case 2: {
+                [self getSectionAppPinBlock:cell byRow:indexPath.row];
+                break;
+            }
+            case 3: {
+                [self getSectionAppInstantUpload:cell byRow:indexPath.row];
+                break;
+            }
+            case 4: {
+                return [self getSectionInfoBlock:cell byRow:indexPath.row];
+                break;
+            }
+            default:
+                break;
+        }
+    } else {
+        switch (indexPath.section) {
+            case 0: {
                 cell = [self getSectionDisconnectButton:cell byRow:indexPath.row];
+                break;
             }
-            break;
-            
-        case 1:
-            if (k_multiaccount_available) {
-               cell = [self getSectionAddAccountButton:cell byRow:indexPath.row];
-            }else{
+            case 1: {
                 [self getSectionAppPinBlock:cell byRow:indexPath.row];
+                break;
             }
-            break;
-            
-        case 2:
-            if (k_multiaccount_available) {
-                [self getSectionAppPinBlock:cell byRow:indexPath.row];
-            }else{
+            case 2: {
                 [self getSectionAppInstantUpload:cell byRow:indexPath.row];
+                break;
             }
-            break;
-            
-        case 3:
-            if (k_multiaccount_available) {
-                [self getSectionAppInstantUpload:cell byRow:indexPath.row];
-            }else{
+            case 3: {
                 [self getSectionInfoBlock:cell byRow:indexPath.row];
+                break;
             }
-            break;
-            
-        case 4:
-            if (k_multiaccount_available) {
-                [self getSectionInfoBlock:cell byRow:indexPath.row];
-            }else{
-                //Nothing
-            }
-            
-            break;
-            
-        default:
-            break;
+            default:
+                break;
+        }
     }
-    
     
     return cell;
 }
