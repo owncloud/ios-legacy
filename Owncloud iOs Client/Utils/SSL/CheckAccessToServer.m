@@ -125,9 +125,72 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     //Add the user agent
     [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
     
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
+                                            completionHandler:
+                                  ^(NSData *data, NSURLResponse *response, NSError *error) {
+                                      
+                                      DLog(@"Error: %@", error);
+                                      NSLog(@"Error: %ld - %@",(long)[error code] , [error localizedDescription]);
+                                      
+                                      //-1202 = self signed certificate
+                                      if([error code] == -1202){
+                                          NSLog(@"Error -1202");
+                                          
+                                          //if(self.delegate) {
+                                          
+#ifdef CONTAINER_APP
+                                          dispatch_async(dispatch_get_main_queue(), ^{
+                                              //Your main thread code goes in here
+                                              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"invalid_ssl_cert", nil) delegate: self cancelButtonTitle:NSLocalizedString(@"no", nil) otherButtonTitles:NSLocalizedString(@"yes", nil), nil];
+                                              [alert show];
+                                              [alert release];
+                                          });
+                                          
+#else
+                                          
+                                          UIAlertController *alert =   [UIAlertController
+                                                                        alertControllerWithTitle:@""
+                                                                        message:NSLocalizedString(@"invalid_ssl_cert", nil)
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                                          UIAlertAction* no = [UIAlertAction
+                                                               actionWithTitle:NSLocalizedString(@"no", nil)
+                                                               style:UIAlertActionStyleDefault
+                                                               handler:^(UIAlertAction * action)
+                                                               {
+                                                                   
+                                                               }];
+                                          
+                                          UIAlertAction* yes = [UIAlertAction
+                                                                actionWithTitle:NSLocalizedString(@"yes", nil)
+                                                                style:UIAlertActionStyleDefault
+                                                                handler:^(UIAlertAction * action)
+                                                                {
+                                                                    [self acceptCertificate];
+                                                                }];
+                                          [alert addAction:no];
+                                          [alert addAction:yes];
+                                          
+                                          [self.viewControllerToShow presentViewController:alert animated:YES completion:nil];
+                                          
+#endif
+                                          //}
+                                          
+                                          
+                                          
+                                          
+                                      } else {
+                                          if(self.delegate) {
+                                              [self.delegate connectionToTheServer:NO];
+                                          }
+                                      }
+                                      
+                                  }];
     
-    [connection release];
+    [task resume];
+    
+    
+    
     
 }
 
@@ -150,57 +213,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
 
-    NSLog(@"Error: %ld - %@",(long)[error code] , [error localizedDescription]);
-    
-    //-1202 = self signed certificate
-    if([error code] == -1202){
-        NSLog(@"Error -1202");
 
-        //if(self.delegate) {
-
-            #ifdef CONTAINER_APP
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"invalid_ssl_cert", nil) delegate: self cancelButtonTitle:NSLocalizedString(@"no", nil) otherButtonTitles:NSLocalizedString(@"yes", nil), nil];
-            [alert show];
-            [alert release];
-            
-            #else
-            
-            UIAlertController *alert =   [UIAlertController
-                                          alertControllerWithTitle:@""
-                                          message:NSLocalizedString(@"invalid_ssl_cert", nil)
-                                          preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction* no = [UIAlertAction
-                                 actionWithTitle:NSLocalizedString(@"no", nil)
-                                 style:UIAlertActionStyleDefault
-                                 handler:^(UIAlertAction * action)
-                                 {
-                                     
-                                 }];
-            
-            UIAlertAction* yes = [UIAlertAction
-                                  actionWithTitle:NSLocalizedString(@"yes", nil)
-                                  style:UIAlertActionStyleDefault
-                                  handler:^(UIAlertAction * action)
-                                  {
-                                      [self acceptCertificate];
-                                  }];
-            [alert addAction:no];
-            [alert addAction:yes];
-            
-            [self.viewControllerToShow presentViewController:alert animated:YES completion:nil];
-            
-            #endif
-        //}
-
-    
-
-        
-    } else {
-        if(self.delegate) {
-            [self.delegate connectionToTheServer:NO];
-        }
-    }
 }
 
 
