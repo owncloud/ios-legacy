@@ -627,16 +627,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             return NSURLSessionAuthChallengePerformDefaultHandling;
         }];
         
-       /* [uploadSessionManager.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-            if (status == AFNetworkReachabilityStatusNotReachable) {
-                [[NSNotificationCenter defaultCenter] postNotificationName: NotReachableNetworkForUploadsNotification object: nil];
-                [[NSNotificationCenter defaultCenter] postNotificationName: NotReachableNetworkForDownloadsNotification object: nil];
-            }
-            
-        }];
-        
-        [uploadSessionManager.reachabilityManager startMonitoring];*/
-        
         NSURLSessionConfiguration *configurationDownload = nil;
         
         if (k_is_sso_active || !k_is_background_active) {
@@ -660,9 +650,19 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             return NSURLSessionAuthChallengePerformDefaultHandling;
         }];
         
+        
+        
+        NSURLSessionConfiguration *networkConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        networkConfiguration.HTTPShouldUsePipelining = YES;
+        networkConfiguration.HTTPMaximumConnectionsPerHost = 1;
+        networkConfiguration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+        
+        OCURLSessionManager *networkSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:networkConfiguration];
+        [networkSessionManager.operationQueue setMaxConcurrentOperationCount:1];
+        networkSessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
    
 
-        sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:uploadSessionManager andDownloadSessionManager:downloadSessionManager];
+        sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:uploadSessionManager andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
 
         //Acive the cookies functionality if the server supports it
@@ -704,7 +704,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //    return NSURLSessionAuthChallengePerformDefaultHandling;
         //}];
         
-        sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager];
+        sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:nil];
         
         
         //Acive the cookies functionality if the server supports it
