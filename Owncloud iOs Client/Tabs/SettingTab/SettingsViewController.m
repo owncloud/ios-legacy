@@ -614,6 +614,7 @@
             cell.textLabel.text = NSLocalizedString(@"help", nil);
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             
+            
             //Add accesibility label for Automation
             cell.accessibilityLabel = ACS_SETTINGS_HELP_CELL;
             break;
@@ -829,7 +830,10 @@
     }
     
     accountCell.urlServer.text = ((UserDto *) [self.listUsers objectAtIndex:row]).url;
-    accountCell.accessoryType = UITableViewCellAccessoryDetailButton;
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [accountCell.menuButton setTag:row];
+    [accountCell.menuButton setImage:[UIImage imageNamed:@"more-filledBlack.png"] forState:UIControlStateNormal];
+
     
     if(((UserDto *) [self.listUsers objectAtIndex:row]).activeaccount){
         [accountCell.activeButton setImage:[UIImage imageNamed:@"radio_checked.png"] forState:UIControlStateNormal];
@@ -1775,6 +1779,13 @@
     [self.switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:NO];
     [self.settingsTableView reloadData];
 
+    
+}
+
+- (void)didSelectMenuAccount:(NSInteger)accountNumber{
+    
+
+    
     
 }
 

@@ -21,10 +21,6 @@
 #import "Customization.h"
 
 @implementation AccountCell
-@synthesize userName = _userName;
-@synthesize urlServer = _urlServer;
-@synthesize activeButton = _activeButton;
-@synthesize delegate = _delegate;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -57,6 +53,10 @@
     
     [self.delegate activeAccountByPosition:self.activeButton.tag];
 
+}
+
+- (IBAction)menuAccount:(id)sender {
+    
 }
 
 @end
