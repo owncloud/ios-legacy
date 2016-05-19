@@ -55,8 +55,5 @@
 
 }
 
-- (IBAction)menuAccount:(id)sender {
-    
-}
 
 @end
