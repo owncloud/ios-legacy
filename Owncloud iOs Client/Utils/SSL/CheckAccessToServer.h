@@ -24,7 +24,7 @@
 -(void)badCertificateNoAcceptedByUser;
 @end
 
-@interface CheckAccessToServer : NSObject <UIAlertViewDelegate, NSURLConnectionDataDelegate, NSURLSessionDataDelegate, NSURLSessionTaskDelegate, NSURLSessionDelegate> {
+@interface CheckAccessToServer : NSObject <UIAlertViewDelegate, NSURLSessionTaskDelegate, NSURLSessionDelegate> {
     __weak id<CheckAccessToServerDelegate> _delegate;
 }
 
@@ -32,7 +32,6 @@
 - (void) isConnectionToTheServerByUrl:(NSString *) url;
 - (void)isConnectionToTheServerByUrl:(NSString *) url withTimeout:(NSInteger) timeout;
 - (BOOL) isNetworkIsReachable;
-- (NSString *) getConnectionToTheServerByUrlAndCheckTheVersion:(NSString *)url;
 - (void)createFolderToSaveCertificates;
 - (void)saveCertificate:(SecTrustRef) trust withName:(NSString *) certName;
 
@@ -41,6 +40,7 @@
 @property (nonatomic, strong) NSString *urlStatusCheck;
 @property (nonatomic, strong) UIViewController *viewControllerToShow;
 @property (nonatomic, strong) NSString *urlUserToCheck;
+@property (nonatomic, strong) NSURLSession *connectionSession;
 
 
 @end

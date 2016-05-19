@@ -67,44 +67,6 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     return result;
 }
 
--(NSString *) getConnectionToTheServerByUrlAndCheckTheVersion:(NSString *)url {
-    
-    NSString *version = [[[NSString alloc] init] autorelease];
-    
-    _urlStatusCheck = [NSString stringWithFormat:@"%@status.php", url];
-    
-    NSLog(@"URL Status: |%@|", _urlStatusCheck);
-    
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:0 timeoutInterval:k_timeout_webdav];
-    
-    //Add the user agent
-    [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
-    
-    NSURLResponse* response=nil;
-    NSError* error=nil;
-    NSData* data=[NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    
-    NSError *e = nil;
-    
-    
-    if (data) {
-        NSMutableDictionary *jsonArray = [NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: &e];
-        if(e) {
-            NSLog(@"Error parsing JSON: %@", e);
-        } else {
-            version = [jsonArray valueForKey:@"version"];
-        }
-        
-    } else {
-        NSLog(@"Error parsing JSON: data is null");
-    }
-    
-    NSLog(@"getConnectionToTheServerByUrlAndCheckTheVersion: %@", version);
-    
-    return version;
-
-}
-
 
 -(void) isConnectionToTheServerByUrl:(NSString *) url {
     [self isConnectionToTheServerByUrl:url withTimeout:k_timeout_webdav];
@@ -125,64 +87,105 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     //Add the user agent
     [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
     
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
+    self.connectionSession = [NSURLSession sharedSession];
+    
+    //Configure connectionSession
+    NSURLSessionConfiguration *configuration = nil;
+    
+    if (k_is_sso_active || !k_is_background_active) {
+        configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    } else {
+        if (IS_IOS8 || IS_IOS9) {
+            configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_session_name];
+        } else {
+            configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:k_session_name];
+        }
+    }
+    
+    configuration.HTTPMaximumConnectionsPerHost = 1;
+    configuration.requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
+    configuration.timeoutIntervalForRequest = k_timeout_upload;
+    configuration.sessionSendsLaunchEvents = YES;
+    [configuration setAllowsCellularAccess:YES];
+
+    self.connectionSession = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    
+    NSURLSessionDataTask *task = [self.connectionSession dataTaskWithRequest:request
                                             completionHandler:
                                   ^(NSData *data, NSURLResponse *response, NSError *error) {
                                       
                                       DLog(@"Error: %@", error);
                                       NSLog(@"Error: %ld - %@",(long)[error code] , [error localizedDescription]);
                                       
-                                      //-1202 = self signed certificate
-                                      if([error code] == -1202){
-                                          NSLog(@"Error -1202");
-                                          
-                                          //if(self.delegate) {
-                                          
+                                      if(error != nil){                                          
+                                          //-1202 = self signed certificate
+                                          if([error code] == -1202){
+                                              NSLog(@"Error -1202");
+                                              
 #ifdef CONTAINER_APP
-                                          dispatch_async(dispatch_get_main_queue(), ^{
-                                              //Your main thread code goes in here
-                                              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"invalid_ssl_cert", nil) delegate: self cancelButtonTitle:NSLocalizedString(@"no", nil) otherButtonTitles:NSLocalizedString(@"yes", nil), nil];
-                                              [alert show];
-                                              [alert release];
-                                          });
-                                          
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  //Your main thread code goes in here
+                                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"invalid_ssl_cert", nil) delegate: self cancelButtonTitle:NSLocalizedString(@"no", nil) otherButtonTitles:NSLocalizedString(@"yes", nil), nil];
+                                                  [alert show];
+                                                  [alert release];
+                                              });
+                                              
 #else
-                                          
-                                          UIAlertController *alert =   [UIAlertController
-                                                                        alertControllerWithTitle:@""
-                                                                        message:NSLocalizedString(@"invalid_ssl_cert", nil)
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                                          UIAlertAction* no = [UIAlertAction
-                                                               actionWithTitle:NSLocalizedString(@"no", nil)
-                                                               style:UIAlertActionStyleDefault
-                                                               handler:^(UIAlertAction * action)
-                                                               {
-                                                                   
-                                                               }];
-                                          
-                                          UIAlertAction* yes = [UIAlertAction
-                                                                actionWithTitle:NSLocalizedString(@"yes", nil)
-                                                                style:UIAlertActionStyleDefault
-                                                                handler:^(UIAlertAction * action)
-                                                                {
-                                                                    [self acceptCertificate];
-                                                                }];
-                                          [alert addAction:no];
-                                          [alert addAction:yes];
-                                          
-                                          [self.viewControllerToShow presentViewController:alert animated:YES completion:nil];
-                                          
+                                              
+                                              UIAlertController *alert =   [UIAlertController
+                                                                            alertControllerWithTitle:@""
+                                                                            message:NSLocalizedString(@"invalid_ssl_cert", nil)
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                                              UIAlertAction* no = [UIAlertAction
+                                                                   actionWithTitle:NSLocalizedString(@"no", nil)
+                                                                   style:UIAlertActionStyleDefault
+                                                                   handler:^(UIAlertAction * action)
+                                                                   {
+                                                                       
+                                                                   }];
+                                              
+                                              UIAlertAction* yes = [UIAlertAction
+                                                                    actionWithTitle:NSLocalizedString(@"yes", nil)
+                                                                    style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction * action)
+                                                                    {
+                                                                        [self acceptCertificate];
+                                                                    }];
+                                              [alert addAction:no];
+                                              [alert addAction:yes];
+                                              
+                                              [self.viewControllerToShow presentViewController:alert animated:YES completion:nil];
+                                              
 #endif
-                                          //}
-                                          
-                                          
-                                          
-                                          
-                                      } else {
-                                          if(self.delegate) {
-                                              [self.delegate connectionToTheServer:NO];
+                                              
+                                          } else {
+                                              if(self.delegate) {
+                                                  [self.delegate connectionToTheServer:NO];
+                                              }
                                           }
+                                          
+                                          
+                                      }
+                                      
+                                      else{
+                                          
+                                          BOOL installed = NO;
+                                          if (data!= nil){
+                                              
+                                              NSError *e = nil;
+                                              NSMutableDictionary *jsonArray = [NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: &e];
+                                              
+                                              if (!jsonArray) {
+                                                  NSLog(@"Error parsing JSON: %@", e);
+                                              } else {
+                                                  installed = [[jsonArray valueForKey:@"installed"] boolValue];
+                                              }
+                                          }
+                                          
+                                          if(self.delegate) {
+                                              [self.delegate connectionToTheServer:installed];
+                                          }
+                                          
                                       }
                                       
                                   }];
@@ -194,31 +197,11 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     
 }
 
--(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+
+-(void) URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler{
     
-    NSError *e = nil;
-    NSMutableDictionary *jsonArray = [NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: &e];
-    BOOL installed = NO;
     
-    if (!jsonArray) {
-        NSLog(@"Error parsing JSON: %@", e);
-    } else {
-        installed = [[jsonArray valueForKey:@"installed"] boolValue];
-    }
-    
-    if(self.delegate) {
-        [self.delegate connectionToTheServer:installed];
-    }
-}
-
--(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
-
-
-}
-
-
--(void) connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-    NSLog(@"willSendRequestForAuthenticationChallenge");
+    NSLog(@"didReceiveChallenge");
     
     BOOL trusted = NO;
     SecTrustRef trust;
@@ -250,14 +233,17 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     } else {
         trusted = NO;
     }
+ 
+    __block NSURLCredential *credential = nil;
     
     if (trusted) {
-        [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
-        
+        credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+        completionHandler(NSURLSessionAuthChallengeUseCredential,credential);
     } else {
-        [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
+        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, credential);
     }
 }
+
 
 - (void)saveCertificate:(SecTrustRef) trust withName:(NSString *) certName {
     SecCertificateRef currentServerCert = SecTrustGetLeafCertificate(trust);
@@ -372,9 +358,13 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     [self.delegate repeatTheCheckToTheServer];
 }
 
-- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response {
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+willPerformHTTPRedirection:(NSHTTPURLResponse *)redirectResponse
+        newRequest:(NSURLRequest *)request
+ completionHandler:(void (^)(NSURLRequest *))completionHandler{
     
-    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) redirectResponse;
     
     NSDictionary *dict = [httpResponse allHeaderFields];
     //Server path of redirected server
@@ -407,7 +397,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
         [requestRedirect setURL: [NSURL URLWithString:responseURLString]];
         requestRedirect.HTTPMethod = @"GET";
         
-        return requestRedirect;
+        completionHandler(requestRedirect);
         
     } else {
         
@@ -424,7 +414,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
             }
         }
         
-        return request;
+        completionHandler(request);
     }
 }
 
