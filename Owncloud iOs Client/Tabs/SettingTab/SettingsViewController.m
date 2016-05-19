@@ -805,6 +805,7 @@
     static NSString *CellIdentifier = @"AccountCell";
     
     AccountCell *accountCell = (AccountCell *) [self.settingsTableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UserDto *userAccout = [self.listUsers objectAtIndex:row];
     
     if (accountCell == nil) {
         
@@ -822,17 +823,18 @@
     [accountCell.activeButton setTag:row];
     
     accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
-    accountCell.userName.text = ((UserDto *) [self.listUsers objectAtIndex:row]).username;
+    accountCell.userName.text = userAccout.username;
     
     //If saml needs change the name to utf8
     if (k_is_sso_active) {
         accountCell.userName.text = [accountCell.userName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
     
-    accountCell.urlServer.text = ((UserDto *) [self.listUsers objectAtIndex:row]).url;
+    accountCell.urlServer.text = userAccout.url;
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [accountCell.menuButton setTag:row];
     [accountCell.menuButton setImage:[UIImage imageNamed:@"more-filledBlack.png"] forState:UIControlStateNormal];
+    [accountCell.menuButton addTarget:self action:@selector(showMenuAccountOptions:) forControlEvents:UIControlEventTouchUpInside];
 
     
     if(((UserDto *) [self.listUsers objectAtIndex:row]).activeaccount){
@@ -1782,12 +1784,37 @@
     
 }
 
-- (void)didSelectMenuAccount:(NSInteger)accountNumber{
-    
 
+# pragma mark - menu account
+
+- (void)showMenuAccountOptions:(UIButton *)sender {
     
+    UserDto *userAccout = [self.listUsers objectAtIndex:sender.tag];
+    NSString *titleMenu = [NSString stringWithFormat:@"%@ %@",userAccout.username,userAccout.url];
     
+    if (self.menuAccountActionSheet) {
+        self.menuAccountActionSheet = nil;
+    }
+    
+    self.menuAccountActionSheet = [[UIActionSheet alloc]
+                            initWithTitle:titleMenu
+                            delegate:self
+                            cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                            destructiveButtonTitle:nil
+                            otherButtonTitles:NSLocalizedString(@"menu_account_edit", nil), NSLocalizedString(@"menu_account_clear_cache", nil), NSLocalizedString(@"menu_account_log_out", nil), nil];
+    
+    self.menuAccountActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
+    self.menuAccountActionSheet.tag=100;
+    
+    if (IS_IPHONE) {
+        [self.menuAccountActionSheet showInView:self.tabBarController.view];
+    } else {
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        [self.menuAccountActionSheet showInView:app.splitViewController.view];
+    }
 }
+
 
 
 #pragma mark - Touch ID methods

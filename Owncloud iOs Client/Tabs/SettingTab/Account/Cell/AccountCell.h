@@ -30,8 +30,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *menuButton;
 @property(nonatomic, weak) __weak id <AccountCellDelegate> delegate;
 
--(IBAction)activeAccount:(id)sender;
 
-- (IBAction)menuAccount:(id)sender;
+- (IBAction)activeAccount:(id)sender;
+
+
 
 @end

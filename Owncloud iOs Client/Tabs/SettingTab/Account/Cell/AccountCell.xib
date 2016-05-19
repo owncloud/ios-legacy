@@ -12,7 +12,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2" id="sY6-ya-VbR">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="3">
@@ -56,9 +56,6 @@
                             <constraint firstAttribute="height" constant="38" id="39y-hA-Fst"/>
                             <constraint firstAttribute="width" constant="38" id="z9f-6C-fTX"/>
                         </constraints>
-                        <connections>
-                            <action selector="menuAccount:" destination="2" eventType="touchUpInside" id="5iU-3K-eRb"/>
-                        </connections>
                     </button>
                 </subviews>
                 <constraints>
