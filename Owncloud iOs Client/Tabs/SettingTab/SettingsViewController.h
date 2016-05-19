@@ -59,6 +59,7 @@ typedef enum {
 @property(nonatomic, strong) dispatch_semaphore_t semaphoreChangeUser;
 
 @property (nonatomic,strong) UIActionSheet *menuAccountActionSheet;
+@property (nonatomic,strong) UserDto *selectedUserAccount;
 
 - (IBAction)changeSwitchPasscode:(id)sender;
 - (IBAction)changeSwitchTouchID:(id)sender;
