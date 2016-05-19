@@ -53,6 +53,10 @@
 #define k_settings_normal_font [UIFont fontWithName:@"HelveticaNeue" size:17]
 #define k_settings_bold_font [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
 
+//ActionSheet tags
+#define k_tag_actionSheet_menu_account 101
+#define k_tag_actionSheet_recommend 102
+
 
 ///-----------------------------------
 /// @name MFMailComposeViewController Category for iOS 7 Status Style
@@ -1047,23 +1051,6 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    
-    //Edit Account
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:(UserDto *)[self.listUsers objectAtIndex:indexPath.row]];
-    
-    if (IS_IPHONE) {
-        viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:YES];
-    } else {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [app.splitViewController presentViewController:navController animated:YES completion:nil];
-    }
-    
-}
 
 #pragma mark - DidSelectRow Sections
 
@@ -1162,7 +1149,14 @@
                 if (self.popupQuery) {
                     self.popupQuery = nil;
                 }
-                self.popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:@"Facebook", @"Twitter", @"E-Mail", nil];
+                self.popupQuery = [[UIActionSheet alloc] initWithTitle:nil
+                                                              delegate:self
+                                                     cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                                                destructiveButtonTitle:nil
+                                                     otherButtonTitles:@"Facebook", @"Twitter", @"E-Mail", nil];
+                
+                self.popupQuery.actionSheetStyle = UIActionSheetStyleDefault;
+                self.popupQuery.tag = k_tag_actionSheet_recommend;
                 
                 if (IS_IPHONE) {
                     [self.popupQuery showInView:[self.view window]];
@@ -1419,22 +1413,40 @@
 #pragma mark - UIActionSheetDelegate
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    switch (buttonIndex) {
-        case 0:
-            DLog(@"Facebook");
-            [self publishFacebook];
-            break;
-        case 1:
-            DLog(@"Twitter");
-            [self publishTwitter];
-            break;
-        case 2:
-            DLog(@"Mail");
-            [self sendRecommendacionByMail];
-            break;
-        case 3:
-            DLog(@"Cancel Button Clicked");
-            break;
+    
+    if (actionSheet.tag == k_tag_actionSheet_recommend) {
+        
+        switch (buttonIndex) {
+            case 0:
+                DLog(@"Facebook");
+                [self publishFacebook];
+                break;
+            case 1:
+                DLog(@"Twitter");
+                [self publishTwitter];
+                break;
+            case 2:
+                DLog(@"Mail");
+                [self sendRecommendacionByMail];
+                break;
+            case 3:
+                DLog(@"Cancel Button Clicked");
+                break;
+        }
+    } else if (actionSheet.tag == k_tag_actionSheet_menu_account) {
+        switch (buttonIndex) {
+            case 0:
+                [self didSelectEditAccount];
+                break;
+            case 1:
+                [self didSelectClearCacheAccount];
+                break;
+            case 2:
+                [self dicSelectLogOutAccount];
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -1707,8 +1719,8 @@
     }
 }
 
-#pragma mark - MFMailComposeController delegate
 
+#pragma mark - MFMailComposeController delegate
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
 {
@@ -1747,8 +1759,8 @@
    
 }
 
-#pragma mark - KKPasscodeViewController delegate methods
 
+#pragma mark - KKPasscodeViewController delegate methods
 
 ///-----------------------------------
 /// @name Changes in Pass Code
@@ -1783,39 +1795,6 @@
 
     
 }
-
-
-# pragma mark - menu account
-
-- (void)showMenuAccountOptions:(UIButton *)sender {
-    
-    UserDto *userAccout = [self.listUsers objectAtIndex:sender.tag];
-    NSString *titleMenu = [NSString stringWithFormat:@"%@ %@",userAccout.username,userAccout.url];
-    
-    if (self.menuAccountActionSheet) {
-        self.menuAccountActionSheet = nil;
-    }
-    
-    self.menuAccountActionSheet = [[UIActionSheet alloc]
-                            initWithTitle:titleMenu
-                            delegate:self
-                            cancelButtonTitle:NSLocalizedString(@"cancel", nil)
-                            destructiveButtonTitle:nil
-                            otherButtonTitles:NSLocalizedString(@"menu_account_edit", nil), NSLocalizedString(@"menu_account_clear_cache", nil), NSLocalizedString(@"menu_account_log_out", nil), nil];
-    
-    self.menuAccountActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
-    self.menuAccountActionSheet.tag=100;
-    
-    if (IS_IPHONE) {
-        [self.menuAccountActionSheet showInView:self.tabBarController.view];
-    } else {
-        
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        [self.menuAccountActionSheet showInView:app.splitViewController.view];
-    }
-}
-
-
 
 #pragma mark - Touch ID methods
 
@@ -2161,5 +2140,63 @@
     });
 }
 
+
+# pragma mark - menu account
+
+- (void)showMenuAccountOptions:(UIButton *)sender {
+    
+    self.selectedUserAccount = [self.listUsers objectAtIndex:sender.tag];
+    NSString *titleMenu = [NSString stringWithFormat:@"%@ %@",self.selectedUserAccount .username,self.selectedUserAccount .url];
+    
+    if (self.menuAccountActionSheet) {
+        self.menuAccountActionSheet = nil;
+    }
+    
+    self.menuAccountActionSheet = [[UIActionSheet alloc]
+                                   initWithTitle:titleMenu
+                                   delegate:self
+                                   cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                                   destructiveButtonTitle:nil
+                                   otherButtonTitles:NSLocalizedString(@"menu_account_edit", nil), NSLocalizedString(@"menu_account_clear_cache", nil), NSLocalizedString(@"menu_account_log_out", nil), nil];
+    
+    self.menuAccountActionSheet.actionSheetStyle = UIActionSheetStyleDefault;
+    self.menuAccountActionSheet.tag = k_tag_actionSheet_menu_account;
+    
+    if (IS_IPHONE) {
+        [self.menuAccountActionSheet showInView:self.tabBarController.view];
+    } else {
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        [self.menuAccountActionSheet showInView:app.splitViewController.view];
+    }
+}
+
+
+#pragma mark - Options menu account
+
+- (void) didSelectEditAccount  {
+   
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:self.selectedUserAccount];
+    
+    if (IS_IPHONE) {
+        viewController.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:navController animated:YES completion:nil];
+    }
+
+}
+
+- (void) didSelectClearCacheAccount {
+    
+}
+
+- (void) dicSelectLogOutAccount {
+    
+}
 
 @end
