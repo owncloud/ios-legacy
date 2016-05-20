@@ -16,7 +16,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="3">
-                        <rect key="frame" x="41" y="3" width="0.0" height="21"/>
+                        <rect key="frame" x="41" y="3" width="236" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="MYe-rL-Wam"/>
                         </constraints>
@@ -24,7 +24,7 @@
                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="4">
-                        <rect key="frame" x="41" y="20" width="0.0" height="21"/>
+                        <rect key="frame" x="41" y="20" width="236" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="xBM-Ms-0PZ"/>
                         </constraints>
@@ -64,9 +64,13 @@
                     <constraint firstItem="12" firstAttribute="leading" secondItem="sY6-ya-VbR" secondAttribute="leadingMargin" constant="-6" id="GuC-7s-ie9"/>
                     <constraint firstAttribute="bottomMargin" secondItem="4" secondAttribute="bottom" constant="-5" id="HBv-KK-ihx"/>
                     <constraint firstItem="qkx-Da-V7a" firstAttribute="top" secondItem="sY6-ya-VbR" secondAttribute="topMargin" constant="-5" id="Pb5-9Y-06i"/>
+                    <constraint firstItem="qkx-Da-V7a" firstAttribute="leading" secondItem="4" secondAttribute="trailing" constant="2" id="QJJ-9D-KBv"/>
+                    <constraint firstItem="3" firstAttribute="top" secondItem="sY6-ya-VbR" secondAttribute="topMargin" constant="-5" id="Wna-ga-Xsq"/>
                     <constraint firstAttribute="bottomMargin" secondItem="qkx-Da-V7a" secondAttribute="bottom" constant="-5" id="Ypy-bF-Cs7"/>
                     <constraint firstItem="12" firstAttribute="top" secondItem="sY6-ya-VbR" secondAttribute="topMargin" constant="-5" id="ZHH-mx-pdH"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="4" secondAttribute="bottom" constant="-5" id="bGO-Fh-xNk"/>
                     <constraint firstAttribute="trailingMargin" secondItem="qkx-Da-V7a" secondAttribute="trailing" constant="-5" id="caP-92-wQy"/>
+                    <constraint firstItem="qkx-Da-V7a" firstAttribute="leading" secondItem="3" secondAttribute="trailing" constant="2" id="gBj-82-OCX"/>
                     <constraint firstItem="4" firstAttribute="leading" secondItem="12" secondAttribute="trailing" constant="1" id="lhb-DE-fLh"/>
                     <constraint firstItem="3" firstAttribute="leading" secondItem="12" secondAttribute="trailing" constant="1" id="yF4-8t-AIq"/>
                 </constraints>
@@ -77,6 +81,7 @@
                 <outlet property="urlServer" destination="4" id="7"/>
                 <outlet property="userName" destination="3" id="8"/>
             </connections>
+            <point key="canvasLocation" x="672.5" y="367"/>
         </tableViewCell>
     </objects>
 </document>
