@@ -1381,10 +1381,10 @@
     } else if (actionSheet.tag == k_tag_actionSheet_menu_account) {
         switch (buttonIndex) {
             case 0:
-                [self didSelectEditAccount];
+                [self didSelectEditAccount:self.selectedUserAccount];
                 break;
             case 1:
-                [self didSelectClearCacheAccount];
+                [self didSelectClearCacheAccount:self.selectedUserAccount];
                 break;
             case 2:
                 [self dicSelectLogOutAccount:self.selectedUserAccount];
@@ -2119,9 +2119,9 @@
 
 #pragma mark - Options menu account
 
-- (void) didSelectEditAccount  {
+- (void) didSelectEditAccount:(UserDto *)user  {
    
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:self.selectedUserAccount];
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:user];
     
     if (IS_IPHONE) {
         viewController.hidesBottomBarWhenPushed = YES;
@@ -2136,23 +2136,24 @@
 
 }
 
-- (void) didSelectClearCacheAccount {
+- (void) didSelectClearCacheAccount:(UserDto *)user {
+    
     
 }
 
-- (void) dicSelectLogOutAccount:(UserDto *)userSelected {
+- (void) dicSelectLogOutAccount:(UserDto *)user {
     
     [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
     
-    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: userSelected.idUser];
+    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: user.idUser];
     
     //Delete the tables of this user
-    [ManageUsersDB removeUserAndDataByIdUser: userSelected.idUser];
+    [ManageUsersDB removeUserAndDataByIdUser: user.idUser];
     
-    [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:userSelected];
+    [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:user];
     
     //Delete files os user in the system
-    NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)userSelected.idUser];
+    NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)user.idUser];
     NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
     
     
@@ -2161,7 +2162,7 @@
     
     
     //if previous account is active we active the first by iduser
-    if(userSelected.activeaccount) {
+    if(user.activeaccount) {
         
         [ManageUsersDB setActiveAccountAutomatically];
         
