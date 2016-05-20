@@ -660,7 +660,7 @@
     }
     
     if (self.plusActionSheet) {
-        [self.plusActionSheet dismissWithClickedButtonIndex:3 animated:NO];
+        [self.plusActionSheet dismissWithClickedButtonIndex:4 animated:NO];
     }
     
     if(self.sortingActionSheet){
