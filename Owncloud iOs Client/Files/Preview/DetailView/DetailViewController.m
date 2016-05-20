@@ -121,6 +121,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     //Set title and the font of the label of the toolBar
     [_titleLabel setFont:[UIFont systemFontOfSize:18.0]];
     [_titleLabel setText:@""];
+    [_titleLabel setTextColor:[UIColor colorOfNavigationTitle]];
     
     //Set color of background
     self.view.backgroundColor = [UIColor colorOfBackgroundDetailViewiPad];
@@ -708,6 +709,13 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [toolbar addSubview:_updatingFileView];
     
     [self performSelector:@selector(showTextInStatusBar) withObject:nil afterDelay:1.0];
+    
+    if(k_is_text_status_bar_white){
+        [_updatingCancelButton setImage:[UIImage imageNamed:@"cancel_download_white.png"] forState:UIControlStateNormal];
+    }
+    else{
+        [_updatingCancelButton setImage:[UIImage imageNamed:@"cancel_download.png"] forState:UIControlStateNormal];
+    }
 }
 
 

@@ -207,7 +207,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     UIFont *titleFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
     
     [label setBackgroundColor:[UIColor clearColor]];
-    [label setTextColor:[UIColor whiteColor]];
+    [label setTextColor:[UIColor colorOfNavigationTitle]];
 
     [label setFont:titleFont];
 
@@ -257,8 +257,14 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     _updatingFileProgressView.progress = 0.0;
     _updatingCancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_updatingCancelButton setFrame:CGRectMake(220, 12, 20, 20)];
-    [_updatingCancelButton setImage:[UIImage imageNamed:@"cancel_download_white.png"] forState:UIControlStateNormal];
     [_updatingCancelButton addTarget:self action:@selector(didPressUpdatingCancelButton:) forControlEvents:UIControlEventTouchUpInside];
+    
+    if(k_is_text_status_bar_white){
+        [_updatingCancelButton setImage:[UIImage imageNamed:@"cancel_download_white.png"] forState:UIControlStateNormal];
+    }
+    else{
+          [_updatingCancelButton setImage:[UIImage imageNamed:@"cancel_download.png"] forState:UIControlStateNormal];
+    }
     
     [_updatingFileView addSubview:_updatingFileProgressView];
     [_updatingFileView addSubview:_updatingCancelButton];
@@ -281,8 +287,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     if (_isDownloading && nameFileToUpdate == _file.fileName) {
         DLog(@"Show a notification text in the status bar");
         //Notificacion style
-        _notification.notificationLabelBackgroundColor = [UIColor whiteColor];
-        _notification.notificationLabelTextColor = [UIColor colorOfNavigationBar];
+        _notification.notificationLabelBackgroundColor = [UIColor colorOfNavigationBar];
+        _notification.notificationLabelTextColor = [UIColor colorOfNavigationTitle];
         _notification.notificationAnimationInStyle = CWNotificationAnimationStyleTop;
         _notification.notificationAnimationOutStyle = CWNotificationAnimationStyleTop;
         //File name

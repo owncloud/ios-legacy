@@ -121,7 +121,7 @@
 #define k_number_uploads_shown 30
 
 //Set text of status bar white. YES = White | NO = Black
-#define k_is_text_status_bar_white NO
+#define k_is_text_status_bar_white YES
 
 //Show the help link on login
 #define k_is_shown_help_link_on_login NO
