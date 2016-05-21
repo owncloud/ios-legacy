@@ -49,8 +49,6 @@
 #import "UtilsDtos.h"
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
-#import "ManageLocation.h"
-#import "ManageAsset.h"
 #import "OCSplitViewController.h"
 #import "InitializeDatabase.h"
 #import "HelpGuideViewController.h"
@@ -58,6 +56,7 @@
 #import "DownloadFileSyncFolder.h"
 #import "CheckFeaturesSupported.h"
 #import "ManageTouchID.h"
+#import "InstantUpload.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -95,6 +94,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     //init
+    
     DLog(@"Init");
     
     self.oauthToken = @"";
@@ -180,6 +180,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Show TouchID dialog if active
     if([ManageAppSettingsDB isTouchID])
         [[ManageTouchID sharedSingleton] showTouchIDAuth];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[InstantUpload instantUploadManager] activate];
+    });
 
     return YES;
 }
@@ -874,9 +878,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 }
 
 
-- (void) initInstantUploads{
-    
-    [self.settingsViewController initStateInstantUpload];
+- (void) initInstantUpload {
+    [[InstantUpload instantUploadManager] activate];
 }
 
 #pragma mark - Manage media player
@@ -1045,10 +1048,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 {
     DLog(@"applicationWillEnterForeground");
     
-    [self performSelector:@selector(initInstantUploads) withObject:nil afterDelay:4.0];
-    
-   
-    
     if (_activeUser.username==nil) {
         _activeUser=[ManageUsersDB getActiveUser];
     }
@@ -1084,12 +1083,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 }
 
-
-
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-  
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -2832,34 +2828,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:[folderToRemoveName encodeString:NSUTF8StringEncoding] andFilePath:[folderToRemovePath encodeString:NSUTF8StringEncoding] andUser:app.activeUser];
     [self reloadCellByFile:folderRemoved];
 }
-
-#pragma mark - Location
-
--(void)checkIfLocationIsEnabled {
-    if ([CLLocationManager locationServicesEnabled]) {
-        
-        DLog(@"authorizationStatus: %d", [CLLocationManager authorizationStatus]);
-        
-        if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
-            
-            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
-                                                                message:NSLocalizedString(@"message_location_not_enabled", nil)
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"ok"
-                                                      otherButtonTitles:nil];
-                [alert show];
-            } else {
-                DLog(@"Location services not enabled");
-                [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
-                [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
-            }
-        }
-    }
-    
-}
-
-
 
 - (void) showLoginView {
     DLog(@"ShowLoginView");

@@ -18,6 +18,7 @@
 #define ACS_SETTINGS_PASSCODE_SWITCH @"Settings Passcode Switch";
 #define ACS_SETTINGS_TOUCH_ID_SWITCH @"Settings Touch ID";
 #define ACS_SETTINGS_INSTANT_UPLOADS_SWITCH @"Settings Instant Upload Switch";
+#define ACS_SETTINGS_BACKGROUND_INSTANT_UPLOADS_SWITCH @"Settings Background Instant Upload Switch";
 #define ACS_SETTINGS_HELP_CELL @"Settings Help Cell";
 #define ACS_SETTINGS_RECOMMEND_CELL @"Settings Recommend Cell";
 #define ACS_SETTINGS_SEND_FEEDBACK_CELL @"Settings Send Feedback Cell";
