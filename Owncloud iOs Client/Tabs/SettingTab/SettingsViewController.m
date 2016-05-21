@@ -21,8 +21,6 @@
 #import "WebViewController.h"
 #import "UIColor+Constants.h"
 #import "constants.h"
-#import "AppDelegate.h"
-#import "constants.h"
 #import "ImpressumViewController.h"
 #import "Customization.h"
 #import "ManageAppSettingsDB.h"
@@ -32,8 +30,6 @@
 #import "ImageUtils.h"
 #import "UtilsFramework.h"
 #import "UtilsUrls.h"
-#import "ManageLocation.h"
-#import "ManageAsset.h"
 #import "PrepareFilesToUpload.h"
 #import "UploadUtils.h"
 #import "UtilsCookies.h"
@@ -43,6 +39,7 @@
 #import "ManageThumbnails.h"
 #import "ManageTouchID.h"
 #import "DeleteUtils.h"
+#import "InstantUpload.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -89,7 +86,7 @@
 
 @end
 
-@interface SettingsViewController ()
+@interface SettingsViewController () <InstantUploadDelegate>
 
 @property (nonatomic, strong) NSMutableArray *listUsers;
 
@@ -102,14 +99,9 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _isMailComposeVisible = NO;
-       
-        //Set the instant upload
-        [self performSelector:@selector(initStateInstantUpload) withObject:nil afterDelay:4.0];
-    
     }
     return self;
 }
-
 
 - (void)viewDidLoad
 {
@@ -118,7 +110,8 @@
     self.title = NSLocalizedString(@"settings", nil);
     
     [self.view setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
-
+    
+    [InstantUpload instantUploadManager].delegate = self;
 }
 
 - (void)viewDidUnload
@@ -261,7 +254,6 @@
     [self setPropertiesTouchIDToState:touchIDSwitch.on];
 }
 
-
 - (void) clearCache {
     DLog(@"Clear cache");
     
@@ -365,7 +357,11 @@
             break;
             
         case 3:
-            n = 1;
+            if ([[InstantUpload instantUploadManager] enabled]) {
+                n = 2;
+            } else {
+                n = 1;
+            }
             break;
             
         case 4:
@@ -744,12 +740,28 @@
             cell.textLabel.text = NSLocalizedString(@"title_instant_upload", nil);
             self.switchInstantUpload = [[UISwitch alloc] initWithFrame:CGRectZero];
             cell.accessoryView = self.switchInstantUpload;
-            [self.switchInstantUpload setOn:[ManageAppSettingsDB isInstantUpload] animated:YES];
+            [self.switchInstantUpload setOn:[[InstantUpload instantUploadManager] enabled] animated:YES];
             [self.switchInstantUpload addTarget:self action:@selector(changeSwitchInstantUpload:) forControlEvents:UIControlEventValueChanged];
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             
-            //Add accesibility label for Automation
             self.switchInstantUpload.accessibilityLabel = ACS_SETTINGS_INSTANT_UPLOADS_SWITCH;
+            
+            break;
+        case 1:
+            
+            //TODO: Need to localize cell label
+            cell.textLabel.text = NSLocalizedString(@"title_background_instant_upload", nil);
+            
+            self.switchBackgroundInstantUpload = [[UISwitch alloc] initWithFrame:CGRectZero];
+            cell.accessoryView = self.switchBackgroundInstantUpload;
+            
+            [self.switchBackgroundInstantUpload setOn:[[InstantUpload instantUploadManager] backgroundInstantUploadEnabled] animated:YES];
+            
+            [self.switchBackgroundInstantUpload addTarget:self action:@selector(changeSwitchBackgroundInstantUpload:) forControlEvents:UIControlEventValueChanged];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            
+            self.switchInstantUpload.accessibilityLabel = ACS_SETTINGS_BACKGROUND_INSTANT_UPLOADS_SWITCH;
+            
             
             break;
         default:
@@ -844,12 +856,13 @@
     if(((UserDto *) [self.listUsers objectAtIndex:row]).activeaccount){
         [accountCell.activeButton setImage:[UIImage imageNamed:@"radio_checked.png"] forState:UIControlStateNormal];
         
-    }else {
+    } else {
         [accountCell.activeButton setImage:[UIImage imageNamed:@"radio_unchecked.png"] forState:UIControlStateNormal];
     }
     
     //Accesibility support for Automation
     NSString *accesibilityCellString = ACS_SETTINGS_USER_ACCOUNT_CELL;
+    
     accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$user" withString:accountCell.userName.text];
     accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
 
@@ -1244,8 +1257,7 @@
     
     // Run loop
     while (dispatch_semaphore_wait(self.semaphoreChangeUser, DISPATCH_TIME_NOW)) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
-                                 beforeDate:[NSDate dateWithTimeIntervalSinceNow:k_timeout_upload]];
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:k_timeout_upload]];
     }
     
     DLog(@"continueChangingUser");
@@ -1379,7 +1391,6 @@
     }];
     
 }
-
 
 #pragma mark - Utils
 
@@ -1759,7 +1770,6 @@
    
 }
 
-
 #pragma mark - KKPasscodeViewController delegate methods
 
 ///-----------------------------------
@@ -1792,8 +1802,6 @@
     //Refresh the switch pass code
     [self.switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:NO];
     [self.settingsTableView reloadData];
-
-    
 }
 
 #pragma mark - Touch ID methods
@@ -1806,9 +1814,8 @@
     return [[ManageTouchID sharedSingleton] isTouchIDAvailable];
 }
 
--(void)setPropertiesTouchIDToState:(BOOL)isTocuhIDActive{
-    
-    if (isTocuhIDActive) {
+-(void)setPropertiesTouchIDToState:(BOOL)isTouchIDActive{
+    if (isTouchIDActive) {
         [self switchTouchIDTo:YES];
         [ManageAppSettingsDB updateTouchIDTo:YES];
     } else {
@@ -1817,260 +1824,21 @@
     }
 }
 
-
-#pragma mark - Instant Upload - Location Support
-
-- (void)switchInstantUploadTo:(BOOL)value {
-     [self.switchInstantUpload setOn:value animated:NO];
-}
-
--(void)setPropertiesInstantUploadToState:(BOOL)stateInstantUpload{
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    if (app.activeUser.username == nil) {
-        app.activeUser = [ManageUsersDB getActiveUser];
-    }
-    
-    if (stateInstantUpload) {
-        [self switchInstantUploadTo:YES];
-        app.activeUser.instantUpload = YES;
-        [ManageAppSettingsDB updateInstantUploadTo:YES];
-    } else {
-        [self switchInstantUploadTo:NO];
-        app.activeUser.instantUpload = NO;
-        [ManageAppSettingsDB updateInstantUploadTo:NO];
-        [[ManageLocation sharedSingleton] stopSignificantChangeUpdates];
-    }
-}
-
--(void)setDateInstantUpload{
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    if (app.activeUser.username == nil) {
-        app.activeUser = [ManageUsersDB getActiveUser];
-    }
-    
-    long dateInstantUpload = [[NSDate date] timeIntervalSince1970];
-    app.activeUser.dateInstantUpload = dateInstantUpload;
-    [ManageAppSettingsDB updateDateInstantUpload:dateInstantUpload];
-}
+#pragma mark - Instant Upload
 
 -(IBAction)changeSwitchInstantUpload:(id)sender {
-    
-    [self switchInstantUploadTo:NO];
-
-    if(![ManageAppSettingsDB isInstantUpload]) {
-       [self checkIfLocationIsEnabled];
-    } else {
-        //Dissable mode
-        [self setPropertiesInstantUploadToState:NO];
-    }
+    UISwitch *uiSwitch = (UISwitch *)sender;
+    [[InstantUpload instantUploadManager] setEnabled:uiSwitch.on];
+    [self refreshTable];
 }
 
-
--(void)checkIfLocationIsEnabled {
-    [ManageLocation sharedSingleton].delegate = self;
-    
-    if ([CLLocationManager locationServicesEnabled]) {
-        
-        DLog(@"authorizationStatus: %d", [CLLocationManager authorizationStatus]);
-        
-        if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
-            
-            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined ) {
-                
-                DLog(@"Location services not determined");
-                [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
-                
-            } else {
-                
-                if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
-                    [ManageAppSettingsDB updateInstantUploadTo:NO];
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
-                                                                    message:NSLocalizedString(@"message_location_not_enabled", nil)
-                                                                   delegate:nil
-                                                          cancelButtonTitle:NSLocalizedString(@"ok", nil)
-                                                          otherButtonTitles:nil];
-                    [alert show];
-                } else {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_and_location_not_enabled", nil)
-                                                                    message:NSLocalizedString(@"message_access_photos_and_location_not_enabled", nil)
-                                                                   delegate:nil
-                                                          cancelButtonTitle:NSLocalizedString(@"ok", nil)
-                                                          otherButtonTitles:nil];
-                    [alert show];
-                }
-            }
-        } else {
-            
-            if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
-                if(![ManageAppSettingsDB isInstantUpload]) {
-                    [self setDateInstantUpload];
-                }
-                
-                [self setPropertiesInstantUploadToState:YES];
-                [[ManageLocation sharedSingleton] startSignificantChangeUpdates];
-                ManageAsset * manageAsset = [[ManageAsset alloc] init];
-                NSArray * newItemsToUpload = [manageAsset getCameraRollNewItems];
-                if (newItemsToUpload != nil && [newItemsToUpload count] != 0) {
-                    [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
-                }
-            } else {
-                [self setPropertiesInstantUploadToState:NO];
-                UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
-                                                                 message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
-                                                                delegate:nil
-                                                       cancelButtonTitle:NSLocalizedString(@"ok", nil)
-                                                       otherButtonTitles:nil];
-                [alert show];
-            }
-        }
-    } else {
-        
-        [self setPropertiesInstantUploadToState:NO];
-        if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
-                                                            message:NSLocalizedString(@"message_location_not_enabled", nil)
-                                                           delegate:nil
-                                                  cancelButtonTitle:NSLocalizedString(@"ok", nil)
-                                                  otherButtonTitles:nil];
-            [alert show];
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_and_location_not_enabled", nil)
-                                                            message:NSLocalizedString(@"message_access_photos_and_location_not_enabled", nil)
-                                                           delegate:nil
-                                                  cancelButtonTitle:NSLocalizedString(@"ok", nil)
-                                                  otherButtonTitles:nil];
-            [alert show];
-        }
-    }
+-(IBAction)changeSwitchBackgroundInstantUpload:(id)sender {
+    UISwitch *uiSwitch = (UISwitch *)sender;
+    [[InstantUpload instantUploadManager] setBackgroundInstantUploadEnabled:uiSwitch.on];
 }
 
-
--(void)initStateInstantUpload{
-    
-    [self switchInstantUploadTo:NO];
-    
-    if([ManageAppSettingsDB isInstantUpload]) {
-        [self checkIfLocationIsEnabled];
-    } else {
-        //Dissable mode
-        [self setPropertiesInstantUploadToState:NO];
-    }
-    
-}
-
-- (void) initPrepareFiles:(NSArray *) newAsssets andRemoteFolder: (NSString *) remoteFolder{
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    if(app.prepareFiles == nil) {
-        app.prepareFiles = [[PrepareFilesToUpload alloc] init];
-        app.prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
-        app.prepareFiles.listOfAssetsToUpload = [[NSMutableArray alloc] init];
-        app.prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
-        app.prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
-    }
-    app.prepareFiles.delegate = app;
-    app.prepareFiles.counterUploadFiles = 0;
-    app.uploadTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        // If you’re worried about exceeding 10 minutes, handle it here
-    }];
-    
-    [app.prepareFiles addAssetsToUpload: newAsssets andRemoteFolder: remoteFolder];
-  
-   
-}
-
-#pragma mark - ManageLocationDelegate Method
-
-- (void)statusAuthorizationLocationChanged{
-    
-    if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){
-        
-        if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
-            ALAssetsLibrary *assetLibrary = [UploadUtils defaultAssetsLibrary];
-            [assetLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
-                                        usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-                                            
-                                        } failureBlock:^(NSError *error) {
-                                            
-                                        }];
-        }
-        
-        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-            
-            if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
-                
-                if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
-                    //activated only when user allow location first alert
-                    [self setPropertiesInstantUploadToState:YES];
-                    [self setDateInstantUpload];
-                } else {
-                    [self setPropertiesInstantUploadToState:NO];
-                }
-            } else {
-                UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil)
-                                                                 message:NSLocalizedString(@"message_access_photos_not_enabled", nil)
-                                                                delegate:nil
-                                                       cancelButtonTitle:NSLocalizedString(@"ok", nil)
-                                                       otherButtonTitles:nil];
-                [alert show];
-            }
-        } else if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusNotDetermined){
-            if([ManageAppSettingsDB isInstantUpload]) {
-                [self setPropertiesInstantUploadToState:NO];
-                
-                if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil)
-                                                                    message:NSLocalizedString(@"message_location_not_enabled", nil)
-                                                                   delegate:nil
-                                                          cancelButtonTitle:NSLocalizedString(@"ok", nil)
-                                                          otherButtonTitles:nil];
-                    [alert show];
-                    
-                } else {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_and_location_not_enabled", nil)
-                                                                    message:NSLocalizedString(@"message_access_photos_and_location_not_enabled", nil)
-                                                                   delegate:nil
-                                                          cancelButtonTitle:NSLocalizedString(@"ok", nil)
-                                                          otherButtonTitles:nil];
-                    [alert show];
-                }
-            }
-        }
-        
-        if (![ManageLocation sharedSingleton].firstChangeAuthorizationDone) {
-            [ManageLocation sharedSingleton].firstChangeAuthorizationDone = YES;
-        }
-    }
-    
-}
-
-
--(void) changedLocation{
-    
-    NSArray * newItemsToUpload = [[NSArray alloc]init];
-    
-    if([ManageAppSettingsDB isInstantUpload]) {
-        
-        if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
-            //check location
-            if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) {
-                //Check keychain access
-                if ([ManageUsersDB getActiveUser].username != nil) {
-                    //upload new photos
-                    ManageAsset * manageAsset = [[ManageAsset alloc] init];
-                    newItemsToUpload = [manageAsset getCameraRollNewItems];
-                    if (newItemsToUpload != nil && [newItemsToUpload count] != 0) {
-                        [self initPrepareFiles:newItemsToUpload andRemoteFolder:k_path_instant_upload];
-                    }
-                }
-            }
-        } else {
-            [self setPropertiesInstantUploadToState:NO];
-        }
-    }
-}
+//TODO: Wifi-only Instant Upload
+//TODO: Video Instant Upload - should Wifi-only Instant Upload be split-out for video as well?
 
 #pragma mark Loading view methods
 
@@ -2197,6 +1965,16 @@
 
 - (void) dicSelectLogOutAccount {
     
+}
+
+#pragma mark InstantUploadDelegate methods
+
+- (void) instantUploadPermissionLostOrDenied {
+    self.switchInstantUpload.on = NO;
+}
+
+- (void) backgroundInstantUploadPermissionLostOrDenied {
+    self.switchBackgroundInstantUpload.on = NO;
 }
 
 @end

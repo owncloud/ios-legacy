@@ -20,6 +20,7 @@
 #import "ManageUsersDB.h"
 #import "OCKeychain.h"
 #import "UserDto.h"
+#import "ManageAppSettingsDB.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -47,7 +48,7 @@
         
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_sharee_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'has_forbidden_characters_support' INTEGER NOT NULL DEFAULT 0, 'has_capabilities_support' INTEGER NOT NULL DEFAULT 0, 'instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0, 'date_instant_upload' LONG, 'url_redirected' VARCHAR, 'sorting_type' INTEGER NOT NULL DEFAULT 0)"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_sharee_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'has_forbidden_characters_support' INTEGER NOT NULL DEFAULT 0, 'has_capabilities_support' INTEGER NOT NULL DEFAULT 0, 'instant_upload' BOOL NOT NULL DEFAULT 0, 'background_instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0, 'date_instant_upload' LONG, 'url_redirected' VARCHAR, 'sorting_type' INTEGER NOT NULL DEFAULT 0)"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table users");
@@ -986,6 +987,33 @@
         correctQuery = [db executeUpdate:@"ALTER TABLE users ADD sorting_type INTEGER DEFAULT 0"];
         if (!correctQuery) {
             DLog(@"Error update version 16 to 17 table users sorting_type");
+        }
+        
+    }];
+    
+}
+
+///-----------------------------------
+/// @name Update Database version with 17 version to 18
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter users table, adds new field to track user background Instant Upload preference
+ */
++ (void) updateDBVersion17To18 {
+    
+    BOOL defaultBackgroundInstantUploadValue = (BOOL)[ManageAppSettingsDB isInstantUpload]; //Users who are using Instant Upload before this migration also have background upload enabled, so we want to default to enabling this preference.
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL updateSuccessful;
+        
+        updateSuccessful = [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE users ADD background_instant_upload INTEGER DEFAULT %i", defaultBackgroundInstantUploadValue]];
+        if (!updateSuccessful) {
+            DLog(@"Error update version 17 to 18 table users background_instant_upload");
         }
         
     }];

@@ -250,6 +250,28 @@
     
 }
 
++ (BOOL) isBackgroundInstantUpload {
+    
+    __block BOOL output = NO;
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        
+        FMResultSet *rs = [db executeQuery:@"SELECT background_instant_upload FROM users WHERE activeaccount=1"];
+        
+        while ([rs next]) {
+            
+            output =[rs boolForColumn:@"background_instant_upload"];
+            
+        }
+        
+    }];
+    
+    return output;
+    
+}
+
 +(void)updateInstantUploadTo:(BOOL)newValue {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -261,6 +283,22 @@
         
         if (!correctQuery) {
             DLog(@"Error updating instant_upload");
+        }
+    }];
+    
+}
+
++(void)updateBackgroundInstantUploadTo:(BOOL)newValue {
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE users SET background_instant_upload=? ", [NSNumber numberWithBool:newValue]];
+        
+        if (!correctQuery) {
+            DLog(@"Error updating background_instant_upload");
         }
     }];
     
