@@ -1001,63 +1001,8 @@
 {
     DLog(@"DELETE!!! %ld", (long)indexPath.row);
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
-        UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
-        
-        [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
-        
-        [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: selectedUser.idUser];
-        
-        //Delete the tables of this user
-        [ManageUsersDB removeUserAndDataByIdUser: selectedUser.idUser];
-        
-        [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:selectedUser];
-        
-        //Delete files os user in the system
-        NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)selectedUser.idUser];
-        NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
-        
-
-        NSError *error;
-        [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-        
-        
-        //if previeus account is active we active the first by iduser
-        if(selectedUser.activeaccount) {
-            
-            [ManageUsersDB setActiveAccountAutomatically];
-            
-            //Update in appDelegate the active user
-            APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
-            
-            [self setCookiesOfActiveAccount];
-            
-            [self createFolderForUser:APP_DELEGATE.activeUser];
-            
-            //If ipad, clean the detail view
-            if (!IS_IPHONE) {
-                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                [app presentWithView];
-            }
-        }
-        
-        self.listUsers = [ManageUsersDB getAllUsers];
-        
-        if([self.listUsers count] > 0) {
-            [self.settingsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
-        } else {
-            
-            self.settingsTableView.editing = NO;
-            
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            
-            [self cancelAllDownloads];
-            //[self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
-            app.uploadArray=[[NSMutableArray alloc]init];
-            [app updateRecents];
-            [app restartAppAfterDeleteAllAccounts];
-        }
-        
+         UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
+        [self dicSelectLogOutAccount:selectedUser];
         
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
@@ -1447,13 +1392,13 @@
     } else if (actionSheet.tag == k_tag_actionSheet_menu_account) {
         switch (buttonIndex) {
             case 0:
-                [self didSelectEditAccount];
+                [self didSelectEditAccount:self.selectedUserAccount];
                 break;
             case 1:
-                [self didSelectClearCacheAccount];
+                [self didSelectClearCacheAccount:self.selectedUserAccount];
                 break;
             case 2:
-                [self dicSelectLogOutAccount];
+                [self dicSelectLogOutAccount:self.selectedUserAccount];
                 break;
             default:
                 break;
@@ -1942,9 +1887,9 @@
 
 #pragma mark - Options menu account
 
-- (void) didSelectEditAccount  {
+- (void) didSelectEditAccount:(UserDto *)user  {
    
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:self.selectedUserAccount];
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:user];
     
     if (IS_IPHONE) {
         viewController.hidesBottomBarWhenPushed = YES;
@@ -1959,12 +1904,66 @@
 
 }
 
-- (void) didSelectClearCacheAccount {
+- (void) didSelectClearCacheAccount:(UserDto *)user {
+    
     
 }
 
-- (void) dicSelectLogOutAccount {
+- (void) dicSelectLogOutAccount:(UserDto *)user {
     
+    [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
+    
+    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: user.idUser];
+    
+    //Delete the tables of this user
+    [ManageUsersDB removeUserAndDataByIdUser: user.idUser];
+    
+    [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:user];
+    
+    //Delete files os user in the system
+    NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)user.idUser];
+    NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
+    
+    
+    NSError *error;
+    [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+    
+    
+    //if previous account is active we active the first by iduser
+    if(user.activeaccount) {
+        
+        [ManageUsersDB setActiveAccountAutomatically];
+        
+        //Update in appDelegate the active user
+        APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
+        
+        [self setCookiesOfActiveAccount];
+        
+        [self createFolderForUser:APP_DELEGATE.activeUser];
+        
+        //If ipad, clean the detail view
+        if (!IS_IPHONE) {
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            [app presentWithView];
+        }
+    }
+    
+    self.listUsers = [ManageUsersDB getAllUsers];
+    
+    if([self.listUsers count] > 0) {
+        [self.settingsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+    } else {
+        
+        self.settingsTableView.editing = NO;
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        [self cancelAllDownloads];
+        //[self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
+        app.uploadArray=[[NSMutableArray alloc]init];
+        [app updateRecents];
+        [app restartAppAfterDeleteAllAccounts];
+    }
 }
 
 #pragma mark InstantUploadDelegate methods
