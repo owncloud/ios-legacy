@@ -117,12 +117,18 @@
     
     self.currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:self.currentFileDto.idFile];
 
-    NSPredicate *predicateSameName = [NSPredicate predicateWithFormat:@"fileName == %@", [fileName encodeString:NSUTF8StringEncoding]];
-    NSArray *filesSameName = [self.currentDirectoryArray filteredArrayUsingPredicate:predicateSameName];
+    NSPredicate *predicateSameFileName = [NSPredicate predicateWithFormat:@"fileName == %@", [fileName encodeString:NSUTF8StringEncoding]];
+    NSString *folderSameName = [NSString stringWithFormat:@"%@/",[fileName encodeString:NSUTF8StringEncoding]];
+    NSPredicate *predicateSameFolderName = [NSPredicate predicateWithFormat:@"fileName == %@", folderSameName];
 
-    if (filesSameName !=nil && filesSameName.count > 0) {
+    NSArray *filesSameFileName = [self.currentDirectoryArray filteredArrayUsingPredicate:predicateSameFileName];
+    NSArray *filesSameFolderName = [self.currentDirectoryArray filteredArrayUsingPredicate:predicateSameFolderName];
+
+
+    if ((filesSameFileName !=nil && filesSameFileName.count > 0) || (filesSameFolderName != nil && filesSameFolderName.count >0)) {
         sameName = YES;
     }
+
     
     return sameName;
 }
@@ -137,7 +143,8 @@
                 valid = YES;
             } else {
                 DLog(@"Exist a file with the same name");
-                [self showAlertView:NSLocalizedString(@"error_text_file_exist", nil)];
+                
+                [self showAlertView:[NSString stringWithFormat:@"%@ %@",fileName, NSLocalizedString(@"error_text_file_exist", nil)]];
             }
         } else {
             [self showAlertView:NSLocalizedString(@"forbidden_characters_from_server", nil)];
