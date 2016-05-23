@@ -30,6 +30,8 @@
 #import "UtilsFileSystem.h"
 
 
+#define k_default_extension @"txt"
+
 @interface EditFileViewController ()
 
 @end
@@ -50,8 +52,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.titleTextField.placeholder = NSLocalizedString(@"title_text_file_placeholder", nil);
-    self.titleTextField.text = NSLocalizedString(@"default_text_file_title", nil);
-  
+    self.titleTextField.text = [NSString stringWithFormat:@"%@.%@",NSLocalizedString(@"default_text_file_title", nil),k_default_extension];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -88,7 +89,7 @@
 
 - (void) didSelectDoneView {
    
-    NSString *fileName = [NSString stringWithFormat:@"%@.txt", self.titleTextField.text];
+    NSString *fileName = [self.titleTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet] ];
     NSString *bodyTextFile = self.bodyTextView.text;
     
     if ([self isValidTitleName:fileName]) {
@@ -129,21 +130,20 @@
 - (BOOL) isValidTitleName:(NSString *)fileName {
     
     BOOL valid = NO;
-    if (![fileName isEqualToString:@".txt"]) {
+    if (!([fileName length] == 0)) {
         if (![FileNameUtils isForbiddenCharactersInFileName:fileName withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]]) {
             
             if (![self existFileWithSameName:fileName]) {
                 valid = YES;
-                
             } else {
                 DLog(@"Exist a file with the same name");
-                [self showAlertView:NSLocalizedString(@"text_file_exist", nil)];
+                [self showAlertView:NSLocalizedString(@"error_text_file_exist", nil)];
             }
         } else {
             [self showAlertView:NSLocalizedString(@"forbidden_characters_from_server", nil)];
         }
     } else {
-         [self showAlertView:NSLocalizedString(@"title_text_file_empty", nil)];
+         [self showAlertView:NSLocalizedString(@"error_file_name_empty", nil)];
     }
     
     return valid;
