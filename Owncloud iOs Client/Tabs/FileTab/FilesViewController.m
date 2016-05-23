@@ -1973,7 +1973,7 @@
     [self performSelector:@selector(sendRequestToReloadTableView) withObject:nil];
     
     //Refresh the shared data
-    [self performSelector:@selector(refreshSharedPath) withObject:nil];
+    //[self performSelector:@selector(refreshSharedPath) withObject:nil afterDelay:1.0];
     
     [self performSelectorInBackground:@selector(syncFavoritesByFolder:) withObject:self.fileIdToShowFiles];
 }
@@ -2008,29 +2008,31 @@
     
      [[AppDelegate sharedOCCommunication] readFolder:path withUserSessionToken:app.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
          
-        DLog(@"Operation response code: %ld", (long)response.statusCode);
-        BOOL isSamlCredentialsError = NO;
-        
-        //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
-            //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-            if (isSamlCredentialsError) {
-                [self errorLogin];
-            }
-        }
-        
-        if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError && [app.userSessionCurrentToken isEqualToString:token]) {
-            
-            //Pass the items with OCFileDto to FileDto Array
-            NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
-            
-            //Send the data to DB and refresh the table
-            [self deleteOldDataFromDBBeforeRefresh:directoryList];
-        } else {
-            [self stopPullRefresh];
-            _showLoadingAfterChangeUser = NO;
-        }
+         DLog(@"Operation response code: %ld", (long)response.statusCode);
+         BOOL isSamlCredentialsError = NO;
+         
+         //Check the login error in shibboleth
+         if (k_is_sso_active && redirectedServer) {
+             //Check if there are fragmens of saml in url, in this case there are a credential error
+             isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+             if (isSamlCredentialsError) {
+                 [self errorLogin];
+             }
+         }
+         
+         if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError && [app.userSessionCurrentToken isEqualToString:token]) {
+             
+             //Pass the items with OCFileDto to FileDto Array
+             NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
+             
+             //Send the data to DB and refresh the table
+             [self deleteOldDataFromDBBeforeRefresh:directoryList];
+         } else {
+             [self stopPullRefresh];
+             _showLoadingAfterChangeUser = NO;
+         }
+         
+         [self performSelector:@selector(refreshSharedPath) withObject:nil];
 
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token, NSString *redirectedServer) {
         
