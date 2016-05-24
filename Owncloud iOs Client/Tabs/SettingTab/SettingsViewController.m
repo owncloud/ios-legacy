@@ -396,15 +396,13 @@
     
     switch (indexPath.section) {
         case 0:
-            if (k_multiaccount_available) {
-                cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
-            }else{
-                cell = [self getSectionDisconnectButton:cell byRow:indexPath.row];
-            }
+            cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
             break;
 
         case 1:
-            cell = [self getSectionAddAccountButton:cell byRow:indexPath.row];
+            if (k_multiaccount_available) {
+                cell = [self getSectionAddAccountButton:cell byRow:indexPath.row];
+            }
             break;
 
         case 2:
@@ -948,8 +946,6 @@
         case 0:
             if (k_multiaccount_available) {
                 [self didPressOnAccountIndexPath:indexPath];
-            }else{
-                [self disconnectUser];
             }
             break;
             
