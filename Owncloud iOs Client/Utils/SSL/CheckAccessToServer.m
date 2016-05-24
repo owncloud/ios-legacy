@@ -87,30 +87,11 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     //Add the user agent
     [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
     
-    self.connectionSession = [NSURLSession sharedSession];
-    
     //Configure connectionSession
-    NSURLSessionConfiguration *configuration = nil;
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
     
-    if (k_is_sso_active || !k_is_background_active) {
-        configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    } else {
-        if (IS_IOS8 || IS_IOS9) {
-            configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_session_name];
-        } else {
-            configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:k_session_name];
-        }
-    }
-    
-    configuration.HTTPMaximumConnectionsPerHost = 1;
-    configuration.requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
-    configuration.timeoutIntervalForRequest = k_timeout_upload;
-    configuration.sessionSendsLaunchEvents = YES;
-    [configuration setAllowsCellularAccess:YES];
-
-    self.connectionSession = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    
-    NSURLSessionDataTask *task = [self.connectionSession dataTaskWithRequest:request
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
                                             completionHandler:
                                   ^(NSData *data, NSURLResponse *response, NSError *error) {
                                       
@@ -119,7 +100,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                       
                                       if(error != nil){                                          
                                           //-1202 = self signed certificate
-                                          if([error code] == -1202){
+                                          if([error code] == -1202) {
                                               NSLog(@"Error -1202");
                                               
 #ifdef CONTAINER_APP
@@ -170,7 +151,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                       else{
                                           
                                           BOOL installed = NO;
-                                          if (data!= nil){
+                                          if (data!= nil) {
                                               
                                               NSError *e = nil;
                                               NSMutableDictionary *jsonArray = [NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: &e];
@@ -191,9 +172,6 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                   }];
     
     [task resume];
-    
-    
-    
     
 }
 
@@ -234,7 +212,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
         trusted = NO;
     }
  
-    __block NSURLCredential *credential = nil;
+    NSURLCredential *credential = nil;
     
     if (trusted) {
         credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];

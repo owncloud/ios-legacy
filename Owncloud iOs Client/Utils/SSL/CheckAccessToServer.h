@@ -40,7 +40,6 @@
 @property (nonatomic, strong) NSString *urlStatusCheck;
 @property (nonatomic, strong) UIViewController *viewControllerToShow;
 @property (nonatomic, strong) NSString *urlUserToCheck;
-@property (nonatomic, strong) NSURLSession *connectionSession;
 
 
 @end
