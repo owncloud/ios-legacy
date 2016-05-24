@@ -1091,8 +1091,8 @@
     
     //TODO: create subclass to include those variables
     
-    self.albumController.currentRemoteFolder=_currentRemoteFolder;
-    self.albumController.locationInfo=folder;
+    //self.albumController.currentRemoteFolder=_currentRemoteFolder;
+    //self.albumController.locationInfo=folder;
     /*
     albumController.locationInfo=folder;
     albumController.accountInfo=app.activeUser.username;
