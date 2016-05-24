@@ -2085,7 +2085,7 @@
 - (void)showMenuAccountOptions:(UIButton *)sender {
     
     self.selectedUserAccount = [self.listUsers objectAtIndex:sender.tag];
-    NSString *titleMenu = [NSString stringWithFormat:@"%@ %@",self.selectedUserAccount .username,self.selectedUserAccount .url];
+    NSString *titleMenu = [NSString stringWithFormat:@"%@@%@",self.selectedUserAccount .username,self.selectedUserAccount .url];
     
     if (self.menuAccountActionSheet) {
         self.menuAccountActionSheet = nil;
