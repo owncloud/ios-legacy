@@ -28,6 +28,8 @@
 #import "UploadsOfflineDto.h"
 #import "ManageUploadsDB.h"
 #import "UtilsFileSystem.h"
+#import "UIColor+Constants.h"
+#import "UtilsBrandedOptions.h"
 
 
 #define k_default_extension @"txt"
@@ -53,6 +55,8 @@
     // Do any additional setup after loading the view from its nib.
     self.titleTextField.placeholder = NSLocalizedString(@"title_text_file_placeholder", nil);
     self.titleTextField.text = [NSString stringWithFormat:@"%@.%@",NSLocalizedString(@"default_text_file_title", nil),k_default_extension];
+    
+    [self.navigationController.navigationBar setTitleTextAttributes:[UtilsBrandedOptions titleAttributesToNavigationBar]];
 }
 
 - (void)didReceiveMemoryWarning {
