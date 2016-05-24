@@ -3174,7 +3174,7 @@
 /*
  * Method called when receive a fail from server side
  * @errorCodeFromServer -> WebDav Server Error of NSURLResponse
- * @error -> NSError of NSURLConnection
+ * @error -> NSError of NSURLSession
  */
 
 - (void)manageServerErrors: (NSInteger)errorCodeFromServer and:(NSError *)error {

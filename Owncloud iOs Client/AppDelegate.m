@@ -699,10 +699,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         configurationDownload.sessionSendsLaunchEvents = YES;
         [configurationDownload setAllowsCellularAccess:YES];
         OCURLSessionManager *downloadSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:configurationDownload];
-        //[downloadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
-        //[downloadSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
-        //    return NSURLSessionAuthChallengePerformDefaultHandling;
-        //}];
         
         sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:nil];
         

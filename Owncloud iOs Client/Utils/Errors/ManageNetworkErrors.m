@@ -23,7 +23,7 @@
 /*
  * Method called when receive an error from server
  * @errorHttp -> WebDav Server Error of NSURLResponse
- * @errorConnection -> NSError of NSURLConnection
+ * @errorConnection -> NSError of NSURLSession
  */
 
 - (void)manageErrorHttp:(NSInteger)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *)user {
