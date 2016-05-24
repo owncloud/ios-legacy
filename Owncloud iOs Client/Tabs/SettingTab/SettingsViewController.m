@@ -262,12 +262,6 @@
 }
 
 
-- (void) clearCache {
-    DLog(@"Clear cache");
-    
-    [DeleteUtils deleteAllDownloadedFilesByUser:APP_DELEGATE.activeUser];
-}
-
 -(void)disconnectUser {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
 
@@ -2137,8 +2131,9 @@
 }
 
 - (void) didSelectClearCacheAccount:(UserDto *)user {
-    
-    
+    DLog(@"Clear cache");
+        
+    [DeleteUtils deleteAllDownloadedFilesByUser:APP_DELEGATE.activeUser];
 }
 
 - (void) dicSelectLogOutAccount:(UserDto *)user {
