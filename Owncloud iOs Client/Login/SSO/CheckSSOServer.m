@@ -18,7 +18,6 @@
 #import "FileNameUtils.h"
 #import "UtilsUrls.h"
 #import "OCConstants.h"
-#import "OCFrameworkConstants.h"
 
 @implementation CheckSSOServer
 
@@ -40,102 +39,66 @@
     
     NSURL *url = [NSURL URLWithString:urlString];
     
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url cachePolicy:0 timeoutInterval:k_timeout_webdav];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:40.0];
     [request setHTTPShouldHandleCookies:NO];
     
-    NSURLSession *session = [NSURLSession sharedSession];
+    //Add the user agent
+    [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
     
-    //Configure connectionSession
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-        
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request];
-    [task resume];
+    // Create url connection and fire request
+    [NSURLConnection connectionWithRequest:request delegate:self];
+    
 }
 
-#pragma mark - NSURLSessionTaskDelegate
+#pragma mark NSURLConnection Delegate Methods
 
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task willPerformHTTPRedirection:(NSHTTPURLResponse *)response newRequest:(NSURLRequest *)request completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler {
-    
-    //If there is a redireccion
-    if (response) {
-        DLog(@"redirecction");
-        NSInteger statusCode = [response statusCode];
-        DLog(@"HTTP status %ld", (long)statusCode);
-        
-        if (k_is_sso_active && (statusCode == k_redirected_code_1 || statusCode == k_redirected_code_2 || statusCode == k_redirected_code_3)) {
-            //sso login error
-            DLog(@"redirection with saml");
-            //We get all the headers in order to obtain the Location
-            NSDictionary *dict = [response allHeaderFields];
-            
-            //Server path of redirected server
-            NSString *responseURLString = [dict objectForKey:@"Location"];
-            DLog(@"Shibboleth redirected server is: %@", responseURLString);
-            
-            if ([FileNameUtils isURLWithSamlFragment:responseURLString]) {
-                _isSSOServer = YES;
-                [_delegate showSSOLoginScreen];
-            }
-            
-        }
+/*- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+ // A response has been received, this is where we initialize the instance var you created
+ // so that we can append data to it in the didReceiveData method
+ // Furthermore, this method is called each time there is a redirect so reinitializing it
+ // also serves to clear it
+ }*/
+
+/* -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+ // Append the new data to the instance variable you declared
+ 
+ }*/
+
+/*- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
+ willCacheResponse:(NSCachedURLResponse*)cachedResponse {
+ // Return nil to indicate not necessary to store a cached response for this connection
+ return nil;
+ }*/
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    // The request is complete and data has been received
+    // You can parse the stuff in your instance variable now
+    if (!_isSSOServer) {
+        [_delegate showSSOErrorServer];
     }
 }
 
-- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {
-    completionHandler(NSURLSessionAuthChallengeUseCredential,[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
-}
+///-----------------------------------
+/// @name Conection Fail NSURLConnection delegate method
+///-----------------------------------
 
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
-    
-    if (error) {
-        DLog(@"Error checking SAML: %@", error);
-        [self.delegate showErrorConnection];
-    } else {
-        if (!self.isSSOServer) {
-            [self.delegate showSSOErrorServer];
-        }
-    }
-}
-
-- (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(nullable NSError *)error {
+/**
+ * Method is called when the connection fails
+ * In this method the app shows an alert view with the error.
+ *
+ * @param connection -> NSURLConnection
+ * @param error -> NSError
+ *
+ */
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    // The request has failed for some reason!
     DLog(@"Error checking SAML: %@", error);
-    [self.delegate showErrorConnection];
-}
-
-
-/* The task has received a request specific authentication challenge.
- * If this delegate is not implemented, the session specific authentication challenge
- * will *NOT* be called and the behavior will be the same as using the default handling
- * disposition.
- */
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
-didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
- completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * __nullable credential))completionHandler {
+    [_delegate showErrorConnection];
+    
+    
+   
     
 }
-
-/* Sent if a task requires a new, unopened body stream.  This may be
- * necessary when authentication has failed for any request that
- * involves a body stream.
- */
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
- needNewBodyStream:(void (^)(NSInputStream * __nullable bodyStream))completionHandler {
-    
-}
-
-/* Sent periodically to notify the delegate of upload progress.  This
- * information is also available as properties of the task.
- */
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
-   didSendBodyData:(int64_t)bytesSent
-    totalBytesSent:(int64_t)totalBytesSent
-totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
-    
-}
-
-
-
 
 #pragma mark - Redirection protection
 
@@ -154,7 +117,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
  * @return NSURLRequest
  *
  */
-/*
 - (NSURLRequest *)connection: (NSURLConnection *)connection
              willSendRequest: (NSURLRequest *)requestRed
             redirectResponse: (NSURLResponse *)redirectResponse;
@@ -197,7 +159,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 //Handle the change on the certificate
 - (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
     [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
-}*/
+}
 
 
 

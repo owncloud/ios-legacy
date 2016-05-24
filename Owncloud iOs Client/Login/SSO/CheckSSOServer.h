@@ -26,7 +26,7 @@
 @end
 
 
-@interface CheckSSOServer: NSObject <NSURLSessionTaskDelegate, NSURLSessionDelegate>
+@interface CheckSSOServer: NSObject <NSURLConnectionDelegate>
 
 @property (nonatomic,strong) NSString *urlString;
 @property (nonatomic) BOOL isSSOServer;
