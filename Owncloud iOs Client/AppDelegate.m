@@ -2243,8 +2243,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             NSString * path = [NSString stringWithFormat:@"%@%@", [currentUploadBackground.destinyFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding ], currentUploadBackground.uploadFileName];
             
             [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
-                FileDto *currentFile = [items objectAtIndex:0];
-                [self theFileWasUploadedByCurrentUploadInBackground:currentUploadBackground andCurrentFile:currentFile];
+                if (items != nil && [items count] > 0) {
+                    FileDto *currentFile = [items objectAtIndex:0];
+                    [self theFileWasUploadedByCurrentUploadInBackground:currentUploadBackground andCurrentFile:currentFile];
+                }
                 
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                 //Check the error for to know if there is a server connection error
@@ -2285,8 +2287,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             NSString * path = [NSString stringWithFormat:@"%@%@", [currentUploadBackground.destinyFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding ], currentUploadBackground.uploadFileName];
             
             [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
-                FileDto *currentFile = [items objectAtIndex:0];
-                [self theFileWasUploadedByCurrentUploadInBackground:currentUploadBackground andCurrentFile:currentFile];
+                if (items != nil && [items count] > 0) {
+                    FileDto *currentFile = [items objectAtIndex:0];
+                    [self theFileWasUploadedByCurrentUploadInBackground:currentUploadBackground andCurrentFile:currentFile];
+                }
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
 //                //Do nothing
 //                [ManageUploadsDB setStatus:pendingToBeCheck andKindOfError:notAnError byUploadOffline:currentUploadBackground];
