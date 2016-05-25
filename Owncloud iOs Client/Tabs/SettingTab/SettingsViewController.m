@@ -1076,13 +1076,8 @@
                 if (IS_IPHONE) {
                     [self.popupQuery showInView:[self.view window]];
                 }else {
-                    
-                    if (IS_IOS8 || IS_IOS9) {
-                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                        [self.popupQuery showInView:app.splitViewController.view];
-                    } else {
-                        [self.popupQuery showInView:[self.view window]];
-                    }
+                    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                    [self.popupQuery showInView:app.splitViewController.view];
                 }
             }
         }
@@ -2167,6 +2162,20 @@
         [app updateRecents];
         [app restartAppAfterDeleteAllAccounts];
     }
+}
+
+
+#pragma mark - iOS 8 rotation method
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+
+    if (self.menuAccountActionSheet) {
+        [self.menuAccountActionSheet dismissWithClickedButtonIndex:3 animated:NO];
+    }
+    if (self.popupQuery) {
+        [self.popupQuery dismissWithClickedButtonIndex:3 animated:NO];
+    }
+
 }
 
 @end
