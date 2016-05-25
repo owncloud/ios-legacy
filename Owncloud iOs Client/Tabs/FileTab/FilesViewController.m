@@ -1075,7 +1075,7 @@
     self.albumController = [[ELCAlbumPickerController alloc] initWithNibName: nil bundle: nil];
     self.elcPicker = [[ELCImagePickerController alloc] initWithRootViewController:self.albumController];
     [self.albumController setParent: self.elcPicker];
-	[self.elcPicker setDelegate:self];
+    self.elcPicker.imagePickerDelegate = self;
     
     
     //Info of account and location path   

@@ -23,6 +23,8 @@
  */
 - (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info inURL:(NSString*)remoteURLToUpload;
 
+- (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info;
+
 /**
  * Called when image selection was cancelled, by tapping the 'Cancel' BarButtonItem.
  */

@@ -103,25 +103,13 @@
     NSArray *_assets = [args objectForKey:@"assets"];
     NSString *urlToUpload = [args objectForKey:@"urlToUpload"];
     
-    NSMutableDictionary *workingDictionary;
-    
-    for(PHAsset *asset in _assets) {
+    for(ELCAsset *elcAsset in _assets) {
         
-        // workingDictionary = nil;
-        workingDictionary = [[NSMutableDictionary alloc] init];
-        [workingDictionary setObject:[asset valueForProperty:ALAssetPropertyType] forKey:@"UIImagePickerControllerMediaType"];
-        [workingDictionary setObject:[[asset valueForProperty:ALAssetPropertyURLs] valueForKey:[[[asset valueForProperty:ALAssetPropertyURLs] allKeys] objectAtIndex:0]] forKey:@"UIImagePickerControllerReferenceURL"];
+        PHAsset *asset = (PHAsset*) elcAsset.asset;
         
-        
-        [returnArray addObject:workingDictionary];
-        
-        
-        //Code to implemente the change of name
-        // NSString *fileName = asset.defaultRepresentation.filename;
-        // DLog(@"filename is: %@", fileName);
+        [returnArray addObject:asset];
         
         DLog(@"Doing something");
-        
     }
     
     if([self.imagePickerDelegate respondsToSelector:@selector(elcImagePickerController:didFinishPickingMediaWithInfo:inURL:)]) {
