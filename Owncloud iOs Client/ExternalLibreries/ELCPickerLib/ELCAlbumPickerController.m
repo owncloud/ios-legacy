@@ -36,7 +36,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
 	
 	[self.navigationItem setTitle:NSLocalizedString(@"Loading...", nil)];
 
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self.parent action:@selector(cancelImagePicker)];
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelImagePicker)];
 	[self.navigationItem setRightBarButtonItem:cancelButton];
 
     NSMutableArray *tempArray = [[NSMutableArray alloc] init];
@@ -47,65 +47,10 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     
     self.imageManager = [[PHCachingImageManager alloc] init];
 
-    // Load Albums into assetGroups
-    if(!IS_IOS8) {
-        dispatch_async(dispatch_get_main_queue(), ^
-        {
-            @autoreleasepool {
-            
-            // Group enumerator Block
-                
-                void (^assetGroupEnumerator)(ALAssetsGroup *, BOOL *) = ^(ALAssetsGroup *group, BOOL *stop) 
-                {
-                    if (group == nil) {
-                        return;
-                    }
-                    
-                    // added fix for camera albums order
-                    NSString *sGroupPropertyName = (NSString *)[group valueForProperty:ALAssetsGroupPropertyName];
-                    NSUInteger nType = [[group valueForProperty:ALAssetsGroupPropertyType] intValue];
-                    
-                    if ([[sGroupPropertyName lowercaseString] isEqualToString:@"camera roll"] && nType == ALAssetsGroupSavedPhotos) {
-                        [self.assetGroups insertObject:group atIndex:0];
-                    }
-                    else {
-                        [self.assetGroups addObject:group];
-                    }
-
-                    // Reload albums
-                    [self performSelectorOnMainThread:@selector(reloadTableView) withObject:nil waitUntilDone:YES];
-                };
-                
-                // Group Enumerator Failure Block
-                void (^assetGroupEnumberatorFailure)(NSError *) = ^(NSError *error) {
-                  
-                    if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusDenied) {
-                        NSString *errorMessage = NSLocalizedString(@"This app does not have access to your photos or videos. You can enable access in Privacy Settings.", nil);
-                        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Access Denied", nil) message:errorMessage delegate:nil cancelButtonTitle:NSLocalizedString(@"Ok", nil) otherButtonTitles:nil] show];
-                      
-                    } else {
-                        NSString *errorMessage = [NSString stringWithFormat:@"Album Error: %@ - %@", [error localizedDescription], [error localizedRecoverySuggestion]];
-                        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil) message:errorMessage delegate:nil cancelButtonTitle:NSLocalizedString(@"Ok", nil) otherButtonTitles:nil] show];
-                    }
-
-                    [self.navigationItem setTitle:nil];
-                    NSLog(@"A problem occured %@", [error description]);	                                 
-                };	
-                        
-                // Enumerate Albums
-                
-                [self.library enumerateGroupsWithTypes:ALAssetsGroupAll
-                                       usingBlock:assetGroupEnumerator
-                                      failureBlock:assetGroupEnumberatorFailure];
-
-            }
-        });
-    } else {
 //        //if ios 8 and above
         NSLog(@"authorization status %li", (long)[PHPhotoLibrary authorizationStatus]);
         [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
 //        [self updateFetchResults];
-    }
 }
 
 -(void)updateFetchResults
@@ -160,22 +105,8 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
 
 - (void)viewWillAppear:(BOOL)animated {
     
-    if(!IS_IOS8) {
-         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableView) name:ALAssetsLibraryChangedNotification object:nil];
-    }else {
-        //if ios 8 and above
-        [self updateFetchResults];
-        
-    }
-    
-   
+    [self updateFetchResults];
     [self.tableView reloadData];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    if(!IS_IOS8) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:ALAssetsLibraryChangedNotification object:nil];
-    }
 }
 
 - (void)dealloc
@@ -218,6 +149,22 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     {
         return [ALAssetsFilter allPhotos];
     }
+}
+
+/*
+ * The user tap the cancel button
+ */
+- (void)cancelImagePicker {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    if (IS_IPHONE){
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        [app.detailViewController dismissViewControllerAnimated:YES completion:nil];
+    }
+    
+    app.isUploadViewVisible = NO;
 }
 
 #pragma mark -
@@ -322,14 +269,8 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
 	ELCAssetTablePicker *picker = [[ELCAssetTablePicker alloc] initWithNibName: nil bundle: nil];
 	picker.parent = self;
 
-    
-    if(!IS_IOS8) {
-        picker.assetGroup = [self.assetGroups objectAtIndex:indexPath.row];
-        [((ALAssetsGroup *)picker.assetGroup) setAssetsFilter:[self assetFilter]];
-    }else {
-        picker.assetGroup = [[self.assetGroups objectAtIndex:indexPath.row] allValues][0];
-    }
-	picker.assetPickerFilterDelegate = self.assetPickerFilterDelegate;
+    picker.assetGroup = [[self.assetGroups objectAtIndex:indexPath.row] allValues][0];
+    picker.assetPickerFilterDelegate = self.assetPickerFilterDelegate;
 	
 	[self.navigationController pushViewController:picker animated:YES];
 }
