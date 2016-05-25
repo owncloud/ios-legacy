@@ -124,19 +124,21 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     
     if (assetsFetchResult != nil)
         [self.assetGroups addObject:@{@"All Photos":assetsFetchResult}];
+
+    //Smart Albums
+    PHFetchResult *smartCollections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+    [self addPHCollectionListToTheAssetGroups:smartCollections];
     
-    /*PHFetchOptions *allPhotosOptions = [[PHFetchOptions alloc] init];
-    allPhotosOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
-    PHFetchResult *allPhotos = [PHAsset fetchAssetsWithOptions:allPhotosOptions];
-    NSLog(@"All: %lu %@", (unsigned long)allPhotos.count, allPhotos.);
-  
-    if (allPhotos != nil)
-        [self.assetGroups addObject:@{@"All Photos":allPhotos}];
-    */
+    //Created by the user
+    PHFetchResult *userCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:nil];
+    [self addPHCollectionListToTheAssetGroups:userCollections];
     
-    PHFetchResult *topLevelUserCollections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+    [self reloadTableView];
+}
+
+- (void) addPHCollectionListToTheAssetGroups:(PHFetchResult *) collectionsResult {
     
-    for(PHCollection *collection in topLevelUserCollections)
+    for(PHCollection *collection in collectionsResult)
     {
         NSLog(@"album title %@", collection.localizedTitle);
         
@@ -152,8 +154,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
             }
         }
     }
-
-    [self reloadTableView];
+    
 }
 
 
