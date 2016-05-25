@@ -10,7 +10,6 @@ some advantages over the Web interface:
 * A simplified interface that fits nicely on an iPhone or iPad
 * Automatic synchronization of your files
 * Share files with other ownCloud users
-* Create public share links
 * Easily upload files from your device to ownCloud
 * Optional PIN for stronger security
 
@@ -33,10 +32,10 @@ Managing Your Files
 
 All your files on your ownCloud server are listed on the Files page, but are not 
 downloaded to your iPhone or iPad until you tap on them. Downloaded files are 
-marked with a little green arrow. Image files display thumbnails after they have 
-been downloaded; image files that have not been downloaded display generic 
-icons. Click the plus button at the top right to upload files to your ownCloud 
-server, or to create a new folder. 
+marked with a little green arrow. Thumbnails are displayed for both downloaded 
+and not-downloaded files (owncloud 8.0+ only). Click the overflow button at the 
+top right (the three-dot button) to upload files to your server, create a new 
+folder, or sort your files alphabetically or by date.
 
 The Files button at the bottom takes you back to your main Files page. The 
 Uploads button shows your history of uploads to your ownCloud server. The Shared 
@@ -48,6 +47,9 @@ options for Open With, Rename, Move, or mark as Favorite.
 
 .. image:: images/ios-slider.png
    :alt: Slide filename right to expose management options.
+   
+The More button has different options for folders: Rename, Move, Download 
+Folder, and Favorite.   
 
 When you tap any file in the Files view it downloads to your iPhone or iPad, if 
 it hasn't already been downloaded, and opens a preview. 
@@ -71,11 +73,14 @@ files, click the Share button to see who you have shared with, and to remove
 shares.
 
 You may also create Federation shares from your iOS app. If you are sharing 
-files with ownCloud 9.x users, you can enter their username and server URL in 
-the User and Groups dialog to create a direct share; for example 
-freda@example.com/owncloud. Your recipient will receive a notification asking 
-if they wish to accept the share, and then all they have to do is click an 
-"Accept" button.
+files with ownCloud 9.x users, you can enter their username (auto-completion is 
+supported for Federation sharing) and server URL in the User and Groups dialog 
+to create a Federation share; for example freda@example.com/owncloud. (The exact 
+Federation share link is on every ownCloud user's Personal page in the ownCloud 
+Web interface.) Please note that this is not yet fully-implemented in the iOS 
+app: your recipient needs to use their ownCloud Web interface to receive the 
+notification asking if they wish to accept the share, and then they must click 
+an "Accept" button.
 
 .. image:: images/ios-sharing.png
    :alt: File sharing dialog.
@@ -84,7 +89,13 @@ You may share files with people who are not using ownCloud, and with
 older ownCloud servers by creating a share link. Tap "Get Share Link", and this 
 opens a menu with options to automatically create an email notification, or to 
 copy the link so that you can paste it wherever you like. You have options to 
-creating an expiration date on the share, and to password-protect it.
+put an expiration date on the share, and to password-protect it.
+
+When you create a share link on a folder, you also have the option to make it 
+editable.
+
+.. image:: images/ios-share-link.png
+   :alt: Share link on a folder.   
 
 Settings
 --------

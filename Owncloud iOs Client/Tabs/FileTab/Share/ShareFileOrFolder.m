@@ -339,7 +339,7 @@
                         DLog(@"error.code: %ld", (long)error.code);
                         DLog(@"server error: %ld", (long)response.statusCode);
                         
-                        if (error.code == kOCErrorServerForbidden && sharesOfFile.count == 0 && [self isPasswordEnforcedCapabilityEnabled]) {
+                        if (error.code == kOCErrorServerForbidden && [self isPasswordEnforcedCapabilityEnabled]) {
                             
                             //Share whith password maybe enabled, ask for password and try to do the request again with it
                             [self showAlertEnterPassword];
@@ -385,7 +385,7 @@
         
         if (!isSamlCredentialsError) {
             
-            if (error.code == kOCErrorServerForbidden && sharesOfFile.count == 0 && [self isPasswordEnforcedCapabilityEnabled]) {
+            if (error.code == kOCErrorServerForbidden && [self isPasswordEnforcedCapabilityEnabled]) {
             
                 //Share whith password maybe enabled, ask for password and try to do the request again with it
                 [self showAlertEnterPassword];
@@ -407,15 +407,16 @@
 
 -(BOOL)isPasswordEnforcedCapabilityEnabled {
     
-    BOOL output = NO;
+    BOOL output;
     
-    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+    if ((APP_DELEGATE.activeUser.hasCapabilitiesSupport != serverFunctionalitySupported) ||
+        (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingPasswordEnforcedEnabled) ) {
         
-        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+        output = YES;
         
-        if (cap.isFilesSharingPasswordEnforcedEnabled) {
-            output = YES;
-        }
+    } else {
+        
+        output = NO;
     }
     
     return output;

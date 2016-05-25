@@ -28,12 +28,14 @@
 /*
  * TableViews methods
  */
+
+// Returns the number of sections in a table view depending on the user.
 + (NSInteger)numberOfSectionsInTableViewForUser:(UserDto*)user withFolderList: (NSArray *)currentDirectoryArray;
 
-// Returns the table view managed by the controller object.
+// Returns the number of rows in a table viewn for an user depending on the sorting method and section.
 + (NSInteger)numberOfRowsInSection: (NSInteger) section forUser:(UserDto*)user withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray needsExtraEmptyRow:(BOOL) emptyMessageRow;
 
-// Returns the table view managed by the controller object.
+// Returns the table header title for each section.
 + (NSString *)titleForHeaderInTableViewSection:(NSInteger)section forUser:(UserDto*)user withCurrentDirectoryArray:(NSArray *)currentDirectoryArray andSortedArray: (NSArray *) sortedArray;
 
 // Returns the titles for the sections for a table view.
@@ -43,10 +45,11 @@
 /*
  * Array sorting methods
  */
-//Method that sorts alphabetically array by selector
+
+// This method sorts alphabetically an array by selector
 + (NSMutableArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector;
 
-// This method sorts an array by modification Date and configure ot to be used in file list
+// This method sorts an array by modification date to be shown in files/folders list
 + (NSMutableArray*) sortByModificationDate:(NSArray*)array;
 
 // This method creates an array to be shown in the files/folders list

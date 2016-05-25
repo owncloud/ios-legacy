@@ -1,3 +1,11 @@
+## 3.4.9 (May 2016)
+- Sort by date or alphabetically
+- Remote thumbnails, images and videos
+- Updated SSL library version
+- Federating sharing improvements, autocompletation of users taking into account defined remote trusted servers
+- Share by link, added a new option to define whether editing is enable or not
+- Bugs fixing
+
 ## 3.4.8 (February 2016)
 - Touch ID support
 - Federated sharing, you can create direct share links with users on other ownCloud servers within your iOS app

@@ -1,20 +1,15 @@
-#This is the iOS Client for [ownCloud][0].
+# [ownCloud](https://owncloud.org) iOS app
+[![](https://owncloud.org/wp-content/themes/owncloudorgnew/assets/img/clients/buttons/appstore.png)](https://itunes.apple.com/app/owncloud/id543672169)
 
-The app performs file synchronization with an ownCloud server. Other ownCloud features may be added in the future, but they are not a priority right now. This app is GPLv3 licensed.
+[![](https://s5.mzstatic.com/eu/r30/Purple49/v4/68/9f/75/689f75f8-1524-f121-7503-32f47fe45896/screen322x572.jpeg)](https://itunes.apple.com/app/owncloud/id543672169)[![](https://s4.mzstatic.com/eu/r30/Purple69/v4/82/c5/4b/82c54bd9-9835-cbbd-2eac-20867ef8f7d6/screen322x572.jpeg)](https://itunes.apple.com/app/owncloud/id543672169)
 
-## Build Status on
-Git master: ![Build Status](https://api.travis-ci.org/owncloud/android.svg?branch=master)
+## Join development!
 
-Git stable:  ![Build Status](https://api.travis-ci.org/owncloud/android.svg?branch=stable)
+**Build status:** master ![](https://api.travis-ci.org/owncloud/android.svg?branch=master) stable ![](https://api.travis-ci.org/owncloud/android.svg?branch=stable)
 
-## Development
+**Start contributing:** Make sure you read [SETUP.md](https://github.com/owncloud/ios/blob/master/SETUP.md) when you start working on this project. Basically: Fork this repository and contribute back using pull requests to the master branch.
+Easy starting points are also reviewing [pull requests](https://github.com/owncloud/ios/pulls) and working on [junior jobs](https://github.com/owncloud/ios/issues?q=is%3Aopen+is%3Aissue+label%3A%22Junior+Job%22).
 
-### Project Setup
-Make sure you read [SETUP.md][1] when you start working on this project.
+**IRC channel:** [#owncloud-ios](https://webchat.freenode.net/?channels=owncloud-ios) on freenode IRC
 
-[0]: https://github.com/owncloud/core
-[1]: https://github.com/owncloud/ios/blob/master/SETUP.md
-
-### Contributing
-Please see [Contribution Guidelines](https://owncloud.org/contribute/). Fork this repository and contribute back using
-[pull requests](https://github.com/owncloud/ios/pulls). All pull requests should be based on, and targeted to, the ['master'](https://github.com/owncloud/ios/tree/master) branch.
+**License:** [GPLv3](https://github.com/owncloud/ios/blob/master/LICENSE.txt)

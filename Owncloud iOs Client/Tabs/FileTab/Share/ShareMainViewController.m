@@ -141,13 +141,16 @@
 }
 
 - (BOOL) hasAllowEditingToBeShown {
-    
-    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && self.sharedItem.isDirectory) {
-        return APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAllowPublicUploadsEnabled;
-    }
-    
-    return false;
 
+    if (((APP_DELEGATE.activeUser.hasCapabilitiesSupport != serverFunctionalitySupported) ||
+        (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAllowPublicUploadsEnabled))
+        && self.sharedItem.isDirectory){
+        return YES;
+        
+    } else {
+        
+        return NO;
+    }
 }
 
 #pragma mark - Accessory alert views
@@ -432,7 +435,7 @@
 
 - (void) sharedLinkSwithValueChanged: (UISwitch*)sender {
     
-    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto) {
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto) {
         CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
         
         if (!cap.isFilesSharingShareLinkEnabled) {
@@ -457,7 +460,7 @@
     
      if (self.isPasswordProtectEnabled){
 
-        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported) {
             CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
             
             if (cap.isFilesSharingPasswordEnforcedEnabled) {
@@ -481,7 +484,7 @@
 - (void) expirationTimeSwithValueChanged:(UISwitch*) sender{
     
     if (self.isExpirationDateEnabled) {
-        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport) {
+        if (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported) {
             CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
             
             if (cap.isFilesSharingExpireDateEnforceEnabled) {
@@ -809,7 +812,7 @@
     }
     
     shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
-    shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
+    shareLinkButtonCell.titleButton.textColor = [UIColor colorOfLoginButtonTextColor];
     shareLinkButtonCell.titleButton.text = NSLocalizedString(@"add_user_or_group_title", nil);
     
     return shareLinkButtonCell;
@@ -859,7 +862,7 @@
     }
     
     shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
-    shareLinkButtonCell.titleButton.textColor = [UIColor whiteColor];
+    shareLinkButtonCell.titleButton.textColor = [UIColor colorOfLoginButtonTextColor];
     shareLinkButtonCell.titleButton.text = NSLocalizedString(@"get_share_link", nil);
     
     return shareLinkButtonCell;

@@ -3318,7 +3318,7 @@
     NSMutableArray *rightUtilityButtons = [NSMutableArray new];
     
     BOOL areTwoButtonsInTheSwipe = false;
-    if ( (k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled) ) {
+    if ( (k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled) ) {
         //Two buttons
         areTwoButtonsInTheSwipe = true;
     }else{
@@ -3384,7 +3384,7 @@
         }
         case 1:
         {
-            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
+            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
                 DLog(@"Click on index 2 - Delete");
                 [self didSelectDeleteOption];
                 break;
@@ -3397,7 +3397,7 @@
         }
         case 2:
         {
-            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
+            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
             }else{
                 DLog(@"Click on index 2 - Delete");
                 [self didSelectDeleteOption];

@@ -51,13 +51,6 @@
 		<string>MainAppIcon_76-76.png</string>
 		<string>MainAppIcon_76-76@2x.png</string>
 		<string>MainAppIcon_167-167.png</string>
-		<string>Default.png</string>
-		<string>Default@2x.png</string>
-		<string>Default-568h@2x.png</string>
-		<string>Default-736h@3x.png</string>
-		<string>Default-667h@2x.png</string>
-		<string>Default-Landscape_375h@2x.png</string>
-		<string>Default-Landscape_414h@3x.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.owncloud.iOSmobileapp</string>
@@ -68,7 +61,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.4.8</string>
+	<string>3.4.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -145,6 +138,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LastGitCommit</key>
 	<string></string>
 </dict>
