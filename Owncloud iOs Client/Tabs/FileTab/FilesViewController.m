@@ -1089,14 +1089,8 @@
         folder=appName;
     }
     
-    //TODO: create subclass to include those variables
-    
-    //self.albumController.currentRemoteFolder=_currentRemoteFolder;
-    //self.albumController.locationInfo=folder;
-    /*
-    albumController.locationInfo=folder;
-    albumController.accountInfo=app.activeUser.username;
-     */
+    self.albumController.currentRemoteFolder=_currentRemoteFolder;
+    self.albumController.locationInfo=folder;
     
     if (IS_IPHONE) {
         [self presentViewController:self.elcPicker animated:YES completion:nil];

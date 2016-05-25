@@ -12,6 +12,14 @@
 #import <Photos/Photos.h>
 #import "ELCConstants.h"
 
+#import "Customization.h"
+#import "AppDelegate.h"
+#import "SelectFolderViewController.h"
+#import "constants.h"
+#import "UIColor+Constants.h"
+#import "UtilsUrls.h"
+#import "ManageFilesDB.h"
+
 
 @interface ELCAlbumPickerController () <PHPhotoLibraryChangeObserver>
 
@@ -32,7 +40,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [self.albumPickerTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 	
 	[self.navigationItem setTitle:NSLocalizedString(@"Loading...", nil)];
 
@@ -47,10 +55,11 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     
     self.imageManager = [[PHCachingImageManager alloc] init];
 
-//        //if ios 8 and above
-        NSLog(@"authorization status %li", (long)[PHPhotoLibrary authorizationStatus]);
-        [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
-//        [self updateFetchResults];
+    //if ios 8 and above
+    NSLog(@"authorization status %li", (long)[PHPhotoLibrary authorizationStatus]);
+    [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
+    
+    [self addToolBar];
 }
 
 -(void)updateFetchResults
@@ -106,7 +115,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
 - (void)viewWillAppear:(BOOL)animated {
     
     [self updateFetchResults];
-    [self.tableView reloadData];
+    [self.albumPickerTableView reloadData];
 }
 
 - (void)dealloc
@@ -116,7 +125,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
 
 - (void)reloadTableView
 {
-	[self.tableView reloadData];
+	[self.albumPickerTableView reloadData];
 	[self.navigationItem setTitle:NSLocalizedString(@"Select an Album", nil)];
 }
 
@@ -305,10 +314,118 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
         
         if (updatedCollectionsFetchResults) {
             self.assetGroups = updatedCollectionsFetchResults;
-            [self.tableView reloadData];
+            [self.albumPickerTableView reloadData];
         }
         
     });
 }
+
+
+///-----------------------------------
+/// @name addToolBar
+///-----------------------------------
+
+/**
+ * It is a mehod to add the Toolbar with the username and the
+ *
+ */
+
+- (void) addToolBar {
+    
+    //Button to select folder to upload
+    
+    NSString *folderName = [NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"location", nil), _locationInfo];
+    folderName = [[NSString stringWithString:folderName] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    [_folderToUploadButton setTitle:folderName];
+    
+    NSShadow *shadow = [[NSShadow alloc] init];
+    shadow.shadowColor = [UIColor colorOfToolBarButtons];
+    shadow.shadowOffset = CGSizeMake(0.5, 0);
+    
+    
+    NSDictionary *titleAttributes = @{NSForegroundColorAttributeName: [UIColor colorOfToolBarButtons],
+                                      NSShadowAttributeName:shadow,
+                                      NSFontAttributeName: [UIFont systemFontOfSize:16.0]};
+    
+    
+    [self.folderToUploadButton setTitleTextAttributes:titleAttributes forState:UIControlStateNormal];
+    
+}
+
+///-----------------------------------
+/// @name selectFolderToUploadFiles
+///-----------------------------------
+
+/**
+ * Method to change the folder where we will upload the files
+ *
+ * @param id - sender
+ *
+ */
+- (IBAction) selectFolderToUploadFiles:(id)sender  {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    SelectFolderViewController *sf = [[SelectFolderViewController alloc] initWithNibName:@"SelectFolderViewController" onFolder:[ManageFilesDB getRootFileDtoByUser:app.activeUser]];
+    
+    //sf.toolBarLabelTxt = NSLocalizedString(@"upload_label", nil);
+    sf.toolBarLabelTxt = @"";
+    
+    SelectFolderNavigation *navigation = [[SelectFolderNavigation alloc]initWithRootViewController:sf];
+    sf.parent=navigation;
+    sf.currentRemoteFolder=self.currentRemoteFolder;
+    
+    //We get the current folder to create the local tree
+    NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser];
+    
+    sf.currentLocalFolder = localRootUrlString;
+    
+    navigation.delegate=self;
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+    {
+        [self presentViewController:navigation animated:YES completion:nil];
+        
+    } else {
+        navigation.modalTransitionStyle=UIModalTransitionStyleCoverVertical;
+        navigation.modalPresentationStyle = UIModalPresentationFormSheet;
+        
+        // [self presentViewController:navigation animated:YES completion:nil];
+        [self presentViewController:navigation animated:YES completion:nil];
+        
+    }
+}
+
+#pragma mark Select Folder Navigation Delegate Methods
+- (void)folderSelected:(NSString*)folder{
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    DLog(@"Change Folder");
+    //TODO. Change current Remote Folder
+    self.currentRemoteFolder=folder;
+    
+    NSArray *splitedUrl = [folder componentsSeparatedByString:@"/"];
+    // int cont = [splitedUrl count];
+    NSString *folderName = [NSString stringWithFormat:@"%@",[splitedUrl objectAtIndex:([splitedUrl count]-2)]];
+    
+    folderName = [[NSString stringWithString:folderName] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    DLog(@"Folder is:%@", folderName);
+    if ([self.currentRemoteFolder isEqualToString:[NSString stringWithFormat:@"%@%@", app.activeUser.url,k_url_webdav_server]]) {
+        NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+        folderName=appName;
+    }
+    
+    self.locationInfo=folderName;
+    
+    [_folderToUploadButton setTitle:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"location", nil), folderName]];
+}
+- (void)cancelFolderSelected{
+    
+    //Nothing
+    DLog(@"Cancel folder");
+}
+
 @end
 
