@@ -139,9 +139,8 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     return [self.parent shouldDeselectAsset:asset previousCount:previousCount];
 }
 
-- (void)selectedAssets:(NSArray*)assets
-{
-	[_parent selectedAssets:assets];
+-(void)selectedAssets:(NSArray*)assets andURL:(NSString*)urlToUpload {
+	[_parent selectedAssets:assets andURL:urlToUpload];
 }
 
 - (ALAssetsFilter *)assetFilter
@@ -277,6 +276,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
 {
 	ELCAssetTablePicker *picker = [[ELCAssetTablePicker alloc] initWithNibName: nil bundle: nil];
 	picker.parent = self;
+    picker.currentRemoteFolder = self.currentRemoteFolder;
 
     picker.assetGroup = [[self.assetGroups objectAtIndex:indexPath.row] allValues][0];
     picker.assetPickerFilterDelegate = self.assetPickerFilterDelegate;

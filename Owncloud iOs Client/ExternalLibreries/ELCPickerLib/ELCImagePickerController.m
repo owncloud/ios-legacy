@@ -70,19 +70,10 @@
 	}
 }
 
+//Method to block the number of items that allow to select using the self.maximumImagesCount
 - (BOOL)shouldSelectAsset:(ELCAsset *)asset previousCount:(NSUInteger)previousCount
 {
-    BOOL shouldSelect = previousCount < self.maximumImagesCount;
-    if (!shouldSelect) {
-        NSString *title = [NSString stringWithFormat:NSLocalizedString(@"Only %d photos please!", nil), self.maximumImagesCount];
-        NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You can only send %d photos at a time.", nil), self.maximumImagesCount];
-        [[[UIAlertView alloc] initWithTitle:title
-                                    message:message
-                                   delegate:nil
-                          cancelButtonTitle:nil
-                          otherButtonTitles:NSLocalizedString(@"Okay", nil), nil] show];
-    }
-    return shouldSelect;
+    return YES;
 }
 
 - (BOOL)shouldDeselectAsset:(ELCAsset *)asset previousCount:(NSUInteger)previousCount;
@@ -90,16 +81,51 @@
     return YES;
 }
 
-- (void)selectedAssets:(NSArray *)assets
-{
+-(void)selectedAssets:(NSArray*)assets andURL:(NSString*)urlToUpload {
+    DLog(@"selectedAssets");
+    
+    NSMutableDictionary *args = [[NSMutableDictionary alloc] init];
+    [args setObject:assets forKey:@"assets"];
+    [args setObject:urlToUpload forKey:@"urlToUpload"];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    [self performSelector:@selector(initThredInABackgroundThread:) withObject:args afterDelay:0.2];
+}
+
+-(void) initThredInABackgroundThread:(NSMutableDictionary*)args{
+    [self performSelectorInBackground:@selector(initInOtherThread:) withObject:args];
+}
+
+-(void)initInOtherThread:(NSMutableDictionary*)args{
     NSMutableArray *returnArray = [[NSMutableArray alloc] init];
-    for(ELCAsset *elcasset in assets) {
-        [returnArray addObject:elcasset.asset];
+    
+    NSArray *_assets = [args objectForKey:@"assets"];
+    NSString *urlToUpload = [args objectForKey:@"urlToUpload"];
+    
+    NSMutableDictionary *workingDictionary;
+    
+    for(PHAsset *asset in _assets) {
+        
+        // workingDictionary = nil;
+        workingDictionary = [[NSMutableDictionary alloc] init];
+        [workingDictionary setObject:[asset valueForProperty:ALAssetPropertyType] forKey:@"UIImagePickerControllerMediaType"];
+        [workingDictionary setObject:[[asset valueForProperty:ALAssetPropertyURLs] valueForKey:[[[asset valueForProperty:ALAssetPropertyURLs] allKeys] objectAtIndex:0]] forKey:@"UIImagePickerControllerReferenceURL"];
+        
+        
+        [returnArray addObject:workingDictionary];
+        
+        
+        //Code to implemente the change of name
+        // NSString *fileName = asset.defaultRepresentation.filename;
+        // DLog(@"filename is: %@", fileName);
+        
+        DLog(@"Doing something");
+        
     }
-    if (_imagePickerDelegate != nil && [_imagePickerDelegate respondsToSelector:@selector(elcImagePickerController:didFinishPickingMediaWithInfo:)]) {
-        [_imagePickerDelegate performSelector:@selector(elcImagePickerController:didFinishPickingMediaWithInfo:) withObject:self withObject:returnArray];
-    } else {
-        [self popToRootViewControllerAnimated:NO];
+    
+    if([self.imagePickerDelegate respondsToSelector:@selector(elcImagePickerController:didFinishPickingMediaWithInfo:inURL:)]) {
+        [self.imagePickerDelegate elcImagePickerController:self didFinishPickingMediaWithInfo:[NSArray arrayWithArray:returnArray] inURL:urlToUpload];
     }
 }
 

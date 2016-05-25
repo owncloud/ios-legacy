@@ -207,7 +207,7 @@
     if ([[ELCConsole mainConsole] onOrder]) {
         [selectedAssetsImages sortUsingSelector:@selector(compareWithIndex:)];
     }
-    [self.parent selectedAssets:selectedAssetsImages];
+    [self.parent selectedAssets:selectedAssetsImages andURL:self.currentRemoteFolder];
 }
 
 
