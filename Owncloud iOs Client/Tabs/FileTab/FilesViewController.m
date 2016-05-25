@@ -848,7 +848,8 @@
 - (void)showCreateTextFile{
     
     EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.fileIdToShowFiles];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+    navController.navigationBar.translucent = NO;
     
     if (IS_IPHONE)
     {
