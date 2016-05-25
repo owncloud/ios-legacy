@@ -93,7 +93,7 @@
             overlayView.labIndex.text = [NSString stringWithFormat:@"%d", asset.index + 1];
         } else {
             if (overlayImage == nil) {
-                overlayImage = [UIImage imageNamed:@"Overlay.png"];
+                overlayImage = [UIImage imageNamed:@"imageSelected.png"];
             }
             ELCOverlayImageView *overlayView = [[ELCOverlayImageView alloc] initWithImage:overlayImage];
             [_overlayViewArray addObject:overlayView];
@@ -106,15 +106,9 @@
 - (void)cellTapped:(UITapGestureRecognizer *)tapRecognizer
 {
     CGPoint point = [tapRecognizer locationInView:self];
-    int c = (int32_t)self.rowAssets.count;
-    CGFloat totalWidth = c * 75 + (c - 1) * 4;
-    CGFloat startX;
-    
-    if (self.alignmentLeft) {
-        startX = 4;
-    }else {
-        startX = (self.bounds.size.width - totalWidth) / 2;
-    }
+    //We calculate the sizes supousing the cells have 78px becaouse have 2 of margins
+    CGFloat totalWidth = ((int)(self.bounds.size.width/78)) * 78;
+    CGFloat startX = (self.bounds.size.width - totalWidth) / 2;
     
 	CGRect frame = CGRectMake(startX, 2, 75, 75);
 	
@@ -142,19 +136,46 @@
 
 - (void)layoutSubviews
 {
-    int c = (int32_t)self.rowAssets.count;
-    CGFloat totalWidth = c * 75 + (c - 1) * 4;
-    CGFloat startX;
-    
-    if (self.alignmentLeft) {
-        startX = 4;
-    }else {
-        startX = (self.bounds.size.width - totalWidth) / 2;
-    }
+    //We calculate the sizes supousing the cells have 78px becaouse have 2 of margins
+    CGFloat totalWidth = ((int)(self.bounds.size.width/78)) * 78;
+    CGFloat startX = (self.bounds.size.width - totalWidth) / 2;
     
 	CGRect frame = CGRectMake(startX, 2, 75, 75);
 	
 	for (int i = 0; i < [_rowAssets count]; ++i) {
+        
+        ELCAsset *elcAsset = [_rowAssets objectAtIndex:i];
+        PHAsset *asset = (PHAsset*) elcAsset.asset;
+        UIView *currentVideoView = nil;
+        
+        if (asset.mediaType == PHAssetMediaTypeVideo) {
+            //Base View
+            currentVideoView = [[UIView alloc] initWithFrame:CGRectMake(frame.origin.x, frame.origin.y+60, frame.size.width, frame.size.height-60)];
+            currentVideoView.backgroundColor = [UIColor blackColor];
+            currentVideoView.alpha = 0.7f;
+            
+            // Movie icon on left side
+            CGRect movieFrame = CGRectMake(5, 2, 15, 10);
+            UIImageView *movieImageView = [[UIImageView alloc] initWithFrame:movieFrame];
+            movieImageView.image=[UIImage imageNamed:@"movieOverlay.png"];
+            [currentVideoView addSubview:movieImageView];
+            
+            //Duration
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            [formatter setDateFormat:@"mm:ss"];
+            CGRect durationFrame = CGRectMake(45,2, 30, 10);
+            UILabel *durationView = [[UILabel alloc] initWithFrame:durationFrame];
+            durationView.backgroundColor = [UIColor clearColor];
+            durationView.textColor = [UIColor whiteColor];
+            durationView.font = [UIFont systemFontOfSize:10];
+            NSString *videoDuration= [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:asset.duration]];
+            durationView.text=videoDuration;
+            [currentVideoView addSubview:durationView];
+        }
+        
+        
+        
+        
 		UIImageView *imageView = [_imageViewArray objectAtIndex:i];
 		[imageView setFrame:frame];
 		[self addSubview:imageView];
@@ -162,6 +183,10 @@
         ELCOverlayImageView *overlayView = [_overlayViewArray objectAtIndex:i];
         [overlayView setFrame:frame];
         [self addSubview:overlayView];
+        
+        if (currentVideoView) {
+            [self addSubview:currentVideoView];
+        }
 		
 		frame.origin.x = frame.origin.x + frame.size.width + 4;
 	}

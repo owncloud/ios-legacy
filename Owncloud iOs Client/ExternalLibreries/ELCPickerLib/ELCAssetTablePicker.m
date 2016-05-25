@@ -79,11 +79,77 @@
     return YES;
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
+    ELCAssetCell *topCellVisible = [[[self tableView] visibleCells] objectAtIndex: 0];
+    
+    NSIndexPath* pathOfTheCell = [self.tableView indexPathForCell:topCellVisible];
+    long currentRow = [pathOfTheCell row];
+    DLog(@"Number: %ld", currentRow);
+    
+    NSInteger numberOfRowInView = [[[self tableView] visibleCells] count];
+    NSInteger currentImagesAtEachRow = 0;
+    NSInteger futureImagesAtEachRow = 0;
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        currentImagesAtEachRow = (NSInteger)(self.view.frame.size.width/78);
+        futureImagesAtEachRow = (NSInteger)((self.view.frame.size.height + self.navigationController.navigationBar.frame.size.height+20)/78);
+    } else {
+        currentImagesAtEachRow = 6;
+        futureImagesAtEachRow = 6;
+    }
+    
+    DLog(@"numberOfRowInView: %ld", (long)numberOfRowInView);
+    DLog(@"currentImagesAtEachRow: %ld", (long)currentImagesAtEachRow);
+    DLog(@"futureImagesAtEachRow: %ld", (long)futureImagesAtEachRow);
+    
+    _rowToScrollAfterRotation = ((currentRow*currentImagesAtEachRow)/futureImagesAtEachRow);
+    if (_rowToScrollAfterRotation != 0) {
+        _rowToScrollAfterRotation = _rowToScrollAfterRotation  + numberOfRowInView-1;
+    }
+    
+    DLog(@"A: %ld", (long)[self.tableView numberOfRowsInSection:0]);
+    DLog(@"B: %ld", currentRow);
+    
+    
+    //Check if is near to bottom
+    if (([self.tableView numberOfRowsInSection:0] - (currentRow+1)) <= numberOfRowInView) {
+        _isNearToBottom = YES;
+    } else {
+        _isNearToBottom = NO;
+    }
+}
+
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-    self.columns = self.view.bounds.size.width / 80;
     [self.tableView reloadData];
+    
+    // scroll to _rowToScrollAfterRotation
+    long section = [self numberOfSectionsInTableView:self.tableView] - 1;
+    long row = [self tableView:self.tableView numberOfRowsInSection:section] - 1;
+    if (section >= 0 && row >= 0) {
+        
+        DLog(@"self.tableView numberOfRowsInSection:0]: %ld", (long)[self.tableView numberOfRowsInSection:0]);
+        DLog(@"_rowToScrollAfterRotation: %ld", _rowToScrollAfterRotation);
+        DLog(@"([self.tableView numberOfRowsInSection:0] - _rowToScrollAfterRotation): %ld", ([self.tableView numberOfRowsInSection:0] - _rowToScrollAfterRotation));
+        
+        //In case we are more under the bottom (out of array) or we are really near to the bottom then we go to the bottom
+        if ([self.tableView numberOfRowsInSection:0] <= _rowToScrollAfterRotation || (_isNearToBottom && (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)                               )) {
+            _rowToScrollAfterRotation = [self.tableView numberOfRowsInSection:0]-1;
+        }
+        
+        
+        NSIndexPath *ip = [NSIndexPath indexPathForRow:_rowToScrollAfterRotation
+                                             inSection:section];
+        [self.tableView scrollToRowAtIndexPath:ip
+                              atScrollPosition:UITableViewScrollPositionBottom
+                                      animated:NO];
+    }
+    
+    //[self.navigationItem setTitle:[NSString stringWithFormat:@"%@",[_assetGroup valueForProperty:ALAssetsGroupPropertyName]]];
+    
 }
 
 - (void)preparePhotos
