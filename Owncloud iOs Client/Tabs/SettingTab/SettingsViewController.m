@@ -914,26 +914,6 @@
     return disconnectCell;
 }
 
-#pragma mark - Accesories support for Accounts Section
-
-- (void) pressedInfoAccountButton:(UIButton *)sender{
-    
-    //Edit Account
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:(UserDto *)[self.listUsers objectAtIndex:sender.tag]];
-    
-    if (IS_IPHONE)
-    {
-        viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:YES];
-    } else {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [app.splitViewController presentViewController:navController animated:YES completion:nil];
-    }
-}
-
 
 #pragma mark - UITableView delegate
 
@@ -1347,8 +1327,8 @@
 
 #pragma mark - UIActionSheetDelegate
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+
     if (actionSheet.tag == k_tag_actionSheet_recommend) {
         
         switch (buttonIndex) {
