@@ -2053,7 +2053,7 @@
         
         void (^deletionBlock)(void) = ^{
             
-            [DeleteUtils deleteAllDownloadedFilesByUser:APP_DELEGATE.activeUser];
+            [DeleteUtils deleteAllDownloadedFilesByUser:user];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[OCLoadingSpinner sharedOCLoadingSpinner]  endLoading];
             });
