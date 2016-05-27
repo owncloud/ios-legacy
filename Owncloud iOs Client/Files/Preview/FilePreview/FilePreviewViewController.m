@@ -287,10 +287,17 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     if (_isDownloading && nameFileToUpdate == _file.fileName) {
         DLog(@"Show a notification text in the status bar");
         //Notificacion style
-        _notification.notificationLabelBackgroundColor = [UIColor colorOfNavigationBar];
-        _notification.notificationLabelTextColor = [UIColor colorOfNavigationTitle];
+        _notification.notificationLabelBackgroundColor = [[UIColor colorOfNavigationBar] colorWithAlphaComponent:1.0f];
         _notification.notificationAnimationInStyle = CWNotificationAnimationStyleTop;
         _notification.notificationAnimationOutStyle = CWNotificationAnimationStyleTop;
+        
+        if(k_is_text_status_bar_white) {
+            _notification.notificationLabelTextColor = [UIColor whiteColor];
+        }
+        else {
+            _notification.notificationLabelTextColor = [UIColor blackColor];
+        }
+        
         //File name
         NSString *notificationText = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"updating", nil), [nameFileToUpdate stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         DLog(@"name: %@",notificationText);
