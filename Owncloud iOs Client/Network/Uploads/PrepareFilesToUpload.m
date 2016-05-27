@@ -19,6 +19,7 @@
 #import "ELCAlbumPickerController.h"
 #import "CheckAccessToServer.h"
 #import "AppDelegate.h"
+#import <Photos/Photos.h>
 
 #import "UserDto.h"
 #import "constants.h"
@@ -87,14 +88,102 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     
 }
 
-- (void)uploadFileFromGallery:(NSDictionary *)info andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray
-{
+- (void)uploadFileFromGallery:(PHAsset *)assetToUpload andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray {
     
     DLog(@"uploadFileFromGallery");
     
-    //Hardik Comment: condition changed instead of "public.image" to "ALAssetTypePhoto"
+    [[PHImageManager defaultManager] requestImageDataForAsset:assetToUpload options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+        
+        
+        
+        static NSDateFormatter *dateFormatter;
+        static dispatch_once_t onceToken;
+        
+        //TODO: Set the filename as we make before. Check the commentd code at the end of this method
+        dispatch_once(&onceToken, ^{
+            dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat:@"yyyy-MM-dd-HH-mm-ss.SSS"];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        });
+        
+        NSURL *url = info[@"PHImageFileURLKey"];
+        NSString *fileExtension = url.pathExtension;
+        
+        //Use a temporary name with a date identification
+        NSString *temporaryFileName = [NSString stringWithFormat:@"IMG_%@.%@", [dateFormatter stringFromDate:[NSDate date]], fileExtension];
+        NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:temporaryFileName];
+        
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        if ([fileManager fileExistsAtPath:localPath]) {
+            [fileManager removeItemAtPath:localPath error:nil];
+        }
+        
+        [fileManager createFileAtPath:localPath contents:imageData attributes:nil];
+        
+        UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
+        currentUpload.originPath = localPath;
+        currentUpload.destinyFolder = remoteFolder;
+        currentUpload.uploadFileName = temporaryFileName;
+        currentUpload.estimateLength = imageData.length;;
+        currentUpload.userId = currentUser.idUser;
+        currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
+        currentUpload.status = waitingAddToUploadList;
+        currentUpload.chunksLength = k_lenght_chunk;
+        currentUpload.uploadedDate = 0;
+        currentUpload.kindOfError = notAnError;
+        currentUpload.isInternalUpload = YES;
+        currentUpload.taskIdentifier = 0;
+        
+        [self.listOfUploadOfflineToGenerateSQL addObject:currentUpload];
+        
+        long dateAsset = (long)[assetToUpload.creationDate timeIntervalSince1970];
+        //update date last asset uploaded
+        if (dateAsset > [ManageAppSettingsDB getDateInstantUpload]) {
+            //assetDate later than startDate
+            [ManageAppSettingsDB updateDateInstantUpload:dateAsset];
+        }
+        
+        if([self.listOfFilesToUpload count] > 0) {
+            //We have more files to process
+            [self startWithTheNextFile];
+        } else {
+            
+            //We finish all the files of this block
+            DLog(@"self.listOfUploadOfflineToGenerateSQL: %lu", (unsigned long)[self.listOfUploadOfflineToGenerateSQL count]);
+            
+            //In this point we have all the files to upload in the Array
+            [ManageUploadsDB insertManyUploadsOffline:self.listOfUploadOfflineToGenerateSQL];
+            
+            //if is the last one we reset the array
+            self.listOfUploadOfflineToGenerateSQL = nil;
+            self.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
+            
+            self.positionOfCurrentUploadInArray = 0;
+            
+            [self performSelectorOnMainThread:@selector(endLoadingInFileList) withObject:nil waitUntilDone:YES];
+            
+            UploadsOfflineDto *currentFile = [ManageUploadsDB getNextUploadOfflineFileToUpload];
+            
+            //We begin with the first file of the array
+            if (currentFile) {
+                [self sendFileToUploadByUploadOfflineDto:currentFile];
+            }
+        }
+        
+        
+        
+        
+        
+    }];
     
-    ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset){
+    
+    
+    
+    
+    
+    
+    
+    /*ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset){
         
         @autoreleasepool {
             
@@ -104,7 +193,8 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             NSString *assetPath = [assetURL absoluteString];
             DLog(@"assetPath :%@", assetPath);
             
-            currentFileName = [FileNameUtils getComposeNameFromAsset:myasset];
+            //TODO: Create a new getComposeNameFromPHAsset
+            //currentFileName = [FileNameUtils getComposeNameFromAsset:myasset];
          
             DLog(@"currentFileName: %@",currentFileName);
             DLog(@"remoteFolder: %@", remoteFolder);
@@ -220,7 +310,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     NSURL *videoURL = [info objectForKey:UIImagePickerControllerReferenceURL];
     ALAssetsLibrary* assetslibrary = [[ALAssetsLibrary alloc] init];
     
-    [assetslibrary assetForURL:videoURL resultBlock:resultblock failureBlock:failureblock];
+    [assetslibrary assetForURL:videoURL resultBlock:resultblock failureBlock:failureblock];*/
 }
 
 

@@ -1220,7 +1220,10 @@
     [app.prepareFiles addFilesToUpload:info andRemoteFoldersToUpload: arrayOfRemoteurl];
     
     //Init loading to prepare files to upload
-    [self initLoading];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self initLoading];
+    });
+    
     //Set global loading screen global flag to YES (only for iPad)
     app.isLoadingVisible = YES;
 }
