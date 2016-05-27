@@ -99,7 +99,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
         static NSDateFormatter *dateFormatter;
         static dispatch_once_t onceToken;
         
-        //TODO: Set the filename as we make before. Check the commentd code at the end of this method
+        //TODO: Set the filename as we make before. Check the commentd code at the end of this method getComposeNameFromAsset:myasset
         dispatch_once(&onceToken, ^{
             dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat:@"yyyy-MM-dd-HH-mm-ss.SSS"];
