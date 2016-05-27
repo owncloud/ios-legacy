@@ -33,7 +33,6 @@
 #import "OCSharedDto.h"
 #import "OCCommunication.h"
 #import "Customization.h"
-#import "UtilsFileSystem.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -220,8 +219,6 @@
         fileCell.fileImageView.image = [self getIconOfFile:fileForSetTheStatusIcon andUser:user];
         
 
-        NSString *fullFileSystemPath = [UtilsUrls getFileLocalSystemPathByFileDto:fileForSetTheStatusIcon andUser:user];
-        
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
             if(fileForSetTheStatusIcon.isDownload == downloaded && !fileForSetTheStatusIcon.isNecessaryUpdate) {
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
@@ -230,17 +227,9 @@
             }
         } else if (!fileForSetTheStatusIcon.isFavorite) {
             if(fileForSetTheStatusIcon.isNecessaryUpdate || fileForSetTheStatusIcon.isDownload == updating) {
-            //if(fileForSetTheStatusIcon.isNecessaryUpdate) {
                 //File is in updating
-                
-                //TODO:pending update DB propertly after exist the file on DB and remove check here fileSystem
-//                //TODO:refresh file
-//                NSString *fullRemoteFilePath = [NSString stringWithFormat:@"%@",weakSelf.currentUpload.destinyFolder];
-//                NSString *filePathOnDB = [UtilsUrls getFilePathOnDBByFullPath:fullRemoteFilePath andUser:appDelegate.activeUser];
-//                [ManageFilesDB updateDownloadStateOfFileDtoByFileName:weakSelf.currentUpload.uploadFileName andFilePath:filePathOnDB andActiveUser:appDelegate.activeUser withState:downloaded];
-                
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileUpdatedIcon"];
-            } else if (fileForSetTheStatusIcon.isDownload == downloaded || [UtilsFileSystem existFileOnFileSystemByPath:fullFileSystemPath]) {
+            } else if (fileForSetTheStatusIcon.isDownload == downloaded) {
                 //File is in device
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadedIcon"];
             } else if (fileForSetTheStatusIcon.isDownload == overwriting) {
