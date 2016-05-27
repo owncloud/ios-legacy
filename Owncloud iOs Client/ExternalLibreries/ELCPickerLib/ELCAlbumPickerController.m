@@ -42,7 +42,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     [super viewDidLoad];
     [self.albumPickerTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 	
-	[self.navigationItem setTitle:NSLocalizedString(@"Loading...", nil)];
+	[self.navigationItem setTitle:NSLocalizedString(@"loading", nil)];
 
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelImagePicker)];
 	[self.navigationItem setRightBarButtonItem:cancelButton];
@@ -56,7 +56,6 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     self.imageManager = [[PHCachingImageManager alloc] init];
 
     //if ios 8 and above
-    NSLog(@"authorization status %li", (long)[PHPhotoLibrary authorizationStatus]);
     [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
     
     [self addToolBar];
@@ -77,7 +76,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     PHFetchResult *assetsFetchResult = [PHAsset fetchAssetsWithOptions:options];
     
     if (assetsFetchResult != nil)
-        [self.assetGroups addObject:@{@"All Photos":assetsFetchResult}];
+        [self.assetGroups addObject:@{NSLocalizedString(@"all_photos", nil):assetsFetchResult}];
 
     //Smart Albums
     PHFetchResult *smartCollections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
@@ -94,8 +93,6 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     
     for(PHCollection *collection in collectionsResult)
     {
-        NSLog(@"album title %@", collection.localizedTitle);
-        
         if ([collection isKindOfClass:[PHAssetCollection class]])
         {
             PHAssetCollection *assetCollection = (PHAssetCollection *)collection;
@@ -126,7 +123,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
 - (void)reloadTableView
 {
 	[self.albumPickerTableView reloadData];
-	[self.navigationItem setTitle:NSLocalizedString(@"Select an Album", nil)];
+	[self.navigationItem setTitle:NSLocalizedString(@"photo_albums", nil)];
 }
 
 - (BOOL)shouldSelectAsset:(ELCAsset *)asset previousCount:(NSUInteger)previousCount
@@ -279,6 +276,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     picker.currentRemoteFolder = self.currentRemoteFolder;
 
     picker.assetGroup = [[self.assetGroups objectAtIndex:indexPath.row] allValues][0];
+    picker.assetGroupName = [[self.assetGroups objectAtIndex:indexPath.row] allKeys][0];
     picker.assetPickerFilterDelegate = self.assetPickerFilterDelegate;
 	
 	[self.navigationController pushViewController:picker animated:YES];
