@@ -10,9 +10,7 @@
 
 @interface DeleteUtils : NSObject
 
-/*
- *  Method to delete all the files that can be deleted by user
- */
+// Method to delete all the files that can be deleted by user
 + (void) deleteAllDownloadedFilesByUser:(UserDto *) user;
 
 @end

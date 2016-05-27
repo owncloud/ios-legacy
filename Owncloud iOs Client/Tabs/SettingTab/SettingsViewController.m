@@ -43,6 +43,7 @@
 #import "ManageThumbnails.h"
 #import "ManageTouchID.h"
 #import "DeleteUtils.h"
+#import "OCLoadingSpinner.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -1135,7 +1136,7 @@
     if (app.activeUser.idUser != selectedUser.idUser) {
         //Cancel downloads of the previous user
     
-        [self initLoading];
+        [[OCLoadingSpinner sharedOCLoadingSpinner] initLoadingForViewController: self];
     
         [AppDelegate sharedSyncFolderManager].delegate = self;
         
@@ -1160,7 +1161,7 @@
     
     DLog(@"continueChangingUser");
     
-    [self endLoading];
+    [[OCLoadingSpinner sharedOCLoadingSpinner] endLoading];
     
     [UtilsFramework deleteAllCookies];
     
@@ -1982,65 +1983,8 @@
     }
 }
 
-#pragma mark Loading view methods
 
-/*
- * Method that launch the loading screen and block the view
- */
--(void)initLoading {
-    
-    if (_HUD) {
-        [_HUD removeFromSuperview];
-        _HUD=nil;
-    }
-    
-    if (IS_IPHONE) {
-        _HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
-        _HUD.delegate = self;
-        [self.view.window addSubview:_HUD];
-    } else {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        
-        _HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
-        _HUD.delegate = self;
-        [app.splitViewController.view.window addSubview:_HUD];
-    }
-    
-    _HUD.labelText = NSLocalizedString(@"loading", nil);
-    
-    if (IS_IPHONE) {
-        _HUD.dimBackground = NO;
-    }else {
-        _HUD.dimBackground = NO;
-    }
-    
-    [_HUD show:YES];
-    
-    self.view.userInteractionEnabled = NO;
-    self.navigationController.navigationBar.userInteractionEnabled = NO;
-    self.tabBarController.tabBar.userInteractionEnabled = NO;
-    [self.view.window setUserInteractionEnabled:NO];
-}
-
-
-/*
- * Method that quit the loading screen and unblock the view
- */
-- (void)endLoading {
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //Check if the loading should be visible
-    if (app.isLoadingVisible==NO) {
-        // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
-        [_HUD removeFromSuperview];
-        self.view.userInteractionEnabled = YES;
-        self.navigationController.navigationBar.userInteractionEnabled = YES;
-        self.tabBarController.tabBar.userInteractionEnabled = YES;
-        [self.view.window setUserInteractionEnabled:YES];
-    }
-}
-
-#pragma mark - 
+#pragma mark - Semaphore
 
 - (void) releaseSemaphoreToContinueChangingUser {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -2054,7 +1998,7 @@
 # pragma mark - menu account
 
 - (void)showMenuAccountOptions:(UIButton *)sender {
-    
+
     self.selectedUserAccount = [self.listUsers objectAtIndex:sender.tag];
     NSString *titleMenu = [NSString stringWithFormat:@"%@@%@",self.selectedUserAccount .username,self.selectedUserAccount .url];
     
@@ -2102,9 +2046,22 @@
 }
 
 - (void) didSelectClearCacheAccount:(UserDto *)user {
-    DLog(@"Clear cache");
+
+    [[OCLoadingSpinner sharedOCLoadingSpinner] initLoadingForViewController: self];
+    
+    dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-    [DeleteUtils deleteAllDownloadedFilesByUser:APP_DELEGATE.activeUser];
+        void (^deletionBlock)(void) = ^{
+            
+            [DeleteUtils deleteAllDownloadedFilesByUser:APP_DELEGATE.activeUser];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[OCLoadingSpinner sharedOCLoadingSpinner]  endLoading];
+            });
+        };
+        
+        deletionBlock();
+        
+    });
 }
 
 - (void) dicSelectLogOutAccount:(UserDto *)user {

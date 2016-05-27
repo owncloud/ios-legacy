@@ -12,9 +12,9 @@
 #import "FileDto.h"
 #import "DownloadUtils.h"
 
-NSString *DeleteAllDownloadedFilesFinish = @"DeleteAllDownloadedFilesFinish";
 
 @implementation DeleteUtils
+
 
 /*
  *  Method to delete all the files that can be deleted by user
@@ -31,14 +31,12 @@ NSString *DeleteAllDownloadedFilesFinish = @"DeleteAllDownloadedFilesFinish";
             [fileMgr removeItemAtPath:current.localFolder error:&error];
             
             if (error) {
-                DLog(@"Error: %@", error);
+                DLog(@"Error deleting downloaded files: %@", error);
             } else {
                 [ManageFilesDB setFileIsDownloadState:current.idFile andState:notDownload];
             }
         }
     }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:DeleteAllDownloadedFilesFinish object:nil];
 }
 
 @end
