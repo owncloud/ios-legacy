@@ -2353,7 +2353,7 @@
                 case 3:
                     
                     if (self.isCurrentFolderSonOfFavoriteFolder) {
-                        [self showAlertView:NSLocalizedString(@"parent_folder_is_favorite", nil)];
+                        [self showAlertView:NSLocalizedString(@"parent_folder_is_available_offline", nil)];
                     } else {
                         if (self.selectedFileDto.isFavorite) {
                             [self didSelectCancelFavoriteFolder];
@@ -2386,7 +2386,7 @@
                     break;
                 case 3:
                     if (self.isCurrentFolderSonOfFavoriteFolder) {
-                        [self showAlertView:NSLocalizedString(@"parent_folder_is_favorite", nil)];
+                        [self showAlertView:NSLocalizedString(@"parent_folder_is_available_offline", nil)];
                     } else {
                         [self didSelectFavoriteOption];
                     }
@@ -3469,7 +3469,7 @@
                 _alert = [[UIAlertView alloc] initWithTitle:msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
                 [_alert show];
             } else if (self.selectedFileDto.isFavorite) {
-                self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"unfavorite", nil), nil];
+                self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"not_available_offline", nil), nil];
                 self.moreActionSheet.tag=220;
             } else {
                 self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"cancel_download", nil), nil];
@@ -3480,9 +3480,9 @@
             NSString *favoriteOrUnfavoriteString = @"";
             
             if (_selectedFileDto.isFavorite && !self.isCurrentFolderSonOfFavoriteFolder) {
-                favoriteOrUnfavoriteString = NSLocalizedString(@"unfavorite", nil);
+                favoriteOrUnfavoriteString = NSLocalizedString(@"not_available_offline", nil);
             } else {
-                favoriteOrUnfavoriteString = NSLocalizedString(@"favorite", nil);
+                favoriteOrUnfavoriteString = NSLocalizedString(@"available_offline", nil);
             }
             
             self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), NSLocalizedString(@"download_folder", nil), favoriteOrUnfavoriteString, nil];
@@ -3504,9 +3504,9 @@
         NSString *favoriteOrUnfavoriteString = @"";
         
         if (_selectedFileDto.isFavorite && !self.isCurrentFolderSonOfFavoriteFolder) {
-            favoriteOrUnfavoriteString = NSLocalizedString(@"unfavorite", nil);
+            favoriteOrUnfavoriteString = NSLocalizedString(@"not_available_offline", nil);
         } else {
-            favoriteOrUnfavoriteString = NSLocalizedString(@"favorite", nil);
+            favoriteOrUnfavoriteString = NSLocalizedString(@"available_offline", nil);
         }
         
         self.moreActionSheet = [[UIActionSheet alloc]initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle: nil otherButtonTitles:NSLocalizedString(@"open_with_label", nil), NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), favoriteOrUnfavoriteString, nil];
