@@ -94,24 +94,8 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     
     [[PHImageManager defaultManager] requestImageDataForAsset:assetToUpload options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
         
-        
-        
-        static NSDateFormatter *dateFormatter;
-        static dispatch_once_t onceToken;
-        
-        //TODO: Set the filename as we make before. Check the commentd code at the end of this method getComposeNameFromAsset:myasset
-        dispatch_once(&onceToken, ^{
-            dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat:@"yyyy-MM-dd-HH-mm-ss.SSS"];
-            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-        });
-        
-        NSURL *url = info[@"PHImageFileURLKey"];
-        NSString *fileExtension = url.pathExtension;
-        
-        //Use a temporary name with a date identification
-        NSString *temporaryFileName = [NSString stringWithFormat:@"IMG_%@.%@", [dateFormatter stringFromDate:[NSDate date]], fileExtension];
-        NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:temporaryFileName];
+        NSString *fileName = [FileNameUtils getComposeNameFromPHAsset:assetToUpload];
+        NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
         
         NSFileManager *fileManager = [NSFileManager defaultManager];
         if ([fileManager fileExistsAtPath:localPath]) {
@@ -123,7 +107,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
         UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
         currentUpload.originPath = localPath;
         currentUpload.destinyFolder = remoteFolder;
-        currentUpload.uploadFileName = temporaryFileName;
+        currentUpload.uploadFileName = fileName;
         currentUpload.estimateLength = imageData.length;;
         currentUpload.userId = currentUser.idUser;
         currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
@@ -170,147 +154,8 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             }
         }
         
-        
-        
-        
-        
     }];
-    
-    
-    
-    
-    
-    
-    
-    
-    /*ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset){
-        
-        @autoreleasepool {
-            
-            NSString *currentFileName = nil;
-            
-            NSURL *assetURL = [info objectForKey:@"UIImagePickerControllerReferenceURL"];
-            NSString *assetPath = [assetURL absoluteString];
-            DLog(@"assetPath :%@", assetPath);
-            
-            //TODO: Create a new getComposeNameFromPHAsset
-            //currentFileName = [FileNameUtils getComposeNameFromAsset:myasset];
-         
-            DLog(@"currentFileName: %@",currentFileName);
-            DLog(@"remoteFolder: %@", remoteFolder);
-            DLog(@"isLastUploadFileOfThisArray: %d", isLastUploadFileOfThisArray);
-            
-            //Use a temporal name with a date identification
-            NSString *temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [currentFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
-            NSString *localPath= [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:temporalFileName];
-            
-            //Divide the file in chunks of 1024KB, then create the file with all chunks
-            
-            //Variables
-            NSUInteger offset = 0;
-            NSUInteger chunkSize = 1024 * 1024;
-            ALAssetRepresentation *rep = [myasset defaultRepresentation];
-            NSUInteger length = (NSUInteger)rep.size;
-            
-            DLog(@"rep size %lld", (rep.size/1024)/1024);
-            DLog(@"rep size %lu", (unsigned long) (length/1024)/1024);
-            
-            if (length < (k_lenght_chunk *1024)) {
-                Byte *buffer = (Byte*)malloc(length);
-                NSUInteger k = [rep getBytes:buffer fromOffset: 0.0
-                                      length:length error:nil];
-                
-                NSData *adata = [NSData dataWithBytesNoCopy:buffer length:k freeWhenDone:YES];
-                [adata writeToFile:localPath atomically:YES];
-            }else{
-                
-                //Create file
-                NSFileManager *fm = [NSFileManager defaultManager];
-                [fm createFileAtPath:localPath contents:nil attributes:nil];
-                
-                
-                do {
-                    Byte *buffer = (Byte*)malloc(chunkSize);
-                    
-                    //Store the chunk size
-                    NSUInteger thisChunkSize = length - offset > chunkSize ? chunkSize : length - offset;
-                    
-                    //Write data
-                    NSUInteger k = [rep getBytes:buffer fromOffset: offset length:thisChunkSize error:nil];
-                    
-                    NSData *adata = [NSData dataWithBytes:buffer length:k];
-                    
-                    DLog(@"Write buffer in file: %@", localPath);
-                    NSFileHandle *fileHandle=[NSFileHandle fileHandleForWritingAtPath:localPath];
-                    [fileHandle seekToEndOfFile];
-                    [fileHandle writeData:adata];
-                    [fileHandle closeFile];
-                    
-                    
-                    //Avanced position
-                    offset += thisChunkSize;
-                    
-                    //Free memory
-                    free(buffer);
-                    fileHandle=nil;
-                    adata=nil;
-                } while (offset < length);
-            }
-            
-            UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
-            currentUpload.originPath = localPath;
-            currentUpload.destinyFolder = remoteFolder;
-            currentUpload.uploadFileName = currentFileName;
-            currentUpload.estimateLength = length;
-            currentUpload.userId = currentUser.idUser;
-            currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
-            currentUpload.status = waitingAddToUploadList;
-            currentUpload.chunksLength = k_lenght_chunk;
-            currentUpload.uploadedDate = 0;
-            currentUpload.kindOfError = notAnError;
-            currentUpload.isInternalUpload = YES;
-            currentUpload.taskIdentifier = 0;
-            
-            [self.listOfUploadOfflineToGenerateSQL addObject:currentUpload];
-            
-            if([self.listOfFilesToUpload count] > 0 && [self.arrayOfRemoteurl count] > 0) {
-                //We have more files to process
-                [self startWithTheNextFile];
-            } else {
-                
-                //We finish all the files of this block
-                DLog(@"self.listOfUploadOfflineToGenerateSQL: %lu", (unsigned long)[self.listOfUploadOfflineToGenerateSQL count]);
-                
-                //In this point we have all the files to upload in the Array
-                [ManageUploadsDB insertManyUploadsOffline:self.listOfUploadOfflineToGenerateSQL];
-                
-                //if is the last one we reset the array
-                self.listOfUploadOfflineToGenerateSQL = nil;
-                self.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
-                
-                self.positionOfCurrentUploadInArray = 0;
-                
-                [self performSelectorOnMainThread:@selector(endLoadingInFileList) withObject:nil waitUntilDone:YES];
-                
-                UploadsOfflineDto *currentFile = [ManageUploadsDB getNextUploadOfflineFileToUpload];
-                
-                //We begin with the first file of the array
-                if (currentFile) {
-                    [self sendFileToUploadByUploadOfflineDto:currentFile];
-                }
-            }
-        }
-    };
-    ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror){
-        DLog(@"Cannot get image - %@",[myerror localizedDescription]);
-        
-    };
-    
-    NSURL *videoURL = [info objectForKey:UIImagePickerControllerReferenceURL];
-    ALAssetsLibrary* assetslibrary = [[ALAssetsLibrary alloc] init];
-    
-    [assetslibrary assetForURL:videoURL resultBlock:resultblock failureBlock:failureblock];*/
 }
 
 

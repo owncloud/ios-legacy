@@ -16,6 +16,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <Photos/Photos.h>
 
 typedef NS_ENUM (NSInteger, kindOfFileEnum){
     imageFileType = 0,
@@ -180,5 +181,12 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
  */
 + (NSString *)getComposeNameFromPath:(NSString *) path;
 
+///-----------------------------------
+/// @name getComposeNameFromPHAsset
+///-----------------------------------
+/*
+ Method to generate the name of the file depending if it is a video or an image
+ */
++ (NSString *)getComposeNameFromPHAsset:(PHAsset *)asset;
 
 @end
