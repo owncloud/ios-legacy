@@ -57,26 +57,28 @@
 }
 
 - (void) setEnabled:(BOOL)enabled {
-    if (enabled != self.enabled) {
-        if (enabled) {
-            if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
-                ACTIVE_USER.instantUpload = YES;
-                [ManageAppSettingsDB updateInstantUploadTo:YES];
-                [self attemptUpload];
+    @synchronized (self) {
+        if (enabled != self.enabled) {
+            if (enabled) {
+                if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
+                    ACTIVE_USER.instantUpload = YES;
+                    [ManageAppSettingsDB updateInstantUploadTo:YES];
+                    [self attemptUpload];
+                } else {
+                    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+                        if (status == PHAuthorizationStatusAuthorized) {
+                            [self attemptUpload];
+                        } else {
+                            [self showPhotoLibraryAccessPermissionDeniedAlert];
+                            [self.delegate instantUploadPermissionLostOrDenied];
+                        }
+                    }];
+                }
             } else {
-                [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-                    if (status == PHAuthorizationStatusAuthorized) {
-                        [self attemptUpload];
-                    } else {
-                        [self showPhotoLibraryAccessPermissionDeniedAlert];
-                        [self.delegate instantUploadPermissionLostOrDenied];
-                    }
-                }];
+                ACTIVE_USER.instantUpload = NO;
+                [ManageAppSettingsDB updateInstantUploadTo:NO];
+                [self setBackgroundInstantUploadEnabled:NO];
             }
-        } else {
-            ACTIVE_USER.instantUpload = NO;
-            [ManageAppSettingsDB updateInstantUploadTo:NO];
-            [self setBackgroundInstantUploadEnabled:NO];
         }
     }
 }
@@ -131,9 +133,8 @@
     if ([self enabled]) {
         if (ACTIVE_USER.username != nil) {
             if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
-                NSArray * newItemsToUpload = @[@"Asset"]; 
                 
-                NSDate *lastInstantUploadedAssetCaptureDate = [NSDate dateWithTimeIntervalSince1970:ACTIVE_USER.dateInstantUpload];
+                NSDate *lastInstantUploadedAssetCaptureDate = [NSDate dateWithTimeIntervalSince1970:ACTIVE_USER.timestampInstantUpload];
                 
                 PHFetchOptions *newAssetsFetchOptions = [PHFetchOptions new];
                 newAssetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
@@ -142,6 +143,14 @@
                 PHFetchResult *newPhotos = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:newAssetsFetchOptions];
                 
                 if (newPhotos != nil && [newPhotos count] != 0) {
+                    
+                    for (PHAsset *image in newPhotos) {
+                        NSTimeInterval assetDateCreated = [image.creationDate timeIntervalSince1970];
+                        if (assetDateCreated > ACTIVE_USER.timestampInstantUpload) {
+                            ACTIVE_USER.timestampInstantUpload = assetDateCreated;
+                            [ManageAppSettingsDB updateTimestampInstantUpload:assetDateCreated];
+                        }
+                    }
                     
                     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                     
