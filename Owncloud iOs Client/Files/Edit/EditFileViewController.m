@@ -198,7 +198,6 @@
         upload.taskIdentifier = 0;
         
         [ManageUploadsDB insertUpload:upload];
-       // [app relaunchUploadsFailedForced];
         [app initUploadsOffline];
     }
 

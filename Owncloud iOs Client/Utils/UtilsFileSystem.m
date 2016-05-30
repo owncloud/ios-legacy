@@ -16,7 +16,6 @@
 
 #import "UtilsFileSystem.h"
 #import "UtilsUrls.h"
-#import "UploadsOfflineDto.h"
 
 @implementation UtilsFileSystem
 

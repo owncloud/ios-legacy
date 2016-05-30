@@ -19,13 +19,10 @@
 
 #define shareMainViewNibName @"EditFileViewController"
 
-@interface EditFileViewController : UIViewController <ManageNetworkErrorsDelegate, UITextViewDelegate>
-
-@property (nonatomic, strong) ManageNetworkErrors *manageNetworkErrors;
+@interface EditFileViewController : UIViewController <UITextViewDelegate>
 
 @property(nonatomic, strong) NSMutableArray *currentDirectoryArray;
 @property(nonatomic, strong) FileDto *currentFileDto;
-@property(nonatomic) UIAlertView *alert;
 
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextView *bodyTextView;
