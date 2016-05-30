@@ -41,8 +41,6 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
 {
     [super viewDidLoad];
     [self.albumPickerTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-	
-	[self.navigationItem setTitle:NSLocalizedString(@"loading", nil)];
 
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelImagePicker)];
 	[self.navigationItem setRightBarButtonItem:cancelButton];
