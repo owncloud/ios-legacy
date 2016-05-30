@@ -1011,7 +1011,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL updateSuccessful;
         
-        updateSuccessful = [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE users ADD background_instant_upload INTEGER DEFAULT %i", defaultBackgroundInstantUploadValue]];
+        updateSuccessful = [db executeUpdate:@"ALTER TABLE users ADD background_instant_upload INTEGER DEFAULT ?", @(defaultBackgroundInstantUploadValue)];
         if (!updateSuccessful) {
             DLog(@"Error update version 17 to 18 table users background_instant_upload");
         }

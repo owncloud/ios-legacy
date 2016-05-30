@@ -303,7 +303,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
         
         long dateAsset = (long)[assetToUpload.creationDate timeIntervalSince1970];
         //update date last asset uploaded
-        if (dateAsset > [ManageAppSettingsDB getDateInstantUpload]) {
+        if (dateAsset > (((AppDelegate *)[[UIApplication sharedApplication] delegate]).activeUser.dateInstantUpload)) {
             //assetDate later than startDate
             [ManageAppSettingsDB updateDateInstantUpload:dateAsset];
         }

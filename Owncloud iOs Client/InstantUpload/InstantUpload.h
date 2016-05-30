@@ -2,9 +2,6 @@
 //  InstantUpload.h
 //  Owncloud iOs Client
 //
-//  Created by Jon Schneider on 5/20/16.
-//
-//
 
 #import <Foundation/Foundation.h>
 

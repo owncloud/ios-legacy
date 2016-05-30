@@ -1,8 +1,6 @@
 //
-//  InstantUpload.m
+//  InstantUpload.h
 //  Owncloud iOs Client
-//
-//  Created by Jon Schneider on 5/20/16.
 //
 
 #import <CoreLocation/CoreLocation.h>
@@ -17,10 +15,7 @@
 #import "ManageUsersDB.h"
 #import "UserDto.h"
 
-#define kPhotoLibraryAccessPermissionDeniedAlert [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil) message:NSLocalizedString(@"message_access_photos_not_enabled", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil]
-
-//TODO: Language should be for background upload, not general Instant Upload
-#define kLocationAccessAlwaysPermissionDeniedAlert [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"location_not_enabled", nil) message:NSLocalizedString(@"message_location_not_enabled", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil]
+#define ACTIVE_USER ((AppDelegate *)[[UIApplication sharedApplication] delegate]).activeUser
 
 @interface InstantUpload () <CLLocationManagerDelegate, PHPhotoLibraryChangeObserver>
 
@@ -54,18 +49,18 @@
 }
 
 - (BOOL) enabled {
-    return [ManageUsersDB getActiveUser].instantUpload;
+    return ACTIVE_USER.instantUpload;
 }
 
 - (BOOL) backgroundInstantUploadEnabled {
-    return [ManageUsersDB getActiveUser].backgroundInstantUpload;
+    return ACTIVE_USER.backgroundInstantUpload;
 }
 
 - (void) setEnabled:(BOOL)enabled {
     if (enabled != self.enabled) {
         if (enabled) {
             if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
-                [ManageUsersDB getActiveUser].instantUpload = YES;
+                ACTIVE_USER.instantUpload = YES;
                 [ManageAppSettingsDB updateInstantUploadTo:YES];
                 [self attemptUpload];
             } else {
@@ -73,13 +68,13 @@
                     if (status == PHAuthorizationStatusAuthorized) {
                         [self attemptUpload];
                     } else {
-                        [kPhotoLibraryAccessPermissionDeniedAlert show];
+                        [self showPhotoLibraryAccessPermissionDeniedAlert];
                         [self.delegate instantUploadPermissionLostOrDenied];
                     }
                 }];
             }
         } else {
-            [ManageUsersDB getActiveUser].instantUpload = NO;
+            ACTIVE_USER.instantUpload = NO;
             [ManageAppSettingsDB updateInstantUploadTo:NO];
             [self setBackgroundInstantUploadEnabled:NO];
         }
@@ -90,14 +85,14 @@
     if (enabled != self.backgroundInstantUploadEnabled) {
         if (enabled) {
             if ([self isBackgroundLocationUpdatesPermissionGranted]) {
-                [ManageUsersDB getActiveUser].backgroundInstantUpload = YES;
+                ACTIVE_USER.backgroundInstantUpload = YES;
                 [ManageAppSettingsDB updateBackgroundInstantUploadTo:YES];
                 [self.locationManager startMonitoringSignificantLocationChanges];
             } else {
                 [self.locationManager requestAlwaysAuthorization];
             }
         } else {
-            [ManageUsersDB getActiveUser].backgroundInstantUpload = NO;
+            ACTIVE_USER.backgroundInstantUpload = NO;
             [ManageAppSettingsDB updateBackgroundInstantUploadTo:NO];
             [self.locationManager stopMonitoringSignificantLocationChanges];
         }
@@ -114,13 +109,13 @@
             } else {
                 if ([self backgroundInstantUploadEnabled]) {
                     [self setBackgroundInstantUploadEnabled:NO];
-                    [kLocationAccessAlwaysPermissionDeniedAlert show];
+                    [self showLocationAccessAlwaysPermissionDeniedAlert];
                     [self.delegate backgroundInstantUploadPermissionLostOrDenied];
                 }
             }
         } else {
             [self setEnabled:NO];
-            [kPhotoLibraryAccessPermissionDeniedAlert show];
+            [self showPhotoLibraryAccessPermissionDeniedAlert];
             [self.delegate instantUploadPermissionLostOrDenied];
         }
     }
@@ -134,11 +129,11 @@
 
 - (void) attemptUpload {
     if ([self enabled]) {
-        if ([ManageUsersDB getActiveUser].username != nil) {
+        if (ACTIVE_USER.username != nil) {
             if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
                 NSArray * newItemsToUpload = @[@"Asset"]; 
                 
-                NSDate *lastInstantUploadedAssetCaptureDate = [NSDate dateWithTimeIntervalSince1970:[ManageAppSettingsDB getDateInstantUpload]];
+                NSDate *lastInstantUploadedAssetCaptureDate = [NSDate dateWithTimeIntervalSince1970:ACTIVE_USER.dateInstantUpload];
                 
                 PHFetchOptions *newAssetsFetchOptions = [PHFetchOptions new];
                 newAssetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
@@ -170,7 +165,7 @@
                 
             } else {
                 [self setEnabled:NO];
-                [kPhotoLibraryAccessPermissionDeniedAlert show];
+                [self showPhotoLibraryAccessPermissionDeniedAlert];
                 [self.delegate instantUploadPermissionLostOrDenied];
             }
         }
@@ -200,7 +195,7 @@
             [self.locationManager startMonitoringSignificantLocationChanges];
         } else {
             [self setBackgroundInstantUploadEnabled:NO];
-            [kLocationAccessAlwaysPermissionDeniedAlert show];
+            [self showLocationAccessAlwaysPermissionDeniedAlert];
             [self.delegate backgroundInstantUploadPermissionLostOrDenied];
         }
     }
@@ -210,6 +205,21 @@
 
 - (void)photoLibraryDidChange:(PHChange *)changeInstance {
     [self attemptUpload];
+}
+
+#pragma mark - Utility
+
+- (void) showPhotoLibraryAccessPermissionDeniedAlert {
+    [self showAlertViewWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil) body:NSLocalizedString(@"message_access_photos_not_enabled", nil)];
+}
+
+- (void) showLocationAccessAlwaysPermissionDeniedAlert {
+    [self showAlertViewWithTitle:NSLocalizedString(@"location_not_enabled", nil) body:NSLocalizedString(@"message_location_not_enabled", nil)];
+}
+
+- (void) showAlertViewWithTitle:(NSString *)title body:(NSString *)body{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:body delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+    [alertView show];
 }
 
 @end
