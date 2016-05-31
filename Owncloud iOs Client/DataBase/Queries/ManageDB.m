@@ -1004,7 +1004,6 @@
  * Alter users table, adds new field to track user background Instant Upload preference
  */
 + (void) updateDBVersion17To18 {
-    
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     // Fetch parameters needed for migration
@@ -1018,7 +1017,6 @@
             defaultBackgroundInstantUploadValue = [rs boolForColumn:@"instant_upload"];
             lastDateInstantUpload = [rs longForColumn:@"date_instant_upload"];
         }
-        
     }];
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
