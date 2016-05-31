@@ -102,7 +102,7 @@
                 [ManageDB updateDBVersion15To16];
             case k_DB_version_16:
                 [self updateDBVersion16To17];
-                break;
+                break; //Insert your migration above this final break.
         }
     }
     
