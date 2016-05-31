@@ -1005,16 +1005,17 @@
  */
 + (void) updateDBVersion17To18 {
     
-    BOOL defaultBackgroundInstantUploadValue = (BOOL)[ManageAppSettingsDB isInstantUpload]; //Users who are using Instant Upload before this migration also have background upload enabled, so we want to default to enabling this preference.
-    
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
-    // Get the old instant upload date so it can be migrated to an NSTimestamp
+    // Fetch parameters needed for migration
+    
     __block long lastDateInstantUpload;
+    __block BOOL defaultBackgroundInstantUploadValue;
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT date_instant_upload FROM users WHERE activeaccount=1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT instant_upload, date_instant_upload FROM users WHERE activeaccount=1"];
         
         while ([rs next]) {
+            defaultBackgroundInstantUploadValue = [rs boolForColumn:@"instant_upload"];
             lastDateInstantUpload = [rs longForColumn:@"date_instant_upload"];
         }
         
