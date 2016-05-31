@@ -19,6 +19,7 @@
 
 
 #import <Foundation/Foundation.h>
+#import <Photos/Photos.h>
 #import "UserDto.h"
 #import "ManageUploadRequest.h"
 
@@ -81,9 +82,6 @@ extern NSString *ReloadFileListFromDataBaseNotification;
  */
 - (void) sendFileToUploadByUploadOfflineDto:(UploadsOfflineDto *) currentUpload;
 
-
-
-- (void) addAssetsToUpload:(NSArray *) newAsssets andRemoteFolder:(NSString *) remoteFolderToUpload;
-
+- (void) addAssetsToUpload:(PHFetchResult *) assetsToUpload andRemoteFolder:(NSString *) remoteFolder;
 
 @end
