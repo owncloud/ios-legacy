@@ -64,12 +64,13 @@
  * Methods manage instant uploads photos
  */
 +(BOOL)isInstantUpload;
++(BOOL)isBackgroundInstantUpload;
 +(void)updateInstantUploadTo:(BOOL)instantUpload;
++(void)updateBackgroundInstantUploadTo:(BOOL)newValue;
 +(void)updatePathInstantUpload:(NSString *)newValue;
-+(void)updateDateInstantUpload:(long )newValue;
 +(void)updateInstantUploadAllUser;
-+(long)getDateInstantUpload;
++(NSTimeInterval)getTimestampInstantUpload;
++(void)updateTimestampInstantUpload:(NSTimeInterval)newValue;
 +(void)updateOnlyWifiInstantUpload:(BOOL)newValue;
-
 
 @end

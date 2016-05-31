@@ -344,7 +344,6 @@
 		4030D8F61A16277100DB0871 /* file_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F31A16277100DB0871 /* file_icon@2x.png */; };
 		4030D8F71A16277100DB0871 /* file_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4030D8F41A16277100DB0871 /* file_icon@3x.png */; };
 		404FDA241A36E5E5008AB4E1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */; };
-		404FDA281A36EA9D008AB4E1 /* ManageLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 404FDA271A36EA9D008AB4E1 /* ManageLocation.m */; };
 		4052B4D81B4ECC75000788DA /* btnAllHelpGrey.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4D71B4ECC75000788DA /* btnAllHelpGrey.png */; };
 		4052B4DA1B4ECD3A000788DA /* btnHelpPage0.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4D91B4ECD3A000788DA /* btnHelpPage0.png */; };
 		4052B4DC1B4ECD74000788DA /* btnHelpPage1.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4DB1B4ECD74000788DA /* btnHelpPage1.png */; };
@@ -361,7 +360,6 @@
 		405D06CB1BFB678900591604 /* CapabilitiesDto.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1A1BEA66A1009971AF /* CapabilitiesDto.m */; };
 		40A3A0EB1CEC9B3A0056016A /* more-filledBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = 40A3A0E91CEC9B3A0056016A /* more-filledBlack.png */; };
 		40A3A0EC1CEC9B3A0056016A /* more-filledBlack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40A3A0EA1CEC9B3A0056016A /* more-filledBlack@2x.png */; };
-		40A969E41A5EEAC80046A36C /* ManageAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 40A969E31A5EEAC80046A36C /* ManageAsset.m */; };
 		40AB1F5B1A12392E003E7397 /* cancel_download_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F591A12392E003E7397 /* cancel_download_white@3x.png */; };
 		40AB1F5C1A12392E003E7397 /* cancel_download@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F5A1A12392E003E7397 /* cancel_download@3x.png */; };
 		40AB1F5F1A123B03003E7397 /* BackRootFolderIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F5E1A123B03003E7397 /* BackRootFolderIcon@3x.png */; };
@@ -901,6 +899,7 @@
 		EAF771311B73523800ED6E6E /* SystemConstants-swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF771301B73523800ED6E6E /* SystemConstants-swift.swift */; };
 		EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 		EAFE20A81AC4617D00BB888E /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */; };
+		FCE228D11CFE08EF00E4827F /* InstantUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE228D01CFE08EF00E4827F /* InstantUpload.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1457,8 +1456,6 @@
 		4030D8F31A16277100DB0871 /* file_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@2x.png"; sourceTree = "<group>"; };
 		4030D8F41A16277100DB0871 /* file_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@3x.png"; sourceTree = "<group>"; };
 		404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		404FDA261A36EA9D008AB4E1 /* ManageLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageLocation.h; sourceTree = "<group>"; };
-		404FDA271A36EA9D008AB4E1 /* ManageLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageLocation.m; sourceTree = "<group>"; };
 		4052B4D71B4ECC75000788DA /* btnAllHelpGrey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnAllHelpGrey.png; sourceTree = "<group>"; };
 		4052B4D91B4ECD3A000788DA /* btnHelpPage0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage0.png; sourceTree = "<group>"; };
 		4052B4DB1B4ECD74000788DA /* btnHelpPage1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage1.png; sourceTree = "<group>"; };
@@ -1469,8 +1466,6 @@
 		405AD0C01B56C26A00271424 /* iphoneShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneShare.png; sourceTree = "<group>"; };
 		40A3A0E91CEC9B3A0056016A /* more-filledBlack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more-filledBlack.png"; sourceTree = "<group>"; };
 		40A3A0EA1CEC9B3A0056016A /* more-filledBlack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more-filledBlack@2x.png"; sourceTree = "<group>"; };
-		40A969E21A5EEAC80046A36C /* ManageAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageAsset.h; sourceTree = "<group>"; };
-		40A969E31A5EEAC80046A36C /* ManageAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageAsset.m; sourceTree = "<group>"; };
 		40AB1F591A12392E003E7397 /* cancel_download_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel_download_white@3x.png"; sourceTree = "<group>"; };
 		40AB1F5A1A12392E003E7397 /* cancel_download@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel_download@3x.png"; sourceTree = "<group>"; };
 		40AB1F5E1A123B03003E7397 /* BackRootFolderIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BackRootFolderIcon@3x.png"; sourceTree = "<group>"; };
@@ -1817,6 +1812,8 @@
 		EAF7712B1B7340C400ED6E6E /* ShareLinkButtonCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareLinkButtonCell.xib; path = Tabs/FileTab/Share/Cells/ShareLinkButtonCell.xib; sourceTree = "<group>"; };
 		EAF771301B73523800ED6E6E /* SystemConstants-swift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SystemConstants-swift.swift"; path = "Utils/SystemConstants-swift.swift"; sourceTree = "<group>"; };
 		EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
+		FCE228CF1CFE08EF00E4827F /* InstantUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstantUpload.h; sourceTree = "<group>"; };
+		FCE228D01CFE08EF00E4827F /* InstantUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstantUpload.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1980,7 +1977,6 @@
 				148DD5DD1778549700FB9977 /* ExternalLibreries */,
 				148DD61D17785D4200FB9977 /* Files */,
 				137AAF1715B0054F00A1A764 /* Login */,
-				404FDA251A36E60A008AB4E1 /* Location */,
 				40A969DD1A5EDF900046A36C /* InstantUpload */,
 				148DD6661778625100FB9977 /* Network */,
 				1324298315ADBB3700DF823E /* Supporting Files */,
@@ -2904,15 +2900,6 @@
 			path = HelpGuide;
 			sourceTree = "<group>";
 		};
-		404FDA251A36E60A008AB4E1 /* Location */ = {
-			isa = PBXGroup;
-			children = (
-				404FDA261A36EA9D008AB4E1 /* ManageLocation.h */,
-				404FDA271A36EA9D008AB4E1 /* ManageLocation.m */,
-			);
-			path = Location;
-			sourceTree = "<group>";
-		};
 		4052B4AC1B4E951F000788DA /* HelpPageButtons */ = {
 			isa = PBXGroup;
 			children = (
@@ -2937,8 +2924,8 @@
 		40A969DD1A5EDF900046A36C /* InstantUpload */ = {
 			isa = PBXGroup;
 			children = (
-				40A969E21A5EEAC80046A36C /* ManageAsset.h */,
-				40A969E31A5EEAC80046A36C /* ManageAsset.m */,
+				FCE228CF1CFE08EF00E4827F /* InstantUpload.h */,
+				FCE228D01CFE08EF00E4827F /* InstantUpload.m */,
 			);
 			path = InstantUpload;
 			sourceTree = "<group>";
@@ -4519,7 +4506,6 @@
 			files = (
 				EAF771311B73523800ED6E6E /* SystemConstants-swift.swift in Sources */,
 				59BF9B361A2C8BEA009D9CF0 /* DocumentPickerViewController.m in Sources */,
-				404FDA281A36EA9D008AB4E1 /* ManageLocation.m in Sources */,
 				59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */,
 				EAD0EBA317FAF811000005A1 /* OCELCAssetTablePicker.m in Sources */,
 				1324298915ADBB3700DF823E /* main.m in Sources */,
@@ -4566,7 +4552,6 @@
 				148DD619177855D900FB9977 /* Reachability.m in Sources */,
 				40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */,
 				148DD62517785D6900FB9977 /* DetailViewController.m in Sources */,
-				40A969E41A5EEAC80046A36C /* ManageAsset.m in Sources */,
 				EABF69171891379C00A2217C /* SWTableViewCell.m in Sources */,
 				EA8ADE681A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
 				148DD62A17785D9800FB9977 /* FilePreviewViewController.m in Sources */,
@@ -4708,6 +4693,7 @@
 				1420C3AC178A9F5000C0455C /* LoginViewController.m in Sources */,
 				400A63661B4FD75600890579 /* IFTTTAnimatedScrollViewController.m in Sources */,
 				EA8ADE6A1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */,
+				FCE228D11CFE08EF00E4827F /* InstantUpload.m in Sources */,
 				13A9C667187FE91700C6EEE8 /* ShareFileOrFolder.m in Sources */,
 				EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */,
 				EA42FA51180539E70006DB7C /* ImageUtils.m in Sources */,
