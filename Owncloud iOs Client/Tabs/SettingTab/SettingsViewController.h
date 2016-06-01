@@ -58,10 +58,14 @@ typedef enum {
 @property(nonatomic, strong) MBProgressHUD  *HUD;
 @property(nonatomic, strong) dispatch_semaphore_t semaphoreChangeUser;
 
+@property (nonatomic,strong) UIActionSheet *menuAccountActionSheet;
+@property (nonatomic,strong) UserDto *selectedUserAccount;
+
 - (IBAction)changeSwitchPasscode:(id)sender;
 - (IBAction)changeSwitchTouchID:(id)sender;
 - (IBAction)changeSwitchInstantUpload:(id)sender;
 - (void)disconnectUser;
 - (void)initStateInstantUpload;
+- (void)showMenuAccountOptions;
 
 @end
