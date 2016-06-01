@@ -271,7 +271,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     [self.navigationItem setTitleView:_updatingFileView];
     
-    [self performSelector:@selector(showTextInStatusBar) withObject:nil afterDelay:0.8];
+    [self performSelector:@selector(showTextInStatusBar) withObject:nil afterDelay:0.0];
 }
 
 
@@ -284,7 +284,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  * This method shows a text in the status bar of the device
  */
 - (void) showTextInStatusBar {
-    if (_isDownloading && nameFileToUpdate == _file.fileName) {
+
+    if ([self isDownloadingImageOrFile] && nameFileToUpdate == _file.fileName) {
         DLog(@"Show a notification text in the status bar");
         //Notificacion style
         _notification.notificationLabelBackgroundColor = [[UIColor colorOfNavigationBar] colorWithAlphaComponent:1.0f];
@@ -306,6 +307,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 }
 
 
+- (BOOL) isDownloadingImageOrFile {
+
+    if ((self.galleryView != nil && [self.galleryView isCurrentImageDownloading]) || (self.galleryView == nil && self.isDownloading)) {
+        return TRUE;
+    }
+    return FALSE;
+}
 
 ///-----------------------------------
 /// @name Stop notification in status bar
@@ -340,8 +348,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     _progressView.progress = 0.0;
     
     //Enable back button
-    self.navigationController.navigationBar.UserInteractionEnabled = YES;
-    _toolBar.UserInteractionEnabled = YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
+    _toolBar.userInteractionEnabled = YES;
     
     DLog(@"finish to clean view");
 }
@@ -609,8 +617,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
     
     //Enable back button
-    self.navigationController.navigationBar.UserInteractionEnabled = YES;
-    _toolBar.UserInteractionEnabled = YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
+    _toolBar.userInteractionEnabled = YES;
     
 }
 
@@ -661,8 +669,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         }
         
         //Enable back button
-        self.navigationController.navigationBar.UserInteractionEnabled = YES;
-        _toolBar.UserInteractionEnabled = YES;
+        self.navigationController.navigationBar.userInteractionEnabled = YES;
+        _toolBar.userInteractionEnabled = YES;
 
 }
 
@@ -732,8 +740,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     [self.view bringSubviewToFront:_toolBar];
     
     //Enable user interaction
-    self.navigationController.navigationBar.UserInteractionEnabled = YES;
-    _toolBar.UserInteractionEnabled = YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
+    _toolBar.userInteractionEnabled = YES;
 }
 
 #pragma mark - Gallery View Delegate Methods
@@ -1143,8 +1151,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         _progressView.progress = 0.0;
         
         //Enable back button
-        self.navigationController.navigationBar.UserInteractionEnabled = YES;
-        _toolBar.UserInteractionEnabled = YES;
+        self.navigationController.navigationBar.userInteractionEnabled = YES;
+        _toolBar.userInteractionEnabled = YES;
     }
 }
 
@@ -1369,8 +1377,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     _progressLabel.hidden = YES;
     
     //Enable back button
-    self.navigationController.navigationBar.UserInteractionEnabled = YES;
-    _toolBar.UserInteractionEnabled = YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
+    _toolBar.userInteractionEnabled = YES;
 }
 
 
@@ -1426,8 +1434,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     [self cleanView];
     
     //Enable interaction view
-    self.navigationController.navigationBar.UserInteractionEnabled = YES;
-    _toolBar.UserInteractionEnabled = YES;
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
+    _toolBar.userInteractionEnabled = YES;
     
     if(string) {
         [self showErrorMessageIfNotIsShowingWithString:string];
