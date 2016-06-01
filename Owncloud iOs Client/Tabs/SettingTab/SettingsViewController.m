@@ -752,50 +752,6 @@
     return cell;
 }
 
-- (AccountCell *) getActiveAccountCell {
-    
-    static NSString *CellIdentifier = @"AccountCell";
-    
-    AccountCell *accountCell = (AccountCell *) [self.settingsTableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    UserDto *user = [ManageUsersDB getActiveUser];
-    
-    
-    if (accountCell == nil) {
-        
-        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"AccountCell" owner:self options:nil];
-        
-        for (id currentObject in topLevelObjects){
-            if ([currentObject isKindOfClass:[UITableViewCell class]]){
-                accountCell =  (AccountCell *) currentObject;
-                break;
-            }
-        }
-    }
-    
-    accountCell.delegate = self;
-    accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
-    accountCell.userName.text = user.username;
-    
-    //If saml needs change the name to utf8
-    if (k_is_sso_active) {
-        accountCell.userName.text = [accountCell.userName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
-    
-    accountCell.urlServer.text = user.url;
-    accountCell.accessoryType = UITableViewCellAccessoryDetailButton;
-    [accountCell.activeButton setImage:[UIImage imageNamed:@"radio_checked.png"] forState:UIControlStateNormal];
-    
-    //Accesibility support for Automation
-    NSString *accesibilityCellString = ACS_SETTINGS_USER_ACCOUNT_CELL;
-    accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$user" withString:accountCell.userName.text];
-    accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
-    
-    [accountCell setAccessibilityLabel:accesibilityCellString];
-    
-    return accountCell;
-    
-}
 
 - (AccountCell *) getSectionManageAccountBlock:(UITableViewCell *) cell byRow:(NSInteger) row {
     
@@ -875,46 +831,6 @@
     return addAccountCell;
 }
 
-- (UITableViewCell *) getSectionClearCache:(UITableViewCell *) cell byRow:(NSInteger) row {
-    
-    
-    static NSString *CellIdentifier = @"ClearCache";
-    
-    UITableViewCell *clearCacheCell;
-    
-    clearCacheCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    
-    clearCacheCell.selectionStyle = UITableViewCellSelectionStyleBlue;
-    clearCacheCell.textLabel.font = k_settings_bold_font;
-    clearCacheCell.textLabel.textAlignment = NSTextAlignmentCenter;
-    clearCacheCell.editing = NO;
-    clearCacheCell.textLabel.text = NSLocalizedString(@"clear_cache_button", nil);
-    clearCacheCell.backgroundColor = [UIColor colorOfBackgroundButtonOnList];
-    clearCacheCell.textLabel.textColor = [UIColor colorOfTextButtonOnList];
-    
-    return clearCacheCell;
-}
-
-- (UITableViewCell *) getSectionDisconnectButton:(UITableViewCell *) cell byRow:(NSInteger) row {
-    
-    
-    static NSString *CellIdentifier = @"DisconnectCell";
-    
-    UITableViewCell *disconnectCell;
-    
-    disconnectCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-   
-    disconnectCell.selectionStyle = UITableViewCellSelectionStyleBlue;
-    disconnectCell.textLabel.font = k_settings_bold_font;
-    disconnectCell.textLabel.textAlignment = NSTextAlignmentCenter;
-    disconnectCell.editing = NO;
-    disconnectCell.textLabel.text = NSLocalizedString(@"disconnect_button", nil);
-    disconnectCell.backgroundColor = [UIColor colorOfBackgroundButtonOnList];
-    disconnectCell.textLabel.textColor = [UIColor colorOfTextButtonOnList];
-    
-    return disconnectCell;
-}
-
 
 #pragma mark - UITableView delegate
 
@@ -957,13 +873,9 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DLog(@"DELETE!!! %ld", (long)indexPath.row);
     if (editingStyle == UITableViewCellEditingStyleDelete) {
          UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
         [self dicSelectLogOutAccount:selectedUser];
-        
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }
 }
 
@@ -2075,14 +1987,11 @@
     
     [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:user];
     
-    //Delete files os user in the system
+    //Delete files of user in the system
     NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)user.idUser];
     NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
-    
-    
     NSError *error;
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-    
     
     //if previous account is active we active the first by iduser
     if(user.activeaccount) {
@@ -2114,7 +2023,6 @@
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
         [self cancelAllDownloads];
-        //[self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
         app.uploadArray=[[NSMutableArray alloc]init];
         [app updateRecents];
         [app restartAppAfterDeleteAllAccounts];
