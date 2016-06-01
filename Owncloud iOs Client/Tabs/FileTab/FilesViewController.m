@@ -2353,7 +2353,7 @@
                 case 3:
                     
                     if (self.isCurrentFolderSonOfFavoriteFolder) {
-                        [self showAlertView:NSLocalizedString(@"parent_folder_is_available_offline", nil)];
+                        [self showAlertView:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)];
                     } else {
                         if (self.selectedFileDto.isFavorite) {
                             [self didSelectCancelFavoriteFolder];
@@ -2386,7 +2386,7 @@
                     break;
                 case 3:
                     if (self.isCurrentFolderSonOfFavoriteFolder) {
-                        [self showAlertView:NSLocalizedString(@"parent_folder_is_available_offline", nil)];
+                        [self showAlertView:NSLocalizedString(@"parent_folder_is_available_offline_file_child", nil)];
                     } else {
                         [self didSelectFavoriteOption];
                     }

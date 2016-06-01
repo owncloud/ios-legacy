@@ -1034,7 +1034,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if ([DownloadUtils isSonOfFavoriteFolder:self.file]) {
-        [self showErrorMessageIfNotIsShowingWithString:NSLocalizedString(@"parent_folder_is_available_offline", nil)];
+        [self showErrorMessageIfNotIsShowingWithString:NSLocalizedString(@"parent_folder_is_available_offline_file_child", nil)];
     } else {
         if (_file.isFavorite) {
             _file.isFavorite = NO;
