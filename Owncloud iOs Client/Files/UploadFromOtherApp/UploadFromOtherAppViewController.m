@@ -962,9 +962,10 @@
     //Get the name in the correct encoding
     NSString *name=[_nameFileTextField.text encodeString:NSUTF8StringEncoding];
     
-    //The _remoteFolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
+    //The _remoteFolder: https://domain/(subfoldersServer)/k_url_webdav_server/(subfoldersDB)/
     //The nameFileTextField: FileType.pdf
-    //The folder Name: A/
+    //The folder Name: (subfoldersDB)/
+    
     NSString *folderName = [UtilsUrls getFilePathOnDBByFullPath:_remoteFolder andUser:app.activeUser];
     
     //Obtain the file that the user wants overwrite

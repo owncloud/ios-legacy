@@ -332,6 +332,9 @@
 		400A63821B4FD94C00890579 /* iphoneAccounts.png in Resources */ = {isa = PBXBuildFile; fileRef = 400A63811B4FD94C00890579 /* iphoneAccounts.png */; };
 		4016E5C51A0CE9410022163C /* MainAppIcon_76_76@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4016E5C41A0CE9410022163C /* MainAppIcon_76_76@3x.png */; };
 		402183C11B8B12F100975520 /* FileNameUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 402183C01B8B12F100975520 /* FileNameUtilsTests.m */; };
+		402596051CF470640037A78A /* UtilsBrandedOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 402596041CF470640037A78A /* UtilsBrandedOptions.m */; };
+		402596071CF473310037A78A /* UtilsBrandedOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 402596041CF470640037A78A /* UtilsBrandedOptions.m */; };
+		402596081CF473320037A78A /* UtilsBrandedOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 402596041CF470640037A78A /* UtilsBrandedOptions.m */; };
 		4026610C1A07926000517663 /* MainAppIcon_76-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4026610B1A07926000517663 /* MainAppIcon_76-76@2x.png */; };
 		4029B6A01A19EB5B00A8ED9F /* company_empty_screen_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FB117FC2CCE001766BB /* company_empty_screen_ipad@2x.png */; };
 		4029B6A11A19EB5B00A8ED9F /* company_empty_screen_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EA2B4FAF17FAFF69001766BB /* company_empty_screen_ipad.png */; };
@@ -352,6 +355,10 @@
 		4052B4E21B4ECF35000788DA /* btnHelpPage3.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4DE1B4ECF35000788DA /* btnHelpPage3.png */; };
 		4052B4E31B4ECF35000788DA /* btnHelpPage4.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4DF1B4ECF35000788DA /* btnHelpPage4.png */; };
 		4052B4E41B4ECF35000788DA /* btnHelpPage5.png in Resources */ = {isa = PBXBuildFile; fileRef = 4052B4E01B4ECF35000788DA /* btnHelpPage5.png */; };
+		4056551B1CE0A204001266EE /* UtilsFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4056551A1CE0A204001266EE /* UtilsFileSystem.m */; };
+		4056551D1CE1DD5E001266EE /* UtilsFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4056551A1CE0A204001266EE /* UtilsFileSystem.m */; };
+		4056551E1CE1DD67001266EE /* UtilsFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4056551A1CE0A204001266EE /* UtilsFileSystem.m */; };
+		4056551F1CE1DD67001266EE /* UtilsFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4056551A1CE0A204001266EE /* UtilsFileSystem.m */; };
 		405AD0C11B56C26A00271424 /* iphoneShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 405AD0C01B56C26A00271424 /* iphoneShare.png */; };
 		405D06C51BFB670100591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
 		405D06C71BFB670200591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
@@ -376,6 +383,8 @@
 		40CC7F0D1B4E665400231D73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40CC7F0C1B4E665400231D73 /* Images.xcassets */; };
 		40CF2C6C1C491C610047969A /* ShareUserPrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40CF2C6B1C491C610047969A /* ShareUserPrivilegeCell.xib */; };
 		40CF2C6F1C491D200047969A /* ShareUserPrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CF2C6E1C491D200047969A /* ShareUserPrivilegeCell.swift */; };
+		40DC9C671CDA191B00F5F5EF /* EditFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DC9C651CDA191B00F5F5EF /* EditFileViewController.m */; };
+		40DC9C681CDA191B00F5F5EF /* EditFileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40DC9C661CDA191B00F5F5EF /* EditFileViewController.xib */; };
 		40E30ED61B59105D00D36B07 /* iphoneInstantUpload.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */; };
 		40E354C51A14D671000E7FE4 /* ownCloud-xmas@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */; };
 		40E354C71A14D6A2000E7FE4 /* sharedItem@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C61A14D6A2000E7FE4 /* sharedItem@3x.png */; };
@@ -1447,6 +1456,8 @@
 		400A63811B4FD94C00890579 /* iphoneAccounts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneAccounts.png; sourceTree = "<group>"; };
 		4016E5C41A0CE9410022163C /* MainAppIcon_76_76@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76_76@3x.png"; sourceTree = "<group>"; };
 		402183C01B8B12F100975520 /* FileNameUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileNameUtilsTests.m; sourceTree = "<group>"; };
+		402596031CF470640037A78A /* UtilsBrandedOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsBrandedOptions.h; path = Utils/UtilsBrandedOptions.h; sourceTree = "<group>"; };
+		402596041CF470640037A78A /* UtilsBrandedOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsBrandedOptions.m; path = Utils/UtilsBrandedOptions.m; sourceTree = "<group>"; };
 		4026610B1A07926000517663 /* MainAppIcon_76-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76-76@2x.png"; sourceTree = "<group>"; };
 		4030D8E71A161FC900DB0871 /* WhatsappShareiphone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "WhatsappShareiphone@3x.png"; sourceTree = "<group>"; };
 		4030D8EA1A161FD600DB0871 /* CopyLinkShareiphone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CopyLinkShareiphone@3x.png"; sourceTree = "<group>"; };
@@ -1466,6 +1477,8 @@
 		4052B4DE1B4ECF35000788DA /* btnHelpPage3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage3.png; sourceTree = "<group>"; };
 		4052B4DF1B4ECF35000788DA /* btnHelpPage4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage4.png; sourceTree = "<group>"; };
 		4052B4E01B4ECF35000788DA /* btnHelpPage5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage5.png; sourceTree = "<group>"; };
+		405655191CE0A204001266EE /* UtilsFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsFileSystem.h; path = Utils/UtilsFileSystem.h; sourceTree = "<group>"; };
+		4056551A1CE0A204001266EE /* UtilsFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsFileSystem.m; path = Utils/UtilsFileSystem.m; sourceTree = "<group>"; };
 		405AD0C01B56C26A00271424 /* iphoneShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneShare.png; sourceTree = "<group>"; };
 		40A3A0E91CEC9B3A0056016A /* more-filledBlack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more-filledBlack.png"; sourceTree = "<group>"; };
 		40A3A0EA1CEC9B3A0056016A /* more-filledBlack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more-filledBlack@2x.png"; sourceTree = "<group>"; };
@@ -1486,6 +1499,9 @@
 		40CC7F0C1B4E665400231D73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		40CF2C6B1C491C610047969A /* ShareUserPrivilegeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareUserPrivilegeCell.xib; path = Tabs/FileTab/Share/Cells/ShareUserPrivilegeCell.xib; sourceTree = "<group>"; };
 		40CF2C6E1C491D200047969A /* ShareUserPrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareUserPrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/ShareUserPrivilegeCell.swift; sourceTree = "<group>"; };
+		40DC9C641CDA191B00F5F5EF /* EditFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditFileViewController.h; sourceTree = "<group>"; };
+		40DC9C651CDA191B00F5F5EF /* EditFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditFileViewController.m; sourceTree = "<group>"; };
+		40DC9C661CDA191B00F5F5EF /* EditFileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditFileViewController.xib; sourceTree = "<group>"; };
 		40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneInstantUpload.png; sourceTree = "<group>"; };
 		40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ownCloud-xmas@3x.png"; sourceTree = "<group>"; };
 		40E354C61A14D6A2000E7FE4 /* sharedItem@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@3x.png"; sourceTree = "<group>"; };
@@ -2166,6 +2182,10 @@
 				EAAD688E1C560AF2005F3B28 /* ShareUtils.m */,
 				59EF1F0C1CE0BD8900184F8F /* DeleteUtils.h */,
 				59EF1F0D1CE0BD8900184F8F /* DeleteUtils.m */,
+				405655191CE0A204001266EE /* UtilsFileSystem.h */,
+				4056551A1CE0A204001266EE /* UtilsFileSystem.m */,
+				402596031CF470640037A78A /* UtilsBrandedOptions.h */,
+				402596041CF470640037A78A /* UtilsBrandedOptions.m */,
 				138841D216E735E700053AAB /* Image Scale */,
 			);
 			name = Utils;
@@ -2816,6 +2836,7 @@
 		148DD61D17785D4200FB9977 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				40DC9C601CDA16E400F5F5EF /* Edit */,
 				148DD61E17785D5000FB9977 /* Preview */,
 				EACC1A2C170C3E550043CAA2 /* PreviewSupportedFiles */,
 				EA8F6BD4163E9C6500689CE7 /* Upload From Other App */,
@@ -2949,6 +2970,17 @@
 				D924DCAF1B973D7E008B4BE7 /* OCMock_3.1.5 */,
 			);
 			path = ExternalLibraries;
+			sourceTree = "<group>";
+		};
+		40DC9C601CDA16E400F5F5EF /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				40DC9C641CDA191B00F5F5EF /* EditFileViewController.h */,
+				40DC9C651CDA191B00F5F5EF /* EditFileViewController.m */,
+				40DC9C661CDA191B00F5F5EF /* EditFileViewController.xib */,
+			);
+			name = Edit;
+			path = Files/Edit;
 			sourceTree = "<group>";
 		};
 		40EDF89D1B4D112900700E3A /* HelpGuide */ = {
@@ -3944,6 +3976,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40DC9C681CDA191B00F5F5EF /* EditFileViewController.xib in Resources */,
 				59DA496619F7A4B600DD3619 /* Owncloud iOs Client.entitlements in Resources */,
 				14A4796A18EC6FDF003500BA /* FileFavoriteIcon.png in Resources */,
 				137E485E15B6A3A400628EB1 /* DB.sqlite in Resources */,
@@ -4539,9 +4572,11 @@
 				148DD5DB177851E700FB9977 /* UploadRecentCell.m in Sources */,
 				EABF68E11889593100A2217C /* ShareLinkCell.m in Sources */,
 				13A9FCED17E9858C00FF48D7 /* ELCAlbumPickerController.m in Sources */,
+				40DC9C671CDA191B00F5F5EF /* EditFileViewController.m in Sources */,
 				400A636A1B4FD75600890579 /* IFTTTConstraintConstantAnimation.m in Sources */,
 				59A6B65719458F6E000B107D /* OCURLSessionManager.m in Sources */,
 				1493D8CF185702D70090FEFB /* CheckSSOServer.m in Sources */,
+				4056551B1CE0A204001266EE /* UtilsFileSystem.m in Sources */,
 				148DD5FD1778556500FB9977 /* MBProgressHUD.m in Sources */,
 				EAC5985A1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
 				400A63641B4FD75600890579 /* IFTTTAlphaAnimation.m in Sources */,
@@ -4675,6 +4710,7 @@
 				40FF874319F81396008B7C62 /* OCKeychain.m in Sources */,
 				400A63751B4FD75600890579 /* IFTTTScaleAnimation.m in Sources */,
 				1487F135177C2F08004A1A5A /* ManageAppSettingsDB.m in Sources */,
+				402596051CF470640037A78A /* UtilsBrandedOptions.m in Sources */,
 				1487F138177C2F48004A1A5A /* ManageDB.m in Sources */,
 				1487F13B177C2F73004A1A5A /* ManageFilesDB.m in Sources */,
 				1487F13E177C2F9C004A1A5A /* ManageUploadsDB.m in Sources */,
@@ -4768,6 +4804,7 @@
 				EAC6E5FC1AB0987D00CCF8C4 /* NSString+Encoding.m in Sources */,
 				EAF721811AAF33F8009F5596 /* OCKeychain.m in Sources */,
 				59E20C7F1AEFB45900554D7E /* ManageDB.m in Sources */,
+				402596081CF473320037A78A /* UtilsBrandedOptions.m in Sources */,
 				EAC6E5F71AB097B800CCF8C4 /* ManageAppSettingsDB.m in Sources */,
 				EAC6E5F81AB097F500CCF8C4 /* UtilsDtos.m in Sources */,
 				405D06C51BFB670100591604 /* ManageCapabilitiesDB.m in Sources */,
@@ -4788,6 +4825,7 @@
 				EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */,
 				EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */,
 				EAF7217D1AAF2E0D009F5596 /* Managers.swift in Sources */,
+				4056551D1CE1DD5E001266EE /* UtilsFileSystem.m in Sources */,
 				59C762341AB85B7C00A64C1F /* UploadsOfflineDto.m in Sources */,
 				EAF7217E1AAF2E49009F5596 /* FMDatabaseQueue.m in Sources */,
 				EAC6E5FB1AB0986D00CCF8C4 /* SelectedFolderCell.m in Sources */,
@@ -4827,6 +4865,7 @@
 				599E5C2C1A0CF42700E83C03 /* ImageUtils.m in Sources */,
 				599E5C2B1A0CF3C000E83C03 /* OCNavigationController.m in Sources */,
 				599E5C271A0CD0E500E83C03 /* EmptyCell.m in Sources */,
+				402596071CF473310037A78A /* UtilsBrandedOptions.m in Sources */,
 				405D06C81BFB670800591604 /* ManageCapabilitiesDB.m in Sources */,
 				59990A271A0BD74000D3B842 /* FileNameUtils.m in Sources */,
 				59990A251A0BD67A00D3B842 /* InfoFileUtils.m in Sources */,
@@ -4852,6 +4891,7 @@
 				599D99F71A025F24008A9DB3 /* ManageUsersDB.m in Sources */,
 				599D99F11A0256F1008A9DB3 /* FMDatabaseAdditions.m in Sources */,
 				599D80A31A23366D0071B66E /* SimpleFileListTableViewController.m in Sources */,
+				4056551F1CE1DD67001266EE /* UtilsFileSystem.m in Sources */,
 				599D99F21A0256F1008A9DB3 /* FMDatabasePool.m in Sources */,
 				599D99F31A0256F1008A9DB3 /* FMResultSet.m in Sources */,
 				599D99F01A0256D9008A9DB3 /* FMDatabase.m in Sources */,
@@ -4877,6 +4917,7 @@
 				EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */,
 				EA1F62D11A5EBD2000D6346F /* ProvidingFileDto.m in Sources */,
 				EA1F62D41A5EBDA700D6346F /* FMDatabasePool.m in Sources */,
+				4056551E1CE1DD67001266EE /* UtilsFileSystem.m in Sources */,
 				EA1F62CE1A5EBC2A00D6346F /* UserDto.m in Sources */,
 				EA1F62D01A5EBCAE00D6346F /* FMDatabase.m in Sources */,
 				405D06CA1BFB678800591604 /* CapabilitiesDto.m in Sources */,

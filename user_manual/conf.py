@@ -44,14 +44,14 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ownCloud iOS App Manual'
-copyright = u'2013-2015, The ownCloud developers'
+copyright = u'2013-2016, The ownCloud developers'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '3.3.2'
+version = '3.4.9'
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -253,7 +253,7 @@ texinfo_documents = [
 epub_title = u'ownCloud iOS App Manual'
 epub_author = u'The ownCloud developers'
 epub_publisher = u'The ownCloud developers'
-epub_copyright = u'2013-2015, The ownCloud developers'
+epub_copyright = u'2013-2016, The ownCloud developers'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
