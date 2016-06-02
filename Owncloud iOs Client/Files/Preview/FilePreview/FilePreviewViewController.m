@@ -310,9 +310,9 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 - (BOOL) isDownloadingImageOrFile {
 
     if ((self.galleryView != nil && [self.galleryView isCurrentImageDownloading]) || (self.galleryView == nil && self.isDownloading)) {
-        return TRUE;
+        return YES;
     }
-    return FALSE;
+    return NO;
 }
 
 ///-----------------------------------

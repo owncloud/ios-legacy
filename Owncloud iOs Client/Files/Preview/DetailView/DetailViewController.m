@@ -708,7 +708,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     [toolbar addSubview:_updatingFileView];
     
-    [self performSelector:@selector(showTextInStatusBar) withObject:nil afterDelay:0.0];
+    [self showTextInStatusBar];
     
     if(k_is_text_status_bar_white){
         [_updatingCancelButton setImage:[UIImage imageNamed:@"cancel_download_white.png"] forState:UIControlStateNormal];
@@ -1897,9 +1897,9 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 - (BOOL) isDownloadingImageOrFile {
 
     if ((self.galleryView != nil && [self.galleryView isCurrentImageDownloading]) || (self.galleryView == nil && self.isDownloading)) {
-        return TRUE;
+        return YES;
     }
-    return FALSE;
+    return NO;
 }
 
 ///-----------------------------------
