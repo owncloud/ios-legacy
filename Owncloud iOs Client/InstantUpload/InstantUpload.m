@@ -71,7 +71,8 @@
                 if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
                     ACTIVE_USER.instantUpload = YES;
                     [ManageAppSettingsDB updateInstantUploadTo:YES];
-                    [self attemptUpload];
+                    ACTIVE_USER.timestampInstantUpload = [[NSDate date] timeIntervalSince1970];;
+                    [ManageAppSettingsDB updateTimestampInstantUpload:ACTIVE_USER.timestampInstantUpload];
                 } else {
                     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
                         if (status == PHAuthorizationStatusAuthorized) {
