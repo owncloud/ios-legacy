@@ -139,7 +139,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     [super viewWillDisappear:animated];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    if (app.isSharedToOwncloudPresent == NO) {
+    if (app.isSharedToOwncloudPresent == NO && _notification.notificationIsShowing) {
         //Stop the notification
         [self stopNotificationUpdatingFile];
         
@@ -230,10 +230,10 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 - (void) putTheFavoriteStatus {
     if (_file.isFavorite || [DownloadUtils isSonOfFavoriteFolder:self.file]) {
         //Change the image to unstarred
-        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
+        _favoriteButtonBar.image = [UIImage imageNamed:@"available_offline_TB-filled"];
     } else {
         //Change the image to starred
-        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+        _favoriteButtonBar.image = [UIImage imageNamed:@"available_offline_TB"];
     }
 }
 
@@ -1039,12 +1039,12 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         if (_file.isFavorite) {
             _file.isFavorite = NO;
             //Change the image to unstarred
-            _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+            _favoriteButtonBar.image = [UIImage imageNamed:@"available_offline_TB"];
         } else {
             _file.isFavorite = YES;
             _isCancelDownloadClicked = NO;
             //Change the image to starred
-            _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
+            _favoriteButtonBar.image = [UIImage imageNamed:@"available_offline_TB-filled"];
             //Download the file if it's not downloaded and not pending to be download
             [self downloadTheFileIfIsnotDownloadingInOtherProcess];
         }

@@ -618,6 +618,12 @@
 		905C594F1C50DA490051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
 		905C59501C50DA680051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
 		906177E21C4FABF600BBE648 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
+		906414311D004719000AEFE5 /* available_offline_TB@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064142B1D004719000AEFE5 /* available_offline_TB@2x.png */; };
+		906414321D004719000AEFE5 /* available_offline_TB@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064142C1D004719000AEFE5 /* available_offline_TB@3x.png */; };
+		906414331D004719000AEFE5 /* available_offline_TB-filled.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064142D1D004719000AEFE5 /* available_offline_TB-filled.png */; };
+		906414341D004719000AEFE5 /* available_offline_TB-filled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064142E1D004719000AEFE5 /* available_offline_TB-filled@2x.png */; };
+		906414351D004719000AEFE5 /* available_offline_TB-filled@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064142F1D004719000AEFE5 /* available_offline_TB-filled@3x.png */; };
+		906414381D004BA1000AEFE5 /* available_offline_TB.png in Resources */ = {isa = PBXBuildFile; fileRef = 906414371D004BA1000AEFE5 /* available_offline_TB.png */; };
 		90D608FA1C89844E0049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		90D608FC1C8984760049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; };
@@ -1619,6 +1625,12 @@
 		905B3D3E1C88681000BCC93B /* SortManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SortManager.h; path = Tabs/FileTab/Sort/SortManager.h; sourceTree = "<group>"; };
 		906177E11C4FABF600BBE648 /* ManageTouchID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageTouchID.m; sourceTree = "<group>"; };
 		906177E31C4FAC0B00BBE648 /* ManageTouchID.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManageTouchID.h; sourceTree = "<group>"; };
+		9064142B1D004719000AEFE5 /* available_offline_TB@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "available_offline_TB@2x.png"; sourceTree = "<group>"; };
+		9064142C1D004719000AEFE5 /* available_offline_TB@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "available_offline_TB@3x.png"; sourceTree = "<group>"; };
+		9064142D1D004719000AEFE5 /* available_offline_TB-filled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "available_offline_TB-filled.png"; sourceTree = "<group>"; };
+		9064142E1D004719000AEFE5 /* available_offline_TB-filled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "available_offline_TB-filled@2x.png"; sourceTree = "<group>"; };
+		9064142F1D004719000AEFE5 /* available_offline_TB-filled@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "available_offline_TB-filled@3x.png"; sourceTree = "<group>"; };
+		906414371D004BA1000AEFE5 /* available_offline_TB.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = available_offline_TB.png; sourceTree = "<group>"; };
 		D924DCBC1B973E88008B4BE7 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
 		D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
 		D924DCBF1B973E98008B4BE7 /* OCMArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
@@ -2648,6 +2660,12 @@
 		1487F1EC177C35AA004A1A5A /* Preview */ = {
 			isa = PBXGroup;
 			children = (
+				906414371D004BA1000AEFE5 /* available_offline_TB.png */,
+				9064142B1D004719000AEFE5 /* available_offline_TB@2x.png */,
+				9064142C1D004719000AEFE5 /* available_offline_TB@3x.png */,
+				9064142D1D004719000AEFE5 /* available_offline_TB-filled.png */,
+				9064142E1D004719000AEFE5 /* available_offline_TB-filled@2x.png */,
+				9064142F1D004719000AEFE5 /* available_offline_TB-filled@3x.png */,
 				1487F1EF177C35AA004A1A5A /* deleteTB.png */,
 				1487F1F0177C35AA004A1A5A /* deleteTB@2x.png */,
 				40E354CE1A14D6E8000E7FE4 /* deleteTB@3x.png */,
@@ -3984,6 +4002,7 @@
 				EA2243EB1B71276D00F62E2A /* ShareLinkHeaderCell.xib in Resources */,
 				1487F208177C35AA004A1A5A /* MainAppIcon_29-29.png in Resources */,
 				59EDC4321C611F9A0050939C /* btnHelpPage5@2x.png in Resources */,
+				906414381D004BA1000AEFE5 /* available_offline_TB.png in Resources */,
 				1487F209177C35AA004A1A5A /* MainAppIcon_29-29@2x.png in Resources */,
 				400A63821B4FD94C00890579 /* iphoneAccounts.png in Resources */,
 				14A7F7A018ED5781009AF347 /* presentation_icon@2x.png in Resources */,
@@ -4083,6 +4102,7 @@
 				EA4914721AC0346100BECF0B /* TTOpenInAppActivity.png in Resources */,
 				1487F249177C35AA004A1A5A /* NonSecureConnectionIcon@2x.png in Resources */,
 				59EDC42C1C611F9A0050939C /* btnAllHelpGrey@2x.png in Resources */,
+				906414351D004719000AEFE5 /* available_offline_TB-filled@3x.png in Resources */,
 				1487F24A177C35AA004A1A5A /* ReconnectIcon.png in Resources */,
 				1487F24B177C35AA004A1A5A /* ReconnectIcon@2x.png in Resources */,
 				1487F24C177C35AA004A1A5A /* RevealPasswordIcon.png in Resources */,
@@ -4134,6 +4154,7 @@
 				40AB1F5C1A12392E003E7397 /* cancel_download@3x.png in Resources */,
 				EABD89051BBE82C400DA5281 /* NotificationBackgroundSuccessIcon@2x.png in Resources */,
 				14A4796718EC6294003500BA /* favoriteTB-filled@2x.png in Resources */,
+				906414321D004719000AEFE5 /* available_offline_TB@3x.png in Resources */,
 				14A4796618EC6294003500BA /* favoriteTB-filled.png in Resources */,
 				1487F268177C35AA004A1A5A /* TSAlertViewCancelButtonBackground.png in Resources */,
 				13B1DDE318EC1F69006166DC /* sharedItemWhite@2x.png in Resources */,
@@ -4166,6 +4187,7 @@
 				1487F277177C35AA004A1A5A /* user.png in Resources */,
 				1487F278177C35AA004A1A5A /* user@2x.png in Resources */,
 				1487F279177C35AA004A1A5A /* exitFullScreen.png in Resources */,
+				906414341D004719000AEFE5 /* available_offline_TB-filled@2x.png in Resources */,
 				1487F27A177C35AA004A1A5A /* exitFullScreen@2x.png in Resources */,
 				14A7F7A218ED5781009AF347 /* presentation_icon~ipad.png in Resources */,
 				1487F27B177C35AA004A1A5A /* fullScreen.png in Resources */,
@@ -4219,6 +4241,7 @@
 				4007876D1C44EAEE00486A26 /* ShareEditUserViewController.xib in Resources */,
 				14CB98AA19657B7700F6FF4E /* folder-public@2x.png in Resources */,
 				4052B4DC1B4ECD74000788DA /* btnHelpPage1.png in Resources */,
+				906414331D004719000AEFE5 /* available_offline_TB-filled.png in Resources */,
 				4016E5C51A0CE9410022163C /* MainAppIcon_76_76@3x.png in Resources */,
 				EA123C781C58E9C500926398 /* MainAppIcon_167-167.png in Resources */,
 				148BEA64178C027400696246 /* FailedUploadCell.xib in Resources */,
@@ -4227,6 +4250,7 @@
 				593D531E17BF701800191846 /* SSOViewController.xib in Resources */,
 				EA4914731AC0346100BECF0B /* TTOpenInAppActivity@2x.png in Resources */,
 				13AA2C9B17D8AFCB00DB5E11 /* tabBar.png in Resources */,
+				906414311D004719000AEFE5 /* available_offline_TB@2x.png in Resources */,
 				40CF2C6C1C491C610047969A /* ShareUserPrivilegeCell.xib in Resources */,
 				149D98C1195AAD54005E0C73 /* fileSharedByLink.png in Resources */,
 				13AA2C9C17D8AFCB00DB5E11 /* tabBar@2x.png in Resources */,
