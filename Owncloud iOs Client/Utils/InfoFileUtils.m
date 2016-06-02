@@ -203,7 +203,7 @@
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
             }
         } else if (isFolderPendingToBeDownload) {
-            fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon.png"];
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
         } else {
             fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
         }
@@ -234,9 +234,9 @@
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synced_icon"];
             } else if (fileForSetTheStatusIcon.isDownload == overwriting) {
                 //File is overwritten
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileOverwritingIcon"];
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
             } else if (fileForSetTheStatusIcon.isDownload == downloading) {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon"];
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
             } else {
                 fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
             }
