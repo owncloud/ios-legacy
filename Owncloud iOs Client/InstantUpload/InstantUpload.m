@@ -77,7 +77,7 @@
                         if (status == PHAuthorizationStatusAuthorized) {
                             [self attemptUpload];
                         } else {
-                            [self showPhotoLibraryAccessPermissionDeniedAlert];
+                            [self showAlertViewWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil) body:NSLocalizedString(@"message_access_photos_not_enabled", nil)];
                             [self.delegate instantUploadPermissionLostOrDenied];
                         }
                     }];
@@ -119,13 +119,13 @@
             } else {
                 if ([self backgroundInstantUploadEnabled]) {
                     [self setBackgroundInstantUploadEnabled:NO];
-                    [self showLocationAccessAlwaysPermissionDeniedAlert];
+                    [self showAlertViewWithTitle:NSLocalizedString(@"location_not_enabled", nil) body:NSLocalizedString(@"message_location_not_enabled", nil)];
                     [self.delegate backgroundInstantUploadPermissionLostOrDenied];
                 }
             }
         } else {
             [self setEnabled:NO];
-            [self showPhotoLibraryAccessPermissionDeniedAlert];
+            [self showAlertViewWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil) body:NSLocalizedString(@"message_access_photos_not_enabled", nil)];
             [self.delegate instantUploadPermissionLostOrDenied];
         }
     }
@@ -182,7 +182,7 @@
                 
             } else {
                 [self setEnabled:NO];
-                [self showPhotoLibraryAccessPermissionDeniedAlert];
+                [self showAlertViewWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil) body:NSLocalizedString(@"message_access_photos_not_enabled", nil)];
                 [self.delegate instantUploadPermissionLostOrDenied];
             }
         }
@@ -212,7 +212,7 @@
             [self.locationManager startMonitoringSignificantLocationChanges];
         } else {
             [self setBackgroundInstantUploadEnabled:NO];
-            [self showLocationAccessAlwaysPermissionDeniedAlert];
+            [self showAlertViewWithTitle:NSLocalizedString(@"location_not_enabled", nil) body:NSLocalizedString(@"message_location_not_enabled", nil)];
             [self.delegate backgroundInstantUploadPermissionLostOrDenied];
         }
     }
@@ -225,14 +225,6 @@
 }
 
 #pragma mark - Utility
-
-- (void) showPhotoLibraryAccessPermissionDeniedAlert {
-    [self showAlertViewWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil) body:NSLocalizedString(@"message_access_photos_not_enabled", nil)];
-}
-
-- (void) showLocationAccessAlwaysPermissionDeniedAlert {
-    [self showAlertViewWithTitle:NSLocalizedString(@"location_not_enabled", nil) body:NSLocalizedString(@"message_location_not_enabled", nil)];
-}
 
 - (void) showAlertViewWithTitle:(NSString *)title body:(NSString *)body{
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:body delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
