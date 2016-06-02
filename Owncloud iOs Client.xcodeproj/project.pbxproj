@@ -624,6 +624,12 @@
 		906414341D004719000AEFE5 /* available_offline_TB-filled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064142E1D004719000AEFE5 /* available_offline_TB-filled@2x.png */; };
 		906414351D004719000AEFE5 /* available_offline_TB-filled@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064142F1D004719000AEFE5 /* available_offline_TB-filled@3x.png */; };
 		906414381D004BA1000AEFE5 /* available_offline_TB.png in Resources */ = {isa = PBXBuildFile; fileRef = 906414371D004BA1000AEFE5 /* available_offline_TB.png */; };
+		9064143F1D005B5C000AEFE5 /* file_new_server_version_available_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 906414391D005B5C000AEFE5 /* file_new_server_version_available_icon.png */; };
+		906414401D005B5C000AEFE5 /* file_new_server_version_available_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064143A1D005B5C000AEFE5 /* file_new_server_version_available_icon@2x.png */; };
+		906414411D005B5C000AEFE5 /* file_synced_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064143B1D005B5C000AEFE5 /* file_synced_icon.png */; };
+		906414421D005B5C000AEFE5 /* file_synced_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064143C1D005B5C000AEFE5 /* file_synced_icon@2x.png */; };
+		906414431D005B5C000AEFE5 /* file_synchronizing_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064143D1D005B5C000AEFE5 /* file_synchronizing_icon.png */; };
+		906414441D005B5C000AEFE5 /* file_synchronizing_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064143E1D005B5C000AEFE5 /* file_synchronizing_icon@2x.png */; };
 		90D608FA1C89844E0049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		90D608FC1C8984760049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; };
@@ -1631,6 +1637,12 @@
 		9064142E1D004719000AEFE5 /* available_offline_TB-filled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "available_offline_TB-filled@2x.png"; sourceTree = "<group>"; };
 		9064142F1D004719000AEFE5 /* available_offline_TB-filled@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "available_offline_TB-filled@3x.png"; sourceTree = "<group>"; };
 		906414371D004BA1000AEFE5 /* available_offline_TB.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = available_offline_TB.png; sourceTree = "<group>"; };
+		906414391D005B5C000AEFE5 /* file_new_server_version_available_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_new_server_version_available_icon.png; sourceTree = "<group>"; };
+		9064143A1D005B5C000AEFE5 /* file_new_server_version_available_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_new_server_version_available_icon@2x.png"; sourceTree = "<group>"; };
+		9064143B1D005B5C000AEFE5 /* file_synced_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_synced_icon.png; sourceTree = "<group>"; };
+		9064143C1D005B5C000AEFE5 /* file_synced_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_synced_icon@2x.png"; sourceTree = "<group>"; };
+		9064143D1D005B5C000AEFE5 /* file_synchronizing_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_synchronizing_icon.png; sourceTree = "<group>"; };
+		9064143E1D005B5C000AEFE5 /* file_synchronizing_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_synchronizing_icon@2x.png"; sourceTree = "<group>"; };
 		D924DCBC1B973E88008B4BE7 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
 		D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
 		D924DCBF1B973E98008B4BE7 /* OCMArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
@@ -2440,6 +2452,12 @@
 		1487F175177C35AA004A1A5A /* FilesViewScreen */ = {
 			isa = PBXGroup;
 			children = (
+				906414391D005B5C000AEFE5 /* file_new_server_version_available_icon.png */,
+				9064143A1D005B5C000AEFE5 /* file_new_server_version_available_icon@2x.png */,
+				9064143B1D005B5C000AEFE5 /* file_synced_icon.png */,
+				9064143C1D005B5C000AEFE5 /* file_synced_icon@2x.png */,
+				9064143D1D005B5C000AEFE5 /* file_synchronizing_icon.png */,
+				9064143E1D005B5C000AEFE5 /* file_synchronizing_icon@2x.png */,
 				1487F176177C35AA004A1A5A /* BackRootFolderIcon.png */,
 				1487F177177C35AA004A1A5A /* BackRootFolderIcon@2x.png */,
 				40AB1F5E1A123B03003E7397 /* BackRootFolderIcon@3x.png */,
@@ -4010,6 +4028,7 @@
 				59EDC4221C611E670050939C /* iphoneAccounts@2x.png in Resources */,
 				EA42FA5A180C13710006DB7C /* cancel_download_white.png in Resources */,
 				1487F218177C35AA004A1A5A /* BackRootFolderIcon.png in Resources */,
+				906414431D005B5C000AEFE5 /* file_synchronizing_icon.png in Resources */,
 				400904DC1A02B54600E3DD15 /* MainAppIcon_60-60@3x.png in Resources */,
 				40E354D91A14FD66000E7FE4 /* pdf_icon@3x.png in Resources */,
 				1487F219177C35AA004A1A5A /* BackRootFolderIcon@2x.png in Resources */,
@@ -4053,6 +4072,7 @@
 				1487F22D177C35AA004A1A5A /* movie_icon@2x.png in Resources */,
 				40E354D51A14FCE7000E7FE4 /* movie_icon@3x.png in Resources */,
 				1487F22E177C35AA004A1A5A /* movie_icon@2x~ipad.png in Resources */,
+				906414401D005B5C000AEFE5 /* file_new_server_version_available_icon@2x.png in Resources */,
 				405AD0C11B56C26A00271424 /* iphoneShare.png in Resources */,
 				1487F22F177C35AA004A1A5A /* movie_icon~ipad.png in Resources */,
 				1487F230177C35AA004A1A5A /* pdf_icon.png in Resources */,
@@ -4089,6 +4109,7 @@
 				14A50E9F18F3FC9100506E2B /* SelectedFolderCell.xib in Resources */,
 				1487F242177C35AA004A1A5A /* zip_icon@2x~ipad.png in Resources */,
 				1487F243177C35AA004A1A5A /* zip_icon~ipad.png in Resources */,
+				906414411D005B5C000AEFE5 /* file_synced_icon.png in Resources */,
 				EABD88CA1BBE638300DA5281 /* ShareLoadingCell.xib in Resources */,
 				1487F244177C35AA004A1A5A /* CredentialsError.png in Resources */,
 				EA42FA5B180C13710006DB7C /* cancel_download_white@2x.png in Resources */,
@@ -4171,6 +4192,7 @@
 				40E354D71A14FD53000E7FE4 /* doc_icon@3x.png in Resources */,
 				1487F270177C35AA004A1A5A /* Button.png in Resources */,
 				1487F271177C35AA004A1A5A /* Button@2x.png in Resources */,
+				906414441D005B5C000AEFE5 /* file_synchronizing_icon@2x.png in Resources */,
 				1487F272177C35AA004A1A5A /* gradImage.png in Resources */,
 				59C0F2B21A963670007FE71B /* iTunesArtwork in Resources */,
 				14A7F7A818ED578E009AF347 /* spreadsheet_icon.png in Resources */,
@@ -4221,6 +4243,7 @@
 				13A5ADB318883C77000EB617 /* CopyLinkShareipad.png in Resources */,
 				EA2B4FB017FAFF69001766BB /* company_empty_screen_ipad.png in Resources */,
 				4052B4E11B4ECF35000788DA /* btnHelpPage2.png in Resources */,
+				906414421D005B5C000AEFE5 /* file_synced_icon@2x.png in Resources */,
 				40E354DD1A14FE00000E7FE4 /* image_icon@3x.png in Resources */,
 				14B0084118FD1B5B004CB06B /* EmptyCell.xib in Resources */,
 				149D98BE195AAD08005E0C73 /* fileSharedWithUs@2x.png in Resources */,
@@ -4235,6 +4258,7 @@
 				4030D8F71A16277100DB0871 /* file_icon@3x.png in Resources */,
 				1420C3AA178A9F5000C0455C /* LoginViewController_iPad.xib in Resources */,
 				EA4914771AC0346100BECF0B /* TTOpenInAppActivity8@2x.png in Resources */,
+				9064143F1D005B5C000AEFE5 /* file_new_server_version_available_icon.png in Resources */,
 				1420C3AB178A9F5000C0455C /* LoginViewController_iPhone.xib in Resources */,
 				EA4914781AC0346100BECF0B /* TTOpenInAppActivity8@3x.png in Resources */,
 				14A7F7AA18ED578E009AF347 /* spreadsheet_icon@2x~ipad.png in Resources */,
