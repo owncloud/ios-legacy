@@ -228,7 +228,7 @@
         } else if (!fileForSetTheStatusIcon.isFavorite) {
             if(fileForSetTheStatusIcon.isNecessaryUpdate || fileForSetTheStatusIcon.isDownload == updating) {
                 //File is in updating
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileUpdatedIcon"];
+                fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_new_server_version_available_icon"];
             } else if (fileForSetTheStatusIcon.isDownload == downloaded) {
                 //File is in device
                 fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synced_icon"];
