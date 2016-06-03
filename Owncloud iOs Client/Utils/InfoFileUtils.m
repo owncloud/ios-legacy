@@ -197,12 +197,9 @@
         BOOL isFolderPendingToBeDownload = [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon];
 
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
-            if(isFolderPendingToBeDownload || [fileForSetTheStatusIcon.etag isEqualToString:k_negative_etag] || fileForSetTheStatusIcon.isNecessaryUpdate) {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
-            } else {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
-            }
-        } else if (isFolderPendingToBeDownload) {
+            fileCell.imageAvailableOffline.image=[UIImage imageNamed:@"file_available_offline_icon"];
+        }
+        if (isFolderPendingToBeDownload) {
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
         } else {
             fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
@@ -220,27 +217,23 @@
         
 
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
-            if(fileForSetTheStatusIcon.isDownload == downloaded && !fileForSetTheStatusIcon.isNecessaryUpdate) {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
-            } else {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
-            }
-        } else if (!fileForSetTheStatusIcon.isFavorite) {
-            if(fileForSetTheStatusIcon.isNecessaryUpdate || fileForSetTheStatusIcon.isDownload == updating) {
-                //File is in updating
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_new_server_version_available_icon"];
-            } else if (fileForSetTheStatusIcon.isDownload == downloaded) {
-                //File is in device
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synced_icon"];
-            } else if (fileForSetTheStatusIcon.isDownload == overwriting) {
-                //File is overwritten
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
-            } else if (fileForSetTheStatusIcon.isDownload == downloading) {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
-            } else {
-                fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
-            }
+            fileCell.imageAvailableOffline.image=[UIImage imageNamed:@"file_available_offline_icon"];
         }
+        if(fileForSetTheStatusIcon.isNecessaryUpdate || fileForSetTheStatusIcon.isDownload == updating) {
+            //File is in updating
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_new_server_version_available_icon"];
+        } else if (fileForSetTheStatusIcon.isDownload == downloaded) {
+            //File is in device
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synced_icon"];
+        } else if (fileForSetTheStatusIcon.isDownload == overwriting) {
+            //File is overwritten
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
+        } else if (fileForSetTheStatusIcon.isDownload == downloading) {
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
+        } else {
+            fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
+        }
+        
     }
     
     if (numberOfShares > 0 && allShares !=nil) {

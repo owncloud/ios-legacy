@@ -630,6 +630,8 @@
 		906414421D005B5C000AEFE5 /* file_synced_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064143C1D005B5C000AEFE5 /* file_synced_icon@2x.png */; };
 		906414431D005B5C000AEFE5 /* file_synchronizing_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064143D1D005B5C000AEFE5 /* file_synchronizing_icon.png */; };
 		906414441D005B5C000AEFE5 /* file_synchronizing_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064143E1D005B5C000AEFE5 /* file_synchronizing_icon@2x.png */; };
+		908A3C5B1D016FE500A34FDB /* file_available_offline_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 908A3C5A1D016FE500A34FDB /* file_available_offline_icon@2x.png */; };
+		908A3C5D1D01732C00A34FDB /* file_available_offline_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 908A3C5C1D01732C00A34FDB /* file_available_offline_icon.png */; };
 		90D608FA1C89844E0049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		90D608FC1C8984760049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; };
@@ -1643,6 +1645,8 @@
 		9064143C1D005B5C000AEFE5 /* file_synced_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_synced_icon@2x.png"; sourceTree = "<group>"; };
 		9064143D1D005B5C000AEFE5 /* file_synchronizing_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_synchronizing_icon.png; sourceTree = "<group>"; };
 		9064143E1D005B5C000AEFE5 /* file_synchronizing_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_synchronizing_icon@2x.png"; sourceTree = "<group>"; };
+		908A3C5A1D016FE500A34FDB /* file_available_offline_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_available_offline_icon@2x.png"; sourceTree = "<group>"; };
+		908A3C5C1D01732C00A34FDB /* file_available_offline_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_available_offline_icon.png; sourceTree = "<group>"; };
 		D924DCBC1B973E88008B4BE7 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
 		D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
 		D924DCBF1B973E98008B4BE7 /* OCMArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
@@ -2452,6 +2456,8 @@
 		1487F175177C35AA004A1A5A /* FilesViewScreen */ = {
 			isa = PBXGroup;
 			children = (
+				908A3C5C1D01732C00A34FDB /* file_available_offline_icon.png */,
+				908A3C5A1D016FE500A34FDB /* file_available_offline_icon@2x.png */,
 				906414391D005B5C000AEFE5 /* file_new_server_version_available_icon.png */,
 				9064143A1D005B5C000AEFE5 /* file_new_server_version_available_icon@2x.png */,
 				9064143B1D005B5C000AEFE5 /* file_synced_icon.png */,
@@ -4050,6 +4056,7 @@
 				1487F228177C35AA004A1A5A /* image_icon.png in Resources */,
 				EABD88E51BBE82C400DA5281 /* NotificationBackgroundError@2x.png in Resources */,
 				EA0599861BB92B19002C2864 /* ShareUserCell.xib in Resources */,
+				908A3C5B1D016FE500A34FDB /* file_available_offline_icon@2x.png in Resources */,
 				1487F229177C35AA004A1A5A /* image_icon@2x.png in Resources */,
 				1487F22A177C35AA004A1A5A /* image_icon@2x~ipad.png in Resources */,
 				13B1DDE218EC1F69006166DC /* sharedItemWhite.png in Resources */,
@@ -4257,6 +4264,7 @@
 				4030D8EF1A1626CC00DB0871 /* file_icon@2x~ipad.png in Resources */,
 				4030D8F71A16277100DB0871 /* file_icon@3x.png in Resources */,
 				1420C3AA178A9F5000C0455C /* LoginViewController_iPad.xib in Resources */,
+				908A3C5D1D01732C00A34FDB /* file_available_offline_icon.png in Resources */,
 				EA4914771AC0346100BECF0B /* TTOpenInAppActivity8@2x.png in Resources */,
 				9064143F1D005B5C000AEFE5 /* file_new_server_version_available_icon.png in Resources */,
 				1420C3AB178A9F5000C0455C /* LoginViewController_iPhone.xib in Resources */,
