@@ -16,7 +16,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IDu-X5-C6e">
-                        <rect key="frame" x="57" y="11" width="194" height="20"/>
+                        <rect key="frame" x="66" y="11" width="185" height="20"/>
                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                         <color key="highlightedColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </label>
@@ -28,14 +28,14 @@
                         </constraints>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V7X-iO-wsT">
-                        <rect key="frame" x="21" y="14" width="32" height="32"/>
+                        <rect key="frame" x="30" y="14" width="32" height="32"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="32" id="Zlo-0x-l04"/>
                             <constraint firstAttribute="width" constant="32" id="wWT-Gu-S8D"/>
                         </constraints>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6fA-Dh-GIN" userLabel="Image Available Offline">
-                        <rect key="frame" x="21" y="14" width="32" height="32"/>
+                        <rect key="frame" x="30" y="14" width="32" height="32"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="32" id="0R1-1O-nDz"/>
                             <constraint firstAttribute="width" constant="32" id="w1v-kh-PQP"/>
@@ -56,7 +56,7 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NYE-BJ-wnH">
-                        <rect key="frame" x="57" y="35" width="194" height="15"/>
+                        <rect key="frame" x="66" y="35" width="185" height="15"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="15" id="mzj-nD-Vlr"/>
                         </constraints>
@@ -84,7 +84,7 @@
                 <constraints>
                     <constraint firstItem="R0W-iY-F4b" firstAttribute="leading" secondItem="NYE-BJ-wnH" secondAttribute="trailing" constant="8" id="4fZ-BI-Qx2"/>
                     <constraint firstItem="ajA-jy-DvN" firstAttribute="top" secondItem="IDu-X5-C6e" secondAttribute="top" id="4uM-w6-hvE"/>
-                    <constraint firstItem="6fA-Dh-GIN" firstAttribute="leading" secondItem="Sxc-wI-TBi" secondAttribute="leadingMargin" constant="13" id="75l-T0-HLQ"/>
+                    <constraint firstItem="6fA-Dh-GIN" firstAttribute="leading" secondItem="Sxc-wI-TBi" secondAttribute="leadingMargin" constant="22" id="75l-T0-HLQ"/>
                     <constraint firstAttribute="trailingMargin" secondItem="ajA-jy-DvN" secondAttribute="trailing" constant="-2" id="A0g-9R-uL9"/>
                     <constraint firstItem="ajA-jy-DvN" firstAttribute="leading" secondItem="IDu-X5-C6e" secondAttribute="trailing" constant="14" id="Crk-0f-j2g"/>
                     <constraint firstItem="uyu-Jj-Uz8" firstAttribute="leading" secondItem="R0W-iY-F4b" secondAttribute="trailing" constant="13" id="D5y-JC-fGe"/>
@@ -99,7 +99,7 @@
                     <constraint firstAttribute="trailingMargin" secondItem="uyu-Jj-Uz8" secondAttribute="trailing" constant="-2" id="awV-4g-TPg"/>
                     <constraint firstItem="R0W-iY-F4b" firstAttribute="leading" secondItem="NYE-BJ-wnH" secondAttribute="trailing" constant="8" id="b3T-7w-4d0"/>
                     <constraint firstItem="NYE-BJ-wnH" firstAttribute="top" secondItem="IDu-X5-C6e" secondAttribute="bottom" constant="4" id="fGs-Z3-T9U"/>
-                    <constraint firstItem="V7X-iO-wsT" firstAttribute="leading" secondItem="Sxc-wI-TBi" secondAttribute="leadingMargin" constant="13" id="goZ-PB-xnj"/>
+                    <constraint firstItem="V7X-iO-wsT" firstAttribute="leading" secondItem="Sxc-wI-TBi" secondAttribute="leadingMargin" constant="22" id="goZ-PB-xnj"/>
                     <constraint firstItem="R0W-iY-F4b" firstAttribute="top" secondItem="ajA-jy-DvN" secondAttribute="top" constant="-2" id="iBe-v3-JYR"/>
                     <constraint firstItem="uyu-Jj-Uz8" firstAttribute="top" secondItem="ajA-jy-DvN" secondAttribute="bottom" constant="12" id="lTu-s5-1b6"/>
                     <constraint firstItem="uyu-Jj-Uz8" firstAttribute="top" secondItem="NYE-BJ-wnH" secondAttribute="top" id="lbX-xY-6Vl"/>
