@@ -42,6 +42,8 @@
 #import "SyncFolderManager.h"
 #import "ManageThumbnails.h"
 #import "ManageTouchID.h"
+#import "DeleteUtils.h"
+#import "OCLoadingSpinner.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -51,6 +53,10 @@
 //Settings custom font
 #define k_settings_normal_font [UIFont fontWithName:@"HelveticaNeue" size:17]
 #define k_settings_bold_font [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
+
+//ActionSheet tags
+#define k_tag_actionSheet_menu_account 101
+#define k_tag_actionSheet_recommend 102
 
 
 ///-----------------------------------
@@ -72,9 +78,13 @@
 }
 
 
--(UIStatusBarStyle)preferredStatusBarStyle
-{
-    return UIStatusBarStyleLightContent;
+-(UIStatusBarStyle)preferredStatusBarStyle {
+    
+    if (k_is_text_status_bar_white) {
+        return UIStatusBarStyleLightContent;
+    } else {
+        return UIStatusBarStyleDefault;
+    }
 }
 
 -(UIViewController *)childViewControllerForStatusBarStyle
@@ -319,14 +329,7 @@
 // Asks the data source to return the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    NSInteger sections = 0;
-    
-    if (k_multiaccount_available) {
-        sections = 5;
-     } else {
-        sections = 4;
-     }
-    return sections;
+    return 5;
 }
 
 // Returns the table view managed by the controller object.
@@ -345,17 +348,15 @@
             break;
             
         case 1:
-            
-            if (!k_multiaccount_available && self.switchPasscode.on && [self isTouchIDAvailable]) {
-                n = 2;
-            }else{
+            if (k_multiaccount_available) {
                 n = 1;
+            }else{
+                n = 0;
             }
             break;
             
         case 2:
-
-            if (k_multiaccount_available && self.switchPasscode.on && [self isTouchIDAvailable]) {
+            if (self.switchPasscode.on && [self isTouchIDAvailable]) {
                 n = 2;
             }else{
                 n = 1;
@@ -363,42 +364,21 @@
             break;
             
         case 3:
-            
-            if (k_multiaccount_available) {
-                n = 1;
-            }else{
-                if (k_show_help_option_on_settings) {
-                    n = n + 1;
-                }
-                if (k_show_recommend_option_on_settings) {
-                    n = n + 1;
-                }
-                if (k_show_feedback_option_on_settings) {
-                    n = n + 1;
-                }
-                if (k_show_imprint_option_on_settings) {
-                    n = n + 1;
-                }
-            }
-            
+            n = 1;
             break;
             
         case 4:
-            n = 0;
-            if (k_multiaccount_available) {
-                
-                if (k_show_help_option_on_settings) {
-                    n = n + 1;
-                }
-                if (k_show_recommend_option_on_settings) {
-                    n = n + 1;
-                }
-                if (k_show_feedback_option_on_settings) {
-                    n = n + 1;
-                }
-                if (k_show_imprint_option_on_settings) {
-                    n = n + 1;
-                }
+            if (k_show_help_option_on_settings) {
+                n = n + 1;
+            }
+            if (k_show_recommend_option_on_settings) {
+                n = n + 1;
+            }
+            if (k_show_feedback_option_on_settings) {
+                n = n + 1;
+            }
+            if (k_show_imprint_option_on_settings) {
+                n = n + 1;
             }
             break;
             
@@ -421,44 +401,24 @@
     
     switch (indexPath.section) {
         case 0:
-            if (k_multiaccount_available) {
-                cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
-            }else{
-                cell = [self getSectionDisconnectButton:cell byRow:indexPath.row];
-            }
+            cell = [self getSectionManageAccountBlock:cell byRow:indexPath.row];
             break;
-            
+
         case 1:
             if (k_multiaccount_available) {
-               cell = [self getSectionAddAccountButton:cell byRow:indexPath.row];
-            }else{
-                [self getSectionAppPinBlock:cell byRow:indexPath.row];
+                cell = [self getSectionAddAccountButton:cell byRow:indexPath.row];
             }
             break;
-            
+
         case 2:
-            if (k_multiaccount_available) {
-                [self getSectionAppPinBlock:cell byRow:indexPath.row];
-            }else{
-                [self getSectionAppInstantUpload:cell byRow:indexPath.row];
-            }
+            [self getSectionAppPinBlock:cell byRow:indexPath.row];
             break;
-            
+
         case 3:
-            if (k_multiaccount_available) {
-                [self getSectionAppInstantUpload:cell byRow:indexPath.row];
-            }else{
-                [self getSectionInfoBlock:cell byRow:indexPath.row];
-            }
+            [self getSectionAppInstantUpload:cell byRow:indexPath.row];
             break;
-            
         case 4:
-            if (k_multiaccount_available) {
-                [self getSectionInfoBlock:cell byRow:indexPath.row];
-            }else{
-                //Nothing
-            }
-            
+            [self getSectionInfoBlock:cell byRow:indexPath.row];
             break;
             
         default:
@@ -477,11 +437,7 @@
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.settingsTableView.frame.size.width, k_padding_last_section)];
     UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:13];
     
-    NSInteger sectionToShowFooter = 3;
-    
-    if (k_multiaccount_available) {
-        sectionToShowFooter = 4;
-    }
+    NSInteger sectionToShowFooter = 4;
 
     if (section == sectionToShowFooter) {
         NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
@@ -516,10 +472,10 @@
             if (k_multiaccount_available) {
                 height = k_padding_under_section;
             }else{
-                height = k_padding_normal_section;
+                height = 0;
             }
             break;
-      
+            
         default:
             height = k_padding_normal_section;
             break;
@@ -541,20 +497,16 @@
             }
             break;
             
-        case 3:
+        case 1:
             if (k_multiaccount_available) {
                 height = k_padding_normal_section;
-            }else{
-                height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
+            } else {
+                height = 0;
             }
             break;
             
         case 4:
-            if (k_multiaccount_available) {
-                height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
-            }else{
-                height = k_padding_normal_section;
-            }
+            height = k_padding_last_section + self.tabBarController.tabBar.frame.size.height;
             break;
             
         default:
@@ -574,41 +526,16 @@
             title = NSLocalizedString(@"accounts_section", nil);
             break;
             
-        case 1:
-            
-            if (!k_multiaccount_available) {
-                title = NSLocalizedString(@"security_section", nil);
-            }
-            
-            break;
-            
         case 2:
-            
-            if (k_multiaccount_available) {
-                title = NSLocalizedString(@"security_section", nil);
-            }else{
-                title = NSLocalizedString(@"instant_updloads_section", nil);
-            }
-            
+            title = NSLocalizedString(@"security_section", nil);
             break;
-            
         case 3:
-            
-            if (k_multiaccount_available) {
-                title = NSLocalizedString(@"instant_updloads_section", nil);
-            }else{
-                title = NSLocalizedString(@"more_section", nil);
-            }
-            
+            title = NSLocalizedString(@"instant_updloads_section", nil);
             break;
-            
         case 4:
-            if (k_multiaccount_available) {
-                title = NSLocalizedString(@"more_section", nil);
-            }
-    
+            title = NSLocalizedString(@"more_section", nil);
             break;
-            
+
         default:
             break;
     }
@@ -687,6 +614,7 @@
             cell.selectionStyle = UITableViewCellSelectionStyleBlue;
             cell.textLabel.text = NSLocalizedString(@"help", nil);
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            
             
             //Add accesibility label for Automation
             cell.accessibilityLabel = ACS_SETTINGS_HELP_CELL;
@@ -828,11 +756,13 @@
     return cell;
 }
 
+
 - (AccountCell *) getSectionManageAccountBlock:(UITableViewCell *) cell byRow:(NSInteger) row {
     
     static NSString *CellIdentifier = @"AccountCell";
     
     AccountCell *accountCell = (AccountCell *) [self.settingsTableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UserDto *userAccout = [self.listUsers objectAtIndex:row];
     
     if (accountCell == nil) {
         
@@ -850,15 +780,19 @@
     [accountCell.activeButton setTag:row];
     
     accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
-    accountCell.userName.text = ((UserDto *) [self.listUsers objectAtIndex:row]).username;
+    accountCell.userName.text = userAccout.username;
     
     //If saml needs change the name to utf8
     if (k_is_sso_active) {
         accountCell.userName.text = [accountCell.userName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
     
-    accountCell.urlServer.text = ((UserDto *) [self.listUsers objectAtIndex:row]).url;
-    accountCell.accessoryType = UITableViewCellAccessoryDetailButton;
+    accountCell.urlServer.text = userAccout.url;
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [accountCell.menuButton setTag:row];
+    [accountCell.menuButton setImage:[UIImage imageNamed:@"more-filledBlack.png"] forState:UIControlStateNormal];
+    [accountCell.menuButton addTarget:self action:@selector(showMenuAccountOptions:) forControlEvents:UIControlEventTouchUpInside];
+
     
     if(((UserDto *) [self.listUsers objectAtIndex:row]).activeaccount){
         [accountCell.activeButton setImage:[UIImage imageNamed:@"radio_checked.png"] forState:UIControlStateNormal];
@@ -901,46 +835,6 @@
     return addAccountCell;
 }
 
-- (UITableViewCell *) getSectionDisconnectButton:(UITableViewCell *) cell byRow:(NSInteger) row {
-    
-    
-    static NSString *CellIdentifier = @"DisconnectCell";
-    
-    UITableViewCell *disconnectCell;
-    
-    disconnectCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-   
-    disconnectCell.selectionStyle = UITableViewCellSelectionStyleBlue;
-    disconnectCell.textLabel.font = k_settings_bold_font;
-    disconnectCell.textLabel.textAlignment = NSTextAlignmentCenter;
-    disconnectCell.editing = NO;
-    disconnectCell.textLabel.text = NSLocalizedString(@"disconnect_button", nil);
-    disconnectCell.backgroundColor = [UIColor colorOfBackgroundButtonOnList];
-    disconnectCell.textLabel.textColor = [UIColor colorOfTextButtonOnList];
-    
-    return disconnectCell;
-}
-
-#pragma mark - Accesories support for Accounts Section
-
-- (void) pressedInfoAccountButton:(UIButton *)sender{
-    
-    //Edit Account
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:(UserDto *)[self.listUsers objectAtIndex:sender.tag]];
-    
-    if (IS_IPHONE)
-    {
-        viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:YES];
-    } else {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [app.splitViewController presentViewController:navController animated:YES completion:nil];
-    }
-}
-
 
 #pragma mark - UITableView delegate
 
@@ -953,8 +847,6 @@
         case 0:
             if (k_multiaccount_available) {
                 [self didPressOnAccountIndexPath:indexPath];
-            }else{
-                [self disconnectUser];
             }
             break;
             
@@ -964,16 +856,8 @@
             }
             break;
             
-        case 3:
-            if (!k_multiaccount_available) {
-                [self didPressOnInfoBlock:indexPath.row];
-            }
-            break;
-            
         case 4:
-            if (k_multiaccount_available) {
-                [self didPressOnInfoBlock:indexPath.row];
-            }
+            [self didPressOnInfoBlock:indexPath.row];
             break;
             
         default:
@@ -993,89 +877,12 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DLog(@"DELETE!!! %ld", (long)indexPath.row);
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
-        UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
-        
-        [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
-        
-        [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: selectedUser.idUser];
-        
-        //Delete the tables of this user
-        [ManageUsersDB removeUserAndDataByIdUser: selectedUser.idUser];
-        
-        [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:selectedUser];
-        
-        //Delete files os user in the system
-        NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)selectedUser.idUser];
-        NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
-        
-
-        NSError *error;
-        [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-        
-        
-        //if previeus account is active we active the first by iduser
-        if(selectedUser.activeaccount) {
-            
-            [ManageUsersDB setActiveAccountAutomatically];
-            
-            //Update in appDelegate the active user
-            APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
-            
-            [self setCookiesOfActiveAccount];
-            
-            [self createFolderForUser:APP_DELEGATE.activeUser];
-            
-            //If ipad, clean the detail view
-            if (!IS_IPHONE) {
-                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                [app presentWithView];
-            }
-        }
-        
-        self.listUsers = [ManageUsersDB getAllUsers];
-        
-        if([self.listUsers count] > 0) {
-            [self.settingsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
-        } else {
-            
-            self.settingsTableView.editing = NO;
-            
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            
-            [self cancelAllDownloads];
-            //[self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
-            app.uploadArray=[[NSMutableArray alloc]init];
-            [app updateRecents];
-            [app restartAppAfterDeleteAllAccounts];
-        }
-        
-        
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+         UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
+        [self dicSelectLogOutAccount:selectedUser];
     }
 }
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
-    
-    //Edit Account
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:(UserDto *)[self.listUsers objectAtIndex:indexPath.row]];
-    
-    if (IS_IPHONE)
-    {
-        viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:YES];
-    } else {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [app.splitViewController presentViewController:navController animated:YES completion:nil];
-    }
-    
-}
 
 #pragma mark - DidSelectRow Sections
 
@@ -1174,18 +981,20 @@
                 if (self.popupQuery) {
                     self.popupQuery = nil;
                 }
-                self.popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:@"Facebook", @"Twitter", @"E-Mail", nil];
+                self.popupQuery = [[UIActionSheet alloc] initWithTitle:nil
+                                                              delegate:self
+                                                     cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                                                destructiveButtonTitle:nil
+                                                     otherButtonTitles:@"Facebook", @"Twitter", @"E-Mail", nil];
+                
+                self.popupQuery.actionSheetStyle = UIActionSheetStyleDefault;
+                self.popupQuery.tag = k_tag_actionSheet_recommend;
                 
                 if (IS_IPHONE) {
                     [self.popupQuery showInView:[self.view window]];
                 }else {
-                    
-                    if (IS_IOS8 || IS_IOS9) {
-                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                        [self.popupQuery showInView:app.splitViewController.view];
-                    } else {
-                        [self.popupQuery showInView:[self.view window]];
-                    }
+                    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                    [self.popupQuery showInView:app.splitViewController.view];
                 }
             }
         }
@@ -1243,7 +1052,7 @@
     if (app.activeUser.idUser != selectedUser.idUser) {
         //Cancel downloads of the previous user
     
-        [self initLoading];
+        [[OCLoadingSpinner sharedOCLoadingSpinner] initLoadingForViewController: self];
     
         [AppDelegate sharedSyncFolderManager].delegate = self;
         
@@ -1268,7 +1077,7 @@
     
     DLog(@"continueChangingUser");
     
-    [self endLoading];
+    [[OCLoadingSpinner sharedOCLoadingSpinner] endLoading];
     
     [UtilsFramework deleteAllCookies];
     
@@ -1409,6 +1218,18 @@
     [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
 }
 
+- (NSMutableArray *) getUsersWithoutActiveUser {
+    NSMutableArray *listOfUsersWithouActive = [NSMutableArray new];
+    
+    for (UserDto *current in self.listUsers) {
+        if (!current.activeaccount) {
+            [listOfUsersWithouActive addObject:current];
+        }
+    }
+    
+    return listOfUsersWithouActive;
+}
+
 #pragma mark - Check Server version in order to use chunks to upload or not
 - (void)checkShareItemsInAppDelegate{
     
@@ -1418,23 +1239,41 @@
 
 #pragma mark - UIActionSheetDelegate
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    switch (buttonIndex) {
-        case 0:
-            DLog(@"Facebook");
-            [self publishFacebook];
-            break;
-        case 1:
-            DLog(@"Twitter");
-            [self publishTwitter];
-            break;
-        case 2:
-            DLog(@"Mail");
-            [self sendRecommendacionByMail];
-            break;
-        case 3:
-            DLog(@"Cancel Button Clicked");
-            break;
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+
+    if (actionSheet.tag == k_tag_actionSheet_recommend) {
+        
+        switch (buttonIndex) {
+            case 0:
+                DLog(@"Facebook");
+                [self publishFacebook];
+                break;
+            case 1:
+                DLog(@"Twitter");
+                [self publishTwitter];
+                break;
+            case 2:
+                DLog(@"Mail");
+                [self sendRecommendacionByMail];
+                break;
+            case 3:
+                DLog(@"Cancel Button Clicked");
+                break;
+        }
+    } else if (actionSheet.tag == k_tag_actionSheet_menu_account) {
+        switch (buttonIndex) {
+            case 0:
+                [self didSelectEditAccount:self.selectedUserAccount];
+                break;
+            case 1:
+                [self didSelectClearCacheAccount:self.selectedUserAccount];
+                break;
+            case 2:
+                [self dicSelectLogOutAccount:self.selectedUserAccount];
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -1707,8 +1546,8 @@
     }
 }
 
-#pragma mark - MFMailComposeController delegate
 
+#pragma mark - MFMailComposeController delegate
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
 {
@@ -1747,8 +1586,8 @@
    
 }
 
-#pragma mark - KKPasscodeViewController delegate methods
 
+#pragma mark - KKPasscodeViewController delegate methods
 
 ///-----------------------------------
 /// @name Changes in Pass Code
@@ -1783,7 +1622,6 @@
 
     
 }
-
 
 #pragma mark - Touch ID methods
 
@@ -2061,65 +1899,8 @@
     }
 }
 
-#pragma mark Loading view methods
 
-/*
- * Method that launch the loading screen and block the view
- */
--(void)initLoading {
-    
-    if (_HUD) {
-        [_HUD removeFromSuperview];
-        _HUD=nil;
-    }
-    
-    if (IS_IPHONE) {
-        _HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
-        _HUD.delegate = self;
-        [self.view.window addSubview:_HUD];
-    } else {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        
-        _HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
-        _HUD.delegate = self;
-        [app.splitViewController.view.window addSubview:_HUD];
-    }
-    
-    _HUD.labelText = NSLocalizedString(@"loading", nil);
-    
-    if (IS_IPHONE) {
-        _HUD.dimBackground = NO;
-    }else {
-        _HUD.dimBackground = NO;
-    }
-    
-    [_HUD show:YES];
-    
-    self.view.userInteractionEnabled = NO;
-    self.navigationController.navigationBar.userInteractionEnabled = NO;
-    self.tabBarController.tabBar.userInteractionEnabled = NO;
-    [self.view.window setUserInteractionEnabled:NO];
-}
-
-
-/*
- * Method that quit the loading screen and unblock the view
- */
-- (void)endLoading {
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //Check if the loading should be visible
-    if (app.isLoadingVisible==NO) {
-        // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
-        [_HUD removeFromSuperview];
-        self.view.userInteractionEnabled = YES;
-        self.navigationController.navigationBar.userInteractionEnabled = YES;
-        self.tabBarController.tabBar.userInteractionEnabled = YES;
-        [self.view.window setUserInteractionEnabled:YES];
-    }
-}
-
-#pragma mark - 
+#pragma mark - Semaphore
 
 - (void) releaseSemaphoreToContinueChangingUser {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -2129,5 +1910,141 @@
     });
 }
 
+
+# pragma mark - menu account
+
+- (void)showMenuAccountOptions:(UIButton *)sender {
+
+    self.selectedUserAccount = [self.listUsers objectAtIndex:sender.tag];
+    NSString *titleMenu = [NSString stringWithFormat:@"%@@%@",self.selectedUserAccount .username,self.selectedUserAccount .url];
+    
+    if (self.menuAccountActionSheet) {
+        self.menuAccountActionSheet = nil;
+    }
+    
+    self.menuAccountActionSheet = [[UIActionSheet alloc]
+                                   initWithTitle:titleMenu
+                                   delegate:self
+                                   cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                                   destructiveButtonTitle:nil
+                                   otherButtonTitles:NSLocalizedString(@"menu_account_edit", nil), NSLocalizedString(@"menu_account_clear_cache", nil), NSLocalizedString(@"menu_account_log_out", nil), nil];
+    
+    self.menuAccountActionSheet.actionSheetStyle = UIActionSheetStyleDefault;
+    self.menuAccountActionSheet.tag = k_tag_actionSheet_menu_account;
+    
+    if (IS_IPHONE) {
+        [self.menuAccountActionSheet showInView:self.tabBarController.view];
+    } else {
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        [self.menuAccountActionSheet showInView:app.splitViewController.view];
+    }
+}
+
+
+#pragma mark - Options menu account
+
+- (void) didSelectEditAccount:(UserDto *)user  {
+   
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:user];
+    
+    if (IS_IPHONE) {
+        viewController.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:navController animated:YES completion:nil];
+    }
+
+}
+
+- (void) didSelectClearCacheAccount:(UserDto *)user {
+
+    [[OCLoadingSpinner sharedOCLoadingSpinner] initLoadingForViewController: self];
+    
+    dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        void (^deletionBlock)(void) = ^{
+            
+            [DeleteUtils deleteAllDownloadedFilesByUser:user];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[OCLoadingSpinner sharedOCLoadingSpinner]  endLoading];
+            });
+        };
+        
+        deletionBlock();
+        
+    });
+}
+
+- (void) dicSelectLogOutAccount:(UserDto *)user {
+    
+    [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
+    
+    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: user.idUser];
+    
+    //Delete the tables of this user
+    [ManageUsersDB removeUserAndDataByIdUser: user.idUser];
+    
+    [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:user];
+    
+    //Delete files of user in the system
+    NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)user.idUser];
+    NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
+    NSError *error;
+    [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+    
+    //if previous account is active we active the first by iduser
+    if(user.activeaccount) {
+        
+        [ManageUsersDB setActiveAccountAutomatically];
+        
+        //Update in appDelegate the active user
+        APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
+        
+        [self setCookiesOfActiveAccount];
+        
+        [self createFolderForUser:APP_DELEGATE.activeUser];
+        
+        //If ipad, clean the detail view
+        if (!IS_IPHONE) {
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            [app presentWithView];
+        }
+    }
+    
+    self.listUsers = [ManageUsersDB getAllUsers];
+    
+    if([self.listUsers count] > 0) {
+        [self.settingsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+    } else {
+        
+        self.settingsTableView.editing = NO;
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        [self cancelAllDownloads];
+        app.uploadArray=[[NSMutableArray alloc]init];
+        [app updateRecents];
+        [app restartAppAfterDeleteAllAccounts];
+    }
+}
+
+
+#pragma mark - iOS 8 rotation method
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+
+    if (self.menuAccountActionSheet) {
+        [self.menuAccountActionSheet dismissWithClickedButtonIndex:3 animated:NO];
+    }
+    if (self.popupQuery) {
+        [self.popupQuery dismissWithClickedButtonIndex:3 animated:NO];
+    }
+
+}
 
 @end

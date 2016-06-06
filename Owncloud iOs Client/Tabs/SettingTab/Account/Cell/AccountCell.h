@@ -22,18 +22,17 @@
 @end
 
 @interface AccountCell : UITableViewCell
-{   
-    __weak UILabel *_userName;
-    __weak UILabel *_urlServer;
-    __weak UIButton * _activeButton;
-    __weak id<AccountCellDelegate> _delegate;
-}
+
 
 @property(nonatomic, weak) IBOutlet UILabel *userName;
 @property(nonatomic, weak) IBOutlet UILabel *urlServer;
 @property(nonatomic, weak) IBOutlet UIButton *activeButton;
-@property(nonatomic, weak) __weak id <AccountCellDelegate> delegate; 
+@property (weak, nonatomic) IBOutlet UIButton *menuButton;
+@property(nonatomic, weak) __weak id <AccountCellDelegate> delegate;
 
--(IBAction)activeAccount:(id)sender;
+
+- (IBAction)activeAccount:(id)sender;
+
+
 
 @end

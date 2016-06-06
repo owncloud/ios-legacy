@@ -7,6 +7,7 @@
 //
 
 #import "NotificationStatusBarViewController.h"
+#import "Customization.h"
 
 @interface NotificationStatusBarViewController ()
 
@@ -35,8 +36,13 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (UIStatusBarStyle) preferredStatusBarStyle {
-    return UIStatusBarStyleLightContent;
+-(UIStatusBarStyle)preferredStatusBarStyle {
+    
+    if (k_is_text_status_bar_white) {
+        return UIStatusBarStyleLightContent;
+    } else {
+        return UIStatusBarStyleDefault;
+    }
 }
 
 @end

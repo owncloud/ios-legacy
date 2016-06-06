@@ -37,6 +37,8 @@ extern NSString * PreviewFileNotification;
 
 + (ALAssetsLibrary *)defaultAssetsLibrary;
 
++ (BOOL) moveFinishedUploadTempFileToLocalPathByUploadsOfflineDto:(UploadsOfflineDto *)currentUpload;
+
 @end
 
 
