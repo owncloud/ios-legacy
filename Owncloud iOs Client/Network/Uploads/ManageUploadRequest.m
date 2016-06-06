@@ -313,8 +313,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 [weakSelf.delegate uploadCompleted:weakSelf.currentUpload.destinyFolder];
             }
             
-            //The destinyfolder: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
-            //The folder Name: A/
+            //The destinyfolder: https://domain/(subfoldersServer)/k_url_webdav_server/(subfoldersDB)/
+            //The folder Name: (subfoldersDB)/
             
             FileDto *uploadFile = [self getFileDtoOfTheUploadOffline];
             

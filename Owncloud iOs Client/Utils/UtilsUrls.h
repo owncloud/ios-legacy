@@ -96,4 +96,8 @@
  */
 + (NSString *) getKeyByLocalFolder:(NSString *) localFolder;
 
++ (NSString *) getFileLocalSystemPathByFullPath:(NSString *)fullRemotePath andUser:(UserDto *)user;
+
++ (NSString *) getFileLocalSystemPathByFileDto:(FileDto *)fileDto andUser:(UserDto *)user;
+
 @end

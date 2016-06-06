@@ -1250,7 +1250,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //Get downloads in progress from the DataBase
         NSMutableArray *downloadsFromDB = [NSMutableArray new];
         
-        [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading]];
+        [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading andUser:self.activeUser]];
         
         for (NSURLSessionDownloadTask *downloadTask in downloadTasks) {
             
@@ -1283,7 +1283,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //Get downloads in progress from the DataBase
         NSMutableArray *downloadsFromDB = [NSMutableArray new];
         
-        [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading]];
+        [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading andUser:self.activeUser]];
         
         for (NSURLSessionDownloadTask *downloadTask in downloadTasks) {
             
@@ -1324,7 +1324,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Get downloads in progress from the DataBase
     NSMutableArray *downloadsFromDB = [NSMutableArray new];
     
-    [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading]];
+    [downloadsFromDB addObjectsFromArray:[ManageFilesDB getFilesByDownloadStatus:downloading andUser:self.activeUser]];
     
     if (downloadsFromDB.count > 0) {
         
@@ -2228,8 +2228,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             NSString * path = [NSString stringWithFormat:@"%@%@", [currentUploadBackground.destinyFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding ], currentUploadBackground.uploadFileName];
             
             [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
-                FileDto *currentFile = [items objectAtIndex:0];
-                [self theFileWasUploadedByCurrentUploadInBackground:currentUploadBackground andCurrentFile:currentFile];
+                if (items != nil && [items count] > 0) {
+                    FileDto *currentFile = [items objectAtIndex:0];
+                    [self theFileWasUploadedByCurrentUploadInBackground:currentUploadBackground andCurrentFile:currentFile];
+                }
                 
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                 //Check the error for to know if there is a server connection error
@@ -2270,8 +2272,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             NSString * path = [NSString stringWithFormat:@"%@%@", [currentUploadBackground.destinyFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding ], currentUploadBackground.uploadFileName];
             
             [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
-                FileDto *currentFile = [items objectAtIndex:0];
-                [self theFileWasUploadedByCurrentUploadInBackground:currentUploadBackground andCurrentFile:currentFile];
+                if (items != nil && [items count] > 0) {
+                    FileDto *currentFile = [items objectAtIndex:0];
+                    [self theFileWasUploadedByCurrentUploadInBackground:currentUploadBackground andCurrentFile:currentFile];
+                }
             } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
 //                //Do nothing
 //                [ManageUploadsDB setStatus:pendingToBeCheck andKindOfError:notAnError byUploadOffline:currentUploadBackground];
@@ -2362,7 +2366,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) updateTheDownloadState: (int) previousState to:(int) newState {
     //Obtain all the file with previous status
-    NSMutableArray *listOfFiles = [ManageFilesDB getFilesByDownloadStatus:previousState];
+    NSMutableArray *listOfFiles = [ManageFilesDB getFilesByDownloadStatus:previousState andUser:self.activeUser];
     DLog(@"There are: %lu in the list of files", (unsigned long)listOfFiles.count);
     
     //First, check if there are
