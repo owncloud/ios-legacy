@@ -609,11 +609,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         if (k_is_sso_active || !k_is_background_active) {
             configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
         } else {
-            if (IS_IOS8 || IS_IOS9) {
-                configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_session_name];
-            } else {
-                configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:k_session_name];
-            }
+            configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_session_name];
         }
 
         configuration.HTTPMaximumConnectionsPerHost = 1;
@@ -632,11 +628,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         if (k_is_sso_active || !k_is_background_active) {
             configurationDownload = [NSURLSessionConfiguration defaultSessionConfiguration];
         } else {
-            if (IS_IOS8 || IS_IOS9) {
-                configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_session_name];
-            }else{
-                configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_session_name];
-            }
+            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_session_name];
         }
      
         configurationDownload.HTTPMaximumConnectionsPerHost = 1;
@@ -686,11 +678,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         if (k_is_sso_active || !k_is_background_active) {
             configurationDownload = [NSURLSessionConfiguration defaultSessionConfiguration];
         } else {
-            if (IS_IOS8) {
-                configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_folder_session_name];
-            }else{
-                configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_folder_session_name];
-            }
+            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_folder_session_name];
         }
         
         configurationDownload.HTTPMaximumConnectionsPerHost = 1;
@@ -1130,15 +1118,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) restoreUploadsInProccessFromSystemWithIdentificator: (NSString*)identifier withCompletionHandler:(void (^)())completionHandler {
     
-    NSURLSessionConfiguration *configuration = nil;
-    
-    
-    if (IS_IOS8 || IS_IOS9) {
-        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
-    } else {
-        configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
-    }
-    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
     NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:configuration];
     
    //Get uploads in the database "waiting for upload" and "uploading" to compare with background uploads
@@ -1259,11 +1239,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (k_is_sso_active || !k_is_background_active) {
         configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     } else {
-        if (IS_IOS8) {
-            configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
-        } else {
-            configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
-        }
+        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
     }
     
     
@@ -1297,11 +1273,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (k_is_sso_active || !k_is_background_active) {
         configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     } else {
-        if (IS_IOS8 || IS_IOS9) {
-            configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
-        } else {
-            configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
-        }
+        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
     }
     
     NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:configuration];
