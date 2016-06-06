@@ -18,6 +18,7 @@
 #import "UIColor+Constants.h"
 #import "Customization.h"
 #import "ImageUtils.h"
+#import "UtilsBrandedOptions.h"
 
 @interface OCNavigationController ()
 
@@ -71,8 +72,6 @@
     
     // Custom initialization
     
-    UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:18];
-    
     self.navigationBar.barTintColor = [UIColor colorOfNavigationBar];
     
     [self.navigationBar setBackgroundImage:[ImageUtils imageWithColor:[UIColor colorOfBackgroundNavBarImage]] forBarMetrics:UIBarMetricsDefault];
@@ -82,20 +81,7 @@
     
     [self.navigationBar setTintColor:[UIColor colorOfNavigationItems]];
     
-    //Set the title color
-    NSShadow *shadow = [[NSShadow alloc] init];
-    shadow.shadowColor = [UIColor colorOfNavigationTitle];
-    shadow.shadowOffset = CGSizeMake(0.7, 0);
-    
-    
-    NSDictionary *titleAttributes = @{NSForegroundColorAttributeName: [UIColor colorOfNavigationTitle],
-                                      NSShadowAttributeName: shadow,
-                                      NSFontAttributeName: appFont};
-    
-    
-    
-    [self.navigationBar setTitleTextAttributes:titleAttributes];
-    
+    [self.navigationBar setTitleTextAttributes:[UtilsBrandedOptions titleAttributesToNavigationBar]];
     
 }
 
@@ -145,9 +131,13 @@
     // Dispose of any resources that can be recreated.
 }
 
--(UIStatusBarStyle)preferredStatusBarStyle
-{
-    return UIStatusBarStyleLightContent;
+-(UIStatusBarStyle)preferredStatusBarStyle {
+    
+    if (k_is_text_status_bar_white) {
+        return UIStatusBarStyleLightContent;
+    } else {
+        return UIStatusBarStyleDefault;
+    }
 }
 
 

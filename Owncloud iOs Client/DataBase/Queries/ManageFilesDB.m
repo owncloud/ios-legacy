@@ -1542,31 +1542,22 @@
  *
  * @return NSMutableArray -> The array with the files
  */
-+ (NSMutableArray *) getFilesByDownloadStatus:(NSInteger) status {
++ (NSMutableArray *) getFilesByDownloadStatus:(NSInteger) status andUser:(UserDto *) user {
     __block NSMutableArray *output = [NSMutableArray new];
     DLog(@"getFilesByDownloadStatus: %ld",(long)status);
-    
-    UserDto *mUser;
-    
-#ifdef CONTAINER_APP
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    mUser = app.activeUser;
-#else
-    mUser = [ManageUsersDB getActiveUser];
-#endif
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
         
-    FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE is_download = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:status], [NSNumber numberWithInteger:mUser.idUser]];
+    FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE is_download = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:status], [NSNumber numberWithInteger:user.idUser]];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];
             
             currentFile.idFile = [rs intForColumn:@"id"];
             currentFile.ocId = [rs stringForColumn:@"oc_id"];
-            currentFile.filePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:mUser],[rs stringForColumn:@"file_path"]];
+            currentFile.filePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:user],[rs stringForColumn:@"file_path"]];
             currentFile.fileName = [rs stringForColumn:@"file_name"];
             currentFile.isDirectory = [rs intForColumn:@"is_directory"];
             currentFile.userId = [rs intForColumn:@"user_id"];
@@ -1576,7 +1567,7 @@
             currentFile.date = [rs longForColumn:@"date"];
             currentFile.etag = [rs stringForColumn:@"etag"];
             currentFile.isFavorite = [rs intForColumn:@"is_favorite"];
-            currentFile.localFolder = [UtilsUrls getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:mUser];
+            currentFile.localFolder = [UtilsUrls getLocalFolderByFilePath:currentFile.filePath andFileName:currentFile.fileName andUserDto:user];
             currentFile.isNecessaryUpdate = [rs boolForColumn:@"is_necessary_update"];
             currentFile.sharedFileSource = [rs intForColumn:@"shared_file_source"];
             currentFile.permissions = [rs stringForColumn:@"permissions"];

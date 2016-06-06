@@ -26,6 +26,7 @@
 #import "ManageUsersDB.h"
 #import "UtilsUrls.h"
 #import "ManageThumbnails.h"
+#import "UtilsFileSystem.h"
 
 NSString * PreviewFileNotification=@"PreviewFileNotification";
 
@@ -84,11 +85,11 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     [ManageFilesDB setFileIsDownloadState:file.idFile andState:overwriting];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    //Obtain the remotePath: https://s3.owncloud.com/owncloud/remote.php/webdav
+    //Obtain the remotePath: https://domain/(subfoldersServer)/k_url_webdav_server
     NSString *remoteFolder = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     //With the filePath obtain the folder name: A/
     NSString *folderName= [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser];
-    //Obtain the complete path: https://s3.owncloud.com/owncloud/remote.php/webdav/A/
+    //Obtain the complete path: https://domain/(subfoldersServer)/k_url_webdav_server/(subfoldersDB)/
     remoteFolder=[NSString stringWithFormat:@"%@%@",remoteFolder, folderName];
     DLog(@"remote folder: %@",remoteFolder);
     
@@ -134,6 +135,16 @@ NSString * PreviewFileNotification=@"PreviewFileNotification";
     });
     return library;
 }
+
++ (BOOL) moveFinishedUploadTempFileToLocalPathByUploadsOfflineDto:(UploadsOfflineDto *)currentUpload {
+    
+    NSString *fullRemoteDestiny = [NSString stringWithFormat:@"%@%@",currentUpload.destinyFolder,currentUpload.uploadFileName];
+    
+    NSString *localDestiny = [UtilsUrls  getFileLocalSystemPathByFullPath:fullRemoteDestiny andUser:APP_DELEGATE.activeUser];
+    
+    return [UtilsFileSystem moveFileOnTheFileSystemFrom:currentUpload.originPath toDestiny:localDestiny];
+}
+
 
 @end
 
