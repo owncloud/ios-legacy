@@ -201,54 +201,41 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     NSInteger currentTag = cell.tag + 1;
     cell.tag = currentTag;
     
-//    if(indexPath.row == 0) {
     
-//        ALAssetsGroup *g = (ALAssetsGroup*)[self.assetGroups objectAtIndex:indexPath.row-1];
-//        [g setAssetsFilter:[self assetFilter]];
-//        NSInteger gCount = [g numberOfAssets];
-//        
-//        cell.textLabel.text = [NSString stringWithFormat:@"%@ (%ld)",[g valueForProperty:ALAssetsGroupPropertyName], (long)gCount];
-//        UIImage* image = [UIImage imageWithCGImage:[g posterImage]];
-//        image = [self resize:image to:CGSizeMake(78, 78)];
-//        [cell.imageView setImage:image];
-//        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    NSDictionary *currentFetchResultRecord = [self.assetGroups objectAtIndex:indexPath.row];
+    PHFetchResult *assetsFetchResult = [currentFetchResultRecord allValues][0];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ %lu", [currentFetchResultRecord allKeys][0],(unsigned long)assetsFetchResult.count];
+    if([assetsFetchResult count]>0)
+    {
+        CGFloat scale = [UIScreen mainScreen].scale;
         
+        //Compute the thumbnail pixel size:
+        CGSize tableCellThumbnailSize1 = CGSizeMake(kAlbumThumbnailSize1.width*scale, kAlbumThumbnailSize1.height*scale);
+        PHAsset *asset = assetsFetchResult[0];
         
-        // } else {         if ios 8 and above
-        NSDictionary *currentFetchResultRecord = [self.assetGroups objectAtIndex:indexPath.row];
-        PHFetchResult *assetsFetchResult = [currentFetchResultRecord allValues][0];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ %lu", [currentFetchResultRecord allKeys][0],(unsigned long)assetsFetchResult.count];
-        if([assetsFetchResult count]>0)
-        {
-            CGFloat scale = [UIScreen mainScreen].scale;
-            
-            //Compute the thumbnail pixel size:
-            CGSize tableCellThumbnailSize1 = CGSizeMake(kAlbumThumbnailSize1.width*scale, kAlbumThumbnailSize1.height*scale);
-            PHAsset *asset = assetsFetchResult[0];
-            
-            PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-            
-            // Download from cloud if necessary
-            options.networkAccessAllowed = YES;
-            options.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
-                
-            };
-            
-            [self.imageManager requestImageForAsset:asset
-                                         targetSize:tableCellThumbnailSize1
-                                        contentMode:PHImageContentModeAspectFill
-                                            options:options
-                                      resultHandler:^(UIImage *result, NSDictionary *info)
-             {
-                 if(cell.tag == currentTag) {
-                     cell.imageView.image = [self resize:result to:CGSizeMake(78, 78)];
-                 }
-             }];
-        }else {
-            cell.imageView.image = nil;
-        }
+        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
         
-
+        // Download from cloud if necessary
+        options.networkAccessAllowed = YES;
+        options.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+            
+        };
+        
+        [self.imageManager requestImageForAsset:asset
+                                     targetSize:tableCellThumbnailSize1
+                                    contentMode:PHImageContentModeAspectFill
+                                        options:options
+                                  resultHandler:^(UIImage *result, NSDictionary *info)
+         {
+             if(cell.tag == currentTag) {
+                 cell.imageView.image = [self resize:result to:CGSizeMake(78, 78)];
+             }
+         }];
+    }else {
+        cell.imageView.image = nil;
+    }
+    
+    
     return cell;
 }
 
