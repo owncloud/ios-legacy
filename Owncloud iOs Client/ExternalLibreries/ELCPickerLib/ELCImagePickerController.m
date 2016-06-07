@@ -24,7 +24,6 @@
 - (id)initImagePicker
 {
     ELCAlbumPickerController *albumPicker = [[ELCAlbumPickerController alloc] init];
-    //ELCAlbumPickerController *albumPicker = [[ELCAlbumPickerController alloc] initWithStyle:UITableViewStylePlain];
     
     self = [super initWithRootViewController:albumPicker];
     if (self) {

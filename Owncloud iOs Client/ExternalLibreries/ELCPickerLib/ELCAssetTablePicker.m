@@ -147,9 +147,7 @@
                               atScrollPosition:UITableViewScrollPositionBottom
                                       animated:NO];
     }
-    
-    //[self.navigationItem setTitle:[NSString stringWithFormat:@"%@",[_assetGroup valueForProperty:ALAssetsGroupPropertyName]]];
-    
+        
 }
 
 - (void)preparePhotos

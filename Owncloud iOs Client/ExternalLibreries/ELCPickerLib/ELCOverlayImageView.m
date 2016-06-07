@@ -44,8 +44,6 @@
             self.labIndex.textColor = [UIColor whiteColor];
             self.labIndex.layer.cornerRadius = 8;
             self.labIndex.layer.shouldRasterize = YES;
-            //        self.labIndex.layer.borderWidth = 1;
-            //        self.labIndex.layer.borderColor = [UIColor greenColor].CGColor;
             self.labIndex.font = [UIFont boldSystemFontOfSize:13];
             [self addSubview:self.labIndex];
         }
