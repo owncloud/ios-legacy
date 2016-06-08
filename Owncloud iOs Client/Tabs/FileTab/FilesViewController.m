@@ -1096,7 +1096,7 @@
     self.albumController = [[ELCAlbumPickerController alloc] initWithNibName: nil bundle: nil];
     self.elcPicker = [[ELCImagePickerController alloc] initWithRootViewController:self.albumController];
     [self.albumController setParent: self.elcPicker];
-	[self.elcPicker setDelegate:self];
+    self.elcPicker.imagePickerDelegate = self;
     
     
     //Info of account and location path   
@@ -1110,14 +1110,8 @@
         folder=appName;
     }
     
-    //TODO: create subclass to include those variables
-    
     self.albumController.currentRemoteFolder=_currentRemoteFolder;
     self.albumController.locationInfo=folder;
-    /*
-    albumController.locationInfo=folder;
-    albumController.accountInfo=app.activeUser.username;
-     */
     
     if (IS_IPHONE) {
         [self presentViewController:self.elcPicker animated:YES completion:nil];
@@ -1245,7 +1239,10 @@
     [app.prepareFiles addFilesToUpload:info andRemoteFoldersToUpload: arrayOfRemoteurl];
     
     //Init loading to prepare files to upload
-    [self initLoading];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self initLoading];
+    });
+    
     //Set global loading screen global flag to YES (only for iPad)
     app.isLoadingVisible = YES;
 }
