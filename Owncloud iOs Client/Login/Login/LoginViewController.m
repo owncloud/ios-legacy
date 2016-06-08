@@ -152,7 +152,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 //For one of the next user story
 -(UIStatusBarStyle)preferredStatusBarStyle {
     
-    if (k_is_text_status_bar_white) {
+    if (k_is_text_login_status_bar_white) {
         return UIStatusBarStyleLightContent;
     } else {
         return UIStatusBarStyleDefault;
