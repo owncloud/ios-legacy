@@ -100,7 +100,12 @@
                 [ManageAppSettingsDB updateBackgroundInstantUploadTo:YES];
                 [self.locationManager startMonitoringSignificantLocationChanges];
             } else {
-                [self.locationManager requestAlwaysAuthorization];
+                if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
+                    [self.locationManager requestAlwaysAuthorization];
+                } else {
+                    [self showAlertViewWithTitle:NSLocalizedString(@"location_not_enabled", nil) body:NSLocalizedString(@"message_location_not_enabled", nil)];
+                    [self.delegate backgroundInstantUploadPermissionLostOrDenied];
+                }
             }
         } else {
             ACTIVE_USER.backgroundInstantUpload = NO;
