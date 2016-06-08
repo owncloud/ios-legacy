@@ -50,8 +50,6 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     self.currentUpload = currentUpload;
     _transferProgress = 0.0;
     
-    [self dismissTransferProgress:self];
-    
     //Store the upload objet to appdelegate
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
@@ -306,7 +304,6 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
             weakSelf.currentUpload.status = uploaded;
             
             [weakSelf updateRecentsTab];
-            [weakSelf dismissTransferProgress:weakSelf];
             
             if(weakSelf.currentUpload.isLastUploadFileOfThisArray) {
                 DLog(@"self.currentUpload: %@", weakSelf.currentUpload.uploadFileName);
@@ -410,7 +407,6 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
         
         switch (error.code) {
             case OCErrorFileToUploadDoesNotExist: {
-                //TODO: create a state to control if the file does not exist
                 
                 AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
                 
@@ -678,13 +674,6 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
 
 #pragma mark - Transfer methods
 
-/*
- * Dismiss transfer progress
- */
-- (void)dismissTransferProgress:(id)sender {
-    //TODO: AF this was commented, maybe this method it is not necessary
-    //_operation = nil;
-}
 
 /*
  * Update recents view
