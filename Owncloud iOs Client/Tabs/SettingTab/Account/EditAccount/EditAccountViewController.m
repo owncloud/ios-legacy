@@ -80,7 +80,6 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
 - (void)setBarForCancelForLoadingFromModal {
     
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(closeViewController)];
-	//[self.navigationItem setRightBarButtonItem:cancelButton];
     [self.navigationItem setLeftBarButtonItem:cancelButton];
 }
 
