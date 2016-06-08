@@ -224,7 +224,7 @@
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_new_server_version_available_icon"];
         } else if (fileForSetTheStatusIcon.isDownload == downloaded) {
             //File is in device
-            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synced_icon"];
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadedIcon"];
         } else if (fileForSetTheStatusIcon.isDownload == overwriting) {
             //File is overwritten
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
