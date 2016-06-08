@@ -678,7 +678,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         if (k_is_sso_active || !k_is_background_active) {
             configurationDownload = [NSURLSessionConfiguration defaultSessionConfiguration];
         } else {
-            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_folder_session_name];
+            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_folder_session_name];
         }
         
         configurationDownload.HTTPMaximumConnectionsPerHost = 1;
