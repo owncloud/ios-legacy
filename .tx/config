@@ -6,4 +6,4 @@ file_filter = Owncloud iOs Client/SupportingFiles/Languages/<lang>.lproj/Localiz
 source_file = Owncloud iOs Client/SupportingFiles/Languages/en.lproj/Localizable.strings
 source_lang = en
 type = STRINGS
-lang_map = nb_NO: nb, pt_PT: pt, pt_BR: pt-BR, th_TH: th-TH, fi_FI: fi, cs_CZ: cs, et_EE: et, ja_JP: ja
+lang_map = nb_NO: nb, pt_PT: pt, pt_BR: pt-BR, th_TH: th-TH, fi_FI: fi, cs_CZ: cs, et_EE: et, ja_JP: ja, de_DE: de
