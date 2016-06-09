@@ -237,4 +237,11 @@
  */
 + (void) updateDBVersion16To17;
 
+/**
+ * Changes:
+ *
+ * Alter users table, adds new field to track user background Instant Upload preference
+ */
++ (void) updateDBVersion17To18;
+
 @end
