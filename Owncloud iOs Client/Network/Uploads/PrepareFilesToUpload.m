@@ -118,13 +118,6 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
         
         [self.listOfUploadOfflineToGenerateSQL addObject:currentUpload];
         
-        long dateAsset = (long)[assetToUpload.creationDate timeIntervalSince1970];
-        //update date last asset uploaded
-        if (dateAsset > [ManageAppSettingsDB getDateInstantUpload]) {
-            //assetDate later than startDate
-            [ManageAppSettingsDB updateDateInstantUpload:dateAsset];
-        }
-        
         if([self.listOfFilesToUpload count] > 0) {
             //We have more files to process
             [self startWithTheNextFile];
