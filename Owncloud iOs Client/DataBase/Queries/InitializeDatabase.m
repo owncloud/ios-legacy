@@ -40,6 +40,7 @@
 #define k_DB_version_15 15
 #define k_DB_version_16 16
 #define k_DB_version_17 17
+#define k_DB_version_18 18
 
 @implementation InitializeDatabase
 
@@ -53,7 +54,7 @@
 + (void) initDataBase {
     
     //New version
-    static int dbVersion = k_DB_version_17;
+    static int dbVersion = k_DB_version_18;
     
     //This method make a new database
     [ManageDB createDataBase];
@@ -102,6 +103,8 @@
                 [ManageDB updateDBVersion15To16];
             case k_DB_version_16:
                 [self updateDBVersion16To17];
+            case k_DB_version_17:
+                [ManageDB updateDBVersion17To18];
                 break; //Insert your migration above this final break.
         }
     }
