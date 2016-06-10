@@ -250,7 +250,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     CFDataRef data = SecCertificateCopyData(currentServerCert);
     X509 *x509cert = NULL;
     if (data) {
-        BIO *mem = BIO_new_mem_buf((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
+        BIO *mem = BIO_new_mem_buf((void *)CFDataGetBytePtr(data), (int)CFDataGetLength(data));
         x509cert = d2i_X509_bio(mem, NULL);
         BIO_free(mem);
         CFRelease(data);
@@ -262,14 +262,15 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
             
             NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
             
-            certName = [NSString stringWithFormat:@"%@/Certificates/%@",documentsDirectory,certName];
-            
+            certName = [NSString stringWithFormat:@"%@Certificates/%@",documentsDirectory,certName];
             
             FILE *file;
             file = fopen( [certName UTF8String], "w" );
-            PEM_write_X509(file, x509cert);
-            
+            if (file) {
+                PEM_write_X509(file, x509cert);
+            }
             fclose(file);
+
         }
     
     } else {
