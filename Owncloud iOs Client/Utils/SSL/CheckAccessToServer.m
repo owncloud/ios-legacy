@@ -337,7 +337,6 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     
     NSString *localCertificatesFolder = [NSString stringWithFormat:@"%@/Certificates/",documentsDirectory];
     
-    
     NSError * err = NULL;
     NSFileManager * fm = [[NSFileManager alloc] init];
     
