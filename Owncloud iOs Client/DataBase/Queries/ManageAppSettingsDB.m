@@ -202,7 +202,7 @@
     
     NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
     
-    NSString *localCertificatesFolder = [NSString stringWithFormat:@"%@/Certificates/",documentsDirectory];
+    NSString *localCertificatesFolder = [NSString stringWithFormat:@"%@Certificates/",documentsDirectory];
     
     
     __block NSMutableArray *output = [NSMutableArray new];

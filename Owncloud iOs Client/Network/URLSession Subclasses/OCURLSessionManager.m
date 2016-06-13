@@ -48,7 +48,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
         
         NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
         
-        NSString *localCertificatesFolder = [NSString stringWithFormat:@"%@/Certificates/",documentsDirectory];
+        NSString *localCertificatesFolder = [NSString stringWithFormat:@"%@Certificates/",documentsDirectory];
         
         NSMutableArray *listCertificateLocation = [ManageAppSettingsDB getAllCertificatesLocation];
         

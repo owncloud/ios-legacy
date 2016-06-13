@@ -635,4 +635,23 @@
     return fullLocalDestiny;
 }
 
+//-----------------------------------
+/// @name getLocalCertificatesPath
+///-----------------------------------
+
+/**
+ * Method used to get only the domain and the protocol (http/https)
+ *
+ * @return NSString localCertificatesPath --> /fullLocalSystemPath/Certificates/
+ *
+ */
++ (NSString *) getLocalCertificatesPath{
+    
+    NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
+    
+    NSString *localCertificatesPath = [NSString stringWithFormat:@"%@Certificates/",documentsDirectory];
+    
+    return localCertificatesPath;
+}
+
 @end
