@@ -28,7 +28,6 @@
 #import "UtilsDtos.h"
 #import "Customization.h"
 #import "ManageUsersDB.h"
-#import "UtilsFileSystem.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"

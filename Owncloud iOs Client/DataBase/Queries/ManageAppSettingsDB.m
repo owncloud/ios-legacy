@@ -200,10 +200,7 @@
     
     DLog(@"getAllCertificatesLocation");
     
-    NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
-    
-    NSString *localCertificatesFolder = [NSString stringWithFormat:@"%@Certificates/",documentsDirectory];
-    
+    NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
     
     __block NSMutableArray *output = [NSMutableArray new];
     
