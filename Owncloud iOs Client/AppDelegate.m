@@ -371,7 +371,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
         
         //Generate the interface of the app
-        [self generateAppInterfaceFromLoginScreen:NO];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self generateAppInterfaceFromLoginScreen:NO];
+        });
     }
 }
 
