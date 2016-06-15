@@ -1737,61 +1737,66 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 #pragma mark - Pass Code
 
 - (void)checkIfIsNecesaryShowPassCode {
-    
     if ([ManageAppSettingsDB isPasscode]) {
-        
-        KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
-        vc.delegate = self;
-        
-        OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
-        vc.mode = KKPasscodeModeEnter;
-        
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        
-        UIViewController *rootController = [[UIViewController alloc]init];
-        rootController.view.backgroundColor = [UIColor darkGrayColor];
-        
-        self.window.rootViewController = rootController;
-        [self.window makeKeyAndVisible];
-        
-        if (IS_IPHONE) {
-
-            [rootController presentViewController:oc animated:YES completion:nil];
-        } else {
-            oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-            oc.modalPresentationStyle = UIModalPresentationFormSheet;
-            [rootController presentViewController:oc animated:NO completion:nil];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
+            vc.delegate = self;
+            
+            OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
+            vc.mode = KKPasscodeModeEnter;
+            
+            self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+            
+            UIViewController *rootController = [[UIViewController alloc]init];
+            rootController.view.backgroundColor = [UIColor darkGrayColor];
+            
+            self.window.rootViewController = rootController;
+            [self.window makeKeyAndVisible];
+            
+            if (IS_IPHONE) {
+                
+                [rootController presentViewController:oc animated:YES completion:nil];
+                
+            } else {
+                oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+                oc.modalPresentationStyle = UIModalPresentationFormSheet;
+                [rootController presentViewController:oc animated:NO completion:nil];
+            }
+        });
     } else {        
         [self initAppWithEtagRequest:YES];
     }
+  
 }
 
 - (void)checkIfIsNecesaryShowPassCodeWillEnterForeground {
     
     if ([ManageAppSettingsDB isPasscode]) {
-        
-        KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
-        vc.delegate = self;
-        
-        OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
-        vc.mode = KKPasscodeModeEnter;
-        
-        if (IS_IPHONE) {
-            [self closeAlertViewAndViewControllers];
-            [_currentViewVisible presentViewController:oc animated:NO completion:nil];
-
-        } else {
-            //is ipad
-            [_splitViewController dismissViewControllerAnimated:NO completion:nil];
-
-           // oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-            oc.modalPresentationStyle = UIModalPresentationFormSheet;
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-            [_splitViewController presentViewController:oc animated:NO completion:^{
-                DLog(@"present complete");
-            }];
-        }
+            KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
+            vc.delegate = self;
+            
+            OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
+            vc.mode = KKPasscodeModeEnter;
+            
+            if (IS_IPHONE) {
+                [self closeAlertViewAndViewControllers];
+                [_currentViewVisible presentViewController:oc animated:NO completion:nil];
+                
+            } else {
+                //is ipad
+                [_splitViewController dismissViewControllerAnimated:NO completion:nil];
+                
+                // oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+                oc.modalPresentationStyle = UIModalPresentationFormSheet;
+                
+                [_splitViewController presentViewController:oc animated:NO completion:^{
+                    DLog(@"present complete");
+                }];
+            }
+        });
     }
 }
 
