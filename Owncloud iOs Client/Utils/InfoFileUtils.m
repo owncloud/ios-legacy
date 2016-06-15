@@ -202,10 +202,10 @@
         if (isFolderPendingToBeDownload) {
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
         } else {
-            fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
+            fileCell.imageDownloaded.image= nil;
         }
 #else
-        fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
+        fileCell.imageDownloaded.image= nil;
 #endif   
         
     } else {
@@ -218,20 +218,21 @@
 
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
             fileCell.imageAvailableOffline.image=[UIImage imageNamed:@"file_available_offline_icon"];
+        } else {
+            fileCell.imageAvailableOffline.image= nil;
         }
+        
         if(fileForSetTheStatusIcon.isNecessaryUpdate || fileForSetTheStatusIcon.isDownload == updating) {
             //File is in updating
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_new_server_version_available_icon"];
         } else if (fileForSetTheStatusIcon.isDownload == downloaded) {
             //File is in device
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadedIcon"];
-        } else if (fileForSetTheStatusIcon.isDownload == overwriting) {
+        } else if (fileForSetTheStatusIcon.isDownload == overwriting || fileForSetTheStatusIcon.isDownload == downloading) {
             //File is overwritten
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
-        } else if (fileForSetTheStatusIcon.isDownload == downloading) {
-            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
         } else {
-            fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
+            fileCell.imageDownloaded.image= nil;
         }
         
     }
@@ -243,18 +244,18 @@
             fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
         }
         else {
-            fileCell.sharedByLinkImage.image= [UIImage imageNamed:@""];
+            fileCell.sharedByLinkImage.image= nil;
         }
         
     } else {
-        fileCell.sharedByLinkImage.image= [UIImage imageNamed:@""];
+        fileCell.sharedByLinkImage.image= nil;
     }
     
     
     if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound){
         fileCell.sharedWithUsImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
     } else {
-        fileCell.sharedWithUsImage.image= [UIImage imageNamed:@""];
+        fileCell.sharedWithUsImage.image= nil;
     }
     
     return fileCell;
