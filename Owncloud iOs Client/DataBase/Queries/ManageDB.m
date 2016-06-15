@@ -20,6 +20,7 @@
 #import "ManageUsersDB.h"
 #import "OCKeychain.h"
 #import "UserDto.h"
+#import "ManageAppSettingsDB.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -47,7 +48,7 @@
         
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_sharee_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'has_forbidden_characters_support' INTEGER NOT NULL DEFAULT 0, 'has_capabilities_support' INTEGER NOT NULL DEFAULT 0, 'instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0, 'date_instant_upload' LONG, 'url_redirected' VARCHAR, 'sorting_type' INTEGER NOT NULL DEFAULT 0)"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_sharee_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'has_forbidden_characters_support' INTEGER NOT NULL DEFAULT 0, 'has_capabilities_support' INTEGER NOT NULL DEFAULT 0, 'instant_upload' BOOL NOT NULL DEFAULT 0, 'background_instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0, 'timestamp_last_instant_upload' DOUBLE, 'url_redirected' VARCHAR, 'sorting_type' INTEGER NOT NULL DEFAULT 0)"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table users");
@@ -990,6 +991,97 @@
         
     }];
     
+}
+
+
+///-----------------------------------
+/// @name Update Database version with 17 version to 18
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter users table, adds new field to track user background Instant Upload preference
+ */
++ (void) updateDBVersion17To18 {
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    // Fetch parameters needed for migration
+    
+    __block long lastDateInstantUpload;
+    __block BOOL defaultBackgroundInstantUploadValue;
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT instant_upload, date_instant_upload FROM users WHERE activeaccount=1"];
+        
+        while ([rs next]) {
+            defaultBackgroundInstantUploadValue = [rs boolForColumn:@"instant_upload"];
+            lastDateInstantUpload = [rs longForColumn:@"date_instant_upload"];
+        }
+    }];
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL dbOperationSuccessful;
+        
+        dbOperationSuccessful = [db executeUpdate:@"ALTER TABLE users ADD background_instant_upload INTEGER"];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error update version 17 to 18 table users add column background_instant_upload");
+        }
+        
+        dbOperationSuccessful = [db executeUpdate:@"UPDATE users SET background_instant_upload=?", @(defaultBackgroundInstantUploadValue)];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error update version 17 to 18 table set background_instant_upload value");
+        }
+        
+        dbOperationSuccessful = [db executeUpdate:@"ALTER TABLE users ADD timestamp_last_instant_upload DOUBLE"];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error update version 17 to 18 table users add column timestamp_last_instant_upload");
+        }
+        
+        dbOperationSuccessful = [db executeUpdate:@"UPDATE users SET timestamp_last_instant_upload=?", @(lastDateInstantUpload)];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error update version 17 to 18 table set timestamp_last_instant_upload value");
+        }
+        
+        // Remove date_instant_upload column from users table
+        
+        //1.- Create a temporary users table users_temp
+        
+        dbOperationSuccessful = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users_temp' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_sharee_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'has_forbidden_characters_support' INTEGER NOT NULL DEFAULT 0, 'has_capabilities_support' INTEGER NOT NULL DEFAULT 0, 'instant_upload' BOOL NOT NULL DEFAULT 0, 'background_instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0, 'timestamp_last_instant_upload' DOUBLE, 'url_redirected' VARCHAR, 'sorting_type' INTEGER NOT NULL DEFAULT 0)"];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error creating database table users_temp, timestamp migration failed");
+        }
+        
+        //2.- Copy the information from users to users_temp
+        dbOperationSuccessful = [db executeUpdate:@"INSERT INTO users_temp SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload, url_redirected, sorting_type FROM users"];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error backing up users table in users_temp");
+        }
+        
+        //3.- Delete the old users table
+        dbOperationSuccessful = [db executeUpdate:@"DROP TABLE users"];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error deleting table users");
+        }
+        
+        //4. Create new table users
+        dbOperationSuccessful = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_sharee_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'has_forbidden_characters_support' INTEGER NOT NULL DEFAULT 0, 'has_capabilities_support' INTEGER NOT NULL DEFAULT 0, 'instant_upload' BOOL NOT NULL DEFAULT 0, 'background_instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0, 'timestamp_last_instant_upload' DOUBLE, 'url_redirected' VARCHAR, 'sorting_type' INTEGER NOT NULL DEFAULT 0)"];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error creating table users");
+        }
+        
+        //5.- Copy the information from users_temp to users
+        dbOperationSuccessful = [db executeUpdate:@"INSERT INTO users SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload, url_redirected, sorting_type FROM users_temp"];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error migrating data from users_temp to users");
+        }
+        
+        //6.- Drop user_temp table
+        dbOperationSuccessful = [db executeUpdate:@"DROP TABLE users_temp"];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error dropping table users_temp");
+        }
+        
+    }];
 }
 
 @end
