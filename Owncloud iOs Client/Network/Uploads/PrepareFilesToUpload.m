@@ -99,13 +99,8 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
 - (void) uploadAssetFromGallery:(PHAsset *) assetToUpload andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray {
     DLog(@"uploadAssetFromGalleryToRemoteFolder");
     
-    static NSDateFormatter *dateFormatter;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd-HH-mm-ss.SSS"];
-        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-    });
+    NSString *fileName = [FileNameUtils getComposeNameFromPHAsset:assetToUpload];
+    NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
     
     void (^UploadFile)(NSString *, UploadsOfflineDto *) = ^(NSString *localPath, UploadsOfflineDto *upload) {
         
@@ -143,12 +138,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     if (assetToUpload.mediaType == PHAssetMediaTypeImage) {
         [[PHImageManager defaultManager] requestImageDataForAsset:assetToUpload options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
             
-            NSURL *url = info[@"PHImageFileURLKey"];
-            NSString *fileExtension = url.pathExtension;
-            
-            //Use a temporary name with a date identification
-            NSString *temporaryFileName = [NSString stringWithFormat:@"IMG_%@.%@", [dateFormatter stringFromDate:[NSDate date]], fileExtension];
-            NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:temporaryFileName];
+            NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
             
             NSFileManager *fileManager = [NSFileManager defaultManager];
             if ([fileManager fileExistsAtPath:localPath]) {
@@ -160,7 +150,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
             currentUpload.originPath = localPath;
             currentUpload.destinyFolder = remoteFolder;
-            currentUpload.uploadFileName = temporaryFileName;
+            currentUpload.uploadFileName = fileName;
             currentUpload.estimateLength = imageData.length;;
             currentUpload.userId = currentUser.idUser;
             currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
@@ -187,12 +177,6 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             }
             
             if (videoFilePath) {
-                NSString *fileExtension = videoFilePath.pathExtension;
-                
-                NSString *temporaryFileName = [NSString stringWithFormat:@"IMG_%@.%@", [dateFormatter stringFromDate:[NSDate date]], fileExtension];
-                
-                NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:temporaryFileName];
-                
                 NSFileManager *fileManager = [NSFileManager defaultManager];
                 if ([fileManager fileExistsAtPath:localPath]) {
                     [fileManager removeItemAtPath:localPath error:nil];
@@ -211,7 +195,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                     UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
                     currentUpload.originPath = localPath;
                     currentUpload.destinyFolder = remoteFolder;
-                    currentUpload.uploadFileName = temporaryFileName;
+                    currentUpload.uploadFileName = fileName;
                     currentUpload.estimateLength = videoData.length;;
                     currentUpload.userId = currentUser.idUser;
                     currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
