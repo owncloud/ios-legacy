@@ -23,9 +23,11 @@
 
 @property(nonatomic, strong) NSMutableArray *currentDirectoryArray;
 @property(nonatomic, strong) FileDto *currentFileDto;
+@property (nonatomic) BOOL isModeEditingEnabled;
 
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextView *bodyTextView;
+
 
 - (id)initWithFileDto:(FileDto *)fileDto;
 

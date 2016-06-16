@@ -42,6 +42,7 @@
     if ((self = [super initWithNibName:shareMainViewNibName bundle:nil]))
     {
         self.currentFileDto = fileDto;
+        self.isModeEditingEnabled = NO;
     }
     
     return self;
