@@ -42,6 +42,7 @@
 #import "SyncFolderManager.h"
 #import "DownloadUtils.h"
 #import "ManageCapabilitiesDB.h"
+#import "EditFileViewController.h"
 
 
 //Constant for iOS7
@@ -163,11 +164,36 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     _isCancelDownloadClicked = NO;
     
+    [self setBarButtonStyle];
+    
     //Set the navigation bar to not translucent
     [self.navigationController.navigationBar setTranslucent:YES];
     
     //Configure view depend device orientation
     [self configureView];
+}
+
+
+- (void) setBarButtonStyle {
+    
+    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(didSelectEditView)];
+    self.navigationItem.rightBarButtonItem = editButton;
+}
+
+- (void) didSelectEditView {
+    
+    EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.file];
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+    navController.navigationBar.translucent = NO;
+    
+    if (IS_IPHONE) {
+        viewController.hidesBottomBarWhenPushed = YES;
+        [self presentViewController:navController animated:YES completion:nil];
+    } else {
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:navController animated:YES completion:nil];
+    }
+
 }
 
 ///-----------------------------------
