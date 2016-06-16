@@ -184,9 +184,9 @@
                 
                 if (numberOfSharesByLink > 0 && sharesByLink !=nil && isShareAPIActive) {
                     fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
-                } else if((numberOfSharesByRemote > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
+                } else if ((numberOfSharesByRemote > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive) {
                     fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
-                } else{
+                } else {
                     fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
                 }
             } else {
@@ -198,7 +198,10 @@
 
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
             fileCell.imageAvailableOffline.image=[UIImage imageNamed:@"file_available_offline_icon"];
+        } else {
+            fileCell.imageAvailableOffline.image= nil;
         }
+
         if (isFolderPendingToBeDownload) {
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
         } else {
