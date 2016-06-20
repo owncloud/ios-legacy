@@ -37,12 +37,12 @@
 
 @implementation EditFileViewController
 
-- (id)initWithFileDto:(FileDto *)fileDto {
+- (id)initWithFileDto:(FileDto *)fileDto andModeEditing:(BOOL)modeEditing{
    
     if ((self = [super initWithNibName:shareMainViewNibName bundle:nil]))
     {
         self.currentFileDto = fileDto;
-        self.isModeEditingEnabled = NO;
+        self.isModeEditing = modeEditing;
     }
     
     return self;
@@ -51,8 +51,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
     self.titleTextField.placeholder = NSLocalizedString(@"title_text_file_placeholder", nil);
-    self.titleTextField.text = [NSString stringWithFormat:@"%@.%@",NSLocalizedString(@"default_text_file_title", nil),k_default_extension];
+
+    if (self.isModeEditing) {
+        self.titleTextField.text = self.currentFileDto.fileName;
+    } else {
+        self.titleTextField.text = [NSString stringWithFormat:@"%@.%@",NSLocalizedString(@"default_text_file_title", nil),k_default_extension];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -60,10 +66,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) viewWillAppear:(BOOL)animated{
+- (void) viewWillAppear:(BOOL)animated {
     [self.bodyTextView becomeFirstResponder];
     [super viewWillAppear:animated];
     [self setStyleView];
+    
 }
 
 
@@ -71,7 +78,17 @@
 
 - (void) setStyleView {
     
-    self.navigationItem.title = NSLocalizedString(@"title_view_new_text_file", nil);
+    if (self.isModeEditing) {
+        
+        self.navigationItem.title = self.currentFileDto.fileName;
+        [self.titleTextField setHidden:YES];
+
+        NSString *contentFile = [NSString stringWithContentsOfFile:[UtilsUrls getFileLocalSystemPathByFileDto:self.currentFileDto andUser:APP_DELEGATE.activeUser] encoding:NSUTF8StringEncoding error:nil];
+        self.bodyTextView.text  = contentFile;
+        
+    } else {
+        self.navigationItem.title = NSLocalizedString(@"title_view_new_text_file", nil);
+    }
     [self setBarButtonStyle];
 }
 
@@ -88,11 +105,18 @@
 #pragma mark - Action Methods
 
 - (void) didSelectDoneView {
-   
-    NSString *fileName = [self.titleTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet] ];
-    NSString *bodyTextFile = self.bodyTextView.text;
+    NSString *fileName = @"";
+    NSString *bodyTextFile = @"";
     
-    if ([self isValidTitleName:fileName]) {
+    if (self.isModeEditing) {
+        fileName = self.currentFileDto.fileName;
+    } else {
+        fileName = [self.titleTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet] ];
+    }
+    bodyTextFile = self.bodyTextView.text;
+
+    
+    if ( self.isModeEditing || (!self.isModeEditing && [self isValidTitleName:fileName])) {
         
         NSString *tempLocalPath = [self storeFileWithTitle:fileName andBody:bodyTextFile];
         if (tempLocalPath) {
@@ -198,8 +222,16 @@
         upload.isInternalUpload = NO;
         upload.taskIdentifier = 0;
         
-        [ManageUploadsDB insertUpload:upload];
-        [app initUploadsOffline];
+        if (self.isModeEditing) {
+            //Set this file as an overwritten state
+            [ManageFilesDB setFileIsDownloadState:self.currentFileDto.idFile andState:overwriting];
+            
+            [ManageUploadsDB insertUpload:upload];
+
+        } else {
+            [ManageUploadsDB insertUpload:upload];
+            [app initUploadsOffline];
+        }
     }
 
 }

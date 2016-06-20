@@ -182,7 +182,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 - (void) didSelectEditView {
     
-    EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.file];
+    EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.file andModeEditing:YES];
     OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
     navController.navigationBar.translucent = NO;
     
