@@ -164,7 +164,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     _isCancelDownloadClicked = NO;
     
-    [self setBarButtonStyle];
+    [self setEditBarButtonInTextFiles];
     
     //Set the navigation bar to not translucent
     [self.navigationController.navigationBar setTranslucent:YES];
@@ -174,10 +174,16 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 }
 
 
-- (void) setBarButtonStyle {
+- (void) setEditBarButtonInTextFiles {
     
-    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(didSelectEditView)];
-    self.navigationItem.rightBarButtonItem = editButton;
+    NSString *ext=@"";
+    ext = [FileNameUtils getExtension:self.file.fileName];
+    
+    if ( [ext isEqualToString:@"TXT"] || [ext isEqualToString:@"RTF"] || [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] ) {
+        
+        UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(didSelectEditView)];
+        self.navigationItem.rightBarButtonItem = editButton;
+    }
 }
 
 - (void) didSelectEditView {
