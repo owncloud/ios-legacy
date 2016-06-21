@@ -205,7 +205,8 @@
    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
 
-    NSString *fullRemotePath = [NSString stringWithFormat:@"%@",[UtilsUrls getFullRemoteServerFilePathByFile:self.currentFileDto andUser:app.activeUser]];
+    //NSString *fullRemotePath = [NSString stringWithFormat:@"%@",[UtilsUrls getFullRemoteServerFilePathByFile:self.currentFileDto andUser:app.activeUser]];
+    NSString *fullRemotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser],[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.currentFileDto.filePath andUser:app.activeUser]];
     
     long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:tempLocalPath error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
     
@@ -220,7 +221,7 @@
         upload.estimateLength = (long)fileLength;
         upload.userId = self.currentFileDto.userId;
         upload.isLastUploadFileOfThisArray = YES;
-        upload.status = pendingToBeCheck;
+        upload.status = generatedByDocumentProvider;
         upload.chunksLength = k_lenght_chunk;
         upload.isNotNecessaryCheckIfExist = NO;
         upload.isInternalUpload = NO;
@@ -229,9 +230,10 @@
         if (self.isModeEditing) {
             //Set this file as an overwritten state
             [ManageFilesDB setFileIsDownloadState:self.currentFileDto.idFile andState:overwriting];
+            [ManageFilesDB setFile:self.currentFileDto.idFile isNecessaryUpdate:YES];
             
             [ManageUploadsDB insertUpload:upload];
-
+            [app launchUploadsOfflineFromDocumentProvider];
         } else {
             [ManageUploadsDB insertUpload:upload];
             [app initUploadsOffline];
