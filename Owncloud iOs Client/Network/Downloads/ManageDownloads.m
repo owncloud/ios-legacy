@@ -118,7 +118,7 @@
         }
         
         NSMutableArray *downs = [NSMutableArray arrayWithArray:self.downloads];
-        
+        //To be sure that the download is not duplicated we remove all the identical
         for (Download *temp in self.downloads) {
             if ([temp.fileDto.localFolder isEqualToString:download.fileDto.localFolder]) {
                 [downs removeObjectIdenticalTo:temp];
