@@ -56,10 +56,14 @@
 
     if (self.isModeEditing) {
         self.titleTextField.text = self.currentFileDto.fileName;
+    
+        self.bodyTextViewHeightConstraint.constant = 5;
+        
     } else {
         self.titleTextField.text = [NSString stringWithFormat:@"%@.%@",NSLocalizedString(@"default_text_file_title", nil),k_default_extension];
     }
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

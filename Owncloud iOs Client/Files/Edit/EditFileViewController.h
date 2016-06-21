@@ -27,6 +27,7 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextView *bodyTextView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bodyTextViewHeightConstraint;
 
 
 - (id)initWithFileDto:(FileDto *)fileDto andModeEditing:(BOOL)modeEditing;
