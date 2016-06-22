@@ -19,6 +19,8 @@
 
 #define shareMainViewNibName @"EditFileViewController"
 
+extern NSString *iPhoneDoneEditFileTextMessageNotification;
+
 @interface EditFileViewController : UIViewController <UITextViewDelegate>
 
 @property(nonatomic, strong) NSMutableArray *currentDirectoryArray;
@@ -28,6 +30,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextView *bodyTextView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bodyTextViewHeightConstraint;
+
 
 
 - (id)initWithFileDto:(FileDto *)fileDto andModeEditing:(BOOL)modeEditing;

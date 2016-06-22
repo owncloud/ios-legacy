@@ -1616,6 +1616,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePreviewFileWithNewIDFromDB:) name:uploadOverwriteFileNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cleanView) name:iPhoneCleanPreviewNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNotConnectionWithServerMessage) name:iPhoneShowNotConnectionWithServerMessageNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissThisView) name:iPhoneDoneEditFileTextMessageNotification object:nil];
 }
 
 
@@ -1668,6 +1669,19 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [self handleFile];
     }
     
+}
+
+
+#pragma mark - dismiss notification
+
+-(void) dismissThisView {
+    [self cleanView];
+    NSArray *allViewControllers = [self.navigationController viewControllers];
+    for (UIViewController *aViewController in allViewControllers) {
+        if ([aViewController isKindOfClass:[FilesViewController class]]) {
+            [self.navigationController popToViewController:aViewController animated:NO];
+        }
+    }
 }
 
 @end

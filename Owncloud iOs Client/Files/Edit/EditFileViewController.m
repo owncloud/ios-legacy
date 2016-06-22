@@ -27,9 +27,13 @@
 #import "UtilsFileSystem.h"
 #import "UIColor+Constants.h"
 #import "UtilsBrandedOptions.h"
+#import "FilePreviewViewController.h"
 
 
 #define k_default_extension @"txt"
+
+NSString * iPhoneDoneEditFileTextMessageNotification = @"iPhoneDoneEditFileTextMessageNotification";
+
 
 @interface EditFileViewController ()
 
@@ -57,7 +61,7 @@
     if (self.isModeEditing) {
         self.titleTextField.text = self.currentFileDto.fileName;
     
-        self.bodyTextViewHeightConstraint.constant = 5;
+        self.bodyTextViewHeightConstraint.constant = 2;
         
     } else {
         self.titleTextField.text = [NSString stringWithFormat:@"%@.%@",NSLocalizedString(@"default_text_file_title", nil),k_default_extension];
@@ -126,10 +130,16 @@
         if (tempLocalPath) {
             [self sendTextFileToUploadsByTempLocalPath:tempLocalPath andFileName:fileName];
         }
-        [self dismissViewControllerAnimated:true completion:nil];
+        
+        [self dismissViewControllerAnimated:NO completion:^{
+            //Send notification in order to update the file list
+            [[NSNotificationCenter defaultCenter] postNotificationName:iPhoneDoneEditFileTextMessageNotification object:nil];
+        }];
+
     }
     
 }
+
 
 - (void) closeViewController {
     
