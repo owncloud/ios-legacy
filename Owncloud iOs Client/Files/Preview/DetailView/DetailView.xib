@@ -20,6 +20,7 @@
                 <outlet property="_spaceBar2" destination="98" id="mCo-DK-9Mz"/>
                 <outlet property="_spaceBar3" destination="PHm-EO-a4h" id="jRS-lG-1Wb"/>
                 <outlet property="_spaceBar4" destination="O4r-p0-SmD" id="4on-ZC-zmH"/>
+                <outlet property="_titleMarginRightConstraint" destination="4g2-Br-Gll" id="ynp-3w-oWH"/>
                 <outlet property="_toolBarHeightConstraint" destination="Qgy-82-b7E" id="B6M-lP-nCw"/>
                 <outlet property="_topMarginTitleLabelConstraint" destination="5IR-2P-Sff" id="fwj-Eu-QOE"/>
                 <outlet property="_topMarginUpdatingButton" destination="z7s-hh-G4S" id="0xg-eK-9Sw"/>

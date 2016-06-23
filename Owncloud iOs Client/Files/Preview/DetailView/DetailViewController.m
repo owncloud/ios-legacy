@@ -114,7 +114,6 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     //Set Constraints
     _topMarginTitleLabelConstraint.constant = 32;
     _progressViewHeightConstraint.constant = 2;
-    _fileTypeCenterHeightConstraint.constant = -40;
     
     
     [self.view setNeedsLayout];
@@ -197,10 +196,13 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     }
     
     
+
     if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
         [items insertObject:_spaceBar4 atIndex:8];
         [items insertObject:_editButtonBar atIndex:9];
-        titleMarginRightConstraint.constant = 260;
+        _titleMarginRightConstraint.constant = 260;
+    } else {
+        _titleMarginRightConstraint.constant = 210;
     }
     
     [toolbar setItems:items animated:YES];
@@ -2252,13 +2254,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         toolBarTopMargin.constant = -deltaHeigh;
         _topMarginUpdatingFileProgressView.constant = -deltaHeigh;
         _topMarginTitleLabelConstraint.constant = -deltaHeigh;
-        toolBarHeight.constant = -deltaHeigh;
         _toolBarHeightConstraint.constant = -deltaHeigh;
     }else{
         toolBarTopMargin.constant = 0;
         _topMarginUpdatingFileProgressView.constant = 10;
         _topMarginTitleLabelConstraint.constant = k_delta_height_toolBar_split_transition/2;
-        toolBarHeight.constant = 0;
         _toolBarHeightConstraint.constant = k_delta_height_toolBar_split_transition;
     }
     

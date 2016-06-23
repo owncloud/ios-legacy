@@ -65,16 +65,14 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
     IBOutlet NSLayoutConstraint *_leftMarginTitleLabelConstraint;
     IBOutlet NSLayoutConstraint *_toolBarHeightConstraint;
     IBOutlet NSLayoutConstraint *_progressViewHeightConstraint;
-    IBOutlet NSLayoutConstraint *_fileTypeCenterHeightConstraint;
     
     IBOutlet NSLayoutConstraint *_topMarginUpdatingFileProgressView;
     IBOutlet NSLayoutConstraint *_topMarginUpdatingView;
     IBOutlet NSLayoutConstraint *_topMarginUpdatingButton;
     
     IBOutlet NSLayoutConstraint *toolBarTopMargin;
-    IBOutlet NSLayoutConstraint *toolBarHeight;
     
-    IBOutlet NSLayoutConstraint *titleMarginRightConstraint;
+    IBOutlet NSLayoutConstraint *_titleMarginRightConstraint;
     
     NSString *nameFileToUpdate; 
     
