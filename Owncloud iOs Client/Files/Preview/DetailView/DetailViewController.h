@@ -50,10 +50,12 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
     IBOutlet UIBarButtonItem *_spaceBar1;
     IBOutlet UIBarButtonItem *_spaceBar2;
     IBOutlet UIBarButtonItem *_spaceBar3;
+    IBOutlet UIBarButtonItem *_spaceBar4;
     IBOutlet UIBarButtonItem *_openButtonBar;
     IBOutlet UIBarButtonItem *_favoriteButtonBar;
     IBOutlet UIBarButtonItem *_shareLinkButtonBar;
     IBOutlet UIBarButtonItem *_deleteButtonBar;
+    IBOutlet UIBarButtonItem *_editButtonBar;
     IBOutlet UIImageView *_companyImageView;
     
     OCToolBar *toolbar;
@@ -71,6 +73,8 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
     
     IBOutlet NSLayoutConstraint *toolBarTopMargin;
     IBOutlet NSLayoutConstraint *toolBarHeight;
+    
+    IBOutlet NSLayoutConstraint *titleMarginRightConstraint;
     
     NSString *nameFileToUpdate; 
     
@@ -184,6 +188,11 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
  * Cancel download feature. Action to cancel the download of a selected file.
  */
 - (IBAction)didPressCancelButton:(id)sender;
+
+/*
+ * Edit file feature. Action to edit the selected file.
+ */
+- (IBAction)didPressEditButton:(id)sender;
 
 
 ///-----------------------------------

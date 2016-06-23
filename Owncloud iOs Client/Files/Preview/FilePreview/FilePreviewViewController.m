@@ -174,6 +174,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 }
 
 
+#pragma mark - Edit file option
+
 - (void) setEditBarButtonInTextFiles {
     
     NSString *ext=@"";
@@ -201,6 +203,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     }
 
 }
+
 
 ///-----------------------------------
 /// @name Set Type of Extend With Option

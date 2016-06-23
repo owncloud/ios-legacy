@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="9059" systemVersion="14F27" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DetailViewController">
             <connections>
                 <outlet property="_companyImageView" destination="RhM-9d-K2q" id="iUu-2g-Wlk"/>
                 <outlet property="_deleteButtonBar" destination="1u1-qz-0oM" id="KUa-zz-8yK"/>
+                <outlet property="_editButtonBar" destination="t2f-eR-Zk5" id="n4w-hA-Zne"/>
                 <outlet property="_favoriteButtonBar" destination="d5c-hM-MXC" id="5N9-mP-ecd"/>
                 <outlet property="_leftMarginTitleLabelConstraint" destination="nEk-l1-bFG" id="ipW-13-E4F"/>
                 <outlet property="_openButtonBar" destination="90" id="9XM-aG-HWG"/>
@@ -18,6 +19,7 @@
                 <outlet property="_spaceBar1" destination="VYt-rC-1eC" id="Zxh-gN-XQS"/>
                 <outlet property="_spaceBar2" destination="98" id="mCo-DK-9Mz"/>
                 <outlet property="_spaceBar3" destination="PHm-EO-a4h" id="jRS-lG-1Wb"/>
+                <outlet property="_spaceBar4" destination="O4r-p0-SmD" id="4on-ZC-zmH"/>
                 <outlet property="_toolBarHeightConstraint" destination="Qgy-82-b7E" id="B6M-lP-nCw"/>
                 <outlet property="_topMarginTitleLabelConstraint" destination="5IR-2P-Sff" id="fwj-Eu-QOE"/>
                 <outlet property="_topMarginUpdatingButton" destination="z7s-hh-G4S" id="0xg-eK-9Sw"/>
@@ -29,6 +31,7 @@
                 <outlet property="progressLabel" destination="85" id="86"/>
                 <outlet property="progressView" destination="82" id="89"/>
                 <outlet property="titleLabel" destination="1eq-mt-JYf" id="WLW-Lz-7kY"/>
+                <outlet property="titleMarginRightConstraint" destination="dtc-mg-Qfz" id="7ao-GB-BHW"/>
                 <outlet property="toolBarTopMargin" destination="wvX-GC-a9Z" id="SeH-e7-f6n"/>
                 <outlet property="toolbar" destination="63" id="65"/>
                 <outlet property="updatingCancelButton" destination="SvH-e8-BmT" id="Z5m-co-vxq"/>
@@ -111,10 +114,16 @@
                                 <action selector="didPressDeleteButton:" destination="-1" id="Drg-ut-FOx"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem width="16" style="plain" systemItem="fixedSpace" id="O4r-p0-SmD" userLabel="Space Bar4"/>
+                        <barButtonItem image="renameBlack.png" style="plain" id="t2f-eR-Zk5" userLabel="Edit Button Bar">
+                            <connections>
+                                <action selector="didPressEditButton:" destination="-1" id="HRw-ZI-ve3"/>
+                            </connections>
+                        </barButtonItem>
                     </items>
                 </toolbar>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1eq-mt-JYf">
-                    <rect key="frame" x="62" y="32" width="496" height="22"/>
+                    <rect key="frame" x="2" y="32" width="556" height="22"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="18"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
@@ -179,7 +188,7 @@
                 <constraint firstAttribute="trailing" secondItem="1eq-mt-JYf" secondAttribute="trailing" constant="210" id="dtc-mg-Qfz"/>
                 <constraint firstAttribute="centerY" secondItem="85" secondAttribute="centerY" constant="512" id="fcI-W2-MVH"/>
                 <constraint firstItem="BV7-Lz-cFn" firstAttribute="top" secondItem="8" secondAttribute="top" constant="10" id="jWd-pP-iNs"/>
-                <constraint firstItem="1eq-mt-JYf" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="62" id="nEk-l1-bFG"/>
+                <constraint firstItem="1eq-mt-JYf" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="2" id="nEk-l1-bFG"/>
                 <constraint firstItem="63" firstAttribute="top" secondItem="8" secondAttribute="top" id="wvX-GC-a9Z"/>
             </constraints>
         </view>
@@ -191,6 +200,7 @@
         <image name="deleteTB.png" width="25" height="25"/>
         <image name="favoriteTB.png" width="25" height="25"/>
         <image name="openWithTB.png" width="25" height="25"/>
+        <image name="renameBlack.png" width="25" height="25"/>
         <image name="sharedItem.png" width="25" height="25"/>
     </resources>
 </document>

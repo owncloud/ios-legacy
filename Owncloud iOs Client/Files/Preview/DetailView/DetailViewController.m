@@ -43,6 +43,7 @@
 #import "DownloadUtils.h"
 #import "ManageCapabilitiesDB.h"
 #import "DownloadFileSyncFolder.h"
+#import "EditFileViewController.h"
 
 
 NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
@@ -108,6 +109,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [_favoriteButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     [_shareLinkButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     [_deleteButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
+    [_editButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     
     //Set Constraints
     _topMarginTitleLabelConstraint.constant = 32;
@@ -193,9 +195,21 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             [items insertObject:_deleteButtonBar atIndex:7];
         }
     }
+    
+    
+    NSString *ext=@"";
+    ext = [FileNameUtils getExtension:self.file.fileName];
+    
+    if ( [ext isEqualToString:@"TXT"] || [ext isEqualToString:@"RTF"] || [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] ) {
+        [items insertObject:_spaceBar4 atIndex:8];
+        [items insertObject:_editButtonBar atIndex:9];
+        titleMarginRightConstraint.constant = 260;
+    }
+    
     [toolbar setItems:items animated:YES];
     
 }
+
 
 - (CGRect) getTheCorrectSize{
     
@@ -1124,6 +1138,17 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     _isViewBlocked = NO;
     [self unBlockFileList];
+}
+
+
+- (IBAction)didPressEditButton:(id)sender
+{
+    EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.file andModeEditing:YES];
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+    navController.navigationBar.translucent = NO;
+    
+    navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 
