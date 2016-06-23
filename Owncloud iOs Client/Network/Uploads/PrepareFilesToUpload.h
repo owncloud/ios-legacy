@@ -76,7 +76,7 @@ extern NSString *ReloadFileListFromDataBaseNotification;
 /*
  * This method is called to add a list of files to the upload list
  */
-- (void) addFilesToUpload:(NSArray *) info andRemoteFoldersToUpload:(NSMutableArray *) arrayOfRemoteurl;
+- (void) addAssetsToUploadFromArray:(NSArray <PHAsset *>*) info andRemoteFoldersToUpload:(NSMutableArray *) arrayOfRemoteurl; 
 /*
  *This method is called to begin the upload transaction. Is called after finish an upload
  */

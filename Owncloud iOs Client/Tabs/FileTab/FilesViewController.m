@@ -1236,7 +1236,7 @@
 - (void) initPrepareFiles:(NSArray *) info andArrayOFfolders: (NSMutableArray *)  arrayOfRemoteurl{
    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [app.prepareFiles addFilesToUpload:info andRemoteFoldersToUpload: arrayOfRemoteurl];
+    [app.prepareFiles addAssetsToUploadFromArray:info andRemoteFoldersToUpload: arrayOfRemoteurl];
     
     //Init loading to prepare files to upload
     dispatch_async(dispatch_get_main_queue(), ^{

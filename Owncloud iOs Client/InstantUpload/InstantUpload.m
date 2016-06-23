@@ -22,6 +22,7 @@
 #import "ManageAppSettingsDB.h"
 #import "ManageUsersDB.h"
 #import "UserDto.h"
+#import "UtilsUrls.h"
 
 #define ACTIVE_USER ((AppDelegate *)[[UIApplication sharedApplication] delegate]).activeUser
 
@@ -183,7 +184,7 @@
                         
                     }];
                     
-                    [app.prepareFiles addAssetsToUpload:newPhotos andRemoteFolder:k_path_instant_upload];
+                    [app.prepareFiles addAssetsToUpload:newPhotos andRemoteFolder:[[NSString alloc] initWithFormat:@"%@%@/",[UtilsUrls getFullRemoteServerPathWithWebDav:ACTIVE_USER], k_path_instant_upload]];
                 }
                 
             } else {
