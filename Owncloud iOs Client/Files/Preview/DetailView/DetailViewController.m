@@ -197,10 +197,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     }
     
     
-    NSString *ext=@"";
-    ext = [FileNameUtils getExtension:self.file.fileName];
-    
-    if ( [ext isEqualToString:@"TXT"] || [ext isEqualToString:@"RTF"] || [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] ) {
+    if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
         [items insertObject:_spaceBar4 atIndex:8];
         [items insertObject:_editButtonBar atIndex:9];
         titleMarginRightConstraint.constant = 260;
