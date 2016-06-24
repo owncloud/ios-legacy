@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -15,9 +16,9 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3">
-                        <rect key="frame" x="58" y="10" width="230" height="20"/>
+                        <rect key="frame" x="60" y="10" width="228" height="20"/>
                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                        <color key="highlightedColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="highlightedColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="5">
                         <rect key="frame" x="9" y="11" width="32" height="32"/>
@@ -27,7 +28,7 @@
                         </constraints>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7">
-                        <rect key="frame" x="22" y="11" width="32" height="32"/>
+                        <rect key="frame" x="24" y="11" width="32" height="32"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="32" id="OHT-3x-PxK"/>
                             <constraint firstAttribute="height" constant="32" id="zCt-0e-HdN"/>
@@ -48,7 +49,7 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="11">
-                        <rect key="frame" x="58" y="32" width="230" height="15"/>
+                        <rect key="frame" x="60" y="32" width="228" height="15"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="15" id="mQ8-I9-mj9"/>
                         </constraints>
@@ -56,6 +57,13 @@
                         <color key="textColor" white="0.50082687043795615" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="highlightedColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QpB-pi-hRP" userLabel="Image Available Offline">
+                        <rect key="frame" x="24" y="11" width="32" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="32" id="BPr-gx-wFn"/>
+                            <constraint firstAttribute="height" constant="32" id="W2J-bx-38m"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="LZy-r3-ulR" firstAttribute="top" secondItem="11" secondAttribute="top" id="CVc-Z9-znj"/>
@@ -63,19 +71,23 @@
                     <constraint firstItem="5" firstAttribute="top" secondItem="7" secondAttribute="top" id="Giz-2e-uer"/>
                     <constraint firstAttribute="trailingMargin" secondItem="LZy-r3-ulR" secondAttribute="trailing" constant="-2" id="Iyn-nF-Ur1"/>
                     <constraint firstItem="3" firstAttribute="leading" secondItem="7" secondAttribute="trailing" constant="4" id="MuK-hv-lLa"/>
+                    <constraint firstItem="QpB-pi-hRP" firstAttribute="leading" secondItem="sQq-jC-UEV" secondAttribute="leadingMargin" constant="16" id="OeS-St-quy"/>
                     <constraint firstItem="5" firstAttribute="leading" secondItem="sQq-jC-UEV" secondAttribute="leadingMargin" constant="1" id="Sbt-zf-CoG"/>
                     <constraint firstItem="11" firstAttribute="top" secondItem="3" secondAttribute="bottom" constant="2" id="d8F-WH-F4Y"/>
                     <constraint firstAttribute="trailingMargin" secondItem="Nv0-oE-v77" secondAttribute="trailing" constant="-2" id="dDI-VR-MUy"/>
-                    <constraint firstItem="7" firstAttribute="leading" secondItem="sQq-jC-UEV" secondAttribute="leadingMargin" constant="14" id="eoB-Vm-11G"/>
+                    <constraint firstItem="7" firstAttribute="leading" secondItem="sQq-jC-UEV" secondAttribute="leadingMargin" constant="16" id="eoB-Vm-11G"/>
                     <constraint firstItem="11" firstAttribute="leading" secondItem="7" secondAttribute="trailing" constant="4" id="gTX-y1-e2b"/>
                     <constraint firstItem="5" firstAttribute="top" secondItem="sQq-jC-UEV" secondAttribute="topMargin" constant="3" id="gtR-MM-n1T"/>
                     <constraint firstItem="3" firstAttribute="top" secondItem="sQq-jC-UEV" secondAttribute="topMargin" constant="2" id="hRW-i2-PsO"/>
+                    <constraint firstItem="11" firstAttribute="leading" secondItem="QpB-pi-hRP" secondAttribute="trailing" constant="4" id="lZW-D9-jzT"/>
                     <constraint firstItem="LZy-r3-ulR" firstAttribute="top" secondItem="Nv0-oE-v77" secondAttribute="bottom" constant="12" id="nBe-nI-4le"/>
                     <constraint firstItem="Nv0-oE-v77" firstAttribute="leading" secondItem="3" secondAttribute="trailing" constant="14" id="omc-xb-BkM"/>
+                    <constraint firstItem="QpB-pi-hRP" firstAttribute="top" secondItem="7" secondAttribute="top" id="otk-cA-PRQ"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="fileImageView" destination="5" id="6"/>
+                <outlet property="imageAvailableOffline" destination="QpB-pi-hRP" id="XpD-KZ-bez"/>
                 <outlet property="imageDownloaded" destination="7" id="8"/>
                 <outlet property="labelInfoFile" destination="11" id="c3X-GA-6oC"/>
                 <outlet property="labelTitle" destination="3" id="4"/>
