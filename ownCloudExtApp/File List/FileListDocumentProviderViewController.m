@@ -302,7 +302,6 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
         }
         
         
-        //Add a FileDownloadedIcon.png in the left of cell when the file is in device
         if (![file isDirectory]) {
             //Is file
             //Font for file

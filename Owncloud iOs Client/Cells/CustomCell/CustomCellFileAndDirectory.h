@@ -19,6 +19,7 @@
 
 @property(nonatomic, weak) IBOutlet UIImageView *fileImageView;
 @property(nonatomic, weak) IBOutlet UIImageView *imageDownloaded;
+@property(nonatomic, weak) IBOutlet UIImageView *imageAvailableOffline;
 @property(nonatomic, weak) IBOutlet UILabel *labelTitle;
 @property(nonatomic, weak) IBOutlet UILabel *labelInfoFile;
 @property(nonatomic, weak) IBOutlet UIImageView *sharedByLinkImage;

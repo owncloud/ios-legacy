@@ -13,7 +13,6 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
-
 #import "PrepareFilesToUpload.h"
 #import "ELCImagePickerController.h"
 #import "ELCAlbumPickerController.h"
@@ -30,7 +29,6 @@
 #import "UploadUtils.h"
 #import "ManageUsersDB.h"
 #import "ManageUploadRequest.h"
-#import "ManageAsset.h"
 #import "ManageAppSettingsDB.h"
 #import "UtilsNetworkRequest.h"
 #import "constants.h"
@@ -47,32 +45,25 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
 
 @implementation PrepareFilesToUpload
 
-#pragma  mark - Manage queue
-- (void) addFilesToUpload:(NSArray *) info andRemoteFoldersToUpload:(NSMutableArray *) arrayOfRemoteurl {
-    
+#pragma mark - Gallery Upload, Upload camera assets, instant upload
+
+- (void) addAssetsToUploadFromArray:(NSArray <PHAsset *>*) info andRemoteFoldersToUpload:(NSMutableArray *) arrayOfRemoteurl {
     for (int i = 0 ; i < [info count] ; i++) {
-        
-        [self.listOfFilesToUpload addObject:[info objectAtIndex:i]];
+        [self.listOfAssetsToUpload addObject:[info objectAtIndex:i]];
         [self.arrayOfRemoteurl addObject:[arrayOfRemoteurl objectAtIndex:i]];
     }
     
-    [self startWithTheNextFile];
+    [self startWithTheNextAsset];
 }
 
-- (void) startWithTheNextFile {
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    BOOL isLastUploadFileOfThisArray = NO;
-    
-    if ([self.listOfFilesToUpload count] == 1 && [self.arrayOfRemoteurl count]== 1) {
-        isLastUploadFileOfThisArray = YES;
+- (void) addAssetsToUpload:(PHFetchResult *) assetsToUpload andRemoteFolder:(NSString *) remoteFolder {
+    for (int i = 0 ; i < [assetsToUpload count] ; i++) {
+        [self.listOfAssetsToUpload addObject:[assetsToUpload objectAtIndex:i]];
+        
+        [self.arrayOfRemoteurl addObject:remoteFolder];
     }
     
-    [self uploadFileFromGallery:[self.listOfFilesToUpload objectAtIndex:0] andRemoteFolder:[self.arrayOfRemoteurl objectAtIndex:0] andCurrentUser:appDelegate.activeUser andIsLastFile:isLastUploadFileOfThisArray];
-    
-    [self.listOfFilesToUpload removeObjectAtIndex:0];
-    [self.arrayOfRemoteurl removeObjectAtIndex:0];
+    [self startWithTheNextAsset];
 }
 
 - (void)sendFileToUploadByUploadOfflineDto:(UploadsOfflineDto *) currentUpload {
@@ -88,48 +79,36 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     
 }
 
-- (void)uploadFileFromGallery:(PHAsset *)assetToUpload andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray {
+- (void) startWithTheNextAsset {
+    @synchronized (self) {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        
+        self.pathRemoteInstantUpload = [[NSString alloc]initWithFormat:@"%@%@/",[UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser],[self nameRemoteInstantUploadFolder]];
+        DLog(@"remoteFolderInstantUpload: %@", self.pathRemoteInstantUpload);
+        
+        PHAsset *assetToUpload = self.listOfAssetsToUpload[0];
+        NSString *uploadPath = self.arrayOfRemoteurl[0];
+        
+        [self.listOfAssetsToUpload removeObjectAtIndex:0];
+        [self.arrayOfRemoteurl removeObjectAtIndex:0];
+        
+        [self uploadAssetFromGallery:assetToUpload andRemoteFolder:uploadPath andCurrentUser:app.activeUser andIsLastFile:([self.listOfAssetsToUpload count] == 1)];
+    }
+}
+
+- (void) uploadAssetFromGallery:(PHAsset *) assetToUpload andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray {
+    DLog(@"uploadAssetFromGalleryToRemoteFolder");
     
-    DLog(@"uploadFileFromGallery");
+    NSString *fileName = [FileNameUtils getComposeNameFromPHAsset:assetToUpload];
+    NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
     
-    [[PHImageManager defaultManager] requestImageDataForAsset:assetToUpload options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+    void (^UploadFile)(NSString *, UploadsOfflineDto *) = ^(NSString *localPath, UploadsOfflineDto *upload) {
         
-        NSString *fileName = [FileNameUtils getComposeNameFromPHAsset:assetToUpload];
-        NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
+        [self.listOfUploadOfflineToGenerateSQL addObject:upload];
         
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        if ([fileManager fileExistsAtPath:localPath]) {
-            [fileManager removeItemAtPath:localPath error:nil];
-        }
-        
-        [fileManager createFileAtPath:localPath contents:imageData attributes:nil];
-        
-        UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
-        currentUpload.originPath = localPath;
-        currentUpload.destinyFolder = remoteFolder;
-        currentUpload.uploadFileName = fileName;
-        currentUpload.estimateLength = imageData.length;;
-        currentUpload.userId = currentUser.idUser;
-        currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
-        currentUpload.status = waitingAddToUploadList;
-        currentUpload.chunksLength = k_lenght_chunk;
-        currentUpload.uploadedDate = 0;
-        currentUpload.kindOfError = notAnError;
-        currentUpload.isInternalUpload = YES;
-        currentUpload.taskIdentifier = 0;
-        
-        [self.listOfUploadOfflineToGenerateSQL addObject:currentUpload];
-        
-        long dateAsset = (long)[assetToUpload.creationDate timeIntervalSince1970];
-        //update date last asset uploaded
-        if (dateAsset > [ManageAppSettingsDB getDateInstantUpload]) {
-            //assetDate later than startDate
-            [ManageAppSettingsDB updateDateInstantUpload:dateAsset];
-        }
-        
-        if([self.listOfFilesToUpload count] > 0) {
+        if([self.listOfAssetsToUpload count] > 0) {
             //We have more files to process
-            [self startWithTheNextFile];
+            [self startWithTheNextAsset];
         } else {
             
             //We finish all the files of this block
@@ -154,167 +133,84 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             }
         }
         
-    }];
-
-}
-
-
-#pragma mark - Upload camera assets, instant upload
-
-- (void) addAssetsToUpload:(NSArray *) assetsToUpload andRemoteFolder:(NSString *) remoteFolder {
+    };
     
-    self.nameRemoteInstantUploadFolder = remoteFolder;
-    
-    for (int i = 0 ; i < [assetsToUpload count] ; i++) {
-        
-        [self.listOfAssetsToUpload addObject:[assetsToUpload objectAtIndex:i]];
+    if (assetToUpload.mediaType == PHAssetMediaTypeImage) {
+        [[PHImageManager defaultManager] requestImageDataForAsset:assetToUpload options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+            
+            NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
+            
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            if ([fileManager fileExistsAtPath:localPath]) {
+                [fileManager removeItemAtPath:localPath error:nil];
+            }
+            
+            [fileManager createFileAtPath:localPath contents:imageData attributes:nil];
+            
+            UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
+            currentUpload.originPath = localPath;
+            currentUpload.destinyFolder = remoteFolder;
+            currentUpload.uploadFileName = fileName;
+            currentUpload.estimateLength = imageData.length;;
+            currentUpload.userId = currentUser.idUser;
+            currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
+            currentUpload.status = waitingAddToUploadList;
+            currentUpload.chunksLength = k_lenght_chunk;
+            currentUpload.uploadedDate = 0;
+            currentUpload.kindOfError = notAnError;
+            currentUpload.isInternalUpload = YES;
+            currentUpload.taskIdentifier = 0;
+            
+            UploadFile(localPath, currentUpload);
+        }];
+    } else if (assetToUpload.mediaType == PHAssetMediaTypeVideo) {
+        [[PHImageManager defaultManager] requestPlayerItemForVideo:assetToUpload options:nil resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
+            
+            //PHImageFileSandboxExtensionTokenKey = "3c58769e46e62a7eed5f9c5fde03e3e063ffabc9;00000000;00000000;000000000000001b;com.apple.avasset.read-only;00000001;01000004;0000000002b1a808;/users/jon/library/developer/coresimulator/devices/a022a96f-3de3-4de7-a0a5-d7b5465e8657/data/media/dcim/100apple/img_0006.mov";
+            NSString *videoFilePath;
+            NSArray *tokenizedPHImageFileSandboxExtensionTokenKey = [info[@"PHImageFileSandboxExtensionTokenKey"] componentsSeparatedByString:@";"];
+            for (NSString *substring in tokenizedPHImageFileSandboxExtensionTokenKey) {
+                if ([substring isAbsolutePath] && [[NSFileManager defaultManager] fileExistsAtPath:substring]) {
+                    videoFilePath = substring;
+                    break;
+                }
+            }
+            
+            if (videoFilePath) {
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                if ([fileManager fileExistsAtPath:localPath]) {
+                    [fileManager removeItemAtPath:localPath error:nil];
+                }
+                
+                AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:playerItem.asset presetName:AVAssetExportPresetHighestQuality];
+                
+                exportSession.outputURL = [NSURL fileURLWithPath:localPath];
+                exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+                
+                [exportSession exportAsynchronouslyWithCompletionHandler:^{
+                    NSData *videoData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:localPath]];
+                    
+                    [fileManager createFileAtPath:localPath contents:videoData attributes:nil];
+                    
+                    UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
+                    currentUpload.originPath = localPath;
+                    currentUpload.destinyFolder = remoteFolder;
+                    currentUpload.uploadFileName = fileName;
+                    currentUpload.estimateLength = videoData.length;;
+                    currentUpload.userId = currentUser.idUser;
+                    currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
+                    currentUpload.status = waitingAddToUploadList;
+                    currentUpload.chunksLength = k_lenght_chunk;
+                    currentUpload.uploadedDate = 0;
+                    currentUpload.kindOfError = notAnError;
+                    currentUpload.isInternalUpload = YES;
+                    currentUpload.taskIdentifier = 0;
+                    
+                    UploadFile(localPath, currentUpload);
+                }];
+            }
+        }];
     }
-    
-    [self startWithTheNextAsset];
-}
-
-- (void) startWithTheNextAsset {
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    self.pathRemoteInstantUpload = [[NSString alloc]initWithFormat:@"%@%@/",[UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser],[self nameRemoteInstantUploadFolder]];
-    DLog(@"remoteFolderInstantUpload: %@", self.pathRemoteInstantUpload);
-
-    BOOL isLastUploadFileOfThisArray = NO;
-    
-    if ([self.listOfAssetsToUpload count] == 1) {
-        isLastUploadFileOfThisArray = YES;
-    }
-    
-    ALAsset *assetToUpload = [self.listOfAssetsToUpload objectAtIndex:0];
-    
-    [self.listOfAssetsToUpload removeObjectAtIndex:0];
-
-    [self uploadAssetFromGallery:assetToUpload andRemoteFolder:self.pathRemoteInstantUpload andCurrentUser:app.activeUser andIsLastFile:isLastUploadFileOfThisArray];
-
-}
-
-- (void) uploadAssetFromGallery:(ALAsset *) assetToUpload andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray{
-    DLog(@"uploadAssetFromGalleryToRemoteFolder");
-
-    NSString *currentFileName = nil;
-    NSDate *date = [assetToUpload valueForProperty:ALAssetPropertyDate];
-    //NSString *type = [assetToUpload valueForProperty:ALAssetPropertyType];
-    ALAssetRepresentation *assetRep = [assetToUpload defaultRepresentation];
-    
-    DLog(@"assetPath :%@", [[assetRep url] absoluteString]);
-    
-    currentFileName = [FileNameUtils getComposeNameFromAsset:assetToUpload];
-    
-    DLog(@"currentFileName: %@",currentFileName);
-    DLog(@"isLastUploadFileOfThisArray: %d", isLastUploadFileOfThisArray);
-    
-    //Use a temporal name with a date identification
-    NSString *temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [currentFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    
-    NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:temporalFileName];
-    DLog(@"localPath: %@", localPath);
-    
-    //Divide the file in chunks of 1024KB, then create the file with all chunks
-    
-    //Variables
-    NSUInteger offset = 0;
-    NSUInteger chunkSize = 1024 * 1024;
-    NSUInteger length = (NSUInteger)[assetToUpload defaultRepresentation].size;
-    DLog(@"rep size %lu", (unsigned long) (length/1024)/1024);
-    
-    if (length < (k_lenght_chunk *1024)) {
-        Byte *buffer = (Byte*)malloc(length);
-        NSUInteger k = [assetRep getBytes:buffer fromOffset: 0.0
-                                        length:length error:nil];
-        
-        NSData *adata = [NSData dataWithBytesNoCopy:buffer length:k freeWhenDone:YES];
-        [adata writeToFile:localPath atomically:YES];
-    } else {
-        
-        //Create file
-        NSFileManager *fm = [NSFileManager defaultManager];
-        [fm createFileAtPath:localPath contents:nil attributes:nil];
-        
-        
-        do {
-            Byte *buffer = (Byte*)malloc(chunkSize);
-            
-            //Store the chunk size
-            NSUInteger thisChunkSize = length - offset > chunkSize ? chunkSize : length - offset;
-            
-            //Write data
-            NSUInteger k = [assetRep getBytes:buffer fromOffset: offset length:thisChunkSize error:nil];
-            
-            NSData *adata = [NSData dataWithBytes:buffer length:k];
-            
-            DLog(@"Write buffer in file: %@", localPath);
-            NSFileHandle *fileHandle=[NSFileHandle fileHandleForWritingAtPath:localPath];
-            [fileHandle seekToEndOfFile];
-            [fileHandle writeData:adata];
-            [fileHandle closeFile];
-            
-            
-            //Avanced position
-            offset += thisChunkSize;
-            
-            //Free memory
-            free(buffer);
-            fileHandle=nil;
-            adata=nil;
-        } while (offset < length);
-    }
-    
-    UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
-    currentUpload.originPath = localPath;
-    currentUpload.destinyFolder = remoteFolder;
-    currentUpload.uploadFileName = currentFileName;
-    currentUpload.estimateLength = length;
-    currentUpload.userId = currentUser.idUser;
-    currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
-    currentUpload.status = waitingAddToUploadList;
-    currentUpload.chunksLength = k_lenght_chunk;
-    currentUpload.uploadedDate = 0;
-    currentUpload.kindOfError = notAnError;
-    currentUpload.isInternalUpload = YES;
-    currentUpload.taskIdentifier = 0;
-
-    [self.listOfUploadOfflineToGenerateSQL addObject:currentUpload];
-    
-    long dateAsset = (long)[date timeIntervalSince1970];
-    //update date last asset uploaded
-    if (dateAsset > [ManageAppSettingsDB getDateInstantUpload]) {
-        //assetDate later than startDate
-        [ManageAppSettingsDB updateDateInstantUpload:dateAsset];
-    }
-    
-    if([self.listOfAssetsToUpload count] > 0) {
-        //We have more files to process
-        [self startWithTheNextAsset];
-    } else {
-        
-        //We finish all the files of this block
-        DLog(@"self.listOfUploadOfflineToGenerateSQL: %lu", (unsigned long)[self.listOfUploadOfflineToGenerateSQL count]);
-        
-        //In this point we have all the files to upload in the Array
-        [ManageUploadsDB insertManyUploadsOffline:self.listOfUploadOfflineToGenerateSQL];
-        
-        //if is the last one we reset the array
-        self.listOfUploadOfflineToGenerateSQL = nil;
-        self.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
-        
-        self.positionOfCurrentUploadInArray = 0;
-        
-        [self performSelectorOnMainThread:@selector(endLoadingInFileList) withObject:nil waitUntilDone:YES];
-        
-        UploadsOfflineDto *currentFile = [ManageUploadsDB getNextUploadOfflineFileToUpload];
-        
-        //We begin with the first file of the array
-        if (currentFile) {
-            [self sendFileToUploadByUploadOfflineDto:currentFile];
-        }
-    }
-    
 }
 
 /*
