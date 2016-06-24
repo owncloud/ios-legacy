@@ -217,9 +217,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     if(trust != nil) {
         [self saveCertificate:trust withName:tmpFileName];
         
-        NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
-        
-        NSString *localCertificatesFolder = [NSString stringWithFormat:@"%@/Certificates/",documentsDirectory];
+        NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
         
         NSMutableArray *listCertificateLocation = [ManageAppSettingsDB getAllCertificatesLocation];
         
@@ -250,7 +248,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     CFDataRef data = SecCertificateCopyData(currentServerCert);
     X509 *x509cert = NULL;
     if (data) {
-        BIO *mem = BIO_new_mem_buf((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
+        BIO *mem = BIO_new_mem_buf((void *)CFDataGetBytePtr(data), (int)CFDataGetLength(data));
         x509cert = d2i_X509_bio(mem, NULL);
         BIO_free(mem);
         CFRelease(data);
@@ -260,16 +258,22 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
             
         } else {
             
-            NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
+            NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
             
-            certName = [NSString stringWithFormat:@"%@/Certificates/%@",documentsDirectory,certName];
+            certName = [NSString stringWithFormat:@"%@%@",localCertificatesFolder,certName];
             
+            if ([[NSFileManager defaultManager] fileExistsAtPath:certName]) {
+                NSError *error;
+                [[NSFileManager defaultManager] removeItemAtPath:certName error:&error];
+            }
             
             FILE *file;
             file = fopen( [certName UTF8String], "w" );
-            PEM_write_X509(file, x509cert);
-            
+            if (file) {
+                PEM_write_X509(file, x509cert);
+            }
             fclose(file);
+
         }
     
     } else {
@@ -333,9 +337,8 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 
 - (void) acceptCertificate {
     NSLog(@"user pressed YES");
-    NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
     
-    NSString *localCertificatesFolder = [NSString stringWithFormat:@"%@/Certificates/",documentsDirectory];
+    NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
     
     NSError * err = NULL;
     NSFileManager * fm = [[NSFileManager alloc] init];
@@ -345,11 +348,12 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     
     NSLog(@"currentCertLocation: %@", currentCertLocation);
     
-    BOOL result = [fm moveItemAtPath:[NSString stringWithFormat:@"%@tmp.der",localCertificatesFolder] toPath:currentCertLocation error:&err];
+    BOOL result = [fm moveItemAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder, tmpFileName] toPath:currentCertLocation error:&err];
     if(!result) {
         NSLog(@"Error: %@", [err localizedDescription]);
     } else {
         [ManageAppSettingsDB insertCertificate:[NSString stringWithFormat:@"%f.der", [date timeIntervalSince1970]]];
+        
     }
     [fm release];
     
