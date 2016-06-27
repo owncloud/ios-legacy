@@ -63,6 +63,7 @@
 #import "ManageCapabilitiesDB.h"
 #import "CheckCapabilities.h"
 #import "SortManager.h"
+#import "EditFileViewController.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -659,7 +660,7 @@
     }
     
     if (self.plusActionSheet) {
-        [self.plusActionSheet dismissWithClickedButtonIndex:3 animated:NO];
+        [self.plusActionSheet dismissWithClickedButtonIndex:4 animated:NO];
     }
     
     if(self.sortingActionSheet){
@@ -839,6 +840,26 @@
     }
 }
 
+#pragma mark - Create Text File
+
+/*
+ * This method show a view to enter text for new text file
+ */
+- (void)showCreateTextFile{
+    
+    EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.fileIdToShowFiles];
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+    navController.navigationBar.translucent = NO;
+    
+    if (IS_IPHONE)
+    {
+        viewController.hidesBottomBarWhenPushed = YES;
+        [self presentViewController:navController animated:YES completion:nil];
+    } else {
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:navController animated:YES completion:nil];
+    }
+}
 
 #pragma mark - Create Folder
 
@@ -1118,8 +1139,6 @@
  */
 - (void)showOptions {
     
-    NSString * sortByTitle = NSLocalizedString(@"sort_menu_title", nil);
-    
     if (self.plusActionSheet) {
         self.plusActionSheet = nil;
     }
@@ -1129,7 +1148,7 @@
                             delegate:self
                             cancelButtonTitle:NSLocalizedString(@"cancel", nil)
                             destructiveButtonTitle:nil
-                            otherButtonTitles:NSLocalizedString(@"menu_upload", nil), NSLocalizedString(@"menu_folder", nil), sortByTitle, nil];
+                            otherButtonTitles:NSLocalizedString(@"menu_upload", nil), NSLocalizedString(@"menu_folder", nil), NSLocalizedString(@"menu_text_file", nil), NSLocalizedString(@"sort_menu_title", nil), nil];
     
     self.plusActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
     self.plusActionSheet.tag=100;
@@ -1426,7 +1445,7 @@
         fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.fileIdToShowFiles andIsSonOfFavoriteFolder:self.isCurrentFolderSonOfFavoriteFolder ofUser:APP_DELEGATE.activeUser];
         
         //Thumbnail
-        fileCell.thumbnailOperation = [InfoFileUtils updateThumbnail:file andUser:APP_DELEGATE.activeUser tableView:tableView cellForRowAtIndexPath:indexPath];
+        fileCell.thumbnailSessionTask = [InfoFileUtils updateThumbnail:file andUser:APP_DELEGATE.activeUser tableView:tableView cellForRowAtIndexPath:indexPath];
         
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
@@ -1543,9 +1562,9 @@
     @try {
         CustomCellFileAndDirectory *customCell = (CustomCellFileAndDirectory *) cell;
         
-        if ([customCell isKindOfClass:[CustomCellFileAndDirectory class]] && customCell.thumbnailOperation) {
+        if ([customCell isKindOfClass:[CustomCellFileAndDirectory class]] && customCell.thumbnailSessionTask) {
             DLog(@"Cancel thumbnailOperation");
-            [customCell.thumbnailOperation cancel];
+            [customCell.thumbnailSessionTask cancel];
         }
     }
     @catch (NSException *exception) {
@@ -1973,7 +1992,7 @@
     [self performSelector:@selector(sendRequestToReloadTableView) withObject:nil];
     
     //Refresh the shared data
-    [self performSelector:@selector(refreshSharedPath) withObject:nil];
+    //[self performSelector:@selector(refreshSharedPath) withObject:nil afterDelay:1.0];
     
     [self performSelectorInBackground:@selector(syncFavoritesByFolder:) withObject:self.fileIdToShowFiles];
 }
@@ -2008,29 +2027,31 @@
     
      [[AppDelegate sharedOCCommunication] readFolder:path withUserSessionToken:app.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
          
-        DLog(@"Operation response code: %ld", (long)response.statusCode);
-        BOOL isSamlCredentialsError = NO;
-        
-        //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
-            //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-            if (isSamlCredentialsError) {
-                [self errorLogin];
-            }
-        }
-        
-        if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError && [app.userSessionCurrentToken isEqualToString:token]) {
-            
-            //Pass the items with OCFileDto to FileDto Array
-            NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
-            
-            //Send the data to DB and refresh the table
-            [self deleteOldDataFromDBBeforeRefresh:directoryList];
-        } else {
-            [self stopPullRefresh];
-            _showLoadingAfterChangeUser = NO;
-        }
+         DLog(@"Operation response code: %ld", (long)response.statusCode);
+         BOOL isSamlCredentialsError = NO;
+         
+         //Check the login error in shibboleth
+         if (k_is_sso_active && redirectedServer) {
+             //Check if there are fragmens of saml in url, in this case there are a credential error
+             isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+             if (isSamlCredentialsError) {
+                 [self errorLogin];
+             }
+         }
+         
+         if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError && [app.userSessionCurrentToken isEqualToString:token]) {
+             
+             //Pass the items with OCFileDto to FileDto Array
+             NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
+             
+             //Send the data to DB and refresh the table
+             [self deleteOldDataFromDBBeforeRefresh:directoryList];
+         } else {
+             [self stopPullRefresh];
+             _showLoadingAfterChangeUser = NO;
+         }
+         
+         [self performSelector:@selector(refreshSharedPath) withObject:nil];
 
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token, NSString *redirectedServer) {
         
@@ -2330,6 +2351,9 @@
                 [self showCreateFolder];
                 break;
             case 2:
+                [self showCreateTextFile];
+                break;
+            case 3:
                 [self showSortingOptions];
                 break;
             default:
@@ -3172,7 +3196,7 @@
 /*
  * Method called when receive a fail from server side
  * @errorCodeFromServer -> WebDav Server Error of NSURLResponse
- * @error -> NSError of NSURLConnection
+ * @error -> NSError of NSURLSession
  */
 
 - (void)manageServerErrors: (NSInteger)errorCodeFromServer and:(NSError *)error {

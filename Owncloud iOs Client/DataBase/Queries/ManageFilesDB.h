@@ -192,11 +192,6 @@
 +(void) deleteAllThumbnailsWithDifferentEtagFromBackup;
 
 /*
- * Method to delete localy the files that was deleted from other App
- */
-+ (void) deleteAllFilesAndFoldersThatNotExistOnServerFromBackup;
-
-/*
  * Method to update the Favorite files from the backup after refresh
  */
 + (void) updateFavoriteFilesFromBackup;
@@ -431,10 +426,11 @@
  * This method get all the file where the download status is equal to status
  *
  * @param NSInteger -> The download status
+ * @param UserDto -> user
  *
  * @return NSMutableArray -> The array with the files
  */
-+ (NSMutableArray *) getFilesByDownloadStatus:(NSInteger) status;
++ (NSMutableArray *) getFilesByDownloadStatus:(NSInteger) status andUser:(UserDto *) user;
 
 
 

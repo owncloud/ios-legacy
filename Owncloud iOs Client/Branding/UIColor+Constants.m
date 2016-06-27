@@ -23,7 +23,7 @@
 + (UIColor*)colorOfNavigationBar{
     return [UIColor colorWithRed:28/255.0f green:44/255.0f blue:67/255.0f alpha:1.0];
 }
-//Color of background view in navigation bar, only for iOS 7 for transparency
+//Color of background view in navigation bar
 + (UIColor*)colorOfBackgroundNavBarImage {
     return [UIColor colorWithRed:28/255.0f green:44/255.0f blue:67/255.0f alpha:0.7];
 }
@@ -70,6 +70,7 @@
 //Tint color for selected tab bar item
 + (UIColor*)colorOfTintSelectedUITabBar {
     return [UIColor colorWithRed:255/255.0f green:255/255.0f blue:255/255.0f alpha:1.0];
+
 }
 
 //Tint color for non selected tab bar item (only works with the labels)

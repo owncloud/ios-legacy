@@ -121,6 +121,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     //Set title and the font of the label of the toolBar
     [_titleLabel setFont:[UIFont systemFontOfSize:18.0]];
     [_titleLabel setText:@""];
+    [_titleLabel setTextColor:[UIColor colorOfNavigationTitle]];
     
     //Set color of background
     self.view.backgroundColor = [UIColor colorOfBackgroundDetailViewiPad];
@@ -395,7 +396,7 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             }];
             
             //Check to know if it's in progress
-            if ((download && [download.operation isExecuting]) || (download && download.downloadTask && download.downloadTask.state == NSURLSessionTaskStateRunning) ) {
+            if (download && download.downloadTask && download.downloadTask.state == NSURLSessionTaskStateRunning) {
                 [self contiueDownloadIfTheFileisDownloading];
             }else{
                 [self restartTheDownload];
@@ -707,7 +708,14 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     
     [toolbar addSubview:_updatingFileView];
     
-    [self performSelector:@selector(showTextInStatusBar) withObject:nil afterDelay:1.0];
+    [self showTextInStatusBar];
+    
+    if(k_is_text_status_bar_white){
+        [_updatingCancelButton setImage:[UIImage imageNamed:@"cancel_download_white.png"] forState:UIControlStateNormal];
+    }
+    else{
+        [_updatingCancelButton setImage:[UIImage imageNamed:@"cancel_download.png"] forState:UIControlStateNormal];
+    }
 }
 
 
@@ -1865,13 +1873,20 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
  */
 - (void) showTextInStatusBar {
     
-    if (_isDownloading && _updatingFileView.hidden == NO && nameFileToUpdate == _file.fileName) {
+    if ([self isDownloadingImageOrFile] && _updatingFileView.hidden == NO && nameFileToUpdate == _file.fileName) {
         DLog(@"Show a notification text in the status bar");
         //Notificacion style
-        _notification.notificationLabelBackgroundColor = [UIColor whiteColor];
-        _notification.notificationLabelTextColor = [UIColor colorOfNavigationBar];
+        _notification.notificationLabelBackgroundColor = [[UIColor colorOfNavigationBar] colorWithAlphaComponent:1.0f];
         _notification.notificationAnimationInStyle = CWNotificationAnimationStyleTop;
         _notification.notificationAnimationOutStyle = CWNotificationAnimationStyleTop;
+        
+        if(k_is_text_status_bar_white) {
+            _notification.notificationLabelTextColor = [UIColor whiteColor];
+        }
+        else {
+            _notification.notificationLabelTextColor = [UIColor blackColor];
+        }
+        
         //File name
         NSString *notificationText = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"updating", nil), [nameFileToUpdate stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         DLog(@"name: %@",notificationText);
@@ -1879,7 +1894,13 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     }
 }
 
+- (BOOL) isDownloadingImageOrFile {
 
+    if ((self.galleryView != nil && [self.galleryView isCurrentImageDownloading]) || (self.galleryView == nil && self.isDownloading)) {
+        return YES;
+    }
+    return NO;
+}
 
 ///-----------------------------------
 /// @name Stop notification in status bar

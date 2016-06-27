@@ -27,7 +27,6 @@ extern NSString *PreviewFileNotificationUpdated;
 @property (nonatomic, strong) NSString *currentFileEtag;
 @property (nonatomic, strong) NSString *tmpUpdatePath;
 
-@property (nonatomic, strong) NSOperation *operation;
 @property (nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
 //user is needed when we cancel all the downloads in a change of user
 @property (nonatomic, strong) UserDto *user;
