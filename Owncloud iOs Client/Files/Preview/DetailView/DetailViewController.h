@@ -34,14 +34,6 @@ typedef enum {
     sharedViewManagerController =2,
 } kindOfManageController;
 
-extern NSString * IpadFilePreviewViewControllerFileWasDeletedNotification;
-extern NSString * IpadFilePreviewViewControllerFileWasDownloadNotification; 
-extern NSString * IpadFilePreviewViewControllerFileWhileDonwloadingNotification;
-extern NSString * IpadFilePreviewViewControllerFileFinishDownloadNotification;
-extern NSString * IpadSelectRowInFileListNotification;
-extern NSString * IpadCleanPreviewNotification;
-extern NSString * IpadShowNotConnectionWithServerMessageNotification;
-
 
 @interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, UIAlertViewDelegate, ManageFavoritesDelegate, UIGestureRecognizerDelegate> {
     

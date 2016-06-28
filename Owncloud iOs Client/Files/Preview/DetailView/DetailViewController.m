@@ -44,15 +44,8 @@
 #import "ManageCapabilitiesDB.h"
 #import "DownloadFileSyncFolder.h"
 #import "EditFileViewController.h"
+#import "UtilsNotifications.h"
 
-
-NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
-NSString * IpadFilePreviewViewControllerFileWasDownloadNotification = @"IpadFilePreviewViewControllerFileWasDownloadNotification";
-NSString * IpadFilePreviewViewControllerFileWhileDonwloadingNotification = @"IpadFilePreviewViewControllerFileWhileDonwloadingNotification";
-NSString * IpadFilePreviewViewControllerFileFinishDownloadNotification = @"IpadFilePreviewViewControllerFileFinishDownloadNotification";
-NSString * IpadSelectRowInFileListNotification = @"IpadSelectRowInFileListNotification";
-NSString * IpadCleanPreviewNotification = @"IpadCleanPreviewNotification";
-NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotConnectionWithServerMessageNotification";
 
 #define k_delta_width_for_split_transition 320.0
 #define k_delta_height_toolBar_split_transition 64.0
@@ -1811,8 +1804,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void) setNotificationForCommunicationBetweenViews {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePreviewOverwriteFile:) name:PreviewFileNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePreviewFileWithNewIDFromDB:) name:uploadOverwriteFileNotification object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updatePreviewFileWithNewIdFromDBWhenAFileISDelete:) name:fileDeleteInAOverwriteProcess object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePreviewFileWithNewIDFromDB:) name:UploadOverwriteFileNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updatePreviewFileWithNewIdFromDBWhenAFileISDelete:) name:FileDeleteInAOverwriteProcess object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cleanView) name:IpadCleanPreviewNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNotConnectionWithServerMessage) name:IpadShowNotConnectionWithServerMessageNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadFileInView:) name:PreviewFileNotificationUpdated object:nil];

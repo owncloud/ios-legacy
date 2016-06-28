@@ -24,9 +24,10 @@
 #import "SyncFolderManager.h"
 #import "IndexedForest.h"
 #import "FilesViewController.h"
+#import "UtilsNotifications.h"
 
 #define k_task_identifier_invalid -1
-NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
+
 
 @implementation DownloadFileSyncFolder
 

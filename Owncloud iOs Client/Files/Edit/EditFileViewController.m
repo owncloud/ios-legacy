@@ -93,9 +93,11 @@ NSString * iPhoneDoneEditFileTextMessageNotification = @"iPhoneDoneEditFileTextM
 
         NSString *contentFile = [NSString stringWithContentsOfFile:[UtilsUrls getFileLocalSystemPathByFileDto:self.currentFileDto andUser:APP_DELEGATE.activeUser] encoding:NSUTF8StringEncoding error:nil];
         self.bodyTextView.text  = contentFile;
+        self.initialBodyContent = contentFile;
         
     } else {
         self.navigationItem.title = NSLocalizedString(@"title_view_new_text_file", nil);
+        self.initialBodyContent = @"";
     }
     [self setBarButtonStyle];
 }
@@ -126,9 +128,13 @@ NSString * iPhoneDoneEditFileTextMessageNotification = @"iPhoneDoneEditFileTextM
     
     if ( self.isModeEditing || (!self.isModeEditing && [self isValidTitleName:fileName])) {
         
-        NSString *tempLocalPath = [self storeFileWithTitle:fileName andBody:bodyTextFile];
-        if (tempLocalPath) {
-            [self sendTextFileToUploadsByTempLocalPath:tempLocalPath andFileName:fileName];
+        if (![self.initialBodyContent isEqualToString:bodyTextFile]) {
+            NSString *tempLocalPath = [self storeFileWithTitle:fileName andBody:bodyTextFile];
+            if (tempLocalPath) {
+                [self sendTextFileToUploadsByTempLocalPath:tempLocalPath andFileName:fileName];
+            }
+        } else {
+            [self showAlertView:NSLocalizedString(@"no_changes_made", nil)];
         }
         
         [self dismissViewControllerAnimated:NO completion:^{
@@ -139,6 +145,9 @@ NSString * iPhoneDoneEditFileTextMessageNotification = @"iPhoneDoneEditFileTextM
     }
     
 }
+
+#pragma mark - FilesViewController callBacks
+
 
 
 - (void) closeViewController {

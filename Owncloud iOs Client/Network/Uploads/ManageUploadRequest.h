@@ -16,13 +16,11 @@
 
 #import <Foundation/Foundation.h>
 #import "UtilsNetworkRequest.h"
+#import "UtilsNotifications.h"
 
 @class UploadsOfflineDto;
 @class UserDto;
 @class FileDto;
-
-extern NSString *fileDeleteInAOverwriteProcess;
-extern NSString *uploadOverwriteFileNotification;
 
 @protocol ManageUploadRequestDelegate
 

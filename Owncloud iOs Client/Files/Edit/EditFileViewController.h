@@ -26,6 +26,7 @@ extern NSString *iPhoneDoneEditFileTextMessageNotification;
 @property(nonatomic, strong) NSMutableArray *currentDirectoryArray;
 @property(nonatomic, strong) FileDto *currentFileDto;
 @property (nonatomic) BOOL isModeEditing;
+@property (nonatomic, strong) NSString *initialBodyContent;
 
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextView *bodyTextView;

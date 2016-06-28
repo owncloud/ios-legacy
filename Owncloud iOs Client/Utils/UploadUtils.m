@@ -27,8 +27,8 @@
 #import "UtilsUrls.h"
 #import "ManageThumbnails.h"
 #import "UtilsFileSystem.h"
+#import "UtilsNotifications.h"
 
-NSString * PreviewFileNotification=@"PreviewFileNotification";
 
 @implementation UploadUtils
 
