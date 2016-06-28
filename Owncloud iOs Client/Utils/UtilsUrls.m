@@ -518,7 +518,6 @@
  * Method to get full file path
  *
  * @param file -> fileDto
- *
  * @param user -> userDto
  *
  * @return fullFilePath ->subfolders  -> http://domain/(subfoldersServer)/k_url_webdav_server/(subfoldersDB)/(filename)
@@ -595,7 +594,7 @@
 ///-----------------------------------
 
 /**
- * Method used to get only the domain and the protocol (http/https)
+ * Method used to get the system path of a file according to the remote path and the user
  *
  * @param NSString -> fullRemotePath -->http://domain/(subfolders)/k_url_webdav_server/folderA/fileA.txt
  * @param UserDto -> user
@@ -619,9 +618,10 @@
 ///-----------------------------------
 
 /**
- * Method used to get only the domain and the protocol (http/https)
+ * Method used to get the system path of a file according to a fileDto and a user
  *
  * @param FileDto ->  fileDto
+ * @param UserDto ->  user
  *
  * @return NSString fullLocalDestiny --> /fullLocalSystemPath/idUser/folderA/fileA.txt
  *
@@ -633,6 +633,25 @@
     NSString *fullLocalDestiny = [NSString stringWithFormat:@"%@/%@",ocLocalFolder,[fullDBPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     return fullLocalDestiny;
+}
+
+//-----------------------------------
+/// @name getLocalCertificatesPath
+///-----------------------------------
+
+/**
+ * Method used to get the system path of the certificates
+ *
+ * @return NSString localCertificatesPath --> /fullLocalSystemPath/Certificates/
+ *
+ */
++ (NSString *) getLocalCertificatesPath{
+    
+    NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
+    
+    NSString *localCertificatesPath = [NSString stringWithFormat:@"%@Certificates/",documentsDirectory];
+    
+    return localCertificatesPath;
 }
 
 @end

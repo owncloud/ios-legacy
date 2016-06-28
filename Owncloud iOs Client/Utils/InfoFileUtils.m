@@ -184,9 +184,9 @@
                 
                 if (numberOfSharesByLink > 0 && sharesByLink !=nil && isShareAPIActive) {
                     fileCell.fileImageView.image=[UIImage imageNamed:@"folder-public.png"];
-                } else if((numberOfSharesByRemote > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
+                } else if ((numberOfSharesByRemote > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive) {
                     fileCell.fileImageView.image=[UIImage imageNamed:@"folder-shared.png"];
-                } else{
+                } else {
                     fileCell.fileImageView.image=[UIImage imageNamed:@"folder_icon.png"];
                 }
             } else {
@@ -197,18 +197,18 @@
         BOOL isFolderPendingToBeDownload = [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon];
 
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
-            if(isFolderPendingToBeDownload || [fileForSetTheStatusIcon.etag isEqualToString:k_negative_etag] || fileForSetTheStatusIcon.isNecessaryUpdate) {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
-            } else {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
-            }
-        } else if (isFolderPendingToBeDownload) {
-            fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon.png"];
+            fileCell.imageAvailableOffline.image=[UIImage imageNamed:@"file_available_offline_icon"];
         } else {
-            fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
+            fileCell.imageAvailableOffline.image= nil;
+        }
+
+        if (isFolderPendingToBeDownload) {
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
+        } else {
+            fileCell.imageDownloaded.image= nil;
         }
 #else
-        fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
+        fileCell.imageDownloaded.image= nil;
 #endif   
         
     } else {
@@ -220,27 +220,24 @@
         
 
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
-            if(fileForSetTheStatusIcon.isDownload == downloaded && !fileForSetTheStatusIcon.isNecessaryUpdate) {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteIcon"];
-            } else {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileFavoriteUpdatingIcon"];
-            }
-        } else if (!fileForSetTheStatusIcon.isFavorite) {
-            if(fileForSetTheStatusIcon.isNecessaryUpdate || fileForSetTheStatusIcon.isDownload == updating) {
-                //File is in updating
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileUpdatedIcon"];
-            } else if (fileForSetTheStatusIcon.isDownload == downloaded) {
-                //File is in device
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadedIcon"];
-            } else if (fileForSetTheStatusIcon.isDownload == overwriting) {
-                //File is overwritten
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileOverwritingIcon"];
-            } else if (fileForSetTheStatusIcon.isDownload == downloading) {
-                fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadingIcon"];
-            } else {
-                fileCell.imageDownloaded.image= [UIImage imageNamed:@""];
-            }
+            fileCell.imageAvailableOffline.image=[UIImage imageNamed:@"file_available_offline_icon"];
+        } else {
+            fileCell.imageAvailableOffline.image= nil;
         }
+        
+        if(fileForSetTheStatusIcon.isNecessaryUpdate || fileForSetTheStatusIcon.isDownload == updating) {
+            //File is in updating
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_new_server_version_available_icon"];
+        } else if (fileForSetTheStatusIcon.isDownload == downloaded) {
+            //File is in device
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadedIcon"];
+        } else if (fileForSetTheStatusIcon.isDownload == overwriting || fileForSetTheStatusIcon.isDownload == downloading) {
+            //File is overwritten
+            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
+        } else {
+            fileCell.imageDownloaded.image= nil;
+        }
+        
     }
     
     if (numberOfShares > 0 && allShares !=nil) {
@@ -250,18 +247,18 @@
             fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
         }
         else {
-            fileCell.sharedByLinkImage.image= [UIImage imageNamed:@""];
+            fileCell.sharedByLinkImage.image= nil;
         }
         
     } else {
-        fileCell.sharedByLinkImage.image= [UIImage imageNamed:@""];
+        fileCell.sharedByLinkImage.image= nil;
     }
     
     
     if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound){
         fileCell.sharedWithUsImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
     } else {
-        fileCell.sharedWithUsImage.image= [UIImage imageNamed:@""];
+        fileCell.sharedWithUsImage.image= nil;
     }
     
     return fileCell;

@@ -98,7 +98,7 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem width="16" style="plain" systemItem="fixedSpace" id="VYt-rC-1eC"/>
-                        <barButtonItem image="favoriteTB.png" style="plain" id="d5c-hM-MXC">
+                        <barButtonItem image="available_offline_TB.png" style="plain" id="d5c-hM-MXC">
                             <connections>
                                 <action selector="didPressFavoritesButton:" destination="-1" id="zKn-Qj-Knm"/>
                             </connections>
@@ -195,11 +195,11 @@
         </view>
     </objects>
     <resources>
+        <image name="available_offline_TB.png" width="25" height="25"/>
         <image name="cancel_download.png" width="25" height="25"/>
         <image name="cancel_download_white.png" width="25" height="25"/>
         <image name="company_empty_screen_ipad.png" width="512" height="279"/>
         <image name="deleteTB.png" width="25" height="25"/>
-        <image name="favoriteTB.png" width="25" height="25"/>
         <image name="openWithTB.png" width="25" height="25"/>
         <image name="renameBlack.png" width="25" height="25"/>
         <image name="sharedItem.png" width="25" height="25"/>

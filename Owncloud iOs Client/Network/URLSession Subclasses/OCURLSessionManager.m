@@ -46,9 +46,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
     if(trust != nil) {
         [[CheckAccessToServer sharedManager] saveCertificate:trust withName:tmpFileName];
         
-        NSString *documentsDirectory = [UtilsUrls getOwnCloudFilePath];
-        
-        NSString *localCertificatesFolder = [NSString stringWithFormat:@"%@/Certificates/",documentsDirectory];
+        NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
         
         NSMutableArray *listCertificateLocation = [ManageAppSettingsDB getAllCertificatesLocation];
         

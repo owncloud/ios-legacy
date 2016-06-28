@@ -100,4 +100,6 @@
 
 + (NSString *) getFileLocalSystemPathByFileDto:(FileDto *)fileDto andUser:(UserDto *)user;
 
++ (NSString *) getLocalCertificatesPath;
+
 @end

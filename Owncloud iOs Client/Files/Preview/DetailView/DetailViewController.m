@@ -682,10 +682,10 @@
 - (void) putTheFavoriteStatus {
     if (_file.isFavorite || [DownloadUtils isSonOfFavoriteFolder:self.file]) {
         //Change the image to unstarred
-        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
+        _favoriteButtonBar.image = [UIImage imageNamed:@"available_offline_TB-filled"];
     } else {
         //Change the image to starred
-        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+        _favoriteButtonBar.image = [UIImage imageNamed:@"available_offline_TB"];
     }
 }
 
@@ -1015,17 +1015,17 @@
     _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if ([DownloadUtils isSonOfFavoriteFolder:self.file]) {
-        [self showAlertView:NSLocalizedString(@"parent_folder_is_favorite", nil)];
+        [self showAlertView:NSLocalizedString(@"parent_folder_is_available_offline_file_child", nil)];
     } else {
         if (_file.isFavorite) {
             _file.isFavorite = NO;
             //Change the image to unstarred
-            _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+            _favoriteButtonBar.image = [UIImage imageNamed:@"available_offline_TB"];
         } else {
             _file.isFavorite = YES;
             _isCancelDownloadClicked = NO;
             //Change the image to starred
-            _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
+            _favoriteButtonBar.image = [UIImage imageNamed:@"available_offline_TB-filled"];
             //Download the file if it's not downloaded and not pending to be download
             [self downloadTheFileIfIsnotDownloadingInOtherProcess];
         }
@@ -2386,10 +2386,10 @@
 - (void)updateFavoriteIconWhenAFolderIsSelectedFavorite {
     if ([DownloadUtils isSonOfFavoriteFolder:self.file]) {
         //Change the image to unstarred
-        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB-filled"];
+        _favoriteButtonBar.image = [UIImage imageNamed:@"available_offline_TB-filled"];
     } else {
         //Change the image to starred
-        _favoriteButtonBar.image = [UIImage imageNamed:@"favoriteTB"];
+        _favoriteButtonBar.image = [UIImage imageNamed:@"available_offline_TB"];
     }
 }
 
