@@ -64,7 +64,8 @@ typedef enum {
     
     IBOutlet NSLayoutConstraint *toolBarTopMargin;
     
-    IBOutlet NSLayoutConstraint *_titleMarginRightConstraint;
+    IBOutlet NSLayoutConstraint *_titleLabelMarginRightConstraint;
+    IBOutlet NSLayoutConstraint *_updatingProgressMarginUpdatingRightConstraint;
     
     NSString *nameFileToUpdate; 
     

@@ -20,19 +20,19 @@
                 <outlet property="_spaceBar2" destination="98" id="mCo-DK-9Mz"/>
                 <outlet property="_spaceBar3" destination="PHm-EO-a4h" id="jRS-lG-1Wb"/>
                 <outlet property="_spaceBar4" destination="O4r-p0-SmD" id="4on-ZC-zmH"/>
-                <outlet property="_titleMarginRightConstraint" destination="4g2-Br-Gll" id="ynp-3w-oWH"/>
+                <outlet property="_titleLabelMarginRightConstraint" destination="dtc-mg-Qfz" id="5cy-hT-AoK"/>
                 <outlet property="_toolBarHeightConstraint" destination="Qgy-82-b7E" id="B6M-lP-nCw"/>
                 <outlet property="_topMarginTitleLabelConstraint" destination="5IR-2P-Sff" id="fwj-Eu-QOE"/>
                 <outlet property="_topMarginUpdatingButton" destination="z7s-hh-G4S" id="0xg-eK-9Sw"/>
                 <outlet property="_topMarginUpdatingFileProgressView" destination="jWd-pP-iNs" id="CjL-8s-l9K"/>
                 <outlet property="_topMarginUpdatingView" destination="0fn-Yu-APf" id="yLv-h5-LR6"/>
+                <outlet property="_updatingProgressMarginUpdatingRightConstraint" destination="4g2-Br-Gll" id="MIo-Ai-bJK"/>
                 <outlet property="cancelButton" destination="83" id="84"/>
                 <outlet property="mainScrollView" destination="112" id="125"/>
                 <outlet property="previewImageView" destination="80" id="81"/>
                 <outlet property="progressLabel" destination="85" id="86"/>
                 <outlet property="progressView" destination="82" id="89"/>
                 <outlet property="titleLabel" destination="1eq-mt-JYf" id="WLW-Lz-7kY"/>
-                <outlet property="titleMarginRightConstraint" destination="dtc-mg-Qfz" id="7ao-GB-BHW"/>
                 <outlet property="toolBarTopMargin" destination="wvX-GC-a9Z" id="SeH-e7-f6n"/>
                 <outlet property="toolbar" destination="63" id="65"/>
                 <outlet property="updatingCancelButton" destination="SvH-e8-BmT" id="Z5m-co-vxq"/>

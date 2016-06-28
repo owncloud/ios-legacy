@@ -193,9 +193,11 @@
     if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
         [items insertObject:_spaceBar4 atIndex:8];
         [items insertObject:_editButtonBar atIndex:9];
-        _titleMarginRightConstraint.constant = 260;
+        _titleLabelMarginRightConstraint.constant = 260;
+        _updatingProgressMarginUpdatingRightConstraint.constant = 260;
     } else {
-        _titleMarginRightConstraint.constant = 210;
+        _titleLabelMarginRightConstraint.constant = 210;
+        _updatingProgressMarginUpdatingRightConstraint.constant = 210;
     }
     
     [toolbar setItems:items animated:YES];
