@@ -88,7 +88,7 @@ NSString * iPhoneDoneEditFileTextMessageNotification = @"iPhoneDoneEditFileTextM
     
     if (self.isModeEditing) {
         
-        self.navigationItem.title = self.currentFileDto.fileName;
+        self.navigationItem.title = [self.currentFileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         [self.titleTextField setHidden:YES];
 
         NSString *contentFile = [NSString stringWithContentsOfFile:[UtilsUrls getFileLocalSystemPathByFileDto:self.currentFileDto andUser:APP_DELEGATE.activeUser] encoding:NSUTF8StringEncoding error:nil];
