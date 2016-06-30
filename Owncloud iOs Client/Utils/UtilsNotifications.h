@@ -14,7 +14,7 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
-//#import <Foundation/Foundation.h>
+#import <Foundation/Foundation.h>
 //FOUNDATION_EXPORT
 
 extern NSString *const PreviewFileNotification;
@@ -30,7 +30,7 @@ extern NSString *const IpadSelectRowInFileListNotification;
 extern NSString *const IpadCleanPreviewNotification;
 extern NSString *const IpadShowNotConnectionWithServerMessageNotification;
 
-//@interface UtilsNotifications : NSObject
-//
-//@end
+@interface UtilsNotifications : NSObject
+
+@end
 

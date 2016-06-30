@@ -43,6 +43,7 @@
 #import "DownloadUtils.h"
 #import "ManageCapabilitiesDB.h"
 #import "EditFileViewController.h"
+#import "UtilsBrandedOptions.h"
 
 
 //Constant for iOS7
@@ -232,23 +233,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  * Method that put a title label in navBar.
  */
 - (void)putTitleInNavBarByName:(NSString *) name {
-    DLog(@"Put the title of the file in the navigation bar");
-    //Custom title
-    UILabel *label = [[UILabel alloc]initWithFrame: CGRectMake(0, 0, 270, 44)];
-    UIFont *titleFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
     
-    [label setBackgroundColor:[UIColor clearColor]];
-    [label setTextColor:[UIColor colorOfNavigationTitle]];
-
-    [label setFont:titleFont];
-
-    [label setLineBreakMode:NSLineBreakByTruncatingMiddle];
-    [label setTextAlignment:NSTextAlignmentCenter];
-    [label setClipsToBounds:YES];
-    
-    label.text = [name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    self.navigationItem.titleView = label;
+    self.navigationItem.titleView = [UtilsBrandedOptions getCustomLabelForNavBarByName:name];
 }
 
 ///-----------------------------------

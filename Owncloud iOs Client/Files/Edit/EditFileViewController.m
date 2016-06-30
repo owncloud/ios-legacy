@@ -59,9 +59,10 @@ NSString * iPhoneDoneEditFileTextMessageNotification = @"iPhoneDoneEditFileTextM
     self.titleTextField.placeholder = NSLocalizedString(@"title_text_file_placeholder", nil);
 
     if (self.isModeEditing) {
-        self.titleTextField.text = self.currentFileDto.fileName;
-    
+        
         self.bodyTextViewHeightConstraint.constant = 2;
+        
+
         
     } else {
         self.titleTextField.text = [NSString stringWithFormat:@"%@.%@",NSLocalizedString(@"default_text_file_title", nil),k_default_extension];
@@ -87,10 +88,10 @@ NSString * iPhoneDoneEditFileTextMessageNotification = @"iPhoneDoneEditFileTextM
 - (void) setStyleView {
     
     if (self.isModeEditing) {
-        
-        self.navigationItem.title = [self.currentFileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         [self.titleTextField setHidden:YES];
-
+        
+        self.navigationItem.titleView = [UtilsBrandedOptions getCustomLabelForNavBarByName:[[self.currentFileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    
         NSString *contentFile = [NSString stringWithContentsOfFile:[UtilsUrls getFileLocalSystemPathByFileDto:self.currentFileDto andUser:APP_DELEGATE.activeUser] encoding:NSUTF8StringEncoding error:nil];
         self.bodyTextView.text  = contentFile;
         self.initialBodyContent = contentFile;
