@@ -129,7 +129,7 @@ NSString * iPhoneDoneEditFileTextMessageNotification = @"iPhoneDoneEditFileTextM
     
     if ( self.isModeEditing || (!self.isModeEditing && [self isValidTitleName:fileName])) {
         
-        if (![self.initialBodyContent isEqualToString:bodyTextFile]) {
+        if (![self.initialBodyContent isEqualToString:bodyTextFile] || ([bodyTextFile length] == 0)) {
             NSString *tempLocalPath = [self storeFileWithTitle:fileName andBody:bodyTextFile];
             if (tempLocalPath) {
                 [self sendTextFileToUploadsByTempLocalPath:tempLocalPath andFileName:fileName];
