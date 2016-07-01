@@ -78,6 +78,8 @@
 
 + (NSString *) getFullRemoteServerFilePathByFile:(FileDto *) file andUser:(UserDto *) user;
 
++ (NSString *) getFullRemoteServerParentPathByFile:(FileDto *) file andUser:(UserDto *) user;
+
 + (NSString *) getUserAgent;
 
 + (BOOL) isFileUploadingWithPath:(NSString *)path andUser: (UserDto *) user;

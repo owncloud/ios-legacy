@@ -224,8 +224,14 @@ NSString * iPhoneDoneEditFileTextMessageNotification = @"iPhoneDoneEditFileTextM
 - (void) sendTextFileToUploadsByTempLocalPath:(NSString *)tempLocalPath andFileName:(NSString *)fileName {
    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-
-    NSString *fullRemotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser],[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.currentFileDto.filePath andUser:app.activeUser]];
+    
+    NSString *fullRemotePath = @"";
+    
+    if (self.isModeEditing) {
+        fullRemotePath = [NSString stringWithFormat:@"%@",[UtilsUrls getFullRemoteServerParentPathByFile:self.currentFileDto andUser:app.activeUser]];
+    } else {
+        fullRemotePath = [NSString stringWithFormat:@"%@",[UtilsUrls getFullRemoteServerFilePathByFile:self.currentFileDto andUser:app.activeUser]];
+    }
     
     long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:tempLocalPath error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
     
@@ -240,7 +246,11 @@ NSString * iPhoneDoneEditFileTextMessageNotification = @"iPhoneDoneEditFileTextM
         upload.estimateLength = (long)fileLength;
         upload.userId = self.currentFileDto.userId;
         upload.isLastUploadFileOfThisArray = YES;
-        upload.status = generatedByDocumentProvider;
+        if (self.isModeEditing) {
+            upload.status = generatedByDocumentProvider;
+        } else {
+            upload.status = pendingToBeCheck;
+        }
         upload.chunksLength = k_lenght_chunk;
         upload.isNotNecessaryCheckIfExist = NO;
         upload.isInternalUpload = NO;
