@@ -180,23 +180,29 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 - (void) setEditBarButtonInTextFiles {
     
     if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
+
         UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(didSelectEditView)];
         self.navigationItem.rightBarButtonItem = editButton;
     }
 }
 
+
 - (void) didSelectEditView {
     
-    EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.file andModeEditing:YES];
-    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-    navController.navigationBar.translucent = NO;
-    
-    if (IS_IPHONE) {
-        viewController.hidesBottomBarWhenPushed = YES;
-        [self presentViewController:navController animated:YES completion:nil];
+    if (self.file.isDownload) {
+        EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.file andModeEditing:YES];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.navigationBar.translucent = NO;
+        
+        if (IS_IPHONE) {
+            viewController.hidesBottomBarWhenPushed = YES;
+            [self presentViewController:navController animated:YES completion:nil];
+        } else {
+            navController.modalPresentationStyle = UIModalPresentationFormSheet;
+            [self presentViewController:navController animated:YES completion:nil];
+        }
     } else {
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self presentViewController:navController animated:YES completion:nil];
+        [self showAlertView:NSLocalizedString(@"no_file_downloaded", nil)];
     }
 
 }
@@ -1558,6 +1564,11 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         default:
             break;
     }
+}
+
+- (void) showAlertView:(NSString*)string{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+    [alertView show];
 }
 
 #pragma mark - Error login delegate method
