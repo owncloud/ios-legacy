@@ -118,48 +118,33 @@
     ext = [FileNameUtils getExtension:fileName];
     
     if ( [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] ) {
-        NSMutableURLRequest *headRequest = [NSMutableURLRequest requestWithURL:url];
-        [headRequest setHTTPMethod:@"HEAD"];
-        NSHTTPURLResponse *headResponse;
-        NSError *error = nil;
-        [NSURLConnection sendSynchronousRequest:headRequest
-                              returningResponse:&headResponse
-                                          error:&error];
-        if (error != nil) {
-            NSLog(@"loadURLWithString %@",[error localizedDescription]);
-        }
-      
         
         NSString *dataFile = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:url] encoding:NSASCIIStringEncoding];
 
         if (IS_IPHONE) {
-       
             [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_iphone,k_txt_files_font_family,dataFile] baseURL:nil];
         }else{
-
             [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_ipad,k_txt_files_font_family,dataFile] baseURL:nil];
         }
-       
         
-    }else if ([ext isEqualToString:@"TXT"] ) {
+    } else if ([ext isEqualToString:@"TXT"]) {
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:nil delegateQueue:nil];
+
         NSMutableURLRequest *headRequest = [NSMutableURLRequest requestWithURL:url];
         [headRequest setHTTPMethod:@"HEAD"];
-        NSHTTPURLResponse *headResponse;
-        NSError *error = nil;
-        [NSURLConnection sendSynchronousRequest:headRequest
-                              returningResponse:&headResponse
-                                          error:&error];
-        if (error != nil) {
-            NSLog(@"loadURLWithString %@",[error localizedDescription]);
-        }
-        NSString *mimeType = [headResponse MIMEType];
         
-        [_webView loadData:[NSData dataWithContentsOfURL: url] MIMEType:mimeType
-          textEncodingName:@"utf-8" baseURL:nil];
-    }else if ([ext isEqualToString:@"PDF"]) {
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:headRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            [_webView loadData:[NSData dataWithContentsOfURL: url] MIMEType:response.MIMEType textEncodingName:@"utf-8" baseURL:url];
+        }];
+        
+        [task resume];
+        
+    } else if ([ext isEqualToString:@"PDF"]) {
         NSURL *targetURL = [NSURL fileURLWithPath:filePath];
         NSData *pdfData = [[NSData alloc] initWithContentsOfURL:targetURL];
-        [self.webView loadData:pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:nil];
+        [self.webView loadData:pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:url];
     } else {
         [self.webView loadRequest:[NSMutableURLRequest requestWithURL:url]];
     }

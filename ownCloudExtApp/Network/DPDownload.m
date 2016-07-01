@@ -32,7 +32,7 @@
 
 @interface DPDownload ()
 
-@property (nonatomic, strong) NSOperation *operation;
+@property (nonatomic, strong) NSURLSessionTask *operationTask;
 @property (nonatomic, strong) FileDto *file;
 @property (nonatomic, strong) UserDto *user;
 @property (nonatomic, strong) NSString *currentLocalFolder;
@@ -236,21 +236,21 @@
     
    self.state = downloadWorking;
     
- 
-    
-    self.operation = [sharedCommunication downloadFile:serverUrl toDestiny:localPath withLIFOSystem:self.isLIFO onCommunication:sharedCommunication progressDownload:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-        [self.progressView stopSpinProgressBackgroundLayer];
-        float percent = (float)totalBytesRead / totalBytesExpectedToRead;
+    self.operationTask = [sharedCommunication downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:sharedCommunication progress:^(NSProgress *progress) {
         
+        float percent = roundf (progress.fractionCompleted * 100);
+        
+        //We make it on the main thread because it is an UX modification
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.progressView setProgress:percent];
         });
         
+    } successRequest:^(NSURLResponse *response, NSURL *filePath) {
         
-    } successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         [self.progressView stopSpinProgressBackgroundLayer];
         
         BOOL isSamlCredentialsError = NO;
+        NSString *redirectedServer = nil;
         
         //Check the login error in shibboleth
         if (k_is_sso_active && redirectedServer) {
@@ -303,15 +303,17 @@
             });
         }
         
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
+    } failureRequest:^(NSURLResponse *response, NSError *error) {
         [self.progressView stopSpinProgressBackgroundLayer];
-         self.state = downloadFailed;
+        self.state = downloadFailed;
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.progressView setProgress:0.0];
         });
         
         BOOL isSamlCredentialsError = NO;
+        
+        NSString *redirectedServer = nil;
         
         //Check the login error in shibboleth
         if (k_is_sso_active && redirectedServer) {
@@ -332,11 +334,7 @@
         if (!isSamlCredentialsError) {
             [self failureInDownloadProcessWithError:error andResponse:response];
         }
- 
-    } shouldExecuteAsBackgroundTaskWithExpirationHandler:^{
-       [self.delegate downloadFailed:@"" andFile:self.file];
     }];
-
 }
 
 - (void) cancelDownload{
@@ -355,7 +353,7 @@
             break;
             
         case downloadWorking:
-            [self.operation cancel];
+            [self.operationTask cancel];
             break;
             
         case downloadComplete:

@@ -46,7 +46,6 @@ extern NSString *uploadOverwriteFileNotification;
 @property(nonatomic, strong) UserDto *userUploading;
 @property(nonatomic, strong) UtilsNetworkRequest *utilsNetworkRequest;
 
-@property(nonatomic, strong) NSOperation *operation;
 @property(nonatomic, strong) NSURLSessionUploadTask *uploadTask;
 
 @property(nonatomic) BOOL isFinishTransferLostServer;
@@ -58,7 +57,6 @@ extern NSString *uploadOverwriteFileNotification;
 @property(nonatomic) BOOL isUploadBegan;
 @property(nonatomic) BOOL isFromBackground;
 
-@property(nonatomic, strong) NSProgress *progressValueGlobal;
 @property(nonatomic) NSUInteger progressTag;
 
 - (void) addFileToUpload:(UploadsOfflineDto*) currentUpload;

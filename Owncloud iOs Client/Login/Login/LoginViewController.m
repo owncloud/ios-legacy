@@ -2342,7 +2342,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  * This method checks the URL in URLTextField in order to know if
  * is a valid SSO server.
  *
- * @warning This method uses a NSURLConnection delegate methods
  */
 
 -(void) checkURLServerForSSO {
