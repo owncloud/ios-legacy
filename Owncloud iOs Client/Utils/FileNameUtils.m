@@ -484,7 +484,7 @@
     [dateFormatter setDateFormat:@"yyyy-MM-dd-HH-mm-ss"];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
 
-    NSString *dateString = [dateFormatter stringFromDate:asset.creationDate];
+    NSString *dateString = [dateFormatter stringFromDate:asset.modificationDate];
     NSString *fileName = [asset valueForKey:@"filename"];
     NSString *fileExtension = [fileName pathExtension];
     
