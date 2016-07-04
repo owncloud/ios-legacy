@@ -1137,14 +1137,14 @@
 
 - (IBAction)didPressEditButton:(id)sender
 {
-    if (self.file.isDownload) {
-    EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.file andModeEditing:YES];
-    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-    navController.navigationBar.translucent = NO;
-    
-    navController.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:navController animated:YES completion:nil];
-    
+    if (self.file.isDownload == downloaded && !self.isDownloading) {
+        EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.file andModeEditing:YES];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.navigationBar.translucent = NO;
+        
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:navController animated:YES completion:nil];
+        
     } else {
         [self showAlertView:NSLocalizedString(@"no_file_downloaded", nil)];
     }

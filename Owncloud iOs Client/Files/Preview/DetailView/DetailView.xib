@@ -130,13 +130,13 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BV7-Lz-cFn">
-                    <rect key="frame" x="62" y="10" width="496" height="44"/>
+                    <rect key="frame" x="2" y="10" width="556" height="44"/>
                     <subviews>
                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="E9s-I7-wvl">
-                            <rect key="frame" x="29" y="30" width="387" height="2"/>
+                            <rect key="frame" x="29" y="30" width="447" height="2"/>
                         </progressView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SvH-e8-BmT">
-                            <rect key="frame" x="441" y="20" width="25" height="25"/>
+                            <rect key="frame" x="501" y="20" width="25" height="25"/>
                             <state key="normal" image="cancel_download_white.png">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
@@ -184,7 +184,7 @@
                 <constraint firstAttribute="centerX" secondItem="80" secondAttribute="centerX" id="O3M-bq-gO3"/>
                 <constraint firstItem="80" firstAttribute="centerX" secondItem="112" secondAttribute="centerX" id="R4W-5S-H3h"/>
                 <constraint firstAttribute="centerX" secondItem="82" secondAttribute="centerX" constant="4" id="TbT-rI-qb9"/>
-                <constraint firstItem="BV7-Lz-cFn" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="62" id="Vsl-8p-I3W"/>
+                <constraint firstItem="BV7-Lz-cFn" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="2" id="Vsl-8p-I3W"/>
                 <constraint firstItem="112" firstAttribute="top" secondItem="63" secondAttribute="bottom" id="Wo6-z4-XgU"/>
                 <constraint firstAttribute="trailing" secondItem="1eq-mt-JYf" secondAttribute="trailing" constant="210" id="dtc-mg-Qfz"/>
                 <constraint firstAttribute="centerY" secondItem="85" secondAttribute="centerY" constant="512" id="fcI-W2-MVH"/>

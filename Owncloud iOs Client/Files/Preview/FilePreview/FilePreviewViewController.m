@@ -189,7 +189,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 - (void) didSelectEditView {
     
-    if (self.file.isDownload) {
+    if (self.file.isDownload == downloaded && !self.isDownloading) {
         EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.file andModeEditing:YES];
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         navController.navigationBar.translucent = NO;
@@ -1411,7 +1411,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 - (void)downloadCompleted:(FileDto*)fileDto{
     DLog(@"Hey, file is in device, go to preview");
 
-    _isDownloading = NO;
     _cancelButton.hidden = YES;
     _updatingCancelButton.userInteractionEnabled = NO;
     
@@ -1445,6 +1444,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         }
         [self performSelector:@selector(hiddenButtonsAfterDownload) withObject:nil afterDelay:0.6];
     }
+    
+    _isDownloading = NO;
 }
 
 
