@@ -44,7 +44,6 @@ extern NSString * fileWasDownloadNotification;
 
 
 //Download operation
-@property(nonatomic, strong) NSOperation *operation;
 @property(nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
 
 //Current local folder
@@ -89,8 +88,6 @@ extern NSString * fileWasDownloadNotification;
 @property(nonatomic) BOOL isFromBackground;
 
 @property(nonatomic) BOOL isForceCanceling;
-
-@property(nonatomic, strong) NSProgress *progressValueGlobal;
 
 //user is needed when we cancel all the downloads in a change of user
 @property (nonatomic, strong) UserDto *user;

@@ -404,7 +404,7 @@
             }];
             
             //Check to know if it's in progress
-            if ((download && [download.operation isExecuting]) || (download && download.downloadTask && download.downloadTask.state == NSURLSessionTaskStateRunning) ) {
+            if (download && download.downloadTask && download.downloadTask.state == NSURLSessionTaskStateRunning) {
                 [self contiueDownloadIfTheFileisDownloading];
             }else{
                 [self restartTheDownload];

@@ -60,7 +60,7 @@
 
 + (void)createAllFoldersInFileSystemByFileDto:(FileDto *)file andUserDto:(UserDto *)user;
 
-+ (NSOperation *) updateThumbnail:(FileDto *) file andUser:(UserDto *) user tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
++ (NSURLSessionTask *) updateThumbnail:(FileDto *) file andUser:(UserDto *) user tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 
 @end
