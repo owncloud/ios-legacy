@@ -242,21 +242,18 @@
         upload.estimateLength = (long)fileLength;
         upload.userId = self.currentFileDto.userId;
         upload.isLastUploadFileOfThisArray = YES;
-        if (self.isModeEditing) {
-            upload.status = generatedByDocumentProvider;
-        } else {
-            upload.status = pendingToBeCheck;
-        }
         upload.chunksLength = k_lenght_chunk;
         upload.isNotNecessaryCheckIfExist = NO;
         upload.isInternalUpload = NO;
         upload.taskIdentifier = 0;
         
         if (self.isModeEditing) {
+             upload.status = generatedByDocumentProvider;
             [ManageFilesDB setFileIsDownloadState:self.currentFileDto.idFile andState:overwriting];
             [ManageUploadsDB insertUpload:upload];
             [app launchUploadsOfflineFromDocumentProvider];
         } else {
+            upload.status = pendingToBeCheck;
             [ManageUploadsDB insertUpload:upload];
             [app initUploadsOffline];
         }
