@@ -27,6 +27,7 @@
 #import "UtilsFileSystem.h"
 #import "UIColor+Constants.h"
 #import "UtilsBrandedOptions.h"
+#import "UtilsNotifications.h"
 
 #define k_default_extension @"txt"
 
