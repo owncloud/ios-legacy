@@ -75,6 +75,12 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
 + (BOOL)isOfficeSupportedThisFile:(NSString*)fileName;
 
 /*
+ * Method to know if the file is an edit file supported by the system for the moment.
+ * @fileName -> file name
+ */
++ (BOOL)isEditTextViewSupportedThisFile:(NSString*)fileName;
+
+/*
  * Method to know if the image file can be scaled.
  * Only JPG, PNG, BMP and JPEG images files can be scaled for the moment.
  * @fileName -> file name 

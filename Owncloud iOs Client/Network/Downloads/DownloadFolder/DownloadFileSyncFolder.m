@@ -24,9 +24,10 @@
 #import "SyncFolderManager.h"
 #import "IndexedForest.h"
 #import "FilesViewController.h"
+#import "UtilsNotifications.h"
 
 #define k_task_identifier_invalid -1
-NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
+
 
 @implementation DownloadFileSyncFolder
 
@@ -74,64 +75,34 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
     
     __weak typeof(self) weakSelf = self;
     
+    self.downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunicationDownloadFolder] progress:^(NSProgress *progress) {
+        NSLog(@"Progress: %f", progress.fractionCompleted);
+    } successRequest:^(NSURLResponse *response, NSURL *filePath) {
+        DLog(@"file: %@", file.localFolder);
+        DLog(@"File downloaded");
+        
+        //Finalized the download
+        if ([[NSFileManager defaultManager] fileExistsAtPath:self.file.localFolder]) {
+            [weakSelf updateDataDownloadSuccess];
+        } else {
+            [weakSelf failureDownloadProcess];
+        }
+    } failureRequest:^(NSURLResponse *response, NSError *error) {
+        DLog(@"Error: %@", error);
+        DLog(@"error.code: %ld", (long)error.code);
+        
+        if (error.code != kCFURLErrorCancelled) {
+            [weakSelf failureDownloadProcess];
+        }
+    }];
+    
     if (k_is_sso_active || !k_is_background_active) {
-        
-        //Create the block of NSOperation to download.
-        self.operation = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFile:serverUrl toDestiny:localPath withLIFOSystem:NO onCommunication:[AppDelegate sharedOCCommunication]
-                                                      progressDownload:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-                                                          
-                                                      } successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
-                                                          
-                                                          DLog(@"file: %@", file.localFolder);
-                                                          DLog(@"File downloaded");
-                                                          
-                                                           if (k_is_sso_active && redirectedServer) {
-                                                               [weakSelf failureDownloadProcess];
-                                                           } else {
-                                                               //Finalized the download
-                                                               if ([[NSFileManager defaultManager] fileExistsAtPath:self.file.localFolder]) {
-                                                                   [weakSelf updateDataDownloadSuccess];
-                                                               } else {
-                                                                   [weakSelf failureDownloadProcess];
-                                                               }
-                                                           }
-                                                          
-                                                      } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
-                                                          DLog(@"Error: %@", error);
-                                                          DLog(@"error.code: %ld", (long)error.code);
-                                                          [weakSelf failureDownloadProcess];
-                                                          
-                                                      } shouldExecuteAsBackgroundTaskWithExpirationHandler:^{
-                                                          //Cancel download
-                                                          [weakSelf cancelDownload];
-                                                      }];
-        
+        //Will be resume by it self
     } else {
-        self.downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFileSession:serverUrl  toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunicationDownloadFolder] withProgress:nil successRequest:^(NSURLResponse *response, NSURL *filePath) {
-            
-            DLog(@"file: %@", file.localFolder);
-            DLog(@"File downloaded");
-            
-            //Finalized the download
-            if ([[NSFileManager defaultManager] fileExistsAtPath:self.file.localFolder]) {
-                [weakSelf updateDataDownloadSuccess];
-            } else {
-                [weakSelf failureDownloadProcess];
-            }
-            
-        } failureRequest:^(NSURLResponse *response, NSError *error) {
-            
-            DLog(@"Error: %@", error);
-            DLog(@"error.code: %ld", (long)error.code);
-            
-            if (error.code != kCFURLErrorCancelled) {
-                [weakSelf failureDownloadProcess];
-            }
-        }];
-        
         [self.downloadTask resume];
-        [ManageFilesDB updateFile:file.idFile withTaskIdentifier:self.downloadTask.taskIdentifier];
     }
+    
+    [ManageFilesDB updateFile:file.idFile withTaskIdentifier:self.downloadTask.taskIdentifier];
 }
 
 #pragma mark - Success/Failure/Cancel
@@ -156,6 +127,7 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
     
     [self reloadCellFromDataBase];
     [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
+    [self resumeNextDownloadFromQueue];
     
     //On Ipad reload the preview if the file is the same has been updated
     if (!IS_IPHONE && [app.detailViewController.file.localFolder isEqualToString: self.file.localFolder]) {
@@ -190,13 +162,10 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
     
     [self reloadCellFromDataBase];
     [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
+    [self resumeNextDownloadFromQueue];
 }
 
 - (void) cancelDownload {
-    
-    if (self.operation) {
-        [self.operation cancel];
-    }
     
     if (self.downloadTask) {
         [self.downloadTask cancel];
@@ -208,6 +177,15 @@ NSString *PreviewFileNotificationUpdated=@"PreviewFileNotificationUpdated";
 - (void)reloadCellFromDataBase{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     [app reloadCellByFile:self.file];
+}
+
+- (void) resumeNextDownloadFromQueue {
+    if (k_is_sso_active || !k_is_background_active) {
+        if ([AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count > 0) {
+            DownloadFileSyncFolder *download = (DownloadFileSyncFolder *) [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded objectAtIndex:0];
+            [download.downloadTask resume];
+        }
+    }
 }
 
 @end

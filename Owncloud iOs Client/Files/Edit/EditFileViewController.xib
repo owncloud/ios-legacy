@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EditFileViewController">
             <connections>
                 <outlet property="bodyTextView" destination="xMh-ks-EIq" id="omn-PX-ML0"/>
+                <outlet property="bodyTextViewHeightConstraint" destination="qOs-5y-P7T" id="YsB-fV-Qgj"/>
                 <outlet property="titleTextField" destination="ij5-gI-oPC" id="2lc-88-OM5"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -36,8 +37,8 @@
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="xMh-ks-EIq" secondAttribute="bottom" constant="8" id="6ae-c9-35C"/>
                 <constraint firstItem="ij5-gI-oPC" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="L2G-Vl-gSL"/>
-                <constraint firstItem="xMh-ks-EIq" firstAttribute="top" secondItem="ij5-gI-oPC" secondAttribute="bottom" constant="13" id="VZ2-0X-P0K"/>
                 <constraint firstAttribute="trailing" secondItem="ij5-gI-oPC" secondAttribute="trailing" constant="8" id="mXo-5z-iax"/>
+                <constraint firstItem="xMh-ks-EIq" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="51" identifier="heightBodyWithTop" id="qOs-5y-P7T"/>
                 <constraint firstItem="xMh-ks-EIq" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="rcY-Mx-YiW"/>
                 <constraint firstAttribute="trailing" secondItem="xMh-ks-EIq" secondAttribute="trailing" constant="8" id="tYo-Ml-Lec"/>
                 <constraint firstItem="ij5-gI-oPC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="zGx-O3-U2K"/>

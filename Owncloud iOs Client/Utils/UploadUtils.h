@@ -19,7 +19,6 @@
 @class FileDto;
 @class UploadsOfflineDto;
 
-extern NSString * PreviewFileNotification;
 
 @interface UploadUtils : NSObject
 

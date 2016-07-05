@@ -374,6 +374,7 @@
 		40CF2C6F1C491D200047969A /* ShareUserPrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CF2C6E1C491D200047969A /* ShareUserPrivilegeCell.swift */; };
 		40DC9C671CDA191B00F5F5EF /* EditFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DC9C651CDA191B00F5F5EF /* EditFileViewController.m */; };
 		40DC9C681CDA191B00F5F5EF /* EditFileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40DC9C661CDA191B00F5F5EF /* EditFileViewController.xib */; };
+		40DD9AE01D228E0C008E99D6 /* UtilsNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DD9ADF1D228E0C008E99D6 /* UtilsNotifications.m */; };
 		40E30ED61B59105D00D36B07 /* iphoneInstantUpload.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */; };
 		40E354C51A14D671000E7FE4 /* ownCloud-xmas@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */; };
 		40E354C71A14D6A2000E7FE4 /* sharedItem@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40E354C61A14D6A2000E7FE4 /* sharedItem@3x.png */; };
@@ -1509,6 +1510,8 @@
 		40DC9C641CDA191B00F5F5EF /* EditFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditFileViewController.h; sourceTree = "<group>"; };
 		40DC9C651CDA191B00F5F5EF /* EditFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditFileViewController.m; sourceTree = "<group>"; };
 		40DC9C661CDA191B00F5F5EF /* EditFileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditFileViewController.xib; sourceTree = "<group>"; };
+		40DD9ADE1D228E0C008E99D6 /* UtilsNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsNotifications.h; path = Utils/UtilsNotifications.h; sourceTree = "<group>"; };
+		40DD9ADF1D228E0C008E99D6 /* UtilsNotifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsNotifications.m; path = Utils/UtilsNotifications.m; sourceTree = "<group>"; };
 		40E30ED51B59105D00D36B07 /* iphoneInstantUpload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneInstantUpload.png; sourceTree = "<group>"; };
 		40E354C41A14D671000E7FE4 /* ownCloud-xmas@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ownCloud-xmas@3x.png"; sourceTree = "<group>"; };
 		40E354C61A14D6A2000E7FE4 /* sharedItem@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@3x.png"; sourceTree = "<group>"; };
@@ -2231,6 +2234,8 @@
 				4056551A1CE0A204001266EE /* UtilsFileSystem.m */,
 				402596031CF470640037A78A /* UtilsBrandedOptions.h */,
 				402596041CF470640037A78A /* UtilsBrandedOptions.m */,
+				40DD9ADE1D228E0C008E99D6 /* UtilsNotifications.h */,
+				40DD9ADF1D228E0C008E99D6 /* UtilsNotifications.m */,
 				138841D216E735E700053AAB /* Image Scale */,
 			);
 			name = Utils;
@@ -4638,6 +4643,7 @@
 				59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */,
 				1324298915ADBB3700DF823E /* main.m in Sources */,
 				EA4070FE1C11B82B008B1507 /* UIImage+Thumbnail.m in Sources */,
+				40DD9AE01D228E0C008E99D6 /* UtilsNotifications.m in Sources */,
 				EABD89361BBE82D900DA5281 /* TSMessage.m in Sources */,
 				59C71D231A9216AE00F66166 /* ThumbsMainToolbar.m in Sources */,
 				59C71D1A1A9216AE00F66166 /* ReaderMainToolbar.m in Sources */,
@@ -4652,7 +4658,6 @@
 				148DD5D9177851E700FB9977 /* UploadCell.m in Sources */,
 				148DD5DB177851E700FB9977 /* UploadRecentCell.m in Sources */,
 				EABF68E11889593100A2217C /* ShareLinkCell.m in Sources */,
-				13A9FCED17E9858C00FF48D7 /* ELCAlbumPickerController.m in Sources */,
 				40DC9C671CDA191B00F5F5EF /* EditFileViewController.m in Sources */,
 				400A636A1B4FD75600890579 /* IFTTTConstraintConstantAnimation.m in Sources */,
 				59A6B65719458F6E000B107D /* OCURLSessionManager.m in Sources */,
@@ -4808,7 +4813,6 @@
 				1487F159177C3392004A1A5A /* FMDatabaseAdditions.m in Sources */,
 				906177E21C4FABF600BBE648 /* ManageTouchID.m in Sources */,
 				59EF1F0E1CE0BD8900184F8F /* DeleteUtils.m in Sources */,
-				13A9FCEF17E9858C00FF48D7 /* ELCAssetCell.m in Sources */,
 				1487F15A177C3392004A1A5A /* FMDatabasePool.m in Sources */,
 				59C71D1F1A9216AE00F66166 /* ReaderThumbRequest.m in Sources */,
 				400A636B1B4FD75600890579 /* IFTTTConstraintMultiplierAnimation.m in Sources */,

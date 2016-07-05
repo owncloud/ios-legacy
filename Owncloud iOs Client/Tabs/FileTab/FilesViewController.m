@@ -274,11 +274,6 @@
         self.edgesForExtendedLayout = UIRectEdgeAll;
     }
     
-    //Set the navigation bar to translucent
-    if (IS_IOS7){
-        [self.navigationController.navigationBar setTranslucent:YES];
-    }
-    
     //Flag to know when the view change automatic to root view
     BOOL isGoToRootView = NO;
     
@@ -311,18 +306,7 @@
          [currentUser.url isEqualToString:_mUser.url])) {
         //We are changing of user
         //Show the file list in the correct place
-        //Only for iOS 7
-        if (IS_IOS7){
-            if (!IS_IPHONE){
-                [_tableView setContentOffset:CGPointMake(0,-k_navigation_bar_height) animated:animated];
-            } else if (IS_IPHONE && !IS_PORTRAIT) {
-                [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height_in_iphone_landscape + k_status_bar_height)) animated:animated];
-            } else {
-                [_tableView setContentOffset:CGPointMake(0,-(k_status_bar_height + k_navigation_bar_height)) animated:animated];
-            }
-        } else {
-            [_tableView setContentOffset:CGPointMake(0,0) animated:animated];
-        }
+        [_tableView setContentOffset:CGPointMake(0,0) animated:animated];
         
         //We check if the user have root folder at true on the DB
         if([ManageFilesDB isExistRootFolderByUser:app.activeUser]) {
@@ -847,7 +831,7 @@
  */
 - (void)showCreateTextFile{
     
-    EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.fileIdToShowFiles];
+    EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.fileIdToShowFiles andModeEditing:NO];
     OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
     navController.navigationBar.translucent = NO;
     
@@ -1442,7 +1426,7 @@
         fileCell = [InfoFileUtils getTheStatusIconOntheFile:file onTheCell:fileCell andCurrentFolder:self.fileIdToShowFiles andIsSonOfFavoriteFolder:self.isCurrentFolderSonOfFavoriteFolder ofUser:APP_DELEGATE.activeUser];
         
         //Thumbnail
-        fileCell.thumbnailOperation = [InfoFileUtils updateThumbnail:file andUser:APP_DELEGATE.activeUser tableView:tableView cellForRowAtIndexPath:indexPath];
+        fileCell.thumbnailSessionTask = [InfoFileUtils updateThumbnail:file andUser:APP_DELEGATE.activeUser tableView:tableView cellForRowAtIndexPath:indexPath];
         
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
@@ -1523,15 +1507,6 @@
 
 }
 
-// Change the color of the header section on the table
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
-{
-    //Only on iOS7 include transparency on the header section
-    if (IS_IOS7) {
-        view.tintColor = [UIColor colorOfHeaderTableSectionFileList];
-    }
-}
-
 
 // Asks the data source to return the index of the section having the given title and section title index.
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
@@ -1559,9 +1534,9 @@
     @try {
         CustomCellFileAndDirectory *customCell = (CustomCellFileAndDirectory *) cell;
         
-        if ([customCell isKindOfClass:[CustomCellFileAndDirectory class]] && customCell.thumbnailOperation) {
+        if ([customCell isKindOfClass:[CustomCellFileAndDirectory class]] && customCell.thumbnailSessionTask) {
             DLog(@"Cancel thumbnailOperation");
-            [customCell.thumbnailOperation cancel];
+            [customCell.thumbnailSessionTask cancel];
         }
     }
     @catch (NSException *exception) {
@@ -1678,24 +1653,14 @@
     } else {
         self.navigationItem.backBarButtonItem = nil;
 
-        //Depend of the iOS version 
-        if (IS_IOS7) {
-            //iOS 7 - only the arrow
-            self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-        } else {
-            //iOS 6 - back button
-            self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
-        }
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
+        
         FilePreviewViewController *viewController = [[FilePreviewViewController alloc]initWithNibName:@"FilePreviewViewController" selectedFile:selectedFile];
         
         //Hide tabbar
         viewController.hidesBottomBarWhenPushed = YES;
         viewController.sortedArray=_sortedArray;
 
-        //Set the navigation bar to not translucent
-        if (IS_IOS7) {
-            [self.navigationController.navigationBar setTranslucent:NO];
-        }
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }
@@ -1989,7 +1954,7 @@
     [self performSelector:@selector(sendRequestToReloadTableView) withObject:nil];
     
     //Refresh the shared data
-    [self performSelector:@selector(refreshSharedPath) withObject:nil];
+    //[self performSelector:@selector(refreshSharedPath) withObject:nil afterDelay:1.0];
     
     [self performSelectorInBackground:@selector(syncFavoritesByFolder:) withObject:self.fileIdToShowFiles];
 }
@@ -2024,29 +1989,31 @@
     
      [[AppDelegate sharedOCCommunication] readFolder:path withUserSessionToken:app.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
          
-        DLog(@"Operation response code: %ld", (long)response.statusCode);
-        BOOL isSamlCredentialsError = NO;
-        
-        //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
-            //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-            if (isSamlCredentialsError) {
-                [self errorLogin];
-            }
-        }
-        
-        if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError && [app.userSessionCurrentToken isEqualToString:token]) {
-            
-            //Pass the items with OCFileDto to FileDto Array
-            NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
-            
-            //Send the data to DB and refresh the table
-            [self deleteOldDataFromDBBeforeRefresh:directoryList];
-        } else {
-            [self stopPullRefresh];
-            _showLoadingAfterChangeUser = NO;
-        }
+         DLog(@"Operation response code: %ld", (long)response.statusCode);
+         BOOL isSamlCredentialsError = NO;
+         
+         //Check the login error in shibboleth
+         if (k_is_sso_active && redirectedServer) {
+             //Check if there are fragmens of saml in url, in this case there are a credential error
+             isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+             if (isSamlCredentialsError) {
+                 [self errorLogin];
+             }
+         }
+         
+         if(response.statusCode != kOCErrorServerUnauthorized && !isSamlCredentialsError && [app.userSessionCurrentToken isEqualToString:token]) {
+             
+             //Pass the items with OCFileDto to FileDto Array
+             NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
+             
+             //Send the data to DB and refresh the table
+             [self deleteOldDataFromDBBeforeRefresh:directoryList];
+         } else {
+             [self stopPullRefresh];
+             _showLoadingAfterChangeUser = NO;
+         }
+         
+         [self performSelector:@selector(refreshSharedPath) withObject:nil];
 
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token, NSString *redirectedServer) {
         
@@ -3191,7 +3158,7 @@
 /*
  * Method called when receive a fail from server side
  * @errorCodeFromServer -> WebDav Server Error of NSURLResponse
- * @error -> NSError of NSURLConnection
+ * @error -> NSError of NSURLSession
  */
 
 - (void)manageServerErrors: (NSInteger)errorCodeFromServer and:(NSError *)error {
