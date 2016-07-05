@@ -30,6 +30,8 @@ extern NSString *const IpadSelectRowInFileListNotification;
 extern NSString *const IpadCleanPreviewNotification;
 extern NSString *const IpadShowNotConnectionWithServerMessageNotification;
 
+extern NSString *const IPhoneDoneEditFileTextMessageNotification;
+
 @interface UtilsNotifications : NSObject
 
 @end

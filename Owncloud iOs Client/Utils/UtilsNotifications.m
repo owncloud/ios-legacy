@@ -31,5 +31,7 @@ NSString *const IpadSelectRowInFileListNotification = @"IpadSelectRowInFileListN
 NSString *const IpadCleanPreviewNotification = @"IpadCleanPreviewNotification";
 NSString *const IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotConnectionWithServerMessageNotification";
 
+NSString *const IPhoneDoneEditFileTextMessageNotification = @"IPhoneDoneEditFileTextMessageNotification";
+
 @end
 

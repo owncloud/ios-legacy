@@ -19,8 +19,6 @@
 
 #define shareMainViewNibName @"EditFileViewController"
 
-extern NSString *iPhoneDoneEditFileTextMessageNotification;
-
 @interface EditFileViewController : UIViewController <UITextViewDelegate>
 
 @property(nonatomic, strong) NSMutableArray *currentDirectoryArray;
