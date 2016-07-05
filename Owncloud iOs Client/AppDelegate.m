@@ -1527,7 +1527,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             __block ManageUploadRequest *uploadRequest = nil;
             
             //Get the ManageUploadRequest of the UploadOffline
-            for (ManageUploadRequest *tempRequest in self.uploadArray) {
+            for (ManageUploadRequest *tempRequest in [self.uploadArray copy]) {
                 if (tempRequest.currentUpload.idUploadsOffline == uploadOffline.idUploadsOffline) {
                     uploadRequest = tempRequest;
                     break;
