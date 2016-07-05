@@ -34,14 +34,6 @@ typedef enum {
     sharedViewManagerController =2,
 } kindOfManageController;
 
-extern NSString * IpadFilePreviewViewControllerFileWasDeletedNotification;
-extern NSString * IpadFilePreviewViewControllerFileWasDownloadNotification; 
-extern NSString * IpadFilePreviewViewControllerFileWhileDonwloadingNotification;
-extern NSString * IpadFilePreviewViewControllerFileFinishDownloadNotification;
-extern NSString * IpadSelectRowInFileListNotification;
-extern NSString * IpadCleanPreviewNotification;
-extern NSString * IpadShowNotConnectionWithServerMessageNotification;
-
 
 @interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, UIAlertViewDelegate, ManageFavoritesDelegate, UIGestureRecognizerDelegate> {
     
@@ -50,10 +42,12 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
     IBOutlet UIBarButtonItem *_spaceBar1;
     IBOutlet UIBarButtonItem *_spaceBar2;
     IBOutlet UIBarButtonItem *_spaceBar3;
+    IBOutlet UIBarButtonItem *_spaceBar4;
     IBOutlet UIBarButtonItem *_openButtonBar;
     IBOutlet UIBarButtonItem *_favoriteButtonBar;
     IBOutlet UIBarButtonItem *_shareLinkButtonBar;
     IBOutlet UIBarButtonItem *_deleteButtonBar;
+    IBOutlet UIBarButtonItem *_editButtonBar;
     IBOutlet UIImageView *_companyImageView;
     
     OCToolBar *toolbar;
@@ -63,14 +57,15 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
     IBOutlet NSLayoutConstraint *_leftMarginTitleLabelConstraint;
     IBOutlet NSLayoutConstraint *_toolBarHeightConstraint;
     IBOutlet NSLayoutConstraint *_progressViewHeightConstraint;
-    IBOutlet NSLayoutConstraint *_fileTypeCenterHeightConstraint;
     
     IBOutlet NSLayoutConstraint *_topMarginUpdatingFileProgressView;
     IBOutlet NSLayoutConstraint *_topMarginUpdatingView;
     IBOutlet NSLayoutConstraint *_topMarginUpdatingButton;
     
     IBOutlet NSLayoutConstraint *toolBarTopMargin;
-    IBOutlet NSLayoutConstraint *toolBarHeight;
+    
+    IBOutlet NSLayoutConstraint *_titleLabelMarginRightConstraint;
+    IBOutlet NSLayoutConstraint *_updatingProgressMarginUpdatingRightConstraint;
     
     NSString *nameFileToUpdate; 
     
@@ -184,6 +179,11 @@ extern NSString * IpadShowNotConnectionWithServerMessageNotification;
  * Cancel download feature. Action to cancel the download of a selected file.
  */
 - (IBAction)didPressCancelButton:(id)sender;
+
+/*
+ * Edit file feature. Action to edit the selected file.
+ */
+- (IBAction)didPressEditButton:(id)sender;
 
 
 ///-----------------------------------

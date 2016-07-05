@@ -18,7 +18,8 @@
 
 @interface UtilsBrandedOptions : NSObject
 
-+ (NSDictionary *)titleAttributesToNavigationBar;
++ (NSDictionary *) titleAttributesToNavigationBar;
 
++ (UILabel *) getCustomLabelForNavBarByName:(NSString *) name;
 
 @end

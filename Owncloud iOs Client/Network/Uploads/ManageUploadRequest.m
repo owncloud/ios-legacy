@@ -36,9 +36,6 @@
 
 #define k_delay_after_check_instant_uploads_folders 2.0
 
-NSString *fileDeleteInAOverwriteProcess=@"fileDeleteInAOverwriteProcess";
-NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
-
 
 @implementation ManageUploadRequest
 
@@ -491,7 +488,7 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
     if (!IS_IPHONE){
         [app.detailViewController presentWhiteView];
         //Launch a notification for update the previewed file
-        [[NSNotificationCenter defaultCenter] postNotificationName:fileDeleteInAOverwriteProcess object:self.currentUpload.destinyFolder];
+        [[NSNotificationCenter defaultCenter] postNotificationName:FileDeleteInAOverwriteProcess object:self.currentUpload.destinyFolder];
     }
     
     if (!deleteOverwriteFile.isFavorite){
@@ -750,7 +747,8 @@ NSString *uploadOverwriteFileNotification=@"uploadOverwriteFileNotification";
                 [ManageFilesDB updateDownloadStateOfFileDtoByFileName:overwrittenFile.fileName andFilePath:folderName andActiveUser:self.userUploading withState:downloaded];
                 
                 //Launch a notification for update the file previewed
-                [[NSNotificationCenter defaultCenter] postNotificationName:uploadOverwriteFileNotification object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:UploadOverwriteFileNotification object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:PreviewFileNotificationUpdated object:overwrittenFile];
                 
                 
                 [self.delegate overwriteCompleted];

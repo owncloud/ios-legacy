@@ -115,11 +115,23 @@
 }
 
 
-+ (BOOL)isOfficeSupportedThisFile:(NSString*)fileName{
++ (BOOL)isOfficeSupportedThisFile:(NSString*)fileName {
     
     NSString *ext=[self getExtension:fileName];
     
     if([ext isEqualToString:@"TXT"] || [ext isEqualToString:@"PDF"] || [ext isEqualToString:@"DOC"] || [ext isEqualToString:@"XLS"] || [ext isEqualToString:@"PPT"] || [ext isEqualToString:@"RTF"] || [ext isEqualToString:@"DOCX"] || [ext isEqualToString:@"PPTX"] || [ext isEqualToString:@"XLSX"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"HTM"] || [ext isEqualToString:@"HTML"] || [ext isEqualToString:@"KEY.ZIP"] || [ext isEqualToString:@"NUMBERS.ZIP"] || [ext isEqualToString:@"PAGES.ZIP"] || [ext isEqualToString:@"PAGES"] || [ext isEqualToString:@"NUMBERS"] || [ext isEqualToString:@"KEY"] || [ext isEqualToString:@"CSS"]  || [ext isEqualToString:@"PY"]  || [ext isEqualToString:@"JS"])
+    {
+        return YES;
+    }
+    
+    return NO;
+}
+
++ (BOOL)isEditTextViewSupportedThisFile:(NSString*)fileName {
+    
+    NSString *ext=[self getExtension:fileName];
+    
+    if ([ext isEqualToString:@"TXT"] || [ext isEqualToString:@"RTF"] || [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] )
     {
         return YES;
     }

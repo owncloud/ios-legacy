@@ -43,15 +43,9 @@
 #import "DownloadUtils.h"
 #import "ManageCapabilitiesDB.h"
 #import "DownloadFileSyncFolder.h"
+#import "EditFileViewController.h"
+#import "UtilsNotifications.h"
 
-
-NSString * IpadFilePreviewViewControllerFileWasDeletedNotification = @"IpadFilePreviewViewControllerFileWasDeletedNotification";
-NSString * IpadFilePreviewViewControllerFileWasDownloadNotification = @"IpadFilePreviewViewControllerFileWasDownloadNotification";
-NSString * IpadFilePreviewViewControllerFileWhileDonwloadingNotification = @"IpadFilePreviewViewControllerFileWhileDonwloadingNotification";
-NSString * IpadFilePreviewViewControllerFileFinishDownloadNotification = @"IpadFilePreviewViewControllerFileFinishDownloadNotification";
-NSString * IpadSelectRowInFileListNotification = @"IpadSelectRowInFileListNotification";
-NSString * IpadCleanPreviewNotification = @"IpadCleanPreviewNotification";
-NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotConnectionWithServerMessageNotification";
 
 #define k_delta_width_for_split_transition 320.0
 #define k_delta_height_toolBar_split_transition 64.0
@@ -108,11 +102,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
     [_favoriteButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     [_shareLinkButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     [_deleteButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
+    [_editButtonBar setImageInsets:UIEdgeInsetsMake(10, 0, -10, 0)];
     
     //Set Constraints
     _topMarginTitleLabelConstraint.constant = 32;
     _progressViewHeightConstraint.constant = 2;
-    _fileTypeCenterHeightConstraint.constant = -40;
     
     
     [self.view setNeedsLayout];
@@ -193,9 +187,23 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
             [items insertObject:_deleteButtonBar atIndex:7];
         }
     }
+    
+    
+
+    if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
+        [items insertObject:_spaceBar4 atIndex:8];
+        [items insertObject:_editButtonBar atIndex:9];
+        _titleLabelMarginRightConstraint.constant = 260;
+        _updatingProgressMarginUpdatingRightConstraint.constant = 260;
+    } else {
+        _titleLabelMarginRightConstraint.constant = 210;
+        _updatingProgressMarginUpdatingRightConstraint.constant = 210;
+    }
+    
     [toolbar setItems:items animated:YES];
     
 }
+
 
 - (CGRect) getTheCorrectSize{
     
@@ -1127,6 +1135,23 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 }
 
 
+- (IBAction)didPressEditButton:(id)sender
+{
+    if (self.file.isDownload == downloaded && !self.isDownloading) {
+        EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.file andModeEditing:YES];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.navigationBar.translucent = NO;
+        
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:navController animated:YES completion:nil];
+        
+    } else {
+        [self showAlertView:NSLocalizedString(@"no_file_downloaded", nil)];
+    }
+
+}
+
+
 ///-----------------------------------
 /// @name Action of updating cancel button
 ///-----------------------------------
@@ -1787,8 +1812,8 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
 
 - (void) setNotificationForCommunicationBetweenViews {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePreviewOverwriteFile:) name:PreviewFileNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePreviewFileWithNewIDFromDB:) name:uploadOverwriteFileNotification object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updatePreviewFileWithNewIdFromDBWhenAFileISDelete:) name:fileDeleteInAOverwriteProcess object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePreviewFileWithNewIDFromDB:) name:UploadOverwriteFileNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updatePreviewFileWithNewIdFromDBWhenAFileISDelete:) name:FileDeleteInAOverwriteProcess object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cleanView) name:IpadCleanPreviewNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNotConnectionWithServerMessage) name:IpadShowNotConnectionWithServerMessageNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadFileInView:) name:PreviewFileNotificationUpdated object:nil];
@@ -2230,13 +2255,11 @@ NSString * IpadShowNotConnectionWithServerMessageNotification = @"IpadShowNotCon
         toolBarTopMargin.constant = -deltaHeigh;
         _topMarginUpdatingFileProgressView.constant = -deltaHeigh;
         _topMarginTitleLabelConstraint.constant = -deltaHeigh;
-        toolBarHeight.constant = -deltaHeigh;
         _toolBarHeightConstraint.constant = -deltaHeigh;
     }else{
         toolBarTopMargin.constant = 0;
         _topMarginUpdatingFileProgressView.constant = 10;
         _topMarginTitleLabelConstraint.constant = k_delta_height_toolBar_split_transition/2;
-        toolBarHeight.constant = 0;
         _toolBarHeightConstraint.constant = k_delta_height_toolBar_split_transition;
     }
     

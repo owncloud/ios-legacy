@@ -23,10 +23,16 @@
 
 @property(nonatomic, strong) NSMutableArray *currentDirectoryArray;
 @property(nonatomic, strong) FileDto *currentFileDto;
+@property (nonatomic) BOOL isModeEditing;
+@property (nonatomic, strong) NSString *initialBodyContent;
 
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextView *bodyTextView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bodyTextViewHeightConstraint;
 
-- (id)initWithFileDto:(FileDto *)fileDto;
+
+
+- (id)initWithFileDto:(FileDto *)fileDto andModeEditing:(BOOL)modeEditing;
+
 
 @end
