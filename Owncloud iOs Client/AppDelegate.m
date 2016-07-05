@@ -1214,7 +1214,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     BOOL isExist = NO;
     //Check if the ManageUploadRequest exists on the uploadArray
-    for (ManageUploadRequest *currentInUploadArray in _uploadArray) {
+    for (ManageUploadRequest *currentInUploadArray in [self.uploadArray copy]) {
         if (currentInUploadArray.currentUpload.idUploadsOffline == uploadFile.currentUpload.idUploadsOffline) {
             isExist = YES;
         }
