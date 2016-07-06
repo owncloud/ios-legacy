@@ -1653,7 +1653,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         BOOL isTheTaskOnTheDB = NO;
         
-        for (ManageUploadRequest *uploadRequest in self.uploadArray) {
+        for (ManageUploadRequest *uploadRequest in [self.uploadArray copy]) {
 
             if (uploadRequest.uploadTask.taskIdentifier == task.taskIdentifier) {
                 
