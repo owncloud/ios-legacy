@@ -27,9 +27,10 @@
 #import "UtilsFileSystem.h"
 #import "UIColor+Constants.h"
 #import "UtilsBrandedOptions.h"
-
+#import "UtilsNotifications.h"
 
 #define k_default_extension @"txt"
+
 
 @interface EditFileViewController ()
 
@@ -37,11 +38,12 @@
 
 @implementation EditFileViewController
 
-- (id)initWithFileDto:(FileDto *)fileDto {
+- (id)initWithFileDto:(FileDto *)fileDto andModeEditing:(BOOL)modeEditing{
    
     if ((self = [super initWithNibName:shareMainViewNibName bundle:nil]))
     {
         self.currentFileDto = fileDto;
+        self.isModeEditing = modeEditing;
     }
     
     return self;
@@ -50,19 +52,31 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
     self.titleTextField.placeholder = NSLocalizedString(@"title_text_file_placeholder", nil);
-    self.titleTextField.text = [NSString stringWithFormat:@"%@.%@",NSLocalizedString(@"default_text_file_title", nil),k_default_extension];
+
+    if (self.isModeEditing) {
+        
+        self.bodyTextViewHeightConstraint.constant = 2;
+        
+
+        
+    } else {
+        self.titleTextField.text = [NSString stringWithFormat:@"%@.%@",NSLocalizedString(@"default_text_file_title", nil),k_default_extension];
+    }
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (void) viewWillAppear:(BOOL)animated{
+- (void) viewWillAppear:(BOOL)animated {
     [self.bodyTextView becomeFirstResponder];
     [super viewWillAppear:animated];
     [self setStyleView];
+    
 }
 
 
@@ -70,7 +84,19 @@
 
 - (void) setStyleView {
     
-    self.navigationItem.title = NSLocalizedString(@"title_view_new_text_file", nil);
+    if (self.isModeEditing) {
+        [self.titleTextField setHidden:YES];
+        
+        self.navigationItem.titleView = [UtilsBrandedOptions getCustomLabelForNavBarByName:[[self.currentFileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    
+        NSString *contentFile = [NSString stringWithContentsOfFile:[UtilsUrls getFileLocalSystemPathByFileDto:self.currentFileDto andUser:APP_DELEGATE.activeUser] encoding:NSUTF8StringEncoding error:nil];
+        self.bodyTextView.text  = contentFile;
+        self.initialBodyContent = contentFile;
+        
+    } else {
+        self.navigationItem.title = NSLocalizedString(@"title_view_new_text_file", nil);
+        self.initialBodyContent = @"";
+    }
     [self setBarButtonStyle];
 }
 
@@ -87,20 +113,40 @@
 #pragma mark - Action Methods
 
 - (void) didSelectDoneView {
-   
-    NSString *fileName = [self.titleTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet] ];
-    NSString *bodyTextFile = self.bodyTextView.text;
+    NSString *fileName = @"";
+    NSString *bodyTextFile = @"";
     
-    if ([self isValidTitleName:fileName]) {
+    if (self.isModeEditing) {
+        fileName = self.currentFileDto.fileName;
+    } else {
+        fileName = [self.titleTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet] ];
+    }
+    bodyTextFile = self.bodyTextView.text;
+
+    
+    if ( self.isModeEditing || (!self.isModeEditing && [self isValidTitleName:fileName])) {
         
-        NSString *tempLocalPath = [self storeFileWithTitle:fileName andBody:bodyTextFile];
-        if (tempLocalPath) {
-            [self sendTextFileToUploadsByTempLocalPath:tempLocalPath andFileName:fileName];
+        if (![self.initialBodyContent isEqualToString:bodyTextFile] || ([bodyTextFile length] == 0)) {
+            NSString *tempLocalPath = [self storeFileWithTitle:fileName andBody:bodyTextFile];
+            if (tempLocalPath) {
+                [self sendTextFileToUploadsByTempLocalPath:tempLocalPath andFileName:fileName];
+            }
+        } else {
+            [self showAlertView:NSLocalizedString(@"no_changes_made", nil)];
         }
-        [self dismissViewControllerAnimated:true completion:nil];
+        
+        [self dismissViewControllerAnimated:NO completion:^{
+            //Send notification in order to update the file list
+            [[NSNotificationCenter defaultCenter] postNotificationName:IPhoneDoneEditFileTextMessageNotification object:nil];
+        }];
+
     }
     
 }
+
+#pragma mark - FilesViewController callBacks
+
+
 
 - (void) closeViewController {
     
@@ -175,8 +221,14 @@
 - (void) sendTextFileToUploadsByTempLocalPath:(NSString *)tempLocalPath andFileName:(NSString *)fileName {
    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-
-    NSString *fullRemotePath = [NSString stringWithFormat:@"%@",[UtilsUrls getFullRemoteServerFilePathByFile:self.currentFileDto andUser:app.activeUser]];
+    
+    NSString *fullRemotePath = @"";
+    
+    if (self.isModeEditing) {
+        fullRemotePath = [NSString stringWithFormat:@"%@",[UtilsUrls getFullRemoteServerParentPathByFile:self.currentFileDto andUser:app.activeUser]];
+    } else {
+        fullRemotePath = [NSString stringWithFormat:@"%@",[UtilsUrls getFullRemoteServerFilePathByFile:self.currentFileDto andUser:app.activeUser]];
+    }
     
     long long fileLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:tempLocalPath error:nil] valueForKey:NSFileSize] unsignedLongLongValue];
     
@@ -191,14 +243,21 @@
         upload.estimateLength = (long)fileLength;
         upload.userId = self.currentFileDto.userId;
         upload.isLastUploadFileOfThisArray = YES;
-        upload.status = pendingToBeCheck;
         upload.chunksLength = k_lenght_chunk;
         upload.isNotNecessaryCheckIfExist = NO;
         upload.isInternalUpload = NO;
         upload.taskIdentifier = 0;
         
-        [ManageUploadsDB insertUpload:upload];
-        [app initUploadsOffline];
+        if (self.isModeEditing) {
+             upload.status = generatedByDocumentProvider;
+            [ManageFilesDB setFileIsDownloadState:self.currentFileDto.idFile andState:overwriting];
+            [ManageUploadsDB insertUpload:upload];
+            [app launchUploadsOfflineFromDocumentProvider];
+        } else {
+            upload.status = pendingToBeCheck;
+            [ManageUploadsDB insertUpload:upload];
+            [app initUploadsOffline];
+        }
     }
 
 }

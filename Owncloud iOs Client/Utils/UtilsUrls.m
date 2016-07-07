@@ -532,6 +532,27 @@
     return fullFilePath;
 }
 
+//----------------------------------------------
+/// @name getFullRemoteServerParentPathByFile
+///---------------------------------------------
+/**
+ * Method to get full file path
+ *
+ * @param file -> fileDto
+ * @param user -> userDto
+ *
+ * @return fullFilePath ->subfolders  -> http://domain/(subfoldersServer)/k_url_webdav_server/(subfoldersDB)
+ *
+ */
++ (NSString *)getFullRemoteServerParentPathByFile:(FileDto *) file andUser:(UserDto *) user {
+    
+    NSString *fullFilePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemoteServerPathWithoutFolders:user],file.filePath];
+    
+    DLog(@"fullFilePath: %@", fullFilePath);
+    
+    return fullFilePath;
+}
+
 
 
 

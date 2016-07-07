@@ -340,7 +340,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
             }
             
             //Thumbnail
-            fileCell.thumbnailOperation = [InfoFileUtils updateThumbnail:file andUser:self.user tableView:tableView cellForRowAtIndexPath:indexPath];
+            fileCell.thumbnailSessionTask = [InfoFileUtils updateThumbnail:file andUser:self.user tableView:tableView cellForRowAtIndexPath:indexPath];
             
         } else {
             //Is directory

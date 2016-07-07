@@ -31,7 +31,7 @@
 /*
  * Method called when receive an error from server
  * @errorHttp -> WebDav Server Error of NSURLResponse
- * @errorConnection -> NSError of NSURLConnection
+ * @errorConnection -> NSError of NSURLSession
  * @user -> UserDto
  */
 

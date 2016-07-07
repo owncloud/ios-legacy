@@ -374,7 +374,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
         
         //Generate the interface of the app
-        [self generateAppInterfaceFromLoginScreen:NO];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self generateAppInterfaceFromLoginScreen:NO];
+        });
     }
 }
 
@@ -609,15 +611,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 		
         NSURLSessionConfiguration *configuration = nil;
         
-
-        if (IS_IOS8 || IS_IOS9) {
-            configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_session_name];
+        if (k_is_sso_active || !k_is_background_active) {
+            configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
         } else {
-            configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:k_session_name];
+            configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_session_name];
         }
-        
-        
-      
+
         configuration.HTTPMaximumConnectionsPerHost = 1;
         configuration.requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
         configuration.timeoutIntervalForRequest = k_timeout_upload;
@@ -629,22 +628,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             return NSURLSessionAuthChallengePerformDefaultHandling;
         }];
         
-       /* [uploadSessionManager.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-            if (status == AFNetworkReachabilityStatusNotReachable) {
-                [[NSNotificationCenter defaultCenter] postNotificationName: NotReachableNetworkForUploadsNotification object: nil];
-                [[NSNotificationCenter defaultCenter] postNotificationName: NotReachableNetworkForDownloadsNotification object: nil];
-            }
-            
-        }];
-        
-        [uploadSessionManager.reachabilityManager startMonitoring];*/
-        
         NSURLSessionConfiguration *configurationDownload = nil;
         
-        if (IS_IOS8 || IS_IOS9) {
+        if (k_is_sso_active || !k_is_background_active) {
+            configurationDownload = [NSURLSessionConfiguration defaultSessionConfiguration];
+        } else {
             configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_session_name];
-        }else{
-            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_session_name];
         }
      
         configurationDownload.HTTPMaximumConnectionsPerHost = 1;
@@ -658,9 +647,19 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             return NSURLSessionAuthChallengePerformDefaultHandling;
         }];
         
+        
+        
+        NSURLSessionConfiguration *networkConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        networkConfiguration.HTTPShouldUsePipelining = YES;
+        networkConfiguration.HTTPMaximumConnectionsPerHost = 1;
+        networkConfiguration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+        
+        OCURLSessionManager *networkSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:networkConfiguration];
+        [networkSessionManager.operationQueue setMaxConcurrentOperationCount:1];
+        networkSessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
    
 
-        sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:uploadSessionManager andDownloadSessionManager:downloadSessionManager];
+        sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:uploadSessionManager andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
 
         //Acive the cookies functionality if the server supports it
@@ -677,15 +676,14 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 + (OCCommunication*)sharedOCCommunicationDownloadFolder {
     static OCCommunication* sharedOCCommunicationDownloadFolder = nil;
-    if (sharedOCCommunicationDownloadFolder == nil)
-    {
-        
+    if (sharedOCCommunicationDownloadFolder == nil) {
+
         NSURLSessionConfiguration *configurationDownload = nil;
         
-        if (IS_IOS8) {
+        if (k_is_sso_active || !k_is_background_active) {
+            configurationDownload = [NSURLSessionConfiguration defaultSessionConfiguration];
+        } else {
             configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_folder_session_name];
-        }else{
-            configurationDownload = [NSURLSessionConfiguration backgroundSessionConfiguration:k_download_folder_session_name];
         }
         
         configurationDownload.HTTPMaximumConnectionsPerHost = 1;
@@ -694,12 +692,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         configurationDownload.sessionSendsLaunchEvents = YES;
         [configurationDownload setAllowsCellularAccess:YES];
         OCURLSessionManager *downloadSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:configurationDownload];
-        [downloadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
-        [downloadSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
-            return NSURLSessionAuthChallengePerformDefaultHandling;
-        }];
         
-        sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager];
+        sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:nil];
         
         
         //Acive the cookies functionality if the server supports it
@@ -1119,15 +1113,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) restoreUploadsInProccessFromSystemWithIdentificator: (NSString*)identifier withCompletionHandler:(void (^)())completionHandler {
     
-    NSURLSessionConfiguration *configuration = nil;
-    
-    
-    if (IS_IOS8 || IS_IOS9) {
-        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
-    } else {
-        configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
-    }
-    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
     NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:configuration];
     
    //Get uploads in the database "waiting for upload" and "uploading" to compare with background uploads
@@ -1228,7 +1214,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     BOOL isExist = NO;
     //Check if the ManageUploadRequest exists on the uploadArray
-    for (ManageUploadRequest *currentInUploadArray in _uploadArray) {
+    for (ManageUploadRequest *currentInUploadArray in [self.uploadArray copy]) {
         if (currentInUploadArray.currentUpload.idUploadsOffline == uploadFile.currentUpload.idUploadsOffline) {
             isExist = YES;
         }
@@ -1245,11 +1231,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     NSURLSessionConfiguration *configuration = nil;
     
-    if (IS_IOS8) {
-        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
+    if (k_is_sso_active || !k_is_background_active) {
+        configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     } else {
-        configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
+        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
     }
+    
     
     NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:configuration];
     
@@ -1278,10 +1265,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     NSURLSessionConfiguration *configuration = nil;
     
-    if (IS_IOS8 || IS_IOS9) {
-        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
+    if (k_is_sso_active || !k_is_background_active) {
+        configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     } else {
-        configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:identifier];
+        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
     }
     
     NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:configuration];
@@ -1540,7 +1527,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             __block ManageUploadRequest *uploadRequest = nil;
             
             //Get the ManageUploadRequest of the UploadOffline
-            for (ManageUploadRequest *tempRequest in self.uploadArray) {
+            for (ManageUploadRequest *tempRequest in [self.uploadArray copy]) {
                 if (tempRequest.currentUpload.idUploadsOffline == uploadOffline.idUploadsOffline) {
                     uploadRequest = tempRequest;
                     break;
@@ -1666,7 +1653,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         BOOL isTheTaskOnTheDB = NO;
         
-        for (ManageUploadRequest *uploadRequest in self.uploadArray) {
+        for (ManageUploadRequest *uploadRequest in [self.uploadArray copy]) {
 
             if (uploadRequest.uploadTask.taskIdentifier == task.taskIdentifier) {
                 
@@ -1743,61 +1730,66 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 #pragma mark - Pass Code
 
 - (void)checkIfIsNecesaryShowPassCode {
-    
     if ([ManageAppSettingsDB isPasscode]) {
-        
-        KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
-        vc.delegate = self;
-        
-        OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
-        vc.mode = KKPasscodeModeEnter;
-        
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        
-        UIViewController *rootController = [[UIViewController alloc]init];
-        rootController.view.backgroundColor = [UIColor darkGrayColor];
-        
-        self.window.rootViewController = rootController;
-        [self.window makeKeyAndVisible];
-        
-        if (IS_IPHONE) {
-
-            [rootController presentViewController:oc animated:YES completion:nil];
-        } else {
-            oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-            oc.modalPresentationStyle = UIModalPresentationFormSheet;
-            [rootController presentViewController:oc animated:NO completion:nil];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
+            vc.delegate = self;
+            
+            OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
+            vc.mode = KKPasscodeModeEnter;
+            
+            self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+            
+            UIViewController *rootController = [[UIViewController alloc]init];
+            rootController.view.backgroundColor = [UIColor darkGrayColor];
+            
+            self.window.rootViewController = rootController;
+            [self.window makeKeyAndVisible];
+            
+            if (IS_IPHONE) {
+                
+                [rootController presentViewController:oc animated:YES completion:nil];
+                
+            } else {
+                oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+                oc.modalPresentationStyle = UIModalPresentationFormSheet;
+                [rootController presentViewController:oc animated:NO completion:nil];
+            }
+        });
     } else {        
         [self initAppWithEtagRequest:YES];
     }
+  
 }
 
 - (void)checkIfIsNecesaryShowPassCodeWillEnterForeground {
     
     if ([ManageAppSettingsDB isPasscode]) {
-        
-        KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
-        vc.delegate = self;
-        
-        OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
-        vc.mode = KKPasscodeModeEnter;
-        
-        if (IS_IPHONE) {
-            [self closeAlertViewAndViewControllers];
-            [_currentViewVisible presentViewController:oc animated:NO completion:nil];
-
-        } else {
-            //is ipad
-            [_splitViewController dismissViewControllerAnimated:NO completion:nil];
-
-           // oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-            oc.modalPresentationStyle = UIModalPresentationFormSheet;
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-            [_splitViewController presentViewController:oc animated:NO completion:^{
-                DLog(@"present complete");
-            }];
-        }
+            KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
+            vc.delegate = self;
+            
+            OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
+            vc.mode = KKPasscodeModeEnter;
+            
+            if (IS_IPHONE) {
+                [self closeAlertViewAndViewControllers];
+                [_currentViewVisible presentViewController:oc animated:NO completion:nil];
+                
+            } else {
+                //is ipad
+                [_splitViewController dismissViewControllerAnimated:NO completion:nil];
+                
+                // oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+                oc.modalPresentationStyle = UIModalPresentationFormSheet;
+                
+                [_splitViewController presentViewController:oc animated:NO completion:^{
+                    DLog(@"present complete");
+                }];
+            }
+        });
     }
 }
 

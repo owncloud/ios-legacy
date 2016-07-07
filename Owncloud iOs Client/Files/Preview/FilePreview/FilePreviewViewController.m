@@ -42,6 +42,8 @@
 #import "SyncFolderManager.h"
 #import "DownloadUtils.h"
 #import "ManageCapabilitiesDB.h"
+#import "EditFileViewController.h"
+#import "UtilsBrandedOptions.h"
 
 
 //Constant for iOS7
@@ -163,12 +165,48 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     _isCancelDownloadClicked = NO;
     
+    [self setEditBarButtonInTextFiles];
+    
     //Set the navigation bar to not translucent
     [self.navigationController.navigationBar setTranslucent:YES];
     
     //Configure view depend device orientation
     [self configureView];
 }
+
+
+#pragma mark - Edit file option
+
+- (void) setEditBarButtonInTextFiles {
+    
+    if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
+
+        UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(didSelectEditView)];
+        self.navigationItem.rightBarButtonItem = editButton;
+    }
+}
+
+
+- (void) didSelectEditView {
+    
+    if (self.file.isDownload == downloaded && !self.isDownloading) {
+        EditFileViewController *viewController = [[EditFileViewController alloc] initWithFileDto:self.file andModeEditing:YES];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.navigationBar.translucent = NO;
+        
+        if (IS_IPHONE) {
+            viewController.hidesBottomBarWhenPushed = YES;
+            [self presentViewController:navController animated:YES completion:nil];
+        } else {
+            navController.modalPresentationStyle = UIModalPresentationFormSheet;
+            [self presentViewController:navController animated:YES completion:nil];
+        }
+    } else {
+        [self showAlertView:NSLocalizedString(@"no_file_downloaded", nil)];
+    }
+
+}
+
 
 ///-----------------------------------
 /// @name Set Type of Extend With Option
@@ -201,23 +239,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  * Method that put a title label in navBar.
  */
 - (void)putTitleInNavBarByName:(NSString *) name {
-    DLog(@"Put the title of the file in the navigation bar");
-    //Custom title
-    UILabel *label = [[UILabel alloc]initWithFrame: CGRectMake(0, 0, 270, 44)];
-    UIFont *titleFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
     
-    [label setBackgroundColor:[UIColor clearColor]];
-    [label setTextColor:[UIColor colorOfNavigationTitle]];
-
-    [label setFont:titleFont];
-
-    [label setLineBreakMode:NSLineBreakByTruncatingMiddle];
-    [label setTextAlignment:NSTextAlignmentCenter];
-    [label setClipsToBounds:YES];
-    
-    label.text = [name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    self.navigationItem.titleView = label;
+    self.navigationItem.titleView = [UtilsBrandedOptions getCustomLabelForNavBarByName:name];
 }
 
 ///-----------------------------------
@@ -532,7 +555,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             }
             
             
-            if ((download && [download.operation isExecuting]) || (download && download.downloadTask && download.downloadTask.state == NSURLSessionTaskStateRunning) ) {
+            if (download && download.downloadTask && download.downloadTask.state == NSURLSessionTaskStateRunning) {
                  [self contiueDownloadIfTheFileisDownloading];
             }else{
                  [self restartTheDownload];
@@ -1388,7 +1411,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 - (void)downloadCompleted:(FileDto*)fileDto{
     DLog(@"Hey, file is in device, go to preview");
 
-    _isDownloading = NO;
     _cancelButton.hidden = YES;
     _updatingCancelButton.userInteractionEnabled = NO;
     
@@ -1422,6 +1444,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         }
         [self performSelector:@selector(hiddenButtonsAfterDownload) withObject:nil afterDelay:0.6];
     }
+    
+    _isDownloading = NO;
 }
 
 
@@ -1543,6 +1567,11 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     }
 }
 
+- (void) showAlertView:(NSString*)string{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+    [alertView show];
+}
+
 #pragma mark - Error login delegate method
 
 - (void) errorLogin {
@@ -1581,9 +1610,10 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 - (void) setNotificationForCommunicationBetweenViews {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePreviewOverwriteFile:) name:PreviewFileNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePreviewFileWithNewIDFromDB:) name:uploadOverwriteFileNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePreviewFileWithNewIDFromDB:) name:UploadOverwriteFileNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cleanView) name:iPhoneCleanPreviewNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNotConnectionWithServerMessage) name:iPhoneShowNotConnectionWithServerMessageNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissThisView) name:IPhoneDoneEditFileTextMessageNotification object:nil];
 }
 
 
@@ -1636,6 +1666,19 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [self handleFile];
     }
     
+}
+
+
+#pragma mark - dismiss notification
+
+-(void) dismissThisView {
+    [self cleanView];
+    NSArray *allViewControllers = [self.navigationController viewControllers];
+    for (UIViewController *aViewController in allViewControllers) {
+        if ([aViewController isKindOfClass:[FilesViewController class]]) {
+            [self.navigationController popToViewController:aViewController animated:NO];
+        }
+    }
 }
 
 @end
