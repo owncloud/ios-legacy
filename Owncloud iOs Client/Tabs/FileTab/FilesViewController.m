@@ -1260,7 +1260,7 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     // If the selected cell is showing the SwipeMenu, we don´t navigate further
-    FileDto *selectedFile = (FileDto *)[[_sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
+    FileDto *selectedFile = (FileDto *)[[[self.sortedArray copy] objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
     
     selectedFile = [ManageFilesDB getFileDtoByFileName:selectedFile.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:selectedFile.filePath andUser:app.activeUser] andUser:app.activeUser];
     _selectedFileDto = selectedFile;
