@@ -145,7 +145,9 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                 [fileManager removeItemAtPath:localPath error:nil];
             }
             
-            [fileManager createFileAtPath:localPath contents:imageData attributes:nil];
+            if (imageData && localPath) {
+                [fileManager createFileAtPath:localPath contents:imageData attributes:nil];
+            }
             
             UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
             currentUpload.originPath = localPath;
