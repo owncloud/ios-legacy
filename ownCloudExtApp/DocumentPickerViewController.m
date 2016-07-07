@@ -181,8 +181,10 @@
         }
     }
     
-    if (![[NSFileManager defaultManager] copyItemAtURL:originUrl toURL:destinationUrl error:&error]) {
-        NSLog(@"Error copyng file: %@", error);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:fileDto.localFolder]) {
+        if (![[NSFileManager defaultManager] copyItemAtURL:originUrl toURL:destinationUrl error:&error]) {
+            NSLog(@"Error copyng file: %@", error);
+        }
     }
     
     NSDictionary *attributes = nil;

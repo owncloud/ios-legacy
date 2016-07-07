@@ -177,10 +177,13 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
 
 - (void)downloadCompleted:(FileDto*)fileDto{
     
-    self.selectedFile = nil;
     [self setLockedApperance:NO];
     
-    [self.delegate openFile:fileDto];
+    if (fileDto) {
+        [self.delegate openFile:fileDto];
+    }
+    
+    self.selectedFile = nil;
 }
 
 - (void)downloadFailed:(NSString*)string andFile:(FileDto*)fileDto{
