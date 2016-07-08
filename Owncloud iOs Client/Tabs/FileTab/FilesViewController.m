@@ -709,7 +709,6 @@
     if (IS_IPHONE) {
         self.HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
         self.HUD.delegate = self;
-        [self.view addSubview:_HUD];
         [[UIApplication sharedApplication].keyWindow addSubview:self.HUD];
     } else {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
