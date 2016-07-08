@@ -699,15 +699,18 @@
  */
 -(void)initLoading {
     
-    if (_HUD) {
-        [_HUD removeFromSuperview];
-        _HUD=nil;
+    if (self.HUD) {
+        if ([self.HUD respondsToSelector:@selector(removeFromSuperview)]) {
+            [self.HUD removeFromSuperview];
+        }
+        self.HUD=nil;
     }
     
     if (IS_IPHONE) {
-        _HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
-        _HUD.delegate = self;
-        [self.view.window addSubview:_HUD];
+        self.HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
+        self.HUD.delegate = self;
+        [self.view addSubview:_HUD];
+        [[UIApplication sharedApplication].keyWindow addSubview:self.HUD];
     } else {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
@@ -716,15 +719,15 @@
         [app.splitViewController.view.window addSubview:_HUD];
     }
     
-    _HUD.labelText = NSLocalizedString(@"loading", nil);
+    self.HUD.labelText = NSLocalizedString(@"loading", nil);
     
     if (IS_IPHONE) {
-        _HUD.dimBackground = NO;
+        self.HUD.dimBackground = NO;
     }else {
-        _HUD.dimBackground = NO;
+        self.HUD.dimBackground = NO;
     }
     
-    [_HUD show:YES];
+    [self.HUD show:YES];
     
     self.view.userInteractionEnabled = NO;
     self.navigationController.navigationBar.userInteractionEnabled = NO;
