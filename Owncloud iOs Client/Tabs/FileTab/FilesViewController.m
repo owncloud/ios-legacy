@@ -700,9 +700,7 @@
 -(void)initLoading {
     
     if (self.HUD) {
-        if ([self.HUD respondsToSelector:@selector(removeFromSuperview)]) {
-            [self.HUD removeFromSuperview];
-        }
+        [self.HUD removeFromSuperview];
         self.HUD=nil;
     }
     
@@ -740,12 +738,14 @@
  */
 - (void)endLoading {
     
-    if (!_isLoadingForNavigate) {
+    if (!self.isLoadingForNavigate) {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         //Check if the loading should be visible
         if (app.isLoadingVisible==NO) {
             // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
-            [_HUD removeFromSuperview];
+            if (self.HUD) {
+                [self.HUD removeFromSuperview];
+            }
             self.view.userInteractionEnabled = YES;
             self.navigationController.navigationBar.userInteractionEnabled = YES;
             self.tabBarController.tabBar.userInteractionEnabled = YES;
@@ -757,8 +757,8 @@
             [app performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.3];
         }
         
-        if (!_rename.renameAlertView.isVisible) {
-            _rename = nil;
+        if (!self.rename.renameAlertView.isVisible) {
+            self.rename = nil;
         }
     }
 }
