@@ -301,7 +301,9 @@
             DLog(@"File not catched yet");
             file = [self getFileNotCatchedBySharedPath:temp];
         }
-        [fileImages addObject:file];
+        if (file) {
+            [fileImages addObject:file];
+        }
     }
     
     //Free memory
@@ -1024,49 +1026,56 @@
         if ([FileNameUtils isImageSupportedThisFile:file.fileName]) {
             filesArray = [self getFileDtoWithOCSharedDtoArray:_sharedLinkItems];
         }else{
-            filesArray = [NSArray arrayWithObject:file];
-        }
-        
-        NSMutableArray *sortArray = [NSMutableArray new];
-        [sortArray addObject:filesArray];
-        
-        
-        if (IS_IPHONE) {
-            //iPhone
-            [tableView deselectRowAtIndexPath:indexPath animated:YES];
-            
-            DLog(@"File name is: %@", file.fileName);
-            FilePreviewViewController *viewController = [[FilePreviewViewController alloc]initWithNibName:@"FilePreviewViewController" selectedFile:file];
-            viewController.hidesBottomBarWhenPushed = YES;
-            viewController.sortedArray=sortArray;
-            
-            [self.navigationController.navigationBar setTranslucent:NO];
-            
-            self.navigationItem.backBarButtonItem = nil;
-            
-            self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-            
-            [self.navigationController pushViewController:viewController animated:YES];
-            
-        } else {
-            //iPad
-            //Select in detail view
-            if (_selectedCell) {
-                ShareLinkCell *temp = (ShareLinkCell*) [_sharedTableView cellForRowAtIndexPath:_selectedCell];
-                [temp setSelectedStrong:NO];
+            if (file) {
+                filesArray = [NSArray arrayWithObject:file];
             }
+        }
+
+        
+        if (file) {
             
-            //Set selected indexPath
-            _selectedCell = indexPath;
+            NSMutableArray *sortArray = [NSMutableArray new];
+            if (filesArray) {
+                [sortArray addObject:filesArray];
+            };
             
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            
-            app.detailViewController.sortedArray=sortArray;
-            [app.detailViewController handleFile:file fromController:sharedViewManagerController];
-         
-            ShareLinkCell *sharedLink = (ShareLinkCell*) [_sharedTableView cellForRowAtIndexPath:indexPath];
-            [sharedLink setSelectedStrong:YES];
-            
+            if (IS_IPHONE) {
+                //iPhone
+                [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                
+                DLog(@"File name is: %@", file.fileName);
+                FilePreviewViewController *viewController = [[FilePreviewViewController alloc]initWithNibName:@"FilePreviewViewController" selectedFile:file];
+                viewController.hidesBottomBarWhenPushed = YES;
+                viewController.sortedArray=sortArray;
+                
+                [self.navigationController.navigationBar setTranslucent:NO];
+                
+                self.navigationItem.backBarButtonItem = nil;
+                
+                self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+                
+                [self.navigationController pushViewController:viewController animated:YES];
+                
+            } else {
+                //iPad
+                //Select in detail view
+                if (_selectedCell) {
+                    ShareLinkCell *temp = (ShareLinkCell*) [_sharedTableView cellForRowAtIndexPath:_selectedCell];
+                    [temp setSelectedStrong:NO];
+                }
+                
+                //Set selected indexPath
+                _selectedCell = indexPath;
+                
+                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                
+                app.detailViewController.sortedArray=sortArray;
+                [app.detailViewController handleFile:file fromController:sharedViewManagerController];
+                
+                ShareLinkCell *sharedLink = (ShareLinkCell*) [_sharedTableView cellForRowAtIndexPath:indexPath];
+                [sharedLink setSelectedStrong:YES];
+                
+            }
         }
     }
     
