@@ -353,11 +353,11 @@
     NSInteger permissions = k_read_share_permission;
     
     //File is shared to me by others or not
-    if (userOrGroup.shareeType == shareTypeRemote) {
+    if (userOrGroup.shareeType == shareTypeRemote && !APP_DELEGATE.activeUser.hasFedSharesOptionShareSupport) {
         if (self.shareFileDto.isDirectory) {
-            permissions = k_defaul_folder_remote_share_permission;
+            permissions = k_default_folder_remote_share_permission_no_support_share_option;
         } else {
-            permissions = k_defaul_file_remote_share_permission;
+            permissions = k_default_file_remote_share_permission_no_support_share_option;
         }
         
     } else if (([self.shareFileDto.permissions rangeOfString:k_permission_shared].location != NSNotFound)) {
