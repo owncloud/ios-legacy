@@ -699,15 +699,15 @@
  */
 -(void)initLoading {
     
-    if (_HUD) {
-        [_HUD removeFromSuperview];
-        _HUD=nil;
+    if (self.HUD) {
+        [self.HUD removeFromSuperview];
+        self.HUD=nil;
     }
     
     if (IS_IPHONE) {
-        _HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
-        _HUD.delegate = self;
-        [self.view.window addSubview:_HUD];
+        self.HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
+        self.HUD.delegate = self;
+        [[UIApplication sharedApplication].keyWindow addSubview:self.HUD];
     } else {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
@@ -716,15 +716,15 @@
         [app.splitViewController.view.window addSubview:_HUD];
     }
     
-    _HUD.labelText = NSLocalizedString(@"loading", nil);
+    self.HUD.labelText = NSLocalizedString(@"loading", nil);
     
     if (IS_IPHONE) {
-        _HUD.dimBackground = NO;
+        self.HUD.dimBackground = NO;
     }else {
-        _HUD.dimBackground = NO;
+        self.HUD.dimBackground = NO;
     }
     
-    [_HUD show:YES];
+    [self.HUD show:YES];
     
     self.view.userInteractionEnabled = NO;
     self.navigationController.navigationBar.userInteractionEnabled = NO;
@@ -738,12 +738,14 @@
  */
 - (void)endLoading {
     
-    if (!_isLoadingForNavigate) {
+    if (!self.isLoadingForNavigate) {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         //Check if the loading should be visible
         if (app.isLoadingVisible==NO) {
             // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
-            [_HUD removeFromSuperview];
+            if (self.HUD) {
+                [self.HUD removeFromSuperview];
+            }
             self.view.userInteractionEnabled = YES;
             self.navigationController.navigationBar.userInteractionEnabled = YES;
             self.tabBarController.tabBar.userInteractionEnabled = YES;
@@ -755,8 +757,8 @@
             [app performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.3];
         }
         
-        if (!_rename.renameAlertView.isVisible) {
-            _rename = nil;
+        if (!self.rename.renameAlertView.isVisible) {
+            self.rename = nil;
         }
     }
 }
