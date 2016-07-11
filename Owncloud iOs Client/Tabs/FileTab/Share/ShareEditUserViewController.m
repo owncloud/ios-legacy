@@ -266,10 +266,11 @@ typedef NS_ENUM (NSInteger, enumUpload){
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
     if (self.updatedOCShare.shareType == shareTypeRemote) {
-        return shareTableViewSectionsNumberRemote;
-    } else {
-        return shareTableViewSectionsNumber;
+        if (!(APP_DELEGATE.activeUser.hasFedSharesOptionShareSupport == serverFunctionalitySupported)) {
+            return shareTableViewSectionsNumberRemote;
+        }
     }
+    return shareTableViewSectionsNumber;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

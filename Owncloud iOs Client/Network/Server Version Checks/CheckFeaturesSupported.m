@@ -46,7 +46,7 @@
     
     if (app.activeUser) {
         
-        [[AppDelegate sharedOCCommunication] getFeaturesSupportedByServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, BOOL hasShareSupport, BOOL hasShareeSupport, BOOL hasCookiesSupport, BOOL hasForbiddenCharactersSupport, BOOL hasCapabilitiesSupport, NSString *redirectedServer) {
+        [[AppDelegate sharedOCCommunication] getFeaturesSupportedByServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, BOOL hasShareSupport, BOOL hasShareeSupport, BOOL hasCookiesSupport, BOOL hasForbiddenCharactersSupport, BOOL hasCapabilitiesSupport, BOOL hasFedSharesOptionShareSupport, NSString *redirectedServer) {
             
             //Share Support
             
@@ -100,6 +100,10 @@
             }else{
                 app.activeUser.hasCapabilitiesSupport = serverFunctionalityNotSupported;
                 
+            }
+            
+            if (hasFedSharesOptionShareSupport) {
+                app.activeUser.hasFedSharesOptionShareSupport = serverFunctionalitySupported;
             }
             
             [ManageUsersDB updateUserByUserDto:app.activeUser];

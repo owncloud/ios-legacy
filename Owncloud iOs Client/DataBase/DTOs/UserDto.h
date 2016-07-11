@@ -43,6 +43,7 @@ typedef enum {
 @property NSInteger hasCookiesSupport;
 @property NSInteger hasForbiddenCharactersSupport;
 @property NSInteger hasCapabilitiesSupport;
+@property NSInteger hasFedSharesOptionShareSupport;
 @property BOOL instantUpload;
 @property BOOL backgroundInstantUpload;
 @property (nonatomic, copy) NSString *pathInstantUpload;
