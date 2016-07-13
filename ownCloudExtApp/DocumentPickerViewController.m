@@ -122,7 +122,8 @@
         
     } else {
         //TODO: show the login view
-        NSString *message = NSLocalizedString(@"error_login_doc_provider", nil);
+        NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+        NSString *message = [NSLocalizedString(@"error_login_doc_provider", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
         _labelErrorLogin.text = message;
         _labelErrorLogin.textAlignment = NSTextAlignmentCenter;
         
