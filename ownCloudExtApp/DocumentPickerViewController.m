@@ -148,6 +148,17 @@
             }
         }
         
+        // Add new session and container identifiers to the download session manager
+        NSURLSessionConfiguration *downConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_session_name_ext_app];
+        downConfiguration.HTTPShouldUsePipelining = YES;
+        downConfiguration.HTTPMaximumConnectionsPerHost = 1;
+        downConfiguration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+        downConfiguration.sharedContainerIdentifier = k_shared_container_identifier;
+        AFURLSessionManager *downloadSessionManager = [[AFURLSessionManager alloc] initWithSessionConfiguration:downConfiguration];
+        [downloadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
+        
+        sharedOCCommunication.downloadSessionManager = downloadSessionManager;
+        
     }
     return sharedOCCommunication;
 }
