@@ -47,7 +47,7 @@
     if (self = [super init]) {
         self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
-        [PHPhotoLibrary.sharedPhotoLibrary registerChangeObserver:self];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLifecycleShouldTriggerInstantUpload:) name:UIApplicationWillEnterForegroundNotification object:nil];
         
         if (ACTIVE_USER.backgroundInstantUpload && [CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
@@ -78,9 +78,15 @@
                     [ManageAppSettingsDB updateInstantUploadTo:YES];
                     ACTIVE_USER.timestampInstantUpload = [[NSDate date] timeIntervalSince1970];;
                     [ManageAppSettingsDB updateTimestampInstantUpload:ACTIVE_USER.timestampInstantUpload];
+                    [PHPhotoLibrary.sharedPhotoLibrary registerChangeObserver:self];
                 } else {
                     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
                         if (status == PHAuthorizationStatusAuthorized) {
+                            ACTIVE_USER.instantUpload = YES;
+                            [ManageAppSettingsDB updateInstantUploadTo:YES];
+                            ACTIVE_USER.timestampInstantUpload = [[NSDate date] timeIntervalSince1970];;
+                            [ManageAppSettingsDB updateTimestampInstantUpload:ACTIVE_USER.timestampInstantUpload];
+                            [PHPhotoLibrary.sharedPhotoLibrary registerChangeObserver:self];
                             [self attemptUpload];
                         } else {
                             [self showAlertViewWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil) body:NSLocalizedString(@"message_access_photos_not_enabled", nil)];
@@ -89,6 +95,7 @@
                     }];
                 }
             } else {
+                [PHPhotoLibrary.sharedPhotoLibrary unregisterChangeObserver:self];
                 ACTIVE_USER.instantUpload = NO;
                 [ManageAppSettingsDB updateInstantUploadTo:NO];
                 [self setBackgroundInstantUploadEnabled:NO];
@@ -125,6 +132,7 @@
 - (void) activate {
     if ([self enabled]) {
         if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
+            [PHPhotoLibrary.sharedPhotoLibrary registerChangeObserver:self];
             [self attemptUpload];
             
             if ([self isBackgroundLocationUpdatesPermissionGranted]) {
