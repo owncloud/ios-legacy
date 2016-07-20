@@ -155,7 +155,9 @@
                 newAssetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
                 newAssetsFetchOptions.predicate = [NSPredicate predicateWithFormat:@"creationDate > %@", lastInstantUploadedAssetCaptureDate];
                 
-                PHFetchResult *newPhotos = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:newAssetsFetchOptions];
+                PHFetchResult *cameraRollAssetCollection = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
+                
+                PHFetchResult *newPhotos = [PHAsset fetchAssetsInAssetCollection:cameraRollAssetCollection[0] options:newAssetsFetchOptions];
                 
                 if (newPhotos != nil && [newPhotos count] != 0) {
                     
