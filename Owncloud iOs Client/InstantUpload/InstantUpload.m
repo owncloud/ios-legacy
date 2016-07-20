@@ -152,18 +152,20 @@
                 NSDate *lastInstantUploadedAssetCaptureDate = [NSDate dateWithTimeIntervalSince1970:ACTIVE_USER.timestampInstantUpload];
                 
                 PHFetchOptions *newAssetsFetchOptions = [PHFetchOptions new];
-                newAssetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
-                newAssetsFetchOptions.predicate = [NSPredicate predicateWithFormat:@"creationDate > %@", lastInstantUploadedAssetCaptureDate];
+                newAssetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:YES]];
+                newAssetsFetchOptions.predicate = [NSPredicate predicateWithFormat:@"modificationDate > %@", lastInstantUploadedAssetCaptureDate];
                 
-                PHFetchResult *newPhotos = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:newAssetsFetchOptions];
+                PHFetchResult *cameraRollAssetCollection = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
+                
+                PHFetchResult *newPhotos = [PHAsset fetchAssetsInAssetCollection:cameraRollAssetCollection[0] options:newAssetsFetchOptions];
                 
                 if (newPhotos != nil && [newPhotos count] != 0) {
                     
                     for (PHAsset *image in newPhotos) {
-                        NSTimeInterval assetDateCreated = [image.creationDate timeIntervalSince1970];
-                        if (assetDateCreated > ACTIVE_USER.timestampInstantUpload) {
-                            ACTIVE_USER.timestampInstantUpload = assetDateCreated;
-                            [ManageAppSettingsDB updateTimestampInstantUpload:assetDateCreated];
+                        NSTimeInterval assetModifiedDate = [image.modificationDate timeIntervalSince1970];
+                        if (assetModifiedDate > ACTIVE_USER.timestampInstantUpload) {
+                            ACTIVE_USER.timestampInstantUpload = assetModifiedDate;
+                            [ManageAppSettingsDB updateTimestampInstantUpload:assetModifiedDate];
                         }
                     }
                     
