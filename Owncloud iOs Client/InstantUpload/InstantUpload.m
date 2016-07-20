@@ -49,6 +49,10 @@
         self.locationManager.delegate = self;
         [PHPhotoLibrary.sharedPhotoLibrary registerChangeObserver:self];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appLifecycleShouldTriggerInstantUpload:) name:UIApplicationWillEnterForegroundNotification object:nil];
+        
+        if (ACTIVE_USER.backgroundInstantUpload && [CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorizedAlways) {
+            [self setBackgroundInstantUploadEnabled:NO];
+        }
     }
     return self;
 }
@@ -102,6 +106,8 @@
                 [self.locationManager startMonitoringSignificantLocationChanges];
             } else {
                 if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
+                    ACTIVE_USER.backgroundInstantUpload = YES;
+                    [ManageAppSettingsDB updateBackgroundInstantUploadTo:YES];
                     [self.locationManager requestAlwaysAuthorization];
                 } else {
                     [self showAlertViewWithTitle:NSLocalizedString(@"location_not_enabled", nil) body:NSLocalizedString(@"message_location_not_enabled", nil)];
