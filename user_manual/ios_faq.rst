@@ -8,7 +8,7 @@ Enabling the instant upload feature requires that the Owncloud client have acces
 
 **Resolution:**
 
-iOS does not allow any execution in background. The ownCloud iOS App use the location to wake up the app in background in order to check if there is any new image to be uploaded.
+The ownCloud iOS App uses the location to wake up the app in background in order to check if there is any new image to be uploaded, if so, images are uploaded.
 
 The iOS App don't send location information to any server.
 
