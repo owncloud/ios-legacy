@@ -179,25 +179,30 @@
         [items insertObject:_favoriteButtonBar atIndex:3];
         [items insertObject:_spaceBar2 atIndex:4];
         
+        _titleLabelMarginRightConstraint.constant = 210;
+        _updatingProgressMarginUpdatingRightConstraint.constant = 210;
+        
         if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
-             [items insertObject:_deleteButtonBar atIndex:5];
+            [items insertObject:_deleteButtonBar atIndex:5];
+            
+            if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
+                [items insertObject:_spaceBar4 atIndex:6];
+                [items insertObject:_editButtonBar atIndex:7];
+                _titleLabelMarginRightConstraint.constant = 260;
+                _updatingProgressMarginUpdatingRightConstraint.constant = 260;
+            }
         }else{
             [items insertObject:_shareLinkButtonBar atIndex:5];
             [items insertObject:_spaceBar3 atIndex:6];
             [items insertObject:_deleteButtonBar atIndex:7];
+            
+            if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
+                [items insertObject:_spaceBar4 atIndex:8];
+                [items insertObject:_editButtonBar atIndex:9];
+                _titleLabelMarginRightConstraint.constant = 260;
+                _updatingProgressMarginUpdatingRightConstraint.constant = 260;
+            }
         }
-    }
-    
-    
-
-    if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
-        [items insertObject:_spaceBar4 atIndex:8];
-        [items insertObject:_editButtonBar atIndex:9];
-        _titleLabelMarginRightConstraint.constant = 260;
-        _updatingProgressMarginUpdatingRightConstraint.constant = 260;
-    } else {
-        _titleLabelMarginRightConstraint.constant = 210;
-        _updatingProgressMarginUpdatingRightConstraint.constant = 210;
     }
     
     [toolbar setItems:items animated:YES];
