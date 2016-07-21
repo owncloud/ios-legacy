@@ -56,7 +56,7 @@
             //Check if there are fragmens of saml in url, in this case there are a credential error
             isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
             if (isSamlCredentialsError) {
-                [_delegate theFileIsInThePathResponse:isNotInThePath];
+                [_delegate theFileIsInThePathResponse:credentialsError];
             }
         }
         if (!isSamlCredentialsError) {

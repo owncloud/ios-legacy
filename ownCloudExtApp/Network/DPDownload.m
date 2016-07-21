@@ -32,7 +32,7 @@
 
 @interface DPDownload ()
 
-@property (nonatomic, strong) NSURLSessionTask *operationTask;
+@property (nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
 @property (nonatomic, strong) FileDto *file;
 @property (nonatomic, strong) UserDto *user;
 @property (nonatomic, strong) NSString *currentLocalFolder;
@@ -236,7 +236,7 @@
     
    self.state = downloadWorking;
     
-    self.operationTask = [sharedCommunication downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:sharedCommunication progress:^(NSProgress *progress) {
+    self.downloadTask = [sharedCommunication downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:sharedCommunication progress:^(NSProgress *progress) {
         
         float percent = roundf (progress.fractionCompleted * 100);
         
@@ -335,7 +335,11 @@
             [self failureInDownloadProcessWithError:error andResponse:response];
         }
     }];
+    
+    [self.downloadTask resume];
+    
 }
+
 
 - (void) cancelDownload{
     
@@ -353,7 +357,7 @@
             break;
             
         case downloadWorking:
-            [self.operationTask cancel];
+            [self.downloadTask cancel];
             break;
             
         case downloadComplete:

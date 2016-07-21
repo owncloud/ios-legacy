@@ -367,14 +367,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
     } else {
         
-        [self performSelector:@selector(doThingsThatShouldDoOnStart) withObject:nil afterDelay:0.4];
-        
-        [self performSelector:@selector(launchUploadsOfflineFromDocumentProvider) withObject:nil afterDelay:0.3];
-        
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
         
         //Generate the interface of the app
         dispatch_async(dispatch_get_main_queue(), ^{
+            [self doThingsThatShouldDoOnStart];
+            [self launchUploadsOfflineFromDocumentProvider];
             [self generateAppInterfaceFromLoginScreen:NO];
         });
     }
