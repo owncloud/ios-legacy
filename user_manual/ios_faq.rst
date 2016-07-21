@@ -4,7 +4,7 @@ iOS App FAQ
 
 **Issue:**
 
-Enabling the instant upload feature requires that the Owncloud client have access to location services. 
+Enabling the "Background Instant Upload" feature requires that the Owncloud client have access to location services. 
 
 **Resolution:**
 
