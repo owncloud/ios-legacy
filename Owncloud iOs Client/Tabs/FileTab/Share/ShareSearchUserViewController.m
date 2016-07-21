@@ -409,10 +409,15 @@
 
 -(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
     
-    if  ([searchString isEqualToString:@""] == NO)
+    [self.searchDelayer invalidate], self.searchDelayer=nil;
+    
+    if  (![searchString isEqualToString:@""])
     {
-        [self sendSearchRequestToUpdateTheUsersListWith:searchString];
-        
+        self.searchDelayer = [NSTimer scheduledTimerWithTimeInterval:1.5
+                                                         target:self
+                                                       selector:@selector(doDelayedSearch:)
+                                                       userInfo:searchString
+                                                        repeats:NO];
         return NO;
     }
     else
@@ -423,6 +428,13 @@
     
 }
 
+-(void)doDelayedSearch:(NSTimer *)t
+{
+    assert(t == self.searchDelayer);
+    [self sendSearchRequestToUpdateTheUsersListWith:self.searchDelayer.userInfo];
+
+    self.searchDelayer = nil;
+}
 
 - (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView
 {

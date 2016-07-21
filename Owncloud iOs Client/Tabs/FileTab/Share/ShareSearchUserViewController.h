@@ -25,6 +25,7 @@
 @property (nonatomic, weak) IBOutlet UITableView* searchTableView;
 @property (nonatomic, strong) IBOutlet UISearchBar *itemSearchBar;
 @property (nonatomic, strong) FileDto *shareFileDto;
+@property (nonatomic, strong) NSTimer *searchDelayer; 
 
 - (void) setAndAddSelectedItems:(NSMutableArray *) selectedItems;
 
