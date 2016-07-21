@@ -250,8 +250,10 @@
 #pragma mark - Utility
 
 - (void) showAlertViewWithTitle:(NSString *)title body:(NSString *)body{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:body delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-    [alertView show];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:body delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [alertView show];
+    });
 }
 
 @end
