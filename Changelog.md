@@ -1,3 +1,20 @@
+
+## 3.5.0 (Agost 2016)
+
+- Create and edit text files within the app
+- Clear cache option so that you may delete your downloaded files
+- New menu per account to quick access to your account options
+- Within this version you have access to more albums where you may pick what images/videos to upload to your ownCloud server
+- Updated network library to AFNetworking 3
+- Favorite files are now called AVAILABLE OFFLINE
+- New overlay icons following the one used in the ownCloud platform 
+- Refactored instant uploads to use without location while the app it is alive 
+- Added more languages
+
+- Bug fixings 
+
+
+
 ## 3.4.9 (May 2016)
 - Sort by date or alphabetically
 - Remote thumbnails, images and videos
