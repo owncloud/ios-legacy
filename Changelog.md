@@ -1,5 +1,5 @@
 
-## 3.5.0 (Agost 2016)
+## 3.5.0 (August 2016)
 
 - Create and edit text files within the app
 - Clear cache option so that you may delete your downloaded files
