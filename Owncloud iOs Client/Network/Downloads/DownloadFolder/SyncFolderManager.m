@@ -82,11 +82,9 @@ static float const kDelayAfterCancelAll = 3.0;
     }
     
     //3. Give the permissions to the folder
-    [[NSFileManager defaultManager] setAttributes:@{NSFileProtectionKey: NSFileProtectionCompleteUntilFirstUserAuthentication} ofItemAtPath:cacheDirPath error:&error];
+    [DownloadUtils setThePermissionsForFolderPath:cacheDirPath];
     
-    if (error) {
-        DLog(@"Error setting permissions: %@", error);
-    }
+    
 }
 
 - (void) addFolderToBeDownloaded: (FileDto *) folder {

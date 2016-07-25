@@ -57,6 +57,7 @@
 #import "CheckFeaturesSupported.h"
 #import "ManageTouchID.h"
 #import "InstantUpload.h"
+#import "DownloadUtils.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -347,6 +348,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void) initAppWithEtagRequest:(BOOL)isEtagRequestNecessary {
     
     [[AppDelegate sharedSyncFolderManager] setThePermissionsOnDownloadCacheFolder];
+    
+    NSString *localTempPath = [UtilsUrls getTempFolderForUploadFiles];
+    [DownloadUtils setThePermissionsForFolderPath:localTempPath];
     
     //First Call when init the app
      self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
