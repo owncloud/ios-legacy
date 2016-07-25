@@ -65,8 +65,6 @@ static float const kDelayAfterCancelAll = 3.0;
     
     cacheDirPath = [cacheDirPath stringByAppendingPathComponent:dictionary[@"CFBundleIdentifier"]];
     
-    NSError *error;
-    
     DLog(@"Perssions cache: %@", cacheDirPath);
     
     //2. Check if the folder exist
