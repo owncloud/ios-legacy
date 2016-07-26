@@ -434,7 +434,7 @@
     if ([mediaType isEqualToString:@"ALAssetTypePhoto"]) {
         output = [NSString stringWithFormat:@"Photo-%@_%@.%@", dateString, appleID, ext];
     } else {
-        output = [NSString stringWithFormat:@"Video-%@.%@", dateString, ext];
+        output = [NSString stringWithFormat:@"Video-%@_%@.%@", dateString, appleID, ext];
     }
     
     return output;
@@ -467,7 +467,7 @@
     if ([FileNameUtils checkTheTypeOfFile:path.lastPathComponent] == imageFileType) {
         output = [NSString stringWithFormat:@"Photo-%@_%@.%@", dateString, appleID, ext];
     } else if ([FileNameUtils checkTheTypeOfFile:path.lastPathComponent] == videoFileType) {
-        output = [NSString stringWithFormat:@"Video-%@.%@", dateString, ext];
+        output = [NSString stringWithFormat:@"Video-%@_%@.%@", dateString, appleID, ext];
     } else {
         output = [NSString stringWithFormat:@"File-%@.%@", dateString, ext];
     }
@@ -497,7 +497,7 @@
     if (asset.mediaType == PHAssetMediaTypeImage) {
         output = [NSString stringWithFormat:@"Photo-%@_%@.%@", dateString, appleID, fileExtension];
     } else if (asset.mediaType == PHAssetMediaTypeVideo) {
-        output = [NSString stringWithFormat:@"Video-%@.%@", dateString, fileExtension];
+        output = [NSString stringWithFormat:@"Video-%@_%@.%@", dateString, appleID, fileExtension];
     } else {
         output = [NSString stringWithFormat:@"File-%@.%@", dateString, fileExtension];
     }
