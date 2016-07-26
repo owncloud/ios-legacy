@@ -38,6 +38,7 @@
 #define searchResultsPerPage 30
 #define messageAlpha 0.96
 #define messageDuration 3.5
+#define shareSearchUserLaunchRequestDelay 1.0
 
 @interface ShareSearchUserViewController ()
 
@@ -413,7 +414,7 @@
     
     if  (![searchString isEqualToString:@""])
     {
-        self.searchDelayer = [NSTimer scheduledTimerWithTimeInterval:1.5
+        self.searchDelayer = [NSTimer scheduledTimerWithTimeInterval:shareSearchUserLaunchRequestDelay
                                                          target:self
                                                        selector:@selector(doDelayedSearch:)
                                                        userInfo:searchString
