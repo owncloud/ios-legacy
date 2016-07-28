@@ -1479,6 +1479,9 @@
 		4030D8F21A16277100DB0871 /* file_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_icon.png; sourceTree = "<group>"; };
 		4030D8F31A16277100DB0871 /* file_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@2x.png"; sourceTree = "<group>"; };
 		4030D8F41A16277100DB0871 /* file_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@3x.png"; sourceTree = "<group>"; };
+		404BA7E41D49F4DB00A716C7 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
+		404BA7E51D49F4E300A716C7 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		404BA7E61D49F4EB00A716C7 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		4052B4D71B4ECC75000788DA /* btnAllHelpGrey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnAllHelpGrey.png; sourceTree = "<group>"; };
 		4052B4D91B4ECD3A000788DA /* btnHelpPage0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnHelpPage0.png; sourceTree = "<group>"; };
@@ -1759,7 +1762,6 @@
 		EA5DFA951C0F002A00BA0C06 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EA5DFA961C0F007600BA0C06 /* et */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = et; path = et.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EA5DFA991C0F017000BA0C06 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
-		EA5DFA9A1C0F01C200BA0C06 /* th-TH */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "th-TH"; path = "th-TH.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EA5DFA9B1C0F031000BA0C06 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EA6606951AA767F700BA2C65 /* OC Share Sheet.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "OC Share Sheet.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA6606981AA767F800BA2C65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -3991,10 +3993,15 @@
 				"pt-BR",
 				et,
 				cs,
-				"th-TH",
 				nb,
 				he,
 				ja,
+
+				sq,
+				sl,
+				th,
+				"zh-Hans",
+				"zh-Hant",
 			);
 			mainGroup = 1324296D15ADBB3700DF823E;
 			productRefGroup = 1324297915ADBB3700DF823E /* Products */;
@@ -5110,10 +5117,14 @@
 				EA5DFA951C0F002A00BA0C06 /* pt-BR */,
 				EA5DFA961C0F007600BA0C06 /* et */,
 				EA5DFA991C0F017000BA0C06 /* cs */,
-				EA5DFA9A1C0F01C200BA0C06 /* th-TH */,
 				EA5DFA9B1C0F031000BA0C06 /* nb */,
 				590F1FF91C7474AE00AAF1C7 /* he */,
 				590F1FFA1C7474B700AAF1C7 /* ja */,
+				4002B01A1D421A7100520FB3 /* sq */,
+				4002B01C1D421A8300520FB3 /* sl */,
+				404BA7E41D49F4DB00A716C7 /* th */,
+				404BA7E51D49F4E300A716C7 /* zh-Hans */,
+				404BA7E61D49F4EB00A716C7 /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
