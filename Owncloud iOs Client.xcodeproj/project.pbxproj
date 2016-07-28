@@ -4000,11 +4000,11 @@
 				ja,
 				sq,
 				sl,
+				sq,
+				sl,
 				th,
 				"zh-Hans",
 				"zh-Hant",
-				sq,
-				sl,
 			);
 			mainGroup = 1324296D15ADBB3700DF823E;
 			productRefGroup = 1324297915ADBB3700DF823E /* Products */;
