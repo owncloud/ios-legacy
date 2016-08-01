@@ -2004,7 +2004,13 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             hasInvalidAuth = NO;
         }
         
-        [self checkTheSecurityOfTheRedirectedURL:response];
+        if (response == nil) {
+             [self checkTheSecurityOfTheRedirectedURL:redirectedServer];
+        }else{
+            [self checkTheSecurityOfTheRedirectedURL:response.URL.absoluteString];
+        }
+        
+       
         
         [_tableView reloadData];
         [self updateInterfaceWithConnectionToTheServer:YES];
@@ -2022,10 +2028,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  *
  * @param repsonse -> NSHTTPURLResponse, the response of the server
  */
-- (void) checkTheSecurityOfTheRedirectedURL: (NSHTTPURLResponse *)response {
+- (void) checkTheSecurityOfTheRedirectedURL: (NSString *)redirectionURLString {
     //Check the security of the redirection
-    NSURL *redirectionURL = response.URL;
-    NSString *redirectionURLString = [redirectionURL absoluteString];
     
     if (isHttps) {
         if ([redirectionURLString hasPrefix:k_https_prefix]) {
