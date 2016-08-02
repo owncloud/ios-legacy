@@ -142,6 +142,7 @@
             if ([FileNameUtils isURLWithSamlFragment:responseURLString]) {
                 _isSSOServer = YES;
                 [_delegate showSSOLoginScreen];
+                return nil;
             }
             
         }
