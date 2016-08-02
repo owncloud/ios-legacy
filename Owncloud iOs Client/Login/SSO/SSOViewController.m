@@ -114,7 +114,7 @@
     
     self.urlStringToRetryTheWholeProcess = urlString;
     
-    NSString *connectURL =[NSString stringWithFormat:@"%@%@",urlString, k_url_webdav_server];
+    NSString *connectURL =[NSString stringWithFormat:@"%@%@",urlString, k_url_webdav_server_without_last_slash];
     DLog(@"URL of shibbolet:%@",connectURL);
     _ownCloudServerUrlString = connectURL;
     

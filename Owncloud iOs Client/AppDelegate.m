@@ -180,6 +180,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Show TouchID dialog if active
     if([ManageAppSettingsDB isTouchID])
         [[ManageTouchID sharedSingleton] showTouchIDAuth];
+    
+    //Set up user agent, so this way all UIWebView will use it
+    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:[UtilsUrls getUserAgent], @"UserAgent", nil];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:dictionary];
 
     return YES;
 }
