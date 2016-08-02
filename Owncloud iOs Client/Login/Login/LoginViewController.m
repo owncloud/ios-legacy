@@ -1958,7 +1958,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             hasInvalidAuth = NO;
         }
         
-        [self checkTheSecurityOfTheRedirectedURL:response];
+        [self checkTheSecurityOfTheRedirectedURL:response.URL.absoluteString];
         
         [_tableView reloadData];
         [self updateInterfaceWithConnectionToTheServer:YES];
