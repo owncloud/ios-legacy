@@ -239,7 +239,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
     
     // Percent
     float percent = roundf (progress.fractionCompleted * 100) / 100.0;
-    DLog(@"Download percent is: %f", percent);
+    DLog(@"Downloading %@ percent is: %f", self.fileDto.fileName, percent);
     
     // Progress
     NSInteger currentProgressDownload = 0;

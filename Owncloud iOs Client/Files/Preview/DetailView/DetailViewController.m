@@ -1468,7 +1468,7 @@
         } else {
             _progressView.progress = percent;
         }
-        DLog(@"PERCENT OF DOWNLOAD IS:%f", percent);
+        DLog(@"PERCENT OF DOWNLOAD %@ IS:%f", _file.fileName, percent);
     }
 }
 
