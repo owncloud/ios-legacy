@@ -2129,12 +2129,13 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 }
 
 - (void) manageFailOfServerConnection{
-    
-    [self hideTryingToLogin];
-    _alert = nil;
-    _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_possible_connect_to_server", nil)
-                                                    message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-    [_alert show];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self hideTryingToLogin];
+        _alert = nil;
+        _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_possible_connect_to_server", nil)
+                                            message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        [_alert show];
+    });
 }
 
 

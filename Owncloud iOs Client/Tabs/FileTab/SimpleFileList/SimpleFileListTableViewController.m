@@ -522,37 +522,39 @@
  * @NSString -> Server error msg
  */
 - (void)showError:(NSString *) message {
-    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
-    
-    if (IS_IOS7) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
         
+        if (IS_IOS7) {
+            
 #ifdef CONTAINER_APP
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:message message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [alertView show];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:message message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+            [alertView show];
 #endif
-        
-    }else{
-        UIAlertController *alert =   [UIAlertController
-                                      alertControllerWithTitle:message
-                                      message:@""
-                                      preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction* ok = [UIAlertAction
-                             actionWithTitle:NSLocalizedString(@"ok", nil)
-                             style:UIAlertActionStyleDefault
-                             handler:^(UIAlertAction * action)
-                             {
-                                 
-                             }];
-        [alert addAction:ok];
-        
-        if ([self.navigationController isViewLoaded] && self.navigationController.view.window && self.resolveCredentialErrorViewController != nil) {
-            [self.resolveCredentialErrorViewController presentViewController:alert animated:YES completion:nil];
-        } else {
-            [self presentViewController:alert animated:YES completion:nil];
+            
+        }else{
+            UIAlertController *alert =   [UIAlertController
+                                          alertControllerWithTitle:message
+                                          message:@""
+                                          preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction* ok = [UIAlertAction
+                                 actionWithTitle:NSLocalizedString(@"ok", nil)
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     
+                                 }];
+            [alert addAction:ok];
+            
+            if ([self.navigationController isViewLoaded] && self.navigationController.view.window && self.resolveCredentialErrorViewController != nil) {
+                [self.resolveCredentialErrorViewController presentViewController:alert animated:YES completion:nil];
+            } else {
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+            
         }
-        
-    }
+    });
 }
 
 - (void) showEditAccount {

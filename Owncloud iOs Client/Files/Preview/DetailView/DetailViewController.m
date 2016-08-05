@@ -1581,16 +1581,17 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     if (!app.downloadErrorAlertView) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            app.downloadErrorAlertView = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+            app.downloadErrorAlertView.tag = k_alertview_for_download_error;
         
-        app.downloadErrorAlertView = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        app.downloadErrorAlertView.tag = k_alertview_for_download_error;
-        [app.downloadErrorAlertView show];
+            [app.downloadErrorAlertView show];
+        });
     }
     
 }
 
 - (void)showNotConnectionWithServerMessage{
-    
     [self showErrorMessageIfNotIsShowingWithString:NSLocalizedString(@"not_possible_connect_to_server", nil)];
 }
 
