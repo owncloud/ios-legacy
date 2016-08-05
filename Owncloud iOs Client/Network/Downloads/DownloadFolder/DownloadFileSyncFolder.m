@@ -76,7 +76,7 @@
     __weak typeof(self) weakSelf = self;
     
     self.downloadTask = [[AppDelegate sharedOCCommunicationDownloadFolder] downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:[AppDelegate sharedOCCommunicationDownloadFolder] progress:^(NSProgress *progress) {
-        NSLog(@"Progress: %f", progress.fractionCompleted);
+        NSLog(@"Progress of %@: %f",self.file.fileName, progress.fractionCompleted);
     } successRequest:^(NSURLResponse *response, NSURL *filePath) {
         DLog(@"file: %@", file.localFolder);
         DLog(@"File downloaded");

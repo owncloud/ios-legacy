@@ -309,6 +309,8 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         //Cancel current uploads with the same user
         AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         [appDelegate cancelTheCurrentUploadsOfTheUser:_selectedUser.idUser];
+        [appDelegate.downloadManager cancelDownloadsAndRefreshInterface];
+        [appDelegate launchProcessToSyncAllFavorites];
             
          [[NSNotificationCenter defaultCenter] postNotificationName:relaunchErrorCredentialFilesNotification object:_selectedUser];
         

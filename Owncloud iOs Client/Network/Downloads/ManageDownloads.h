@@ -30,6 +30,8 @@
 
 - (void) cancelDownloads;
 
+- (void) cancelDownloadsAndRefreshInterface;
+
 - (NSArray *) getDownloads;
 
 - (void) addDownload:(Download *)download;
