@@ -833,8 +833,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     RecentViewController *currenRecent = [_ocTabBarController.viewControllers objectAtIndex:1];
     
     if (![currenRecent.tabBarItem.badgeValue isEqualToString:errorBadge]) {
-        //update badge
-        [currenRecent.tabBarItem setBadgeValue:errorBadge];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //update badge
+            [currenRecent.tabBarItem setBadgeValue:errorBadge];
+        });
     }
     
     //update recents
