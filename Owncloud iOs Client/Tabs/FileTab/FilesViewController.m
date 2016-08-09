@@ -3191,7 +3191,9 @@
     } else {
         _checkingEtag = NO;
     }
-    [_tableView deselectRowAtIndexPath:[_tableView indexPathForSelectedRow] animated:YES];
+     dispatch_async(dispatch_get_main_queue(), ^{
+         [_tableView deselectRowAtIndexPath:[_tableView indexPathForSelectedRow] animated:YES];
+     });
 }
 
 /*
