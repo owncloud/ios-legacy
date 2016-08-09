@@ -1960,8 +1960,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         [self checkTheSecurityOfTheRedirectedURL:response.URL.absoluteString];
         
-        [_tableView reloadData];
-        [self updateInterfaceWithConnectionToTheServer:YES];
+         dispatch_async(dispatch_get_main_queue(), ^{
+             [_tableView reloadData];
+             [self updateInterfaceWithConnectionToTheServer:YES];
+         });
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         BOOL isInvalid = NO;
@@ -2011,9 +2013,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         }
         
        
-        
-        [_tableView reloadData];
-        [self updateInterfaceWithConnectionToTheServer:YES];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_tableView reloadData];
+            [self updateInterfaceWithConnectionToTheServer:YES];
+        });
     }];
 }
 
