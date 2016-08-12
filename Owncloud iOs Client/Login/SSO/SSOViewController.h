@@ -26,7 +26,7 @@
 - (void)setCookieForSSO:(NSString *) cookieString andSamlUserName:(NSString*)samlUserName;
 @end
 
-@interface SSOViewController : UIViewController <UIWebViewDelegate, UIAlertViewDelegate, UITextFieldDelegate, NSURLConnectionDelegate>
+@interface SSOViewController : UIViewController <UIWebViewDelegate, UIAlertViewDelegate, UITextFieldDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate>
 
 
 
@@ -46,6 +46,8 @@
 @property (nonatomic, strong) NSString *password;
 //Request to repeat after make login
 @property (nonatomic, strong) NSURLRequest *authRequest;
+
+@property (nonatomic) BOOL authenticated;
 
 @property (nonatomic, strong) NSURLConnection *connection;
 
