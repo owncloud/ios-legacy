@@ -219,13 +219,13 @@ static NSString *const tmpFileName = @"tmp.der";
     
     if ([error.domain isEqualToString: NSURLErrorDomain])
     {
-        if (error.code == kCFURLErrorServerCertificateHasBadDate        ||
-            error.code == kCFURLErrorServerCertificateUntrusted         ||
+        if (error.code == kCFURLErrorServerCertificateUntrusted         ||
+            error.code == kCFURLErrorServerCertificateHasBadDate        ||
             error.code == kCFURLErrorServerCertificateHasUnknownRoot    ||
             error.code == kCFURLErrorServerCertificateNotYetValid)
         {
             
-            if (![self isTemporalCertificateTrusted]) {
+            if (![[CheckAccessToServer sharedManager] isTemporalCertificateTrusted]) {
                 [self askToAcceptCertificate];
             }
           
@@ -626,34 +626,12 @@ static NSString *const tmpFileName = @"tmp.der";
     
     if (alertView.tag == 2) {
         if (buttonIndex == 1) {
-            [self acceptCertificate];
+            [[CheckAccessToServer sharedManager] acceptCertificate];
         } else {
             NSLog(@"user pressed CANCEL");
             [self dismissThisView];
         }
     }
-}
-
-
-- (BOOL) isTemporalCertificateTrusted {
-    
-    BOOL trusted = NO;
-    
-    NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
-    
-    NSMutableArray *listCertificateLocation = [ManageAppSettingsDB getAllCertificatesLocation];
-    
-    for (int i = 0 ; i < [listCertificateLocation count] ; i++) {
-        
-        NSString *currentLocalCertLocation = [listCertificateLocation objectAtIndex:i];
-        NSFileManager *fileManager = [ NSFileManager defaultManager];
-        if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder,tmpFileName] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
-            NSLog(@"Is the same certificate!!!");
-            trusted = YES;
-        }
-    }
-    
-    return trusted;
 }
 
 
@@ -669,27 +647,7 @@ static NSString *const tmpFileName = @"tmp.der";
 
 
 
-- (void) acceptCertificate {
-    NSLog(@"user pressed YES. Accepted certificate");
-    //Save temporal certificate
-    
-    NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
-    
-    NSError * err = NULL;
-    NSFileManager * fm = [[NSFileManager alloc] init];
-    
-    NSDate *date = [NSDate date];
-    NSString *currentCertLocation = [NSString stringWithFormat:@"%@%f.der",localCertificatesFolder, [date timeIntervalSince1970]];
-    
-    NSLog(@"currentCertLocation: %@", currentCertLocation);
-    
-    BOOL result = [fm moveItemAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder, tmpFileName] toPath:currentCertLocation error:&err];
-    if(!result) {
-        NSLog(@"Error: %@", [err localizedDescription]);
-    } else {
-        [ManageAppSettingsDB insertCertificate:[NSString stringWithFormat:@"%f.der", [date timeIntervalSince1970]]];
-    }
-}
+
 
 
 

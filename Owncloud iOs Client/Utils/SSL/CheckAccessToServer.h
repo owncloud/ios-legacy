@@ -28,18 +28,20 @@
     __weak id<CheckAccessToServerDelegate> _delegate;
 }
 
+@property (nonatomic, weak) __weak id<CheckAccessToServerDelegate> delegate;
+@property (nonatomic, strong) NSString *urlStatusCheck;
+@property (nonatomic, strong) UIViewController *viewControllerToShow;
+@property (nonatomic, strong) NSString *urlUserToCheck;
+
 + (id)sharedManager;
 - (void) isConnectionToTheServerByUrl:(NSString *) url;
 - (void)isConnectionToTheServerByUrl:(NSString *) url withTimeout:(NSInteger) timeout;
 - (BOOL) isNetworkIsReachable;
 - (void)createFolderToSaveCertificates;
 - (void)saveCertificate:(SecTrustRef) trust withName:(NSString *) certName;
-
-
-@property (nonatomic, weak) __weak id<CheckAccessToServerDelegate> delegate;
-@property (nonatomic, strong) NSString *urlStatusCheck;
-@property (nonatomic, strong) UIViewController *viewControllerToShow;
-@property (nonatomic, strong) NSString *urlUserToCheck;
+- (BOOL) isTemporalCertificateTrusted;
+- (void) acceptCertificate;
+- (void) askToAcceptCertificate;
 
 
 @end
