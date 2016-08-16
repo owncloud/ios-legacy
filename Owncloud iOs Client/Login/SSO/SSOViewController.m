@@ -427,6 +427,10 @@ static NSString *const tmpFileName = @"tmp.der";
  */
 - (IBAction)cancel:(id)sender {
     
+    [self dismissThisView];
+}
+
+- (void) dismissThisView {
     [self.view endEditing:YES];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -625,8 +629,7 @@ static NSString *const tmpFileName = @"tmp.der";
             [self acceptCertificate];
         } else {
             NSLog(@"user pressed CANCEL");
-            //TODO:dismiss log in view
-            // [self.delegate badCertificateNoAcceptedByUser];
+            [self dismissThisView];
         }
     }
 }
