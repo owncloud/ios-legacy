@@ -99,17 +99,16 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                           DLog(@"Error: %@", error);
                                           NSLog(@"Error: %ld - %@",(long)[error code] , [error localizedDescription]);
                                           
-                                          if ([error.domain isEqualToString: NSURLErrorDomain])
+                                          
+                                          if (error.code == kCFURLErrorServerCertificateUntrusted         ||
+                                              error.code == kCFURLErrorServerCertificateHasBadDate        ||
+                                              error.code == kCFURLErrorServerCertificateHasUnknownRoot    ||
+                                              error.code == kCFURLErrorServerCertificateNotYetValid)
                                           {
-                                              if (error.code == kCFURLErrorServerCertificateUntrusted         ||
-                                                  error.code == kCFURLErrorServerCertificateHasBadDate        ||
-                                                  error.code == kCFURLErrorServerCertificateHasUnknownRoot    ||
-                                                  error.code == kCFURLErrorServerCertificateNotYetValid)
-                                              {
-                                                  if (![self isTemporalCertificateTrusted]) {
-                                                      [self askToAcceptCertificate];
-                                                  }
+                                              if (![self isTemporalCertificateTrusted]) {
+                                                  [self acceptCertificateAndRetryCheckToTheServer];
                                               }
+                                              
                                               
                                           } else {
                                               if(self.delegate) {
