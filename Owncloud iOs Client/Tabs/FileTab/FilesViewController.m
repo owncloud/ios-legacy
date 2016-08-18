@@ -2007,8 +2007,12 @@
              //Pass the items with OCFileDto to FileDto Array
              NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
              
-             //Send the data to DB and refresh the table
-             [self deleteOldDataFromDBBeforeRefresh:directoryList];
+             if (response.statusCode == 200 && directoryList.count == 0) {
+                 [self errorLogin];
+             } else {
+                 //Send the data to DB and refresh the table
+                 [self deleteOldDataFromDBBeforeRefresh:directoryList];
+             }
          } else {
              [self stopPullRefresh];
              _showLoadingAfterChangeUser = NO;
