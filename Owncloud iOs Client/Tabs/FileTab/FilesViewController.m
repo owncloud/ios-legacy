@@ -1046,7 +1046,6 @@
 }
 
 - (void) showAlertView:(NSString*)string {
-    
     _alert = nil;
     _alert = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
     [_alert show];
@@ -2008,8 +2007,12 @@
              //Pass the items with OCFileDto to FileDto Array
              NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
              
-             //Send the data to DB and refresh the table
-             [self deleteOldDataFromDBBeforeRefresh:directoryList];
+             if (response.statusCode == 200 && directoryList.count == 0) {
+                 [self errorLogin];
+             } else {
+                 //Send the data to DB and refresh the table
+                 [self deleteOldDataFromDBBeforeRefresh:directoryList];
+             }
          } else {
              [self stopPullRefresh];
              _showLoadingAfterChangeUser = NO;
@@ -2341,7 +2344,9 @@
                 case 3:
                     
                     if (self.isCurrentFolderSonOfFavoriteFolder) {
-                        [self showAlertView:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)];
+                        [self performSelectorOnMainThread:@selector(showAlertView:)
+                                               withObject:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)
+                                            waitUntilDone:YES];
                     } else {
                         if (self.selectedFileDto.isFavorite) {
                             [self didSelectCancelFavoriteFolder];
@@ -2361,9 +2366,9 @@
                     if (_selectedFileDto.isDownload || [[CheckAccessToServer sharedManager] isNetworkIsReachable]){
                         [self didSelectOpenWithOptionAndFile:_selectedFileDto];
                     } else {
-                        _alert = nil;
-                        _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_possible_connect_to_server", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-                        [_alert show];
+                        [self performSelectorOnMainThread:@selector(showAlertView:)
+                                               withObject:NSLocalizedString(@"not_possible_connect_to_server", nil)
+                                            waitUntilDone:YES];
                     }
                     break;
                 case 1:
@@ -2374,7 +2379,9 @@
                     break;
                 case 3:
                     if (self.isCurrentFolderSonOfFavoriteFolder) {
-                        [self showAlertView:NSLocalizedString(@"parent_folder_is_available_offline_file_child", nil)];
+                        [self performSelectorOnMainThread:@selector(showAlertView:)
+                                               withObject:NSLocalizedString(@"parent_folder_is_available_offline_file_child", nil)
+                                            waitUntilDone:YES];
                     } else {
                         [self didSelectFavoriteOption];
                     }
@@ -3078,22 +3085,24 @@
  * Download failed
  */
 - (void)downloadFailed:(NSString*)string andFile:(FileDto*)fileDto {
-    [_downloadView.view removeFromSuperview];
-    //Unlock view
-    self.navigationController.navigationBar.userInteractionEnabled=YES;
-    self.tabBarController.tabBar.userInteractionEnabled=YES; 
-    
-    //Check the string in order to doesn't show an empty alert view.
-    if (string) {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_downloadView.view removeFromSuperview];
+        //Unlock view
+        self.navigationController.navigationBar.userInteractionEnabled=YES;
+        self.tabBarController.tabBar.userInteractionEnabled=YES;
         
-        if (!app.downloadErrorAlertView) {
+        //Check the string in order to doesn't show an empty alert view.
+        if (string) {
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
-            app.downloadErrorAlertView = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-            app.downloadErrorAlertView.tag = k_alertview_for_download_error;
-            [app.downloadErrorAlertView show];
+            if (!app.downloadErrorAlertView) {
+                
+                app.downloadErrorAlertView = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+                app.downloadErrorAlertView.tag = k_alertview_for_download_error;
+                [app.downloadErrorAlertView show];
+            }
         }
-    }
+    });
 }
 
 #pragma mark - Etag methods
@@ -3186,7 +3195,9 @@
     } else {
         _checkingEtag = NO;
     }
-    [_tableView deselectRowAtIndexPath:[_tableView indexPathForSelectedRow] animated:YES];
+     dispatch_async(dispatch_get_main_queue(), ^{
+         [_tableView deselectRowAtIndexPath:[_tableView indexPathForSelectedRow] animated:YES];
+     });
 }
 
 /*

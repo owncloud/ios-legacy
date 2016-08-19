@@ -67,8 +67,6 @@ extern NSString *ReloadFileListFromDataBaseNotification;
 @property(nonatomic) int positionOfCurrentUploadInArray;
 
 @property(nonatomic,strong) NSMutableArray *listOfAssetsToUpload;
-@property(nonatomic,strong) NSString * nameRemoteInstantUploadFolder;
-@property(nonatomic,strong) NSString * pathRemoteInstantUpload;
 
 @property (nonatomic, strong) UtilsNetworkRequest *utilsNetworkRequest;
 

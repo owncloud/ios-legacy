@@ -166,8 +166,8 @@
                 NSDate *lastInstantUploadedAssetCaptureDate = [NSDate dateWithTimeIntervalSince1970:ACTIVE_USER.timestampInstantUpload];
                 
                 PHFetchOptions *newAssetsFetchOptions = [PHFetchOptions new];
-                newAssetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:YES]];
-                newAssetsFetchOptions.predicate = [NSPredicate predicateWithFormat:@"modificationDate > %@", lastInstantUploadedAssetCaptureDate];
+                newAssetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
+                newAssetsFetchOptions.predicate = [NSPredicate predicateWithFormat:@"creationDate > %@", lastInstantUploadedAssetCaptureDate];
                 
                 PHFetchResult *cameraRollAssetCollection = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
                 
@@ -176,10 +176,10 @@
                 if (newPhotos != nil && [newPhotos count] != 0) {
                     
                     for (PHAsset *image in newPhotos) {
-                        NSTimeInterval assetModifiedDate = [image.modificationDate timeIntervalSince1970];
-                        if (assetModifiedDate > ACTIVE_USER.timestampInstantUpload) {
-                            ACTIVE_USER.timestampInstantUpload = assetModifiedDate;
-                            [ManageAppSettingsDB updateTimestampInstantUpload:assetModifiedDate];
+                        NSTimeInterval assetCreatedDate = [image.creationDate timeIntervalSince1970];
+                        if (assetCreatedDate > ACTIVE_USER.timestampInstantUpload) {
+                            ACTIVE_USER.timestampInstantUpload = assetCreatedDate;
+                            [ManageAppSettingsDB updateTimestampInstantUpload:assetCreatedDate];
                         }
                     }
                     
@@ -250,8 +250,10 @@
 #pragma mark - Utility
 
 - (void) showAlertViewWithTitle:(NSString *)title body:(NSString *)body{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:body delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
-    [alertView show];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:body delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
+        [alertView show];
+    });
 }
 
 @end

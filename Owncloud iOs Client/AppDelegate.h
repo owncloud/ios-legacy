@@ -292,6 +292,8 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 - (void) initUploadsOffline;
 - (void) launchUploadsOfflineFromDocumentProvider;
 
+- (void) launchProcessToSyncAllFavorites;
+
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) LoginViewController *loginViewController;
 @property (strong, nonatomic) UserDto *activeUser;
@@ -337,6 +339,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) NSString *urlServerRedirected;
 @property (nonatomic, strong) ManageDownloads *downloadManager;
 @property (nonatomic, strong) NSString *userSessionCurrentToken;
+
 
 
 @end

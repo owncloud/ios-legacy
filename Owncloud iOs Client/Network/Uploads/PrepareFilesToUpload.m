@@ -57,6 +57,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
 }
 
 - (void) addAssetsToUpload:(PHFetchResult *) assetsToUpload andRemoteFolder:(NSString *) remoteFolder {
+    
     for (int i = 0 ; i < [assetsToUpload count] ; i++) {
         [self.listOfAssetsToUpload addObject:[assetsToUpload objectAtIndex:i]];
         
@@ -83,16 +84,15 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     @synchronized (self) {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
-        self.pathRemoteInstantUpload = [[NSString alloc]initWithFormat:@"%@%@/",[UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser],[self nameRemoteInstantUploadFolder]];
-        DLog(@"remoteFolderInstantUpload: %@", self.pathRemoteInstantUpload);
-        
-        PHAsset *assetToUpload = self.listOfAssetsToUpload[0];
-        NSString *uploadPath = self.arrayOfRemoteurl[0];
-        
-        [self.listOfAssetsToUpload removeObjectAtIndex:0];
-        [self.arrayOfRemoteurl removeObjectAtIndex:0];
-        
-        [self uploadAssetFromGallery:assetToUpload andRemoteFolder:uploadPath andCurrentUser:app.activeUser andIsLastFile:([self.listOfAssetsToUpload count] == 1)];
+        if(self.listOfAssetsToUpload && [self.listOfAssetsToUpload count] >0) {
+            PHAsset *assetToUpload = self.listOfAssetsToUpload[0];
+            NSString *uploadPath = self.arrayOfRemoteurl[0];
+            
+            [self.listOfAssetsToUpload removeObjectAtIndex:0];
+            [self.arrayOfRemoteurl removeObjectAtIndex:0];
+            
+            [self uploadAssetFromGallery:assetToUpload andRemoteFolder:uploadPath andCurrentUser:app.activeUser andIsLastFile:([self.listOfAssetsToUpload count] == 1)];
+        }
     }
 }
 
@@ -137,8 +137,6 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     
     if (assetToUpload.mediaType == PHAssetMediaTypeImage) {
         [[PHImageManager defaultManager] requestImageDataForAsset:assetToUpload options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-            
-            NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
             
             NSFileManager *fileManager = [NSFileManager defaultManager];
             if ([fileManager fileExistsAtPath:localPath]) {

@@ -33,6 +33,7 @@
 #import "ManageCookiesStorageDB.h"
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
+#import "ManageAppSettingsDB.h"
 
 //Cookie
 #define k_cookie_user_value_name @"oc_username"
@@ -41,6 +42,9 @@
 #define k_json_ocs @"ocs"
 #define k_json_ocs_data @"data"
 #define k_json_ocs_data_display_name @"display-name"
+
+
+static NSString *const tmpFileName = @"tmp.der";
 
 
 @interface SSOViewController ()
@@ -114,7 +118,7 @@
     
     self.urlStringToRetryTheWholeProcess = urlString;
     
-    NSString *connectURL =[NSString stringWithFormat:@"%@%@",urlString, k_url_webdav_server];
+    NSString *connectURL =[NSString stringWithFormat:@"%@%@",urlString, k_url_webdav_server_without_last_slash];
     DLog(@"URL of shibbolet:%@",connectURL);
     _ownCloudServerUrlString = connectURL;
     
@@ -177,6 +181,27 @@
     [self performSelector:@selector(delay) withObject:nil afterDelay:15.0];
     
     return YES;
+    
+//    NSLog(@"Did start loading: %@ auth:%d", [[request URL] absoluteString], _authenticated);
+//    
+//    if (!_authenticated) {
+//        _authenticated = NO;
+//        
+//        self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+//        
+//        [self.connection start];
+//        
+//        return NO;
+//    }
+    
+//    if (self.authenticated)
+//    {
+//        self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+//        [self.connection start];
+//        return NO;
+//    }
+    
+    return YES;
 }
 
 - (void) delay {
@@ -190,6 +215,22 @@
     if ([error code] != -999) {
         [_activity stopAnimating];
         [_webView setHidden:NO];
+    }
+    
+    if ([error.domain isEqualToString: NSURLErrorDomain])
+    {
+        if (error.code == kCFURLErrorServerCertificateUntrusted         ||
+            error.code == kCFURLErrorServerCertificateHasBadDate        ||
+            error.code == kCFURLErrorServerCertificateHasUnknownRoot    ||
+            error.code == kCFURLErrorServerCertificateNotYetValid)
+        {
+            
+            if (![[CheckAccessToServer sharedManager] isTemporalCertificateTrusted]) {
+                [self askToAcceptCertificate];
+            }
+          
+
+        }
     }
 }
 
@@ -313,6 +354,21 @@
             }
         }];
     }
+    
+//    NSLog(@"WebController Got auth challange via NSURLConnection");
+//    
+//    if ([challenge previousFailureCount] == 0)
+//    {
+//        _authenticated = YES;
+//        
+//        NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+//        
+//        [challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
+//        
+//    } else
+//    {
+//        [[challenge sender] cancelAuthenticationChallenge:challenge];
+//    }
 }
 
 - (void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -323,6 +379,12 @@
         //With the right credentials we try to repeat the last request
         [_webView loadRequest:self.authRequest];
     }
+    if (self.authenticated) {
+        self.authenticated = NO;
+        
+        [_webView loadRequest:self.authRequest];
+    }
+   
 }
 
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -345,6 +407,16 @@
     
     DLog(@"Request: %@", request.URL.absoluteString);
     DLog(@"redirectResponse: %@", redirectResponse.URL.absoluteString);
+    if (redirectResponse)
+    {
+        NSMutableURLRequest *newRequest = [request mutableCopy]; // original request
+        
+        [newRequest setURL: [request URL]];
+        
+        NSLog (@"redirected");
+        self.authRequest = newRequest;
+        return newRequest;
+    }
     
     return request;
 }
@@ -355,6 +427,10 @@
  */
 - (IBAction)cancel:(id)sender {
     
+    [self dismissThisView];
+}
+
+- (void) dismissThisView {
     [self.view endEditing:YES];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -456,23 +532,25 @@
 
 - (void) alertView: (UIAlertView *) alertView willDismissWithButtonIndex: (NSInteger) buttonIndex {
     // cancel
-    switch (buttonIndex) {
-        case 0:
-            //Cancel
-            [self openLink:_urlString];
-            break;
-        case 1: {
-            //Do login with the credendial
-            self.isCredentialsWritten = YES;
-            self.user = [_loginAlertView textFieldAtIndex:0].text;
-            self.password = [_loginAlertView textFieldAtIndex:1].text;
-            
-            //After make login we send the credential to the request
-            [[self.challenge sender] useCredential:[NSURLCredential credentialWithUser:self.user password:self.password persistence:NSURLCredentialPersistenceNone] forAuthenticationChallenge:self.challenge];
+    if(alertView.tag != 2) {
+        switch (buttonIndex) {
+            case 0:
+                //Cancel
+                [self openLink:_urlString];
+                break;
+            case 1: {
+                //Do login with the credendial
+                self.isCredentialsWritten = YES;
+                self.user = [_loginAlertView textFieldAtIndex:0].text;
+                self.password = [_loginAlertView textFieldAtIndex:1].text;
+                
+                //After make login we send the credential to the request
+                [[self.challenge sender] useCredential:[NSURLCredential credentialWithUser:self.user password:self.password persistence:NSURLCredentialPersistenceNone] forAuthenticationChallenge:self.challenge];
             }
-            break;
-        default:
-            break;
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -481,15 +559,96 @@
  */
 - (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView {
     BOOL output = NO;
+
+    if (alertView.tag !=2) {
+        NSString *username = [alertView textFieldAtIndex:0].text;
+        NSString *password = [alertView textFieldAtIndex:1].text;
     
-    NSString *username = [alertView textFieldAtIndex:0].text;
-    NSString *password = [alertView textFieldAtIndex:1].text;
-    
-    if ([username length] > 0 && [password length] > 0) {
+        if ([username length] > 0 && [password length] > 0) {
+            output = YES;
+        }
+    } else {
         output = YES;
     }
-    
     return output;
 }
+
+
+#pragma NSURLConnectionDelegate
+
+-(void) connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+    
+    NSLog(@"willSendRequestForAuthenticationChallenge");
+    
+    BOOL trusted = NO;
+    SecTrustRef trust;
+    NSURLProtectionSpace *protectionSpace;
+    
+    protectionSpace = [challenge protectionSpace];
+    trust = [protectionSpace serverTrust];
+    
+    [[CheckAccessToServer sharedManager] createFolderToSaveCertificates];
+    
+    if(trust != nil) {
+        [[CheckAccessToServer sharedManager] saveCertificate:trust withName:tmpFileName];
+        
+        NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
+        
+        NSMutableArray *listCertificateLocation = [ManageAppSettingsDB getAllCertificatesLocation];
+        
+        for (int i = 0 ; i < [listCertificateLocation count] ; i++) {
+            
+            NSString *currentLocalCertLocation = [listCertificateLocation objectAtIndex:i];
+            NSFileManager *fileManager = [ NSFileManager defaultManager];
+            if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder,tmpFileName] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
+                NSLog(@"Is the same certificate!!!");
+                trusted = YES;
+            }
+        }
+    } else {
+        trusted = NO;
+    }
+
+    if (trusted) {
+        self.authenticated = YES;
+        
+        [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+        
+    } else {
+        [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
+    }
+}
+
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    if (alertView.tag == 2) {
+        if (buttonIndex == 1) {
+            [[CheckAccessToServer sharedManager] acceptCertificate];
+        } else {
+            NSLog(@"user pressed CANCEL");
+            [self dismissThisView];
+        }
+    }
+}
+
+
+- (void) askToAcceptCertificate {
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //Your main thread code goes in here
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"invalid_ssl_cert", nil) delegate: self cancelButtonTitle:NSLocalizedString(@"no", nil) otherButtonTitles:NSLocalizedString(@"yes", nil), nil];
+        alert.tag = 2;
+        [alert show];
+    });
+}
+
+
+
+
+
+
 
 @end

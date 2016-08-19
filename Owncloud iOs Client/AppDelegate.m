@@ -57,6 +57,7 @@
 #import "CheckFeaturesSupported.h"
 #import "ManageTouchID.h"
 #import "InstantUpload.h"
+#import "DownloadUtils.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -183,6 +184,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [[InstantUpload instantUploadManager] activate];
     });
+    
+    //Set up user agent, so this way all UIWebView will use it
+    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:[UtilsUrls getUserAgent], @"UserAgent", nil];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:dictionary];
 
     return YES;
 }
@@ -348,6 +353,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     [[AppDelegate sharedSyncFolderManager] setThePermissionsOnDownloadCacheFolder];
     
+    NSString *localTempPath = [UtilsUrls getTempFolderForUploadFiles];
+    [DownloadUtils setThePermissionsForFolderPath:localTempPath];
+    
     //First Call when init the app
      self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
     
@@ -367,14 +375,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
     } else {
         
-        [self performSelector:@selector(doThingsThatShouldDoOnStart) withObject:nil afterDelay:0.4];
-        
-        [self performSelector:@selector(launchUploadsOfflineFromDocumentProvider) withObject:nil afterDelay:0.3];
-        
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
         
         //Generate the interface of the app
         dispatch_async(dispatch_get_main_queue(), ^{
+            [self doThingsThatShouldDoOnStart];
+            [self launchUploadsOfflineFromDocumentProvider];
             [self generateAppInterfaceFromLoginScreen:NO];
         });
     }
@@ -827,8 +833,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     RecentViewController *currenRecent = [_ocTabBarController.viewControllers objectAtIndex:1];
     
     if (![currenRecent.tabBarItem.badgeValue isEqualToString:errorBadge]) {
-        //update badge
-        [currenRecent.tabBarItem setBadgeValue:errorBadge];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //update badge
+            [currenRecent.tabBarItem setBadgeValue:errorBadge];
+        });
     }
     
     //update recents

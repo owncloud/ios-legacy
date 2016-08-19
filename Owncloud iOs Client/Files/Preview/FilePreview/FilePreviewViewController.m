@@ -1472,10 +1472,11 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     if (!app.downloadErrorAlertView) {
-        
-        app.downloadErrorAlertView = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        app.downloadErrorAlertView.tag = k_alertview_for_download_error;
-        [app.downloadErrorAlertView show];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            app.downloadErrorAlertView = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+            app.downloadErrorAlertView.tag = k_alertview_for_download_error;
+            [app.downloadErrorAlertView show];
+        });
     }
 }
 

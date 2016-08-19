@@ -95,59 +95,27 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                             completionHandler:
                                   ^(NSData *data, NSURLResponse *response, NSError *error) {
                                       
-                                      DLog(@"Error: %@", error);
-                                      NSLog(@"Error: %ld - %@",(long)[error code] , [error localizedDescription]);
-                                      
-                                      if(error != nil){                                          
-                                          //-1202 = self signed certificate
-                                          if([error code] == -1202) {
-                                              NSLog(@"Error -1202");
+                                      if(error != nil){
+                                          DLog(@"Error: %@", error);
+                                          NSLog(@"Error: %ld - %@",(long)[error code] , [error localizedDescription]);
+                                          
+                                          
+                                          if (error.code == kCFURLErrorServerCertificateUntrusted         ||
+                                              error.code == kCFURLErrorServerCertificateHasBadDate        ||
+                                              error.code == kCFURLErrorServerCertificateHasUnknownRoot    ||
+                                              error.code == kCFURLErrorServerCertificateNotYetValid)
+                                          {
+                                              if (![self isTemporalCertificateTrusted]) {
+                                                  [self acceptCertificateAndRetryCheckToTheServer];
+                                              }
                                               
-#ifdef CONTAINER_APP
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  //Your main thread code goes in here
-                                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"invalid_ssl_cert", nil) delegate: self cancelButtonTitle:NSLocalizedString(@"no", nil) otherButtonTitles:NSLocalizedString(@"yes", nil), nil];
-                                                  [alert show];
-                                                  [alert release];
-                                              });
-                                              
-#else
-                                              
-                                              UIAlertController *alert =   [UIAlertController
-                                                                            alertControllerWithTitle:@""
-                                                                            message:NSLocalizedString(@"invalid_ssl_cert", nil)
-                                                                            preferredStyle:UIAlertControllerStyleAlert];
-                                              UIAlertAction* no = [UIAlertAction
-                                                                   actionWithTitle:NSLocalizedString(@"no", nil)
-                                                                   style:UIAlertActionStyleDefault
-                                                                   handler:^(UIAlertAction * action)
-                                                                   {
-                                                                       
-                                                                   }];
-                                              
-                                              UIAlertAction* yes = [UIAlertAction
-                                                                    actionWithTitle:NSLocalizedString(@"yes", nil)
-                                                                    style:UIAlertActionStyleDefault
-                                                                    handler:^(UIAlertAction * action)
-                                                                    {
-                                                                        [self acceptCertificate];
-                                                                    }];
-                                              [alert addAction:no];
-                                              [alert addAction:yes];
-                                              
-                                              [self.viewControllerToShow presentViewController:alert animated:YES completion:nil];
-                                              
-#endif
                                               
                                           } else {
                                               if(self.delegate) {
                                                   [self.delegate connectionToTheServer:NO];
                                               }
                                           }
-                                          
-                                          
                                       }
-                                      
                                       else{
                                           
                                           BOOL installed = NO;
@@ -175,6 +143,46 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     
 }
 
+
+- (void) askToAcceptCertificate {
+
+#ifdef CONTAINER_APP
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //Your main thread code goes in here
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"invalid_ssl_cert", nil) delegate: self cancelButtonTitle:NSLocalizedString(@"no", nil) otherButtonTitles:NSLocalizedString(@"yes", nil), nil];
+        [alert show];
+        [alert release];
+    });
+    
+#else
+    
+    UIAlertController *alert =   [UIAlertController
+                                  alertControllerWithTitle:@""
+                                  message:NSLocalizedString(@"invalid_ssl_cert", nil)
+                                  preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* no = [UIAlertAction
+                         actionWithTitle:NSLocalizedString(@"no", nil)
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action)
+                         {
+                             
+                         }];
+    
+    UIAlertAction* yes = [UIAlertAction
+                          actionWithTitle:NSLocalizedString(@"yes", nil)
+                          style:UIAlertActionStyleDefault
+                          handler:^(UIAlertAction * action)
+                          {
+                              [self acceptCertificateAndRetryCheckToTheServer];
+                          }];
+    [alert addAction:no];
+    [alert addAction:yes];
+    
+    [self.viewControllerToShow presentViewController:alert animated:YES completion:nil];
+    
+#endif
+    
+}
 
 -(void) URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler{
     
@@ -307,15 +315,21 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     
     if (buttonIndex == 1) {
-        [self acceptCertificate];
+        [self acceptCertificateAndRetryCheckToTheServer];
     } else {
         NSLog(@"user pressed CANCEL");
         [self.delegate badCertificateNoAcceptedByUser];
     }
 }
 
+- (void) acceptCertificateAndRetryCheckToTheServer {
+    [self acceptCertificate];
+    [self.delegate repeatTheCheckToTheServer];
+}
+
 - (void) acceptCertificate {
     NSLog(@"user pressed YES");
+    //Save temporal certificate
     
     NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
     
@@ -334,9 +348,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
         [ManageAppSettingsDB insertCertificate:[NSString stringWithFormat:@"%f.der", [date timeIntervalSince1970]]];
         
     }
-    [fm release];
-    
-    [self.delegate repeatTheCheckToTheServer];
+
 }
 
 - (void)URLSession:(NSURLSession *)session
@@ -399,5 +411,26 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)redirectResponse
     }
 }
 
+
+- (BOOL) isTemporalCertificateTrusted {
+    
+    BOOL trusted = NO;
+    
+    NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
+    
+    NSMutableArray *listCertificateLocation = [ManageAppSettingsDB getAllCertificatesLocation];
+    
+    for (int i = 0 ; i < [listCertificateLocation count] ; i++) {
+        
+        NSString *currentLocalCertLocation = [listCertificateLocation objectAtIndex:i];
+        NSFileManager *fileManager = [ NSFileManager defaultManager];
+        if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder,tmpFileName] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
+            NSLog(@"Is the same certificate!!!");
+            trusted = YES;
+        }
+    }
+    
+    return trusted;
+}
 
 @end

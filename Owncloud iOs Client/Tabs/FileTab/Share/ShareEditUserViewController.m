@@ -650,10 +650,11 @@ typedef NS_ENUM (NSInteger, enumUpload){
  * Show the standar message of the error connection.
  */
 - (void)showError:(NSString *) message {
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:message
-                                                    message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-    [alert show];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:message
+                                                        message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        [alert show];
+    });
 }
 
 @end

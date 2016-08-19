@@ -16,7 +16,7 @@
 #import "FileNameUtils.h"
 #import "Customization.h"
 
-
+#define kSAMLFragmentArray [NSArray arrayWithObjects: @"wayf", @"saml", @"sso_orig_uri", nil]
 
 
 @implementation FileNameUtils
@@ -257,19 +257,19 @@
 
 + (BOOL)isURLWithSamlFragment:(NSString*)urlString{
     
-    BOOL isSaml = NO;
-    
+    // NSString *samlFragment1 = @"AuthnEngine";
+
     urlString = [urlString lowercaseString];
-    NSString *samlFragment1 = @"wayf";
-   // NSString *samlFragment1 = @"AuthnEngine";
-    NSString *samlFragment2 = @"saml";
-    if((urlString && [urlString rangeOfString:samlFragment1 options:NSCaseInsensitiveSearch].location != NSNotFound)||(urlString && [urlString rangeOfString:samlFragment2 options:NSCaseInsensitiveSearch].location != NSNotFound)) {
-        //shibboleth key is in the request url
-        NSLog(@"shibboleth fragment is in the request url");
-        isSaml=YES;
-    }
     
-    return isSaml;
+    if (urlString) {
+        for (NSString* samlFragment in kSAMLFragmentArray) {
+            if ([urlString rangeOfString:samlFragment options:NSCaseInsensitiveSearch].location != NSNotFound) {
+                NSLog(@"shibboleth fragment is in the request url");
+                return YES;
+            }
+        }
+    }
+    return NO;
 }
 
 
@@ -434,7 +434,7 @@
     if ([mediaType isEqualToString:@"ALAssetTypePhoto"]) {
         output = [NSString stringWithFormat:@"Photo-%@_%@.%@", dateString, appleID, ext];
     } else {
-        output = [NSString stringWithFormat:@"Video-%@.%@", dateString, ext];
+        output = [NSString stringWithFormat:@"Video-%@_%@.%@", dateString, appleID, ext];
     }
     
     return output;
@@ -467,7 +467,7 @@
     if ([FileNameUtils checkTheTypeOfFile:path.lastPathComponent] == imageFileType) {
         output = [NSString stringWithFormat:@"Photo-%@_%@.%@", dateString, appleID, ext];
     } else if ([FileNameUtils checkTheTypeOfFile:path.lastPathComponent] == videoFileType) {
-        output = [NSString stringWithFormat:@"Video-%@.%@", dateString, ext];
+        output = [NSString stringWithFormat:@"Video-%@_%@.%@", dateString, appleID, ext];
     } else {
         output = [NSString stringWithFormat:@"File-%@.%@", dateString, ext];
     }
@@ -484,7 +484,7 @@
     [dateFormatter setDateFormat:@"yyyy-MM-dd-HH-mm-ss"];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
 
-    NSString *dateString = [dateFormatter stringFromDate:asset.modificationDate];
+    NSString *dateString = [dateFormatter stringFromDate:asset.creationDate];
     NSString *fileName = [asset valueForKey:@"filename"];
     NSString *fileExtension = [fileName pathExtension];
     
@@ -497,7 +497,7 @@
     if (asset.mediaType == PHAssetMediaTypeImage) {
         output = [NSString stringWithFormat:@"Photo-%@_%@.%@", dateString, appleID, fileExtension];
     } else if (asset.mediaType == PHAssetMediaTypeVideo) {
-        output = [NSString stringWithFormat:@"Video-%@.%@", dateString, fileExtension];
+        output = [NSString stringWithFormat:@"Video-%@_%@.%@", dateString, appleID, fileExtension];
     } else {
         output = [NSString stringWithFormat:@"File-%@.%@", dateString, fileExtension];
     }

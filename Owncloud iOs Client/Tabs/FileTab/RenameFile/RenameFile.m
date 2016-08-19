@@ -339,11 +339,12 @@
  *
  */
 - (void)showError:(NSString *) message{
-    
-    [self endLoading];
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:message message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-    [alert show];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self endLoading];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:message message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        [alert show];
+    });
 }
 
 - (void)errorLogin {

@@ -88,7 +88,8 @@
     
     //Titles labels
     self.welcomeLabel = [UILabel new];
-    self.welcomeLabel.text = NSLocalizedString(@"title_help_slide_0", nil);
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    self.welcomeLabel.text = [NSLocalizedString(@"title_help_slide_0", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
     self.welcomeLabel.textColor = [UIColor colorOfLoginText];
     [self.welcomeLabel setFont:[UIFont boldSystemFontOfSize:22]];
     [self.welcomeLabel sizeToFit];

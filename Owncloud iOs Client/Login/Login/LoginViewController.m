@@ -1958,10 +1958,12 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             hasInvalidAuth = NO;
         }
         
-        [self checkTheSecurityOfTheRedirectedURL:response];
+        [self checkTheSecurityOfTheRedirectedURL:response.URL.absoluteString];
         
-        [_tableView reloadData];
-        [self updateInterfaceWithConnectionToTheServer:YES];
+         dispatch_async(dispatch_get_main_queue(), ^{
+             [_tableView reloadData];
+             [self updateInterfaceWithConnectionToTheServer:YES];
+         });
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         BOOL isInvalid = NO;
@@ -2004,10 +2006,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             hasInvalidAuth = NO;
         }
         
-        [self checkTheSecurityOfTheRedirectedURL:response];
+        if (response == nil) {
+             [self checkTheSecurityOfTheRedirectedURL:redirectedServer];
+        }else{
+            [self checkTheSecurityOfTheRedirectedURL:response.URL.absoluteString];
+        }
         
-        [_tableView reloadData];
-        [self updateInterfaceWithConnectionToTheServer:YES];
+       
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_tableView reloadData];
+            [self updateInterfaceWithConnectionToTheServer:YES];
+        });
     }];
 }
 
@@ -2022,10 +2031,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  *
  * @param repsonse -> NSHTTPURLResponse, the response of the server
  */
-- (void) checkTheSecurityOfTheRedirectedURL: (NSHTTPURLResponse *)response {
+- (void) checkTheSecurityOfTheRedirectedURL: (NSString *)redirectionURLString {
     //Check the security of the redirection
-    NSURL *redirectionURL = response.URL;
-    NSString *redirectionURLString = [redirectionURL absoluteString];
     
     if (isHttps) {
         if ([redirectionURLString hasPrefix:k_https_prefix]) {
@@ -2125,12 +2132,13 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 }
 
 - (void) manageFailOfServerConnection{
-    
-    [self hideTryingToLogin];
-    _alert = nil;
-    _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_possible_connect_to_server", nil)
-                                                    message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-    [_alert show];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self hideTryingToLogin];
+        _alert = nil;
+        _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_possible_connect_to_server", nil)
+                                            message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
+        [_alert show];
+    });
 }
 
 

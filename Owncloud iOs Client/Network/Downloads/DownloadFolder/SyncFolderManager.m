@@ -65,8 +65,6 @@ static float const kDelayAfterCancelAll = 3.0;
     
     cacheDirPath = [cacheDirPath stringByAppendingPathComponent:dictionary[@"CFBundleIdentifier"]];
     
-    NSError *error;
-    
     DLog(@"Perssions cache: %@", cacheDirPath);
     
     //2. Check if the folder exist
@@ -82,11 +80,9 @@ static float const kDelayAfterCancelAll = 3.0;
     }
     
     //3. Give the permissions to the folder
-    [[NSFileManager defaultManager] setAttributes:@{NSFileProtectionKey: NSFileProtectionCompleteUntilFirstUserAuthentication} ofItemAtPath:cacheDirPath error:&error];
+    [DownloadUtils setThePermissionsForFolderPath:cacheDirPath];
     
-    if (error) {
-        DLog(@"Error setting permissions: %@", error);
-    }
+    
 }
 
 - (void) addFolderToBeDownloaded: (FileDto *) folder {

@@ -16,6 +16,7 @@
 //URL for webdav
 //#define k_url_webdav_server @"remote.php/odav/"
 #define k_url_webdav_server @"remote.php/webdav/"
+#define k_url_webdav_server_without_last_slash @"remote.php/webdav"
 
 
 //Chunk length

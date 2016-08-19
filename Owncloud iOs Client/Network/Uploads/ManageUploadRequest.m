@@ -404,7 +404,8 @@
         
         switch (error.code) {
             case OCErrorFileToUploadDoesNotExist: {
-                
+                NSLog(@"(Error, fails before request. File not exist)_startUploadFile_: %@ Error: %ld - %@",weakSelf.currentUpload.uploadFileName, (long)[error code] , [error localizedDescription]);
+                DLog(@"_startUploadFile_ %@ from %@ to %@. Error: %@",weakSelf.currentUpload.uploadFileName, weakSelf.currentUpload.originPath, weakSelf.currentUpload.destinyFolder, error);
                 AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
                 
                 weakSelf.currentUpload.status = errorUploading;
@@ -417,6 +418,8 @@
                 
                 
             default: {
+                NSLog(@"(Error, fails before request.Default) _startUploadFile_: %@ Error: %ld - %@",weakSelf.currentUpload.uploadFileName, (long)[error code] , [error localizedDescription]);
+                DLog(@"_startUploadFile_ %@ from %@ to %@. Error: %@", weakSelf.currentUpload.uploadFileName, weakSelf.currentUpload.originPath, weakSelf.currentUpload.destinyFolder, error);
                 AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
                 
                 weakSelf.currentUpload.status = errorUploading;

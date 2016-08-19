@@ -135,6 +135,7 @@
     if (download.downloadTask) {
         [self.downloads addObject:download];
         if (download.downloadTask.state != NSURLSessionTaskStateRunning) {
+            download.isForceCanceling = NO;
             [download.downloadTask resume];
         }
     }

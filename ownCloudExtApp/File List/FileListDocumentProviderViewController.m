@@ -192,6 +192,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     [self setLockedApperance:NO];
     
     if (![string isEqualToString:@""]) {
+        
         [self showError:string];
     }
     
