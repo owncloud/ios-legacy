@@ -1649,9 +1649,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 }
 
 -(void) isConnectionToTheServerByUrlInOtherThread {
-    
-    [self.tableView reloadData];
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
     isCheckingTheServerRightNow = YES;
     isConnectionToServer = NO;
     
@@ -1780,7 +1780,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  * @param isConnection -> BOOL
  */
 -(void)updateInterfaceWithConnectionToTheServer:(BOOL)isConnection{
-    
+ dispatch_async(dispatch_get_main_queue(), ^{
     if(isConnection) {
         isConnectionToServer = YES;
         if (self.urlTextField.text.length > 0 && self.usernameTextField.text.length > 0 && self.passwordTextField.text.length > 0 && hasInvalidAuth == NO) {
@@ -1845,6 +1845,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     [self.tableView reloadData];
     
     isNeedToCheckAgain = YES;
+ });
 }
 
 ///-----------------------------------
