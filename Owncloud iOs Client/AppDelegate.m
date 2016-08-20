@@ -483,128 +483,129 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //DLog(@"localRootUrlString: %@", localSystemPath);
     }
 
-    if (!self.window) {
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    }
-    
-    //if ocTabBarController exist remove all of them
-    if (_ocTabBarController) {
-        [_filesViewController.navigationController popToRootViewControllerAnimated:NO];
-        [_recentViewController.navigationController popToRootViewControllerAnimated:NO];
-        [_sharedViewController.navigationController popToRootViewControllerAnimated:NO];
-        [_settingsViewController.navigationController popToRootViewControllerAnimated:NO];
-        
-        //liberate controllers
-        _filesViewController = nil;
-        _recentViewController = nil;
-        _sharedViewController = nil;
-        _settingsViewController = nil;
-        
-        //liberate controllers of splitview controller
-        if (_splitViewController) {
-            _splitViewController = nil;
-            _detailViewController = nil;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!self.window) {
+            self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         }
-    }
-    
-    //Create view controllers and custom navigation controllers
-    
-    _filesViewController = [[FilesViewController alloc] initWithNibName:@"FilesViewController" onFolder:wevDavString andFileId:0 andCurrentLocalFolder:localSystemPath];
-    _filesViewController.isEtagRequestNecessary = YES;
-    OCNavigationController *filesNavigationController = [[OCNavigationController alloc]initWithRootViewController:_filesViewController];
-    
-    _recentViewController = [[RecentViewController alloc]initWithNibName:@"RecentViewController" bundle:nil];
-    OCNavigationController *recentsNavigationController = [[OCNavigationController alloc]initWithRootViewController:_recentViewController];
-    
-    _sharedViewController = [[SharedViewController alloc]initWithNibName:@"SharedViewController" bundle:nil];
-    OCNavigationController *sharedNavigationController = [[OCNavigationController alloc]initWithRootViewController:_sharedViewController];
-    
-    _settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
-    OCNavigationController *settingsNavigationController = [[OCNavigationController alloc]initWithRootViewController:_settingsViewController];
-    
-    UIImage *tabBarImageSelected = [UIImage imageNamed:@"TABfiles.png"];
-    UIImage *tabBarRecentSelected = [UIImage imageNamed:@"TABrecents.png"];
-    UIImage *tabBarSharedSelected = [UIImage imageNamed:@"TABShares.png"];
-    UIImage *tabBarSettingSelected = [UIImage imageNamed:@"TABsettings.png"];
-    
-    //Set the selected and unselected images
-    if (k_is_customize_unselectedUITabBarItems) {
         
-        UIImage *tabBarImageUnselected = [tabBarImageSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        filesNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarImageUnselected selectedImage:tabBarImageSelected];
+        //if ocTabBarController exist remove all of them
+        if (_ocTabBarController) {
+            [_filesViewController.navigationController popToRootViewControllerAnimated:NO];
+            [_recentViewController.navigationController popToRootViewControllerAnimated:NO];
+            [_sharedViewController.navigationController popToRootViewControllerAnimated:NO];
+            [_settingsViewController.navigationController popToRootViewControllerAnimated:NO];
+            
+            //liberate controllers
+            _filesViewController = nil;
+            _recentViewController = nil;
+            _sharedViewController = nil;
+            _settingsViewController = nil;
+            
+            //liberate controllers of splitview controller
+            if (_splitViewController) {
+                _splitViewController = nil;
+                _detailViewController = nil;
+            }
+        }
         
-        UIImage *tabBarRecentUnselected = [tabBarRecentSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        recentsNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarRecentUnselected selectedImage:tabBarRecentSelected];
+        //Create view controllers and custom navigation controllers
         
-        UIImage *tabBarSharedUnselected = [tabBarSharedSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        sharedNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarSharedUnselected selectedImage:tabBarSharedSelected];
+        _filesViewController = [[FilesViewController alloc] initWithNibName:@"FilesViewController" onFolder:wevDavString andFileId:0 andCurrentLocalFolder:localSystemPath];
+        _filesViewController.isEtagRequestNecessary = YES;
+        OCNavigationController *filesNavigationController = [[OCNavigationController alloc]initWithRootViewController:_filesViewController];
         
-        UIImage *tabBarSettingUnselected = [tabBarSettingSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        settingsNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarSettingUnselected selectedImage:tabBarSettingSelected];
+        _recentViewController = [[RecentViewController alloc]initWithNibName:@"RecentViewController" bundle:nil];
+        OCNavigationController *recentsNavigationController = [[OCNavigationController alloc]initWithRootViewController:_recentViewController];
         
-    } else {
-        filesNavigationController.tabBarItem.image = tabBarImageSelected;
-        recentsNavigationController.tabBarItem.image = tabBarRecentSelected;
-        sharedNavigationController.tabBarItem.image = tabBarSharedSelected;
-        settingsNavigationController.tabBarItem.image = tabBarSettingSelected;
-    }
-    
-    //Set titles
-    filesNavigationController.tabBarItem.title = NSLocalizedString(@"files_tab", nil);
-    recentsNavigationController.tabBarItem.title = NSLocalizedString(@"uploads_tab", nil);
-    sharedNavigationController.tabBarItem.title = NSLocalizedString(@"shared_tab", nil);
-    settingsNavigationController.tabBarItem.title = NSLocalizedString(@"settings", nil);
-    
-
-    //Create custom tab bar controllers
-    _ocTabBarController = [OCTabBarController new];
-    _ocTabBarController.viewControllers = [NSArray arrayWithObjects:filesNavigationController, recentsNavigationController, sharedNavigationController, settingsNavigationController, nil];
-
-    //Depend of type of device there are differents rootViewController
-    if (IS_IPHONE){
-        //iPhone
+        _sharedViewController = [[SharedViewController alloc]initWithNibName:@"SharedViewController" bundle:nil];
+        OCNavigationController *sharedNavigationController = [[OCNavigationController alloc]initWithRootViewController:_sharedViewController];
         
-        //Assign the tabBarController to the window
-        self.window.rootViewController = _ocTabBarController;
-        [self.window makeKeyAndVisible];
-        //Select the first item of the tabBar
-        self.ocTabBarController.selectedIndex = 0;
-    } else {
-        //iPad
+        _settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
+        OCNavigationController *settingsNavigationController = [[OCNavigationController alloc]initWithRootViewController:_settingsViewController];
         
-        //Create a splitViewController (Split container to show two view in the same time)
-        self.splitViewController = [OCSplitViewController new];
+        UIImage *tabBarImageSelected = [UIImage imageNamed:@"TABfiles.png"];
+        UIImage *tabBarRecentSelected = [UIImage imageNamed:@"TABrecents.png"];
+        UIImage *tabBarSharedSelected = [UIImage imageNamed:@"TABShares.png"];
+        UIImage *tabBarSettingSelected = [UIImage imageNamed:@"TABsettings.png"];
         
-        self.splitViewController.view.backgroundColor = [UIColor blackColor];
+        //Set the selected and unselected images
+        if (k_is_customize_unselectedUITabBarItems) {
+            
+            UIImage *tabBarImageUnselected = [tabBarImageSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+            filesNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarImageUnselected selectedImage:tabBarImageSelected];
+            
+            UIImage *tabBarRecentUnselected = [tabBarRecentSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+            recentsNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarRecentUnselected selectedImage:tabBarRecentSelected];
+            
+            UIImage *tabBarSharedUnselected = [tabBarSharedSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+            sharedNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarSharedUnselected selectedImage:tabBarSharedSelected];
+            
+            UIImage *tabBarSettingUnselected = [tabBarSettingSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+            settingsNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarSettingUnselected selectedImage:tabBarSettingSelected];
+            
+        } else {
+            filesNavigationController.tabBarItem.image = tabBarImageSelected;
+            recentsNavigationController.tabBarItem.image = tabBarRecentSelected;
+            sharedNavigationController.tabBarItem.image = tabBarSharedSelected;
+            settingsNavigationController.tabBarItem.image = tabBarSettingSelected;
+        }
         
-        //Create the detailViewController (Detail View of the split)
-        self.detailViewController = [[DetailViewController alloc]initWithNibName:@"DetailView" bundle:nil];
-        
-        //Assign tabBarController like a master view
-        
-        self.splitViewController.viewControllers = [NSArray arrayWithObjects:self.ocTabBarController, self.detailViewController, nil];
-        self.splitViewController.delegate = self.detailViewController;
+        //Set titles
+        filesNavigationController.tabBarItem.title = NSLocalizedString(@"files_tab", nil);
+        recentsNavigationController.tabBarItem.title = NSLocalizedString(@"uploads_tab", nil);
+        sharedNavigationController.tabBarItem.title = NSLocalizedString(@"shared_tab", nil);
+        settingsNavigationController.tabBarItem.title = NSLocalizedString(@"settings", nil);
         
         
-        // Add the split view controller's view to the window and display.
-        self.window.rootViewController = _splitViewController;
-        [self.window makeKeyAndVisible];
-         self.ocTabBarController.selectedIndex = 0;
+        //Create custom tab bar controllers
+        _ocTabBarController = [OCTabBarController new];
+        _ocTabBarController.viewControllers = [NSArray arrayWithObjects:filesNavigationController, recentsNavigationController, sharedNavigationController, settingsNavigationController, nil];
         
-        [self.detailViewController performSelector:@selector(configureView) withObject:nil afterDelay:0];
+        //Depend of type of device there are differents rootViewController
+        if (IS_IPHONE){
+            //iPhone
+            
+            //Assign the tabBarController to the window
+            self.window.rootViewController = _ocTabBarController;
+            [self.window makeKeyAndVisible];
+            //Select the first item of the tabBar
+            self.ocTabBarController.selectedIndex = 0;
+        } else {
+            //iPad
+            
+            //Create a splitViewController (Split container to show two view in the same time)
+            self.splitViewController = [OCSplitViewController new];
+            
+            self.splitViewController.view.backgroundColor = [UIColor blackColor];
+            
+            //Create the detailViewController (Detail View of the split)
+            self.detailViewController = [[DetailViewController alloc]initWithNibName:@"DetailView" bundle:nil];
+            
+            //Assign tabBarController like a master view
+            
+            self.splitViewController.viewControllers = [NSArray arrayWithObjects:self.ocTabBarController, self.detailViewController, nil];
+            self.splitViewController.delegate = self.detailViewController;
+            
+            
+            // Add the split view controller's view to the window and display.
+            self.window.rootViewController = _splitViewController;
+            [self.window makeKeyAndVisible];
+            self.ocTabBarController.selectedIndex = 0;
+            
+            [self.detailViewController performSelector:@selector(configureView) withObject:nil afterDelay:0];
+            
+        }
         
-    }
-    
-    self.activeUser = [ManageUsersDB getActiveUser];
-    
-    //if is file from other app wainting, present the upload from other app view
-    if (self.isFileFromOtherAppWaitting==YES) {
-        [self presentUploadFromOtherApp];
-    }
-    
-    //Check the version of the server to know if has shared support
-    [self performSelectorInBackground:@selector(checkIfServerSupportThings) withObject:nil];
-    
+        self.activeUser = [ManageUsersDB getActiveUser];
+        
+        //if is file from other app wainting, present the upload from other app view
+        if (self.isFileFromOtherAppWaitting==YES) {
+            [self presentUploadFromOtherApp];
+        }
+        
+        //Check the version of the server to know if has shared support
+        [self performSelectorInBackground:@selector(checkIfServerSupportThings) withObject:nil];
+    });
     
 }
 

@@ -1540,21 +1540,25 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 #pragma mark - Loading
 
 -(void) showTryingToLogin {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    //hud.mode=MBProgressHUDModeDeterminate;
-    hud.labelText = NSLocalizedString(@"loading", nil);
-    hud.dimBackground = NO;
-    
-    self.view.userInteractionEnabled = NO;
-    self.navigationController.navigationBar.userInteractionEnabled = NO;
-    self.tabBarController.tabBar.userInteractionEnabled = NO;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        //hud.mode=MBProgressHUDModeDeterminate;
+        hud.labelText = NSLocalizedString(@"loading", nil);
+        hud.dimBackground = NO;
+        
+        self.view.userInteractionEnabled = NO;
+        self.navigationController.navigationBar.userInteractionEnabled = NO;
+        self.tabBarController.tabBar.userInteractionEnabled = NO;
+    });
 }
 
 -(void) hideTryingToLogin {
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
-    self.view.userInteractionEnabled = YES;
-    self.navigationController.navigationBar.userInteractionEnabled = YES;
-    self.tabBarController.tabBar.userInteractionEnabled = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        self.view.userInteractionEnabled = YES;
+        self.navigationController.navigationBar.userInteractionEnabled = YES;
+        self.tabBarController.tabBar.userInteractionEnabled = YES;
+    });
 }
 
 #pragma mark - TextField delegates
@@ -2163,8 +2167,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     if(requestCode >= 400) {
         isError500 = YES;
         [self hideTryingToLogin];
-        
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     } else {
         
         UserDto *userDto = [[UserDto alloc] init];
@@ -2229,7 +2234,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     isErrorOnCredentials = YES;
     
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
 }
 
 #pragma mark - Cookies support
