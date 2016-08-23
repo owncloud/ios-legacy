@@ -254,6 +254,9 @@
     
     [[AppDelegate sharedOCCommunication].uploadSessionManager.operationQueue cancelAllOperations];
     
+    
+    DLog(@"_startUploadFile_ previous send request, origin: @% destiny: @%",_currentUpload.originPath, urlClean);
+    
     self.uploadTask = [[AppDelegate sharedOCCommunication] uploadFileSession:_currentUpload.originPath toDestiny:urlClean onCommunication:[AppDelegate sharedOCCommunication] progress:^(NSProgress *progress) {
         
         [self calculateTheProgressBy:progress];

@@ -144,29 +144,84 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             }
             
             if (imageData && localPath) {
-                [fileManager createFileAtPath:localPath contents:imageData attributes:nil];
+                
+                //Divide the file in chunks of 1024KB, then create the file with all chunks
+                
+                //Variables
+                NSUInteger offset = 0;
+                NSUInteger chunkSize = 1024 * 1024;
+                NSUInteger length = (NSUInteger) imageData.length;
+                DLog(@"rep size %lu", (unsigned long) (length/1024)/1024);
+                
+                if (length < (k_lenght_chunk *1024)) {
+
+                    [imageData writeToFile:localPath atomically:YES];
+                    
+                } else {
+                    
+                    //Create file
+                    if (! [fileManager createFileAtPath:localPath contents:nil attributes:nil])
+                    {
+                        DLog(@"_error_createImageFileAtPath_ File: %@ - Path: %@ - Error was code: %d - message: %s",fileName, localPath, errno, strerror(errno));
+                        
+                    } else {
+                        
+                        do {
+                            Byte *buffer = (Byte*)malloc(chunkSize);
+                            
+                            //Store the chunk size
+                            NSUInteger thisChunkSize = length - offset > chunkSize ? chunkSize : length - offset;
+                            
+                            NSRange rangeBytes= NSMakeRange(offset,thisChunkSize);
+                            [imageData getBytes:buffer range:rangeBytes];
+                            NSUInteger k = rangeBytes.length - rangeBytes.location;
+                            NSData *adata = [NSData dataWithBytes:buffer length:thisChunkSize];
+                            
+                            DLog(@"Write buffer in file: %@", localPath);
+                            NSFileHandle *fileHandle=[NSFileHandle fileHandleForWritingAtPath:localPath];
+                            [fileHandle seekToEndOfFile];
+                            [fileHandle writeData:adata];
+                            [fileHandle closeFile];
+                            
+                            //Avanced position
+                            offset += thisChunkSize;
+                            
+                            //Free memory
+                            free(buffer);
+                            fileHandle=nil;
+                            adata=nil;
+                        } while (offset < length);
+                    }
+                }
+             
+                if (![fileManager fileExistsAtPath:localPath])
+                {
+                    DLog(@"_error_createImageFileAtPath_ fileNotExists - File: %@ - Path: %@ - Error was code: %d - message: %s",fileName, localPath, errno, strerror(errno));
+                    
+                } else {
+                
+                    UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
+                    currentUpload.originPath = localPath;
+                    currentUpload.destinyFolder = remoteFolder;
+                    currentUpload.uploadFileName = fileName;
+                    currentUpload.estimateLength = imageData.length;;
+                    currentUpload.userId = currentUser.idUser;
+                    currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
+                    currentUpload.status = waitingAddToUploadList;
+                    currentUpload.chunksLength = k_lenght_chunk;
+                    currentUpload.uploadedDate = 0;
+                    currentUpload.kindOfError = notAnError;
+                    currentUpload.isInternalUpload = YES;
+                    currentUpload.taskIdentifier = 0;
+                    
+                    UploadFile(localPath, currentUpload);
+                }
             }
-            
-            UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
-            currentUpload.originPath = localPath;
-            currentUpload.destinyFolder = remoteFolder;
-            currentUpload.uploadFileName = fileName;
-            currentUpload.estimateLength = imageData.length;;
-            currentUpload.userId = currentUser.idUser;
-            currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
-            currentUpload.status = waitingAddToUploadList;
-            currentUpload.chunksLength = k_lenght_chunk;
-            currentUpload.uploadedDate = 0;
-            currentUpload.kindOfError = notAnError;
-            currentUpload.isInternalUpload = YES;
-            currentUpload.taskIdentifier = 0;
-            
-            UploadFile(localPath, currentUpload);
         }];
     } else if (assetToUpload.mediaType == PHAssetMediaTypeVideo) {
+        
         [[PHImageManager defaultManager] requestPlayerItemForVideo:assetToUpload options:nil resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
             
-            //PHImageFileSandboxExtensionTokenKey = "3c58769e46e62a7eed5f9c5fde03e3e063ffabc9;00000000;00000000;000000000000001b;com.apple.avasset.read-only;00000001;01000004;0000000002b1a808;/users/jon/library/developer/coresimulator/devices/a022a96f-3de3-4de7-a0a5-d7b5465e8657/data/media/dcim/100apple/img_0006.mov";
             NSString *videoFilePath;
             NSArray *tokenizedPHImageFileSandboxExtensionTokenKey = [info[@"PHImageFileSandboxExtensionTokenKey"] componentsSeparatedByString:@";"];
             for (NSString *substring in tokenizedPHImageFileSandboxExtensionTokenKey) {
@@ -190,23 +245,31 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                 [exportSession exportAsynchronouslyWithCompletionHandler:^{
                     NSData *videoData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:localPath]];
                     
-                    [fileManager createFileAtPath:localPath contents:videoData attributes:nil];
-                    
-                    UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
-                    currentUpload.originPath = localPath;
-                    currentUpload.destinyFolder = remoteFolder;
-                    currentUpload.uploadFileName = fileName;
-                    currentUpload.estimateLength = videoData.length;;
-                    currentUpload.userId = currentUser.idUser;
-                    currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
-                    currentUpload.status = waitingAddToUploadList;
-                    currentUpload.chunksLength = k_lenght_chunk;
-                    currentUpload.uploadedDate = 0;
-                    currentUpload.kindOfError = notAnError;
-                    currentUpload.isInternalUpload = YES;
-                    currentUpload.taskIdentifier = 0;
-                    
-                    UploadFile(localPath, currentUpload);
+                    if (videoData && localPath) {
+                        
+                        if (![fileManager createFileAtPath:localPath contents:videoData attributes:nil])
+                        {
+                            DLog(@"_error_createVideoFileAtPath_ File: %@ - Path: %@ - Error was code: %d - message: %s",fileName, localPath, errno, strerror(errno));
+                            
+                        } else {
+                            
+                            UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
+                            currentUpload.originPath = localPath;
+                            currentUpload.destinyFolder = remoteFolder;
+                            currentUpload.uploadFileName = fileName;
+                            currentUpload.estimateLength = videoData.length;;
+                            currentUpload.userId = currentUser.idUser;
+                            currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
+                            currentUpload.status = waitingAddToUploadList;
+                            currentUpload.chunksLength = k_lenght_chunk;
+                            currentUpload.uploadedDate = 0;
+                            currentUpload.kindOfError = notAnError;
+                            currentUpload.isInternalUpload = YES;
+                            currentUpload.taskIdentifier = 0;
+                            
+                            UploadFile(localPath, currentUpload);
+                        }
+                    }
                 }];
             }
         }];
