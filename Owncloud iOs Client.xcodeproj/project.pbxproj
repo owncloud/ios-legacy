@@ -4639,7 +4639,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "LASTGITCOMMIT=$(git rev-parse --short HEAD)\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"LastGitCommit\" \"${LASTGITCOMMIT}\"\n";
+			shellScript = "LASTGITCOMMIT=$(git rev-parse --short HEAD)\nLASTGITSUBMODULECOMMIT=$(git submodule status | awk '{print $1}' | head -n 1)\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"LastGitCommit\" \"${LASTGITCOMMIT}\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"LastGitSubmoduleCommit\" \"${LASTGITSUBMODULECOMMIT}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

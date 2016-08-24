@@ -87,6 +87,9 @@
 	<true/>
 	<key>LastGitCommit</key>
 	<string></string>
+	<key>LastGitSubmoduleCommit
+LastGitSubmoduleCommit</key>
+	<string></string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
