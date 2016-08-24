@@ -16,9 +16,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.htm
 import Foundation
 import UIKit
 
-let IS_IPHONE = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.Phone
-let IS_PORTRAIT = UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication().statusBarOrientation)
-let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+let IS_IPHONE = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone
+let IS_PORTRAIT = UIInterfaceOrientationIsPortrait(UIApplication.shared.statusBarOrientation)
+let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
 
 

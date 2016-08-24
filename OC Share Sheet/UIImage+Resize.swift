@@ -16,17 +16,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.htm
 import Foundation
 
 extension UIImage {
-    public func resize(size:CGSize, completionHandler:(resizedImage:UIImage, data:NSData)->()) {
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), { () -> Void in
+    public func resize(_ size:CGSize, completionHandler:@escaping (_ resizedImage:UIImage, _ data:Data)->()) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async(execute: { () -> Void in
             let newSize:CGSize = size
-            let rect = CGRectMake(0, 0, newSize.width, newSize.height)
+            let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
             UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
-            self.drawInRect(rect)
+            self.draw(in: rect)
             let newImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
-            let imageData = UIImageJPEGRepresentation(newImage, 0.5)
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                completionHandler(resizedImage: newImage, data:imageData!)
+            let imageData = UIImageJPEGRepresentation(newImage!, 0.5)
+            DispatchQueue.main.async(execute: { () -> Void in
+                completionHandler(newImage!, imageData!)
             })
         })
     }

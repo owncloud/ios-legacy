@@ -27,19 +27,19 @@ class ShareLinkHeaderCell:UITableViewCell {
         self.setup()
     }
     
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         // Configure the view for the selected state
     }
 
-    private func setup(){
+    fileprivate func setup(){
         
-        switchSection.backgroundColor = UIColor.whiteColor()
+        switchSection.backgroundColor = UIColor.white
         switchSection.layer.cornerRadius = switchCornerRadious
         
-        self.contentView.backgroundColor = UIColor.colorOfNavigationBar()
-        titleSection.textColor = UIColor.colorOfNavigationTitle()
+        self.contentView.backgroundColor = UIColor.ofNavigationBar()
+        titleSection.textColor = UIColor.ofNavigationTitle()
     }
     
 }
