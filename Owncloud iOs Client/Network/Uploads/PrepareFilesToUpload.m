@@ -138,7 +138,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     if (assetToUpload.mediaType == PHAssetMediaTypeImage) {
         [[PHImageManager defaultManager] requestImageDataForAsset:assetToUpload options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
             
-            NSFileManager *fileManager = [NSFileManager defaultManager];
+            NSFileManager *fileManager = [[NSFileManager alloc] init];
             if ([fileManager fileExistsAtPath:localPath]) {
                 [fileManager removeItemAtPath:localPath error:nil];
             }
@@ -148,13 +148,13 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                 //Divide the file in chunks of 1024KB, then create the file with all chunks
                 
                 //Variables
-                NSUInteger offset = 0;
+               __block NSUInteger offset = 0;
                 NSUInteger chunkSize = 1024 * 1024;
                 NSUInteger length = (NSUInteger) imageData.length;
-                DLog(@"rep size %lu", (unsigned long) (length/1024)/1024);
+                DLog(@"_assetFileSize_: %lu length: %lu", (unsigned long) (length/1024)/1024, length );
                 
                 if (length < (k_lenght_chunk *1024)) {
-
+                     DLog(@"_copyingDirectlyFile_ - File: %@ - Path: %@ ",fileName, localPath);
                     [imageData writeToFile:localPath atomically:YES];
                     
                 } else {
@@ -165,32 +165,35 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                         DLog(@"_error_createImageFileAtPath_ File: %@ - Path: %@ - Error was code: %d - message: %s",fileName, localPath, errno, strerror(errno));
                         
                     } else {
+                         DLog(@"_copyingFile_ - File: %@ - Path: %@ ",fileName, localPath);
                         
-                        do {
-                            Byte *buffer = (Byte*)malloc(chunkSize);
-                            
-                            //Store the chunk size
-                            NSUInteger thisChunkSize = length - offset > chunkSize ? chunkSize : length - offset;
-                            
-                            NSRange rangeBytes= NSMakeRange(offset,thisChunkSize);
-                            [imageData getBytes:buffer range:rangeBytes];
-                            NSUInteger k = rangeBytes.length - rangeBytes.location;
-                            NSData *adata = [NSData dataWithBytes:buffer length:thisChunkSize];
-                            
-                            DLog(@"Write buffer in file: %@", localPath);
-                            NSFileHandle *fileHandle=[NSFileHandle fileHandleForWritingAtPath:localPath];
-                            [fileHandle seekToEndOfFile];
-                            [fileHandle writeData:adata];
-                            [fileHandle closeFile];
-                            
-                            //Avanced position
-                            offset += thisChunkSize;
-                            
-                            //Free memory
-                            free(buffer);
-                            fileHandle=nil;
-                            adata=nil;
-                        } while (offset < length);
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                            do {
+                                Byte *buffer = (Byte*)malloc(chunkSize);
+                                
+                                //Store the chunk size
+                                NSUInteger thisChunkSize = length - offset > chunkSize ? chunkSize : length - offset;
+                                
+                                NSRange rangeBytes= NSMakeRange(offset,thisChunkSize);
+                                [imageData getBytes:buffer range:rangeBytes];
+                                //NSUInteger k = rangeBytes.length - rangeBytes.location;
+                                NSData *adata = [NSData dataWithBytes:buffer length:thisChunkSize];
+                                
+                                DLog(@"Write buffer in file: %@", localPath);
+                                NSFileHandle *fileHandle=[NSFileHandle fileHandleForWritingAtPath:localPath];
+                                [fileHandle seekToEndOfFile];
+                                [fileHandle writeData:adata];
+                                [fileHandle closeFile];
+                                
+                                //Avanced position
+                                offset += thisChunkSize;
+                                
+                                //Free memory
+                                free(buffer);
+                                fileHandle=nil;
+                                adata=nil;
+                            } while (offset < length);
+                        });
                     }
                 }
              
@@ -199,6 +202,8 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                     DLog(@"_error_createImageFileAtPath_ fileNotExists - File: %@ - Path: %@ - Error was code: %d - message: %s",fileName, localPath, errno, strerror(errno));
                     
                 } else {
+                    
+                    DLog(@"_fileReadyToAddUploadsQueue_ - File: %@ - Path: %@ ",fileName, localPath);
                 
                     UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
                     currentUpload.originPath = localPath;
