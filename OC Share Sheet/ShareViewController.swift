@@ -477,7 +477,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         
         if (type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue){
             //Image
-            let fileName: NSString = (url.path as NSString).lastPathComponent
+            let fileName: NSString = ((url.path as NSString).lastPathComponent  as NSString);
             if row < images.count {
                 cell.imageForFile?.image = images[indexPath.row];
             }
