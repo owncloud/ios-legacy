@@ -290,7 +290,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
                 //We check the connection here because we need to accept the certificate on the self signed server
                 (CheckAccessToServer.sharedManager() as? CheckAccessToServer)!.delegate = selectFolderViewController
                 (CheckAccessToServer.sharedManager() as? CheckAccessToServer)!.viewControllerToShow = selectFolderViewController
-                CheckAccessToServer.sharedManager().isConnectionToTheServer(byUrl: activeUser.url)
+                (CheckAccessToServer.sharedManager() as? CheckAccessToServer)!.isConnectionToTheServer(byUrl: activeUser!.url)
             }
         } else {
             showAlertView(NSLocalizedString("error_login_doc_provider", comment: ""))
