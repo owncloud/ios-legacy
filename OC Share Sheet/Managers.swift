@@ -17,42 +17,26 @@ import UIKit
 
 class Managers: NSObject {
     
-    private static var __once1: () = {
-            let sharedOCCommunication = OCCommunication()
-        }()
-    
-    private static var __once: () = {
-            var sharedDatabase = FMDatabaseQueue()
-            
-            let documentsDir = UtilsUrls.getOwnCloudFilePath()
-            let dbPath = documentsDir! + "DB.sqlite"
-            
-            sharedDatabase = FMDatabaseQueue(path: dbPath, flags: SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE)
-        }()
-    
     //MARK: FMDataBase
     class var sharedDatabase: FMDatabaseQueue {
         struct Static {
-            static var sharedDatabase: FMDatabaseQueue?
-            static var tokenDatabase: Int = 0
+            let documentsDir = UtilsUrls.getOwnCloudFilePath()
+            let dbPath = documentsDir.stringByAppendingString("DB.sqlite")
+            
+            static let sharedDatabase: FMDatabaseQueue = FMDatabaseQueue(path: dbPath, flags: SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE)
         }
         
-        _ = Managers.__once
-        
-        return Static.sharedDatabase!
+        return Static.sharedDatabase
     }
     
     
     //MARK: OCCommunication
     class var sharedOCCommunication: OCCommunication {
         struct Static {
-            static var sharedOCCommunication: OCCommunication?
-            static var tokenCommunication: Int = 0
+            static let sharedOCCommunication: OCCommunication = OCCommunication()
         }
         
-        _ = Managers.__once1
-        
-        return Static.sharedOCCommunication!
+        return Static.sharedOCCommunication
     }
 }
 
