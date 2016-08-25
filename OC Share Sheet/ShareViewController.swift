@@ -39,7 +39,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 
-@objc class ShareViewController: UIViewController, UITableViewDelegate, KKPasscodeViewControllerDelegate, CheckAccessToServerDelegate {
+@objc class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, KKPasscodeViewControllerDelegate, CheckAccessToServerDelegate {
     
     @IBOutlet weak var navigationBar: UINavigationBar?
     @IBOutlet weak var shareTable: UITableView?
@@ -425,8 +425,6 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
                 
                 if image != nil{
                     
-                    var resizedImage:UIImage?
-                    
                     image?.resize(CGSize(width: witdhImageSize, height: heighImageSize), completionHandler: { (resizedImage, data) -> () in
                         
                         self.images.append(resizedImage)
@@ -456,12 +454,12 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     
     //MARK: TableView Delegate and Datasource methods
     
-    func tableView(_ tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         return self.filesSelected.count
     }
     
-    func tableView(_ tableView: UITableView!, cellForRowAtIndexPath indexPath: IndexPath!) -> UITableViewCell!
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let identifier = "FileSelectedCell"
         let cell: FileSelectedCell! = tableView.dequeueReusableCell(withIdentifier: identifier ,for: indexPath) as! FileSelectedCell
@@ -511,7 +509,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         return cell
     }
     
-    func tableView(_ tableView: UITableView!, canEditRowAtIndexPath indexPath: IndexPath!) -> Bool
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
     {
         return false
     }
