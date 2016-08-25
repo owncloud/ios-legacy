@@ -18,16 +18,16 @@ import UIKit
 class Managers: NSObject {
     
     private static var __once1: () = {
-            Static.sharedOCCommunication = OCCommunication()
+            let sharedOCCommunication = OCCommunication()
         }()
     
     private static var __once: () = {
-            Static.sharedDatabase = FMDatabaseQueue()
+            var sharedDatabase = FMDatabaseQueue()
             
             let documentsDir = UtilsUrls.getOwnCloudFilePath()
             let dbPath = documentsDir! + "DB.sqlite"
             
-            Static.sharedDatabase = FMDatabaseQueue(path: dbPath, flags: SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE)
+            sharedDatabase = FMDatabaseQueue(path: dbPath, flags: SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE)
         }()
     
     //MARK: FMDataBase
