@@ -528,11 +528,11 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         print("Folder selected \(folder)")
         
         self.currentRemotePath = folder as String
-        let name:NSString = folder.replacingPercentEscapes(using: String.Encoding.utf8.rawValue)!
+        let name:NSString = (folder.replacingPercentEscapes(using: String.Encoding.utf8.rawValue)! as NSString);
         let user = ManageUsersDB.getActiveUser()
         let folderPath = UtilsUrls.getFilePathOnDB(byFullPath: name as String, andUser: user)
 
-        self.changeTheDestinyFolderWith((folderPath as NSString).lastPathComponent)
+        self.changeTheDestinyFolderWith((folderPath! as NSString).lastPathComponent)
         
     }
     
