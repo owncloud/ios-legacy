@@ -2061,9 +2061,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  *
  */
 - (void) connectToServer{
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
+        
     NSString *userName=self.usernameTextField.text;
     NSString *password=self.passwordTextField.text;
     
