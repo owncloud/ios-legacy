@@ -16,16 +16,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.htm
 import UIKit
 
 class Managers: NSObject {
+  // var documentsDir : NSString = ""
+  //  var dbPath : NSString = ""
     
     //MARK: FMDataBase
     class var sharedDatabase: FMDatabaseQueue {
-        struct Static {
-            let documentsDir = UtilsUrls.getOwnCloudFilePath()
-            let dbPath = documentsDir.stringByAppendingString("DB.sqlite")
-            
-            static let sharedDatabase: FMDatabaseQueue = FMDatabaseQueue(path: dbPath, flags: SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE)
+       struct Static {
+        static let sharedDatabase: FMDatabaseQueue = FMDatabaseQueue(path:((UtilsUrls.getOwnCloudFilePath() as NSString).appending("DB.sqlite")), flags: SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE)
         }
-        
+
         return Static.sharedDatabase
     }
     
