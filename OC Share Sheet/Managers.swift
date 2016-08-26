@@ -22,7 +22,7 @@ class Managers: NSObject {
     //MARK: FMDataBase
     class var sharedDatabase: FMDatabaseQueue {
        struct Static {
-        static let sharedDatabase: FMDatabaseQueue = FMDatabaseQueue(path:((UtilsUrls.getOwnCloudFilePath() as NSString).appending("DB.sqlite")), flags: SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE)
+        static let sharedDatabase: FMDatabaseQueue = FMDatabaseQueue(path:((UtilsUrls.getOwnCloudFilePath()).appending("DB.sqlite")), flags: SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE)
         }
 
         return Static.sharedDatabase
