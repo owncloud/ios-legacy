@@ -10,7 +10,7 @@
 
 
 /*
- Copyright (C) 2014, ownCloud, Inc.
+ Copyright (C) 2016, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
