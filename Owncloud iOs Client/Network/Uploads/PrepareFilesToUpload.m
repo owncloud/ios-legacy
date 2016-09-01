@@ -68,9 +68,8 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
 }
 
 - (void)sendFileToUploadByUploadOfflineDto:(UploadsOfflineDto *) currentUpload {
-    
-    DLog(@"self.currentUpload: %@", currentUpload.uploadFileName);
-    DLog(@"isLast: %d", currentUpload.isLastUploadFileOfThisArray);
+    NSLog(@"self.currentUpload: %@", currentUpload.uploadFileName);
+    NSLog(@"isLast: %d", currentUpload.isLastUploadFileOfThisArray);
     
     ManageUploadRequest *currentManageUploadRequest = [ManageUploadRequest new];
     currentManageUploadRequest.delegate = self;
@@ -81,6 +80,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
 }
 
 - (void) startWithTheNextAsset {
+    NSLog(@"_starWithTheNextAsset_");
     @synchronized (self) {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
@@ -97,12 +97,13 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
 }
 
 - (void) uploadAssetFromGallery:(PHAsset *) assetToUpload andRemoteFolder:(NSString *) remoteFolder andCurrentUser:(UserDto *) currentUser andIsLastFile:(BOOL) isLastUploadFileOfThisArray {
-    DLog(@"uploadAssetFromGalleryToRemoteFolder");
+    NSLog(@"_uploadAssetFromGallery_ToRemoteFolder");
     
     NSString *fileName = [FileNameUtils getComposeNameFromPHAsset:assetToUpload];
     NSString *localPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
     
     void (^UploadFile)(NSString *, UploadsOfflineDto *) = ^(NSString *localPath, UploadsOfflineDto *upload) {
+        NSLog(@"_UploadFile_ : %@ , localPath: %@", upload.uploadFileName, localPath);
         
         [self.listOfUploadOfflineToGenerateSQL addObject:upload];
         
@@ -110,9 +111,9 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             //We have more files to process
             [self startWithTheNextAsset];
         } else {
-            
+            NSLog(@"No pending asset to process");
             //We finish all the files of this block
-            DLog(@"self.listOfUploadOfflineToGenerateSQL: %lu", (unsigned long)[self.listOfUploadOfflineToGenerateSQL count]);
+            NSLog(@"self.listOfUploadOfflineToGenerateSQL: %lu", (unsigned long)[self.listOfUploadOfflineToGenerateSQL count]);
             
             //In this point we have all the files to upload in the Array
             [ManageUploadsDB insertManyUploadsOffline:self.listOfUploadOfflineToGenerateSQL];
@@ -151,10 +152,10 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                __block NSUInteger offset = 0;
                 NSUInteger chunkSize = 1024 * 1024;
                 NSUInteger length = (NSUInteger) imageData.length;
-                DLog(@"_assetFileSize_: %lu length: %lu", (unsigned long) (length/1024)/1024, length );
+                NSLog(@"_assetFileSize_: %lu length: %lu", (unsigned long) (length/1024)/1024, length );
                 
                 if (length < (k_lenght_chunk *1024)) {
-                     DLog(@"_copyingDirectlyFile_ - File: %@ - Path: %@ ",fileName, localPath);
+                     NSLog(@"_copyingFileDirectly_ - File: %@ - Path: %@ ",fileName, localPath);
                     [imageData writeToFile:localPath atomically:YES];
                     
                 } else {
@@ -163,9 +164,11 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                     if (! [fileManager createFileAtPath:localPath contents:nil attributes:nil])
                     {
                         DLog(@"_error_createImageFileAtPath_ File: %@ - Path: %@ - Error was code: %d - message: %s",fileName, localPath, errno, strerror(errno));
+                        NSLog(@"_error_createImageFileAtPath_ File: %@ - Path: %@ - Error was code: %d - message: %s",fileName, localPath, errno, strerror(errno));
                         
                     } else {
                          DLog(@"_copyingFile_ - File: %@ - Path: %@ ",fileName, localPath);
+                        NSLog(@"_copyingFile_ - File: %@ - Path: %@ ",fileName, localPath);
                         
                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                             do {
@@ -200,27 +203,24 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                 if (![fileManager fileExistsAtPath:localPath])
                 {
                     DLog(@"_error_createImageFileAtPath_ fileNotExists - File: %@ - Path: %@ - Error was code: %d - message: %s",fileName, localPath, errno, strerror(errno));
-                    
-                } else {
-                    
-                    DLog(@"_fileReadyToAddUploadsQueue_ - File: %@ - Path: %@ ",fileName, localPath);
-                
-                    UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
-                    currentUpload.originPath = localPath;
-                    currentUpload.destinyFolder = remoteFolder;
-                    currentUpload.uploadFileName = fileName;
-                    currentUpload.estimateLength = imageData.length;;
-                    currentUpload.userId = currentUser.idUser;
-                    currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
-                    currentUpload.status = waitingAddToUploadList;
-                    currentUpload.chunksLength = k_lenght_chunk;
-                    currentUpload.uploadedDate = 0;
-                    currentUpload.kindOfError = notAnError;
-                    currentUpload.isInternalUpload = YES;
-                    currentUpload.taskIdentifier = 0;
-                    
-                    UploadFile(localPath, currentUpload);
+                    NSLog(@"_error_createImageFileAtPath_ fileNotExists - File: %@ - Path: %@ - Error was code: %d - message: %s",fileName, localPath, errno, strerror(errno));
                 }
+                
+                UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
+                currentUpload.originPath = localPath;
+                currentUpload.destinyFolder = remoteFolder;
+                currentUpload.uploadFileName = fileName;
+                currentUpload.estimateLength = imageData.length;;
+                currentUpload.userId = currentUser.idUser;
+                currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
+                currentUpload.status = waitingAddToUploadList;
+                currentUpload.chunksLength = k_lenght_chunk;
+                currentUpload.uploadedDate = 0;
+                currentUpload.kindOfError = notAnError;
+                currentUpload.isInternalUpload = YES;
+                currentUpload.taskIdentifier = 0;
+                
+                UploadFile(localPath, currentUpload);
             }
         }];
     } else if (assetToUpload.mediaType == PHAssetMediaTypeVideo) {
@@ -255,25 +255,25 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                         if (![fileManager createFileAtPath:localPath contents:videoData attributes:nil])
                         {
                             DLog(@"_error_createVideoFileAtPath_ File: %@ - Path: %@ - Error was code: %d - message: %s",fileName, localPath, errno, strerror(errno));
-                            
-                        } else {
-                            
-                            UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
-                            currentUpload.originPath = localPath;
-                            currentUpload.destinyFolder = remoteFolder;
-                            currentUpload.uploadFileName = fileName;
-                            currentUpload.estimateLength = videoData.length;;
-                            currentUpload.userId = currentUser.idUser;
-                            currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
-                            currentUpload.status = waitingAddToUploadList;
-                            currentUpload.chunksLength = k_lenght_chunk;
-                            currentUpload.uploadedDate = 0;
-                            currentUpload.kindOfError = notAnError;
-                            currentUpload.isInternalUpload = YES;
-                            currentUpload.taskIdentifier = 0;
-                            
-                            UploadFile(localPath, currentUpload);
+                            NSLog(@"_error_createVideoFileAtPath_ File: %@ - Path: %@ - Error was code: %d - message: %s",fileName, localPath, errno, strerror(errno));
                         }
+                            
+                        UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
+                        currentUpload.originPath = localPath;
+                        currentUpload.destinyFolder = remoteFolder;
+                        currentUpload.uploadFileName = fileName;
+                        currentUpload.estimateLength = videoData.length;;
+                        currentUpload.userId = currentUser.idUser;
+                        currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
+                        currentUpload.status = waitingAddToUploadList;
+                        currentUpload.chunksLength = k_lenght_chunk;
+                        currentUpload.uploadedDate = 0;
+                        currentUpload.kindOfError = notAnError;
+                        currentUpload.isInternalUpload = YES;
+                        currentUpload.taskIdentifier = 0;
+                        
+                        UploadFile(localPath, currentUpload);
+                
                     }
                 }];
             }
@@ -285,6 +285,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
  * This method close the loading view in main screen by local notification
  */
 - (void)endLoadingInFileList {
+    NSLog(@"_endLoadingInFileList_");
     //Set global loading screen global flag to NO
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     app.isLoadingVisible = NO;
@@ -296,6 +297,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
  * This method close the loading view in main screen by local notification
  */
 - (void)initLoadingInFileList {
+    NSLog(@"_initLoadingInFileList_");
     //Set global loading screen global flag to NO
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     app.isLoadingVisible = YES;
@@ -333,12 +335,12 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
  */
 
 - (void)uploadCompleted:(NSString *) currentRemoteFolder {
-    DLog(@"uploadCompleted");
+    NSLog(@"uploadCompleted");
     
     if (_delegate) {
         [_delegate refreshAfterUploadAllFiles:currentRemoteFolder];
     } else {
-        DLog(@"_delegate is nil");
+        NSLog(@"_delegate is nil");
     }
     
     //Update the Recent Tab for update the number of error in the badge
@@ -370,12 +372,12 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
 }
 
 - (void)uploadCanceled:(NSObject*)up{
-    DLog(@"uploadCanceled");
+    NSLog(@"_uploadCanceled_");
 }
 
 //Control of the number of lost connecition to send only one message for the user
 - (void)uploadLostConnectionWithServer:(NSString*)string{
-    DLog(@"uploadLostConnectionWithServer:%@", string);
+    NSLog(@"_uploadLostConnectionWithServer_:%@", string);
     
     //Error msg
     //Call showAlertView in main thread

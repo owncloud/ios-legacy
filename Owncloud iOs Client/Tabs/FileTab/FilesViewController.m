@@ -698,7 +698,8 @@
  * Method that launch the loading screen and block the view
  */
 -(void)initLoading {
-    
+    NSLog(@"_initLoading_ FilesViewController");
+    //dispatch_async(dispatch_get_main_queue(), ^{
     if (self.HUD) {
         [self.HUD removeFromSuperview];
         self.HUD=nil;
@@ -730,6 +731,7 @@
     self.navigationController.navigationBar.userInteractionEnabled = NO;
     self.tabBarController.tabBar.userInteractionEnabled = NO;
     [self.view.window setUserInteractionEnabled:NO];
+    //});
 }
 
 
@@ -737,6 +739,7 @@
  * Method that quit the loading screen and unblock the view
  */
 - (void)endLoading {
+    NSLog(@"_endLoading_ FilesViewController");
     
     if (!self.isLoadingForNavigate) {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1179,7 +1182,8 @@
     
     NSArray *info = [args objectForKey:@"info"];
     NSString *remoteURLToUpload = [args objectForKey:@"remoteURLToUpload"];
-        
+    
+    NSLog(@"_initUploadFileFromGalleryInOtherThread_");
     /*
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
@@ -1222,7 +1226,7 @@
    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.prepareFiles addAssetsToUploadFromArray:info andRemoteFoldersToUpload: arrayOfRemoteurl];
-    
+    NSLog(@"_InitPrepareFiles_ n: %lu files", (unsigned long)[arrayOfRemoteurl count]);
     //Init loading to prepare files to upload
     dispatch_async(dispatch_get_main_queue(), ^{
         [self initLoading];
