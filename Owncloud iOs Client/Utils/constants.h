@@ -83,3 +83,7 @@
 #define k_thumbnails_height 64
 #define k_thumbnails_width 64
 
+//Commit versions
+#define k_commit_oc_app @"2a30677bd450c64a6e42f256e1e1ff4f1c9fcf80"
+#define k_commit_oc_library @"2fe22474539e00aa959d6a601ba322f89e7be173"
+

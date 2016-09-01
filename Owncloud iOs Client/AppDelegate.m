@@ -98,8 +98,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     NSString *lastGitCommit = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"LastGitCommit"];
     NSString *lastGitSubmoduleCommit = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"LastGitSubmoduleCommit"];
     
-    DLog(@"Init, OC iOS app (%@)", lastGitCommit);
-    DLog(@"OC iOS library (%@)", lastGitSubmoduleCommit);
+    NSLog(@"Init, OC iOS app (%@) (commit after compile)", lastGitCommit);
+    NSLog(@"Init, OC iOS library (%@) (commit after compile)", lastGitSubmoduleCommit);
+    NSLog(@"OC iOS app (%@)",k_commit_oc_app);
+    NSLog(@"OC iOS library (%@)",k_commit_oc_library);
+
+    
     
     self.oauthToken = @"";
     
