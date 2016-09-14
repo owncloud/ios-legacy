@@ -19,7 +19,7 @@
 
 
 @class UploadsOfflineDto;
-@interface RecentViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, OverwriteFileOptionsDelegate, SelectFolderDelegate, UIAlertViewDelegate, UITextFieldDelegate>
+@interface RecentViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, OverwriteFileOptionsDelegate, SelectFolderDelegate, UIAlertViewDelegate, UITextFieldDelegate, UIActionSheetDelegate>
  
 @property (nonatomic,strong) IBOutlet UITableView *uploadsTableView;
 @property(nonatomic,strong) UIAlertView *renameAlertView;
@@ -37,6 +37,8 @@
 
 @property (nonatomic, strong) UploadsOfflineDto *selectedFileDtoToResolveNotPermission;
 
+//UIActionSheet for + button
+@property (nonatomic,strong) UIActionSheet *plusActionSheet;
 
 - (void)updateRecents;
 - (void) updateProgressView:(NSUInteger)num withPercent:(float)percent;
