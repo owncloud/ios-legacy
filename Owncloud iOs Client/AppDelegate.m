@@ -720,7 +720,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     static SyncFolderManager* sharedSyncFolderManager = nil;
     
     if (sharedSyncFolderManager == nil) {
-        sharedSyncFolderManager = [SyncFolderManager new];
+        sharedSyncFolderManager = [[SyncFolderManager alloc] init];
     }
     
     return sharedSyncFolderManager;
@@ -731,7 +731,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     static ManageFavorites* manageFavorites = nil;
     
     if (manageFavorites == nil) {
-        manageFavorites = [ManageFavorites new];
+        manageFavorites = [[ManageFavorites alloc] init];
     }
     
     return manageFavorites;
@@ -746,7 +746,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void) launchProcessToSyncAllFavorites {
     
     //Do operations in background thread
-    [[AppDelegate sharedManageFavorites] syncAllFavoritesOfUser:_activeUser.idUser];
+    [[AppDelegate sharedManageFavorites] syncAllFavoritesOfUser:self.activeUser.idUser];
     
 }
 
@@ -1345,7 +1345,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         //Files download folder pending to be download
         
-        NSMutableArray *listOfFilesToBeDownloaded = [AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded;
+        NSMutableArray *listOfFilesToBeDownloaded = [[NSMutableArray alloc] initWithArray: [AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded];
         
         for (DownloadFileSyncFolder *download in listOfFilesToBeDownloaded) {
             for (FileDto *file in downloadsFromDB) {
@@ -1372,7 +1372,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     DLog(@"Download in background task finish");
     [[AppDelegate sharedOCCommunicationDownloadFolder] setDownloadTaskComleteBlock:^NSURL *(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location) {
         
-        NSMutableArray *listOfFilesToBeDownloaded = [AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.copy;
+        NSMutableArray *listOfFilesToBeDownloaded = [[NSMutableArray alloc] initWithArray: [AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded];
         
         for (DownloadFileSyncFolder *download in listOfFilesToBeDownloaded) {
             

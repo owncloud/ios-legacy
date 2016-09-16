@@ -126,7 +126,13 @@
     [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded removeFileFromTheForest:self.file];
     
     [self reloadCellFromDataBase];
-    [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
+    //DLog(@"Success: number of listOfFileToBeDownloaded: %lu, remove: %@ ",(unsigned long)[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count, self.file.fileName);
+    if ([[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded containsObject:self]) {
+
+        [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
+        DLog(@"Success: number of listOfFileToBeDownloaded: %lu, after remove: %@ already downloaded",(unsigned long)[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count, self.file.fileName);
+    }
+
     [self resumeNextDownloadFromQueue];
     
     //On Ipad reload the preview if the file is the same has been updated
@@ -161,8 +167,12 @@
     }
     
     [self reloadCellFromDataBase];
-    [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
-    [self resumeNextDownloadFromQueue];
+    //DLog(@"number of listOfFileToBeDownloaded: %lu, remove: %@ ",(unsigned long)[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count, self.file.fileName);
+    if ([[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded containsObject:self]) {
+        [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
+        DLog(@"number of listOfFileToBeDownloaded: %lu, after remove: %@ ",(unsigned long)[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count, self.file.fileName);
+    }
+
 }
 
 - (void) cancelDownload {
@@ -180,6 +190,7 @@
 }
 
 - (void) resumeNextDownloadFromQueue {
+    DLog(@"resumeNextDownloadFromQueue");
     if (k_is_sso_active || !k_is_background_active) {
         if ([AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count > 0) {
             DownloadFileSyncFolder *download = (DownloadFileSyncFolder *) [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded objectAtIndex:0];
