@@ -15,6 +15,8 @@
 
 #import "UIColor+Constants.h"
 
+#import "UIColor+Constant.h"
+
 @implementation UIColor(Constants)
 
 //NAVIGATION AND TOOL BAR
