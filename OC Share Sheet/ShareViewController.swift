@@ -264,7 +264,8 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
             }
             
         } else {
-            showAlertView(NSLocalizedString("error_login_doc_provider", comment: ""))
+            let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+            showAlertView((NSLocalizedString("error_login_doc_provider", comment: "") as NSString).replacingOccurrences(of: "$appname", with: appName!))
         }
     }
     
@@ -293,7 +294,8 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
                 (CheckAccessToServer.sharedManager() as? CheckAccessToServer)!.isConnectionToTheServer(byUrl: activeUser!.url)
             }
         } else {
-            showAlertView(NSLocalizedString("error_login_doc_provider", comment: ""))
+            let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+            showAlertView((NSLocalizedString("error_login_doc_provider", comment: "") as NSString).replacingOccurrences(of: "$appname", with: appName!))
         }
     }
     
