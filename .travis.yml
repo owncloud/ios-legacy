@@ -4,9 +4,9 @@ xcode_project: Owncloud iOs Client.xcodeproj
 xcode_scheme: Owncloud iOs Client
 xcode_sdk: iphonesimulator
 
-#script:
-#- xcodebuild -project 'Owncloud iOs Client.xcodeproj' -scheme 'Owncloud iOs Client' -sdk iphonesimulator -UseSanitizedBuildSystemEnvironment=YES
+script:
+- xcodebuild -project 'Owncloud iOs Client.xcodeproj' -scheme 'Owncloud iOs Client' -sdk iphonesimulator -UseSanitizedBuildSystemEnvironment=YES
 
 
 before_install:
-  - brew update;  brew update
+  - brew update
