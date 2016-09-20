@@ -106,7 +106,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                               error.code == kCFURLErrorServerCertificateNotYetValid)
                                           {
                                               if (![self isTemporalCertificateTrusted]) {
-                                                  [self acceptCertificateAndRetryCheckToTheServer];
+                                                  [self askToAcceptCertificate];
                                               }
                                               
                                               
