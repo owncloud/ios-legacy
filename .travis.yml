@@ -2,7 +2,7 @@ language: objective-c
 osx_image: xcode8
 xcode_project: Owncloud iOs Client.xcodeproj
 xcode_scheme: Owncloud iOs Client
-xcode_sdk: 
+xcode_sdk: iphonesimulator
 
 script:
 - xcodebuild -project 'Owncloud iOs Client.xcodeproj' -scheme 'Owncloud iOs Client' -sdk iphonesimulator -UseSanitizedBuildSystemEnvironment=YES
