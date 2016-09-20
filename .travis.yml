@@ -9,4 +9,5 @@ xcode_sdk: iphonesimulator
 
 
 before_install:
-  - brew update; brew update
+  - brew update
+  - brew outdated xctool || brew upgrade xctool
