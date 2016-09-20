@@ -9,4 +9,4 @@ script:
 
 
 before_install:
-  - brew update; brew update
+- brew update; brew update
