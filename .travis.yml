@@ -1,13 +1,13 @@
 language: objective-c
 osx_image: xcode8
-xcode_project: Owncloud iOs Client.xcodeproj
-xcode_scheme: Owncloud iOs Client
-xcode_sdk: iphonesimulator
+#xcode_project: Owncloud iOs Client.xcodeproj
+#xcode_scheme: Owncloud iOs Client
+xcode_sdk: iphonesimulator10.0
 
 script:
- - xcodebuild -project 'Owncloud iOs Client.xcodeproj' -scheme 'Owncloud iOs Client' -sdk iphonesimulator -UseSanitizedBuildSystemEnvironment=YES
+ - xcodebuild -project 'Owncloud iOs Client.xcodeproj' -scheme 'Owncloud iOs Client' -sdk iphonesimulator
+#-UseSanitizedBuildSystemEnvironment=YES
 
-
-before_install:
-  - brew update; brew update
-  #- brew outdated xctool || brew upgrade xctool
+#before_install:
+#  - brew update; brew update
+#- brew outdated xctool || brew upgrade xctool
