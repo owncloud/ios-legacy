@@ -264,7 +264,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     picker.assetGroupName = [[self.assetGroups objectAtIndex:indexPath.row] allKeys][0];
     picker.assetPickerFilterDelegate = self.assetPickerFilterDelegate;
 	
-	[self.navigationController pushViewController:picker animated:YES];
+	[self.navigationController pushViewController:picker animated:NO];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

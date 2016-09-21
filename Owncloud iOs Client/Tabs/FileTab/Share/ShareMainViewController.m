@@ -1114,7 +1114,7 @@
         ssuvc.shareFileDto = self.sharedItem;
         [ssuvc setAndAddSelectedItems:self.sharedUsersOrGroups];
         self.activityView = nil;
-        [self.navigationController pushViewController:ssuvc animated:true];
+        [self.navigationController pushViewController:ssuvc animated:NO];
     }else{
         [self showErrorWithTitle:NSLocalizedString(@"not_sharee_api_supported", nil)];
         
