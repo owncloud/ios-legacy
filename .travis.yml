@@ -2,10 +2,10 @@ language: objective-c
 osx_image: xcode8
 #xcode_project: Owncloud iOs Client.xcodeproj
 #xcode_scheme: Owncloud iOs Client
-xcode_sdk: iphonesimulator10.0
+#xcode_sdk: iphonesimulator
 
 script:
- - xcodebuild -project 'Owncloud iOs Client.xcodeproj' -scheme 'Owncloud iOs Client' -sdk iphonesimulator build | xcpretty -c
+ - xcodebuild -project 'Owncloud iOs Client.xcodeproj' -scheme 'Owncloud iOs Client' -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=10.0,name=iPhone 6' build test | xcpretty -c --test --color
 #-UseSanitizedBuildSystemEnvironment=YES
 
 #before_install:
