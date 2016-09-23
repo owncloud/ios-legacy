@@ -63,9 +63,11 @@
 /*
  * Methods manage instant uploads photos
  */
-+(BOOL)isInstantUpload;
++(BOOL)isImageInstantUpload;
++(BOOL)isVideoInstantUpload;
 +(BOOL)isBackgroundInstantUpload;
-+(void)updateInstantUploadTo:(BOOL)instantUpload;
++(void)updateImageInstantUploadTo:(BOOL)instantUpload;
++(void)updateVideoInstantUploadTo:(BOOL)instantUpload;
 +(void)updateBackgroundInstantUploadTo:(BOOL)newValue;
 +(void)updatePathInstantUpload:(NSString *)newValue;
 +(void)updateInstantUploadAllUser;

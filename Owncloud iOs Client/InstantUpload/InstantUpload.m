@@ -9,7 +9,7 @@
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*/
+ */
 
 #import <CoreLocation/CoreLocation.h>
 #import <Photos/Photos.h>
@@ -61,30 +61,67 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (BOOL) enabled {
-    return ACTIVE_USER.instantUpload;
+- (BOOL) imageInstantUploadEnabled {
+    return ACTIVE_USER.imageInstantUpload;
+}
+
+- (BOOL) videoInstantUploadEnabled {
+    return ACTIVE_USER.videoInstantUpload;
 }
 
 - (BOOL) backgroundInstantUploadEnabled {
     return ACTIVE_USER.backgroundInstantUpload;
 }
 
-- (void) setEnabled:(BOOL)enabled {
+- (void) setImageInstantUploadEnabled:(BOOL)enabled {
     @synchronized (self) {
-        if (enabled != self.enabled) {
-            if (enabled) {
-                if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
-                    ACTIVE_USER.instantUpload = YES;
-                    [ManageAppSettingsDB updateInstantUploadTo:YES];
-                    ACTIVE_USER.timestampInstantUpload = [[NSDate date] timeIntervalSince1970];;
-                    [ManageAppSettingsDB updateTimestampInstantUpload:ACTIVE_USER.timestampInstantUpload];
-                    [PHPhotoLibrary.sharedPhotoLibrary registerChangeObserver:self];
+        if (enabled != self.imageInstantUploadEnabled) {
+            if (!self.imageInstantUploadEnabled) {
+                if (self.videoInstantUploadEnabled) {
+                    ACTIVE_USER.imageInstantUpload = YES;
+                    [ManageAppSettingsDB updateImageInstantUploadTo:YES];
+                    [self attemptUpload];
                 } else {
-                    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-                        if (status == PHAuthorizationStatusAuthorized) {
-                            ACTIVE_USER.instantUpload = YES;
-                            [ManageAppSettingsDB updateInstantUploadTo:YES];
-                            ACTIVE_USER.timestampInstantUpload = [[NSDate date] timeIntervalSince1970];;
+                    [self getMediaLibraryPermission:^(BOOL granted) {
+                        if (granted) {
+                            ACTIVE_USER.videoInstantUpload = YES;
+                            [ManageAppSettingsDB updateImageInstantUploadTo:YES];
+                            ACTIVE_USER.timestampInstantUpload = [[NSDate date] timeIntervalSince1970];
+                            [ManageAppSettingsDB updateTimestampInstantUpload:ACTIVE_USER.timestampInstantUpload];
+                            [PHPhotoLibrary.sharedPhotoLibrary registerChangeObserver:self];
+                            [self attemptUpload];
+                        } else {
+                            [self showAlertViewWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil) body:NSLocalizedString(@"message_access_photos_not_enabled", nil)];
+                            [self.delegate instantUploadPermissionLostOrDenied];
+                        }
+                    }];
+                }
+            } else{
+                ACTIVE_USER.imageInstantUpload = NO;
+                [ManageAppSettingsDB updateImageInstantUploadTo:NO];
+                if (!self.videoInstantUploadEnabled) {
+                    [PHPhotoLibrary.sharedPhotoLibrary unregisterChangeObserver:self];
+                    [self setBackgroundInstantUploadEnabled:NO];
+                }
+            }
+        }
+    }
+}
+
+- (void) setVideoInstantUploadEnabled:(BOOL)enabled {
+    @synchronized (self) {
+        if (enabled != self.videoInstantUploadEnabled) {
+            if (!self.videoInstantUploadEnabled) {
+                if (self.imageInstantUploadEnabled) {
+                    ACTIVE_USER.videoInstantUpload = YES;
+                    [ManageAppSettingsDB updateVideoInstantUploadTo:YES];
+                    [self attemptUpload];
+                } else {
+                    [self getMediaLibraryPermission:^(BOOL granted) {
+                        if (granted) {
+                            ACTIVE_USER.videoInstantUpload = YES;
+                            [ManageAppSettingsDB updateVideoInstantUploadTo:YES];
+                            ACTIVE_USER.timestampInstantUpload = [[NSDate date] timeIntervalSince1970];
                             [ManageAppSettingsDB updateTimestampInstantUpload:ACTIVE_USER.timestampInstantUpload];
                             [PHPhotoLibrary.sharedPhotoLibrary registerChangeObserver:self];
                             [self attemptUpload];
@@ -95,12 +132,28 @@
                     }];
                 }
             } else {
-                [PHPhotoLibrary.sharedPhotoLibrary unregisterChangeObserver:self];
-                ACTIVE_USER.instantUpload = NO;
-                [ManageAppSettingsDB updateInstantUploadTo:NO];
-                [self setBackgroundInstantUploadEnabled:NO];
+                ACTIVE_USER.videoInstantUpload = NO;
+                [ManageAppSettingsDB updateVideoInstantUploadTo:NO];
+                if (!self.imageInstantUploadEnabled) {
+                    [PHPhotoLibrary.sharedPhotoLibrary unregisterChangeObserver:self];
+                    [self setBackgroundInstantUploadEnabled:NO];
+                }
             }
         }
+    }
+}
+
+- (void) getMediaLibraryPermission:(void(^)(BOOL granted))completion {
+    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
+        if (completion) {
+            completion(YES);
+        }
+    } else {
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+            if (completion) {
+                completion(status == PHAuthorizationStatusAuthorized);
+            }
+        }];
     }
 }
 
@@ -130,7 +183,7 @@
 }
 
 - (void) activate {
-    if ([self enabled]) {
+    if (self.imageInstantUploadEnabled || self.videoInstantUploadEnabled) {
         if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
             [PHPhotoLibrary.sharedPhotoLibrary registerChangeObserver:self];
             [self attemptUpload];
@@ -145,7 +198,8 @@
                 }
             }
         } else {
-            [self setEnabled:NO];
+            [self setImageInstantUploadEnabled:NO];
+            [self setVideoInstantUploadEnabled:NO];
             [self showAlertViewWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil) body:NSLocalizedString(@"message_access_photos_not_enabled", nil)];
             [self.delegate instantUploadPermissionLostOrDenied];
         }
@@ -159,24 +213,36 @@
 }
 
 - (void) attemptUpload {
-    if ([self enabled]) {
+    if (self.imageInstantUploadEnabled || self.videoInstantUploadEnabled) {
         if (ACTIVE_USER.username != nil) {
             if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
                 
                 NSDate *lastInstantUploadedAssetCaptureDate = [NSDate dateWithTimeIntervalSince1970:ACTIVE_USER.timestampInstantUpload];
                 
+                BOOL instantUploadPhotosEnabled = self.imageInstantUploadEnabled;
+                BOOL instantUploadVideosEnabled = self.videoInstantUploadEnabled;
+    
+                NSPredicate *mediaTypePredicate;
+                if (instantUploadPhotosEnabled && instantUploadVideosEnabled) {
+                    mediaTypePredicate = [NSCompoundPredicate orPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"mediaType = %i", PHAssetMediaTypeImage], [NSPredicate predicateWithFormat:@"mediaType = %i", PHAssetMediaTypeVideo]]];
+                } else if (instantUploadPhotosEnabled) {
+                    mediaTypePredicate = [NSPredicate predicateWithFormat:@"mediaType = %i",PHAssetMediaTypeImage];
+                } else if (instantUploadVideosEnabled) {
+                    mediaTypePredicate = [NSPredicate predicateWithFormat:@"mediaType = %i",PHAssetMediaTypeVideo];
+                }
+                
                 PHFetchOptions *newAssetsFetchOptions = [PHFetchOptions new];
                 newAssetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
-                newAssetsFetchOptions.predicate = [NSPredicate predicateWithFormat:@"creationDate > %@", lastInstantUploadedAssetCaptureDate];
+                newAssetsFetchOptions.predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"creationDate > %@", lastInstantUploadedAssetCaptureDate], mediaTypePredicate]];
                 
                 PHFetchResult *cameraRollAssetCollection = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
                 
-                PHFetchResult *newPhotos = [PHAsset fetchAssetsInAssetCollection:cameraRollAssetCollection[0] options:newAssetsFetchOptions];
+                PHFetchResult *newAssets = [PHAsset fetchAssetsInAssetCollection:cameraRollAssetCollection[0] options:newAssetsFetchOptions];
                 
-                if (newPhotos != nil && [newPhotos count] != 0) {
+                if (newAssets != nil && [newAssets count] != 0) {
                     
-                    for (PHAsset *image in newPhotos) {
-                        NSTimeInterval assetCreatedDate = [image.creationDate timeIntervalSince1970];
+                    for (PHAsset *asset in newAssets) {
+                        NSTimeInterval assetCreatedDate = [asset.creationDate timeIntervalSince1970];
                         if (assetCreatedDate > ACTIVE_USER.timestampInstantUpload) {
                             ACTIVE_USER.timestampInstantUpload = assetCreatedDate;
                             [ManageAppSettingsDB updateTimestampInstantUpload:assetCreatedDate];
@@ -200,11 +266,12 @@
                         
                     }];
                     
-                    [app.prepareFiles addAssetsToUpload:newPhotos andRemoteFolder:[[NSString alloc] initWithFormat:@"%@%@/",[UtilsUrls getFullRemoteServerPathWithWebDav:ACTIVE_USER], k_path_instant_upload]];
+                    [app.prepareFiles addAssetsToUpload:newAssets andRemoteFolder:[[NSString alloc] initWithFormat:@"%@%@/",[UtilsUrls getFullRemoteServerPathWithWebDav:ACTIVE_USER], k_path_instant_upload]];
                 }
                 
             } else {
-                [self setEnabled:NO];
+                [self setImageInstantUploadEnabled:NO];
+                [self setVideoInstantUploadEnabled:NO];
                 [self showAlertViewWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil) body:NSLocalizedString(@"message_access_photos_not_enabled", nil)];
                 [self.delegate instantUploadPermissionLostOrDenied];
             }

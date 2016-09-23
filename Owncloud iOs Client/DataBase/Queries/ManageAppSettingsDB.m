@@ -225,39 +225,62 @@
 
 #pragma mark - Instant Upload
 
-+(BOOL)isInstantUpload {
++(BOOL)isImageInstantUpload {
     
     __block BOOL output = NO;
  
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        
-        FMResultSet *rs = [db executeQuery:@"SELECT instant_upload FROM users WHERE activeaccount=1"];
-        
+        FMResultSet *rs = [db executeQuery:@"SELECT image_instant_upload FROM users WHERE activeaccount=1"];
         while ([rs next]) {
-            
-            output =[rs boolForColumn:@"instant_upload"];
-            
+            output =[rs boolForColumn:@"image_instant_upload"];
         }
-        
     }];
     
     return output;
-    
 }
 
-+(void)updateInstantUploadTo:(BOOL)newValue {
+
++(BOOL)isVideoInstantUpload {
+    
+    __block BOOL output = NO;
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT video_instant_upload FROM users WHERE activeaccount=1"];
+        while ([rs next]) {
+            output =[rs boolForColumn:@"video_instant_upload"];
+        }
+    }];
+    
+    return output;
+}
+
++(void)updateImageInstantUploadTo:(BOOL)newValue {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
-        
-        correctQuery = [db executeUpdate:@"UPDATE users SET instant_upload=? ", [NSNumber numberWithBool:newValue]];
-        
+        correctQuery = [db executeUpdate:@"UPDATE users SET image_instant_upload=? ", [NSNumber numberWithBool:newValue]];
         if (!correctQuery) {
-            DLog(@"Error updating instant_upload");
+            DLog(@"Error updating image_instant_upload");
+        }
+    }];
+    
+}
+
++(void)updateVideoInstantUploadTo:(BOOL)newValue {
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        correctQuery = [db executeUpdate:@"UPDATE users SET video_instant_upload=? ", [NSNumber numberWithBool:newValue]];
+        if (!correctQuery) {
+            DLog(@"Error updating video_instant_upload");
         }
     }];
     
@@ -339,11 +362,17 @@
 }
 
 +(void)updateInstantUploadAllUser {
-    if ([self isInstantUpload]) {
-        [self updateInstantUploadTo:YES];
+    if ([self isImageInstantUpload]) {
+        [self updateImageInstantUploadTo:YES];
         [self updateTimestampInstantUpload:[self getTimestampInstantUpload]];
     } else {
-        [self updateInstantUploadTo:NO];
+        [self updateImageInstantUploadTo:NO];
+    }
+    if ([self isVideoInstantUpload]) {
+        [self updateVideoInstantUploadTo:YES];
+        [self updateTimestampInstantUpload:[self getTimestampInstantUpload]];
+    } else {
+        [self updateVideoInstantUploadTo:NO];
     }
 }
 
