@@ -1654,7 +1654,18 @@
     } else {
         self.navigationItem.backBarButtonItem = nil;
 
-        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
+        // If the file is in root folder, show icon instead of folder name.
+        if(self.fileIdToShowFiles.isRootFolder){
+            UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
+                                           initWithImage:[UIImage imageNamed:[FileNameUtils getTheNameOfTheBrandImage]]
+                                           style:UIBarButtonItemStyleBordered
+                                           target:nil
+                                           action:nil];
+            self.navigationItem.backBarButtonItem = backButton;
+        }else{
+            NSString *folderName = [[selectedFile.filePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] lastPathComponent];
+            self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(folderName, nil) style:UIBarButtonItemStylePlain target:nil action:nil];
+        }
         
         FilePreviewViewController *viewController = [[FilePreviewViewController alloc]initWithNibName:@"FilePreviewViewController" selectedFile:selectedFile];
         
