@@ -1,4 +1,4 @@
-//
+ //
 //  DownloadFileSyncFolder.m
 //  Owncloud iOs Client
 //
@@ -165,12 +165,11 @@
     if ([DownloadUtils isSonOfFavoriteFolder:self.file]) {
         [DownloadUtils setEtagNegativeToAllTheFoldersThatContainsFile:self.file];
     }
-    
     [self reloadCellFromDataBase];
     //DLog(@"number of listOfFileToBeDownloaded: %lu, remove: %@ ",(unsigned long)[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count, self.file.fileName);
     if ([[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded containsObject:self]) {
+             DLog(@"number of listOfFileToBeDownloaded: %lu, before remove: %@ ",(unsigned long)[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count, self.file.fileName);
         [[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded removeObjectIdenticalTo:self];
-        DLog(@"number of listOfFileToBeDownloaded: %lu, after remove: %@ ",(unsigned long)[AppDelegate sharedSyncFolderManager].listOfFilesToBeDownloaded.count, self.file.fileName);
     }
 
 }
