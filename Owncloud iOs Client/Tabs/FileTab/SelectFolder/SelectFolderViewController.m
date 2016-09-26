@@ -438,7 +438,7 @@
     _selectFolderViewController = [[SelectFolderViewController alloc] initWithNibName:@"SelectFolderViewController" onFolder:file];
     _selectFolderViewController.parent = self.parent;
     
-    [self.parent pushViewController:_selectFolderViewController animated:YES];
+    [self.parent pushViewController:_selectFolderViewController animated:NO];
 }
 
 #pragma mark - UIAlertViewDelegate

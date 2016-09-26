@@ -53,7 +53,7 @@
 		<string>MainAppIcon_167-167.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
-	<string>com.owncloud.iOSmobileapp</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -94,8 +94,6 @@
 		<key>NSExceptionDomains</key>
 		<dict/>
 	</dict>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string></string>
 	<key>UIApplicationExitsOnSuspend</key>
 	<false/>
 	<key>UIBackgroundModes</key>
@@ -142,5 +140,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Upload your selected photos to your account</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used to instantly upload your new photos after a significant change in your location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Used to instantly upload your new photos after a significant change in your location</string>
 </dict>
 </plist>

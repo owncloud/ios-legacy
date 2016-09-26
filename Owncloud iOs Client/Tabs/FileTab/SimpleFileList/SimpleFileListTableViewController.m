@@ -337,7 +337,7 @@
     //Method to be overwritten
     _simpleFilesViewController = [[SimpleFileListTableViewController alloc] initWithNibName:@"SimpleFileListTableViewController" onFolder:file];
     
-    [[self navigationController] pushViewController:_simpleFilesViewController animated:YES];
+    [[self navigationController] pushViewController:_simpleFilesViewController animated:NO];
 }
 
 - (void) reloadCurrentFolder {

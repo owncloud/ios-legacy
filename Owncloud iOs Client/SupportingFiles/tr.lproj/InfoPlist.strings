@@ -1,0 +1,12 @@
+/* 
+  InfoPlist.strings
+  Owncloud iOs Client
+
+  Created by Noelia Alvarez on 13/09/16.
+
+*/
+
+
+"NSPhotoLibraryUsageDescription" = "Upload your selected photos to your account";
+"NSLocationAlwaysUsageDescription" = "Used to instantly upload your new photos after a significant change in your location";
+"NSLocationWhenInUseUsageDescription" = "Used to instantly upload your new photos after a significant change in your location";

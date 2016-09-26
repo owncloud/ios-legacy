@@ -17,16 +17,36 @@ import UIKit
 import Social
 import MobileCoreServices
 import AVFoundation
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
 
 
-@objc class ShareViewController: UIViewController, UITableViewDelegate, KKPasscodeViewControllerDelegate, CheckAccessToServerDelegate {
+
+@objc class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, KKPasscodeViewControllerDelegate, CheckAccessToServerDelegate {
     
     @IBOutlet weak var navigationBar: UINavigationBar?
     @IBOutlet weak var shareTable: UITableView?
     @IBOutlet weak var destinyFolderButton: UIBarButtonItem?
     @IBOutlet weak var constraintTopTableView: NSLayoutConstraint?
     
-    var filesSelected: [NSURL] = []
+    var filesSelected: [URL] = []
     var images: [UIImage] = []
     var currentRemotePath: String!
    
@@ -45,10 +65,10 @@ import AVFoundation
         
         if ManageAppSettingsDB.isPasscode(){
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
                 self.showPasscode()
                 if ManageAppSettingsDB.isTouchID(){
-                    ManageTouchID.sharedSingleton().showTouchIDAuth()
+                    ManageTouchID.sharedSingleton().showAuth()
                 }
             }
             
@@ -56,7 +76,7 @@ import AVFoundation
             
         }
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
             self.showShareIn()
         }
  
@@ -66,8 +86,8 @@ import AVFoundation
         
         super.viewWillLayoutSubviews()
         
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-            self.navigationController?.view.bounds = CGRectMake(0, 0, witdhFormSheet, heighFormSheet)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            self.navigationController?.view.bounds = CGRect(x: 0, y: 0, width: witdhFormSheet, height: heighFormSheet)
             self.constraintTopTableView?.constant = -20
         }
         
@@ -79,12 +99,12 @@ import AVFoundation
         passcodeView.delegate = self
         passcodeView.mode = UInt(KKPasscodeModeEnter)
         
-        passcodeView.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: Selector("cancelView"))
+        passcodeView.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(ShareViewController.cancelView))
         
         let ocNavController = OCNavigationController(rootViewController: passcodeView)
-        ocNavController.modalPresentationStyle = UIModalPresentationStyle.FormSheet
+        ocNavController.modalPresentationStyle = UIModalPresentationStyle.formSheet
         
-        self.presentViewController(ocNavController, animated: false) { () -> Void in
+        self.present(ocNavController, animated: false) { () -> Void in
             print("Passcode presented")
         }
         
@@ -95,7 +115,7 @@ import AVFoundation
         
         self.createCustomInterface()
         
-        self.shareTable!.registerClass(FileSelectedCell.self, forCellReuseIdentifier: "cell")
+        self.shareTable!.register(FileSelectedCell.self, forCellReuseIdentifier: "cell")
         
         self.loadFiles()
         
@@ -103,10 +123,10 @@ import AVFoundation
     
     func createCustomInterface(){
         
-        let rightBarButton = UIBarButtonItem (title:NSLocalizedString("upload_label", comment: ""), style: .Plain, target: self, action:"sendTheFilesToOwnCloud")
-        let leftBarButton = UIBarButtonItem (title:NSLocalizedString("cancel", comment: ""), style: .Plain, target: self, action:"cancelView")
+        let rightBarButton = UIBarButtonItem (title:NSLocalizedString("upload_label", comment: ""), style: .plain, target: self, action:#selector(ShareViewController.sendTheFilesToOwnCloud))
+        let leftBarButton = UIBarButtonItem (title:NSLocalizedString("cancel", comment: ""), style: .plain, target: self, action:#selector(ShareViewController.cancelView))
         
-        let appName = NSBundle.mainBundle().infoDictionary?["CFBundleDisplayName"] as! String
+        let appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as! String
 
         self.navigationItem.title = appName
 
@@ -120,18 +140,18 @@ import AVFoundation
 
     }
     
-    func changeTheDestinyFolderWith(folder: String){
+    func changeTheDestinyFolderWith(_ folder: String){
         
         var nameFolder = folder
         let location = NSLocalizedString("location", comment: "comment")
         if folder.isEmpty {
-            let appName = NSBundle.mainBundle().infoDictionary?["CFBundleDisplayName"] as! String
+            let appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as! String
             nameFolder = appName
         }
 
         if (nameFolder.characters.count > 20) {
             let nameFolderNSString = nameFolder as NSString
-            nameFolder = nameFolderNSString.substringWithRange(NSRange(location: 0, length: 20))
+            nameFolder = nameFolderNSString.substring(with: NSRange(location: 0, length: 20))
             nameFolder += "..."
         }
 
@@ -144,7 +164,7 @@ import AVFoundation
     
     func cancelView() {
        
-        self.extensionContext?.completeRequestReturningItems(nil, completionHandler: nil)
+        self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
         return
        
     }
@@ -159,47 +179,47 @@ import AVFoundation
             
             var hasSomethingToUpload: Bool = false
             
-           for (index, url): (Int, NSURL) in (self.filesSelected.enumerate()){
+           for (index, url): (Int, URL) in (self.filesSelected.enumerated()){
                 
                 //1º Get the future name of the file
                 
                 let ext = FileNameUtils.getExtension(url.lastPathComponent)
-                let type = FileNameUtils.checkTheTypeOfFile(ext)
+                let type = FileNameUtils.checkTheType(ofFile: ext)
                 
                 var fileName:String!
                 
-                let urlOriginalPath :String = (url.path! as NSString).stringByDeletingLastPathComponent
+                let urlOriginalPath :String = (url.path as NSString).deletingLastPathComponent
                 var destinyMovedFilePath :String = UtilsUrls.getTempFolderForUploadFiles()
                 
-                fileName = (url.path! as NSString).lastPathComponent
+                fileName = (url.path as NSString).lastPathComponent
                 if type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue {
                     
                     if  urlOriginalPath != String(destinyMovedFilePath.characters.dropLast()) {
-                        fileName = FileNameUtils.getComposeNameFromPath(url.path)
+                        fileName = FileNameUtils.getComposeName(fromPath: url.path)
                     }
                 }
                 
                 //2º Check filename 
             
-                if !FileNameUtils.isForbiddenCharactersInFileName(fileName, withForbiddenCharactersSupported: ManageUsersDB.hasTheServerOfTheActiveUserForbiddenCharactersSupport()){
+                if !FileNameUtils.isForbiddenCharacters(inFileName: fileName, withForbiddenCharactersSupported: ManageUsersDB.hasTheServerOfTheActiveUserForbiddenCharactersSupport()){
                     
                     //2º Copy the file to the tmp folder
                     destinyMovedFilePath = destinyMovedFilePath + fileName
-                    if (destinyMovedFilePath as NSString).stringByDeletingLastPathComponent != urlOriginalPath {
+                    if (destinyMovedFilePath as NSString).deletingLastPathComponent != urlOriginalPath {
                         do {
-                            try NSFileManager.defaultManager().copyItemAtPath(url.path!, toPath: destinyMovedFilePath)
+                            try FileManager.default.copyItem(atPath: url.path, toPath: destinyMovedFilePath)
                         } catch _ {
                         }
                     }
                     
                     if currentRemotePath == nil {
-                        currentRemotePath = UtilsUrls.getFullRemoteServerPathWithWebDav(user)
+                        currentRemotePath = UtilsUrls.getFullRemoteServerPath(withWebDav: user)
                     }
                     
                     //3º Crete the upload objects
                     print("remotePath: \(currentRemotePath)")
                     
-                    let fileLength = (try! NSFileManager.defaultManager().attributesOfItemAtPath(url.path!))[NSFileSize] as! Int
+                    let fileLength = (try! FileManager.default.attributesOfItem(atPath: url.path))[FileAttributeKey.size] as! Int
                     print("fileLength: \(fileLength)")
                     
                     let upload = UploadsOfflineDto()
@@ -209,7 +229,7 @@ import AVFoundation
                     upload.uploadFileName = fileName
                     upload.kindOfError = enumKindOfError.notAnError.rawValue
                     upload.estimateLength = fileLength
-                    upload.userId = user.idUser
+                    upload.userId = (user?.idUser)!
                     upload.status = enumUpload.generatedByDocumentProvider.rawValue
                     upload.chunksLength = Int(k_lenght_chunk)
                     upload.isNotNecessaryCheckIfExist = false
@@ -248,29 +268,29 @@ import AVFoundation
         }
     }
     
-    @IBAction func destinyFolderButtonTapped(sender: UIBarButtonItem) {
+    @IBAction func destinyFolderButtonTapped(_ sender: UIBarButtonItem) {
         print("destiny folder tapped")
         
         let activeUser = ManageUsersDB.getActiveUser()
         
         if activeUser != nil {
-            let rootFileDto = ManageFilesDB.getRootFileDtoByUser(activeUser)
+            let rootFileDto = ManageFilesDB.getRootFileDto(byUser: activeUser)
             
             let selectFolderViewController = SelectFolderViewController(nibName: "SelectFolderViewController", onFolder: rootFileDto)
             
-            let navigation = SelectFolderNavigation(rootViewController: selectFolderViewController)
+            let navigation = SelectFolderNavigation(rootViewController: selectFolderViewController!)
             
             navigation.delegate = self
-            navigation.modalPresentationStyle = UIModalPresentationStyle.FormSheet
+            navigation.modalPresentationStyle = UIModalPresentationStyle.formSheet
             
-            selectFolderViewController.parent = navigation;
+            selectFolderViewController?.parent = navigation;
             
-            self.presentViewController(navigation, animated: true) { () -> Void in
+            self.present(navigation, animated: true) { () -> Void in
                 print("select folder presented")
                 //We check the connection here because we need to accept the certificate on the self signed server
                 (CheckAccessToServer.sharedManager() as? CheckAccessToServer)!.delegate = selectFolderViewController
                 (CheckAccessToServer.sharedManager() as? CheckAccessToServer)!.viewControllerToShow = selectFolderViewController
-                CheckAccessToServer.sharedManager().isConnectionToTheServerByUrl(activeUser.url)
+                (CheckAccessToServer.sharedManager() as? CheckAccessToServer)!.isConnectionToTheServer(byUrl: activeUser!.url)
             }
         } else {
             showAlertView(NSLocalizedString("error_login_doc_provider", comment: ""))
@@ -285,19 +305,19 @@ import AVFoundation
                 if let attachments = item.attachments as? [NSItemProvider] {
                     
                     if attachments.isEmpty {
-                        self.extensionContext?.completeRequestReturningItems(nil, completionHandler: nil)
+                        self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
                         return
                     }
 
-                    for (index, current) in (attachments.enumerate()){
+                    for (index, current) in (attachments.enumerated()){
 
                         //Items
                         if current.hasItemConformingToTypeIdentifier(kUTTypeItem as String){
                             
-                            current.loadItemForTypeIdentifier(kUTTypeItem as String, options: nil, completionHandler: {(item, error) -> Void in
+                            current.loadItem(forTypeIdentifier: kUTTypeItem as String, options: nil, completionHandler: {(item, error) -> Void in
                                 
                                 if error == nil {
-                                    if let url = item as? NSURL{
+                                    if let url = item as? URL{
                                         
                                         print("item as url: \(item)")
                                         
@@ -309,26 +329,26 @@ import AVFoundation
                                         }
                                     }
                                     
-                                    if let image = item as? NSData{
+                                    if let image = item as? Data{
                                         
                                         print("item as NSdata")
                                         
                                         let description = current.description
                                
-                                        var fullNameArr = description.componentsSeparatedByString("\"")
-                                        var fileExtArr = fullNameArr[1].componentsSeparatedByString(".")
-                                        let ext = (fileExtArr[fileExtArr.count-1]).uppercaseString
-                                        let dateFormatter = NSDateFormatter()
+                                        var fullNameArr = description.components(separatedBy: "\"")
+                                        var fileExtArr = fullNameArr[1].components(separatedBy: ".")
+                                        let ext = (fileExtArr[fileExtArr.count-1]).uppercased()
+                                        let dateFormatter = DateFormatter()
                                         dateFormatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
-                                        let fileName = "Photo_email_\(dateFormatter.stringFromDate(NSDate())).\(ext)"
+                                        let fileName = "Photo_email_\(dateFormatter.string(from: Date())).\(ext)"
                                         
                                         //2º Copy the file to the tmp folder
                                         var destinyMovedFilePath = UtilsUrls.getTempFolderForUploadFiles()
-                                        destinyMovedFilePath = destinyMovedFilePath + fileName
+                                        destinyMovedFilePath = destinyMovedFilePath! + fileName
                                         
-                                        NSFileManager.defaultManager().createFileAtPath(destinyMovedFilePath,contents:image, attributes:nil)
+                                        FileManager.default.createFile(atPath: destinyMovedFilePath!,contents:image, attributes:nil)
                                         
-                                        let url = NSURL(fileURLWithPath: destinyMovedFilePath)
+                                        let url = URL(fileURLWithPath: destinyMovedFilePath!)
                                         
                                         self.filesSelected.append(url)
                                         
@@ -355,7 +375,7 @@ import AVFoundation
     
     func reloadListWithDelay(){
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
             
             func reloadDatabase () {
                 self.shareTable?.reloadData()
@@ -371,43 +391,41 @@ import AVFoundation
         
         if self.filesSelected.count > 0{
             
-            for (index, url): (Int, NSURL) in (self.filesSelected.enumerate()){
+            for (index, url): (Int, URL) in (self.filesSelected.enumerated()){
                 
                 //Check the type of the file
                 
                 let ext = FileNameUtils.getExtension(url.lastPathComponent)
-                let type = FileNameUtils.checkTheTypeOfFile(ext)
+                let type = FileNameUtils.checkTheType(ofFile: ext)
                 
                 print("Selecte file: \(url.path)")
                 
                 var image: UIImage?
                 
                 if type == kindOfFileEnum.imageFileType.rawValue{
-                    image = UIImage(contentsOfFile: url.path!)
+                    image = UIImage(contentsOfFile: url.path)
                    
                 } else if type == kindOfFileEnum.videoFileType.rawValue {
                     print("Video Selected")
                     
-                    let asset = AVURLAsset (URL: url, options: nil)
+                    let asset = AVURLAsset (url: url, options: nil)
                     let imageGenerator = AVAssetImageGenerator (asset: asset)
                     imageGenerator.appliesPreferredTrackTransform = true
                     let time = CMTimeMakeWithSeconds(0.0, 600)
                 
                     let imageRef: CGImage!
                     do {
-                        imageRef = try imageGenerator.copyCGImageAtTime(time, actualTime: nil)
+                        imageRef = try imageGenerator.copyCGImage(at: time, actualTime: nil)
                     } catch _ {
                         imageRef = nil
                     }
-                    image = UIImage (CGImage: imageRef)
+                    image = UIImage (cgImage: imageRef)
 
                 }
                 
                 if image != nil{
                     
-                    var resizedImage:UIImage?
-                    
-                    image?.resize(CGSizeMake(witdhImageSize, heighImageSize), completionHandler: { (resizedImage, data) -> () in
+                    image?.resize(CGSize(width: witdhImageSize, height: heighImageSize), completionHandler: { (resizedImage, data) -> () in
                         
                         self.images.append(resizedImage)
                         
@@ -436,52 +454,52 @@ import AVFoundation
     
     //MARK: TableView Delegate and Datasource methods
     
-    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         return self.filesSelected.count
     }
     
-    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell!
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let identifier = "FileSelectedCell"
-        let cell: FileSelectedCell! = tableView.dequeueReusableCellWithIdentifier(identifier ,forIndexPath: indexPath) as! FileSelectedCell
+        let cell: FileSelectedCell! = tableView.dequeueReusableCell(withIdentifier: identifier ,for: indexPath) as! FileSelectedCell
         
         let row = indexPath.row
-        let url = self.filesSelected[row] as NSURL
+        let url = self.filesSelected[row] as URL
         
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
+        cell.selectionStyle = UITableViewCellSelectionStyle.none
         
         //Choose the correct icon if the file is not an image
         let ext = FileNameUtils.getExtension(url.lastPathComponent)
-        let type = FileNameUtils.checkTheTypeOfFile(ext)
+        let type = FileNameUtils.checkTheType(ofFile: ext)
         
         if (type == kindOfFileEnum.imageFileType.rawValue || type == kindOfFileEnum.videoFileType.rawValue){
             //Image
-            let fileName: NSString = (url.path! as NSString).lastPathComponent
+            let fileName: NSString = ((url.path as NSString).lastPathComponent  as NSString);
             if row < images.count {
                 cell.imageForFile?.image = images[indexPath.row];
             }
-            if  !fileName.containsString("Photo_email") {
-                cell.title?.text = FileNameUtils.getComposeNameFromPath(url.path)
+            if  !fileName.contains("Photo_email") {
+                cell.title?.text = FileNameUtils.getComposeName(fromPath: url.path)
             } else {
                 cell.title?.text = fileName as String
             }
         }else{
             //Not image
-            let image = UIImage(named: FileNameUtils.getTheNameOfTheImagePreviewOfFileName(url.lastPathComponent))
+            let image = UIImage(named: FileNameUtils.getTheNameOfTheImagePreview(ofFileName: url.lastPathComponent))
             cell.imageForFile?.image = image
-            cell.imageForFile?.backgroundColor = UIColor.whiteColor()
-            cell.title?.text = (url.path! as NSString).lastPathComponent
+            cell.imageForFile?.backgroundColor = UIColor.white
+            cell.title?.text = (url.path as NSString).lastPathComponent
         }
         
 
-        let fileSizeInBytes = (try! NSFileManager.defaultManager().attributesOfItemAtPath(url.path!))[NSFileSize] as? Double
+        let fileSizeInBytes = (try! FileManager.default.attributesOfItem(atPath: url.path))[FileAttributeKey.size] as? Double
         
         
         if fileSizeInBytes > 0 {
-            let formattedFileSize = NSByteCountFormatter.stringFromByteCount(
-                Int64(fileSizeInBytes!),
-                countStyle: NSByteCountFormatterCountStyle.File
+            let formattedFileSize = ByteCountFormatter.string(
+                fromByteCount: Int64(fileSizeInBytes!),
+                countStyle: ByteCountFormatter.CountStyle.file
             )
             cell.size?.text = "\(formattedFileSize)"
         }else{
@@ -491,28 +509,28 @@ import AVFoundation
         return cell
     }
     
-    func tableView(tableView: UITableView!, canEditRowAtIndexPath indexPath: NSIndexPath!) -> Bool
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
     {
         return false
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        print("row = %d",indexPath.row)
+        print("row = %d",(indexPath as NSIndexPath).row)
     }
     
     //MARK: Select Folder Selected Delegate Methods
     
-    func folderSelected(folder: NSString){
+    func folderSelected(_ folder: NSString){
         
         print("Folder selected \(folder)")
         
         self.currentRemotePath = folder as String
-        let name:NSString = folder.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
+        let name:NSString = (folder.replacingPercentEscapes(using: String.Encoding.utf8.rawValue)! as NSString);
         let user = ManageUsersDB.getActiveUser()
-        let folderPath = UtilsUrls.getFilePathOnDBByFullPath(name as String, andUser: user)
+        let folderPath = UtilsUrls.getFilePathOnDB(byFullPath: name as String, andUser: user)
 
-        self.changeTheDestinyFolderWith((folderPath as NSString).lastPathComponent)
+        self.changeTheDestinyFolderWith((folderPath! as NSString).lastPathComponent)
         
     }
     
@@ -522,32 +540,32 @@ import AVFoundation
         
     }
     
-    func showAlertView(title: String) {
+    func showAlertView(_ title: String) {
         
-        let alert = UIAlertController(title: title, message: "", preferredStyle: UIAlertControllerStyle.Alert)
+        let alert = UIAlertController(title: title, message: "", preferredStyle: UIAlertControllerStyle.alert)
         
-        alert.addAction(UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .Default, handler: { action in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default, handler: { action in
             switch action.style{
-            case .Default:
+            case .default:
                 self.cancelView()
-            case .Cancel:
+            case .cancel:
                 print("cancel")
-            case .Destructive:
+            case .destructive:
                 print("destructive")
             }
         }))
         
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
     
     //MARK: KKPasscodeViewControllerDelegate
     
-    func didPasscodeEnteredCorrectly(viewController: KKPasscodeViewController!) {
+    func didPasscodeEnteredCorrectly(_ viewController: KKPasscodeViewController!) {
         print("Did passcode entered correctly")
     }
     
    
-    func didPasscodeEnteredIncorrectly(viewController: KKPasscodeViewController!) {
+    func didPasscodeEnteredIncorrectly(_ viewController: KKPasscodeViewController!) {
         print("Did passcode entered incorrectly")
     }
 

@@ -307,7 +307,7 @@
             webView.urlString = k_impressum_url;
             webView.navigationTitleString = NSLocalizedString(@"imprint_button", nil);
             
-            [self.navigationController pushViewController:webView animated:YES];
+            [self.navigationController pushViewController:webView animated:NO];
 
         } else {
             if(!_detailViewController) {
@@ -961,7 +961,7 @@
                 webView.urlString = k_help_url;
                 webView.navigationTitleString = NSLocalizedString(@"help", nil);
                 
-                [self.navigationController pushViewController:webView animated:YES];
+                [self.navigationController pushViewController:webView animated:NO];
 
             } else {
                 DLog(@"2.2-Press Help");
@@ -1032,7 +1032,7 @@
     if (IS_IPHONE)
     {
         viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:YES];
+        [self.navigationController pushViewController:viewController animated:NO];
     } else {
         
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
@@ -1717,7 +1717,7 @@
     
     if (IS_IPHONE) {
         viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:YES];
+        [self.navigationController pushViewController:viewController animated:NO];
     } else {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         

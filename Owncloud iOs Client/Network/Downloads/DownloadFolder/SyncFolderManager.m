@@ -46,7 +46,7 @@ static float const kDelayAfterCancelAll = 3.0;
     if (self) {
         self.dictOfFoldersToBeCheck = [CWLOrderedDictionary new];
         self.forestOfFilesAndFoldersToBeDownloaded = [IndexedForest new];
-        self.listOfFilesToBeDownloaded = [NSMutableArray new];
+        self.listOfFilesToBeDownloaded = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -389,7 +389,7 @@ static float const kDelayAfterCancelAll = 3.0;
     self.dictOfFoldersToBeCheck = [CWLOrderedDictionary new];
     self.forestOfFilesAndFoldersToBeDownloaded = [IndexedForest new];
     
-    NSArray *listOfFilesToBeDownloadedCopy = self.listOfFilesToBeDownloaded.copy;
+    NSArray *listOfFilesToBeDownloadedCopy = [[NSMutableArray alloc] initWithArray: self.listOfFilesToBeDownloaded];
     
     //We set the user before the loop to update the FildDto canceled with the right user
     UserDto *user = nil;
