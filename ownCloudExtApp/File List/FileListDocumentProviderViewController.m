@@ -469,7 +469,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     _filesViewController.delegate = self.delegate;
     _filesViewController.mode = self.mode;
     
-    [[self navigationController] pushViewController:_filesViewController animated:YES];
+    [[self navigationController] pushViewController:_filesViewController animated:NO];
 }
 
 #pragma mark - Rotation

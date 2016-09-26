@@ -1560,7 +1560,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             
             viewController.hidesBottomBarWhenPushed = YES;
             
-            [self.navigationController pushViewController:viewController animated:YES];
+            [self.navigationController pushViewController:viewController animated:NO];
             break;
         }
         default:
