@@ -1,3 +1,7 @@
+## 3.5.1 (September 2016)
+- iOS10, Xcode8 and Swift3 Support
+- Updated app icon
+- Bug fixing
 
 ## 3.5.0 (August 2016)
 
@@ -10,8 +14,7 @@
 - New overlay icons following the one used in the ownCloud platform 
 - Refactored instant uploads to use without location while the app it is alive 
 - Added more languages
-
-- Bug fixings 
+- Bug fixing 
 
 
 
@@ -21,7 +24,7 @@
 - Updated SSL library version
 - Federating sharing improvements, autocompletation of users taking into account defined remote trusted servers
 - Share by link, added a new option to define whether editing is enable or not
-- Bugs fixing
+- Bug fixing
 
 ## 3.4.8 (February 2016)
 - Touch ID support
