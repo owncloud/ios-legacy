@@ -281,6 +281,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     dispatch_async(dispatch_get_main_queue(), ^{
         
         NSMutableArray *updatedCollectionsFetchResults = nil;
+        [self updateFetchResults];
         
         for (NSDictionary *fetchResultDictionary in self.assetGroups) {
             PHFetchResult *collectionsFetchResult = [fetchResultDictionary allValues][0];

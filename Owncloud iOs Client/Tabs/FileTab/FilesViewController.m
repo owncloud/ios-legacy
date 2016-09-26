@@ -1089,7 +1089,7 @@
     // int cont = [splitedUrl count];
     NSString *folder = [NSString stringWithFormat:@"%@",[splitedUrl objectAtIndex:([splitedUrl count]-2)]];
     
-    DLog(@"Folder is:%@", folder);
+    DLog(@"Folder selected to upload photos is:%@", folder);
     if (_fileIdToShowFiles.isRootFolder) {
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
         folder=appName;
