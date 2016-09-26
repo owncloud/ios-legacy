@@ -1662,7 +1662,7 @@
         viewController.hidesBottomBarWhenPushed = YES;
         viewController.sortedArray=_sortedArray;
 
-        [self.navigationController pushViewController:viewController animated:YES];
+        [self.navigationController pushViewController:viewController animated:NO];
     }
 }
 
@@ -1686,7 +1686,7 @@
         filesViewController.isCurrentFolderSonOfFavoriteFolder = self.selectedFileDto.isFavorite;
     }
     
-    [[self navigationController] pushViewController:filesViewController animated:YES];
+    [[self navigationController] pushViewController:filesViewController animated:NO];
 }
 
 
