@@ -362,18 +362,13 @@
 }
 
 +(void)updateInstantUploadAllUser {
-    if ([self isImageInstantUpload]) {
-        [self updateImageInstantUploadTo:YES];
+    
+    [self updateImageInstantUploadTo:[self isImageInstantUpload]];
+    [self updateVideoInstantUploadTo:[self isVideoInstantUpload]];
+    if ([self isImageInstantUpload] || [self isVideoInstantUpload]) {
         [self updateTimestampInstantUpload:[self getTimestampInstantUpload]];
-    } else {
-        [self updateImageInstantUploadTo:NO];
     }
-    if ([self isVideoInstantUpload]) {
-        [self updateVideoInstantUploadTo:YES];
-        [self updateTimestampInstantUpload:[self getTimestampInstantUpload]];
-    } else {
-        [self updateVideoInstantUploadTo:NO];
-    }
+    [self updateBackgroundInstantUploadTo:[self isBackgroundInstantUpload]];
 }
 
 +(void)updatePathInstantUpload:(NSString *)newValue {
