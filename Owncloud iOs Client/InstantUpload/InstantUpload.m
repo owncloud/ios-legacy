@@ -84,7 +84,7 @@
                 } else {
                     [self getMediaLibraryPermission:^(BOOL granted) {
                         if (granted) {
-                            ACTIVE_USER.videoInstantUpload = YES;
+                            ACTIVE_USER.imageInstantUpload = YES;
                             [ManageAppSettingsDB updateImageInstantUploadTo:YES];
                             ACTIVE_USER.timestampInstantUpload = [[NSDate date] timeIntervalSince1970];
                             [ManageAppSettingsDB updateTimestampInstantUpload:ACTIVE_USER.timestampInstantUpload];
