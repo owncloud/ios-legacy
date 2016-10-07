@@ -1680,6 +1680,7 @@
 -(IBAction)changeSwitchBackgroundInstantUpload:(id)sender {
     UISwitch *uiSwitch = (UISwitch *)sender;
     [[InstantUpload instantUploadManager] setBackgroundInstantUploadEnabled:uiSwitch.on];
+    [self refreshTable];
 }
 
 #pragma mark - Semaphore
