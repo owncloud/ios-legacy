@@ -68,7 +68,56 @@
     // Do any additional setup after loading the view from its nib.
     self.title=NSLocalizedString(@"uploads_tab", nil);
     _progressViewArray=[[NSMutableArray alloc]init];
-    
+
+    //Add a more button
+    UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more-filled"] style:UIBarButtonItemStylePlain target:self action:@selector(showOptions)];
+    self.navigationItem.rightBarButtonItem = addButtonItem;
+
+}
+
+- (void)showOptions
+{
+    if (self.plusActionSheet) {
+        self.plusActionSheet = nil;
+    }
+
+    self.plusActionSheet = [[UIActionSheet alloc]
+                            initWithTitle:nil
+                            delegate:self
+                            cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                            destructiveButtonTitle:nil
+                            otherButtonTitles:NSLocalizedString(@"clear_successful", nil), nil];
+
+    self.plusActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
+    self.plusActionSheet.tag=100;
+
+    // FIXMEL Refactor into a utility function, we do this quite a lot
+    if (IS_IPHONE) {
+        [self.plusActionSheet showInView:self.tabBarController.view];
+    } else {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        [self.plusActionSheet showInView:app.splitViewController.view];
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    if (actionSheet.tag==100) {
+        switch (buttonIndex) {
+            case 0: {
+                NSMutableArray *toRemove = [NSMutableArray array];
+                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                for (ManageUploadRequest* candidate in app.uploadArray) {
+                    if (candidate.isCanceled || (candidate.currentUpload && candidate.currentUpload.status == uploaded)) {
+                        [toRemove addObject:candidate];
+                    }
+                }
+                [app.uploadArray removeObjectsInArray:toRemove];
+                [ManageUploadsDB cleanTableUploadsOfflineTheFinishedUploads];
+                [self updateRecents];
+                break;
+            }
+        }
+    }
 }
 
 - (void)viewDidUnload
@@ -100,7 +149,7 @@
     
      [self updateRecents];
     
-    
+
 }
 
 -(void)viewDidLayoutSubviews
@@ -151,7 +200,10 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
-    
+    if (self.plusActionSheet) {
+        [self.plusActionSheet dismissWithClickedButtonIndex:self.plusActionSheet.cancelButtonIndex animated:TRUE];
+    }
+
     if(_overWritteOption) {
         if(!IS_IPHONE) {
             [_overWritteOption.overwriteOptionsActionSheet dismissWithClickedButtonIndex:0 animated:NO];
