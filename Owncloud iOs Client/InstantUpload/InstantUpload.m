@@ -81,7 +81,7 @@
                     ACTIVE_USER.imageInstantUpload = YES;
                     [ManageAppSettingsDB updateImageInstantUploadTo:YES];
                     ACTIVE_USER.timestampInstantUpload = [[NSDate date] timeIntervalSince1970];
-                    [ManageAppSettingsDB updateTimestampInstantUpload:[[NSDate date] timeIntervalSince1970]];
+                    [ManageAppSettingsDB updateTimestampInstantUpload:ACTIVE_USER.timestampInstantUpload];
                     [self attemptUpload];
                 } else {
                     [self getMediaLibraryPermission:^(BOOL granted) {
@@ -118,7 +118,7 @@
                     ACTIVE_USER.videoInstantUpload = YES;
                     [ManageAppSettingsDB updateVideoInstantUploadTo:YES];
                     ACTIVE_USER.timestampInstantUpload = [[NSDate date] timeIntervalSince1970];
-                    [ManageAppSettingsDB updateTimestampInstantUpload:[[NSDate date] timeIntervalSince1970]];
+                    [ManageAppSettingsDB updateTimestampInstantUpload:ACTIVE_USER.timestampInstantUpload];
                     [self attemptUpload];
                 } else {
                     [self getMediaLibraryPermission:^(BOOL granted) {
