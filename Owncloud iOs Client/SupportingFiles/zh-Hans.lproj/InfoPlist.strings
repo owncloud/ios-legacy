@@ -7,6 +7,6 @@
 */
 
 
-"NSPhotoLibraryUsageDescription" = "Upload your selected photos to your account";
-"NSLocationAlwaysUsageDescription" = "Used to instantly upload your new photos after a significant change in your location";
-"NSLocationWhenInUseUsageDescription" = "Used to instantly upload your new photos after a significant change in your location";
+"NSPhotoLibraryUsageDescription" = "上传选定的照片到你的账户";
+"NSLocationAlwaysUsageDescription" = "你的位置有重要变化后，将即时上传你的新照片";
+"NSLocationWhenInUseUsageDescription" = "你的位置有重要变化后，将即时上传你的新照片";
