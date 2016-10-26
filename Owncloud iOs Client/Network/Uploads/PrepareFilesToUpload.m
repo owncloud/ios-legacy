@@ -136,7 +136,12 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     };
     
     if (assetToUpload.mediaType == PHAssetMediaTypeImage) {
-        [[PHImageManager defaultManager] requestImageDataForAsset:assetToUpload options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+        
+        PHImageRequestOptions *requestOptions = [PHImageRequestOptions new];
+        //this option allow to download the real image from iCloud
+        requestOptions.networkAccessAllowed = true;
+        
+        [[PHImageManager defaultManager] requestImageDataForAsset:assetToUpload options:requestOptions resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
             
             NSFileManager *fileManager = [NSFileManager defaultManager];
             if ([fileManager fileExistsAtPath:localPath]) {
