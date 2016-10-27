@@ -169,7 +169,12 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             UploadFile(localPath, currentUpload);
         }];
     } else if (assetToUpload.mediaType == PHAssetMediaTypeVideo) {
-        [[PHImageManager defaultManager] requestPlayerItemForVideo:assetToUpload options:nil resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
+        
+        PHVideoRequestOptions *requestOptions = [PHVideoRequestOptions new];
+        //this option allow to download the real image from iCloud
+        requestOptions.networkAccessAllowed = true;
+        
+        [[PHImageManager defaultManager] requestPlayerItemForVideo:assetToUpload options:requestOptions resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
             
             //PHImageFileSandboxExtensionTokenKey = "3c58769e46e62a7eed5f9c5fde03e3e063ffabc9;00000000;00000000;000000000000001b;com.apple.avasset.read-only;00000001;01000004;0000000002b1a808;/users/jon/library/developer/coresimulator/devices/a022a96f-3de3-4de7-a0a5-d7b5465e8657/data/media/dcim/100apple/img_0006.mov";
             NSString *videoFilePath;
