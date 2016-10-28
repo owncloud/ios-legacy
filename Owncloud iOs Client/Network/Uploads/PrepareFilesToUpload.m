@@ -171,7 +171,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     } else if (assetToUpload.mediaType == PHAssetMediaTypeVideo) {
         
         PHVideoRequestOptions *requestOptions = [PHVideoRequestOptions new];
-        //this option allow to download the real image from iCloud
+        //this option allow to download the real video from iCloud
         requestOptions.networkAccessAllowed = true;
         
         [[PHImageManager defaultManager] requestPlayerItemForVideo:assetToUpload options:requestOptions resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
@@ -186,39 +186,46 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                 }
             }
             
-            if (videoFilePath) {
-                NSFileManager *fileManager = [NSFileManager defaultManager];
-                if ([fileManager fileExistsAtPath:localPath]) {
-                    [fileManager removeItemAtPath:localPath error:nil];
-                }
-                
-                AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:playerItem.asset presetName:AVAssetExportPresetHighestQuality];
-                
-                exportSession.outputURL = [NSURL fileURLWithPath:localPath];
-                exportSession.outputFileType = AVFileTypeQuickTimeMovie;
-                
-                [exportSession exportAsynchronouslyWithCompletionHandler:^{
-                    NSData *videoData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:localPath]];
-                    
-                    [fileManager createFileAtPath:localPath contents:videoData attributes:nil];
-                    
-                    UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
-                    currentUpload.originPath = localPath;
-                    currentUpload.destinyFolder = remoteFolder;
-                    currentUpload.uploadFileName = fileName;
-                    currentUpload.estimateLength = videoData.length;;
-                    currentUpload.userId = currentUser.idUser;
-                    currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
-                    currentUpload.status = waitingAddToUploadList;
-                    currentUpload.chunksLength = k_lenght_chunk;
-                    currentUpload.uploadedDate = 0;
-                    currentUpload.kindOfError = notAnError;
-                    currentUpload.isInternalUpload = YES;
-                    currentUpload.taskIdentifier = 0;
-                    
-                    UploadFile(localPath, currentUpload);
-                }];
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            if ([fileManager fileExistsAtPath:localPath]) {
+                [fileManager removeItemAtPath:localPath error:nil];
             }
+            
+            AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:playerItem.asset presetName:AVAssetExportPresetHighestQuality];
+            
+            exportSession.outputURL = [NSURL fileURLWithPath:localPath];
+            exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+            
+            [exportSession exportAsynchronouslyWithCompletionHandler:^{
+
+                NSData *videoData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:localPath]];
+              
+                switch (exportSession.status) {
+                    case AVAssetExportSessionStatusCompleted:
+                        [fileManager createFileAtPath:localPath contents:videoData attributes:nil];
+                        break;
+    
+                    default:
+                        break;
+                }
+     
+                UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
+                currentUpload.originPath = localPath;
+                currentUpload.destinyFolder = remoteFolder;
+                currentUpload.uploadFileName = fileName;
+                currentUpload.estimateLength = videoData.length;;
+                currentUpload.userId = currentUser.idUser;
+                currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
+                currentUpload.status = waitingAddToUploadList;
+                currentUpload.chunksLength = k_lenght_chunk;
+                currentUpload.uploadedDate = 0;
+                currentUpload.kindOfError = notAnError;
+                currentUpload.isInternalUpload = YES;
+                currentUpload.taskIdentifier = 0;
+                
+                UploadFile(localPath, currentUpload);
+            }];
+            
         }];
     }
 }
