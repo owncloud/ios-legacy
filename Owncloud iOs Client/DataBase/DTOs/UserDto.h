@@ -49,7 +49,8 @@ typedef enum {
 @property BOOL backgroundInstantUpload;
 @property (nonatomic, copy) NSString *pathInstantUpload;
 @property BOOL onlyWifiInstantUpload;
-@property NSTimeInterval timestampInstantUpload;
+@property NSTimeInterval timestampInstantUploadImage;
+@property NSTimeInterval timestampInstantUploadVideo;
 @property (nonatomic, copy) NSString *urlRedirected;
 @property (nonatomic, strong) CapabilitiesDto *capabilitiesDto;
 @property enumSortingType sortingType;

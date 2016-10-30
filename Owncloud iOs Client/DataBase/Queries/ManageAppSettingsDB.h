@@ -71,8 +71,10 @@
 +(void)updateBackgroundInstantUploadTo:(BOOL)newValue;
 +(void)updatePathInstantUpload:(NSString *)newValue;
 +(void)updateInstantUploadAllUser;
-+(NSTimeInterval)getTimestampInstantUpload;
-+(void)updateTimestampInstantUpload:(NSTimeInterval)newValue;
++ (NSTimeInterval)getTimestampInstantUploadImage;
++ (NSTimeInterval)getTimestampInstantUploadVideo;
++ (void)updateTimestampInstantUploadImage:(NSTimeInterval)newValue;
++ (void)updateTimestampInstantUploadVideo:(NSTimeInterval)newValue;
 +(void)updateOnlyWifiInstantUpload:(BOOL)newValue;
 
 @end
