@@ -201,75 +201,77 @@
 }
 
 - (void) attemptUpload {
-    if (self.imageInstantUploadEnabled || self.videoInstantUploadEnabled) {
-        if (ACTIVE_USER.username != nil) {
-            if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
-                
-                BOOL instantUploadPhotosEnabled = self.imageInstantUploadEnabled;
-                BOOL instantUploadVideosEnabled = self.videoInstantUploadEnabled;
-                
-                PHFetchResult *cameraRollAssetCollection = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
-                
-                NSPredicate * newImagesFetchPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"mediaType = %i", PHAssetMediaTypeImage], [NSPredicate predicateWithFormat:@"creationDate > %@", [NSDate dateWithTimeIntervalSince1970:ACTIVE_USER.timestampInstantUploadImage]]]];
-                NSPredicate * newVideosFetchPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"mediaType = %i", PHAssetMediaTypeVideo], [NSPredicate predicateWithFormat:@"creationDate > %@", [NSDate dateWithTimeIntervalSince1970:ACTIVE_USER.timestampInstantUploadVideo]]]];
-                
-                NSPredicate *newInstantUploadAssetsFetchOptionPredicate;
-                if (instantUploadPhotosEnabled && instantUploadVideosEnabled) {
-                    newInstantUploadAssetsFetchOptionPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:@[newImagesFetchPredicate, newVideosFetchPredicate]];
-                } else if (instantUploadPhotosEnabled) {
-                    newInstantUploadAssetsFetchOptionPredicate = newImagesFetchPredicate;
-                } else if (instantUploadVideosEnabled) {
-                    newInstantUploadAssetsFetchOptionPredicate = newVideosFetchPredicate;
-                }
-                
-                PHFetchOptions *newInstantUploadAssetsFetchOptions = [PHFetchOptions new];
-                newInstantUploadAssetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
-                newInstantUploadAssetsFetchOptions.predicate = newInstantUploadAssetsFetchOptionPredicate;
-                
-                PHFetchResult *newAssets = [PHAsset fetchAssetsInAssetCollection:cameraRollAssetCollection[0] options:newInstantUploadAssetsFetchOptions];
-                
-                if (newAssets != nil && [newAssets count] != 0) {
+    @synchronized (self) {
+        if (self.imageInstantUploadEnabled || self.videoInstantUploadEnabled) {
+            if (ACTIVE_USER.username != nil) {
+                if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
                     
-                    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                    BOOL instantUploadPhotosEnabled = self.imageInstantUploadEnabled;
+                    BOOL instantUploadVideosEnabled = self.videoInstantUploadEnabled;
                     
-                    for (PHAsset *asset in newAssets) {
-                        if (asset.mediaType == PHAssetMediaTypeImage) {
-                            NSTimeInterval assetCreatedDate = [asset.creationDate timeIntervalSince1970];
-                            if (assetCreatedDate > ACTIVE_USER.timestampInstantUploadImage) {
-                                ACTIVE_USER.timestampInstantUploadImage = assetCreatedDate;
-                                [ManageAppSettingsDB updateTimestampInstantUploadImage:assetCreatedDate];
-                            }
-                        } else if (asset.mediaType == PHAssetMediaTypeVideo) {
-                            NSTimeInterval assetCreatedDate = [asset.creationDate timeIntervalSince1970];
-                            if (assetCreatedDate > ACTIVE_USER.timestampInstantUploadVideo) {
-                                ACTIVE_USER.timestampInstantUploadVideo = assetCreatedDate;
-                                [ManageAppSettingsDB updateTimestampInstantUploadVideo:assetCreatedDate];
+                    PHFetchResult *cameraRollAssetCollection = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
+                    
+                    NSPredicate * newImagesFetchPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"mediaType = %i", PHAssetMediaTypeImage], [NSPredicate predicateWithFormat:@"creationDate > %@", [NSDate dateWithTimeIntervalSince1970:ACTIVE_USER.timestampInstantUploadImage]]]];
+                    NSPredicate * newVideosFetchPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"mediaType = %i", PHAssetMediaTypeVideo], [NSPredicate predicateWithFormat:@"creationDate > %@", [NSDate dateWithTimeIntervalSince1970:ACTIVE_USER.timestampInstantUploadVideo]]]];
+                    
+                    NSPredicate *newInstantUploadAssetsFetchOptionPredicate;
+                    if (instantUploadPhotosEnabled && instantUploadVideosEnabled) {
+                        newInstantUploadAssetsFetchOptionPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:@[newImagesFetchPredicate, newVideosFetchPredicate]];
+                    } else if (instantUploadPhotosEnabled) {
+                        newInstantUploadAssetsFetchOptionPredicate = newImagesFetchPredicate;
+                    } else if (instantUploadVideosEnabled) {
+                        newInstantUploadAssetsFetchOptionPredicate = newVideosFetchPredicate;
+                    }
+                    
+                    PHFetchOptions *newInstantUploadAssetsFetchOptions = [PHFetchOptions new];
+                    newInstantUploadAssetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
+                    newInstantUploadAssetsFetchOptions.predicate = newInstantUploadAssetsFetchOptionPredicate;
+                    
+                    PHFetchResult *newAssets = [PHAsset fetchAssetsInAssetCollection:cameraRollAssetCollection[0] options:newInstantUploadAssetsFetchOptions];
+                    
+                    if (newAssets != nil && [newAssets count] != 0) {
+                        
+                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                        
+                        for (PHAsset *asset in newAssets) {
+                            if (asset.mediaType == PHAssetMediaTypeImage) {
+                                NSTimeInterval assetCreatedDate = [asset.creationDate timeIntervalSince1970];
+                                if (assetCreatedDate > ACTIVE_USER.timestampInstantUploadImage) {
+                                    ACTIVE_USER.timestampInstantUploadImage = assetCreatedDate;
+                                    [ManageAppSettingsDB updateTimestampInstantUploadImage:assetCreatedDate];
+                                }
+                            } else if (asset.mediaType == PHAssetMediaTypeVideo) {
+                                NSTimeInterval assetCreatedDate = [asset.creationDate timeIntervalSince1970];
+                                if (assetCreatedDate > ACTIVE_USER.timestampInstantUploadVideo) {
+                                    ACTIVE_USER.timestampInstantUploadVideo = assetCreatedDate;
+                                    [ManageAppSettingsDB updateTimestampInstantUploadVideo:assetCreatedDate];
+                                }
                             }
                         }
-                    }
-                    
-                    if (app.prepareFiles == nil) {
-                        app.prepareFiles = [[PrepareFilesToUpload alloc] init];
-                        app.prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
-                        app.prepareFiles.listOfAssetsToUpload = [[NSMutableArray alloc] init];
-                        app.prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
-                        app.prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
-                    }
-                    
-                    app.prepareFiles.delegate = app;
-                    app.prepareFiles.counterUploadFiles = 0;
-                    app.uploadTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-                        // If you’re worried about exceeding 10 minutes, handle it here
                         
-                    }];
-                    
-                    [app.prepareFiles addAssetsToUpload:newAssets andRemoteFolder:[[NSString alloc] initWithFormat:@"%@%@/",[UtilsUrls getFullRemoteServerPathWithWebDav:ACTIVE_USER], k_path_instant_upload]];
+                        if (app.prepareFiles == nil) {
+                            app.prepareFiles = [[PrepareFilesToUpload alloc] init];
+                            app.prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
+                            app.prepareFiles.listOfAssetsToUpload = [[NSMutableArray alloc] init];
+                            app.prepareFiles.arrayOfRemoteurl = [[NSMutableArray alloc] init];
+                            app.prepareFiles.listOfUploadOfflineToGenerateSQL = [[NSMutableArray alloc] init];
+                        }
+                        
+                        app.prepareFiles.delegate = app;
+                        app.prepareFiles.counterUploadFiles = 0;
+                        app.uploadTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+                            // If you’re worried about exceeding 10 minutes, handle it here
+                            
+                        }];
+                        
+                        [app.prepareFiles addAssetsToUpload:newAssets andRemoteFolder:[[NSString alloc] initWithFormat:@"%@%@/", [UtilsUrls getFullRemoteServerPathWithWebDav:ACTIVE_USER], k_path_instant_upload]];
+                    }
+                } else {
+                    [self setImageInstantUploadEnabled:NO];
+                    [self setVideoInstantUploadEnabled:NO];
+                    [self showAlertViewWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil) body:NSLocalizedString(@"message_access_photos_not_enabled", nil)];
+                    [self.delegate instantUploadPermissionLostOrDenied];
                 }
-            } else {
-                [self setImageInstantUploadEnabled:NO];
-                [self setVideoInstantUploadEnabled:NO];
-                [self showAlertViewWithTitle:NSLocalizedString(@"access_photos_library_not_enabled", nil) body:NSLocalizedString(@"message_access_photos_not_enabled", nil)];
-                [self.delegate instantUploadPermissionLostOrDenied];
             }
         }
     }
