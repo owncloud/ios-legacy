@@ -136,7 +136,12 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
     };
     
     if (assetToUpload.mediaType == PHAssetMediaTypeImage) {
-        [[PHImageManager defaultManager] requestImageDataForAsset:assetToUpload options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+        
+        PHImageRequestOptions *requestOptions = [PHImageRequestOptions new];
+        //this option allow to download the real image from iCloud
+        requestOptions.networkAccessAllowed = true;
+        
+        [[PHImageManager defaultManager] requestImageDataForAsset:assetToUpload options:requestOptions resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
             
             NSFileManager *fileManager = [NSFileManager defaultManager];
             if ([fileManager fileExistsAtPath:localPath]) {
@@ -164,7 +169,12 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             UploadFile(localPath, currentUpload);
         }];
     } else if (assetToUpload.mediaType == PHAssetMediaTypeVideo) {
-        [[PHImageManager defaultManager] requestPlayerItemForVideo:assetToUpload options:nil resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
+        
+        PHVideoRequestOptions *requestOptions = [PHVideoRequestOptions new];
+        //this option allow to download the real video from iCloud
+        requestOptions.networkAccessAllowed = true;
+        
+        [[PHImageManager defaultManager] requestPlayerItemForVideo:assetToUpload options:requestOptions resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
             
             //PHImageFileSandboxExtensionTokenKey = "3c58769e46e62a7eed5f9c5fde03e3e063ffabc9;00000000;00000000;000000000000001b;com.apple.avasset.read-only;00000001;01000004;0000000002b1a808;/users/jon/library/developer/coresimulator/devices/a022a96f-3de3-4de7-a0a5-d7b5465e8657/data/media/dcim/100apple/img_0006.mov";
             NSString *videoFilePath;
@@ -176,39 +186,46 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                 }
             }
             
-            if (videoFilePath) {
-                NSFileManager *fileManager = [NSFileManager defaultManager];
-                if ([fileManager fileExistsAtPath:localPath]) {
-                    [fileManager removeItemAtPath:localPath error:nil];
-                }
-                
-                AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:playerItem.asset presetName:AVAssetExportPresetHighestQuality];
-                
-                exportSession.outputURL = [NSURL fileURLWithPath:localPath];
-                exportSession.outputFileType = AVFileTypeQuickTimeMovie;
-                
-                [exportSession exportAsynchronouslyWithCompletionHandler:^{
-                    NSData *videoData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:localPath]];
-                    
-                    [fileManager createFileAtPath:localPath contents:videoData attributes:nil];
-                    
-                    UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
-                    currentUpload.originPath = localPath;
-                    currentUpload.destinyFolder = remoteFolder;
-                    currentUpload.uploadFileName = fileName;
-                    currentUpload.estimateLength = videoData.length;;
-                    currentUpload.userId = currentUser.idUser;
-                    currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
-                    currentUpload.status = waitingAddToUploadList;
-                    currentUpload.chunksLength = k_lenght_chunk;
-                    currentUpload.uploadedDate = 0;
-                    currentUpload.kindOfError = notAnError;
-                    currentUpload.isInternalUpload = YES;
-                    currentUpload.taskIdentifier = 0;
-                    
-                    UploadFile(localPath, currentUpload);
-                }];
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            if ([fileManager fileExistsAtPath:localPath]) {
+                [fileManager removeItemAtPath:localPath error:nil];
             }
+            
+            AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:playerItem.asset presetName:AVAssetExportPresetHighestQuality];
+            
+            exportSession.outputURL = [NSURL fileURLWithPath:localPath];
+            exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+            
+            [exportSession exportAsynchronouslyWithCompletionHandler:^{
+
+                NSData *videoData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:localPath]];
+              
+                switch (exportSession.status) {
+                    case AVAssetExportSessionStatusCompleted:
+                        [fileManager createFileAtPath:localPath contents:videoData attributes:nil];
+                        break;
+    
+                    default:
+                        break;
+                }
+     
+                UploadsOfflineDto *currentUpload = [[UploadsOfflineDto alloc] init];
+                currentUpload.originPath = localPath;
+                currentUpload.destinyFolder = remoteFolder;
+                currentUpload.uploadFileName = fileName;
+                currentUpload.estimateLength = videoData.length;;
+                currentUpload.userId = currentUser.idUser;
+                currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
+                currentUpload.status = waitingAddToUploadList;
+                currentUpload.chunksLength = k_lenght_chunk;
+                currentUpload.uploadedDate = 0;
+                currentUpload.kindOfError = notAnError;
+                currentUpload.isInternalUpload = YES;
+                currentUpload.taskIdentifier = 0;
+                
+                UploadFile(localPath, currentUpload);
+            }];
+            
         }];
     }
 }
