@@ -806,4 +806,46 @@
     
 }
 
+/*
+ * Method that update override all url in all user accounts
+ */
+
++(void)overrideAllAccountsWithNewURL:(NSString *)newUrl
+{
+    DLog(@"Overriding urls of all the accounts");
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=? ", newUrl];
+        
+        if (!correctQuery) {
+            DLog(@"Error overriding urls");
+        }
+    }];
+}
+
+/*
+ * Method that update if account is expired
+ */
++(void)updateExpiredInAllAccountsTo:(BOOL)value
+{
+    DLog(@"Update Expired");
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE users SET expired=? ", value ];
+        
+        if (!correctQuery) {
+            DLog(@"Error overriding urls");
+        }
+    }];
+}
+
+
 @end

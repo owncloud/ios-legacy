@@ -22,6 +22,7 @@
 #import "ManageUsersDB.h"
 #import "UtilsUrls.h"
 #import "ManageThumbnails.h"
+#import "Customization.h"
 
 #define k_DB_version_1 1
 #define k_DB_version_2 2
@@ -119,6 +120,15 @@
     if (![ManageUsersDB isUsers]) {
         //delete all keychain items
         [OCKeychain resetKeychain];
+    } else {
+        
+        if (k_override_server_url) {
+
+            [ManageUsersDB overrideAllAccountsWithNewURL:k_default_url_server];
+            
+            [ManageUsersDB updateExpiredInAllAccountsTo:YES];
+        }
+        
     }
 }
 

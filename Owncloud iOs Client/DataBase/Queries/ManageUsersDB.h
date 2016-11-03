@@ -152,4 +152,10 @@
  */
 +(BOOL)isUsers;
 
+
+
++(void)overrideAllAccountsWithNewURL:(NSString *)newUrl;
+
++(void)updateExpiredInAllAccountsTo:(BOOL)value;
+
 @end
