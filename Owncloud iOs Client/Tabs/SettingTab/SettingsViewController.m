@@ -360,10 +360,10 @@
             break;
             
         case 3:
-            if ([[InstantUpload instantUploadManager] enabled]) {
-                n = 2;
+            if ([[InstantUpload instantUploadManager] imageInstantUploadEnabled] || [[InstantUpload instantUploadManager] videoInstantUploadEnabled]) {
+                n = 3;
             } else {
-                n = 1;
+                n = 2;
             }
             break;
         case 4:
@@ -737,17 +737,26 @@
     
     switch (row) {
         case 0:
-            cell.textLabel.text = NSLocalizedString(@"title_instant_upload", nil);
-            self.switchInstantUpload = [[UISwitch alloc] initWithFrame:CGRectZero];
-            cell.accessoryView = self.switchInstantUpload;
-            [self.switchInstantUpload setOn:[[InstantUpload instantUploadManager] enabled] animated:YES];
-            [self.switchInstantUpload addTarget:self action:@selector(changeSwitchInstantUpload:) forControlEvents:UIControlEventValueChanged];
+            cell.textLabel.text = NSLocalizedString(@"title_instant_upload_photos", nil);
+            self.switchInstantUploadPhotos = [[UISwitch alloc] initWithFrame:CGRectZero];
+            cell.accessoryView = self.switchInstantUploadPhotos;
+            [self.switchInstantUploadPhotos setOn:[[InstantUpload instantUploadManager] imageInstantUploadEnabled] animated:YES];
+            [self.switchInstantUploadPhotos addTarget:self action:@selector(changeSwitchImageInstantUpload:) forControlEvents:UIControlEventValueChanged];
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-            
-            self.switchInstantUpload.accessibilityLabel = ACS_SETTINGS_INSTANT_UPLOADS_SWITCH;
+            self.switchInstantUploadPhotos.accessibilityLabel = ACS_SETTINGS_INSTANT_UPLOAD_PHOTOS_SWITCH;
             
             break;
         case 1:
+            cell.textLabel.text = NSLocalizedString(@"title_instant_upload_videos", nil);
+            self.switchInstantUploadVideos = [[UISwitch alloc] initWithFrame:CGRectZero];
+            cell.accessoryView = self.switchInstantUploadVideos;
+            [self.switchInstantUploadVideos setOn:[[InstantUpload instantUploadManager] videoInstantUploadEnabled] animated:YES];
+            [self.switchInstantUploadVideos addTarget:self action:@selector(changeSwitchVideoInstantUpload:) forControlEvents:UIControlEventValueChanged];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            self.switchInstantUploadVideos.accessibilityLabel = ACS_SETTINGS_INSTANT_UPLOAD_VIDEOS_SWITCH;
+            
+            break;
+        case 2:
             cell.textLabel.text = NSLocalizedString(@"title_background_instant_upload", nil);
             
             self.switchBackgroundInstantUpload = [[UISwitch alloc] initWithFrame:CGRectZero];
@@ -757,7 +766,7 @@
             
             [self.switchBackgroundInstantUpload addTarget:self action:@selector(changeSwitchBackgroundInstantUpload:) forControlEvents:UIControlEventValueChanged];
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-            self.switchInstantUpload.accessibilityLabel = ACS_SETTINGS_BACKGROUND_INSTANT_UPLOADS_SWITCH;
+            self.switchBackgroundInstantUpload.accessibilityLabel = ACS_SETTINGS_BACKGROUND_INSTANT_UPLOADS_SWITCH;
             break;
         default:
             break;
@@ -1656,15 +1665,22 @@
 
 #pragma mark - Instant Upload
 
--(IBAction)changeSwitchInstantUpload:(id)sender {
+-(IBAction)changeSwitchImageInstantUpload:(id)sender {
     UISwitch *uiSwitch = (UISwitch *)sender;
-    [[InstantUpload instantUploadManager] setEnabled:uiSwitch.on];
+    [[InstantUpload instantUploadManager] setImageInstantUploadEnabled:uiSwitch.on];
+    [self refreshTable];
+}
+
+-(IBAction)changeSwitchVideoInstantUpload:(id)sender {
+    UISwitch *uiSwitch = (UISwitch *)sender;
+    [[InstantUpload instantUploadManager] setVideoInstantUploadEnabled:uiSwitch.on];
     [self refreshTable];
 }
 
 -(IBAction)changeSwitchBackgroundInstantUpload:(id)sender {
     UISwitch *uiSwitch = (UISwitch *)sender;
     [[InstantUpload instantUploadManager] setBackgroundInstantUploadEnabled:uiSwitch.on];
+    [self refreshTable];
 }
 
 #pragma mark - Semaphore
@@ -1817,7 +1833,8 @@
 #pragma mark InstantUploadDelegate methods
 
 - (void) instantUploadPermissionLostOrDenied {
-    self.switchInstantUpload.on = NO;
+    self.switchInstantUploadPhotos.on = NO;
+    self.switchInstantUploadVideos.on = NO;
 }
 
 - (void) backgroundInstantUploadPermissionLostOrDenied {

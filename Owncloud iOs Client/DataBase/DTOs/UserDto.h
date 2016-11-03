@@ -44,11 +44,13 @@ typedef enum {
 @property NSInteger hasForbiddenCharactersSupport;
 @property NSInteger hasCapabilitiesSupport;
 @property NSInteger hasFedSharesOptionShareSupport;
-@property BOOL instantUpload;
+@property BOOL imageInstantUpload;
+@property BOOL videoInstantUpload;
 @property BOOL backgroundInstantUpload;
 @property (nonatomic, copy) NSString *pathInstantUpload;
 @property BOOL onlyWifiInstantUpload;
-@property NSTimeInterval timestampInstantUpload;
+@property NSTimeInterval timestampInstantUploadImage;
+@property NSTimeInterval timestampInstantUploadVideo;
 @property (nonatomic, copy) NSString *urlRedirected;
 @property (nonatomic, strong) CapabilitiesDto *capabilitiesDto;
 @property enumSortingType sortingType;

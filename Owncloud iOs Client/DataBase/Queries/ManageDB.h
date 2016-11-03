@@ -244,4 +244,11 @@
  */
 + (void) updateDBVersion17To18;
 
+/**
+ * Changes:
+ *
+ * Alter users table, adds new field to track user video and image Instant Upload preferences, copies user instant upload preference to new image and video instant upload preference fields, deletes old instant upload preference field, adds new image and video last instant upload timestamp fields, migrates old instant upload timestamp field to new timestamp fields, deletes old instant upload timestamp field.
+ */
++ (void) updateDBVersion18To19;
+
 @end

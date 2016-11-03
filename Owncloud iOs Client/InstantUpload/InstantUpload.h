@@ -15,6 +15,7 @@
 
 @protocol InstantUploadDelegate <NSObject>
 
+@required
 - (void) instantUploadPermissionLostOrDenied;
 - (void) backgroundInstantUploadPermissionLostOrDenied;
 
@@ -26,8 +27,11 @@
 
 + (instancetype) instantUploadManager;
 
-- (BOOL) enabled;
-- (void) setEnabled:(BOOL)enabled;
+- (BOOL) imageInstantUploadEnabled;
+- (void) setImageInstantUploadEnabled:(BOOL)enabled;
+
+- (BOOL) videoInstantUploadEnabled;
+- (void) setVideoInstantUploadEnabled:(BOOL)enabled;
 
 - (BOOL) backgroundInstantUploadEnabled;
 - (void) setBackgroundInstantUploadEnabled:(BOOL)enabled;

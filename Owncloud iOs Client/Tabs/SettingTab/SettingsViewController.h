@@ -39,7 +39,8 @@ typedef enum {
 @property(nonatomic,strong)IBOutlet UITableView *settingsTableView;
 @property(nonatomic,strong)UISwitch *switchPasscode;
 @property(nonatomic,strong)UISwitch *switchTouchID;
-@property(nonatomic,strong)UISwitch *switchInstantUpload;
+@property(nonatomic,strong)UISwitch *switchInstantUploadPhotos;
+@property(nonatomic,strong)UISwitch *switchInstantUploadVideos;
 @property(nonatomic,strong)UISwitch *switchBackgroundInstantUpload;
 @property(nonatomic, strong)DetailViewController *detailViewController;
 @property(nonatomic, strong)UserDto *user;
