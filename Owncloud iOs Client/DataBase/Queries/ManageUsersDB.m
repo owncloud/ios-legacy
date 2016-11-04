@@ -82,7 +82,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_capabilities_support, has_forbidden_characters_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_capabilities_support, has_forbidden_characters_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, expired FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
         
         DLog(@"RSColumnt count: %d", rs.columnCount);
         
@@ -120,6 +120,7 @@
             output.password = credDto.password;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
+            output.expired = [rs intForColumn:@"expired"];
         }
         
         [rs close];
@@ -145,7 +146,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, expired FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
         
         DLog(@"RSColumnt count: %d", rs.columnCount);
         
@@ -179,6 +180,7 @@
             output.password = nil;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
+            output.expired = [rs intForColumn:@"expired"];
         }
         
         [rs close];
@@ -237,7 +239,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, expired FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
         
         while ([rs next]) {
             
@@ -270,6 +272,7 @@
             output.password = credDto.password;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
+            output.expired = [rs intForColumn:@"expired"];
         }
         
         [rs close];
@@ -314,7 +317,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type FROM users ORDER BY id ASC"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, expired FROM users ORDER BY id ASC"];
         
         UserDto *current = nil;
         
@@ -351,6 +354,7 @@
             current.password = credDto.password;
             
             current.sortingType = [rs intForColumn:@"sorting_type"];
+            current.expired = [rs intForColumn:@"expired"];
             
             [output addObject:current];
             
@@ -375,7 +379,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, sorting_type FROM users ORDER BY id ASC"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, sorting_type, expired FROM users ORDER BY id ASC"];
         
         UserDto *current = nil;
         
@@ -406,6 +410,7 @@
             current.urlRedirected = @"";
             
             current.sortingType = [rs intForColumn:@"sorting_type"];
+            current.expired = [rs intForColumn:@"expired"];
             
             [output addObject:current];
             
@@ -630,7 +635,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type FROM users ORDER BY id DESC LIMIT 1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, expired FROM users ORDER BY id DESC LIMIT 1"];
         
         while ([rs next]) {
             
@@ -657,6 +662,7 @@
             output.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
+            output.expired = [rs intForColumn:@"expired"];
         }
         
         [rs close];
@@ -682,7 +688,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_sharee_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, has_capabilities_support=?, image_instant_upload=?, video_instant_upload=?, background_instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, timestamp_last_instant_upload_image=?, timestamp_last_instant_upload_video=?, url_redirected=?, sorting_type=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport], [NSNumber numberWithInteger:user.hasShareeApiSupport], [NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:user.hasCapabilitiesSupport], [NSNumber numberWithBool:user.imageInstantUpload], [NSNumber numberWithBool:user.videoInstantUpload], [NSNumber numberWithBool:user.backgroundInstantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.timestampInstantUploadImage], [NSNumber numberWithLong:user.timestampInstantUploadVideo], user.urlRedirected, [NSNumber numberWithInteger:user.sortingType], [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_sharee_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, has_capabilities_support=?, image_instant_upload=?, video_instant_upload=?, background_instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, timestamp_last_instant_upload_image=?, timestamp_last_instant_upload_video=?, url_redirected=?, sorting_type=?, expired=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport], [NSNumber numberWithInteger:user.hasShareeApiSupport], [NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:user.hasCapabilitiesSupport], [NSNumber numberWithBool:user.imageInstantUpload], [NSNumber numberWithBool:user.videoInstantUpload], [NSNumber numberWithBool:user.backgroundInstantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.timestampInstantUploadImage], [NSNumber numberWithLong:user.timestampInstantUploadVideo], user.urlRedirected, [NSNumber numberWithInteger:user.sortingType], [NSNumber numberWithInteger:user.expired], [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error updating a user");

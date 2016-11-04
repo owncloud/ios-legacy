@@ -122,7 +122,7 @@
         [OCKeychain resetKeychain];
     } else {
         
-        if (k_override_server_url) {
+        if (k_force_update_of_server_url) {
 
             [ManageUsersDB overrideAllAccountsWithNewURL:k_default_url_server];
             
