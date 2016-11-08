@@ -136,7 +136,28 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Init and update the DataBase
     [InitializeDatabase initDataBase];
     
+    
+    /*Reset keychain items when db need to be updated or when db first init after app has been removed and reinstalled */
+    if (![ManageUsersDB isUsers]) {
+        //delete all keychain items
+        [OCKeychain resetKeychain];
+    } else {
+        
+        if (k_force_update_of_server_url) {
+            
+            [ManageUsersDB overrideAllAccountsWithNewURL:k_default_url_server];
+            
+            [ManageUsersDB updateExpiredInAllAccountsTo:YES];
+            
+            //self.activeUser = [ManageUsersDB getActiveUser];
+            
+        }
+        
+    }
+    
     [self showSplashScreenFake];
+    
+    
     
     //Check if the server support shared api
     [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
@@ -2087,7 +2108,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
     
 }
-
 
 
 #pragma markt - LocalPath by version

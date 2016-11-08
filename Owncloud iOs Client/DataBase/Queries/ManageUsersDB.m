@@ -845,10 +845,10 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET expired=? ", value ];
+        correctQuery = [db executeUpdate:@"UPDATE users SET expired=? ",  [NSNumber numberWithBool:value] ];
         
         if (!correctQuery) {
-            DLog(@"Error overriding urls");
+            DLog(@"Error set as expired all accounts");
         }
     }];
 }

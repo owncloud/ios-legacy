@@ -22,7 +22,6 @@
 #import "ManageUsersDB.h"
 #import "UtilsUrls.h"
 #import "ManageThumbnails.h"
-#import "Customization.h"
 
 #define k_DB_version_1 1
 #define k_DB_version_2 2
@@ -116,20 +115,6 @@
     //Insert DB version
     [ManageDB insertVersionToDataBase:dbVersion];
     
-    /*Reset keychain items when db need to be updated or when db first init after app has been removed and reinstalled */
-    if (![ManageUsersDB isUsers]) {
-        //delete all keychain items
-        [OCKeychain resetKeychain];
-    } else {
-        
-        if (k_force_update_of_server_url) {
-
-            [ManageUsersDB overrideAllAccountsWithNewURL:k_default_url_server];
-            
-            [ManageUsersDB updateExpiredInAllAccountsTo:YES];
-        }
-        
-    }
 }
 
 #pragma mark - System Updates
