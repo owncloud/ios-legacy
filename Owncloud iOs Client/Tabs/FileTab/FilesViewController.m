@@ -286,6 +286,10 @@
     //ErrorLogin
     app.isErrorLoginShown = NO;
     
+    if (k_force_update_of_server_url && APP_DELEGATE.activeUser.expired) {
+        [self errorLogin];
+    }
+    
     app.currentViewVisible = self;
     
     //Relaunch the uploads that failed before
@@ -3469,7 +3473,10 @@
     
     //Edit Account
     _resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser];
-    [_resolvedCredentialError setBarForCancelForLoadingFromModal];
+    //If account expired avoid going out login view
+    if(!k_force_update_of_server_url && APP_DELEGATE.activeUser.expired){
+        [_resolvedCredentialError setBarForCancelForLoadingFromModal];
+    }
     
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:_resolvedCredentialError];
