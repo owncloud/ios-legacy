@@ -72,6 +72,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         isNeedToCheckAgain = YES;
         hasInvalidAuth = NO;
         isHttpsSecure = NO;
+        self.alreadyHaveValidSAMLCredentials = NO;
         
         showPasswordCharacterButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [showPasswordCharacterButton setHidden:YES];
@@ -116,7 +117,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     [super viewDidAppear:animated];
     
-    if(![self.auxUrlForReloadTable isEqualToString:@""]) {
+    if(![self.auxUrlForReloadTable isEqualToString:@""] && !self.alreadyHaveValidSAMLCredentials && !self.alreadyHaveValidSAMLCredentials) {
         DLog(@"1- self.auxUrlForReloadTable: %@",self.auxUrlForReloadTable);
         [self checkUrlManually];
     }
@@ -128,10 +129,20 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     ((CheckAccessToServer *)[CheckAccessToServer sharedManager]).delegate = self;
     
-    if(self.urlTextField.text.length > 0 && isConnectionToServer == NO) {
+    
+    if (self.urlTextField.text.length > 0 && (isConnectionToServer == NO) && !self.alreadyHaveValidSAMLCredentials) {
+        DLog(@"_login view appear and no connection to server and no valid SAML credentials auto recheck server manually_");
         [self checkUrlManually];
     }
     
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    
+    [super viewWillDisappear:animated];
+    
+    //Cleaning boolean for next connections
+    self.alreadyHaveValidSAMLCredentials = NO;
 }
 
 - (void)setTableBackGroundColor {
@@ -1565,9 +1576,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     
-    
     DLog(@"6- self.auxUrlForReloadTable %@", self.auxUrlForReloadTable);
     DLog(@"6- self.urlTextField.text %@", self.urlTextField.text);
+    DLog(@"6- textFieldDidEndEditing:textField %@", textField);
+    DLog(@"6- is in main thread? %d", [NSThread isMainThread]);
     
     if(self.urlTextField != nil) {
         NSString *urlWithoutUserPassword = [self stripUsernameAndPassword:self.urlTextField.text];
@@ -1582,9 +1594,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     self.auxUsernameForReloadTable = self.usernameTextField.text;
     self.auxPasswordForReloadTable = self.passwordTextField.text;
     
-    //if it is nill the screen is not here
+    //if it is nil the screen is not here
     if(((CheckAccessToServer *)[CheckAccessToServer sharedManager]).delegate != nil) {
-        
+        DLog(@"CheckAccessToServer nil");
         //[self undoAnimateTextField:textField up:YES];
         
         if(isUserTextUp==YES || isPasswordTextUp==YES){
@@ -1653,6 +1665,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 }
 
 -(void) isConnectionToTheServerByUrlInOtherThread {
+    DLog(@"_isConnectionToTheServerByUrlInOtherThread_");
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
     });
@@ -1914,8 +1927,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 
 
 -(void) checkLogin {
+    DLog(@"_checkLogin_");
     
-    //Update connect string
     [self updateConnectString];
     
     [UtilsFramework deleteAllCookies];
@@ -1962,6 +1975,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         } else {
             hasInvalidAuth = NO;
         }
+        
+        DLog(@"_Check server success_  isInvalidAuth=%d",isInvalid);
         
         [self checkTheSecurityOfTheRedirectedURL:response.URL.absoluteString];
         
@@ -2011,6 +2026,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             hasInvalidAuth = NO;
         }
         
+        DLog(@"_Check server failure_  isInvalidAuth=%d",isInvalid);
+        
         if (response == nil) {
              [self checkTheSecurityOfTheRedirectedURL:redirectedServer];
         }else{
@@ -2037,7 +2054,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  * @param repsonse -> NSHTTPURLResponse, the response of the server
  */
 - (void) checkTheSecurityOfTheRedirectedURL: (NSString *)redirectionURLString {
-    //Check the security of the redirection
     
     if (isHttps) {
         if ([redirectionURLString hasPrefix:k_https_prefix]) {
@@ -2046,6 +2062,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             isHttpsSecure = NO;
         }
     }
+    
+    DLog(@"_Check the security of the redirectedURL_: %@ isHttps=%d", redirectionURLString, isHttps);
 }
 
 
@@ -2061,7 +2079,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  *
  */
 - (void) connectToServer{
-        
+    DLog(@"_connectToServer_");
+    
     NSString *userName=self.usernameTextField.text;
     NSString *password=self.passwordTextField.text;
     
@@ -2077,7 +2096,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
      [[AppDelegate sharedOCCommunication] readFolder:_connectString withUserSessionToken:nil onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token){
         
-        DLog(@"Operation response code: %ld", (long)response.statusCode);
+        DLog(@"Operation success response code: %ld", (long)response.statusCode);
         
         BOOL isSamlServer = NO;
 
@@ -2159,7 +2178,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  * @warning This method it's present also in AddAcountViewController and EditViewController
  */
 -(void)createUserAndDataInTheSystemWithRequest:(NSArray *)items andCode:(NSInteger) requestCode {
-      
+    DLog(@"_createUserAndDataInTheSystemWithRequest:andCode:_ %ld",(long)requestCode);
    // DLog(@"Request Did Fetch Directory Listing And Test Authetification");
     
     if(requestCode >= 400) {
@@ -2184,7 +2203,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             }
         }
         
-        //DLog(@"URL FINAL: %@", userDto.url);
+        DLog(@"Request code >=400 and userDtoUrl: %@", userDto.url);
         
         AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         
@@ -2225,7 +2244,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 
 -(void) errorLogin {
     
-    
     DLog(@"Error login");
     
     [self hideTryingToLogin];
@@ -2249,7 +2267,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  *
  */
 - (void) restoreTheCookiesOfActiveUser {
-    
+    DLog(@"_restoreTheCookiesOfActiveUser_");
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //1- Clean the cookies storage
@@ -2263,11 +2281,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 #pragma marK - Action Buttons
 
 -(void)checkUrlManually {
+    DLog(@"_checkUrlManually_");
     [self textFieldDidEndEditing:self.urlTextField];
 }
 
 -(void)hideOrShowPassword {
-    
     if ([self.passwordTextField isSecureTextEntry]) {
         [self.passwordTextField setSecureTextEntry:NO];
         [showPasswordCharacterButton setBackgroundImage:[UIImage imageNamed:@"NonRevealPasswordIcon.png"] forState:UIControlStateNormal];
@@ -2283,26 +2301,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 }
 
 -(void)goTryToDoLogin {
-    DLog(@"goTryToDoLogin");
-    DLog(@"user: %@ | pass: %@", self.usernameTextField.text, self.passwordTextField.text);
+    DLog(@"_goTryToDoLogin_ with user: %@ | pass: %@", self.usernameTextField.text, self.passwordTextField.text);
     
     isError500 = NO;
     
     if (self.urlTextField.text.length > 0 && self.usernameTextField.text.length > 0 && self.passwordTextField.text.length > 0 && isConnectionToServer==YES && hasInvalidAuth==NO) {
         
-        //We check the problematic characters before login
-        //if([self isProblematicCharactersOnPassword:passwordTxtField.text]) {
-        if(NO) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"forbidden_characters_in_password", nil)
-                                                            message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-            [alert show];
-        } else {
-            [self showTryingToLogin];
-            
-            if(isConnectionToServer){
-                //Try login
-                [self checkLogin];
-            }
+        [self showTryingToLogin];
+        
+        if(isConnectionToServer){
+            DLog(@"Connection with server, try to login");
+            [self checkLogin];
         }
     }else {
         isLoginButtonEnabled = NO;
@@ -2310,7 +2319,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 }
 
 - (void) showHelpURLInSafari {
-    DLog(@"showHelpURLInSafari");
+    DLog(@"_showHelpURLInSafari_");
     
     NSURL *url = [NSURL URLWithString:k_url_link_on_login];
     
@@ -2362,6 +2371,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     //Get the URL string
     NSString *urlString = [self getUrlToCheck];
+    DLog(@"_checkURLServerForSSO_ %@",urlString);
     
     //Check SSO Server
     CheckSSOServer *checkSSOServer = [CheckSSOServer new];
@@ -2385,9 +2395,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  *
  */
 - (void) showSSOLoginScreen{
-    
+
     //Server url
     NSString * urlString = [self getUrlToCheck];
+    
+    DLog(@"_showSSOLoginScreen_ url: %@", urlString);
     
     //In main thread
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -2471,6 +2483,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  *
  */
 - (void)setCookieForSSO:(NSString *) cookieString andSamlUserName:(NSString*)samlUserName {
+    DLog(@"_setCookieForSSO:andSamlUserName:_ %@", samlUserName);
     
     //We should be change this behaviour when in the server side update the cookies.
     if (samlUserName) {
@@ -2479,6 +2492,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         _passwordTextField = [UITextField new];
         _passwordTextField.text = cookieString;
+        self.alreadyHaveValidSAMLCredentials = YES;
+        
         [self goTryToDoLogin];
         
     }else{

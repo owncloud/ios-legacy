@@ -119,7 +119,7 @@ static NSString *const tmpFileName = @"tmp.der";
     self.urlStringToRetryTheWholeProcess = urlString;
     
     NSString *connectURL =[NSString stringWithFormat:@"%@%@",urlString, k_url_webdav_server_without_last_slash];
-    DLog(@"URL of shibbolet:%@",connectURL);
+    DLog(@"_openLink_ URL of shibbolet: %@",connectURL);
     _ownCloudServerUrlString = connectURL;
     
     [self clearAllCookies];
@@ -205,6 +205,7 @@ static NSString *const tmpFileName = @"tmp.der";
 }
 
 - (void) delay {
+    DLog(@"_delay_ new NSURLConnection");
     //We make a NSURLConnection to detect if we receive an authentication challenge
     [NSURLConnection connectionWithRequest:self.authRequest delegate:self];
 }
@@ -235,7 +236,7 @@ static NSString *const tmpFileName = @"tmp.der";
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
-    DLog(@"loading started: %@", webView.request.URL.absoluteString);
+    DLog(@"_webViewDidStartLoad_: %@", webView.request.URL.absoluteString);
     
     [_webView endEditing:YES];
     
@@ -252,7 +253,7 @@ static NSString *const tmpFileName = @"tmp.der";
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
     
-    DLog(@"webViewDidFinishLoad");
+    DLog(@"_webViewDidFinishLoad_");
     
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delay) object:nil];
     
@@ -460,7 +461,7 @@ static NSString *const tmpFileName = @"tmp.der";
  *
  */
 - (NSString *) requestForUserNameByCookie:(NSString *) cookieString {
-    
+    DLog(@"_requestForUserNameByCookie:_ %@", cookieString);
     __block NSString *userName = nil;
 
     //We create a semaphore to wait until we recive the responses from Async calls

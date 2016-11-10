@@ -79,7 +79,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     
     _urlStatusCheck = [NSString stringWithFormat:@"%@status.php", url];
     
-    NSLog(@"URL Status: |%@|", _urlStatusCheck);
+    NSLog(@"_isConnectionToTheServerByUrl_ URL Status: |%@|", _urlStatusCheck);
     
     
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:0 timeoutInterval:timeout];
