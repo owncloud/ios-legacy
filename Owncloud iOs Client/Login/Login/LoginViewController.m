@@ -2134,10 +2134,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             //Pass the items with OCFileDto to FileDto Array
             NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
             [self createUserAndDataInTheSystemWithRequest:directoryList andCode:response.statusCode];
-            if (APP_DELEGATE.activeUser.expired){
-                [ManageUsersDB updateExpiredInAllAccountsTo:NO];
-                APP_DELEGATE.activeUser.expired = NO;
-            }
         }
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token, NSString *redirectedServer) {
         

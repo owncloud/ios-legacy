@@ -853,5 +853,45 @@
     }];
 }
 
+/*
+ * Method that update url of the user
+ */
++(void)updateUrl:(NSString *)url byUserId:(NSInteger)userId
+{
+    DLog(@"Update url");
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=? WHERE id = ? ",  url, [NSNumber numberWithInteger:userId] ];
+        
+        if (!correctQuery) {
+            DLog(@"Error set url of userId %ld", (long)userId);
+        }
+    }];
+}
+
+/*
+ * Method that update expired of the user
+ */
++(void)updateExpired:(BOOL)value byUserId:(NSInteger)userId
+{
+    DLog(@"Update expired of userId %ld", (long)userId);
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE users SET expired=? WHERE id = ? ",  value, [NSNumber numberWithInteger:userId] ];
+        
+        if (!correctQuery) {
+            DLog(@"Error set expired of userId %ld", (long)userId);
+        }
+    }];
+}
+
 
 @end

@@ -158,4 +158,8 @@
 
 +(void)updateExpiredInAllAccountsTo:(BOOL)value;
 
++(void)updateUrl:(NSString *)url byUserId:(NSInteger)userId;
+
++(void)updateExpired:(BOOL)value byUserId:(NSInteger)userId;
+
 @end

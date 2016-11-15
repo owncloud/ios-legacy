@@ -286,7 +286,7 @@
     //ErrorLogin
     app.isErrorLoginShown = NO;
     
-    if (k_force_update_of_server_url && APP_DELEGATE.activeUser.expired) {
+    if (APP_DELEGATE.activeUser.expired) {
         [self errorLogin];
     }
     

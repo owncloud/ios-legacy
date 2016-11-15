@@ -295,6 +295,15 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         
         [self hideTryingToLogin];
         
+        if (k_force_update_of_server_url && self.selectedUser.expired) {
+            [ManageUsersDB updateUrl:userDto.url byUserId:self.selectedUser.idUser];
+            [ManageUsersDB updateExpired:NO byUserId:self.selectedUser.idUser];
+            if (self.selectedUser.activeaccount) {
+                APP_DELEGATE.activeUser.url = userDto.url;
+                APP_DELEGATE.activeUser.expired = NO;
+            }
+        }
+
         [ManageUsersDB updatePassword:self.selectedUser];
         
         //Update features and capabilities of the active account
