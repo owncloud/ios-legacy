@@ -154,12 +154,12 @@
 
 
 
-+(void)overrideAllAccountsWithNewURL:(NSString *)newUrl;
++(void)overrideAllAccountsWithNewURL:(NSString *)newValue;
 
-+(void)updateExpiredInAllAccountsTo:(BOOL)value;
++(void)updateExpiredInAllAccountsTo:(BOOL)newValue;
 
-+(void)updateUrl:(NSString *)url byUserId:(NSInteger)userId;
++(void)updateUrl:(NSString *)newValue byUserId:(NSInteger)userId;
 
-+(void)updateExpired:(BOOL)value byUserId:(NSInteger)userId;
++(void)updateExpiredTo:(BOOL)newValue byUserId:(NSInteger)userId;
 
 @end

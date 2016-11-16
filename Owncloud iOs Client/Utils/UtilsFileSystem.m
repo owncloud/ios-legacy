@@ -67,6 +67,42 @@
    return [[NSFileManager defaultManager] fileExistsAtPath:filePath];
 }
 
++ (void) initBundleVersionDefaults {
+    
+    NSString* bundleVersionOfLastRun = [[NSUserDefaults standardUserDefaults] objectForKey:@"BundleVersionOfLastRun"];
+    
+    if (bundleVersionOfLastRun == nil){
+        NSString* currentVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+        NSString* currentShortVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+        
+        [[NSUserDefaults standardUserDefaults] setObject:currentVersion forKey:@"BundleVersionOfLastRun"];
+        [[NSUserDefaults standardUserDefaults] setObject:currentShortVersion forKey:@"BundleShortVersionOfLastRun"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
 
++ (BOOL) isOpenAfterUpgrade {
+    
+    NSString* currentVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    NSString* currentShortVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    
+    NSString* bundleVersionOfLastRun = [[NSUserDefaults standardUserDefaults] objectForKey:@"BundleVersionOfLastRun"];
+    NSString* bundleShortVersionOfLastRun = [[NSUserDefaults standardUserDefaults] objectForKey:@"BundleShortVersionOfLastRun"];
+    //First start after installing the app or
+    if ( !([bundleShortVersionOfLastRun isEqual:currentShortVersion] && [bundleVersionOfLastRun isEqual:currentVersion]) ) {
+        //App was updated since last run
+        
+        [[NSUserDefaults standardUserDefaults] setObject:currentVersion forKey:@"BundleVersionOfLastRun"];
+        [[NSUserDefaults standardUserDefaults] setObject:currentShortVersion forKey:@"BundleShortVersionOfLastRun"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        return YES;
+        
+    } else {
+        
+        return NO;
+    }
+
+}
 
 @end

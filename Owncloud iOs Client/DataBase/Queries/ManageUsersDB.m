@@ -812,12 +812,8 @@
     
 }
 
-/*
- * Method that update override all url in all user accounts
- */
 
-+(void)overrideAllAccountsWithNewURL:(NSString *)newUrl
-{
++(void)overrideAllAccountsWithNewURL:(NSString *)newValue {
     DLog(@"Overriding urls of all the accounts");
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -825,7 +821,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=? ", newUrl];
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=? ", newValue];
         
         if (!correctQuery) {
             DLog(@"Error overriding urls");
@@ -833,11 +829,8 @@
     }];
 }
 
-/*
- * Method that update if account is expired
- */
-+(void)updateExpiredInAllAccountsTo:(BOOL)value
-{
+
++(void)updateExpiredInAllAccountsTo:(BOOL)newValue {
     DLog(@"Update Expired");
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -845,7 +838,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET expired=? ",  [NSNumber numberWithBool:value] ];
+        correctQuery = [db executeUpdate:@"UPDATE users SET expired=? ",  [NSNumber numberWithBool:newValue] ];
         
         if (!correctQuery) {
             DLog(@"Error set as expired all accounts");
@@ -853,11 +846,8 @@
     }];
 }
 
-/*
- * Method that update url of the user
- */
-+(void)updateUrl:(NSString *)url byUserId:(NSInteger)userId
-{
+
++(void)updateUrl:(NSString *)newValue byUserId:(NSInteger)userId {
     DLog(@"Update url");
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -865,7 +855,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=? WHERE id = ? ",  url, [NSNumber numberWithInteger:userId] ];
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=? WHERE id=? ",  newValue, [NSNumber numberWithInteger:userId] ];
         
         if (!correctQuery) {
             DLog(@"Error set url of userId %ld", (long)userId);
@@ -873,11 +863,8 @@
     }];
 }
 
-/*
- * Method that update expired of the user
- */
-+(void)updateExpired:(BOOL)value byUserId:(NSInteger)userId
-{
+
++(void)updateExpiredTo:(BOOL)newValue byUserId:(NSInteger)userId {
     DLog(@"Update expired of userId %ld", (long)userId);
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -885,7 +872,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET expired=? WHERE id = ? ",  value, [NSNumber numberWithInteger:userId] ];
+        correctQuery = [db executeUpdate:@"UPDATE users SET expired=? WHERE id=? ",  [NSNumber numberWithBool:newValue], [NSNumber numberWithInteger:userId] ];
         
         if (!correctQuery) {
             DLog(@"Error set expired of userId %ld", (long)userId);

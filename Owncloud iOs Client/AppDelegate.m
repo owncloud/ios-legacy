@@ -58,6 +58,7 @@
 #import "ManageTouchID.h"
 #import "InstantUpload.h"
 #import "DownloadUtils.h"
+#import "UtilsFileSystem.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -126,6 +127,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     _isNewUser = NO;
     _isExpirationTimeInUpload = NO;
     
+    [UtilsFileSystem  initBundleVersionDefaults];
+    
     [self moveIfIsNecessaryFilesAfterUpdateAppFromTheOldFolderArchitecture];
     
     [self moveIfIsNecessaryFolderOfOwnCloudFromContainerAppSandboxToAppGroupSanbox];
@@ -136,28 +139,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Init and update the DataBase
     [InitializeDatabase initDataBase];
     
-    
-    /*Reset keychain items when db need to be updated or when db first init after app has been removed and reinstalled */
     if (![ManageUsersDB isUsers]) {
-        //delete all keychain items
+        //Reset all keychain items when db need to be updated or when db first init after app has been removed and reinstalled
         [OCKeychain resetKeychain];
-    } else {
         
-        if (k_force_update_of_server_url) {
-            
-            [ManageUsersDB overrideAllAccountsWithNewURL:k_default_url_server];
-            
-            [ManageUsersDB updateExpiredInAllAccountsTo:YES];
-            
-            //self.activeUser = [ManageUsersDB getActiveUser];
-            
-        }
-        
+    } else if (k_force_update_of_server_url && [UtilsFileSystem isOpenAfterUpgrade]) {
+        //set up parameters to force override url for all existing accounts
+        [ManageUsersDB overrideAllAccountsWithNewURL:k_default_url_server];
+        [ManageUsersDB updateExpiredInAllAccountsTo:YES];
     }
     
     [self showSplashScreenFake];
-    
-    
     
     //Check if the server support shared api
     [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
