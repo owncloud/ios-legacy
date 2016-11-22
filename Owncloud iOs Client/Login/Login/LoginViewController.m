@@ -117,7 +117,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     [super viewDidAppear:animated];
     
-    if(![self.auxUrlForReloadTable isEqualToString:@""] && !self.alreadyHaveValidSAMLCredentials && !self.alreadyHaveValidSAMLCredentials) {
+    if(![self.auxUrlForReloadTable isEqualToString:@""] && !self.alreadyHaveValidSAMLCredentials) {
         DLog(@"1- self.auxUrlForReloadTable: %@",self.auxUrlForReloadTable);
         [self checkUrlManually];
     }
