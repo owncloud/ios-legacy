@@ -130,7 +130,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     ((CheckAccessToServer *)[CheckAccessToServer sharedManager]).delegate = self;
     
     
-    if (self.urlTextField.text.length > 0 && (isConnectionToServer == NO) && !self.alreadyHaveValidSAMLCredentials) {
+    if (self.urlTextField.text.length > 0 && (!isConnectionToServer) && !self.alreadyHaveValidSAMLCredentials) {
         DLog(@"_login view appear and no connection to server and no valid SAML credentials auto recheck server manually_");
         [self checkUrlManually];
     }
@@ -1631,7 +1631,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             [refreshTestServerButton setHidden:NO];
         }
         
-        if ((self.urlTextField.text.length > 0 && self.passwordTextField.text.length > 0 && self.passwordTextField.text.length > 0 && isConnectionToServer==YES && hasInvalidAuth == NO) || (isConnectionToServer && (k_is_oauth_active || k_is_sso_active))) {
+        if ((self.urlTextField.text.length > 0 && self.passwordTextField.text.length > 0 && self.passwordTextField.text.length > 0 && isConnectionToServer && !hasInvalidAuth) || (isConnectionToServer && (k_is_oauth_active || k_is_sso_active))) {
             //[loginButton setEnabled:YES];
             isLoginButtonEnabled = YES;
             [self.tableView reloadData];
@@ -1800,7 +1800,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  dispatch_async(dispatch_get_main_queue(), ^{
     if(isConnection) {
         isConnectionToServer = YES;
-        if (self.urlTextField.text.length > 0 && self.usernameTextField.text.length > 0 && self.passwordTextField.text.length > 0 && hasInvalidAuth == NO) {
+        if (self.urlTextField.text.length > 0 && self.usernameTextField.text.length > 0 && self.passwordTextField.text.length > 0 && !hasInvalidAuth) {
             //[loginButton setEnabled:YES];
             isLoginButtonEnabled = YES;
         }
@@ -1989,7 +1989,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         BOOL isInvalid = NO;
         
-        if (k_is_sso_active == NO) {
+        if (!k_is_sso_active) {
             //Get header related with autentication type
             NSString *autenticationType = [[response allHeaderFields] valueForKey:@"Www-Authenticate"];
             
@@ -1999,7 +1999,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                     isInvalid = NO;
                 } else if ([autenticationType hasPrefix:@"Bearer"]) {
                     //Autentication type oauth
-                    if (k_is_oauth_active == YES) {
+                    if (k_is_oauth_active) {
                         //Check if is activate oauth
                         isInvalid = NO;
                     } else {
