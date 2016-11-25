@@ -1966,16 +1966,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     [[AppDelegate sharedOCCommunication] checkServer:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
         //Update the interface depend of if isInvalid or not
-
-        if (k_is_sso_active) {
-            isLoginButtonEnabled = YES;
-            hasInvalidAuth = NO;
-
-        } else {
-            //Unkown, must be invalid
-            hasInvalidAuth = YES;
-            isLoginButtonEnabled = NO;
-        }
+        
+        isLoginButtonEnabled = k_is_sso_active;
+        hasInvalidAuth = !k_is_sso_active;
         
         DLog(@"_Check server success_  InvalidAuth=%d",hasInvalidAuth);
         
