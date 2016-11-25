@@ -1965,18 +1965,19 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     [[AppDelegate sharedOCCommunication] checkServer:_connectString onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         
-        BOOL isInvalid = NO;
-        isLoginButtonEnabled = YES;
-        
         //Update the interface depend of if isInvalid or not
-        if (isInvalid) {
+
+        if (k_is_sso_active) {
+            isLoginButtonEnabled = YES;
+            hasInvalidAuth = NO;
+
+        } else {
+            //Unkown, must be invalid
             hasInvalidAuth = YES;
             isLoginButtonEnabled = NO;
-        } else {
-            hasInvalidAuth = NO;
         }
         
-        DLog(@"_Check server success_  isInvalidAuth=%d",isInvalid);
+        DLog(@"_Check server success_  InvalidAuth=%d",hasInvalidAuth);
         
         [self checkTheSecurityOfTheRedirectedURL:response.URL.absoluteString];
         
@@ -2026,7 +2027,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             hasInvalidAuth = NO;
         }
         
-        DLog(@"_Check server failure_  isInvalidAuth=%d",isInvalid);
+        DLog(@"_Check server failure_  InvalidAuth=%d",hasInvalidAuth);
         
         if (response == nil) {
              [self checkTheSecurityOfTheRedirectedURL:redirectedServer];
@@ -2305,16 +2306,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     isError500 = NO;
     
-    if (self.urlTextField.text.length > 0 && self.usernameTextField.text.length > 0 && self.passwordTextField.text.length > 0 && isConnectionToServer==YES && hasInvalidAuth==NO) {
-        
+    DLog(@"_goTryToDoLogin_ log2 urlTextField: %@ username:%@  isConnectionToServer%d : hasInvalidAuth: %d", self.urlTextField.text, self.usernameTextField.text, isConnectionToServer, hasInvalidAuth);
+    if (self.urlTextField.text.length > 0 && self.usernameTextField.text.length > 0 && self.passwordTextField.text.length > 0 && isConnectionToServer && !hasInvalidAuth) {
+        DLog(@"_goTryToDoLogin_ logIf_ Connection with server OK, go to showTryingToLogin");
+
         [self showTryingToLogin];
+        DLog(@"Connection with server, try to login");
+        [self checkLogin];
         
-        if(isConnectionToServer){
-            DLog(@"Connection with server, try to login");
-            [self checkLogin];
-        }
     }else {
         isLoginButtonEnabled = NO;
+        DLog(@"_goTryToDoLogin_ logElse urlTextField: %@ username:%@  isConnectionToServer%d : hasInvalidAuth: %d", self.urlTextField.text, self.usernameTextField.text, isConnectionToServer, hasInvalidAuth);
     }
 }
 
