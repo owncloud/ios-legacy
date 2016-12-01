@@ -559,7 +559,7 @@
 
 + (NSString *) getUserAgent {
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *userAgentWithAppVersion = [NSString stringWithFormat:@"%@%@",k_user_agent,appVersion];
+    NSString *userAgentWithAppVersion = [NSString stringWithFormat:@"%@",[k_user_agent stringByReplacingOccurrencesOfString:@"$appVersion" withString:appVersion]];
     
     return userAgentWithAppVersion;
     
