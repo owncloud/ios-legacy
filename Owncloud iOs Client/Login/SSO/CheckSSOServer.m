@@ -121,6 +121,7 @@
              willSendRequest: (NSURLRequest *)requestRed
             redirectResponse: (NSURLResponse *)redirectResponse;
 {
+    DLog(@"_connection:willSendRequest:redirectResponse_");
     //If there is a redireccion
     if (redirectResponse) {
         DLog(@"redirecction");

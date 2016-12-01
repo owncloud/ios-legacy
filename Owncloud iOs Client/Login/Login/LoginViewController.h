@@ -84,6 +84,8 @@ extern NSString *loginViewControllerRotate;
 @property(nonatomic)CGRect userAndPasswordFrame;
 @property(nonatomic)CGRect imageTextFieldLeftFrame;
 
+@property(nonatomic)BOOL alreadyHaveValidSAMLCredentials;
+
 
 -(void)setTableBackGroundColor;
 -(void)checkUrlManually;
