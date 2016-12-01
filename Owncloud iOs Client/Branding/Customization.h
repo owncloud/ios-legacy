@@ -131,7 +131,7 @@
 #define k_url_link_on_login @"https://owncloud.com/mobile/new"
 
 //User-Agent, Mozilla/5.0 (iOS) ownCloud-iOS/<appVersion> <ob_customUserAgent>
-#define k_user_agent @"Mozilla/5.0 (iOS) ownCloud-iOS/$appVersion "
+#define k_user_agent @"Mozilla/5.0 (iOS) ownCloud-iOS/$appVersion"
 
 //Enable/Disable Background uploads and download (NSURLSession or NSOperation)
 #define k_is_background_active YES
