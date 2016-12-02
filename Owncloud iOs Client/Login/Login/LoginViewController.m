@@ -1585,10 +1585,15 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         NSString *urlWithoutUserPassword = [self stripUsernameAndPassword:self.urlTextField.text];
         self.auxUrlForReloadTable = [self stripIndexPhpOrAppsFilesFromUrl:urlWithoutUserPassword];
     } else {
-        //This is when we deleted the last account and go to the login screen
+        //This is when we deleted the last account and go to the login screen and when edit credentials in settings view
         self.urlTextField = [[UITextField alloc]initWithFrame:self.urlFrame];
         self.urlTextField.text = self.auxUrlForReloadTable;
         textField = self.urlTextField;
+    }
+    
+    if(self.usernameTextField.text == nil) {
+        self.usernameTextField = [[UITextField alloc]initWithFrame:self.userAndPasswordFrame];
+        self.usernameTextField.text = self.auxUsernameForReloadTable;
     }
     
     self.auxUsernameForReloadTable = self.usernameTextField.text;
