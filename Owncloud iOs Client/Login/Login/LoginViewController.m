@@ -1991,11 +1991,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             //Get header related with autentication type
             NSString *autenticationType = [[response allHeaderFields] valueForKey:@"Www-Authenticate"];
             
-            if (autenticationType) {
-                //Autentication type basic
-                if ([autenticationType hasPrefix:@"Basic"]) {
-                    isInvalid = NO;
-                } else if ([autenticationType hasPrefix:@"Bearer"]) {
+            if ((autenticationType) && ([autenticationType hasPrefix:@"Bearer"])) {
                     //Autentication type oauth
                     if (k_is_oauth_active) {
                         //Check if is activate oauth
@@ -2003,14 +1999,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                     } else {
                         isInvalid = YES;
                     }
-                } else {
-                    //Unknown autentication type
-                    isInvalid = YES;
-                }
             } else {
-                //The server not return a Www-Authenticate header
-                isInvalid = YES;
+                    //Unknown autentication type
+                    isInvalid = NO;
             }
+            
         } else {
             //If sso_active the check does not fail
             //As we are receiving a SAML error from SAML server, we forced the flag to accept this connection
