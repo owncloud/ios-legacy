@@ -233,21 +233,11 @@
                         
                         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                         
-                        for (PHAsset *asset in newAssets) {
-                            if (asset.mediaType == PHAssetMediaTypeImage) {
-                                NSTimeInterval assetCreatedDate = [asset.creationDate timeIntervalSince1970];
-                                if (assetCreatedDate > ACTIVE_USER.timestampInstantUploadImage) {
-                                    ACTIVE_USER.timestampInstantUploadImage = assetCreatedDate;
-                                    [ManageAppSettingsDB updateTimestampInstantUploadImage:assetCreatedDate];
-                                }
-                            } else if (asset.mediaType == PHAssetMediaTypeVideo) {
-                                NSTimeInterval assetCreatedDate = [asset.creationDate timeIntervalSince1970];
-                                if (assetCreatedDate > ACTIVE_USER.timestampInstantUploadVideo) {
-                                    ACTIVE_USER.timestampInstantUploadVideo = assetCreatedDate;
-                                    [ManageAppSettingsDB updateTimestampInstantUploadVideo:assetCreatedDate];
-                                }
-                            }
-                        }
+                        NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+                        ACTIVE_USER.timestampInstantUploadImage = now;
+                        ACTIVE_USER.timestampInstantUploadVideo = now;
+                        [ManageAppSettingsDB updateTimestampInstantUploadImage:now];
+                        [ManageAppSettingsDB updateTimestampInstantUploadVideo:now];
                         
                         if (app.prepareFiles == nil) {
                             app.prepareFiles = [[PrepareFilesToUpload alloc] init];
