@@ -1989,13 +1989,18 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
          });
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
-        BOOL isInvalid = NO;
+        BOOL isInvalid = YES;
+        
+        NSString *authenticationHeader = @"Www-Authenticate";
+        NSString *outhAuthentication = @"bearer";
+        NSString *basicAuthentication = @"basic";
         
         if (!k_is_sso_active) {
-            //Get header related with autentication type
-            NSString *autenticationType = [[response allHeaderFields] valueForKey:@"Www-Authenticate"];
-            
-            if ((autenticationType) && ([autenticationType hasPrefix:@"Bearer"])) {
+            if (response.statusCode == kOCErrorServerUnauthorized) {
+                //Get header related with autentication type
+                NSString *autenticationType = [[response allHeaderFields] valueForKey:authenticationHeader];
+
+                if ((autenticationType) && ([autenticationType.lowercaseString hasPrefix:outhAuthentication])) {
                     //Autentication type oauth
                     if (k_is_oauth_active) {
                         //Check if is activate oauth
@@ -2003,9 +2008,13 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                     } else {
                         isInvalid = YES;
                     }
-            } else {
-                    //Unknown autentication type
+                } else if ((autenticationType) && ([autenticationType.lowercaseString hasPrefix:basicAuthentication])) {
                     isInvalid = NO;
+                } else {
+                    //For the moment we have to mantain this value as valid because when we work with
+                    //some Redirected Server our library lost the Wwww-Authenticate header
+                    isInvalid = NO;
+                }
             }
             
         } else {
@@ -2014,6 +2023,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             isInvalid = NO;
             isLoginButtonEnabled = YES;
         }
+        
         
         //Update the interface depend of if isInvalid or not
         if (isInvalid) {
