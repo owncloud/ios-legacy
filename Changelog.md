@@ -4,6 +4,7 @@
 - New menu option to clean all your successful uploads
 - Updated user agent
 - Bug fixing
+- Please, notice that this will be the latest version with support for iOS 8
 
 ## 3.5.1 (September 2016)
 - iOS10, Xcode8 and Swift3 Support
