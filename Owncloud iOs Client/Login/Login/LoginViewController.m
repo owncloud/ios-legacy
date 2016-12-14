@@ -1585,10 +1585,15 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         NSString *urlWithoutUserPassword = [self stripUsernameAndPassword:self.urlTextField.text];
         self.auxUrlForReloadTable = [self stripIndexPhpOrAppsFilesFromUrl:urlWithoutUserPassword];
     } else {
-        //This is when we deleted the last account and go to the login screen
+        //This is when we deleted the last account and go to the login screen and when edit credentials in settings view
         self.urlTextField = [[UITextField alloc]initWithFrame:self.urlFrame];
         self.urlTextField.text = self.auxUrlForReloadTable;
         textField = self.urlTextField;
+    }
+    
+    if(self.usernameTextField.text == nil) {
+        self.usernameTextField = [[UITextField alloc]initWithFrame:self.userAndPasswordFrame];
+        self.usernameTextField.text = self.auxUsernameForReloadTable;
     }
     
     self.auxUsernameForReloadTable = self.usernameTextField.text;
@@ -1671,6 +1676,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     });
     isCheckingTheServerRightNow = YES;
     isConnectionToServer = NO;
+    
+    //Reset the url of redirected server at this point
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    app.urlServerRedirected = nil;
     
     [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:[self getUrlToCheck]];
 }
@@ -1980,17 +1989,18 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
          });
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
-        BOOL isInvalid = NO;
+        BOOL isInvalid = YES;
+        
+        NSString *authenticationHeader = @"Www-Authenticate";
+        NSString *outhAuthentication = @"bearer";
+        NSString *basicAuthentication = @"basic";
         
         if (!k_is_sso_active) {
-            //Get header related with autentication type
-            NSString *autenticationType = [[response allHeaderFields] valueForKey:@"Www-Authenticate"];
-            
-            if (autenticationType) {
-                //Autentication type basic
-                if ([autenticationType hasPrefix:@"Basic"]) {
-                    isInvalid = NO;
-                } else if ([autenticationType hasPrefix:@"Bearer"]) {
+            if (response.statusCode == kOCErrorServerUnauthorized) {
+                //Get header related with autentication type
+                NSString *autenticationType = [[response allHeaderFields] valueForKey:authenticationHeader];
+
+                if ((autenticationType) && ([autenticationType.lowercaseString hasPrefix:outhAuthentication])) {
                     //Autentication type oauth
                     if (k_is_oauth_active) {
                         //Check if is activate oauth
@@ -1998,20 +2008,22 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                     } else {
                         isInvalid = YES;
                     }
+                } else if ((autenticationType) && ([autenticationType.lowercaseString hasPrefix:basicAuthentication])) {
+                    isInvalid = NO;
                 } else {
-                    //Unknown autentication type
-                    isInvalid = YES;
+                    //For the moment we have to mantain this value as valid because when we work with
+                    //some Redirected Server our library lost the Wwww-Authenticate header
+                    isInvalid = NO;
                 }
-            } else {
-                //The server not return a Www-Authenticate header
-                isInvalid = YES;
             }
+            
         } else {
             //If sso_active the check does not fail
             //As we are receiving a SAML error from SAML server, we forced the flag to accept this connection
             isInvalid = NO;
             isLoginButtonEnabled = YES;
         }
+        
         
         //Update the interface depend of if isInvalid or not
         if (isInvalid) {
@@ -2208,6 +2220,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         userDto.password = passwordUTF8;
         userDto.ssl = isHttps;
         userDto.activeaccount = YES;
+        //Take into account that this global property can be stored bab value
+        //For that we reset this property when the system check the server in LoginViewController class
         userDto.urlRedirected = app.urlServerRedirected;
         
         [ManageUsersDB insertUser:userDto];

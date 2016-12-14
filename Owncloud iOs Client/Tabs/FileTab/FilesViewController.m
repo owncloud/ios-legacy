@@ -303,7 +303,8 @@
     
     if(!([currentUser.username isEqualToString:_mUser.username] &&
          [currentUser.password isEqualToString:_mUser.password] &&
-         [currentUser.url isEqualToString:_mUser.url])) {
+         [currentUser.url isEqualToString:_mUser.url] &&
+         currentUser.idUser == _mUser.idUser)) {
         //We are changing of user
         //Show the file list in the correct place
         [_tableView setContentOffset:CGPointMake(0,0) animated:animated];
