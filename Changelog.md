@@ -1,10 +1,16 @@
+## 3.5.2 (December 2016)
+- New options available for instant uploads. Select what type of media you want to upload
+- Stream Photo items from iCloud. Now you can upload your photos even if they are not downloaded into your device
+- New menu option to clean all your successful uploads
+- Updated user agent
+- Bug fixing
+
 ## 3.5.1 (September 2016)
 - iOS10, Xcode8 and Swift3 Support
 - Updated app icon
 - Bug fixing
 
 ## 3.5.0 (August 2016)
-
 - Create and edit text files within the app
 - Clear cache option so that you may delete your downloaded files
 - New menu per account to quick access to your account options
@@ -15,8 +21,6 @@
 - Refactored instant uploads to use without location while the app it is alive 
 - Added more languages
 - Bug fixing 
-
-
 
 ## 3.4.9 (May 2016)
 - Sort by date or alphabetically
@@ -35,9 +39,7 @@
 - ownCloud 9 server version support
 - Minor bugs fixed
 
-
 ## 3.4.6 (December 2015)
-
 - Share privately with users or groups in your server
 - Set folder as favorite so that it's content is always downloaded and updated
 - Download a folder
@@ -45,7 +47,6 @@
 - Preview your documents on full screen on the iPad
 - Fixed an error on the video preview
 - Fixed error that requested credentials although having logged in previously
-
 
 ## 3.4.5 (October 2015)
 - New share interface, adding support to share with password protect and expiration time
@@ -65,21 +66,15 @@
 ## 3.4.1 (March 2015)
 - Share link, share your files with password enforced
 - Get the app ready for oc 8.1
-
 - Bugs fixed
     + Open in your files on another apps
     + Preview large pdf files
 
-
 ## 3.4.0 (20 March 2015)
-
 - Document provider extension: access to your ownCloud files from other iOS apps
 - Instant uploads: enable this option and your new images will be uploaded automatically to your ownCloud account
-
 - Bug fixed: several bug fixes and improvements
 - 64-bit support
 
-
 ## 3.3.3 (20 February 2015)
-
 - Prepare the app for ownCloud 8
