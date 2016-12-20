@@ -1049,7 +1049,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         _activeUser=[ManageUsersDB getActiveUser];
     }
     
-    [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
+    if (_activeUser.url != nil) {
+       [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
+    }
+    
     
     //Check if expieration time upload is called
     if (_isExpirationTimeInUpload) {
