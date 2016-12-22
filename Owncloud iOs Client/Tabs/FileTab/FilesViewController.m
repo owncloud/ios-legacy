@@ -1157,7 +1157,6 @@
  */
 - (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info inURL:(NSString*)remoteURLToUpload
 {
-    
     [self initLoading];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -2801,14 +2800,60 @@
 - (void) didSelectDownloadFolder {
     DLog(@"Download Folder");
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [self initLoading];
     
-    //Update fileDto
-    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    [[AppDelegate sharedSyncFolderManager] addFolderToBeDownloaded:self.selectedFileDto];
-
-    [self reloadTableFileList];
+    //Set the right credentials
+    if (k_is_sso_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
+    } else if (k_is_oauth_active) {
+        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
+    } else {
+        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
+    }
+    
+    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+    
+    NSString *path = _nextRemoteFolder;
+    
+    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    if (!app.userSessionCurrentToken) {
+        app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
+    }
+    
+    [[AppDelegate sharedOCCommunication] checkServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+        [self endLoading];
+        //Update fileDto
+        self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+        
+        [[AppDelegate sharedSyncFolderManager] addFolderToBeDownloaded:self.selectedFileDto];
+        
+        [self reloadTableFileList];
+        
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
+        [self endLoading];
+        
+        [self reloadTableFileList];
+        
+        DLog(@"error: %@", error);
+        DLog(@"Operation error: %ld", (long)response.statusCode);
+        
+        BOOL isSamlCredentialsError = NO;
+        
+        //Check the login error in shibboleth
+        if (k_is_sso_active && redirectedServer) {
+            //Check if there are fragmens of saml in url, in this case there are a credential error
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            if (isSamlCredentialsError) {
+                [self errorLogin];
+            }
+        }
+        if (!isSamlCredentialsError) {
+            [self manageServerErrors:response.statusCode and:error];
+        }
+    }];
 }
 
 /*
