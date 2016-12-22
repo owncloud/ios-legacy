@@ -36,6 +36,7 @@
  */
 
 - (void)manageErrorHttp:(NSInteger)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *)user;
+- (void)returnSuitableWebDavErrorMessage:(NSInteger) errorHttp;
 
 
 @end

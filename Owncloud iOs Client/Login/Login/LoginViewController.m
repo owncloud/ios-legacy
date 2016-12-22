@@ -76,6 +76,12 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         showPasswordCharacterButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [showPasswordCharacterButton setHidden:YES];
+        
+        //We init the ManageNetworkErrors
+        if (!self.manageNetworkErrors) {
+            self.manageNetworkErrors = [ManageNetworkErrors new];
+            self.manageNetworkErrors.delegate = self;
+        }
     }
     return self;
 }
@@ -2015,6 +2021,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                     //some Redirected Server our library lost the Wwww-Authenticate header
                     isInvalid = NO;
                 }
+            }else if (response != nil) {
+                [self.manageNetworkErrors returnSuitableWebDavErrorMessage:response.statusCode];
             }
             
         } else {
@@ -2133,42 +2141,23 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
         
-        switch (response.statusCode) {
-            case kOCErrorServerUnauthorized:
-                //Unauthorized (bad username or password)
-                [self errorLogin];
-                break;
-            case kOCErrorServerForbidden:
-                //403 Forbidden
-                [self manageFailOfServerConnection];
-                break;
-            case kOCErrorServerPathNotFound:
-                //404 Not Found. When for example we try to access a path that now not exist
-                [self manageFailOfServerConnection];;
-                break;
-            case kOCErrorServerTimeout:
-                //408 timeout
-                [self manageFailOfServerConnection];
-                break;
-            default:
-                [self manageFailOfServerConnection];
-                break;
-        }
+        [self.manageNetworkErrors returnSuitableWebDavErrorMessage:response.statusCode];
         
     }];
     
 }
 
-- (void) manageFailOfServerConnection{
+
+- (void)showError:(NSString *) message {
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideTryingToLogin];
         _alert = nil;
-        _alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"not_possible_connect_to_server", nil)
+        _alert = [[UIAlertView alloc] initWithTitle:message
                                             message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
         [_alert show];
     });
 }
-
 
 
 ///-----------------------------------
