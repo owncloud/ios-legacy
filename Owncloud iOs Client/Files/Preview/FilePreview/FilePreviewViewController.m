@@ -462,6 +462,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
          [_galleryView adjustTheScrollViewAfterTheRotation];
     } else if (_readerPDFViewController) {
         [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    } else if (_gifView) {
+        
+        CGRect frame = self.view.frame;
+        frame.size.height = frame.size.height-(_toolBar.frame.size.height + self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+        frame.origin.y = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
+        self.gifView.frame = frame;
+
     } else {
         _toolBar.hidden = NO;
     }
@@ -536,6 +543,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
                     [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.0];
                 } else if (_typeOfFile == officeFileType) {
                     [self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
+                } else if (_typeOfFile == gifFileType) {
+                    [self performSelectorOnMainThread:@selector(openGifFile) withObject:nil waitUntilDone:YES];
                 } else {
                     [self cleanView];
                 }
@@ -577,7 +586,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
                     [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.0];
                 } else if (_typeOfFile == officeFileType) {
                     [self performSelector:@selector(openFileOffice) withObject:nil afterDelay:0.1];
-                    //[self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
+                } else if (_typeOfFile == gifFileType) {
+                    [self performSelector:@selector(openGifFile) withObject:nil afterDelay:0.1];
                 } else {
                     [self cleanView];
                 }
@@ -697,6 +707,33 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 }
 
+/*
+ * Open a GIF file
+ */
+
+- (void) openGifFile {
+    
+    self.gifView = [FLAnimatedImageView new];
+    self.gifView.contentMode = UIViewContentModeScaleAspectFit;
+    self.gifView.clipsToBounds = true;
+    
+    CGRect frame = self.view.frame;
+    frame.size.height = frame.size.height-(_toolBar.frame.size.height + self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+    frame.origin.y = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
+    self.gifView.frame = frame;
+    [self.view addSubview:self.gifView];
+    
+    NSData *gifData = [NSData dataWithContentsOfFile:_file.localFolder];
+    
+    if (gifData != nil) {
+        FLAnimatedImage *gifImage = [FLAnimatedImage animatedImageWithGIFData:gifData];
+        self.gifView.animatedImage = gifImage;
+    }
+    
+    //Enable back button
+    self.navigationController.navigationBar.userInteractionEnabled = YES;
+    _toolBar.userInteractionEnabled = YES;
+}
 
 #pragma mark - Loading Methods
 
@@ -1437,6 +1474,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.5];
         } else if(_typeOfFile == videoFileType) {
             [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.5];
+        } else if (_typeOfFile == gifFileType) {
+            [self performSelector:@selector(openGifFile) withObject:nil afterDelay:0.5];
         } else if (_typeOfFile == imageFileType){
             DLog(@"Image file");
         } else {
