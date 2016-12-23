@@ -389,6 +389,8 @@
                     [self performSelectorOnMainThread:@selector(playMediaFile) withObject:nil waitUntilDone:YES];
                 } else if (_typeOfFile == officeFileType) {
                     [self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
+                } else if (_typeOfFile == gifFileType) {
+                    [self performSelectorOnMainThread:@selector(openGifFile) withObject:nil waitUntilDone:YES];
                 } else {
                     [self cleanViewWithoutBlock];
                 }
@@ -423,9 +425,10 @@
             if (_typeOfFile == videoFileType || _typeOfFile == audioFileType) {
                 [self performSelectorOnMainThread:@selector(playMediaFile) withObject:nil waitUntilDone:YES];
             } else if (_typeOfFile == officeFileType) {
-                //[self performSelector:@selector(openFileOffice) withObject:nil afterDelay:2.0];
                 [self performSelectorOnMainThread:@selector(openFileOffice) withObject:nil waitUntilDone:YES];
-            } else {
+            } else if (_typeOfFile == gifFileType) {
+                [self performSelectorOnMainThread:@selector(openGifFile) withObject:nil waitUntilDone:YES];
+            }  else {
                 [self cleanViewWithoutBlock];
             }
         }
@@ -537,6 +540,26 @@
     self.isViewBlocked = NO;
 }
 
+
+- (void) openGifFile {
+    
+    self.gifView = [FLAnimatedImageView new];
+    self.gifView.contentMode = UIViewContentModeScaleAspectFit;
+    self.gifView.clipsToBounds = true;
+    
+    self.gifView.frame = [self getTheCorrectSize];
+    [self.view addSubview:self.gifView];
+    
+    NSData *gifData = [NSData dataWithContentsOfFile:_file.localFolder];
+    
+    if (gifData != nil) {
+        FLAnimatedImage *gifImage = [FLAnimatedImage animatedImageWithGIFData:gifData];
+        self.gifView.animatedImage = gifImage;
+    }
+    
+    //Enable back button
+    self.isViewBlocked = false;
+}
 
 ///-----------------------------------
 /// @name openGalleryFileOnUpdatingProcess
@@ -1524,6 +1547,8 @@
         if (_file != nil) {
             if (_typeOfFile == officeFileType) {
                 [self performSelector:@selector(openFileOffice) withObject:nil afterDelay:0.0];
+            } else if (_typeOfFile == gifFileType) {
+                [self performSelector:@selector(openGifFile) withObject:nil afterDelay:0.0];
             } else if(_typeOfFile == audioFileType) {
                 [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.0];
             } else if(_typeOfFile == videoFileType) {

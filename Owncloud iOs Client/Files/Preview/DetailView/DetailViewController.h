@@ -24,6 +24,7 @@
 #import "OCToolBar.h"
 #import "CWStatusBarNotification.h"
 #import "ManageFavorites.h"
+#import "FLAnimatedImage.h"
 
 @class ReaderDocument;
 @class ReaderViewController;
@@ -125,6 +126,9 @@ typedef enum {
 //VFR Pdf reader
 @property(nonatomic, strong) ReaderDocument *documentPDF;
 @property(nonatomic, strong) ReaderViewController *readerPDFViewController;
+
+//Gif View
+@property(nonatomic, strong) FLAnimatedImageView *gifView;
 
 //Favorites
 @property(nonatomic, strong) ManageFavorites *manageFavorites;
