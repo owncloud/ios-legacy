@@ -546,9 +546,8 @@
     self.gifView = [FLAnimatedImageView new];
     self.gifView.contentMode = UIViewContentModeScaleAspectFit;
     self.gifView.clipsToBounds = true;
-    
+    self.gifView.userInteractionEnabled = true;
     self.gifView.frame = [self getTheCorrectSize];
-    [self.view addSubview:self.gifView];
     
     NSData *gifData = [NSData dataWithContentsOfFile:_file.localFolder];
     
@@ -556,6 +555,12 @@
         FLAnimatedImage *gifImage = [FLAnimatedImage animatedImageWithGIFData:gifData];
         self.gifView.animatedImage = gifImage;
     }
+    
+    if (self.singleTap) {
+        [self.gifView addGestureRecognizer:self.singleTap];
+    }
+    
+    [self.view addSubview:self.gifView];
     
     //Enable back button
     self.isViewBlocked = false;
@@ -2158,6 +2163,10 @@
         self.readerPDFViewController.view.alpha = 0.0;
     }
     
+    if (self.gifView) {
+        self.gifView.alpha = 0.0;
+    }
+    
 }
 
 - (void) showContainerView{
@@ -2193,6 +2202,11 @@
         self.view.backgroundColor = [UIColor whiteColor];
         self.galleryView.scrollView.alpha = 1.0;
         self.mainScrollView.hidden = YES;
+    }
+    
+    if (self.gifView) {
+        self.gifView.frame = frame;
+        self.gifView.alpha = 1.0;
     }
     
     if (self.readerPDFViewController) {

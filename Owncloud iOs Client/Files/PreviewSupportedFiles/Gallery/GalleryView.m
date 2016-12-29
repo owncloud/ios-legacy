@@ -230,8 +230,8 @@
     //Get the currentLocalFolder
     [self updateTheCurrentLocalFolder];
    
-    _fullScreen=NO;
-    _isDoubleTap=YES;
+    _fullScreen = NO;
+    _isDoubleTap = YES;
     
     _visiblePageScrollViewArray = [[NSMutableArray alloc] init];
     
