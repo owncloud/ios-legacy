@@ -713,6 +713,11 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 - (void) openGifFile {
     
+    if (self.gifView){
+        [self.gifView removeFromSuperview];
+        self.gifView = nil;
+    }
+    
     self.gifView = [FLAnimatedImageView new];
     self.gifView.contentMode = UIViewContentModeScaleAspectFit;
     self.gifView.clipsToBounds = true;
