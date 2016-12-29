@@ -774,6 +774,12 @@
         self.officeView = nil;
     }
     
+    //Quit the gif view
+    if (self.gifView) {
+        [self.gifView removeFromSuperview];
+        self.gifView = nil;
+    }
+    
     //Quit the gallery view
     if (self.galleryView) {
         [self.galleryView.scrollView removeFromSuperview];
@@ -1733,6 +1739,10 @@
         [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
     
+    if (self.gifView) {
+        self.gifView.frame = [self getTheCorrectSize];
+    }
+    
     if (self.galleryView) {
         [self adjustGalleryScrollView];
     }
@@ -2321,6 +2331,10 @@
         
         if (self.officeView) {
             self.officeView.webView.frame = [self getTheCorrectSize];
+        }
+        
+        if (self.gifView){
+            self.gifView.frame = [self getTheCorrectSize];
         }
         
         if (self.moviePlayer) {
