@@ -123,7 +123,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     
     func createCustomInterface(){
         
-        let rightBarButton = UIBarButtonItem (title:NSLocalizedString("upload_label", comment: ""), style: .plain, target: self, action:#selector(ShareViewController.sendTheFilesToOwnCloud))
+        let rightBarButton = UIBarButtonItem (title:NSLocalizedString("upload_label", comment: ""), style: .plain, target: self, action:#selector(ShareViewController.uploadButtonTapped))
         let leftBarButton = UIBarButtonItem (title:NSLocalizedString("cancel", comment: ""), style: .plain, target: self, action:#selector(ShareViewController.cancelView))
         
         let appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as! String
@@ -167,6 +167,34 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
         return
        
+    }
+    
+    func uploadButtonTapped() {
+        
+        let activeUser = ManageUsersDB.getActiveUser()
+        
+        if activeUser != nil {
+        
+            Managers.sharedOCCommunication.checkServer(activeUser?.url, on: Managers.sharedOCCommunication, successRequest: { (response, redirectedServer) in
+                self.sendTheFilesToOwnCloud()
+            }) { (response, error, redirectedServer) in
+                
+                switch (response?.statusCode){
+                case kOCErrorServerUnauthorized.hashValue?:
+                    self.showErrorLoginView()
+                case kOCErrorServerTimeout.hashValue?:
+                    self.showAlertView((NSLocalizedString("not_possible_connect_to_server", comment: "")))
+                case kOCErrorServerMaintenanceError.hashValue?:
+                    self.showAlertView((NSLocalizedString("maintenance_mode_on_server_message", comment: "")))
+                default:
+                    self.showAlertView("not_possible_connect_to_server")
+                }
+            }
+            
+        } else {
+            self.showErrorLoginView()
+        }
+   
     }
     
     func sendTheFilesToOwnCloud() {
@@ -254,9 +282,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
                     msg = NSLocalizedString("forbidden_characters_from_server", comment: "")
                 
                     showAlertView(msg)
-                    
                 }
-                
             }
             
             if hasSomethingToUpload == true {
@@ -294,8 +320,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
                 (CheckAccessToServer.sharedManager() as? CheckAccessToServer)!.isConnectionToTheServer(byUrl: activeUser!.url)
             }
         } else {
-            let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
-            showAlertView((NSLocalizedString("error_login_doc_provider", comment: "") as NSString).replacingOccurrences(of: "$appname", with: appName!))
+            self.showErrorLoginView()
         }
     }
     
@@ -540,6 +565,11 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         
         print("Cancel folder selected")
         
+    }
+    
+    func showErrorLoginView () {
+        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+        showAlertView((NSLocalizedString("error_login_doc_provider", comment: "") as NSString).replacingOccurrences(of: "$appname", with: appName!))
     }
     
     func showAlertView(_ title: String) {
