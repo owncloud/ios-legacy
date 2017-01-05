@@ -54,18 +54,14 @@
 }
 
 - (void) viewWillDisappear:(BOOL)animated{
-   
     [super viewWillDisappear:animated];
-    
     [[NSNotificationCenter defaultCenter] postNotificationName: userHasCloseDocumentPicker object: nil];
     
 }
 
 - (void) closeDocumentPicker{
-    
     [self dismissGrantingAccessToURL:nil];
 }
-
 
 -(void)prepareForPresentationInMode:(UIDocumentPickerMode)mode {
     // TODO: present a view controller appropriate for picker mode here
@@ -126,7 +122,6 @@
         NSString *message = [NSLocalizedString(@"error_login_doc_provider", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
         _labelErrorLogin.text = message;
         _labelErrorLogin.textAlignment = NSTextAlignmentCenter;
-        
     }
 }
 

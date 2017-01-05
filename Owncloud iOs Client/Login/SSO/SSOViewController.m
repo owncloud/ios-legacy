@@ -58,6 +58,11 @@ static NSString *const tmpFileName = @"tmp.der";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
+        //We init the ManageNetworkErrors
+        if (!_manageNetworkErrors) {
+            _manageNetworkErrors = [ManageNetworkErrors new];
+            _manageNetworkErrors.delegate = self;
+        }
     }
     return self;
 }
@@ -343,6 +348,7 @@ static NSString *const tmpFileName = @"tmp.der";
             [self showLoginInterface];
         }
     } else {
+        
         //Error credentials
         [UIAlertView showWithTitle:NSLocalizedString(@"error_login_message", nil) message:@"" cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil tapBlock:^(UIAlertView *alertView, NSInteger buttonIndex) {
             if (buttonIndex == [alertView cancelButtonIndex]) {
@@ -421,7 +427,22 @@ static NSString *const tmpFileName = @"tmp.der";
     
     return request;
 }
-   
+
+#pragma mark - ManageNetworkErrorsDelegate
+
+- (void)errorLogin {
+    
+}
+
+
+- (void)showError:(NSString *) message {
+    //Error credentials
+    [UIAlertView showWithTitle:message message:@"" cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil tapBlock:^(UIAlertView *alertView, NSInteger buttonIndex) {
+
+    }];
+ 
+}
+
 #pragma mark - Buttons
 /*
  * This method close the view
@@ -500,6 +521,8 @@ static NSString *const tmpFileName = @"tmp.der";
     } failure:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         DLog(@"Error: %@", error);
+        
+        [self.manageNetworkErrors returnSuitableWebDavErrorMessage:response.statusCode];
         
         //Error we do not have user
         dispatch_semaphore_signal(semaphore);
