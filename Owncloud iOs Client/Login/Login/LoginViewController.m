@@ -2494,17 +2494,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         [self goTryToDoLogin];
         
-    }else{
+    }else if ([samlUserName isEqual: @""]){
     
         //Show message in main thread
         dispatch_async(dispatch_get_main_queue(), ^{
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"saml_server_does_not_give_user_id", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alertView show];
         });
-       
+    }else {
+        //It's nil
+        //nothing to do
     }
-    
-   
 
 }
 

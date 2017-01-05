@@ -483,7 +483,7 @@ static NSString *const tmpFileName = @"tmp.der";
  */
 - (NSString *) requestForUserNameByCookie:(NSString *) cookieString {
     DLog(@"_requestForUserNameByCookie:_ %@", cookieString);
-    __block NSString *userName = nil;
+    __block NSString *userName = @"";
 
     //We create a semaphore to wait until we recive the responses from Async calls
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
@@ -521,6 +521,8 @@ static NSString *const tmpFileName = @"tmp.der";
     } failure:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
         
         DLog(@"Error: %@", error);
+        
+        userName = nil;
         
         [self.manageNetworkErrors returnSuitableWebDavErrorMessage:response.statusCode];
         
