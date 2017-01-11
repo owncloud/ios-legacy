@@ -22,14 +22,14 @@
 @protocol GalleryViewDelegate
 
 @optional
-- (void)selectThisFile:(FileDto*)file;
-- (void)putUpdateProgressInNavBar;
+- (void) selectThisFile:(FileDto*)file;
+- (void) putUpdateProgressInNavBar;
 - (void) stopNotificationUpdatingFile;
 - (void) percentageTransfer:(float)percent andFileDto:(FileDto*)fileDto;
 - (void) handleFile;
-- (void)setFullScreenGallery:(BOOL)isFullScreen;
-- (void)errorLogin;
-- (void)contiueDownloadIfTheFileisDownloading;
+- (void) setFullScreenGallery:(BOOL)isFullScreen;
+- (void) errorLogin;
+- (void) contiueDownloadIfTheFileisDownloading;
 @end
 
 @interface GalleryView : UIView<UIScrollViewDelegate, DownloadDelegate, UIAlertViewDelegate>

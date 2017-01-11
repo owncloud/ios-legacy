@@ -24,6 +24,7 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
     audioFileType = 2,
     officeFileType = 3,
     otherFileType = 4,
+    gifFileType = 5,
 };
 
 @interface FileNameUtils : NSObject

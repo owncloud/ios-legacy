@@ -664,6 +664,8 @@
 		908A3C701D019EDD00A34FDB /* file_synchronizing_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064143E1D005B5C000AEFE5 /* file_synchronizing_icon@2x.png */; };
 		90D608FA1C89844E0049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		90D608FC1C8984760049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
+		BC855ACD1E0D4B0200998CB7 /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BC855ACA1E0D4B0200998CB7 /* FLAnimatedImage.m */; };
+		BC855ACE1E0D4B0200998CB7 /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC855ACC1E0D4B0200998CB7 /* FLAnimatedImageView.m */; };
 		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; };
 		EA0599861BB92B19002C2864 /* ShareUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599841BB92B19002C2864 /* ShareUserCell.xib */; };
 		EA0599931BB94F3F002C2864 /* ShareSearchUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0599911BB94F3F002C2864 /* ShareSearchUserViewController.m */; };
@@ -1725,6 +1727,10 @@
 		9069EAA61CF5F07200810996 /* OCLoadingSpinner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCLoadingSpinner.m; path = Utils/OCLoadingSpinner.m; sourceTree = "<group>"; };
 		908A3C5A1D016FE500A34FDB /* file_available_offline_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_available_offline_icon@2x.png"; sourceTree = "<group>"; };
 		908A3C5C1D01732C00A34FDB /* file_available_offline_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_available_offline_icon.png; sourceTree = "<group>"; };
+		BC855AC91E0D4B0200998CB7 /* FLAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FLAnimatedImage.h; path = ExternalLibreries/FLAnimatedimage/FLAnimatedImage.h; sourceTree = "<group>"; };
+		BC855ACA1E0D4B0200998CB7 /* FLAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLAnimatedImage.m; path = ExternalLibreries/FLAnimatedimage/FLAnimatedImage.m; sourceTree = "<group>"; };
+		BC855ACB1E0D4B0200998CB7 /* FLAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FLAnimatedImageView.h; path = ExternalLibreries/FLAnimatedimage/FLAnimatedImageView.h; sourceTree = "<group>"; };
+		BC855ACC1E0D4B0200998CB7 /* FLAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLAnimatedImageView.m; path = ExternalLibreries/FLAnimatedimage/FLAnimatedImageView.m; sourceTree = "<group>"; };
 		D924DCBC1B973E88008B4BE7 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
 		D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
 		D924DCBF1B973E98008B4BE7 /* OCMArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
@@ -2893,6 +2899,7 @@
 		148DD5DD1778549700FB9977 /* ExternalLibreries */ = {
 			isa = PBXGroup;
 			children = (
+				BC855AC71E0D4AE100998CB7 /* FLAnimatedImage */,
 				59915D9B1BBC00930015FBF3 /* CWLOrderedDictionary */,
 				EABD88CE1BBE827D00DA5281 /* TSMessages */,
 				40EDF8AB1B4D1E9600700E3A /* JazzHands */,
@@ -3370,6 +3377,17 @@
 				148DD6B61778693000FB9977 /* RecentViewController.xib */,
 			);
 			name = "Recent Tab";
+			sourceTree = "<group>";
+		};
+		BC855AC71E0D4AE100998CB7 /* FLAnimatedImage */ = {
+			isa = PBXGroup;
+			children = (
+				BC855AC91E0D4B0200998CB7 /* FLAnimatedImage.h */,
+				BC855ACA1E0D4B0200998CB7 /* FLAnimatedImage.m */,
+				BC855ACB1E0D4B0200998CB7 /* FLAnimatedImageView.h */,
+				BC855ACC1E0D4B0200998CB7 /* FLAnimatedImageView.m */,
+			);
+			name = FLAnimatedImage;
 			sourceTree = "<group>";
 		};
 		D924DCAF1B973D7E008B4BE7 /* OCMock_3.1.5 */ = {
@@ -4762,6 +4780,7 @@
 				40EDF89F1B4D123500700E3A /* HelpGuideViewController.m in Sources */,
 				EABD892E1BBE82D900DA5281 /* HexColors.m in Sources */,
 				148DD6951778663100FB9977 /* DownloadViewController.m in Sources */,
+				BC855ACE1E0D4B0200998CB7 /* FLAnimatedImageView.m in Sources */,
 				400A63691B4FD75600890579 /* IFTTTColorAnimation.m in Sources */,
 				EA2527551BECCA3500C1EB14 /* CheckFeaturesSupported.m in Sources */,
 				40EDF8A31B4D152300700E3A /* MyCustomAnimation.m in Sources */,
@@ -4806,6 +4825,7 @@
 				400A637A1B4FD75600890579 /* IFTTTTextColorAnimation.m in Sources */,
 				14B0084018FD1B5B004CB06B /* EmptyCell.m in Sources */,
 				59C9D324195C0EFB00400AE2 /* ManageNetworkErrors.m in Sources */,
+				BC855ACD1E0D4B0200998CB7 /* FLAnimatedImage.m in Sources */,
 				EA68969017F599060033B3C1 /* KKPasscodeSettingsViewController.m in Sources */,
 				59C71D121A9216AE00F66166 /* CGPDFDocument.m in Sources */,
 				400A63671B4FD75600890579 /* IFTTTAnimation.m in Sources */,

@@ -54,7 +54,9 @@
             typeOfFile = audioFileType;
         } else if ([self isOfficeSupportedThisFile:fileName]){
             typeOfFile = officeFileType;
-        } else {
+        } else if ([self isGifSupportedThisFile:fileName])
+             typeOfFile = gifFileType;
+        else {
             typeOfFile = otherFileType;
         }
     }
@@ -67,7 +69,7 @@
     
     NSString *ext=[self getExtension:fileName];
     
-    if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"GIF"] || [ext isEqualToString:@"TIFF"] || [ext isEqualToString:@"TIF"] || [ext isEqualToString:@"BMP"] || [ext isEqualToString:@"JPEG"])
+    if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"TIFF"] || [ext isEqualToString:@"TIF"] || [ext isEqualToString:@"BMP"] || [ext isEqualToString:@"JPEG"])
     {
         return YES;
     }
@@ -107,6 +109,18 @@
     NSString *ext=[self getExtension:fileName];
     
     if([ext isEqualToString:@"MP3"] || [ext isEqualToString:@"AIFF"] || [ext isEqualToString:@"AAC"] || [ext isEqualToString:@"WAV"]|| [ext isEqualToString:@"M4A"])
+    {
+        return YES;
+    }
+    
+    return NO;
+}
+
++ (BOOL)isGifSupportedThisFile:(NSString*)fileName{
+    
+    NSString *ext = [self getExtension:fileName];
+    
+    if([ext isEqualToString:@"GIF"])
     {
         return YES;
     }
