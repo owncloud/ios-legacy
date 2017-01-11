@@ -2504,6 +2504,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     }else {
         //It's nil
         //nothing to do
+        DLog(@"saml user name is nil");
     }
 
 }

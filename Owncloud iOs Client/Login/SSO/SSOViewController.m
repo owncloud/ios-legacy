@@ -431,7 +431,7 @@ static NSString *const tmpFileName = @"tmp.der";
 #pragma mark - ManageNetworkErrorsDelegate
 
 - (void)errorLogin {
-    
+    DLog(@"Error login");
 }
 
 
