@@ -192,6 +192,9 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                             case kOCErrorServerPathNotFound:
                                 [weakSelf.delegate downloadFailed:NSLocalizedString(@"download_file_exist", nil) andFile:weakSelf.fileDto];
                                 break;
+                            case kOCErrorServerMaintenanceError:
+                                [weakSelf.delegate downloadFailed:NSLocalizedString(@"maintenance_mode_on_server_message", nil) andFile:weakSelf.fileDto];
+                                break;
                             default:
                                 [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];
                                 break;
@@ -668,6 +671,9 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                                 break;
                             case kOCErrorServerPathNotFound:
                                 [weakSelf.delegate downloadFailed:NSLocalizedString(@"download_file_exist", nil) andFile:weakSelf.fileDto];
+                                break;
+                            case kOCErrorServerMaintenanceError:
+                                [weakSelf.delegate downloadFailed:NSLocalizedString(@"maintenance_mode_on_server_message", nil) andFile:weakSelf.fileDto];
                                 break;
                             default:
                                 [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:weakSelf.fileDto];

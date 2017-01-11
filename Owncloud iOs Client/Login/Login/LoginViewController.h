@@ -21,7 +21,7 @@
 
 extern NSString *loginViewControllerRotate;
 
-@interface LoginViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate, CheckAccessToServerDelegate, SSODelegate, CheckSSOServerDelegate> {
+@interface LoginViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate, CheckAccessToServerDelegate, SSODelegate, CheckSSOServerDelegate, ManageNetworkErrorsDelegate> {
     
     UITapGestureRecognizer *tapRecognizer;
     
@@ -63,6 +63,7 @@ extern NSString *loginViewControllerRotate;
     BOOL userNameEditable;
     BOOL hasInvalidAuth;
     
+    
 }
 
 @property(nonatomic,strong)IBOutlet UITableView *tableView;
@@ -85,6 +86,8 @@ extern NSString *loginViewControllerRotate;
 @property(nonatomic)CGRect imageTextFieldLeftFrame;
 
 @property(nonatomic)BOOL alreadyHaveValidSAMLCredentials;
+
+@property(nonatomic,strong) ManageNetworkErrors *manageNetworkErrors;
 
 
 -(void)setTableBackGroundColor;

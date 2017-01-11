@@ -55,31 +55,46 @@
             
         default:
             //Web Dav Error Code
-            switch (errorHttp) {
-                case kOCErrorServerUnauthorized:
-                    //Unauthorized (bad username or password)
-                    [self.delegate errorLogin];
-                    break;
-                case kOCErrorServerForbidden:
-                    //403 Forbidden
-                    [_delegate showError:NSLocalizedString(@"error_not_permission", nil)];
-                    break;
-                case kOCErrorServerPathNotFound:
-                    //404 Not Found. When for example we try to access a path that now not exist
-                    [_delegate showError:NSLocalizedString(@"error_path", nil)];
-                    break;
-                case kOCErrorServerMethodNotPermitted:
-                    //405 Method not permitted
-                    [_delegate showError:NSLocalizedString(@"not_possible_create_folder", nil)];
-                    break;
-                case kOCErrorServerTimeout:
-                    //408 timeout
-                    [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                    break;
-                default:
-                    [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-                    break;
-            }
+            [self returnSuitableWebDavErrorMessage:errorHttp];
+            break;
+    }
+}
+
+
+/*
+ * Method that show the suitable webdav error message in the delegate class
+ * @errorHttp -> WebDav Server Error
+ */
+
+- (void)returnSuitableWebDavErrorMessage:(NSInteger) errorHttp {
+    
+    switch (errorHttp) {
+        case kOCErrorServerUnauthorized:
+            //Unauthorized (bad username or password)
+            [self.delegate errorLogin];
+            break;
+        case kOCErrorServerForbidden:
+            //403 Forbidden
+            [_delegate showError:NSLocalizedString(@"error_not_permission", nil)];
+            break;
+        case kOCErrorServerPathNotFound:
+            //404 Not Found. When for example we try to access a path that now not exist
+            [_delegate showError:NSLocalizedString(@"error_path", nil)];
+            break;
+        case kOCErrorServerMethodNotPermitted:
+            //405 Method not permitted
+            [_delegate showError:NSLocalizedString(@"not_possible_create_folder", nil)];
+            break;
+        case kOCErrorServerTimeout:
+            //408 timeout
+            [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+            break;
+        case kOCErrorServerMaintenanceError:
+            //503 Maintenance Error
+            [_delegate showError:NSLocalizedString(@"maintenance_mode_on_server_message", nil)];
+            break;
+        default:
+            [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
             break;
     }
 }

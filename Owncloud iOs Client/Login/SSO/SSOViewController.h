@@ -18,6 +18,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "ManageNetworkErrors.h"
 
 
 @protocol SSODelegate
@@ -26,7 +27,7 @@
 - (void)setCookieForSSO:(NSString *) cookieString andSamlUserName:(NSString*)samlUserName;
 @end
 
-@interface SSOViewController : UIViewController <UIWebViewDelegate, UIAlertViewDelegate, UITextFieldDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate>
+@interface SSOViewController : UIViewController <UIWebViewDelegate, UIAlertViewDelegate, UITextFieldDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate, ManageNetworkErrorsDelegate>
 
 
 
@@ -57,6 +58,9 @@
 //Bools to control if the credentials was shown
 @property BOOL is401ErrorDetected;
 @property BOOL isCredentialsWritten;
+
+//Manage Errors
+@property ManageNetworkErrors *manageNetworkErrors;
 
 - (IBAction)cancel:(id)sender;
 

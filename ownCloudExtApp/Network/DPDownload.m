@@ -405,6 +405,9 @@
             case kOCErrorServerPathNotFound:
                 [self.delegate downloadFailed:NSLocalizedString(@"download_file_exist", nil) andFile:self.file];
                 break;
+            case kOCErrorServerMaintenanceError:
+                [self.delegate downloadFailed:NSLocalizedString(@"maintenance_mode_on_server_message", nil) andFile:self.file];
+                break;
             default:
                 [self.delegate downloadFailed:NSLocalizedString(@"not_possible_connect_to_server", nil) andFile:self.file];
                 break;
