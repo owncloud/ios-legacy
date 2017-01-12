@@ -104,4 +104,6 @@
 
 + (NSString *) getLocalCertificatesPath;
 
++ (NSString *) getRelatvePathOfFullDestinyPath: (NSString *) fullPath;
+
 @end

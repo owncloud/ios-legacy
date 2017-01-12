@@ -246,6 +246,7 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
+    
     NSString *urlClean = [NSString stringWithFormat:@"%@%@", _currentUpload.destinyFolder, _currentUpload.uploadFileName];
     urlClean = [urlClean stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -689,6 +690,17 @@
     
     _currentUpload.uploadedDate = [_date timeIntervalSince1970];
     
+}
+
+
+/*
+ * Method called when the server has changed the url and it's necessary to 
+ * restart the pending uploads with the right new server
+ */
+
+- (void) refreshPathOfUploadAfterServerChangeUrl {
+    NSString *relativePath = [UtilsUrls getRelatvePathOfFullDestinyPath:_currentUpload.destinyFolder];
+    _currentUpload.destinyFolder = [NSString stringWithFormat:@"%@%@%@",[UtilsUrls getFullRemoteServerPath:APP_DELEGATE.activeUser], k_url_webdav_server_without_last_slash, relativePath];
 }
 
 

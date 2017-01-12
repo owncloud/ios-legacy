@@ -676,4 +676,35 @@
     return localCertificatesPath;
 }
 
+/*
+ * Method used to get the relative path of a full path
+ *
+ * @param fullPath (http://storage.server.com/remote.php/webdav/folderA/folderB/folderC/)
+ *
+ * @return /folderA/folderB/folderC/
+ *
+ */
+
++ (NSString *) getRelatvePathOfFullDestinyPath: (NSString *) fullPath {
+    
+    NSString *result = @"";
+    static NSString *k_webDav = @"webdav";
+    NSArray *fullPathSplited = [fullPath componentsSeparatedByString:@"/"];
+    
+    BOOL isItemValid = false;
+    
+    for (NSString* item in fullPathSplited) {
+        if (isItemValid == true){
+            result = [NSString stringWithFormat:@"%@/%@", result, item];
+        }
+        
+        if ([item isEqualToString:k_webDav]) {
+            isItemValid = true;
+        }
+    }
+    
+    return result;
+    
+}
+
 @end
