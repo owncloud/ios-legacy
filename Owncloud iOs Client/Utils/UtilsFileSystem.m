@@ -67,18 +67,14 @@
    return [[NSFileManager defaultManager] fileExistsAtPath:filePath];
 }
 
-+ (void) initBundleVersionDefaults {
++ (void) storeVersionUsed {
     
-    NSString* bundleVersionOfLastRun = [[NSUserDefaults standardUserDefaults] objectForKey:@"BundleVersionOfLastRun"];
+    NSString* currentVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    NSString* currentShortVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     
-    if (bundleVersionOfLastRun == nil){
-        NSString* currentVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-        NSString* currentShortVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-        
-        [[NSUserDefaults standardUserDefaults] setObject:currentVersion forKey:@"BundleVersionOfLastRun"];
-        [[NSUserDefaults standardUserDefaults] setObject:currentShortVersion forKey:@"BundleShortVersionOfLastRun"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
+    [[NSUserDefaults standardUserDefaults] setObject:currentVersion forKey:@"BundleVersionOfLastRun"];
+    [[NSUserDefaults standardUserDefaults] setObject:currentShortVersion forKey:@"BundleShortVersionOfLastRun"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 + (BOOL) isOpenAfterUpgrade {

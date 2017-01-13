@@ -23,7 +23,7 @@
 + (BOOL) createFileOnTheFileSystemByPath:(NSString *)tempPath andData:(NSData *)fileData;
 + (BOOL) moveFileOnTheFileSystemFrom:(NSString *)origin toDestiny:(NSString *)destiny;
 + (BOOL) existFileOnFileSystemByPath:(NSString *)filePath;
-+ (void) initBundleVersionDefaults;
++ (void) storeVersionUsed;
 + (BOOL) isOpenAfterUpgrade;
 
 @end

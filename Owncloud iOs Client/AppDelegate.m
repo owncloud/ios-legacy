@@ -994,7 +994,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
     
     //Store the version of the app in NSUserDefautls
-    [UtilsFileSystem  initBundleVersionDefaults];
+    [UtilsFileSystem  storeVersionUsed];
 
 }
 
