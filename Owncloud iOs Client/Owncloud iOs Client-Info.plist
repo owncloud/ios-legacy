@@ -140,11 +140,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Upload your selected photos to your account</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Used to instantly upload your new photos after a significant change in your location</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Used to instantly upload your new photos after a significant change in your location</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Upload your selected photos to your account</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Used to instantly upload your new photos after a significant change in your location</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Used to instantly upload your new photos after a significant change in your location</string>
 </dict>
 </plist>
