@@ -128,8 +128,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     _isExpirationTimeInUpload = NO;
     _isOpenAfterUpgrade = false;
     
-    [UtilsFileSystem  initBundleVersionDefaults];
-    
     [self moveIfIsNecessaryFilesAfterUpdateAppFromTheOldFolderArchitecture];
     
     [self moveIfIsNecessaryFolderOfOwnCloudFromContainerAppSandboxToAppGroupSanbox];
@@ -994,6 +992,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     } else {
         DLog(@"Multitasking Not Supported");
     }
+    
+    //Store the version of the app in NSUserDefautls
+    [UtilsFileSystem  initBundleVersionDefaults];
 
 }
 
