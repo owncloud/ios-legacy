@@ -723,6 +723,23 @@
     }];
 }
 
+
++ (void) updateStateOfAllUploadsOfUser:(NSInteger)userId withCurrentState:(NSInteger)currentState toNewState:(NSInteger)newState {
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET kind_of_error=? WHERE kind_of_error = ? AND user_id = ?", [NSNumber numberWithInteger:newState], [NSNumber numberWithInteger:currentState], [NSNumber numberWithInteger:userId]];
+        
+        if (!correctQuery) {
+            DLog(@"Error in setState %ld",(long)newState);
+        }
+        
+    }];
+}
+
 /*
  * Method set all uploads to check if the file exist in order to show overwrite or rename
  */

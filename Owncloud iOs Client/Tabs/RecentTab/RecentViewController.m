@@ -611,6 +611,10 @@
                     msgError=NSLocalizedString(@"error_file_in_background", nil);
                     failedCell.accessoryType = UITableViewCellAccessoryNone;
                     break;
+                case errorInsufficientStorage:
+                    msgError=NSLocalizedString(@"error_insufficient_storage", nil);
+                    break;
+                    
                 default:
                     msgError=NSLocalizedString(@"error", nil);
                     failedCell.accessoryType = UITableViewCellAccessoryNone;
@@ -777,19 +781,31 @@
             DLog(@"File error upload no chunks");
             ManageUploadRequest *selectedManageUploadRequest = (ManageUploadRequest *)[_failedUploads objectAtIndex:indexPath.row];
             
-            if (selectedManageUploadRequest.currentUpload.kindOfError == errorCredentials) {
-                DLog(@"Credential errors");
-                [self resolveCredentialError:selectedManageUploadRequest.currentUpload];
-            } else if (selectedManageUploadRequest.currentUpload.kindOfError == errorDestinyNotExist){
-                DLog(@"Destiny folder doesn't exist");
-                [self resolveFolderNotFoundError:selectedManageUploadRequest.currentUpload];
-            } else if (selectedManageUploadRequest.currentUpload.kindOfError == errorFileExist){
-                [self resolveFileExistError:selectedManageUploadRequest.currentUpload];
-                DLog(@"File exists");
-            } else if (selectedManageUploadRequest.currentUpload.kindOfError == errorNotPermission){
-                _selectedFileDtoToResolveNotPermission = selectedManageUploadRequest.currentUpload;
-                [self resolveNotHavePermission:selectedManageUploadRequest.currentUpload];
-                DLog(@"User not have permision");
+            switch (selectedManageUploadRequest.currentUpload.kindOfError) {
+                case errorCredentials:
+                    DLog(@"Credential errors");
+                    [self resolveCredentialError:selectedManageUploadRequest.currentUpload];
+                    break;
+                case errorDestinyNotExist:
+                    DLog(@"Destiny folder doesn't exist");
+                    [self resolveFolderNotFoundError:selectedManageUploadRequest.currentUpload];
+                    break;
+                case errorFileExist:
+                    [self resolveFileExistError:selectedManageUploadRequest.currentUpload];
+                    DLog(@"File exists");
+                    break;
+                case errorNotPermission:
+                    _selectedFileDtoToResolveNotPermission = selectedManageUploadRequest.currentUpload;
+                    [self resolveNotHavePermission:selectedManageUploadRequest.currentUpload];
+                    DLog(@"User not have permision");
+                    break;
+                case errorInsufficientStorage:
+                    DLog(@"Not enough free space in your account");
+                    [self resolveInsufficientStorage:selectedManageUploadRequest.currentUpload];
+                    break;
+                default:
+                    break;
+                    
             }
         } else {
             DLog(@"No Exist item to select");
@@ -1031,6 +1047,48 @@
         [alertView show];
     }
 }
+
+///-----------------------------------
+/// @name Resolve insufficient storage
+///-----------------------------------
+
+/**
+ * This method resolves a file insufficient error: 
+ * When the user tries to upload and no free space available in their account
+ * this error appear in the Recent Tab
+ *
+ * @param selectedUpload -> UploadsOfflineDto, the upload with the conclict error
+ *
+ */
+- (void) resolveInsufficientStorage:(UploadsOfflineDto *) selectedUpload {
+ 
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    if(selectedUpload.userId == app.activeUser.idUser){
+        [ManageUploadsDB updateStateOfAllUploadsOfUser:selectedUpload.userId withCurrentState:errorInsufficientStorage toNewState:notAnError];
+    } else {
+        UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
+        NSString *userName = userSelected.username;
+        //if SAML is enabled replace the percent of the samlusername by utf8
+        if (k_is_sso_active) {
+            userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        }
+        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                           message:temp
+                                                          delegate:nil
+                                                 cancelButtonTitle:nil
+                                                 otherButtonTitles:NSLocalizedString(@"ok",nil), nil];
+        [alertView show];
+    }
+
+    //Reload data of uploads table
+    [self updateRecents];
+    
+    //Relaunch the uploads that failed before
+    [app performSelectorInBackground:@selector(relaunchUploadsFailedForced) withObject:nil];
+}
+
+
 
 
 #pragma mark - OverwriteFileOptionsDelegate

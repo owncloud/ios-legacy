@@ -368,8 +368,8 @@
                             weakSelf.currentUpload.status = errorUploading;
                             weakSelf.currentUpload.kindOfError = errorInsufficientStorage;
                             [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
-                            [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
-                            //TODO: restart on tap on it and show correct label error
+                            [self changeTheStatusToFailForInsufficientStorage];
+                           // [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
                             break;
                         case kOCErrorServerUnauthorized:
                             weakSelf.currentUpload.status = errorUploading;
@@ -577,6 +577,19 @@
     _currentUpload.status = errorUploading;
     _currentUpload.kindOfError = errorCredentials;
     [ManageUploadsDB setStatus:errorUploading andKindOfError:errorCredentials byUploadOffline:self.currentUpload];
+    
+}
+
+- (void)changeTheStatusToFailForInsufficientStorage{
+    
+    DLog(@"The Status is Fail for credentials");
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    //Like credential error
+    _currentUpload.status = errorUploading;
+    _currentUpload.kindOfError = errorInsufficientStorage;
+    [ManageUploadsDB setStatus:errorUploading andKindOfError:errorInsufficientStorage byUploadOffline:self.currentUpload];
     
 }
 
