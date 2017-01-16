@@ -363,6 +363,14 @@
                 }else{
                     //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
                     switch (httpResponse.statusCode) {
+                            
+                        case kOCErrorServerInsufficientStorage:
+                            weakSelf.currentUpload.status = errorUploading;
+                            weakSelf.currentUpload.kindOfError = errorInsufficientStorage;
+                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                            [appDelegate cancelTheCurrentUploadsWithTheSameUserId:weakSelf.currentUpload.userId];
+                            //TODO: restart on tap on it and show correct label error
+                            break;
                         case kOCErrorServerUnauthorized:
                             weakSelf.currentUpload.status = errorUploading;
                             weakSelf.currentUpload.kindOfError = errorCredentials;

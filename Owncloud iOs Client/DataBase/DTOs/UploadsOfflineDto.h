@@ -33,7 +33,8 @@ typedef NS_ENUM (NSInteger, enumKindOfError){
     errorNotPermission = 3,
     errorUploadFileDoesNotExist = 4,
     errorUploadInBackground = 5,
-    errorInvalidPath = 6
+    errorInvalidPath = 6,
+    errorInsufficientStorage = 7
 };
 
 @interface UploadsOfflineDto : NSObject
