@@ -699,38 +699,41 @@
  * Method that launch the loading screen and block the view
  */
 -(void)initLoading {
-    
-    if (self.HUD) {
-        [self.HUD removeFromSuperview];
-        self.HUD=nil;
-    }
-    
-    if (IS_IPHONE) {
-        self.HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
-        self.HUD.delegate = self;
-        [[UIApplication sharedApplication].keyWindow addSubview:self.HUD];
-    } else {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    dispatch_async(dispatch_get_main_queue(), ^{
         
-        _HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
-        _HUD.delegate = self;
-        [app.splitViewController.view.window addSubview:_HUD];
-    }
-    
-    self.HUD.labelText = NSLocalizedString(@"loading", nil);
-    
-    if (IS_IPHONE) {
-        self.HUD.dimBackground = NO;
-    }else {
-        self.HUD.dimBackground = NO;
-    }
-    
-    [self.HUD show:YES];
-    
-    self.view.userInteractionEnabled = NO;
-    self.navigationController.navigationBar.userInteractionEnabled = NO;
-    self.tabBarController.tabBar.userInteractionEnabled = NO;
-    [self.view.window setUserInteractionEnabled:NO];
+        if (self.HUD) {
+            [self.HUD removeFromSuperview];
+            self.HUD=nil;
+        }
+        
+        if (IS_IPHONE) {
+            self.HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
+            self.HUD.delegate = self;
+            [[UIApplication sharedApplication].keyWindow addSubview:self.HUD];
+        } else {
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            
+            _HUD = [[MBProgressHUD alloc]initWithWindow:[UIApplication sharedApplication].keyWindow];
+            _HUD.delegate = self;
+            [app.splitViewController.view.window addSubview:_HUD];
+        }
+        
+        self.HUD.labelText = NSLocalizedString(@"loading", nil);
+        
+        if (IS_IPHONE) {
+            self.HUD.dimBackground = NO;
+        }else {
+            self.HUD.dimBackground = NO;
+        }
+        
+        [self.HUD show:YES];
+        
+        self.view.userInteractionEnabled = NO;
+        self.navigationController.navigationBar.userInteractionEnabled = NO;
+        self.tabBarController.tabBar.userInteractionEnabled = NO;
+        [self.view.window setUserInteractionEnabled:NO];
+        
+    });
 }
 
 
@@ -1263,9 +1266,7 @@
     [app.prepareFiles addAssetsToUploadFromArray:info andRemoteFoldersToUpload: arrayOfRemoteurl];
     
     //Init loading to prepare files to upload
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self initLoading];
-    });
+    [self initLoading];
     
     //Set global loading screen global flag to YES (only for iPad)
     app.isLoadingVisible = YES;
