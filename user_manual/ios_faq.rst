@@ -2,19 +2,21 @@
 iOS App FAQ
 ===========
 
-**Issue:**
+Enabling "Background Instant Upload" requires the Owncloud client to have access to location services 
+-----------------------------------------------------------------------------------------------------
 
-Enabling the "Background Instant Upload" feature requires that the Owncloud client have access to location services. 
+In order to check for new images to be uploaded, the ownCloud iOS application
+uses location services to wake the application in background. 
+If new images are ready to be uploaded, they are then uploaded.
 
-**Resolution:**
+.. NOTE::
+   The iOS App don't send location information to any server.
 
-The ownCloud iOS App uses the location to wake up the app in background in order to check if there is any new image to be uploaded, if so, images are uploaded.
+See https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/LocationAwarenessPG/CoreLocation/CoreLocation.html for more information.
 
-The iOS App don't send location information to any server.
 Files marked "available offline" aren't available offline after editing
 -----------------------------------------------------------------------
 
-See https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/LocationAwarenessPG/CoreLocation/CoreLocation.html for more information.
 Currently, there is a limitation in the “Available Offline” feature in the iOS
 client application. 
 A file *is* editable offline. 
