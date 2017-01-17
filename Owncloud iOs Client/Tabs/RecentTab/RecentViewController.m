@@ -1064,7 +1064,7 @@
  
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     if(selectedUpload.userId == app.activeUser.idUser){
-        [ManageUploadsDB updateStateOfAllUploadsOfUser:selectedUpload.userId withCurrentState:errorInsufficientStorage toNewState:notAnError];
+        [ManageUploadsDB updateErrorOfAllUploadsOfUser:selectedUpload.userId withCurrentError:errorInsufficientStorage toNewError:notAnError];
     } else {
         UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
         NSString *userName = userSelected.username;

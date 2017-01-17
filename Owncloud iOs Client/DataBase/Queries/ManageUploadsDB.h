@@ -143,9 +143,9 @@
 
 
 /*
- * Method that update all the uploads files by user and state to the new state
+ * Method that update all the uploads files by user and error to the new kind of error
  */
-+ (void) updateStateOfAllUploadsOfUser:(NSInteger)userId withCurrentState:(NSInteger)currentState toNewState:(NSInteger)newState;
++ (void) updateErrorOfAllUploadsOfUser:(NSInteger)userId withCurrentError:(NSInteger)currentError toNewError:(NSInteger)newError;
 
 
 /*
