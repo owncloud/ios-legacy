@@ -141,6 +141,13 @@
  */
 + (void) updateErrorConflictFilesSetOverwrite:(BOOL) isNotNecessaryCheckIfExist forUploadOffline:(UploadsOfflineDto *) selectedUpload;
 
+
+/*
+ * Method that update all the uploads files by user and error to the new kind of error
+ */
++ (void) updateErrorOfAllUploadsOfUser:(NSInteger)userId withCurrentError:(NSInteger)currentError toNewError:(NSInteger)newError;
+
+
 /*
  * Method set all uploads to check if the file exist in order to show overwrite or rename 
  */

@@ -363,6 +363,13 @@
                 }else{
                     //We set the kindOfError in case that we have a credential or if the file where we want upload not exist
                     switch (httpResponse.statusCode) {
+                            
+                        case kOCErrorServerInsufficientStorage:
+                            weakSelf.currentUpload.status = errorUploading;
+                            weakSelf.currentUpload.kindOfError = errorInsufficientStorage;
+                            [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
+                            [self changeTheStatusToFailForInsufficientStorage];
+                            break;
                         case kOCErrorServerUnauthorized:
                             weakSelf.currentUpload.status = errorUploading;
                             weakSelf.currentUpload.kindOfError = errorCredentials;
@@ -569,6 +576,19 @@
     _currentUpload.status = errorUploading;
     _currentUpload.kindOfError = errorCredentials;
     [ManageUploadsDB setStatus:errorUploading andKindOfError:errorCredentials byUploadOffline:self.currentUpload];
+    
+}
+
+- (void)changeTheStatusToFailForInsufficientStorage{
+    
+    DLog(@"The Status is Fail for Insufficient storage");
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    //Like credential error
+    _currentUpload.status = errorUploading;
+    _currentUpload.kindOfError = errorInsufficientStorage;
+    [ManageUploadsDB setStatus:errorUploading andKindOfError:errorInsufficientStorage byUploadOffline:self.currentUpload];
     
 }
 
