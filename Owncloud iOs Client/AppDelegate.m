@@ -1727,20 +1727,23 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 #pragma mark - Pass Code
 
 - (void)checkIfIsNecesaryShowPassCode {
-    if ([ManageAppSettingsDB isPasscode]) {
+    if ([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) {
         dispatch_async(dispatch_get_main_queue(), ^{
             
             KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
             vc.delegate = self;
             
             OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
-            vc.mode = KKPasscodeModeEnter;
             
+            if([ManageAppSettingsDB isPasscode]) {
+                vc.mode = KKPasscodeModeEnter;
+            } else {
+                vc.mode = KKPasscodeModeSet;
+            }
+        //TODO:remove cancel button
             self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
             
             UIViewController *rootController = [[UIViewController alloc]init];
-            rootController.view.backgroundColor = [UIColor darkGrayColor];
-            
             self.window.rootViewController = rootController;
             [self.window makeKeyAndVisible];
             
@@ -1753,6 +1756,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 oc.modalPresentationStyle = UIModalPresentationFormSheet;
                 [rootController presentViewController:oc animated:NO completion:nil];
             }
+
         });
     } else {        
         [self initAppWithEtagRequest:YES];
@@ -1762,15 +1766,20 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 - (void)checkIfIsNecesaryShowPassCodeWillEnterForeground {
     
-    if ([ManageAppSettingsDB isPasscode]) {
+    if ([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) {
         dispatch_async(dispatch_get_main_queue(), ^{
             
             KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
             vc.delegate = self;
             
             OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
-            vc.mode = KKPasscodeModeEnter;
             
+            if([ManageAppSettingsDB isPasscode]) {
+                vc.mode = KKPasscodeModeEnter;
+            } else {
+                vc.mode = KKPasscodeModeSet;
+            }
+                   //TODO:remove cancel button
             if (IS_IPHONE) {
                 [self closeAlertViewAndViewControllers];
                 [_currentViewVisible presentViewController:oc animated:NO completion:nil];

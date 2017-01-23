@@ -228,12 +228,10 @@
     OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:_vc];
 
     //Indicate the pass code view mode
-    if(![ManageAppSettingsDB isPasscode]) {
-        //Set mode
-        self.vc.mode = KKPasscodeModeSet;
-    } else {
-        //Dissable mode
+    if([ManageAppSettingsDB isPasscode]) {
         self.vc.mode = KKPasscodeModeDisabled;
+    } else {
+        self.vc.mode = KKPasscodeModeSet;
     }
     
     if (IS_IPHONE) {
