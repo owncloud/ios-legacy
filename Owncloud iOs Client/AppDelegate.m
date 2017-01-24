@@ -141,11 +141,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Check if the server support shared api
     [self performSelector:@selector(checkIfServerSupportThings) withObject:nil afterDelay:0.0];
     
-    //Update favorites files if there are active user
-    if (_activeUser) {
-        [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
-    }
-    
     //Needed to use on background tasks
     if (!k_is_sso_active) {
         [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
@@ -160,7 +155,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
    */
     
-    
     //Ugly solution for erase the persistent cache across launches
     
     NSInteger memory = 4; //4 MB
@@ -171,15 +165,25 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [NSURLCache setSharedURLCache:sharedCache];
     sleep(1); //Important sleep. Very ugly but neccesarry.
     
-    DLog(@"showHelp_:%d",[ManageDB getShowHelpGuide]);
-    if (k_show_main_help_guide && [ManageDB getShowHelpGuide] && !_activeUser) {
-        self.helpGuideWindowViewController = [HelpGuideViewController new];        
-        self.window.rootViewController = self.helpGuideWindowViewController;
+    UserDto *user = [ManageUsersDB getActiveUser];
+    
+    if (user) {
+        self.activeUser = user;
+        
+        ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
+        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
+        
+        //Update favorites files if there are active user
+        [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
+        
+    } else if (k_show_main_help_guide && [ManageDB getShowHelpGuide]) {
+            self.helpGuideWindowViewController = [HelpGuideViewController new];
+            self.window.rootViewController = self.helpGuideWindowViewController;
+    } else {
+        
+        [self checkIfIsNecesaryShowPassCode];
     }
-   
-    //Show TouchID dialog if active
-    if([ManageAppSettingsDB isTouchID])
-        [[ManageTouchID sharedSingleton] showTouchIDAuth];
+
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [[InstantUpload instantUploadManager] activate];
@@ -1740,7 +1744,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             } else {
                 vc.mode = KKPasscodeModeSet;
             }
-        //TODO:remove cancel button
+
             self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
             
             UIViewController *rootController = [[UIViewController alloc]init];
@@ -1755,6 +1759,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
                 oc.modalPresentationStyle = UIModalPresentationFormSheet;
                 [rootController presentViewController:oc animated:NO completion:nil];
+            }
+            
+            
+            //Show TouchID dialog if active
+            if([ManageAppSettingsDB isTouchID]) {
+                [[ManageTouchID sharedSingleton] showTouchIDAuth];
             }
 
         });
@@ -1779,7 +1789,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             } else {
                 vc.mode = KKPasscodeModeSet;
             }
-                   //TODO:remove cancel button
+
             if (IS_IPHONE) {
                 [self closeAlertViewAndViewControllers];
                 [_currentViewVisible presentViewController:oc animated:NO completion:nil];
@@ -1794,6 +1804,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [_splitViewController presentViewController:oc animated:NO completion:^{
                     DLog(@"present complete");
                 }];
+            }
+            
+            //Show TouchID dialog if active
+            if([ManageAppSettingsDB isTouchID]) {
+                [[ManageTouchID sharedSingleton] showTouchIDAuth];
             }
         });
     }
@@ -2851,15 +2866,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     self.window.rootViewController = splashScreenView;
     [self.window makeKeyAndVisible];
-    
-    UserDto *user = [ManageUsersDB getActiveUser];
-    
-    if (user) {
-        ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
-        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
-    } else {
-        [self checkIfIsNecesaryShowPassCode];
-    }
 }
 
 #pragma mark - CheckAccessToServerDelegate

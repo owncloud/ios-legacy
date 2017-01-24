@@ -27,6 +27,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import "ManageAppSettingsDB.h"
+#import "Customization.h"
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
 #endif
@@ -176,12 +177,12 @@
     self.isSmallLandscape = NO;
     
     if (_mode == KKPasscodeModeSet) {
-        
-        
         self.navigationItem.title =NSLocalizedString(@"title_app_pin", nil); // KKPasscodeLockLocalizedString(@"Set Passcode", @"");
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+        if(!k_is_passcode_forced){
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                               target:self
                                                                                               action:@selector(cancelButtonPressed:)];
+        }
     } else if (_mode == KKPasscodeModeChange) {
         self.navigationItem.title = KKPasscodeLockLocalizedString(@"Change Passcode", @"");
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
@@ -341,6 +342,11 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Set Passcode not visible
     app.isPasscodeVisible = NO;
+    
+    if (!app.activeUser) {
+        [app showLoginView];
+    }
+    
 #else
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 #endif

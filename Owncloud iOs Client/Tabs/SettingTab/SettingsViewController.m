@@ -220,32 +220,44 @@
  */
 -(IBAction)changeSwitchPasscode:(id)sender {
     
-    //Create pass code view controller
-    self.vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
-    self.vc.delegate = self;
-    
-    //Create the navigation bar of portrait
-    OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:_vc];
-
-    //Indicate the pass code view mode
-    if([ManageAppSettingsDB isPasscode]) {
-        self.vc.mode = KKPasscodeModeDisabled;
+    if (!k_is_passcode_forced) {
+        //Create pass code view controller
+        self.vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
+        self.vc.delegate = self;
+        
+        //Create the navigation bar of portrait
+        OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:_vc];
+        
+        //Indicate the pass code view mode
+        if([ManageAppSettingsDB isPasscode]) {
+            self.vc.mode = KKPasscodeModeDisabled;
+        } else {
+            self.vc.mode = KKPasscodeModeSet;
+        }
+        
+        if (IS_IPHONE) {
+            //is iphone
+            [self presentViewController:oc animated:YES completion:nil];
+        } else {
+            //is ipad
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            oc.modalPresentationStyle = UIModalPresentationFormSheet;
+            [app.splitViewController presentViewController:oc animated:YES completion:nil];
+        }
+        
+        [self.settingsTableView reloadData];
+        
     } else {
-        self.vc.mode = KKPasscodeModeSet;
+        self.switchPasscode.enabled = YES;
+        [self refreshTable];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                           message:NSLocalizedString(@"passcode_forced_can_not_be_disabled", nil)
+                                                          delegate:nil
+                                                 cancelButtonTitle:nil
+                                                 otherButtonTitles:NSLocalizedString(@"ok",nil), nil];
+        [alertView show];
     }
     
-    if (IS_IPHONE) {
-        //is iphone
-        [self presentViewController:oc animated:YES completion:nil];
-    } else {
-        //is ipad
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        oc.modalPresentationStyle = UIModalPresentationFormSheet;
-        [app.splitViewController presentViewController:oc animated:YES completion:nil];
-    }
-    
-    [self.settingsTableView reloadData];
-
 }
 
 /**

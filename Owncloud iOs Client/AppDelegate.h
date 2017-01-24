@@ -111,13 +111,52 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 
 @property (strong, nonatomic) LoginViewController *loginWindowViewController;
 @property (strong, nonatomic) HelpGuideViewController *helpGuideWindowViewController;
+@property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) LoginViewController *loginViewController;
+@property (strong, nonatomic) UserDto *activeUser;
+@property (strong, nonatomic) OCTabBarController *ocTabBarController;
+@property (nonatomic, strong) NSMutableArray *uploadArray;
+@property (nonatomic, strong) NSMutableArray *webDavArray;
+@property (nonatomic, strong) SharedViewController *sharedViewController;
+@property (nonatomic, strong) RecentViewController *recentViewController;
+@property (nonatomic, strong) FilesViewController *filesViewController;
+@property (nonatomic, strong) FilesViewController *presentFilesViewController;
+@property (nonatomic, strong) SettingsViewController *settingsViewController;
+@property (nonatomic, strong) UISplitViewController *splitViewController;
+@property (nonatomic, strong)DetailViewController *detailViewController;
+@property (nonatomic, strong) MediaViewController *mediaPlayer;
+@property (nonatomic, strong) UploadFromOtherAppViewController *uploadFromOtherAppViewController;
+@property (nonatomic) BOOL isErrorLoginShown;
+@property (nonatomic) BOOL firstInit;
+@property(nonatomic)BOOL isRefreshInProgress;
+@property(nonatomic)  UIBackgroundTaskIdentifier uploadTask;
+@property (nonatomic, strong)NSString *filePathFromOtherApp;
+@property (nonatomic) BOOL isFileFromOtherAppWaitting;
+@property (nonatomic) BOOL isSharedToOwncloudPresent;
+@property (nonatomic, strong) NSString *oauthToken;
+@property (nonatomic, strong) PrepareFilesToUpload *prepareFiles;
+@property (nonatomic, strong) NSOperationQueue *databaseOperationsQueue;
+@property (nonatomic) BOOL isUploadViewVisible;
+@property (nonatomic) BOOL isLoadingVisible;
+@property (nonatomic) BOOL isPasscodeVisible;
+@property (nonatomic, strong) UIViewController *currentViewVisible;
+//Flag for detect if a overwrite process is in progress
+@property (nonatomic) BOOL isOverwriteProcess;
+@property (nonatomic,strong) UserDto *userUploadWithError;
+@property (nonatomic) long dateLastRelaunch;
+@property (nonatomic) long dateLastCheckingWaiting;
+//New user
+@property (nonatomic) BOOL isNewUser;
+//Know if the uploads has been a expiration time error
+@property (nonatomic) BOOL isExpirationTimeInUpload;
+//AlertView to control that we do not show the same error multiple times
+@property (nonatomic, strong) UIAlertView *downloadErrorAlertView;
+@property (copy) void (^backgroundSessionCompletionHandler)();
+//Url of the server redirected to be used on uploads in background
+@property (nonatomic, strong) NSString *urlServerRedirected;
+@property (nonatomic, strong) ManageDownloads *downloadManager;
+@property (nonatomic, strong) NSString *userSessionCurrentToken;
 
-- (void) initAppWithEtagRequest:(BOOL)isEtagRequestNecessary;
-- (void) presentUploadFromOtherApp;
-- (void) updateRecents;
-- (void) updateProgressView:(NSUInteger)num withPercent:(float)percent;
-- (void) restartAppAfterDeleteAllAccounts;
-- (void) showLoginView;
 
 + (ALAssetsLibrary *)defaultAssetsLibrary;
 //+ (FMDatabaseQueue*)sharedDatabase;
@@ -141,6 +180,14 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  * Method to get a Singleton of the sharedManageFavorites to manage the favorites
  */
 + (ManageFavorites*)sharedManageFavorites;
+
+
+- (void) initAppWithEtagRequest:(BOOL)isEtagRequestNecessary;
+- (void) presentUploadFromOtherApp;
+- (void) updateRecents;
+- (void) updateProgressView:(NSUInteger)num withPercent:(float)percent;
+- (void) restartAppAfterDeleteAllAccounts;
+- (void) showLoginView;
 
 - (void)doLoginWithOauthToken;
 
@@ -294,51 +341,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 
 - (void) launchProcessToSyncAllFavorites;
 
-@property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) LoginViewController *loginViewController;
-@property (strong, nonatomic) UserDto *activeUser;
-@property (strong, nonatomic) OCTabBarController *ocTabBarController;
-@property (nonatomic, strong) NSMutableArray *uploadArray;
-@property (nonatomic, strong) NSMutableArray *webDavArray;
-@property (nonatomic, strong) SharedViewController *sharedViewController;
-@property (nonatomic, strong) RecentViewController *recentViewController;
-@property (nonatomic, strong) FilesViewController *filesViewController;
-@property (nonatomic, strong) FilesViewController *presentFilesViewController;
-@property (nonatomic, strong) SettingsViewController *settingsViewController;
-@property (nonatomic, strong) UISplitViewController *splitViewController;
-@property (nonatomic, strong)DetailViewController *detailViewController;
-@property (nonatomic, strong) MediaViewController *mediaPlayer;
-@property (nonatomic, strong) UploadFromOtherAppViewController *uploadFromOtherAppViewController;
-@property (nonatomic) BOOL isErrorLoginShown;
-@property (nonatomic) BOOL firstInit;
-@property(nonatomic)BOOL isRefreshInProgress;
-@property(nonatomic)  UIBackgroundTaskIdentifier uploadTask;
-@property (nonatomic, strong)NSString *filePathFromOtherApp;
-@property (nonatomic) BOOL isFileFromOtherAppWaitting;
-@property (nonatomic) BOOL isSharedToOwncloudPresent;
-@property (nonatomic, strong) NSString *oauthToken;
-@property (nonatomic, strong) PrepareFilesToUpload *prepareFiles;
-@property (nonatomic, strong) NSOperationQueue *databaseOperationsQueue;
-@property (nonatomic) BOOL isUploadViewVisible;
-@property (nonatomic) BOOL isLoadingVisible;
-@property (nonatomic) BOOL isPasscodeVisible;
-@property (nonatomic, strong) UIViewController *currentViewVisible;
-//Flag for detect if a overwrite process is in progress
-@property (nonatomic) BOOL isOverwriteProcess;
-@property (nonatomic,strong) UserDto *userUploadWithError;
-@property (nonatomic) long dateLastRelaunch;
-@property (nonatomic) long dateLastCheckingWaiting;
-//New user
-@property (nonatomic) BOOL isNewUser;
-//Know if the uploads has been a expiration time error
-@property (nonatomic) BOOL isExpirationTimeInUpload;
-//AlertView to control that we do not show the same error multiple times
-@property (nonatomic, strong) UIAlertView *downloadErrorAlertView;
-@property (copy) void (^backgroundSessionCompletionHandler)();
-//Url of the server redirected to be used on uploads in background
-@property (nonatomic, strong) NSString *urlServerRedirected;
-@property (nonatomic, strong) ManageDownloads *downloadManager;
-@property (nonatomic, strong) NSString *userSessionCurrentToken;
+- (void)checkIfIsNecesaryShowPassCode;
 
 
 
