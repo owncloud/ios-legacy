@@ -42,14 +42,14 @@ Uploads button shows your history of uploads to your ownCloud server. The Shared
 Links button shows how many files you have shared by link.
 
 When you're in the Files view, slide any filename to the right to expose your 
-file management options: Trash, Share, and the More button has 
-options for Open With, Rename, Move, or mark as Favorite.
+file management options: Trash, Share, and More. The More button has 
+options for Open With, Rename, Move, Available Offline.
 
 .. image:: images/ios-slider.png
    :alt: Slide filename right to expose management options.
    
 The More button has different options for folders: Rename, Move, Download 
-Folder, and Favorite.   
+Folder, and Available Offline.   
 
 When you tap any file in the Files view it downloads to your iPhone or iPad, if 
 it hasn't already been downloaded, and opens a preview. 
@@ -59,7 +59,7 @@ it hasn't already been downloaded, and opens a preview.
 
 The little arrow button on the bottom left has options for sharing the file via 
 email and instant messaging, saving or copying, and printing. The star button 
-marks it as a Favorite. The triangular Share button opens a share dialog. The 
+marks it as available offline. The triangular Share button opens a share dialog. The 
 trashcan allows you to delete the file from your device, your ownCloud server, 
 or both.
 
