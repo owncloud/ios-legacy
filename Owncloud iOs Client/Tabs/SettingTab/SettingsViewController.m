@@ -220,44 +220,32 @@
  */
 -(IBAction)changeSwitchPasscode:(id)sender {
     
-    if (!k_is_passcode_forced) {
-        //Create pass code view controller
-        self.vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
-        self.vc.delegate = self;
-        
-        //Create the navigation bar of portrait
-        OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:_vc];
-        
-        //Indicate the pass code view mode
-        if([ManageAppSettingsDB isPasscode]) {
-            self.vc.mode = KKPasscodeModeDisabled;
-        } else {
-            self.vc.mode = KKPasscodeModeSet;
-        }
-        
-        if (IS_IPHONE) {
-            //is iphone
-            [self presentViewController:oc animated:YES completion:nil];
-        } else {
-            //is ipad
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            oc.modalPresentationStyle = UIModalPresentationFormSheet;
-            [app.splitViewController presentViewController:oc animated:YES completion:nil];
-        }
-        
-        [self.settingsTableView reloadData];
-        
+    //Create pass code view controller
+    self.vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
+    self.vc.delegate = self;
+    
+    //Create the navigation bar of portrait
+    OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:_vc];
+
+    //Indicate the pass code view mode
+    if([ManageAppSettingsDB isPasscode]) {
+        self.vc.mode = KKPasscodeModeDisabled;
     } else {
-        self.switchPasscode.enabled = YES;
-        [self refreshTable];
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
-                                                           message:NSLocalizedString(@"passcode_forced_can_not_be_disabled", nil)
-                                                          delegate:nil
-                                                 cancelButtonTitle:nil
-                                                 otherButtonTitles:NSLocalizedString(@"ok",nil), nil];
-        [alertView show];
+        self.vc.mode = KKPasscodeModeSet;
     }
     
+    if (IS_IPHONE) {
+        //is iphone
+        [self presentViewController:oc animated:YES completion:nil];
+    } else {
+        //is ipad
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        oc.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:oc animated:YES completion:nil];
+    }
+    
+    [self.settingsTableView reloadData];
+
 }
 
 /**
@@ -362,7 +350,7 @@
             break;
             
         case 2:
-            if (self.switchPasscode.on && [self isTouchIDAvailable]) {
+            if ((self.switchPasscode.on || k_is_passcode_forced) && [self isTouchIDAvailable]) {
                 n = 2;
             }else{
                 n = 1;
@@ -703,21 +691,37 @@
     
     switch (row) {
         case 0:
-            if([self isTouchIDAvailable] && !self.switchPasscode.on) {
-                cell.textLabel.text = NSLocalizedString(@"title_app_pin_and_touchID", nil);
-            }
-            else{
-                cell.textLabel.text = NSLocalizedString(@"title_app_pin", nil);
+            
+            if (k_is_passcode_forced) {
+                //static NSString *CellIdentifier = @"AddAccountCell";
+
+                //cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+                cell.textLabel.text = NSLocalizedString(@"title_app_pin_forced", nil);
+                cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                cell.textLabel.font = k_settings_bold_font;
+                cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                cell.editing = NO;
+                cell.backgroundColor = [UIColor colorOfBackgroundButtonOnList];
+                cell.textLabel.textColor = [UIColor colorOfTextButtonOnList];
+                cell.accessibilityLabel = ACS_SETTINGS_PASSCODE_CHANGE_CELL;
+
+            } else {
+                if([self isTouchIDAvailable] && !self.switchPasscode.on) {
+                    cell.textLabel.text = NSLocalizedString(@"title_app_pin_and_touchID", nil);
+                    
+                } else {
+                    cell.textLabel.text = NSLocalizedString(@"title_app_pin", nil);
+                }
+                self.switchPasscode = [[UISwitch alloc] initWithFrame:CGRectZero];
+                cell.accessoryView = self.switchPasscode;
+                [self.switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:YES];
+                [self.switchPasscode addTarget:self action:@selector(changeSwitchPasscode:) forControlEvents:UIControlEventValueChanged];
+                [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+                //Add accesibility label for Automation
+                self.switchPasscode.accessibilityLabel = ACS_SETTINGS_PASSCODE_SWITCH;
             }
             
-            self.switchPasscode = [[UISwitch alloc] initWithFrame:CGRectZero];
-            cell.accessoryView = self.switchPasscode;
-            [self.switchPasscode setOn:[ManageAppSettingsDB isPasscode] animated:YES];
-            [self.switchPasscode addTarget:self action:@selector(changeSwitchPasscode:) forControlEvents:UIControlEventValueChanged];
-            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-            
-            //Add accesibility label for Automation
-            self.switchPasscode.accessibilityLabel = ACS_SETTINGS_PASSCODE_SWITCH;
+
             
             break;
             
@@ -882,6 +886,12 @@
         case 1:
             if (k_multiaccount_available) {
                 [self didPressOnAddAccountButton];
+            }
+            break;
+            
+        case 2:
+            if (k_is_passcode_forced) {
+                [self didPressOnChangePasscodeButton];
             }
             break;
             
@@ -1058,6 +1068,31 @@
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
     }
+
+}
+
+- (void) didPressOnChangePasscodeButton{
+    
+    //Create pass code view controller
+    self.vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
+    self.vc.delegate = self;
+    
+    //Create the navigation bar of portrait
+    OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:_vc];
+    
+    self.vc.mode = KKPasscodeModeChange;
+    
+    if (IS_IPHONE) {
+        //is iphone
+        [self presentViewController:oc animated:YES completion:nil];
+    } else {
+        //is ipad
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        oc.modalPresentationStyle = UIModalPresentationFormSheet;
+        [app.splitViewController presentViewController:oc animated:YES completion:nil];
+    }
+    
+    [self.settingsTableView reloadData];
 
 }
 
