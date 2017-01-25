@@ -337,15 +337,11 @@
                              [self.dimView removeFromSuperview];
                              self.dimView = nil;
                          }];
-    }
+    } 
 #ifdef CONTAINER_APP
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //Set Passcode not visible
     app.isPasscodeVisible = NO;
-    
-    if (!app.activeUser) {
-        [app showLoginView];
-    }
     
 #else
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -645,7 +641,7 @@
         } else {
             [self incrementFailedAttemptsLabel];
         }
-    } else if (_mode == KKPasscodeModeEnter) {
+    } else if (_mode == KKPasscodeModeEnter || _mode == KKPasscodeModeSet) {
         ///NSString *passcode = [KKKeychain getStringForKey:@"passcode"];
          NSString *passcode = [ManageAppSettingsDB getPassCode];
         if ([_enterPasscodeTextField.text isEqualToString:passcode]) {
