@@ -728,11 +728,6 @@
         
         [self.HUD show:YES];
         
-        self.view.userInteractionEnabled = NO;
-        self.navigationController.navigationBar.userInteractionEnabled = NO;
-        self.tabBarController.tabBar.userInteractionEnabled = NO;
-        [self.view.window setUserInteractionEnabled:NO];
-        
     });
 }
 
@@ -741,30 +736,28 @@
  * Method that quit the loading screen and unblock the view
  */
 - (void)endLoading {
-    
-    if (!self.isLoadingForNavigate) {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        //Check if the loading should be visible
-        if (app.isLoadingVisible==NO) {
-            // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
-            if (self.HUD) {
-                [self.HUD removeFromSuperview];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!self.isLoadingForNavigate) {
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            //Check if the loading should be visible
+            if (app.isLoadingVisible==NO) {
+                // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
+                if (self.HUD) {
+                    [self.HUD removeFromSuperview];
+                }
             }
-            self.view.userInteractionEnabled = YES;
-            self.navigationController.navigationBar.userInteractionEnabled = YES;
-            self.tabBarController.tabBar.userInteractionEnabled = YES;
-            [self.view.window setUserInteractionEnabled:YES];
+            
+            //Check if the app is wainting to show the upload from other app view
+            if (app.isFileFromOtherAppWaitting && app.isPasscodeVisible == NO) {
+                [app performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.3];
+            }
+            
+            if (!self.rename.renameAlertView.isVisible) {
+                self.rename = nil;
+            }
         }
-        
-        //Check if the app is wainting to show the upload from other app view
-        if (app.isFileFromOtherAppWaitting && app.isPasscodeVisible == NO) {
-            [app performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.3];
-        }
-        
-        if (!self.rename.renameAlertView.isVisible) {
-            self.rename = nil;
-        }
-    }
+    });
+
 }
 
 
