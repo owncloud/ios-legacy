@@ -394,11 +394,7 @@
         [_delegate didCancelPassCodeTapped];
     }
     
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-    [self dismissModalViewControllerAnimated:YES];
-#else
     [self dismissViewControllerAnimated:YES completion:nil];
-#endif
 }
 
 //We change this method in order doesn't have account failed atttempts
@@ -557,11 +553,7 @@
 						[_delegate performSelector:@selector(didSettingsChanged:) withObject:self];
 					}
 					
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-                    [self dismissModalViewControllerAnimated:YES];
-#else
                     [self dismissViewControllerAnimated:YES completion:nil];
-#endif
 				}
 			}
 		} else if (_mode == KKPasscodeModeChange) {
@@ -599,11 +591,8 @@
 						[_delegate performSelector:@selector(didSettingsChanged:) withObject:self];
 					}
                     
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-                    [self dismissModalViewControllerAnimated:YES];
-#else
                     [self dismissViewControllerAnimated:YES completion:nil];
-#endif
+
 				}
 			}
 		}
@@ -633,11 +622,8 @@
                 [_delegate performSelector:@selector(didSettingsChanged:) withObject:self];
             }
             
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-            [self dismissModalViewControllerAnimated:YES];
-#else
             [self dismissViewControllerAnimated:YES completion:nil];
-#endif
+
         } else {
             [self incrementFailedAttemptsLabel];
         }
@@ -662,12 +648,8 @@
             
             //[KKKeychain setString:@"0" forKey:@"failedAttemptsCount"];
 
-            //Change the behaviour for OC
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-           // [self dismissModalViewControllerAnimated:YES];
-#else
             [self dismissViewControllerAnimated:YES completion:nil];
-#endif
+
         } else {
             [self incrementFailedAttemptsLabel];
         }
@@ -711,11 +693,7 @@
                     [_delegate performSelector:@selector(didSettingsChanged:) withObject:self];
                 }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-                [self dismissModalViewControllerAnimated:YES];
-#else
                 [self dismissViewControllerAnimated:YES completion:nil];
-#endif
             }
         }
     } else if ([textField isEqual:_setPasscodeTextField]) {
@@ -738,11 +716,7 @@
                 [_delegate performSelector:@selector(didSettingsChanged:) withObject:self];
             }
             
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-            [self dismissModalViewControllerAnimated:YES];
-#else
             [self dismissViewControllerAnimated:YES completion:nil];
-#endif
         }
     }
 }
@@ -759,16 +733,15 @@
 {
     [self.view addSubview:textField];
 	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 70.0)];
-	UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, self.isSmallLandscape ? 2.0f : 28.0f, self.view.bounds.size.width, 30.0)];
+    float headerLabelX = 0.0;
+    if ([textField isEqual:_setPasscodeTextField] && k_is_passcode_forced) {
+        headerLabelX = 28.0;
+    }
+    
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(headerLabelX, self.isSmallLandscape ? 2.0f : 10.0f, self.view.bounds.size.width, 30.0)];
 	headerLabel.textColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.4 alpha:1.0];
 	headerLabel.backgroundColor = [UIColor clearColor];
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-	headerLabel.textAlignment = UITextAlignmentCenter;
-#else
-	headerLabel.textAlignment = NSTextAlignmentCenter;
-#endif
-    
+    headerLabel.textAlignment = NSTextAlignmentCenter;
 	headerLabel.font = [UIFont boldSystemFontOfSize:self.isSmallLandscape ? 12.0f : 17.0f];
 	headerLabel.shadowOffset = CGSizeMake(0, 1.0);
 	headerLabel.shadowColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
@@ -777,24 +750,13 @@
 		_passcodeConfirmationWarningLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, self.isSmallLandscape ? 73.0f : 146.0, self.view.bounds.size.width, 30.0)];
 		_passcodeConfirmationWarningLabel.textColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.4 alpha:1.0];
 		_passcodeConfirmationWarningLabel.backgroundColor = [UIColor clearColor];
-        
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-		_passcodeConfirmationWarningLabel.textAlignment = UITextAlignmentCenter;
-#else
 		_passcodeConfirmationWarningLabel.textAlignment = NSTextAlignmentCenter;
-#endif
-
 		_passcodeConfirmationWarningLabel.font = [UIFont systemFontOfSize:14.0];
 		_passcodeConfirmationWarningLabel.shadowOffset = CGSizeMake(0, 1.0);
 		_passcodeConfirmationWarningLabel.shadowColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
 		_passcodeConfirmationWarningLabel.text = @"";
 		_passcodeConfirmationWarningLabel.numberOfLines = 0;
-        
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-		_passcodeConfirmationWarningLabel.lineBreakMode = UILineBreakModeWordWrap;
-#else
 		_passcodeConfirmationWarningLabel.lineBreakMode = NSLineBreakByWordWrapping;
-#endif
         
 		[headerView addSubview:_passcodeConfirmationWarningLabel];
 	}
@@ -806,13 +768,7 @@
 		_failedAttemptsLabel.textColor = [UIColor whiteColor];
 		_failedAttemptsLabel.text = @"";
 		_failedAttemptsLabel.font = [UIFont boldSystemFontOfSize:self.isSmallLandscape ? 10.0f : 14.0f];
-        
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-		_failedAttemptsLabel.textAlignment = UITextAlignmentCenter;
-#else
 		_failedAttemptsLabel.textAlignment = NSTextAlignmentCenter;
-#endif
-        
 		_failedAttemptsLabel.shadowOffset = CGSizeMake(0, -1.0);
 		_failedAttemptsLabel.shadowColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0];
 		_failedAttemptsView.layer.cornerRadius = self.isSmallLandscape ? 7.0f : 14.0f;
@@ -832,7 +788,14 @@
         if ([textField isEqual:_enterPasscodeTextField]) {
             headerLabel.text = NSLocalizedString(@"enter_app_pin_long_description", nil); // KKPasscodeLockLocalizedString(@"Enter your passcode", @"");
         } else if ([textField isEqual:_setPasscodeTextField]) {
-            headerLabel.text = NSLocalizedString(@"enter_app_pin_long_description", nil); //KKPasscodeLockLocalizedString(@"Enter a passcode", @"");
+            if (k_is_passcode_forced){
+                headerLabel.text = NSLocalizedString(@"enter_app_pin_long_description_forced", nil);
+                headerLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                headerLabel.numberOfLines = 0;
+                [headerLabel sizeToFit];
+            } else {
+                headerLabel.text = NSLocalizedString(@"enter_app_pin_long_description", nil); //KKPasscodeLockLocalizedString(@"Enter a passcode", @"");
+            }
         } else if ([textField isEqual:_confirmPasscodeTextField]) {
             headerLabel.text = NSLocalizedString(@"reenter_app_pin", nil); //KKPasscodeLockLocalizedString(@"Re-enter your passcode", @"");
         }
@@ -850,7 +813,10 @@
         headerLabel.text = NSLocalizedString(@"enter_app_pin", nil);//KKPasscodeLockLocalizedString(@"Enter your passcode", @"");
     }
     
-    headerLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+    if (!k_is_passcode_forced){
+        headerLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+    }
+    
     
 #ifdef CONTAINER_APP
     [headerView addSubview:headerLabel];
@@ -995,12 +961,7 @@
             [_delegate performSelector:@selector(didPasscodeEnteredCorrectly:) withObject:self];
         }
         
-        //Change the behaviour for OC
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-        // [self dismissModalViewControllerAnimated:YES];
-#else
         [self dismissViewControllerAnimated:YES completion:nil];
-#endif
     });
 
 }
