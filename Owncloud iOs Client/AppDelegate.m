@@ -668,14 +668,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
         sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:uploadSessionManager andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
-
-        //Acive the cookies functionality if the server supports it
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        if (appDelegate.activeUser) {
-            if (appDelegate.activeUser.hasCookiesSupport == serverFunctionalitySupported) {
-                sharedOCCommunication.isCookiesAvailable = YES;
-            }
-        }
+        //Cookies is allways available in current supported Servers
+        sharedOCCommunication.isCookiesAvailable = YES;
 
 	}
 	return sharedOCCommunication;

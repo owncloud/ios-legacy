@@ -134,15 +134,8 @@
     {
         sharedOCCommunication = [[OCCommunication alloc] init];
         
-        //Acive the cookies functionality if the server supports it
-
-        UserDto *user = [ManageUsersDB getActiveUser];
-        
-        if (user) {
-            if (user.hasCookiesSupport == serverFunctionalitySupported) {
-                sharedOCCommunication.isCookiesAvailable = YES;
-            }
-        }
+        //Cookies is allways available in current supported Servers
+        sharedOCCommunication.isCookiesAvailable = YES;
         
         // Add new session and container identifiers to the download session manager
         NSURLSessionConfiguration *downConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_session_name_ext_app];
