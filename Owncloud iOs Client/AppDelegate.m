@@ -1859,19 +1859,32 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)didPasscodeEnteredCorrectly:(KKPasscodeViewController*)viewController{
     DLog(@"Did pass code entered correctly");
     
+    [self initViewsAfterDismissPasscode];
+}
+
+- (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController{
+    DLog(@"Did pass code entered incorrectly");
+}
+
+- (void)didSettingsChanged:(KKPasscodeViewController *)viewController {
+    DLog(@"Did pass code entered correctly after enforce passcode set");
+    [self initViewsAfterDismissPasscode];
+}
+
+- (void)initViewsAfterDismissPasscode {
+    
     if (_isFileFromOtherAppWaitting==YES) {
         if (!_filesViewController) {
             [self initAppWithEtagRequest:YES];
             
         } else {
-             [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.5];
+            [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.5];
         }
     } else {
         //If it's first open
         if (!_filesViewController) {
             [self initAppWithEtagRequest:YES];
             
-
         } else {
             if (_splitViewController) {
                 [_splitViewController dismissViewControllerAnimated:NO completion:nil];
@@ -1882,9 +1895,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-- (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController{
-    DLog(@"Did pass code entered incorrectly");
-}
+
 
 #pragma mark - Items to upload from other apps
 

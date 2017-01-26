@@ -641,7 +641,7 @@
         } else {
             [self incrementFailedAttemptsLabel];
         }
-    } else if (_mode == KKPasscodeModeEnter || _mode == KKPasscodeModeSet) {
+    } else if (_mode == KKPasscodeModeEnter) {
         ///NSString *passcode = [KKKeychain getStringForKey:@"passcode"];
          NSString *passcode = [ManageAppSettingsDB getPassCode];
         if ([_enterPasscodeTextField.text isEqualToString:passcode]) {
