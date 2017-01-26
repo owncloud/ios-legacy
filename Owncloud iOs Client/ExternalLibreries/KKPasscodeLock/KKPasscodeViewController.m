@@ -734,11 +734,13 @@
     [self.view addSubview:textField];
 	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 70.0)];
     float headerLabelX = 0.0;
+    float headerLabelWidth = self.view.bounds.size.width;
     if ([textField isEqual:_setPasscodeTextField] && k_is_passcode_forced) {
-        headerLabelX = 28.0;
+        headerLabelX = 25.0;
+        headerLabelWidth = self.view.bounds.size.width - headerLabelX ;
     }
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(headerLabelX, self.isSmallLandscape ? 2.0f : 10.0f, self.view.bounds.size.width, 30.0)];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(headerLabelX, self.isSmallLandscape ? 2.0f : 10.0f, headerLabelWidth, 30.0)];
 	headerLabel.textColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.4 alpha:1.0];
 	headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.textAlignment = NSTextAlignmentCenter;
