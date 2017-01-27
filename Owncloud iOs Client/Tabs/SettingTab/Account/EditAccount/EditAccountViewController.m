@@ -133,8 +133,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
 
 - (void) viewDidAppear:(BOOL)animated {
 
-    [super viewDidAppear:animated];
-    [self textFieldDidEndEditing:self.urlTextField];
+   [self textFieldDidEndEditing:self.urlTextField];
     
     //Hide the show password button until the user write something
     showPasswordCharacterButton.hidden = YES;

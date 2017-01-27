@@ -40,7 +40,7 @@
     NSURL *url = [NSURL URLWithString:urlString];
     
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:40.0];
-    [request setHTTPShouldHandleCookies:NO];
+    [request setHTTPShouldHandleCookies:false];
     
     //Add the user agent
     [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];

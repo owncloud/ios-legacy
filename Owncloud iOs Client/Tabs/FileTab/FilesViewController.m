@@ -1176,7 +1176,10 @@
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
     }
 
-    [[AppDelegate sharedOCCommunication] checkServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    NSString *rootFolder =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
+    
+    
+    [[AppDelegate sharedOCCommunication] checkServer:rootFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         [self endLoading];
         NSDictionary * args = [NSDictionary dictionaryWithObjectsAndKeys:
                                (NSArray *) info, @"info",
@@ -2817,7 +2820,9 @@
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
     }
     
-    [[AppDelegate sharedOCCommunication] checkServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    NSString *rootFolder =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
+    
+    [[AppDelegate sharedOCCommunication] checkServer:rootFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         [self endLoading];
         //Update fileDto
         self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
@@ -3138,7 +3143,9 @@
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
     }
     
-    [[AppDelegate sharedOCCommunication] checkServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    NSString *rootFolder =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
+    
+    [[AppDelegate sharedOCCommunication] checkServer:rootFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         [self endLoading];
         
         if ([_selectedFileDto isDownload] == notDownload || _selectedFileDto.isNecessaryUpdate) {

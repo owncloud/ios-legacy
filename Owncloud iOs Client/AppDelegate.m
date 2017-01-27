@@ -654,8 +654,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             return NSURLSessionAuthChallengePerformDefaultHandling;
         }];
         
-        
-        
         NSURLSessionConfiguration *networkConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
         networkConfiguration.HTTPShouldUsePipelining = YES;
         networkConfiguration.HTTPMaximumConnectionsPerHost = 1;
@@ -665,17 +663,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [networkSessionManager.operationQueue setMaxConcurrentOperationCount:1];
         networkSessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
    
-
         sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:uploadSessionManager andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
-
-        //Acive the cookies functionality if the server supports it
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        if (appDelegate.activeUser) {
-            if (appDelegate.activeUser.hasCookiesSupport == serverFunctionalitySupported) {
-                sharedOCCommunication.isCookiesAvailable = YES;
-            }
-        }
+        //Cookies is allways available in current supported Servers
+        sharedOCCommunication.isCookiesAvailable = YES;
 
 	}
 	return sharedOCCommunication;
@@ -702,14 +693,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:nil];
         
-        
-        //Acive the cookies functionality if the server supports it
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        if (appDelegate.activeUser) {
-            if (appDelegate.activeUser.hasCookiesSupport == serverFunctionalitySupported) {
-                sharedOCCommunicationDownloadFolder.isCookiesAvailable = YES;
-            }
-        }
+        //Cookies is allways available in current supported Servers
+        sharedOCCommunicationDownloadFolder.isCookiesAvailable = YES;
         
     }
     return sharedOCCommunicationDownloadFolder;

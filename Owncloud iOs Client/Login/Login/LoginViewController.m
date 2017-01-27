@@ -1901,7 +1901,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         //Update the interface
         [self updateInterfaceWithConnectionToTheServer:isConnection];
     }
-    
 }
 
 #pragma mark - Checklogin
