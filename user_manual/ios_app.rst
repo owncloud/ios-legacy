@@ -21,7 +21,7 @@ and look on your Personal page for a link to the ownCloud app on iTunes. When
 you install the ownCloud app and open it you'll be prompted for your ownCloud 
 server URL and login. When it connects it opens to your Files page.
 
-.. image:: images/ios-files.png
+.. image:: images/ios-files-list.png
    :alt: Files listing.
 
 You'll also find links and information at the ownCloud `installation page 
@@ -30,29 +30,49 @@ You'll also find links and information at the ownCloud `installation page
 Managing Your Files
 -------------------
 
-All your files on your ownCloud server are listed on the Files page, but are not 
-downloaded to your iPhone or iPad until you tap on them. Downloaded files are 
-marked with a little green arrow. Thumbnails are displayed for both downloaded 
-and not-downloaded files (owncloud 8.0+ only). Click the overflow button at the 
-top right (the three-dot button) to upload files to your server, create a new 
-folder, or sort your files alphabetically or by date.
+All your files on your ownCloud server are listed on the Files page, but are
+not downloaded to your iPhone or iPad until you tap on them. 
+Downloaded files are marked with a little green arrow. 
+Thumbnails are displayed for both downloaded and not-downloaded files (owncloud
+8.0+ only). 
+Click the overflow button at the top right (the three-dot button) to upload
+files to your server, create a new folder, or sort your files alphabetically or
+by date.
 
-The Files button at the bottom takes you back to your main Files page. The 
-Uploads button shows your history of uploads to your ownCloud server. The Shared 
-Links button shows how many files you have shared by link.
+The Files button at the bottom takes you back to your main Files page. 
+The Uploads button shows your history of uploads to your ownCloud server. 
+The Shared Links button shows how many files you have shared by link.
 
 When you're in the Files view, slide any filename to the right to expose your 
-file management options: Trash, Share, and the More button has 
-options for Open With, Rename, Move, or mark as Favorite.
+file management options. 
+These are: Trash, Share, and More. 
+The More button has options for Open With, Rename, Move, Available Offline.
 
 .. image:: images/ios-slider.png
    :alt: Slide filename right to expose management options.
    
-The More button has different options for folders: Rename, Move, Download 
-Folder, and Favorite.   
+The More button has different options for folders. 
+These are: Rename, Move, Download Folder, and Available Offline.   
 
-When you tap any file in the Files view it downloads to your iPhone or iPad, if 
+.. image:: images/ios-file-squirrel.png
+   :alt: Squirrel image in the iOS app
+
+Downloading Files
+~~~~~~~~~~~~~~~~~
+
+.. image:: images/ios-file-downloaded-file.png
+   :alt: A file that has been downloaded successfully in ownCloud
+
+When you tap any file in the Files view it downloads to your iPhone or iPad, if
 it hasn't already been downloaded, and opens a preview. 
+If the file has been successfully downloaded, then it will have a tick next to
+its icon, as in the image above. 
+
+Sharing Files
+~~~~~~~~~~~~~
+
+The little arrow button on the bottom left has options for sharing the file via
+email and instant messaging, saving or copying, and printing. 
 
 .. image:: images/ios-betsyross.png
    :alt: Betsy Ross says "Don't believe everything you read on the Internet."
@@ -62,6 +82,18 @@ email and instant messaging, saving or copying, and printing. The star button
 marks it as a Favorite. The triangular Share button opens a share dialog. The 
 trashcan allows you to delete the file from your device, your ownCloud server, 
 or both.
+
+Sharing Files
+~~~~~~~~~~~~~
+
+The triangular Share button opens a share dialog, allowing you to start
+`Sharing Files`_. 
+
+Deleting Files
+~~~~~~~~~~~~~~
+
+The trashcan allows you to delete the file from your device, your ownCloud
+server, or both.
 
 Sharing Files
 -------------
@@ -101,9 +133,17 @@ Settings
 --------
 
 The Settings button (bottom right of any screen) takes you to the Settings 
-screen. You can add and edit new accounts, set a login PIN (personal 
-identification number), and it has links to Help, Recommend to a Friend, Send 
-Feedback, and your app version number. Click the information button at the 
+screen. 
+Here, you can:
+
+- Add and edit new accounts
+- Set a login PIN (personal identification number)
+- Get help
+- Recommend the app to a Friend
+- Send Feedback
+- Find the application version number
+
+Click the information button at the 
 right of your ownCloud accounts to change your password. Slide the account name 
 to the left to expose the Delete button.
 
