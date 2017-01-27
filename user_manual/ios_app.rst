@@ -54,14 +54,17 @@ Folder, and Available Offline.
 When you tap any file in the Files view it downloads to your iPhone or iPad, if 
 it hasn't already been downloaded, and opens a preview. 
 
-.. image:: images/ios-betsyross.png
-   :alt: Betsy Ross says "Don't believe everything you read on the Internet."
+Making Files Available Offline
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The little arrow button on the bottom left has options for sharing the file via 
-email and instant messaging, saving or copying, and printing. The star button 
-marks it as available offline. The triangular Share button opens a share dialog. The 
-trashcan allows you to delete the file from your device, your ownCloud server, 
-or both.
+.. image:: images/ios-file-buttons.png
+   :alt: Making files available offline (or not)
+
+The underlined down arrow button, which you can see in the image above, marks
+it as available offline. 
+If the icon is not filled white, then the file is not available offline.
+If the file is filled white, then it is available offline. 
+Click the button to make the file available, or not available offline.
 
 Sharing Files
 -------------
