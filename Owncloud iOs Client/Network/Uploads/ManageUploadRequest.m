@@ -183,9 +183,9 @@
         BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
         }
         if (!isSamlCredentialsError) {
             
@@ -272,9 +272,9 @@
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 weakSelf.currentUpload.status = errorUploading;
                 weakSelf.currentUpload.kindOfError = errorCredentials;
@@ -737,9 +737,9 @@
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 DLog(@"error login updating the etag");
             }
@@ -816,9 +816,9 @@
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 DLog(@"error login checking the etag");
                 [ManageUploadsDB setStatus:errorUploading andKindOfError:notAnError byUploadOffline:_currentUpload];
