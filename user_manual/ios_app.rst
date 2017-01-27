@@ -95,6 +95,40 @@ Deleting Files
 The trashcan allows you to delete the file from your device, your ownCloud
 server, or both.
 
+Instant Upload of Photos and Videos
+-----------------------------------
+
+.. image:: images/ios-instant-uploads-all-disabled.png
+   :alt: Instant Uploads
+
+New in version 3.5.2 is the ability for instantly uploading to ownCloud any photos and videos which you create with your iPhone. 
+In Settings, you’ll find a new section titled **Instant Uploads**. 
+In that section you’ll see, initially disabled, two options. These are:
+
+- Instant Upload Photos
+- Instant Upload Videos
+
+Toggle the one that you want, or both, if that’s your preference. 
+
+When enabling "*Instant Upload Photos*", you will be prompted to allow access to your photos, as you can see in the screenshot below.
+For this functionality to work, you have to click "OK".
+
+.. image:: images/ios-instant-uploads-enabled-access-notification.png
+   :alt: ownCloud needs access to your photos for Instant Upload Photos to work.
+
+When enabling "*Instant Upload Videos*", you will need to have Location Services enabled.
+Otherwise, you’ll see the notification in the screenshot below.
+For this functionality to work, Location Services are required.
+
+.. image:: images/ios-instant-uploads-videos-location-services-notification.png
+   :alt: ownCloud needs Location Services to be enabled for Instant Upload Videos to work.
+
+Once you have enabled one or both of the Instant Upload options, a new folder, called InstantUpload, will appear in your Files view. 
+If you click on it, you will see all of the photos and videos which have been automatically uploaded from your iPhone to your ownCloud account, as in the image below.
+
+.. image:: images/ios-instant-upload-file-list.png
+   :alt: Photos and videos which were automatically uploaded to ownCloud by Instant Upload.
+
 Sharing Files
 -------------
 
