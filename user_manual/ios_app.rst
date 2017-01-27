@@ -97,6 +97,27 @@ editable.
 .. image:: images/ios-share-link.png
    :alt: Share link on a folder.   
 
+Editing Text Files
+------------------
+
+From version 3.5.2 onward you can edit text files directly within the
+application.
+To do so, first click on the text file which you want to edit. 
+This will display the contents of the file, as in the example below. 
+
+.. image:: images/ios-share-link.png
+   :alt: Share link on a folder.   
+   
+Then, click "Edit" in the top right-hand corner, which opens the file for
+editing, as in the example below. 
+
+.. image:: images/ios-share-link.png
+   :alt: Share link on a folder.   
+
+Make all the changes which you need to, and when you're finished editing, click
+"Done" in the top right-hand corner. 
+This will save the changes and begin the sync process to your ownCloud account.
+
 Settings
 --------
 
