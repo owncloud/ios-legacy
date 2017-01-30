@@ -112,8 +112,6 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
  */
 + (BOOL) isURLWithSamlFragment:(NSHTTPURLResponse *)response;
 
-+ (BOOL) isURLWithSamlFragmentByNSURLResponse:(NSURLResponse *)response;
-
 
 ///-----------------------------------
 /// @name Get the Name of the Brand Image

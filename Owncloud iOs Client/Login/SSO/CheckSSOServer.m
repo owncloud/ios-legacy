@@ -133,7 +133,7 @@
             //sso login error
             DLog(@"redirection with saml");
             
-            if ([FileNameUtils isURLWithSamlFragmentByNSURLResponse:redirectResponse]) {
+            if ([FileNameUtils isURLWithSamlFragment:httpResponse]) {
                 _isSSOServer = YES;
                 [_delegate showSSOLoginScreen];
                 return nil;

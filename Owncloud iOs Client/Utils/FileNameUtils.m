@@ -273,32 +273,8 @@
     
     // NSString *samlFragment1 = @"AuthnEngine";
     
-    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSHTTPURLResponse *httpResponse = response;
     NSDictionary *dict = [httpResponse allHeaderFields];
-    //Server path of redirected server
-    NSString *responseURLString = [dict objectForKey:@"Location"];
-
-    responseURLString = [responseURLString lowercaseString];
-    
-    if (responseURLString) {
-        for (NSString* samlFragment in kSAMLFragmentArray) {
-            if ([responseURLString rangeOfString:samlFragment options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                NSLog(@"shibboleth fragment is in the request url");
-                return YES;
-            }
-        }
-    }
-    return NO;
-}
-
-+ (BOOL) isURLWithSamlFragmentByNSURLResponse:(NSURLResponse *)response {
-    
-    // NSString *samlFragment1 = @"AuthnEngine";
-    
-    //We get all the headers in order to obtain the Location
-    NSHTTPURLResponse *hr = (NSHTTPURLResponse*)response;
-    NSDictionary *dict = [hr allHeaderFields];
-    
     //Server path of redirected server
     NSString *responseURLString = [dict objectForKey:@"Location"];
 

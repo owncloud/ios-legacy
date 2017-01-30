@@ -254,7 +254,7 @@
         //Check the login error in shibboleth
         if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragmentByNSURLResponse:response];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:(NSHTTPURLResponse *)response];
             if (isSamlCredentialsError) {
                 //Set not download or downloaded in database
                 if (self.file.isNecessaryUpdate) {
@@ -315,7 +315,7 @@
         //Check the login error in shibboleth
         if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragmentByNSURLResponse:response];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:(NSHTTPURLResponse *)response];
             if (isSamlCredentialsError) {
                 //Set not download or downloaded in database
                 if (self.file.isNecessaryUpdate) {
@@ -329,7 +329,7 @@
             }
         }
         if (!isSamlCredentialsError) {
-            [self failureInDownloadProcessWithError:error andResponse:response];
+            [self failureInDownloadProcessWithError:error andResponse:(NSHTTPURLResponse *)response];
         }
     }];
     
