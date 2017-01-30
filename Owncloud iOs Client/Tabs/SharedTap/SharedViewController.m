@@ -390,11 +390,9 @@
                 
                 //Check the login error in shibboleth
                 if (k_is_sso_active) {
-                    NSURL *samlRedirectUrl = [NSURL URLWithString:redirectedServer];
-                    NSHTTPURLResponse *responseCopyWithSamlRedirectUrl = [[NSHTTPURLResponse alloc]initWithURL:samlRedirectUrl statusCode:response.statusCode HTTPVersion:nil headerFields:[response allHeaderFields]];
                     
                     //Check if there are fragmens of saml in url, in this case there are a credential error
-                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:responseCopyWithSamlRedirectUrl.URL.absoluteString];
+                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
                     
                     if (isSamlCredentialsError) {
                         
