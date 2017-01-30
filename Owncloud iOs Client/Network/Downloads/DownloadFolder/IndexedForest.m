@@ -98,7 +98,12 @@
     key = [key substringToIndex:[key length] - [key lastPathComponent].length];
     
     do {
-        NSString *parentKey = [key substringToIndex:[key length] - ([key lastPathComponent].length+1)];
+       NSString *parentKey = key;
+        
+       if (key) {
+             parentKey = [key substringToIndex:[key length] - ([key lastPathComponent].length+1)];
+        }
+        
         if (![parentKey hasSuffix:@"/"]) {
             parentKey = [parentKey stringByAppendingString:@"/"];
         }
