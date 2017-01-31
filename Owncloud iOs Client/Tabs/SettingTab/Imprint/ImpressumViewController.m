@@ -66,6 +66,7 @@
     
     NSURL *targetURL = [NSURL fileURLWithPath:path];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:targetURL];
+    [request setHTTPShouldHandleCookies:false];
     
     //Add the user agent
     [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];

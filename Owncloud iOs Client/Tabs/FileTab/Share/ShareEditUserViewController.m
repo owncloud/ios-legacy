@@ -189,9 +189,9 @@ typedef NS_ENUM (NSInteger, enumUpload){
             BOOL isSamlCredentialsError=NO;
             
             //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
+            if (k_is_sso_active) {
                 //Check if there are fragmens of saml in url, in this case there are a credential error
-                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
                 if (isSamlCredentialsError) {
                     [self endLoading];
                     [self errorLogin];
@@ -211,9 +211,9 @@ typedef NS_ENUM (NSInteger, enumUpload){
             BOOL isSamlCredentialsError=NO;
             
             //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
+            if (k_is_sso_active) {
                 //Check if there are fragmens of saml in url, in this case there are a credential error
-                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
                 if (isSamlCredentialsError) {
                     [self errorLogin];
                 }

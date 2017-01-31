@@ -108,9 +108,9 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
 /*
  * This method check and url and look for a saml fragment
  * and return the bollean result
- @urlString -> url from redirect server
+ @response -> response
  */
-+ (BOOL)isURLWithSamlFragment:(NSString*)urlString;
++ (BOOL) isURLWithSamlFragment:(NSHTTPURLResponse *)response;
 
 
 ///-----------------------------------

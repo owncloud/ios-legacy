@@ -173,13 +173,7 @@
     
     cell.accessoryView = nil;
     cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-    
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-    cell.textLabel.textAlignment = UITextAlignmentLeft;
-#else
     cell.textLabel.textAlignment = NSTextAlignmentLeft;
-#endif
-    
     cell.textLabel.textColor = [UIColor blackColor];
     
 	
@@ -187,11 +181,7 @@
         
         if (indexPath.row == 0) {
             
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-            cell.textLabel.textAlignment = UITextAlignmentCenter;
-#else
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
-#endif
             
             if (_passcodeLockOn) {
                 cell.textLabel.text = KKPasscodeLockLocalizedString(@"Turn Passcode Off", @"");
@@ -200,12 +190,7 @@
             }
         } else {
             cell.textLabel.text = KKPasscodeLockLocalizedString(@"Change Passcode", @"");
-            
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-            cell.textLabel.textAlignment = UITextAlignmentCenter;
-#else
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
-#endif
 
             if (!_passcodeLockOn) {
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -261,11 +246,7 @@
 			nav.navigationBar.barStyle = self.navigationController.navigationBar.barStyle;
 		}
 		
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-        [self.navigationController presentModalViewController:nav animated:YES];
-#else
         [self.navigationController presentViewController:nav animated:YES completion:nil];
-#endif
 		
 	} else if (indexPath.section == 0 && indexPath.row == 1 && _passcodeLockOn) {
 		KKPasscodeViewController *vc = [[self.passcodeViewControllerClass alloc] initWithNibName:nil bundle:nil];
@@ -289,11 +270,7 @@
 			nav.navigationBar.barStyle = self.navigationController.navigationBar.barStyle;
 		}
 		
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
-        [self.navigationController presentModalViewController:nav animated:YES];
-#else
         [self.navigationController presentViewController:nav animated:YES completion:nil];
-#endif
 	}
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

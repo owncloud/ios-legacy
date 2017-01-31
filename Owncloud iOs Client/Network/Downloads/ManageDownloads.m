@@ -69,10 +69,8 @@
     
     if (IS_IPHONE) {
         [[NSNotificationCenter defaultCenter] postNotificationName:iPhoneCleanPreviewNotification object:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:iPhoneShowNotConnectionWithServerMessageNotification object:nil];
     }else{
         [[NSNotificationCenter defaultCenter] postNotificationName:IpadCleanPreviewNotification object:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:IpadShowNotConnectionWithServerMessageNotification object:nil];
     }
 }
 

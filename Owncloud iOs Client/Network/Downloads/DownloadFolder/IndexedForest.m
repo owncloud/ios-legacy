@@ -98,14 +98,18 @@
     key = [key substringToIndex:[key length] - [key lastPathComponent].length];
     
     do {
-        NSString *parentKey = [key substringToIndex:[key length] - ([key lastPathComponent].length+1)];
-        if (![parentKey hasSuffix:@"/"]) {
-            parentKey = [parentKey stringByAppendingString:@"/"];
-        }
+        NSString *parentKey = key;
         
         CWLOrderedDictionary *parentDict;
         CWLOrderedDictionary *currentDict = [self getDictionaryOfTreebyKey:key];
-
+        
+        if (key) {
+            parentKey = [key substringToIndex:[key length] - ([key lastPathComponent].length+1)];
+        }
+        
+        if (![parentKey hasSuffix:@"/"]) {
+            parentKey = [parentKey stringByAppendingString:@"/"];
+        }
         
         if ([parentKey isEqualToString:@"/"]) {
             //Parent is the treeDictionary

@@ -86,10 +86,15 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     
     //Add the user agent
     [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
+    [request setHTTPShouldHandleCookies:false];
     
     //Configure connectionSession
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    [configuration setHTTPShouldSetCookies:false];
+    configuration.HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyNever;
+    configuration.HTTPCookieStorage = nil;
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    
     
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request
                                             completionHandler:
@@ -389,6 +394,7 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)redirectResponse
         
         [requestRedirect setURL: [NSURL URLWithString:responseURLString]];
         requestRedirect.HTTPMethod = @"GET";
+        [requestRedirect setHTTPShouldHandleCookies:false];
         
         completionHandler(requestRedirect);
         

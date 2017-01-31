@@ -377,9 +377,9 @@
                 BOOL isSamlCredentialsError = NO;
                 
                 //Check the login error in shibboleth
-                if (k_is_sso_active && redirectedServer) {
+                if (k_is_sso_active) {
                     //Check if there are fragmens of saml in url, in this case there are a credential error
-                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
                     if (isSamlCredentialsError) {
                         [self errorLogin];
                     }
@@ -406,9 +406,9 @@
             BOOL isSamlCredentialsError = NO;
             
             //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
+            if (k_is_sso_active) {
                 //Check if there are fragmens of saml in url, in this case there are a credential error
-                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
                 if (isSamlCredentialsError) {
                     [self errorLogin];
                 }
@@ -728,11 +728,6 @@
         
         [self.HUD show:YES];
         
-        self.view.userInteractionEnabled = NO;
-        self.navigationController.navigationBar.userInteractionEnabled = NO;
-        self.tabBarController.tabBar.userInteractionEnabled = NO;
-        [self.view.window setUserInteractionEnabled:NO];
-        
     });
 }
 
@@ -741,30 +736,28 @@
  * Method that quit the loading screen and unblock the view
  */
 - (void)endLoading {
-    
-    if (!self.isLoadingForNavigate) {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        //Check if the loading should be visible
-        if (app.isLoadingVisible==NO) {
-            // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
-            if (self.HUD) {
-                [self.HUD removeFromSuperview];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!self.isLoadingForNavigate) {
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            //Check if the loading should be visible
+            if (app.isLoadingVisible==NO) {
+                // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
+                if (self.HUD) {
+                    [self.HUD removeFromSuperview];
+                }
             }
-            self.view.userInteractionEnabled = YES;
-            self.navigationController.navigationBar.userInteractionEnabled = YES;
-            self.tabBarController.tabBar.userInteractionEnabled = YES;
-            [self.view.window setUserInteractionEnabled:YES];
+            
+            //Check if the app is wainting to show the upload from other app view
+            if (app.isFileFromOtherAppWaitting && app.isPasscodeVisible == NO) {
+                [app performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.3];
+            }
+            
+            if (!self.rename.renameAlertView.isVisible) {
+                self.rename = nil;
+            }
         }
-        
-        //Check if the app is wainting to show the upload from other app view
-        if (app.isFileFromOtherAppWaitting && app.isPasscodeVisible == NO) {
-            [app performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.3];
-        }
-        
-        if (!self.rename.renameAlertView.isVisible) {
-            self.rename = nil;
-        }
-    }
+    });
+
 }
 
 
@@ -927,9 +920,9 @@
                 BOOL isSamlCredentialsError = NO;
                 
                 //Check the login error in shibboleth
-                if (k_is_sso_active && redirectedServer) {
+                if (k_is_sso_active) {
                     //Check if there are fragmens of saml in url, in this case there are a credential error
-                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
                     if (isSamlCredentialsError) {
                         [self errorLogin];
                     }
@@ -944,9 +937,9 @@
                 BOOL isSamlCredentialsError = NO;
                 
                 //Check the login error in shibboleth
-                if (k_is_sso_active && redirectedServer) {
+                if (k_is_sso_active) {
                     //Check if there are fragmens of saml in url, in this case there are a credential error
-                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                    isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
                     if (isSamlCredentialsError) {
                         [self errorLogin];
                     }
@@ -1183,7 +1176,10 @@
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
     }
 
-    [[AppDelegate sharedOCCommunication] checkServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    NSString *rootFolder =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
+    
+    
+    [[AppDelegate sharedOCCommunication] checkServer:rootFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         [self endLoading];
         NSDictionary * args = [NSDictionary dictionaryWithObjectsAndKeys:
                                (NSArray *) info, @"info",
@@ -1204,9 +1200,9 @@
         BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 [self errorLogin];
             }
@@ -1813,9 +1809,9 @@
         BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 self.isLoadingForNavigate = NO;
                 [self errorLogin];
@@ -1836,9 +1832,9 @@
         BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 [self errorLogin];
             }
@@ -2045,9 +2041,9 @@
          BOOL isSamlCredentialsError = NO;
          
          //Check the login error in shibboleth
-         if (k_is_sso_active && redirectedServer) {
+         if (k_is_sso_active) {
              //Check if there are fragmens of saml in url, in this case there are a credential error
-             isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+             isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
              if (isSamlCredentialsError) {
                  [self errorLogin];
              }
@@ -2079,9 +2075,9 @@
         BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 [self errorLogin];
             }
@@ -2251,9 +2247,9 @@
             BOOL isSamlCredentialsError=NO;
             
             //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
+            if (k_is_sso_active) {
                 //Check if there are fragmens of saml in url, in this case there are a credential error
-                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
                 if (isSamlCredentialsError) {
                     //We don't show a error login in this request.
                     //[self errorLogin];
@@ -2824,7 +2820,9 @@
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
     }
     
-    [[AppDelegate sharedOCCommunication] checkServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    NSString *rootFolder =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
+    
+    [[AppDelegate sharedOCCommunication] checkServer:rootFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         [self endLoading];
         //Update fileDto
         self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
@@ -2844,9 +2842,9 @@
         BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 [self errorLogin];
             }
@@ -3145,7 +3143,9 @@
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
     }
     
-    [[AppDelegate sharedOCCommunication] checkServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+    NSString *rootFolder =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
+    
+    [[AppDelegate sharedOCCommunication] checkServer:rootFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
         [self endLoading];
         
         if ([_selectedFileDto isDownload] == notDownload || _selectedFileDto.isNecessaryUpdate) {
@@ -3170,9 +3170,9 @@
         BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 [self errorLogin];
             }

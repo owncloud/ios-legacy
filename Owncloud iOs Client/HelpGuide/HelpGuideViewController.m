@@ -679,7 +679,8 @@
 -(void)stayPressed:(UIButton *) sender {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     [ManageDB updateShowHelpGuide:NO];
-    [app showLoginView];
+    
+    [app checkIfIsNecesaryShowPassCode];
 }
 
 - (NSUInteger)supportedInterfaceOrientations

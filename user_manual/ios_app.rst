@@ -74,14 +74,17 @@ Sharing Files
 The little arrow button on the bottom left has options for sharing the file via
 email and instant messaging, saving or copying, and printing. 
 
-.. image:: images/ios-betsyross.png
-   :alt: Betsy Ross says "Don't believe everything you read on the Internet."
+Making Files Available Offline
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The little arrow button on the bottom left has options for sharing the file via 
-email and instant messaging, saving or copying, and printing. The star button 
-marks it as a Favorite. The triangular Share button opens a share dialog. The 
-trashcan allows you to delete the file from your device, your ownCloud server, 
-or both.
+.. image:: images/ios-file-buttons.png
+   :alt: Making files available offline (or not)
+
+The underlined down arrow button, which you can see in the image above, marks
+it as available offline. 
+If the icon is not filled white, then the file is not available offline.
+If the file is filled white, then it is available offline. 
+Click the button to make the file available, or not available offline.
 
 Sharing Files
 ~~~~~~~~~~~~~
@@ -162,6 +165,27 @@ editable.
 
 .. image:: images/ios-share-link.png
    :alt: Share link on a folder.   
+
+Editing Text Files
+------------------
+
+From version 3.5.0 onward you can edit text files directly within the
+application.
+To do so, first click on the text file which you want to edit. 
+This will display the contents of the file, as in the example below. 
+
+.. image:: images/ios-share-link.png
+   :alt: Share link on a folder.   
+   
+Then, click "Edit" in the top right-hand corner, which opens the file for
+editing, as in the example below. 
+
+.. image:: images/ios-share-link.png
+   :alt: Share link on a folder.   
+
+Make all the changes which you need to, and when you're finished editing, click
+"Done" in the top right-hand corner. 
+This will save the changes and begin the sync process to your ownCloud account.
 
 Settings
 --------

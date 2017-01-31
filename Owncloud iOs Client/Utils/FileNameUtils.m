@@ -269,15 +269,20 @@
 }
 
 
-+ (BOOL)isURLWithSamlFragment:(NSString*)urlString{
++ (BOOL) isURLWithSamlFragment:(NSHTTPURLResponse *)response {
     
     // NSString *samlFragment1 = @"AuthnEngine";
-
-    urlString = [urlString lowercaseString];
     
-    if (urlString) {
+    NSHTTPURLResponse *httpResponse = response;
+    NSDictionary *dict = [httpResponse allHeaderFields];
+    //Server path of redirected server
+    NSString *responseURLString = [dict objectForKey:@"Location"];
+
+    responseURLString = [responseURLString lowercaseString];
+    
+    if (responseURLString) {
         for (NSString* samlFragment in kSAMLFragmentArray) {
-            if ([urlString rangeOfString:samlFragment options:NSCaseInsensitiveSearch].location != NSNotFound) {
+            if ([responseURLString rangeOfString:samlFragment options:NSCaseInsensitiveSearch].location != NSNotFound) {
                 NSLog(@"shibboleth fragment is in the request url");
                 return YES;
             }

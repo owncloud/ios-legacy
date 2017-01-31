@@ -141,11 +141,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Check if the server support shared api
     [self performSelector:@selector(checkIfServerSupportThings) withObject:nil afterDelay:0.0];
     
-    //Update favorites files if there are active user
-    if (_activeUser) {
-        [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
-    }
-    
     //Needed to use on background tasks
     if (!k_is_sso_active) {
         [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
@@ -160,7 +155,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
    */
     
-    
     //Ugly solution for erase the persistent cache across launches
     
     NSInteger memory = 4; //4 MB
@@ -171,15 +165,29 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [NSURLCache setSharedURLCache:sharedCache];
     sleep(1); //Important sleep. Very ugly but neccesarry.
     
-    DLog(@"showHelp_:%d",[ManageDB getShowHelpGuide]);
-    if (k_show_main_help_guide && [ManageDB getShowHelpGuide] && !_activeUser) {
-        self.helpGuideWindowViewController = [HelpGuideViewController new];        
-        self.window.rootViewController = self.helpGuideWindowViewController;
+    UserDto *user = [ManageUsersDB getActiveUser];
+    
+    if (user) {
+        self.activeUser = user;
+        
+        ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
+        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
+        
+        //Update favorites files if there are active user
+        [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
+        
+    } else if (k_show_main_help_guide && [ManageDB getShowHelpGuide]) {
+            self.helpGuideWindowViewController = [HelpGuideViewController new];
+            self.window.rootViewController = self.helpGuideWindowViewController;
+    } else {
+        
+        [self checkIfIsNecesaryShowPassCode];
     }
-   
+
     //Show TouchID dialog if active
-    if([ManageAppSettingsDB isTouchID])
+    if([ManageAppSettingsDB isTouchID]) {
         [[ManageTouchID sharedSingleton] showTouchIDAuth];
+    }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [[InstantUpload instantUploadManager] activate];
@@ -654,8 +662,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             return NSURLSessionAuthChallengePerformDefaultHandling;
         }];
         
-        
-        
         NSURLSessionConfiguration *networkConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
         networkConfiguration.HTTPShouldUsePipelining = YES;
         networkConfiguration.HTTPMaximumConnectionsPerHost = 1;
@@ -665,17 +671,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [networkSessionManager.operationQueue setMaxConcurrentOperationCount:1];
         networkSessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
    
-
         sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:uploadSessionManager andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
-
-        //Acive the cookies functionality if the server supports it
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        if (appDelegate.activeUser) {
-            if (appDelegate.activeUser.hasCookiesSupport == serverFunctionalitySupported) {
-                sharedOCCommunication.isCookiesAvailable = YES;
-            }
-        }
+        //Cookies is allways available in current supported Servers
+        sharedOCCommunication.isCookiesAvailable = YES;
 
 	}
 	return sharedOCCommunication;
@@ -702,14 +701,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:nil];
         
-        
-        //Acive the cookies functionality if the server supports it
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        if (appDelegate.activeUser) {
-            if (appDelegate.activeUser.hasCookiesSupport == serverFunctionalitySupported) {
-                sharedOCCommunicationDownloadFolder.isCookiesAvailable = YES;
-            }
-        }
+        //Cookies is allways available in current supported Servers
+        sharedOCCommunicationDownloadFolder.isCookiesAvailable = YES;
         
     }
     return sharedOCCommunicationDownloadFolder;
@@ -990,7 +983,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     //For iOS8 we need to change the checking to this method, for show as a first step the pincode screen
-    [self checkIfIsNecesaryShowPassCodeWillEnterForeground];
+    [self checkIfIsNecesaryShowPassCodeWillResignActive];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -1742,20 +1735,23 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 #pragma mark - Pass Code
 
 - (void)checkIfIsNecesaryShowPassCode {
-    if ([ManageAppSettingsDB isPasscode]) {
+    if ([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) {
         dispatch_async(dispatch_get_main_queue(), ^{
             
             KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
             vc.delegate = self;
             
             OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
-            vc.mode = KKPasscodeModeEnter;
             
+            if([ManageAppSettingsDB isPasscode]) {
+                vc.mode = KKPasscodeModeEnter;
+            } else {
+                vc.mode = KKPasscodeModeSet;
+            }
+
             self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
             
             UIViewController *rootController = [[UIViewController alloc]init];
-            rootController.view.backgroundColor = [UIColor darkGrayColor];
-            
             self.window.rootViewController = rootController;
             [self.window makeKeyAndVisible];
             
@@ -1775,17 +1771,22 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
   
 }
 
-- (void)checkIfIsNecesaryShowPassCodeWillEnterForeground {
+- (void)checkIfIsNecesaryShowPassCodeWillResignActive {
     
-    if ([ManageAppSettingsDB isPasscode]) {
+    if ([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) {
         dispatch_async(dispatch_get_main_queue(), ^{
             
             KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
             vc.delegate = self;
             
             OCPortraitNavigationViewController *oc = [[OCPortraitNavigationViewController alloc]initWithRootViewController:vc];
-            vc.mode = KKPasscodeModeEnter;
             
+            if([ManageAppSettingsDB isPasscode]) {
+                vc.mode = KKPasscodeModeEnter;
+            } else {
+                vc.mode = KKPasscodeModeSet;
+            }
+
             if (IS_IPHONE) {
                 [self closeAlertViewAndViewControllers];
                 [_currentViewVisible presentViewController:oc animated:NO completion:nil];
@@ -1841,6 +1842,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_settingsViewController.vc) {
         [_settingsViewController.vc dismissViewControllerAnimated:NO completion:nil];
     }
+
     
 }
 
@@ -1850,19 +1852,32 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)didPasscodeEnteredCorrectly:(KKPasscodeViewController*)viewController{
     DLog(@"Did pass code entered correctly");
     
+    [self initViewsAfterDismissPasscode];
+}
+
+- (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController{
+    DLog(@"Did pass code entered incorrectly");
+}
+
+- (void)didSettingsChanged:(KKPasscodeViewController *)viewController {
+    DLog(@"Did pass code entered correctly after enforce passcode set");
+    [self initViewsAfterDismissPasscode];
+}
+
+- (void)initViewsAfterDismissPasscode {
+    
     if (_isFileFromOtherAppWaitting==YES) {
         if (!_filesViewController) {
             [self initAppWithEtagRequest:YES];
             
         } else {
-             [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.5];
+            [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.5];
         }
     } else {
         //If it's first open
         if (!_filesViewController) {
             [self initAppWithEtagRequest:YES];
             
-
         } else {
             if (_splitViewController) {
                 [_splitViewController dismissViewControllerAnimated:NO completion:nil];
@@ -1873,9 +1888,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-- (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController{
-    DLog(@"Did pass code entered incorrectly");
-}
+
 
 #pragma mark - Items to upload from other apps
 
@@ -2857,15 +2870,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     self.window.rootViewController = splashScreenView;
     [self.window makeKeyAndVisible];
-    
-    UserDto *user = [ManageUsersDB getActiveUser];
-    
-    if (user) {
-        ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
-        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
-    } else {
-        [self checkIfIsNecesaryShowPassCode];
-    }
 }
 
 #pragma mark - CheckAccessToServerDelegate

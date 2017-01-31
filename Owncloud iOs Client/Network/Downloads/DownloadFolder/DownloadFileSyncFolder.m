@@ -96,11 +96,7 @@
         }
     }];
     
-    if (k_is_sso_active || !k_is_background_active) {
-        //Will be resume by it self
-    } else {
-        [self.downloadTask resume];
-    }
+    [self.downloadTask resume];
     
     [ManageFilesDB updateFile:file.idFile withTaskIdentifier:self.downloadTask.taskIdentifier];
 }

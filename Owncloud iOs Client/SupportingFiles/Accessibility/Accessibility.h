@@ -15,6 +15,7 @@
 
 #define ACS_SETTINGS_USER_ACCOUNT_CELL @"Settings Account Cell $user@$server";
 #define ACS_SETTINGS_ADD_ACCOUNT_CELL @"Settings Add Account Cell";
+#define ACS_SETTINGS_PASSCODE_CHANGE_CELL @"Settings Change passcode Cell";
 #define ACS_SETTINGS_PASSCODE_SWITCH @"Settings Passcode Switch";
 #define ACS_SETTINGS_TOUCH_ID_SWITCH @"Settings Touch ID";
 #define ACS_SETTINGS_INSTANT_UPLOAD_PHOTOS_SWITCH @"Settings Instant Upload Photos Switch";
