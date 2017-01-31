@@ -147,3 +147,6 @@
 
 //Show share by link
 #define k_is_share_by_link_available YES
+
+//Force passcode
+#define k_is_passcode_forced NO
