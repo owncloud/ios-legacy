@@ -1789,6 +1789,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
             if (IS_IPHONE) {
                 [self closeAlertViewAndViewControllers];
+                
+                
+                UIViewController *testTop = [self topViewController];
+                
+                if (testTop) {
+                    //if ([testTop isKindOfClass:[EditAccountViewController class]]) {
+                    _currentViewVisible = testTop;
+                      //   [testTop dismissViewControllerAnimated:NO completion:nil];
+                   // } //else if
+                }
+
                 [_currentViewVisible presentViewController:oc animated:NO completion:nil];
                 
             } else {
@@ -1842,9 +1853,49 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (_settingsViewController.vc) {
         [_settingsViewController.vc dismissViewControllerAnimated:NO completion:nil];
     }
+    
 
     
 }
+
+- (UIViewController *)topViewController{
+    return [self topViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
+}
+
+- (UIViewController *)topViewController:(UIViewController *)rootViewController
+{
+    if (rootViewController.presentedViewController == nil) {
+        return rootViewController;
+    }
+    
+    if ([rootViewController.presentedViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *navigationController = (UINavigationController *)rootViewController.presentedViewController;
+        UIViewController *lastViewController = [[navigationController viewControllers] lastObject];
+        return [self topViewController:lastViewController];
+    }
+    
+    UIViewController *presentedViewController = (UIViewController *)rootViewController.presentedViewController;
+    return [self topViewController:presentedViewController];
+}
+
+//- (UIViewController*)topViewController {
+//    return [self topViewControllerWithRootViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
+//}
+//
+//- (UIViewController*)topViewControllerWithRootViewController:(UIViewController*)rootViewController {
+//    if ([rootViewController isKindOfClass:[UITabBarController class]]) {
+//        UITabBarController* tabBarController = (UITabBarController*)rootViewController;
+//        return [self topViewControllerWithRootViewController:tabBarController.selectedViewController];
+//    } else if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+//        UINavigationController* navigationController = (UINavigationController*)rootViewController;
+//        return [self topViewControllerWithRootViewController:navigationController.visibleViewController];
+//    } else if (rootViewController.presentedViewController) {
+//        UIViewController* presentedViewController = rootViewController.presentedViewController;
+//        return [self topViewControllerWithRootViewController:presentedViewController];
+//    } else {
+//        return rootViewController;
+//    }
+//}
 
 
 #pragma mark - Pass Code Delegate Methods
