@@ -100,7 +100,7 @@ editable.
 Editing Text Files
 ------------------
 
-From version 3.5.2 onward you can edit text files directly within the
+From version 3.5.0 onward you can edit text files directly within the
 application.
 To do so, first click on the text file which you want to edit. 
 This will display the contents of the file, as in the example below. 
