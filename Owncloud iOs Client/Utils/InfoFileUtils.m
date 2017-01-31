@@ -231,8 +231,8 @@
         } else if (fileForSetTheStatusIcon.isDownload == downloaded) {
             //File is in device
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadedIcon"];
-        } else if (fileForSetTheStatusIcon.isDownload == overwriting || fileForSetTheStatusIcon.isDownload == downloading) {
-            //File is overwritten
+        } else if (fileForSetTheStatusIcon.isDownload == overwriting || fileForSetTheStatusIcon.isDownload == downloading || (fileForSetTheStatusIcon.isDownload == notDownload && (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder))) {
+            //File is overwritten, downloading or pending to download in available offline folder
             fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
         } else {
             fileCell.imageDownloaded.image= nil;

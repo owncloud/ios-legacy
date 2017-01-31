@@ -2111,13 +2111,13 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         DLog(@"Operation success response code: %ld", (long)response.statusCode);
         
-        BOOL isSamlServer = NO;
+        BOOL isSamlCredentialsError = NO;
 
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlServer = [FileNameUtils isURLWithSamlFragment:redirectedServer];
-            if (isSamlServer) {
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
+            if (isSamlCredentialsError) {
                 [self errorLogin];
             }
             
@@ -2130,7 +2130,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             self.urlTextField.text = redirectedServer;
         }
         
-        if (!isSamlServer) {
+        if (!isSamlCredentialsError) {
             //Pass the items with OCFileDto to FileDto Array
             NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
             [self createUserAndDataInTheSystemWithRequest:directoryList andCode:response.statusCode];

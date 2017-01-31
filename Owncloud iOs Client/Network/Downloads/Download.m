@@ -563,9 +563,9 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 DLog(@"error login updating the etag");
                 //Set not download or downloaded in database
@@ -616,9 +616,9 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
          BOOL isSamlCredentialsError = NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 DLog(@"error login updating the etag");
                 //Set not download or downloaded in database

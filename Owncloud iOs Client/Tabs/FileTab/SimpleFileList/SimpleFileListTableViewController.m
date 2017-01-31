@@ -376,9 +376,9 @@
         BOOL isSamlCredentialsError=NO;
         
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 [self errorLogin];
             }
@@ -453,9 +453,9 @@
         BOOL isSamlCredentialsError = NO;
          
         //Check the login error in shibboleth
-        if (k_is_sso_active && redirectedServer) {
+        if (k_is_sso_active) {
             //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             if (isSamlCredentialsError) {
                 [self errorLogin];
             }
@@ -677,9 +677,9 @@
             BOOL isSamlCredentialsError = NO;
             
             //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
+            if (k_is_sso_active) {
                 //Check if there are fragmens of saml in url, in this case there are a credential error
-                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:redirectedServer];
+                isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
                 if (isSamlCredentialsError) {
                     [self errorLogin];
                 }
@@ -708,9 +708,9 @@
             DLog(@"Operation error: %d", (int) response.statusCode);
         
             //Check the login error in shibboleth
-            if (k_is_sso_active && redirectedServer) {
+            if (k_is_sso_active) {
                 //Check if there are fragmens of saml in url, in this case there are a credential error
-                if ([FileNameUtils isURLWithSamlFragment:redirectedServer]) {
+                if ([FileNameUtils isURLWithSamlFragment:response]) {
                     [self errorLogin];
                 }
             }

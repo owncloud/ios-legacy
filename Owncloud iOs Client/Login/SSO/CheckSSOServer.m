@@ -132,15 +132,8 @@
         if (k_is_sso_active && (statusCode == k_redirected_code_1 || statusCode == k_redirected_code_2 || statusCode == k_redirected_code_3)) {
             //sso login error
             DLog(@"redirection with saml");
-            //We get all the headers in order to obtain the Location
-            NSHTTPURLResponse *hr = (NSHTTPURLResponse*)redirectResponse;
-            NSDictionary *dict = [hr allHeaderFields];
             
-            //Server path of redirected server
-            NSString *responseURLString = [dict objectForKey:@"Location"];
-            DLog(@"Shibboleth redirected server is: %@", responseURLString);
-            
-            if ([FileNameUtils isURLWithSamlFragment:responseURLString]) {
+            if ([FileNameUtils isURLWithSamlFragment:httpResponse]) {
                 _isSSOServer = YES;
                 [_delegate showSSOLoginScreen];
                 return nil;
