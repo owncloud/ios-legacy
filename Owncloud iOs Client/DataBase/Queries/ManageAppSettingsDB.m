@@ -78,7 +78,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE SET passcode=?", passcode];
+        correctQuery = [db executeUpdate:@"UPDATE passcode SET passcode=?", passcode];
         
         if (!correctQuery) {
             DLog(@"Error passcode not updated");
