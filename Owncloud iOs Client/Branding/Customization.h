@@ -15,7 +15,7 @@
 
 
 //app year
-#define k_year 2016
+#define k_year 2017
 
 //URLs Setting
 #define k_help_url @"http://owncloud.com/mobile/help"
