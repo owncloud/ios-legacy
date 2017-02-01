@@ -33,9 +33,6 @@
 @implementation ManageAppSettingsDB
 
 
-/*
- * Method that return if exist pass code or not
- */
 +(BOOL)isPasscode {
     
     __block BOOL output = NO;
@@ -54,17 +51,11 @@
         if(size > 0) {
             output = YES;
         }
-        
     }];
     
     return output;
-    
 }
 
-/*
-* Method that insert pin code
-* @passcode -> pin code
-*/
 +(void) insertPasscode: (NSString *) passcode {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -75,15 +66,26 @@
         correctQuery = [db executeUpdate:@"INSERT INTO passcode(passcode) Values(?)", passcode];
         
         if (!correctQuery) {
-            DLog(@"Error insert pin code");
+            DLog(@"Error insert passcode");
         }
     }];
-    
 }
 
-/*
- * Method that return the pin code
- */
++(void) updatePasscode: (NSString *) passcode {
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL correctQuery=NO;
+        
+        correctQuery = [db executeUpdate:@"UPDATE SET passcode=?", passcode];
+        
+        if (!correctQuery) {
+            DLog(@"Error passcode not updated");
+        }
+    }];
+}
+
 +(NSString *) getPassCode {
     
     DLog(@"getPassCode");
@@ -99,17 +101,11 @@
             
             output = [rs stringForColumn:@"passcode"];
         }
-        
     }];
     
     return output;
-
 }
 
-
-/*
- * Method that remove the pin code
- */
 +(void) removePasscode {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -123,13 +119,8 @@
             DLog(@"Error delete the pin code");
         }
     }];
-    
 }
 
-
-/*
- * Method that return if Touch ID is active or not
- */
 +(BOOL) isTouchID {
     
     __block BOOL output = NO;
@@ -143,18 +134,12 @@
         while ([rs next]) {
             
             output =[rs boolForColumn:@"is_touch_id"];
-            
         }
-        
     }];
     
     return output;
 }
 
-
-/*
- * Method that enable or disable Touch ID
- */
 +(void) updateTouchIDTo:(BOOL)newValue {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -170,13 +155,6 @@
     }];
 }
 
-
-/*
- * Method that insert certificate
- * @certificateLocation -> path of certificate
- */
-
-
 +(void) insertCertificate: (NSString *) certificateLocation {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -190,12 +168,8 @@
             DLog(@"Error insert certificate");
         }
     }];
-    
 }
 
-/*
- * Method that return an array with all of certifications
- */
 +(NSMutableArray*) getAllCertificatesLocation {
     
     DLog(@"getAllCertificatesLocation");
@@ -214,7 +188,6 @@
             NSString *certificatePath = [NSString stringWithFormat:@"%@%@", localCertificatesFolder, [rs stringForColumn:@"certificate_location"]];
             [output addObject:certificatePath];
         }
-        
     }];
     
     DLog(@"Number of certificates: %lu", (unsigned long)[output count]);
@@ -240,7 +213,6 @@
     
     return output;
 }
-
 
 +(BOOL)isVideoInstantUpload {
     
@@ -283,7 +255,6 @@
             DLog(@"Error updating video_instant_upload");
         }
     }];
-    
 }
 
 + (BOOL) isBackgroundInstantUpload {
@@ -299,13 +270,10 @@
         while ([rs next]) {
             
             output =[rs boolForColumn:@"background_instant_upload"];
-            
         }
-        
     }];
     
     return output;
-    
 }
 
 +(void)updateBackgroundInstantUploadTo:(BOOL)newValue {
@@ -321,10 +289,9 @@
             DLog(@"Error updating background_instant_upload");
         }
     }];
-    
 }
 
-+ (NSTimeInterval)getTimestampInstantUploadImage {
++(NSTimeInterval)getTimestampInstantUploadImage {
     DLog(@"getTimestampInstantUploadImage");
     
     __block double output;
@@ -338,11 +305,9 @@
             
             output = [rs doubleForColumn:@"timestamp_last_instant_upload_image"];
         }
-        
     }];
     
     return output;
-    
 }
 
 + (NSTimeInterval)getTimestampInstantUploadVideo {
@@ -359,11 +324,9 @@
             
             output = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
         }
-        
     }];
     
     return output;
-    
 }
 
 + (void)updateTimestampInstantUploadImage:(NSTimeInterval)newValue {
@@ -379,7 +342,6 @@
             DLog(@"Error updating timestamp_last_instant_upload_image");
         }
     }];
-    
 }
 
 + (void)updateTimestampInstantUploadVideo:(NSTimeInterval)newValue {
@@ -395,7 +357,6 @@
             DLog(@"Error updating timestamp_last_instant_upload_video");
         }
     }];
-    
 }
 
 +(void)updateInstantUploadAllUser {
@@ -422,9 +383,7 @@
             DLog(@"Error updating path_instant_upload");
         }
     }];
-    
 }
-
 
 +(void)updateOnlyWifiInstantUpload:(BOOL)newValue {
     
@@ -439,10 +398,6 @@
             DLog(@"Error updating only_wifi_instant_upload");
         }
     }];
-    
 }
-
-
-
 
 @end
