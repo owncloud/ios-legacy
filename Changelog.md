@@ -1,3 +1,9 @@
+## 3.5.3 (February 2017)
+- Added support for animated GIF images
+- Added more descriptive error message for maintenance mode
+- Added more descriptive error message for uploads greater than available space in account
+- Bug fixing
+
 ## 3.5.2 (December 2016)
 - New options available for instant uploads. Select what type of media you want to upload
 - Stream Photo items from iCloud. Now you can upload your photos even if they are not downloaded into your device
