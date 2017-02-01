@@ -116,7 +116,7 @@ The third party software included and used by this project is:
 	Original license document included at ExternalLibreries/VFR Pdf Reader/LICENSE.
    	See https://github.com/vfr/Reader
 
- * 	ownCloud iOS Library v 2.0.2
+ * 	ownCloud iOS Library v 2.0.3
    	Copyright (c) 2016, ownCloud GmbH. (http://www.owncloud.org/)
    	Licensed under MIT License.
    	Placed at OCCommunicationLib
@@ -149,4 +149,11 @@ The third party software included and used by this project is:
    	Placed at Owncloud iOs ClientTests/ExternalLibraries/OCMock_3.1.5
 	Original license document included at Owncloud iOs ClientTests/ExternalLibraries/OCMock_3.1.5/LICENSE
 	See https://github.com/erikdoe/ocmock
+
+ *	FLAnimatedImage
+ 	Copyright (c) 2014-2016 Flipboard
+	Licensed under MIT License.
+	Placed at ExternalLibreries/FLAnimatedImage.
+	Original license document included at ExternalLibreries/FLAnimatedImage/LICENSE
+	See https://github.com/Flipboard/FLAnimatedImage
 
