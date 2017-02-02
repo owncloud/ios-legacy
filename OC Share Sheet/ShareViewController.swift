@@ -187,7 +187,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
                 case kOCErrorServerMaintenanceError.hashValue?:
                     self.showAlertView((NSLocalizedString("maintenance_mode_on_server_message", comment: "")))
                 default:
-                    self.showAlertView("not_possible_connect_to_server")
+                    self.showAlertView((NSLocalizedString("not_possible_connect_to_server", comment: "")))
                 }
             }
             
