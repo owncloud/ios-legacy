@@ -1838,11 +1838,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         if (_presentFilesViewController.mDeleteFile.popupQuery) {
             [_presentFilesViewController.mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
         }
-//        //Close the pop-up of rename in FileViewController
-//        if(_presentFilesViewController.rename.renameAlertView){
-//            [_presentFilesViewController.rename.renameAlertView dismissWithClickedButtonIndex:0 animated:NO];
-//            
-//        }
     }
     
     if (_settingsViewController){
