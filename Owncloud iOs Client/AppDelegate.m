@@ -1944,6 +1944,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             if (_presentFilesViewController.plusActionSheet){
                 [_presentFilesViewController.plusActionSheet dismissWithClickedButtonIndex:k_max_number_options_plus_menu animated:NO];
             }
+            if (_presentFilesViewController.sortingActionSheet) {
+                [_presentFilesViewController.sortingActionSheet dismissWithClickedButtonIndex:k_max_number_options_sort_menu animated:NO];
+            }
             
             if (_splitViewController) {
                 [_splitViewController dismissViewControllerAnimated:NO completion:nil];
