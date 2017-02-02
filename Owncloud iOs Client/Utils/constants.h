@@ -83,3 +83,10 @@
 #define k_thumbnails_height 64
 #define k_thumbnails_width 64
 
+
+//Menu sizes
+#define k_max_number_options_plus_menu 4
+#define k_max_number_options_more_menu 4
+#define k_max_number_options_account_menu 3
+
+

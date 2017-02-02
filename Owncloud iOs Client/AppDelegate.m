@@ -1790,17 +1790,18 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             if (IS_IPHONE) {
                 [self closeAlertViewAndViewControllers];
                 
-                
-                UIViewController *testTop = [self topViewController];
-                
-                if (testTop) {
-                    //if ([testTop isKindOfClass:[EditAccountViewController class]]) {
-                    _currentViewVisible = testTop;
-                      //   [testTop dismissViewControllerAnimated:NO completion:nil];
-                   // } //else if
-                }
 
+
+
+                UIViewController *topView = [self topViewController];
+                
+                if (topView) {
+                    if (![topView isKindOfClass:[KKPasscodeViewController class]]) {
+                        _currentViewVisible = topView;
+                   }
+                }
                 [_currentViewVisible presentViewController:oc animated:NO completion:nil];
+                
                 
             } else {
                 //is ipad
@@ -1817,6 +1818,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
+
 ///-----------------------------------
 /// @name Close alertViews and ViewControllers
 ///-----------------------------------
@@ -1827,35 +1829,42 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) closeAlertViewAndViewControllers {
     
-    //Close the openWith option in FileViewController
-    if (_presentFilesViewController.openWith) {
-        [_presentFilesViewController.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
-    }
-    //Close the delete option in FilesViewController
-    if (_presentFilesViewController.mDeleteFile.popupQuery) {
-        [_presentFilesViewController.mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
-    }
-    //Close the pop-up of twitter and facebook in SettingViewController
-    if (_settingsViewController.popupQuery) {
-        [_settingsViewController.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
-    }
-    if (_settingsViewController.twitter) {
-        [_settingsViewController.twitter dismissViewControllerAnimated:NO completion:nil];
-    }
-    if (_settingsViewController.facebook) {
-        [_settingsViewController.facebook dismissViewControllerAnimated:NO completion:nil];
-    }
-    //Close the view of mail in SettingViewController
-    if (_settingsViewController.mailer) {
-        [_settingsViewController.mailer dismissViewControllerAnimated:NO completion:nil];
-    }
-    //Close the pincode view controller in SettingViewController
-    if (_settingsViewController.vc) {
-        [_settingsViewController.vc dismissViewControllerAnimated:NO completion:nil];
+    if (_presentFilesViewController){
+        //Close the openWith option in FileViewController
+        if (_presentFilesViewController.openWith) {
+            [_presentFilesViewController.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
+        }
+        //Close the delete option in FilesViewController
+        if (_presentFilesViewController.mDeleteFile.popupQuery) {
+            [_presentFilesViewController.mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
+        }
+//        //Close the pop-up of rename in FileViewController
+//        if(_presentFilesViewController.rename.renameAlertView){
+//            [_presentFilesViewController.rename.renameAlertView dismissWithClickedButtonIndex:0 animated:NO];
+//            
+//        }
     }
     
-
-    
+    if (_settingsViewController){
+        //Close the pop-up of twitter and facebook in SettingViewController
+        if (_settingsViewController.popupQuery) {
+            [_settingsViewController.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
+        }
+        if (_settingsViewController.twitter) {
+            [_settingsViewController.twitter dismissViewControllerAnimated:NO completion:nil];
+        }
+        if (_settingsViewController.facebook) {
+            [_settingsViewController.facebook dismissViewControllerAnimated:NO completion:nil];
+        }
+        //Close the view of mail in SettingViewController
+        if (_settingsViewController.mailer) {
+            [_settingsViewController.mailer dismissViewControllerAnimated:NO completion:nil];
+        }
+        //Close the pincode view controller in SettingViewController
+        if (_settingsViewController.vc) {
+            [_settingsViewController.vc dismissViewControllerAnimated:NO completion:nil];
+        }
+    }
 }
 
 - (UIViewController *)topViewController{
@@ -1930,6 +1939,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             [self initAppWithEtagRequest:YES];
             
         } else {
+            
+            if(_presentFilesViewController.rename.renameAlertView){
+                [_presentFilesViewController.rename.renameAlertView dismissWithClickedButtonIndex:0 animated:NO];
+            }
+            if (_presentFilesViewController.moreActionSheet){
+                [_presentFilesViewController.moreActionSheet dismissWithClickedButtonIndex:k_max_number_options_more_menu animated:NO];
+            }
+            if (_presentFilesViewController.plusActionSheet){
+                [_presentFilesViewController.plusActionSheet dismissWithClickedButtonIndex:k_max_number_options_plus_menu animated:NO];
+            }
+            
             if (_splitViewController) {
                 [_splitViewController dismissViewControllerAnimated:NO completion:nil];
             } else {
