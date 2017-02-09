@@ -983,7 +983,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     //For iOS8 we need to change the checking to this method, for show as a first step the pincode screen
-    [self checkIfIsNecesaryShowPassCodeWillResignActive];
+    [self closeAlertViewAndViewControllers];
+    [self performSelector:@selector(checkIfIsNecesaryShowPassCodeWillResignActive) withObject:nil afterDelay:0.5];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -1788,11 +1789,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             }
 
             if (IS_IPHONE) {
-                [self closeAlertViewAndViewControllers];
                 
-
-
-
                 UIViewController *topView = [self topViewController];
                 
                 if (topView) {
@@ -1829,36 +1826,51 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
  */
 - (void) closeAlertViewAndViewControllers {
     
-    if (_presentFilesViewController){
+    if (self.presentFilesViewController){
         //Close the openWith option in FileViewController
-        if (_presentFilesViewController.openWith) {
-            [_presentFilesViewController.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
+        if (self.presentFilesViewController.openWith) {
+            [self.presentFilesViewController.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
         }
         //Close the delete option in FilesViewController
-        if (_presentFilesViewController.mDeleteFile.popupQuery) {
-            [_presentFilesViewController.mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
+        if (self.presentFilesViewController.mDeleteFile.popupQuery) {
+            [self.presentFilesViewController.mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
+        }
+        
+        //Close the more view controller on the list of FilesViewController
+        if (self.presentFilesViewController.moreActionSheet) {
+            [self.presentFilesViewController.moreActionSheet dismissWithClickedButtonIndex:self.presentFilesViewController.moreActionSheet.cancelButtonIndex animated:NO];
+        }
+        
+        //Close the plus view controller on the list of FilesViewController
+        if (self.presentFilesViewController.plusActionSheet) {
+            [self.presentFilesViewController.plusActionSheet dismissWithClickedButtonIndex:self.presentFilesViewController.plusActionSheet.cancelButtonIndex animated:NO];
         }
     }
     
-    if (_settingsViewController){
+    if (self.settingsViewController){
         //Close the pop-up of twitter and facebook in SettingViewController
-        if (_settingsViewController.popupQuery) {
-            [_settingsViewController.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
+        if (self.settingsViewController.popupQuery) {
+            [self.settingsViewController.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
         }
-        if (_settingsViewController.twitter) {
-            [_settingsViewController.twitter dismissViewControllerAnimated:NO completion:nil];
+        if (self.settingsViewController.twitter) {
+            [self.settingsViewController.twitter dismissViewControllerAnimated:NO completion:nil];
         }
-        if (_settingsViewController.facebook) {
-            [_settingsViewController.facebook dismissViewControllerAnimated:NO completion:nil];
+        if (self.settingsViewController.facebook) {
+            [self.settingsViewController.facebook dismissViewControllerAnimated:NO completion:nil];
         }
         //Close the view of mail in SettingViewController
-        if (_settingsViewController.mailer) {
-            [_settingsViewController.mailer dismissViewControllerAnimated:NO completion:nil];
+        if (self.settingsViewController.mailer) {
+            [self.settingsViewController.mailer dismissViewControllerAnimated:NO completion:nil];
         }
         //Close the pincode view controller in SettingViewController
-        if (_settingsViewController.vc) {
-            [_settingsViewController.vc dismissViewControllerAnimated:NO completion:nil];
+        if (self.settingsViewController.vc) {
+            [self.settingsViewController.vc dismissViewControllerAnimated:NO completion:nil];
         }
+        //Close the pincode view controller in SettingViewController
+        if (self.settingsViewController.vc) {
+            [self.settingsViewController.vc dismissViewControllerAnimated:NO completion:nil];
+        }
+        
     }
 }
 
@@ -1876,6 +1888,18 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         UINavigationController *navigationController = (UINavigationController *)rootViewController.presentedViewController;
         UIViewController *lastViewController = [[navigationController viewControllers] lastObject];
         return [self topViewController:lastViewController];
+        
+        /*
+         UIViewController *lastViewController;
+         
+         for (id current in [navigationController viewControllers]) {
+         
+         if (![current isKindOfClass:[UIAlertController class]]) {
+         lastViewController = current;
+         }
+         
+         }
+         */
     }
     
     UIViewController *presentedViewController = (UIViewController *)rootViewController.presentedViewController;
