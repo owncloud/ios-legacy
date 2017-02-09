@@ -303,6 +303,9 @@
         }
         
     } failureRequest:^(NSURLResponse *response, NSError *error) {
+        
+        DLog(@"Error: %@", error);
+        
         [self.progressView stopSpinProgressBackgroundLayer];
         self.state = downloadFailed;
         

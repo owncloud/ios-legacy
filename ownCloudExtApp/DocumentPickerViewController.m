@@ -135,6 +135,7 @@
         
         NSURLSessionConfiguration *configurationDownload = nil;
         configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_session_name_ext_app];
+        configurationDownload.sharedContainerIdentifier = k_shared_container_identifier;
         
         configurationDownload.HTTPMaximumConnectionsPerHost = 1;
         configurationDownload.requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
