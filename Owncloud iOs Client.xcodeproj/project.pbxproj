@@ -666,6 +666,7 @@
 		90D608FC1C8984760049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		BC855ACD1E0D4B0200998CB7 /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BC855ACA1E0D4B0200998CB7 /* FLAnimatedImage.m */; };
 		BC855ACE1E0D4B0200998CB7 /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC855ACC1E0D4B0200998CB7 /* FLAnimatedImageView.m */; };
+		CB6ABBC21E4CA0C000F27940 /* OCURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A6B65619458F6E000B107D /* OCURLSessionManager.m */; };
 		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; };
 		EA0599861BB92B19002C2864 /* ShareUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599841BB92B19002C2864 /* ShareUserCell.xib */; };
 		EA0599931BB94F3F002C2864 /* ShareSearchUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0599911BB94F3F002C2864 /* ShareSearchUserViewController.m */; };
@@ -4992,6 +4993,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB6ABBC21E4CA0C000F27940 /* OCURLSessionManager.m in Sources */,
 				90D608FA1C89844E0049CCE4 /* SortManager.m in Sources */,
 				905C59501C50DA680051D223 /* ManageTouchID.m in Sources */,
 				59DF586D1B04B35B00EEFA84 /* Managers.swift in Sources */,

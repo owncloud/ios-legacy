@@ -132,21 +132,34 @@
     static OCCommunication* sharedOCCommunication = nil;
     if (sharedOCCommunication == nil)
     {
-        sharedOCCommunication = [[OCCommunication alloc] init];
+        
+        NSURLSessionConfiguration *configurationDownload = nil;
+        configurationDownload = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_session_name_ext_app];
+        
+        configurationDownload.HTTPMaximumConnectionsPerHost = 1;
+        configurationDownload.requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
+        configurationDownload.timeoutIntervalForRequest = k_timeout_upload;
+        configurationDownload.sessionSendsLaunchEvents = YES;
+        [configurationDownload setAllowsCellularAccess:YES];
+        OCURLSessionManager *downloadSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:configurationDownload];
+        [downloadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
+        [downloadSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
+            return NSURLSessionAuthChallengePerformDefaultHandling;
+        }];
+        
+        NSURLSessionConfiguration *networkConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        networkConfiguration.HTTPShouldUsePipelining = YES;
+        networkConfiguration.HTTPMaximumConnectionsPerHost = 1;
+        networkConfiguration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+        
+        OCURLSessionManager *networkSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:networkConfiguration];
+        [networkSessionManager.operationQueue setMaxConcurrentOperationCount:1];
+        networkSessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        
+        sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
         //Cookies is allways available in current supported Servers
         sharedOCCommunication.isCookiesAvailable = YES;
-        
-        // Add new session and container identifiers to the download session manager
-        NSURLSessionConfiguration *downConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:k_download_session_name_ext_app];
-        downConfiguration.HTTPShouldUsePipelining = YES;
-        downConfiguration.HTTPMaximumConnectionsPerHost = 1;
-        downConfiguration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
-        downConfiguration.sharedContainerIdentifier = k_shared_container_identifier;
-        AFURLSessionManager *downloadSessionManager = [[AFURLSessionManager alloc] initWithSessionConfiguration:downConfiguration];
-        [downloadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
-        
-        sharedOCCommunication.downloadSessionManager = downloadSessionManager;
         
     }
     return sharedOCCommunication;
