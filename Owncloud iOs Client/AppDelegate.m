@@ -1845,6 +1845,17 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         if (self.presentFilesViewController.plusActionSheet) {
             [self.presentFilesViewController.plusActionSheet dismissWithClickedButtonIndex:self.presentFilesViewController.plusActionSheet.cancelButtonIndex animated:NO];
         }
+        
+        //Create folder
+        if (self.presentFilesViewController.folderView) {
+            [self.presentFilesViewController.folderView dismissWithClickedButtonIndex:self.presentFilesViewController.folderView.cancelButtonIndex animated:NO];
+        }
+        
+        //Rename folder
+        if (self.presentFilesViewController.rename.renameAlertView) {
+            [self.presentFilesViewController.rename.renameAlertView dismissWithClickedButtonIndex:self.presentFilesViewController.rename.renameAlertView.cancelButtonIndex animated:NO];
+        }
+        
     }
     
     if (self.settingsViewController){
