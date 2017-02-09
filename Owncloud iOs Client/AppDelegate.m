@@ -1866,7 +1866,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     if (self.settingsViewController){
         //Close the pop-up of twitter and facebook in SettingViewController
         if (self.settingsViewController.popupQuery) {
-            [self.settingsViewController.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
+            [self.settingsViewController.popupQuery dismissWithClickedButtonIndex:self.settingsViewController.popupQuery.cancelButtonIndex animated:NO];
         }
         if (self.settingsViewController.twitter) {
             [self.settingsViewController.twitter dismissViewControllerAnimated:NO completion:nil];
@@ -1886,7 +1886,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         if (self.settingsViewController.vc) {
             [self.settingsViewController.vc dismissViewControllerAnimated:NO completion:nil];
         }
-        
+        //Close user actionsheet view controller in SettingViewController
+        if (self.settingsViewController.menuAccountActionSheet) {
+            [self.settingsViewController.menuAccountActionSheet dismissWithClickedButtonIndex:self.settingsViewController.menuAccountActionSheet.cancelButtonIndex animated:NO];
+        }
     }
 }
 
