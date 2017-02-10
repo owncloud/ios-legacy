@@ -23,6 +23,7 @@
 #import "UtilsCookies.h"
 #import "constants.h"
 #import "ManageCapabilitiesDB.h"
+#import "UploadsOfflineDto.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -822,7 +823,7 @@
         [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             BOOL correctQuery=NO;
             
-            correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET destiny_folder=replace(destiny_folder, ?, ?)", anyUser.url, newValue];
+            correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET destiny_folder=replace(destiny_folder, ?, ?) WHERE status =! ?", anyUser.url, newValue, uploaded];
 
             if (!correctQuery) {
                 DLog(@"Error overriding urls");
