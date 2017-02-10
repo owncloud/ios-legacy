@@ -153,6 +153,7 @@
 +(BOOL)isUsers;
 
 
++(void)overrideAllUploadsWithNewURL:(NSString *)newValue;
 
 +(void)overrideAllAccountsWithNewURL:(NSString *)newValue;
 

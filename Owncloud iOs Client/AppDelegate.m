@@ -144,6 +144,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
     } else if (k_force_update_of_server_url && [UtilsFileSystem isOpenAfterUpgrade]) {
         //set up parameters to force override url for all existing accounts
+        [ManageUsersDB overrideAllUploadsWithNewURL:k_default_url_server];
         [ManageUsersDB overrideAllAccountsWithNewURL:k_default_url_server];
         [ManageUsersDB updateExpiredInAllAccountsTo:YES];
         self.isOpenAfterUpgrade = true;

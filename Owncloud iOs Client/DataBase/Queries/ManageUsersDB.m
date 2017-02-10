@@ -812,6 +812,24 @@
     
 }
 
++(void)overrideAllUploadsWithNewURL:(NSString *)newValue {
+    
+    UserDto *anyUser = [self getAllUsers][0];
+    
+    if (anyUser) {
+        FMDatabaseQueue *queue = Managers.sharedDatabase;
+        
+        [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+            BOOL correctQuery=NO;
+            
+            correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET destiny_folder=replace(destiny_folder, ?, ?)", anyUser.url, newValue];
+
+            if (!correctQuery) {
+                DLog(@"Error overriding urls");
+            }
+        }];
+    }
+}
 
 +(void)overrideAllAccountsWithNewURL:(NSString *)newValue {
     DLog(@"Overriding urls of all the accounts");
