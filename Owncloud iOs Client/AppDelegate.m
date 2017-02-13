@@ -148,6 +148,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [ManageUsersDB overrideAllAccountsWithNewURL:k_default_url_server];
         [ManageUsersDB updateExpiredInAllAccountsTo:YES];
         self.isOpenAfterUpgrade = true;
+        self.activeUser = [ManageUsersDB getActiveUser];
     }
     
     [self showSplashScreenFake];
