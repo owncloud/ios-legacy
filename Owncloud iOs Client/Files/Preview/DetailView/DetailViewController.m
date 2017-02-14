@@ -769,8 +769,8 @@
  */
 - (void) removeThePreviousViews {
     //Quit the player if exist
-    if (self.moviePlayer) {
-        [self.moviePlayer.view removeFromSuperview];
+    if (self.avMoviePlayer) {
+        [self.avMoviePlayer.view removeFromSuperview];
     }
     
     //Quit the office view
@@ -1249,17 +1249,17 @@
     
     BOOL needNewPlayer = NO;
     if (_file != nil) {
-        if (self.moviePlayer) {
-            DLog(@"Movie urlString: %@", _moviePlayer.urlString);
+        if (self.avMoviePlayer) {
+            DLog(@"Movie urlString: %@", self.avMoviePlayer.urlString);
             DLog(@"File local folder: %@", _file.localFolder);
-            if ([self.moviePlayer.urlString isEqualToString:self.file.localFolder]) {
+            if ([self.avMoviePlayer.urlString isEqualToString:self.file.localFolder]) {
                 needNewPlayer = NO;
             } else {
-                [self.moviePlayer removeNotificationObservation];
-                [self.moviePlayer.moviePlayer stop];
-                [self.moviePlayer finalizePlayer];
-                [self.moviePlayer.view removeFromSuperview];
-                self.moviePlayer = nil;
+                [self.avMoviePlayer.player pause];
+                self.avMoviePlayer.player = nil;
+                [self.avMoviePlayer.view removeFromSuperview];
+                self.avMoviePlayer = nil;
+                
                 needNewPlayer = YES;
             }
         } else {
@@ -1282,7 +1282,20 @@
             
             NSURL *url = [NSURL fileURLWithPath:self.file.localFolder];
             
-            self.moviePlayer = [[MediaViewController alloc]initWithContentURL:url];
+            AVPlayer *player = [AVPlayer playerWithURL:url];
+            
+            // create a player view controller
+            self.avMoviePlayer = [[MediaAVPlayerViewController alloc]init];
+            self.avMoviePlayer.player = player;
+            [player play];
+            
+            // show the view controller
+            [self addChildViewController:self.avMoviePlayer];
+            [self.view addSubview:self.avMoviePlayer.view];
+            self.avMoviePlayer.view.frame = [self getTheCorrectSize];
+            
+            
+            /*self.moviePlayer = [[MediaViewController alloc]initWithContentURL:url];
 
             self.moviePlayer.view.frame = [self getTheCorrectSize];
             
@@ -1310,16 +1323,8 @@
             
             [self.view addSubview:self.moviePlayer.view];
             
-            [self.moviePlayer playFile];
+            [self.moviePlayer playFile];*/
             
-        } else {
-            
-            if (self.singleTap) {
-                [self.moviePlayer.view addGestureRecognizer:self.singleTap];
-            }
-            
-            
-            [self.view addSubview:self.moviePlayer.view];
         }
     }
 }
@@ -1546,11 +1551,11 @@
         
 
         //Quit the player if exist
-        if (self.moviePlayer) {
-            [self.moviePlayer.moviePlayer stop];
-            [self.moviePlayer finalizePlayer];
-            [self.moviePlayer.view removeFromSuperview];
-            self.moviePlayer = nil;
+        if (self.avMoviePlayer) {
+            [self.avMoviePlayer.player pause];
+            self.avMoviePlayer.player = nil;
+            [self.avMoviePlayer.view removeFromSuperview];
+            self.avMoviePlayer = nil;
         }
         
         //Depend if the file is an image or other "openimage" or "openfile"
@@ -2351,8 +2356,8 @@
             self.gifView.frame = [self getTheCorrectSize];
         }
         
-        if (self.moviePlayer) {
-            self.moviePlayer.view.frame = [self getTheCorrectSize];
+        if (self.avMoviePlayer) {
+            self.avMoviePlayer.view.frame = [self getTheCorrectSize];
         }
         
  

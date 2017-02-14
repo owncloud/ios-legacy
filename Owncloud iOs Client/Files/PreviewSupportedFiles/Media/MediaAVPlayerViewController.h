@@ -11,4 +11,6 @@
 
 @interface MediaAVPlayerViewController : AVPlayerViewController
 
+@property (nonatomic, strong) NSString *urlString;
+
 @end

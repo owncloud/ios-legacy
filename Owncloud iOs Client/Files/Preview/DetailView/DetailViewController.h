@@ -19,7 +19,8 @@
 #import "OpenWith.h"
 #import "DeleteFile.h"
 #import "OfficeFileView.h"
-#import "MediaViewController.h"
+#import "MediaAVPlayerViewController.h"
+#import <AVKit/AVKit.h>
 #import "GalleryView.h"
 #import "OCToolBar.h"
 #import "CWStatusBarNotification.h"
@@ -94,7 +95,7 @@ typedef enum {
 
 //Owncloud preview objects
 @property (nonatomic, strong) OfficeFileView *officeView;
-@property(nonatomic, strong) MediaViewController *moviePlayer;
+@property(nonatomic, strong) MediaAVPlayerViewController *avMoviePlayer;
 @property (nonatomic, strong) GalleryView *galleryView;
 //Control the type of files
 @property(nonatomic) NSInteger typeOfFile;

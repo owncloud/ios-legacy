@@ -889,8 +889,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             }
         }
     }else{
-        if (_detailViewController.moviePlayer) {
-            if ([_detailViewController.moviePlayer.urlString isEqualToString:filePath]) {
+        if (_detailViewController.avMoviePlayer) {
+            if ([_detailViewController.avMoviePlayer.urlString isEqualToString:filePath]) {
                 output = YES;
             }
         }
