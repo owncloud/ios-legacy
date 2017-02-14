@@ -152,9 +152,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     if (self.avMoviePlayer) {
         [self.avMoviePlayer.contentOverlayView removeObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen]];
         [self.avMoviePlayer.player pause];
-        self.avMoviePlayer.player = nil;
-        [self.avMoviePlayer.view removeFromSuperview];
-        self.avMoviePlayer = nil;
     }
     
     [super viewWillDisappear:animated];
@@ -181,6 +178,11 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     //Configure view depend device orientation
     [self configureView];
+    
+    //Quit the player if exist
+    if (self.avMoviePlayer) {
+        [self.avMoviePlayer.contentOverlayView addObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen] options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
+    }
 }
 
 
