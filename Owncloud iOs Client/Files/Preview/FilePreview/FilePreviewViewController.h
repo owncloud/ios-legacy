@@ -18,7 +18,6 @@
 #import "Download.h"
 #import "OpenWith.h"
 #import "DeleteFile.h"
-#import "MediaViewController.h"
 #import "MediaAVPlayerViewController.h"
 #import "OfficeFileView.h"
 #import "GalleryView.h"
@@ -36,7 +35,7 @@ extern NSString * iPhoneCleanPreviewNotification;
 extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 
 
-@interface FilePreviewViewController : UIViewController <UIAlertViewDelegate, DeleteFileDelegate, CheckAccessToServerDelegate, DownloadDelegate, MediaViewControllerDelegate, GalleryViewDelegate, ManageFavoritesDelegate>
+@interface FilePreviewViewController : UIViewController <UIAlertViewDelegate, DeleteFileDelegate, CheckAccessToServerDelegate, DownloadDelegate, GalleryViewDelegate, ManageFavoritesDelegate>
 {
     //Autolayout attributes
     IBOutlet NSLayoutConstraint *_progressViewHeightConstraint;
@@ -74,7 +73,6 @@ extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 
 //Owncloud preview objects
 @property(nonatomic, strong) OfficeFileView *officeView;
-@property(nonatomic, strong) MediaViewController *moviePlayer;
 @property(nonatomic, strong) MediaAVPlayerViewController *avMoviePlayer;
 @property(nonatomic, strong) GalleryView *galleryView;
 //Control the type of files

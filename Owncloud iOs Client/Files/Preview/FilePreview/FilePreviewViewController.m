@@ -892,7 +892,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
  *
  */
 - (BOOL)prefersStatusBarHidden {
-    if (_galleryView.fullScreen || _moviePlayer.isFullScreen) {
+    if (_galleryView.fullScreen) {
         return YES;
     } else {
         return NO;
@@ -926,17 +926,17 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     BOOL isNewMediaPlayer = YES;
     
-    if (appDelegate.mediaPlayer != nil) {
+    if (appDelegate.avMoviePlayer != nil) {
         
         //Know if the last media file played
-        if ([appDelegate.mediaPlayer.urlString isEqualToString:_file.localFolder]) {
+        if ([appDelegate.avMoviePlayer.urlString isEqualToString:_file.localFolder]) {
             isNewMediaPlayer = NO;
         } else {
-            [appDelegate.mediaPlayer removeNotificationObservation];
-            [appDelegate.mediaPlayer.moviePlayer stop];
-            [appDelegate.mediaPlayer finalizePlayer];
-            [appDelegate.mediaPlayer.view removeFromSuperview];
-             appDelegate.mediaPlayer = nil;
+            //[appDelegate.avMoviePlayer removeNotificationObservation];
+            [appDelegate.avMoviePlayer.player pause];
+            appDelegate.avMoviePlayer.player = nil;
+            [appDelegate.avMoviePlayer.view removeFromSuperview];
+             appDelegate.avMoviePlayer = nil;
             isNewMediaPlayer = YES;
         }
     } else {
@@ -946,10 +946,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     if (isNewMediaPlayer == NO) {
         
-        _moviePlayer = appDelegate.mediaPlayer;
-        _moviePlayer.delegate = self;
-        
-        [self.view addSubview: _moviePlayer.moviePlayer.view];
+        self.avMoviePlayer = appDelegate.avMoviePlayer;
+        [self.view addSubview: self.avMoviePlayer.view];
         
         [self configureView];
         
@@ -1458,14 +1456,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     if (_file.idFile == fileDto.idFile) {
         
         //Quit the player if exist
-        if (app.mediaPlayer) {
-            [app.mediaPlayer removeNotificationObservation];
-            [app.mediaPlayer.moviePlayer stop];
-            [app.mediaPlayer finalizePlayer];
-            [app.mediaPlayer.moviePlayer.view removeFromSuperview];
-            app.mediaPlayer = nil;
+        if (app.avMoviePlayer) {
+            //[app.mediaPlayer removeNotificationObservation];
+            [app.avMoviePlayer.player pause];
+            app.avMoviePlayer.player = nil;
+            [app.avMoviePlayer.view removeFromSuperview];
+            app.avMoviePlayer = nil;
         }
-
         
         if(_typeOfFile == officeFileType) {
             [self performSelector:@selector(openFileOffice) withObject:nil afterDelay:0.5];

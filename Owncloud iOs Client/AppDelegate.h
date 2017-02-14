@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UserDto.h"
-#import "MediaViewController.h"
+#import "MediaAVPlayerViewController.h"
 #import "PrepareFilesToUpload.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "FMDatabaseQueue.h"
@@ -70,7 +70,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
     
     UploadFromOtherAppViewController *_uploadFromOtherAppViewController;
 
-    MediaViewController *_mediaPlayer;
+    MediaAVPlayerViewController *_avMoviePlayer;
     float _currentPlayBack;
     
     
@@ -124,7 +124,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) SettingsViewController *settingsViewController;
 @property (nonatomic, strong) UISplitViewController *splitViewController;
 @property (nonatomic, strong)DetailViewController *detailViewController;
-@property (nonatomic, strong) MediaViewController *mediaPlayer;
+@property (nonatomic, strong) MediaAVPlayerViewController *avMoviePlayer;
 @property (nonatomic, strong) UploadFromOtherAppViewController *uploadFromOtherAppViewController;
 @property (nonatomic) BOOL isErrorLoginShown;
 @property (nonatomic) BOOL firstInit;

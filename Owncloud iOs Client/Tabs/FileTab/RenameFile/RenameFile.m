@@ -514,7 +514,7 @@
     
     if ([app isMediaPlayerRunningWithThisFilePath: oldPath]) {
         NSString *pathOfNewFile = [NSString stringWithFormat:@"%@%@",_currentLocalFolder, _mNewName];
-        app.mediaPlayer.urlString = pathOfNewFile;
+        app.avMoviePlayer.urlString = pathOfNewFile;
     }
     
     if ([(NSObject*)self.delegate respondsToSelector:@selector(reloadTableFromDataBase)]) {
