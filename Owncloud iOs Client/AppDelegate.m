@@ -906,6 +906,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     if (IS_IPHONE) {
         if (self.avMoviePlayer) {
+            [self.avMoviePlayer.contentOverlayView removeObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen]];
             [self.avMoviePlayer.player pause];
             self.avMoviePlayer.player = nil;
             [self.avMoviePlayer.view removeFromSuperview];

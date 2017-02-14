@@ -8,6 +8,12 @@
 
 #import "MediaAVPlayerViewController.h"
 
+NSString * const keyFullScreen = @"bounds";
+
 @implementation MediaAVPlayerViewController
+
++(NSString *)observerKeyFullScreen {
+    return keyFullScreen;
+}
 
 @end

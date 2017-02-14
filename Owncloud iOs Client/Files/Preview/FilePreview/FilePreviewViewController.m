@@ -138,8 +138,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
-    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (app.isSharedToOwncloudPresent == NO && _notification.notificationIsShowing) {
         //Stop the notification
@@ -149,6 +147,17 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             _notification = nil;
         }
     }
+    
+    //Quit the player if exist
+    if (self.avMoviePlayer) {
+        [self.avMoviePlayer.contentOverlayView removeObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen]];
+        [self.avMoviePlayer.player pause];
+        self.avMoviePlayer.player = nil;
+        [self.avMoviePlayer.view removeFromSuperview];
+        self.avMoviePlayer = nil;
+    }
+    
+    [super viewWillDisappear:animated];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
@@ -944,7 +953,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         if ([appDelegate.avMoviePlayer.urlString isEqualToString:_file.localFolder]) {
             isNewMediaPlayer = NO;
         } else {
-            //[appDelegate.avMoviePlayer removeNotificationObservation];
+            [appDelegate.avMoviePlayer.contentOverlayView removeObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen]];
             [appDelegate.avMoviePlayer.player pause];
             appDelegate.avMoviePlayer.player = nil;
             [appDelegate.avMoviePlayer.view removeFromSuperview];
@@ -994,7 +1003,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         self.avMoviePlayer.view.frame = self.view.frame;
         
         //Check if the player is or not in fullscreen
-        [self.avMoviePlayer.contentOverlayView addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
+        [self.avMoviePlayer.contentOverlayView addObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen] options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
         
         [self configureView];
         
@@ -1494,7 +1503,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
         //Quit the player if exist
         if (app.avMoviePlayer) {
-            //[app.mediaPlayer removeNotificationObservation];
+            [app.avMoviePlayer.contentOverlayView removeObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen]];
             [app.avMoviePlayer.player pause];
             app.avMoviePlayer.player = nil;
             [app.avMoviePlayer.view removeFromSuperview];

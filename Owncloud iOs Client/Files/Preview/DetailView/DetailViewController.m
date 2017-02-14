@@ -1255,6 +1255,7 @@
             if ([self.avMoviePlayer.urlString isEqualToString:self.file.localFolder]) {
                 needNewPlayer = NO;
             } else {
+                [self.avMoviePlayer.contentOverlayView removeObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen]];
                 [self.avMoviePlayer.player pause];
                 self.avMoviePlayer.player = nil;
                 [self.avMoviePlayer.view removeFromSuperview];
@@ -1552,6 +1553,7 @@
 
         //Quit the player if exist
         if (self.avMoviePlayer) {
+            [self.avMoviePlayer.contentOverlayView removeObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen]];
             [self.avMoviePlayer.player pause];
             self.avMoviePlayer.player = nil;
             [self.avMoviePlayer.view removeFromSuperview];

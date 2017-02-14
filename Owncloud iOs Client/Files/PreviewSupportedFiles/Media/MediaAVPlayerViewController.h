@@ -15,4 +15,6 @@
 @property (nonatomic) BOOL isMusic;
 @property (nonatomic) BOOL isFullScreen;
 
++(NSString *)observerKeyFullScreen;
+
 @end
