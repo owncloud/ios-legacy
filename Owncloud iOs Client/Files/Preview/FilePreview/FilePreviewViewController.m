@@ -380,22 +380,22 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 #pragma mark - Rotation Methods
 
 -(void)potraitView{
-    if (_moviePlayer) {
+    if (self.avMoviePlayer) {
         UIScreen *screen = [UIScreen mainScreen];
         CGSize screenSize = screen.bounds.size;
         
-        if (_moviePlayer.isFullScreen == NO) {
+        if (self.avMoviePlayer.isFullScreen == NO) {
             //[nc manageBackgroundView:NO];
             if ([screen respondsToSelector:@selector(fixedCoordinateSpace)]) {
                 screenSize = [screen.coordinateSpace convertRect:screen.bounds toCoordinateSpace:screen.fixedCoordinateSpace].size;
             }
-            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.width, (screenSize.height - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height));
+            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.width, (screenSize.height - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height));
         } else {
             //[nc manageBackgroundView:YES];
             if ([screen respondsToSelector:@selector(fixedCoordinateSpace)]) {
                 screenSize = [screen.coordinateSpace convertRect:screen.bounds toCoordinateSpace:screen.fixedCoordinateSpace].size;
             }
-            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.width, screenSize.height);
+            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.width, screenSize.height);
         }
     }
 }
@@ -1002,6 +1002,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [self addChildViewController:self.avMoviePlayer];
         [self.view addSubview:self.avMoviePlayer.view];
         self.avMoviePlayer.view.frame = self.view.frame;
+        
+        [self configureView];
         
         /*_moviePlayer = [[MediaViewController alloc]initWithContentURL:url];
         _moviePlayer.urlString = _file.localFolder;
