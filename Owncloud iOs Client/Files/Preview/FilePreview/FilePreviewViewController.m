@@ -387,8 +387,12 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         if ([screen respondsToSelector:@selector(fixedCoordinateSpace)]) {
             screenSize = [screen.coordinateSpace convertRect:screen.bounds toCoordinateSpace:screen.fixedCoordinateSpace].size;
         }
-        self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.width, (screenSize.height - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height));
         
+        if (self.avMoviePlayer.isFullScreen) {
+            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.width, (screenSize.height - _toolBar.frame.size.height - k_navigation_bar_height));
+        } else {
+            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.width, (screenSize.height - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height));
+        }
     }
 }
 
@@ -400,7 +404,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         if ([mainScreen respondsToSelector:@selector(fixedCoordinateSpace)]) {
             screenSize = [mainScreen.coordinateSpace convertRect:mainScreen.bounds toCoordinateSpace:mainScreen.fixedCoordinateSpace].size;
         }
-        self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape - 10));
+        
+        if (self.avMoviePlayer.isFullScreen) {
+            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_navigation_bar_height_in_iphone_landscape - 10));
+        } else {
+            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape - 10));
+        }
+        
     }
 }
 
@@ -465,6 +475,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     if (_readerPDFViewController) {
         [_readerPDFViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     }
+    
+    [self configureView];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -972,6 +984,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
         // create a player view controller
         self.avMoviePlayer = [[MediaAVPlayerViewController alloc]init];
+        
         self.avMoviePlayer.player = player;
         [player play];
         
@@ -979,6 +992,9 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [self addChildViewController:self.avMoviePlayer];
         [self.view addSubview:self.avMoviePlayer.view];
         self.avMoviePlayer.view.frame = self.view.frame;
+        
+        //Check if the player is or not in fullscreen
+        [self.avMoviePlayer.contentOverlayView addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
         
         [self configureView];
         
@@ -1004,6 +1020,27 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [_moviePlayer.moviePlayer prepareToPlay];
         [_moviePlayer playFile];*/
 
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {
+    if (object == self.avMoviePlayer.contentOverlayView) {
+        if ([keyPath isEqualToString:@"bounds"]) {
+            CGRect oldBounds = [change[NSKeyValueChangeOldKey] CGRectValue], newBounds = [change[NSKeyValueChangeNewKey] CGRectValue];
+            BOOL wasFullscreen = CGRectEqualToRect(oldBounds, [UIScreen mainScreen].bounds), isFullscreen = CGRectEqualToRect(newBounds, [UIScreen mainScreen].bounds);
+            if (isFullscreen && !wasFullscreen) {
+                if (CGRectEqualToRect(oldBounds, CGRectMake(0, 0, newBounds.size.height, newBounds.size.width))) {
+                    DLog(@"rotated fullscreen");
+                    self.avMoviePlayer.isFullScreen = YES;
+                } else {
+                    DLog(@"entered fullscreen");
+                    self.avMoviePlayer.isFullScreen = YES;
+                }
+            } else if (!isFullscreen && wasFullscreen) {
+                DLog(@"exited fullscreen");
+                self.avMoviePlayer.isFullScreen = NO;
+            }
+        }
     }
 }
 

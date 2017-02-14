@@ -13,5 +13,6 @@
 
 @property (nonatomic, strong) NSString *urlString;
 @property (nonatomic) BOOL isMusic;
+@property (nonatomic) BOOL isFullScreen;
 
 @end
