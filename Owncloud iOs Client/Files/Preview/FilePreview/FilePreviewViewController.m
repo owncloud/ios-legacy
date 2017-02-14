@@ -401,21 +401,21 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 }
 
 -(void)landscapeView{
-    if (_moviePlayer) {
+    if (self.avMoviePlayer) {
         UIScreen *mainScreen = [UIScreen mainScreen];
         CGSize screenSize = mainScreen.bounds.size;
 
-        if (_moviePlayer.isFullScreen == NO) {
+        if (self.avMoviePlayer.isFullScreen == NO) {
             if ([mainScreen respondsToSelector:@selector(fixedCoordinateSpace)]) {
                 screenSize = [mainScreen.coordinateSpace convertRect:mainScreen.bounds toCoordinateSpace:mainScreen.fixedCoordinateSpace].size;
             }
-            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape));
+            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape));
             
         } else {
             if ([mainScreen respondsToSelector:@selector(fixedCoordinateSpace)]) {
                 screenSize = [mainScreen.coordinateSpace convertRect:mainScreen.bounds toCoordinateSpace:mainScreen.fixedCoordinateSpace].size;
             }
-            _moviePlayer.moviePlayer.view.frame = CGRectMake(0,0, screenSize.height, screenSize.width);
+            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, screenSize.width);
 
         }
     }
@@ -426,11 +426,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
     [self putTheFavoriteStatus];
     
-    UIInterfaceOrientation currentOrientation;
-    currentOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    BOOL isPotrait = UIDeviceOrientationIsPortrait(currentOrientation);
-    
-    if (isPotrait == YES) {
+    if (IS_PORTRAIT) {
         [self potraitView];
     } else {
         [self landscapeView];
