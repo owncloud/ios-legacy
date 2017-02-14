@@ -36,7 +36,7 @@ extern NSString * iPhoneCleanPreviewNotification;
 extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 
 
-@interface FilePreviewViewController : UIViewController <UIAlertViewDelegate, DeleteFileDelegate, CheckAccessToServerDelegate, DownloadDelegate, MediaViewControllerDelegate, GalleryViewDelegate, ManageFavoritesDelegate,AVPlayerViewControllerDelegate>
+@interface FilePreviewViewController : UIViewController <UIAlertViewDelegate, DeleteFileDelegate, CheckAccessToServerDelegate, DownloadDelegate, MediaViewControllerDelegate, GalleryViewDelegate, ManageFavoritesDelegate>
 {
     //Autolayout attributes
     IBOutlet NSLayoutConstraint *_progressViewHeightConstraint;

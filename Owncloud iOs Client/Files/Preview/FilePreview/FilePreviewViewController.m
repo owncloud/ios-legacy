@@ -384,19 +384,11 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         UIScreen *screen = [UIScreen mainScreen];
         CGSize screenSize = screen.bounds.size;
         
-        if (self.avMoviePlayer.isFullScreen == NO) {
-            //[nc manageBackgroundView:NO];
-            if ([screen respondsToSelector:@selector(fixedCoordinateSpace)]) {
-                screenSize = [screen.coordinateSpace convertRect:screen.bounds toCoordinateSpace:screen.fixedCoordinateSpace].size;
-            }
-            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.width, (screenSize.height - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height));
-        } else {
-            //[nc manageBackgroundView:YES];
-            if ([screen respondsToSelector:@selector(fixedCoordinateSpace)]) {
-                screenSize = [screen.coordinateSpace convertRect:screen.bounds toCoordinateSpace:screen.fixedCoordinateSpace].size;
-            }
-            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.width, screenSize.height);
+        if ([screen respondsToSelector:@selector(fixedCoordinateSpace)]) {
+            screenSize = [screen.coordinateSpace convertRect:screen.bounds toCoordinateSpace:screen.fixedCoordinateSpace].size;
         }
+        self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.width, (screenSize.height - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height));
+        
     }
 }
 
@@ -404,20 +396,11 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     if (self.avMoviePlayer) {
         UIScreen *mainScreen = [UIScreen mainScreen];
         CGSize screenSize = mainScreen.bounds.size;
-
-        if (self.avMoviePlayer.isFullScreen == NO) {
-            if ([mainScreen respondsToSelector:@selector(fixedCoordinateSpace)]) {
-                screenSize = [mainScreen.coordinateSpace convertRect:mainScreen.bounds toCoordinateSpace:mainScreen.fixedCoordinateSpace].size;
-            }
-            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape));
-            
-        } else {
-            if ([mainScreen respondsToSelector:@selector(fixedCoordinateSpace)]) {
-                screenSize = [mainScreen.coordinateSpace convertRect:mainScreen.bounds toCoordinateSpace:mainScreen.fixedCoordinateSpace].size;
-            }
-            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, screenSize.width);
-
+        
+        if ([mainScreen respondsToSelector:@selector(fixedCoordinateSpace)]) {
+            screenSize = [mainScreen.coordinateSpace convertRect:mainScreen.bounds toCoordinateSpace:mainScreen.fixedCoordinateSpace].size;
         }
+        self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape - 10));
     }
 }
 

@@ -11,9 +11,4 @@
 
 @interface MediaAVPlayerViewController : AVPlayerViewController
 
-@property (nonatomic) BOOL isPlaying;
-@property (nonatomic) BOOL isFullScreen;
-@property (nonatomic) BOOL hiddenHUD;
-@property (nonatomic) BOOL isMusic;
-
 @end
