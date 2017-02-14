@@ -990,7 +990,20 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         }
 
         NSURL *url = [NSURL fileURLWithPath:_file.localFolder];
-        _moviePlayer = [[MediaViewController alloc]initWithContentURL:url];
+        
+        AVPlayer *player = [AVPlayer playerWithURL:url];
+        
+        // create a player view controller
+        self.avMoviePlayer = [[MediaAVPlayerViewController alloc]init];
+        self.avMoviePlayer.player = player;
+        [player play];
+        
+        // show the view controller
+        [self addChildViewController:self.avMoviePlayer];
+        [self.view addSubview:self.avMoviePlayer.view];
+        self.avMoviePlayer.view.frame = self.view.frame;
+        
+        /*_moviePlayer = [[MediaViewController alloc]initWithContentURL:url];
         _moviePlayer.urlString = _file.localFolder;
         
         //if is audio file tell the controller the file is music
@@ -1010,7 +1023,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [_moviePlayer initHudView];
         [_moviePlayer.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
         [_moviePlayer.moviePlayer prepareToPlay];
-        [_moviePlayer playFile];
+        [_moviePlayer playFile];*/
 
     }
 }
