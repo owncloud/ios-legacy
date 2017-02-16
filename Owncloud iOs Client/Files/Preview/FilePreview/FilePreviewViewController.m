@@ -44,7 +44,7 @@
 #import "ManageCapabilitiesDB.h"
 #import "EditFileViewController.h"
 #import "UtilsBrandedOptions.h"
-
+#import "UtilsFramework.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -534,9 +534,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
         //Check if the file is in the device
         if ([_file isDownload] == notDownload) {
-
-            //Download the file
-            [self downloadTheFile];
+            if(_typeOfFile == videoFileType) {
+                //Streaming video
+                [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.5];
+            } else {
+                //Download the file
+                [self downloadTheFile];
+            }
         } else if ((_file.isDownload == downloading) || (_file.isDownload == updating)) {
             //Continue the download
             if (_file.isDownload == updating) {
@@ -988,10 +992,46 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
                 DLog(@"AVAudioSession activation error: %@", activationError);
             }
         }
-
-        NSURL *url = [NSURL fileURLWithPath:_file.localFolder];
         
-        AVPlayer *player = [AVPlayer playerWithURL:url];
+        
+        
+        
+        
+        AVPlayer *player;
+        
+        if (self.file.isDownload) {
+            
+            NSURL *url = [NSURL fileURLWithPath:_file.localFolder];
+            player = [AVPlayer playerWithURL:url];
+            
+        } else {
+            NSMutableDictionary *headers = [NSMutableDictionary new];
+            
+            if (k_is_sso_active) {
+                [headers setValue:APP_DELEGATE.activeUser.password forKey:@"Cookie"];
+            } else if (k_is_oauth_active) {
+                [headers setValue:[NSString stringWithFormat:@"Bearer %@", APP_DELEGATE.activeUser.password] forKey:@"Authorization"];
+            } else {
+                NSString *basicAuthCredentials = [NSString stringWithFormat:@"%@:%@", APP_DELEGATE.activeUser.username, APP_DELEGATE.activeUser.password];
+                [headers setValue:[NSString stringWithFormat:@"Basic %@", [UtilsFramework AFBase64EncodedStringFromString:basicAuthCredentials]] forKey:@"Authorization"];
+            }
+            
+            [headers setValue:[UtilsUrls getUserAgent] forKey:@"User-Agent"];
+            
+            //FileName full path
+            NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:APP_DELEGATE.activeUser];
+            //serverPath = @"streaming://docker.oc.solidgear.es:61437/remote.php/webdav/";
+            
+            NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.file.filePath andUser:APP_DELEGATE.activeUser], self.file.fileName];
+            
+            self.asset = [[AVURLAsset alloc] initWithURL:[NSURL URLWithString:path] options:headers];
+            [self.asset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
+            AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:self.asset];
+            
+            player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
+        }
+        
+        
         
         // create a player view controller
         self.avMoviePlayer = [[MediaAVPlayerViewController alloc]init];
@@ -1006,6 +1046,10 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
         //Check if the player is or not in fullscreen
         [self.avMoviePlayer.contentOverlayView addObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen] options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemFailedToPlayToEndTime:) name:AVPlayerItemFailedToPlayToEndTimeNotification object:self.avMoviePlayer.player];
+
+
         
         [self configureView];
         
@@ -1032,6 +1076,12 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [_moviePlayer playFile];*/
 
     }
+}
+
+- (void) playerItemFailedToPlayToEndTime:(NSNotification *)notification
+{
+    NSError *error = notification.userInfo[AVPlayerItemFailedToPlayToEndTimeErrorKey];
+    DLog(@"Error: %@", error);
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {

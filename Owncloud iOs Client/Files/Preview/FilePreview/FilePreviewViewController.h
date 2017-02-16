@@ -35,7 +35,7 @@ extern NSString * iPhoneCleanPreviewNotification;
 extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 
 
-@interface FilePreviewViewController : UIViewController <UIAlertViewDelegate, DeleteFileDelegate, CheckAccessToServerDelegate, DownloadDelegate, GalleryViewDelegate, ManageFavoritesDelegate>
+@interface FilePreviewViewController : UIViewController <UIAlertViewDelegate, DeleteFileDelegate, CheckAccessToServerDelegate, DownloadDelegate, GalleryViewDelegate, ManageFavoritesDelegate, AVAssetResourceLoaderDelegate>
 {
     //Autolayout attributes
     IBOutlet NSLayoutConstraint *_progressViewHeightConstraint;
@@ -74,6 +74,7 @@ extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 //Owncloud preview objects
 @property(nonatomic, strong) OfficeFileView *officeView;
 @property(nonatomic, strong) MediaAVPlayerViewController *avMoviePlayer;
+@property(nonatomic, strong) AVURLAsset *asset;
 @property(nonatomic, strong) GalleryView *galleryView;
 //Control the type of files
 @property(nonatomic) NSInteger typeOfFile;
@@ -99,6 +100,11 @@ extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 
 //Favorites
 @property(nonatomic, strong) ManageFavorites *manageFavorites;
+
+@property(nonatomic, strong) NSMutableArray *pendingRequests;
+@property(nonatomic, strong) NSMutableData *receivedData;
+@property(nonatomic, strong) NSURLConnection *connection;
+@property(nonatomic, strong) NSHTTPURLResponse *response;
 
 /*
  * Init method
