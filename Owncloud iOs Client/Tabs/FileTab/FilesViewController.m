@@ -2434,7 +2434,7 @@
                     }
                     break;
                 case 4:
-                    [self didSelectDownladFile];
+                    [self didSelectDownloadFileOption];
                 default:
                     break;
             }
@@ -2920,8 +2920,20 @@
     }
 }
 
-- (void) didSelectDownloadFile {
+- (void) didSelectDownloadFileOption {
     
+    //TODO: go to preview with a "force download" to be sure that the file will be downloaded and not streamer
+    
+    /*//Phase 1.2. If the file isn't in the device, download the file
+    Download *download = nil;
+    download = [[Download alloc]init];
+    download.delegate = self;
+    download.currentLocalFolder = _currentLocalFolder;
+    
+    //Update fileDto
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
+    
+    [download fileToDownload:self.selectedFileDto];*/
 }
 
 /*
