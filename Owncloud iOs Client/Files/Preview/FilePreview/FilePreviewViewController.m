@@ -1021,13 +1021,16 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             
             //FileName full path
             NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:APP_DELEGATE.activeUser];
-            //serverPath = @"streaming://docker.oc.solidgear.es:61437/remote.php/webdav/";
             
             NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.file.filePath andUser:APP_DELEGATE.activeUser], self.file.fileName];
             
-            self.asset = [[AVURLAsset alloc] initWithURL:[NSURL URLWithString:path] options:headers];
+            self.asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:path] options:@{@"AVURLAssetHTTPHeaderFieldsKey" : headers}];
             [self.asset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
             AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:self.asset];
+            
+            //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemFailedToPlayToEndTime:) name:AVPlayerItemNewErrorLogEntryNotification object:playerItem];
+            
+            //[playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:NULL];
             
             player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
         }
@@ -1049,33 +1052,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [self.avMoviePlayer.contentOverlayView addObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen] options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemFailedToPlayToEndTime:) name:AVPlayerItemFailedToPlayToEndTimeNotification object:self.avMoviePlayer.player];
-
-
         
         [self configureView];
-        
-        /*_moviePlayer = [[MediaViewController alloc]initWithContentURL:url];
-        _moviePlayer.urlString = _file.localFolder;
-        
-        //if is audio file tell the controller the file is music
-        _moviePlayer.isMusic = YES;
-        
-        _moviePlayer.moviePlayer.controlStyle = MPMovieControlStyleNone;
-        [_moviePlayer.moviePlayer setFullscreen:NO];
-        _moviePlayer.moviePlayer.shouldAutoplay = NO;
-        _moviePlayer.delegate = self;
-        
-        appDelegate.mediaPlayer = _moviePlayer;
-        [self.view addSubview:_moviePlayer.moviePlayer.view];
-        
-        
-        [self configureView];
-        
-        [_moviePlayer initHudView];
-        [_moviePlayer.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
-        [_moviePlayer.moviePlayer prepareToPlay];
-        [_moviePlayer playFile];*/
-
     }
 }
 
@@ -1086,6 +1064,10 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"status"]) {
+        DLog(@"Status has change");
+    }
+    
     if (object == self.avMoviePlayer.contentOverlayView) {
         if ([keyPath isEqualToString:@"bounds"]) {
             CGRect oldBounds = [change[NSKeyValueChangeOldKey] CGRectValue], newBounds = [change[NSKeyValueChangeNewKey] CGRectValue];
