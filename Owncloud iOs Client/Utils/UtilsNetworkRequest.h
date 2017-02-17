@@ -35,4 +35,6 @@ typedef enum {
 
 - (void)checkIfTheFileExistsWithThisPath:(NSString*)path andUser:(UserDto *) user;
 
++ (NSMutableDictionary *) getHttpLoginHeaders;
+
 @end

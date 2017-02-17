@@ -22,6 +22,7 @@
 #import "OCCommunication.h"
 #import "OCErrorMsg.h"
 #import "UtilsUrls.h"
+#import "UtilsFramework.h"
 
 @implementation UtilsNetworkRequest
 
@@ -103,6 +104,25 @@
             }
         }
     }];
+}
+
++ (NSMutableDictionary *) getHttpLoginHeaders {
+    
+    NSMutableDictionary *headers = [NSMutableDictionary new];
+    
+    if (k_is_sso_active) {
+        [headers setValue:APP_DELEGATE.activeUser.password forKey:@"Cookie"];
+    } else if (k_is_oauth_active) {
+        [headers setValue:[NSString stringWithFormat:@"Bearer %@", APP_DELEGATE.activeUser.password] forKey:@"Authorization"];
+    } else {
+        NSString *basicAuthCredentials = [NSString stringWithFormat:@"%@:%@", APP_DELEGATE.activeUser.username, APP_DELEGATE.activeUser.password];
+        [headers setValue:[NSString stringWithFormat:@"Basic %@", [UtilsFramework AFBase64EncodedStringFromString:basicAuthCredentials]] forKey:@"Authorization"];
+    }
+    
+    [headers setValue:[UtilsUrls getUserAgent] forKey:@"User-Agent"];
+    
+    return headers;
+    
 }
 
 @end

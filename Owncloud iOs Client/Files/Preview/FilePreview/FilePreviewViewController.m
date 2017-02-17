@@ -994,10 +994,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             }
         }
         
-        
-        
-        
-        
         AVPlayer *player;
         
         if (self.file.isDownload) {
@@ -1006,25 +1002,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             player = [AVPlayer playerWithURL:url];
             
         } else {
-            NSMutableDictionary *headers = [NSMutableDictionary new];
-            
-            if (k_is_sso_active) {
-                [headers setValue:APP_DELEGATE.activeUser.password forKey:@"Cookie"];
-            } else if (k_is_oauth_active) {
-                [headers setValue:[NSString stringWithFormat:@"Bearer %@", APP_DELEGATE.activeUser.password] forKey:@"Authorization"];
-            } else {
-                NSString *basicAuthCredentials = [NSString stringWithFormat:@"%@:%@", APP_DELEGATE.activeUser.username, APP_DELEGATE.activeUser.password];
-                [headers setValue:[NSString stringWithFormat:@"Basic %@", [UtilsFramework AFBase64EncodedStringFromString:basicAuthCredentials]] forKey:@"Authorization"];
-            }
-            
-            [headers setValue:[UtilsUrls getUserAgent] forKey:@"User-Agent"];
             
             //FileName full path
             NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:APP_DELEGATE.activeUser];
             
             NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.file.filePath andUser:APP_DELEGATE.activeUser], self.file.fileName];
             
-            self.asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:path] options:@{@"AVURLAssetHTTPHeaderFieldsKey" : headers}];
+            self.asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:path] options:@{@"AVURLAssetHTTPHeaderFieldsKey" : [UtilsNetworkRequest getHttpLoginHeaders]}];
             [self.asset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
             AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:self.asset];
             
