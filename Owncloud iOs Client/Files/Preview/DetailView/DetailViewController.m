@@ -379,8 +379,13 @@
         
         //Check if the file is in the device
         if ([_file isDownload] == notDownload) {
-            //Download the file
-            [self downloadTheFile];
+            if(_typeOfFile == videoFileType && ([[CheckAccessToServer sharedManager] getSslStatus] != sslStatusSelfSigned)) {
+                //Streaming video
+                [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.5];
+            } else {
+                //Download the file
+                [self downloadTheFile];
+            }
         } else if (([_file isDownload] == downloading) || ([_file isDownload] == updating)) {
             
             if ([_file isDownload] == updating) {
@@ -1281,10 +1286,33 @@
                 }
             }
             
+            AVPlayer *player;
+            
+            if (self.file.isDownload) {
+                
+                NSURL *url = [NSURL fileURLWithPath:_file.localFolder];
+                player = [AVPlayer playerWithURL:url];
+                
+            } else {
+                
+                //FileName full path
+                NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:APP_DELEGATE.activeUser];
+                
+                NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.file.filePath andUser:APP_DELEGATE.activeUser], self.file.fileName];
+                
+                self.asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:path] options:@{@"AVURLAssetHTTPHeaderFieldsKey" : [UtilsNetworkRequest getHttpLoginHeaders]}];
+                [self.asset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
+                AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:self.asset];
+                
+                player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
+            }
+            
+            /*
             NSURL *url = [NSURL fileURLWithPath:self.file.localFolder];
             
             AVPlayer *player = [AVPlayer playerWithURL:url];
-            
+           */
+        
             // create a player view controller
             self.avMoviePlayer = [[MediaAVPlayerViewController alloc]init];
             self.avMoviePlayer.player = player;
@@ -1294,38 +1322,31 @@
             [self addChildViewController:self.avMoviePlayer];
             [self.view addSubview:self.avMoviePlayer.view];
             self.avMoviePlayer.view.frame = [self getTheCorrectSize];
-            
-            
-            /*self.moviePlayer = [[MediaViewController alloc]initWithContentURL:url];
+        }
+    }
+}
 
-            self.moviePlayer.view.frame = [self getTheCorrectSize];
-            
-            self.moviePlayer.urlString = self.file.localFolder;
-            
-            //if is audio file tell the controller the file is music
-            self.moviePlayer.isMusic = YES;
-            AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-            appDelegate.mediaPlayer = self.moviePlayer;
-            
-            self.moviePlayer.moviePlayer.controlStyle = MPMovieControlStyleNone;
-            
-            [self.moviePlayer.moviePlayer setFullscreen:NO];
-            
-            self.moviePlayer.moviePlayer.shouldAutoplay = NO;
-            
-            [self.moviePlayer initHudView];
-            
-            [self.moviePlayer.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
-            [self.moviePlayer.moviePlayer prepareToPlay];
-            
-            if (self.singleTap) {
-                [self.moviePlayer.view addGestureRecognizer:self.singleTap];
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"status"]) {
+        DLog(@"Status has change");
+    }
+    
+    if (object == self.avMoviePlayer.contentOverlayView) {
+        if ([keyPath isEqualToString:@"bounds"]) {
+            CGRect oldBounds = [change[NSKeyValueChangeOldKey] CGRectValue], newBounds = [change[NSKeyValueChangeNewKey] CGRectValue];
+            BOOL wasFullscreen = CGRectEqualToRect(oldBounds, [UIScreen mainScreen].bounds), isFullscreen = CGRectEqualToRect(newBounds, [UIScreen mainScreen].bounds);
+            if (isFullscreen && !wasFullscreen) {
+                if (CGRectEqualToRect(oldBounds, CGRectMake(0, 0, newBounds.size.height, newBounds.size.width))) {
+                    DLog(@"rotated fullscreen");
+                    self.avMoviePlayer.isFullScreen = YES;
+                } else {
+                    DLog(@"entered fullscreen");
+                    self.avMoviePlayer.isFullScreen = YES;
+                }
+            } else if (!isFullscreen && wasFullscreen) {
+                DLog(@"exited fullscreen");
+                self.avMoviePlayer.isFullScreen = NO;
             }
-            
-            [self.view addSubview:self.moviePlayer.view];
-            
-            [self.moviePlayer playFile];*/
-            
         }
     }
 }

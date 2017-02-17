@@ -1011,16 +1011,10 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             self.asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:path] options:@{@"AVURLAssetHTTPHeaderFieldsKey" : [UtilsNetworkRequest getHttpLoginHeaders]}];
             [self.asset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
             AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:self.asset];
-            
-            //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemFailedToPlayToEndTime:) name:AVPlayerItemNewErrorLogEntryNotification object:playerItem];
-            
-            //[playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:NULL];
-            
+    
             player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
         }
-        
-        
-        
+                
         // create a player view controller
         self.avMoviePlayer = [[MediaAVPlayerViewController alloc]init];
         
@@ -1032,46 +1026,9 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [self.view addSubview:self.avMoviePlayer.view];
         self.avMoviePlayer.view.frame = self.view.frame;
         
-        //Check if the player is or not in fullscreen
-        [self.avMoviePlayer.contentOverlayView addObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen] options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemFailedToPlayToEndTime:) name:AVPlayerItemFailedToPlayToEndTimeNotification object:self.avMoviePlayer.player];
-        
         [self configureView];
     }
 }
-
-- (void) playerItemFailedToPlayToEndTime:(NSNotification *)notification
-{
-    NSError *error = notification.userInfo[AVPlayerItemFailedToPlayToEndTimeErrorKey];
-    DLog(@"Error: %@", error);
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"status"]) {
-        DLog(@"Status has change");
-    }
-    
-    if (object == self.avMoviePlayer.contentOverlayView) {
-        if ([keyPath isEqualToString:@"bounds"]) {
-            CGRect oldBounds = [change[NSKeyValueChangeOldKey] CGRectValue], newBounds = [change[NSKeyValueChangeNewKey] CGRectValue];
-            BOOL wasFullscreen = CGRectEqualToRect(oldBounds, [UIScreen mainScreen].bounds), isFullscreen = CGRectEqualToRect(newBounds, [UIScreen mainScreen].bounds);
-            if (isFullscreen && !wasFullscreen) {
-                if (CGRectEqualToRect(oldBounds, CGRectMake(0, 0, newBounds.size.height, newBounds.size.width))) {
-                    DLog(@"rotated fullscreen");
-                    self.avMoviePlayer.isFullScreen = YES;
-                } else {
-                    DLog(@"entered fullscreen");
-                    self.avMoviePlayer.isFullScreen = YES;
-                }
-            } else if (!isFullscreen && wasFullscreen) {
-                DLog(@"exited fullscreen");
-                self.avMoviePlayer.isFullScreen = NO;
-            }
-        }
-    }
-}
-
 
 #pragma mark - Media player delegate methods
 

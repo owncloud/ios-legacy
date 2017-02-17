@@ -37,7 +37,7 @@ typedef enum {
 } kindOfManageController;
 
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, UIAlertViewDelegate, ManageFavoritesDelegate, UIGestureRecognizerDelegate> {
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, UIAlertViewDelegate, ManageFavoritesDelegate, UIGestureRecognizerDelegate, AVAssetResourceLoaderDelegate> {
     
     //Bar buttons
     IBOutlet UIBarButtonItem *_spaceBar;
@@ -96,6 +96,7 @@ typedef enum {
 //Owncloud preview objects
 @property (nonatomic, strong) OfficeFileView *officeView;
 @property(nonatomic, strong) MediaAVPlayerViewController *avMoviePlayer;
+@property(nonatomic, strong) AVURLAsset *asset;
 @property (nonatomic, strong) GalleryView *galleryView;
 //Control the type of files
 @property(nonatomic) NSInteger typeOfFile;
