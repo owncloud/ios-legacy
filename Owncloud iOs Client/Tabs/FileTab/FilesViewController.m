@@ -2433,6 +2433,8 @@
                         [self didSelectFavoriteOption];
                     }
                     break;
+                case 4:
+                    [self didSelectDownladFile];
                 default:
                     break;
             }
@@ -2916,6 +2918,10 @@
             [app.detailViewController updateFavoriteIconWhenAFolderIsSelectedFavorite];
         }
     }
+}
+
+- (void) didSelectDownloadFile {
+    
 }
 
 /*
@@ -3646,15 +3652,15 @@
         }
     } else {
         
-        NSString *favoriteOrUnfavoriteString = @"";
+        NSString *availableOfflineOrNotString = @"";
         
         if (_selectedFileDto.isFavorite && !self.isCurrentFolderSonOfFavoriteFolder) {
-            favoriteOrUnfavoriteString = NSLocalizedString(@"not_available_offline", nil);
+            availableOfflineOrNotString = NSLocalizedString(@"not_available_offline", nil);
         } else {
-            favoriteOrUnfavoriteString = NSLocalizedString(@"available_offline", nil);
+            availableOfflineOrNotString = NSLocalizedString(@"available_offline", nil);
         }
         
-        self.moreActionSheet = [[UIActionSheet alloc]initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle: nil otherButtonTitles:NSLocalizedString(@"open_with_label", nil), NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), favoriteOrUnfavoriteString, nil];
+        self.moreActionSheet = [[UIActionSheet alloc]initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle: nil otherButtonTitles:NSLocalizedString(@"open_with_label", nil), NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), availableOfflineOrNotString,NSLocalizedString(@"download_file", nil), nil];
         self.moreActionSheet.tag=200;
         
         if (IS_IPHONE) {
