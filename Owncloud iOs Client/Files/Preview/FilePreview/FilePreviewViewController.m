@@ -45,6 +45,7 @@
 #import "EditFileViewController.h"
 #import "UtilsBrandedOptions.h"
 #import "UtilsFramework.h"
+#import "CheckAccessToServer.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -534,7 +535,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
         //Check if the file is in the device
         if ([_file isDownload] == notDownload) {
-            if(_typeOfFile == videoFileType) {
+            if(_typeOfFile == videoFileType && ([[CheckAccessToServer sharedManager] getSslStatus] != sslStatusSelfSigned)) {
                 //Streaming video
                 [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.5];
             } else {

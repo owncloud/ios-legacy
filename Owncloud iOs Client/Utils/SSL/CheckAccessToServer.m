@@ -46,6 +46,7 @@ static NSString *const tmpFileName = @"tmp.der";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedCheckAccessToServer = [[self alloc] init];
+        sharedCheckAccessToServer.sslStatus = sslStatusNotChecked;
     });
     return sharedCheckAccessToServer;
 }
@@ -76,6 +77,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     
     //We save the url to later compare with urlServerRedirected in request
     self.urlUserToCheck = url;
+    self.isSameCertificateSelfSigned = NO;
     
     _urlStatusCheck = [NSString stringWithFormat:@"%@status.php", url];
     
@@ -100,7 +102,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                             completionHandler:
                                   ^(NSData *data, NSURLResponse *response, NSError *error) {
                                       
-                                      if(error != nil){
+                                      if(error != nil) {
                                           DLog(@"Error: %@", error);
                                           NSLog(@"Error: %ld - %@",(long)[error code] , [error localizedDescription]);
                                           
@@ -120,8 +122,17 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                                   [self.delegate connectionToTheServer:NO];
                                               }
                                           }
-                                      }
-                                      else{
+                                      } else {
+                                          
+                                          if ([[self.urlStatusCheck lowercaseString] hasPrefix:@"http:"]) {
+                                              self.sslStatus = sslStatusSignedOrNotTrusted;
+                                          } else {
+                                              if (self.isSameCertificateSelfSigned) {
+                                                  self.sslStatus = sslStatusSelfSigned;
+                                              } else {
+                                                  self.sslStatus = sslStatusSignedOrNotTrusted;
+                                              }
+                                          }
                                           
                                           BOOL installed = NO;
                                           if (data!= nil) {
@@ -216,6 +227,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
             NSFileManager *fileManager = [ NSFileManager defaultManager];
             if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder,tmpFileName] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
                 NSLog(@"Is the same certificate!!!");
+                self.isSameCertificateSelfSigned = YES;
                 trusted = YES;
             }
         }
@@ -433,10 +445,15 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)redirectResponse
         if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder,tmpFileName] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
             NSLog(@"Is the same certificate!!!");
             trusted = YES;
+            self.isSameCertificateSelfSigned = YES;
         }
     }
     
     return trusted;
+}
+
+- (NSInteger) getSslStatus {
+    return self.sslStatus;
 }
 
 @end

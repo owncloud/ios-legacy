@@ -18,6 +18,18 @@
 
 @protocol CheckAccessToServerDelegate
 
+//TODO: Create enum to store the different states of SSL:
+//notChecked
+//sslSelfSigned
+//goodServer
+//
+
+typedef enum {
+    sslStatusNotChecked = 0, //Available for streaming because this status should change quickly when the user open the app or change the tab
+    sslStatusSelfSigned = 1, //Not available for streaming
+    sslStatusSignedOrNotTrusted = 2 //Available for streaming
+} enumSslStatus;
+
 @optional
 -(void)connectionToTheServer:(BOOL)isConnection;
 -(void)repeatTheCheckToTheServer;
@@ -32,6 +44,8 @@
 @property (nonatomic, strong) NSString *urlStatusCheck;
 @property (nonatomic, strong) UIViewController *viewControllerToShow;
 @property (nonatomic, strong) NSString *urlUserToCheck;
+@property NSInteger sslStatus;
+@property BOOL isSameCertificateSelfSigned;
 
 + (id)sharedManager;
 - (void) isConnectionToTheServerByUrl:(NSString *) url;
@@ -42,7 +56,7 @@
 - (BOOL) isTemporalCertificateTrusted;
 - (void) acceptCertificate;
 - (void) askToAcceptCertificate;
-
+- (NSInteger) getSslStatus;
 
 @end
 
