@@ -1304,7 +1304,7 @@
     
     if (IS_IPHONE){
         
-        [self goToSelectedFileOrFolder:selectedFile];
+        [self goToSelectedFileOrFolder:selectedFile andForceDownload:NO];
     } else {
         
         //Select in detail view
@@ -1681,7 +1681,7 @@
  * if is file open preview 
  * @selectedFile -> FileDto object selected by the user
  */
-- (void) goToSelectedFileOrFolder:(FileDto *) selectedFile {
+- (void) goToSelectedFileOrFolder:(FileDto *) selectedFile andForceDownload:(BOOL) isForceDownload {
     
     [self initLoading];
     
@@ -1703,7 +1703,7 @@
             self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(folderName, nil) style:UIBarButtonItemStylePlain target:nil action:nil];
         }
         
-        FilePreviewViewController *viewController = [[FilePreviewViewController alloc]initWithNibName:@"FilePreviewViewController" selectedFile:selectedFile];
+        FilePreviewViewController *viewController = [[FilePreviewViewController alloc]initWithNibName:@"FilePreviewViewController" selectedFile:selectedFile andIsForceDownload:isForceDownload];
         
         //Hide tabbar
         viewController.hidesBottomBarWhenPushed = YES;
@@ -2927,7 +2927,7 @@
     self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
     
     if (IS_IPHONE){
-        [self goToSelectedFileOrFolder:self.selectedFileDto];
+        [self goToSelectedFileOrFolder:self.selectedFileDto andForceDownload:YES];
     } else {
         
         //Select in detail view
@@ -2939,11 +2939,7 @@
         //Select in detail
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         app.detailViewController.sortedArray=_sortedArray;
-        [app.detailViewController handleFile:selectedFile fromController:fileListManagerController];
-        
-        CustomCellFileAndDirectory *sharedLink = (CustomCellFileAndDirectory*) [_tableView cellForRowAtIndexPath:indexPath];
-        [sharedLink setSelectedStrong:YES];
-        _selectedCell = indexPath;
+        [app.detailViewController handleFile:self.selectedFileDto fromController:fileListManagerController];
     }
     
     /*//Phase 1.2. If the file isn't in the device, download the file

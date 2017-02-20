@@ -63,13 +63,18 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 
 #pragma mark - Init methods
-- (id) initWithNibName:(NSString *) nibNameOrNil selectedFile:(FileDto *) file
-{
+- (id) initWithNibName:(NSString *) nibNameOrNil selectedFile:(FileDto *) file andIsForceDownload:(BOOL) isForceDownload {
     
     [[AppDelegate sharedSyncFolderManager] cancelDownload:file];
     
+    if (!isForceDownload) {
+        isForceDownload = [[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:file] || file.isFavorite;
+    }
+    
+    
     //Assing the file
-    _file = file;
+    self.file = file;
+    self.isForceDownload = isForceDownload;
     
     DLog(@"File to preview: %@ with File id: %ld", self.file.fileName, (long)file.idFile);
     
@@ -535,7 +540,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
         //Check if the file is in the device
         if ([_file isDownload] == notDownload) {
-            if(_typeOfFile == videoFileType && ([[CheckAccessToServer sharedManager] getSslStatus] != sslStatusSelfSigned)) {
+            if(!self.isForceDownload && self.typeOfFile == videoFileType && ([[CheckAccessToServer sharedManager] getSslStatus] != sslStatusSelfSigned)) {
                 //Streaming video
                 [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.5];
             } else {
@@ -1026,7 +1031,30 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [self.view addSubview:self.avMoviePlayer.view];
         self.avMoviePlayer.view.frame = self.view.frame;
         
+        [self.avMoviePlayer.contentOverlayView addObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen] options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
+        
         [self configureView];
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {
+    if (object == self.avMoviePlayer.contentOverlayView) {
+        if ([keyPath isEqualToString:@"bounds"]) {
+            CGRect oldBounds = [change[NSKeyValueChangeOldKey] CGRectValue], newBounds = [change[NSKeyValueChangeNewKey] CGRectValue];
+            BOOL wasFullscreen = CGRectEqualToRect(oldBounds, [UIScreen mainScreen].bounds), isFullscreen = CGRectEqualToRect(newBounds, [UIScreen mainScreen].bounds);
+            if (isFullscreen && !wasFullscreen) {
+                if (CGRectEqualToRect(oldBounds, CGRectMake(0, 0, newBounds.size.height, newBounds.size.width))) {
+                    DLog(@"rotated fullscreen");
+                    self.avMoviePlayer.isFullScreen = YES;
+                } else {
+                    DLog(@"entered fullscreen");
+                    self.avMoviePlayer.isFullScreen = YES;
+                }
+            } else if (!isFullscreen && wasFullscreen) {
+                DLog(@"exited fullscreen");
+                self.avMoviePlayer.isFullScreen = NO;
+            }
+        }
     }
 }
 

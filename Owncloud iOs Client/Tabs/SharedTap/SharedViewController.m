@@ -1040,7 +1040,7 @@
                 [tableView deselectRowAtIndexPath:indexPath animated:YES];
                 
                 DLog(@"File name is: %@", file.fileName);
-                FilePreviewViewController *viewController = [[FilePreviewViewController alloc]initWithNibName:@"FilePreviewViewController" selectedFile:file];
+                FilePreviewViewController *viewController = [[FilePreviewViewController alloc]initWithNibName:@"FilePreviewViewController" selectedFile:file andIsForceDownload:NO];
                 viewController.hidesBottomBarWhenPushed = YES;
                 viewController.sortedArray=sortArray;
                 

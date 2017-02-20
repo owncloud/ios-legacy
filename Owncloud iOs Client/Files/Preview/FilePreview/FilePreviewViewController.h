@@ -82,6 +82,7 @@ extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 @property(nonatomic) BOOL isDownloading;
 //Flag to check if the cancel was clicked before launch automatically the favorite download
 @property(nonatomic) BOOL isCancelDownloadClicked;
+@property(nonatomic) BOOL isForceDownload;
 
 //GALLERY
 //Array with the order images to the Gallery
@@ -109,7 +110,7 @@ extern NSString * iPhoneShowNotConnectionWithServerMessageNotification;
 /*
  * Init method
  */
-- (id) initWithNibName:(NSString *) nibNameOrNil selectedFile:(FileDto *) file;
+- (id) initWithNibName:(NSString *) nibNameOrNil selectedFile:(FileDto *) file andIsForceDownload:(BOOL) isForceDownload;
 
 /*
  * Open With feature. Action to show the apps that can open the selected file
