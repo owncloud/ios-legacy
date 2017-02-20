@@ -1039,7 +1039,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {
     if (object == self.avMoviePlayer.contentOverlayView) {
-        if ([keyPath isEqualToString:@"bounds"]) {
+        if ([keyPath isEqualToString:[MediaAVPlayerViewController observerKeyFullScreen]]) {
             CGRect oldBounds = [change[NSKeyValueChangeOldKey] CGRectValue], newBounds = [change[NSKeyValueChangeNewKey] CGRectValue];
             BOOL wasFullscreen = CGRectEqualToRect(oldBounds, [UIScreen mainScreen].bounds), isFullscreen = CGRectEqualToRect(newBounds, [UIScreen mainScreen].bounds);
             if (isFullscreen && !wasFullscreen) {

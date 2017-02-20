@@ -1266,7 +1266,6 @@
             if ([self.avMoviePlayer.urlString isEqualToString:self.file.localFolder]) {
                 needNewPlayer = NO;
             } else {
-                [self.avMoviePlayer.contentOverlayView removeObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen]];
                 [self.avMoviePlayer.player pause];
                 self.avMoviePlayer.player = nil;
                 [self.avMoviePlayer.view removeFromSuperview];
@@ -1328,31 +1327,6 @@
             [self addChildViewController:self.avMoviePlayer];
             [self.view addSubview:self.avMoviePlayer.view];
             self.avMoviePlayer.view.frame = [self getTheCorrectSize];
-        }
-    }
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"status"]) {
-        DLog(@"Status has change");
-    }
-    
-    if (object == self.avMoviePlayer.contentOverlayView) {
-        if ([keyPath isEqualToString:@"bounds"]) {
-            CGRect oldBounds = [change[NSKeyValueChangeOldKey] CGRectValue], newBounds = [change[NSKeyValueChangeNewKey] CGRectValue];
-            BOOL wasFullscreen = CGRectEqualToRect(oldBounds, [UIScreen mainScreen].bounds), isFullscreen = CGRectEqualToRect(newBounds, [UIScreen mainScreen].bounds);
-            if (isFullscreen && !wasFullscreen) {
-                if (CGRectEqualToRect(oldBounds, CGRectMake(0, 0, newBounds.size.height, newBounds.size.width))) {
-                    DLog(@"rotated fullscreen");
-                    self.avMoviePlayer.isFullScreen = YES;
-                } else {
-                    DLog(@"entered fullscreen");
-                    self.avMoviePlayer.isFullScreen = YES;
-                }
-            } else if (!isFullscreen && wasFullscreen) {
-                DLog(@"exited fullscreen");
-                self.avMoviePlayer.isFullScreen = NO;
-            }
         }
     }
 }
@@ -1580,7 +1554,6 @@
 
         //Quit the player if exist
         if (self.avMoviePlayer) {
-            [self.avMoviePlayer.contentOverlayView removeObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen]];
             [self.avMoviePlayer.player pause];
             self.avMoviePlayer.player = nil;
             [self.avMoviePlayer.view removeFromSuperview];
