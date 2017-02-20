@@ -1319,7 +1319,7 @@
             //Select in detail
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             app.detailViewController.sortedArray=_sortedArray;
-            [app.detailViewController handleFile:selectedFile fromController:fileListManagerController];
+            [app.detailViewController handleFile:selectedFile fromController:fileListManagerController andIsForceDownload:NO];
             
             CustomCellFileAndDirectory *sharedLink = (CustomCellFileAndDirectory*) [_tableView cellForRowAtIndexPath:indexPath];
             [sharedLink setSelectedStrong:YES];
@@ -2946,22 +2946,21 @@
         //Select in detail
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         app.detailViewController.sortedArray=_sortedArray;
-        [app.detailViewController handleFile:self.selectedFileDto fromController:fileListManagerController];
+        [app.detailViewController handleFile:self.selectedFileDto fromController:fileListManagerController andIsForceDownload:YES];
     }
 }
 
 - (void) didSelectCancelDownloadFileOption {
     DLog(@"Cancel download");
     
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    NSArray *downs = [appDelegate.downloadManager getDownloads];
-    
-    Download *download;
-    
-    for (download in downs) {
-        if (download.fileDto.idFile == self.selectedFileDto.idFile) {
-            [download cancelDownload];
+    if (IS_IPHONE) {
+        for (Download *currentDownload in [APP_DELEGATE.downloadManager getDownloads]) {
+            if (currentDownload.fileDto.idFile == self.selectedFileDto.idFile) {
+                [currentDownload cancelDownload];
+            }
         }
+    } else {
+        [APP_DELEGATE.detailViewController didPressCancelButton:nil];
     }
 }
 

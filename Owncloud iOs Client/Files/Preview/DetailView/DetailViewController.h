@@ -124,6 +124,7 @@ typedef enum {
 @property (nonatomic)NSInteger controllerManager;
 //Flag to check if the cancel was clicked before launch automatically the favorite download
 @property(nonatomic) BOOL isCancelDownloadClicked;
+@property(nonatomic) BOOL isForceDownload;
 
 //VFR Pdf reader
 @property(nonatomic, strong) ReaderDocument *documentPDF;
@@ -150,7 +151,7 @@ typedef enum {
  * @param myFile -> FileDto
  * @param controller -> enumerate of types of controller in the app
  */
-- (void) handleFile:(FileDto*)myFile fromController:(NSInteger)controller;
+- (void) handleFile:(FileDto*)myFile fromController:(NSInteger)controller andIsForceDownload:(BOOL) isForceDownload;
 
 
 ///-----------------------------------

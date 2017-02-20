@@ -1064,9 +1064,8 @@
                 _selectedCell = indexPath;
                 
                 AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                
                 app.detailViewController.sortedArray=sortArray;
-                [app.detailViewController handleFile:file fromController:sharedViewManagerController];
+                [app.detailViewController handleFile:file fromController:sharedViewManagerController andIsForceDownload:NO];
                 
                 ShareLinkCell *sharedLink = (ShareLinkCell*) [_sharedTableView cellForRowAtIndexPath:indexPath];
                 [sharedLink setSelectedStrong:YES];

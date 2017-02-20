@@ -234,7 +234,7 @@
  * @param myFile -> FileDto
  * @param controller -> enum type
  */
-- (void) handleFile:(FileDto*)myFile fromController:(NSInteger)controller {
+- (void) handleFile:(FileDto*)myFile fromController:(NSInteger)controller andIsForceDownload:(BOOL) isForceDownload {
     DLog(@"HandleFile _file.fileName: %@", _file.fileName);
     
     [[AppDelegate sharedSyncFolderManager] cancelDownload:myFile];
@@ -253,6 +253,12 @@
     } else {
         _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     }
+    
+    if (self.file && !isForceDownload) {
+        isForceDownload = [[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.file] || self.file.isFavorite;
+    }
+    
+    self.isForceDownload = isForceDownload;
     
     //Get the current local folder
     _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:myFile.filePath andUser:app.activeUser]];
@@ -379,7 +385,7 @@
         
         //Check if the file is in the device
         if ([_file isDownload] == notDownload) {
-            if(_typeOfFile == videoFileType && ([[CheckAccessToServer sharedManager] getSslStatus] != sslStatusSelfSigned)) {
+            if(!self.isForceDownload && self.typeOfFile == videoFileType && ([[CheckAccessToServer sharedManager] getSslStatus] != sslStatusSelfSigned)) {
                 //Streaming video
                 [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.5];
             } else {
@@ -1911,7 +1917,7 @@
         DLog(@"The file is the same, update the preview");
         _file.isDownload=downloaded;
         _isOverwritedFile = YES;
-        [self handleFile:_file fromController:_controllerManager];
+        [self handleFile:_file fromController:_controllerManager andIsForceDownload:NO];
         DLog(@"id file: %ld", (long)_file.idFile);
     }    
 }
