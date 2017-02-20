@@ -2924,6 +2924,28 @@
     
     //TODO: go to preview with a "force download" to be sure that the file will be downloaded and not streamer
     
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
+    
+    if (IS_IPHONE){
+        [self goToSelectedFileOrFolder:self.selectedFileDto];
+    } else {
+        
+        //Select in detail view
+        if (_selectedCell) {
+            CustomCellFileAndDirectory *temp = (CustomCellFileAndDirectory*) [_tableView cellForRowAtIndexPath:_selectedCell];
+            [temp setSelectedStrong:NO];
+        }
+        
+        //Select in detail
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        app.detailViewController.sortedArray=_sortedArray;
+        [app.detailViewController handleFile:selectedFile fromController:fileListManagerController];
+        
+        CustomCellFileAndDirectory *sharedLink = (CustomCellFileAndDirectory*) [_tableView cellForRowAtIndexPath:indexPath];
+        [sharedLink setSelectedStrong:YES];
+        _selectedCell = indexPath;
+    }
+    
     /*//Phase 1.2. If the file isn't in the device, download the file
     Download *download = nil;
     download = [[Download alloc]init];
