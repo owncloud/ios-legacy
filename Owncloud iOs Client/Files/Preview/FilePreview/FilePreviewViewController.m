@@ -125,7 +125,20 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
     _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-
+    
+    //Obtain the type of file
+    _typeOfFile = [FileNameUtils checkTheTypeOfFile:_file.fileName];
+    
+    if(self.file.isDownload == notDownload && !self.isForceDownload && self.typeOfFile == videoFileType && ([[CheckAccessToServer sharedManager] getSslStatus] != sslStatusSelfSigned)) {
+        //Not show options
+        NSMutableArray *customItems = [NSMutableArray arrayWithArray:self.toolBar.items];
+        [customItems removeObjectIdenticalTo:_openInButtonBar];
+        [customItems removeObjectIdenticalTo:_flexibleSpaceAfterOpenInButtonBar];
+        [customItems removeObjectIdenticalTo:_favoriteButtonBar];
+        [customItems removeObjectIdenticalTo:_flexibleSpaceAfterFavoriteButtonBar];
+        self.toolBar.items = customItems;
+    }
+    
     //Check if share link button should be appear.
     if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
         NSMutableArray *customItems = [NSMutableArray arrayWithArray:self.toolBar.items];
@@ -521,9 +534,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     //Update the file
     _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
-    
-    //Obtain the type of file
-    _typeOfFile = [FileNameUtils checkTheTypeOfFile:_file.fileName];
     
     if (_typeOfFile == imageFileType) {
         //black screen
