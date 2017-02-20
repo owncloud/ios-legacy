@@ -1303,7 +1303,6 @@
     _selectedFileDto = selectedFile;
     
     if (IS_IPHONE){
-        
         [self goToSelectedFileOrFolder:selectedFile andForceDownload:NO];
     } else {
         
@@ -2434,7 +2433,17 @@
                     }
                     break;
                 case 4:
-                    [self didSelectDownloadFileOption];
+                    if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
+                        self.selectedFileDto.isDownload == downloaded) {
+                        DLog(@"Cancel");
+                    } else {
+                        if (self.selectedFileDto.isDownload == downloading ||
+                            self.selectedFileDto.isDownload == updating) {
+                            [self didSelectCancelDownloadFileOption];
+                        } else {
+                            [self didSelectDownloadFileOption];
+                        }
+                    }
                 default:
                     break;
             }
@@ -2922,8 +2931,6 @@
 
 - (void) didSelectDownloadFileOption {
     
-    //TODO: go to preview with a "force download" to be sure that the file will be downloaded and not streamer
-    
     self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
     
     if (IS_IPHONE){
@@ -2941,17 +2948,21 @@
         app.detailViewController.sortedArray=_sortedArray;
         [app.detailViewController handleFile:self.selectedFileDto fromController:fileListManagerController];
     }
+}
+
+- (void) didSelectCancelDownloadFileOption {
+    DLog(@"Cancel download");
     
-    /*//Phase 1.2. If the file isn't in the device, download the file
-    Download *download = nil;
-    download = [[Download alloc]init];
-    download.delegate = self;
-    download.currentLocalFolder = _currentLocalFolder;
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    NSArray *downs = [appDelegate.downloadManager getDownloads];
     
-    //Update fileDto
-    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
+    Download *download;
     
-    [download fileToDownload:self.selectedFileDto];*/
+    for (download in downs) {
+        if (download.fileDto.idFile == self.selectedFileDto.idFile) {
+            [download cancelDownload];
+        }
+    }
 }
 
 /*
@@ -3690,7 +3701,21 @@
             availableOfflineOrNotString = NSLocalizedString(@"available_offline", nil);
         }
         
-        self.moreActionSheet = [[UIActionSheet alloc]initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle: nil otherButtonTitles:NSLocalizedString(@"open_with_label", nil), NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), availableOfflineOrNotString,NSLocalizedString(@"download_file", nil), nil];
+        NSString *downloadFileCancelDownload;
+        
+        if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
+            self.selectedFileDto.isDownload == downloaded) {
+            downloadFileCancelDownload = nil;
+        } else {
+            if (self.selectedFileDto.isDownload == downloading ||
+                self.selectedFileDto.isDownload == updating) {
+                downloadFileCancelDownload = NSLocalizedString(@"cancel_download", nil);
+            } else {
+                downloadFileCancelDownload = NSLocalizedString(@"download_file", nil);
+            }
+        }
+        
+        self.moreActionSheet = [[UIActionSheet alloc]initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle: nil otherButtonTitles:NSLocalizedString(@"open_with_label", nil), NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), availableOfflineOrNotString, downloadFileCancelDownload, nil];
         self.moreActionSheet.tag=200;
         
         if (IS_IPHONE) {
