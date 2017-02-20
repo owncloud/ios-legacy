@@ -683,7 +683,7 @@
                 [self moveToPreviousTableView];
             } else {
                 
-                [ManageAppSettingsDB insertPasscode:_setPasscodeTextField.text];
+                [ManageAppSettingsDB updatePasscode:_setPasscodeTextField.text];
                 
                /* if ([KKKeychain setString:_setPasscodeTextField.text forKey:@"passcode"]) {
                     [KKKeychain setString:@"YES" forKey:@"passcode_on"];

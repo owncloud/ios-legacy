@@ -29,6 +29,8 @@
  */
 +(void) insertPasscode: (NSString *) passcode;
 
++(void) updatePasscode: (NSString *) passcode;
+
 /*
  * Method that return the pin code
  */

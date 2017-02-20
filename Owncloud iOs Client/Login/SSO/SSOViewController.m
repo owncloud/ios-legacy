@@ -308,10 +308,12 @@ static NSString *const tmpFileName = @"tmp.der";
         if (samlNameUser) {
             DLog(@"samlNameUser: %@", samlNameUser);
             DLog(@"currentURL: %@", currentURL);
+            
+            //Send to the delegate class the cookie receive from the server
+            [_delegate setCookieForSSO:cookieString andSamlUserName:samlNameUser];
         }
         
-        //Send to the delegate class the cookie receive from the server
-        [_delegate setCookieForSSO:cookieString andSamlUserName:samlNameUser];
+
         
         //Close this view
         [self cancel:nil];

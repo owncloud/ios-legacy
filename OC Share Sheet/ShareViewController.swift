@@ -174,22 +174,20 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         let activeUser = ManageUsersDB.getActiveUser()
         
         if activeUser != nil {
-        
-            Managers.sharedOCCommunication.checkServer(activeUser?.url, on: Managers.sharedOCCommunication, successRequest: { (response, redirectedServer) in
+            
+            var title = ""
+            
+            title = NSLocalizedString("files_will_be_upload_next_time", comment: "")
+            let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
+            title = title.replacingOccurrences(of: "$appname", with: appName)
+            
+            let alert = UIAlertController(title: title, message: "", preferredStyle: UIAlertControllerStyle.alert)
+            
+            alert.addAction(UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default, handler: { action in
                 self.sendTheFilesToOwnCloud()
-            }) { (response, error, redirectedServer) in
-                
-                switch (response?.statusCode){
-                case kOCErrorServerUnauthorized.hashValue?:
-                    self.showErrorLoginView()
-                case kOCErrorServerTimeout.hashValue?:
-                    self.showAlertView((NSLocalizedString("not_possible_connect_to_server", comment: "")))
-                case kOCErrorServerMaintenanceError.hashValue?:
-                    self.showAlertView((NSLocalizedString("maintenance_mode_on_server_message", comment: "")))
-                default:
-                    self.showAlertView("not_possible_connect_to_server")
-                }
-            }
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
             
         } else {
             self.showErrorLoginView()
