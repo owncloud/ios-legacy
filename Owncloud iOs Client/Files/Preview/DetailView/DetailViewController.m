@@ -171,34 +171,39 @@
     [self putTheFavoriteStatus];
     
     NSMutableArray *items = [NSMutableArray new];
-    [items insertObject:_spaceBar atIndex:0];
+    NSInteger indexPosition = 0;
+    [items insertObject:_spaceBar atIndex:indexPosition++];
     
     if (self.isFileCharged ) {
-        [items insertObject:_openButtonBar atIndex:1];
-        [items insertObject:_spaceBar1 atIndex:2];
-        [items insertObject:_favoriteButtonBar atIndex:3];
-        [items insertObject:_spaceBar2 atIndex:4];
+        if(self.file.isDownload == notDownload && !self.isForceDownload && self.typeOfFile == videoFileType && ([[CheckAccessToServer sharedManager] getSslStatus] != sslStatusSelfSigned)) {
+            //Not show options
+        } else {
+            [items insertObject:_openButtonBar atIndex:indexPosition++];
+            [items insertObject:_spaceBar1 atIndex:indexPosition++];
+            [items insertObject:_favoriteButtonBar atIndex:indexPosition++];
+            [items insertObject:_spaceBar2 atIndex:indexPosition++];
+        }
         
         _titleLabelMarginRightConstraint.constant = 210;
         _updatingProgressMarginUpdatingRightConstraint.constant = 210;
         
         if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
-            [items insertObject:_deleteButtonBar atIndex:5];
+            [items insertObject:_deleteButtonBar atIndex:indexPosition++];
             
             if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
-                [items insertObject:_spaceBar4 atIndex:6];
-                [items insertObject:_editButtonBar atIndex:7];
+                [items insertObject:_spaceBar4 atIndex:indexPosition++];
+                [items insertObject:_editButtonBar atIndex:indexPosition++];
                 _titleLabelMarginRightConstraint.constant = 260;
                 _updatingProgressMarginUpdatingRightConstraint.constant = 260;
             }
         }else{
-            [items insertObject:_shareLinkButtonBar atIndex:5];
-            [items insertObject:_spaceBar3 atIndex:6];
-            [items insertObject:_deleteButtonBar atIndex:7];
+            [items insertObject:_shareLinkButtonBar atIndex:indexPosition++];
+            [items insertObject:_spaceBar3 atIndex:indexPosition++];
+            [items insertObject:_deleteButtonBar atIndex:indexPosition++];
             
             if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
-                [items insertObject:_spaceBar4 atIndex:8];
-                [items insertObject:_editButtonBar atIndex:9];
+                [items insertObject:_spaceBar4 atIndex:indexPosition++];
+                [items insertObject:_editButtonBar atIndex:indexPosition++];
                 _titleLabelMarginRightConstraint.constant = 260;
                 _updatingProgressMarginUpdatingRightConstraint.constant = 260;
             }
