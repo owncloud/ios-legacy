@@ -2090,6 +2090,18 @@
 
 - (void) reloadCellByFile:(FileDto *) file {
    
+    NSArray* indexArray = [NSArray arrayWithObjects:[self getIndexPathFromFilesTableViewByFile:file], nil];
+    
+    dispatch_queue_t mainThreadQueue = dispatch_get_main_queue();
+    dispatch_async(mainThreadQueue, ^{
+        [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+    });
+}
+
+- (NSIndexPath*) getIndexPathFromFilesTableViewByFile:(FileDto *) file {
+    
     NSIndexPath* indexPath;
     BOOL isFound = NO;
     
@@ -2114,14 +2126,7 @@
         }
     }
     
-    NSArray* indexArray = [NSArray arrayWithObjects:indexPath, nil];
-    
-    dispatch_queue_t mainThreadQueue = dispatch_get_main_queue();
-    dispatch_async(mainThreadQueue, ^{
-        [self.tableView beginUpdates];
-        [self.tableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationNone];
-        [self.tableView endUpdates];
-    });
+    return indexPath;
 }
 
 /*
@@ -2948,6 +2953,12 @@
         app.detailViewController.sortedArray=_sortedArray;
         [app.detailViewController handleFile:self.selectedFileDto fromController:fileListManagerController andIsForceDownload:YES];
     }
+    
+    //Select the cell
+    NSIndexPath *indexPath = [self getIndexPathFromFilesTableViewByFile:self.selectedFileDto];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    [cell setSelected:YES];
+
 }
 
 - (void) didSelectCancelDownloadFileOption {
