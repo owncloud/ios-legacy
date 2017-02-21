@@ -26,6 +26,8 @@
 #import "UtilsFramework.h"
 #import "ManageCookiesStorageDB.h"
 #import "CheckFeaturesSupported.h"
+#import "CheckCapabilities.h"
+#import "FilesViewController.h"
 
 
 //Initialization the notification
