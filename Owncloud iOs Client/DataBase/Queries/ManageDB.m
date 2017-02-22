@@ -1155,12 +1155,6 @@
             DLog(@"Error update version 18 to 19 table users set timestamp_last_instant_upload_video value");
         }
         
-        //new expired variable to set after we force update existing urls
-        dbOperationSuccessful = [db executeUpdate:@"ALTER TABLE users ADD expired BOOL NOT NULL DEFAULT 0"];
-        if (!dbOperationSuccessful) {
-            DLog(@"Error update version 18 to 19 table users add column expired");
-        }
-        
         // Remove instant_upload column from users table
         
         //1.- Create a temporary users table users_temp
@@ -1199,6 +1193,32 @@
         dbOperationSuccessful = [db executeUpdate:@"DROP TABLE users_temp"];
         if (!dbOperationSuccessful) {
             DLog(@"Error dropping table users_temp");
+        }
+        
+    }];
+    
+}
+
+///-----------------------------------
+/// @name Update Database version with 19 version to 20
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter users table, adds new field expire to reset the user password. Designed for the update of URL between version
+ */
++ (void) updateDBVersion19To20 {
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        
+        BOOL dbOperationSuccessful;
+        
+        //new expired variable to set after we force update existing urls
+        dbOperationSuccessful = [db executeUpdate:@"ALTER TABLE users ADD expired BOOL NOT NULL DEFAULT 0"];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error update version 18 to 19 table users add column expired");
         }
         
     }];

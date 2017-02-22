@@ -251,4 +251,12 @@
  */
 + (void) updateDBVersion18To19;
 
+
+/**
+ * Changes:
+ *
+ * Alter users table, adds new field expire to reset the user password. Designed for the update of URL between version
+ */
++ (void) updateDBVersion19To20;
+
 @end
