@@ -17,6 +17,7 @@
 #import "UserDto.h"
 #import "CheckAccessToServer.h"
 #import "OCErrorMsg.h"
+#import "OCCommunication.h"
 
 @implementation ManageNetworkErrors
 
@@ -38,7 +39,7 @@
             [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
             break;
         }
-        case OCServerErrorForbiddenCharacters:
+        case OCErrorForbidenCharacters:
             //Forbidden characters from the server side
             [_delegate showError:NSLocalizedString(@"forbidden_characters_from_server", nil)];
             break;

@@ -33,6 +33,7 @@
 #import "OCURLSessionManager.h"
 #import "ManageAppSettingsDB.h"
 #import "UtilsCookies.h"
+#import "OCCommunication.h"
 
 #define k_delay_after_check_instant_uploads_folders 2.0
 
@@ -356,7 +357,7 @@
                     [self finishOverwriteProcess];
                 }
                 
-                if (error.code == OCServerErrorForbiddenCharacters) {
+                if (error.code == OCErrorForbidenCharacters) {
                     weakSelf.currentUpload.status = errorUploading;
                     weakSelf.currentUpload.kindOfError = errorInvalidPath;
                     [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
