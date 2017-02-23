@@ -27,7 +27,7 @@
 typedef enum {
     sslStatusNotChecked = 0, //Available for streaming because this status should change quickly when the user open the app or change the tab
     sslStatusSelfSigned = 1, //Not available for streaming
-    sslStatusSignedOrNotTrusted = 2 //Available for streaming
+    sslStatusSignedOrNotSSL = 2 //Available for streaming
 } enumSslStatus;
 
 @optional

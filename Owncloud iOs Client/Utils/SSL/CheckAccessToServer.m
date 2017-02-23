@@ -125,12 +125,12 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                       } else {
                                           
                                           if ([[self.urlStatusCheck lowercaseString] hasPrefix:@"http:"]) {
-                                              self.sslStatus = sslStatusSignedOrNotTrusted;
+                                              self.sslStatus = sslStatusSignedOrNotSSL;
                                           } else {
                                               if (self.isSameCertificateSelfSigned) {
                                                   self.sslStatus = sslStatusSelfSigned;
                                               } else {
-                                                  self.sslStatus = sslStatusSignedOrNotTrusted;
+                                                  self.sslStatus = sslStatusSignedOrNotSSL;
                                               }
                                           }
                                           
