@@ -380,7 +380,12 @@
                             break;
                         case kOCErrorServerForbidden:
                             weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorNotPermission;
+                            if (error.code == OCErrorForbidenUnknow) {
+                                weakSelf.currentUpload.kindOfError = errorFirewallRuleNotAllowUpload;
+                            } else {
+                                weakSelf.currentUpload.kindOfError = errorNotPermission;
+                            }
+                            
                             [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
                             break;
                         case kOCErrorProxyAuth:

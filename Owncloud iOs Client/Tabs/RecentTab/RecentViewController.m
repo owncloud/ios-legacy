@@ -611,7 +611,9 @@
                 case errorInsufficientStorage:
                     msgError=NSLocalizedString(@"error_insufficient_storage", nil);
                     break;
-                    
+                case errorFirewallRuleNotAllowUpload:
+                    msgError=NSLocalizedString(@"error_not_allowed_by_firewall_rule", nil);
+                    break;
                 default:
                     msgError=NSLocalizedString(@"error", nil);
                     failedCell.accessoryType = UITableViewCellAccessoryNone;
