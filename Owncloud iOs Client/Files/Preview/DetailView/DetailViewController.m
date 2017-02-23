@@ -242,6 +242,10 @@
 - (void) handleFile:(FileDto*)myFile fromController:(NSInteger)controller andIsForceDownload:(BOOL) isForceDownload {
     DLog(@"HandleFile _file.fileName: %@", _file.fileName);
     
+    if (myFile.isDownload == downloading) {
+        isForceDownload = YES;
+    }
+    
     [[AppDelegate sharedSyncFolderManager] cancelDownload:myFile];
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];

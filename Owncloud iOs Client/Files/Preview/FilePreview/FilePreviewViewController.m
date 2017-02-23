@@ -65,6 +65,10 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
 #pragma mark - Init methods
 - (id) initWithNibName:(NSString *) nibNameOrNil selectedFile:(FileDto *) file andIsForceDownload:(BOOL) isForceDownload {
     
+    if (file.isDownload == downloading) {
+        isForceDownload = YES;
+    }
+    
     [[AppDelegate sharedSyncFolderManager] cancelDownload:file];
     
     if (!isForceDownload) {
@@ -533,7 +537,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
      */
     
     //Update the file
-    _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
+    self.file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
     
     if (_typeOfFile == imageFileType) {
         //black screen
@@ -541,15 +545,14 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [self performSelector:@selector(initGallery) withObject:nil afterDelay:0.1];
     } else {
         
-        if (!_file.isNecessaryUpdate) {
+        if (!self.file.isNecessaryUpdate) {
             [self previewFile];
         }
         
         DLog(@"ide file: %ld",(long)_file.idFile);
         DLog(@"is Donwloaded: %ld",(long)_file.isDownload);
-        
         //Check if the file is in the device
-        if ([_file isDownload] == notDownload) {
+        if (self.file.isDownload == notDownload) {
             if(!self.isForceDownload && self.typeOfFile == videoFileType && ([[CheckAccessToServer sharedManager] getSslStatus] != sslStatusSelfSigned)) {
                 //Streaming video
                 [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.5];
