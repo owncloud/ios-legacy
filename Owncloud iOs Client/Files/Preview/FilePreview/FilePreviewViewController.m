@@ -565,7 +565,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
                 //Streaming video
                 [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.5];
             } else {
-                if (([[CheckAccessToServer sharedManager] getSslStatus] == sslStatusSelfSigned)) {
+                if (([[CheckAccessToServer sharedManager] getSslStatus] == sslStatusSelfSigned) && self.typeOfFile == videoFileType && !self.isForceDownload) {
                     [self showAlertView:NSLocalizedString(@"streaming_no_possible_ssl_self_signed", nil)];
                 }
                 //Download the file
