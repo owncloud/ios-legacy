@@ -184,7 +184,12 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                                 [weakSelf.delegate errorLogin];
                                 break;
                             case kOCErrorServerForbidden:
-                                [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
+                                //403 Forbidden
+                                if (error.code == OCErrorForbidenUnknow) {
+                                    [weakSelf.delegate downloadFailed:[error.userInfo objectForKey:NSLocalizedDescriptionKey] andFile:weakSelf.fileDto];
+                                } else {
+                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
+                                }
                                 break;
                             case kOCErrorProxyAuth:
                                 [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
@@ -664,7 +669,12 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                                 [weakSelf.delegate errorLogin];
                                 break;
                             case kOCErrorServerForbidden:
-                                [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
+                                //403 Forbidden
+                                if (error.code == OCErrorForbidenUnknow) {
+                                    [weakSelf.delegate downloadFailed:[error.userInfo objectForKey:NSLocalizedDescriptionKey] andFile:weakSelf.fileDto];
+                                } else {
+                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
+                                }
                                 break;
                             case kOCErrorProxyAuth:
                                 [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
