@@ -1985,6 +1985,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     //Update connect string
     [self updateConnectString];
     
+    [UtilsFramework deleteAllCookies];
+    [UtilsCookies eraseURLCache];
+    [UtilsCookies eraseCredentialsWithURL:self.connectString];
+    
     //Empty username and password to get a fail response to the server
     NSString *userName=@"";
     NSString *password=@"";
@@ -2039,7 +2043,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                     isInvalid = NO;
                 }
             }else if (response != nil) {
-                [self.manageNetworkErrors returnSuitableWebDavErrorMessage:response.statusCode];
+                [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:response.statusCode andSubCodeError:error.code];
             }
             
         } else {
@@ -2158,8 +2162,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
         
-        [self.manageNetworkErrors returnSuitableWebDavErrorMessage:response.statusCode];
-        
+        [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:response.statusCode andSubCodeError:error.code];
     }];
     
 }

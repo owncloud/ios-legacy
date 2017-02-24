@@ -526,7 +526,7 @@ static NSString *const tmpFileName = @"tmp.der";
         
         userName = nil;
         
-        [self.manageNetworkErrors returnSuitableWebDavErrorMessage:response.statusCode];
+        [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:response.statusCode andSubCodeError:error.code];
         
         //Error we do not have user
         dispatch_semaphore_signal(semaphore);

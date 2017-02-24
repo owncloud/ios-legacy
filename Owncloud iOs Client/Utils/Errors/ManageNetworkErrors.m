@@ -56,7 +56,7 @@
             
         default:
             //Web Dav Error Code
-            [self returnSuitableWebDavErrorMessage:errorHttp];
+            [self returnErrorMessageWithHttpStatusCode:errorHttp andSubCodeError:errorConnection.code];
             break;
     }
 }
@@ -67,7 +67,7 @@
  * @errorHttp -> WebDav Server Error
  */
 
-- (void)returnSuitableWebDavErrorMessage:(NSInteger) errorHttp {
+- (void)returnErrorMessageWithHttpStatusCode:(NSInteger) errorHttp andSubCodeError:(NSInteger) subCodeError {
     
     switch (errorHttp) {
         case kOCErrorServerUnauthorized:
@@ -76,7 +76,11 @@
             break;
         case kOCErrorServerForbidden:
             //403 Forbidden
-            [_delegate showError:NSLocalizedString(@"error_not_permission", nil)];
+            if (subCodeError == OCErrorForbidenUnknow) {
+                [_delegate showError:NSLocalizedString(@"error_not_allowed_by_firewall_rule", nil)];
+            } else {
+                [_delegate showError:NSLocalizedString(@"error_not_permission", nil)];
+            }
             break;
         case kOCErrorServerPathNotFound:
             //404 Not Found. When for example we try to access a path that now not exist
