@@ -56,7 +56,7 @@
             
         default:
             //Web Dav Error Code
-            [self returnErrorMessageWithHttpStatusCode:errorHttp andSubCodeError:errorConnection.code];
+            [self returnErrorMessageWithHttpStatusCode:errorHttp andError:errorConnection];
             break;
     }
 }
@@ -67,7 +67,7 @@
  * @errorHttp -> WebDav Server Error
  */
 
-- (void)returnErrorMessageWithHttpStatusCode:(NSInteger) errorHttp andSubCodeError:(NSInteger) subCodeError {
+- (void)returnErrorMessageWithHttpStatusCode:(NSInteger) errorHttp andError:(NSError *) error {
     
     switch (errorHttp) {
         case kOCErrorServerUnauthorized:
@@ -76,8 +76,8 @@
             break;
         case kOCErrorServerForbidden:
             //403 Forbidden
-            if (subCodeError == OCErrorForbidenUnknow) {
-                [_delegate showError:NSLocalizedString(@"error_not_allowed_by_firewall_rule", nil)];
+            if (error.code == OCErrorForbidenUnknow) {
+                [_delegate showError:[error.userInfo objectForKey:NSLocalizedDescriptionKey]];
             } else {
                 [_delegate showError:NSLocalizedString(@"error_not_permission", nil)];
             }

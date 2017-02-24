@@ -36,7 +36,7 @@
  */
 
 - (void)manageErrorHttp:(NSInteger)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *)user;
-- (void)returnErrorMessageWithHttpStatusCode:(NSInteger) errorHttp andSubCodeError:(NSInteger) subCodeError;
+- (void)returnErrorMessageWithHttpStatusCode:(NSInteger) errorHttp andError:(NSError *) error;
 
 
 @end

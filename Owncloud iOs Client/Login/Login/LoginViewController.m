@@ -2043,7 +2043,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                     isInvalid = NO;
                 }
             }else if (response != nil) {
-                [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:response.statusCode andSubCodeError:error.code];
+                [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:response.statusCode andError:error];
             }
             
         } else {
@@ -2162,7 +2162,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         DLog(@"error: %@", error);
         DLog(@"Operation error: %ld", (long)response.statusCode);
         
-        [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:response.statusCode andSubCodeError:error.code];
+        [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:response.statusCode andError:error];
     }];
     
 }
