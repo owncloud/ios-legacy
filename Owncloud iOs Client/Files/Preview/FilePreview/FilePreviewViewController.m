@@ -51,6 +51,8 @@
 #define k_status_bar_height 20
 #define k_navigation_bar_height 44
 #define k_navigation_bar_height_in_iphone_landscape 32
+#define k_iphone_plus_correction 10
+
 
 NSString * iPhoneCleanPreviewNotification = @"iPhoneCleanPreviewNotification";
 NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNotConnectionWithServerMessageNotification";
@@ -439,10 +441,16 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             screenSize = [mainScreen.coordinateSpace convertRect:mainScreen.bounds toCoordinateSpace:mainScreen.fixedCoordinateSpace].size;
         }
         
+        NSInteger iPhoneCorrection = 0;
+        
+        if (IS_IPHONE_PLUS) {
+            iPhoneCorrection = k_iphone_plus_correction;
+        }
+        
         if (self.avMoviePlayer.isFullScreen) {
-            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_navigation_bar_height_in_iphone_landscape - 10));
+            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_navigation_bar_height_in_iphone_landscape - iPhoneCorrection));
         } else {
-            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape - 10));
+            self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape - iPhoneCorrection));
         }
         
     }
@@ -557,6 +565,9 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
                 //Streaming video
                 [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.5];
             } else {
+                if (([[CheckAccessToServer sharedManager] getSslStatus] == sslStatusSelfSigned)) {
+                    [self showAlertView:NSLocalizedString(@"streaming_no_possible_ssl_self_signed", nil)];
+                }
                 //Download the file
                 [self downloadTheFile];
             }
