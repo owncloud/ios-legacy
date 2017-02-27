@@ -252,4 +252,6 @@ typedef enum {
 
 - (void)updateFavoriteIconWhenAFolderIsSelectedFavorite;
 
+- (void) removeMediaPlayer;
+
 @end

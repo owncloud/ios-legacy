@@ -2950,6 +2950,11 @@
         
         //Select in detail
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        //Quit the player if exist
+        if (app.detailViewController.avMoviePlayer) {
+            [app.detailViewController removeMediaPlayer];
+        }
         app.detailViewController.sortedArray=_sortedArray;
         [app.detailViewController handleFile:self.selectedFileDto fromController:fileListManagerController andIsForceDownload:YES];
     }

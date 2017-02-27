@@ -1278,11 +1278,7 @@
             if ([self.avMoviePlayer.urlString isEqualToString:self.file.localFolder]) {
                 needNewPlayer = NO;
             } else {
-                [self.avMoviePlayer.player pause];
-                self.avMoviePlayer.player = nil;
-                [self.avMoviePlayer.view removeFromSuperview];
-                self.avMoviePlayer = nil;
-                
+                [self removeMediaPlayer];
                 needNewPlayer = YES;
             }
         } else {
@@ -1341,6 +1337,13 @@
             self.avMoviePlayer.view.frame = [self getTheCorrectSize];
         }
     }
+}
+
+- (void) removeMediaPlayer {
+    [self.avMoviePlayer.player pause];
+    self.avMoviePlayer.player = nil;
+    [self.avMoviePlayer.view removeFromSuperview];
+    self.avMoviePlayer = nil;
 }
 
 #pragma mark - Download Methods
@@ -1566,10 +1569,7 @@
 
         //Quit the player if exist
         if (self.avMoviePlayer) {
-            [self.avMoviePlayer.player pause];
-            self.avMoviePlayer.player = nil;
-            [self.avMoviePlayer.view removeFromSuperview];
-            self.avMoviePlayer = nil;
+            [self removeMediaPlayer];
         }
         
         //Depend if the file is an image or other "openimage" or "openfile"
