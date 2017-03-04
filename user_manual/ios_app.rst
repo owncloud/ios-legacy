@@ -1,5 +1,5 @@
 ==========================
-Using the ownCloud iOS App
+Using the ownCloud iOS App 3.5.3
 ==========================
 
 Accessing your files on your ownCloud server via the Web interface is easy and 
@@ -13,7 +13,7 @@ some advantages over the Web interface:
 * Easily upload files from your device to ownCloud
 * Optional PIN for stronger security
 
-Getting the ownCloud iOS App 3.5.3
+Getting the ownCloud iOS App 
 --------------------------------
 
 Open Safari, or any Web browser, and point it to your ownCloud server. Log in 
