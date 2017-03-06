@@ -1040,7 +1040,7 @@
                 [tableView deselectRowAtIndexPath:indexPath animated:YES];
                 
                 DLog(@"File name is: %@", file.fileName);
-                FilePreviewViewController *viewController = [[FilePreviewViewController alloc]initWithNibName:@"FilePreviewViewController" selectedFile:file];
+                FilePreviewViewController *viewController = [[FilePreviewViewController alloc]initWithNibName:@"FilePreviewViewController" selectedFile:file andIsForceDownload:NO];
                 viewController.hidesBottomBarWhenPushed = YES;
                 viewController.sortedArray=sortArray;
                 
@@ -1064,9 +1064,8 @@
                 _selectedCell = indexPath;
                 
                 AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                
                 app.detailViewController.sortedArray=sortArray;
-                [app.detailViewController handleFile:file fromController:sharedViewManagerController];
+                [app.detailViewController handleFile:file fromController:sharedViewManagerController andIsForceDownload:NO];
                 
                 ShareLinkCell *sharedLink = (ShareLinkCell*) [_sharedTableView cellForRowAtIndexPath:indexPath];
                 [sharedLink setSelectedStrong:YES];

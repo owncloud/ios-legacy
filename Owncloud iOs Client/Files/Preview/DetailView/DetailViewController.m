@@ -171,34 +171,39 @@
     [self putTheFavoriteStatus];
     
     NSMutableArray *items = [NSMutableArray new];
-    [items insertObject:_spaceBar atIndex:0];
+    NSInteger indexPosition = 0;
+    [items insertObject:_spaceBar atIndex:indexPosition++];
     
     if (self.isFileCharged ) {
-        [items insertObject:_openButtonBar atIndex:1];
-        [items insertObject:_spaceBar1 atIndex:2];
-        [items insertObject:_favoriteButtonBar atIndex:3];
-        [items insertObject:_spaceBar2 atIndex:4];
+        if(self.file.isDownload == notDownload && !self.isForceDownload && self.typeOfFile == videoFileType && ([[CheckAccessToServer sharedManager] getSslStatus] != sslStatusSelfSigned)) {
+            //Not show options
+        } else {
+            [items insertObject:_openButtonBar atIndex:indexPosition++];
+            [items insertObject:_spaceBar1 atIndex:indexPosition++];
+            [items insertObject:_favoriteButtonBar atIndex:indexPosition++];
+            [items insertObject:_spaceBar2 atIndex:indexPosition++];
+        }
         
         _titleLabelMarginRightConstraint.constant = 210;
         _updatingProgressMarginUpdatingRightConstraint.constant = 210;
         
         if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
-            [items insertObject:_deleteButtonBar atIndex:5];
+            [items insertObject:_deleteButtonBar atIndex:indexPosition++];
             
             if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
-                [items insertObject:_spaceBar4 atIndex:6];
-                [items insertObject:_editButtonBar atIndex:7];
+                [items insertObject:_spaceBar4 atIndex:indexPosition++];
+                [items insertObject:_editButtonBar atIndex:indexPosition++];
                 _titleLabelMarginRightConstraint.constant = 260;
                 _updatingProgressMarginUpdatingRightConstraint.constant = 260;
             }
         }else{
-            [items insertObject:_shareLinkButtonBar atIndex:5];
-            [items insertObject:_spaceBar3 atIndex:6];
-            [items insertObject:_deleteButtonBar atIndex:7];
+            [items insertObject:_shareLinkButtonBar atIndex:indexPosition++];
+            [items insertObject:_spaceBar3 atIndex:indexPosition++];
+            [items insertObject:_deleteButtonBar atIndex:indexPosition++];
             
             if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
-                [items insertObject:_spaceBar4 atIndex:8];
-                [items insertObject:_editButtonBar atIndex:9];
+                [items insertObject:_spaceBar4 atIndex:indexPosition++];
+                [items insertObject:_editButtonBar atIndex:indexPosition++];
                 _titleLabelMarginRightConstraint.constant = 260;
                 _updatingProgressMarginUpdatingRightConstraint.constant = 260;
             }
@@ -234,8 +239,12 @@
  * @param myFile -> FileDto
  * @param controller -> enum type
  */
-- (void) handleFile:(FileDto*)myFile fromController:(NSInteger)controller {
+- (void) handleFile:(FileDto*)myFile fromController:(NSInteger)controller andIsForceDownload:(BOOL) isForceDownload {
     DLog(@"HandleFile _file.fileName: %@", _file.fileName);
+    
+    if (myFile.isDownload == downloading) {
+        isForceDownload = YES;
+    }
     
     [[AppDelegate sharedSyncFolderManager] cancelDownload:myFile];
     
@@ -253,6 +262,12 @@
     } else {
         _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
     }
+    
+    if (self.file && !isForceDownload) {
+        isForceDownload = [[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.file] || self.file.isFavorite;
+    }
+    
+    self.isForceDownload = isForceDownload;
     
     //Get the current local folder
     _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:myFile.filePath andUser:app.activeUser]];
@@ -379,8 +394,16 @@
         
         //Check if the file is in the device
         if ([_file isDownload] == notDownload) {
-            //Download the file
-            [self downloadTheFile];
+            if(!self.isForceDownload && self.typeOfFile == videoFileType && ([[CheckAccessToServer sharedManager] getSslStatus] != sslStatusSelfSigned)) {
+                //Streaming video
+                [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.5];
+            } else {
+                if (([[CheckAccessToServer sharedManager] getSslStatus] == sslStatusSelfSigned) && self.typeOfFile == videoFileType && !self.isForceDownload) {
+                    [self showAlertView:NSLocalizedString(@"streaming_no_possible_ssl_self_signed", nil)];
+                }
+                //Download the file
+                [self downloadTheFile];
+            }
         } else if (([_file isDownload] == downloading) || ([_file isDownload] == updating)) {
             
             if ([_file isDownload] == updating) {
@@ -769,8 +792,8 @@
  */
 - (void) removeThePreviousViews {
     //Quit the player if exist
-    if (self.moviePlayer) {
-        [self.moviePlayer.view removeFromSuperview];
+    if (self.avMoviePlayer) {
+        [self.avMoviePlayer.view removeFromSuperview];
     }
     
     //Quit the office view
@@ -1249,17 +1272,13 @@
     
     BOOL needNewPlayer = NO;
     if (_file != nil) {
-        if (self.moviePlayer) {
-            DLog(@"Movie urlString: %@", _moviePlayer.urlString);
+        if (self.avMoviePlayer) {
+            DLog(@"Movie urlString: %@", self.avMoviePlayer.urlString);
             DLog(@"File local folder: %@", _file.localFolder);
-            if ([self.moviePlayer.urlString isEqualToString:self.file.localFolder]) {
+            if ([self.avMoviePlayer.urlString isEqualToString:self.file.localFolder]) {
                 needNewPlayer = NO;
             } else {
-                [self.moviePlayer removeNotificationObservation];
-                [self.moviePlayer.moviePlayer stop];
-                [self.moviePlayer finalizePlayer];
-                [self.moviePlayer.view removeFromSuperview];
-                self.moviePlayer = nil;
+                [self removeMediaPlayer];
                 needNewPlayer = YES;
             }
         } else {
@@ -1280,48 +1299,43 @@
                 }
             }
             
-            NSURL *url = [NSURL fileURLWithPath:self.file.localFolder];
+            AVPlayer *player;
             
-            self.moviePlayer = [[MediaViewController alloc]initWithContentURL:url];
-
-            self.moviePlayer.view.frame = [self getTheCorrectSize];
-            
-            self.moviePlayer.urlString = self.file.localFolder;
-            
-            //if is audio file tell the controller the file is music
-            self.moviePlayer.isMusic = YES;
-            AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-            appDelegate.mediaPlayer = self.moviePlayer;
-            
-            self.moviePlayer.moviePlayer.controlStyle = MPMovieControlStyleNone;
-            
-            [self.moviePlayer.moviePlayer setFullscreen:NO];
-            
-            self.moviePlayer.moviePlayer.shouldAutoplay = NO;
-            
-            [self.moviePlayer initHudView];
-            
-            [self.moviePlayer.moviePlayer setScalingMode:MPMovieScalingModeAspectFit];
-            [self.moviePlayer.moviePlayer prepareToPlay];
-            
-            if (self.singleTap) {
-                [self.moviePlayer.view addGestureRecognizer:self.singleTap];
+            if (self.file.isDownload) {
+                
+                NSURL *url = [NSURL fileURLWithPath:_file.localFolder];
+                player = [AVPlayer playerWithURL:url];
+                
+            } else {
+                
+                //FileName full path
+                NSString *path = [UtilsUrls  getFullRemoteServerFilePathByFile:self.file andUser:APP_DELEGATE.activeUser];
+                
+                self.asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:path] options:@{@"AVURLAssetHTTPHeaderFieldsKey" : [UtilsNetworkRequest getHttpLoginHeaders]}];
+                [self.asset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
+                AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:self.asset];
+                
+                player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
             }
+        
+            // create a player view controller
+            self.avMoviePlayer = [[MediaAVPlayerViewController alloc]init];
+            self.avMoviePlayer.player = player;
+            [player play];
             
-            [self.view addSubview:self.moviePlayer.view];
-            
-            [self.moviePlayer playFile];
-            
-        } else {
-            
-            if (self.singleTap) {
-                [self.moviePlayer.view addGestureRecognizer:self.singleTap];
-            }
-            
-            
-            [self.view addSubview:self.moviePlayer.view];
+            // show the view controller
+            [self addChildViewController:self.avMoviePlayer];
+            [self.view addSubview:self.avMoviePlayer.view];
+            self.avMoviePlayer.view.frame = [self getTheCorrectSize];
         }
     }
+}
+
+- (void) removeMediaPlayer {
+    [self.avMoviePlayer.player pause];
+    self.avMoviePlayer.player = nil;
+    [self.avMoviePlayer.view removeFromSuperview];
+    self.avMoviePlayer = nil;
 }
 
 #pragma mark - Download Methods
@@ -1546,11 +1560,8 @@
         
 
         //Quit the player if exist
-        if (self.moviePlayer) {
-            [self.moviePlayer.moviePlayer stop];
-            [self.moviePlayer finalizePlayer];
-            [self.moviePlayer.view removeFromSuperview];
-            self.moviePlayer = nil;
+        if (self.avMoviePlayer) {
+            [self removeMediaPlayer];
         }
         
         //Depend if the file is an image or other "openimage" or "openfile"
@@ -1883,7 +1894,7 @@
         DLog(@"The file is the same, update the preview");
         _file.isDownload=downloaded;
         _isOverwritedFile = YES;
-        [self handleFile:_file fromController:_controllerManager];
+        [self handleFile:_file fromController:_controllerManager andIsForceDownload:NO];
         DLog(@"id file: %ld", (long)_file.idFile);
     }    
 }
@@ -2351,8 +2362,8 @@
             self.gifView.frame = [self getTheCorrectSize];
         }
         
-        if (self.moviePlayer) {
-            self.moviePlayer.view.frame = [self getTheCorrectSize];
+        if (self.avMoviePlayer) {
+            self.avMoviePlayer.view.frame = [self getTheCorrectSize];
         }
         
  

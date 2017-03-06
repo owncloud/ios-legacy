@@ -1303,8 +1303,7 @@
     _selectedFileDto = selectedFile;
     
     if (IS_IPHONE){
-        
-        [self goToSelectedFileOrFolder:selectedFile];
+        [self goToSelectedFileOrFolder:selectedFile andForceDownload:NO];
     } else {
         
         //Select in detail view
@@ -1320,7 +1319,7 @@
             //Select in detail
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             app.detailViewController.sortedArray=_sortedArray;
-            [app.detailViewController handleFile:selectedFile fromController:fileListManagerController];
+            [app.detailViewController handleFile:selectedFile fromController:fileListManagerController andIsForceDownload:NO];
             
             CustomCellFileAndDirectory *sharedLink = (CustomCellFileAndDirectory*) [_tableView cellForRowAtIndexPath:indexPath];
             [sharedLink setSelectedStrong:YES];
@@ -1681,7 +1680,7 @@
  * if is file open preview 
  * @selectedFile -> FileDto object selected by the user
  */
-- (void) goToSelectedFileOrFolder:(FileDto *) selectedFile {
+- (void) goToSelectedFileOrFolder:(FileDto *) selectedFile andForceDownload:(BOOL) isForceDownload {
     
     [self initLoading];
     
@@ -1703,7 +1702,7 @@
             self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(folderName, nil) style:UIBarButtonItemStylePlain target:nil action:nil];
         }
         
-        FilePreviewViewController *viewController = [[FilePreviewViewController alloc]initWithNibName:@"FilePreviewViewController" selectedFile:selectedFile];
+        FilePreviewViewController *viewController = [[FilePreviewViewController alloc]initWithNibName:@"FilePreviewViewController" selectedFile:selectedFile andIsForceDownload:isForceDownload];
         
         //Hide tabbar
         viewController.hidesBottomBarWhenPushed = YES;
@@ -2091,6 +2090,18 @@
 
 - (void) reloadCellByFile:(FileDto *) file {
    
+    NSArray* indexArray = [NSArray arrayWithObjects:[self getIndexPathFromFilesTableViewByFile:file], nil];
+    
+    dispatch_queue_t mainThreadQueue = dispatch_get_main_queue();
+    dispatch_async(mainThreadQueue, ^{
+        [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+    });
+}
+
+- (NSIndexPath*) getIndexPathFromFilesTableViewByFile:(FileDto *) file {
+    
     NSIndexPath* indexPath;
     BOOL isFound = NO;
     
@@ -2115,14 +2126,7 @@
         }
     }
     
-    NSArray* indexArray = [NSArray arrayWithObjects:indexPath, nil];
-    
-    dispatch_queue_t mainThreadQueue = dispatch_get_main_queue();
-    dispatch_async(mainThreadQueue, ^{
-        [self.tableView beginUpdates];
-        [self.tableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationNone];
-        [self.tableView endUpdates];
-    });
+    return indexPath;
 }
 
 /*
@@ -2433,6 +2437,18 @@
                         [self didSelectFavoriteOption];
                     }
                     break;
+                case 4:
+                    if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
+                        self.selectedFileDto.isDownload == downloaded) {
+                        DLog(@"Cancel");
+                    } else {
+                        if (self.selectedFileDto.isDownload == downloading ||
+                            self.selectedFileDto.isDownload == updating) {
+                            [self didSelectCancelDownloadFileOption];
+                        } else {
+                            [self didSelectDownloadFileOption];
+                        }
+                    }
                 default:
                     break;
             }
@@ -2915,6 +2931,52 @@
         if (app.detailViewController.file) {
             [app.detailViewController updateFavoriteIconWhenAFolderIsSelectedFavorite];
         }
+    }
+}
+
+- (void) didSelectDownloadFileOption {
+    
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:APP_DELEGATE.activeUser] andUser:APP_DELEGATE.activeUser];
+    
+    if (IS_IPHONE){
+        [self goToSelectedFileOrFolder:self.selectedFileDto andForceDownload:YES];
+    } else {
+        
+        //Select in detail view
+        if (_selectedCell) {
+            CustomCellFileAndDirectory *temp = (CustomCellFileAndDirectory*) [_tableView cellForRowAtIndexPath:_selectedCell];
+            [temp setSelectedStrong:NO];
+        }
+        
+        //Select in detail
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        //Quit the player if exist
+        if (app.detailViewController.avMoviePlayer) {
+            [app.detailViewController removeMediaPlayer];
+        }
+        app.detailViewController.sortedArray=_sortedArray;
+        [app.detailViewController handleFile:self.selectedFileDto fromController:fileListManagerController andIsForceDownload:YES];
+    }
+    
+    //Select the cell
+    NSIndexPath *indexPath = [self getIndexPathFromFilesTableViewByFile:self.selectedFileDto];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    [cell setSelected:YES];
+
+}
+
+- (void) didSelectCancelDownloadFileOption {
+    DLog(@"Cancel download");
+    
+    if (IS_IPHONE) {
+        for (Download *currentDownload in [APP_DELEGATE.downloadManager getDownloads]) {
+            if (currentDownload.fileDto.idFile == self.selectedFileDto.idFile) {
+                [currentDownload cancelDownload];
+            }
+        }
+    } else {
+        [APP_DELEGATE.detailViewController didPressCancelButton:nil];
     }
 }
 
@@ -3646,15 +3708,29 @@
         }
     } else {
         
-        NSString *favoriteOrUnfavoriteString = @"";
+        NSString *availableOfflineOrNotString = @"";
         
         if (_selectedFileDto.isFavorite && !self.isCurrentFolderSonOfFavoriteFolder) {
-            favoriteOrUnfavoriteString = NSLocalizedString(@"not_available_offline", nil);
+            availableOfflineOrNotString = NSLocalizedString(@"not_available_offline", nil);
         } else {
-            favoriteOrUnfavoriteString = NSLocalizedString(@"available_offline", nil);
+            availableOfflineOrNotString = NSLocalizedString(@"available_offline", nil);
         }
         
-        self.moreActionSheet = [[UIActionSheet alloc]initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle: nil otherButtonTitles:NSLocalizedString(@"open_with_label", nil), NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), favoriteOrUnfavoriteString, nil];
+        NSString *downloadFileCancelDownload;
+        
+        if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
+            self.selectedFileDto.isDownload == downloaded) {
+            downloadFileCancelDownload = nil;
+        } else {
+            if (self.selectedFileDto.isDownload == downloading ||
+                self.selectedFileDto.isDownload == updating) {
+                downloadFileCancelDownload = NSLocalizedString(@"cancel_download", nil);
+            } else {
+                downloadFileCancelDownload = NSLocalizedString(@"download_file", nil);
+            }
+        }
+        
+        self.moreActionSheet = [[UIActionSheet alloc]initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle: nil otherButtonTitles:NSLocalizedString(@"open_with_label", nil), NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), availableOfflineOrNotString, downloadFileCancelDownload, nil];
         self.moreActionSheet.tag=200;
         
         if (IS_IPHONE) {

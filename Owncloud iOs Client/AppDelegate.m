@@ -84,7 +84,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @synthesize isRefreshInProgress=_isRefreshInProgress;
 @synthesize oauthToken = _oauthToken;
 @synthesize isErrorLoginShown = _isErrorLoginShown;
-@synthesize mediaPlayer=_mediaPlayer;
+@synthesize avMoviePlayer=_avMoviePlayer;
 @synthesize firstInit=_firstInit;
 @synthesize activeUser=_activeUser;
 @synthesize prepareFiles=_prepareFiles;
@@ -883,14 +883,14 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     BOOL output = NO;
     
     if (IS_IPHONE) {
-        if (_mediaPlayer) {
-            if ([_mediaPlayer.urlString isEqualToString:filePath]) {
+        if (self.avMoviePlayer) {
+            if ([self.avMoviePlayer.urlString isEqualToString:filePath]) {
                 output = YES;
             }
         }
     }else{
-        if (_detailViewController.moviePlayer) {
-            if ([_detailViewController.moviePlayer.urlString isEqualToString:filePath]) {
+        if (_detailViewController.avMoviePlayer) {
+            if ([_detailViewController.avMoviePlayer.urlString isEqualToString:filePath]) {
                 output = YES;
             }
         }
@@ -905,11 +905,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)quitMediaPlayer{
     
     if (IS_IPHONE) {
-        if (_mediaPlayer) {
-            [_mediaPlayer.moviePlayer stop];
-            [_mediaPlayer finalizePlayer];
-            [_mediaPlayer.view removeFromSuperview];
-            _mediaPlayer = nil;
+        if (self.avMoviePlayer) {
+            [self.avMoviePlayer.contentOverlayView removeObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen]];
+            [self.avMoviePlayer.player pause];
+            self.avMoviePlayer.player = nil;
+            [self.avMoviePlayer.view removeFromSuperview];
+            self.avMoviePlayer = nil;
         }
     }
 }
@@ -944,37 +945,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     return YES;
 }
 
-/*
- * Method that receive events of de iOS General controls or headphones.
- * Now only supported play and paused options
- * @event -> External event.
- */
-
-- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
-    
-    if (_mediaPlayer.isMusic) {
-        switch (event.subtype) {
-            case UIEventSubtypeRemoteControlTogglePlayPause:
-                DLog(@"UIEvent toggle play pause");
-                [self.mediaPlayer playDidTouch:nil];
-                break;
-            case UIEventSubtypeRemoteControlPlay:
-                DLog(@"UIEvent Play");
-                [self.mediaPlayer playFile];
-                break;
-            case UIEventSubtypeRemoteControlPause:
-                DLog(@"UIEven pause");
-                [self.mediaPlayer pauseFile];
-                break;
-            default:
-                break;
-        }
-        
-    }
-    
-}
-
-
 
 #pragma mark - Multitasking methods
 
@@ -993,9 +963,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     
     //In the case that the mediaplayer its running, pause the audio/video file.
-   if (_mediaPlayer) {
-        if (_mediaPlayer.isMusic==NO) {
-             [_mediaPlayer pauseFile];
+   if (self.avMoviePlayer) {
+        if (self.avMoviePlayer.isMusic==NO) {
+             [self.avMoviePlayer.player pause];
         }
     }
     

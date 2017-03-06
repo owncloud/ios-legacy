@@ -666,6 +666,8 @@
 		90D608FC1C8984760049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		BC855ACD1E0D4B0200998CB7 /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BC855ACA1E0D4B0200998CB7 /* FLAnimatedImage.m */; };
 		BC855ACE1E0D4B0200998CB7 /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC855ACC1E0D4B0200998CB7 /* FLAnimatedImageView.m */; };
+		CB238ACB1E52FC2A006A03FA /* MediaAVPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB238ACA1E52FC2A006A03FA /* MediaAVPlayerViewController.m */; };
+		CB238ACD1E52FCA4006A03FA /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB238ACC1E52FCA4006A03FA /* AVKit.framework */; };
 		CB6ABBC21E4CA0C000F27940 /* OCURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A6B65619458F6E000B107D /* OCURLSessionManager.m */; };
 		EA0599851BB92B19002C2864 /* ShareUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0599831BB92B19002C2864 /* ShareUserCell.swift */; };
 		EA0599861BB92B19002C2864 /* ShareUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA0599841BB92B19002C2864 /* ShareUserCell.xib */; };
@@ -1732,6 +1734,9 @@
 		BC855ACA1E0D4B0200998CB7 /* FLAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLAnimatedImage.m; path = ExternalLibreries/FLAnimatedimage/FLAnimatedImage.m; sourceTree = "<group>"; };
 		BC855ACB1E0D4B0200998CB7 /* FLAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FLAnimatedImageView.h; path = ExternalLibreries/FLAnimatedimage/FLAnimatedImageView.h; sourceTree = "<group>"; };
 		BC855ACC1E0D4B0200998CB7 /* FLAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLAnimatedImageView.m; path = ExternalLibreries/FLAnimatedimage/FLAnimatedImageView.m; sourceTree = "<group>"; };
+		CB238AC91E52FC2A006A03FA /* MediaAVPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MediaAVPlayerViewController.h; path = Files/PreviewSupportedFiles/Media/MediaAVPlayerViewController.h; sourceTree = "<group>"; };
+		CB238ACA1E52FC2A006A03FA /* MediaAVPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MediaAVPlayerViewController.m; path = Files/PreviewSupportedFiles/Media/MediaAVPlayerViewController.m; sourceTree = "<group>"; };
+		CB238ACC1E52FCA4006A03FA /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		D924DCBC1B973E88008B4BE7 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
 		D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
 		D924DCBF1B973E98008B4BE7 /* OCMArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
@@ -1928,6 +1933,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB238ACD1E52FCA4006A03FA /* AVKit.framework in Frameworks */,
 				59C71D281A921A5100F66166 /* ImageIO.framework in Frameworks */,
 				404FDA241A36E5E5008AB4E1 /* CoreLocation.framework in Frameworks */,
 				EA8667E918AA299000D3550D /* libownCloudiOS.a in Frameworks */,
@@ -2041,6 +2047,7 @@
 		1324297B15ADBB3700DF823E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CB238ACC1E52FCA4006A03FA /* AVKit.framework */,
 				59C71D271A921A5100F66166 /* ImageIO.framework */,
 				404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */,
 				EA68969217F59A090033B3C1 /* AudioToolbox.framework */,
@@ -3743,6 +3750,8 @@
 			children = (
 				148DD62F17785DE900FB9977 /* MediaViewController.h */,
 				148DD63017785DE900FB9977 /* MediaViewController.m */,
+				CB238AC91E52FC2A006A03FA /* MediaAVPlayerViewController.h */,
+				CB238ACA1E52FC2A006A03FA /* MediaAVPlayerViewController.m */,
 			);
 			name = Media;
 			sourceTree = "<group>";
@@ -4772,6 +4781,7 @@
 				EAF721801AAF3325009F5596 /* Managers.swift in Sources */,
 				59C71D191A9216AE00F66166 /* ReaderMainPagebar.m in Sources */,
 				595333FB1A1DF26000C57ED5 /* UIAlertView+Blocks.m in Sources */,
+				CB238ACB1E52FC2A006A03FA /* MediaAVPlayerViewController.m in Sources */,
 				148DD68F1778661A00FB9977 /* MoveFile.m in Sources */,
 				EAABAB2A18585CD700909831 /* NSString+Encoding.m in Sources */,
 				EABD89321BBE82D900DA5281 /* TSBlurView.m in Sources */,

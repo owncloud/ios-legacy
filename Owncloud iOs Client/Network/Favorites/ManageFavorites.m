@@ -220,7 +220,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                                 
                                 //Update iPad Detail View
                                 if (!IS_IPHONE && [app.detailViewController.file.localFolder isEqualToString:updatedFile.localFolder]) {
-                                    [app.detailViewController handleFile:updatedFile fromController:app.detailViewController.controllerManager];
+                                    [app.detailViewController handleFile:updatedFile fromController:app.detailViewController.controllerManager andIsForceDownload:NO];
                                 }
                                 
                             }

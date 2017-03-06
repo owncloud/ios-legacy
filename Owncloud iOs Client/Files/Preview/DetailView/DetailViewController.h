@@ -19,7 +19,8 @@
 #import "OpenWith.h"
 #import "DeleteFile.h"
 #import "OfficeFileView.h"
-#import "MediaViewController.h"
+#import "MediaAVPlayerViewController.h"
+#import <AVKit/AVKit.h>
 #import "GalleryView.h"
 #import "OCToolBar.h"
 #import "CWStatusBarNotification.h"
@@ -36,7 +37,7 @@ typedef enum {
 } kindOfManageController;
 
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, MediaViewControllerDelegate, UIAlertViewDelegate, ManageFavoritesDelegate, UIGestureRecognizerDelegate> {
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, DeleteFileDelegate, OfficeFileDelegate, GalleryViewDelegate, DownloadDelegate, UIAlertViewDelegate, ManageFavoritesDelegate, UIGestureRecognizerDelegate, AVAssetResourceLoaderDelegate> {
     
     //Bar buttons
     IBOutlet UIBarButtonItem *_spaceBar;
@@ -94,7 +95,8 @@ typedef enum {
 
 //Owncloud preview objects
 @property (nonatomic, strong) OfficeFileView *officeView;
-@property(nonatomic, strong) MediaViewController *moviePlayer;
+@property(nonatomic, strong) MediaAVPlayerViewController *avMoviePlayer;
+@property(nonatomic, strong) AVURLAsset *asset;
 @property (nonatomic, strong) GalleryView *galleryView;
 //Control the type of files
 @property(nonatomic) NSInteger typeOfFile;
@@ -122,6 +124,7 @@ typedef enum {
 @property (nonatomic)NSInteger controllerManager;
 //Flag to check if the cancel was clicked before launch automatically the favorite download
 @property(nonatomic) BOOL isCancelDownloadClicked;
+@property(nonatomic) BOOL isForceDownload;
 
 //VFR Pdf reader
 @property(nonatomic, strong) ReaderDocument *documentPDF;
@@ -148,7 +151,7 @@ typedef enum {
  * @param myFile -> FileDto
  * @param controller -> enumerate of types of controller in the app
  */
-- (void) handleFile:(FileDto*)myFile fromController:(NSInteger)controller;
+- (void) handleFile:(FileDto*)myFile fromController:(NSInteger)controller andIsForceDownload:(BOOL) isForceDownload;
 
 
 ///-----------------------------------
@@ -248,5 +251,7 @@ typedef enum {
 - (void)contiueDownloadIfTheFileisDownloading;
 
 - (void)updateFavoriteIconWhenAFolderIsSelectedFavorite;
+
+- (void) removeMediaPlayer;
 
 @end
