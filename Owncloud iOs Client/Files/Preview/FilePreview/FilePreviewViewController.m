@@ -1033,9 +1033,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         } else {
             
             //FileName full path
-            NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:APP_DELEGATE.activeUser];
-            
-            NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.file.filePath andUser:APP_DELEGATE.activeUser], self.file.fileName];
+            NSString *path = [UtilsUrls  getFullRemoteServerFilePathByFile:self.file andUser:APP_DELEGATE.activeUser];
             
             self.asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:path] options:@{@"AVURLAssetHTTPHeaderFieldsKey" : [UtilsNetworkRequest getHttpLoginHeaders]}];
             [self.asset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];

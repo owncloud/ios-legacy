@@ -18,12 +18,6 @@
 
 @protocol CheckAccessToServerDelegate
 
-//TODO: Create enum to store the different states of SSL:
-//notChecked
-//sslSelfSigned
-//goodServer
-//
-
 typedef enum {
     sslStatusNotChecked = 0, //Available for streaming because this status should change quickly when the user open the app or change the tab
     sslStatusSelfSigned = 1, //Not available for streaming
