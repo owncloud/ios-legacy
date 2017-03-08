@@ -499,7 +499,10 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         frame.size.height = frame.size.height-(_toolBar.frame.size.height + self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
         frame.origin.y = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
         self.gifView.frame = frame;
-
+    } else if (_officeView) {
+        CGRect frame = self.view.frame;
+        _officeView.frame = frame;
+        _toolBar.hidden = _officeView.isFullscreen;
     } else {
         _toolBar.hidden = NO;
     }
@@ -726,11 +729,12 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
                     frame.size.height = frame.size.height-_toolBar.frame.size.height;
                     frame.origin.y = 0;
                     _officeView=[[OfficeFileView alloc]initWithFrame:frame];
+                    _officeView.delegate = self;
                 }
                 
                 [_officeView openOfficeFileWithPath:_file.localFolder andFileName:_file.fileName];
                 
-                [self.view addSubview:_officeView.webView];
+                [self.view addSubview:_officeView];
                 if (_file.isNecessaryUpdate) {
                     [self.view bringSubviewToFront:_updatingFileView];
                 }
@@ -929,6 +933,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [nc manageBackgroundView:NO];
         //Set the new position of the toolBar
         _toolBar.frame = CGRectMake(0, self.view.frame.size.height-_toolBar.frame.size.height, self.view.frame.size.width, _toolBar.frame.size.height);
+        [self.view bringSubviewToFront:_toolBar];
     } completion:^(BOOL finished){
         //When the animation finish, show the labels in the tollBar
         _toolBar.hidden = NO;
@@ -1103,6 +1108,27 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [_toolBar setHidden:NO];
          [nc manageBackgroundView:NO];
         [self configureView];
+    }
+}
+
+#pragma mark - OfficeFileView Delegate Methods
+- (void)setFullscreenOfficeFileView:(BOOL)isFullscreen {
+    if (isFullscreen) {
+        CGRect frame = self.view.bounds;
+        CGFloat statusBarHeight = UIApplication.sharedApplication.statusBarFrame.size.height;
+        frame.origin.y = statusBarHeight;
+        frame.size.height = UIScreen.mainScreen.bounds.size.height - statusBarHeight;
+
+        _officeView.frame = frame;
+        //Hide the toolBar and the navigationBar with animation
+        [self hideBars];
+    } else {
+        CGRect frame = self.view.bounds;
+        frame.size.height = frame.size.height-_toolBar.frame.size.height;
+        _officeView.frame = frame;
+
+        //Show the toolBar and the navigationBar with animation
+        [self showBars];
     }
 }
 
