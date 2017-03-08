@@ -29,16 +29,39 @@
 @synthesize activity=_activity;
 @synthesize isDocument=_isDocument;
 @synthesize delegate=_delegate;
+CGPoint _lastContentOffset;
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        UITapGestureRecognizer *doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+        doubleTapRecognizer.numberOfTapsRequired = 2;
+        doubleTapRecognizer.delegate = self;
+        [self addGestureRecognizer:doubleTapRecognizer];
+
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+        recognizer.numberOfTapsRequired = 1;
+        recognizer.delegate = self;
+        [recognizer requireGestureRecognizerToFail:doubleTapRecognizer];
+        [self addGestureRecognizer:recognizer];
+
+        _isFullscreen = NO;
+        _lastContentOffset = CGPointZero;
     }
     return self;
 }
 
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    if (_webView) {
+        CGRect webViewFrame = frame;
+        webViewFrame.origin.x = 0;
+        webViewFrame.origin.y = 0;
+        _webView.frame = webViewFrame;
+    }
+}
 
 ///-----------------------------------
 /// @name Go Back
@@ -101,6 +124,8 @@
     
     if (!_webView) {
         _webView = [[UIWebView alloc] initWithFrame:self.frame];
+        _webView.scrollView.delegate = self;
+        [self addSubview:_webView];
     }
     _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
@@ -174,6 +199,33 @@
     [_webView loadRequest:request];
 }
 
+#pragma mark - Fullscreen Methods
+
+- (void)setIsFullscreen:(BOOL)isFullscreen {
+    if (isFullscreen != _isFullscreen) {
+        if (IS_IPHONE) {
+            [self.delegate setFullscreenOfficeFileView:isFullscreen];
+        }
+    }
+    _isFullscreen = isFullscreen;
+}
+
+#pragma mark - Gesture Methods
+
+- (void)handleSingleTap:(UIGestureRecognizer *)recognizer {
+    self.isFullscreen = !self.isFullscreen;
+}
+
+- (void)handleDoubleTap:(UIGestureRecognizer *)recognizer {
+    // nothing to do
+}
+
+#pragma mark - UIGestureRecognizer Delegate Methods
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return [otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]];
+}
+
 #pragma mark - UIWebView Delegate Methods
 #pragma mark UIWebView Delegate methods
 
@@ -204,6 +256,13 @@
     if (_isDocument == NO) {
         [_delegate finishLinkLoad];        
     }
+}
+
+#pragma mark - UIScrollView Delegate Methods
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    self.isFullscreen = _lastContentOffset.y <= scrollView.contentOffset.y;
+    _lastContentOffset = scrollView.contentOffset;
 }
 
 @end

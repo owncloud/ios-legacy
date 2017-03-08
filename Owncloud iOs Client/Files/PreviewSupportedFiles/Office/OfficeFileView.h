@@ -19,10 +19,12 @@
 
 @optional
 - (void)finishLinkLoad;
+@optional
+- (void)setFullscreenOfficeFileView:(BOOL) isFullscreen;
 @end
 
 
-@interface OfficeFileView : UIView<UIWebViewDelegate>{
+@interface OfficeFileView : UIView<UIWebViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate>{
     
     UIWebView *_webView;
     UIActivityIndicatorView *_activity;
@@ -34,6 +36,7 @@
 @property (nonatomic,strong) UIWebView *webView;
 @property (nonatomic,strong) UIActivityIndicatorView *activity;
 @property (nonatomic) BOOL isDocument;
+@property (nonatomic) BOOL isFullscreen;
 @property(nonatomic,weak) __weak id<OfficeFileDelegate> delegate;
 
 
