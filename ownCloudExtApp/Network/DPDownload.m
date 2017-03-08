@@ -398,7 +398,7 @@
                 break;
             case kOCErrorServerForbidden:
                 //403 Forbidden
-                if (error.code == OCErrorForbidenUnknow) {
+                if (error.code == OCErrorForbiddenUnknown) {
                     [self.delegate downloadFailed:[error.userInfo objectForKey:NSLocalizedDescriptionKey] andFile:self.file];
                 } else {
                     [self.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:self.file];

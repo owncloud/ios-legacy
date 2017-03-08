@@ -213,7 +213,7 @@
         DLog(@"Operation error: %ld", (long)response.statusCode);
         
     } errorBeforeRequest:^(NSError *error) {
-        if (error.code == OCErrorForbidenCharacters) {
+        if (error.code == OCErrorForbiddenCharacters) {
             DLog(@"The folder have problematic characters");
         } else {
             DLog(@"The folder have problems under controlled");
@@ -357,7 +357,7 @@
                     [self finishOverwriteProcess];
                 }
                 
-                if (error.code == OCErrorForbidenCharacters) {
+                if (error.code == OCErrorForbiddenCharacters) {
                     weakSelf.currentUpload.status = errorUploading;
                     weakSelf.currentUpload.kindOfError = errorInvalidPath;
                     [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
@@ -380,7 +380,7 @@
                             break;
                         case kOCErrorServerForbidden:
                             weakSelf.currentUpload.status = errorUploading;
-                            if (error.code == OCErrorForbidenUnknow) {
+                            if (error.code == OCErrorForbiddenUnknown) {
                                 weakSelf.currentUpload.kindOfError = errorFirewallRuleNotAllowUpload;
                             } else {
                                 weakSelf.currentUpload.kindOfError = errorNotPermission;

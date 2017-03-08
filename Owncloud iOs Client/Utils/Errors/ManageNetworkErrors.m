@@ -39,7 +39,7 @@
             [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
             break;
         }
-        case OCErrorForbidenCharacters:
+        case OCErrorForbiddenCharacters:
             //Forbidden characters from the server side
             [_delegate showError:NSLocalizedString(@"forbidden_characters_from_server", nil)];
             break;
@@ -76,7 +76,7 @@
             break;
         case kOCErrorServerForbidden:
             //403 Forbidden
-            if (error.code == OCErrorForbidenUnknow) {
+            if (error.code == OCErrorForbiddenUnknown) {
                 [_delegate showError:[error.userInfo objectForKey:NSLocalizedDescriptionKey]];
             } else {
                 [_delegate showError:NSLocalizedString(@"error_not_permission", nil)];

@@ -391,7 +391,7 @@
                 [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:self.user];
                 
             } errorBeforeRequest:^(NSError *error) {
-                if (error.code == OCErrorForbidenCharacters) {
+                if (error.code == OCErrorForbiddenCharacters) {
                     [self endLoading];
                     DLog(@"The folder have problematic characters");
                     
