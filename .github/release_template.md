@@ -1,3 +1,7 @@
+<!--
+This is the template for new release issues.
+-->
+
 Release a new version
 ## TASKS:
 - [ ] [GIT] Create branch release_3.5.4 (freeze the code)
