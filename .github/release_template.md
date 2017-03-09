@@ -1,26 +1,31 @@
 <!--
 This is the template for new release issues.
+Y <> X
 -->
 
 Release a new version
 ## TASKS:
-- [ ] [GIT] Create branch release_3.5.4 (freeze the code)
-- [ ] [GIT] Create branch library release_ios_app_3.5.4 (freeze the code)
-- [ ] [DIS] Update changelog ios app
-- [ ] [DEV] Update version number 3.5.4
-- [ ] [DEV] Update readme number version app and library
+- [ ] [GIT] Create branch release_X.X.X (freeze the code)
+- [ ] [DEV] Update version number X.X.X
+- [ ] [DIS] Update changelog iOS app
 - [ ] [QA] Design Test plan
 - [ ] [QA] Regression Test plan
-- [ ] [DIS] Update screenshots.
+- [ ] [DIS] Update screenshots if needed
 - [ ] [DIS] Release to appstore
-- [ ] [GIT] Merge branch release_3.5.4
-- [ ] [GIT] Merge branch release_ios_app_3.5.4
-- [ ] [GIT] Create tag and sign it
-- [ ] [DEV] update FMDB library
-- [ ] [DEV] Refactor database methods to reduce process inside method inDatabase:^(FMDatabase *db)
-- [ ] [DEV] Refactor database methods to reduce keychain access and use id or property needed instead full user object
-- [ ] [DEV] Add InfoPlist.strings file to transifex @DeepDiver1975
+- [ ] [DOC] Update user manual https://github.com/owncloud/ios/blob/master/user_manual/ios_app.rst
+- [ ] [GIT] Merge branch release_X.X.X in master and develop
+- [ ] [GIT] Create tag and sign it "version_X.X.X"
 
-_____
+If it is required to update third party or OC iOS Library
+- [ ] [DIS] Update THIRD_PARTY.txt
 
-BUGS & IMPROVEMENTS
+If it is required to update OC iOS Library:
+- [ ] [GIT] Create branch library release_Y.Y.Y (freeze the code)
+- [ ] [DIS] Update README.md (version number, third party, supported versions of iOS, Xcode)
+- [ ] [DIS] Update changelog Doc_Changelog.md 
+- [ ] [GIT] Merge branch release_Y.Y.Y in master and develop
+- [ ] [GIT] Create tag and sign it "oc-ios-library-Y.Y.Y"
+
+
+## BUGS & IMPROVEMENTS:
+
