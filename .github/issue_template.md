@@ -24,6 +24,10 @@ Tell us what happens instead
 
 **PHP version:**
 
+**ownCloud version:**
+
+**Storage backend (external storage):**
+
 ### Client
 **iOS version:**
 
