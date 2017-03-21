@@ -798,22 +798,6 @@
     
 }
 
-- (UITableViewCell *) getCellShareWithUserOrGroupButtonByTableView:(UITableView *) tableView {
-    
-    ShareLinkButtonCell *shareLinkButtonCell = [tableView dequeueReusableCellWithIdentifier:shareLinkButtonIdentifier];
-    
-    if (shareLinkButtonCell == nil) {
-        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkButtonNib owner:self options:nil];
-        shareLinkButtonCell = (ShareLinkButtonCell *)[topLevelObjects objectAtIndex:0];
-    }
-    
-    shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
-    shareLinkButtonCell.titleButton.textColor = [UIColor colorOfLoginButtonTextColor];
-    shareLinkButtonCell.titleButton.text = NSLocalizedString(@"add_user_or_group_title", nil);
-    
-    return shareLinkButtonCell;
-}
-
 - (UITableViewCell *) getCellOfUserOrGroupNameSharedByTableView:(UITableView *) tableView andIndexPath:(NSIndexPath *) indexPath {
     
     ShareUserCell* shareUserCell = (ShareUserCell*)[tableView dequeueReusableCellWithIdentifier:shareUserCellIdentifier];
