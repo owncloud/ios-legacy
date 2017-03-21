@@ -791,6 +791,7 @@
     NSString *name = NSLocalizedString(@"not_share_with_users_yet", nil);
     
     shareUserCell.itemName.text = name;
+    shareUserCell.itemName.textColor = [UIColor grayColor];
     
     shareUserCell.selectionStyle = UITableViewCellEditingStyleNone;
     

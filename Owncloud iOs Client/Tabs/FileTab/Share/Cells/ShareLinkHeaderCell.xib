@@ -33,7 +33,7 @@
                             <constraint firstAttribute="height" constant="30" id="dPs-NZ-uKP"/>
                             <constraint firstAttribute="width" constant="46" id="vTl-0l-xYo"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="48"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
                         <state key="normal" title="+"/>
                     </button>
                 </subviews>
