@@ -21,6 +21,7 @@ class ShareLinkHeaderCell:UITableViewCell {
     
     @IBOutlet weak var titleSection: UILabel!
     @IBOutlet weak var switchSection: UISwitch!
+    @IBOutlet weak var addButtonSection: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -40,6 +41,8 @@ class ShareLinkHeaderCell:UITableViewCell {
         
         self.contentView.backgroundColor = UIColor.ofNavigationBar()
         titleSection.textColor = UIColor.ofNavigationTitle()
+        
+        addButtonSection.setTitleColor(UIColor.ofNavigationTitle(), for: .normal)
     }
     
 }
