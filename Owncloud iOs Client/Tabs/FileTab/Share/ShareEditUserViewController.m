@@ -406,6 +406,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
     if (section == 1 || section == 2) {
         
         ShareLinkHeaderCell* shareLinkHeaderCell = [tableView dequeueReusableCellWithIdentifier:shareLinkHeaderIdentifier];
+        shareLinkHeaderCell.addButtonSection.hidden = YES;
         
         if (shareLinkHeaderCell == nil) {
             NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkHeaderNib owner:self options:nil];
@@ -423,6 +424,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
             [shareLinkHeaderCell.switchSection addTarget:self action:@selector(canShareSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
         }
         
+        shareLinkHeaderCell.addButtonSection.hidden = YES;
         
         headerView = shareLinkHeaderCell.contentView;
         
