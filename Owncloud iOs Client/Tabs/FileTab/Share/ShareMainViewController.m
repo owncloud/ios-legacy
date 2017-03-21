@@ -1048,6 +1048,8 @@
     shareLinkHeaderCell.switchSection.hidden = true;
     shareLinkHeaderCell.addButtonSection.hidden = false;
     
+    [shareLinkHeaderCell.addButtonSection addTarget:self action:@selector(didSelectAddUserOrGroup) forControlEvents:UIControlEventTouchUpInside];
+    
     return shareLinkHeaderCell;
 }
 
@@ -1058,8 +1060,6 @@
     
     shareLinkHeaderCell.switchSection.hidden = false;
     shareLinkHeaderCell.addButtonSection.hidden = true;
-    
-    [shareLinkHeaderCell.addButtonSection addTarget:self action:@selector(didSelectAddUserOrGroup:) forControlEvents:UIControlEventTouchUpInside];
     
     shareLinkHeaderCell.titleSection.text = NSLocalizedString(@"share_link_title", nil);
     [shareLinkHeaderCell.switchSection setOn:self.isShareLinkEnabled animated:false];
@@ -1075,7 +1075,7 @@
     switch (indexPath.section) {
         case 1:
             if (k_is_share_with_users_available && (self.sharedUsersOrGroups.count == 0 && indexPath.row == self.sharedUsersOrGroups.count + 1) || (self.sharedUsersOrGroups.count > 0 && indexPath.row == self.sharedUsersOrGroups.count)) {
-                [self didSelectAddUserOrGroup:nil];
+                [self didSelectAddUserOrGroup];
             } else if(!k_is_share_with_users_available && k_is_share_by_link_available) {
                 [self didSelectShareLinkOptionSection:indexPath.row];
             }
@@ -1113,7 +1113,7 @@
     }
 }
 
-- (void) didSelectAddUserOrGroup:(id)sender {
+- (void) didSelectAddUserOrGroup {
     //Check if the server has Sharee support
     if (APP_DELEGATE.activeUser.hasShareeApiSupport == serverFunctionalitySupported) {
         ShareSearchUserViewController *ssuvc = [[ShareSearchUserViewController alloc] initWithNibName:@"ShareSearchUserViewController" bundle:nil];
