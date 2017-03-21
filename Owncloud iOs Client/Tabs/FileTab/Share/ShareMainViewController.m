@@ -676,9 +676,9 @@
         return 1;
     }else if (section == 1 && k_is_share_with_users_available){
         if (self.sharedUsersOrGroups.count == 0) {
-           return self.sharedUsersOrGroups.count + 2;
-        }else{
            return self.sharedUsersOrGroups.count + 1;
+        }else{
+           return self.sharedUsersOrGroups.count;
         }
     } else if ((section == 1 || section == 2) && k_is_share_by_link_available){
         return self.optionsShownWithShareLink;
@@ -706,10 +706,6 @@
                 if (indexPath.row == 0 && self.sharedUsersOrGroups.count == 0) {
                     
                     cell = [self getCellShareUserByTableView:tableView];
-                    
-                } else if ((indexPath.row == 1 && self.sharedUsersOrGroups.count == 0) || (indexPath.row == self.sharedUsersOrGroups.count)){
-                    
-                    cell = [self getCellShareWithUserOrGroupButtonByTableView:tableView];
                     
                 } else {
                     
