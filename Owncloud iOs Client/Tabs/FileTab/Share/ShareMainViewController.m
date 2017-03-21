@@ -848,6 +848,10 @@
     [shareLinkButtonCell.shareLinkButton setTitleColor:[UIColor colorOfLoginButtonTextColor] forState:UIControlStateNormal];
     [shareLinkButtonCell.shareLinkButton setTitle:NSLocalizedString(@"get_share_link", nil) forState:UIControlStateNormal];
     
+    shareLinkButtonCell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    [shareLinkButtonCell.shareLinkButton addTarget:self action:@selector(didSelectGetShareLink) forControlEvents:UIControlEventTouchUpInside];
+    
     return shareLinkButtonCell;
 }
 
@@ -1084,13 +1088,13 @@
                 [self didSelectSetPasswordLink];
             }
             break;
-        case 2:
+        /*case 2:
             if(!self.isAllowEditingShown){
                 [self didSelectGetShareLink];
             }
             break;
         case 3:
-            [self didSelectGetShareLink];
+            [self didSelectGetShareLink];*/
         default:
             break;
     }
