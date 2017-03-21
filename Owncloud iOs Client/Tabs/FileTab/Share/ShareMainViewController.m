@@ -842,9 +842,11 @@
         shareLinkButtonCell = (ShareLinkButtonCell *)[topLevelObjects objectAtIndex:0];
     }
     
-    shareLinkButtonCell.backgroundColor = [UIColor colorOfLoginButtonBackground];
-    shareLinkButtonCell.titleButton.textColor = [UIColor colorOfLoginButtonTextColor];
-    shareLinkButtonCell.titleButton.text = NSLocalizedString(@"get_share_link", nil);
+    shareLinkButtonCell.shareLinkButton.layer.cornerRadius = 10;
+    shareLinkButtonCell.shareLinkButton.clipsToBounds = YES;
+    shareLinkButtonCell.shareLinkButton.backgroundColor = [UIColor colorOfLoginButtonBackground];
+    [shareLinkButtonCell.shareLinkButton setTitleColor:[UIColor colorOfLoginButtonTextColor] forState:UIControlStateNormal];
+    [shareLinkButtonCell.shareLinkButton setTitle:NSLocalizedString(@"get_share_link", nil) forState:UIControlStateNormal];
     
     return shareLinkButtonCell;
 }
