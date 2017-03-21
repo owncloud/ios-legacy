@@ -1088,13 +1088,6 @@
                 [self didSelectSetPasswordLink];
             }
             break;
-        /*case 2:
-            if(!self.isAllowEditingShown){
-                [self didSelectGetShareLink];
-            }
-            break;
-        case 3:
-            [self didSelectGetShareLink];*/
         default:
             break;
     }
