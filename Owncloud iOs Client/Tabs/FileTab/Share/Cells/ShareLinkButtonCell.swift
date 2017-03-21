@@ -18,6 +18,7 @@ import UIKit
 class ShareLinkButtonCell: UITableViewCell {
     
     @IBOutlet weak var titleButton: UILabel!
+    @IBOutlet weak var shareLinkButton: UIButton!
 
     override func awakeFromNib() {
         super.awakeFromNib()
