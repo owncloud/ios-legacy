@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iet-l0-saU">
-                        <rect key="frame" x="58" y="0.0" width="204" height="52"/>
+                        <rect key="frame" x="58" y="0.0" width="204" height="44"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="204" id="cMj-rB-DPt"/>
                         </constraints>
@@ -27,7 +27,7 @@
                     </button>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="Iet-l0-saU" secondAttribute="bottom" id="4vf-Mp-ztB"/>
+                    <constraint firstAttribute="bottom" secondItem="Iet-l0-saU" secondAttribute="bottom" constant="8" id="4vf-Mp-ztB"/>
                     <constraint firstItem="Iet-l0-saU" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="hi9-8y-XDD"/>
                     <constraint firstItem="Iet-l0-saU" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="ldy-c9-sxc"/>
                 </constraints>
