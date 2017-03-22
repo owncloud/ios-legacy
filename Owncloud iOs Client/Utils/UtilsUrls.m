@@ -707,4 +707,16 @@
     
 }
 
+
++ (BOOL) isNecessaryUpdateToPredefinedUrlByPreviousUrl:(NSString *)oldPredefinedUrl {
+    
+    if (k_force_update_of_server_url && ![k_default_url_server isEqualToString:oldPredefinedUrl] ) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+
+
 @end

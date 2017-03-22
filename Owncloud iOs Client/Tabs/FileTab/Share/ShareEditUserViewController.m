@@ -603,7 +603,7 @@ typedef NS_ENUM (NSInteger, enumUpload){
 #ifdef CONTAINER_APP
     
     //Edit Account
-    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
+    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser] andModeUpdateToPredefinedUrl:NO];
     [self.resolveCredentialErrorViewController setBarForCancelForLoadingFromModal];
     
     if (IS_IPHONE) {

@@ -126,7 +126,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     _isPasscodeVisible = NO;
     _isNewUser = NO;
     _isExpirationTimeInUpload = NO;
-    _isOpenAfterUpgrade = false;
     
     [self moveIfIsNecessaryFilesAfterUpdateAppFromTheOldFolderArchitecture];
     
@@ -142,13 +141,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //Reset all keychain items when db need to be updated or when db first init after app has been removed and reinstalled
         [OCKeychain resetKeychain];
         
-    } else if (k_force_update_of_server_url && [UtilsFileSystem isOpenAfterUpgrade]) {
-        //set up parameters to force override url for all existing accounts
-        [ManageUsersDB overrideAllUploadsWithNewURL:k_default_url_server];
-        [ManageUsersDB overrideAllAccountsWithNewURL:k_default_url_server];
-        [ManageUsersDB updateExpiredInAllAccountsTo:YES];
-        self.isOpenAfterUpgrade = true;
-        self.activeUser = [ManageUsersDB getActiveUser];
     }
     
     [self showSplashScreenFake];
@@ -1166,8 +1158,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             [self recoverTheFinishedUploads];
         }
         
-        [self updateUploadsPathAfterChangeServerUrl];
-        
         //All the waitingForUpload should be relaunched so we change the state to errorUploading-notAnError
         [self performSelector:@selector(resetWaitingForUploadToErrorUploading) withObject:nil afterDelay:5.0];
     }];
@@ -2088,7 +2078,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         _isErrorLoginShown=YES;
         
         //Edit Account
-        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:_activeUser];
+        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:_activeUser andModeUpdateToPredefinedUrl:NO];
         [viewController setBarForCancelForLoadingFromModal];
         
        
@@ -2106,7 +2096,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
     
 }
-
 
 
 #pragma markt - LocalPath by version
@@ -2678,17 +2667,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [_prepareFiles sendFileToUploadByUploadOfflineDto:[listOfFilesGeneratedByDocumentProvider objectAtIndex:0]];
         
  
-    }
-}
-
-
-- (void) updateUploadsPathAfterChangeServerUrl {
-    
-    if ([ManageUsersDB isUsers] && k_force_update_of_server_url && _isOpenAfterUpgrade == true){
-        self.isOpenAfterUpgrade = false;
-        for (ManageUploadRequest *uploadFile in _uploadArray) {
-            [uploadFile refreshPathOfUploadAfterServerChangeUrl];
-        }
     }
 }
 

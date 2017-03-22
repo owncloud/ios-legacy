@@ -286,7 +286,8 @@
     //ErrorLogin
     app.isErrorLoginShown = NO;
     
-    if (APP_DELEGATE.activeUser.expired) {
+    if ([UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:currentUser.predefinedUrl]) {
+       //TODO:update editview instead show alert error, showEdit
         [self errorLogin];
     }
     
@@ -3472,10 +3473,13 @@
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
     //Edit Account
-    _resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser];
-    //If account expired avoid going out login view
-    if(!k_force_update_of_server_url && APP_DELEGATE.activeUser.expired){
-        [_resolvedCredentialError setBarForCancelForLoadingFromModal];
+    BOOL requiredUpdateUrl = [UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:[ManageUsersDB getActiveUser].predefinedUrl];
+    
+    self.resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andModeUpdateToPredefinedUrl:requiredUpdateUrl];
+    
+    //If is necessary updete to predefined URK avoid going out login view
+    if(!requiredUpdateUrl){
+        [self.resolvedCredentialError setBarForCancelForLoadingFromModal];
     }
     
     if (IS_IPHONE) {

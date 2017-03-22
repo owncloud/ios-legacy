@@ -152,15 +152,8 @@
  */
 +(BOOL)isUsers;
 
-
 +(void)overrideAllUploadsWithNewURL:(NSString *)newValue;
 
-+(void)overrideAllAccountsWithNewURL:(NSString *)newValue;
-
-+(void)updateExpiredInAllAccountsTo:(BOOL)newValue;
-
-+(void)updateUrl:(NSString *)newValue byUserId:(NSInteger)userId;
-
-+(void)updateExpiredTo:(BOOL)newValue byUserId:(NSInteger)userId;
++(void)updatePredefinedUrlTo:(NSString *)newValue byUserId:(NSInteger)userId;
 
 @end

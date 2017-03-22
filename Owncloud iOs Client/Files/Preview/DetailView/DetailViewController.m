@@ -1850,7 +1850,7 @@
                                     waitUntilDone:YES];
             }
             
-            EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:appDelegate.activeUser];
+            EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:appDelegate.activeUser andModeUpdateToPredefinedUrl:NO];
             [viewController setBarForCancelForLoadingFromModal];
             
             OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];

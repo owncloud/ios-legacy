@@ -885,7 +885,7 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser];
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andModeUpdateToPredefinedUrl:NO];
     [viewController setBarForCancelForLoadingFromModal];
     
     if (IS_IPHONE)

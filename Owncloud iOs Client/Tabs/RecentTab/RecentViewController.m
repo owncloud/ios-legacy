@@ -929,7 +929,7 @@
         [alertView show];
     } else {
         //Show the Edit Account Screen
-        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:userSelected];
+        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:userSelected andModeUpdateToPredefinedUrl:NO];
         [viewController setBarForCancelForLoadingFromModal];
         
         if (IS_IPHONE) {

@@ -26,8 +26,10 @@ extern NSString *relaunchErrorCredentialFilesNotification;
 }
 
 @property(nonatomic,strong)UserDto *selectedUser;
+@property (nonatomic) BOOL isModeUpdateToPredefinedUrl;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andUser:(UserDto *) selectedUser;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andUser:(UserDto *) selectedUser andModeUpdateToPredefinedUrl:(BOOL)modeUpdateToPredefinedUrl;
 - (void)setBarForCancelForLoadingFromModal;
 - (void)setBrandingNavigationBarWithCancelButton;
 - (IBAction)cancelClicked:(id)sender;

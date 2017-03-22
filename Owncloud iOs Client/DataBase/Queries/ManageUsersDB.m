@@ -45,7 +45,7 @@
  */
 +(void) insertUser:(UserDto *)userDto {
     
-    DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d / urlRedirected:%@ ", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount, userDto.urlRedirected);
+    DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d / urlRedirected:%@ / predefindedUrl:%@", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount, userDto.urlRedirected, userDto.predefinedUrl);
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -53,7 +53,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, url_redirected) Values(?, ?, ?, ?, ?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithInteger:userDto.hasShareeApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport], [NSNumber numberWithInteger:userDto.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:userDto.hasCapabilitiesSupport], userDto.urlRedirected];
+        correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, url_redirected, predefined_url) Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithInteger:userDto.hasShareeApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport], [NSNumber numberWithInteger:userDto.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:userDto.hasCapabilitiesSupport], userDto.urlRedirected, userDto.predefinedUrl];
         
         if (!correctQuery) {
             DLog(@"Error in insertUser");
@@ -83,7 +83,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_capabilities_support, has_forbidden_characters_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, expired FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_capabilities_support, has_forbidden_characters_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, predefined_url FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
         
         DLog(@"RSColumnt count: %d", rs.columnCount);
         
@@ -121,7 +121,8 @@
             output.password = credDto.password;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
-            output.expired = [rs intForColumn:@"expired"];
+            
+            output.predefinedUrl = [rs stringForColumn:@"predefined_url"];
         }
         
         [rs close];
@@ -147,7 +148,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, expired FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, predefined_url FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
         
         DLog(@"RSColumnt count: %d", rs.columnCount);
         
@@ -181,7 +182,8 @@
             output.password = nil;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
-            output.expired = [rs intForColumn:@"expired"];
+            
+            output.predefinedUrl = [rs stringForColumn:@"predefined_url"];
         }
         
         [rs close];
@@ -240,7 +242,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, expired FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, predefined_url FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
         
         while ([rs next]) {
             
@@ -273,7 +275,8 @@
             output.password = credDto.password;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
-            output.expired = [rs intForColumn:@"expired"];
+            
+            output.predefinedUrl = [rs stringForColumn:@"predefined_url"];
         }
         
         [rs close];
@@ -318,7 +321,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, expired FROM users ORDER BY id ASC"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, predefined_url FROM users ORDER BY id ASC"];
         
         UserDto *current = nil;
         
@@ -355,7 +358,8 @@
             current.password = credDto.password;
             
             current.sortingType = [rs intForColumn:@"sorting_type"];
-            current.expired = [rs intForColumn:@"expired"];
+            
+            current.predefinedUrl = [rs stringForColumn:@"predefined_url"];
             
             [output addObject:current];
             
@@ -380,7 +384,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, sorting_type, expired FROM users ORDER BY id ASC"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, sorting_type, predefined_url FROM users ORDER BY id ASC"];
         
         UserDto *current = nil;
         
@@ -408,10 +412,11 @@
             current.timestampInstantUploadImage = [rs doubleForColumn:@"timestamp_last_instant_upload_image"];
             current.timestampInstantUploadVideo = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
             
-            current.urlRedirected = @"";
+            current.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
             current.sortingType = [rs intForColumn:@"sorting_type"];
-            current.expired = [rs intForColumn:@"expired"];
+            
+            current.predefinedUrl = [rs stringForColumn:@"predefined_url"];
             
             [output addObject:current];
             
@@ -636,7 +641,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, expired FROM users ORDER BY id DESC LIMIT 1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, predefined_url FROM users ORDER BY id DESC LIMIT 1"];
         
         while ([rs next]) {
             
@@ -663,7 +668,8 @@
             output.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
-            output.expired = [rs intForColumn:@"expired"];
+            
+            output.predefinedUrl = [rs stringForColumn:@"predefined_url"];
         }
         
         [rs close];
@@ -689,7 +695,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_sharee_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, has_capabilities_support=?, image_instant_upload=?, video_instant_upload=?, background_instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, timestamp_last_instant_upload_image=?, timestamp_last_instant_upload_video=?, url_redirected=?, sorting_type=?, expired=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport], [NSNumber numberWithInteger:user.hasShareeApiSupport], [NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:user.hasCapabilitiesSupport], [NSNumber numberWithBool:user.imageInstantUpload], [NSNumber numberWithBool:user.videoInstantUpload], [NSNumber numberWithBool:user.backgroundInstantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.timestampInstantUploadImage], [NSNumber numberWithLong:user.timestampInstantUploadVideo], user.urlRedirected, [NSNumber numberWithInteger:user.sortingType], [NSNumber numberWithInteger:user.expired], [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_sharee_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, has_capabilities_support=?, image_instant_upload=?, video_instant_upload=?, background_instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, timestamp_last_instant_upload_image=?, timestamp_last_instant_upload_video=?, url_redirected=?, sorting_type=?, predefined_url=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport], [NSNumber numberWithInteger:user.hasShareeApiSupport], [NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:user.hasCapabilitiesSupport], [NSNumber numberWithBool:user.imageInstantUpload], [NSNumber numberWithBool:user.videoInstantUpload], [NSNumber numberWithBool:user.backgroundInstantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.timestampInstantUploadImage], [NSNumber numberWithLong:user.timestampInstantUploadVideo], user.urlRedirected, [NSNumber numberWithInteger:user.sortingType],user.predefinedUrl, [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error updating a user");
@@ -813,88 +819,38 @@
     
 }
 
+#pragma mark - Force update predefined URL
+
 +(void)overrideAllUploadsWithNewURL:(NSString *)newValue {
     
-    UserDto *anyUser = [self getAllUsers][0];
-    
-    if (anyUser) {
-        FMDatabaseQueue *queue = Managers.sharedDatabase;
-        
-        [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-            BOOL correctQuery=NO;
-            
-            correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET destiny_folder=replace(destiny_folder, ?, ?) WHERE status != ?", anyUser.url, newValue, [NSNumber numberWithInteger:uploaded]];
-
-            if (!correctQuery) {
-                DLog(@"Error overriding urls");
-            }
-        }];
-    }
-}
-
-+(void)overrideAllAccountsWithNewURL:(NSString *)newValue {
-    DLog(@"Overriding urls of all the accounts");
+    NSString *oldUrl = [UtilsUrls getFullRemoteServerPath:[ManageUsersDB getActiveUser]];
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=? ", newValue];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET destiny_folder=replace(destiny_folder, ?, ?) WHERE status != ?", oldUrl, newValue, [NSNumber numberWithInteger:uploaded]];
         
         if (!correctQuery) {
-            DLog(@"Error overriding urls");
+            DLog(@"Error overriding uploads urls");
         }
     }];
+    
 }
 
-
-+(void)updateExpiredInAllAccountsTo:(BOOL)newValue {
-    DLog(@"Update Expired");
++(void)updatePredefinedUrlTo:(NSString *)newValue byUserId:(NSInteger)userId {
+    DLog(@"Update predefined URL of userId %ld", (long)userId);
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET expired=? ",  [NSNumber numberWithBool:newValue] ];
+        correctQuery = [db executeUpdate:@"UPDATE users SET predefined_url=? WHERE id=? ", newValue, [NSNumber numberWithInteger:userId] ];
         
         if (!correctQuery) {
-            DLog(@"Error set as expired all accounts");
-        }
-    }];
-}
-
-
-+(void)updateUrl:(NSString *)newValue byUserId:(NSInteger)userId {
-    DLog(@"Update url");
-    
-    FMDatabaseQueue *queue = Managers.sharedDatabase;
-    
-    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-        BOOL correctQuery=NO;
-        
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=? WHERE id=? ",  newValue, [NSNumber numberWithInteger:userId] ];
-        
-        if (!correctQuery) {
-            DLog(@"Error set url of userId %ld", (long)userId);
-        }
-    }];
-}
-
-
-+(void)updateExpiredTo:(BOOL)newValue byUserId:(NSInteger)userId {
-    DLog(@"Update expired of userId %ld", (long)userId);
-    
-    FMDatabaseQueue *queue = Managers.sharedDatabase;
-    
-    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-        BOOL correctQuery=NO;
-        
-        correctQuery = [db executeUpdate:@"UPDATE users SET expired=? WHERE id=? ",  [NSNumber numberWithBool:newValue], [NSNumber numberWithInteger:userId] ];
-        
-        if (!correctQuery) {
-            DLog(@"Error set expired of userId %ld", (long)userId);
+            DLog(@"Error setting predefined URL of userId %ld", (long)userId);
         }
     }];
 }

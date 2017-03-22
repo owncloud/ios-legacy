@@ -106,4 +106,7 @@
 
 + (NSString *) getRelatvePathOfFullDestinyPath: (NSString *) fullPath;
 
+
++ (BOOL) isNecessaryUpdateToPredefinedUrlByPreviousUrl:(NSString *)oldPredefinedUrl;
+
 @end

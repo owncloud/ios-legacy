@@ -28,6 +28,7 @@
 #import "CheckFeaturesSupported.h"
 #import "CheckCapabilities.h"
 #import "FilesViewController.h"
+#import "UtilsUrls.h"
 
 
 //Initialization the notification
@@ -42,13 +43,18 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
 @synthesize selectedUser = _selectedUser;
 
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andUser:(UserDto *) selectedUser {
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andUser:(UserDto *) selectedUser andModeUpdateToPredefinedUrl:(BOOL)modeUpdateToPredefinedUrl{
     
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.selectedUser = selectedUser;
+        self.isModeUpdateToPredefinedUrl = modeUpdateToPredefinedUrl;
         
-        self.auxUrlForReloadTable = self.selectedUser.url;
+        if(modeUpdateToPredefinedUrl){
+            self.auxUrlForReloadTable = k_default_url_server;
+        } else {
+            self.auxUrlForReloadTable = self.selectedUser.url;
+        }
         self.auxUsernameForReloadTable = self.selectedUser.username;
         self.auxPasswordForReloadTable = self.selectedUser.password;
         
@@ -279,7 +285,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         [self.tableView reloadData];
     } else {
         
-        UserDto *userDto = [[UserDto alloc] init];
+        UserDto *userDto =[ManageUsersDB getUserByIdUser:self.selectedUser.idUser];
         
         //We check if start with http or https to concat it
         if([self.urlTextField.text hasPrefix:@"http://"] || [self.urlTextField.text hasPrefix:@"https://"]) {
@@ -293,20 +299,41 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
             }
         }
         
+        
         self.selectedUser.password = self.passwordTextField.text;
         
         [self hideTryingToLogin];
         
-        if (k_force_update_of_server_url && self.selectedUser.expired) {
-            [ManageUsersDB updateUrl:userDto.url byUserId:self.selectedUser.idUser];
-            [ManageUsersDB updateExpiredTo:NO byUserId:self.selectedUser.idUser];
+        //Update parameters after a force url and credentials have not been renewed
+        if (self.isModeUpdateToPredefinedUrl) {
+            
+            //NSString *userNameUTF8=self.usernameTextField.text;
+            NSString *passwordUTF8=self.passwordTextField.text;
+            
+            //userDto.username = userNameUTF8;
+            userDto.password = passwordUTF8;
+            userDto.ssl = isHttps;
+            userDto.urlRedirected = APP_DELEGATE.urlServerRedirected;
+            userDto.predefinedUrl = k_default_url_server;
+            
+            [ManageUsersDB overrideAllUploadsWithNewURL:[UtilsUrls getFullRemoteServerPath:userDto]];
+            
+            [ManageUsersDB updateUserByUserDto:userDto];
+            
+            userDto.ssl = isHttps;
+            
             if (self.selectedUser.activeaccount) {
-                APP_DELEGATE.activeUser.url = userDto.url;
-                APP_DELEGATE.activeUser.expired = NO;
+                APP_DELEGATE.activeUser = userDto;
+                DLog(@"user predefined url:%@", APP_DELEGATE.activeUser.predefinedUrl);
             }
+            
+            [ManageUsersDB updatePassword:userDto];
+            
+        } else {
+        
+            //TODO update username if force url and saml
+            [ManageUsersDB updatePassword:self.selectedUser];
         }
-
-        [ManageUsersDB updatePassword:self.selectedUser];
         
         //Update features and capabilities of the active account
         if (self.selectedUser.activeaccount) {
