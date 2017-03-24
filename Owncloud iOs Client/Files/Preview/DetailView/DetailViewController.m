@@ -1819,6 +1819,7 @@
 #pragma mark - Error login delegate method
 
 - (void)errorLogin {
+    DLog(@"Error login");
     
     if (_updatingFileView) {
         [self stopNotificationUpdatingFile];
@@ -1827,36 +1828,29 @@
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.downloadManager errorLogin];
     
-    
-    DLog(@"Error login");
-    
     if(k_is_oauth_active) {
         NSURL *url = [NSURL URLWithString:k_oauth_login];
         [[UIApplication sharedApplication] openURL:url];
+        
     } else {
         
-        //Flag to indicate that the error login is in the screen
-        if (appDelegate.isErrorLoginShown==NO) {
-            appDelegate.isErrorLoginShown=YES;
-            
-            //In SAML the error message is about the session expired
-            if (k_is_sso_active) {
-                [self performSelectorOnMainThread:@selector(showAlertView:)
-                                       withObject:NSLocalizedString(@"session_expired", nil)
-                                    waitUntilDone:YES];
-            } else {
-                [self performSelectorOnMainThread:@selector(showAlertView:)
-                                       withObject:NSLocalizedString(@"error_login_message", nil)
-                                    waitUntilDone:YES];
-            }
-            
-            EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:appDelegate.activeUser andModeUpdateToPredefinedUrl:NO];
-            [viewController setBarForCancelForLoadingFromModal];
-            
-            OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-            navController.modalPresentationStyle = UIModalPresentationFormSheet;
-            [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
+        //In SAML the error message is about the session expired
+        if (k_is_sso_active) {
+            [self performSelectorOnMainThread:@selector(showAlertView:)
+                                   withObject:NSLocalizedString(@"session_expired", nil)
+                                waitUntilDone:YES];
+        } else {
+            [self performSelectorOnMainThread:@selector(showAlertView:)
+                                   withObject:NSLocalizedString(@"error_login_message", nil)
+                                waitUntilDone:YES];
         }
+
+        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:appDelegate.activeUser andModeUpdateToPredefinedUrl:NO];
+        [viewController setBarForCancelForLoadingFromModal];
+        
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
     }
 }
 

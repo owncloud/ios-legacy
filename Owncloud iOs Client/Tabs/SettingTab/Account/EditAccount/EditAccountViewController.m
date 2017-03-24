@@ -159,9 +159,6 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
 
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    appDelegate.isErrorLoginShown=NO;
 }
 
 - (void) viewWillAppear:(BOOL)animated {

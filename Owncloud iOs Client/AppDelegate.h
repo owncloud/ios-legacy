@@ -92,7 +92,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 
     //Flag
     BOOL _isRefreshInProgress;
-    BOOL _isErrorLoginShown;
     
     //OAuth
     NSString *_oauthToken;
@@ -126,7 +125,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong)DetailViewController *detailViewController;
 @property (nonatomic, strong) MediaAVPlayerViewController *avMoviePlayer;
 @property (nonatomic, strong) UploadFromOtherAppViewController *uploadFromOtherAppViewController;
-@property (nonatomic) BOOL isErrorLoginShown;
 @property (nonatomic) BOOL firstInit;
 @property(nonatomic)BOOL isRefreshInProgress;
 @property(nonatomic)  UIBackgroundTaskIdentifier uploadTask;

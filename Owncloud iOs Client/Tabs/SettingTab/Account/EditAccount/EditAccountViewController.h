@@ -26,7 +26,6 @@ extern NSString *relaunchErrorCredentialFilesNotification;
 }
 
 @property(nonatomic,strong)UserDto *selectedUser;
-@property (nonatomic) BOOL isModeUpdateToPredefinedUrl;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andUser:(UserDto *) selectedUser andModeUpdateToPredefinedUrl:(BOOL)modeUpdateToPredefinedUrl;

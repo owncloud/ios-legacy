@@ -120,7 +120,7 @@
     return [UIColor colorWithRed:96/255.0f green:133/255.0f blue:154/255.0f alpha:1.0];
 }
 
-//Text color of server error
+//Text color of server error //Not in use this color
 + (UIColor*)colorOfServerErrorText{
     return [UIColor colorWithRed:96/255.0f green:133/255.0f blue:154/255.0f alpha:1.0];
 }

@@ -82,6 +82,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             self.manageNetworkErrors = [ManageNetworkErrors new];
             self.manageNetworkErrors.delegate = self;
         }
+        
+        self.isModeUpdateToPredefinedUrl = NO;
     }
     return self;
 }
@@ -1316,60 +1318,53 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 
 -(UIView *) generateFooterForUsernameAndPassword {
     
-    if(isError500) {
-        UIImageView *errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CredentialsError.png"]];
-        [errorImage setFrame:okNokImageFrameFooter];
-        
-        UILabel* label = [[UILabel alloc] initWithFrame:textFooterFrame2];
-        label.backgroundColor = [UIColor clearColor];
-        label.text = NSLocalizedString(@"unknow_response_server",nil);
-        label.baselineAdjustment= UIBaselineAdjustmentAlignCenters;
-        label.lineBreakMode     =  NSLineBreakByWordWrapping;
-        label.textAlignment     = NSTextAlignmentLeft;
-        label.font          = [UIFont fontWithName:@"Arial" size:13];
-        label.textColor     = [UIColor colorOfLoginErrorText];
-        label.numberOfLines = 0;
-        
-        
-        UIView *view = [[UIView alloc] initWithFrame:footerSection1Frame];
-        
-        [view addSubview:errorImage];
-        [view addSubview:label];
-        
-        return view;
-    }
+    NSString *errorMessage = @"";
     
-    if(isErrorOnCredentials) {
+    if(isError500) {
+
+        errorMessage = @"unknow_response_server";
         
-        UIImageView *errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CredentialsError.png"]];
-        [errorImage setFrame:okNokImageFrameFooter];
+    } else if (isErrorOnCredentials){
         
-        UILabel* label = [[UILabel alloc] initWithFrame:textFooterFrame2];
-        label.backgroundColor = [UIColor clearColor];
         //In SAML the error message is about the session expired
         if (k_is_sso_active) {
-            label.text = NSLocalizedString(@"session_expired",nil);
+            errorMessage = @"session_expired";
         }
         else{
-            label.text = NSLocalizedString(@"error_login_message",nil);
+            errorMessage = @"error_login_message";
         }
-        label.baselineAdjustment= UIBaselineAdjustmentAlignCenters;
-        label.lineBreakMode     = NSLineBreakByWordWrapping;
-        label.textAlignment     = NSTextAlignmentLeft;
-        label.font          = [UIFont fontWithName:@"Arial" size:13];
-        label.textColor     = [UIColor colorOfLoginErrorText];
-        label.numberOfLines = 0;
+
+    } else if (self.isModeUpdateToPredefinedUrl){
         
+        errorMessage = @"error_updating_predefined_url";
         
-        UIView *view = [[UIView alloc] initWithFrame:footerSection1Frame];
-        
-        [view addSubview:errorImage];
-        [view addSubview:label];
-        
-        return view;
     } else {
+        
         return nil;
     }
+    
+    UIImageView *errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CredentialsError.png"]];
+    [errorImage setFrame:okNokImageFrameFooter];
+    
+    UILabel* label = [[UILabel alloc] initWithFrame:textFooterFrame2];
+    label.backgroundColor = [UIColor clearColor];
+    
+    label.baselineAdjustment= UIBaselineAdjustmentAlignCenters;
+    label.lineBreakMode     =  NSLineBreakByWordWrapping;
+    label.textAlignment     = NSTextAlignmentLeft;
+    label.font          = [UIFont fontWithName:@"Arial" size:13];
+    label.textColor     = [UIColor colorOfLoginErrorText];
+    label.numberOfLines = 0;
+    
+    label.text = NSLocalizedString(errorMessage,nil);
+
+    UIView *view = [[UIView alloc] initWithFrame:footerSection1Frame];
+    
+    [view addSubview:errorImage];
+    [view addSubview:label];
+    
+    return view;
+    
 }
 
 #pragma mark - Keyboard

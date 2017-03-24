@@ -84,7 +84,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @synthesize presentFilesViewController=_presentFilesViewController;
 @synthesize isRefreshInProgress=_isRefreshInProgress;
 @synthesize oauthToken = _oauthToken;
-@synthesize isErrorLoginShown = _isErrorLoginShown;
 @synthesize avMoviePlayer=_avMoviePlayer;
 @synthesize firstInit=_firstInit;
 @synthesize activeUser=_activeUser;
@@ -119,7 +118,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     _isFileFromOtherAppWaitting = NO;
     _isSharedToOwncloudPresent = NO;
     _isRefreshInProgress = NO;
-    _isErrorLoginShown = NO;
     _firstInit = YES;
     _isLoadingVisible = NO;
     _isOverwriteProcess = NO; //Flag for detect if a overwrite process is in progress
@@ -2073,28 +2071,19 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 -(void) delayLoadEditAccountAfterErroLogin {
     
-    //Flag to indicate that the error login is in the screen
-    if (_isErrorLoginShown==NO) {
-        _isErrorLoginShown=YES;
-        
-        //Edit Account
-        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:_activeUser andModeUpdateToPredefinedUrl:NO];
-        [viewController setBarForCancelForLoadingFromModal];
-        
-       
-        if (IS_IPHONE)
-        {
-            OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-            [_ocTabBarController presentViewController:navController animated:YES completion:nil];
-        } else {
-            
-            OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-            navController.modalPresentationStyle = UIModalPresentationFormSheet;
-            [self.splitViewController presentViewController:navController animated:YES completion:nil];
-            
-        }
-    }
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:_activeUser andModeUpdateToPredefinedUrl:NO];
+    [viewController setBarForCancelForLoadingFromModal];
     
+    if (IS_IPHONE)
+    {
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        [_ocTabBarController presentViewController:navController animated:YES completion:nil];
+    } else {
+        
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self.splitViewController presentViewController:navController animated:YES completion:nil];
+    }
 }
 
 

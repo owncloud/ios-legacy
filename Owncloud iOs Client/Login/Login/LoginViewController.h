@@ -89,6 +89,8 @@ extern NSString *loginViewControllerRotate;
 
 @property(nonatomic,strong) ManageNetworkErrors *manageNetworkErrors;
 
+@property (nonatomic) BOOL isModeUpdateToPredefinedUrl;
+
 
 -(void)setTableBackGroundColor;
 -(void)checkUrlManually;
