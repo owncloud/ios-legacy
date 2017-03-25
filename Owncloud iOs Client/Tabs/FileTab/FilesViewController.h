@@ -97,15 +97,11 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 @property (nonatomic,strong) EditAccountViewController *resolvedCredentialError;
 //UIActionSheet for "more" option on swipe
 @property (nonatomic,strong) UIActionSheet *moreActionSheet;
-//UIActionSheet for + button
-@property (nonatomic,strong) UIActionSheet *plusActionSheet;
 //An exist file
 @property (nonatomic, strong) OverwriteFileOptions *overWritteOption;
 //Class to manage the Network erros
 @property (nonatomic, strong) ManageNetworkErrors *manageNetworkErrors;
 @property (nonatomic, strong) UIView *viewToShow;
-//UIActionSheet for sorting files and folders
-@property(nonatomic, strong) UIActionSheet *sortingActionSheet;
 
 //Select folder views used by move options
 @property (nonatomic, strong) SelectFolderViewController *selectFolderViewController;
