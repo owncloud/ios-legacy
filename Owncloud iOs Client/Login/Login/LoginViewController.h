@@ -19,6 +19,13 @@
 #import "SSOViewController.h"
 #import "CheckSSOServer.h"
 
+typedef NS_ENUM (NSInteger, LoginMode){
+    LoginModeCreate,
+    LoginModeUpdate,
+    LoginModeExpire,
+    LoginModeMigrate,
+};
+
 extern NSString *loginViewControllerRotate;
 
 @interface LoginViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate, CheckAccessToServerDelegate, SSODelegate, CheckSSOServerDelegate, ManageNetworkErrorsDelegate> {
@@ -56,7 +63,6 @@ extern NSString *loginViewControllerRotate;
     BOOL isHttpsSecure;
     BOOL isCheckingTheServerRightNow;
     BOOL isSSLAccepted;
-    BOOL isErrorOnCredentials;
     BOOL isError500;
     BOOL isLoginButtonEnabled;
     BOOL urlEditable;
@@ -89,7 +95,7 @@ extern NSString *loginViewControllerRotate;
 
 @property(nonatomic,strong) ManageNetworkErrors *manageNetworkErrors;
 
-@property (nonatomic) BOOL isModeUpdateToPredefinedUrl;
+@property (nonatomic) LoginMode loginMode;
 
 
 -(void)setTableBackGroundColor;
@@ -101,9 +107,11 @@ extern NSString *loginViewControllerRotate;
 -(void) hideTryingToLogin;
 -(void) potraitViewiPhone;
 -(void) addEditAccountsViewiPad;
-//-----------------------------------
-/// @name restoreTheCookiesOfActiveUserByNewUser
-///-----------------------------------
 - (void) restoreTheCookiesOfActiveUser;
+
+
+- (id)initWithLoginMode:(LoginMode)loginMode;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andLoginMode:(LoginMode)loginMode;
 
 @end

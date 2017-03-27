@@ -54,18 +54,35 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 
 @implementation LoginViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (id)initWithLoginMode:(LoginMode)loginMode {
+    
+    NSString *nibName = nil;
+    NSBundle *bundle = nil;
+    
+    if (IS_IPHONE) {
+        nibName = @"LoginViewController_iPhone";
+    } else {
+         nibName = @"LoginViewController_iPad";
+    }
+    
+    self = [self initWithNibName:nibName bundle:bundle andLoginMode:(LoginMode)loginMode];
+    
+    return self;
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andLoginMode:(LoginMode)loginMode {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        _loginMode = loginMode;
         self.auxUrlForReloadTable = k_default_url_server;
         self.auxUsernameForReloadTable = @"";
         self.auxPasswordForReloadTable = @"";
+        
         
         urlEditable = YES;
         userNameEditable = YES;
         
         isSSLAccepted = YES;
-        isErrorOnCredentials = NO;
         isError500 = NO;
         isCheckingTheServerRightNow = NO;
         isConnectionToServer = NO;
@@ -82,8 +99,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             self.manageNetworkErrors = [ManageNetworkErrors new];
             self.manageNetworkErrors.delegate = self;
         }
-        
-        self.isModeUpdateToPredefinedUrl = NO;
     }
     return self;
 }
@@ -1250,6 +1265,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                     UIButton *button = [self setTheButtonForReconnectWithTheCurrentServer];
                     [view addSubview:button];
                 }
+            } else if(self.loginMode == LoginModeMigrate){
+                errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CredentialsError.png"]];
+                label.text = NSLocalizedString(@"error_updating_predefined_url",nil);
             } else {
                 errorImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CredentialsError.png"]];
                 label.text = NSLocalizedString(@"connection_declined",nil);
@@ -1324,7 +1342,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 
         errorMessage = @"unknow_response_server";
         
-    } else if (isErrorOnCredentials){
+    } else if (self.loginMode == LoginModeExpire){
         
         //In SAML the error message is about the session expired
         if (k_is_sso_active) {
@@ -1334,7 +1352,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             errorMessage = @"error_login_message";
         }
 
-    } else if (self.isModeUpdateToPredefinedUrl){
+    } else if (self.loginMode == LoginModeMigrate){
         
         errorMessage = @"error_updating_predefined_url";
         
@@ -2238,8 +2256,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     DLog(@"Error login");
     
     [self hideTryingToLogin];
-    
-    isErrorOnCredentials = YES;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];

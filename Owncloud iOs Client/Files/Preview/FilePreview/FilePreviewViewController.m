@@ -1660,18 +1660,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
    
 }
 
-#pragma mark - UIAlert view methods
-
-/*
- * Show this pop up when there are problems with the login
- */
-
-- (void) showAlertViewOfLogin:(NSString*)string{
-    
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-    alertView.tag=k_alertview_for_login;
-    [alertView show];
-}
 
 #pragma mark - UIAlertView delegate methods
 
@@ -1683,17 +1671,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             app.downloadErrorAlertView = nil;
             
-            break;
-        }
-        case k_alertview_for_login: {
-            //Edit Account
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            
-            EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andModeUpdateToPredefinedUrl:NO];
-            
-            viewController.hidesBottomBarWhenPushed = YES;
-            
-            [self.navigationController pushViewController:viewController animated:NO];
             break;
         }
         default:
@@ -1721,16 +1698,15 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         NSURL *url = [NSURL URLWithString:k_oauth_login];
         [[UIApplication sharedApplication] openURL:url];
     } else {
-        //In SAML the error message is about the session expired
-        if (k_is_sso_active) {
-            [self performSelectorOnMainThread:@selector(showAlertViewOfLogin:)
-                                   withObject:NSLocalizedString(@"session_expired", nil)
-                                waitUntilDone:YES];
-        } else {
-            [self performSelectorOnMainThread:@selector(showAlertViewOfLogin:)
-                                   withObject:NSLocalizedString(@"error_login_message", nil)
-                                waitUntilDone:YES];
-        }
+        //Edit Account
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        
+        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andLoginMode:LoginModeExpire];
+        
+        viewController.hidesBottomBarWhenPushed = YES;
+        
+        [self.navigationController pushViewController:viewController animated:NO];
+
     }
     [self didPressCancelButton:nil];
 }

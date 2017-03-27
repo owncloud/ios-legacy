@@ -1833,19 +1833,8 @@
         [[UIApplication sharedApplication] openURL:url];
         
     } else {
-        
-        //In SAML the error message is about the session expired
-        if (k_is_sso_active) {
-            [self performSelectorOnMainThread:@selector(showAlertView:)
-                                   withObject:NSLocalizedString(@"session_expired", nil)
-                                waitUntilDone:YES];
-        } else {
-            [self performSelectorOnMainThread:@selector(showAlertView:)
-                                   withObject:NSLocalizedString(@"error_login_message", nil)
-                                waitUntilDone:YES];
-        }
 
-        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:appDelegate.activeUser andModeUpdateToPredefinedUrl:NO];
+        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:appDelegate.activeUser andLoginMode:LoginModeExpire];
         [viewController setBarForCancelForLoadingFromModal];
         
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];

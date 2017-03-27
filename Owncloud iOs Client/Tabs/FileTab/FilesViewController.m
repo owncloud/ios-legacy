@@ -3438,20 +3438,7 @@
     [self endLoading];
     
     if (!_checkingEtag) {
-        //In SAML the error message is about the session expired
-        if (k_is_sso_active) {
-            //UIAlertView with blocks
-            [UIAlertView showWithTitle:NSLocalizedString(@"session_expired", nil) message:@"" cancelButtonTitle:nil otherButtonTitles:@[NSLocalizedString(@"ok", nil)] tapBlock:^(UIAlertView *alertView, NSInteger buttonIndex) {
-        
-                [self showEditAccount];
-            }];
-        } else {
-            //UIAlertView with blocks
-            [UIAlertView showWithTitle:NSLocalizedString(@"error_login_message", nil) message:@"" cancelButtonTitle:nil otherButtonTitles:@[NSLocalizedString(@"ok", nil)] tapBlock:^(UIAlertView *alertView, NSInteger buttonIndex) {
-                
-                [self showEditAccount];
-            }];
-        }
+        [self showEditAccount];
     }
     
     if(!_checkingEtag) {
@@ -3467,8 +3454,11 @@
     
     //Edit Account
     BOOL requiredUpdateUrl = [UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:[ManageUsersDB getActiveUser].predefinedUrl];
-    
-    self.resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andModeUpdateToPredefinedUrl:requiredUpdateUrl];
+    if (requiredUpdateUrl) {
+        self.resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andLoginMode:LoginModeMigrate];
+    } else {
+        self.resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andLoginMode:LoginModeExpire];
+    }
     
     //If is necessary updete to predefined URK avoid going out login view
     if(!requiredUpdateUrl){

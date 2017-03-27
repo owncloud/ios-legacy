@@ -35,7 +35,7 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil andLoginMode:LoginModeCreate];
     if (self) {
         // Custom initialization
        if (!IS_IPHONE) {

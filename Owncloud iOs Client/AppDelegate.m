@@ -377,11 +377,8 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         
-        if (IS_IPHONE) {
-            self.loginViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPhone" bundle:nil];
-        } else {
-            self.loginViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPad" bundle:nil];
-        }
+        self.loginViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
+        
         self.window.rootViewController = self.loginViewController;
         [self.window makeKeyAndVisible];
         
@@ -441,11 +438,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         _filesViewController.alert = nil;
     }
     
-    if (IS_IPHONE) {
-        _loginWindowViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPhone" bundle:[NSBundle mainBundle]];
-    } else {
-        _loginWindowViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPad" bundle:[NSBundle mainBundle]];
-    }
+    self.loginViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -2056,22 +2049,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 }
 
 - (void) errorLogin {
-    //In SAML the error message is about the session expired
-    if (k_is_sso_active) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"session_expired", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [alertView show];
-    }
-    else{
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error_login_message", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [alertView show];
-    }
-    
+
     [self performSelector:@selector(delayLoadEditAccountAfterErroLogin) withObject:nil afterDelay:0.1];
 }
 
 -(void) delayLoadEditAccountAfterErroLogin {
     
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:_activeUser andModeUpdateToPredefinedUrl:NO];
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:_activeUser andLoginMode:LoginModeExpire];
     [viewController setBarForCancelForLoadingFromModal];
     
     if (IS_IPHONE)
@@ -2904,11 +2888,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void) showLoginView {
     DLog(@"ShowLoginView");
     
-    if (IS_IPHONE) {
-        _loginWindowViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPhone" bundle:[NSBundle mainBundle]];
-    } else {
-        _loginWindowViewController = [[LoginViewController alloc] initWithNibName:@"LoginViewController_iPad" bundle:[NSBundle mainBundle]];
-    }
+    self.loginWindowViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     

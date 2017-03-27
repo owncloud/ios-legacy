@@ -43,14 +43,13 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
 @synthesize selectedUser = _selectedUser;
 
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andUser:(UserDto *) selectedUser andModeUpdateToPredefinedUrl:(BOOL)modeUpdateToPredefinedUrl{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andUser:(UserDto *) selectedUser andLoginMode:(LoginMode)loginMode {
     
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil andLoginMode:loginMode];
     if (self) {
         self.selectedUser = selectedUser;
-        self.isModeUpdateToPredefinedUrl = modeUpdateToPredefinedUrl;
         
-        if(modeUpdateToPredefinedUrl){
+        if(self.loginMode == LoginModeMigrate){
             self.auxUrlForReloadTable = k_default_url_server;
         } else {
             self.auxUrlForReloadTable = self.selectedUser.url;
@@ -64,7 +63,6 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         DLog(@"self.auxUrlForReloadTable: %@", self.auxUrlForReloadTable);
         
         isSSLAccepted = YES;
-        isErrorOnCredentials = NO;
         isCheckingTheServerRightNow = YES;
         isConnectionToServer = NO;
         isNeedToCheckAgain = YES;
@@ -302,7 +300,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         [self hideTryingToLogin];
         
         //Update parameters after a force url and credentials have not been renewed
-        if (self.isModeUpdateToPredefinedUrl) {
+        if (self.loginMode == LoginModeMigrate) {
             
             //NSString *userNameUTF8=self.usernameTextField.text;
             NSString *passwordUTF8=self.passwordTextField.text;

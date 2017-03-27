@@ -859,25 +859,6 @@
 }
 
 
-
--(void) errorLogin {
-    
-    [self endLoading];
-    //[self.delegate endLoading];
-    //In SAML the error message is about the session expired
-    if (k_is_sso_active) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"session_expired", nil)
-                                                        message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [alert show];
-    }
-    else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error_login_message", nil)
-                                                        message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [alert show];
-    }
-    
-}
-
 /*
  * This method show the edit account view.
  */
@@ -885,7 +866,7 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andModeUpdateToPredefinedUrl:NO];
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andLoginMode:LoginModeExpire];
     [viewController setBarForCancelForLoadingFromModal];
     
     if (IS_IPHONE)
@@ -897,12 +878,7 @@
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         
-        if (IS_IOS8 || IS_IOS9) {
-            [self presentViewController:navController animated:YES completion:nil];
-        }else{
-            [app.splitViewController presentViewController:navController animated:YES completion:nil];
-        }
-
+        [self presentViewController:navController animated:YES completion:nil];
     }
 }
 
