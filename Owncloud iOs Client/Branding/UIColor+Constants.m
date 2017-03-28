@@ -38,9 +38,10 @@
     return [UIColor colorWithRed:255/255.0f green:255/255.0f blue:255/255.0f alpha:1.0];
 }
 
-//Color of background in custom status bar, only for iOS 7
+//Color of background in custom status bar, only for iOS 7 //NOT IN USE
 + (UIColor*)colorOfBackgroundStatusBarNotification {
     return [UIColor colorWithRed:55/255.0f green:70/255.0f blue:89/255.0f alpha:1.0];
+
 }
 
 //Tint color of tool bar
@@ -51,9 +52,10 @@
 //Color of background view in toolBar bar, only for iOS 7 for transparency
 + (UIColor*)colorOfBackgroundToolBarImage {
     return [UIColor colorWithRed:28/255.0f green:44/255.0f blue:67/255.0f alpha:0.7];
+
 }
 
-//Tint color of tool bar buttons
+//Tint color of tool bar items for detail preview of file view
 + (UIColor*)colorOfToolBarButtons {
     return [UIColor colorWithRed:255/255.0f green:255/255.0f blue:255/255.0f alpha:1.0];
     
