@@ -56,10 +56,6 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
             self.auxUrlForReloadTable = self.selectedUser.url;
         }
         self.auxUsernameForReloadTable = self.selectedUser.username;
-        self.auxPasswordForReloadTable = self.selectedUser.password;
-        
-        urlEditable = NO;
-        userNameEditable = NO;
         
         DLog(@"self.auxUrlForReloadTable: %@", self.auxUrlForReloadTable);
         
@@ -289,9 +285,10 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         [self hideTryingToLogin];
         
         //TODO normalize username and password fields
+        NSString *userNameUTF8=self.usernameTextField.text;
         NSString *passwordUTF8=self.passwordTextField.text;
         
-        //userDto.username = userNameUTF8;
+        userDtoEdited.username = userNameUTF8;
         userDtoEdited.password = passwordUTF8;
         
         //Update parameters after a force url and credentials have not been renewed

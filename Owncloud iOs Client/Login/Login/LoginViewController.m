@@ -78,9 +78,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         self.auxUsernameForReloadTable = @"";
         self.auxPasswordForReloadTable = @"";
         
+        if (loginMode == LoginModeCreate && !k_force_update_of_server_url) {
+            urlEditable = YES;
+        } else {
+            urlEditable = NO;
+        }
         
-        urlEditable = YES;
-        userNameEditable = YES;
+        if (loginMode == LoginModeCreate || loginMode == LoginModeMigrate) {
+            userNameEditable = YES;
+        } else {
+            userNameEditable = NO;
+        }
         
         isSSLAccepted = YES;
         isError500 = NO;
