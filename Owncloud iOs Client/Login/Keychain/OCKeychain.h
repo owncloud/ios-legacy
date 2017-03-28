@@ -21,7 +21,7 @@
 +(BOOL)setCredentialsById:(NSString *)idUser withUsername:(NSString *)userName andPassword:(NSString *)password;
 +(CredentialsDto *)getCredentialsById:(NSString *)idUser;
 +(BOOL)removeCredentialsById:(NSString *)idUser;
-+(BOOL)updatePasswordById:(NSString *)idUser withNewPassword:(NSString *)password;
++(BOOL)updateCredentialsById:(NSString *)idUser withUsername:(NSString *)userName andPassword:(NSString *)password;
 +(BOOL)updateKeychainForUseLockPropertyForUser:(NSString *)idUser;
 +(BOOL)resetKeychain;
 +(void)updateAllKeychainsToUseTheLockProperty;

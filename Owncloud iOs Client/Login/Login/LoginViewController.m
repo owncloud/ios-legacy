@@ -2224,6 +2224,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         //Take into account that this global property can be stored bab value
         //For that we reset this property when the system check the server in LoginViewController class
         userDto.urlRedirected = app.urlServerRedirected;
+        userDto.predefinedUrl = k_default_url_server;
         
         [ManageUsersDB insertUser:userDto];
         

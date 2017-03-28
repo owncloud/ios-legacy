@@ -19,6 +19,8 @@
 #import "UtilsFramework.h"
 #import "ManageUsersDB.h"
 #import "Customization.h"
+#import "OCKeychain.h"
+#import "UtilsCookies.h"
 
 @implementation AccountCell
 
@@ -40,15 +42,21 @@
 
 -(IBAction)activeAccount:(id)sender {
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    //AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
     [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.urlServer.text];
     
     //We delete the cookies on SAML
     if (k_is_sso_active) {
-        app.activeUser.password = @"";
-        [ManageUsersDB updatePassword:app.activeUser];
+        //app.activeUser.password = @"";
+        
+        //update keychain user
+//        if(![OCKeychain updateCredentialsById:[NSString stringWithFormat:@"%ld", (long)app.activeUser.idUser] withUsername:nil andPassword:app.activeUser.password]) {
+//            DLog(@"Error updating credentials of userId:%ld on keychain",(long)app.activeUser.idUser);
+//        }
+        
+        [UtilsCookies eraseCredentialsAndUrlCacheOfActiveUser];
     }
     
     [self.delegate activeAccountByPosition:self.activeButton.tag];

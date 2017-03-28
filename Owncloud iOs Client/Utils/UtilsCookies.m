@@ -17,6 +17,7 @@
 #import "UserDto.h"
 #import "ManageCookiesStorageDB.h"
 #import "CookiesStorageDto.h"
+#import "UtilsUrls.h"
 
 @implementation UtilsCookies
 
@@ -68,7 +69,7 @@
 
 #pragma mark - Delete cache HTTP
 
-+ (void)eraseCredentialsWithURL:(NSString *)connectURL
++ (void) eraseCredentialsWithURL:(NSString *)connectURL
 {
     NSURLCredentialStorage *credentialsStorage = [NSURLCredentialStorage sharedCredentialStorage];
     NSDictionary *allCredentials = [credentialsStorage allCredentials];
@@ -92,11 +93,18 @@
     }
 }
 
-+ (void)eraseURLCache
++ (void) eraseURLCache
 {
     [[NSURLCache sharedURLCache] setMemoryCapacity:0];
     [[NSURLCache sharedURLCache] setDiskCapacity:0];
 }
 
++ (void) eraseCredentialsAndUrlCacheOfActiveUser {
+    
+    NSString *connectURL = [UtilsUrls getFullRemoteServerPathWithWebDav:APP_DELEGATE.activeUser];
+    
+    [UtilsCookies eraseCredentialsWithURL:connectURL];
+    [UtilsCookies eraseURLCache];
+}
 
 @end

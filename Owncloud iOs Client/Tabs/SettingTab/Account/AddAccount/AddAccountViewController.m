@@ -163,6 +163,7 @@
         userDto.activeaccount = NO;
         AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         userDto.urlRedirected = app.urlServerRedirected;
+        userDto.predefinedUrl = k_default_url_server;
         
         [self hideTryingToLogin];
         

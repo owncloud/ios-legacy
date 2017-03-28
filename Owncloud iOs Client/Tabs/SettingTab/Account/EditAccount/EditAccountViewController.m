@@ -29,6 +29,7 @@
 #import "CheckCapabilities.h"
 #import "FilesViewController.h"
 #import "UtilsUrls.h"
+#import "OCKeychain.h"
 
 
 //Initialization the notification
@@ -271,63 +272,61 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         [self.tableView reloadData];
     } else {
         
-        UserDto *userDto =[ManageUsersDB getUserByIdUser:self.selectedUser.idUser];
+        UserDto *userDtoEdited =[ManageUsersDB getUserByIdUser:self.selectedUser.idUser];
         
         //We check if start with http or https to concat it
         if([self.urlTextField.text hasPrefix:@"http://"] || [self.urlTextField.text hasPrefix:@"https://"]) {
-            userDto.url = [self getUrlChecked: self.urlTextField.text];
+            userDtoEdited.url = [self getUrlChecked: self.urlTextField.text];
             
         } else {
             if(isHttps) {
-                userDto.url = [NSString stringWithFormat:@"%@%@",@"https://", [self getUrlChecked: self.urlTextField.text]];
+                userDtoEdited.url = [NSString stringWithFormat:@"%@%@",@"https://", [self getUrlChecked: self.urlTextField.text]];
             } else {
-                userDto.url = [NSString stringWithFormat:@"%@%@",@"http://", [self getUrlChecked: self.urlTextField.text]];
+                userDtoEdited.url = [NSString stringWithFormat:@"%@%@",@"http://", [self getUrlChecked: self.urlTextField.text]];
             }
         }
-        
-        
-        self.selectedUser.password = self.passwordTextField.text;
-        
+
         [self hideTryingToLogin];
+        
+        //TODO normalize username and password fields
+        NSString *passwordUTF8=self.passwordTextField.text;
+        
+        //userDto.username = userNameUTF8;
+        userDtoEdited.password = passwordUTF8;
         
         //Update parameters after a force url and credentials have not been renewed
         if (self.loginMode == LoginModeMigrate) {
             
-            //NSString *userNameUTF8=self.usernameTextField.text;
-            NSString *passwordUTF8=self.passwordTextField.text;
-            
-            //userDto.username = userNameUTF8;
-            userDto.password = passwordUTF8;
-            userDto.ssl = isHttps;
-            userDto.urlRedirected = APP_DELEGATE.urlServerRedirected;
-            userDto.predefinedUrl = k_default_url_server;
-            
-            [ManageUsersDB overrideAllUploadsWithNewURL:[UtilsUrls getFullRemoteServerPath:userDto]];
-            
-            [ManageUsersDB updateUserByUserDto:userDto];
-            
-            userDto.ssl = isHttps;
-            
-            if (self.selectedUser.activeaccount) {
-                APP_DELEGATE.activeUser = userDto;
-                DLog(@"user predefined url:%@", APP_DELEGATE.activeUser.predefinedUrl);
+            if (k_is_sso_active) {
+                userDtoEdited.username = self.usernameTextField.text;
             }
+            userDtoEdited.ssl = isHttps;
+            userDtoEdited.urlRedirected = APP_DELEGATE.urlServerRedirected;
+            userDtoEdited.predefinedUrl = k_default_url_server;
             
-            [ManageUsersDB updatePassword:userDto];
+            [ManageUsersDB overrideAllUploadsWithNewURL:[UtilsUrls getFullRemoteServerPath:userDtoEdited]];
             
-        } else {
-        
-            //TODO update username if force url and saml
-            [ManageUsersDB updatePassword:self.selectedUser];
+            [ManageUsersDB updateUserByUserDto:userDtoEdited];
         }
         
-        //Update features and capabilities of the active account
-        if (self.selectedUser.activeaccount) {
+        //update keychain user
+        if(![OCKeychain updateCredentialsById:[NSString stringWithFormat:@"%ld", (long)userDtoEdited.idUser] withUsername:userDtoEdited.username andPassword:userDtoEdited.password]) {
+            DLog(@"Error updating credentials of userId:%ld on keychain",(long)userDtoEdited.idUser);
+        }
+        
+        if (userDtoEdited.activeaccount) {
+        
+            //update current active DTO user
+            APP_DELEGATE.activeUser = userDtoEdited;
+            DLog(@"user predefined url:%@", APP_DELEGATE.activeUser.predefinedUrl);
+            
+            [UtilsCookies eraseCredentialsAndUrlCacheOfActiveUser];
+            
             [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
         }
         
-        //Change the state of the of the user uploads with credential error
-        [ManageUploadsDB updateErrorCredentialFiles:_selectedUser.idUser];
+        //Change the state of user uploads with credential error
+        [ManageUploadsDB updateErrorCredentialFiles:userDtoEdited.idUser];
         
         [self performSelector:@selector(restoreDownloadsAndUploads) withObject:nil afterDelay:5.0];
             
@@ -338,6 +337,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         [self performSelector:@selector(closeViewController) withObject:nil afterDelay:0.5];
     }
 }
+
 
 - (void) restoreDownloadsAndUploads {
     //Cancel current uploads with the same user

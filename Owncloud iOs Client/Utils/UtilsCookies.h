@@ -23,7 +23,8 @@
 + (void) setOnDBStorageCookiesByUser:(UserDto *) user;
 + (void) setOnSystemStorageCookiesByUser:(UserDto *) user;
 
-+ (void)eraseCredentialsWithURL:(NSString *)connectURL;
-+ (void)eraseURLCache;
++ (void) eraseCredentialsWithURL:(NSString *)connectURL;
++ (void) eraseURLCache;
++ (void) eraseCredentialsAndUrlCacheOfActiveUser;
 
 @end

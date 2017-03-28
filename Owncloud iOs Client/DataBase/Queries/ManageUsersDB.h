@@ -40,12 +40,6 @@
 + (UserDto *) getActiveUserWithoutUserNameAndPassword;
 
 /*
- * This method changes the password of the an user
- * @user -> user object
- */
-+(void) updatePassword: (UserDto *) user;
-
-/*
  * Method that returns the user object of the idUser
  * @idUser -> id User.
  */

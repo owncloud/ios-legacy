@@ -126,10 +126,10 @@
 
 }
 
-+(BOOL)updatePasswordById:(NSString *)idUser withNewPassword:(NSString *)password{
++(BOOL)updateCredentialsById:(NSString *)idUser withUsername:(NSString *)userName andPassword:(NSString *)password {
     
     BOOL output = NO;
-
+    
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
     [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
@@ -140,26 +140,29 @@
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
     
     if(stsExist != errSecSuccess) {
-        NSLog(@"Unable to update item with id =%@ ",idUser);
+        NSLog(@"Unable to update keychain item with id =%@ ",idUser);
         
     }else {
         
         NSMutableDictionary *attrToUpdate = [NSMutableDictionary dictionary];
-
-        [attrToUpdate setObject:[password dataUsingEncoding:NSUTF8StringEncoding] forKey:(__bridge id)kSecValueData];
+        if (password != nil){
+            [attrToUpdate setObject:[password dataUsingEncoding:NSUTF8StringEncoding] forKey:(__bridge id)kSecValueData];
+        }
+        
+        if (userName != nil) {
+            [attrToUpdate setObject:userName forKey:(__bridge id)kSecAttrDescription];
+        }
         
         OSStatus stsUpd = SecItemUpdate((__bridge CFDictionaryRef)(keychainItem), (__bridge CFDictionaryRef)(attrToUpdate));
         
-        NSLog(@"(updateCredentials)Error Code: %d", (int)stsUpd);
+        NSLog(@"(updateKeychainCredentials)Error Code: %d", (int)stsUpd);
         
         if (stsUpd == errSecSuccess) {
             output = YES;
         }
-        
     }
     
     return output;
-
 }
 
 + (BOOL)updateKeychainForUseLockPropertyForUser:(NSString *)idUser{

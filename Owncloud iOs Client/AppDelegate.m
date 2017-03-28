@@ -59,6 +59,8 @@
 #import "InstantUpload.h"
 #import "DownloadUtils.h"
 #import "UtilsFileSystem.h"
+#import "OCKeychain.h"
+#import "UtilsCookies.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -404,7 +406,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     if(_activeUser.idUser > 0) {
         _activeUser.password = self.oauthToken;
-        [ManageUsersDB updatePassword:_activeUser];
+        
+        //update keychain user
+        if(![OCKeychain updateCredentialsById:[NSString stringWithFormat:@"%ld", (long)_activeUser.idUser] withUsername:_activeUser.username andPassword:_activeUser.password]) {
+            DLog(@"Error updating credentials of userId:%ld on keychain",(long)_activeUser.idUser);
+        }
+        
+        [UtilsCookies eraseCredentialsAndUrlCacheOfActiveUser];
         
         [self initAppWithEtagRequest:NO];
     } else {

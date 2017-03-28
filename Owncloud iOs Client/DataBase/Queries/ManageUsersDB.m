@@ -196,38 +196,6 @@
 
 
 /*
- * This method change the password of the an user
- * @user -> user object
- */
-+(void) updatePassword: (UserDto *) user {
-    
-    
-    if(user.password != nil) {
-        
-        NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
-        
-        if (![OCKeychain updatePasswordById:idString withNewPassword:user.password]) {
-            DLog(@"Error update the password keychain");
-        }
-        
-#ifdef CONTAINER_APP
-        //Set the user password
-        if (user.activeaccount) {
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            app.activeUser = user;
-            
-            NSString *connectURL =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
-            
-            [UtilsCookies eraseCredentialsWithURL:connectURL];
-            [UtilsCookies eraseURLCache];
-        }
-#endif
-        
-    }
-}
-
-
-/*
  * Method that return the user object of the idUser
  * @idUser -> id User.
  */
