@@ -3460,11 +3460,6 @@
         self.resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andLoginMode:LoginModeExpire];
     }
     
-    //If is necessary updete to predefined URK avoid going out login view
-    if(!requiredUpdateUrl){
-        [self.resolvedCredentialError setBarForCancelForLoadingFromModal];
-    }
-    
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:_resolvedCredentialError];
         [self.navigationController presentViewController:navController animated:YES completion:nil];

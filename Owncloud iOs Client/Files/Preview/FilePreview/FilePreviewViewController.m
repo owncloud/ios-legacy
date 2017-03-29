@@ -1705,7 +1705,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
         viewController.hidesBottomBarWhenPushed = YES;
         
-        [self.navigationController pushViewController:viewController animated:NO];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
 
     }
     [self didPressCancelButton:nil];

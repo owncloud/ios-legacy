@@ -1771,12 +1771,12 @@
     EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:user andLoginMode:LoginModeUpdate];
     
     if (IS_IPHONE) {
-        viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:NO];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        OCNavigationController *navController = nil;
+        navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
     }

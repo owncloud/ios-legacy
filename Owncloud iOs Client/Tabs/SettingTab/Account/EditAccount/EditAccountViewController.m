@@ -64,27 +64,14 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         isConnectionToServer = NO;
         isNeedToCheckAgain = YES;
         
-        
-        // Custom initialization
-        if ([[UIDevice currentDevice] userInterfaceIdiom] != UIUserInterfaceIdiomPhone) {
-            UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"cancel", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancelClicked:)];
-            
-            self.navigationItem.leftBarButtonItem = cancelButton;
+        if(k_multiaccount_available && loginMode != LoginModeMigrate) {
+            [self setBarForCancelForLoadingFromModal];
         }
     }
     return self;
 }
 
-- (void)setTableBackGroundColor {
-    [self.tableView setBackgroundView: nil];
-    [self.tableView setBackgroundColor:[UIColor colorOfLoginBackground]];
-}
 
-- (void)setBarForCancelForLoadingFromModal {
-    
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(closeViewController)];
-    [self.navigationItem setLeftBarButtonItem:cancelButton];
-}
 
 - (void)setBrandingNavigationBarWithCancelButton{
     
@@ -102,12 +89,6 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
     [self setBarForCancelForLoadingFromModal];
 }
 
-- (void) closeViewController {
-    
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
-    //[self dismissModalViewControllerAnimated:NO];
-}
 
 - (void)viewDidLoad
 {    

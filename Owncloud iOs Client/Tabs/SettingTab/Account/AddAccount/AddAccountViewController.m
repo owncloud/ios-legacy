@@ -47,11 +47,6 @@
     return self;
 }
 
-- (void)setTableBackGroundColor {
-    [self.tableView setBackgroundView: nil];
-    [self.tableView setBackgroundColor:[UIColor colorOfLoginBackground]];
-}
-
 - (void) viewWillAppear:(BOOL)animated {
    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];

@@ -29,8 +29,6 @@ extern NSString *relaunchErrorCredentialFilesNotification;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andUser:(UserDto *) selectedUser andLoginMode:(LoginMode)loginMode;
-- (void)setBarForCancelForLoadingFromModal;
-- (void)setBrandingNavigationBarWithCancelButton;
 - (IBAction)cancelClicked:(id)sender;
 
 @end

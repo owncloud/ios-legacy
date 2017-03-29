@@ -2064,7 +2064,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 -(void) delayLoadEditAccountAfterErroLogin {
     
     EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:_activeUser andLoginMode:LoginModeExpire];
-    [viewController setBarForCancelForLoadingFromModal];
     
     if (IS_IPHONE)
     {

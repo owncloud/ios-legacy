@@ -177,6 +177,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 }
 
 - (void)setTableBackGroundColor {
+    [self.tableView setBackgroundView: nil];
     [self.tableView setBackgroundColor:[UIColor colorOfLoginBackground]];
 }
 
@@ -2526,6 +2527,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         DLog(@"saml user name is nil");
     }
 
+}
+
+
+- (void)setBarForCancelForLoadingFromModal {
+    
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(closeViewController)];
+    [self.navigationItem setLeftBarButtonItem:cancelButton];
+}
+
+- (void) closeViewController {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

@@ -930,7 +930,6 @@
     } else {
         //Show the Edit Account Screen
         EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:userSelected andLoginMode:LoginModeExpire];
-        [viewController setBarForCancelForLoadingFromModal];
         
         if (IS_IPHONE) {
             viewController.hidesBottomBarWhenPushed = YES;

@@ -97,8 +97,6 @@ extern NSString *loginViewControllerRotate;
 
 @property (nonatomic) LoginMode loginMode;
 
-
--(void)setTableBackGroundColor;
 -(void)checkUrlManually;
 -(void)hideOrShowPassword;
 -(void)goTryToDoLogin;
@@ -109,9 +107,12 @@ extern NSString *loginViewControllerRotate;
 -(void) addEditAccountsViewiPad;
 - (void) restoreTheCookiesOfActiveUser;
 
-
 - (id)initWithLoginMode:(LoginMode)loginMode;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andLoginMode:(LoginMode)loginMode;
+
+- (void)setBarForCancelForLoadingFromModal;
+
+- (void) closeViewController;
 
 @end
