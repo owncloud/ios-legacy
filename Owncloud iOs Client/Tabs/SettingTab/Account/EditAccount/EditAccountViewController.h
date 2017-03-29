@@ -29,6 +29,5 @@ extern NSString *relaunchErrorCredentialFilesNotification;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andUser:(UserDto *) selectedUser andLoginMode:(LoginMode)loginMode;
-- (IBAction)cancelClicked:(id)sender;
 
 @end
