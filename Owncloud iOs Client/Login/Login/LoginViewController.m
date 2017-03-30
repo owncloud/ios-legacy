@@ -78,6 +78,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         self.auxUsernameForReloadTable = @"";
         self.auxPasswordForReloadTable = @"";
         
+        isErrorOnCredentials = NO;
+        
         if (loginMode == LoginModeCreate && !k_force_update_of_server_url) {
             urlEditable = YES;
         } else {
@@ -1351,7 +1353,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 
         errorMessage = @"unknow_response_server";
         
-    } else if (self.loginMode == LoginModeExpire){
+    } else if (isErrorOnCredentials){
         
         //In SAML the error message is about the session expired
         if (k_is_sso_active) {
@@ -2266,6 +2268,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     DLog(@"Error login");
     
     [self hideTryingToLogin];
+    
+    isErrorOnCredentials = YES;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];

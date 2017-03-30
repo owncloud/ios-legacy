@@ -719,4 +719,29 @@
 
 
 
+ 
+ 
+ 
+ ///-----------------------------------
+ /// @name getFullRemoteServerPathWithoutProtocolBeginningWithUsername
+ ///-----------------------------------
+/**
+ * Return the domain serverpath with subfolderserver and beginning with the username
+ * Used to show path in the uploads view
+ *
+ * @param mUserDto -> user dto
+ *
+ * @return  fullPath -> username@domainName/sub1/sub2/...
+ *                   -> username@domainName/(subfoldersServer)
+ */
+ + (NSString *) getFullRemoteServerPathWithoutProtocolBeginningWithUsername:(UserDto *)mUserDto {
+     
+     NSString *path = nil;
+     
+     path = [NSString stringWithFormat:@"%@@%@", mUserDto.username, [UtilsUrls getFullRemoteServerPathWithoutProtocol:mUserDto]];
+
+     return path;
+ }
+ 
+
 @end

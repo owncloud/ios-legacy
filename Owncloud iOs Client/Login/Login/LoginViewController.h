@@ -63,6 +63,7 @@ extern NSString *loginViewControllerRotate;
     BOOL isHttpsSecure;
     BOOL isCheckingTheServerRightNow;
     BOOL isSSLAccepted;
+    BOOL isErrorOnCredentials;
     BOOL isError500;
     BOOL isLoginButtonEnabled;
     BOOL urlEditable;

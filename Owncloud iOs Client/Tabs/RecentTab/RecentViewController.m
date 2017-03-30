@@ -55,7 +55,11 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        //Set notifications for communication betweenViews
+        self.uploadsTableView = [[UITableView alloc] init];
+        self.uploadsTableView.dataSource = self;
+        self.uploadsTableView.delegate = self;
+        [self.uploadsTableView reloadData];
+       
         [self setNotificationForCommunicationBetweenViews];
     }
     return self;
@@ -65,6 +69,7 @@
 {
 
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view from its nib.
     self.title=NSLocalizedString(@"uploads_tab", nil);
     _progressViewArray=[[NSMutableArray alloc]init];
@@ -72,6 +77,7 @@
     //Add a more button
     UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more-filled"] style:UIBarButtonItemStylePlain target:self action:@selector(showOptions)];
     self.navigationItem.rightBarButtonItem = addButtonItem;
+    
 
 }
 
@@ -131,13 +137,10 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if (IS_IOS8 || IS_IOS9) {
-        self.edgesForExtendedLayout = UIRectEdgeAll;
-        self.extendedLayoutIncludesOpaqueBars = true;
-        self.automaticallyAdjustsScrollViewInsets = true;
-    }else{
-        self.edgesForExtendedLayout = UIRectCornerAllCorners;
-    }
+    self.edgesForExtendedLayout = UIRectEdgeAll;
+    self.extendedLayoutIncludesOpaqueBars = true;
+    self.automaticallyAdjustsScrollViewInsets = true;
+
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -154,38 +157,29 @@
 
 -(void)viewDidLayoutSubviews
 {
-    
-    if (IS_IOS8 || IS_IOS9) {
-        
-        if ([self.uploadsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.uploadsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
-        }
-        
-        if ([self.uploadsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
-            [self.uploadsTableView setLayoutMargins:UIEdgeInsetsZero];
-        }
-        
-        
-        CGRect rect = self.navigationController.navigationBar.frame;
-        float y = rect.size.height + rect.origin.y;
-        self.uploadsTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
-        
+    if ([self.uploadsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.uploadsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
     }
+    
+    if ([self.uploadsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.uploadsTableView setLayoutMargins:UIEdgeInsetsZero];
+    }
+    
+    CGRect rect = self.navigationController.navigationBar.frame;
+    float y = rect.size.height + rect.origin.y;
+    self.uploadsTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
 
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    if (IS_IOS8 || IS_IOS9) {
-        if ([self.uploadsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.uploadsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
-        }
-        
-        if ([self.uploadsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
-            [self.uploadsTableView setLayoutMargins:UIEdgeInsetsZero];
-        }
-        
+    if ([self.uploadsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.uploadsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
+    }
+    
+    if ([self.uploadsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.uploadsTableView setLayoutMargins:UIEdgeInsetsZero];
     }
 }
 
@@ -285,7 +279,7 @@
 
         
         //Update uploads offline with error uploading of the current uploads in order to have update data in current uploads
-        NSArray *uploadsOfflineArray = [ManageUploadsDB getUploadsByStatus:errorUploading];
+        NSArray *uploadsOfflineArray = [ManageUploadsDB getUploads];
         
         //Make a dictionary of uploads offline
         NSMutableDictionary *uploadsOfflineDict = [NSMutableDictionary new];
@@ -300,6 +294,13 @@
             
             currentManageUploadRequest = obj;
             
+            //Check if the dictionary contains the upload offline key
+            if ([[uploadsOfflineDict allKeys] containsObject:[NSNumber numberWithInteger:currentManageUploadRequest.currentUpload.idUploadsOffline]]) {
+                //Update the upload offline data
+                currentManageUploadRequest.currentUpload = [uploadsOfflineDict objectForKey:[NSNumber numberWithInteger:currentManageUploadRequest.currentUpload.idUploadsOffline]];
+                currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:currentManageUploadRequest.currentUpload.userId];
+            }
+            
             //Depends of kind of error we assings the upload to appropiate array
             if (currentManageUploadRequest.currentUpload.kindOfError != notAnError) {
                 [failedUploadsTemp addObject:currentManageUploadRequest];
@@ -308,11 +309,7 @@
             } else {
                 [currentUploadsTemp addObject:currentManageUploadRequest];
                 
-                //Check if the dictionary contains the upload offline key
-                if ([[uploadsOfflineDict allKeys] containsObject:[NSNumber numberWithInteger:currentManageUploadRequest.currentUpload.idUploadsOffline]]) {
-                    //Update the upload offline data
-                    currentManageUploadRequest.currentUpload = [uploadsOfflineDict objectForKey:[NSNumber numberWithInteger:currentManageUploadRequest.currentUpload.idUploadsOffline]];
-                }
+               
             }
             
         }];
@@ -626,7 +623,7 @@
             
             failedCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             failedCell.labelLengthAndError.text=lengthAndError;
-            failedCell.labelUserName.text=[NSString stringWithFormat:@"%@@%@", currentManageUploadRequest.userUploading.username, [UtilsUrls getUrlServerWithoutHttpOrHttps:currentManageUploadRequest.userUploading.url]];
+            failedCell.labelUserName.text=[UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUsername:currentManageUploadRequest.userUploading];
             //If there are SAML replacind the percents escapes with UTF8 coding
             if (k_is_sso_active) {
                 failedCell.labelUserName.text = [failedCell.labelUserName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

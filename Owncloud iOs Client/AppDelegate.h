@@ -54,7 +54,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
     UserDto *_activeUser;
     
   
-    NSMutableArray *_uploadArray;
+    NSMutableArray *_uploadArray; //uploads of type ManageUploadRequest
     NSMutableArray *_webDavArray;
      
     RecentViewController *_recentViewController;

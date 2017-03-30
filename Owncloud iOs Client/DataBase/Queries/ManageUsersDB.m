@@ -798,7 +798,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET destiny_folder=replace(destiny_folder, ?, ?) WHERE status != ?", oldUrl, newValue, [NSNumber numberWithInteger:uploaded]];
+        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET destiny_folder=replace(destiny_folder, ?, ?)", oldUrl, newValue];
         
         if (!correctQuery) {
             DLog(@"Error overriding uploads urls");
