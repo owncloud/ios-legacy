@@ -192,7 +192,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
     [UtilsCookies eraseURLCache];
     
     //We check if the user that we are editing is the same that we are using
-    if ([_selectedUser.username isEqualToString:samlUserName]) {
+    if ([_selectedUser.username isEqualToString:samlUserName] || self.loginMode == LoginModeMigrate) {
         
         _usernameTextField = [UITextField new];
         _usernameTextField.text = samlUserName;
