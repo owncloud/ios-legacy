@@ -114,8 +114,6 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 //Flags
 //Boleean that indicate if the loading screen is showing
 @property(nonatomic) BOOL showLoadingAfterChangeUser;
-//Boleean that indicate if is checking the Etag
-@property(nonatomic) BOOL checkingEtag;
 //Boleean that indicate if is necesary etag request
 @property(nonatomic) BOOL isEtagRequestNecessary;
 //Alert to show any alert on Files view. Property to can cancel it on rotate
