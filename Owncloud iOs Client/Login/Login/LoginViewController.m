@@ -130,7 +130,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     //Configure view for interface position
     [self configureViewForInterfacePosition];
-    [self internazionaliceTheInitialInterface];
     
     isLoginButtonEnabled = NO;
     
@@ -214,15 +213,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     // Dispose of any resources that can be recreated.
 }
 
-
-#pragma markt - Internacionalization
-
--(void)internazionaliceTheInitialInterface {
-    
-    self.loginButtonString = NSLocalizedString(@"login", nil);
-    //[loginButton setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
-    //[cancelButton setTitle:NSLocalizedString(@"cancel", nil) forState:UIControlStateNormal];
-}
 #pragma mark - Draw Position
 
 ///-----------------------------------
@@ -1054,7 +1044,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 -(AccountCell *) configureCellToLoginByAccountCell:(AccountCell *) cell {
     
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    cell.textLabel.text=self.loginButtonString;
+    cell.textLabel.text= NSLocalizedString(@"login", nil);
     cell.textLabel.textColor = [UIColor colorOfLoginButtonTextColor];
   //  cell.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"gradImage.png"]];
     cell.backgroundColor = [UIColor colorOfLoginButtonBackground];

@@ -102,10 +102,6 @@
     [self addEditAccountsViewiPad];
 }
 
--(void)internazionaliceTheInitialInterface {
-    self.loginButtonString = NSLocalizedString(@"add_account", nil);
-}
-
 
 ///-----------------------------------
 /// @name Create data with server data

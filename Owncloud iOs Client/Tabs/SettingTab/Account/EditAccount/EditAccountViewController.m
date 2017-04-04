@@ -123,11 +123,6 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
     
 }
 
-
--(void)internazionaliceTheInitialInterface {
-    self.loginButtonString = NSLocalizedString(@"save_changes", nil);
-}
-
 -(void)potraitViewiPad{
     
     DLog(@"Potrait iPad");

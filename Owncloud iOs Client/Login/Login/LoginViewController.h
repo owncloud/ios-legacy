@@ -85,7 +85,6 @@ extern NSString *loginViewControllerRotate;
 @property(nonatomic,strong) NSString *auxPasswordForShowPasswordOnEdit;
 
 @property(nonatomic,strong) NSString *connectString;
-@property(nonatomic,strong) NSString *loginButtonString;
 
 @property(nonatomic)CGRect txtWithLogoWhenNoURLFrame;
 @property(nonatomic)CGRect urlFrame;
