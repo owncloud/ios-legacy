@@ -7,7 +7,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -18,7 +18,6 @@
 #import "FMDatabaseQueue.h"
 #import "FMDatabase.h"
 #import "UserDto.h"
-#import "CapabilitiesDto.h"
 #import "OCCapabilities.h"
 
 #ifdef CONTAINER_APP
@@ -34,7 +33,7 @@
 
 @implementation ManageCapabilitiesDB
 
-+(CapabilitiesDto *) insertCapabilities:(OCCapabilities *)capabilities ofUserId:(NSInteger)userId{
++(void) insertCapabilities:(OCCapabilities *)capabilities ofUserId:(NSInteger)userId{
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -46,20 +45,12 @@
         if (!correctQuery) {
             DLog(@"Error in insert capabilities");
         }
-        
     }];
-    
-    CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId:userId];
-    
-    return cap;
-
-    
-
 }
 
-+(CapabilitiesDto *) getCapabilitiesOfUserId:(NSInteger) userId{
++(OCCapabilities *) getCapabilitiesOfUserId:(NSInteger) userId{
     
-    __block CapabilitiesDto *output = nil;
+    __block OCCapabilities *output = nil;
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -68,10 +59,8 @@
         
         while ([rs next]) {
             
-            output = [CapabilitiesDto new];
-            
-            output.idCapabilities = [rs intForColumn:@"id"];
-            output.idUser = [rs intForColumn:@"id_user"];
+            output = [OCCapabilities new];
+
             output.versionMajor = [rs intForColumn:@"version_major"];
             output.versionMinor = [rs intForColumn:@"version_minor"];
             output.versionMicro = [rs intForColumn:@"version_micro"];
@@ -99,19 +88,17 @@
             output.isFileBigFileChunkingEnabled = [rs boolForColumn:@"is_file_big_file_chunking_enabled"];
             output.isFileUndeleteEnabled = [rs boolForColumn:@"is_file_undelete_enabled"];
             output.isFileVersioningEnabled = [rs boolForColumn:@"is_file_versioning_enabled"];
-            
         }
         
         [rs close];
         
     }];
     
-    
     return output;
 
 }
 
-+(CapabilitiesDto *) updateCapabilitiesWith:(OCCapabilities *)capabilities ofUserId:(NSInteger)userId {
++(void) updateCapabilitiesWith:(OCCapabilities *)capabilities ofUserId:(NSInteger)userId {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -123,13 +110,7 @@
         if (!correctQuery) {
             DLog(@"Error updating capabilities");
         }
-        
     }];
-    
-    CapabilitiesDto *cap = [self getCapabilitiesOfUserId:userId];
-    
-    return cap;
-    
 }
 
 

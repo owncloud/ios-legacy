@@ -19,102 +19,115 @@
 #import "OCCommunication.h"
 #import "SharedViewController.h"
 #import "OCCapabilities.h"
-#import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
 #import "CheckCapabilities.h"
 
 @implementation CheckFeaturesSupported
 
-#pragma mark - Singleton
-
-+ (id)sharedCheckFeaturesSupported {
-    static CheckFeaturesSupported *sharedCheckFeaturesSupported = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedCheckFeaturesSupported = [[self alloc] init];
++ (void) updateServerFeaturesAndCapabilitiesOfActiveUser{
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        
+        if (app.activeUser.username == nil) {
+            app.activeUser = [ManageUsersDB getActiveUser];
+        }
+        
+        if (app.activeUser) {
+            
+            [CheckCapabilities getServerCapabilitiesOfActiveAccount:^(OCCapabilities *capabilities) {
+                
+                [CheckCapabilities updateServerCapabilitiesOfActiveAccountInDB:capabilities];
+                
+                //if server version change update supported features
+                if (![app.activeUser.capabilitiesDto.versionString isEqualToString:capabilities.versionString]) {
+                    [self updateServerFeaturesOfActiveUserForVersion:capabilities.versionString];
+                }
+                
+                //update file list view if needed
+                BOOL capabilitiesShareAPIChanged = (app.activeUser.capabilitiesDto.isFilesSharingAPIEnabled == capabilities.isFilesSharingAPIEnabled)? NO:YES;
+                if(capabilitiesShareAPIChanged){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [CheckCapabilities reloadFileList];
+                    });
+                }
+                
+                app.activeUser.capabilitiesDto = [OCCapabilities new];
+                app.activeUser.capabilitiesDto = capabilities;
+                
+            } failure:^(NSError *error) {
+                DLog(@"error: %@", error);
+            }];
+        }
     });
-    return sharedCheckFeaturesSupported;
+    
 }
 
-- (void) updateServerFeaturesOfActiveUser{
++ (void) updateServerFeaturesOfActiveUserForVersion:(NSString *)versionString {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    OCServerFeatures *serverFeatures = [[AppDelegate sharedOCCommunication] getFeaturesSupportedByServerForVersion:versionString];
     
-    if (app.activeUser.username == nil) {
-        app.activeUser = [ManageUsersDB getActiveUser];
+    //Capabilities support
+    
+    if (serverFeatures.hasCapabilitiesSupport) {
+        app.activeUser.hasCapabilitiesSupport = serverFunctionalitySupported;
+    } else {
+        app.activeUser.hasCapabilitiesSupport = serverFunctionalityNotSupported;
     }
     
-    if (app.activeUser) {
-        
-        [[AppDelegate sharedOCCommunication] getFeaturesSupportedByServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, BOOL hasShareSupport, BOOL hasShareeSupport, BOOL hasCookiesSupport, BOOL hasForbiddenCharactersSupport, BOOL hasCapabilitiesSupport, BOOL hasFedSharesOptionShareSupport, NSString *redirectedServer) {
-            
-            //Share Support
-            
-            if (hasShareSupport) {
-                app.activeUser.hasShareApiSupport = serverFunctionalitySupported;
-            } else {
-                app.activeUser.hasShareApiSupport = serverFunctionalityNotSupported;
-            }
-            
-            //Sharee Support
-            
-            if (hasShareeSupport) {
-                app.activeUser.hasShareeApiSupport = serverFunctionalitySupported;
-            } else {
-                app.activeUser.hasShareeApiSupport = serverFunctionalityNotSupported;
-            }
-            
-            if (app.activeUser.hasShareApiSupport) {
-                //Launch the notification
-                [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
-            }
-            
-            [self updateSharedView];
-            
-            //Cookies Support
-            
-            [AppDelegate sharedOCCommunication].isCookiesAvailable = hasCookiesSupport;
-            
-            if (hasCookiesSupport) {
-                app.activeUser.hasCookiesSupport = serverFunctionalitySupported;
-            } else {
-                app.activeUser.hasCookiesSupport = serverFunctionalityNotSupported;
-            }
-            
-            //Forbidden Character Support
-            
-            if (hasForbiddenCharactersSupport) {
-                app.activeUser.hasForbiddenCharactersSupport = serverFunctionalitySupported;
-            } else {
-                app.activeUser.hasForbiddenCharactersSupport = serverFunctionalityNotSupported;
-            }
+    //Share Support
+    
+    if (serverFeatures.hasShareSupport) {
+        app.activeUser.hasShareApiSupport = serverFunctionalitySupported;
+    } else {
+        app.activeUser.hasShareApiSupport = serverFunctionalityNotSupported;
+    }
+    
+    //Sharee Support
+    
+    if (serverFeatures.hasShareeSupport) {
+        app.activeUser.hasShareeApiSupport = serverFunctionalitySupported;
+    } else {
+        app.activeUser.hasShareeApiSupport = serverFunctionalityNotSupported;
+    }
+    
+    if (app.activeUser.hasShareApiSupport) {
+        //Launch the notification
+        [[NSNotificationCenter defaultCenter] postNotificationName: RefreshSharesItemsAfterCheckServerVersion object: nil];
+    }
+    
+     dispatch_async(dispatch_get_main_queue(), ^{
+         [self updateSharedView];
+     });
+    
+    //Cookies Support
+    
+    [AppDelegate sharedOCCommunication].isCookiesAvailable = serverFeatures.hasCookiesSupport;
+    
+    if (serverFeatures.hasCookiesSupport) {
+        app.activeUser.hasCookiesSupport = serverFunctionalitySupported;
+    } else {
+        app.activeUser.hasCookiesSupport = serverFunctionalityNotSupported;
+    }
+    
+    //Forbidden Character Support
+    
+    if (serverFeatures.hasForbiddenCharactersSupport) {
+        app.activeUser.hasForbiddenCharactersSupport = serverFunctionalitySupported;
+    } else {
+        app.activeUser.hasForbiddenCharactersSupport = serverFunctionalityNotSupported;
+    }
+    
+    //Federated shares has option to share
+    
+    if (serverFeatures.hasFedSharesOptionShareSupport) {
+        app.activeUser.hasFedSharesOptionShareSupport = serverFunctionalitySupported;
+    }
+    
+    
+    [ManageUsersDB updateUserByUserDto:app.activeUser];
 
-            //Capabilities support
-            
-            if (hasCapabilitiesSupport) {
-                app.activeUser.hasCapabilitiesSupport = serverFunctionalitySupported;
-                
-                //Update capabilities of the active account
-                [[CheckCapabilities sharedCheckCapabilities] updateServerCapabilitiesOfActiveAccount];
-                
-            }else{
-                app.activeUser.hasCapabilitiesSupport = serverFunctionalityNotSupported;
-                
-            }
-            
-            if (hasFedSharesOptionShareSupport) {
-                app.activeUser.hasFedSharesOptionShareSupport = serverFunctionalitySupported;
-            }
-            
-            [ManageUsersDB updateUserByUserDto:app.activeUser];
-            
-        } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
-            DLog(@"error when try to get server features: %@", error);
-            [self updateSharedView];
-        }];
-        
-    }
-    
 }
 
 ///-----------------------------------
@@ -124,7 +137,7 @@
 /**
  * Update shared view
  */
-- (void) updateSharedView {
++ (void) updateSharedView {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     

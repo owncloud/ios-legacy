@@ -21,8 +21,8 @@ extern NSString * CapabilitiesUpdatedNotification;
 
 @interface CheckCapabilities : NSObject
 
-+ (id)sharedCheckCapabilities;
-
-- (void) updateServerCapabilitiesOfActiveAccount;
++ (void) getServerCapabilitiesOfActiveAccount:(void(^)(OCCapabilities *capabilities))success failure:(void(^)(NSError *error))failure;
++ (void) updateServerCapabilitiesOfActiveAccountInDB:(OCCapabilities *)capabilities;
++ (void) reloadFileList;
 
 @end

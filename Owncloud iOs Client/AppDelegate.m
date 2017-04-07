@@ -854,7 +854,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 - (void)checkIfServerSupportThings {
     
     //Check and updated the features supported by the server
-    [[CheckFeaturesSupported sharedCheckFeaturesSupported]updateServerFeaturesOfActiveUser];
+    [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
     
 }
 

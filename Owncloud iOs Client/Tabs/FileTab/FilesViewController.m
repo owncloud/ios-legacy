@@ -1631,8 +1631,10 @@
     }
     footerLabel.text = footerText;
     
-    [footerView addSubview:footerLabel];
-    [_tableView setTableFooterView:footerView];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [footerView addSubview:footerLabel];
+        [_tableView setTableFooterView:footerView];
+    });
 }
 
 
@@ -1883,9 +1885,11 @@
     
     //Update the table footer
     [self setTheLabelOnTheTableFooter];
-        
-    //Reload data in the table
-    [self reloadTableFileList];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //Reload data in the table
+        [self reloadTableFileList];
+    });
     
     //TODO: Remove this to prevent duplicate files
     /*if([_currentDirectoryArray count] != 0) {
@@ -1897,7 +1901,9 @@
 -(void)reloadTableFileListAfterCapabilitiesUpdated {
     _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
     _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
-    [self reloadTableFileList];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self reloadTableFileList];
+    });
 }
 -(void)reloadTableFileList{
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
@@ -1921,8 +1927,10 @@
     //update gallery array
     [self updateArrayImagesInGallery];
     
-    //Reload data in the table
-    [_tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //Reload data in the table
+        [_tableView reloadData];
+    });
 }
 
 
@@ -1940,9 +1948,11 @@
     if (!IS_IPHONE) {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
-        if (app.detailViewController.galleryView) {
-            [app.detailViewController.galleryView updateImagesArrayWithNewArray:_sortedArray];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (app.detailViewController.galleryView) {
+                [app.detailViewController.galleryView updateImagesArrayWithNewArray:_sortedArray];
+            }
+        });
     }
 }
 
@@ -1974,7 +1984,9 @@
  */
 - (void)stopPullRefresh{
     //_refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"pull_down_refresh", nil)];
-    [_refreshControl endRefreshing];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_refreshControl endRefreshing];
+    });
 }
 
 /*
@@ -3252,10 +3264,13 @@
     if (_openWith) {
         DLog(@"CANCEL DOWNLOAD");
         [_openWith cancelDownload];
-        [_downloadView.view removeFromSuperview];
-        //Ublock view    
-        self.navigationController.navigationBar.userInteractionEnabled=YES;
-        self.tabBarController.tabBar.userInteractionEnabled=YES; 
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_downloadView.view removeFromSuperview];
+            //Ublock view
+            self.navigationController.navigationBar.userInteractionEnabled=YES;
+            self.tabBarController.tabBar.userInteractionEnabled=YES;
+        });
     }
 }
 /*
