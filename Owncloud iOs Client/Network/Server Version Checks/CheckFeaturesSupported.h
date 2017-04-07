@@ -17,10 +17,8 @@
 
 @interface CheckFeaturesSupported : NSObject
 
-#pragma mark - Singleton
-
-+ (id)sharedCheckFeaturesSupported;
-
-- (void) updateServerFeaturesOfActiveUser;
++ (void) updateServerFeaturesAndCapabilitiesOfActiveUser;
++ (void) updateServerFeaturesOfActiveUserForVersion:(NSString *)versionString;
++ (void) updateSharedView;
 
 @end

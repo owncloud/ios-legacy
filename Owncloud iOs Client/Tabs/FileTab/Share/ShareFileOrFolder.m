@@ -27,7 +27,6 @@
 #import "FileNameUtils.h"
 #import "UtilsUrls.h"
 #import "OCSharedDto.h"
-#import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
 #import "OCConstants.h"
 #import "ManageUsersDB.h"

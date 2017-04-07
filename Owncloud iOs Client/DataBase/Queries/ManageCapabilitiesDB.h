@@ -14,17 +14,15 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
-#import <Foundation/Foundation.h>
 
-@class CapabilitiesDto;
 @class OCCapabilities;
 
 @interface ManageCapabilitiesDB : NSObject
 
-+(CapabilitiesDto *) insertCapabilities:(OCCapabilities *)capabilities ofUserId:(NSInteger)userId;
++(void) insertCapabilities:(OCCapabilities *)capabilities ofUserId:(NSInteger)userId;
 
-+(CapabilitiesDto *) getCapabilitiesOfUserId:(NSInteger) userId;
++(OCCapabilities *) getCapabilitiesOfUserId:(NSInteger) userId;
 
-+(CapabilitiesDto *) updateCapabilitiesWith:(OCCapabilities *)capabilities ofUserId:(NSInteger)userId;
++(void) updateCapabilitiesWith:(OCCapabilities *)capabilities ofUserId:(NSInteger)userId;
 
 @end

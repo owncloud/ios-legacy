@@ -27,7 +27,6 @@
 #import "Customization.h"
 #import "ShareSearchUserViewController.h"
 #import "ManageSharesDB.h"
-#import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
 #import "ShareEditUserViewController.h"
 #import "OCShareUser.h"
@@ -436,7 +435,7 @@
 - (void) sharedLinkSwithValueChanged: (UISwitch*)sender {
     
     if (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto) {
-        CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+        OCCapabilities *cap = APP_DELEGATE.activeUser.capabilitiesDto;
         
         if (!cap.isFilesSharingShareLinkEnabled) {
             sender.on = false;
@@ -461,7 +460,7 @@
      if (self.isPasswordProtectEnabled){
 
         if (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported) {
-            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+            OCCapabilities *cap = APP_DELEGATE.activeUser.capabilitiesDto;
             
             if (cap.isFilesSharingPasswordEnforcedEnabled) {
                 //not remove, is enforced password
@@ -485,7 +484,7 @@
     
     if (self.isExpirationDateEnabled) {
         if (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported) {
-            CapabilitiesDto *cap = APP_DELEGATE.activeUser.capabilitiesDto;
+            OCCapabilities *cap = APP_DELEGATE.activeUser.capabilitiesDto;
             
             if (cap.isFilesSharingExpireDateEnforceEnabled) {
                 //not remove, is enforced expiration date

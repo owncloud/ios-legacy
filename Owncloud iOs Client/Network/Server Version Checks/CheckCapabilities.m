@@ -20,36 +20,32 @@
 #import "ManageUsersDB.h"
 #import "OCCommunication.h"
 #import "OCCapabilities.h"
-#import "CapabilitiesDto.h"
 #import "ManageCapabilitiesDB.h"
 #import "FileNameUtils.h"
 #import "Customization.h"
 #import "FilesViewController.h"
+#import "UtilsUrls.h"
 
 NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
 
 @implementation CheckCapabilities
 
-+ (id)sharedCheckCapabilities{
-    
-    static CheckCapabilities *sharedCheckCapabilities = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedCheckCapabilities = [[self alloc] init];
-    });
-    return sharedCheckCapabilities;
-    
-}
-
-- (void) updateServerCapabilitiesOfActiveAccount {
++ (void) getServerCapabilitiesOfActiveAccount:(void(^)(OCCapabilities *capabilities))success failure:(void(^)(NSError *error))failure{
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    if (app.activeUser.username == nil) {
-        app.activeUser = [ManageUsersDB getActiveUser];
-    }
-    
     if (app.activeUser) {
+        
+        //Set the right credentials
+        if (k_is_sso_active) {
+            [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
+        } else if (k_is_oauth_active) {
+            [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
+        } else {
+            [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
+        }
+        
+        [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
         
         [[AppDelegate sharedOCCommunication] getCapabilitiesOfServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, OCCapabilities *capabilities, NSString *redirectedServer) {
             
@@ -61,36 +57,33 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
                 isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
             }
             
-            CapabilitiesDto *cap = [ManageCapabilitiesDB getCapabilitiesOfUserId: app.activeUser.idUser];
-
             if (!isSamlCredentialsError) {
-                
-                BOOL capabilitiesShareAPIChanged = (cap.isFilesSharingAPIEnabled == capabilities.isFilesSharingAPIEnabled)? NO:YES;
-                
-                if (cap == nil) {
-                    cap = [ManageCapabilitiesDB insertCapabilities:capabilities ofUserId: app.activeUser.idUser];
-                }else{
-                    cap = [ManageCapabilitiesDB updateCapabilitiesWith:capabilities ofUserId: app.activeUser.idUser];
-                }
-                
-                //update active userDto
-                app.activeUser.capabilitiesDto = [CapabilitiesDto new];
-                app.activeUser.capabilitiesDto = cap;
-                
-                //update file list view if needed
-                if(capabilitiesShareAPIChanged){
-                    [self reloadFileList];
-                }
-
+                success(capabilities);
+            } else {
+                success(nil);
             }
 
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
             
-             DLog(@"error when try to get server capabilities: %@", error);
-            
+            DLog(@"error when try to get server capabilities: %@", error);
+            failure(error);
         }];
     }
     
+}
+
+
++ (void) updateServerCapabilitiesOfActiveAccountInDB:(OCCapabilities *)capabilities {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    OCCapabilities *capDB = [ManageCapabilitiesDB getCapabilitiesOfUserId: app.activeUser.idUser];
+    
+    if (capDB == nil) {
+        [ManageCapabilitiesDB insertCapabilities:capabilities ofUserId: app.activeUser.idUser];
+    }else{
+        [ManageCapabilitiesDB updateCapabilitiesWith:capabilities ofUserId: app.activeUser.idUser];
+    }
 }
 
 
@@ -99,7 +92,7 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
 /*
  * Method to reload the data of the file list.
  */
-- (void)reloadFileList{
++ (void)reloadFileList{
     [[NSNotificationCenter defaultCenter] postNotificationName: CapabilitiesUpdatedNotification object: nil];
 }
 

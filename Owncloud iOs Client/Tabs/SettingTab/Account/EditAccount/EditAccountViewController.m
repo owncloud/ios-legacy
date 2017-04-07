@@ -25,7 +25,7 @@
 #import "UtilsCookies.h"
 #import "UtilsFramework.h"
 #import "ManageCookiesStorageDB.h"
-#import "CheckCapabilities.h"
+#import "CheckFeaturesSupported.h"
 
 
 //Initialization the notification
@@ -297,9 +297,9 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         
         [ManageUsersDB updatePassword:self.selectedUser];
         
-        //Update capabilities of the active account
+        //Update features and capabilities of the active account
         if (self.selectedUser.activeaccount) {
-            [[CheckCapabilities sharedCheckCapabilities] updateServerCapabilitiesOfActiveAccount];
+            [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
         }
         
         //Change the state of the of the user uploads with credential error

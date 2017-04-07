@@ -94,13 +94,9 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if (IS_IOS8 || IS_IOS9) {
-        self.edgesForExtendedLayout = UIRectEdgeAll;
-        self.extendedLayoutIncludesOpaqueBars = true;
-        self.automaticallyAdjustsScrollViewInsets = true;
-    }else{
-        self.edgesForExtendedLayout = UIRectCornerAllCorners;
-    }
+    self.edgesForExtendedLayout = UIRectEdgeAll;
+    self.extendedLayoutIncludesOpaqueBars = true;
+    self.automaticallyAdjustsScrollViewInsets = true;
     
     //Get offline data
     [self refreshWithDataBaseSharedItems];
@@ -109,7 +105,7 @@
     //Set the table footer
     [self setTheLabelOnTheTableFooter];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //Do operations in background thread
         //If the server has not been checked, do it
         AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -374,11 +370,13 @@
                     //Sorted by share time
                     _sharedLinkItems = [self getArraySortByShareDate:_sharedLinkItems];
                     
-                    //Refresh the list of share items
-                    [_sharedTableView reloadData];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        //Refresh the list of share items
+                        [_sharedTableView reloadData];
                     
-                    //Stop loading pull refresh
-                    [self stopPullRefresh];
+                        //Stop loading pull refresh
+                        [self stopPullRefresh];
+                     });
                 }
                 
                 //Finish the refresh
@@ -410,8 +408,13 @@
                     //Sorted by share time
                     _sharedLinkItems = [self getArraySortByShareDate:_sharedLinkItems];
                     
-                    //Refresh the list of share items
-                    [_sharedTableView reloadData];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        //Refresh the list of share items
+                        [_sharedTableView reloadData];
+                        
+                        //Stop loading pull refresh
+                        [self stopPullRefresh];
+                    });
                     
                     DLog(@"error: %@", error);
                     DLog(@"Operation error: %ld", (long)response.statusCode);
@@ -421,10 +424,6 @@
 
                         [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
                     }
-                    
-                    //Stop loading pull refresh
-                    [self stopPullRefresh];
-                
                 }
                 
                 //Finish the refresh
@@ -436,10 +435,13 @@
             _sharedLinkItems = nil;
             _sharedLinkItems = [NSArray new];
             
-            [_sharedTableView reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //Refresh the list of share items
+                [_sharedTableView reloadData];
             
-            //Stop loading pull refresh
-            [self stopPullRefresh];
+                //Stop loading pull refresh
+                [self stopPullRefresh];
+            });
             
             //Finish the refresh
             _isRefreshSharedInProgress = NO;
@@ -456,8 +458,10 @@
  * This method called the app delegate error login
  */
 - (void)errorLogin{
-    //Stop loading pull refresh
-    [self stopPullRefresh];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //Stop loading pull refresh
+        [self stopPullRefresh];
+    });
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     [app errorLogin];
