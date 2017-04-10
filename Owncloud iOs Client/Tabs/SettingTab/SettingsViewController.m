@@ -821,7 +821,13 @@
         accountCell.userName.text = [accountCell.userName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
     
-    accountCell.urlServer.text = userAccout.url;
+    if ([UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:userAccout.predefinedUrl]) {
+        accountCell.urlServer.text = NSLocalizedString(@"pending_migration_to_new_url", nil);
+        accountCell.urlServer.textColor = [UIColor colorOfLoginErrorText];
+    } else {
+        accountCell.urlServer.text = userAccout.url;
+    }
+    
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [accountCell.menuButton setTag:row];
     [accountCell.menuButton setImage:[UIImage imageNamed:@"more-filledBlack.png"] forState:UIControlStateNormal];
@@ -1102,9 +1108,14 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     app.userSessionCurrentToken = nil;
     
+    UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
+    //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
+    [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:[UtilsUrls getFullRemoteServerPath:selectedUser]];
+
     //Method to change the account
     AccountCell *cell = (AccountCell *) [self.settingsTableView cellForRowAtIndexPath:indexPath];
     [cell activeAccount:nil];
+    
 }
 
 #pragma mark - AccountCell Delegate Methods
