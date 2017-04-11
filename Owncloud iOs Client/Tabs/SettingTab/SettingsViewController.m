@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -43,6 +43,7 @@
 #import "DeleteUtils.h"
 #import "OCLoadingSpinner.h"
 #import "InstantUpload.h"
+#import "CheckFeaturesSupported.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -1169,8 +1170,7 @@
     //Change the active user in appDelegate global variable
     app.activeUser = selectedUser;
     
-    //Check if the server is Chunk
-    [self performSelectorInBackground:@selector(checkShareItemsInAppDelegate) withObject:nil];
+    [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
     
     [UtilsCookies eraseURLCache];
     
@@ -1294,12 +1294,6 @@
     return listOfUsersWithouActive;
 }
 
-#pragma mark - Check Server version in order to use chunks to upload or not
-- (void)checkShareItemsInAppDelegate{
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate checkIfServerSupportThings];
-}
 
 #pragma mark - UIActionSheetDelegate
 

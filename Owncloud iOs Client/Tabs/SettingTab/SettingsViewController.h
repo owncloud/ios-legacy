@@ -64,8 +64,5 @@ typedef enum {
 
 - (IBAction)changeSwitchPasscode:(id)sender;
 - (IBAction)changeSwitchTouchID:(id)sender;
-- (IBAction)changeSwitchInstantUpload:(id)sender;
 - (void)disconnectUser;
-- (void)showMenuAccountOptions;
-
 @end
