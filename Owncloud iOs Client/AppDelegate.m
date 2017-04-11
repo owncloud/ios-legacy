@@ -5,7 +5,7 @@
 //  Created by Javier Gonzalez on 7/11/12.
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -139,7 +139,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self showSplashScreenFake];
     
     //Check if the server support shared api
-    [self performSelector:@selector(checkIfServerSupportThings) withObject:nil afterDelay:0.0];
+    [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
     
     //Needed to use on background tasks
     if (!k_is_sso_active) {
@@ -612,7 +612,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         }
         
         //Check the version of the server to know if has shared support
-        [self performSelectorInBackground:@selector(checkIfServerSupportThings) withObject:nil];
+        [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
     });
     
 }
@@ -837,26 +837,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [_recentViewController updateRecents];
 }
 
-
-///-----------------------------------
-/// @name Check if server support different things
-///-----------------------------------
-
-/**
- * This method check if the server support multipple things:
- * - If support Share
- * - If support Sharee API
- * - If support Cookies
- * - If support Forbidden Characters
- * - If support Capabilities API
- *
- */
-- (void)checkIfServerSupportThings {
-    
-    //Check and updated the features supported by the server
-    [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
-    
-}
 
 /*
  * Remove chunks of temp folder

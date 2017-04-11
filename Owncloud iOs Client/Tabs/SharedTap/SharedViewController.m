@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -36,6 +36,7 @@
 #import "ShareMainViewController.h"
 #import "OCNavigationController.h"
 #import "ManageCapabilitiesDB.h"
+#import "CheckFeaturesSupported.h"
 
 
 //Three sections {shared items - not shared items msg - not share api support msg}
@@ -110,7 +111,7 @@
         //If the server has not been checked, do it
         AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         if (app.activeUser.hasShareApiSupport == serverFunctionalityNotChecked) {
-            [app checkIfServerSupportThings];
+            [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
         }
         
         //Do the request to get the shared items
@@ -750,7 +751,7 @@
     //If the server has not been checked, do it
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if (app.activeUser.hasShareApiSupport == serverFunctionalityNotChecked) {
-        [app checkIfServerSupportThings];
+         [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
     }
     refresh.attributedTitle = nil;
     [self performSelector:@selector(refreshSharedItems) withObject:nil];

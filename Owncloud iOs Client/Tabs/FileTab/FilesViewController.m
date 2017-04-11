@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -64,6 +64,7 @@
 #import "CheckCapabilities.h"
 #import "SortManager.h"
 #import "EditFileViewController.h"
+#import "CheckFeaturesSupported.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -2317,7 +2318,7 @@
 
     } else if (app.activeUser.hasShareApiSupport == serverFunctionalityNotChecked) {
         //If the server has not been checked, do it
-        [app checkIfServerSupportThings];
+        [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
     }
 }
 
