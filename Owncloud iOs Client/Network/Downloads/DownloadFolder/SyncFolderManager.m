@@ -404,7 +404,7 @@ static float const kDelayAfterCancelAll = 3.0;
         [current cancelDownload];
     }
     
-    DLog(@"Everything cancelled");
+    DLog(@"All downloads have been canceled");
     
     if (self.delegate) {
         if (listOfFilesToBeDownloadedCopy.count > 0) {

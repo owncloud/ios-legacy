@@ -132,14 +132,10 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if (IS_IOS8 || IS_IOS9) {
-        self.edgesForExtendedLayout = UIRectEdgeAll;
-        self.extendedLayoutIncludesOpaqueBars = true;
-        self.automaticallyAdjustsScrollViewInsets = true;
-    }else{
-        self.edgesForExtendedLayout = UIRectCornerAllCorners;
-    }
-    
+    self.edgesForExtendedLayout = UIRectEdgeAll;
+    self.extendedLayoutIncludesOpaqueBars = true;
+    self.automaticallyAdjustsScrollViewInsets = true;
+
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Relaunch the uploads that failed before

@@ -283,7 +283,11 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         [ManageUploadsDB updateErrorCredentialFiles:userDtoEdited.idUser];
         
         [self performSelector:@selector(restoreDownloadsAndUploads) withObject:nil afterDelay:5.0];
-            
+        
+        if (self.loginMode == LoginModeMigrate) {
+            [APP_DELEGATE doThingsThatShouldDoOnStart];
+        }
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:relaunchErrorCredentialFilesNotification object:_selectedUser];
         
         [[self navigationController] popViewControllerAnimated:YES];

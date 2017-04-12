@@ -274,8 +274,13 @@
     
     app.currentViewVisible = self;
     
-    //Relaunch the uploads that failed before
-    [app performSelector:@selector(relaunchUploadsFailedNoForced) withObject:nil afterDelay:5.0];
+    
+    
+    // if we are migrating the url no relaunch pending uploads
+    if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:app.activeUser.predefinedUrl]) {
+        //Relaunch the uploads that failed before
+        [app performSelector:@selector(relaunchUploadsFailedNoForced) withObject:nil afterDelay:5.0];
+    }
     
     //If it is the root folder show the name of root folder
     if(self.fileIdToShowFiles.isRootFolder) {

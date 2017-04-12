@@ -125,7 +125,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     _isOverwriteProcess = NO; //Flag for detect if a overwrite process is in progress
     _isPasscodeVisible = NO;
     _isNewUser = NO;
-    _isExpirationTimeInUpload = NO;
     
     [self moveIfIsNecessaryFilesAfterUpdateAppFromTheOldFolderArchitecture];
     
@@ -180,8 +179,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
         
-        //Update favorites files if there are active user
-        [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
+        //if we are migrating url not relaunch sync
+        if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
+            //Update favorites files if there are active user
+            [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
+        }
         
     } else if (k_show_main_help_guide && [ManageDB getShowHelpGuide]) {
             self.helpGuideWindowViewController = [HelpGuideViewController new];
@@ -389,10 +391,14 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
         
-        //Generate the interface of the app
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self doThingsThatShouldDoOnStart];
-            [self launchUploadsOfflineFromDocumentProvider];
+            
+            // if we are migrating the url no relaunch pending uploads
+            if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
+                [self doThingsThatShouldDoOnStart];
+                [self launchUploadsOfflineFromDocumentProvider];
+            }
+            
             [self generateAppInterfaceFromLoginScreen:NO];
         });
     }
@@ -998,38 +1004,34 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 {
     DLog(@"applicationWillEnterForeground");
     
-    if (_activeUser.username==nil) {
-        _activeUser=[ManageUsersDB getActiveUser];
+    if (self.activeUser.username==nil) {
+        self.activeUser=[ManageUsersDB getActiveUser];
     }
     
-    if (_activeUser.url != nil) {
+    if (self.activeUser.url != nil) {
        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
     }
     
-    
-    //Check if expieration time upload is called
-    if (_isExpirationTimeInUpload) {
-        _uploadArray = [NSMutableArray new];
-        [self doThingsThatShouldDoOnStart];
-        _isExpirationTimeInUpload = NO;
-    } else{
-        
+    // if we are migrating the url no relaunch pending uploads
+    if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
+
         [self launchUploadsOfflineFromDocumentProvider];
         
         [self relaunchUploadsFailedForced];
         
         //Refresh the tab
         [self performSelector:@selector(updateRecents) withObject:nil afterDelay:0.3];
+
+        //Update the Favorites Files
+        [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
+
+        //Refresh the list of files from the database
+        if (_activeUser && self.presentFilesViewController) {
+            [_presentFilesViewController reloadTableFromDataBase];
+        }
+        
     }
 
-    //Update the Favorites Files
-    [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
-   
-    //Refresh the list of files from the database
-    if (_activeUser && self.presentFilesViewController) {
-        [_presentFilesViewController reloadTableFromDataBase];
-    }
-    
     //Show TouchID dialog if active
     if([ManageAppSettingsDB isTouchID])
         [[ManageTouchID sharedSingleton] showTouchIDAuth];

@@ -78,13 +78,13 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         self.auxUsernameForReloadTable = @"";
         self.auxPasswordForReloadTable = @"";
         
-        if (self.loginMode==LoginModeExpire){
+        if (_loginMode==LoginModeExpire){
             isErrorOnCredentials = YES;
         } else {
             isErrorOnCredentials = NO;
         }
         
-        if (loginMode == LoginModeCreate && !k_force_update_of_server_url) {
+        if (_loginMode == LoginModeCreate || _loginMode == LoginModeMigrate) {
             urlEditable = YES;
         } else {
             urlEditable = NO;
