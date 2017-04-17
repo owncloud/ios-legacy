@@ -504,7 +504,7 @@ static NSString *const tmpFileName = @"tmp.der";
         
         if (!jsonDict) {
             //Error
-            // DLog(@"json error: %@", jsonError);
+            DLog(@"json error: %@", jsonError);
         } else {
             
             //Get the ocs dictionary object
