@@ -199,7 +199,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[InstantUpload instantUploadManager] activate];
+        if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:user.predefinedUrl]) {
+            [[InstantUpload instantUploadManager] activate];
+        }
     });
     
     //Set up user agent, so this way all UIWebView will use it

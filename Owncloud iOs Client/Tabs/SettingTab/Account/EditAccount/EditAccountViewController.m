@@ -30,6 +30,7 @@
 #import "FilesViewController.h"
 #import "UtilsUrls.h"
 #import "OCKeychain.h"
+#import "InstantUpload.h"
 
 
 //Initialization the notification
@@ -287,6 +288,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         if (self.loginMode == LoginModeMigrate) {
             [APP_DELEGATE doThingsThatShouldDoOnStart];
             [[APP_DELEGATE presentFilesViewController] initFilesView];
+            [[InstantUpload instantUploadManager] activate];
         }
         
         [[NSNotificationCenter defaultCenter] postNotificationName:relaunchErrorCredentialFilesNotification object:_selectedUser];
