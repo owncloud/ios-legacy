@@ -278,10 +278,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 for (NSString *parameter in parameters)
                 {
                     NSArray *parts = [parameter componentsSeparatedByString:@"="];
-                    NSString *key = [[parts objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                    NSString *key = [[parts objectAtIndex:0] stringByRemovingPercentEncoding];
                     if ([parts count] > 1)
                     {
-                        id value = [[parts objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                        id value = [[parts objectAtIndex:1] stringByRemovingPercentEncoding];
                         [result setObject:value forKey:key];
                     }
                 }
@@ -454,7 +454,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         _filesViewController.alert = nil;
     }
     
-    self.loginViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
+    self.loginWindowViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -1262,7 +1262,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                     //Local folder
                     NSString *localFolder = nil;
                     localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:self.activeUser]];
-                    localFolder = [localFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                    localFolder = [localFolder stringByRemovingPercentEncoding];
                     
                     download.currentLocalFolder = localFolder;
                     
@@ -1381,7 +1381,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                         [download setDownloadTaskIdentifierValid:NO];
                   //  });
 
-                    NSString * localPath = [NSString stringWithFormat:@"%@%@", download.currentLocalFolder, [download.fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                    NSString * localPath = [NSString stringWithFormat:@"%@%@", download.currentLocalFolder, [download.fileDto.fileName stringByRemovingPercentEncoding]];
                     NSURL *localPathUrl = [NSURL fileURLWithPath:localPath];
                     return localPathUrl;
                     
@@ -2304,7 +2304,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     for (UploadsOfflineDto *currentUploadBackground in uploadsBackground) {
         if ((currentUploadBackground.status != uploaded) && (currentUploadBackground.status != errorUploading)) {
-            NSString * path = [NSString stringWithFormat:@"%@%@", [currentUploadBackground.destinyFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding ], currentUploadBackground.uploadFileName];
+            NSString * path = [NSString stringWithFormat:@"%@%@", [currentUploadBackground.destinyFolder stringByRemovingPercentEncoding ], currentUploadBackground.uploadFileName];
             
             [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
                 if (items != nil && [items count] > 0) {
@@ -2348,7 +2348,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     for (UploadsOfflineDto *currentUploadBackground in uploadsBackground) {
         if ((currentUploadBackground.status != uploaded) && (currentUploadBackground.status != errorUploading)) {
-            NSString * path = [NSString stringWithFormat:@"%@%@", [currentUploadBackground.destinyFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding ], currentUploadBackground.uploadFileName];
+            NSString * path = [NSString stringWithFormat:@"%@%@", [currentUploadBackground.destinyFolder stringByRemovingPercentEncoding ], currentUploadBackground.uploadFileName];
             
             [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
                 if (items != nil && [items count] > 0) {

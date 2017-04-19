@@ -814,7 +814,7 @@
     
     //If saml needs change the name to utf8
     if (k_is_sso_active) {
-        accountCell.userName.text = [accountCell.userName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        accountCell.userName.text = [accountCell.userName.text stringByRemovingPercentEncoding];
     }
     
     if ([UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:userAccout.predefinedUrl]) {
@@ -921,7 +921,7 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
          UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
-        [self dicSelectLogOutAccount:selectedUser];
+        [self didSelectLogOutAccount:selectedUser];
     }
 }
 
@@ -1334,7 +1334,7 @@
                 [self didSelectClearCacheAccount:self.selectedUserAccount];
                 break;
             case 2:
-                [self dicSelectLogOutAccount:self.selectedUserAccount];
+                [self didSelectLogOutAccount:self.selectedUserAccount];
                 break;
             default:
                 break;
@@ -1505,9 +1505,6 @@
         } else {
             [self.mailer setSubject:[NSLocalizedString(@"mail_recommendation_subject", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName]];
         }
-        
-        NSArray *toRecipients = [NSArray arrayWithObjects:nil];
-        [self.mailer setToRecipients:toRecipients];
         
         UIImage *myImage = [UIImage imageNamed:@"CompanyLogo.png"];
         NSData *imageData = UIImagePNGRepresentation(myImage);
@@ -1809,7 +1806,7 @@
     });
 }
 
-- (void) dicSelectLogOutAccount:(UserDto *)user {
+- (void) didSelectLogOutAccount:(UserDto *)user {
     
     [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
     
