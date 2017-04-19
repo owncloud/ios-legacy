@@ -159,7 +159,7 @@
     
     //We set the currentLocalFolder when the folder is not the root
     if(_fileIdToShowFiles.idFile != 0) {
-        _currentLocalFolder = [NSString stringWithFormat:@"%@%@", _currentLocalFolder, [_fileIdToShowFiles.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        _currentLocalFolder = [NSString stringWithFormat:@"%@%@", _currentLocalFolder, [_fileIdToShowFiles.fileName stringByRemovingPercentEncoding]];
         DLog(@"CurrentLocalFolder: %@", _currentLocalFolder);
     }
     
@@ -259,8 +259,6 @@
     self.extendedLayoutIncludesOpaqueBars = true;
     self.automaticallyAdjustsScrollViewInsets = true;
 
-    //Flag to know when the view change automatic to root view
-    BOOL isGoToRootView = NO;
     
     //Appear the tabBar
     self.tabBarController.tabBar.hidden=NO;
@@ -274,13 +272,33 @@
     
     app.currentViewVisible = self;
     
-    
-    
     // if we are migrating the url no relaunch pending uploads
     if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:app.activeUser.predefinedUrl]) {
-        //Relaunch the uploads that failed before
-        [app performSelector:@selector(relaunchUploadsFailedNoForced) withObject:nil afterDelay:5.0];
+        
+        [self initFilesView];
+        
     }
+
+    //Assign this class to presentFilesViewController
+    app.presentFilesViewController=self;
+    
+    //Add loading screen if it's necessary (Used by restoring the loading view after a rotate when the uploading processing)
+    if (app.isLoadingVisible==YES) {
+        [self initLoading];
+        
+    }
+
+}
+
+- (void)initFilesView {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UserDto *currentUser = [ManageUsersDB getActiveUser];
+    //Flag to know when the view change automatic to root view
+    BOOL isGoToRootView = NO;
+    
+    //Relaunch the uploads that failed before
+    [app performSelector:@selector(relaunchUploadsFailedNoForced) withObject:nil afterDelay:5.0];
+    
     
     //If it is the root folder show the name of root folder
     if(self.fileIdToShowFiles.isRootFolder) {
@@ -299,7 +317,7 @@
          currentUser.idUser == _mUser.idUser)) {
         //We are changing of user
         //Show the file list in the correct place
-        [_tableView setContentOffset:CGPointMake(0,0) animated:animated];
+        [self.tableView setContentOffset:CGPointMake(0,0) animated:YES];
         
         //We check if the user have root folder at true on the DB
         if([ManageFilesDB isExistRootFolderByUser:app.activeUser]) {
@@ -323,7 +341,7 @@
         } else {
             //Set this flag to yes, to indicate that the user change the account and this view should be dissaper
             isGoToRootView=YES;
-            [self.navigationController popToRootViewControllerAnimated:animated];
+            [self.navigationController popToRootViewControllerAnimated:YES];
         }
         
         _currentRemoteFolder = [UtilsUrls getFullRemoteServerPathWithWebDav:currentUser];
@@ -358,10 +376,10 @@
         
         //Checking the etag
         NSString *path = _currentRemoteFolder;
-        path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        path = [path stringByRemovingPercentEncoding];
         
         [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
-
+            
             if (currentUser.idUser == app.activeUser.idUser) {
                 DLog(@"Operation response code: %ld", (long)response.statusCode);
                 
@@ -407,7 +425,7 @@
             if (!isSamlCredentialsError) {
                 [self manageServerErrors:response.statusCode and:error];
             }
-        
+            
         }];
         
     } else {
@@ -445,7 +463,7 @@
         }
         
         //Is directory
-        NSString *folderName =  [currentFolder.fileName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];
+        NSString *folderName =  [currentFolder.fileName stringByRemovingPercentEncoding];
         
         //Quit the last character, the slash (/)
         folderName = [folderName substringToIndex:[folderName length]-1];
@@ -460,7 +478,7 @@
         // in MyTableViewController's tableView:didSelectRowAtIndexPath method...
         UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
                                        initWithImage:[UIImage imageNamed:[FileNameUtils getTheNameOfTheBrandImage]]
-                                       style:UIBarButtonItemStyleBordered
+                                       style:UIBarButtonItemStylePlain
                                        target:nil
                                        action:nil];
         
@@ -469,7 +487,7 @@
     } else if(_fileIdToShowFiles.isRootFolder) {
         UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
                                        initWithImage:[UIImage imageNamed:@""]
-                                       style:UIBarButtonItemStyleBordered
+                                       style:UIBarButtonItemStylePlain
                                        target:nil
                                        action:nil];
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
@@ -478,7 +496,7 @@
     } else {
         UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
                                        initWithImage:[UIImage imageNamed:@""]
-                                       style:UIBarButtonItemStyleBordered
+                                       style:UIBarButtonItemStylePlain
                                        target:nil
                                        action:nil];
         self.navigationItem.backBarButtonItem = backButton;
@@ -487,16 +505,6 @@
     // Deselect the selected row
     NSIndexPath *indexPath = [_tableView indexPathForSelectedRow];
     [_tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    //Assign this class to presentFilesViewController
-    app.presentFilesViewController=self;
-    
-    //Add loading screen if it's necessary (Used by restoring the loading view after a rotate when the uploading processing)
-    if (app.isLoadingVisible==YES) {
-        [self initLoading];
-        
-    }
-
 }
 
 // Notifies the view controller that its view is about to be removed from a view hierarchy.
@@ -847,7 +855,7 @@
 -(BOOL)checkForSameName:(NSString *)string
 {
     string = [string stringByAppendingString:@"/"];
-    string = [string stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];
+    string = [string stringByRemovingPercentEncoding];
     
     NSString *dicName;
     
@@ -858,7 +866,7 @@
         //DLog(@"%@", fileDto.fileName);       
         
         dicName=fileDto.fileName;
-        dicName=[dicName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];        
+        dicName=[dicName stringByRemovingPercentEncoding];        
         
         if([string isEqualToString:dicName]) {
             return YES;
@@ -894,7 +902,7 @@
             NSString *newURL = [NSString stringWithFormat:@"%@%@",self.currentRemoteFolder,[name encodeString:NSUTF8StringEncoding]];
             NSString *rootPath = [UtilsUrls getFilePathOnDBByFullPath:newURL andUser:app.activeUser];
             
-            NSString *pathOfNewFolder = [NSString stringWithFormat:@"%@%@",[self.currentRemoteFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding], name ];
+            NSString *pathOfNewFolder = [NSString stringWithFormat:@"%@%@",[self.currentRemoteFolder stringByRemovingPercentEncoding], name ];
             
             [[AppDelegate sharedOCCommunication] createFolder:pathOfNewFolder onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
                 DLog(@"Folder created");
@@ -1151,7 +1159,7 @@
     
     NSString *path = _nextRemoteFolder;
     
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
@@ -1393,7 +1401,7 @@
             //Font for file
             UIFont *fileFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
             fileCell.labelTitle.font = fileFont;
-            fileCell.labelTitle.text = [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            fileCell.labelTitle.text = [file.fileName stringByRemovingPercentEncoding];
             
             NSString *fileSizeString = @"";
             //Obtain the file size from the data base
@@ -1429,7 +1437,7 @@
             UIFont *fileFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
             fileCell.labelTitle.font = fileFont;
             
-            NSString *folderName = [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *folderName = [file.fileName stringByRemovingPercentEncoding];
             //Quit the last character
             folderName = [folderName substringToIndex:[folderName length]-1];
             
@@ -1676,12 +1684,12 @@
         if(self.fileIdToShowFiles.isRootFolder){
             UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
                                            initWithImage:[UIImage imageNamed:[FileNameUtils getTheNameOfTheBrandImage]]
-                                           style:UIBarButtonItemStyleBordered
+                                           style:UIBarButtonItemStylePlain
                                            target:nil
                                            action:nil];
             self.navigationItem.backBarButtonItem = backButton;
         }else{
-            NSString *folderName = [[selectedFile.filePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] lastPathComponent];
+            NSString *folderName = [[selectedFile.filePath stringByRemovingPercentEncoding] lastPathComponent];
             self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(folderName, nil) style:UIBarButtonItemStylePlain target:nil action:nil];
         }
         
@@ -1779,7 +1787,7 @@
     
     NSString *path = _nextRemoteFolder;
     
-   path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+   path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
@@ -2021,7 +2029,7 @@
     
     NSString *path = _currentRemoteFolder;
     
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
@@ -2236,7 +2244,7 @@
         
         NSString *path = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser];
         path = [path stringByAppendingString:_fileIdToShowFiles.fileName];
-        path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        path = [path stringByRemovingPercentEncoding];
         
         //Checking the Shared files and folders
         [[AppDelegate sharedOCCommunication] readSharedByServer:app.activeUser.url andPath:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
@@ -2785,12 +2793,12 @@
             self.selectFolderNavigation.modalTransitionStyle=UIModalTransitionStyleCoverVertical;
             self.selectFolderNavigation.modalPresentationStyle = UIModalPresentationFormSheet;
             
-            if (IS_IOS8 || IS_IOS9) {
-                //Remove all the views in the main screen for the iOS8 bug
-                if (self.moreActionSheet) {
-                    [self.moreActionSheet dismissWithClickedButtonIndex:0 animated:YES];
-                }
+            
+            //Remove all the views in the main screen for the iOS8 bug
+            if (self.moreActionSheet) {
+                [self.moreActionSheet dismissWithClickedButtonIndex:0 animated:YES];
             }
+
             [app.detailViewController presentViewController:self.selectFolderNavigation animated:YES completion:nil];
         }
         //Hide preview (only in iPad)
@@ -2823,7 +2831,7 @@
     
     NSString *path = _nextRemoteFolder;
     
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
@@ -3636,7 +3644,7 @@
         self.moreActionSheet = nil;
     }
     
-    NSString *title = [self.selectedFileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *title = [self.selectedFileDto.fileName stringByRemovingPercentEncoding];
     
     if(self.selectedFileDto.isDirectory) {
         

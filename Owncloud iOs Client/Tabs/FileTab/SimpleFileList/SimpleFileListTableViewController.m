@@ -61,7 +61,10 @@
         self.currentFolder = currentFolder;
         self.user = [ManageUsersDB getActiveUser];
         
-        [self fillTheArraysFromDatabase];
+        // if we are migrating the url no relaunch pulldown
+        if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.user.predefinedUrl]) {
+            [self fillTheArraysFromDatabase];
+        }
     }
     return self;
 }
@@ -82,15 +85,18 @@
         }
     } else {
         //We remove the las character / and the URL encoding
-        NSString *title = [self.currentFolder.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *title = [self.currentFolder.fileName stringByRemovingPercentEncoding];
         if ([title length] > 0) {
             title = [title substringToIndex:[title length] - 1];
         }
         
         [self.navigationItem setTitle:title];
     }
-    
-    [self addPullDownRefresh];
+
+    // if we are migrating the url no relaunch pulldown
+    if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.user.predefinedUrl]) {
+        [self addPullDownRefresh];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -217,7 +223,7 @@
             //Font for file
             UIFont *fileFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
             fileCell.labelTitle.font = fileFont;
-            fileCell.labelTitle.text = [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            fileCell.labelTitle.text = [file.fileName stringByRemovingPercentEncoding];
             
             NSString *fileSizeString = @"";
             //Obtain the file size from the data base
@@ -253,7 +259,7 @@
             UIFont *fileFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
             fileCell.labelTitle.font = fileFont;
             
-            NSString *folderName = [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *folderName = [file.fileName stringByRemovingPercentEncoding];
             //Quit the last character
             folderName = [folderName substringToIndex:[folderName length]-1];
             
@@ -334,10 +340,12 @@
 }
 
 - (void) navigateToFile:(FileDto *) file {
-    //Method to be overwritten
-    _simpleFilesViewController = [[SimpleFileListTableViewController alloc] initWithNibName:@"SimpleFileListTableViewController" onFolder:file];
+     //Method to be overwritten
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _simpleFilesViewController = [[SimpleFileListTableViewController alloc] initWithNibName:@"SimpleFileListTableViewController" onFolder:file];
     
-    [[self navigationController] pushViewController:_simpleFilesViewController animated:NO];
+        [[self navigationController] pushViewController:_simpleFilesViewController animated:NO];
+    });
 }
 
 - (void) reloadCurrentFolder {
@@ -368,7 +376,7 @@
     [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
     
     NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:self.user];
-    remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    remotePath = [remotePath stringByRemovingPercentEncoding];
     
      [sharedCommunication readFolder:remotePath withUserSessionToken:nil onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
         
@@ -474,30 +482,31 @@
  * Method that launch the loading screen and block the view
  */
 -(void)initLoading {
-    
-    if (_HUD) {
-        [_HUD removeFromSuperview];
-        _HUD=nil;
-    }
-    
-    _HUD = [[MBProgressHUD alloc]initWithView:self.view];
-    _HUD.delegate = self;
-    [self.view.window addSubview:_HUD];
-    
-    _HUD.labelText = NSLocalizedString(@"loading", nil);
-    
-    if (IS_IPHONE) {
-        _HUD.dimBackground = NO;
-    }else {
-        _HUD.dimBackground = NO;
-    }
-    
-    [_HUD show:YES];
-    
-    self.view.userInteractionEnabled = NO;
-    self.navigationController.navigationBar.userInteractionEnabled = NO;
-    self.tabBarController.tabBar.userInteractionEnabled = NO;
-    [self.view.window setUserInteractionEnabled:NO];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (_HUD) {
+            [_HUD removeFromSuperview];
+            _HUD=nil;
+        }
+        
+        _HUD = [[MBProgressHUD alloc]initWithView:self.view];
+        _HUD.delegate = self;
+        [self.view.window addSubview:_HUD];
+        
+        _HUD.labelText = NSLocalizedString(@"loading", nil);
+        
+        if (IS_IPHONE) {
+            _HUD.dimBackground = NO;
+        }else {
+            _HUD.dimBackground = NO;
+        }
+        
+        [_HUD show:YES];
+        
+        self.view.userInteractionEnabled = NO;
+        self.navigationController.navigationBar.userInteractionEnabled = NO;
+        self.tabBarController.tabBar.userInteractionEnabled = NO;
+        [self.view.window setUserInteractionEnabled:NO];
+    });
 }
 
 
@@ -506,13 +515,14 @@
  */
 - (void)endLoading {
     
-    // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
-    [_HUD removeFromSuperview];
-    self.view.userInteractionEnabled = YES;
-    self.navigationController.navigationBar.userInteractionEnabled = YES;
-    self.tabBarController.tabBar.userInteractionEnabled = YES;
-    [self.view.window setUserInteractionEnabled:YES];
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
+        [_HUD removeFromSuperview];
+        self.view.userInteractionEnabled = YES;
+        self.navigationController.navigationBar.userInteractionEnabled = YES;
+        self.tabBarController.tabBar.userInteractionEnabled = YES;
+        [self.view.window setUserInteractionEnabled:YES];
+    });
 }
 
 #pragma mark - Errors
@@ -630,8 +640,10 @@
  */
 - (void)stopPullRefresh{
     
-    //_refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"pull_down_refresh", nil)];
-    [self.refreshControl endRefreshing];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //_refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"pull_down_refresh", nil)];
+        [self.refreshControl endRefreshing];
+    });
 }
 
 #pragma mark - Etag
@@ -661,7 +673,7 @@
         [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
         
         NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:self.currentFolder andUser:self.user];
-        remotePath = [remotePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        remotePath = [remotePath stringByRemovingPercentEncoding];
         
         [sharedCommunication readFile:remotePath onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
             

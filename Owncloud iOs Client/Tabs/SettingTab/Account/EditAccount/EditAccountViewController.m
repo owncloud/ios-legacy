@@ -286,6 +286,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         
         if (self.loginMode == LoginModeMigrate) {
             [APP_DELEGATE doThingsThatShouldDoOnStart];
+            [[APP_DELEGATE presentFilesViewController] initFilesView];
         }
         
         [[NSNotificationCenter defaultCenter] postNotificationName:relaunchErrorCredentialFilesNotification object:_selectedUser];
