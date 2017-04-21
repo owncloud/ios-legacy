@@ -120,10 +120,6 @@
         
     }];
     
-    if (output) {
-        output.capabilitiesDto = [ManageCapabilitiesDB getCapabilitiesOfUserId: output.idUser];
-    }
-    
     return output;
 }
 
