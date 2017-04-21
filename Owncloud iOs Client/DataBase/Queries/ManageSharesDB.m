@@ -62,7 +62,7 @@
             //Adding UTF8 encoding
             shareDto.path = [shareDto.path encodeString:NSUTF8StringEncoding];
        
-            NSString *sqlQuery = [NSString stringWithFormat:@"INSERT INTO shared SELECT null as id, %ld as 'file_source', %ld as 'item_source', %ld as 'share_type', '%@' as 'share_with', '%@' as 'path', %ld as 'permissions', %ld as 'shared_date', %ld as 'expiration_date', '%@' as 'token', '%@' as 'share_with_display_name', %d as 'is_directory', %ld as 'user_id', %ld as 'id_remote_shared'",
+            NSString *sqlQuery = [NSString stringWithFormat:@"INSERT INTO shared SELECT null as id, %ld as 'file_source', %ld as 'item_source', %ld as 'share_type', '%@' as 'share_with', '%@' as 'path', %ld as 'permissions', %ld as 'shared_date', %ld as 'expiration_date', '%@' as 'token', '%@' as 'share_with_display_name', %d as 'is_directory', %ld as 'user_id', %ld as 'id_remote_shared', '%@' as 'name', '%@' as 'url'",
                              (long)shareDto.fileSource,
                              (long)shareDto.itemSource,
                              (long)shareDto.shareType,
@@ -75,13 +75,12 @@
                              shareDto.shareWithDisplayName,
                              shareDto.isDirectory,
                              (long)mUser.idUser,
-                             (long)shareDto.idRemoteShared];
+                             (long)shareDto.idRemoteShared,
+                             shareDto.name,
+                             shareDto.url];
             
             correctQuery = [db executeUpdate:sqlQuery];
-           
         }
-
-            
         
         if (!correctQuery) {
             
@@ -164,6 +163,8 @@
             sharedDto.shareWithDisplayName = [rs stringForColumn:@"share_with_display_name"];
             sharedDto.isDirectory = [rs boolForColumn:@"is_directory"];
             sharedDto.idRemoteShared = [rs intForColumn:@"id_remote_shared"];
+            sharedDto.name = [rs stringForColumn:@"name"];
+            sharedDto.url = [rs stringForColumn:@"url"];
             
             [output addObject:sharedDto];
         }
@@ -229,6 +230,8 @@
                 sharedDto.shareWithDisplayName = [rs stringForColumn:@"share_with_display_name"];
                 sharedDto.isDirectory = [rs boolForColumn:@"is_directory"];
                 sharedDto.idRemoteShared = [rs intForColumn:@"id_remote_shared"];
+                sharedDto.name = [rs stringForColumn:@"name"];
+                sharedDto.url = [rs stringForColumn:@"url"];
                 
                 [output addObject:sharedDto];
 
@@ -279,6 +282,8 @@
             sharedDto.shareWithDisplayName = [rs stringForColumn:@"share_with_display_name"];
             sharedDto.isDirectory = [rs boolForColumn:@"is_directory"];
             sharedDto.idRemoteShared = [rs intForColumn:@"id_remote_shared"];
+            sharedDto.name = [rs stringForColumn:@"name"];
+            sharedDto.url = [rs stringForColumn:@"url"];
             
             [output addObject:sharedDto];
         }
@@ -327,6 +332,8 @@
             sharedDto.shareWithDisplayName = [rs stringForColumn:@"share_with_display_name"];
             sharedDto.isDirectory = [rs boolForColumn:@"is_directory"];
             sharedDto.idRemoteShared = [rs intForColumn:@"id_remote_shared"];
+            sharedDto.name = [rs stringForColumn:@"name"];
+            sharedDto.url = [rs stringForColumn:@"url"];
             
             [output addObject:sharedDto];
         }
@@ -370,6 +377,8 @@
             sharedDto.shareWithDisplayName = [rs stringForColumn:@"share_with_display_name"];
             sharedDto.isDirectory = [rs boolForColumn:@"is_directory"];
             sharedDto.idRemoteShared = [rs intForColumn:@"id_remote_shared"];
+            sharedDto.name = [rs stringForColumn:@"name"];
+            sharedDto.url = [rs stringForColumn:@"url"];
             
             [output addObject:sharedDto];
         }
@@ -416,6 +425,8 @@
             sharedDto.shareWithDisplayName = [rs stringForColumn:@"share_with_display_name"];
             sharedDto.isDirectory = [rs boolForColumn:@"is_directory"];
             sharedDto.idRemoteShared = [rs intForColumn:@"id_remote_shared"];
+            sharedDto.name = [rs stringForColumn:@"name"];
+            sharedDto.url = [rs stringForColumn:@"url"];
             
             [output addObject:sharedDto];
         }
@@ -525,6 +536,8 @@
                 sharedDto.shareWithDisplayName = [rs stringForColumn:@"share_with_display_name"];
                 sharedDto.isDirectory = [rs boolForColumn:@"is_directory"];
                 sharedDto.idRemoteShared = [rs intForColumn:@"id_remote_shared"];
+                sharedDto.name = [rs stringForColumn:@"name"];
+                sharedDto.url = [rs stringForColumn:@"url"];
                 
             }
             
@@ -561,6 +574,8 @@
             sharedDto.shareWithDisplayName = [rs stringForColumn:@"share_with_display_name"];
             sharedDto.isDirectory = [rs boolForColumn:@"is_directory"];
             sharedDto.idRemoteShared = [rs intForColumn:@"id_remote_shared"];
+            sharedDto.name = [rs stringForColumn:@"name"];
+            sharedDto.url = [rs stringForColumn:@"url"];
             
         }
         [rs close];
@@ -568,40 +583,6 @@
     
     return sharedDto;
 }
-
-//+ (OCSharedDto *) getOCShareTypeUserOrTypeGroupByFileDto:(FileDto*)file andUser:(UserDto *) user {
-//    
-//    __block OCSharedDto *sharedDto;
-//    
-//    FMDatabaseQueue *queue = Managers.sharedDatabase;
-//    
-//    [queue inDatabase:^(FMDatabase *db) {
-//        
-//        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ? AND file_source = ? AND share_type =  ", [NSNumber numberWithInteger:user.idUser], [NSNumber numberWithInteger:file.sharedFileSource]];
-//        while ([rs next]) {
-//            
-//            sharedDto = [OCSharedDto new];
-//            
-//            sharedDto.fileSource = [rs intForColumn:@"file_source"];
-//            sharedDto.itemSource = [rs intForColumn:@"item_source"];
-//            sharedDto.shareType = [rs intForColumn:@"share_type"];
-//            sharedDto.shareWith = [rs stringForColumn:@"share_with"];
-//            sharedDto.path = [rs stringForColumn:@"path"];
-//            sharedDto.permissions = [rs intForColumn:@"permissions"];
-//            sharedDto.sharedDate = [rs longForColumn:@"shared_date"];
-//            sharedDto.expirationDate = [rs longForColumn:@"expiration_date"];
-//            sharedDto.token = [rs stringForColumn:@"token"];
-//            sharedDto.shareWithDisplayName = [rs stringForColumn:@"share_with_display_name"];
-//            sharedDto.isDirectory = [rs boolForColumn:@"is_directory"];
-//            sharedDto.idRemoteShared = [rs intForColumn:@"id_remote_shared"];
-//            
-//        }
-//        [rs close];
-//    }];
-//    
-//    return sharedDto;
-//}
-
 
 
 
