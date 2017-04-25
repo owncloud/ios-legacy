@@ -672,7 +672,7 @@
 
         //Obtain the path where the folder will be created in the file system
         NSString *rootPath = [NSString stringWithFormat:@"%@", newFolder.filePath];
-        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByRemovingPercentEncoding]];
         //Remove the "/"
         NSString *name = [newFolder.fileName substringToIndex:[newFolder.fileName length]-1];
         
@@ -722,8 +722,7 @@
 
 - (void) createFolderPathInFileSystemWithThisPath:(NSString*)path{
     
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    //DLog(@"path: %@", path);
+    path = [path stringByRemovingPercentEncoding];
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
         NSError *error = nil;
@@ -1201,7 +1200,7 @@
             self.mShareFileOrFolder = [ShareFileOrFolder new];
             self.mShareFileOrFolder.delegate = self;
             
-            [self.mShareFileOrFolder unshareTheFile:sharedDto];
+            [self.mShareFileOrFolder unshareTheFileByIdRemoteShared:sharedDto.idRemoteShared];
             [cell hideUtilityButtonsAnimated:YES];
             
             //Refresh the list of share items

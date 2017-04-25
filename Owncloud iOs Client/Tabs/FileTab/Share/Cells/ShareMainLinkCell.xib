@@ -5,36 +5,40 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="55" id="KGk-i7-Jjw" customClass="ShareUserCell" customModule="Owncloud_iOs_Client" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="55" id="KGk-i7-Jjw" customClass="ShareMainLinkCell" customModule="Owncloud_iOs_Client" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="55"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="55"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y3K-pI-hgi">
-                        <rect key="frame" x="15" y="16" width="281" height="21"/>
+                    <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fnn-f4-35g" userLabel="ButtonGetLink">
+                        <rect key="frame" x="293" y="16" width="22" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" title="Button" image="CopyLinkShareipad.png"/>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y3K-pI-hgi">
+                        <rect key="frame" x="8" y="8" width="282" height="39"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
-                <constraints>
-                    <constraint firstAttribute="trailingMargin" secondItem="y3K-pI-hgi" secondAttribute="trailing" constant="16" id="Wy4-w2-Rpc"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="y3K-pI-hgi" secondAttribute="bottom" constant="9" id="cgM-RN-m8y"/>
-                    <constraint firstItem="y3K-pI-hgi" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="7" id="loC-L9-n7E"/>
-                    <constraint firstItem="y3K-pI-hgi" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="8" id="y42-Pl-IAL"/>
-                </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="buttonGetLink" destination="Fnn-f4-35g" id="iWG-dN-mNC"/>
                 <outlet property="itemName" destination="y3K-pI-hgi" id="Vfc-2d-unw"/>
             </connections>
+            <point key="canvasLocation" x="35" y="53.5"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="CopyLinkShareipad.png" width="55" height="55"/>
+    </resources>
 </document>

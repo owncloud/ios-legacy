@@ -3,11 +3,11 @@
 //  Owncloud iOs Client
 //
 //  Created by Gonzalo Gonzalez on 10/8/15.
-//
+//  Edited by Noelia Alvarez
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -18,13 +18,11 @@
 #import "ShareFileOrFolder.h"
 #import "MBProgressHUD.h"
 #import "FileDto.h"
+#import "AppsActivityProvider.h"
 
-@interface ShareMainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, ShareFileOrFolderDelegate, MBProgressHUDDelegate, UIAlertViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
+@interface ShareMainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, ShareFileOrFolderDelegate, MBProgressHUDDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate >
 
-@property (weak, nonatomic) IBOutlet UITableView* shareTableView;
-@property (strong, nonatomic) UIView* datePickerContainerView;
-@property (strong, nonatomic) UIDatePicker *datePickerView;
-@property (strong, nonatomic) UIView* pickerView;
+@property (weak, nonatomic) IBOutlet UITableView *shareTableView;
 
 - (id) initWithFileDto:(FileDto *)fileDto;
 

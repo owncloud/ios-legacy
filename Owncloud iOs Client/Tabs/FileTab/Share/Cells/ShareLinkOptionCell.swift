@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright (C) 2016, ownCloud GmbH.
+Copyright (C) 2017, ownCloud GmbH.
 This code is covered by the GNU Public License Version 3.
 For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
 You should have received a copy of this license
@@ -20,6 +20,7 @@ class ShareLinkOptionCell: UITableViewCell {
      @IBOutlet weak var optionSwith: UISwitch!
      @IBOutlet weak var optionName: UILabel!
      @IBOutlet weak var optionDetail: UILabel!
+     @IBOutlet var optionTextField: UITextField!
 
     override func awakeFromNib() {
         super.awakeFromNib()

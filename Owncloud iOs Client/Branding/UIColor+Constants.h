@@ -92,6 +92,9 @@
 + (UIColor*)colorOfBackgroundDetailViewiPad;
 
 
+//SHARE VIEW Public Link, backgroung of cell to warning about sharing public link
++ (UIColor*)colorOfBackgroundWarningSharingPublicLink;
+
 @end
 
 
