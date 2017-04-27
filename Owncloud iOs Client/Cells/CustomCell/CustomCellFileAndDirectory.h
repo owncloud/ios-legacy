@@ -17,13 +17,13 @@
 
 @interface CustomCellFileAndDirectory : SWTableViewCell
 
-@property(nonatomic, weak) IBOutlet UIImageView *fileImageView;
-@property(nonatomic, weak) IBOutlet UIImageView *imageDownloaded;
-@property(nonatomic, weak) IBOutlet UIImageView *imageAvailableOffline;
-@property(nonatomic, weak) IBOutlet UILabel *labelTitle;
-@property(nonatomic, weak) IBOutlet UILabel *labelInfoFile;
-@property(nonatomic, weak) IBOutlet UIImageView *sharedByLinkImage;
-@property(nonatomic, weak) IBOutlet UIImageView *sharedWithUsImage;
+@property(nonatomic, strong) IBOutlet UIImageView *fileImageView;
+@property(nonatomic, strong) IBOutlet UIImageView *imageDownloaded;
+@property(nonatomic, strong) IBOutlet UIImageView *imageAvailableOffline;
+@property(nonatomic, strong) IBOutlet UILabel *labelTitle;
+@property(nonatomic, strong) IBOutlet UILabel *labelInfoFile;
+@property(nonatomic, strong) IBOutlet UIImageView *sharedByLinkImage;
+@property(nonatomic, strong) IBOutlet UIImageView *sharedWithUsImage;
 
 @property(nonatomic, strong) NSURLSessionTask *thumbnailSessionTask;
 

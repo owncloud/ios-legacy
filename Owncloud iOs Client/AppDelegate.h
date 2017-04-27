@@ -228,8 +228,9 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 
 /*
  * Method to do things that should do on start (clean folders, tables...)
+ * This method prepare the uploads offline table and the file system to save a number of uploads
  */
-- (void) doThingsThatShouldDoOnStart;
+- (void) updateStateAndRestoreUploadsAndDownloads;
 
 /*
  * Method relaunch the upload failed if exist

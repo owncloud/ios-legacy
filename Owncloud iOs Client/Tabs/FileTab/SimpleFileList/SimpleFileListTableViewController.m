@@ -315,9 +315,12 @@
     @try {
         CustomCellFileAndDirectory *customCell = (CustomCellFileAndDirectory *) cell;
         
-        if ([customCell isKindOfClass:[CustomCellFileAndDirectory class]] && customCell.thumbnailSessionTask) {
-            DLog(@"Cancel thumbnailSessionTask");
-            [customCell.thumbnailSessionTask cancel];
+        if (!IS_IOS9) {
+            if ([customCell isKindOfClass:[CustomCellFileAndDirectory class]] && customCell.thumbnailSessionTask) {
+                
+                DLog(@"Cancel thumbnailOperation");
+                [customCell.thumbnailSessionTask cancel];
+            }
         }
     }
     @catch (NSException *exception) {

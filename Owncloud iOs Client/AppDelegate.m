@@ -136,7 +136,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     //Init and update the DataBase
     [InitializeDatabase initDataBase];
     
-    if (![ManageUsersDB isUsers]) {
+    if (![ManageUsersDB existAnyUser]) {
         //Reset all keychain items when db need to be updated or when db first init after app has been removed and reinstalled
         [OCKeychain resetKeychain];
         
@@ -397,7 +397,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             
             // if we are migrating the url no relaunch pending uploads
             if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
-                [self doThingsThatShouldDoOnStart];
+                [self updateStateAndRestoreUploadsAndDownloads];
                 [self launchUploadsOfflineFromDocumentProvider];
             }
             
@@ -1679,7 +1679,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     
     DLog(@"_uploadArray: %@", @(_uploadArray.count));
     
-    [self doThingsThatShouldDoOnStart];
+    [self updateStateAndRestoreUploadsAndDownloads];
    
     //We need some time 30 secs max to call the completion handler
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 20 * NSEC_PER_SEC),
@@ -2173,15 +2173,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 }
 
 
-
-/*
- * This method prepare the uploads offline table and the file system to save a number of uploads
- */
-- (void) doThingsThatShouldDoOnStart {
+- (void) updateStateAndRestoreUploadsAndDownloads {
     
     [self updateTheDownloadState:updating to:downloaded];
     
-    DLog(@"doThingsThatShouldDoOnStart");
+    DLog(@"updateStateAndRestoreUploadsAndDownloads");
     
     if (k_is_sso_active || !k_is_background_active) {
         [self performSelectorInBackground:@selector(initUploadsOffline) withObject:nil];

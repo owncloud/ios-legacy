@@ -104,7 +104,7 @@
 
 + (NSString *) getLocalCertificatesPath;
 
-+ (NSString *) getRelatvePathOfFullDestinyPath: (NSString *) fullPath;
++ (NSString *) getRelativePathOfFullDestintyPath: (NSString *) fullPath;
 
 
 + (BOOL) isNecessaryUpdateToPredefinedUrlByPreviousUrl:(NSString *)oldPredefinedUrl;

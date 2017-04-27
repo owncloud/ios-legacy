@@ -685,7 +685,7 @@
  *
  */
 
-+ (NSString *) getRelatvePathOfFullDestinyPath: (NSString *) fullPath {
++ (NSString *) getRelativePathOfFullDestintyPath: (NSString *) fullPath {
     
     NSString *result = @"";
     static NSString *k_webDav = @"webdav";

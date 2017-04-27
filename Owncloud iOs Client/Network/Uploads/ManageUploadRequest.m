@@ -699,7 +699,7 @@
  */
 
 - (void) refreshPathOfUploadAfterServerChangeUrl {
-    NSString *relativePath = [UtilsUrls getRelatvePathOfFullDestinyPath:_currentUpload.destinyFolder];
+    NSString *relativePath = [UtilsUrls getRelativePathOfFullDestintyPath:_currentUpload.destinyFolder];
     _currentUpload.destinyFolder = [NSString stringWithFormat:@"%@%@%@",[UtilsUrls getFullRemoteServerPath:APP_DELEGATE.activeUser], k_url_webdav_server_without_last_slash, relativePath];
 }
 

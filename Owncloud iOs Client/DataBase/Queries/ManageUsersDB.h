@@ -101,8 +101,15 @@
  */
 + (UserDto *) getLastUserInserted;
 
-/*
- * Method to updates a user sorting choice for a user
+
+//-----------------------------------
+/// @name Update sorting choice by user
+///-----------------------------------
+
+/**
+ * Method to update a user sorting choice for a user
+ *
+ * @param UserDto -> user
  */
 + (void) updateSortingWayForUserDto:(UserDto *)user;
 
@@ -117,6 +124,7 @@
  * @param UserDto -> user
  */
 + (void) updateUserByUserDto:(UserDto *) user;
+
 
 //-----------------------------------
 /// @name Has the Server Of the Active User Forbidden Character Support
@@ -136,7 +144,7 @@
 + (NSString *) getUrlRedirectedByUserDto:(UserDto *)user;
 
 //-----------------------------------
-/// @name isUsers
+/// @name existAnyUser
 ///-----------------------------------
 
 /**
@@ -144,9 +152,7 @@
  *
  * @return BOOL
  */
-+(BOOL)isUsers;
-
-+(void)overrideAllUploadsWithNewURL:(NSString *)newValue;
++(BOOL)existAnyUser;
 
 +(void)updatePredefinedUrlTo:(NSString *)newValue byUserId:(NSInteger)userId;
 

@@ -259,7 +259,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
             userDtoEdited.urlRedirected = APP_DELEGATE.urlServerRedirected;
             userDtoEdited.predefinedUrl = k_default_url_server;
             
-            [ManageUsersDB overrideAllUploadsWithNewURL:[UtilsUrls getFullRemoteServerPath:userDtoEdited]];
+            [ManageUploadsDB overrideAllUploadsWithNewURL:[UtilsUrls getFullRemoteServerPath:userDtoEdited]];
             
             [ManageUsersDB updateUserByUserDto:userDtoEdited];
         }
@@ -286,7 +286,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         [self performSelector:@selector(restoreDownloadsAndUploads) withObject:nil afterDelay:5.0];
         
         if (self.loginMode == LoginModeMigrate) {
-            [APP_DELEGATE doThingsThatShouldDoOnStart];
+            [APP_DELEGATE updateStateAndRestoreUploadsAndDownloads];
             [[APP_DELEGATE presentFilesViewController] initFilesView];
             [[InstantUpload instantUploadManager] activate];
         }

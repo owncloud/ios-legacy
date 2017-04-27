@@ -17,13 +17,10 @@
 #import "FMDatabaseQueue.h"
 #import "FMDatabase.h"
 #import "UserDto.h"
-#import "UtilsUrls.h"
 #import "OCKeychain.h"
 #import "CredentialsDto.h"
-#import "UtilsCookies.h"
 #import "constants.h"
 #import "ManageCapabilitiesDB.h"
-#import "UploadsOfflineDto.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -39,13 +36,9 @@
 @implementation ManageUsersDB
 
 
-/*
- * Method that add user into database
- * @userDto -> userDto (Object of a user info)
- */
 +(void) insertUser:(UserDto *)userDto {
     
-    DLog(@"Insert user: url:%@ / username:%@ / password:%@ / ssl:%d / activeaccount:%d / urlRedirected:%@ / predefindedUrl:%@", userDto.url, userDto.username, userDto.password, userDto.ssl, userDto.activeaccount, userDto.urlRedirected, userDto.predefinedUrl);
+    DLog(@"Insert user");
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -71,9 +64,7 @@
     
 }
 
-/*
- * This method return the active user of the app
- */
+
 + (UserDto *) getActiveUser {
     
     DLog(@"getActiveUser");
@@ -136,9 +127,7 @@
     return output;
 }
 
-/*
- * This method return the active user of the app without user name and password
- */
+
 + (UserDto *) getActiveUserWithoutUserNameAndPassword {
     
     DLog(@"getActiveUser");
@@ -195,10 +184,6 @@
 }
 
 
-/*
- * Method that return the user object of the idUser
- * @idUser -> id User.
- */
 + (UserDto *) getUserByIdUser:(NSInteger) idUser {
     
     DLog(@"getUserByIdUser:(int) idUser");
@@ -255,10 +240,7 @@
     return output;
 }
 
-/*
- * Method that return if the user exist or not
- * @userDto -> user object
- */
+
 + (BOOL) isExistUser: (UserDto *) userDto {
     
     __block BOOL output = NO;
@@ -276,9 +258,7 @@
     return output;
 }
 
-/*
- * Method that return an array with all users
- */
+
 + (NSMutableArray *) getAllUsers {
     
     DLog(@"getAllUsers");
@@ -399,11 +379,7 @@
     
 }
 
-/*
- * Method that return an array with all users.
- * This method is only used with the old structure of the table used until version 9
- * And is only used in the update database method
- */
+
 + (NSMutableArray *) getAllOldUsersUntilVersion10 {
     
     DLog(@"getAllUsers");
@@ -451,10 +427,7 @@
     
 }
 
-/*
- * Method that set a user like a active account
- * @idUser -> id user
- */
+
 +(void) setActiveAccountByIdUser: (NSInteger) idUser {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -473,10 +446,6 @@
 }
 
 
-/*
- * Method that set all acount as a no active.
- * This method is used before that set active account.
- */
 +(void) setAllUsersNoActive {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -494,9 +463,7 @@
     
 }
 
-/*
- * Method that select one account active automatically
- */
+
 +(void) setActiveAccountAutomatically {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -514,10 +481,7 @@
     
 }
 
-/*
- * Method that remove user data in all tables
- * @idUser -> id user
- */
+
 +(void) removeUserAndDataByIdUser:(NSInteger)idUser {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -576,9 +540,7 @@
     }
 }
 
-/*
- * Method that set the user storage of a user
- */
+
 +(void) updateStorageByUserDto:(UserDto *) user {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -596,9 +558,7 @@
     
 }
 
-/*
- * Method that return last user inserted on the Database
- */
+
 + (UserDto *) getLastUserInserted {
     
     __block UserDto *output = nil;
@@ -647,15 +607,7 @@
     return output;
 }
 
-//-----------------------------------
-/// @name Update user by user
-///-----------------------------------
 
-/**
- * Method to update a user setting anything just sending the user
- *
- * @param UserDto -> user
- */
 + (void) updateUserByUserDto:(UserDto *) user {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -673,15 +625,7 @@
     
 }
 
-//-----------------------------------
-/// @name Has the Server Of the Active User Forbidden Character Support
-///-----------------------------------
 
-/**
- * Method to get YES/NO depend if the server of the active user has forbidden character support.
- *
- * @return BOOL
- */
 + (BOOL) hasTheServerOfTheActiveUserForbiddenCharactersSupport{
     
     BOOL isForbiddenCharacterSupport = NO;
@@ -695,15 +639,7 @@
     return isForbiddenCharacterSupport;
 }
 
-//-----------------------------------
-/// @name Update sorting choice by user
-///-----------------------------------
 
-/**
- * Method to update a user sorting choice for a user
- *
- * @param UserDto -> user
- */
 + (void) updateSortingWayForUserDto:(UserDto *)user {
     
     DLog(@"updateSortingTypeTo");
@@ -759,10 +695,8 @@
     return output;
 }
 
-/*
- * Method that return if exist any user on the DB
- */
-+(BOOL)isUsers {
+
++(BOOL)existAnyUser {
     
     __block BOOL output = NO;
     __block int size = 0;
@@ -788,24 +722,6 @@
 }
 
 #pragma mark - Force update predefined URL
-
-+(void)overrideAllUploadsWithNewURL:(NSString *)newValue {
-    
-    NSString *oldUrl = [UtilsUrls getFullRemoteServerPath:[ManageUsersDB getActiveUser]];
-    
-    FMDatabaseQueue *queue = Managers.sharedDatabase;
-    
-    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-        BOOL correctQuery=NO;
-        
-        correctQuery = [db executeUpdate:@"UPDATE uploads_offline SET destiny_folder=replace(destiny_folder, ?, ?)", oldUrl, newValue];
-        
-        if (!correctQuery) {
-            DLog(@"Error overriding uploads urls");
-        }
-    }];
-    
-}
 
 +(void)updatePredefinedUrlTo:(NSString *)newValue byUserId:(NSInteger)userId {
     DLog(@"Update predefined URL of userId %ld", (long)userId);

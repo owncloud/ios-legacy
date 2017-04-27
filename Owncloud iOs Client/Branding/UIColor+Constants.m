@@ -38,12 +38,6 @@
     return [UIColor colorWithRed:255/255.0f green:255/255.0f blue:255/255.0f alpha:1.0];
 }
 
-//Color of background in custom status bar, only for iOS 7 //NOT IN USE
-+ (UIColor*)colorOfBackgroundStatusBarNotification {
-    return [UIColor colorWithRed:55/255.0f green:70/255.0f blue:89/255.0f alpha:1.0];
-
-}
-
 //Tint color of tool bar
 + (UIColor*)colorOfToolBar{
     return [UIColor colorWithRed:28/255.0f green:44/255.0f blue:67/255.0f alpha:1.0];
@@ -119,11 +113,6 @@
 
 //Text color of error credentials
 + (UIColor*)colorOfLoginErrorText{
-    return [UIColor colorWithRed:96/255.0f green:133/255.0f blue:154/255.0f alpha:1.0];
-}
-
-//Text color of server error //Not in use this color
-+ (UIColor*)colorOfServerErrorText{
     return [UIColor colorWithRed:96/255.0f green:133/255.0f blue:154/255.0f alpha:1.0];
 }
 
