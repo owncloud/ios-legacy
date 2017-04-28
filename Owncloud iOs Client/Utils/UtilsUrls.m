@@ -676,4 +676,72 @@
     return localCertificatesPath;
 }
 
+/*
+ * Method used to get the relative path of a full path
+ *
+ * @param fullPath (http://storage.server.com/remote.php/webdav/folderA/folderB/folderC/)
+ *
+ * @return /folderA/folderB/folderC/
+ *
+ */
+
++ (NSString *) getRelativePathOfFullDestintyPath: (NSString *) fullPath {
+    
+    NSString *result = @"";
+    static NSString *k_webDav = @"webdav";
+    NSArray *fullPathSplited = [fullPath componentsSeparatedByString:@"/"];
+    
+    BOOL isItemValid = false;
+    
+    for (NSString* item in fullPathSplited) {
+        if (isItemValid == true){
+            result = [NSString stringWithFormat:@"%@/%@", result, item];
+        }
+        
+        if ([item isEqualToString:k_webDav]) {
+            isItemValid = true;
+        }
+    }
+    
+    return result;
+    
+}
+
+
++ (BOOL) isNecessaryUpdateToPredefinedUrlByPreviousUrl:(NSString *)oldPredefinedUrl {
+    
+    if (k_force_update_of_server_url && ![k_default_url_server isEqualToString:oldPredefinedUrl] ) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+
+
+ 
+ 
+ 
+ ///-----------------------------------
+ /// @name getFullRemoteServerPathWithoutProtocolBeginningWithUsername
+ ///-----------------------------------
+/**
+ * Return the domain serverpath with subfolderserver and beginning with the username
+ * Used to show path in the uploads view
+ *
+ * @param mUserDto -> user dto
+ *
+ * @return  fullPath -> username@domainName/sub1/sub2/...
+ *                   -> username@domainName/(subfoldersServer)
+ */
+ + (NSString *) getFullRemoteServerPathWithoutProtocolBeginningWithUsername:(UserDto *)mUserDto {
+     
+     NSString *path = nil;
+     
+     path = [NSString stringWithFormat:@"%@@%@", mUserDto.username, [UtilsUrls getFullRemoteServerPathWithoutProtocol:mUserDto]];
+
+     return path;
+ }
+ 
+
 @end

@@ -64,6 +64,7 @@
 - (void) cancelUpload;
 - (void) updateProgressWithPercent:(float)per;
 - (void) updateTheEtagOfTheFile: (FileDto *) overwrittenFile;
+- (void) refreshPathOfUploadAfterServerChangeUrl;
 
 
 @end

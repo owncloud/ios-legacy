@@ -177,5 +177,6 @@
 + (void) setTaskIdentifier:(NSInteger)taskIdentifier forUploadOffline:(UploadsOfflineDto *)upload;
 
 
++ (void) overrideAllUploadsWithNewURL:(NSString *)newValue;
 
 @end

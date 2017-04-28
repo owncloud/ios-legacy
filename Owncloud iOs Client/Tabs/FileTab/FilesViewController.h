@@ -114,8 +114,6 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 //Flags
 //Boleean that indicate if the loading screen is showing
 @property(nonatomic) BOOL showLoadingAfterChangeUser;
-//Boleean that indicate if is checking the Etag
-@property(nonatomic) BOOL checkingEtag;
 //Boleean that indicate if is necesary etag request
 @property(nonatomic) BOOL isEtagRequestNecessary;
 //Alert to show any alert on Files view. Property to can cancel it on rotate
@@ -146,7 +144,8 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 - (void)reloadTableFromDataBase;
 - (void)reloadCellByFile:(FileDto *) file;
 - (void)reloadTableFileList;
-- (void) goToSelectedFileOrFolder:(FileDto *) selectedFile andForceDownload:(BOOL) isForceDownload;
+- (void)goToSelectedFileOrFolder:(FileDto *) selectedFile andForceDownload:(BOOL) isForceDownload;
+- (void)initFilesView;
 
 @end;
 

@@ -54,7 +54,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
     UserDto *_activeUser;
     
   
-    NSMutableArray *_uploadArray;
+    NSMutableArray *_uploadArray; //uploads of type ManageUploadRequest
     NSMutableArray *_webDavArray;
      
     RecentViewController *_recentViewController;
@@ -92,7 +92,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 
     //Flag
     BOOL _isRefreshInProgress;
-    BOOL _isErrorLoginShown;
     
     //OAuth
     NSString *_oauthToken;
@@ -126,7 +125,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong)DetailViewController *detailViewController;
 @property (nonatomic, strong) MediaAVPlayerViewController *avMoviePlayer;
 @property (nonatomic, strong) UploadFromOtherAppViewController *uploadFromOtherAppViewController;
-@property (nonatomic) BOOL isErrorLoginShown;
 @property (nonatomic) BOOL firstInit;
 @property(nonatomic)BOOL isRefreshInProgress;
 @property(nonatomic)  UIBackgroundTaskIdentifier uploadTask;
@@ -147,8 +145,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic) long dateLastCheckingWaiting;
 //New user
 @property (nonatomic) BOOL isNewUser;
-//Know if the uploads has been a expiration time error
-@property (nonatomic) BOOL isExpirationTimeInUpload;
 //AlertView to control that we do not show the same error multiple times
 @property (nonatomic, strong) UIAlertView *downloadErrorAlertView;
 @property (copy) void (^backgroundSessionCompletionHandler)();
@@ -232,8 +228,9 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 
 /*
  * Method to do things that should do on start (clean folders, tables...)
+ * This method prepare the uploads offline table and the file system to save a number of uploads
  */
-- (void) doThingsThatShouldDoOnStart;
+- (void) updateStateAndRestoreUploadsAndDownloads;
 
 /*
  * Method relaunch the upload failed if exist

@@ -67,6 +67,15 @@
    return [[NSFileManager defaultManager] fileExistsAtPath:filePath];
 }
 
++ (void) storeVersionUsed {
+    
+    NSString* currentVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    NSString* currentShortVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:currentVersion forKey:@"BundleVersionOfLastRun"];
+    [[NSUserDefaults standardUserDefaults] setObject:currentShortVersion forKey:@"BundleShortVersionOfLastRun"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
 
 
 @end

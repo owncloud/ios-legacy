@@ -1306,8 +1306,7 @@
 #ifdef CONTAINER_APP
     
     //Edit Account
-    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser]];
-    [self.resolveCredentialErrorViewController setBarForCancelForLoadingFromModal];
+    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser] andLoginMode:LoginModeExpire];
     
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
@@ -1322,16 +1321,6 @@
     }
     
 #endif
-    
-}
-
-- (void) showErrorAccount {
-    
-    if (k_is_sso_active) {
-        [self showErrorWithTitle:NSLocalizedString(@"session_expired", nil)];
-    }else{
-        [self showErrorWithTitle:NSLocalizedString(@"error_login_message", nil)];
-    }
     
 }
 

@@ -218,28 +218,9 @@
     
     if ([(NSObject*)self.delegate respondsToSelector:@selector(errorLogin)]) {
         [self.delegate errorLogin];
-    } else {
-        //[self.delegate endLoading];
-        //In SAML the error message is about the session expired
-        if (k_is_sso_active) {
-            [self showError:NSLocalizedString(@"session_expired", nil)];
-        } else {
-            [self showError:NSLocalizedString(@"error_login_message", nil)];
-        }
     }
 }
 
-
-/*
- * Show the standar message of the error connection.
- */
-- (void)showError:(NSString *) message {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:message
-                                                        message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [alert show];
-    });
-}
 
 #pragma mark - Move the item on device
 

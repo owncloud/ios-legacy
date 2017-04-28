@@ -25,3 +25,4 @@
 #define IS_PORTRAIT (([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) || [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortraitUpsideDown)
 #define APP_DELEGATE ((AppDelegate *)[[UIApplication sharedApplication] delegate])
 #define IS_IPHONE_PLUS (IS_IPHONE && SCREEN_MAX_LENGTH == 736.0)
+#define IS_AppAlreadyLaunchedOnce [[NSUserDefaults standardUserDefaults] boolForKey:@"isAppAlreadyLaunchedOnce"]

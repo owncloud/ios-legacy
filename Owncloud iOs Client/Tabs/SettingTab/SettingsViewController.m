@@ -132,14 +132,10 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if (IS_IOS8 || IS_IOS9) {
-        self.edgesForExtendedLayout = UIRectEdgeAll;
-        self.extendedLayoutIncludesOpaqueBars = true;
-        self.automaticallyAdjustsScrollViewInsets = true;
-    }else{
-        self.edgesForExtendedLayout = UIRectCornerAllCorners;
-    }
-    
+    self.edgesForExtendedLayout = UIRectEdgeAll;
+    self.extendedLayoutIncludesOpaqueBars = true;
+    self.automaticallyAdjustsScrollViewInsets = true;
+
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Relaunch the uploads that failed before
@@ -818,10 +814,16 @@
     
     //If saml needs change the name to utf8
     if (k_is_sso_active) {
-        accountCell.userName.text = [accountCell.userName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        accountCell.userName.text = [accountCell.userName.text stringByRemovingPercentEncoding];
     }
     
-    accountCell.urlServer.text = userAccout.url;
+    if ([UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:userAccout.predefinedUrl]) {
+        accountCell.urlServer.text = NSLocalizedString(@"pending_migration_to_new_url", nil);
+        accountCell.urlServer.textColor = [UIColor colorOfLoginErrorText];
+    } else {
+        accountCell.urlServer.text = userAccout.url;
+    }
+    
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [accountCell.menuButton setTag:row];
     [accountCell.menuButton setImage:[UIImage imageNamed:@"more-filledBlack.png"] forState:UIControlStateNormal];
@@ -919,7 +921,7 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
          UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
-        [self dicSelectLogOutAccount:selectedUser];
+        [self didSelectLogOutAccount:selectedUser];
     }
 }
 
@@ -1102,9 +1104,14 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     app.userSessionCurrentToken = nil;
     
+    UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
+    //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
+    [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:[UtilsUrls getFullRemoteServerPath:selectedUser]];
+
     //Method to change the account
     AccountCell *cell = (AccountCell *) [self.settingsTableView cellForRowAtIndexPath:indexPath];
     [cell activeAccount:nil];
+    
 }
 
 #pragma mark - AccountCell Delegate Methods
@@ -1327,7 +1334,7 @@
                 [self didSelectClearCacheAccount:self.selectedUserAccount];
                 break;
             case 2:
-                [self dicSelectLogOutAccount:self.selectedUserAccount];
+                [self didSelectLogOutAccount:self.selectedUserAccount];
                 break;
             default:
                 break;
@@ -1498,9 +1505,6 @@
         } else {
             [self.mailer setSubject:[NSLocalizedString(@"mail_recommendation_subject", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName]];
         }
-        
-        NSArray *toRecipients = [NSArray arrayWithObjects:nil];
-        [self.mailer setToRecipients:toRecipients];
         
         UIImage *myImage = [UIImage imageNamed:@"CompanyLogo.png"];
         NSData *imageData = UIImagePNGRepresentation(myImage);
@@ -1768,15 +1772,15 @@
 
 - (void) didSelectEditAccount:(UserDto *)user  {
    
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:user];
+    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:user andLoginMode:LoginModeUpdate];
     
     if (IS_IPHONE) {
-        viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:NO];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        OCNavigationController *navController = nil;
+        navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
     }
@@ -1802,7 +1806,7 @@
     });
 }
 
-- (void) dicSelectLogOutAccount:(UserDto *)user {
+- (void) didSelectLogOutAccount:(UserDto *)user {
     
     [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
     

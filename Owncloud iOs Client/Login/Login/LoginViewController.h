@@ -19,6 +19,13 @@
 #import "SSOViewController.h"
 #import "CheckSSOServer.h"
 
+typedef NS_ENUM (NSInteger, LoginMode){
+    LoginModeCreate,
+    LoginModeUpdate,
+    LoginModeExpire,
+    LoginModeMigrate,
+};
+
 extern NSString *loginViewControllerRotate;
 
 @interface LoginViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate, CheckAccessToServerDelegate, SSODelegate, CheckSSOServerDelegate, ManageNetworkErrorsDelegate> {
@@ -78,7 +85,6 @@ extern NSString *loginViewControllerRotate;
 @property(nonatomic,strong) NSString *auxPasswordForShowPasswordOnEdit;
 
 @property(nonatomic,strong) NSString *connectString;
-@property(nonatomic,strong) NSString *loginButtonString;
 
 @property(nonatomic)CGRect txtWithLogoWhenNoURLFrame;
 @property(nonatomic)CGRect urlFrame;
@@ -89,8 +95,8 @@ extern NSString *loginViewControllerRotate;
 
 @property(nonatomic,strong) ManageNetworkErrors *manageNetworkErrors;
 
+@property (nonatomic) LoginMode loginMode;
 
--(void)setTableBackGroundColor;
 -(void)checkUrlManually;
 -(void)hideOrShowPassword;
 -(void)goTryToDoLogin;
@@ -99,9 +105,14 @@ extern NSString *loginViewControllerRotate;
 -(void) hideTryingToLogin;
 -(void) potraitViewiPhone;
 -(void) addEditAccountsViewiPad;
-//-----------------------------------
-/// @name restoreTheCookiesOfActiveUserByNewUser
-///-----------------------------------
 - (void) restoreTheCookiesOfActiveUser;
+
+- (id)initWithLoginMode:(LoginMode)loginMode;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andLoginMode:(LoginMode)loginMode;
+
+- (void)setBarForCancelForLoadingFromModal;
+
+- (void) closeViewController;
 
 @end

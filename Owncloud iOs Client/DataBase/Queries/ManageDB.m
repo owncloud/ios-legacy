@@ -48,7 +48,7 @@
         
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_sharee_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'has_forbidden_characters_support' INTEGER NOT NULL DEFAULT 0, 'has_capabilities_support' INTEGER NOT NULL DEFAULT 0, 'image_instant_upload' BOOL NOT NULL DEFAULT 0, 'video_instant_upload' BOOL NOT NULL DEFAULT 0, 'background_instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0, 'timestamp_last_instant_upload_image' DOUBLE, 'timestamp_last_instant_upload_video' DOUBLE, 'url_redirected' VARCHAR, 'sorting_type' INTEGER NOT NULL DEFAULT 0)"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , 'url' VARCHAR, 'ssl' BOOL, 'activeaccount' BOOL, 'storage_occupied' LONG NOT NULL DEFAULT 0, 'storage' LONG NOT NULL DEFAULT 0, 'has_share_api_support' INTEGER NOT NULL DEFAULT 0, 'has_sharee_api_support' INTEGER NOT NULL DEFAULT 0, 'has_cookies_support' INTEGER NOT NULL DEFAULT 0, 'has_forbidden_characters_support' INTEGER NOT NULL DEFAULT 0, 'has_capabilities_support' INTEGER NOT NULL DEFAULT 0, 'image_instant_upload' BOOL NOT NULL DEFAULT 0, 'video_instant_upload' BOOL NOT NULL DEFAULT 0, 'background_instant_upload' BOOL NOT NULL DEFAULT 0, 'path_instant_upload' VARCHAR, 'only_wifi_instant_upload' BOOL NOT NULL DEFAULT 0, 'timestamp_last_instant_upload_image' DOUBLE, 'timestamp_last_instant_upload_video' DOUBLE, 'url_redirected' VARCHAR, 'sorting_type' INTEGER NOT NULL DEFAULT 0, 'predefined_url' VARCHAR)"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table users");
@@ -1113,6 +1113,8 @@
         
         BOOL dbOperationSuccessful;
         
+
+        //Instant uploads separate in video and image
         dbOperationSuccessful = [db executeUpdate:@"ALTER TABLE users ADD image_instant_upload INTEGER"];
         if (!dbOperationSuccessful) {
             DLog(@"Error update version 18 to 19 table users add column image_instant_upload");
@@ -1191,6 +1193,32 @@
         dbOperationSuccessful = [db executeUpdate:@"DROP TABLE users_temp"];
         if (!dbOperationSuccessful) {
             DLog(@"Error dropping table users_temp");
+        }
+        
+    }];
+    
+}
+
+///-----------------------------------
+/// @name Update Database version with 19 version to 20
+///-----------------------------------
+
+/**
+ * Changes:
+ *
+ * Alter users table, adds new field predefined url
+ */
++ (void) updateDBVersion19To20 {
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        
+        BOOL dbOperationSuccessful;
+        
+        //new predefined URL variable to set after we force update existing urls
+        dbOperationSuccessful = [db executeUpdate:@"ALTER TABLE users ADD predefined_url VARCHAR"];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error update version 19 to 20 table users add column predefined_url");
         }
         
     }];
