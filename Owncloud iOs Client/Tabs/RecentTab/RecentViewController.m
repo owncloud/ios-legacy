@@ -798,6 +798,11 @@
                     [self resolveNotHavePermission:selectedManageUploadRequest.currentUpload];
                     DLog(@"User not have permision");
                     break;
+                case errorFirewallRuleNotAllowUpload:
+                    _selectedFileDtoToResolveNotPermission = selectedManageUploadRequest.currentUpload;
+                    [self resolveNotHavePermission:selectedManageUploadRequest.currentUpload];
+                    DLog(@"Firewall rule blocked upload");
+                    break;
                 case errorInsufficientStorage:
                     DLog(@"Not enough free space in your account");
                     [self resolveInsufficientStorage:selectedManageUploadRequest.currentUpload];

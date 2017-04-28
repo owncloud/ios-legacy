@@ -380,7 +380,7 @@
                             break;
                         case kOCErrorServerForbidden:
                             weakSelf.currentUpload.status = errorUploading;
-                            if (error.code == OCErrorForbiddenUnknown) {
+                            if (error.code == OCErrorForbiddenWithSpecificMessage) {
                                 weakSelf.currentUpload.kindOfError = errorFirewallRuleNotAllowUpload;
                             } else {
                                 weakSelf.currentUpload.kindOfError = errorNotPermission;
