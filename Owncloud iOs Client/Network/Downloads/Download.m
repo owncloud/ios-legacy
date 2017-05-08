@@ -185,11 +185,7 @@ NSString * fileWasDownloadNotification = @"fileWasDownloadNotification";
                                 break;
                             case kOCErrorServerForbidden:
                                 //403 Forbidden
-                                if (error.code == OCErrorForbiddenUnknown) {
-                                    [weakSelf.delegate downloadFailed:[error.userInfo objectForKey:NSLocalizedDescriptionKey] andFile:weakSelf.fileDto];
-                                } else {
-                                    [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
-                                }
+                                [weakSelf.delegate downloadFailed:NSLocalizedString(@"error_not_permission", nil) andFile:weakSelf.fileDto];
                                 break;
                             case kOCErrorProxyAuth:
                                 [weakSelf.delegate downloadFailed:NSLocalizedString(@"not_establishing_connection", nil) andFile:weakSelf.fileDto];
