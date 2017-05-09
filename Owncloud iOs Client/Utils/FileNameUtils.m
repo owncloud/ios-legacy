@@ -145,7 +145,7 @@
     
     NSString *ext=[self getExtension:fileName];
     
-    if ([ext isEqualToString:@"TXT"] || [ext isEqualToString:@"RTF"] || [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] )
+    if ([ext isEqualToString:@"TXT"] || [ext isEqualToString:@"RTF"] || [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"]  || [ext isEqualToString:@"TEX"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] )
     {
         return YES;
     }
