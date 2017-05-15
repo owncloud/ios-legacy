@@ -27,6 +27,7 @@
 - (void) endLoading;
 - (void) errorLogin;
 - (void) sharelinkOptionsUpdated;
+- (void) finishCheckSharesAndReloadShareView;
 @end
 
 

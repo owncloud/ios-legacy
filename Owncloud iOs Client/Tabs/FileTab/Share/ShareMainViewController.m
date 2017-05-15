@@ -754,6 +754,9 @@
 
 - (void) sharelinkOptionsUpdated {
     [self checkSharedStatusOFile];
+}
+
+- (void) finishCheckSharesAndReloadShareView {
     [self updateSharesOfFileFromDB];
     [self reloadView];
 }

@@ -316,6 +316,8 @@
             [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
             
             [self endLoading];
+            
+            [self.delegate finishCheckSharesAndReloadShareView];
         }
 
         
