@@ -315,7 +315,7 @@
                 [self endLoading];
                 break;
                 
-            case OCErrorMovingFolderInsideHimself:
+            case OCErrorMovingFolderInsideItself:
                 [self showError:NSLocalizedString(@"error_folder_destiny_is_the_same", nil)];
                 break;
                 

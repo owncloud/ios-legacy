@@ -17,6 +17,7 @@
 #import "UserDto.h"
 #import "CheckAccessToServer.h"
 #import "OCErrorMsg.h"
+#import "OCCommunication.h"
 
 @implementation ManageNetworkErrors
 
@@ -38,7 +39,7 @@
             [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
             break;
         }
-        case OCServerErrorForbiddenCharacters:
+        case OCErrorForbiddenCharacters:
             //Forbidden characters from the server side
             [_delegate showError:NSLocalizedString(@"forbidden_characters_from_server", nil)];
             break;
@@ -55,7 +56,7 @@
             
         default:
             //Web Dav Error Code
-            [self returnSuitableWebDavErrorMessage:errorHttp];
+            [self returnErrorMessageWithHttpStatusCode:errorHttp andError:errorConnection];
             break;
     }
 }
@@ -66,7 +67,7 @@
  * @errorHttp -> WebDav Server Error
  */
 
-- (void)returnSuitableWebDavErrorMessage:(NSInteger) errorHttp {
+- (void)returnErrorMessageWithHttpStatusCode:(NSInteger) errorHttp andError:(NSError *) error {
     
     switch (errorHttp) {
         case kOCErrorServerUnauthorized:
@@ -75,7 +76,11 @@
             break;
         case kOCErrorServerForbidden:
             //403 Forbidden
-            [_delegate showError:NSLocalizedString(@"error_not_permission", nil)];
+            if (error.code == OCErrorForbiddenUnknown) {
+                [_delegate showError:[error.userInfo objectForKey:NSLocalizedDescriptionKey]];
+            } else {
+                [_delegate showError:NSLocalizedString(@"error_not_permission", nil)];
+            }
             break;
         case kOCErrorServerPathNotFound:
             //404 Not Found. When for example we try to access a path that now not exist

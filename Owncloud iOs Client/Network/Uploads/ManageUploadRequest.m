@@ -33,6 +33,7 @@
 #import "OCURLSessionManager.h"
 #import "ManageAppSettingsDB.h"
 #import "UtilsCookies.h"
+#import "OCCommunication.h"
 
 #define k_delay_after_check_instant_uploads_folders 2.0
 
@@ -212,7 +213,7 @@
         DLog(@"Operation error: %ld", (long)response.statusCode);
         
     } errorBeforeRequest:^(NSError *error) {
-        if (error.code == OCErrorForbidenCharacters) {
+        if (error.code == OCErrorForbiddenCharacters) {
             DLog(@"The folder have problematic characters");
         } else {
             DLog(@"The folder have problems under controlled");
@@ -356,7 +357,7 @@
                     [self finishOverwriteProcess];
                 }
                 
-                if (error.code == OCServerErrorForbiddenCharacters) {
+                if (error.code == OCErrorForbiddenCharacters) {
                     weakSelf.currentUpload.status = errorUploading;
                     weakSelf.currentUpload.kindOfError = errorInvalidPath;
                     [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
@@ -379,7 +380,12 @@
                             break;
                         case kOCErrorServerForbidden:
                             weakSelf.currentUpload.status = errorUploading;
-                            weakSelf.currentUpload.kindOfError = errorNotPermission;
+                            if (error.code == OCErrorForbiddenWithSpecificMessage) {
+                                weakSelf.currentUpload.kindOfError = errorFirewallRuleNotAllowUpload;
+                            } else {
+                                weakSelf.currentUpload.kindOfError = errorNotPermission;
+                            }
+                            
                             [ManageUploadsDB setStatus:errorUploading andKindOfError:weakSelf.currentUpload.kindOfError byUploadOffline:weakSelf.currentUpload];
                             break;
                         case kOCErrorProxyAuth:
