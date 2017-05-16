@@ -379,7 +379,11 @@
             break;
         case 2:
             if (k_is_share_by_link_available && self.sharedPublicLinks.count > 0) {
-                return YES;
+                if (indexPath.row == 0 && k_warning_sharing_public_link) {
+                    return NO;
+                } else {
+                    return YES;
+                }
             } else {
                 return NO;
             }
