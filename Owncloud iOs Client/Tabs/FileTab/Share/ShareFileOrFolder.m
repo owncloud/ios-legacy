@@ -97,24 +97,10 @@
             DLog(@"error.code: %ld", (long)error.code);
             DLog(@"server error: %ld", (long)response.statusCode);
             
-            if (error.code == kOCErrorServerForbidden && [ShareUtils isPasswordEnforcedCapabilityEnabled]) {
-                
-                //Share whith password maybe enabled, ask for password and try to do the request again with it
-                // [self showAlertEnterPassword]; //TODO: ask password if needed
-                
-            } else {
-                [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
-            }
-            
-//            if (error.code != kOCErrorServerForbidden) {
-//                
-//
-//            }
+            [self.manageNetworkErrors manageErrorHttp:response.statusCode andErrorConnection:error andUser:app.activeUser];
         }
 
     }];
-     
-    
 }
 
 
