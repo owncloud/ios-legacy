@@ -644,7 +644,11 @@ typedef NS_ENUM (NSInteger, LinkOption){
         cellPassword = [self.shareLinkOptionsTableView viewWithTag:1];
     }
     
-    self.updatedPassword = cellPassword.optionTextField.text;
+    if (self.isPasswordProtectEnabled) {
+        self.updatedPassword = cellPassword.optionTextField.text;
+    } else {
+        self.updatedPassword = @"";
+    }
 }
 
 
