@@ -348,13 +348,14 @@ typedef NS_ENUM (NSInteger, LinkOption){
             shareLinkOptionCell.optionTextField.hidden = NO;
             shareLinkOptionCell.optionTextField.placeholder = NSLocalizedString(@"placeholder_share_link_option_name", nil);
             shareLinkOptionCell.optionTextField.text = self.updatedLinkName;
-            //[shareLinkOptionCell.optionTextField becomeFirstResponder];
+            shareLinkOptionCell.optionTextField.inputAccessoryView = [self keyboardToolbarWithDoneButton];
             
             break;
         
         case LinkOptionPassword:
             
             shareLinkOptionCell.optionTextField.hidden = NO;
+            shareLinkOptionCell.optionTextField.inputAccessoryView = [self keyboardToolbarWithDoneButton];
             
             if ([ShareUtils hasPasswordRemoveOptionAvailable]) {
                 shareLinkOptionCell.optionSwith.hidden = NO;
@@ -385,6 +386,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
         case LinkOptionExpiration:
             
             shareLinkOptionCell.optionTextField.placeholder = NSLocalizedString(@"placeholder_share_link_option_expiration", nil);
+            shareLinkOptionCell.optionTextField.inputAccessoryView = [self keyboardToolbarWithDoneButton];
             
             if ([ShareUtils hasExpirationRemoveOptionAvailable]) {
                 shareLinkOptionCell.optionSwith.hidden = NO;
@@ -424,9 +426,32 @@ typedef NS_ENUM (NSInteger, LinkOption){
     return shareLinkOptionCell;
 }
 
+#pragma mark - keyboard
+
+- (UIToolbar *) keyboardToolbarWithDoneButton {
+    
+    UIToolbar* keyboardToolbar = [[UIToolbar alloc] init];
+    [keyboardToolbar sizeToFit];
+    UIBarButtonItem *flexBarButton = [[UIBarButtonItem alloc]
+                                      initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                      target:nil action:nil];
+    UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc]
+                                      initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                      target:self action:@selector(didSelectKeyboardDoneButton)];
+    keyboardToolbar.items = @[flexBarButton, doneBarButton];
+    
+    return keyboardToolbar;
+}
+
+- (void) didSelectKeyboardDoneButton {
+    [self.view endEditing:YES];
+}
+
+
 #pragma mark - Select options
 
 - (void) didSelectSetExpirationDateLink {
+    [self.view endEditing:YES];
     [self launchDatePicker];
 }
 
