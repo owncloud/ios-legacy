@@ -71,7 +71,7 @@ CGPoint _lastContentOffset;
  * Method to go back in the navigation
  */
 - (void)goBack{
-
+    
     if ([_webView canGoBack]) {
         [_webView goBack];
     }
@@ -85,7 +85,7 @@ CGPoint _lastContentOffset;
  * Method to go Forward in the navigation
  */
 - (void)goForward{
-
+    
     if ([_webView canGoForward]) {
         [_webView goForward];
     }
@@ -100,28 +100,28 @@ CGPoint _lastContentOffset;
  *
  */
 - (void)addControlPanelToNavigate{
-
+    
     //BackButton
     UIButton *backButton = [[UIButton alloc]initWithFrame:CGRectMake(_webView.frame.size.width - 150, 10, 50, 30)];
     [backButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [backButton setTitle:@"Back" forState:UIControlStateNormal];
-
+    
     [backButton addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
-
+    
     //FordwardButton
     UIButton *forwardButton = [[UIButton alloc]initWithFrame:CGRectMake(_webView.frame.size.width - 75, 10, 70, 30)];
     [forwardButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [forwardButton setTitle:@"Forwd" forState:UIControlStateNormal];
-
+    
     [forwardButton addTarget:self action:@selector(goForward) forControlEvents:UIControlEventTouchUpInside];
-
+    
     [_webView addSubview:backButton];
     [_webView addSubview:forwardButton];
 }
 
 
 - (void)configureWebView{
-
+    
     if (!_webView) {
         _webView = [[UIWebView alloc] initWithFrame:self.frame];
         _webView.scrollView.delegate = self;
@@ -135,15 +135,15 @@ CGPoint _lastContentOffset;
  */
 - (void)openOfficeFileWithPath:(NSString*)filePath andFileName: (NSString *) fileName {
     _isDocument=YES;
-
+    
     [self configureWebView];
     NSURL *url = [NSURL fileURLWithPath:filePath];
-
+    
     NSString *ext=@"";
     ext = [FileNameUtils getExtension:fileName];
-
+    
     if ( [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"TEX"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] ) {
-
+        
         NSString *dataFile = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:url] encoding:NSASCIIStringEncoding];
 
         if (IS_IPHONE) {
@@ -151,21 +151,21 @@ CGPoint _lastContentOffset;
         }else{
             [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_ipad,k_txt_files_font_family,dataFile] baseURL:nil];
         }
-
+        
     } else if ([ext isEqualToString:@"TXT"]) {
-
+        
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
         NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:nil delegateQueue:nil];
 
         NSMutableURLRequest *headRequest = [NSMutableURLRequest requestWithURL:url];
         [headRequest setHTTPMethod:@"HEAD"];
-
+        
         NSURLSessionDataTask *task = [session dataTaskWithRequest:headRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             [_webView loadData:[NSData dataWithContentsOfURL: url] MIMEType:response.MIMEType textEncodingName:@"utf-8" baseURL:url];
         }];
-
+        
         [task resume];
-
+        
     } else if ([ext isEqualToString:@"PDF"]) {
         NSURL *targetURL = [NSURL fileURLWithPath:filePath];
         NSData *pdfData = [[NSData alloc] initWithContentsOfURL:targetURL];
@@ -173,7 +173,7 @@ CGPoint _lastContentOffset;
     } else {
         [self.webView loadRequest:[NSMutableURLRequest requestWithURL:url]];
     }
-
+    
     [_webView setHidden:NO];
     [_webView setScalesPageToFit:YES];
 }
@@ -183,19 +183,19 @@ CGPoint _lastContentOffset;
  */
 - (void)openLinkByPath:(NSString*)path {
     _isDocument=NO;
-
+    
     NSURL *url = [NSURL URLWithString:path];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-
+    
     //Add the user agent
     [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
-
+    
     [self configureWebView];
-
+    
     [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
     _webView.hidden  = NO;
     _webView.delegate = self;
-
+    
     [_webView loadRequest:request];
 }
 
@@ -236,7 +236,7 @@ CGPoint _lastContentOffset;
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     DLog(@"Office webview loading started");
-
+    
     if (_activity == nil) {
         _activity = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         _activity.center = CGPointMake(_webView.frame.size.width/2, _webView.frame.size.height/2);
@@ -249,12 +249,12 @@ CGPoint _lastContentOffset;
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
     DLog(@"webViewDidFinishLoad");
     [_activity stopAnimating];
-
+    
     [_webView setHidden:NO];
     [_webView setScalesPageToFit:YES];
-
+    
     if (_isDocument == NO) {
-        [_delegate finishLinkLoad];
+        [_delegate finishLinkLoad];        
     }
 }
 
