@@ -219,7 +219,6 @@ static NSString *const tmpFileName = @"tmp.der";
     DLog(@"An error happened during load: %@", error);
     
     if ([error code] != -999) {
-        [_activity stopAnimating];
         [_webView setHidden:NO];
     }
     
@@ -235,7 +234,6 @@ static NSString *const tmpFileName = @"tmp.der";
                 [self askToAcceptCertificate];
             }
           
-
         }
     }
 }
@@ -400,11 +398,26 @@ static NSString *const tmpFileName = @"tmp.der";
     DLog(@"Error connection: %@", error);
     
     //Too many HTTP redirects error. This error happens sometimes.
-    if (error.code == -1007) {
+    if (error.code == kCFURLErrorHTTPTooManyRedirects) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"unknow_response_server", nil) message:NSLocalizedString(@"", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
         [alert show];
         [self retry:nil];
+        
+    } else if ([error.domain isEqualToString: NSURLErrorDomain]) {
+        
+        if (error.code == kCFURLErrorServerCertificateUntrusted         ||
+            error.code == kCFURLErrorServerCertificateHasBadDate        ||
+            error.code == kCFURLErrorServerCertificateHasUnknownRoot    ||
+            error.code == kCFURLErrorServerCertificateNotYetValid)
+        {
+            
+            if (![[CheckAccessToServer sharedManager] isTemporalCertificateTrusted]) {
+                [self retry:nil];
+            }
+        }
     }
+    
+    
 }
 
 - (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection;
