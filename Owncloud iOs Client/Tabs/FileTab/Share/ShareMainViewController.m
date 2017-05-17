@@ -809,7 +809,9 @@
 
 - (void) confirmRemoveShareLink:(NSInteger)indexLink {
     OCSharedDto *sharedLinkToRemove = self.sharedPublicLinks[indexLink];
-    NSString *message = [NSLocalizedString(@"message_confirm_delete_link", nil)  stringByReplacingOccurrencesOfString:@"$sharedLink" withString:sharedLinkToRemove.name];
+    NSString *sharedLinkNameToShow = [sharedLinkToRemove.name isEqualToString:@"(null)"] ? @"": sharedLinkToRemove.name;
+    
+    NSString *message = [NSLocalizedString(@"message_confirm_delete_link", nil)  stringByReplacingOccurrencesOfString:@"$sharedLink" withString:sharedLinkNameToShow];
     UIAlertController * alert =  [UIAlertController
                                   alertControllerWithTitle:NSLocalizedString(@"title_confirm_delete_link", nil)
                                   message: message
