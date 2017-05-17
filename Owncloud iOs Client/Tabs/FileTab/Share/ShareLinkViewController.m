@@ -734,6 +734,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
         self.datePickerView = [[UIDatePicker alloc] init];
         self.datePickerView.datePickerMode = UIDatePickerModeDate;
         
+        [self.datePickerView setDate:[NSDate dateWithTimeIntervalSince1970:[ShareUtils getDefaultMaxExpirationDateInTimeInterval]]];
         self.datePickerView.minimumDate = [NSDate dateWithTimeIntervalSince1970:[ShareUtils getDefaultMinExpirationDateInTimeInterval]];
         if (![ShareUtils hasExpirationRemoveOptionAvailable]) {
             self.datePickerView.maximumDate = [NSDate dateWithTimeIntervalSince1970:[ShareUtils getDefaultMaxExpirationDateInTimeInterval]];
