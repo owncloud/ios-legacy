@@ -521,7 +521,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
     }
     
     if (self.isExpirationDateEnabled) {
-        updateExpirationTime = [ShareUtils stringOfDate:[NSDate dateWithTimeIntervalSince1970: self.updatedExpirationDate]];
+        updateExpirationTime = [ShareUtils convertDateInServerFormat:[NSDate dateWithTimeIntervalSince1970: self.updatedExpirationDate]];
         self.showErrorExpirationForced = NO;
     }
     
@@ -553,7 +553,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
     //EXPIRATION
     if (self.updatedExpirationDate != self.sharedDto.expirationDate) {
         if (self.isExpirationDateEnabled) {
-            NSString *dateString = [ShareUtils stringOfDate:[NSDate dateWithTimeIntervalSince1970: self.updatedExpirationDate]];
+            NSString *dateString = [ShareUtils convertDateInServerFormat:[NSDate dateWithTimeIntervalSince1970: self.updatedExpirationDate]];
             [self updateSharedLinkWithPassword:nil expirationDate:dateString publicUpload:nil andLinkName:nil];
         } else {
             [self updateSharedLinkWithPassword:nil expirationDate:@"" publicUpload:nil andLinkName:nil];
