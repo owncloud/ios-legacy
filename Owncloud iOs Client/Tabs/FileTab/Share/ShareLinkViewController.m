@@ -487,7 +487,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
     self.showErrorPasswordForced = NO;
     self.showErrorExpirationForced = NO;
     
-    if (![ShareUtils hasPasswordRemoveOptionAvailable] && (!self.isPasswordProtectEnabled || [self.updatedPassword isEqualToString:@""])) {
+    if ( ![ShareUtils hasPasswordRemoveOptionAvailable] && [self.updatedPassword isEqualToString:@""]  && self.linkOptionsViewMode == LinkOptionsViewModeCreate ) {
         allForcedValuesOK = NO;
         self.showErrorPasswordForced = YES;
     }
