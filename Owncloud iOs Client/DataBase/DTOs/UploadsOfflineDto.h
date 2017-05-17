@@ -34,7 +34,8 @@ typedef NS_ENUM (NSInteger, enumKindOfError){
     errorUploadFileDoesNotExist = 4,
     errorUploadInBackground = 5,
     errorInvalidPath = 6,
-    errorInsufficientStorage = 7
+    errorInsufficientStorage = 7,
+    errorFirewallRuleNotAllowUpload = 8
 };
 
 @interface UploadsOfflineDto : NSObject

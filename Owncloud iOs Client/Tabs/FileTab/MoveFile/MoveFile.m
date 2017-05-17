@@ -192,7 +192,7 @@
         if (error.code == OCErrorMovingTheDestinyAndOriginAreTheSame) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error_folder_destiny_is_the_same", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alert show];
-        } else if (error.code == OCErrorMovingFolderInsideHimself) {
+        } else if (error.code == OCErrorMovingFolderInsideItself) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error_folder_destiny_is_the_same", nil) message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             [alert show];
         } else if (error.code == OCErrorMovingDestinyNameHaveForbiddenCharacters) {

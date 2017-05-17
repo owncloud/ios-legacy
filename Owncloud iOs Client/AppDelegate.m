@@ -1558,7 +1558,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                                 break;
                             case kOCErrorServerForbidden:
                                 uploadOffline.status = errorUploading;
-                                uploadOffline.kindOfError = errorNotPermission;
+                                if (error.code == OCErrorForbiddenWithSpecificMessage) {
+                                    uploadOffline.kindOfError = errorFirewallRuleNotAllowUpload;
+                                } else {
+                                    uploadOffline.kindOfError = errorNotPermission;
+                                }
                                 break;
                             case kOCErrorProxyAuth:
                                 uploadOffline.status = errorUploading;
