@@ -190,7 +190,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (self.isExpirationDateEnabled) {
+    if (self.isExpirationDateEnabled || ![ShareUtils hasExpirationRemoveOptionAvailable]) {
         if (indexPath.section == 2 || (indexPath.section == 1 && ![ShareUtils hasOptionLinkNameToBeShown]) ) {
             //the user want to change the current expiration date
             [self didSelectSetExpirationDateLink];
