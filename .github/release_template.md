@@ -20,7 +20,8 @@ If it is required to update third party or OC iOS Library
 - [ ] [DIS] Update THIRD_PARTY.txt
 
 If it is required to update OC iOS Library:
-- [ ] [GIT] Create branch library release_Y.Y.Y (freeze the code)
+- [ ] [GIT] Create branch library release_Y.Y.Y (freeze the code) 
+- [ ] [mail] inform john@owncloud.com and emil@owncloud.com about the new release.
 - [ ] [DIS] Update README.md (version number, third party, supported versions of iOS, Xcode)
 - [ ] [DIS] Update changelog Doc_Changelog.md 
 - [ ] [GIT] Merge branch release_Y.Y.Y in master and develop
