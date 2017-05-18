@@ -43,7 +43,7 @@
 
 #pragma mark - Get default values
 
-+ (NSString *) getDefaultLinkNameNormalicedOfFile:(FileDto *)file withLinkShares:(NSArray *)publicLinkShared;
++ (NSString *) getDefaultLinkNameNormalizedOfFile:(FileDto *)file withLinkShares:(NSArray *)publicLinkShared;
 
 + (long) getDefaultMinExpirationDateInTimeInterval;
 + (long) getDefaultMaxExpirationDateInTimeInterval;

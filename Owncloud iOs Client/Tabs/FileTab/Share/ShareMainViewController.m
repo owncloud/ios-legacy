@@ -663,7 +663,7 @@
 
 -(void) presentViewLinkOptionsOfSharedLink:(OCSharedDto *)sharedDto ofFile:(FileDto *)fileShared withLinkOptionsViewMode:(LinkOptionsViewMode)viewMode{
     
-    NSString *defaultLinkName = [ShareUtils getDefaultLinkNameNormalicedOfFile:fileShared withLinkShares:self.sharedPublicLinks];
+    NSString *defaultLinkName = [ShareUtils getDefaultLinkNameNormalizedOfFile:fileShared withLinkShares:self.sharedPublicLinks];
     
     ShareLinkViewController *viewController = [[ShareLinkViewController alloc] initWithFileDto:fileShared andOCSharedDto:sharedDto andDefaultLinkName:defaultLinkName andLinkOptionsViewMode:viewMode];
     viewController.sharedFileOrFolder = self.sharedFileOrFolder;

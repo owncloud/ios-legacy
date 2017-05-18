@@ -156,21 +156,21 @@
 
 #pragma mark - Default value for link name
 
-+ (NSString *) getDefaultLinkNameNormalicedOfFile:(FileDto *)file withLinkShares:(NSArray *)publicLinkShared {
++ (NSString *) getDefaultLinkNameNormalizedOfFile:(FileDto *)file withLinkShares:(NSArray *)publicLinkShared {
     
-    NSString *fileNameNormaliced = [file.fileName stringByRemovingPercentEncoding];
+    NSString *fileNameNormalized = [file.fileName stringByRemovingPercentEncoding];
     if (file.isDirectory) {
-        fileNameNormaliced = [fileNameNormaliced substringToIndex:[fileNameNormaliced length]-1];
+        fileNameNormalized = [fileNameNormalized substringToIndex:[fileNameNormalized length]-1];
     }
 
-    NSString *linkName = [NSLocalizedString(@"default_link_name", nil) stringByReplacingOccurrencesOfString:@"$fileName" withString:fileNameNormaliced];
-    NSString *linkNameNormaliced = [NSString stringWithString:linkName];
+    NSString *linkName = [NSLocalizedString(@"default_link_name", nil) stringByReplacingOccurrencesOfString:@"$fileName" withString:fileNameNormalized];
+    NSString *linkNameNormalized = [NSString stringWithString:linkName];
 
     NSInteger nShared = [publicLinkShared count];
 
     BOOL alreadyExist = NO;
     
-    NSPredicate *predicateSameFileName = [NSPredicate predicateWithFormat:@"name == %@", linkNameNormaliced];
+    NSPredicate *predicateSameFileName = [NSPredicate predicateWithFormat:@"name == %@", linkNameNormalized];
     NSArray *linksSameName = [publicLinkShared filteredArrayUsingPredicate:predicateSameFileName];
 
     if (linksSameName != nil && [linksSameName count] > 0) {
@@ -180,9 +180,9 @@
         //keep searching with the rest of numbers
         
         for (int i=2; i<=nShared; i++) {
-            linkNameNormaliced = [NSString stringWithFormat:@"%@ (%d)",linkName, i];
+            linkNameNormalized = [NSString stringWithFormat:@"%@ (%d)",linkName, i];
             
-            predicateSameFileName = [NSPredicate predicateWithFormat:@"name == %@", linkNameNormaliced];
+            predicateSameFileName = [NSPredicate predicateWithFormat:@"name == %@", linkNameNormalized];
             linksSameName = [publicLinkShared filteredArrayUsingPredicate:predicateSameFileName];
             
             if (linksSameName == nil || [linksSameName count] == 0) {
@@ -193,10 +193,10 @@
     }
 
     if (alreadyExist) {
-        linkNameNormaliced = [NSString stringWithFormat:@"%@ (%lu)",linkName,nShared+1];
+        linkNameNormalized = [NSString stringWithFormat:@"%@ (%lu)",linkName,nShared+1];
     }
     
-    return linkNameNormaliced;
+    return linkNameNormalized;
 }
 
 

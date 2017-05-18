@@ -109,31 +109,16 @@ typedef NS_ENUM (NSInteger, LinkOption){
             
             [self updateEnabledOptions];
         }
-//        _manageNetworkErrors = [ManageNetworkErrors new];
-//        _manageNetworkErrors.delegate = self;
+
     }
     
     return self;
 }
 
-//- (void) dismissKeyboard {
-//    
-//    //[self.view endEditing:YES];
-//    ShareLinkOptionCell *cellName = [self.shareLinkOptionsTableView viewWithTag:1];
-//    ShareLinkOptionCell *cellPassword = [self.shareLinkOptionsTableView viewWithTag:2];
-//    
-//    [cellName.optionTextField resignFirstResponder];
-//    [cellPassword.optionTextField resignFirstResponder];
-//}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-//    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
-//    [self.view addGestureRecognizer:tapRecognizer];
-//    self.singleTap.numberOfTapsRequired = 1;
-//    self.singleTap.numberOfTouchesRequired = 1;
-//    self.singleTap.delegate = self;
+
 }
 
 - (void) viewWillAppear:(BOOL)animated{
@@ -670,17 +655,6 @@ typedef NS_ENUM (NSInteger, LinkOption){
 }
 
 
-#pragma mark - UIGestureRecognizer delegate
-
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-////    // test if our control subview is on-screen
-////    if ([touch.view isDescendantOfView:self.pickerView]) {
-////        // we touched our control surface
-////        return NO;
-////    }
-////    return YES;
-//}
-
 #pragma mark - UITextField delegate methods
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
@@ -772,7 +746,6 @@ typedef NS_ENUM (NSInteger, LinkOption){
                      completion:nil];
     
 }
-
 
 - (void) dateSelected:(UIBarButtonItem *)sender{
     

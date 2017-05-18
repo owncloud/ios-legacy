@@ -353,7 +353,6 @@
 		405D06C51BFB670100591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
 		405D06C71BFB670200591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
 		405D06C81BFB670800591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
-		4090F0ED1EC0864A00AEDEDA /* CheckShares.m in Sources */ = {isa = PBXBuildFile; fileRef = 4090F0EC1EC0864A00AEDEDA /* CheckShares.m */; };
 		4096E2491EB8650200318240 /* ShareWarningLinkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4096E2471EB8650200318240 /* ShareWarningLinkCell.swift */; };
 		4096E24A1EB8650200318240 /* ShareWarningLinkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4096E2481EB8650200318240 /* ShareWarningLinkCell.xib */; };
 		40A1F17E1D8857740078C901 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 40A1F1801D8857740078C901 /* InfoPlist.strings */; };
@@ -1530,8 +1529,6 @@
 		405655191CE0A204001266EE /* UtilsFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsFileSystem.h; path = Utils/UtilsFileSystem.h; sourceTree = "<group>"; };
 		4056551A1CE0A204001266EE /* UtilsFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsFileSystem.m; path = Utils/UtilsFileSystem.m; sourceTree = "<group>"; };
 		405AD0C01B56C26A00271424 /* iphoneShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneShare.png; sourceTree = "<group>"; };
-		4090F0EB1EC0864A00AEDEDA /* CheckShares.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckShares.h; sourceTree = "<group>"; };
-		4090F0EC1EC0864A00AEDEDA /* CheckShares.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckShares.m; sourceTree = "<group>"; };
 		4096E2471EB8650200318240 /* ShareWarningLinkCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareWarningLinkCell.swift; path = Tabs/FileTab/Share/Cells/ShareWarningLinkCell.swift; sourceTree = "<group>"; };
 		4096E2481EB8650200318240 /* ShareWarningLinkCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareWarningLinkCell.xib; path = Tabs/FileTab/Share/Cells/ShareWarningLinkCell.xib; sourceTree = "<group>"; };
 		40A1F17F1D8857740078C901 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -2990,7 +2987,6 @@
 				EAD036BC19053BAB003665CD /* Favorites */,
 				EAE3FE0915D5566E00C08066 /* Download */,
 				EA9F620115CFF8FE005EB679 /* Uploads */,
-				4090F0EA1EC085F300AEDEDA /* Shares */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -3075,16 +3071,6 @@
 				59EDC42B1C611F9A0050939C /* btnHelpPage5@2x.png */,
 			);
 			path = HelpPageButtons;
-			sourceTree = "<group>";
-		};
-		4090F0EA1EC085F300AEDEDA /* Shares */ = {
-			isa = PBXGroup;
-			children = (
-				4090F0EB1EC0864A00AEDEDA /* CheckShares.h */,
-				4090F0EC1EC0864A00AEDEDA /* CheckShares.m */,
-			);
-			name = Shares;
-			path = Network/Shares;
 			sourceTree = "<group>";
 		};
 		40A969DD1A5EDF900046A36C /* InstantUpload */ = {
@@ -4773,7 +4759,6 @@
 				59C71D1C1A9216AE00F66166 /* ReaderThumbFetch.m in Sources */,
 				EA5C6F841B70BEE30088071B /* ShareFileCell.swift in Sources */,
 				59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */,
-				4090F0ED1EC0864A00AEDEDA /* CheckShares.m in Sources */,
 				EABD88C91BBE638300DA5281 /* ShareLoadingCell.swift in Sources */,
 				EA42FA54180565CB0006DB7C /* OCTabBarController.m in Sources */,
 				148DD613177855B600FB9977 /* AuthenticationResponseTypeCodeTask.m in Sources */,
