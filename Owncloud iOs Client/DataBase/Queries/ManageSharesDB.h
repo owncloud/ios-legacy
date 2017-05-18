@@ -43,7 +43,6 @@
  *
  * @param idUser -> NSInteger
  */
-
 + (void) deleteAllSharesOfUser:(NSInteger)idUser;
 
 
@@ -62,6 +61,7 @@
  */
 + (NSMutableArray*) getSharesByFolder:(FileDto *) folder;
 
+
 ///-----------------------------------
 /// @name Get Shares by Folder Path
 ///-----------------------------------
@@ -76,6 +76,7 @@
  *
  */
 + (NSMutableArray*) getSharesByFolderPath:(NSString *) path;
+
 
 ///-----------------------------------
 /// @name Get Shares by User and Path
@@ -92,20 +93,6 @@
  */
 + (NSMutableArray*) getSharesByUser:(NSInteger)idUser andPath:(NSString *) path;
 
-
-///-----------------------------------
-///
-/// @name getAllSharesByUserAndSharedType
-///-----------------------------------
-
-/**
- * Method to return all shares that have a user of shared type
- *
- * @param idUser -> NSInteger
- * @param sharedType -> NSInteger
- *
- */
-+ (NSMutableArray *) getAllSharesByUser:(NSInteger)idUser anTypeOfShare: (NSInteger) shareType;
 
 
 ///-----------------------------------
@@ -135,6 +122,22 @@
  *
  */
 + (NSMutableArray *) getAllSharesByUser:(NSInteger)idUser;
+
+
+///-----------------------------------
+///
+/// @name getAllSharesByUserAndSharedType
+///-----------------------------------
+
+/**
+ * Method to return all shares that have a user of shared type
+ *
+ * @param idUser -> NSInteger
+ * @param sharedType -> NSInteger
+ *
+ */
++ (NSMutableArray *) getAllSharesByUser:(NSInteger)idUser anTypeOfShare: (NSInteger) shareType;
+
 
 ///-----------------------------------
 /// @name Delete a list of shared
