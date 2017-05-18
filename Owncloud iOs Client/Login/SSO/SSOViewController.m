@@ -401,7 +401,8 @@ static NSString *const tmpFileName = @"tmp.der";
     if (error.code == kCFURLErrorHTTPTooManyRedirects) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"unknow_response_server", nil) message:NSLocalizedString(@"", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil];
         [alert show];
-        [self retry:nil];
+        
+        [self initParemetersAndRetryOpenLink];
         
     } else if ([error.domain isEqualToString: NSURLErrorDomain]) {
         
@@ -412,7 +413,7 @@ static NSString *const tmpFileName = @"tmp.der";
         {
             
             if (![[CheckAccessToServer sharedManager] isTemporalCertificateTrusted]) {
-                [self retry:nil];
+                [self initParemetersAndRetryOpenLink];
             }
         }
     }
@@ -476,6 +477,10 @@ static NSString *const tmpFileName = @"tmp.der";
  *  This method repeat the original request that shown the initial UIWebView
  */
 - (IBAction)retry:(id)sender {
+    [self initParemetersAndRetryOpenLink];
+}
+
+- (void) initParemetersAndRetryOpenLink {
     self.isCredentialsWritten = NO;
     self.user = nil;
     self.password = nil;
