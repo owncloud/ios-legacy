@@ -205,25 +205,22 @@
         NSString *name;
         
         if (userOrGroup.shareeType == shareTypeGroup) {
-            name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.name, NSLocalizedString(@"share_user_group_indicator", nil)];
-        } else {
-            
-            if (userOrGroup.shareeType == shareTypeRemote && userOrGroup.server != nil) {
+            name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, NSLocalizedString(@"share_user_group_indicator", nil)];
+
+        } else if (userOrGroup.shareeType == shareTypeRemote && userOrGroup.server != nil) {
                 
-                if(userOrGroup.isDisplayNameDuplicated){
-                    name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
-                }else{
-                    name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.server];
-                }
+            if(userOrGroup.isDisplayNameDuplicated) {
+                name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
+            } else {
+                name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.server];
             }
             
-            else{
+        } else {
                 
-                if (userOrGroup.isDisplayNameDuplicated){
-                    name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
-                }else{
-                    name = userOrGroup.displayName;
-                }
+            if (userOrGroup.isDisplayNameDuplicated){
+                name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
+            } else {
+                name = userOrGroup.displayName;
             }
         }
         
