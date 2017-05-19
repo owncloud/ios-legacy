@@ -126,6 +126,13 @@
     }
     
     
+    //Public share link with option to change the link name
+    
+    if (serverFeatures.hasPublicShareLinkOptionNameSupport) {
+        app.activeUser.hasPublicShareLinkOptionNameSupport = serverFunctionalitySupported;
+    }
+    
+    
     [ManageUsersDB updateUserByUserDto:app.activeUser];
 
 }
