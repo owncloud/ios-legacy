@@ -63,6 +63,16 @@ static NSString *const tmpFileName = @"tmp.der";
             _manageNetworkErrors = [ManageNetworkErrors new];
             _manageNetworkErrors.delegate = self;
         }
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
+        if (app.activeUser) {
+            //1- Storage the active account cookies on the Database
+            [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
+        }
+        //2- Delete the current cookies because we delete the current active user
+        [UtilsFramework deleteAllCookies];
+
     }
     return self;
 }
@@ -71,16 +81,6 @@ static NSString *const tmpFileName = @"tmp.der";
     
     [super viewWillAppear:animated];
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    if (app.activeUser) {
-        //1- Storage the active account cookies on the Database
-        [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
-    }
-    //2- Delete the current cookies because we delete the current active user
-    [UtilsFramework deleteAllCookies];
-    
-    [self openLink:_urlString];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -90,6 +90,8 @@ static NSString *const tmpFileName = @"tmp.der";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self openLink:_urlString];
     
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"cancel", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.navigationItem.rightBarButtonItem = cancelButton;

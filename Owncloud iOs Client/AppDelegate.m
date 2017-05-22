@@ -363,7 +363,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         uploadFromOtherAppNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;
         [_splitViewController dismissViewControllerAnimated:NO completion:nil];
         [_splitViewController presentViewController:uploadFromOtherAppNavigationController animated:YES completion:nil];
-
     }
 
 }
@@ -1960,7 +1959,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             if (_splitViewController) {
                 [_splitViewController dismissViewControllerAnimated:NO completion:nil];
             } else {
-                [_ocTabBarController dismissViewControllerAnimated:NO completion:nil];
+                //[_ocTabBarController dismissViewControllerAnimated:NO completion:nil];
             }
         }
     }
