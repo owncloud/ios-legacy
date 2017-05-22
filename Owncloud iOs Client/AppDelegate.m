@@ -1806,17 +1806,12 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         if (self.presentFilesViewController.moreActionSheet) {
             [self.presentFilesViewController.moreActionSheet dismissWithClickedButtonIndex:self.presentFilesViewController.moreActionSheet.cancelButtonIndex animated:NO];
         }
-        
-        //Close the plus view controller on the list of FilesViewController
-        if (self.presentFilesViewController.plusActionSheet) {
-            [self.presentFilesViewController.plusActionSheet dismissWithClickedButtonIndex:self.presentFilesViewController.plusActionSheet.cancelButtonIndex animated:NO];
+
+        // Close the plus and sort action sheets/popovers on the list of FilesViewController
+        if ([self.presentFilesViewController.presentedViewController isKindOfClass:[UIAlertController class]]) {
+            [self.presentFilesViewController.presentedViewController dismissViewControllerAnimated:NO completion:nil];
         }
-        
-        //Close the sort view controller on the list of FilesViewController
-        if (self.presentFilesViewController.sortingActionSheet) {
-            [self.presentFilesViewController.sortingActionSheet dismissWithClickedButtonIndex:self.presentFilesViewController.sortingActionSheet.cancelButtonIndex animated:NO];
-        }
-        
+
         //Create folder
         if (self.presentFilesViewController.folderView) {
             [self.presentFilesViewController.folderView dismissWithClickedButtonIndex:self.presentFilesViewController.folderView.cancelButtonIndex animated:NO];
@@ -1950,13 +1945,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             if (_presentFilesViewController.moreActionSheet){
                 [_presentFilesViewController.moreActionSheet dismissWithClickedButtonIndex:k_max_number_options_more_menu animated:NO];
             }
-            if (_presentFilesViewController.plusActionSheet){
-                [_presentFilesViewController.plusActionSheet dismissWithClickedButtonIndex:k_max_number_options_plus_menu animated:NO];
+            if ([_presentFilesViewController.presentedViewController isKindOfClass:[UIAlertController class]]) {
+                [_presentFilesViewController.presentedViewController dismissViewControllerAnimated:NO completion:nil];
             }
-            if (_presentFilesViewController.sortingActionSheet) {
-                [_presentFilesViewController.sortingActionSheet dismissWithClickedButtonIndex:k_max_number_options_sort_menu animated:NO];
-            }
-            
             if (_splitViewController) {
                 [_splitViewController dismissViewControllerAnimated:NO completion:nil];
             } else {

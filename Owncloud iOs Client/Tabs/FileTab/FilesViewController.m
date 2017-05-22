@@ -169,7 +169,7 @@
     _mUser = app.activeUser;
     
     //Add a more button
-    UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more-filled"] style:UIBarButtonItemStylePlain target:self action:@selector(showOptions)];
+    UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more-filled"] style:UIBarButtonItemStylePlain target:self action:@selector(showOptions:)];
     self.navigationItem.rightBarButtonItem = addButtonItem;
     
     // Create a searchBar and a displayController "Future Option"
@@ -633,14 +633,10 @@
         [self.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
     }
     
-    if (self.plusActionSheet) {
-        [self.plusActionSheet dismissWithClickedButtonIndex:4 animated:NO];
+    if ([self.presentedViewController isKindOfClass:[UIAlertController class]]) {
+        [self.presentedViewController dismissViewControllerAnimated:NO completion:nil];
     }
-    
-    if(self.sortingActionSheet){
-        [self.sortingActionSheet dismissWithClickedButtonIndex:2 animated:NO];
-    }
-    
+
     DLog(@"Files view Controller willRotate");
     if (IS_PORTRAIT) {
         //Vertical
@@ -1102,34 +1098,39 @@
 /*
  * Method that show the options when the user tap ... button
  */
-- (void)showOptions {
-    
-    if (self.plusActionSheet) {
-        self.plusActionSheet = nil;
+- (void)showOptions:(UIBarButtonItem *)sender {
+
+    UIAlertController *options = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+
+    UIAlertAction *upload = [UIAlertAction actionWithTitle:NSLocalizedString(@"menu_upload", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [self addPhotoOrVideo];
+    }];
+    UIAlertAction *createFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"menu_folder", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [self showCreateFolder];
+    }];
+    UIAlertAction *createTextFile = [UIAlertAction actionWithTitle:NSLocalizedString(@"menu_text_file", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        [self showCreateTextFile];
+    }];
+    UIAlertAction *sort = [UIAlertAction actionWithTitle:NSLocalizedString(@"sort_menu_title", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        // Wait until the currently visible alert controller is dismissed before presenting a new one
+        // (i.e. wait until the next run loop iteration)
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showSortingOptions:sender];
+        });
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", nil) style:UIAlertActionStyleCancel handler:nil];
+
+    [options addAction:upload];
+    [options addAction:createFolder];
+    [options addAction:createTextFile];
+    [options addAction:sort];
+    [options addAction:cancel];
+
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        options.modalPresentationStyle = UIModalPresentationPopover;
+        options.popoverPresentationController.barButtonItem = sender;
     }
-    
-    self.plusActionSheet = [[UIActionSheet alloc]
-                            initWithTitle:nil
-                            delegate:self
-                            cancelButtonTitle:NSLocalizedString(@"cancel", nil)
-                            destructiveButtonTitle:nil
-                            otherButtonTitles:NSLocalizedString(@"menu_upload", nil), NSLocalizedString(@"menu_folder", nil), NSLocalizedString(@"menu_text_file", nil), NSLocalizedString(@"sort_menu_title", nil), nil];
-    
-    self.plusActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
-    self.plusActionSheet.tag=100;
-    
-    if (IS_IPHONE) {
-        [self.plusActionSheet showInView:self.tabBarController.view];
-    } else {
-        
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        if (IS_IOS8 || IS_IOS9)  {
-            [self.plusActionSheet showInView:app.splitViewController.view];
-        } else {
-            [self.plusActionSheet showInView:app.detailViewController.view];
-        }
-    }
+    [self presentViewController:options animated:YES completion:nil];
 }
 
 
@@ -2318,37 +2319,42 @@
 /*
  * This method shows an action sheet to sort the files and folders list
  */
-- (void)showSortingOptions{
-    NSString * sortByTitle = NSLocalizedString(@"sort_menu_title", nil);
-    
-    if (self.sortingActionSheet) {
-        self.sortingActionSheet = nil;
+- (void)showSortingOptions:(UIBarButtonItem *)sender {
+
+    UIAlertController *options = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"sort_menu_title", nil) message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+
+    UIAlertAction *byName = [UIAlertAction actionWithTitle:NSLocalizedString(@"sort_menu_by_name_option", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [self userDidSelectSortingChoice:sortByName];
+    }];
+    UIAlertAction *byDate = [UIAlertAction actionWithTitle:NSLocalizedString(@"sort_menu_by_modification_date_option", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [self userDidSelectSortingChoice:sortByModificationDate];
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", nil) style:UIAlertActionStyleCancel handler:nil];
+
+    [options addAction:byName];
+    [options addAction:byDate];
+    [options addAction:cancel];
+
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        options.modalPresentationStyle = UIModalPresentationPopover;
+        options.popoverPresentationController.barButtonItem = sender;
     }
-    
-    self.sortingActionSheet = [[UIActionSheet alloc]
-                               initWithTitle:sortByTitle
-                               delegate:self
-                               cancelButtonTitle:NSLocalizedString(@"cancel", nil)
-                               destructiveButtonTitle:nil
-                               otherButtonTitles:NSLocalizedString(@"sort_menu_by_name_option", nil), NSLocalizedString(@"sort_menu_by_modification_date_option", nil), nil];
-    
-    self.sortingActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
-    self.sortingActionSheet.tag=300;
-    
-    if (IS_IPHONE) {
-        [self.sortingActionSheet showInView:self.tabBarController.view];
-    } else {
-        
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        if (IS_IOS8 || IS_IOS9)  {
-            [self.sortingActionSheet showInView:app.splitViewController.view];
-        } else {
-            [self.sortingActionSheet showInView:app.detailViewController.view];
-        }
-    }
+    [self presentViewController:options animated:YES completion:nil];
 }
 
+
+/*
+ * This method is called whenever user decides to change the sorting option
+ */
+- (void)userDidSelectSortingChoice:(enumSortingType)sortingChoice {
+    enumSortingType currentSortingType = APP_DELEGATE.activeUser.sortingType;
+    if (currentSortingType == sortingChoice) {
+        return;
+    }
+    [self updateActiveUserSortingChoiceTo:sortingChoice];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+    [self reloadTableFileList];
+}
 
 /*
  * This method stores in the DB the sorting option selected by the user
@@ -2362,26 +2368,6 @@
 #pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
-    
-    //Upload, create folder, cancel options (+ menu)
-    if (actionSheet.tag==100) {
-        switch (buttonIndex) {
-            case 0:
-                [self addPhotoOrVideo]; 
-                break;
-            case 1:
-                [self showCreateFolder];
-                break;
-            case 2:
-                [self showCreateTextFile];
-                break;
-            case 3:
-                [self showSortingOptions];
-                break;
-            default:
-                break;
-        }
-    }
     
     //Long press menu    
     if (actionSheet.tag==200) {
@@ -2473,29 +2459,6 @@
         switch (buttonIndex) {
             case 0:
                 [self didSelectCancelFavoriteFolder];
-                break;
-            default:
-                break;
-        }
-    }
-    
-    //Sorting options
-    if (actionSheet.tag==300) {
-        enumSortingType storedSorting = APP_DELEGATE.activeUser.sortingType;
-        switch (buttonIndex) {
-            case 0:
-                if(storedSorting != sortByName){
-                    [self updateActiveUserSortingChoiceTo:sortByName];
-                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
-                    [self reloadTableFileList];
-                }
-                break;
-            case 1:
-                if(storedSorting != sortByModificationDate){
-                    [self updateActiveUserSortingChoiceTo:sortByModificationDate];
-                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
-                    [self reloadTableFileList];
-                }
                 break;
             default:
                 break;
