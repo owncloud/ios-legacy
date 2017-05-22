@@ -1676,8 +1676,6 @@
  */
 - (void) goToSelectedFileOrFolder:(FileDto *) selectedFile andForceDownload:(BOOL) isForceDownload {
     
-    [self initLoading];
-    
     if(selectedFile.isDirectory) {
         [self performSelector: @selector(goToFolder:) withObject:selectedFile];
     } else {
