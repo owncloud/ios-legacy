@@ -65,7 +65,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         isConnectionToServer = NO;
         isNeedToCheckAgain = YES;
         
-        if(k_multiaccount_available && loginMode != LoginModeMigrate) {
+        if(k_multiaccount_available && loginMode != LoginModeMigrate && loginMode != LoginModeExpire) {
             [self setBarForCancelForLoadingFromModal];
         }
     }
