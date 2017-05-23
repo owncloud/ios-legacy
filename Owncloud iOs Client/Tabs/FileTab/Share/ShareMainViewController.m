@@ -539,17 +539,7 @@
         
         OCShareUser *shareUser = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
         
-        if (shareUser.shareeType == shareTypeGroup) {
-            name = [NSString stringWithFormat:@"%@ (%@)",shareUser.name, NSLocalizedString(@"share_user_group_indicator", nil)];
-            
-        } else {
-            
-            if (shareUser.isDisplayNameDuplicated) {
-                name = [NSString stringWithFormat:@"%@ (%@)", shareUser.displayName, shareUser.name];
-            }else{
-                name = shareUser.displayName;
-            }
-        }
+        name = [ShareUtils getDisplayNameForSharee:shareUser];
         
         shareUserCell.accessoryType = UITableViewCellAccessoryDetailButton;
     }

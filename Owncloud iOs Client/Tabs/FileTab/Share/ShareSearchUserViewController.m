@@ -202,27 +202,7 @@
         }
 
 
-        NSString *name;
-        
-        if (userOrGroup.shareeType == shareTypeGroup) {
-            name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, NSLocalizedString(@"share_user_group_indicator", nil)];
-
-        } else if (userOrGroup.shareeType == shareTypeRemote && userOrGroup.server != nil) {
-                
-            if(userOrGroup.isDisplayNameDuplicated) {
-                name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
-            } else {
-                name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.server];
-            }
-            
-        } else {
-                
-            if (userOrGroup.isDisplayNameDuplicated){
-                name = [NSString stringWithFormat:@"%@ (%@)", userOrGroup.displayName, userOrGroup.name];
-            } else {
-                name = userOrGroup.displayName;
-            }
-        }
+        NSString *name = [ShareUtils getDisplayNameForSharee:userOrGroup];
         
         shareUserCell.itemName.text = name;
         

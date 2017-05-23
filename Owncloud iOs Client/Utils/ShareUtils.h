@@ -55,5 +55,8 @@
 + (NSString *) convertDateInServerFormat:(NSDate *)date;
 + (NSString *) stringOfDate:(NSDate *) date;
 
+#pragma mark - display utils
+
++ (NSString *) getDisplayNameForSharee:(OCShareUser *)sharee;
 
 @end
