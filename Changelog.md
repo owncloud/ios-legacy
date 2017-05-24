@@ -1,4 +1,4 @@
-## 3.6.0 (May 2017)
+## 3.6.0 (May 2017)
 - Video streaming
 - Multiple public links per file (OC X required)
 - Share with custom groups (OC X required)
