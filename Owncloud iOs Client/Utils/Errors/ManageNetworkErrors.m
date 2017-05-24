@@ -76,7 +76,7 @@
             break;
         case kOCErrorServerForbidden:
             //403 Forbidden
-            if (error.code == OCErrorForbiddenUnknown) {
+            if (error && error.code == OCErrorForbiddenUnknown) {
                 [_delegate showError:[error.userInfo objectForKey:NSLocalizedDescriptionKey]];
             } else {
                 [_delegate showError:NSLocalizedString(@"error_not_permission", nil)];

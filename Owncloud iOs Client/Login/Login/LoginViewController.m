@@ -97,7 +97,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         }
         
         isSSLAccepted = YES;
-        isError500 = NO;
+        self.errorMessage = nil;
         isCheckingTheServerRightNow = NO;
         isConnectionToServer = NO;
         isNeedToCheckAgain = YES;
@@ -1343,11 +1343,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     NSString *errorMessage = @"";
     
-    if(isError500) {
-
-        errorMessage = @"unknow_response_server";
-        
-    } else if (isErrorOnCredentials){
+    if (isErrorOnCredentials) {
         
         //In SAML the error message is about the session expired
         if (k_is_sso_active) {
@@ -1360,6 +1356,10 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     } else if (self.loginMode == LoginModeMigrate){
         
         errorMessage = @"error_updating_predefined_url";
+        
+    } else if (self.errorMessage) {
+        
+        errorMessage = self.errorMessage;
         
     } else {
         
@@ -1633,7 +1633,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         }
         
         if(textField == self.urlTextField) {
-            isError500 = NO;
+            self.errorMessage = nil;
         }
         
         if(textField == self.urlTextField && self.urlTextField.text.length > 0) {
@@ -2169,13 +2169,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 
 
 - (void)showError:(NSString *) message {
-    
+    DLog(@"showError");
+    self.errorMessage = message;
+    [self hideTryingToLogin];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self hideTryingToLogin];
-        _alert = nil;
-        _alert = [[UIAlertView alloc] initWithTitle:message
-                                            message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [_alert show];
+        [self.tableView reloadData];
     });
 }
 
@@ -2197,11 +2195,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
    // DLog(@"Request Did Fetch Directory Listing And Test Authetification");
     
     if(requestCode >= 400) {
-        isError500 = YES;
-        [self hideTryingToLogin];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
+        [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:requestCode
+                                                              andError:nil];
     } else {
         
         UserDto *userDto = [[UserDto alloc] init];
@@ -2273,6 +2268,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     });
 }
 
+
 #pragma mark - Cookies support
 //-----------------------------------
 /// @name restoreTheCookiesOfActiveUserByNewUser
@@ -2321,7 +2317,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
 -(void)goTryToDoLogin {
     DLog(@"_goTryToDoLogin_ with user: %@ | pass: %@", self.usernameTextField.text, self.passwordTextField.text);
     
-    isError500 = NO;
+    self.errorMessage = nil;
     
     DLog(@"_goTryToDoLogin_ log2 urlTextField: %@ username:%@  isConnectionToServer%d : hasInvalidAuth: %d", self.urlTextField.text, self.usernameTextField.text, isConnectionToServer, hasInvalidAuth);
     if (self.urlTextField.text.length > 0 && self.usernameTextField.text.length > 0 && self.passwordTextField.text.length > 0 && isConnectionToServer && !hasInvalidAuth) {

@@ -120,10 +120,8 @@
     //DLog(@"Request Did Fetch Directory Listing And Test Authetification");
     
     if(requestCode >= 400) {
-        isError500 = YES;
-        [self hideTryingToLogin];
-        
-        [self.tableView reloadData];
+        [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:requestCode
+                                                              andError:nil];
     } else {
         
         UserDto *userDto = [[UserDto alloc] init];
@@ -159,8 +157,8 @@
         [self hideTryingToLogin];
         
         if([ManageUsersDB isExistUser:userDto]) {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"user_exist", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-            [alertView show];
+
+            [self showError:NSLocalizedString(@"user_exist", nil)];
             
             //1- Clean the cookies after login or not before go with the active user
             [UtilsFramework deleteAllCookies];
