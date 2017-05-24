@@ -2,7 +2,7 @@
 - Video streaming
 - Multiple public links per file (OC X required)
 - Share with custom groups (OC X required)
-- Show latex files
+- Show & edit latex files
 - UX improvements
 - Bug fixing
 
