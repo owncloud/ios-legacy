@@ -539,17 +539,7 @@
         
         OCShareUser *shareUser = [self.sharedUsersOrGroups objectAtIndex:indexPath.row];
         
-        if (shareUser.shareeType == shareTypeGroup) {
-            name = [NSString stringWithFormat:@"%@ (%@)",shareUser.name, NSLocalizedString(@"share_user_group_indicator", nil)];
-            
-        } else {
-            
-            if (shareUser.isDisplayNameDuplicated) {
-                name = [NSString stringWithFormat:@"%@ (%@)", shareUser.displayName, shareUser.name];
-            }else{
-                name = shareUser.displayName;
-            }
-        }
+        name = [ShareUtils getDisplayNameForSharee:shareUser];
         
         shareUserCell.accessoryType = UITableViewCellAccessoryDetailButton;
     }
@@ -746,13 +736,9 @@
 }
 
 - (void) errorLogin {
-    
      [self endLoading];
     
      [self performSelector:@selector(showEditAccount) withObject:nil afterDelay:animationsDelay];
-    
-     [self performSelector:@selector(showErrorAccount) withObject:nil afterDelay:largeDelay];
-   
 }
 
 
@@ -788,15 +774,6 @@
     
 #endif
     
-}
-
-- (void) showErrorAccount {
-    
-    if (k_is_sso_active) {
-        [self showErrorWithTitle:NSLocalizedString(@"session_expired", nil)];
-    }else{
-        [self showErrorWithTitle:NSLocalizedString(@"error_login_message", nil)];
-    }
 }
 
 - (void)showErrorWithTitle: (NSString *)title {

@@ -51,8 +51,6 @@ extern NSString *loginViewControllerRotate;
     UITextField *_usernameTextField;
     UITextField *_passwordTextField;
     
-    //Alert
-    UIAlertView *_alert;
     
     //Flags
     BOOL isUserTextUp;
@@ -64,11 +62,12 @@ extern NSString *loginViewControllerRotate;
     BOOL isCheckingTheServerRightNow;
     BOOL isSSLAccepted;
     BOOL isErrorOnCredentials;
-    BOOL isError500;
     BOOL isLoginButtonEnabled;
     BOOL urlEditable;
     BOOL userNameEditable;
     BOOL hasInvalidAuth;
+    
+    
     
     
 }
@@ -96,6 +95,8 @@ extern NSString *loginViewControllerRotate;
 @property(nonatomic,strong) ManageNetworkErrors *manageNetworkErrors;
 
 @property (nonatomic) LoginMode loginMode;
+
+@property (nonatomic, strong) NSString *errorMessage;
 
 -(void)checkUrlManually;
 -(void)hideOrShowPassword;

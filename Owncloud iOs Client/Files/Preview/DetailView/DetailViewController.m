@@ -381,6 +381,10 @@
      *  2.1. Other file types.
      */
     
+    if (self.avMoviePlayer) {
+        [self removeMediaPlayer];
+    }
+    
     if (_typeOfFile == imageFileType) {
         if (_file.isNecessaryUpdate) {
             _isUpdatingFile = YES;

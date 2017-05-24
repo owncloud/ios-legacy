@@ -221,6 +221,21 @@
     }
 }
 
+/*
+ * Shows an error message
+ */
+- (void)showError:(NSString *) message {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:message
+                                                        message:@""
+                                                       delegate:nil
+                                              cancelButtonTitle:NSLocalizedString(@"ok", nil)
+                                              otherButtonTitles:nil,
+                              nil];
+        [alert show];
+    });
+}
+
 
 #pragma mark - Move the item on device
 

@@ -27,7 +27,7 @@ Thanks for wanting to contribute source code to ownCloud. That's great!
 Before we're able to merge your code into the ownCloud app for iOS, you need to sign our [Contributor Agreement][agreement].
 
 ### Guidelines
-* Contribute your code in the branch 'develop'. It will give us a better chance to test your code before merging it with stable code.
+* Contribute your code in the branch 'master'. It will give us a better chance to test your code before merging it with stable code.
 * For your first contribution, start a pull request on develop and send us the signed [Contributor Agreement][agreement].
 * Keep on using pull requests for your next contributions although you own write permissions.
 

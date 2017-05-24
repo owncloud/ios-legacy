@@ -65,7 +65,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         isConnectionToServer = NO;
         isNeedToCheckAgain = YES;
         
-        if(k_multiaccount_available && loginMode != LoginModeMigrate) {
+        if(k_multiaccount_available && loginMode != LoginModeMigrate && loginMode != LoginModeExpire) {
             [self setBarForCancelForLoadingFromModal];
         }
     }
@@ -197,9 +197,7 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
         _passwordTextField.text = cookieString;
         [self goTryToDoLogin];
     } else {
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"credentials_different_user", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-        [alertView show];
+        [self showError:NSLocalizedString(@"credentials_different_user", nil)];
     }
 }
 
@@ -220,10 +218,8 @@ NSString *relaunchErrorCredentialFilesNotification = @"relaunchErrorCredentialFi
     //DLog(@"Request Did Fetch Directory Listing And Test Authetification");
     
     if(requestCode >= 400) {
-        isError500 = YES;
-        [self hideTryingToLogin];
-        
-        [self.tableView reloadData];
+        [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:requestCode
+                                                              andError:nil];
     } else {
         
         UserDto *userDtoEdited =[ManageUsersDB getUserByIdUser:self.selectedUser.idUser];

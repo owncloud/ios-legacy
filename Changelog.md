@@ -1,3 +1,11 @@
+## 3.6.0 (May 2017)
+- Video streaming
+- Multiple public links per file (OC X required)
+- Share with custom groups (OC X required)
+- Show & edit latex files
+- UX improvements
+- Bug fixing
+
 ## 3.5.3 (February 2017)
 - Added support for animated GIF images
 - Added more descriptive error message for maintenance mode

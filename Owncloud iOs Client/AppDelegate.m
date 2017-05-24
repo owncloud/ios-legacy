@@ -363,7 +363,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         uploadFromOtherAppNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;
         [_splitViewController dismissViewControllerAnimated:NO completion:nil];
         [_splitViewController presentViewController:uploadFromOtherAppNavigationController animated:YES completion:nil];
-
     }
 
 }
@@ -1796,35 +1795,42 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //Close the openWith option in FileViewController
         if (self.presentFilesViewController.openWith) {
             [self.presentFilesViewController.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
+            self.presentFilesViewController.openWith.activityView = nil;
         }
         //Close the delete option in FilesViewController
         if (self.presentFilesViewController.mDeleteFile.popupQuery) {
             [self.presentFilesViewController.mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
+            self.presentFilesViewController.mDeleteFile.popupQuery = nil;
         }
         
         //Close the more view controller on the list of FilesViewController
         if (self.presentFilesViewController.moreActionSheet) {
             [self.presentFilesViewController.moreActionSheet dismissWithClickedButtonIndex:self.presentFilesViewController.moreActionSheet.cancelButtonIndex animated:NO];
+            self.presentFilesViewController.moreActionSheet = nil;
         }
         
         //Close the plus view controller on the list of FilesViewController
         if (self.presentFilesViewController.plusActionSheet) {
             [self.presentFilesViewController.plusActionSheet dismissWithClickedButtonIndex:self.presentFilesViewController.plusActionSheet.cancelButtonIndex animated:NO];
+            self.presentFilesViewController.plusActionSheet = nil;
         }
         
         //Close the sort view controller on the list of FilesViewController
         if (self.presentFilesViewController.sortingActionSheet) {
             [self.presentFilesViewController.sortingActionSheet dismissWithClickedButtonIndex:self.presentFilesViewController.sortingActionSheet.cancelButtonIndex animated:NO];
+            self.presentFilesViewController.sortingActionSheet = nil;
         }
         
         //Create folder
         if (self.presentFilesViewController.folderView) {
             [self.presentFilesViewController.folderView dismissWithClickedButtonIndex:self.presentFilesViewController.folderView.cancelButtonIndex animated:NO];
+            self.presentFilesViewController.folderView = nil;
         }
         
         //Rename folder
         if (self.presentFilesViewController.rename.renameAlertView) {
             [self.presentFilesViewController.rename.renameAlertView dismissWithClickedButtonIndex:self.presentFilesViewController.rename.renameAlertView.cancelButtonIndex animated:NO];
+            self.presentFilesViewController.rename.renameAlertView = nil;
         }
         
     }
@@ -1833,28 +1839,25 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //Close the pop-up of twitter and facebook in SettingViewController
         if (self.settingsViewController.popupQuery) {
             [self.settingsViewController.popupQuery dismissWithClickedButtonIndex:self.settingsViewController.popupQuery.cancelButtonIndex animated:NO];
+            self.settingsViewController.popupQuery = nil;
         }
         if (self.settingsViewController.twitter) {
             [self.settingsViewController.twitter dismissViewControllerAnimated:NO completion:nil];
+            self.settingsViewController.twitter = nil;
         }
         if (self.settingsViewController.facebook) {
             [self.settingsViewController.facebook dismissViewControllerAnimated:NO completion:nil];
+            self.settingsViewController.facebook = nil;
         }
         //Close the view of mail in SettingViewController
         if (self.settingsViewController.mailer) {
             [self.settingsViewController.mailer dismissViewControllerAnimated:NO completion:nil];
-        }
-        //Close the pincode view controller in SettingViewController
-        if (self.settingsViewController.vc) {
-            [self.settingsViewController.vc dismissViewControllerAnimated:NO completion:nil];
-        }
-        //Close the pincode view controller in SettingViewController
-        if (self.settingsViewController.vc) {
-            [self.settingsViewController.vc dismissViewControllerAnimated:NO completion:nil];
+            self.settingsViewController.mailer = nil;
         }
         //Close user actionsheet view controller in SettingViewController
         if (self.settingsViewController.menuAccountActionSheet) {
             [self.settingsViewController.menuAccountActionSheet dismissWithClickedButtonIndex:self.settingsViewController.menuAccountActionSheet.cancelButtonIndex animated:NO];
+            self.settingsViewController.menuAccountActionSheet = nil;
         }
     }
 }
@@ -1946,21 +1949,28 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             
             if(_presentFilesViewController.rename.renameAlertView){
                 [_presentFilesViewController.rename.renameAlertView dismissWithClickedButtonIndex:0 animated:NO];
+                _presentFilesViewController.rename.renameAlertView = nil;
             }
             if (_presentFilesViewController.moreActionSheet){
                 [_presentFilesViewController.moreActionSheet dismissWithClickedButtonIndex:k_max_number_options_more_menu animated:NO];
+                _presentFilesViewController.moreActionSheet = nil;
+
             }
             if (_presentFilesViewController.plusActionSheet){
                 [_presentFilesViewController.plusActionSheet dismissWithClickedButtonIndex:k_max_number_options_plus_menu animated:NO];
+                _presentFilesViewController.plusActionSheet = nil;
+
             }
             if (_presentFilesViewController.sortingActionSheet) {
                 [_presentFilesViewController.sortingActionSheet dismissWithClickedButtonIndex:k_max_number_options_sort_menu animated:NO];
+                _presentFilesViewController.sortingActionSheet = nil;
+
             }
             
             if (_splitViewController) {
                 [_splitViewController dismissViewControllerAnimated:NO completion:nil];
             } else {
-                [_ocTabBarController dismissViewControllerAnimated:NO completion:nil];
+                //[_ocTabBarController dismissViewControllerAnimated:NO completion:nil];
             }
         }
     }

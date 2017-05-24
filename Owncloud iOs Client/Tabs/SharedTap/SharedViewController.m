@@ -141,38 +141,29 @@
 
 -(void)viewDidLayoutSubviews
 {
-    
-    if (IS_IOS8 || IS_IOS9) {
+    if ([self.sharedTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
+    }
         
-        if ([self.sharedTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
-        }
-        
-        if ([self.sharedTableView respondsToSelector:@selector(setLayoutMargins:)]) {
-            [self.sharedTableView setLayoutMargins:UIEdgeInsetsZero];
-        }
+    if ([self.sharedTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.sharedTableView setLayoutMargins:UIEdgeInsetsZero];
+    }
         
         
-        CGRect rect = self.navigationController.navigationBar.frame;
-        float y = rect.size.height + rect.origin.y;
-        self.sharedTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
-        
-    }}
+    CGRect rect = self.navigationController.navigationBar.frame;
+    float y = rect.size.height + rect.origin.y;
+    self.sharedTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+}
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    if (IS_IOS8 || IS_IOS9) {
-        if ([self.sharedTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
-        }
-        
-        if ([self.sharedTableView respondsToSelector:@selector(setLayoutMargins:)]) {
-            [self.sharedTableView setLayoutMargins:UIEdgeInsetsZero];
-        }
-        
+    if ([self.sharedTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.sharedTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
     }
     
+    if ([self.sharedTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.sharedTableView setLayoutMargins:UIEdgeInsetsZero];
+    }
 }
 
 

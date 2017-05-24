@@ -268,4 +268,31 @@
     return [dateFormatter stringFromDate:date];
 }
 
+
+#pragma mark - display utils
+
++ (NSString *) getDisplayNameForSharee:(OCShareUser *)sharee {
+    
+    if (sharee.shareeType == shareTypeGroup) {
+        return [NSString stringWithFormat:@"%@ (%@)", sharee.displayName, NSLocalizedString(@"share_user_group_indicator", nil)];
+        
+    } else if (sharee.shareeType == shareTypeRemote && sharee.server != nil) {
+        
+        if(sharee.isDisplayNameDuplicated) {
+            return [NSString stringWithFormat:@"%@ (%@)", sharee.displayName, sharee.name];
+        } else {
+            return [NSString stringWithFormat:@"%@ (%@)", sharee.displayName, sharee.server];
+        }
+        
+    } else {
+        
+        if (sharee.isDisplayNameDuplicated){
+            return [NSString stringWithFormat:@"%@ (%@)", sharee.displayName, sharee.name];
+        } else {
+            return sharee.displayName;
+        }
+    }
+    
+}
+
 @end
