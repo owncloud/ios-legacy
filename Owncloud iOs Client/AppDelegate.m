@@ -61,6 +61,7 @@
 #import "UtilsFileSystem.h"
 #import "OCKeychain.h"
 #import "UtilsCookies.h"
+#import "PresentedViewUtils.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -994,11 +995,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
     
     //Store the version of the app in NSUserDefautls
-    [UtilsFileSystem  storeVersionUsed];
+    [UtilsFileSystem storeVersionUsed];
 
 }
-
-
 
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -1009,7 +1008,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         self.activeUser=[ManageUsersDB getActiveUser];
     }
     
-    if (self.activeUser.url != nil) {
+    if (self.activeUser.url != nil && [PresentedViewUtils isSSOViewControllerPresentedInWindow:self.window withPassCodeVisible:_isPasscodeVisible] == false ) {
        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
     }
     
@@ -1030,7 +1029,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         if (_activeUser && self.presentFilesViewController) {
             [_presentFilesViewController reloadTableFromDataBase];
         }
-        
     }
 
     //Show TouchID dialog if active
@@ -1752,30 +1750,21 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             } else {
                 vc.mode = KKPasscodeModeSet;
             }
-
-            if (IS_IPHONE) {
-                
-                UIViewController *topView = [self topViewController];
-                
-                if (topView) {
-                    if (![topView isKindOfClass:[KKPasscodeViewController class]]) {
-                        _currentViewVisible = topView;
-                   }
-                }
-                [_currentViewVisible presentViewController:oc animated:NO completion:nil];
-                
-                
-            } else {
-                //is ipad
-                [_splitViewController dismissViewControllerAnimated:NO completion:nil];
-                
-                // oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-                oc.modalPresentationStyle = UIModalPresentationFormSheet;
-                
-                [_splitViewController presentViewController:oc animated:NO completion:^{
-                    DLog(@"present complete");
-                }];
+            
+            if (IS_IPHONE == false) {
+                 oc.modalPresentationStyle = UIModalPresentationFormSheet;
             }
+            
+            UIViewController *presentedView = [PresentedViewUtils getPresentedViewControllerInWindow:self.window];
+            
+            if (![presentedView isKindOfClass:[KKPasscodeViewController class]]) {
+                _currentViewVisible = presentedView;
+            }
+            
+            [presentedView presentViewController:oc animated:NO completion:^{
+                DLog(@"present complete");
+            }];
+
         });
     }
 }
@@ -1832,7 +1821,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             [self.presentFilesViewController.rename.renameAlertView dismissWithClickedButtonIndex:self.presentFilesViewController.rename.renameAlertView.cancelButtonIndex animated:NO];
             self.presentFilesViewController.rename.renameAlertView = nil;
         }
-        
     }
     
     if (self.settingsViewController){
@@ -1862,64 +1850,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 }
 
-- (UIViewController *)topViewController{
-    return [self topViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
-}
-
-- (UIViewController *)topViewController:(UIViewController *)rootViewController
-{
-    if (rootViewController.presentedViewController == nil) {
-        return rootViewController;
-    }
-    
-    if ([rootViewController.presentedViewController isKindOfClass:[UINavigationController class]]) {
-        UINavigationController *navigationController = (UINavigationController *)rootViewController.presentedViewController;
-        UIViewController *lastViewController = [[navigationController viewControllers] lastObject];
-        return [self topViewController:lastViewController];
-        
-        /*
-         UIViewController *lastViewController;
-         
-         for (id current in [navigationController viewControllers]) {
-         
-         if (![current isKindOfClass:[UIAlertController class]]) {
-         lastViewController = current;
-         }
-         
-         }
-         */
-    }
-    
-    UIViewController *presentedViewController = (UIViewController *)rootViewController.presentedViewController;
-    return [self topViewController:presentedViewController];
-}
-
-//- (UIViewController*)topViewController {
-//    return [self topViewControllerWithRootViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
-//}
-//
-//- (UIViewController*)topViewControllerWithRootViewController:(UIViewController*)rootViewController {
-//    if ([rootViewController isKindOfClass:[UITabBarController class]]) {
-//        UITabBarController* tabBarController = (UITabBarController*)rootViewController;
-//        return [self topViewControllerWithRootViewController:tabBarController.selectedViewController];
-//    } else if ([rootViewController isKindOfClass:[UINavigationController class]]) {
-//        UINavigationController* navigationController = (UINavigationController*)rootViewController;
-//        return [self topViewControllerWithRootViewController:navigationController.visibleViewController];
-//    } else if (rootViewController.presentedViewController) {
-//        UIViewController* presentedViewController = rootViewController.presentedViewController;
-//        return [self topViewControllerWithRootViewController:presentedViewController];
-//    } else {
-//        return rootViewController;
-//    }
-//}
-
-
 #pragma mark - Pass Code Delegate Methods
 
 - (void)didPasscodeEnteredCorrectly:(KKPasscodeViewController*)viewController{
     DLog(@"Did pass code entered correctly");
-    
-    [self initViewsAfterDismissPasscode];
+    if ([PresentedViewUtils isSSOViewControllerPresentedInWindow:self.window withPassCodeVisible:_isPasscodeVisible] == false){
+       [self initViewsAfterDismissPasscode];
+    }
 }
 
 - (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController{
@@ -1965,12 +1902,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 [_presentFilesViewController.sortingActionSheet dismissWithClickedButtonIndex:k_max_number_options_sort_menu animated:NO];
                 _presentFilesViewController.sortingActionSheet = nil;
 
-            }
-            
-            if (_splitViewController) {
-                [_splitViewController dismissViewControllerAnimated:NO completion:nil];
-            } else {
-                //[_ocTabBarController dismissViewControllerAnimated:NO completion:nil];
             }
         }
     }

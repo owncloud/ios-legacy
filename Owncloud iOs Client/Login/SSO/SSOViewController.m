@@ -208,7 +208,7 @@ static NSString *const tmpFileName = @"tmp.der";
 //        return NO;
 //    }
     
-    return YES;
+   // return YES;
 }
 
 - (void) delay {
