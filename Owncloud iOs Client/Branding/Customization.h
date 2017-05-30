@@ -26,7 +26,7 @@
 #define k_hide_url_server NO
 
 //Set a default url server. It must be obligatory if we hide the url server (#define k_hide_url_server YES)
-#define k_default_url_server @"https://docker.oc.solidgear.es:63360/oc-shib/"
+#define k_default_url_server @""
 
 //force override existing accounts with k_default_url_server. It must be obligatory if we change authentication type (k_is_sso_active)
 #define k_force_update_of_server_url NO
@@ -44,7 +44,7 @@
 #define k_is_oauth_active NO
 
 //Have SAML active
-#define k_is_sso_active YES
+#define k_is_sso_active NO
 
 //OAuth server
 #define k_oauth_login @""
@@ -155,5 +155,5 @@
 #define k_warning_sharing_public_link YES
 
 //Force passcode
-#define k_is_passcode_forced YES
+#define k_is_passcode_forced NO
 
