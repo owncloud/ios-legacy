@@ -9,7 +9,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -242,6 +242,7 @@ static NSString *const tmpFileName = @"tmp.der";
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     DLog(@"_webViewDidStartLoad_: %@", webView.request.URL.absoluteString);
+    self.isLoading = true;
     
     [_webView endEditing:YES];
     
@@ -257,8 +258,8 @@ static NSString *const tmpFileName = @"tmp.der";
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
-    
     DLog(@"_webViewDidFinishLoad_");
+    self.isLoading = false;
     
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delay) object:nil];
     

@@ -20,5 +20,6 @@
 
 + (UIViewController *) getPresentedViewControllerInWindow: (UIWindow *)window;
 + (BOOL) isSSOViewControllerPresentedInWindow: (UIWindow *)window withPassCodeVisible: (BOOL) isPasscodeVisible;
++ (BOOL) isSSOViewControllerPresentedAndLoading: (UIWindow *) window;
 
 @end

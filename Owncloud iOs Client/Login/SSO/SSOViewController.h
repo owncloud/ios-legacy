@@ -10,7 +10,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -29,12 +29,11 @@
 
 @interface SSOViewController : UIViewController <UIWebViewDelegate, UIAlertViewDelegate, UITextFieldDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate, ManageNetworkErrorsDelegate>
 
-
-
 @property (nonatomic, strong) IBOutlet UIWebView *webView;
 @property (nonatomic, strong) UIActivityIndicatorView *activity;
 @property (nonatomic, strong) NSString *ownCloudServerUrlString;
 @property (nonatomic, strong) NSString *urlString;
+@property (nonatomic) BOOL isLoading;
 @property (nonatomic,weak) __weak id<SSODelegate> delegate;
 
 #pragma mark - Properties for SAML server with 401 error. Like Microsoft NTLM

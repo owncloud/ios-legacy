@@ -18,11 +18,26 @@
 
 @implementation PresentedViewUtils
 
-+ (UIViewController *) getPresentedViewControllerInWindow: (UIWindow *)window {
-    UIViewController *presentedVC = window.rootViewController;
++ (UIViewController *) getPresentedViewControllerInViewController: (UIViewController *) viewController {
+    UIViewController *presentedVC = viewController;
     
     while (presentedVC.presentedViewController != nil) {
         presentedVC = presentedVC.presentedViewController;
+    }
+    
+    return presentedVC;
+}
+
++ (UIViewController *) getPresentedViewControllerInWindow: (UIWindow *)window {
+    UIViewController *presentedVC = window.rootViewController;
+    
+    presentedVC = [self getPresentedViewControllerInViewController:presentedVC];
+    
+    if ([presentedVC isKindOfClass:[UINavigationController class]]){
+        UINavigationController *navigationVC = (UINavigationController *) presentedVC;
+        if (navigationVC.viewControllers[0] != nil) {
+            presentedVC = [self getPresentedViewControllerInViewController:navigationVC.viewControllers[0]];
+        }
     }
     
     return presentedVC;
@@ -47,9 +62,24 @@
             isSSOViewControllerPresented = true;
         }
     }
-    
     return isSSOViewControllerPresented;
 }
 
++ (BOOL) isSSOViewControllerPresentedAndLoading: (UIWindow *) window {
+    
+    BOOL isSSOViewControllerAndLoading = false;
+    
+    UIViewController *presentedVC = [self getPresentedViewControllerInWindow:window];
+    
+    if ([presentedVC isKindOfClass:[SSOViewController class]]) {
+        SSOViewController *SSOVC = (SSOViewController *) presentedVC;
+        if (SSOVC.isLoading == true) {
+            isSSOViewControllerAndLoading = true;
+        }
+    }
+    
+    return isSSOViewControllerAndLoading;
+    
+}
 
 @end

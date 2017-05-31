@@ -1699,7 +1699,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 #pragma mark - Pass Code
 
 - (void)checkIfIsNecesaryShowPassCode {
-    if ([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) {
+    if (([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) && (_isPasscodeVisible == false) && ([PresentedViewUtils isSSOViewControllerPresentedAndLoading:self.window] == false)) {
         dispatch_async(dispatch_get_main_queue(), ^{
             
             KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
@@ -1726,7 +1726,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             } else {
                 oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
                 oc.modalPresentationStyle = UIModalPresentationFormSheet;
-                [rootController presentViewController:oc animated:NO completion:nil];
+               [rootController presentViewController:oc animated:NO completion:nil];
             }
         });
     } else {        
@@ -1737,7 +1737,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 - (void)checkIfIsNecesaryShowPassCodeWillResignActive {
     
-    if ([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) {
+    if (([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) && (_isPasscodeVisible == false) && ([PresentedViewUtils isSSOViewControllerPresentedAndLoading:self.window] == false)) {
         dispatch_async(dispatch_get_main_queue(), ^{
             
             KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
