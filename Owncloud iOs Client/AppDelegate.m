@@ -195,9 +195,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 
     //Show TouchID dialog if active
-    if([ManageAppSettingsDB isTouchID]) {
-        [[ManageTouchID sharedSingleton] showTouchIDAuth];
-    }
+     [self performSelector:@selector(checkIfIsNecessaryShowTouchId) withObject:nil afterDelay:1.0];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:user.predefinedUrl]) {
@@ -1030,11 +1028,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             [_presentFilesViewController reloadTableFromDataBase];
         }
     }
-
-    //Show TouchID dialog if active
-    if([ManageAppSettingsDB isTouchID])
-        [[ManageTouchID sharedSingleton] showTouchIDAuth];
-
+    
+    [self checkIfIsNecesaryShowPassCodeWillResignActive];
+    [self performSelector:@selector(checkIfIsNecessaryShowTouchId) withObject:nil afterDelay:1.0];
 }
 
 
@@ -1698,6 +1694,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 #pragma mark - Pass Code
 
+- (void)checkIfIsNecessaryShowTouchId {
+    
+    //Show TouchID dialog if active
+    if([ManageAppSettingsDB isTouchID] && _isPasscodeVisible)
+        [[ManageTouchID sharedSingleton] showTouchIDAuth];
+}
+
 - (void)checkIfIsNecesaryShowPassCode {
     if (([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) && (_isPasscodeVisible == false) && ([PresentedViewUtils isSSOViewControllerPresentedAndLoading:self.window] == false)) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1719,14 +1722,16 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             self.window.rootViewController = rootController;
             [self.window makeKeyAndVisible];
             
-            if (IS_IPHONE) {
-                
-                [rootController presentViewController:oc animated:YES completion:nil];
-                
-            } else {
+            if (!IS_IPHONE) {
                 oc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
                 oc.modalPresentationStyle = UIModalPresentationFormSheet;
-               [rootController presentViewController:oc animated:NO completion:nil];
+                
+            }
+            
+            if (_isPasscodeVisible == false){
+                [rootController presentViewController:oc animated:IS_IPHONE completion:^{
+                    [self checkIfIsNecessaryShowTouchId];
+                }];
             }
         });
     } else {        
@@ -1761,10 +1766,11 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
                 _currentViewVisible = presentedView;
             }
             
-            [presentedView presentViewController:oc animated:NO completion:^{
-                DLog(@"present complete");
-            }];
-
+            if (_isPasscodeVisible == false){
+                [presentedView presentViewController:oc animated:NO completion:^{
+                    DLog(@"present complete");
+                }];
+            }
         });
     }
 }
