@@ -96,6 +96,13 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @synthesize isLoadingVisible = _isLoadingVisible;
 
 
+//Constants
+float fiveSecondsDelay = 5.0;
+float secondDelay = 1.0;
+float halfOfSecondDelay = 0.5;
+float sortDelay = 0.3;
+
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     //init
     DLog(@"Init");
@@ -183,7 +190,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         //if we are migrating url not relaunch sync
         if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
             //Update favorites files if there are active user
-            [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
+            [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:fiveSecondsDelay];
         }
         
     } else if (k_show_main_help_guide && [ManageDB getShowHelpGuide]) {
@@ -195,7 +202,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
 
     //Show TouchID dialog if active
-     [self performSelector:@selector(checkIfIsNecessaryShowTouchId) withObject:nil afterDelay:1.0];
+     [self performSelector:@selector(checkIfIsNecessaryShowTouchId) withObject:nil afterDelay:secondDelay];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:user.predefinedUrl]) {
@@ -219,8 +226,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 /**
  * This method set the UINavBar Apperance like the custom UINavBar of OCNavigationController in the app
  * in order to use this in the native features like send a mail from our app
- *
- * @warning iOS 6.0 doen't support [UINavigation Bar appearance]
  */
 -(void)setUINavigationBarApperanceForNativeMail {
     
@@ -324,8 +329,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             //[[NSFileManager defaultManager] removeItemAtPath: filePath error: nil];
             _isFileFromOtherAppWaitting=YES;
         }else{
-           // [self presentUploadFromOtherApp];
-            [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.5];
+            [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:halfOfSecondDelay];
         }
     }
     
@@ -385,7 +389,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         
         self.window.rootViewController = self.loginViewController;
         [self.window makeKeyAndVisible];
-        
         
     } else {
         
@@ -946,7 +949,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     //For iOS8 we need to change the checking to this method, for show as a first step the pincode screen
     [self closeAlertViewAndViewControllers];
-    [self performSelector:@selector(checkIfIsNecesaryShowPassCodeWillResignActive) withObject:nil afterDelay:0.5];
+    [self performSelector:@selector(checkIfIsNecesaryShowPassCodeWillResignActive) withObject:nil afterDelay:halfOfSecondDelay];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -1018,10 +1021,10 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         [self relaunchUploadsFailedForced];
         
         //Refresh the tab
-        [self performSelector:@selector(updateRecents) withObject:nil afterDelay:0.3];
+        [self performSelector:@selector(updateRecents) withObject:nil afterDelay:sortDelay];
 
         //Update the Favorites Files
-        [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:5.0];
+        [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:fiveSecondsDelay];
 
         //Refresh the list of files from the database
         if (_activeUser && self.presentFilesViewController) {
@@ -1030,7 +1033,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     }
     
     [self checkIfIsNecesaryShowPassCodeWillResignActive];
-    [self performSelector:@selector(checkIfIsNecessaryShowTouchId) withObject:nil afterDelay:1.0];
+    [self performSelector:@selector(checkIfIsNecessaryShowTouchId) withObject:nil afterDelay:secondDelay];
 }
 
 
@@ -1155,7 +1158,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
         }
         
         //All the waitingForUpload should be relaunched so we change the state to errorUploading-notAnError
-        [self performSelector:@selector(resetWaitingForUploadToErrorUploading) withObject:nil afterDelay:5.0];
+        [self performSelector:@selector(resetWaitingForUploadToErrorUploading) withObject:nil afterDelay:fiveSecondsDelay];
     }];
 }
 
@@ -1881,7 +1884,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
             [self initAppWithEtagRequest:YES];
             
         } else {
-            [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:0.5];
+            [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:halfOfSecondDelay];
         }
     } else {
         //If it's first open
@@ -2214,7 +2217,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [standardUserDefaults synchronize];
     
     //Refresh the tab
-    [self performSelector:@selector(updateRecents) withObject:nil afterDelay:0.3];
+    [self performSelector:@selector(updateRecents) withObject:nil afterDelay:sortDelay];
 }
 
 //-----------------------------------
@@ -2234,7 +2237,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
     [self checkTheUploadFilesOnTheServerWithoutFailure: allUploads];
     
     //Refresh the tab
-    [self performSelector:@selector(updateRecents) withObject:nil afterDelay:0.3];
+    [self performSelector:@selector(updateRecents) withObject:nil afterDelay:sortDelay];
 }
 
 //-----------------------------------
