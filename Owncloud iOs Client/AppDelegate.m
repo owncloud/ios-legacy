@@ -96,7 +96,7 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @synthesize isLoadingVisible = _isLoadingVisible;
 
 
-//Constants
+//Delay Constants
 float fiveSecondsDelay = 5.0;
 float secondDelay = 1.0;
 float halfOfSecondDelay = 0.5;
@@ -436,16 +436,6 @@ float sortDelay = 0.3;
     
 }
 
-
-+ (ALAssetsLibrary *)defaultAssetsLibrary {
-    static dispatch_once_t pred = 0;
-    static ALAssetsLibrary *library = nil;
-    dispatch_once(&pred, ^{
-        library = [[ALAssetsLibrary alloc] init];
-        
-    });
-    return library;
-}
 
 - (void) restartAppAfterDeleteAllAccounts {
     DLog(@"Restart After Delete All Accounts");
@@ -821,8 +811,6 @@ float sortDelay = 0.3;
     
     __block int errorCount=0;
     __block ManageUploadRequest *currentManageUploadRequest;
-    
-   // NSArray *uploadsArrayTemp = [NSArray arrayWithArray:_uploadArray];
     
     [_uploadArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         currentManageUploadRequest = obj;
@@ -1261,10 +1249,8 @@ float sortDelay = 0.3;
                     localFolder = [localFolder stringByRemovingPercentEncoding];
                     
                     download.currentLocalFolder = localFolder;
-                    
-
+                
                     [self.downloadManager addSimpleDownload:download];
-                    
                 }
             }
         }
@@ -1372,10 +1358,9 @@ float sortDelay = 0.3;
                 
                 if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
                     
-                   // dispatch_async(dispatch_get_main_queue(), ^{
-                        [download updateDataDownload];
-                        [download setDownloadTaskIdentifierValid:NO];
-                  //  });
+                    [download updateDataDownload];
+                    [download setDownloadTaskIdentifierValid:NO];
+                  
 
                     NSString * localPath = [NSString stringWithFormat:@"%@%@", download.currentLocalFolder, [download.fileDto.fileName stringByRemovingPercentEncoding]];
                     NSURL *localPathUrl = [NSURL fileURLWithPath:localPath];
@@ -1917,7 +1902,6 @@ float sortDelay = 0.3;
 }
 
 
-
 #pragma mark - Items to upload from other apps
 
 - (void)itemToUploadFromOtherAppWithName:(NSString*)name andPathName:(NSString*)pathName andRemoteFolder:(NSString*)remFolder andIsNotNeedCheck:(BOOL) isNotNecessaryCheckIfExist{
@@ -1943,7 +1927,6 @@ float sortDelay = 0.3;
     currentUpload.destinyFolder = remFolder;
     currentUpload.uploadFileName = name;
     currentUpload.kindOfError = notAnError;
-    
     currentUpload.estimateLength = (long)fileLength;
     currentUpload.userId = _activeUser.idUser;
     currentUpload.isLastUploadFileOfThisArray = YES;
@@ -1952,7 +1935,6 @@ float sortDelay = 0.3;
     currentUpload.isNotNecessaryCheckIfExist = isNotNecessaryCheckIfExist;
     currentUpload.isInternalUpload = NO;
     currentUpload.taskIdentifier = 0;
-    
     
     [ManageUploadsDB insertUpload:currentUpload];
     currentUpload = [ManageUploadsDB getNextUploadOfflineFileToUpload];
@@ -1992,7 +1974,7 @@ float sortDelay = 0.3;
         }
     }
     
-    _prepareFiles=nil;
+    _prepareFiles = nil;
     
     //End of the background task
     if (uploadTask) {
@@ -2105,7 +2087,6 @@ float sortDelay = 0.3;
         }
     }];
     
-    
     [self updateRecents];
 }
 
@@ -2208,7 +2189,6 @@ float sortDelay = 0.3;
     //We clean the tmp folder and the list
     [self cleanUploadFolder];
     [ManageUploadsDB saveInUploadsOfflineTableTheFirst:k_number_uploads_shown];
-    
     
     //Add finished uploads to Array
     [self addFinishedUploadsOfflineDataToUploadsArray];
@@ -2452,10 +2432,7 @@ float sortDelay = 0.3;
     
     [uploadsFromDB addObjectsFromArray:[ManageUploadsDB getUploadsWithErrorByStatus:errorUploading]];
     
-    
-    
     UploadsOfflineDto *uploadOffline = nil;
-    //for in
     for(uploadOffline in uploadsFromDB) {
         //Create the object
         ManageUploadRequest *currentManageUploadRequest = [ManageUploadRequest new];
@@ -2483,7 +2460,6 @@ float sortDelay = 0.3;
     [uploadsFromDB addObjectsFromArray:[ManageUploadsDB getUploadsByStatus:pendingToBeCheck andByKindOfError:notAnError]];
     
     UploadsOfflineDto *uploadOffline = nil;
-    //for in
     for(uploadOffline in uploadsFromDB) {
         //Create the object
         ManageUploadRequest *currentManageUploadRequest = [ManageUploadRequest new];
@@ -2527,7 +2503,6 @@ float sortDelay = 0.3;
     
     long currentDate = [[NSDate date] timeIntervalSince1970];
     //DLog(@"currentDate - _dateLastRelaunch: %ld", currentDate - _dateLastRelaunch);
-    
     if ((currentDate - _dateLastRelaunch) > k_minimun_time_to_relaunch || isForced) {
         
         _dateLastRelaunch = currentDate;
@@ -2543,7 +2518,6 @@ float sortDelay = 0.3;
             //We update all the files with error to the status waitingAddToUploadList
             [ManageUploadsDB updateAllErrorUploadOfflineWithWaitingAddUploadList];
             
-            
             if (_prepareFiles == nil) {
                 _prepareFiles = [[PrepareFilesToUpload alloc] init];
                 _prepareFiles.listOfFilesToUpload = [[NSMutableArray alloc] init];
@@ -2556,9 +2530,7 @@ float sortDelay = 0.3;
             for (UploadsOfflineDto *upload in listOfUploadsFailed) {
                 upload.status=waitingAddToUploadList;
             }
-            
-            
-            
+
             [_prepareFiles sendFileToUploadByUploadOfflineDto:[listOfUploadsFailed objectAtIndex:0]];
         }
         
@@ -2566,10 +2538,8 @@ float sortDelay = 0.3;
         if (listOfPendingToBeCheckFiles.count > 0) {
             [self checkTheUploadFilesOnTheServer:listOfPendingToBeCheckFiles];
         }
-        
-        
-    }
 
+    }
 }
 
 /*
@@ -2591,7 +2561,6 @@ float sortDelay = 0.3;
             _prepareFiles.delegate = self;
         }
         
-      
         for (UploadsOfflineDto *upload in listOfFilesGeneratedByDocumentProvider) {
             upload.status = waitingAddToUploadList;
         }
@@ -2599,8 +2568,6 @@ float sortDelay = 0.3;
         self.isOverwriteProcess = YES;
         
         [_prepareFiles sendFileToUploadByUploadOfflineDto:[listOfFilesGeneratedByDocumentProvider objectAtIndex:0]];
-        
- 
     }
 }
 
@@ -2635,9 +2602,6 @@ float sortDelay = 0.3;
     return waitingFilesArray;
 }
 
-
-
-
 - (void) removeFromTabRecentsAllInfoByUser:(UserDto *)user {
     
     DLog(@"_uploadArray count: %ld", (long)[_uploadArray count]);
@@ -2655,7 +2619,6 @@ float sortDelay = 0.3;
             [arrayOfPositionsToDelete addObject:[NSNumber numberWithInt:i]];
         }
     }
-    
     
     NSArray *arrayReverse = [[arrayOfPositionsToDelete reverseObjectEnumerator] allObjects];
     
@@ -2694,7 +2657,6 @@ float sortDelay = 0.3;
             [currentManageUploadRequest changeTheStatusToFailForCredentials];
         }
     }
-    
 }
 
 
