@@ -188,27 +188,6 @@ static NSString *const tmpFileName = @"tmp.der";
     [self performSelector:@selector(delay) withObject:nil afterDelay:15.0];
     
     return YES;
-    
-//    NSLog(@"Did start loading: %@ auth:%d", [[request URL] absoluteString], _authenticated);
-//    
-//    if (!_authenticated) {
-//        _authenticated = NO;
-//        
-//        self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-//        
-//        [self.connection start];
-//        
-//        return NO;
-//    }
-    
-//    if (self.authenticated)
-//    {
-//        self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-//        [self.connection start];
-//        return NO;
-//    }
-    
-   // return YES;
 }
 
 - (void) delay {

@@ -98,9 +98,9 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 
 //Delay Constants
 float fiveSecondsDelay = 5.0;
-float secondDelay = 1.0;
-float halfOfSecondDelay = 0.5;
-float sortDelay = 0.3;
+float oneSecondDelay = 1.0;
+float halfASecondDelay = 0.5;
+float shortDelay = 0.3;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -202,7 +202,7 @@ float sortDelay = 0.3;
     }
 
     //Show TouchID dialog if active
-     [self performSelector:@selector(checkIfIsNecessaryShowTouchId) withObject:nil afterDelay:secondDelay];
+     [self performSelector:@selector(showTouchIdIfNeeded) withObject:nil afterDelay:oneSecondDelay];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:user.predefinedUrl]) {
@@ -329,7 +329,7 @@ float sortDelay = 0.3;
             //[[NSFileManager defaultManager] removeItemAtPath: filePath error: nil];
             _isFileFromOtherAppWaitting=YES;
         }else{
-            [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:halfOfSecondDelay];
+            [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:halfASecondDelay];
         }
     }
     
@@ -937,7 +937,7 @@ float sortDelay = 0.3;
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     //For iOS8 we need to change the checking to this method, for show as a first step the pincode screen
     [self closeAlertViewAndViewControllers];
-    [self performSelector:@selector(checkIfIsNecesaryShowPassCodeWillResignActive) withObject:nil afterDelay:halfOfSecondDelay];
+    [self performSelector:@selector(showPasscodeIfNeededWillResignActive) withObject:nil afterDelay:halfASecondDelay];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -1009,7 +1009,7 @@ float sortDelay = 0.3;
         [self relaunchUploadsFailedForced];
         
         //Refresh the tab
-        [self performSelector:@selector(updateRecents) withObject:nil afterDelay:sortDelay];
+        [self performSelector:@selector(updateRecents) withObject:nil afterDelay:shortDelay];
 
         //Update the Favorites Files
         [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:fiveSecondsDelay];
@@ -1020,8 +1020,8 @@ float sortDelay = 0.3;
         }
     }
     
-    [self checkIfIsNecesaryShowPassCodeWillResignActive];
-    [self performSelector:@selector(checkIfIsNecessaryShowTouchId) withObject:nil afterDelay:secondDelay];
+    [self showPasscodeIfNeededWillResignActive];
+    [self performSelector:@selector(showTouchIdIfNeeded) withObject:nil afterDelay:oneSecondDelay];
 }
 
 
@@ -1682,15 +1682,15 @@ float sortDelay = 0.3;
 
 #pragma mark - Pass Code
 
-- (void)checkIfIsNecessaryShowTouchId {
+- (void)showTouchIdIfNeeded {
     
     //Show TouchID dialog if active
     if([ManageAppSettingsDB isTouchID] && _isPasscodeVisible)
         [[ManageTouchID sharedSingleton] showTouchIDAuth];
 }
 
-- (void)checkIfIsNecesaryShowPassCode {
-    if (([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) && (_isPasscodeVisible == false) && ([PresentedViewUtils isSSOViewControllerPresentedAndLoading:self.window] == false)) {
+- (void)showPassCodeIfNeeded {
+    if (([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) && (!_isPasscodeVisible) && ([PresentedViewUtils isSSOViewControllerPresentedAndLoading:self.window] == false)) {
         dispatch_async(dispatch_get_main_queue(), ^{
             
             KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
@@ -1716,9 +1716,9 @@ float sortDelay = 0.3;
                 
             }
             
-            if (_isPasscodeVisible == false){
+            if (!_isPasscodeVisible){
                 [rootController presentViewController:oc animated:IS_IPHONE completion:^{
-                    [self checkIfIsNecessaryShowTouchId];
+                    [self showTouchIdIfNeeded];
                 }];
             }
         });
@@ -1728,9 +1728,9 @@ float sortDelay = 0.3;
   
 }
 
-- (void)checkIfIsNecesaryShowPassCodeWillResignActive {
+- (void)showPasscodeIfNeededWillResignActive {
     
-    if (([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) && (_isPasscodeVisible == false) && ([PresentedViewUtils isSSOViewControllerPresentedAndLoading:self.window] == false)) {
+    if (([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) && (!_isPasscodeVisible) && ([PresentedViewUtils isSSOViewControllerPresentedAndLoading:self.window] == false)) {
         dispatch_async(dispatch_get_main_queue(), ^{
             
             KKPasscodeViewController* vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
@@ -1754,7 +1754,7 @@ float sortDelay = 0.3;
                 _currentViewVisible = presentedView;
             }
             
-            if (_isPasscodeVisible == false){
+            if (!_isPasscodeVisible){
                 [presentedView presentViewController:oc animated:NO completion:^{
                     DLog(@"present complete");
                 }];
@@ -1869,7 +1869,7 @@ float sortDelay = 0.3;
             [self initAppWithEtagRequest:YES];
             
         } else {
-            [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:halfOfSecondDelay];
+            [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:halfASecondDelay];
         }
     } else {
         //If it's first open
@@ -2197,7 +2197,7 @@ float sortDelay = 0.3;
     [standardUserDefaults synchronize];
     
     //Refresh the tab
-    [self performSelector:@selector(updateRecents) withObject:nil afterDelay:sortDelay];
+    [self performSelector:@selector(updateRecents) withObject:nil afterDelay:shortDelay];
 }
 
 //-----------------------------------
@@ -2217,7 +2217,7 @@ float sortDelay = 0.3;
     [self checkTheUploadFilesOnTheServerWithoutFailure: allUploads];
     
     //Refresh the tab
-    [self performSelector:@selector(updateRecents) withObject:nil afterDelay:sortDelay];
+    [self performSelector:@selector(updateRecents) withObject:nil afterDelay:shortDelay];
 }
 
 //-----------------------------------
@@ -2838,15 +2838,15 @@ float sortDelay = 0.3;
 
 -(void)connectionToTheServer:(BOOL)isConnection {
     ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
-    [self checkIfIsNecesaryShowPassCode];
+    [self showPassCodeIfNeeded];
 }
 -(void)repeatTheCheckToTheServer {
     ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
-    [self checkIfIsNecesaryShowPassCode];
+    [self showPassCodeIfNeeded];
 }
 -(void)badCertificateNoAcceptedByUser {
     ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
-    [self checkIfIsNecesaryShowPassCode];
+    [self showPassCodeIfNeeded];
 }
 
 @end

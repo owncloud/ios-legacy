@@ -51,7 +51,7 @@
     
     NSArray *childViewControllers;
     
-    if (isPasscodeVisible == true) {
+    if (isPasscodeVisible) {
         childViewControllers = presentedVC.presentingViewController.childViewControllers;
     } else {
         childViewControllers = presentedVC.childViewControllers;
