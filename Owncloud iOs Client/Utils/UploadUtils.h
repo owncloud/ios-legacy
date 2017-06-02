@@ -34,8 +34,6 @@
 
 + (FileDto *) getFileDtoByUploadOffline:(UploadsOfflineDto *) uploadsOfflineDto;
 
-+ (ALAssetsLibrary *)defaultAssetsLibrary;
-
 + (BOOL) moveFinishedUploadTempFileToLocalPathByUploadsOfflineDto:(UploadsOfflineDto *)currentUpload;
 
 @end

@@ -154,9 +154,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) NSString *userSessionCurrentToken;
 
 
-+ (ALAssetsLibrary *)defaultAssetsLibrary;
-//+ (FMDatabaseQueue*)sharedDatabase;
-
 /*
  * Method to get a Singleton of the OCCommunication to manage all the communications
  */
