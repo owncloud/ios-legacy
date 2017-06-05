@@ -198,7 +198,7 @@ float shortDelay = 0.3;
             self.window.rootViewController = self.helpGuideWindowViewController;
     } else {
         
-        [self checkIfIsNecesaryShowPassCode];
+        [self showPassCodeIfNeeded];
     }
 
     //Show TouchID dialog if active

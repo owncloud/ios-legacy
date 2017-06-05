@@ -335,8 +335,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 
 - (void) launchProcessToSyncAllFavorites;
 
-- (void)checkIfIsNecesaryShowPassCode;
-
-
+- (void) showPassCodeIfNeeded;
 
 @end

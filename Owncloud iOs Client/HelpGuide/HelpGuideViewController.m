@@ -680,7 +680,7 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     [ManageDB updateShowHelpGuide:NO];
     
-    [app checkIfIsNecesaryShowPassCode];
+    [app showPassCodeIfNeeded];
 }
 
 - (NSUInteger)supportedInterfaceOrientations
