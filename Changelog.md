@@ -1,4 +1,4 @@
-## 3.6.1 (May 2017)
+## 3.6.1 (June 2017)
 - Fix bug that restarted log-in process on two-factor authentication environments when app passcode was set
 
 ## 3.6.0 (May 2017)
