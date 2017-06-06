@@ -72,7 +72,7 @@ Sharing Files
 ~~~~~~~~~~~~~
 
 The little arrow button on the bottom left has options for sharing the file via
-email, instant messaging or any other of your apps, saving or copying. 
+email, instant messaging (or any of your other apps), as well as saving and copying.
 
 Making Files Available Offline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -86,19 +86,19 @@ If the icon is not filled white, then the file is not available offline.
 If the file is filled white, then it is available offline. 
 Click the button to make the file available, or not available offline.
 
-If you set your file or folder as available offline that will keep it synchronized if any change is made in other client. 
+If you set your file or folder as available offline that will keep it synchronized if changes are made in other clients.
 
 Your files will always be downloaded and updated.
 
 Sharing Files with users or by public link
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The triangular Share button opens a share dialog, allowing you to start
 `Sharing Files`_.
 
 You can share with other ownCloud users and edit the privileges for each user.
 
-Multiple public link are supported, you can create multiple links with different options (password, expiration date,..) for each one. 
+Multiple public links are supported; you can create each one with different options, e.g., password and expiration date. 
 
 Deleting Files
 ~~~~~~~~~~~~~~
