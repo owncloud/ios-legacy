@@ -502,6 +502,19 @@
     shareFileCell.fileSize.hidden = self.sharedItem.isDirectory;
     shareFileCell.folderName.hidden = !self.sharedItem.isDirectory;
     
+    //Add long press event
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressPrivateLinkButton:)];
+   // longPress.minimumPressDuration = 3; //seconds
+    longPress.delegate = self;
+    [shareFileCell.privateLinkButton addGestureRecognizer:longPress];
+    
+    //Add tap event
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapPrivateLinkButton)];
+    tapGesture.numberOfTapsRequired = 1;
+    tapGesture.numberOfTouchesRequired = 1;
+    [shareFileCell.privateLinkButton addGestureRecognizer:tapGesture];
+
+    
     if (self.sharedItem.isDirectory) {
         shareFileCell.fileImage.image = [UIImage imageNamed:@"folder_icon"];
         shareFileCell.folderName.text = @"";
@@ -517,6 +530,7 @@
     return shareFileCell;
     
 }
+
 
 - (UITableViewCell *) getCellOfUserOrGroupNameSharedByTableView:(UITableView *) tableView andIndexPath:(NSIndexPath *) indexPath {
     
@@ -595,8 +609,6 @@
             OCSharedDto *shareLink = [self.sharedPublicLinks objectAtIndex:indexLink];
             
             shareLinkCell.itemName.text = ([shareLink.name length] == 0 || [shareLink.name isEqualToString:@"(null)"] ) ? shareLink.token: shareLink.name;
-//            shareLinkCell.buttonGetLink.tag = shareLink.idRemoteShared;
-//            [shareLinkCell.buttonGetLink addTarget:self action:@selector(didSelectGetShareLink:) forControlEvents:UIControlEventTouchDown];
             shareLinkCell.accessoryType = UITableViewCellAccessoryDetailButton;
         }
         
@@ -626,9 +638,34 @@
     [self presentViewLinkOptionsOfSharedLink:nil ofFile:self.sharedItem withLinkOptionsViewMode:LinkOptionsViewModeCreate];
 }
 
+- (void) didTapPrivateLinkButton {
+    
+    [self presentActivityViewForShareLink: [NSURL URLWithString:[ShareUtils getPrivateLinkOfFile:self.sharedItem]]];
+}
+
+- (void) didLongPressPrivateLinkButton:(UILongPressGestureRecognizer*)gesture {
+    
+    if ( gesture.state == UIGestureRecognizerStateEnded ) {
+        
+        [self showWarningMessageWithText:NSLocalizedString(@"message_private_link", nil)];
+    }
+    
+}
+
 - (void) didSelectCloseView {
     
     [self dismissViewControllerAnimated:true completion:nil];
+}
+
+
+#pragma mark - TSMessages
+
+- (void)showWarningMessageWithText: (NSString *) message {
+    
+    //Run UI Updates
+    [TSMessage setDelegate:self];
+    [TSMessage showNotificationInViewController:self title:message subtitle:nil type:TSMessageNotificationTypeWarning];
+    
 }
 
 

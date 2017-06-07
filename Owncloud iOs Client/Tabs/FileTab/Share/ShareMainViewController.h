@@ -19,8 +19,9 @@
 #import "MBProgressHUD.h"
 #import "FileDto.h"
 #import "AppsActivityProvider.h"
+#import "TSMessage.h"
 
-@interface ShareMainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, ShareFileOrFolderDelegate, MBProgressHUDDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate >
+@interface ShareMainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, ShareFileOrFolderDelegate, MBProgressHUDDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate , TSMessageViewProtocol>
 
 @property (weak, nonatomic) IBOutlet UITableView *shareTableView;
 

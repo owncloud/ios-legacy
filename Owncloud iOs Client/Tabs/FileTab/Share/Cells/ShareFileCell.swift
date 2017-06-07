@@ -22,6 +22,7 @@ class ShareFileCell: UITableViewCell {
     @IBOutlet weak var fileName: UILabel!
     @IBOutlet weak var folderName: UILabel!
     @IBOutlet weak var fileSize: UILabel!
+    @IBOutlet var privateLinkButton: UIButton!
 
     override func awakeFromNib() {
         super.awakeFromNib()
