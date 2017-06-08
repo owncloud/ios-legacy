@@ -447,13 +447,16 @@
         
         if (!k_warning_sharing_public_link || (k_warning_sharing_public_link && indexPath.row != 0 && [self.sharedPublicLinks count] > 0) ) {
             
-            NSInteger indexShareLink = indexShareLink = indexPath.row;
+            NSInteger indexShareLink = indexPath.row;
             if (k_warning_sharing_public_link) {
                 indexShareLink = indexPath.row-1;
             }
             
             NSURL *urlShareLink = [ShareUtils getNormalizedURLOfShareLink:self.sharedPublicLinks[indexShareLink]];
-            [self presentActivityViewForShareLink:urlShareLink];
+            
+            UIButton *cellGetPublicLinkButton = [self.shareTableView viewWithTag:indexPath.row];
+
+            [self presentActivityViewForShareLink:urlShareLink inView:cellGetPublicLinkButton fromRect:cellGetPublicLinkButton.bounds];
         }
     }
 }
@@ -513,6 +516,8 @@
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
     [shareFileCell.privateLinkButton addGestureRecognizer:tapGesture];
+    
+    shareFileCell.privateLinkButton.tag = -1;
 
     
     if (self.sharedItem.isDirectory) {
@@ -610,6 +615,7 @@
             
             shareLinkCell.itemName.text = ([shareLink.name length] == 0 || [shareLink.name isEqualToString:@"(null)"] ) ? shareLink.token: shareLink.name;
             shareLinkCell.accessoryType = UITableViewCellAccessoryDetailButton;
+            shareLinkCell.buttonGetLink.tag = indexPath.row;
         }
         
         shareLinkCell.selectionStyle = UITableViewCellEditingStyleNone;
@@ -640,7 +646,9 @@
 
 - (void) didTapPrivateLinkButton {
     
-    [self presentActivityViewForShareLink: [NSURL URLWithString:[ShareUtils getPrivateLinkOfFile:self.sharedItem]]];
+    UIButton *cellPrivateLinkButton = [self.shareTableView viewWithTag:-1];
+
+    [self presentActivityViewForShareLink: [NSURL URLWithString:[ShareUtils getPrivateLinkOfFile:self.sharedItem]] inView:cellPrivateLinkButton fromRect:cellPrivateLinkButton.bounds];
 }
 
 - (void) didLongPressPrivateLinkButton:(UILongPressGestureRecognizer*)gesture {
@@ -709,7 +717,7 @@
 }
 
 
-- (void) presentActivityViewForShareLink:(NSURL *)urlShareLink {
+- (void) presentActivityViewForShareLink:(NSURL *)urlShareLink inView:(id)sender fromRect:(CGRect)cgRect {
     
     UIActivityItemProvider *activityProvider = [[UIActivityItemProvider alloc] initWithPlaceholderItem:urlShareLink];
     NSArray *items = @[activityProvider,urlShareLink];
@@ -734,7 +742,16 @@
        UIActivityTypeSaveToCameraRoll,
        UIActivityTypePostToWeibo]];
     
-    [self presentViewController:activityView animated:YES completion:nil];
+    if (IS_IPHONE) {
+        
+        [self presentViewController:activityView animated:YES completion:nil];
+        
+    } else {
+        
+        self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:activityView];
+
+        [self.activityPopoverController presentPopoverFromRect:cgRect inView:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    }
     
 }
 
