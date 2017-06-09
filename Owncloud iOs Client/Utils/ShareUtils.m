@@ -9,6 +9,8 @@
 
 #import "ShareUtils.h"
 #import "FileDto.h"
+#import "UtilsUrls.h"
+#import "InfoFileUtils.h"
 
 #define k_share_link_middle_part_url_before_version_8 @"public.php?service=files&t="
 #define k_share_link_middle_part_url_after_version_8 @"index.php/s/"
@@ -16,6 +18,8 @@
 #define k_server_version_with_new_shared_schema 8
 
 #define dateServerFormat @"YYYY-MM-dd"
+
+#define k_pathPrivateLink @"index.php/f/"
 
 
 @implementation ShareUtils
@@ -294,5 +298,20 @@
     }
     
 }
+
+
+#pragma mark - private link
+
++ (NSString *) getPrivateLinkOfFile:(FileDto *)fileDto {
+    
+    NSString *privateLink = @"";
+    
+    privateLink = [NSString stringWithFormat:@"%@%@%@", [UtilsUrls getFullRemoteServerPath:APP_DELEGATE.activeUser], k_pathPrivateLink, [InfoFileUtils getFileIdFromOcId:fileDto.ocId]];
+    
+    
+    return privateLink;
+    
+}
+
 
 @end

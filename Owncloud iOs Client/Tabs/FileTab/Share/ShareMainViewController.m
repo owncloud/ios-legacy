@@ -447,13 +447,16 @@
         
         if (!k_warning_sharing_public_link || (k_warning_sharing_public_link && indexPath.row != 0 && [self.sharedPublicLinks count] > 0) ) {
             
-            NSInteger indexShareLink = indexShareLink = indexPath.row;
+            NSInteger indexShareLink = indexPath.row;
             if (k_warning_sharing_public_link) {
                 indexShareLink = indexPath.row-1;
             }
             
             NSURL *urlShareLink = [ShareUtils getNormalizedURLOfShareLink:self.sharedPublicLinks[indexShareLink]];
-            [self presentActivityViewForShareLink:urlShareLink];
+            
+            UIButton *cellGetPublicLinkButton = [self.shareTableView viewWithTag:indexPath.row];
+
+            [self presentActivityViewForShareLink:urlShareLink inView:cellGetPublicLinkButton fromRect:cellGetPublicLinkButton.bounds];
         }
     }
 }
@@ -502,6 +505,21 @@
     shareFileCell.fileSize.hidden = self.sharedItem.isDirectory;
     shareFileCell.folderName.hidden = !self.sharedItem.isDirectory;
     
+    //Add long press event
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressPrivateLinkButton:)];
+   // longPress.minimumPressDuration = 3; //seconds
+    longPress.delegate = self;
+    [shareFileCell.privateLinkButton addGestureRecognizer:longPress];
+    
+    //Add tap event
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapPrivateLinkButton)];
+    tapGesture.numberOfTapsRequired = 1;
+    tapGesture.numberOfTouchesRequired = 1;
+    [shareFileCell.privateLinkButton addGestureRecognizer:tapGesture];
+    
+    shareFileCell.privateLinkButton.tag = -1;
+
+    
     if (self.sharedItem.isDirectory) {
         shareFileCell.fileImage.image = [UIImage imageNamed:@"folder_icon"];
         shareFileCell.folderName.text = @"";
@@ -517,6 +535,7 @@
     return shareFileCell;
     
 }
+
 
 - (UITableViewCell *) getCellOfUserOrGroupNameSharedByTableView:(UITableView *) tableView andIndexPath:(NSIndexPath *) indexPath {
     
@@ -595,9 +614,8 @@
             OCSharedDto *shareLink = [self.sharedPublicLinks objectAtIndex:indexLink];
             
             shareLinkCell.itemName.text = ([shareLink.name length] == 0 || [shareLink.name isEqualToString:@"(null)"] ) ? shareLink.token: shareLink.name;
-//            shareLinkCell.buttonGetLink.tag = shareLink.idRemoteShared;
-//            [shareLinkCell.buttonGetLink addTarget:self action:@selector(didSelectGetShareLink:) forControlEvents:UIControlEventTouchDown];
             shareLinkCell.accessoryType = UITableViewCellAccessoryDetailButton;
+            shareLinkCell.buttonGetLink.tag = indexPath.row;
         }
         
         shareLinkCell.selectionStyle = UITableViewCellEditingStyleNone;
@@ -626,9 +644,36 @@
     [self presentViewLinkOptionsOfSharedLink:nil ofFile:self.sharedItem withLinkOptionsViewMode:LinkOptionsViewModeCreate];
 }
 
+- (void) didTapPrivateLinkButton {
+    
+    UIButton *cellPrivateLinkButton = [self.shareTableView viewWithTag:-1];
+
+    [self presentActivityViewForShareLink: [NSURL URLWithString:[ShareUtils getPrivateLinkOfFile:self.sharedItem]] inView:cellPrivateLinkButton fromRect:cellPrivateLinkButton.bounds];
+}
+
+- (void) didLongPressPrivateLinkButton:(UILongPressGestureRecognizer*)gesture {
+    
+    if ( gesture.state == UIGestureRecognizerStateEnded ) {
+        
+        [self showWarningMessageWithText:NSLocalizedString(@"message_private_link", nil)];
+    }
+    
+}
+
 - (void) didSelectCloseView {
     
     [self dismissViewControllerAnimated:true completion:nil];
+}
+
+
+#pragma mark - TSMessages
+
+- (void)showWarningMessageWithText: (NSString *) message {
+    
+    //Run UI Updates
+    [TSMessage setDelegate:self];
+    [TSMessage showNotificationInViewController:self title:message subtitle:nil type:TSMessageNotificationTypeWarning];
+    
 }
 
 
@@ -672,7 +717,7 @@
 }
 
 
-- (void) presentActivityViewForShareLink:(NSURL *)urlShareLink {
+- (void) presentActivityViewForShareLink:(NSURL *)urlShareLink inView:(id)sender fromRect:(CGRect)cgRect {
     
     UIActivityItemProvider *activityProvider = [[UIActivityItemProvider alloc] initWithPlaceholderItem:urlShareLink];
     NSArray *items = @[activityProvider,urlShareLink];
@@ -697,7 +742,16 @@
        UIActivityTypeSaveToCameraRoll,
        UIActivityTypePostToWeibo]];
     
-    [self presentViewController:activityView animated:YES completion:nil];
+    if (IS_IPHONE) {
+        
+        [self presentViewController:activityView animated:YES completion:nil];
+        
+    } else {
+        
+        self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:activityView];
+
+        [self.activityPopoverController presentPopoverFromRect:cgRect inView:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    }
     
 }
 

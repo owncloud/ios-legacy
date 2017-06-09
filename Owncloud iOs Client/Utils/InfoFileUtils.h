@@ -63,4 +63,22 @@
 + (NSURLSessionTask *) updateThumbnail:(FileDto *) file andUser:(UserDto *) user tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 
+///-----------------------------------
+/// @name getFileIdFromOcId
+///-----------------------------------
+
+/**
+ * This method return de file id of the file from the full ocId
+ *
+ * @param NSString ocId owncloud file id
+ *
+ * @return NSString -> file id, first 8 characters without inicial zeros
+ *
+ *  ex: ocId from server: 00000004ocr2n5bhxjux
+ *
+ *    00000004 => file id
+ *    ocr2n5bhxjux => server instance id
+ */
++ (NSString *) getFileIdFromOcId:(NSString *)ocId;
+
 @end

@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -286,7 +286,7 @@
         imageForCell = [UIImage imageWithContentsOfFile:[[ManageThumbnails sharedManager] getThumbnailPathForFile:file]];
         
     } else {
-        NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *imageFile = [FileNameUtils getTheNameOfTheImagePreviewOfFileName:[file.fileName stringByRemovingPercentEncoding]];
         imageForCell = [UIImage imageNamed:imageFile];
     }
     
@@ -325,7 +325,7 @@
             [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
             
             NSString *path = [UtilsUrls getFilePathOnDBWithFileName:file.fileName ByFilePathOnFileDto:file.filePath andUser:user];
-            path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            path = [path stringByRemovingPercentEncoding];
             
             thumbnailSessionTask = [sharedCommunication getRemoteThumbnailByServer:user.url ofFilePath:path withWidth:k_thumbnails_width andHeight:k_thumbnails_height onCommunication:sharedCommunication successRequest:^(NSHTTPURLResponse *response, NSData *thumbnail, NSString *redirectedServer) {
                 
@@ -367,6 +367,15 @@
      }
     
     return thumbnailSessionTask;
+}
+
+
++ (NSString *) getFileIdFromOcId:(NSString *)ocId {
+
+    NSString *fileIdString = [ocId substringToIndex:8];
+    
+    return [NSString stringWithFormat:@"%d", [fileIdString intValue]];
+    
 }
 
 @end
