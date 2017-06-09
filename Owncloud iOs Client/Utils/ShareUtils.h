@@ -26,8 +26,6 @@
 
 + (NSURL *) getNormalizedURLOfShareLink:(NSString *) url;
 
-+ (NSString *) getPasswordEncodingWithPassword:(NSString *)password;
-
 
 #pragma mark - capabilities checks
 

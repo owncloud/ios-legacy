@@ -120,8 +120,6 @@
     }
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-
-    password = [ShareUtils getPasswordEncodingWithPassword:password];
     
     [[AppDelegate sharedOCCommunication] updateShare:ocShare.idRemoteShared ofServerPath:[UtilsUrls getFullRemoteServerPath:app.activeUser] withPasswordProtect:password andExpirationTime:expirationTime andPublicUpload:publicUpload andLinkName:linkName onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSData *responseData, NSString *redirectedServer) {
         
