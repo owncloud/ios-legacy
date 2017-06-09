@@ -1,5 +1,5 @@
 ==========================
-Using the ownCloud iOS App 3.6.1
+Using the ownCloud iOS App 3.6.2
 ==========================
 
 Accessing your files on your ownCloud server via the Web interface is easy and 
