@@ -1,5 +1,5 @@
 ==========================
-Using the ownCloud iOS App 3.5.3
+Using the ownCloud iOS App 3.6.1
 ==========================
 
 Accessing your files on your ownCloud server via the Web interface is easy and 
@@ -63,7 +63,7 @@ Downloading Files
 .. image:: images/ios-file-downloaded-file.png
    :alt: A file that has been downloaded successfully in ownCloud
 
-When you tap any file in the Files view it downloads to your iPhone or iPad, if
+When you tap any file or folder in the Files view it downloads to your iPhone or iPad, if
 it hasn't already been downloaded, and opens a preview. 
 If the file has been successfully downloaded, then it will have a tick next to
 its icon, as in the image above. 
@@ -72,7 +72,7 @@ Sharing Files
 ~~~~~~~~~~~~~
 
 The little arrow button on the bottom left has options for sharing the file via
-email and instant messaging, saving or copying, and printing. 
+email, instant messaging (or any of your other apps), as well as saving and copying.
 
 Making Files Available Offline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -86,16 +86,24 @@ If the icon is not filled white, then the file is not available offline.
 If the file is filled white, then it is available offline. 
 Click the button to make the file available, or not available offline.
 
-Sharing Files
-~~~~~~~~~~~~~
+If you set your file or folder as available offline that will keep it synchronized if changes are made in other clients.
+
+Your files will always be downloaded and updated.
+
+Sharing Files with users or by public link
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The triangular Share button opens a share dialog, allowing you to start
-`Sharing Files`_. 
+`Sharing Files`_.
+
+You can share with other ownCloud users and edit the privileges for each user.
+
+Multiple public links are supported; you can create each one with different options, e.g., password and expiration date. 
 
 Deleting Files
 ~~~~~~~~~~~~~~
 
-The trashcan allows you to delete the file from your device, your ownCloud
+The trash can allows you to delete the file from your device, your ownCloud
 server, or both.
 
 Instant Upload of Photos and Videos
@@ -174,14 +182,14 @@ application.
 To do so, first click on the text file which you want to edit. 
 This will display the contents of the file, as in the example below. 
 
-.. image:: images/ios-share-link.png
-   :alt: Share link on a folder.   
+.. image:: images/ios-viewing-a-text-file.png
+   :alt: Viewing a text file.   
    
 Then, click "Edit" in the top right-hand corner, which opens the file for
 editing, as in the example below. 
 
-.. image:: images/ios-share-link.png
-   :alt: Share link on a folder.   
+.. image:: images/ios-editing-a-text-file.png
+   :alt: Editing a text file.   
 
 Make all the changes which you need to, and when you're finished editing, click
 "Done" in the top right-hand corner. 
@@ -195,15 +203,19 @@ screen.
 Here, you can:
 
 - Add and edit new accounts
-- Set a login PIN (personal identification number)
+- Set a Passcode Lock (personal identification number) & Touch Id
 - Get help
 - Recommend the app to a Friend
 - Send Feedback
 - Find the application version number
 
-Click the information button at the 
-right of your ownCloud accounts to change your password. Slide the account name 
-to the left to expose the Delete button.
+Click the three dot icon button at the 
+right of your ownCloud accounts and a menu with next option will appear:
+- Edit Password
+- Clear cache (will delete all your downloaded files in your device)
+- Remove account 
+
+Slide the account name to the left to expose the Delete button. A quick access to remove the account.
 
 .. image:: images/ios-settings.png
    :alt: iOS app settings screen.
