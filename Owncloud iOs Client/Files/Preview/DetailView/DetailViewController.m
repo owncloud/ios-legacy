@@ -843,7 +843,7 @@
     
     _titleLabel.text = @"";
     
-    [_openWith.activityPopoverController dismissPopoverAnimated:YES];
+    [_openWith.documentInteractionController dismissMenuAnimated:YES];
     
     [self removeThePreviousViews];
     
@@ -1053,8 +1053,8 @@
 - (IBAction)didPressShareLinkButton:(id)sender {
     DLog(@"Share button clicked");
     
-    if (_openWith && _openWith.activityView) {
-        [_openWith.activityPopoverController dismissPopoverAnimated:YES];
+    if (_openWith && _openWith.documentInteractionController) {
+        [_openWith.documentInteractionController dismissMenuAnimated:YES];
     }
     
     DLog(@"Share Link Option");
@@ -1744,7 +1744,7 @@
     }
     
     if (_openWith) {
-        [_openWith.activityPopoverController dismissPopoverAnimated:NO];
+        [_openWith.documentInteractionController dismissMenuAnimated:NO];
     }
     
 }
