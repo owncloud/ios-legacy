@@ -1,6 +1,6 @@
 ## 3.6.2 (June 2017)
 - Support for private links
-- Fix crash with public share links on iPads with iOS10 
+- Fix crash in public share links on iPads with iOS10 
 
 ## 3.6.1 (June 2017)
 - Fix bug that restarted log-in process on two-factor authentication environments when app passcode was set
