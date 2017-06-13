@@ -72,14 +72,6 @@
     return  [NSURL URLWithString:url];
 }
 
-+ (NSString *) getPasswordEncodingWithPassword:(NSString *)password {
-    
-    NSString *encodePassword = [password stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"!*'();:@&=+$,/?%#[]"]];
-    
-    return encodePassword;
-    
-}
-
 
 #pragma mark - capabilities checks
 
