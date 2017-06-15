@@ -1989,12 +1989,18 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     
     //TEST new method
+    __block NSArray *authMethods = [NSArray new];
     
     DetectAuthenticationMethod *detectAuthenticationMethod = [DetectAuthenticationMethod new];
     
-    [detectAuthenticationMethod auth_request:self.connectString withCompletion:^(NSString *result) {
+    [detectAuthenticationMethod auth_request:self.connectString
+                              withCompletion:^(NSHTTPURLResponse * _Nullable httpResponse, NSError * _Nullable error) {
         
-        DLog(@"hi %@",result);
+        DLog(@"_Authentication methods detected");
+                                  
+       authMethods = [detectAuthenticationMethod analyzeResponseWithHttpResponse:httpResponse];
+                                  
+       //do things
     }];
     
     
