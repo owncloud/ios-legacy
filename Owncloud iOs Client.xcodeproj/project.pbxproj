@@ -353,6 +353,7 @@
 		405D06C51BFB670100591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
 		405D06C71BFB670200591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
 		405D06C81BFB670800591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
+		40904B2C1EF04ACE00C72619 /* DetectAuthenticationMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40904B2B1EF04ACE00C72619 /* DetectAuthenticationMethod.swift */; };
 		4096E2491EB8650200318240 /* ShareWarningLinkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4096E2471EB8650200318240 /* ShareWarningLinkCell.swift */; };
 		4096E24A1EB8650200318240 /* ShareWarningLinkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4096E2481EB8650200318240 /* ShareWarningLinkCell.xib */; };
 		40A1F17E1D8857740078C901 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 40A1F1801D8857740078C901 /* InfoPlist.strings */; };
@@ -1530,6 +1531,7 @@
 		405655191CE0A204001266EE /* UtilsFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsFileSystem.h; path = Utils/UtilsFileSystem.h; sourceTree = "<group>"; };
 		4056551A1CE0A204001266EE /* UtilsFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsFileSystem.m; path = Utils/UtilsFileSystem.m; sourceTree = "<group>"; };
 		405AD0C01B56C26A00271424 /* iphoneShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneShare.png; sourceTree = "<group>"; };
+		40904B2B1EF04ACE00C72619 /* DetectAuthenticationMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectAuthenticationMethod.swift; sourceTree = "<group>"; };
 		4096E2471EB8650200318240 /* ShareWarningLinkCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareWarningLinkCell.swift; path = Tabs/FileTab/Share/Cells/ShareWarningLinkCell.swift; sourceTree = "<group>"; };
 		4096E2481EB8650200318240 /* ShareWarningLinkCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareWarningLinkCell.xib; path = Tabs/FileTab/Share/Cells/ShareWarningLinkCell.xib; sourceTree = "<group>"; };
 		40A1F17F1D8857740078C901 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -2987,6 +2989,7 @@
 		148DD6661778625100FB9977 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				40904B291EF046DA00C72619 /* Authentication */,
 				59AE9EAE1990FE74003380A8 /* Server Version Checks */,
 				59A6B65019458D0C000B107D /* URLSession Subclasses */,
 				EAD036BC19053BAB003665CD /* Favorites */,
@@ -3076,6 +3079,15 @@
 				59EDC42B1C611F9A0050939C /* btnHelpPage5@2x.png */,
 			);
 			path = HelpPageButtons;
+			sourceTree = "<group>";
+		};
+		40904B291EF046DA00C72619 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				40904B2B1EF04ACE00C72619 /* DetectAuthenticationMethod.swift */,
+			);
+			name = Authentication;
+			path = Network/Authentication;
 			sourceTree = "<group>";
 		};
 		40A969DD1A5EDF900046A36C /* InstantUpload */ = {
@@ -4868,6 +4880,7 @@
 				400A636E1B4FD75600890579 /* IFTTTFillColorAnimation.m in Sources */,
 				148DD6D9177869C800FB9977 /* ImpressumViewController.m in Sources */,
 				400A636D1B4FD75600890579 /* IFTTTEasingFunction.m in Sources */,
+				40904B2C1EF04ACE00C72619 /* DetectAuthenticationMethod.swift in Sources */,
 				59915D9E1BBC00930015FBF3 /* CWLOrderedDictionary.m in Sources */,
 				148DD6E817786A1400FB9977 /* SettingsViewController.m in Sources */,
 				59D774CE1910EE0F004322BA /* UtilsTableView.m in Sources */,
