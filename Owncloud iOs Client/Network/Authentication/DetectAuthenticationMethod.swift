@@ -37,7 +37,6 @@ enum AuthenticationMethod: String {
 
 @objc class DetectAuthenticationMethod: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
     
-    
     let user = ManageUsersDB.getActiveUser()
     
     
@@ -94,8 +93,8 @@ enum AuthenticationMethod: String {
            // for item in allAuthenticateHeaders {
                 
               //  let itemString = item as! String
-                
-                if httpResponse.statusCode == 401 {
+            
+                if httpResponse.statusCode == NSInteger(kOCErrorServerUnauthorized) {
                     
                    // if itemString.lowercased().hasPrefix(AuthenticationMethod.SC_UNAUTHORIZED) {
                         
