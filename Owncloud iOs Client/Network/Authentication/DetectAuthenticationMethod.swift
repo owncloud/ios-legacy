@@ -42,7 +42,7 @@ enum AuthenticationMethod: String {
     
     
  //   func auth_request(_ urlString: String, withCompletion completion: @escaping ([Any]?) -> Void) {
-    @objc func auth_request(_ urlString: String, withCompletion completion: @escaping (_ result: String) -> Void) {
+    @objc func auth_request(_ urlString: String, withCompletion completion: @escaping (_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
         //Without credentials
         
         //let urlToRequest = UtilsUrls.getFullRemoteServerPath(withWebDav: user)
@@ -62,35 +62,74 @@ enum AuthenticationMethod: String {
 //                return
 //            }
 
-//            if let error = error {
-//                print(error.localizedDescription)
-//                
-//                
-//            } else if let httpResponse = response as? HTTPURLResponse {
-//                if httpResponse.statusCode == 200 {
-//                    
-//                } else if httpRespose.
-//            }
+            if let error = error {
+                print(error.localizedDescription)
+                completion(nil, error)
+                
+            } else if let httpResponse = response as? HTTPURLResponse {
+                completion(httpResponse, error)
+            }
             
             
-            completion("David")
         })
         task.resume()
         
     }
     
+    
     // analyze response, return all authentication types available
     
-    func analyzeResponse(response: HTTPURLResponse) -> Array<Any> {
+    @objc func analyzeResponse(httpResponse: HTTPURLResponse) -> Array<Any> {
         
-        //var authMethod = AuthenticationMethod.UNKNOWN;
-        //
+        let isSAML: Bool = FileNameUtils.isURL(withSamlFragment: httpResponse)
         
-        var availableAuth = [AuthenticationMethod]()
+        var authMethod = AuthenticationMethod.UNKNOWN;
+        var allAvailableAuthMethods = [AuthenticationMethod]()
+
         
-        return availableAuth
+        if let wAuth = httpResponse.allHeaderFields["Www-Authenticate"] as? String {
+            
+           // let allAuthenticateHeaders = httpResponse.allHeaderFields as! NSArray
+
+           // for item in allAuthenticateHeaders {
+                
+              //  let itemString = item as! String
+                
+                if httpResponse.statusCode == 401 {
+                    
+                   // if itemString.lowercased().hasPrefix(AuthenticationMethod.SC_UNAUTHORIZED) {
+                        
+                        if wAuth.lowercased().hasPrefix("basic") {
+                            
+                            authMethod = AuthenticationMethod.BASIC_HTTP_AUTH;
+                            
+                        } else if wAuth.lowercased().hasPrefix("bearer") {
+                            
+                            authMethod = AuthenticationMethod.BEARER_TOKEN;
+                        }
+                        
+                   // }
+                    
+                } else if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+                    
+                    authMethod = AuthenticationMethod.NONE;
+                    
+                } else if isSAML {
+                    
+                    authMethod = AuthenticationMethod.SAML_WEB_SSO;
+                }
+                
+                print("Authentication method found: " + authMethod.rawValue)
+                allAvailableAuthMethods.append(authMethod)
+            //}
+            
+        }
+        
+        return allAvailableAuthMethods
 
     }
+    
+    
     
     // Delegate Handles redirection        
     // try to access the root folder, following redirections but not SAML SSO redirections
