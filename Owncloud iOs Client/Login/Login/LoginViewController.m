@@ -38,6 +38,8 @@
 #import "UtilsFramework.h"
 #import "UtilsCookies.h"
 #import "ManageCookiesStorageDB.h"
+#import "Owncloud_iOs_Client-Swift.h"
+
 
 #define k_http_prefix @"http://"
 #define k_https_prefix @"https://"
@@ -1984,6 +1986,17 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     //Update connect string
     [self updateConnectString];
+    
+    
+    //TEST new method
+    
+    DetectAuthenticationMethod *detectAuthenticationMethod = [DetectAuthenticationMethod new];
+    
+    [detectAuthenticationMethod auth_request:self.connectString withCompletion:^(NSString *result) {
+        
+        DLog(@"hi %@",result);
+    }];
+    
     
     [UtilsFramework deleteAllCookies];
     [UtilsCookies eraseURLCache];

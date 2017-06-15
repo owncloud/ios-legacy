@@ -19,6 +19,8 @@
 #import "SSOViewController.h"
 #import "CheckSSOServer.h"
 
+@class DetectAuthenticationMethod;
+
 typedef NS_ENUM (NSInteger, LoginMode){
     LoginModeCreate,
     LoginModeUpdate,
