@@ -48,14 +48,21 @@ enum AuthenticationMethod: String {
         
         let url = URL (string: urlString)!
         
-//        var request = URLRequest(url: url)
+        var request = NSMutableURLRequest(url: url)
+        request.httpMethod = "PROPFIND"
+        request.setValue("0", forHTTPHeaderField: "Depth")
+        request.setValue(UtilsUrls.getUserAgent(), forHTTPHeaderField: "User-Agent")
+        request.setValue("application/xml", forHTTPHeaderField: "Content-Type")
+        let body =  "<?xml version=\"1.0\" encoding=\"UTF-8\"?><D:propfind xmlns:D=\"DAV:\"><D:prop><D:resourcetype/><D:getlastmodified/><size xmlns=\"http://owncloud.org/ns\"/><D:creationdate/><id xmlns=\"http://owncloud.org/ns\"/><D:getcontentlength/><D:displayname/><D:quota-available-bytes/><D:getetag/><permissions xmlns=\"http://owncloud.org/ns\"/><D:quota-used-bytes/><D:getcontenttype/></D:prop></D:propfind>"
+        request.httpBody = body.data(using: String.Encoding.utf8)
+        
         let configuration = URLSessionConfiguration.ephemeral
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
 //        let session = URLSession(configuration: URLSessionConfiguration.default)
 
-        
-        let task = session.dataTask(with: url, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            let text = NSString(data: data!, encoding: String.Encoding.utf8.rawValue);
+        let task = session.dataTask(with: request as URLRequest, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+       // let task = session.dataTask(with: url, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+            //let text = NSString(data: data!, encoding: String.Encoding.utf8.rawValue);
 //            guard let data = data else {
 //                completion(nil)
 //                return
@@ -96,18 +103,15 @@ enum AuthenticationMethod: String {
             
                 if httpResponse.statusCode == NSInteger(kOCErrorServerUnauthorized) {
                     
-                   // if itemString.lowercased().hasPrefix(AuthenticationMethod.SC_UNAUTHORIZED) {
+                    
+                    if wAuth.lowercased().hasPrefix("basic") {
                         
-                        if wAuth.lowercased().hasPrefix("basic") {
-                            
-                            authMethod = AuthenticationMethod.BASIC_HTTP_AUTH;
-                            
-                        } else if wAuth.lowercased().hasPrefix("bearer") {
-                            
-                            authMethod = AuthenticationMethod.BEARER_TOKEN;
-                        }
+                        authMethod = AuthenticationMethod.BASIC_HTTP_AUTH;
                         
-                   // }
+                    } else if wAuth.lowercased().hasPrefix("bearer") {
+                        
+                        authMethod = AuthenticationMethod.BEARER_TOKEN;
+                    }
                     
                 } else if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
                     
@@ -128,35 +132,34 @@ enum AuthenticationMethod: String {
 
     }
     
-    
-    
-    // Delegate Handles redirection        
-    // try to access the root folder, following redirections but not SAML SSO redirections
+//    //  Delegate Handles redirection
+//    //  try to access the root folder, following redirections but not SAML SSO redirections
 //    func URLSession(session: URLSession,
 //                    task: URLSessionTask,
 //                    willPerformHTTPRedirection response: HTTPURLResponse,
 //                    newRequest request: NSURLRequest,
 //                    completionHandler: (NSURLRequest!) -> Void) {
 //        
-//        print("in URLSession delegate")
+//        print("Redirect detected, in URLSession delegate")
 //        
 //        let newRequest = request
 //        
 //        print(newRequest.description);
 //        
-//        let isSAML = false
+//        let isSAML: Bool = FileNameUtils.isURL(withSamlFragment:response)
+//        
 //        if (isSAML) {
 //            //stop
 //            completionHandler(nil)
-//
+//            
 //        } else {
 //            //follow
 //            completionHandler(newRequest)
 //        }
 //        
 //    }
-    
-    
-    
-    
+//    
 }
+
+
+
