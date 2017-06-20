@@ -202,9 +202,20 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
 
 -(void) URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler{
     
-    
     DLog(@"didReceiveChallenge");
+  
+    NSURLCredential *credential = nil;
     
+    BOOL trusted = [self isTrustedServerWithChallenge:challenge];
+    if (trusted) {
+        credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+        completionHandler(NSURLSessionAuthChallengeUseCredential,credential);
+    } else {
+        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, credential);
+    }
+}
+
+- (BOOL) isTrustedServerWithChallenge:(NSURLAuthenticationChallenge *)challenge {
     BOOL trusted = NO;
     SecTrustRef trust;
     NSURLProtectionSpace *protectionSpace;
@@ -234,15 +245,8 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     } else {
         trusted = NO;
     }
- 
-    NSURLCredential *credential = nil;
-    
-    if (trusted) {
-        credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-        completionHandler(NSURLSessionAuthChallengeUseCredential,credential);
-    } else {
-        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, credential);
-    }
+
+    return trusted;
 }
 
 
