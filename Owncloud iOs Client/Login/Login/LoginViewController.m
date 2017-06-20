@@ -1995,8 +1995,6 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     
     [detectAuthenticationMethod auth_request:self.connectString
                               withCompletion:^(NSHTTPURLResponse * _Nullable httpResponse, NSError * _Nullable error) {
-        
-        DLog(@"_Authentication methods detected");
                                   
        authMethods = [detectAuthenticationMethod analyzeResponseWithHttpResponse:httpResponse];
                                   

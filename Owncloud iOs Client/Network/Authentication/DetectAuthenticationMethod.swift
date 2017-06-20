@@ -37,18 +37,9 @@ enum AuthenticationMethod: String {
 
 @objc class DetectAuthenticationMethod: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
     
-    let user = ManageUsersDB.getActiveUser()
-    
-    
- //   func auth_request(_ urlString: String, withCompletion completion: @escaping ([Any]?) -> Void) {
     @objc func auth_request(_ urlString: String, withCompletion completion: @escaping (_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
-        //Without credentials
         
-        //let urlToRequest = UtilsUrls.getFullRemoteServerPath(withWebDav: user)
-        
-        let url = URL (string: urlString)!
-        
-        var request = NSMutableURLRequest(url: url)
+        var request = URLRequest(url: URL (string: urlString)!)
         request.httpMethod = "PROPFIND"
         request.setValue("0", forHTTPHeaderField: "Depth")
         request.setValue(UtilsUrls.getUserAgent(), forHTTPHeaderField: "User-Agent")
@@ -61,12 +52,6 @@ enum AuthenticationMethod: String {
 //        let session = URLSession(configuration: URLSessionConfiguration.default)
 
         let task = session.dataTask(with: request as URLRequest, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-       // let task = session.dataTask(with: url, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            //let text = NSString(data: data!, encoding: String.Encoding.utf8.rawValue);
-//            guard let data = data else {
-//                completion(nil)
-//                return
-//            }
 
             if let error = error {
                 print(error.localizedDescription)
@@ -75,90 +60,104 @@ enum AuthenticationMethod: String {
             } else if let httpResponse = response as? HTTPURLResponse {
                 completion(httpResponse, error)
             }
-            
-            
         })
         task.resume()
         
     }
     
     
-    // analyze response, return all authentication types available
+    // analyze response, return all authentication methods available
     
-    @objc func analyzeResponse(httpResponse: HTTPURLResponse) -> Array<Any> {
+    func analyzeResponse(httpResponse: HTTPURLResponse) -> Array<Any> {
         
-        let isSAML: Bool = FileNameUtils.isURL(withSamlFragment: httpResponse)
-        
-        var authMethod = AuthenticationMethod.UNKNOWN;
         var allAvailableAuthMethods = [AuthenticationMethod]()
 
-        
-        if let wAuth = httpResponse.allHeaderFields["Www-Authenticate"] as? String {
-            
-           // let allAuthenticateHeaders = httpResponse.allHeaderFields as! NSArray
+        let isSAML: Bool = FileNameUtils.isURL(withSamlFragment: httpResponse)
 
-           // for item in allAuthenticateHeaders {
-                
-              //  let itemString = item as! String
             
-                if httpResponse.statusCode == NSInteger(kOCErrorServerUnauthorized) {
+        if httpResponse.statusCode == NSInteger(kOCErrorServerUnauthorized) {
+            
+            let wwwAuthenticate = httpResponse.allHeaderFields["Www-Authenticate"] as? String
+            
+            if let allAuthMethodsResponse = wwwAuthenticate?.components(separatedBy: ",")  {
+                
+                for wAuth in allAuthMethodsResponse {
                     
-                    
-                    if wAuth.lowercased().hasPrefix("basic") {
+                    if wAuth.lowercased().range(of:"basic") != nil {
+                        allAvailableAuthMethods.append(AuthenticationMethod.BASIC_HTTP_AUTH)
                         
-                        authMethod = AuthenticationMethod.BASIC_HTTP_AUTH;
+                    } else if wAuth.lowercased().range(of:"bearer") != nil {
                         
-                    } else if wAuth.lowercased().hasPrefix("bearer") {
-                        
-                        authMethod = AuthenticationMethod.BEARER_TOKEN;
+                        allAvailableAuthMethods.append(AuthenticationMethod.BEARER_TOKEN)
                     }
                     
-                } else if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-                    
-                    authMethod = AuthenticationMethod.NONE;
-                    
-                } else if isSAML {
-                    
-                    authMethod = AuthenticationMethod.SAML_WEB_SSO;
                 }
                 
-                print("Authentication method found: " + authMethod.rawValue)
-                allAvailableAuthMethods.append(authMethod)
-            //}
-            
+            } else {
+                
+                if isSAML {
+                    
+                    allAvailableAuthMethods.append(AuthenticationMethod.SAML_WEB_SSO)
+
+                } else if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300){
+                    
+                    allAvailableAuthMethods.append(AuthenticationMethod.NONE)
+                }
+                
+            }
+        }
+        
+        
+        if allAvailableAuthMethods.isEmpty {
+            print("Authentication method not found")
+            allAvailableAuthMethods.append(AuthenticationMethod.UNKNOWN)
+
+        } else {
+            print("Authentication methods found:")
+            for element in allAvailableAuthMethods {
+                print(" " + element.rawValue )
+            }
         }
         
         return allAvailableAuthMethods
-
     }
     
-//    //  Delegate Handles redirection
-//    //  try to access the root folder, following redirections but not SAML SSO redirections
-//    func URLSession(session: URLSession,
-//                    task: URLSessionTask,
-//                    willPerformHTTPRedirection response: HTTPURLResponse,
-//                    newRequest request: NSURLRequest,
-//                    completionHandler: (NSURLRequest!) -> Void) {
-//        
-//        print("Redirect detected, in URLSession delegate")
-//        
-//        let newRequest = request
-//        
-//        print(newRequest.description);
-//        
-//        let isSAML: Bool = FileNameUtils.isURL(withSamlFragment:response)
-//        
-//        if (isSAML) {
-//            //stop
-//            completionHandler(nil)
-//            
-//        } else {
-//            //follow
-//            completionHandler(newRequest)
-//        }
-//        
-//    }
-//    
+    
+    func urlSession(_ session: URLSession,
+                             task: URLSessionTask,
+                             didReceive challenge: URLAuthenticationChallenge,
+                             completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void){
+        
+        let checkAccessToServer: CheckAccessToServer = CheckAccessToServer.sharedManager() as! CheckAccessToServer
+        let trusted: Bool = checkAccessToServer.isTrustedServer(with: challenge)
+        if (trusted) {
+            let credential = URLCredential(trust: challenge.protectionSpace.serverTrust!)
+            completionHandler(.useCredential,credential);
+        } else {
+            completionHandler(.performDefaultHandling, nil);
+        }
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Swift.Void) {
+        
+        print("Redirect detected, in URLSession delegate")
+        let newRequest = request
+        
+        print(newRequest.description);
+        
+        let isSAML: Bool = FileNameUtils.isURL(withSamlFragment:response)
+        
+        if (isSAML) {
+            //stop
+            completionHandler(nil)
+            
+        } else {
+            //follow
+            completionHandler(newRequest)
+        }
+    }
+    
+    
 }
 
 
