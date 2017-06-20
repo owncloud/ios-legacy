@@ -52,5 +52,9 @@ typedef enum {
 - (void) askToAcceptCertificate;
 - (NSInteger) getSslStatus;
 
+
+- (BOOL) isTrustedServerWithChallenge:(NSURLAuthenticationChallenge *)challenge;
+
+
 @end
 
