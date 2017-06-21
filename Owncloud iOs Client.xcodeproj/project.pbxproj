@@ -374,6 +374,7 @@
 		40AC24D219FE725600582867 /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
 		40C0BDB91C46562A0057B1DD /* SharePrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */; };
 		40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */; };
+		40C663AA1EFA4FBE004AF994 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40C663A91EFA4FBE004AF994 /* Main.storyboard */; };
 		40CC7F0D1B4E665400231D73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40CC7F0C1B4E665400231D73 /* Images.xcassets */; };
 		40CF2C6C1C491C610047969A /* ShareUserPrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40CF2C6B1C491C610047969A /* ShareUserPrivilegeCell.xib */; };
 		40CF2C6F1C491D200047969A /* ShareUserPrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CF2C6E1C491D200047969A /* ShareUserPrivilegeCell.swift */; };
@@ -1554,6 +1555,7 @@
 		40AC24D119FE725600582867 /* CredentialsDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CredentialsDto.m; path = DataBase/DTOs/CredentialsDto.m; sourceTree = "<group>"; };
 		40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SharePrivilegeCell.xib; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.xib; sourceTree = "<group>"; };
 		40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharePrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.swift; sourceTree = "<group>"; };
+		40C663A91EFA4FBE004AF994 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		40CC7F0C1B4E665400231D73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		40CF2C6B1C491C610047969A /* ShareUserPrivilegeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareUserPrivilegeCell.xib; path = Tabs/FileTab/Share/Cells/ShareUserPrivilegeCell.xib; sourceTree = "<group>"; };
 		40CF2C6E1C491D200047969A /* ShareUserPrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareUserPrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/ShareUserPrivilegeCell.swift; sourceTree = "<group>"; };
@@ -2095,6 +2097,7 @@
 				1324298B15ADBB3700DF823E /* AppDelegate.h */,
 				1324298C15ADBB3700DF823E /* AppDelegate.m */,
 				59F470311C5F97BA005B6091 /* Launch Screen.storyboard */,
+				40C663A91EFA4FBE004AF994 /* Main.storyboard */,
 				148DD5B11778425400FB9977 /* Branding */,
 				148DD5B81778501B00FB9977 /* Cells */,
 				40EDF89D1B4D112900700E3A /* HelpGuide */,
@@ -4144,6 +4147,7 @@
 				137E485E15B6A3A400628EB1 /* DB.sqlite in Resources */,
 				40AB1F5B1A12392E003E7397 /* cancel_download_white@3x.png in Resources */,
 				148DD5C3177850B100FB9977 /* CustomCellFileAndDirectory.xib in Resources */,
+				40C663AA1EFA4FBE004AF994 /* Main.storyboard in Resources */,
 				14A4796B18EC6FDF003500BA /* FileFavoriteIcon@2x.png in Resources */,
 				59F470321C5F97BA005B6091 /* Launch Screen.storyboard in Resources */,
 				EABD88F91BBE82C400DA5281 /* NotificationBackgroundSuccess.png in Resources */,
