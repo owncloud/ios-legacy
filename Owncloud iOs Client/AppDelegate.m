@@ -63,6 +63,8 @@
 #import "UtilsCookies.h"
 #import "PresentedViewUtils.h"
 
+@class UniversalLoginViewController;
+
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
 NSString * NotReachableNetworkForUploadsNotification = @"NotReachableNetworkForUploadsNotification";
@@ -385,9 +387,15 @@ float shortDelay = 0.3;
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         
-        self.loginViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
         
-        self.window.rootViewController = self.loginViewController;
+        //TODO: TEST New login view
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UniversalLoginViewController *universalLoginVC = (UniversalLoginViewController*)[storyboard instantiateViewControllerWithIdentifier:@"universalLoginViewController"];
+        
+        
+       // self.loginViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
+        
+        self.window.rootViewController = (UIViewController*)universalLoginVC;
         [self.window makeKeyAndVisible];
         
     } else {
