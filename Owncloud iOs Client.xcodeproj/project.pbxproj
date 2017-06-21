@@ -375,6 +375,7 @@
 		40C0BDB91C46562A0057B1DD /* SharePrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */; };
 		40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */; };
 		40C663AA1EFA4FBE004AF994 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40C663A91EFA4FBE004AF994 /* Main.storyboard */; };
+		40C663B01EFA94B1004AF994 /* UniversalLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C663AF1EFA94B1004AF994 /* UniversalLoginViewController.swift */; };
 		40CC7F0D1B4E665400231D73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40CC7F0C1B4E665400231D73 /* Images.xcassets */; };
 		40CF2C6C1C491C610047969A /* ShareUserPrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40CF2C6B1C491C610047969A /* ShareUserPrivilegeCell.xib */; };
 		40CF2C6F1C491D200047969A /* ShareUserPrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CF2C6E1C491D200047969A /* ShareUserPrivilegeCell.swift */; };
@@ -1111,10 +1112,10 @@
 		13D6B7C818855EE40090A96C /* AppsActivityProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppsActivityProvider.h; path = Tabs/FileTab/Share/AppsActivityProvider.h; sourceTree = "<group>"; };
 		13D6B7C918855EE40090A96C /* AppsActivityProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppsActivityProvider.m; path = Tabs/FileTab/Share/AppsActivityProvider.m; sourceTree = "<group>"; };
 		13D8741E169DBE05000FBE6D /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		1420C3A6178A9F5000C0455C /* LoginViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LoginViewController_iPad.xib; path = Login/Login/LoginViewController_iPad.xib; sourceTree = "<group>"; };
-		1420C3A7178A9F5000C0455C /* LoginViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LoginViewController_iPhone.xib; path = Login/Login/LoginViewController_iPhone.xib; sourceTree = "<group>"; };
-		1420C3A8178A9F5000C0455C /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = Login/Login/LoginViewController.h; sourceTree = "<group>"; };
-		1420C3A9178A9F5000C0455C /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = Login/Login/LoginViewController.m; sourceTree = "<group>"; };
+		1420C3A6178A9F5000C0455C /* LoginViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController_iPad.xib; sourceTree = "<group>"; };
+		1420C3A7178A9F5000C0455C /* LoginViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController_iPhone.xib; sourceTree = "<group>"; };
+		1420C3A8178A9F5000C0455C /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		1420C3A9178A9F5000C0455C /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		1428F673178422AE0092F42A /* UploadsOfflineDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadsOfflineDto.h; path = DataBase/DTOs/UploadsOfflineDto.h; sourceTree = "<group>"; };
 		1428F674178422AE0092F42A /* UploadsOfflineDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadsOfflineDto.m; path = DataBase/DTOs/UploadsOfflineDto.m; sourceTree = "<group>"; };
 		1428F676178422BE0092F42A /* UtilsDtos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsDtos.h; path = Utils/UtilsDtos.h; sourceTree = "<group>"; };
@@ -1360,7 +1361,7 @@
 		148DD6F517786BDA00FB9977 /* UIImage+RoundedCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+RoundedCorner.m"; path = "Utils/ImagenScale/UIImage+RoundedCorner.m"; sourceTree = "<group>"; };
 		148DD6FB17786BF200FB9977 /* FileNameUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileNameUtils.h; path = Utils/FileNameUtils.h; sourceTree = "<group>"; };
 		148DD6FC17786BF200FB9977 /* FileNameUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FileNameUtils.m; path = Utils/FileNameUtils.m; sourceTree = "<group>"; };
-		1493D8CE185702D70090FEFB /* CheckSSOServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckSSOServer.m; path = Login/SSO/CheckSSOServer.m; sourceTree = "<group>"; };
+		1493D8CE185702D70090FEFB /* CheckSSOServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckSSOServer.m; sourceTree = "<group>"; };
 		149532F917DA09DA00E77D71 /* topBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topBar.png; path = Bar/TopBar/topBar.png; sourceTree = "<group>"; };
 		149532FA17DA09DA00E77D71 /* topBar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "topBar@2x.png"; path = "Bar/TopBar/topBar@2x.png"; sourceTree = "<group>"; };
 		14987090187D6702000D9C49 /* CWStatusBarNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CWStatusBarNotification.h; path = ExternalLibreries/CustomStatusBar/CWStatusBarNotification.h; sourceTree = "<group>"; };
@@ -1556,6 +1557,7 @@
 		40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SharePrivilegeCell.xib; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.xib; sourceTree = "<group>"; };
 		40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharePrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.swift; sourceTree = "<group>"; };
 		40C663A91EFA4FBE004AF994 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		40C663AF1EFA94B1004AF994 /* UniversalLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniversalLoginViewController.swift; sourceTree = "<group>"; };
 		40CC7F0C1B4E665400231D73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		40CF2C6B1C491C610047969A /* ShareUserPrivilegeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareUserPrivilegeCell.xib; path = Tabs/FileTab/Share/Cells/ShareUserPrivilegeCell.xib; sourceTree = "<group>"; };
 		40CF2C6E1C491D200047969A /* ShareUserPrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareUserPrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/ShareUserPrivilegeCell.swift; sourceTree = "<group>"; };
@@ -1590,9 +1592,9 @@
 		590F1FF91C7474AE00AAF1C7 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		590F1FFA1C7474B700AAF1C7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		593D14881C60BE1E005161E2 /* SplashImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SplashImage.png; sourceTree = "<group>"; };
-		593D531A17BF701800191846 /* SSOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSOViewController.h; path = Login/SSO/SSOViewController.h; sourceTree = "<group>"; };
-		593D531B17BF701800191846 /* SSOViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSOViewController.m; path = Login/SSO/SSOViewController.m; sourceTree = "<group>"; };
-		593D531C17BF701800191846 /* SSOViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SSOViewController.xib; path = Login/SSO/SSOViewController.xib; sourceTree = "<group>"; };
+		593D531A17BF701800191846 /* SSOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSOViewController.h; sourceTree = "<group>"; };
+		593D531B17BF701800191846 /* SSOViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSOViewController.m; sourceTree = "<group>"; };
+		593D531C17BF701800191846 /* SSOViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SSOViewController.xib; sourceTree = "<group>"; };
 		593F7CA819EFDE96004136F7 /* UtilsUrls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsUrls.h; path = Utils/UtilsUrls.h; sourceTree = "<group>"; };
 		593F7CA919EFDE96004136F7 /* UtilsUrls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsUrls.m; path = Utils/UtilsUrls.m; sourceTree = "<group>"; };
 		593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Owncloud iOs Client.entitlements"; sourceTree = "<group>"; };
@@ -1926,7 +1928,7 @@
 		EAD281BA1A38A2F900A00D54 /* DPDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DPDownload.m; path = Network/DPDownload.m; sourceTree = "<group>"; };
 		EAD774F11AD2B01E0007C4DB /* OCSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCSplitViewController.h; sourceTree = "<group>"; };
 		EAD774F21AD2B01E0007C4DB /* OCSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCSplitViewController.m; sourceTree = "<group>"; };
-		EAE005F0180EF03E0066E8D4 /* CheckSSOServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckSSOServer.h; path = Login/SSO/CheckSSOServer.h; sourceTree = "<group>"; };
+		EAE005F0180EF03E0066E8D4 /* CheckSSOServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckSSOServer.h; sourceTree = "<group>"; };
 		EAEE0830192B35CC00E1AA25 /* SystemConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemConstants.h; path = Utils/SystemConstants.h; sourceTree = "<group>"; };
 		EAF13F7B1BE8F5EA00F87E9F /* CheckCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckCapabilities.h; path = "Network/Server Version Checks/CheckCapabilities.h"; sourceTree = "<group>"; };
 		EAF13F7C1BE8F5EA00F87E9F /* CheckCapabilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckCapabilities.m; path = "Network/Server Version Checks/CheckCapabilities.m"; sourceTree = "<group>"; };
@@ -2218,7 +2220,7 @@
 				593D531917BF6F7600191846 /* SSO */,
 				13C4DEEC163672CA00638B1D /* Login */,
 			);
-			name = Login;
+			path = Login;
 			sourceTree = "<group>";
 		};
 		137E485115B6A37F00628EB1 /* Database */ = {
@@ -2480,8 +2482,9 @@
 				1420C3A7178A9F5000C0455C /* LoginViewController_iPhone.xib */,
 				1420C3A8178A9F5000C0455C /* LoginViewController.h */,
 				1420C3A9178A9F5000C0455C /* LoginViewController.m */,
+				40C663AF1EFA94B1004AF994 /* UniversalLoginViewController.swift */,
 			);
-			name = Login;
+			path = Login;
 			sourceTree = "<group>";
 		};
 		13C4DEF51636735800638B1D /* Accounts */ = {
@@ -3202,8 +3205,7 @@
 				40FF874119F81396008B7C62 /* OCKeychain.h */,
 				40FF874219F81396008B7C62 /* OCKeychain.m */,
 			);
-			name = Keychain;
-			path = Login/Keychain;
+			path = Keychain;
 			sourceTree = "<group>";
 		};
 		593D531917BF6F7600191846 /* SSO */ = {
@@ -3215,7 +3217,7 @@
 				EAE005F0180EF03E0066E8D4 /* CheckSSOServer.h */,
 				1493D8CE185702D70090FEFB /* CheckSSOServer.m */,
 			);
-			name = SSO;
+			path = SSO;
 			sourceTree = "<group>";
 		};
 		595333F81A1DF26000C57ED5 /* UIAlertViewWithBlocks */ = {
@@ -4864,6 +4866,7 @@
 				EA707223199CC59E00CE7079 /* ManageDownloads.m in Sources */,
 				148DD6B71778693000FB9977 /* RecentViewController.m in Sources */,
 				400A636F1B4FD75600890579 /* IFTTTFilmstrip.m in Sources */,
+				40C663B01EFA94B1004AF994 /* UniversalLoginViewController.swift in Sources */,
 				40AB65111EAFA10000379361 /* ShareLinkViewController.m in Sources */,
 				148DD6BD1778695E00FB9977 /* AddAccountViewController.m in Sources */,
 				EAAD688F1C560AF2005F3B28 /* ShareUtils.m in Sources */,
