@@ -1607,6 +1607,11 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     DLog(@"6- textFieldDidEndEditing:textField %@", textField);
     DLog(@"6- is in main thread? %d", [NSThread isMainThread]);
     
+    [self parseURLOfTextField:textField];
+}
+
+- (void)parseURLOfTextField:(UITextField *)textField {
+    
     if(self.urlTextField != nil) {
         NSString *urlWithoutUserPassword = [self stripUsernameAndPassword:self.urlTextField.text];
         self.auxUrlForReloadTable = [self stripIndexPhpOrAppsFilesFromUrl:urlWithoutUserPassword];
@@ -1631,7 +1636,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         //[self undoAnimateTextField:textField up:YES];
         
         if(isUserTextUp==YES || isPasswordTextUp==YES){
-           // [self undoAnimate];
+            // [self undoAnimate];
         }
         
         if(textField == self.urlTextField) {
@@ -1648,7 +1653,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
                     [threadToCheckUrl cancel];
                 }
                 
-                //[self.tableView reloadData];                
+                //[self.tableView reloadData];
                 [self isConnectionToTheServerByUrlInOtherThread];
                 
                 //[self performSelectorInBackground:@selector(isConnectionToTheServerByUrlInOtherThread) withObject:nil];
@@ -1682,6 +1687,7 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             }
         }
     }
+
 }
 
 -(void) textFieldDidChange {
