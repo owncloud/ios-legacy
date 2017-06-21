@@ -302,19 +302,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 - (void) generateAppInterfaceFromLoginScreen:(BOOL)isFromLogin;
 
-///-----------------------------------
-/// @name Check if server support different things
-///-----------------------------------
-
-/**
- * This method check if the server support multipple things:
- * - If support Share
- * - If support Cookies
- *
- */
-- (void)checkIfServerSupportThings;
-
-
 
 //-----------------------------------
 /// @name reloadTableFromDataBaseIfFileIsVisibleOnList
