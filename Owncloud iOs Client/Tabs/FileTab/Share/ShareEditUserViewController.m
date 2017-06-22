@@ -82,7 +82,7 @@
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
 
 //Enum to restore the option after get an error
-typedef NS_ENUM (NSInteger, enumUpload){
+typedef NS_ENUM (NSInteger, optionPermission){
     optionPermissionNothingYet=0,
     optionPermissionCanEdit=1,
     optionPermissionCanCreate=2,
