@@ -139,7 +139,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                               
                                               NSError *e = nil;
                                               NSMutableDictionary *jsonArray = [NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: &e];
-                                              
+                                              DLog(@"data_check_server: %@",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
                                               if (!jsonArray) {
                                                   DLog(@"Error parsing JSON: %@", e);
                                               } else {

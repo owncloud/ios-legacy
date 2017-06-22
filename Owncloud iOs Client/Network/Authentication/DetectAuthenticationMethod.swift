@@ -122,6 +122,25 @@ enum AuthenticationMethod: String {
         return allAvailableAuthMethods
     }
     
+
+//
+    
+@objc    func getAuthenticationMethodsAvailableByUrl(url: String,  withCompletion completion: @escaping (_ authMethods: Array<Any>? ) -> Void)  {
+        
+        self.auth_request(url, withCompletion: { (httpResponse: HTTPURLResponse?,error: Error?) in
+            
+            if (httpResponse != nil) {
+                completion(self.analyzeResponse(httpResponse: httpResponse!) )
+            } else {
+                completion(nil)
+            }
+
+        })
+        
+    }
+    
+    
+// MARK: UrlSession delgates
     
     func urlSession(_ session: URLSession,
                              task: URLSessionTask,

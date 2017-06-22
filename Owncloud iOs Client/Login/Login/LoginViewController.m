@@ -1994,18 +1994,18 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
     [self updateConnectString];
     
     
-    //TEST new method
-    __block NSArray *authMethods = [NSArray new];
-    
-    DetectAuthenticationMethod *detectAuthenticationMethod = [DetectAuthenticationMethod new];
-    
-    [detectAuthenticationMethod auth_request:self.connectString
-                              withCompletion:^(NSHTTPURLResponse * _Nullable httpResponse, NSError * _Nullable error) {
-                                  
-       authMethods = [detectAuthenticationMethod analyzeResponseWithHttpResponse:httpResponse];
-                                  
-       //do things
-    }];
+//    //TEST new method
+//    __block NSArray *authMethods = [NSArray new];
+//    
+//    DetectAuthenticationMethod *detectAuthenticationMethod = [DetectAuthenticationMethod new];
+//    
+//    [detectAuthenticationMethod auth_request:self.connectString
+//                                withCompletion:^(NSHTTPURLResponse * _Nullable httpResponse, NSError * _Nullable error) {
+//                                                          
+//                                     authMethods = [detectAuthenticationMethod analyzeResponseWithHttpResponse:httpResponse];
+//                                                          
+//                                    //do things
+//    }];
     
     
     [UtilsFramework deleteAllCookies];
