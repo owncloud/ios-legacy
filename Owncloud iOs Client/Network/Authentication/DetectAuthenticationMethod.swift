@@ -125,7 +125,7 @@ enum AuthenticationMethod: String {
 
 //
     
-@objc    func getAuthenticationMethodsAvailableByUrl(url: String,  withCompletion completion: @escaping (_ authMethods: Array<Any>? ) -> Void)  {
+    func getAuthenticationMethodsAvailableByUrl(url: String,  withCompletion completion: @escaping (_ authMethods: Array<Any>? ) -> Void)  {
         
         self.auth_request(url, withCompletion: { (httpResponse: HTTPURLResponse?,error: Error?) in
             
