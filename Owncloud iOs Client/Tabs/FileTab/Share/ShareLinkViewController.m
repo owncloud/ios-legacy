@@ -97,7 +97,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
 
             _isAllowEditingEnabled = NO;
             
-            _isShowFileListingEnabled = NO;
+            _isShowFileListingEnabled = YES;    // public links are readable by default
             
         } else {
             
@@ -157,7 +157,11 @@ typedef NS_ENUM (NSInteger, LinkOption){
     }
     
     if (![ShareUtils hasOptionAllowEditingToBeShownForFile:self.fileShared]) {
-        nOfOptionsAvailable = nOfOptionsAvailable -2;   // both "allow editing" and "show file listing"
+        nOfOptionsAvailable = nOfOptionsAvailable -1;
+    }
+    
+    if (![ShareUtils hasOptionShowFileListingToBeShownForFile:self.fileShared]) {
+        nOfOptionsAvailable = nOfOptionsAvailable -1;
     }
     
     return nOfOptionsAvailable;

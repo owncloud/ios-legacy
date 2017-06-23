@@ -88,6 +88,19 @@
     return NO;
 }
 
++ (BOOL) hasOptionShowFileListingToBeShownForFile:(FileDto *)file {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    if (((app.activeUser.hasCapabilitiesSupport != serverFunctionalitySupported) ||
+         (app.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && app.activeUser.capabilitiesDto.isFilesSharingSupportsUploadOnlyEnabled))
+        && file.isDirectory){
+        return YES;
+    }
+    
+    return NO;
+}
+
 + (BOOL) hasOptionLinkNameToBeShown {
     
     if (APP_DELEGATE.activeUser.hasPublicShareLinkOptionNameSupport) {

@@ -259,4 +259,12 @@
  */
 + (void) updateDBVersion19To20;
 
+/**
+ * Changes:
+ *
+ * Alter capabilities table, adds new column for capability supports_upload_only.
+ */
++ (void) updateDBVersion20To21;
+
+
 @end

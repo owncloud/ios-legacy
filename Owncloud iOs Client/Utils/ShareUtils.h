@@ -32,6 +32,7 @@
 + (BOOL) isPasswordEnforcedCapabilityEnabled;
 
 + (BOOL) hasOptionAllowEditingToBeShownForFile:(FileDto *)file;
++ (BOOL) hasOptionShowFileListingToBeShownForFile:(FileDto *)file;
 + (BOOL) hasOptionLinkNameToBeShown;
 + (BOOL) hasMultipleShareLinkAvailable;
 + (BOOL) hasPasswordRemoveOptionAvailable;
