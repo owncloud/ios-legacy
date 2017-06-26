@@ -1245,7 +1245,6 @@
         
         BOOL dbOperationSuccessful;
         
-        //new predefined URL variable to set after we force update existing urls
         dbOperationSuccessful =[db executeUpdate:@"ALTER TABLE capabilities ADD is_files_sharing_allow_user_create_multiple_public_links_enabled BOOL NOT NULL DEFAULT 0"];
         if (!dbOperationSuccessful) {
             DLog(@"Error update version 19 to 20 table users add column predefined_url");

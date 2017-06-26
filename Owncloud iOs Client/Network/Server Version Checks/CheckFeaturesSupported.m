@@ -37,26 +37,30 @@
             
             [CheckCapabilities getServerCapabilitiesOfActiveAccount:^(OCCapabilities *capabilities) {
                 
-                [CheckCapabilities updateServerCapabilitiesOfActiveAccountInDB:capabilities];
-                
-                //if server version change update supported features
-                if (![app.activeUser.capabilitiesDto.versionString isEqualToString:capabilities.versionString]) {
-                    [self updateServerFeaturesOfActiveUserForVersion:capabilities.versionString];
+                if (capabilities) {
+                    [CheckCapabilities updateServerCapabilitiesOfActiveAccountInDB:capabilities];
+                    
+                    //if server version change update supported features
+                    if (![app.activeUser.capabilitiesDto.versionString isEqualToString:capabilities.versionString]) {
+                        [self updateServerFeaturesOfActiveUserForVersion:capabilities.versionString];
+                    }
+                    
+                    //update file list view if needed
+                    BOOL capabilitiesShareAPIChanged = (app.activeUser.capabilitiesDto.isFilesSharingAPIEnabled == capabilities.isFilesSharingAPIEnabled)? NO:YES;
+                    if(capabilitiesShareAPIChanged){
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [CheckCapabilities reloadFileList];
+                        });
+                    }
+                    
+                    app.activeUser.capabilitiesDto = [OCCapabilities new];
+                    app.activeUser.capabilitiesDto = capabilities;
                 }
-                
-                //update file list view if needed
-                BOOL capabilitiesShareAPIChanged = (app.activeUser.capabilitiesDto.isFilesSharingAPIEnabled == capabilities.isFilesSharingAPIEnabled)? NO:YES;
-                if(capabilitiesShareAPIChanged){
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [CheckCapabilities reloadFileList];
-                    });
-                }
-                
-                app.activeUser.capabilitiesDto = [OCCapabilities new];
-                app.activeUser.capabilitiesDto = capabilities;
                 
             } failure:^(NSError *error) {
-                DLog(@"error: %@", error);
+                DLog(@"error getting capabilities from server, we use previous capabilities from DB to update active user");
+                
+                app.activeUser.capabilitiesDto =  [ManageCapabilitiesDB getCapabilitiesOfUserId:app.activeUser.idUser];
             }];
         }
     });
