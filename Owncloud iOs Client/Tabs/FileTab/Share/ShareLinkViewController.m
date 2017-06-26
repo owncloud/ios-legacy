@@ -238,7 +238,10 @@ typedef NS_ENUM (NSInteger, LinkOption){
             }
             break;
         case 2:
-            title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"title_share_link_option_expiration", nil), [ShareUtils hasExpirationRemoveOptionAvailable] ? @"" : @"*"];
+            if ([ShareUtils hasOptionLinkNameToBeShown]) {
+                title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"title_share_link_option_expiration", nil), [ShareUtils hasExpirationRemoveOptionAvailable] ? @"" : @"*"];
+            }
+            
             break;
             
         default:
