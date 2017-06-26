@@ -379,6 +379,7 @@
 		40CC7F0D1B4E665400231D73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40CC7F0C1B4E665400231D73 /* Images.xcassets */; };
 		40CF2C6C1C491C610047969A /* ShareUserPrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40CF2C6B1C491C610047969A /* ShareUserPrivilegeCell.xib */; };
 		40CF2C6F1C491D200047969A /* ShareUserPrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CF2C6E1C491D200047969A /* ShareUserPrivilegeCell.swift */; };
+		40D3F18E1EFD53E7004F0E22 /* WebLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D3F18D1EFD53E7004F0E22 /* WebLoginViewController.swift */; };
 		40DC9C671CDA191B00F5F5EF /* EditFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DC9C651CDA191B00F5F5EF /* EditFileViewController.m */; };
 		40DC9C681CDA191B00F5F5EF /* EditFileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40DC9C661CDA191B00F5F5EF /* EditFileViewController.xib */; };
 		40DD9AE01D228E0C008E99D6 /* UtilsNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DD9ADF1D228E0C008E99D6 /* UtilsNotifications.m */; };
@@ -1561,6 +1562,7 @@
 		40CC7F0C1B4E665400231D73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		40CF2C6B1C491C610047969A /* ShareUserPrivilegeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareUserPrivilegeCell.xib; path = Tabs/FileTab/Share/Cells/ShareUserPrivilegeCell.xib; sourceTree = "<group>"; };
 		40CF2C6E1C491D200047969A /* ShareUserPrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareUserPrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/ShareUserPrivilegeCell.swift; sourceTree = "<group>"; };
+		40D3F18D1EFD53E7004F0E22 /* WebLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebLoginViewController.swift; sourceTree = "<group>"; };
 		40DC9C641CDA191B00F5F5EF /* EditFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditFileViewController.h; sourceTree = "<group>"; };
 		40DC9C651CDA191B00F5F5EF /* EditFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditFileViewController.m; sourceTree = "<group>"; };
 		40DC9C661CDA191B00F5F5EF /* EditFileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditFileViewController.xib; sourceTree = "<group>"; };
@@ -2483,6 +2485,7 @@
 				1420C3A8178A9F5000C0455C /* LoginViewController.h */,
 				1420C3A9178A9F5000C0455C /* LoginViewController.m */,
 				40C663AF1EFA94B1004AF994 /* UniversalLoginViewController.swift */,
+				40D3F18D1EFD53E7004F0E22 /* WebLoginViewController.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -4753,6 +4756,7 @@
 				59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */,
 				1324298915ADBB3700DF823E /* main.m in Sources */,
 				EA4070FE1C11B82B008B1507 /* UIImage+Thumbnail.m in Sources */,
+				40D3F18E1EFD53E7004F0E22 /* WebLoginViewController.swift in Sources */,
 				40DD9AE01D228E0C008E99D6 /* UtilsNotifications.m in Sources */,
 				EABD89361BBE82D900DA5281 /* TSMessage.m in Sources */,
 				59C71D231A9216AE00F66166 /* ThumbsMainToolbar.m in Sources */,
