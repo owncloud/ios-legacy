@@ -146,7 +146,7 @@
             
             NSString *fullPath = [NSString stringWithFormat:@"%@%@",documentsDirectory, smallPath];
             NSString *originalName = [splitedUrl objectAtIndex:[splitedUrl count]-1];
-            NSString *destinyName = [[splitedUrl objectAtIndex:[splitedUrl count]-1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *destinyName = [[splitedUrl objectAtIndex:[splitedUrl count]-1] stringByRemovingPercentEncoding];
             
             NSURL *originalPath = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",fullPath,originalName]];
             NSURL *destinyPath= [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",fullPath,destinyName]];
