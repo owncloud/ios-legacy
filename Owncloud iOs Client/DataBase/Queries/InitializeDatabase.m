@@ -112,8 +112,8 @@
                 [ManageDB updateDBVersion18To19];
             case k_DB_version_19:
                 [ManageDB updateDBVersion19To20];
-            //case k_DB_version_20:
-            //    [ManageDB updateDBVersion20To21];
+            case k_DB_version_20:
+                [ManageDB updateDBVersion20To21];
                 break; //Insert your migration above this final break.
         }
     }
