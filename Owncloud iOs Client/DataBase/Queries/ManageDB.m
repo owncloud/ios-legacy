@@ -1247,12 +1247,12 @@
         
         dbOperationSuccessful =[db executeUpdate:@"ALTER TABLE capabilities ADD is_files_sharing_allow_user_create_multiple_public_links_enabled BOOL NOT NULL DEFAULT 0"];
         if (!dbOperationSuccessful) {
-            DLog(@"Error update version 19 to 20 table users add column predefined_url");
+            DLog(@"Error update version 20 to 21 table capabilities add column is_files_sharing_allow_user_create_multiple_public_links_enabled");
         }
         
         dbOperationSuccessful = [db executeUpdate:@"ALTER TABLE capabilities ADD is_files_sharing_supports_upload_only_enabled BOOL NOT NULL DEFAULT 0"];
         if (!dbOperationSuccessful) {
-            DLog(@"Error update version 19 to 20 table shared 'name' ");
+            DLog(@"Error update version 20 to 21 table capabilities is_files_sharing_supports_upload_only_enabled ");
         }
         
     }];
