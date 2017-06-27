@@ -90,13 +90,10 @@
 
 + (BOOL) hasOptionShowFileListingToBeShownForFile:(FileDto *)file {
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    if (((app.activeUser.hasCapabilitiesSupport != serverFunctionalitySupported) ||
-         (app.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && app.activeUser.capabilitiesDto.isFilesSharingSupportsUploadOnlyEnabled))
-        && file.isDirectory){
+    if ([self hasOptionAllowEditingToBeShownForFile:file] && APP_DELEGATE.activeUser.hasPublicShareLinkOptionUploadOnlySupport){
         return YES;
     }
+    
     
     return NO;
 }
