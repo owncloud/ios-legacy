@@ -589,14 +589,9 @@ typedef NS_ENUM (NSInteger, LinkOption){
     }
     
     //ALLOW UPLOADS
-    if (![self.updatedPublicUpload isEqualToString:self.oldPublicUploadState] && self.sharedDto.isDirectory) {
+    if (self.sharedDto.isDirectory && (![self.updatedPublicUpload isEqualToString:self.oldPublicUploadState] || ![self.updatedShowFileListing isEqualToString:self.oldShowFileListing])) {
         //SHOW FILE LISTING
-        if (![self.updatedShowFileListing isEqualToString:self.oldShowFileListing]) {
-            [self updateSharedLinkWithPassword:nil expirationDate:nil publicUpload:self.updatedPublicUpload linkName:nil andFileListing:self.updatedShowFileListing];
-
-        } else  {
-            [self updateSharedLinkWithPassword:nil expirationDate:nil publicUpload:self.updatedPublicUpload linkName:nil andFileListing:nil];
-        }
+        [self updateSharedLinkWithPassword:nil expirationDate:nil publicUpload:self.updatedPublicUpload linkName:nil andFileListing:self.updatedShowFileListing];
     }
     
 }
@@ -605,7 +600,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
     
     NSInteger permissions = 0;
     
-    if ([publicUpload isEqualToString:@"true"] && [fileListing isEqualToString:@"false"]) {
+    if ([publicUpload isEqualToString:@"true"] && ![fileListing isEqualToString:@"true"]) {
         permissions = k_permissions_when_file_listing_option_enabled;
     }
     
