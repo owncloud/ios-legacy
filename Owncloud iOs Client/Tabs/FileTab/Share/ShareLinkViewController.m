@@ -549,8 +549,9 @@ typedef NS_ENUM (NSInteger, LinkOption){
     
     if (self.isAllowEditingEnabled && self.fileShared.isDirectory) {
         
-        if (self.isShowFileListingEnabled) {
+        if (!self.isShowFileListingEnabled) {
             permissions = k_permissions_when_file_listing_option_enabled;
+
         } else {
             updatePublicUpload = self.updatedPublicUpload;
         }
@@ -604,8 +605,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
     
     NSInteger permissions = 0;
     
-    if (publicUpload && fileListing) {
-        publicUpload = nil;
+    if ([publicUpload isEqualToString:@"true"] && [fileListing isEqualToString:@"false"]) {
         permissions = k_permissions_when_file_listing_option_enabled;
     }
     
@@ -647,7 +647,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
         self.updatedPublicUpload = @"true";
     }
     
-    [self reloadView];  // to update 'enabled' state of subordinate switch "Show file listing"
+    [self updateInterfaceWithShareOptionsLinkStatus];  // to update 'enabled' state of subordinate switch "Show file listing" and remain rest of updated fields
 }
 
 - (void) showFileListingSwithValueChanged:(UISwitch*) sender{
