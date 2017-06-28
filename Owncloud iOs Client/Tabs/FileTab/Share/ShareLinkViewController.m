@@ -38,6 +38,8 @@
 
 #define animationsDelay 0.5
 
+#define k_permissions_when_file_listing_option_enabled 4
+
 typedef NS_ENUM (NSInteger, LinkOption){
     LinkOptionName,
     LinkOptionPassword,
@@ -528,6 +530,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
     NSString *updatePassword = nil;
     NSString *updateExpirationTime = nil;
     NSString *updatePublicUpload = nil;
+    NSInteger permissions = 0;
 
     
     if (self.updatedLinkName) {
@@ -545,14 +548,15 @@ typedef NS_ENUM (NSInteger, LinkOption){
     }
     
     if (self.isAllowEditingEnabled && self.fileShared.isDirectory) {
-         updatePublicUpload = self.updatedPublicUpload;
+        
+        if (self.isShowFileListingEnabled) {
+            permissions = k_permissions_when_file_listing_option_enabled;
+        } else {
+            updatePublicUpload = self.updatedPublicUpload;
+        }
     }
     
-    if (self.isShowFileListingEnabled && self.fileShared.isDirectory) {
-        // TODO remove READ permission
-    }
-    
-    [self.sharedFileOrFolder doRequestCreateShareLinkOfFile:self.fileShared withPassword:updatePassword expirationTime:updateExpirationTime publicUpload:updatePublicUpload andLinkName:updateLinkName];
+    [self.sharedFileOrFolder doRequestCreateShareLinkOfFile:self.fileShared withPassword:updatePassword expirationTime:updateExpirationTime publicUpload:updatePublicUpload linkName:updateLinkName andPermissions:permissions];
 }
 
 - (void) updateShareOptionsNeeded {
@@ -560,44 +564,52 @@ typedef NS_ENUM (NSInteger, LinkOption){
     //NAME
     if (![self.updatedLinkName isEqualToString:self.sharedDto.name] && [ShareUtils hasOptionLinkNameToBeShown]) {
         
-        [self updateSharedLinkWithPassword:nil expirationDate:nil publicUpload:nil andLinkName:self.updatedLinkName];
+        [self updateSharedLinkWithPassword:nil expirationDate:nil publicUpload:nil linkName:self.updatedLinkName andFileListing:nil];
     }
     
     //PASSWORD
     if (self.isPasswordProtectEnabled && ![self.updatedPassword isEqualToString:@""] ) {
 
-        [self updateSharedLinkWithPassword:self.updatedPassword expirationDate:nil publicUpload:nil andLinkName:nil];
+        [self updateSharedLinkWithPassword:self.updatedPassword expirationDate:nil publicUpload:nil linkName:nil andFileListing:nil];
         
     } else if (_oldPasswordEnabledState && !self.isPasswordProtectEnabled){
         //Remove previous password
-        [self updateSharedLinkWithPassword:@"" expirationDate:nil publicUpload:nil andLinkName:nil];
+        [self updateSharedLinkWithPassword:@"" expirationDate:nil publicUpload:nil linkName:nil andFileListing:nil];
     }
     
     //EXPIRATION
     if (self.updatedExpirationDate != self.sharedDto.expirationDate) {
         if (self.isExpirationDateEnabled) {
             NSString *dateString = [ShareUtils convertDateInServerFormat:[NSDate dateWithTimeIntervalSince1970: self.updatedExpirationDate]];
-            [self updateSharedLinkWithPassword:nil expirationDate:dateString publicUpload:nil andLinkName:nil];
+            [self updateSharedLinkWithPassword:nil expirationDate:dateString publicUpload:nil linkName:nil andFileListing:nil];
         } else {
-            [self updateSharedLinkWithPassword:nil expirationDate:@"" publicUpload:nil andLinkName:nil];
+            [self updateSharedLinkWithPassword:nil expirationDate:@"" publicUpload:nil linkName:nil andFileListing:nil];
         }
     }
     
     //ALLOW UPLOADS
     if (![self.updatedPublicUpload isEqualToString:self.oldPublicUploadState] && self.sharedDto.isDirectory) {
-        [self updateSharedLinkWithPassword:nil expirationDate:nil publicUpload:self.updatedPublicUpload andLinkName:nil];
-    }
-    
-    //SHOW FILE LISTING
-    if (![self.updatedShowFileListing isEqualToString:self.oldShowFileListing] && self.sharedDto.isDirectory) {
-        // TODO update; probably merge with the previous one to make an appropriate update of PERMISSIONS attribute
+        //SHOW FILE LISTING
+        if (![self.updatedShowFileListing isEqualToString:self.oldShowFileListing]) {
+            [self updateSharedLinkWithPassword:nil expirationDate:nil publicUpload:self.updatedPublicUpload linkName:nil andFileListing:self.updatedShowFileListing];
+
+        } else  {
+            [self updateSharedLinkWithPassword:nil expirationDate:nil publicUpload:self.updatedPublicUpload linkName:nil andFileListing:nil];
+        }
     }
     
 }
 
-- (void) updateSharedLinkWithPassword:(NSString*)password expirationDate:(NSString*)expirationDate publicUpload:(NSString *)publicUpload andLinkName:(NSString *)linkName {
+- (void) updateSharedLinkWithPassword:(NSString*)password expirationDate:(NSString*)expirationDate publicUpload:(NSString *)publicUpload linkName:(NSString *)linkName andFileListing:(NSString *)fileListing {
     
-    [self.sharedFileOrFolder doRequestUpdateShareLink:self.sharedDto withPassword:password expirationTime:expirationDate publicUpload:publicUpload andLinkName:linkName];
+    NSInteger permissions = 0;
+    
+    if (publicUpload && fileListing) {
+        publicUpload = nil;
+        permissions = k_permissions_when_file_listing_option_enabled;
+    }
+    
+    [self.sharedFileOrFolder doRequestUpdateShareLink:self.sharedDto withPassword:password expirationTime:expirationDate publicUpload:publicUpload linkName:linkName andPermissions:permissions];
     
 }
 

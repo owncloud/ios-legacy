@@ -136,6 +136,11 @@
         app.activeUser.hasPublicShareLinkOptionNameSupport = serverFunctionalitySupported;
     }
     
+    //Public share link with option to show file listing
+    
+    if (serverFeatures.hasPublicShareLinkOptionUploadOnlySupport) {
+        app.activeUser.hasPublicShareLinkOptionUploadOnlySupport = serverFunctionalitySupported;
+    }
     
     [ManageUsersDB updateUserByUserDto:app.activeUser];
 
