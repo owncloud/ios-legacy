@@ -636,13 +636,14 @@ typedef NS_ENUM (NSInteger, LinkOption){
     if (self.isAllowEditingEnabled) {
         self.isAllowEditingEnabled = NO;
         self.updatedPublicUpload = @"false";
+    
     } else {
         self.isAllowEditingEnabled = YES;
         self.updatedPublicUpload = @"true";
-        
-        self.isShowFileListingEnabled = YES;
-        self.updatedShowFileListing= @"true";
     }
+    
+    self.isShowFileListingEnabled = YES;
+    self.updatedShowFileListing= @"true";
     
     [self updateInterfaceWithShareOptionsLinkStatus];  // to update 'enabled' state of subordinate switch "Show file listing" and remain rest of updated fields
 }
