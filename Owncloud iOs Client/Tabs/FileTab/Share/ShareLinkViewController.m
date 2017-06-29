@@ -269,13 +269,13 @@ typedef NS_ENUM (NSInteger, LinkOption){
                     title =  NSLocalizedString(@"show_error_password_enforced", nil);
                 }
             } else if (![ShareUtils hasExpirationRemoveOptionAvailable]) {
-                NSString *nDays = [NSString stringWithFormat:@"%ld", APP_DELEGATE.activeUser.capabilitiesDto.filesSharingExpireDateDaysNumber];
+                NSString *nDays = [NSString stringWithFormat:@"%d", APP_DELEGATE.activeUser.capabilitiesDto.filesSharingExpireDateDaysNumber];
                 title = [NSLocalizedString(@"show_error_expiration_enforced", nil) stringByReplacingOccurrencesOfString:@"$nDays" withString:nDays];
             }
             break;
         case 2:
             if ([ShareUtils hasOptionLinkNameToBeShown] && ![ShareUtils hasExpirationRemoveOptionAvailable]) {
-                NSString *nDays = [NSString stringWithFormat:@"%ld", APP_DELEGATE.activeUser.capabilitiesDto.filesSharingExpireDateDaysNumber];
+                NSString *nDays = [NSString stringWithFormat:@"%d", APP_DELEGATE.activeUser.capabilitiesDto.filesSharingExpireDateDaysNumber];
                 title = [NSLocalizedString(@"show_error_expiration_enforced", nil) stringByReplacingOccurrencesOfString:@"$nDays" withString:nDays];
             }
             break;
@@ -549,11 +549,10 @@ typedef NS_ENUM (NSInteger, LinkOption){
     
     if (self.isAllowEditingEnabled && self.fileShared.isDirectory) {
         
+        updatePublicUpload = self.updatedPublicUpload;
+
         if (!self.isShowFileListingEnabled) {
             permissions = k_permissions_when_file_listing_option_enabled;
-
-        } else {
-            updatePublicUpload = self.updatedPublicUpload;
         }
     }
     
@@ -640,6 +639,9 @@ typedef NS_ENUM (NSInteger, LinkOption){
     } else {
         self.isAllowEditingEnabled = YES;
         self.updatedPublicUpload = @"true";
+        
+        self.isShowFileListingEnabled = YES;
+        self.updatedShowFileListing= @"true";
     }
     
     [self updateInterfaceWithShareOptionsLinkStatus];  // to update 'enabled' state of subordinate switch "Show file listing" and remain rest of updated fields
