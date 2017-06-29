@@ -21,6 +21,7 @@
 #import "AppDelegate.h"
 #import "DetailViewController.h"
 #import "TTOpenInAppActivity.h"
+#import "PresentedViewUtils.h"
 
 
 
@@ -87,73 +88,38 @@
     //Check if the localFolder is null. 
     if (file.localFolder) {
         
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
          DLog(@"File path is %@", file.localFolder);
         
         //Pass path to url
         NSURL *url = [NSURL fileURLWithPath:file.localFolder];
-        
-        TTOpenInAppActivity *openInAppActivity;
+        self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:url];
+        [self.documentInteractionController setDelegate:self];
+        UIViewController *presentedView = [PresentedViewUtils getPresentedViewControllerInWindow:[[[UIApplication sharedApplication] windows] lastObject]];
         
         if (_isTheParentViewACell) {
-            openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.parentView andRect:_cellFrame];
             
-        }else{
-            openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.parentView andBarButtonItem:self.parentButton];
-        }
+            [self.documentInteractionController presentOpenInMenuFromRect:self.cellFrame inView:self.parentView animated:YES];
 
-        
-        if (self.activityView) {
-            [self.activityView dismissViewControllerAnimated:YES completion:nil];
-            self.activityView = nil;
-        }
-        
-        if (self.activityPopoverController) {
-            [self.activityPopoverController dismissPopoverAnimated:YES];
-            self.activityPopoverController = nil;
-        }
-        
-        self.activityView = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:@[openInAppActivity]];
-        
-        if (IS_IPHONE) {
-            
-            openInAppActivity.superViewController = self.activityView;
-            
-            [app.ocTabBarController presentViewController:self.activityView animated:YES completion:nil];
         } else {
             
-            if (self.activityPopoverController) {
-                [self.activityPopoverController setContentViewController:self.activityView];
+            if (IS_IPHONE) {
+                [self.documentInteractionController presentOpenInMenuFromRect:CGRectZero inView:presentedView.view animated:YES];
+
             } else {
-                self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:self.activityView];
+                [self.documentInteractionController presentOpenInMenuFromBarButtonItem:self.parentButton animated:YES];
+
             }
-            
-            openInAppActivity.superViewController = self.activityPopoverController;
-            
-            if (_isTheParentViewACell && IS_PORTRAIT && (IS_IOS8 || IS_IOS9)) {
-              
-                [self.activityPopoverController presentPopoverFromRect:CGRectMake(app.detailViewController.view.frame.size.width/2, app.detailViewController.view.frame.size.width/2, 100, 100) inView:app.detailViewController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-                
-            }else{
-                
-                if (_isTheParentViewACell) {
-                    //Present view from cell from file list
-                    [self.activityPopoverController presentPopoverFromRect:_cellFrame inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-                    
-                } else if (_parentButton) {
-                    //Present view from bar button item
-                    [self.activityPopoverController presentPopoverFromBarButtonItem:_parentButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-                    
-                } else {
-                    //Present  view from rect
-                    [self.activityPopoverController presentPopoverFromRect:CGRectMake(100, 100, 200, 400) inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-                }
-            }
+
         }
     }
 }
 
+#pragma mark - UIDocumentInteractionControllerDelegate methods
+
+- (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller
+{
+    self.documentInteractionController = nil;
+}
 
 #pragma mark - DownloadInBackGround delegate methods
 

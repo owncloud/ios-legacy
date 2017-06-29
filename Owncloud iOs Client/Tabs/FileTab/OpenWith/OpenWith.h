@@ -36,7 +36,8 @@
 @property(nonatomic, strong) FileDto *file;
 @property(nonatomic,weak) __weak id<OpenWithDelegate> delegate; 
 @property(nonatomic, strong) UIView *parentView;
-@property(nonatomic, strong) UIActivityViewController *activityView;
+@property(nonatomic, strong) UIDocumentInteractionController *documentInteractionController;
+
 @property(nonatomic, strong) UIBarButtonItem *parentButton;
 @property(nonatomic, strong) Download *download;
 @property(nonatomic, strong) NSString *currentLocalFolder;
@@ -44,8 +45,6 @@
 @property(nonatomic)  BOOL isTheParentViewACell;
 //this CGRect is to pass the cell frame of the file list
 @property(nonatomic) CGRect cellFrame;
-@property (nonatomic, strong) UIPopoverController *activityPopoverController;
-
 
 - (void) downloadAndOpenWithFile: (FileDto *) file;
 - (void) openWithFile: (FileDto *) file;
