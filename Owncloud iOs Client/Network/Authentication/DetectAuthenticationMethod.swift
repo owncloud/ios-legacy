@@ -37,9 +37,9 @@ enum AuthenticationMethod: String {
 
 @objc class DetectAuthenticationMethod: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
     
-    @objc func auth_request(_ urlString: String, withCompletion completion: @escaping (_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
+    @objc func auth_request(_ url: URL, withCompletion completion: @escaping (_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
         
-        var request = URLRequest(url: URL (string: urlString)!)
+        var request = URLRequest(url: url)
         request.httpMethod = "PROPFIND"
         request.setValue("0", forHTTPHeaderField: "Depth")
         request.setValue(UtilsUrls.getUserAgent(), forHTTPHeaderField: "User-Agent")
@@ -123,9 +123,9 @@ enum AuthenticationMethod: String {
     }
     
 
-//
+
     
-    func getAuthenticationMethodsAvailableByUrl(url: String,  withCompletion completion: @escaping (_ authMethods: Array<Any>? ) -> Void)  {
+    func getAuthenticationMethodsAvailableBy(url: URL,  withCompletion completion: @escaping (_ authMethods: Array<Any>? ) -> Void)  {
         
         self.auth_request(url, withCompletion: { (httpResponse: HTTPURLResponse?,error: Error?) in
             
@@ -137,6 +137,17 @@ enum AuthenticationMethod: String {
 
         })
         
+    }
+    
+    
+    func authMethodToLoginFrom(availableAuthMethods: [AuthenticationMethod]) -> AuthenticationMethod {
+        
+        var authMethod: AuthenticationMethod? = nil
+        
+        
+        //TODO: return auth method selected to log in
+        
+        return authMethod!
     }
     
     

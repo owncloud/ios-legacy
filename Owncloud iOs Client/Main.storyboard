@@ -37,6 +37,7 @@
                                 <state key="normal" title="Button Connect"/>
                                 <connections>
                                     <action selector="connectButtonTapped:" destination="iPx-pb-eEh" eventType="touchUpInside" id="yRg-q5-hDU"/>
+                                    <segue destination="f4N-GJ-PQD" kind="presentation" identifier="segueWebViewLogin" modalPresentationStyle="currentContext" id="Uac-Hd-tot"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="server.png" translatesAutoresizingMaskIntoConstraints="NO" id="kbb-33-8tT" userLabel="Image View Server url">
@@ -59,7 +60,6 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button" image="ReconnectIcon.png"/>
                                 <connections>
-                                    <action selector="reconnectionButtonAction:" destination="iPx-pb-eEh" eventType="touchUpInside" id="PrW-5U-cLM"/>
                                     <action selector="reconnectionButtonTapped:" destination="iPx-pb-eEh" eventType="touchUpInside" id="71L-sL-XqG"/>
                                 </connections>
                             </button>
@@ -184,10 +184,23 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qbt-Jk-Nkc">
-                                <rect key="frame" x="0.0" y="79" width="414" height="657"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="692"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HV6-q5-DCr">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem id="Srt-MH-Z13">
+                                        <barButtonItem key="leftBarButtonItem" title="Item" id="Yhs-Ln-8f5" userLabel="Item cancel">
+                                            <connections>
+                                                <segue destination="gOD-iC-eEd" kind="unwind" unwindAction="unwindSegueWebLoginViewControllerWithSegue:" id="XRh-MG-coj"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -196,8 +209,9 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iLP-HP-ZaL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="gOD-iC-eEd" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="714.49275362318849" y="-100.2717391304348"/>
+            <point key="canvasLocation" x="834.78260869565224" y="-120.65217391304348"/>
         </scene>
     </scenes>
     <resources>
