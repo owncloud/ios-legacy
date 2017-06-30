@@ -140,7 +140,7 @@ enum AuthenticationMethod: String {
     }
     
     
-    func authMethodToLoginFrom(availableAuthMethods: [AuthenticationMethod]) -> AuthenticationMethod {
+    func getAuthMethodToLoginFrom(availableAuthMethods: [AuthenticationMethod]) -> AuthenticationMethod {
         
         var authMethod: AuthenticationMethod? = nil
         

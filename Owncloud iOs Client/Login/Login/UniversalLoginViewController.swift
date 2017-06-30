@@ -36,6 +36,7 @@ import Foundation
     
     var urlNormalized: String!
     var allAvailableAuthMethods = [AuthenticationMethod]()
+    var authMethodToLogin: AuthenticationMethod!
 
     
     override func viewDidLoad() {
@@ -101,21 +102,17 @@ import Foundation
         if isConnection {
             print("Ok connection to the server")
             
-            //let stringUrl = self.urlNormalized + (k_url_webdav_server)
-            
             let urlComps = NSURLComponents(string: self.urlNormalized)!
             urlComps.path = "/\(k_url_webdav_server)"
-
             let fullUrl: URL = urlComps.url!
             
-            //TODO: use URL instead stringUrl
             DetectAuthenticationMethod().getAuthenticationMethodsAvailableBy(url: fullUrl, withCompletion: { (authMethods: Array<Any>?) in
                 self.allAvailableAuthMethods = authMethods as! [AuthenticationMethod];
                 //do things, open webview
                 
+                self.authMethodToLogin = DetectAuthenticationMethod().getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
                 
-                
-                
+                self.startAuthenticationWith(authMethod: self.authMethodToLogin)
             })
             
         } else {
@@ -126,6 +123,25 @@ import Foundation
     
     
     
+    func startAuthenticationWith(authMethod: AuthenticationMethod) {
+        
+        
+        switch authMethod {
+        case .SAML_WEB_SSO:
+            
+            break
+        case .BEARER_TOKEN:
+            
+            break
+        case .BASIC_HTTP_AUTH:
+            
+            break
+        default:
+            //show footer Error
+
+            break
+        }
+    }
     
     func openWebViewLogin() {
         
