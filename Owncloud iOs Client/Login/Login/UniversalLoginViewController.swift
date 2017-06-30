@@ -17,6 +17,13 @@
 import Foundation
 
 @objc class UniversalLoginViewController: UIViewController, UITextFieldDelegate, CheckAccessToServerDelegate {
+ 
+    struct K {
+        struct segueId {
+            static let segueWebViewLogin = "segueWebViewLogin"
+        }
+        
+    }
     
     
 // MARK: IBOutlets
@@ -26,6 +33,10 @@ import Foundation
     @IBOutlet var buttonConnect: UIButton!
     @IBOutlet var buttonHelpLink: UIButton!
     @IBOutlet var buttonReconnection: UIButton!
+    
+    var urlNormalized: String!
+    var allAvailableAuthMethods = [AuthenticationMethod]()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,33 +80,42 @@ import Foundation
         
         textFieldURL.resignFirstResponder()
 
-       let stringURL = textFieldURL.text
-        
+       //let stringURL = textFieldURL.text
+    
+        self.urlNormalized = textFieldURL.text //TODO: normalize url
         //parse url, appsfiles, user:pass, prefix
         
         
-        //check status
+        //check status and get authmethods available
         
-                //check authentication propfind
-    
         let checkAccessToServer : CheckAccessToServer = CheckAccessToServer.sharedManager() as! CheckAccessToServer
         checkAccessToServer.delegate = self
-        checkAccessToServer.isConnectionToTheServer(byUrl: stringURL)
+        checkAccessToServer.isConnectionToTheServer(byUrl: self.urlNormalized)
         
     }
     
-// MARK:  CheckAccessToServer
+    
+// MARK:  CheckAccessToServer delegate
     
     func connection(toTheServer isConnection: Bool) {
         if isConnection {
             print("Ok connection to the server")
-            //TODO normalice url
-            let stringURL = textFieldURL.text! +  (k_url_webdav_server)
-            var allAvailableAuthMethods = [AuthenticationMethod]()
             
-            DetectAuthenticationMethod().getAuthenticationMethodsAvailableByUrl(url: stringURL, withCompletion: { (authMethods: Array<Any>?) in
-                allAvailableAuthMethods = authMethods as! [AuthenticationMethod];
-                //do things
+            //let stringUrl = self.urlNormalized + (k_url_webdav_server)
+            
+            let urlComps = NSURLComponents(string: self.urlNormalized)!
+            urlComps.path = "/\(k_url_webdav_server)"
+
+            let fullUrl: URL = urlComps.url!
+            
+            //TODO: use URL instead stringUrl
+            DetectAuthenticationMethod().getAuthenticationMethodsAvailableBy(url: fullUrl, withCompletion: { (authMethods: Array<Any>?) in
+                self.allAvailableAuthMethods = authMethods as! [AuthenticationMethod];
+                //do things, open webview
+                
+                
+                
+                
             })
             
         } else {
@@ -104,11 +124,33 @@ import Foundation
 
     }
     
+    
+    
+    
+    func openWebViewLogin() {
+        
+    }
+    
 // MARK: textField delegate
     
     func textFieldDidEndEditing(_ textField: UITextField) {
 
         self.checkCurrentUrl()
+        
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+         if(segue.identifier == K.segueId.segueWebViewLogin) {
+            
+            let nextViewController = (segue.destination as! WebLoginViewController)
+            nextViewController.serverPath = self.urlNormalized
+        }
+    }
+
+    
+    @IBAction func unwindSegueWebLoginViewController(segue:UIStoryboardSegue) {
         
     }
     

@@ -18,13 +18,41 @@
 import Foundation
 
 
-@objc class WebLoginViewController: UIViewController {
+@objc class WebLoginViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate {
 
     
     // MARK: IBOutlets
     @IBOutlet var webViewLogin: UIWebView!
+    
+    var serverPath: String!
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        
+        //TODO: set branding style navigation bar, cancel item title
+        
+        //load login url in web view
+        let urlToGetAuthCode = OauthAuthentication().oauthUrlTogetAuthCodeFrom(serverPath: serverPath)
+        self.loadWebViewWith(url: urlToGetAuthCode)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    
+    func loadWebViewWith (url : URL) {
+       
+        //clearAllCookies
 
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: TimeInterval(k_timeout_upload))
+        request.addValue(UtilsUrls.getUserAgent(), forHTTPHeaderField: "User-Agent")
+        
+        self.webViewLogin.loadRequest(request)
+
+    }
     
 
 }
