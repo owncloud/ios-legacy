@@ -355,6 +355,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
             
         case LinkOptionName:
             
+            shareLinkOptionCell.optionName.hidden = YES;
             shareLinkOptionCell.optionTextField.hidden = NO;
             shareLinkOptionCell.optionTextField.placeholder = NSLocalizedString(@"placeholder_share_link_option_name", nil);
             shareLinkOptionCell.optionTextField.text = self.updatedLinkName;
@@ -364,6 +365,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
         
         case LinkOptionPassword:
             
+            shareLinkOptionCell.optionName.hidden = YES;
             shareLinkOptionCell.optionTextField.hidden = NO;
             shareLinkOptionCell.optionTextField.inputAccessoryView = [self keyboardToolbarWithDoneButton];
             
@@ -421,6 +423,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
         
         case LinkOptionAllowUploads:
             
+            shareLinkOptionCell.optionTextField.hidden = YES;
             shareLinkOptionCell.optionName.hidden = NO;
             shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_allow_editing", nil);
             shareLinkOptionCell.optionSwitch.hidden = NO;
@@ -431,6 +434,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
             
         case LinkOptionShowFileListing:
             
+            shareLinkOptionCell.optionTextField.hidden = YES;
             shareLinkOptionCell.optionName.hidden = NO;
             shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_show_file_listing", nil);
             shareLinkOptionCell.optionSwitch.hidden = NO;
