@@ -353,6 +353,7 @@
 		405D06C51BFB670100591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
 		405D06C71BFB670200591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
 		405D06C81BFB670800591604 /* ManageCapabilitiesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0EFA1E1BEA6C6E009971AF /* ManageCapabilitiesDB.m */; };
+		407B51BC1F0A34DB00DDFA65 /* Customization.m in Sources */ = {isa = PBXBuildFile; fileRef = 407B51BB1F0A34DB00DDFA65 /* Customization.m */; };
 		40904B2C1EF04ACE00C72619 /* DetectAuthenticationMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40904B2B1EF04ACE00C72619 /* DetectAuthenticationMethod.swift */; };
 		4096E2491EB8650200318240 /* ShareWarningLinkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4096E2471EB8650200318240 /* ShareWarningLinkCell.swift */; };
 		4096E24A1EB8650200318240 /* ShareWarningLinkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4096E2481EB8650200318240 /* ShareWarningLinkCell.xib */; };
@@ -1535,6 +1536,7 @@
 		405655191CE0A204001266EE /* UtilsFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsFileSystem.h; path = Utils/UtilsFileSystem.h; sourceTree = "<group>"; };
 		4056551A1CE0A204001266EE /* UtilsFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsFileSystem.m; path = Utils/UtilsFileSystem.m; sourceTree = "<group>"; };
 		405AD0C01B56C26A00271424 /* iphoneShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphoneShare.png; sourceTree = "<group>"; };
+		407B51BB1F0A34DB00DDFA65 /* Customization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Customization.m; path = Branding/Customization.m; sourceTree = "<group>"; };
 		40904B2B1EF04ACE00C72619 /* DetectAuthenticationMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectAuthenticationMethod.swift; sourceTree = "<group>"; };
 		4096E2471EB8650200318240 /* ShareWarningLinkCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareWarningLinkCell.swift; path = Tabs/FileTab/Share/Cells/ShareWarningLinkCell.swift; sourceTree = "<group>"; };
 		4096E2481EB8650200318240 /* ShareWarningLinkCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareWarningLinkCell.xib; path = Tabs/FileTab/Share/Cells/ShareWarningLinkCell.xib; sourceTree = "<group>"; };
@@ -2888,6 +2890,7 @@
 				148DD5B21778436A00FB9977 /* Customization.h */,
 				148DD5B31778436A00FB9977 /* UIColor+Constants.h */,
 				148DD5B41778436A00FB9977 /* UIColor+Constants.m */,
+				407B51BB1F0A34DB00DDFA65 /* Customization.m */,
 			);
 			name = Branding;
 			sourceTree = "<group>";
@@ -4767,6 +4770,7 @@
 				59EA36241BBE6C1E00C6CED0 /* IndexedForest.m in Sources */,
 				1324298D15ADBB3700DF823E /* AppDelegate.m in Sources */,
 				148DD5B51778436A00FB9977 /* UIColor+Constants.m in Sources */,
+				407B51BC1F0A34DB00DDFA65 /* Customization.m in Sources */,
 				59EC94E81BBAA0210085190F /* FolderSyncDto.m in Sources */,
 				148DD5C2177850B100FB9977 /* CustomCellFileAndDirectory.m in Sources */,
 				905B3D3B1C8867AA00BCC93B /* SortManager.m in Sources */,
