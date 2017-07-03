@@ -23,6 +23,10 @@ import Foundation
             static let segueWebViewLogin = "segueWebViewLogin"
         }
         
+        struct vcId {
+            static let vcIdWebViewLogin = "WebViewLoginViewController"
+        }
+        
     }
     
     
@@ -42,6 +46,7 @@ import Foundation
     override func viewDidLoad() {
         super.viewDidLoad()
         textFieldURL.delegate = self;
+        self.buttonConnect.isEnabled = false
         // Do any additional setup after loading the view.
         
         //set branding style
@@ -91,7 +96,8 @@ import Foundation
                 
                 self.authMethodToLogin = DetectAuthenticationMethod().getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
                 
-                self.startAuthenticationWith(authMethod: self.authMethodToLogin)
+                self.buttonConnect.isEnabled = true
+                
             })
             
         } else {
@@ -107,16 +113,19 @@ import Foundation
         
         switch authMethod {
         case .SAML_WEB_SSO:
+            //TODO
             
             break
         case .BEARER_TOKEN:
             
-            break
-        case .BASIC_HTTP_AUTH:
+            performSegue(withIdentifier: K.segueId.segueWebViewLogin, sender: self)
             
             break
+        case .BASIC_HTTP_AUTH:
+            //TODO
+            break
         default:
-            //show footer Error
+            //TODO: show footer Error
 
             break
         }
@@ -143,7 +152,8 @@ import Foundation
     
     
     @IBAction func connectButtonTapped(_ sender: Any) {
-        self.checkCurrentUrl()
+        
+        self.startAuthenticationWith(authMethod: self.authMethodToLogin)
         
     }
     
@@ -153,7 +163,7 @@ import Foundation
         
     }
     
-    @IBAction func unwindSegueWebLoginViewController(segue:UIStoryboardSegue) {
+    @IBAction func cancelToMainLoginView(segue:UIStoryboardSegue) {
         
     }
     
