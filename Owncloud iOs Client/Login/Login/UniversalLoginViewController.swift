@@ -52,27 +52,6 @@ import Foundation
         // Dispose of any resources that can be recreated.
     }
     
-    
-    
-    
-    
-// MARK: IBActions
-    
-    @IBAction func reconnectionButtonTapped(_ sender: Any) {
-        self.checkCurrentUrl()
-    }
-
-    
-    @IBAction func connectButtonTapped(_ sender: Any) {
-        self.checkCurrentUrl()
-        
-    }
-    
-
-    @IBAction func helpLinkButtonTapped(_ sender: Any) {
-        //open web view help
-    
-    }
 
     
 // MARK: checkUrl
@@ -154,20 +133,39 @@ import Foundation
         self.checkCurrentUrl()
         
     }
+
+
+// MARK: IBActions
+    
+    @IBAction func reconnectionButtonTapped(_ sender: Any) {
+        self.checkCurrentUrl()
+    }
     
     
+    @IBAction func connectButtonTapped(_ sender: Any) {
+        self.checkCurrentUrl()
+        
+    }
+    
+    
+    @IBAction func helpLinkButtonTapped(_ sender: Any) {
+        //open web view help
+        
+    }
+    
+    @IBAction func unwindSegueWebLoginViewController(segue:UIStoryboardSegue) {
+        
+    }
+    
+    
+// MARK: segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-         if(segue.identifier == K.segueId.segueWebViewLogin) {
+        if(segue.identifier == K.segueId.segueWebViewLogin) {
             
             let nextViewController = (segue.destination as! WebLoginViewController)
             nextViewController.serverPath = self.urlNormalized
         }
-    }
-
-    
-    @IBAction func unwindSegueWebLoginViewController(segue:UIStoryboardSegue) {
-        
     }
     
     /*
