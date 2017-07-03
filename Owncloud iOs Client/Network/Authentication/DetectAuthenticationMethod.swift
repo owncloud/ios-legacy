@@ -142,10 +142,15 @@ enum AuthenticationMethod: String {
     
     func getAuthMethodToLoginFrom(availableAuthMethods: [AuthenticationMethod]) -> AuthenticationMethod {
         
-        var authMethod: AuthenticationMethod? = nil
+        var authMethod: AuthenticationMethod? = .NONE
         
-        
-        //TODO: return auth method selected to log in
+        if availableAuthMethods.contains(.BEARER_TOKEN){
+            authMethod = .BEARER_TOKEN
+        } else if availableAuthMethods.contains(.BASIC_HTTP_AUTH) {
+            authMethod = .BASIC_HTTP_AUTH
+        } else if availableAuthMethods.contains(.SAML_WEB_SSO) && Customization.kIsSsoActive() {
+            authMethod = .SAML_WEB_SSO
+        }
         
         return authMethod!
     }
