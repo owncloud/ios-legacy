@@ -28,6 +28,7 @@ import Foundation
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.webViewLogin.delegate = self
         // Do any additional setup after loading the view.
         
         //TODO: set branding style navigation bar, cancel item title
@@ -54,5 +55,52 @@ import Foundation
 
     }
     
+    
+    // MARK: webView delegates
+    
+    func webViewDidStartLoad(_ webView: UIWebView) {
+        
+        print("Loading login in webView")
+        
+        //TODO: show loading activityIndicator.startAnimating()
+    }
+    
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        
+        print("Loaded url")
+        
+        //TODO: stop loading
+    }
+    
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+        print("An error happened during load: \(error)");
+        
+    }
 
+    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        
+        let urlToFollow = request.url?.absoluteString
+         print(urlToFollow)
+        
+        let oauth2RedirectUri = k_oauth2_redirect_uri
+        let oauth2RedirectUriEncoded = oauth2RedirectUri.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
+        
+        let redirectUriParam = getQueryStringParameter(url: urlToFollow!, param: "redirect_uri")
+        let codeParam = getQueryStringParameter(url: urlToFollow!, param: "code")
+
+        if let url = urlToFollow?.contains(oauth2RedirectUriEncoded!){
+        print("contains url")
+            //TODO: get code
+           // return false;
+        }
+        
+        return true;
+    }
+    
+    
+    func getQueryStringParameter(url: String, param: String) -> String? {
+        guard let url = URLComponents(string: url) else { return nil }
+        return url.queryItems?.first(where: { $0.name == param })?.value
+    }
+    
 }

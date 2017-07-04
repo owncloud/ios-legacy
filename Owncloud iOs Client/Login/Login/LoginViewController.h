@@ -118,4 +118,6 @@ extern NSString *loginViewControllerRotate;
 
 - (void) closeViewController;
 
+- (void) showSSOLoginScreenWithUrl:(NSString *)serverUrl inVC:(id)vc;
+
 @end
