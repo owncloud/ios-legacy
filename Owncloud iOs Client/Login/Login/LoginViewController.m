@@ -2432,12 +2432,24 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
  * Method called from CheckSSOServer that show the Shibboleth login Screen
  *
  */
-- (void) showSSOLoginScreen{
+- (void) showSSOLoginScreen {
 
-    //Server url
-    NSString * urlString = [self getUrlToCheck];
+    [self showSSOLoginScreenWithUrl:nil inVC:nil];
+}
+
+
+- (void) showSSOLoginScreenWithUrl:(NSString *)serverUrl inVC:(id)vc {
     
-    DLog(@"_showSSOLoginScreen_ url: %@", urlString);
+    if (!serverUrl) {
+        
+        serverUrl = [self getUrlToCheck];
+    }
+    
+    if (!vc) {
+        vc = self;
+    }
+    
+    DLog(@"_showSSOLoginScreen_ url: %@", serverUrl);
     
     //In main thread
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -2447,8 +2459,8 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
         
         //WebView controller
         SSOViewController *ssoViewController = [[SSOViewController alloc] initWithNibName:@"SSOViewController" bundle:nil];
-        ssoViewController.delegate = self;
-        ssoViewController.urlString = urlString;
+        ssoViewController.delegate = vc;
+        ssoViewController.urlString = serverUrl;
         
         //Branding navigation bar
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:ssoViewController];
@@ -2460,8 +2472,9 @@ NSString *loginViewControllerRotate = @"loginViewControllerRotate";
             navController.modalPresentationStyle = UIModalPresentationFormSheet;
         }
         
-        [self presentViewController:navController animated:YES completion:nil];
+        [vc presentViewController:navController animated:YES completion:nil];
     });
+
     
 }
 
