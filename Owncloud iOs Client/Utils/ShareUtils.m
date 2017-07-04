@@ -88,6 +88,18 @@
     return NO;
 }
 
++ (BOOL) hasOptionShowFileListingToBeShownForFile:(FileDto *)file {
+   
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    if ([self hasOptionAllowEditingToBeShownForFile:file] && app.activeUser.hasPublicShareLinkOptionUploadOnlySupport){
+        return YES;
+    }
+    
+    
+    return NO;
+}
+
 + (BOOL) hasOptionLinkNameToBeShown {
     
     if (APP_DELEGATE.activeUser.hasPublicShareLinkOptionNameSupport) {

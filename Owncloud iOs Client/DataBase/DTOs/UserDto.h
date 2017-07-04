@@ -44,6 +44,7 @@ typedef enum {
 @property NSInteger hasCapabilitiesSupport;
 @property NSInteger hasFedSharesOptionShareSupport;
 @property NSInteger hasPublicShareLinkOptionNameSupport;
+@property NSInteger hasPublicShareLinkOptionUploadOnlySupport;
 @property BOOL imageInstantUpload;
 @property BOOL videoInstantUpload;
 @property BOOL backgroundInstantUpload;

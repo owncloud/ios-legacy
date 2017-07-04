@@ -17,7 +17,7 @@ import UIKit
 
 class ShareLinkOptionCell: UITableViewCell {
     
-     @IBOutlet weak var optionSwith: UISwitch!
+     @IBOutlet weak var optionSwitch: UISwitch!
      @IBOutlet weak var optionName: UILabel!
      @IBOutlet weak var optionDetail: UILabel!
      @IBOutlet var optionTextField: UITextField!

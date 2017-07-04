@@ -43,6 +43,7 @@
 #define k_DB_version_18 18
 #define k_DB_version_19 19
 #define k_DB_version_20 20
+#define k_DB_version_21 21
 
 @implementation InitializeDatabase
 
@@ -56,7 +57,7 @@
 + (void) initDataBase {
     
     //New version
-    static int dbVersion = k_DB_version_20;
+    static int dbVersion = k_DB_version_21;
     
     //This method make a new database
     [ManageDB createDataBase];
@@ -111,6 +112,8 @@
                 [ManageDB updateDBVersion18To19];
             case k_DB_version_19:
                 [ManageDB updateDBVersion19To20];
+            case k_DB_version_20:
+                [ManageDB updateDBVersion20To21];
                 break; //Insert your migration above this final break.
         }
     }
@@ -143,7 +146,7 @@
             
             NSString *fullPath = [NSString stringWithFormat:@"%@%@",documentsDirectory, smallPath];
             NSString *originalName = [splitedUrl objectAtIndex:[splitedUrl count]-1];
-            NSString *destinyName = [[splitedUrl objectAtIndex:[splitedUrl count]-1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *destinyName = [[splitedUrl objectAtIndex:[splitedUrl count]-1] stringByRemovingPercentEncoding];
             
             NSURL *originalPath = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",fullPath,originalName]];
             NSURL *destinyPath= [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",fullPath,destinyName]];

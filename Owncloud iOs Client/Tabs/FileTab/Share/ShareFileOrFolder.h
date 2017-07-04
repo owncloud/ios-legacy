@@ -69,16 +69,16 @@
  * Method to share the file from file or from sharedDto
  *
  */
-- (void) doRequestCreateShareLinkOfFile:(FileDto *)file withPassword:(NSString *)password expirationTime:(NSString*)expirationTime publicUpload:(NSString *)publicUpload andLinkName:(NSString *)linkName;
+- (void) doRequestCreateShareLinkOfFile:(FileDto *)file withPassword:(NSString *)password expirationTime:(NSString*)expirationTime publicUpload:(NSString *)publicUpload linkName:(NSString *)linkName andPermissions:(NSInteger)permissions;
 
 ///-----------------------------------
 /// @name Update the share link with password protect
 ///-----------------------------------
 /**
- * This method unshares the file/folder
+ * This method update the file/folder share
  *
  */
-- (void) doRequestUpdateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password expirationTime:(NSString*)expirationTime publicUpload:(NSString *)publicUpload andLinkName:(NSString *)linkName;
+- (void) doRequestUpdateShareLink:(OCSharedDto *)ocShare withPassword:(NSString*)password expirationTime:(NSString*)expirationTime publicUpload:(NSString *)publicUpload linkName:(NSString *)linkName andPermissions:(NSInteger)permissions;
 
 /**
  * Check if the file is shared in the server side. If yes, update the database with update data

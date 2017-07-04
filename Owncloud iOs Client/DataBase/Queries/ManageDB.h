@@ -259,4 +259,12 @@
  */
 + (void) updateDBVersion19To20;
 
+/**
+ * Changes:
+ *
+ * Alter capabilities table, adds new column for capability multiple_public_links and supports_upload_only.
+ */
++ (void) updateDBVersion20To21;
+
+
 @end
