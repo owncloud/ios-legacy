@@ -80,40 +80,13 @@ import Foundation
     }
     
     
-// MARK:  CheckAccessToServer delegate
-    
-    func connection(toTheServer isConnection: Bool) {
-        if isConnection {
-            print("Ok connection to the server")
-            
-            let urlComps = NSURLComponents(string: self.urlNormalized)!
-            urlComps.path = "/\(k_url_webdav_server)"
-            let fullUrl: URL = urlComps.url!
-            
-            DetectAuthenticationMethod().getAuthenticationMethodsAvailableBy(url: fullUrl, withCompletion: { (authMethods: Array<Any>?) in
-                self.allAvailableAuthMethods = authMethods as! [AuthenticationMethod];
-                //do things, open webview
-                
-                self.authMethodToLogin = DetectAuthenticationMethod().getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
-                
-                self.buttonConnect.isEnabled = true
-                
-            })
-            
-        } else {
-            print("No connection to the server")
-        }
-
-    }
-    
-    
-    
     func startAuthenticationWith(authMethod: AuthenticationMethod) {
-        
         
         switch authMethod {
         case .SAML_WEB_SSO:
             //TODO
+            
+            LoginViewController().showSSOLoginScreen(withUrl: self.urlNormalized, inVC: self)
             
             break
         case .BEARER_TOKEN:
@@ -132,6 +105,43 @@ import Foundation
     }
     
     func openWebViewLogin() {
+        
+    }
+    
+    // MARK:  CheckAccessToServer delegate
+    
+    func connection(toTheServer isConnection: Bool) {
+        if isConnection {
+            print("Ok connection to the server")
+            
+            let stringUrl = self.urlNormalized + k_url_webdav_server
+            let urlToCheck: URL = URL(string: stringUrl)!
+            
+            DetectAuthenticationMethod().getAuthenticationMethodsAvailableBy(url: urlToCheck, withCompletion: { (authMethods: Array<Any>?, error: Error?) in
+                
+                if authMethods != nil {
+                    self.allAvailableAuthMethods = authMethods as! [AuthenticationMethod];
+                    //do things, open webview
+                    
+                    self.authMethodToLogin = DetectAuthenticationMethod().getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
+                    
+                    self.buttonConnect.isEnabled = true
+                } else if error != nil{
+                    //TODO: show error
+                    print ("error detecting authentication methods")
+                }
+                
+                
+            })
+            
+        } else {
+            print("No connection to the server")
+        }
+        
+    }
+    
+    
+    func repeatTheCheckToTheServer() {
         
     }
     

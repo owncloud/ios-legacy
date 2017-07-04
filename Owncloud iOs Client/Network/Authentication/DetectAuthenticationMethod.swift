@@ -92,22 +92,21 @@ enum AuthenticationMethod: String {
                     }
                     
                 }
-                
-            } else {
-                
-                if isSAML {
-                    
-                    allAvailableAuthMethods.append(AuthenticationMethod.SAML_WEB_SSO)
-
-                } else if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300){
-                    
-                    allAvailableAuthMethods.append(AuthenticationMethod.NONE)
-                }
-                
             }
+        } else {
+            
+            if isSAML {
+                
+                allAvailableAuthMethods.append(AuthenticationMethod.SAML_WEB_SSO)
+                
+            } else if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300){
+                
+                allAvailableAuthMethods.append(AuthenticationMethod.NONE)
+            }
+            
         }
         
-        
+    
         if allAvailableAuthMethods.isEmpty {
             print("Authentication method not found")
             allAvailableAuthMethods.append(AuthenticationMethod.UNKNOWN)
@@ -125,14 +124,14 @@ enum AuthenticationMethod: String {
 
 
     
-    func getAuthenticationMethodsAvailableBy(url: URL,  withCompletion completion: @escaping (_ authMethods: Array<Any>? ) -> Void)  {
+    func getAuthenticationMethodsAvailableBy(url: URL,  withCompletion completion: @escaping (_ authMethods: Array<Any>? ,_ error: Error?) -> Void)  {
         
         self.auth_request(url, withCompletion: { (httpResponse: HTTPURLResponse?,error: Error?) in
             
             if (httpResponse != nil) {
-                completion(self.analyzeResponse(httpResponse: httpResponse!) )
+                completion(self.analyzeResponse(httpResponse: httpResponse!) , nil )
             } else {
-                completion(nil)
+                completion(nil, error)
             }
 
         })
