@@ -84,8 +84,7 @@ import Foundation
         
         switch authMethod {
         case .SAML_WEB_SSO:
-            //TODO
-            
+
             LoginViewController().showSSOLoginScreen(withUrl: self.urlNormalized, inVC: self)
             
             break
@@ -125,7 +124,13 @@ import Foundation
                     
                     self.authMethodToLogin = DetectAuthenticationMethod().getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
                     
-                    self.buttonConnect.isEnabled = true
+                    if (self.authMethodToLogin != .NONE) {
+                        self.buttonConnect.isEnabled = true
+                    } else {
+                        self.buttonConnect.isEnabled = false
+                        //TODO show error
+                    }
+                    
                 } else if error != nil{
                     //TODO: show error
                     print ("error detecting authentication methods")

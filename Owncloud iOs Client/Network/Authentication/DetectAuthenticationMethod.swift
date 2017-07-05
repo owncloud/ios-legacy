@@ -143,12 +143,17 @@ enum AuthenticationMethod: String {
         
         var authMethod: AuthenticationMethod? = .NONE
         
-        if availableAuthMethods.contains(.BEARER_TOKEN){
+        if Customization.kIsSsoActive() {
+            
+            if availableAuthMethods.contains(.SAML_WEB_SSO) {
+                authMethod = .SAML_WEB_SSO
+            }
+            
+        } else if availableAuthMethods.contains(.BEARER_TOKEN){
             authMethod = .BEARER_TOKEN
+            
         } else if availableAuthMethods.contains(.BASIC_HTTP_AUTH) {
             authMethod = .BASIC_HTTP_AUTH
-        } else if availableAuthMethods.contains(.SAML_WEB_SSO) && Customization.kIsSsoActive() {
-            authMethod = .SAML_WEB_SSO
         }
         
         return authMethod!
