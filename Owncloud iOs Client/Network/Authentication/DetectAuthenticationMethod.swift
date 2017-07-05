@@ -160,7 +160,7 @@ enum AuthenticationMethod: String {
     }
     
     
-// MARK: UrlSession delgates
+// MARK: UrlSession delegates
     
     func urlSession(_ session: URLSession,
                              task: URLSessionTask,

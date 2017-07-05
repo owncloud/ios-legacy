@@ -16,20 +16,23 @@
 
 import Foundation
 
-@objc class UniversalLoginViewController: UIViewController, UITextFieldDelegate, CheckAccessToServerDelegate {
- 
-    struct K {
-        struct segueId {
-            static let segueWebViewLogin = "segueWebViewLogin"
-        }
-        
-        struct vcId {
-            static let vcIdWebViewLogin = "WebViewLoginViewController"
-        }
-        
+struct K {
+    struct segueId {
+        static let segueToWebLoginView = "segueToWebLoginView"
     }
     
+    struct unwindId {
+        static let unwindToMainLoginView = "unwindToMainLoginView"
+    }
     
+    struct vcId {
+        static let vcIdWebViewLogin = "WebViewLoginViewController"
+    }
+    
+}
+
+@objc class UniversalLoginViewController: UIViewController, UITextFieldDelegate, CheckAccessToServerDelegate {
+ 
 // MARK: IBOutlets
     
     @IBOutlet var imageViewLogo: UIImageView!
@@ -80,6 +83,8 @@ import Foundation
     }
     
     
+// MARK: start log in auth
+    
     func startAuthenticationWith(authMethod: AuthenticationMethod) {
         
         switch authMethod {
@@ -90,7 +95,7 @@ import Foundation
             break
         case .BEARER_TOKEN:
             
-            performSegue(withIdentifier: K.segueId.segueWebViewLogin, sender: self)
+            performSegue(withIdentifier: K.segueId.segueToWebLoginView, sender: self)
             
             break
         case .BASIC_HTTP_AUTH:
@@ -107,7 +112,8 @@ import Foundation
         
     }
     
-    // MARK:  CheckAccessToServer delegate
+    
+// MARK:  CheckAccessToServer delegate
     
     func connection(toTheServer isConnection: Bool) {
         if isConnection {
@@ -146,6 +152,8 @@ import Foundation
     }
     
     
+// MARK:  LoginViewController delegates
+
     func repeatTheCheckToTheServer() {
         
     }
@@ -178,15 +186,15 @@ import Foundation
         
     }
     
-    @IBAction func cancelToMainLoginView(segue:UIStoryboardSegue) {
+    @IBAction func unwindToMainLoginView(segue:UIStoryboardSegue) {
         
     }
     
-    
+
 // MARK: segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if(segue.identifier == K.segueId.segueWebViewLogin) {
+        if(segue.identifier == K.segueId.segueToWebLoginView) {
             
             let nextViewController = (segue.destination as! WebLoginViewController)
             nextViewController.serverPath = self.urlNormalized
