@@ -23,6 +23,16 @@ import Foundation
     
     // MARK: IBOutlets
     @IBOutlet var webViewLogin: UIWebView!
+    @IBOutlet var cancelButton: UIBarButtonItem!
+    
+    @IBAction func cancelButtonTapped(_ sender: Any) {
+        self.performCancelButtonTapped()
+    }
+
+    func performCancelButtonTapped() {
+        self.performSegue(withIdentifier: K.unwindId.unwindToMainLoginView, sender: self)
+    }
+
     
     var serverPath: String!
 
@@ -60,14 +70,13 @@ import Foundation
     
     func webViewDidStartLoad(_ webView: UIWebView) {
         
-        print("Loading login in webView")
-        
+        print("Loading login in webView with url:\(String(describing: webView.request?.mainDocumentURL))")
         //TODO: show loading activityIndicator.startAnimating()
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
         
-        print("Loaded url")
+        print("Loaded url:\(String(describing: webView.request?.mainDocumentURL))")
         
         //TODO: stop loading
     }
@@ -75,23 +84,21 @@ import Foundation
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
         print("An error happened during load: \(error)");
         
+        self.performCancelButtonTapped()
+        
     }
 
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         
-        let urlToFollow = request.url?.absoluteString
-         print(urlToFollow)
-        
-        let oauth2RedirectUri = k_oauth2_redirect_uri
-        let oauth2RedirectUriEncoded = oauth2RedirectUri.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
-        
-        let redirectUriParam = getQueryStringParameter(url: urlToFollow!, param: "redirect_uri")
-        let codeParam = getQueryStringParameter(url: urlToFollow!, param: "code")
+        let urlToFollow: String = (request.url?.absoluteString)!
+        print(urlToFollow)
 
-        if let url = urlToFollow?.contains(oauth2RedirectUriEncoded!){
-        print("contains url")
+        if urlToFollow.contains(k_oauth2_redirect_uri){
+            let codeParam = getQueryStringParameter(url: urlToFollow, param: "code")
+            print("contains url and code auth \(codeParam)")
+
             //TODO: get code
-           // return false;
+           return false;
         }
         
         return true;
