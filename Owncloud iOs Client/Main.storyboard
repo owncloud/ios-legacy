@@ -78,7 +78,7 @@
                         <outlet property="buttonReconnection" destination="HUS-Qc-A5N" id="c26-Ww-cpG"/>
                         <outlet property="imageViewLogo" destination="e8b-Rl-Mh0" id="6bs-to-s7J"/>
                         <outlet property="textFieldURL" destination="K3Y-mX-EWx" id="evx-Ry-FVD"/>
-                        <segue destination="f4N-GJ-PQD" kind="presentation" identifier="segueWebViewLogin" id="S2O-4z-eW2"/>
+                        <segue destination="f4N-GJ-PQD" kind="presentation" identifier="segueToWebLoginView" id="S2O-4z-eW2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1kC-5M-QFu" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -191,7 +191,7 @@
                                     <navigationItem id="Srt-MH-Z13">
                                         <barButtonItem key="leftBarButtonItem" title="Item" id="Yhs-Ln-8f5" userLabel="Item cancel">
                                             <connections>
-                                                <segue destination="gOD-iC-eEd" kind="unwind" unwindAction="cancelToMainLoginViewWithSegue:" id="OsY-DC-k6c"/>
+                                                <action selector="cancelButtonTapped:" destination="f4N-GJ-PQD" id="j7m-7k-00M"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -201,13 +201,15 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="cancelButton" destination="Yhs-Ln-8f5" id="q4U-Xr-vI2"/>
                         <outlet property="webViewLogin" destination="qbt-Jk-Nkc" id="6yt-1o-xB0"/>
+                        <segue destination="gOD-iC-eEd" kind="unwind" identifier="unwindToMainLoginView" unwindAction="unwindToMainLoginViewWithSegue:" id="hoy-NS-fHW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iLP-HP-ZaL" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="gOD-iC-eEd" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="834.78260869565224" y="-120.65217391304348"/>
+            <point key="canvasLocation" x="891" y="-121"/>
         </scene>
     </scenes>
     <resources>
