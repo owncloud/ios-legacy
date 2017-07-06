@@ -21,6 +21,8 @@ import Foundation
 @objc class WebLoginViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate {
 
     
+    var authCode = ""
+    
     // MARK: IBOutlets
     @IBOutlet var webViewLogin: UIWebView!
     @IBOutlet var cancelButton: UIBarButtonItem!
@@ -44,7 +46,7 @@ import Foundation
         //TODO: set branding style navigation bar, cancel item title
         
         //load login url in web view
-        let urlToGetAuthCode = OauthAuthentication().oauthUrlTogetAuthCodeFrom(serverPath: serverPath)
+        let urlToGetAuthCode = OauthAuthentication().oauthUrlTogetAuthCodeWith(serverPath: serverPath)
         self.loadWebViewWith(url: urlToGetAuthCode)
     }
     
@@ -78,12 +80,11 @@ import Foundation
         
         print("Loaded url:\(String(describing: webView.request?.mainDocumentURL))")
         
-        //TODO: stop loading
     }
     
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
         print("An error happened during load: \(error)");
-        
+
         self.performCancelButtonTapped()
         
     }
@@ -91,13 +92,14 @@ import Foundation
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         
         let urlToFollow: String = (request.url?.absoluteString)!
-        print(urlToFollow)
 
         if urlToFollow.contains(k_oauth2_redirect_uri){
-            let codeParam = getQueryStringParameter(url: urlToFollow, param: "code")
-            print("contains url and code auth \(codeParam)")
-
-            //TODO: get code
+            
+            if let code = getQueryStringParameter(url: urlToFollow, param: "code") {
+                self.authCode = code
+                print("contains url and code auth \(self.authCode)")
+            }
+            
            return false;
         }
         
