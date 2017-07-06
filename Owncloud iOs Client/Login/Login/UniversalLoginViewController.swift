@@ -44,6 +44,7 @@ struct K {
     var urlNormalized: String!
     var allAvailableAuthMethods = [AuthenticationMethod]()
     var authMethodToLogin: AuthenticationMethod!
+    var authCodeReceived = ""
 
     
     override func viewDidLoad() {
@@ -187,7 +188,18 @@ struct K {
     }
     
     @IBAction func unwindToMainLoginView(segue:UIStoryboardSegue) {
-        
+        if let sourceViewController = segue.source as? WebLoginViewController {
+            let webVC: WebLoginViewController = sourceViewController
+            if !(webVC.authCode).isEmpty {
+                self.authCodeReceived = webVC.authCode
+                
+                let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.urlNormalized)
+                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: authCodeReceived, withCompletion: { (data: NSData?, error: Error?) in
+                    
+                    //TODO: if data store storeOauthData(data)
+                })
+            }
+        }
     }
     
 

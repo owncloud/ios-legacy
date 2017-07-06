@@ -158,8 +158,8 @@
 #define k_is_passcode_forced NO
 
 //oauth2
-#define k_oauth2_authorization_endpoint @"/index.php/apps/oauth2/authorize"
-#define k_token_endpoint @"/index.php/apps/oauth2/api/v1/token"
+#define k_oauth2_authorization_endpoint @"index.php/apps/oauth2/authorize"
+#define k_oauth2_token_endpoint @"index.php/apps/oauth2/api/v1/token"
 #define k_oauth2_redirect_uri @"oc://android.owncloud.com"
 #define k_oauth2_client_id @"e4rAsNUSIUs0lF4nbv9FmCeUkTlV9GdgTLDH1b5uie7syb90SzEVrbN7HIpmWJeD"
 #define k_oauth2_client_secret @"dInFYGV33xKzhbRmpqQltYNdfLdJIfJ9L5ISoKhNoT9qZftpdWSP71VrpGR9pmoD"
