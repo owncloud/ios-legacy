@@ -196,7 +196,9 @@ struct K {
                 let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.urlNormalized)
                 OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: authCodeReceived, withCompletion: { (data: NSData?, error: Error?) in
                     
-                    //TODO: if data store storeOauthData(data)
+                    if (data != nil) {
+                        //getfiles, if ok store new account
+                    }
                 })
             }
         }
