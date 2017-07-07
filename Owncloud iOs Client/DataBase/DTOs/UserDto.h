@@ -14,6 +14,7 @@
  */
 
 #import "OCCapabilities.h"
+#import "CredentialsDto.h"
 
 typedef enum {
     serverFunctionalityNotChecked = 0,
@@ -33,6 +34,8 @@ typedef enum {
 @property (nonatomic, copy) NSString *url;
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *password;
+@property (nonatomic, copy) CredentialsDto *credDto;
+
 @property BOOL ssl;
 @property BOOL activeaccount;
 @property long storageOccupied;

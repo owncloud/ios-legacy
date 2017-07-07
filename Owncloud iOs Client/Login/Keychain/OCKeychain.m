@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -23,15 +23,51 @@
 @implementation OCKeychain
 
 
-+(BOOL)setCredentialsById:(NSString *)idUser withUsername:(NSString *)userName andPassword:(NSString *)password{
++(BOOL)setCredentialsById:(NSString *)userId withUsername:(NSString *)userName andPassword:(NSString *)password{
+    
+    BOOL output = NO;
+    
+    [self setCredentialsById:userId withUsername:userName andData:[password dataUsingEncoding:NSUTF8StringEncoding]];
+    
+//    NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
+//    
+//    [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
+//    [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
+//    [keychainItem setObject:idUser forKey:(__bridge id)kSecAttrAccount];
+//    [keychainItem setObject:userName forKey:(__bridge id)kSecAttrDescription];
+//    [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
+//
+//    
+//    OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
+//    
+//    if(stsExist == errSecSuccess) {
+//        NSLog(@"Unable add item with id =%@ error",idUser);
+//    }else {
+//        [keychainItem setObject:[password dataUsingEncoding:NSUTF8StringEncoding] forKey:(__bridge id)kSecValueData];
+//        OSStatus stsAdd = SecItemAdd((__bridge CFDictionaryRef)keychainItem, NULL);
+//        
+//        NSLog(@"(setCredentials)Error Code: %d", (int)stsAdd);
+//        if (stsAdd == errSecSuccess) {
+//            output = YES;
+//        }
+//        
+//    }
+    
+    return output;
+}
+
+
++(BOOL)setCredentialsById:(NSString *)userId
+             withUsername:(NSString *)userName
+              andData:(NSData *)data {
     
     BOOL output = NO;
     
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
-    [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
+    [keychainItem setObject:(__bridge id)(kSecClassInternetPassword) forKey:(__bridge id)kSecClass];
     [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
-    [keychainItem setObject:idUser forKey:(__bridge id)kSecAttrAccount];
+    [keychainItem setObject:userId forKey:(__bridge id)kSecAttrAccount];
     [keychainItem setObject:userName forKey:(__bridge id)kSecAttrDescription];
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
 
@@ -39,9 +75,10 @@
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
     
     if(stsExist == errSecSuccess) {
-        NSLog(@"Unable add item with id =%@ error",idUser);
+        NSLog(@"Unable add item with id =%@ error",userId);
     }else {
-        [keychainItem setObject:[password dataUsingEncoding:NSUTF8StringEncoding] forKey:(__bridge id)kSecValueData];
+        [keychainItem setObject:data forKey:(__bridge id)kSecValueData];
+        
         OSStatus stsAdd = SecItemAdd((__bridge CFDictionaryRef)keychainItem, NULL);
         
         NSLog(@"(setCredentials)Error Code: %d", (int)stsAdd);
@@ -53,8 +90,6 @@
     
     return output;
 }
-
-
 
 +(CredentialsDto *)getCredentialsById:(NSString *)idUser{
     
@@ -85,16 +120,31 @@
         
         NSDictionary *resultDict = (__bridge_transfer NSDictionary *)result;
         
-        NSData *pswd = resultDict[(__bridge id)kSecValueData];
-        NSString *password = [[NSString alloc] initWithData:pswd encoding:NSUTF8StringEncoding];
+        NSData *resultData = resultDict[(__bridge id)kSecValueData];
+        
         output = [CredentialsDto new];
         
-        output.password = password;
-        output.userName = resultDict[(__bridge id)kSecAttrDescription];
+        NSError *jsonError;
+        NSDictionary* json = [NSJSONSerialization JSONObjectWithData:resultData
+                                                             options:kNilOptions
+                                                               error:&jsonError];
+        if(jsonError) {
+            //basic auth
+            output.password = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
+            output.userName = resultDict[(__bridge id)kSecAttrDescription];
+
+        } else {
+            //oauth auth
+            output.password = [json objectForKey:@"access_token"];
+            output.userName = [json objectForKey:@"user_id"];
+
+            output.refreshToken = [json objectForKey:@"refresh_token"];
+            output.expiresIn = [json objectForKey:@"epires_in"];
+            output.tokenType = [json objectForKey:@"token_type"];
+        }
     }
     
     return output;
-
 }
 
 +(BOOL)removeCredentialsById:(NSString *)idUser{
@@ -239,6 +289,8 @@
     }
     
 }
+
+
 
 
 @end
