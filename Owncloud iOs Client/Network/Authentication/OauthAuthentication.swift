@@ -21,7 +21,7 @@ import Foundation
 class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
 
 
-    func accessTokenAuthRequest(_ url: URL, authCode: String, withCompletion completion: @escaping (_ data: NSData?,_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
+    func accessTokenAuthRequest(_ url: URL, authCode: String, completionHandler completion: @escaping (_ data: NSData?,_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
      
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -48,10 +48,12 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
                 completion(nil, nil, error)
                 
             } else if let data = data {
+                completion(data as NSData, response as? HTTPURLResponse, error)
+                
+                //check if exist error, error_description or error_uri in json, -> completion(nil, response as? HTTPURLResponse, error)
                 do {
-                    //create json object from data
-                    if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: AnyObject] {
-                        print("accessTokenAuthRequest json:", json)
+                    if let dict = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: AnyObject] {
+                        print("accessTokenAuthRequest json:", dict)
                         completion(data as NSData, response as? HTTPURLResponse, error)
                     }
                     
@@ -60,27 +62,33 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
                     completion(nil, response as? HTTPURLResponse, error)
                 }
                 
+            } else {
+                completion(nil, response as? HTTPURLResponse, error)
             }
         })
         task.resume()
     }
     
-    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ authData: NSData? ,_ error: Error?) -> Void)  {
+    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ data: NSData? ,_ error: Error?) -> Void)  {
         
-        self.accessTokenAuthRequest(url, authCode: authCode) { (data:NSData?, httpResponse: HTTPURLResponse?,error: Error?) in
+        self.accessTokenAuthRequest(url, authCode: authCode, completionHandler: { (data: NSData?, response: URLResponse?, error: Error?) -> Void in
             
-            //TODO: return data in format
-            if (data != nil) {
+            if data != nil {
                 completion(data, nil )
             } else {
-                completion(nil, error)
+               completion(nil, error)
             }
-        }
+        })
         
     }
     
-    func storeOauthData () {
+    func storeOauthDataInKeychain(data: NSData) {
         
+        //TODO: get user id, name,
+        
+//        let userId = ""
+//        let username = ""
+//        OCKeychain.setCredentialsById(, withUsername: , andData: data)
     }
     
     
