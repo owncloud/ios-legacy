@@ -34,6 +34,7 @@
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
 #import "ManageAppSettingsDB.h"
+#import "OCNavigationController.h"
 
 //Cookie
 #define k_cookie_user_value_name @"oc_username"
@@ -675,6 +676,22 @@ static NSString *const tmpFileName = @"tmp.der";
 
 
 
+
+#pragma mark - navigation
+
+- (void) navigateFrom:(UIViewController *)currentVC {
+
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self];
+
+    //Check if is iPhone or iPad
+    if (!IS_IPHONE) {
+        //iPad
+        navController.modalTransitionStyle=UIModalTransitionStyleCoverVertical;
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    }
+    [currentVC presentViewController:navController animated:YES completion:nil];
+    
+}
 
 
 

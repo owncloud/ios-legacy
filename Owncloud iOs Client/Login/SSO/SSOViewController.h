@@ -63,4 +63,8 @@
 
 - (IBAction)cancel:(id)sender;
 
+//Navigate to this instance
+- (void) navigateFrom:(UIViewController *)currentVC;
+
+
 @end
