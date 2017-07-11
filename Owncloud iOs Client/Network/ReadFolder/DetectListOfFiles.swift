@@ -57,13 +57,13 @@ import Foundation
     
 //    func getListOfFiles(url:URL, authType: AuthenticationMethod, accessToken: String) -> Array<Any> {
 //        
-////        self.readFolderRequest(url, authType: authType, username: nil, accessToken: accessToken) { (httpResponse: HTTPURLResponse?, error: Error?) in
-////        
-////
-////        }
+//        self.readFolderRequest(url, authType: authType, username: nil, accessToken: accessToken) { (httpResponse: HTTPURLResponse?, error: Error?) in
+//        
+//
+//        }
 //        var resultArray = [""]
 //        
 //        return resultArray
 //    }
-//    
+    
 }
