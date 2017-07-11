@@ -219,14 +219,25 @@ struct K {
                 self.authCodeReceived = webVC.authCode
                 
                 let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.urlNormalized)
-                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: authCodeReceived, withCompletion: { (dataDict: Dictionary<String, String>?, error: String?) in
+                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { (dataDict: Dictionary<String, String>?, error: String?) in
                 
                     if (dataDict != nil) {
                         //getfiles, if ok store new account
-                        let urlToGetRootFiles = UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.urlNormalized)
-                     //   DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles, authType: AuthenticationMethod, accessToken: authCodeReceived)
+                        let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.urlNormalized) )
+                        let items: Array = DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, authType: self.authMethodToLogin, accessToken: self.authCodeReceived)
+                        
+                        if (items.isEmpty) {
+                            //Pass the items with OCFileDto to FileDto Array
+                            var directoryList: NSMutableArray = UtilsDtos.pass(toFileDtoArrayThisOCFileDtoArray: items)
+                           // [self createUserAndDataInTheSystemWithRequest:directoryList andCode:response.statusCode];
+                        } else {
+                            print(items)
+                            //TODO: store new account
+                        }
+                        
+                        
                     } else {
-                        //handle
+                        
                     }
 
                 })
