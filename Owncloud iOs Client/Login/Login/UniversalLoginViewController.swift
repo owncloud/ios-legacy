@@ -31,7 +31,7 @@ struct K {
     
 }
 
-@objc class UniversalLoginViewController: UIViewController, UITextFieldDelegate, CheckAccessToServerDelegate {
+@objc class UniversalLoginViewController: UIViewController, UITextFieldDelegate, CheckAccessToServerDelegate, SSODelegate {
  
 // MARK: IBOutlets
     
@@ -89,30 +89,49 @@ struct K {
     func startAuthenticationWith(authMethod: AuthenticationMethod) {
         
         switch authMethod {
-        case .SAML_WEB_SSO:
 
-            LoginViewController().showSSOLoginScreen(withUrl: self.urlNormalized, inVC: self)
-            
+        case .SAML_WEB_SSO:
+            navigateToSAMLLoginView();
             break
+
         case .BEARER_TOKEN:
-            
-            performSegue(withIdentifier: K.segueId.segueToWebLoginView, sender: self)
-            
+            navigateToOAuthLoginView();
             break
+
         case .BASIC_HTTP_AUTH:
             //TODO
             break
+
         default:
             //TODO: show footer Error
-
             break
         }
+
     }
     
     func openWebViewLogin() {
         
     }
     
+    func navigateToSAMLLoginView() {
+
+        //Grant main thread
+        DispatchQueue.main.async {
+            print("_showSSOLoginScreen_ url: %@", self.urlNormalized);
+            
+            //New SSO WebView controller
+            let ssoViewController: SSOViewController = SSOViewController(nibName: "SSOViewController", bundle: nil);
+            ssoViewController.urlString = self.urlNormalized;
+            ssoViewController.delegate = self;
+
+            //present it
+            ssoViewController.navigate(from: self);
+        }
+    }
+    
+    func navigateToOAuthLoginView() {
+        performSegue(withIdentifier: K.segueId.segueToWebLoginView, sender: self)
+    }
     
 // MARK:  CheckAccessToServer delegate
     
@@ -153,8 +172,17 @@ struct K {
     }
     
     func repeatTheCheckToTheServer() {
-        
+        print("LOL");
     }
+  
+    
+// MARK: SSODelegate
+    
+    func setCookieForSSO(_ cookieString: String!, andSamlUserName samlUserName: String!) {
+        // TODO
+        print("BACK with cookieString %@ and samlUserName %@", cookieString, samlUserName);
+    }
+
     
 // MARK: textField delegate
     
