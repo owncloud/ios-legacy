@@ -21,7 +21,7 @@ import Foundation
 class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
 
 
-    func accessTokenAuthRequest(_ url: URL, authCode: String, completionHandler completion: @escaping (_ data: NSData?,_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
+    func accessTokenAuthRequest(_ url: URL, authCode: String, withCompletion completion: @escaping (_ data: Data?,_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
      
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -36,7 +36,7 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
         let body =  "grant_type=authorization_code&code=\(authCode)&redirect_uri=\(k_oauth2_redirect_uri)&client_id=\(k_oauth2_client_id)"
         let bodyEncoded = body.data(using: String.Encoding.utf8)
         request.httpBody = bodyEncoded
-        print("request body: \(bodyEncoded))")
+        
         let configuration = URLSessionConfiguration.ephemeral
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
         //        let session = URLSession(configuration: URLSessionConfiguration.default)
@@ -48,19 +48,7 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
                 completion(nil, nil, error)
                 
             } else if let data = data {
-                completion(data as NSData, response as? HTTPURLResponse, error)
-                
-                //check if exist error, error_description or error_uri in json, -> completion(nil, response as? HTTPURLResponse, error)
-                do {
-                    if let dict = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: AnyObject] {
-                        print("accessTokenAuthRequest json:", dict)
-                        completion(data as NSData, response as? HTTPURLResponse, error)
-                    }
-                    
-                } catch let error {
-                    print("accessTokenAuthRequest  no data error:", error.localizedDescription)
-                    completion(nil, response as? HTTPURLResponse, error)
-                }
+                completion(data , response as? HTTPURLResponse, error)
                 
             } else {
                 completion(nil, response as? HTTPURLResponse, error)
@@ -69,14 +57,31 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
         task.resume()
     }
     
-    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ data: NSData? ,_ error: Error?) -> Void)  {
+
+    
+    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ dataDict: Dictionary<String, String>? ,_ error: String?) -> Void)  {
         
-        self.accessTokenAuthRequest(url, authCode: authCode, completionHandler: { (data: NSData?, response: URLResponse?, error: Error?) -> Void in
+        self.accessTokenAuthRequest(url, authCode: authCode, withCompletion: { (data:Data?, httpResponse:HTTPURLResponse?, error:Error?) in
             
             if data != nil {
-                completion(data, nil )
+
+                do {
+                    if let dictJSON = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any]  {
+                        
+                        if let resultError = dictJSON["error"] {
+                            completion(dictJSON as? Dictionary<String, String>, resultError as? String)
+                        } else {
+                            completion(nil, error?.localizedDescription)
+                        }
+                    }
+                    
+                } catch let error {
+                    print("accessTokenAuthRequest  no data error:", error.localizedDescription)
+                    completion(nil, error.localizedDescription)
+                }
+                
             } else {
-               completion(nil, error)
+               completion(nil, error?.localizedDescription)
             }
         })
         
