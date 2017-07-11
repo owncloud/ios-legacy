@@ -152,9 +152,6 @@ struct K {
         
     }
     
-    
-// MARK:  LoginViewController delegates
-
     func repeatTheCheckToTheServer() {
         
     }
@@ -194,11 +191,13 @@ struct K {
                 self.authCodeReceived = webVC.authCode
                 
                 let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.urlNormalized)
-                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: authCodeReceived, withCompletion: { (data: NSData?, error: Error?) in
-                    
-                    if (data != nil) {
+                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: authCodeReceived, withCompletion: { (dataDict: Dictionary<String, String>?, error: String?) in
+                
+                    if (dataDict != nil) {
                         //getfiles, if ok store new account
+                       // DetectListOfFiles().getListOfFiles(url: URL, authType: AuthenticationMethod, accessToken: String)
                     }
+
                 })
             }
         }

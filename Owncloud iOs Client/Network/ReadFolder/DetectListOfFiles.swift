@@ -19,31 +19,51 @@ import Foundation
 
 @objc class DetectListOfFiles: NSObject {
     
-    @objc func readFolderRequest(_ url: URL, authType: String, withCompletion completion: @escaping (_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
+//    func readFolderRequest(_ url: URL, authType: AuthenticationMethod, username: String?, accessToken: String, withCompletion completion: @escaping (_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
+//        
+//    //    var sharedCommunication = AppDelegate.sharedOCCommunication()
+//        
+//      //  self.setCredencialsAndUserAgentWith(sharedOCCommunication: sharedCommunication!, authType: authType, username: username, accessToken: accessToken)
+//        
+//        //request
+//        
+//        
+//        
+//        //return
+//        
+//     
+//    }
+    
+    
+    func setCredencialsAndUserAgentWith(sharedOCCommunication: OCCommunication, authType: AuthenticationMethod, username: String?, accessToken: String) {
         
-        
-        let occomunication = AppDelegate.sharedOCCommunication()
-        
-        //set credentials
-        
-        
-        //Set user agent
-        
-        //request
-        
-        
-        //return
-        
-     
+        sharedOCCommunication.setValueOfUserAgent(UtilsUrls.getUserAgent())
+
+        switch authType {
+        case .BEARER_TOKEN:
+            sharedOCCommunication.setCredentialsOauthWithToken(accessToken)
+            break
+        case .SAML_WEB_SSO:
+            if (Customization.kIsSsoActive()) {
+                sharedOCCommunication.setCredentialsWithCookie(accessToken)
+                break
+            }
+        default:
+            sharedOCCommunication.setCredentialsWithUser(username, andPassword: accessToken)
+            break
+        }
     }
     
     
-//    @objc func getListOfFiles(url:URL, authType: String) -> Array<Any> {
+//    func getListOfFiles(url:URL, authType: AuthenticationMethod, accessToken: String) -> Array<Any> {
 //        
-//        
-////        self.readFolderRequest(url, authType: authType) { (<#HTTPURLResponse?#>, <#Error?#>) in
-////            
+////        self.readFolderRequest(url, authType: authType, username: nil, accessToken: accessToken) { (httpResponse: HTTPURLResponse?, error: Error?) in
+////        
+////
 ////        }
+//        var resultArray = [""]
+//        
+//        return resultArray
 //    }
-    
+//    
 }
