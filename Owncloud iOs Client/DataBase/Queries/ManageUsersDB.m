@@ -109,7 +109,7 @@
             
             CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
             output.username = credDto.userName;
-            output.password = credDto.password;
+            output.password = credDto.accesToken;
             output.credDto = credDto;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
@@ -222,7 +222,7 @@
             
             CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
             output.username = credDto.userName;
-            output.password = credDto.password;
+            output.password = credDto.accesToken;
             output.credDto = credDto;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
@@ -301,7 +301,7 @@
             
             CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
             current.username = credDto.userName;
-            current.password = credDto.password;
+            current.password = credDto.accesToken;
             current.credDto = credDto;
             
             current.sortingType = [rs intForColumn:@"sorting_type"];

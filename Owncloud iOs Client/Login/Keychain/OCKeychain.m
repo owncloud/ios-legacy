@@ -56,6 +56,7 @@
     return output;
 }
 
+//TODO: TAKE INTO ACCOUNT UPGRADE ITEMS
 
 +(BOOL)setCredentialsById:(NSString *)userId
              withUsername:(NSString *)userName
@@ -65,7 +66,7 @@
     
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
-    [keychainItem setObject:(__bridge id)(kSecClassInternetPassword) forKey:(__bridge id)kSecClass];
+    [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
     [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
     [keychainItem setObject:userId forKey:(__bridge id)kSecAttrAccount];
     [keychainItem setObject:userName forKey:(__bridge id)kSecAttrDescription];
@@ -130,12 +131,12 @@
                                                                error:&jsonError];
         if(jsonError) {
             //basic auth
-            output.password = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
+            output.accesToken = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
             output.userName = resultDict[(__bridge id)kSecAttrDescription];
 
         } else {
             //oauth auth
-            output.password = [json objectForKey:@"access_token"];
+            output.accesToken = [json objectForKey:@"access_token"];
             output.userName = [json objectForKey:@"user_id"];
 
             output.refreshToken = [json objectForKey:@"refresh_token"];
