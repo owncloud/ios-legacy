@@ -19,7 +19,7 @@
 
 @property (nonatomic, copy) NSString *userId;
 @property (nonatomic, copy) NSString *userName;
-@property (nonatomic, copy) NSString *password; //or accessToken in oauth
+@property (nonatomic, copy) NSString *accesToken; //or passcode for basic auth
 @property (nonatomic, copy) NSString *refreshToken;
 @property (nonatomic, copy) NSString *expiresIn;
 @property (nonatomic, copy) NSString *tokenType;
