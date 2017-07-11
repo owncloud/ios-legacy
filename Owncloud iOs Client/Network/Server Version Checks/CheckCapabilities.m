@@ -45,7 +45,7 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
             [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
         }
         
-        [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+        [[AppDelegate sharedOCCommunication] setValueOfUserAgent:[UtilsUrls getUserAgent]];
         
         [[AppDelegate sharedOCCommunication] getCapabilitiesOfServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, OCCapabilities *capabilities, NSString *redirectedServer) {
             

@@ -53,8 +53,6 @@
 		13B721ED169D78BE00B24A51 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B721EC169D78BE00B24A51 /* Twitter.framework */; };
 		13D6B7CA18855EE40090A96C /* AppsActivityProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D6B7C918855EE40090A96C /* AppsActivityProvider.m */; };
 		13D8741F169DBE05000FBE6D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13D8741E169DBE05000FBE6D /* MessageUI.framework */; };
-		1420C3AA178A9F5000C0455C /* LoginViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1420C3A6178A9F5000C0455C /* LoginViewController_iPad.xib */; };
-		1420C3AB178A9F5000C0455C /* LoginViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1420C3A7178A9F5000C0455C /* LoginViewController_iPhone.xib */; };
 		1420C3AC178A9F5000C0455C /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1420C3A9178A9F5000C0455C /* LoginViewController.m */; };
 		1428F675178422AE0092F42A /* UploadsOfflineDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F674178422AE0092F42A /* UploadsOfflineDto.m */; };
 		1428F678178422BE0092F42A /* UtilsDtos.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F677178422BE0092F42A /* UtilsDtos.m */; };
@@ -222,11 +220,9 @@
 		148DD6B3177866A400FB9977 /* FilesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6B0177866A400FB9977 /* FilesViewController.xib */; };
 		148DD6B71778693000FB9977 /* RecentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6B51778693000FB9977 /* RecentViewController.m */; };
 		148DD6B81778693000FB9977 /* RecentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6B61778693000FB9977 /* RecentViewController.xib */; };
-		148DD6BC1778695E00FB9977 /* AddAccountViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6B91778695E00FB9977 /* AddAccountViewController_iPhone.xib */; };
 		148DD6BD1778695E00FB9977 /* AddAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6BB1778695E00FB9977 /* AddAccountViewController.m */; };
 		148DD6C11778697100FB9977 /* AccountCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6BF1778697100FB9977 /* AccountCell.m */; };
 		148DD6C21778697100FB9977 /* AccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6C01778697100FB9977 /* AccountCell.xib */; };
-		148DD6C61778698300FB9977 /* EditAccountViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6C31778698300FB9977 /* EditAccountViewController_iPhone.xib */; };
 		148DD6C71778698300FB9977 /* EditAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6C51778698300FB9977 /* EditAccountViewController.m */; };
 		148DD6D8177869C800FB9977 /* Impressum.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6D4177869C800FB9977 /* Impressum.rtf */; };
 		148DD6D9177869C800FB9977 /* ImpressumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6D6177869C800FB9977 /* ImpressumViewController.m */; };
@@ -1116,8 +1112,6 @@
 		13D6B7C818855EE40090A96C /* AppsActivityProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppsActivityProvider.h; path = Tabs/FileTab/Share/AppsActivityProvider.h; sourceTree = "<group>"; };
 		13D6B7C918855EE40090A96C /* AppsActivityProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppsActivityProvider.m; path = Tabs/FileTab/Share/AppsActivityProvider.m; sourceTree = "<group>"; };
 		13D8741E169DBE05000FBE6D /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		1420C3A6178A9F5000C0455C /* LoginViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController_iPad.xib; sourceTree = "<group>"; };
-		1420C3A7178A9F5000C0455C /* LoginViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController_iPhone.xib; sourceTree = "<group>"; };
 		1420C3A8178A9F5000C0455C /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		1420C3A9178A9F5000C0455C /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		1428F673178422AE0092F42A /* UploadsOfflineDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadsOfflineDto.h; path = DataBase/DTOs/UploadsOfflineDto.h; sourceTree = "<group>"; };
@@ -1337,13 +1331,11 @@
 		148DD6B41778693000FB9977 /* RecentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RecentViewController.h; path = Tabs/RecentTab/RecentViewController.h; sourceTree = "<group>"; };
 		148DD6B51778693000FB9977 /* RecentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecentViewController.m; path = Tabs/RecentTab/RecentViewController.m; sourceTree = "<group>"; };
 		148DD6B61778693000FB9977 /* RecentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RecentViewController.xib; path = Tabs/RecentTab/RecentViewController.xib; sourceTree = "<group>"; };
-		148DD6B91778695E00FB9977 /* AddAccountViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddAccountViewController_iPhone.xib; path = Tabs/SettingTab/Account/AddAccount/AddAccountViewController_iPhone.xib; sourceTree = "<group>"; };
 		148DD6BA1778695E00FB9977 /* AddAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddAccountViewController.h; path = Tabs/SettingTab/Account/AddAccount/AddAccountViewController.h; sourceTree = "<group>"; };
 		148DD6BB1778695E00FB9977 /* AddAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddAccountViewController.m; path = Tabs/SettingTab/Account/AddAccount/AddAccountViewController.m; sourceTree = "<group>"; };
 		148DD6BE1778697100FB9977 /* AccountCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountCell.h; path = Tabs/SettingTab/Account/Cell/AccountCell.h; sourceTree = "<group>"; };
 		148DD6BF1778697100FB9977 /* AccountCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountCell.m; path = Tabs/SettingTab/Account/Cell/AccountCell.m; sourceTree = "<group>"; };
 		148DD6C01778697100FB9977 /* AccountCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AccountCell.xib; path = Tabs/SettingTab/Account/Cell/AccountCell.xib; sourceTree = "<group>"; };
-		148DD6C31778698300FB9977 /* EditAccountViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EditAccountViewController_iPhone.xib; path = Tabs/SettingTab/Account/EditAccount/EditAccountViewController_iPhone.xib; sourceTree = "<group>"; };
 		148DD6C41778698300FB9977 /* EditAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditAccountViewController.h; path = Tabs/SettingTab/Account/EditAccount/EditAccountViewController.h; sourceTree = "<group>"; };
 		148DD6C51778698300FB9977 /* EditAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditAccountViewController.m; path = Tabs/SettingTab/Account/EditAccount/EditAccountViewController.m; sourceTree = "<group>"; };
 		148DD6D4177869C800FB9977 /* Impressum.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Impressum.rtf; path = Tabs/SettingTab/Imprint/Impressum.rtf; sourceTree = "<group>"; };
@@ -2486,8 +2478,6 @@
 		13C4DEEC163672CA00638B1D /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				1420C3A6178A9F5000C0455C /* LoginViewController_iPad.xib */,
-				1420C3A7178A9F5000C0455C /* LoginViewController_iPhone.xib */,
 				1420C3A8178A9F5000C0455C /* LoginViewController.h */,
 				1420C3A9178A9F5000C0455C /* LoginViewController.m */,
 				40C663AF1EFA94B1004AF994 /* UniversalLoginViewController.swift */,
@@ -2509,7 +2499,6 @@
 		13C4DEF61636736200638B1D /* Edit Account */ = {
 			isa = PBXGroup;
 			children = (
-				148DD6C31778698300FB9977 /* EditAccountViewController_iPhone.xib */,
 				148DD6C41778698300FB9977 /* EditAccountViewController.h */,
 				148DD6C51778698300FB9977 /* EditAccountViewController.m */,
 			);
@@ -2519,7 +2508,6 @@
 		13C4DEF71636736800638B1D /* Add Account */ = {
 			isa = PBXGroup;
 			children = (
-				148DD6B91778695E00FB9977 /* AddAccountViewController_iPhone.xib */,
 				148DD6BA1778695E00FB9977 /* AddAccountViewController.h */,
 				148DD6BB1778695E00FB9977 /* AddAccountViewController.m */,
 			);
@@ -4199,11 +4187,9 @@
 				14A7F7A118ED5781009AF347 /* presentation_icon@2x~ipad.png in Resources */,
 				148DD6B3177866A400FB9977 /* FilesViewController.xib in Resources */,
 				148DD6B81778693000FB9977 /* RecentViewController.xib in Resources */,
-				148DD6BC1778695E00FB9977 /* AddAccountViewController_iPhone.xib in Resources */,
 				14A7F7AF18ED5C06009AF347 /* folder_icon~ipad.png in Resources */,
 				EABF68F2188FC2FA00A2217C /* TABShares.png in Resources */,
 				148DD6C21778697100FB9977 /* AccountCell.xib in Resources */,
-				148DD6C61778698300FB9977 /* EditAccountViewController_iPhone.xib in Resources */,
 				148DD6D8177869C800FB9977 /* Impressum.rtf in Resources */,
 				148DD6DA177869C800FB9977 /* ImpressumViewController.xib in Resources */,
 				148DD6E917786A1400FB9977 /* SettingsViewController.xib in Resources */,
@@ -4464,11 +4450,9 @@
 				EABD88E91BBE82C400DA5281 /* NotificationBackgroundErrorIcon.png in Resources */,
 				4030D8EF1A1626CC00DB0871 /* file_icon@2x~ipad.png in Resources */,
 				4030D8F71A16277100DB0871 /* file_icon@3x.png in Resources */,
-				1420C3AA178A9F5000C0455C /* LoginViewController_iPad.xib in Resources */,
 				908A3C5D1D01732C00A34FDB /* file_available_offline_icon.png in Resources */,
 				EA4914771AC0346100BECF0B /* TTOpenInAppActivity8@2x.png in Resources */,
 				9064143F1D005B5C000AEFE5 /* file_new_server_version_available_icon.png in Resources */,
-				1420C3AB178A9F5000C0455C /* LoginViewController_iPhone.xib in Resources */,
 				EA4914781AC0346100BECF0B /* TTOpenInAppActivity8@3x.png in Resources */,
 				14A7F7AA18ED578E009AF347 /* spreadsheet_icon@2x~ipad.png in Resources */,
 				4007876D1C44EAEE00486A26 /* ShareEditUserViewController.xib in Resources */,
