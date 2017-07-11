@@ -195,7 +195,10 @@ struct K {
                 
                     if (dataDict != nil) {
                         //getfiles, if ok store new account
-                       // DetectListOfFiles().getListOfFiles(url: URL, authType: AuthenticationMethod, accessToken: String)
+                        let urlToGetRootFiles = UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.urlNormalized)
+                     //   DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles, authType: AuthenticationMethod, accessToken: authCodeReceived)
+                    } else {
+                        //handle
                     }
 
                 })
@@ -214,14 +217,5 @@ struct K {
         }
     }
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
 }
