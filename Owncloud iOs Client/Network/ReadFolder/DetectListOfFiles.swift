@@ -19,32 +19,42 @@ import Foundation
 
 @objc class DetectListOfFiles: NSObject {
     
-    func readFolderRequest(_ url: URL, authType: AuthenticationMethod, username: String?, accessToken: String, withCompletion completion: @escaping (_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
+    func readFolderRequest(url: URL, authType: AuthenticationMethod, userName: String?, accessToken: String, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) -> Void ) {
         
-        //var sharedCommunication = AppDelegate.sharedOCCommunication()
-        
-        self.setCredencialsAndUserAgentWith(authType: authType, username: username, accessToken: accessToken)
-        
+        self.setCredentialsAndUserAgentWith(authType: authType, userName: userName, accessToken: accessToken)
         
         AppDelegate.sharedOCCommunication().readFolder(url.absoluteString, withUserSessionToken: accessToken, on: AppDelegate.sharedOCCommunication(),
             
            successRequest: { (response: HTTPURLResponse?, items: [Any]?, redirectedServer: String?, token: String?) in
             
-            completion(response,nil) //TODO
+            if (response != nil) {
+                print("Operation success response code:\(String(describing: response?.statusCode))")
+            }
             
-                                                        
+            var isSamlCredentialsError: Bool = false
+            
+            if Customization.kIsSsoActive() {
+                isSamlCredentialsError = FileNameUtils.isURL(withSamlFragment: response)
+                if isSamlCredentialsError {
+    
+                    //Fail as credentials error
+                    completion(Int(kOCErrorServerUnauthorized), nil , nil)
+                }
+            }
+            //TODO: chec redirectedserver in status
+            if !isSamlCredentialsError {
+                
+                completion(nil, nil , items)
+            }
             
         }, failureRequest: { (response:HTTPURLResponse?, error: Error?, token: String?, redirectedServer: String?) in
-            //handle errors
             
-            completion(response,error) //TODO
-            
-            
+            completion(response?.statusCode, error, nil)
         })
     }
     
     
-    func setCredencialsAndUserAgentWith(authType: AuthenticationMethod, username: String?, accessToken: String) {
+    func setCredentialsAndUserAgentWith(authType: AuthenticationMethod, userName: String?, accessToken: String) {
         
         AppDelegate.sharedOCCommunication().setValueOfUserAgent(UtilsUrls.getUserAgent())
 
@@ -58,21 +68,26 @@ import Foundation
                 break
             }
         default:
-            AppDelegate.sharedOCCommunication().setCredentialsWithUser(username, andPassword: accessToken)
+            AppDelegate.sharedOCCommunication().setCredentialsWithUser(userName, andPassword: accessToken)
             break
         }
     }
     
     
-    func getListOfFiles(url:URL, authType: AuthenticationMethod, accessToken: String) -> Array<Any> {
+    func getListOfFiles(url:URL, authType: AuthenticationMethod, userName: String, accessToken: String, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [Any]? ) -> Void) {
         
-//        self.readFolderRequest(url, authType: authType, username: nil, accessToken: accessToken) { (httpResponse: HTTPURLResponse?, error: Error?) in
-//        
-//
-//        }
-        var items: Array = [""]
-        
-        return items
+        self.readFolderRequest(url: url, authType: authType, userName: userName, accessToken: accessToken) { (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) in
+            
+            var listOfFileDtos: [Any]? = nil
+            
+            if (listOfFiles != nil && !((listOfFiles?.isEmpty)!)) {
+                //Pass the listOfFiles with OCFileDto to FileDto Array
+                listOfFileDtos = UtilsDtos.pass(toFileDtoArrayThisOCFileDtoArray: listOfFiles) as? [Any]
+                completion(errorHttp, error, listOfFileDtos)
+            } else {
+                 completion(errorHttp, error, nil)
+            }
+        }
     }
     
 }
