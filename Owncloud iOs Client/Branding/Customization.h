@@ -41,7 +41,7 @@
 #define k_have_image_background_navigation_bar NO
 
 //Have oauth active
-#define k_is_oauth_active NO
+#define k_is_oauth_active NO //Not use, oauth is auto detected if the server supports it
 
 //Have SAML active
 #define k_is_sso_active NO
@@ -160,15 +160,13 @@
 //oauth2
 #define k_oauth2_authorization_endpoint @"index.php/apps/oauth2/authorize"
 #define k_oauth2_token_endpoint @"index.php/apps/oauth2/api/v1/token"
-#define k_oauth2_redirect_uri @"oc://android.owncloud.com"
-#define k_oauth2_client_id @"e4rAsNUSIUs0lF4nbv9FmCeUkTlV9GdgTLDH1b5uie7syb90SzEVrbN7HIpmWJeD"
-#define k_oauth2_client_secret @"dInFYGV33xKzhbRmpqQltYNdfLdJIfJ9L5ISoKhNoT9qZftpdWSP71VrpGR9pmoD"
-//#define k_oauth2_redirect_uri @"oc://ios.owncloud.com"
-//#define k_oauth2_client_id @"mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1"
-//#define k_oauth2_client_secret @"KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx"
+#define k_oauth2_redirect_uri @"oc://ios.owncloud.com"
+#define k_oauth2_client_id @"mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1"
+#define k_oauth2_client_secret @"KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx"
 
 
 
+//Following getters required to Bridging with Swift
 @interface Customization : NSObject
 
 +(BOOL)kIsSsoActive;
