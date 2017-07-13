@@ -59,20 +59,22 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
     
 
     
-    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ dataDict: Dictionary<String, String>? ,_ error: String?) -> Void)  {
+    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ authDataDict: NSDictionary? ,_ error: String?) -> Void)  {
         
         self.accessTokenAuthRequest(url, authCode: authCode, withCompletion: { (data:Data?, httpResponse:HTTPURLResponse?, error:Error?) in
             
             if data != nil {
 
                 do {
-                    if let dictJSON = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any]  {
+                    if let dictJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary  {
                         
                         if let resultError = dictJSON["error"] {
-                            completion(dictJSON as? Dictionary<String, String>, resultError as? String)
+                            completion(nil, resultError as? String)
                         } else {
-                            completion(nil, error?.localizedDescription)
+                            completion(dictJSON, nil)
                         }
+                    } else {
+                        completion(nil, error?.localizedDescription)
                     }
                     
                 } catch let error {

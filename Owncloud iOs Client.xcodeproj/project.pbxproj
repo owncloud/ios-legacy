@@ -369,6 +369,7 @@
 		40AB65111EAFA10000379361 /* ShareLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AB650F1EAFA10000379361 /* ShareLinkViewController.m */; };
 		40AB65121EAFA10000379361 /* ShareLinkViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40AB65101EAFA10000379361 /* ShareLinkViewController.xib */; };
 		40AC24D219FE725600582867 /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
+		40B083991F1607D90072574A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B083981F1607D90072574A /* Log.swift */; };
 		40C01ED91F0FA923002DCAAA /* DetectListOfFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C01ED81F0FA923002DCAAA /* DetectListOfFiles.swift */; };
 		40C0BDB91C46562A0057B1DD /* SharePrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */; };
 		40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */; };
@@ -1551,6 +1552,7 @@
 		40AB65101EAFA10000379361 /* ShareLinkViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareLinkViewController.xib; path = Tabs/FileTab/Share/ShareLinkViewController.xib; sourceTree = "<group>"; };
 		40AC24D019FE725600582867 /* CredentialsDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CredentialsDto.h; path = DataBase/DTOs/CredentialsDto.h; sourceTree = "<group>"; };
 		40AC24D119FE725600582867 /* CredentialsDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CredentialsDto.m; path = DataBase/DTOs/CredentialsDto.m; sourceTree = "<group>"; };
+		40B083981F1607D90072574A /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		40C01ED81F0FA923002DCAAA /* DetectListOfFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetectListOfFiles.swift; path = Network/ReadFolder/DetectListOfFiles.swift; sourceTree = "<group>"; };
 		40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SharePrivilegeCell.xib; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.xib; sourceTree = "<group>"; };
 		40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharePrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.swift; sourceTree = "<group>"; };
@@ -2130,6 +2132,7 @@
 				1324298815ADBB3700DF823E /* main.m */,
 				1324298A15ADBB3700DF823E /* Owncloud iOs Client-Prefix.pch */,
 				40A1F1801D8857740078C901 /* InfoPlist.strings */,
+				40B083981F1607D90072574A /* Log.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -4886,6 +4889,7 @@
 				59C9D324195C0EFB00400AE2 /* ManageNetworkErrors.m in Sources */,
 				BC855ACD1E0D4B0200998CB7 /* FLAnimatedImage.m in Sources */,
 				EA68969017F599060033B3C1 /* KKPasscodeSettingsViewController.m in Sources */,
+				40B083991F1607D90072574A /* Log.swift in Sources */,
 				59C71D121A9216AE00F66166 /* CGPDFDocument.m in Sources */,
 				400A63671B4FD75600890579 /* IFTTTAnimation.m in Sources */,
 				EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */,

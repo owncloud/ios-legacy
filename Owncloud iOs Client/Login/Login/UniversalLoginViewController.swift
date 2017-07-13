@@ -31,7 +31,7 @@ struct K {
     
 }
 
-@objc class UniversalLoginViewController: UIViewController, UITextFieldDelegate, CheckAccessToServerDelegate, SSODelegate {
+@objc class UniversalLoginViewController: UIViewController, UITextFieldDelegate, CheckAccessToServerDelegate, SSODelegate, ManageNetworkErrorsDelegate {
  
 // MARK: IBOutlets
     
@@ -45,10 +45,24 @@ struct K {
     var allAvailableAuthMethods = [AuthenticationMethod]()
     var authMethodToLogin: AuthenticationMethod!
     var authCodeReceived = ""
-
+    var manageNetworkErrors: ManageNetworkErrors!
+    var loginMode: LoginMode!
+    
+//    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+//        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+//        
+//
+//    }
+//    
+//    required init?(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.manageNetworkErrors = ManageNetworkErrors()
+        self.manageNetworkErrors.delegate = self
         textFieldURL.delegate = self;
         self.buttonConnect.isEnabled = false
         // Do any additional setup after loading the view.
@@ -175,6 +189,11 @@ struct K {
         print("LOL");
     }
   
+// MARK: ManageNetworkError delegate
+    
+    func errorLogin() {
+        //TOOD: SHow error in url footer
+    }
     
 // MARK: SSODelegate
     
@@ -219,27 +238,31 @@ struct K {
                 self.authCodeReceived = webVC.authCode
                 
                 let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.urlNormalized)
-                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { (dataDict: Dictionary<String, String>?, error: String?) in
+                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { (authDataDict: NSDictionary?, error: String?) in
                 
-                    if (dataDict != nil) {
+                    if (authDataDict != nil) {
                         //getfiles, if ok store new account
                         let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.urlNormalized) )
-                        let items: Array = DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, authType: self.authMethodToLogin, accessToken: self.authCodeReceived)
                         
-                        if (items.isEmpty) {
-                            //Pass the items with OCFileDto to FileDto Array
-                            var directoryList: NSMutableArray = UtilsDtos.pass(toFileDtoArrayThisOCFileDtoArray: items)
-                           // [self createUserAndDataInTheSystemWithRequest:directoryList andCode:response.statusCode];
-                        } else {
-                            print(items)
-                            //TODO: store new account
+                        if let userName = authDataDict?["user_id"], let accessToken = authDataDict?["access_token"] {
+                            DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, authType: self.authMethodToLogin, userName:userName as! String, accessToken: accessToken as! String,
+                                                               withCompletion: { (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [Any]? ) in
+                                
+                                if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
+                                    //TODO: store new account
+                                    //TODO: [self createUserAndDataInTheSystemWithRequest:directoryList andCode:response.statusCode];
+                                    print(listOfFileDtos)
+                                    
+                                } else {
+                                  //handle errors
+                                  self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: errorHttp!, andError: error)
+                                }
+                            })
                         }
-                        
                         
                     } else {
                         
                     }
-
                 })
             }
         }
