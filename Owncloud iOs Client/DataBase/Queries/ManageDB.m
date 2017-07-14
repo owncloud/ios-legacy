@@ -632,7 +632,7 @@
     
     for (UserDto *user in currentUsers) {
          NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
-        if (![OCKeychain setCredentialsById:idString withUsername:user.username andPassword:user.password]){
+        if (![OCKeychain setCredentialsOfUser:user]){
             DLog(@"Failed setting credentials");
         }
         

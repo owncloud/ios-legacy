@@ -1823,7 +1823,7 @@
     NSError *error;
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
     
-    //if previous account is active we active the first by iduser
+    //if previous account is active we active the first by userId
     if(user.activeaccount) {
         
         [ManageUsersDB setActiveAccountAutomatically];

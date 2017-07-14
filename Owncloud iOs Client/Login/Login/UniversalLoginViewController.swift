@@ -238,20 +238,35 @@ struct K {
                 self.authCodeReceived = webVC.authCode
                 
                 let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.urlNormalized)
-                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { (authDataDict: NSDictionary?, error: String?) in
+                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { ( userCredDto: CredentialsDto?, error: String?) in
                 
-                    if (authDataDict != nil) {
+                    if (userCredDto != nil) {
+                        
                         //getfiles, if ok store new account
                         let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.urlNormalized) )
                         
-                        if let userName = authDataDict?["user_id"], let accessToken = authDataDict?["access_token"] {
-                            DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, authType: self.authMethodToLogin, userName:userName as! String, accessToken: accessToken as! String,
-                                                               withCompletion: { (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [Any]? ) in
+                        if let userName = userCredDto?.userName, let accessToken = userCredDto?.accessToken {
+                            DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, authType: self.authMethodToLogin, userName:userName , accessToken: accessToken,
+                                                               withCompletion: { (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) in
                                 
                                 if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
-                                    //TODO: store new account
-                                    //TODO: [self createUserAndDataInTheSystemWithRequest:directoryList andCode:response.statusCode];
-                                    print(listOfFileDtos)
+                                    
+                                    let user: UserDto = UserDto()
+                                    user.url = self.urlNormalized
+                                    user.username = userName
+                                    
+                                    user.ssl = self.urlNormalized.hasPrefix("https")
+                                    user.activeaccount = true
+                                    user.urlRedirected = (UIApplication.shared.delegate as! AppDelegate).urlServerRedirected
+                                    user.predefinedUrl = k_default_url_server
+                                    
+                                    ManageAccounts().storeAccountOfUser(user, withCredentials: userCredDto!)
+                                    
+                                    ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0)
+                                    
+                                    
+                                    //Generate the app interface
+                                  //  [app generateAppInterfaceFromLoginScreen:YES];
                                     
                                 } else {
                                   //handle errors
