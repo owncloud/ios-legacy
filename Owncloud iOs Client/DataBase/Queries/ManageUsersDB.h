@@ -27,7 +27,7 @@
  * Method that adds user into database
  * @userDto -> userDto (Object of a user info)
  */
-+(void) insertUser:(UserDto *)userDto;
++(UserDto *) insertUser:(UserDto *)userDto;
 
 /*
  * This method returns the active user of the app
