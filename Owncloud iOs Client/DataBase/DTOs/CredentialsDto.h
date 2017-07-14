@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -15,14 +15,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CredentialsDto : NSObject
+@interface CredentialsDto : NSObject <NSCopying>
 
-@property (nonatomic, copy) NSString *userId;
 @property (nonatomic, copy) NSString *userName;
-@property (nonatomic, copy) NSString *accesToken; //or passcode for basic auth
+@property (nonatomic, copy) NSString *accessToken; //or password for basic auth
 @property (nonatomic, copy) NSString *refreshToken;
 @property (nonatomic, copy) NSString *expiresIn;
 @property (nonatomic, copy) NSString *tokenType;
 
+
+- (void)encodeWithCoder:(NSCoder *)aCoder;
+- (id)initWithCoder:(NSCoder *)aDecoder;
 
 @end

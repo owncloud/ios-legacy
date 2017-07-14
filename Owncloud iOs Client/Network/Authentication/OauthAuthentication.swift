@@ -59,7 +59,7 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
     
 
     
-    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ authDataDict: NSDictionary? ,_ error: String?) -> Void)  {
+    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ userCredDto: CredentialsDto? ,_ error: String?) -> Void)  {
         
         self.accessTokenAuthRequest(url, authCode: authCode, withCompletion: { (data:Data?, httpResponse:HTTPURLResponse?, error:Error?) in
             
@@ -71,7 +71,15 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
                         if let resultError = dictJSON["error"] {
                             completion(nil, resultError as? String)
                         } else {
-                            completion(dictJSON, nil)
+                            
+                            let userCredDto: CredentialsDto = CredentialsDto()
+                            userCredDto.userName = dictJSON["user_id"] as? String
+                            userCredDto.accessToken = dictJSON["access_token"] as? String
+                            userCredDto.refreshToken = dictJSON["refresh_token"] as? String
+                            userCredDto.expiresIn = dictJSON["expires_in"] as? String
+                            userCredDto.tokenType = dictJSON["token_type"] as? String
+                            
+                            completion(userCredDto, nil)
                         }
                     } else {
                         completion(nil, error?.localizedDescription)
