@@ -36,9 +36,8 @@
 @implementation ManageUsersDB
 
 
-+(void) insertUser:(UserDto *)userDto {
++(UserDto *) insertUser:(UserDto *)userDto {
     
-    DLog(@"Insert user");
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -54,13 +53,17 @@
         
     }];
     
-    //Insert last user inserted in the keychain
-    UserDto *lastUser = [self getLastUserInserted];
-    NSString *idString = [NSString stringWithFormat:@"%ld", (long)lastUser.idUser];
     
-    if (![OCKeychain setCredentialsById:idString withUsername:userDto.username andPassword:userDto.password]) {
-        DLog(@"Failed setting credentials");
+    UserDto *lastUser = [self getLastUserInserted];
+    
+    if (lastUser) {
+        lastUser.username = userDto.username;
+        DLog(@"User %@ inserted in DB", userDto.username);
+    } else {
+        DLog(@"Error, not possible to insert user %@ in DB", userDto.username);
     }
+    
+    return lastUser;
     
 }
 
@@ -109,7 +112,7 @@
             
             CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
             output.username = credDto.userName;
-            output.password = credDto.accesToken;
+            output.password = credDto.accessToken;
             output.credDto = credDto;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
@@ -222,7 +225,7 @@
             
             CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
             output.username = credDto.userName;
-            output.password = credDto.accesToken;
+            output.password = credDto.accessToken;
             output.credDto = credDto;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
@@ -301,7 +304,7 @@
             
             CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
             current.username = credDto.userName;
-            current.password = credDto.accesToken;
+            current.password = credDto.accessToken;
             current.credDto = credDto;
             
             current.sortingType = [rs intForColumn:@"sorting_type"];

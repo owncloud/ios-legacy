@@ -354,6 +354,8 @@
 		4096E2491EB8650200318240 /* ShareWarningLinkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4096E2471EB8650200318240 /* ShareWarningLinkCell.swift */; };
 		4096E24A1EB8650200318240 /* ShareWarningLinkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4096E2481EB8650200318240 /* ShareWarningLinkCell.xib */; };
 		40A1F17E1D8857740078C901 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 40A1F1801D8857740078C901 /* InfoPlist.strings */; };
+		40A226AB1F179620003C678E /* ManageAccounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A226AA1F179620003C678E /* ManageAccounts.swift */; };
+		40A226AE1F179C2B003C678E /* ManageFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A226AD1F179C2B003C678E /* ManageFiles.swift */; };
 		40A3A0EB1CEC9B3A0056016A /* more-filledBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = 40A3A0E91CEC9B3A0056016A /* more-filledBlack.png */; };
 		40A3A0EC1CEC9B3A0056016A /* more-filledBlack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40A3A0EA1CEC9B3A0056016A /* more-filledBlack@2x.png */; };
 		40AB1F5B1A12392E003E7397 /* cancel_download_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 40AB1F591A12392E003E7397 /* cancel_download_white@3x.png */; };
@@ -1535,6 +1537,8 @@
 		4096E2471EB8650200318240 /* ShareWarningLinkCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareWarningLinkCell.swift; path = Tabs/FileTab/Share/Cells/ShareWarningLinkCell.swift; sourceTree = "<group>"; };
 		4096E2481EB8650200318240 /* ShareWarningLinkCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareWarningLinkCell.xib; path = Tabs/FileTab/Share/Cells/ShareWarningLinkCell.xib; sourceTree = "<group>"; };
 		40A1F17F1D8857740078C901 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		40A226AA1F179620003C678E /* ManageAccounts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManageAccounts.swift; path = Tabs/SettingTab/Account/ManageAccounts.swift; sourceTree = "<group>"; };
+		40A226AD1F179C2B003C678E /* ManageFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManageFiles.swift; path = Tabs/FileTab/ManageFiles.swift; sourceTree = "<group>"; };
 		40A3A0E91CEC9B3A0056016A /* more-filledBlack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more-filledBlack.png"; sourceTree = "<group>"; };
 		40A3A0EA1CEC9B3A0056016A /* more-filledBlack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more-filledBlack@2x.png"; sourceTree = "<group>"; };
 		40AB1F591A12392E003E7397 /* cancel_download_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel_download_white@3x.png"; sourceTree = "<group>"; };
@@ -2162,6 +2166,7 @@
 			isa = PBXGroup;
 			children = (
 				599D809E1A23366D0071B66E /* SimpleFileList */,
+				40A226AD1F179C2B003C678E /* ManageFiles.swift */,
 				EA42FA52180565CB0006DB7C /* OCTabBarController.h */,
 				EA42FA53180565CB0006DB7C /* OCTabBarController.m */,
 				EA42FA4C1804217D0006DB7C /* OCToolBar.h */,
@@ -2495,6 +2500,7 @@
 				13C4DEF71636736800638B1D /* Add Account */,
 				13C4DEF81636737300638B1D /* Cell */,
 				13C4DEF61636736200638B1D /* Edit Account */,
+				40A226AA1F179620003C678E /* ManageAccounts.swift */,
 			);
 			name = Accounts;
 			sourceTree = "<group>";
@@ -4763,6 +4769,7 @@
 				40D3F18E1EFD53E7004F0E22 /* WebLoginViewController.swift in Sources */,
 				40DD9AE01D228E0C008E99D6 /* UtilsNotifications.m in Sources */,
 				EABD89361BBE82D900DA5281 /* TSMessage.m in Sources */,
+				40A226AE1F179C2B003C678E /* ManageFiles.swift in Sources */,
 				59C71D231A9216AE00F66166 /* ThumbsMainToolbar.m in Sources */,
 				59C71D1A1A9216AE00F66166 /* ReaderMainToolbar.m in Sources */,
 				59EA36241BBE6C1E00C6CED0 /* IndexedForest.m in Sources */,
@@ -4918,6 +4925,7 @@
 				599D80A21A23366D0071B66E /* SimpleFileListTableViewController.m in Sources */,
 				EA0EFA1F1BEA6C6E009971AF /* ManageCapabilitiesDB.m in Sources */,
 				148DD6FE17786BF200FB9977 /* FileNameUtils.m in Sources */,
+				40A226AB1F179620003C678E /* ManageAccounts.swift in Sources */,
 				400A63741B4FD75600890579 /* IFTTTRotationAnimation.m in Sources */,
 				400A637C1B4FD75600890579 /* IFTTTTranslationAnimation.m in Sources */,
 				59C71D201A9216AE00F66166 /* ReaderThumbsView.m in Sources */,

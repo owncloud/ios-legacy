@@ -74,15 +74,19 @@ import Foundation
     }
     
     
-    func getListOfFiles(url:URL, authType: AuthenticationMethod, userName: String, accessToken: String, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [Any]? ) -> Void) {
+    func getListOfFiles(url:URL, authType: AuthenticationMethod, userName: String, accessToken: String, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) -> Void) {
         
         self.readFolderRequest(url: url, authType: authType, userName: userName, accessToken: accessToken) { (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) in
             
-            var listOfFileDtos: [Any]? = nil
+            var listOfFileDtos: [FileDto]? = nil
             
             if (listOfFiles != nil && !((listOfFiles?.isEmpty)!)) {
+                
+                print("\(String(describing: listOfFileDtos)) files found in this folder")
+                
                 //Pass the listOfFiles with OCFileDto to FileDto Array
-                listOfFileDtos = UtilsDtos.pass(toFileDtoArrayThisOCFileDtoArray: listOfFiles) as? [Any]
+                listOfFileDtos = UtilsDtos.pass(toFileDtoArrayThisOCFileDtoArray: listOfFiles) as? [FileDto]
+                
                 completion(errorHttp, error, listOfFileDtos)
             } else {
                  completion(errorHttp, error, nil)

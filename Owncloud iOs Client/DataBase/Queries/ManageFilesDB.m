@@ -472,6 +472,8 @@
             
             if (!correctQuery) {
                 DLog(@"Error in insertManyFiles");
+            } else {
+                DLog(@"Inserted %lu files in DB for file directory id=%ld", (unsigned long)[listOfFiles count], (long)fileId);
             }
             
         }];

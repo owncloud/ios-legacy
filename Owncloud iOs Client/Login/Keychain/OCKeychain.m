@@ -22,54 +22,19 @@
 
 @implementation OCKeychain
 
-
-+(BOOL)setCredentialsById:(NSString *)userId withUsername:(NSString *)userName andPassword:(NSString *)password{
-    
-    BOOL output = NO;
-    
-    [self setCredentialsById:userId withUsername:userName andData:[password dataUsingEncoding:NSUTF8StringEncoding]];
-    
-//    NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
-//    
-//    [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
-//    [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
-//    [keychainItem setObject:idUser forKey:(__bridge id)kSecAttrAccount];
-//    [keychainItem setObject:userName forKey:(__bridge id)kSecAttrDescription];
-//    [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
-//
-//    
-//    OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
-//    
-//    if(stsExist == errSecSuccess) {
-//        NSLog(@"Unable add item with id =%@ error",idUser);
-//    }else {
-//        [keychainItem setObject:[password dataUsingEncoding:NSUTF8StringEncoding] forKey:(__bridge id)kSecValueData];
-//        OSStatus stsAdd = SecItemAdd((__bridge CFDictionaryRef)keychainItem, NULL);
-//        
-//        NSLog(@"(setCredentials)Error Code: %d", (int)stsAdd);
-//        if (stsAdd == errSecSuccess) {
-//            output = YES;
-//        }
-//        
-//    }
-    
-    return output;
-}
-
 //TODO: TAKE INTO ACCOUNT UPGRADE ITEMS
 
-+(BOOL)setCredentialsById:(NSString *)userId
-             withUsername:(NSString *)userName
-              andData:(NSData *)data {
-    
++(BOOL)setCredentialsOfUser:(UserDto *)user {
+
     BOOL output = NO;
+    NSString *userId = [NSString stringWithFormat:@"%ld",(long)user.idUser];
     
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
     [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
     [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
     [keychainItem setObject:userId forKey:(__bridge id)kSecAttrAccount];
-    [keychainItem setObject:userName forKey:(__bridge id)kSecAttrDescription];
+    [keychainItem setObject:user.credDto.userName forKey:(__bridge id)kSecAttrDescription];
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
 
     
@@ -78,15 +43,20 @@
     if(stsExist == errSecSuccess) {
         NSLog(@"Unable add item with id =%@ error",userId);
     }else {
-        [keychainItem setObject:data forKey:(__bridge id)kSecValueData];
+        
+        if (user.credDto) {
+            
+            NSData *encodedCredDto = [NSKeyedArchiver archivedDataWithRootObject:user.credDto];
+
+            [keychainItem setObject:encodedCredDto forKey:(__bridge id)kSecValueData];
+        }
         
         OSStatus stsAdd = SecItemAdd((__bridge CFDictionaryRef)keychainItem, NULL);
         
-        NSLog(@"(setCredentials)Error Code: %d", (int)stsAdd);
+        NSLog(@"(setCredentials)Error Code: %d (0 = success)", (int)stsAdd);
         if (stsAdd == errSecSuccess) {
             output = YES;
         }
-        
     }
     
     return output;
@@ -94,7 +64,7 @@
 
 +(CredentialsDto *)getCredentialsById:(NSString *)idUser{
     
-    CredentialsDto *output = nil;
+    CredentialsDto *decodedCredDto = nil;
     
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
@@ -112,7 +82,7 @@
     
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, (CFTypeRef *)&result);
     
-    DLog(@"(getCredentials)Error Code %d", (int)stsExist);
+    DLog(@"(getCredentials)Error Code %d (0 = success)", (int)stsExist);
     
     if (stsExist != errSecSuccess) {
         NSLog(@"Unable to get the item with id =%@ ",idUser);
@@ -121,31 +91,12 @@
         
         NSDictionary *resultDict = (__bridge_transfer NSDictionary *)result;
         
-        NSData *resultData = resultDict[(__bridge id)kSecValueData];
+        NSData *encodedCredDto = resultDict[(__bridge id)kSecValueData];
         
-        output = [CredentialsDto new];
-        
-        NSError *jsonError;
-        NSDictionary* json = [NSJSONSerialization JSONObjectWithData:resultData
-                                                             options:kNilOptions
-                                                               error:&jsonError];
-        if(jsonError) {
-            //basic auth
-            output.accesToken = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
-            output.userName = resultDict[(__bridge id)kSecAttrDescription];
-
-        } else {
-            //oauth auth
-            output.accesToken = [json objectForKey:@"access_token"];
-            output.userName = [json objectForKey:@"user_id"];
-
-            output.refreshToken = [json objectForKey:@"refresh_token"];
-            output.expiresIn = [json objectForKey:@"epires_in"];
-            output.tokenType = [json objectForKey:@"token_type"];
-        }
+        decodedCredDto = [NSKeyedUnarchiver unarchiveObjectWithData: encodedCredDto];
     }
     
-    return output;
+    return decodedCredDto;
 }
 
 +(BOOL)removeCredentialsById:(NSString *)idUser{
@@ -167,7 +118,7 @@
         NSLog(@"Unable to delete the item with id =%@ ",idUser);
     } else {
         OSStatus sts = SecItemDelete((__bridge CFDictionaryRef)keychainItem);
-        NSLog(@"Error Code: %d", (int)sts);
+        NSLog(@"Error Code: %d (0 = success)", (int)sts);
         if (sts == errSecSuccess) {
             output = YES;
         }
@@ -206,7 +157,7 @@
         
         OSStatus stsUpd = SecItemUpdate((__bridge CFDictionaryRef)(keychainItem), (__bridge CFDictionaryRef)(attrToUpdate));
         
-        NSLog(@"(updateKeychainCredentials)Error Code: %d", (int)stsUpd);
+        NSLog(@"(updateKeychainCredentials)Error Code: %d (0 = success)", (int)stsUpd);
         
         if (stsUpd == errSecSuccess) {
             output = YES;
@@ -240,7 +191,7 @@
         
         OSStatus stsUpd = SecItemUpdate((__bridge CFDictionaryRef)(keychainItem), (__bridge CFDictionaryRef)(attrToUpdate));
         
-        DLog(@"(updateLockProperty)Error Code: %d", (int)stsUpd);
+        DLog(@"(updateLockProperty)Error Code: %d (0 = success)", (int)stsUpd);
         
         if (stsUpd == errSecSuccess) {
             output = YES;
@@ -262,7 +213,7 @@
     [keychainQuery setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
     OSStatus sts = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
-    NSLog(@"Reset keychain Error Code: %d", (int)sts);
+    NSLog(@"Reset keychain Error Code: %d (0 = success)", (int)sts);
     if (sts == errSecSuccess) {
         output = YES;
     }

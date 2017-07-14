@@ -18,10 +18,7 @@
 
 @interface OCKeychain : NSObject
 
-+(BOOL)setCredentialsById:(NSString *)idUser withUsername:(NSString *)userName andPassword:(NSString *)password;
-+(BOOL)setCredentialsById:(NSString *)userId
-             withUsername:(NSString *)userName
-                  andData:(NSData *)data;
++(BOOL)setCredentialsOfUser:(UserDto *)user;
 +(CredentialsDto *)getCredentialsById:(NSString *)idUser;
 +(BOOL)removeCredentialsById:(NSString *)idUser;
 +(BOOL)updateCredentialsById:(NSString *)idUser withUsername:(NSString *)userName andPassword:(NSString *)password;
