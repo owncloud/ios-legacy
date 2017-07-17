@@ -81,8 +81,6 @@ struct K {
     
     func checkCurrentUrl() {
         
-        textFieldURL.resignFirstResponder()
-
        //let stringURL = textFieldURL.text
     
         self.urlNormalized = textFieldURL.text //TODO: normalize url
@@ -94,7 +92,6 @@ struct K {
         let checkAccessToServer : CheckAccessToServer = CheckAccessToServer.sharedManager() as! CheckAccessToServer
         checkAccessToServer.delegate = self
         checkAccessToServer.isConnectionToTheServer(byUrl: self.urlNormalized)
-        
     }
     
     
@@ -147,7 +144,7 @@ struct K {
         performSegue(withIdentifier: K.segueId.segueToWebLoginView, sender: self)
     }
     
-// MARK:  CheckAccessToServer delegate
+// MARK:  CheckAccessToServerDelegate implementation
     
     func connection(toTheServer isConnection: Bool) {
         if isConnection {
@@ -186,7 +183,8 @@ struct K {
     }
     
     func repeatTheCheckToTheServer() {
-        print("LOL");
+        // just glue
+        checkCurrentUrl()
     }
   
 // MARK: ManageNetworkError delegate
