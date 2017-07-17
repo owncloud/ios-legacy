@@ -413,17 +413,6 @@ static NSString *const tmpFileName = @"tmp.der";
     
     DLog(@"Request: %@", request.URL.absoluteString);
     DLog(@"redirectResponse: %@", redirectResponse.URL.absoluteString);
-    if (redirectResponse)
-    {
-        NSMutableURLRequest *newRequest = [request mutableCopy]; // original request
-        
-        [newRequest setURL: [request URL]];
-        
-        NSLog (@"redirected");
-        self.authRequest = newRequest;
-        return newRequest;
-    }
-    
     return request;
 }
 
