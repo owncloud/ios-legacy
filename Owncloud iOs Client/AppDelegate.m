@@ -461,23 +461,7 @@ float shortDelay = 0.3;
     [self.window makeKeyAndVisible];
 }
 
-///-----------------------------------
-/// @name Generate App Interface
-///-----------------------------------
 
-/**
- * This method generate the app interface
- * 
- * For iPhone: 
- *    - TabBarController with three items:
- *           - File list
- *           - Recents view
- *           - Settings view
- * For iPad:
- *    - The same TabBarController with three items.
- *    - Detail View.
- *
- */
 - (void) generateAppInterfaceFromLoginScreen:(BOOL)isFromLogin{
     
     self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
