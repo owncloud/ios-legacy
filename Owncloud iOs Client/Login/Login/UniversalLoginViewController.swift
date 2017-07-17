@@ -266,10 +266,10 @@ struct K {
                                     
                                     
                                     //Generate the app interface
-                                  //  [app generateAppInterfaceFromLoginScreen:YES];
+                                    (UIApplication.shared.delegate as! AppDelegate).generateAppInterface(fromLoginScreen: true)
                                     
                                 } else {
-                                  //handle errors
+                        
                                   self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: errorHttp!, andError: error)
                                 }
                             })
