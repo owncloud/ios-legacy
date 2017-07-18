@@ -18,10 +18,11 @@
 @interface CredentialsDto : NSObject <NSCopying>
 
 @property (nonatomic, copy) NSString *userName;
-@property (nonatomic, copy) NSString *accessToken; //or password for basic auth
+@property (nonatomic, copy) NSString *accessToken; // password for basic auth, cookies for SAML, access token for OAuth2...
 @property (nonatomic, copy) NSString *refreshToken;
 @property (nonatomic, copy) NSString *expiresIn;
 @property (nonatomic, copy) NSString *tokenType;
+@property (nonatomic, copy) NSString *authenticationMethod;
 
 
 - (void)encodeWithCoder:(NSCoder *)aCoder;
