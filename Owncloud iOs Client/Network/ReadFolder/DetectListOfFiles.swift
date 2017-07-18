@@ -19,11 +19,11 @@ import Foundation
 
 @objc class DetectListOfFiles: NSObject {
     
-    func readFolderRequest(url: URL, authType: AuthenticationMethod, userName: String?, accessToken: String, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) -> Void ) {
+    func readFolderRequest(url: URL, /*authType: AuthenticationMethod, userName: String?, accessToken: String,*/ credentials: CredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) -> Void ) {
         
-        self.setCredentialsAndUserAgentWith(authType: authType, userName: userName, accessToken: accessToken)
+        self.setCredentialsAndUserAgentWith(credentials: credentials)
         
-        AppDelegate.sharedOCCommunication().readFolder(url.absoluteString, withUserSessionToken: accessToken, on: AppDelegate.sharedOCCommunication(),
+        AppDelegate.sharedOCCommunication().readFolder(url.absoluteString, withUserSessionToken: credentials.accessToken, on: AppDelegate.sharedOCCommunication(),
             
            successRequest: { (response: HTTPURLResponse?, items: [Any]?, redirectedServer: String?, token: String?) in
             
@@ -54,27 +54,24 @@ import Foundation
     }
     
     
-    func setCredentialsAndUserAgentWith(authType: AuthenticationMethod, userName: String?, accessToken: String) {
+    func setCredentialsAndUserAgentWith(credentials: CredentialsDto) {
         
         AppDelegate.sharedOCCommunication().setValueOfUserAgent(UtilsUrls.getUserAgent())
-
-        switch authType {
+        let authenticationMethod = AuthenticationMethod(rawValue: credentials.authenticationMethod);
+        switch authenticationMethod! {
         case .BEARER_TOKEN:
-            AppDelegate.sharedOCCommunication().setCredentialsOauthWithToken(accessToken)
-            break
+            AppDelegate.sharedOCCommunication().setCredentialsOauthWithToken(credentials.accessToken)
         case .SAML_WEB_SSO:
-            AppDelegate.sharedOCCommunication().setCredentialsWithCookie(accessToken)
-            break
+            AppDelegate.sharedOCCommunication().setCredentialsWithCookie(credentials.accessToken)
         default:
-            AppDelegate.sharedOCCommunication().setCredentialsWithUser(userName, andPassword: accessToken)
-            break
+            AppDelegate.sharedOCCommunication().setCredentialsWithUser(credentials.userName, andPassword: credentials.accessToken)
         }
     }
     
     
-    func getListOfFiles(url:URL, authType: AuthenticationMethod, userName: String, accessToken: String, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) -> Void) {
+    func getListOfFiles(url:URL, credentials: CredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) -> Void) {
         
-        self.readFolderRequest(url: url, authType: authType, userName: userName, accessToken: accessToken) { (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) in
+        self.readFolderRequest(url: url, credentials: credentials) { (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) in
             
             var listOfFileDtos: [FileDto]? = nil
             

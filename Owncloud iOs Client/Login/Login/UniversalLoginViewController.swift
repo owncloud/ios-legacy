@@ -223,36 +223,8 @@ struct K {
         userCredDto.accessToken = cookieString
         userCredDto.authenticationMethod = self.authMethodToLogin.rawValue
         
-       //get list of files in root to check session validty, if ok store new account
-        let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.urlNormalized) )
-            
-        DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, authType: self.authMethodToLogin, userName:samlUserName , accessToken: cookieString,
-                withCompletion: { (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) in
-                        if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
-                            
-                            let user: UserDto = UserDto()
-                            user.url = self.urlNormalized
-                            user.username = samlUserName
-                                                                    
-                            user.ssl = self.urlNormalized.hasPrefix("https")
-                            user.activeaccount = true
-                            user.urlRedirected = (UIApplication.shared.delegate as! AppDelegate).urlServerRedirected
-                            user.predefinedUrl = k_default_url_server
-                                                                    
-                            ManageAccounts().storeAccountOfUser(user, withCredentials: userCredDto)
-                                                                    
-                            ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0)
-                                                                    
-                            //Generate the app interface
-                            (UIApplication.shared.delegate as! AppDelegate).generateAppInterface(fromLoginScreen: true)
-                                                                    
-                        } else {
-                                                                    
-                            self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: errorHttp!, andError: error)
-                        }
-                }
-        )
-    
+        validateCredentialsAndCreateNewAccount(credentials: userCredDto);
+        
     }
 
     
@@ -293,43 +265,12 @@ struct K {
                 let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.urlNormalized)
                 OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { ( userCredDto: CredentialsDto?, error: String?) in
                 
-                    if (userCredDto != nil) {
+                    if let userCredentials = userCredDto {
                         
-                        //getfiles, if ok store new account
-                        let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.urlNormalized) )
-                        
-                        if let userName = userCredDto?.userName, let accessToken = userCredDto?.accessToken {
-                            DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, authType: self.authMethodToLogin, userName:userName , accessToken: accessToken,
-                                                               withCompletion: { (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) in
-                                
-                                if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
-                                    
-                                    let user: UserDto = UserDto()
-                                    user.url = self.urlNormalized
-                                    user.username = userName
-                                    
-                                    user.ssl = self.urlNormalized.hasPrefix("https")
-                                    user.activeaccount = true
-                                    user.urlRedirected = (UIApplication.shared.delegate as! AppDelegate).urlServerRedirected
-                                    user.predefinedUrl = k_default_url_server
-                                    
-                                    ManageAccounts().storeAccountOfUser(user, withCredentials: userCredDto!)
-                                    
-                                    ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0)
-                                    
-                                    
-                                    //Generate the app interface
-                                    (UIApplication.shared.delegate as! AppDelegate).generateAppInterface(fromLoginScreen: true)
-                                    
-                                } else {
-                        
-                                  self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: errorHttp!, andError: error)
-                                }
-                            })
-                        }
+                        self.validateCredentialsAndCreateNewAccount(credentials: userCredentials);
                         
                     } else {
-                        
+                        // TODO show error?
                     }
                 })
             }
@@ -347,5 +288,40 @@ struct K {
         }
     }
     
+    
+// MARK: 'private' methods
+    
+    func validateCredentialsAndCreateNewAccount(credentials: CredentialsDto) {
+        //get list of files in root to check session validty, if ok store new account
+        let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.urlNormalized) )
+        
+        DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, credentials: credentials,
+                                           withCompletion: { (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) in
+                                            
+                                            if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
+                                                
+                                                let user: UserDto = UserDto()
+                                                user.url = self.urlNormalized
+                                                user.username = credentials.userName
+                                                
+                                                user.ssl = self.urlNormalized.hasPrefix("https")
+                                                user.activeaccount = true
+                                                user.urlRedirected = (UIApplication.shared.delegate as! AppDelegate).urlServerRedirected
+                                                user.predefinedUrl = k_default_url_server
+                                                
+                                                ManageAccounts().storeAccountOfUser(user, withCredentials: credentials)
+                                                
+                                                ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0)
+                                                
+                                                //Generate the app interface
+                                                (UIApplication.shared.delegate as! AppDelegate).generateAppInterface(fromLoginScreen: true)
+                                                
+                                            } else {
+                                                
+                                                self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: errorHttp!, andError: error)
+                                            }
+        })
+        
+    }
     
 }
