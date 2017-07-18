@@ -193,11 +193,66 @@ struct K {
         //TOOD: SHow error in url footer
     }
     
-// MARK: SSODelegate
+// MARK: SSODelegate implementation
     
+    
+    /**
+     * This delegate method is called from SSOViewController when the user
+     * successfully logs-in.
+     *
+     * @param cookieString -> NSString      Cookies in last state of the SSO WebView , including SSO cookie & OC session cookie.
+     * @param samlUserName -> NSString      Username.
+     *
+     */
     func setCookieForSSO(_ cookieString: String!, andSamlUserName samlUserName: String!) {
-        // TODO
+
         print("BACK with cookieString %@ and samlUserName %@", cookieString, samlUserName);
+        
+        if cookieString == nil || cookieString == "" {
+            // TODO show error
+            return;
+        }
+        
+        if samlUserName == nil || samlUserName == "" {
+            // TODO show error NSLocalizedString(@"saml_server_does_not_give_user_id", nil)
+            return
+        }
+        
+        let userCredDto: CredentialsDto = CredentialsDto()
+        userCredDto.userName = samlUserName
+        userCredDto.accessToken = cookieString
+        userCredDto.authenticationMethod = self.authMethodToLogin.rawValue
+        
+       //get list of files in root to check session validty, if ok store new account
+        let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.urlNormalized) )
+            
+        DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, authType: self.authMethodToLogin, userName:samlUserName , accessToken: cookieString,
+                withCompletion: { (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) in
+                        if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
+                            
+                            let user: UserDto = UserDto()
+                            user.url = self.urlNormalized
+                            user.username = samlUserName
+                                                                    
+                            user.ssl = self.urlNormalized.hasPrefix("https")
+                            user.activeaccount = true
+                            user.urlRedirected = (UIApplication.shared.delegate as! AppDelegate).urlServerRedirected
+                            user.predefinedUrl = k_default_url_server
+                                                                    
+                            ManageAccounts().storeAccountOfUser(user, withCredentials: userCredDto)
+                                                                    
+                            ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0)
+                                                                    
+                            //Generate the app interface
+                            (UIApplication.shared.delegate as! AppDelegate).generateAppInterface(fromLoginScreen: true)
+                                                                    
+                        } else {
+                                                                    
+                            self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: errorHttp!, andError: error)
+                        }
+                }
+        )
+    
     }
 
     

@@ -34,6 +34,7 @@ import Foundation
             
         } else {
             //error storing account
+            print("Error storing account for \(user.username)")
         }
         
         
