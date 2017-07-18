@@ -63,10 +63,8 @@ import Foundation
             AppDelegate.sharedOCCommunication().setCredentialsOauthWithToken(accessToken)
             break
         case .SAML_WEB_SSO:
-            if (Customization.kIsSsoActive()) {
-                AppDelegate.sharedOCCommunication().setCredentialsWithCookie(accessToken)
-                break
-            }
+            AppDelegate.sharedOCCommunication().setCredentialsWithCookie(accessToken)
+            break
         default:
             AppDelegate.sharedOCCommunication().setCredentialsWithUser(userName, andPassword: accessToken)
             break
