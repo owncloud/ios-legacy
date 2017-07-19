@@ -54,6 +54,8 @@ struct K {
     @IBOutlet var buttonConnect: UIButton!
     @IBOutlet var buttonHelpLink: UIButton!
     @IBOutlet var buttonReconnection: UIButton!
+    @IBOutlet var imageUrlFooter: UIImageView!
+    @IBOutlet var labelUrlFooter: UILabel!
     
     var urlNormalized: String!
     var allAvailableAuthMethods = [AuthenticationMethod]()
@@ -186,6 +188,8 @@ struct K {
             })
             
         } else {
+            self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: 0, andError: nil)
+
             print("No connection to the server")
         }
         
@@ -234,6 +238,15 @@ struct K {
         
         validateCredentialsAndCreateNewAccount(credentials: userCredDto);
         
+    }
+    
+//MARK: Manage network errors delegate
+    public func showError(_ message: String!) {
+        DispatchQueue.main.async {
+            self.imageUrlFooter.isHidden = false
+            self.imageUrlFooter.image = UIImage(named: "CredentialsError.png")!
+            self.labelUrlFooter.text = message
+        }
     }
 
     
