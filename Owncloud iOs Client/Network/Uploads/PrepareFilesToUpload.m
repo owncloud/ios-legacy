@@ -22,7 +22,6 @@
 
 #import "UserDto.h"
 #import "constants.h"
-#import "EditAccountViewController.h"
 #import "UtilsDtos.h"
 #import "ManageUploadsDB.h"
 #import "FileNameUtils.h"

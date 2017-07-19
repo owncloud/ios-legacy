@@ -21,10 +21,10 @@
 #import "UserDto.h"
 #import "KKPasscodeViewController.h"
 #import "AccountCell.h"
-#import "AddAccountViewController.h"
 #import "MBProgressHUD.h"
 #import "SyncFolderManager.h"
 
+@class UniversalViewController;
 
 typedef enum {
     help = 0,
@@ -34,7 +34,7 @@ typedef enum {
     
 } enumInfoSetting;
 
-@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, AccountCellDelegate, AddAccountDelegate, MBProgressHUDDelegate, SyncFolderManagerDelegate>
+@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, AccountCellDelegate, MBProgressHUDDelegate, SyncFolderManagerDelegate>
 
 @property(nonatomic,strong)IBOutlet UITableView *settingsTableView;
 @property(nonatomic,strong)UISwitch *switchPasscode;

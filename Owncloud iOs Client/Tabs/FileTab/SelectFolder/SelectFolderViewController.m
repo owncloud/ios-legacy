@@ -36,7 +36,6 @@
 #import "FileListDBOperations.h"
 #import "UtilsDtos.h"
 #import "ManageFilesDB.h"
-#import "EditAccountViewController.h"
 #import "DetailViewController.h"
 #import "OCNavigationController.h"
 #import "OCCommunication.h"

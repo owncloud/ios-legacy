@@ -40,13 +40,13 @@
 #import "PrepareFilesToUpload.h"
 #import "RenameFile.h"
 #import "MoveFile.h"
-#import "EditAccountViewController.h"
 #import "SWTableViewCell.h"
 #import "OverwriteFileOptions.h"
 #import "ManageNetworkErrors.h"
 #import "SelectFolderViewController.h"
 #import "SelectFolderNavigation.h"
 #import "ManageFavorites.h"
+
 
 @interface FilesViewController : UIViewController
 <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate,
@@ -94,7 +94,7 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 //Refresh Control
 @property(nonatomic, strong) UIRefreshControl *refreshControl;
 //View about credentials error
-@property (nonatomic,strong) EditAccountViewController *resolvedCredentialError;
+@property (nonatomic,strong) UniversalLoginViewController *resolvedCredentialError;
 //UIActionSheet for "more" option on swipe
 @property (nonatomic,strong) UIActionSheet *moreActionSheet;
 //UIActionSheet for + button
