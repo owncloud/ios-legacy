@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina5_5" orientation="portrait">
+    <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -17,22 +17,22 @@
                         <viewControllerLayoutGuide type="bottom" id="Nrw-Uw-7nS"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="dxR-Vh-mRQ">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="CompanyLogo.png" translatesAutoresizingMaskIntoConstraints="NO" id="e8b-Rl-Mh0" userLabel="Image View Logo">
-                                <rect key="frame" x="0.0" y="48" width="414" height="128"/>
+                                <rect key="frame" x="0.0" y="48" width="375" height="128"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="K3Y-mX-EWx" userLabel="Text Field Url">
-                                <rect key="frame" x="57" y="236" width="300" height="30"/>
+                                <rect key="frame" x="57" y="236" width="261" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qcz-FW-RTp">
-                                <rect key="frame" x="152" y="327" width="108" height="30"/>
+                                <rect key="frame" x="133" y="448" width="108" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button Connect"/>
                                 <connections>
@@ -43,19 +43,19 @@
                                 <rect key="frame" x="24" y="239" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="hxl-mo-UHl" userLabel="Label Server Footer">
-                                <rect key="frame" x="57" y="279" width="300" height="30"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="hxl-mo-UHl" userLabel="Label Server Footer">
+                                <rect key="frame" x="57" y="275" width="261" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="w1a-U9-TaZ" userLabel="Image View Server url">
-                                <rect key="frame" x="24" y="279" width="25" height="25"/>
+                                <rect key="frame" x="24" y="275" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HUS-Qc-A5N" userLabel="Button Reconnection">
-                                <rect key="frame" x="365" y="239" width="32" height="25"/>
+                                <rect key="frame" x="326" y="239" width="32" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button" image="ReconnectIcon.png"/>
                                 <connections>
@@ -63,13 +63,39 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lUz-8C-zKg">
-                                <rect key="frame" x="142" y="396" width="129" height="30"/>
+                                <rect key="frame" x="123" y="517" width="129" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button url help link"/>
                                 <connections>
                                     <action selector="helpLinkButtonTapped:" destination="iPx-pb-eEh" eventType="touchUpInside" id="ZZ2-Ih-oNe"/>
                                 </connections>
                             </button>
+                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L65-Zl-2qP" userLabel="Text Field Username">
+                                <rect key="frame" x="57" y="315" width="261" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3io-Sx-qiv" userLabel="Text Field Password">
+                                <rect key="frame" x="57" y="350" width="261" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="user.png" translatesAutoresizingMaskIntoConstraints="NO" id="TgF-b1-q7W" userLabel="Image View Server url">
+                                <rect key="frame" x="24" y="315" width="25" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="password.png" translatesAutoresizingMaskIntoConstraints="NO" id="08w-Yb-JUy" userLabel="Image View Server url">
+                                <rect key="frame" x="24" y="355" width="25" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="RevealPasswordIcon.png" translatesAutoresizingMaskIntoConstraints="NO" id="HO3-T3-Mmy">
+                                <rect key="frame" x="326" y="353" width="25" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -77,16 +103,21 @@
                         <outlet property="buttonConnect" destination="qcz-FW-RTp" id="lkF-6G-Pnj"/>
                         <outlet property="buttonHelpLink" destination="lUz-8C-zKg" id="gnX-eE-ywn"/>
                         <outlet property="buttonReconnection" destination="HUS-Qc-A5N" id="c26-Ww-cpG"/>
-                        <outlet property="imageUrlFooter" destination="w1a-U9-TaZ" id="cDl-fV-ciI"/>
+                        <outlet property="imageViewLeftPassword" destination="08w-Yb-JUy" id="6Gr-Bt-R4e"/>
                         <outlet property="imageViewLogo" destination="e8b-Rl-Mh0" id="6bs-to-s7J"/>
+                        <outlet property="imageViewRightPassword" destination="HO3-T3-Mmy" id="9Cv-DN-oIY"/>
+                        <outlet property="imageViewUrlFooter" destination="w1a-U9-TaZ" id="BsP-jf-dEr"/>
+                        <outlet property="imageViewUsername" destination="TgF-b1-q7W" id="k70-cZ-xoz"/>
                         <outlet property="labelUrlFooter" destination="hxl-mo-UHl" id="OAn-Po-tDZ"/>
+                        <outlet property="textFieldPassword" destination="3io-Sx-qiv" id="Kf4-lG-kZ3"/>
                         <outlet property="textFieldURL" destination="K3Y-mX-EWx" id="evx-Ry-FVD"/>
+                        <outlet property="textFieldUsername" destination="L65-Zl-2qP" id="gQL-J4-iaP"/>
                         <segue destination="f4N-GJ-PQD" kind="presentation" identifier="segueToWebLoginView" id="S2O-4z-eW2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1kC-5M-QFu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="0.80000000000000004" y="36.431784107946029"/>
+            <point key="canvasLocation" x="0.0" y="35.7421875"/>
         </scene>
         <!--Basic Login View Controller-->
         <scene sceneID="0pK-kB-OY3">
@@ -97,7 +128,7 @@
                         <viewControllerLayoutGuide type="bottom" id="8vk-wX-RyQ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="4sS-h1-K1u">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sRS-t9-TB6" userLabel="Image View Logo">
@@ -179,16 +210,16 @@
                         <viewControllerLayoutGuide type="bottom" id="XkD-Kd-VX0"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="T26-kj-Ka7">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qbt-Jk-Nkc">
-                                <rect key="frame" x="0.0" y="44" width="414" height="692"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HV6-q5-DCr">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem id="Srt-MH-Z13">
