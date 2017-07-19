@@ -74,6 +74,7 @@ struct K {
         // Do any additional setup after loading the view.
         
         //set branding style
+        print("Init login with loginMode: \(loginMode.rawValue) (0=Create,1=Update,2=Expire,3=Migrate)")
     }
     
     override public func didReceiveMemoryWarning() {
