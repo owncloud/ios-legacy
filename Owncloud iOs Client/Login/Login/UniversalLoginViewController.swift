@@ -45,7 +45,7 @@ struct K {
 //TODO: check if need to setBarForCancelForLoadingFromModal in this class
 //TODO: check if neet to use the notification LoginViewControllerRotate from login view (- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration)
 
-@objc public class UniversalLoginViewController: UIViewController, UITextFieldDelegate, CheckAccessToServerDelegate, SSODelegate, ManageNetworkErrorsDelegate {
+@objc public class UniversalLoginViewController: UIViewController, UITextFieldDelegate, SSODelegate, ManageNetworkErrorsDelegate {
  
 // MARK: IBOutlets
     
@@ -58,6 +58,7 @@ struct K {
     @IBOutlet var labelUrlFooter: UILabel!
     
     var urlNormalized: String!
+    var validatedServerURL: String!
     var allAvailableAuthMethods = [AuthenticationMethod]()
     var authMethodToLogin: AuthenticationMethod!
     var authCodeReceived = ""
@@ -65,6 +66,7 @@ struct K {
     var loginMode: LoginMode!
     
     let serverURLNormalizer: ServerURLNormalizer = ServerURLNormalizer()
+    let getPublicInfoFromServerJob: GetPublicInfoFromServerJob = GetPublicInfoFromServerJob()
     
     
     override public func viewDidLoad() {
@@ -96,11 +98,31 @@ struct K {
         if let inputURL = textFieldURL.text {
             self.urlNormalized = serverURLNormalizer.normalize(serverURL: inputURL)
 
-            //check status and get authmethods available
-        
-            let checkAccessToServer : CheckAccessToServer = CheckAccessToServer.sharedManager() as! CheckAccessToServer
-            checkAccessToServer.delegate = self
-            checkAccessToServer.isConnectionToTheServer(byUrl: self.urlNormalized)
+            // get public infor from server
+            getPublicInfoFromServerJob.start(serverURL: self.urlNormalized, withCompletion: { (validatedURL: String?, _ serverAuthenticationMethods: Array<Any>?, _ error: Error?, _ httpStatusCode: NSInteger) in
+                
+                if error != nil {
+                    //TODO: show error
+                    print ("error detecting authentication methods")
+                    
+                } else if validatedURL != nil {
+
+                    self.validatedServerURL = validatedURL;
+                    self.allAvailableAuthMethods = serverAuthenticationMethods as! [AuthenticationMethod]
+                    
+                    self.authMethodToLogin = DetectAuthenticationMethod().getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
+                    
+                    if (self.authMethodToLogin != .NONE) {
+                        self.buttonConnect.isEnabled = true
+                    } else {
+                        self.buttonConnect.isEnabled = false
+                        //TODO show error
+                    }
+                    
+                } else {
+                    self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: httpStatusCode, andError: nil)
+                }
+            })
         }
     }
     
@@ -154,51 +176,7 @@ struct K {
         performSegue(withIdentifier: K.segueId.segueToWebLoginView, sender: self)
     }
     
-// MARK:  CheckAccessToServerDelegate implementation
-    
-    public func connection(toTheServer isConnection: Bool) {
-        if isConnection {
-            print("Ok connection to the server")
-            
-            let stringUrl = self.urlNormalized + k_url_webdav_server
-            let urlToCheck: URL = URL(string: stringUrl)!
-            
-            DetectAuthenticationMethod().getAuthenticationMethodsAvailableBy(url: urlToCheck, withCompletion: { (authMethods: Array<Any>?, error: Error?) in
-                
-                if authMethods != nil {
-                    self.allAvailableAuthMethods = authMethods as! [AuthenticationMethod];
-                    //do things, open webview
-                    
-                    self.authMethodToLogin = DetectAuthenticationMethod().getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
-                    
-                    if (self.authMethodToLogin != .NONE) {
-                        self.buttonConnect.isEnabled = true
-                    } else {
-                        self.buttonConnect.isEnabled = false
-                        //TODO show error
-                    }
-                    
-                } else if error != nil{
-                    //TODO: show error
-                    print ("error detecting authentication methods")
-                }
-                
-                
-            })
-            
-        } else {
-            self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: 0, andError: nil)
 
-            print("No connection to the server")
-        }
-        
-    }
-    
-    public func repeatTheCheckToTheServer() {
-        // just glue
-        checkCurrentUrl()
-    }
-  
 // MARK: ManageNetworkError delegate
     
     public func errorLogin() {
