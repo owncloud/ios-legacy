@@ -31,8 +31,8 @@
 + (UniversalLoginViewController *)getLoginVCWithMode:(LoginMode)loginMode {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UniversalLoginViewController *universalLoginVC = (UniversalLoginViewController*)[storyboard instantiateViewControllerWithIdentifier:@"universalLoginViewController"];
-    //universalLoginVC.loginMode = loginMode;
-    
+    [universalLoginVC setLoginModeWithLoginMode:loginMode];
+     
     return universalLoginVC;
 }
 
