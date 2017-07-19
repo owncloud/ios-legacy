@@ -635,6 +635,7 @@
 		59F123E61C89C14D0094CF70 /* SWUtilityButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF69111891379C00A2217C /* SWUtilityButtonTapGestureRecognizer.m */; };
 		59F470321C5F97BA005B6091 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 59F470311C5F97BA005B6091 /* Launch Screen.storyboard */; };
 		7F9B91BD1F1F472700B77260 /* ServerURLNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B91BC1F1F472700B77260 /* ServerURLNormalizer.swift */; };
+		7F9B91C81F1F817700B77260 /* GetPublicInfoFromServerJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B91C71F1F817700B77260 /* GetPublicInfoFromServerJob.swift */; };
 		905B3D3B1C8867AA00BCC93B /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		905C594F1C50DA490051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
 		905C59501C50DA680051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
@@ -1728,6 +1729,7 @@
 		59EF1F0D1CE0BD8900184F8F /* DeleteUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeleteUtils.m; path = Utils/DeleteUtils.m; sourceTree = "<group>"; };
 		59F470311C5F97BA005B6091 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		7F9B91BC1F1F472700B77260 /* ServerURLNormalizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerURLNormalizer.swift; sourceTree = "<group>"; };
+		7F9B91C71F1F817700B77260 /* GetPublicInfoFromServerJob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetPublicInfoFromServerJob.swift; sourceTree = "<group>"; };
 		905B3D3A1C8867AA00BCC93B /* SortManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SortManager.m; path = Tabs/FileTab/Sort/SortManager.m; sourceTree = "<group>"; };
 		905B3D3E1C88681000BCC93B /* SortManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SortManager.h; path = Tabs/FileTab/Sort/SortManager.h; sourceTree = "<group>"; };
 		906177E11C4FABF600BBE648 /* ManageTouchID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageTouchID.m; sourceTree = "<group>"; };
@@ -2487,6 +2489,7 @@
 				40B5700D1F1E137D00A98A8E /* UtilsLogin.h */,
 				40B5700E1F1E137D00A98A8E /* UtilsLogin.m */,
 				7F9B91BC1F1F472700B77260 /* ServerURLNormalizer.swift */,
+				7F9B91C71F1F817700B77260 /* GetPublicInfoFromServerJob.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -4778,6 +4781,7 @@
 				EABD88C91BBE638300DA5281 /* ShareLoadingCell.swift in Sources */,
 				EA42FA54180565CB0006DB7C /* OCTabBarController.m in Sources */,
 				148DD613177855B600FB9977 /* AuthenticationResponseTypeCodeTask.m in Sources */,
+				7F9B91C81F1F817700B77260 /* GetPublicInfoFromServerJob.swift in Sources */,
 				148DD614177855B600FB9977 /* RetrieveAccessTokenTask.m in Sources */,
 				59C71D171A9216AE00F66166 /* ReaderDocument.m in Sources */,
 				148DD615177855B600FB9977 /* RetrieveDataResponseTypeCodeTask.m in Sources */,
