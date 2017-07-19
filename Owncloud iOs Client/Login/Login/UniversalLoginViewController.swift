@@ -54,8 +54,16 @@ struct K {
     @IBOutlet var buttonConnect: UIButton!
     @IBOutlet var buttonHelpLink: UIButton!
     @IBOutlet var buttonReconnection: UIButton!
-    @IBOutlet var imageUrlFooter: UIImageView!
+    @IBOutlet var imageViewUrlFooter: UIImageView!
     @IBOutlet var labelUrlFooter: UILabel!
+    
+    //For Basic and edit account
+    @IBOutlet var imageViewUsername: UIImageView!
+    @IBOutlet var textFieldUsername: UITextField!
+    @IBOutlet var imageViewLeftPassword: UIImageView!
+    @IBOutlet var textFieldPassword: UITextField!
+    @IBOutlet var imageViewRightPassword: UIImageView!
+    
     
     var urlNormalized: String!
     var validatedServerURL: String!
@@ -72,6 +80,8 @@ struct K {
     override public func viewDidLoad() {
         super.viewDidLoad()
         
+        self.loginViewBasicAuthOrEditMode(isHidden: true)
+
         self.manageNetworkErrors = ManageNetworkErrors()
         self.manageNetworkErrors.delegate = self
         textFieldURL.delegate = self;
@@ -89,6 +99,17 @@ struct K {
     
     func setLoginMode(loginMode: LoginMode) {
         self.loginMode = loginMode
+    }
+    
+    
+    //MARK: UI set up
+    func loginViewBasicAuthOrEditMode(isHidden: Bool) {
+        
+        self.imageViewUsername.isHidden = isHidden
+        self.textFieldUsername.isHidden = isHidden
+        self.imageViewLeftPassword.isHidden = isHidden
+        self.textFieldPassword.isHidden = isHidden
+        
     }
     
 // MARK: checkUrl
@@ -142,6 +163,7 @@ struct K {
             break
 
         case .BASIC_HTTP_AUTH:
+            self.loginViewBasicAuthOrEditMode(isHidden: false)
             //TODO
             break
 
@@ -220,9 +242,10 @@ struct K {
 //MARK: Manage network errors delegate
     public func showError(_ message: String!) {
         DispatchQueue.main.async {
-            self.imageUrlFooter.isHidden = false
-            self.imageUrlFooter.image = UIImage(named: "CredentialsError.png")!
+            self.imageViewUrlFooter.image = UIImage(named: "CredentialsError.png")!
             self.labelUrlFooter.text = message
+            self.imageViewUrlFooter.isHidden = false
+            self.labelUrlFooter.isHidden = false
         }
     }
 
