@@ -90,14 +90,11 @@
             //405 Method not permitted
             [_delegate showError:NSLocalizedString(@"not_possible_create_folder", nil)];
             break;
-        case kOCErrorServerTimeout:
-            //408 timeout
-            [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-            break;
         case kOCErrorServerMaintenanceError:
             //503 Maintenance Error
             [_delegate showError:NSLocalizedString(@"maintenance_mode_on_server_message", nil)];
             break;
+        case kOCErrorServerTimeout:
         default:
             [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
             break;

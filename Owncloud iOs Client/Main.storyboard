@@ -43,10 +43,10 @@
                                 <rect key="frame" x="24" y="239" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hxl-mo-UHl" userLabel="Label Server Footer">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="hxl-mo-UHl" userLabel="Label Server Footer">
                                 <rect key="frame" x="57" y="279" width="300" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -75,8 +75,11 @@
                     </view>
                     <connections>
                         <outlet property="buttonConnect" destination="qcz-FW-RTp" id="lkF-6G-Pnj"/>
+                        <outlet property="buttonHelpLink" destination="lUz-8C-zKg" id="gnX-eE-ywn"/>
                         <outlet property="buttonReconnection" destination="HUS-Qc-A5N" id="c26-Ww-cpG"/>
+                        <outlet property="imageUrlFooter" destination="w1a-U9-TaZ" id="cDl-fV-ciI"/>
                         <outlet property="imageViewLogo" destination="e8b-Rl-Mh0" id="6bs-to-s7J"/>
+                        <outlet property="labelUrlFooter" destination="hxl-mo-UHl" id="OAn-Po-tDZ"/>
                         <outlet property="textFieldURL" destination="K3Y-mX-EWx" id="evx-Ry-FVD"/>
                         <segue destination="f4N-GJ-PQD" kind="presentation" identifier="segueToWebLoginView" id="S2O-4z-eW2"/>
                     </connections>
@@ -165,7 +168,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J0P-TE-YCc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="716" y="564.46776611694156"/>
+            <point key="canvasLocation" x="726" y="519"/>
         </scene>
         <!--Web Login View Controller-->
         <scene sceneID="aXj-g5-zsT">
