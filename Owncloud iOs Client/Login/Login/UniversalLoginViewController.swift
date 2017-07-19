@@ -64,7 +64,8 @@ struct K {
     var manageNetworkErrors: ManageNetworkErrors!
     var loginMode: LoginMode!
     
-
+    let serverURLNormalizer: ServerURLNormalizer = ServerURLNormalizer()
+    
     
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -92,17 +93,15 @@ struct K {
     
     func checkCurrentUrl() {
         
-       //let stringURL = textFieldURL.text
-    
-        self.urlNormalized = textFieldURL.text //TODO: normalize url
-        //parse url, appsfiles, user:pass, prefix
+        if let inputURL = textFieldURL.text {
+            self.urlNormalized = serverURLNormalizer.normalize(serverURL: inputURL)
+
+            //check status and get authmethods available
         
-        
-        //check status and get authmethods available
-        
-        let checkAccessToServer : CheckAccessToServer = CheckAccessToServer.sharedManager() as! CheckAccessToServer
-        checkAccessToServer.delegate = self
-        checkAccessToServer.isConnectionToTheServer(byUrl: self.urlNormalized)
+            let checkAccessToServer : CheckAccessToServer = CheckAccessToServer.sharedManager() as! CheckAccessToServer
+            checkAccessToServer.delegate = self
+            checkAccessToServer.isConnectionToTheServer(byUrl: self.urlNormalized)
+        }
     }
     
     
