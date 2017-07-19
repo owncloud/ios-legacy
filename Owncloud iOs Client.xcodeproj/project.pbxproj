@@ -53,7 +53,6 @@
 		13B721ED169D78BE00B24A51 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B721EC169D78BE00B24A51 /* Twitter.framework */; };
 		13D6B7CA18855EE40090A96C /* AppsActivityProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D6B7C918855EE40090A96C /* AppsActivityProvider.m */; };
 		13D8741F169DBE05000FBE6D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13D8741E169DBE05000FBE6D /* MessageUI.framework */; };
-		1420C3AC178A9F5000C0455C /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1420C3A9178A9F5000C0455C /* LoginViewController.m */; };
 		1428F675178422AE0092F42A /* UploadsOfflineDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F674178422AE0092F42A /* UploadsOfflineDto.m */; };
 		1428F678178422BE0092F42A /* UtilsDtos.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F677178422BE0092F42A /* UtilsDtos.m */; };
 		145EA7D117786FAC0087CDDB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 145EA7CA17786FAC0087CDDB /* Localizable.strings */; };
@@ -220,10 +219,8 @@
 		148DD6B3177866A400FB9977 /* FilesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6B0177866A400FB9977 /* FilesViewController.xib */; };
 		148DD6B71778693000FB9977 /* RecentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6B51778693000FB9977 /* RecentViewController.m */; };
 		148DD6B81778693000FB9977 /* RecentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6B61778693000FB9977 /* RecentViewController.xib */; };
-		148DD6BD1778695E00FB9977 /* AddAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6BB1778695E00FB9977 /* AddAccountViewController.m */; };
 		148DD6C11778697100FB9977 /* AccountCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6BF1778697100FB9977 /* AccountCell.m */; };
 		148DD6C21778697100FB9977 /* AccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6C01778697100FB9977 /* AccountCell.xib */; };
-		148DD6C71778698300FB9977 /* EditAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6C51778698300FB9977 /* EditAccountViewController.m */; };
 		148DD6D8177869C800FB9977 /* Impressum.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6D4177869C800FB9977 /* Impressum.rtf */; };
 		148DD6D9177869C800FB9977 /* ImpressumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD6D6177869C800FB9977 /* ImpressumViewController.m */; };
 		148DD6DA177869C800FB9977 /* ImpressumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD6D7177869C800FB9977 /* ImpressumViewController.xib */; };
@@ -372,6 +369,7 @@
 		40AB65121EAFA10000379361 /* ShareLinkViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40AB65101EAFA10000379361 /* ShareLinkViewController.xib */; };
 		40AC24D219FE725600582867 /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
 		40B083991F1607D90072574A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B083981F1607D90072574A /* Log.swift */; };
+		40B5700F1F1E137D00A98A8E /* UtilsLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5700E1F1E137D00A98A8E /* UtilsLogin.m */; };
 		40C01ED91F0FA923002DCAAA /* DetectListOfFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C01ED81F0FA923002DCAAA /* DetectListOfFiles.swift */; };
 		40C0BDB91C46562A0057B1DD /* SharePrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */; };
 		40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */; };
@@ -1115,8 +1113,6 @@
 		13D6B7C818855EE40090A96C /* AppsActivityProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppsActivityProvider.h; path = Tabs/FileTab/Share/AppsActivityProvider.h; sourceTree = "<group>"; };
 		13D6B7C918855EE40090A96C /* AppsActivityProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppsActivityProvider.m; path = Tabs/FileTab/Share/AppsActivityProvider.m; sourceTree = "<group>"; };
 		13D8741E169DBE05000FBE6D /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		1420C3A8178A9F5000C0455C /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
-		1420C3A9178A9F5000C0455C /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		1428F673178422AE0092F42A /* UploadsOfflineDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadsOfflineDto.h; path = DataBase/DTOs/UploadsOfflineDto.h; sourceTree = "<group>"; };
 		1428F674178422AE0092F42A /* UploadsOfflineDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadsOfflineDto.m; path = DataBase/DTOs/UploadsOfflineDto.m; sourceTree = "<group>"; };
 		1428F676178422BE0092F42A /* UtilsDtos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsDtos.h; path = Utils/UtilsDtos.h; sourceTree = "<group>"; };
@@ -1334,13 +1330,9 @@
 		148DD6B41778693000FB9977 /* RecentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RecentViewController.h; path = Tabs/RecentTab/RecentViewController.h; sourceTree = "<group>"; };
 		148DD6B51778693000FB9977 /* RecentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecentViewController.m; path = Tabs/RecentTab/RecentViewController.m; sourceTree = "<group>"; };
 		148DD6B61778693000FB9977 /* RecentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RecentViewController.xib; path = Tabs/RecentTab/RecentViewController.xib; sourceTree = "<group>"; };
-		148DD6BA1778695E00FB9977 /* AddAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddAccountViewController.h; path = Tabs/SettingTab/Account/AddAccount/AddAccountViewController.h; sourceTree = "<group>"; };
-		148DD6BB1778695E00FB9977 /* AddAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddAccountViewController.m; path = Tabs/SettingTab/Account/AddAccount/AddAccountViewController.m; sourceTree = "<group>"; };
 		148DD6BE1778697100FB9977 /* AccountCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountCell.h; path = Tabs/SettingTab/Account/Cell/AccountCell.h; sourceTree = "<group>"; };
 		148DD6BF1778697100FB9977 /* AccountCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountCell.m; path = Tabs/SettingTab/Account/Cell/AccountCell.m; sourceTree = "<group>"; };
 		148DD6C01778697100FB9977 /* AccountCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AccountCell.xib; path = Tabs/SettingTab/Account/Cell/AccountCell.xib; sourceTree = "<group>"; };
-		148DD6C41778698300FB9977 /* EditAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditAccountViewController.h; path = Tabs/SettingTab/Account/EditAccount/EditAccountViewController.h; sourceTree = "<group>"; };
-		148DD6C51778698300FB9977 /* EditAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditAccountViewController.m; path = Tabs/SettingTab/Account/EditAccount/EditAccountViewController.m; sourceTree = "<group>"; };
 		148DD6D4177869C800FB9977 /* Impressum.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Impressum.rtf; path = Tabs/SettingTab/Imprint/Impressum.rtf; sourceTree = "<group>"; };
 		148DD6D5177869C800FB9977 /* ImpressumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImpressumViewController.h; path = Tabs/SettingTab/Imprint/ImpressumViewController.h; sourceTree = "<group>"; };
 		148DD6D6177869C800FB9977 /* ImpressumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImpressumViewController.m; path = Tabs/SettingTab/Imprint/ImpressumViewController.m; sourceTree = "<group>"; };
@@ -1557,6 +1549,8 @@
 		40AC24D019FE725600582867 /* CredentialsDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CredentialsDto.h; path = DataBase/DTOs/CredentialsDto.h; sourceTree = "<group>"; };
 		40AC24D119FE725600582867 /* CredentialsDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CredentialsDto.m; path = DataBase/DTOs/CredentialsDto.m; sourceTree = "<group>"; };
 		40B083981F1607D90072574A /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		40B5700D1F1E137D00A98A8E /* UtilsLogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilsLogin.h; sourceTree = "<group>"; };
+		40B5700E1F1E137D00A98A8E /* UtilsLogin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilsLogin.m; sourceTree = "<group>"; };
 		40C01ED81F0FA923002DCAAA /* DetectListOfFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetectListOfFiles.swift; path = Network/ReadFolder/DetectListOfFiles.swift; sourceTree = "<group>"; };
 		40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SharePrivilegeCell.xib; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.xib; sourceTree = "<group>"; };
 		40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharePrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.swift; sourceTree = "<group>"; };
@@ -2486,10 +2480,10 @@
 		13C4DEEC163672CA00638B1D /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				1420C3A8178A9F5000C0455C /* LoginViewController.h */,
-				1420C3A9178A9F5000C0455C /* LoginViewController.m */,
 				40C663AF1EFA94B1004AF994 /* UniversalLoginViewController.swift */,
 				40D3F18D1EFD53E7004F0E22 /* WebLoginViewController.swift */,
+				40B5700D1F1E137D00A98A8E /* UtilsLogin.h */,
+				40B5700E1F1E137D00A98A8E /* UtilsLogin.m */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -2497,30 +2491,10 @@
 		13C4DEF51636735800638B1D /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
-				13C4DEF71636736800638B1D /* Add Account */,
 				13C4DEF81636737300638B1D /* Cell */,
-				13C4DEF61636736200638B1D /* Edit Account */,
 				40A226AA1F179620003C678E /* ManageAccounts.swift */,
 			);
 			name = Accounts;
-			sourceTree = "<group>";
-		};
-		13C4DEF61636736200638B1D /* Edit Account */ = {
-			isa = PBXGroup;
-			children = (
-				148DD6C41778698300FB9977 /* EditAccountViewController.h */,
-				148DD6C51778698300FB9977 /* EditAccountViewController.m */,
-			);
-			name = "Edit Account";
-			sourceTree = "<group>";
-		};
-		13C4DEF71636736800638B1D /* Add Account */ = {
-			isa = PBXGroup;
-			children = (
-				148DD6BA1778695E00FB9977 /* AddAccountViewController.h */,
-				148DD6BB1778695E00FB9977 /* AddAccountViewController.m */,
-			);
-			name = "Add Account";
 			sourceTree = "<group>";
 		};
 		13C4DEF81636737300638B1D /* Cell */ = {
@@ -4885,12 +4859,10 @@
 				40C663B01EFA94B1004AF994 /* UniversalLoginViewController.swift in Sources */,
 				40C01ED91F0FA923002DCAAA /* DetectListOfFiles.swift in Sources */,
 				40AB65111EAFA10000379361 /* ShareLinkViewController.m in Sources */,
-				148DD6BD1778695E00FB9977 /* AddAccountViewController.m in Sources */,
 				EAAD688F1C560AF2005F3B28 /* ShareUtils.m in Sources */,
 				14987095187DB14A000D9C49 /* NotificationStatusBarViewController.m in Sources */,
 				148DD6C11778697100FB9977 /* AccountCell.m in Sources */,
 				400A637B1B4FD75600890579 /* IFTTTTransform3DAnimation.m in Sources */,
-				148DD6C71778698300FB9977 /* EditAccountViewController.m in Sources */,
 				400A637A1B4FD75600890579 /* IFTTTTextColorAnimation.m in Sources */,
 				14B0084018FD1B5B004CB06B /* EmptyCell.m in Sources */,
 				59C9D324195C0EFB00400AE2 /* ManageNetworkErrors.m in Sources */,
@@ -4908,6 +4880,7 @@
 				40904B2C1EF04ACE00C72619 /* DetectAuthenticationMethod.swift in Sources */,
 				59915D9E1BBC00930015FBF3 /* CWLOrderedDictionary.m in Sources */,
 				148DD6E817786A1400FB9977 /* SettingsViewController.m in Sources */,
+				40B5700F1F1E137D00A98A8E /* UtilsLogin.m in Sources */,
 				59D774CE1910EE0F004322BA /* UtilsTableView.m in Sources */,
 				148DD6EA17786A1400FB9977 /* WebViewController.m in Sources */,
 				EA4071031C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */,
@@ -4966,7 +4939,6 @@
 				EA1762A01B78B50100D36186 /* ShareMainViewController.m in Sources */,
 				1428F678178422BE0092F42A /* UtilsDtos.m in Sources */,
 				59C71D181A9216AE00F66166 /* ReaderDocumentOutline.m in Sources */,
-				1420C3AC178A9F5000C0455C /* LoginViewController.m in Sources */,
 				400A63661B4FD75600890579 /* IFTTTAnimatedScrollViewController.m in Sources */,
 				EA8ADE6A1A31E9AB008D3612 /* UIColor+iOS7.m in Sources */,
 				FCE228D11CFE08EF00E4827F /* InstantUpload.m in Sources */,
@@ -5324,6 +5296,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -5371,6 +5344,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -5402,7 +5376,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
-				DEFINES_MODULE = YES;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5454,7 +5428,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
-				DEFINES_MODULE = YES;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5562,6 +5536,7 @@
 				CODE_SIGN_ENTITLEMENTS = "OC Share Sheet/OC Share Sheet.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
@@ -5593,6 +5568,7 @@
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(SWIFT_MODULE_NAME)-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
@@ -5610,6 +5586,7 @@
 				CODE_SIGN_ENTITLEMENTS = "OC Share Sheet/OC Share Sheet.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -5638,6 +5615,7 @@
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(SWIFT_MODULE_NAME)-Swift.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -5660,7 +5638,7 @@
 				CODE_SIGN_ENTITLEMENTS = ownCloudExtApp/ownCloudExtApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEFINES_MODULE = YES;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -5724,7 +5702,7 @@
 				CODE_SIGN_ENTITLEMENTS = ownCloudExtApp/ownCloudExtApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEFINES_MODULE = YES;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -5784,7 +5762,7 @@
 				CODE_SIGN_ENTITLEMENTS = ownCloudExtAppFileProvider/ownCloudExtAppFileProvider.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEFINES_MODULE = YES;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -5842,7 +5820,7 @@
 				CODE_SIGN_ENTITLEMENTS = ownCloudExtAppFileProvider/ownCloudExtAppFileProvider.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEFINES_MODULE = YES;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;

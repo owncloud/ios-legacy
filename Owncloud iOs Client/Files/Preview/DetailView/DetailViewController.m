@@ -18,7 +18,6 @@
 #import "AppDelegate.h"
 #import "UIColor+Constants.h"
 #import "constants.h"
-#import "EditAccountViewController.h"
 #import "UtilsDtos.h"
 #import "UIImage+Resize.h"
 #import "FileNameUtils.h"
@@ -1831,20 +1830,15 @@
     
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.downloadManager errorLogin];
-    
-    if(k_is_oauth_active) {
-        NSURL *url = [NSURL URLWithString:k_oauth_login];
-        [[UIApplication sharedApplication] openURL:url];
-        
-    } else {
 
-        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:appDelegate.activeUser andLoginMode:LoginModeExpire];
-        [viewController setBarForCancelForLoadingFromModal];
-        
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
-    }
+    
+    UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
+    
+    //[viewController setBarForCancelForLoadingFromModal];
+    
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+    navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
 }
 
 #pragma mark - Notifications methods

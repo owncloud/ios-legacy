@@ -14,16 +14,17 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 #import "CheckAccessToServer.h"
 #import "ManageNetworkErrors.h"
-#import "EditAccountViewController.h"
+#import "UtilsLogin.h"
 
 @class UserDto;
 @class FileDto;
-
 @class SimpleFileListTableViewController;
+@class UniversalLoginViewController;
 
 @interface SimpleFileListTableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MBProgressHUDDelegate, CheckAccessToServerDelegate, ManageNetworkErrorsDelegate>
 
@@ -113,7 +114,7 @@
 //Next List of files to navigate
 @property (nonatomic, strong) SimpleFileListTableViewController *simpleFilesViewController;
 
-@property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
+@property (nonatomic, strong) UniversalLoginViewController *resolveCredentialErrorViewController;
 
 //View for loading screen
 @property(nonatomic, strong) MBProgressHUD  *HUD;

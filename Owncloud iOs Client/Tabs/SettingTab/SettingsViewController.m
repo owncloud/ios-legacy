@@ -690,9 +690,7 @@
         case 0:
             
             if (k_is_passcode_forced) {
-                //static NSString *CellIdentifier = @"AddAccountCell";
 
-                //cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
                 cell.textLabel.text = NSLocalizedString(@"title_app_pin_forced", nil);
                 cell.selectionStyle = UITableViewCellSelectionStyleBlue;
                 cell.textLabel.font = k_settings_bold_font;
@@ -1058,12 +1056,11 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Add Account
-    AddAccountViewController *viewController = [[AddAccountViewController alloc]initWithNibName:@"AddAccountViewController_iPhone" bundle:nil];
-    viewController.delegate = self;
+    UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeCreate];
     
     if (IS_IPHONE)
     {
-        viewController.hidesBottomBarWhenPushed = YES;
+        //viewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:viewController animated:NO];
     } else {
         
@@ -1772,7 +1769,7 @@
 
 - (void) didSelectEditAccount:(UserDto *)user  {
    
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:user andLoginMode:LoginModeUpdate];
+    UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeUpdate];
     
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];

@@ -19,7 +19,6 @@
 #import "UIColor+Constants.h"
 #import "constants.h"
 #import "AppDelegate.h"
-#import "EditAccountViewController.h"
 #import "UtilsDtos.h"
 #import "UIImage+Resize.h"
 #import "UserDto.h"
@@ -1699,13 +1698,12 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [[UIApplication sharedApplication] openURL:url];
     } else {
         //Edit Account
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
-        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andLoginMode:LoginModeExpire];
+        UniversalLoginViewController *loginVC = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
         
-        viewController.hidesBottomBarWhenPushed = YES;
+        //viewController.hidesBottomBarWhenPushed = YES;
         
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginVC];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
 
     }

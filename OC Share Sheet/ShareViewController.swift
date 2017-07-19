@@ -344,7 +344,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
                                 if error == nil {
                                     if let url = item as? URL{
                                         
-                                        print("item as url: \(item)")
+                                        print("item as url: \(url)")
                                         
                                         self.filesSelected.append(url)
                                         

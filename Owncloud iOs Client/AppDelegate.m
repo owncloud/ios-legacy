@@ -19,12 +19,10 @@
 #import "CheckAccessToServer.h"
 #import "DetailViewController.h"
 #import "constants.h"
-#import "LoginViewController.h"
 #import "UploadFromOtherAppViewController.h"
 #import "AuthenticationDbService.h"
 #import "RetrieveRefreshAndAccessTokenTask.h"
 #import "Download.h"
-#import "EditAccountViewController.h"
 #import "UIColor+Constants.h"
 #import "Customization.h"
 #import "FMDatabaseQueue.h"
@@ -63,7 +61,6 @@
 #import "UtilsCookies.h"
 #import "PresentedViewUtils.h"
 
-@class UniversalLoginViewController;
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -73,7 +70,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize loginViewController = _loginViewController;
 @synthesize uploadArray=_uploadArray;
 @synthesize webDavArray=_webDavArray;
 @synthesize recentViewController=_recentViewController;
@@ -385,18 +381,8 @@ float shortDelay = 0.3;
     //if is null we do not have any active user on the database
     if(!self.activeUser) {
         
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        
-        
-        //TODO: TEST New login view
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        UniversalLoginViewController *universalLoginVC = (UniversalLoginViewController*)[storyboard instantiateViewControllerWithIdentifier:@"universalLoginViewController"];
-        
-        
-       // self.loginViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
-        
-        self.window.rootViewController = (UIViewController*)universalLoginVC;
-        [self.window makeKeyAndVisible];
+        //Show new universal login view
+        [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeCreate]];
         
     } else {
         
@@ -415,35 +401,6 @@ float shortDelay = 0.3;
     }
 }
 
-- (void) doLoginWithOauthToken {
-    
-    if (_activeUser.username==nil) {
-        _activeUser=[ManageUsersDB getActiveUser];
-    }    
-    
-    if(_activeUser.idUser > 0) {
-        _activeUser.password = self.oauthToken;
-        
-        //update keychain user
-        if(![OCKeychain updateCredentialsById:[NSString stringWithFormat:@"%ld", (long)_activeUser.idUser] withUsername:_activeUser.username andPassword:_activeUser.password]) {
-            DLog(@"Error updating credentials of userId:%ld on keychain",(long)_activeUser.idUser);
-        }
-        
-        [UtilsCookies eraseCredentialsAndUrlCacheOfActiveUser];
-        
-        [self initAppWithEtagRequest:NO];
-    } else {
-        self.loginViewController.usernameTextField = [[UITextField alloc] init];
-        self.loginViewController.usernameTextField.text = @"OAuth";
-        
-        self.loginViewController.passwordTextField = [[UITextField alloc] init];
-        self.loginViewController.passwordTextField.text = self.oauthToken;
-        
-        [self.loginViewController goTryToDoLogin];
-    }
-    
-}
-
 
 - (void) restartAppAfterDeleteAllAccounts {
     DLog(@"Restart After Delete All Accounts");
@@ -453,12 +410,7 @@ float shortDelay = 0.3;
         _filesViewController.alert = nil;
     }
     
-    self.loginWindowViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
-    
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-    self.window.rootViewController = self.loginWindowViewController;
-    [self.window makeKeyAndVisible];
+    [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeCreate]];
 }
 
 
@@ -1995,18 +1947,8 @@ float shortDelay = 0.3;
 
 -(void) delayLoadEditAccountAfterErroLogin {
     
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:_activeUser andLoginMode:LoginModeExpire];
-    
-    if (IS_IPHONE)
-    {
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        [_ocTabBarController presentViewController:navController animated:YES completion:nil];
-    } else {
-        
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self.splitViewController presentViewController:navController animated:YES completion:nil];
-    }
+    [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeExpire]];
+
 }
 
 
@@ -2800,15 +2742,19 @@ float shortDelay = 0.3;
     FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:[folderToRemoveName encodeString:NSUTF8StringEncoding] andFilePath:[folderToRemovePath encodeString:NSUTF8StringEncoding] andUser:app.activeUser];
     [self reloadCellByFile:folderRemoved];
 }
-- (void) showLoginView {
-    DLog(@"ShowLoginView");
-    
-    self.loginWindowViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
+
+
+
+- (void)showLoginView:(UniversalLoginViewController *)loginView {
+//TODO: move to utils login, and window var
+    DLog(@"ShowUniversalLoginView in window root vc");
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    self.window.rootViewController = self.loginWindowViewController;
+    self.window.rootViewController = loginView;
+    
     [self.window makeKeyAndVisible];
+    
 }
 
 #pragma mark - SplashScreenFake

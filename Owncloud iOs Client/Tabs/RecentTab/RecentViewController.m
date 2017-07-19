@@ -22,7 +22,6 @@
 #import "UIColor+Constants.h"
 #import "NSString+Encoding.h"
 #import "constants.h"
-#import "EditAccountViewController.h"
 #import "ManageUsersDB.h"
 #import "ManageUploadsDB.h"
 #import "ManageFilesDB.h"
@@ -905,7 +904,7 @@
 /**
  * This method is called when the user tap to resolve a error in a file and
  * the error is an "credential error"
- * This method prepare and show the EditAccount Screen
+ * This method prepare and show the Login View in Edit Mode
  *
  * @param selectedUpload -> UploadsOfflineDto of the selected file by the user
  *
@@ -932,11 +931,12 @@
                                                  otherButtonTitles:NSLocalizedString(@"ok",nil), nil];
         [alertView show];
     } else {
-        //Show the Edit Account Screen
-        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:userSelected andLoginMode:LoginModeExpire];
+        //Show the Login View in Edit Mode
+        
+        UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
         
         if (IS_IPHONE) {
-            viewController.hidesBottomBarWhenPushed = YES;
+            //viewController.hidesBottomBarWhenPushed = YES;
             OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
             [self.navigationController presentViewController:navController animated:YES completion:nil];
         } else {
@@ -1253,7 +1253,7 @@
  * This method addObservers for notifications to this class
  */
 -(void)setNotificationForCommunicationBetweenViews{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(relaunchErrorCredentialFiles:) name:relaunchErrorCredentialFilesNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(relaunchErrorCredentialFiles:) name:RelaunchErrorCredentialFilesNotification object:nil];
 }
 
 
