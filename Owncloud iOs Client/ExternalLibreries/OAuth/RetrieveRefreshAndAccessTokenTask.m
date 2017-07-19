@@ -154,9 +154,9 @@
         
         [ExecuteManager insertUser:userDto];*/
         
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        appDelegate.oauthToken = access_token;
-        [appDelegate doLoginWithOauthToken];
+//        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//        appDelegate.oauthToken = access_token;
+//        [appDelegate doLoginWithOauthToken];
     }
     [dbService setAccessToken:access_token];
     

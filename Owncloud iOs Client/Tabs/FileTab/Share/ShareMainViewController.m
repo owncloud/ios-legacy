@@ -24,7 +24,6 @@
 #import "UIColor+Constants.h"
 #import "OCNavigationController.h"
 #import "ManageUsersDB.h"
-#import "EditAccountViewController.h"
 #import "Customization.h"
 #import "ShareSearchUserViewController.h"
 #import "ManageSharesDB.h"
@@ -74,7 +73,7 @@
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
 @property (nonatomic, strong) UIActivityViewController *activityView;
-@property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
+@property (nonatomic, strong) UniversalLoginViewController *resolveCredentialErrorViewController;
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
 @property (nonatomic, strong) NSMutableArray *sharedUsersOrGroups;
 @property (nonatomic, strong) NSMutableArray *sharedPublicLinks;
@@ -812,8 +811,8 @@
 #ifdef CONTAINER_APP
     
     //Edit Account
-    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser] andLoginMode:LoginModeExpire];
-    
+    self.resolveCredentialErrorViewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
+        
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];

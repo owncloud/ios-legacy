@@ -631,7 +631,6 @@
     NSArray *currentUsers = [NSArray arrayWithArray:[ManageUsersDB getAllOldUsersUntilVersion10]];
     
     for (UserDto *user in currentUsers) {
-         NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
         if (![OCKeychain setCredentialsOfUser:user]){
             DLog(@"Failed setting credentials");
         }

@@ -26,10 +26,10 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <RMActionController/RMActionController.h>
 
+
 @class FilesViewController;
 @class RecentViewController;
 @class SettingsViewController;
-@class LoginViewController;
 @class HelpGuideViewController;
 @class Download;
 @class OCCommunication;
@@ -39,6 +39,8 @@
 @class ManageFavorites;
 @class CheckHasShareSupport;
 @class CheckCapabilities;
+@class UniversalLoginViewController;
+
 
 extern NSString * CloseAlertViewWhenApplicationDidEnterBackground;
 extern NSString * RefreshSharesItemsAfterCheckServerVersion;
@@ -106,10 +108,8 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
     
 }
 
-@property (strong, nonatomic) LoginViewController *loginWindowViewController;
 @property (strong, nonatomic) HelpGuideViewController *helpGuideWindowViewController;
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) LoginViewController *loginViewController;
 @property (strong, nonatomic) UserDto *activeUser;
 @property (strong, nonatomic) OCTabBarController *ocTabBarController;
 @property (nonatomic, strong) NSMutableArray *uploadArray;
@@ -178,9 +178,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 - (void) updateRecents;
 - (void) updateProgressView:(NSUInteger)num withPercent:(float)percent;
 - (void) restartAppAfterDeleteAllAccounts;
-- (void) showLoginView;
-
-- (void)doLoginWithOauthToken;
 
 //Method that erase the data of the detail view in iPad.
 - (void)presentWithView;

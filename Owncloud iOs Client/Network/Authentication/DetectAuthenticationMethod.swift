@@ -28,11 +28,11 @@ import Foundation
  */
 
 enum AuthenticationMethod: String {
-    case UNKNOWN = "UNKNOWN"
-    case NONE = "NONE"
-    case BASIC_HTTP_AUTH = "BASIC_HTTP_AUTH"
-    case BEARER_TOKEN = "BEARER_TOKEN"
-    case SAML_WEB_SSO = "SAML_WEB_SSO"
+    case UNKNOWN
+    case NONE
+    case BASIC_HTTP_AUTH
+    case BEARER_TOKEN
+    case SAML_WEB_SSO
 }
 
 @objc class DetectAuthenticationMethod: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
