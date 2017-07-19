@@ -44,7 +44,7 @@
 #define k_is_oauth_active NO //Not use, oauth is auto detected if the server supports it
 
 //Have SAML active
-#define k_is_sso_active YES
+#define k_is_sso_active NO
 
 //OAuth server
 #define k_oauth_login @""
