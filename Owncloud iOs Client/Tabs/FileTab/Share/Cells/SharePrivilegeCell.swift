@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.htm
 
 import UIKit
 
-class SharePrivilegeCell:UITableViewCell {
+@objc class SharePrivilegeCell:UITableViewCell {
     
     @IBOutlet weak var optionSwitch: UISwitch!
     @IBOutlet weak var optionName: UILabel!

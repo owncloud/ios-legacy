@@ -34,7 +34,6 @@
 #import "SelectFolderNavigation.h"
 #import "SelectFolderViewController.h"
 #import "constants.h"
-#import "EditAccountViewController.h"
 #import "UtilsDtos.h"
 #import "FileNameUtils.h"
 #import "Customization.h"
@@ -54,7 +53,7 @@
 #import "ManageNetworkErrors.h"
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
-#import "Owncloud_iOs_Client-Swift.h"
+//#import "Owncloud_iOs_Client-Swift.h"
 #import "ManageUsersDB.h"
 #import "UtilsFramework.h"
 #import "ShareMainViewController.h"
@@ -770,7 +769,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFromDataBase) name:ReloadFileListFromDataBaseNotification object:nil];
     
     //Add an observer for know when the LoginViewController rotate
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willRotateToInterfaceOrientation:duration:) name:loginViewControllerRotate object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willRotateToInterfaceOrientation:duration:) name:LoginViewControllerRotate object:nil];
     
     //Add an observer for know when the Checked Share of server is done
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSharedPath) name:RefreshSharesItemsAfterCheckServerVersion object:nil];
@@ -3433,9 +3432,9 @@
     //Edit Account
     BOOL requiredUpdateUrl = [UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:[ManageUsersDB getActiveUser].predefinedUrl];
     if (requiredUpdateUrl) {
-        self.resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andLoginMode:LoginModeMigrate];
+        self.resolvedCredentialError = [UtilsLogin getLoginVCWithMode:LoginModeMigrate];
     } else {
-        self.resolvedCredentialError = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andLoginMode:LoginModeExpire];
+        self.resolvedCredentialError = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
     }
     
     if (IS_IPHONE) {

@@ -31,7 +31,21 @@ struct K {
     
 }
 
-@objc class UniversalLoginViewController: UIViewController, UITextFieldDelegate, CheckAccessToServerDelegate, SSODelegate, ManageNetworkErrorsDelegate {
+//@objc public enum LoginMode: Int {
+//    case Create
+//    case Update
+//    case Expire
+//    case Migrate
+//}
+
+
+//TODO: check if needed use the notification relaunchErrorCredentialFilesNotification from edit account mode
+//TODO: check if is needed property hidesBottomBarWhenPushed in this class to use with edit and add account modes
+//TODO: check if need to call delegate #pragma mark - AddAccountDelegate- (void) refreshTable  in settings after add account
+//TODO: check if need to setBarForCancelForLoadingFromModal in this class
+//TODO: check if neet to use the notification LoginViewControllerRotate from login view (- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration)
+
+@objc public class UniversalLoginViewController: UIViewController, UITextFieldDelegate, CheckAccessToServerDelegate, SSODelegate, ManageNetworkErrorsDelegate {
  
 // MARK: IBOutlets
     
@@ -48,17 +62,9 @@ struct K {
     var manageNetworkErrors: ManageNetworkErrors!
     var loginMode: LoginMode!
     
-//    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-//        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-//        
-//
-//    }
-//    
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
+
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         
         self.manageNetworkErrors = ManageNetworkErrors()
@@ -70,12 +76,14 @@ struct K {
         //set branding style
     }
     
-    override func didReceiveMemoryWarning() {
+    override public func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
+    func setLoginMode(loginMode: LoginMode) {
+        self.loginMode = loginMode
+    }
     
 // MARK: checkUrl
     
@@ -146,7 +154,7 @@ struct K {
     
 // MARK:  CheckAccessToServerDelegate implementation
     
-    func connection(toTheServer isConnection: Bool) {
+    public func connection(toTheServer isConnection: Bool) {
         if isConnection {
             print("Ok connection to the server")
             
@@ -182,19 +190,18 @@ struct K {
         
     }
     
-    func repeatTheCheckToTheServer() {
+    public func repeatTheCheckToTheServer() {
         // just glue
         checkCurrentUrl()
     }
   
 // MARK: ManageNetworkError delegate
     
-    func errorLogin() {
+    public func errorLogin() {
         //TOOD: SHow error in url footer
     }
     
 // MARK: SSODelegate implementation
-    
     
     /**
      * This delegate method is called from SSOViewController when the user
@@ -204,8 +211,9 @@ struct K {
      * @param samlUserName -> NSString      Username.
      *
      */
-    func setCookieForSSO(_ cookieString: String!, andSamlUserName samlUserName: String!) {
 
+    public func setCookieForSSO(_ cookieString: String!, andSamlUserName samlUserName: String!) {
+        
         print("BACK with cookieString %@ and samlUserName %@", cookieString, samlUserName);
         
         if cookieString == nil || cookieString == "" {
@@ -230,7 +238,7 @@ struct K {
     
 // MARK: textField delegate
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
+    public func textFieldDidEndEditing(_ textField: UITextField) {
 
         self.checkCurrentUrl()
         
@@ -279,7 +287,7 @@ struct K {
     
 
 // MARK: segue
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if(segue.identifier == K.segueId.segueToWebLoginView) {
             

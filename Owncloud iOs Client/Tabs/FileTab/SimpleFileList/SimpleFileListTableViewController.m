@@ -14,6 +14,8 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 #import "SimpleFileListTableViewController.h"
 #import "ManageUsersDB.h"
 #import "ManageFilesDB.h"
@@ -36,13 +38,19 @@
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
-#import "EditAccountViewController.h"
 #import "OCNavigationController.h"
+#import "Owncloud_iOs_Client-Swift.h"
+#elif FILE_PICKER
+#import "DocumentPickerViewController.h"
+#import "ownCloudExtApp-Swift.h"
 #elif SHARE_IN
 #import "OC_Share_Sheet-Swift.h"
 #else
 #import "DocumentPickerViewController.h"
+#import "ownCloudExtAppFileProvider-Swift.h"
 #endif
+
+@class UniversalLoginViewController;
 
 @interface SimpleFileListTableViewController ()
 
@@ -554,7 +562,7 @@
         [alert addAction:ok];
         
         if ([self.navigationController isViewLoaded] && self.navigationController.view.window && self.resolveCredentialErrorViewController != nil) {
-            [self.resolveCredentialErrorViewController presentViewController:alert animated:YES completion:nil];
+          //TODO:check bridging  [self.resolveCredentialErrorViewController presentViewController:alert animated:YES completion:nil];
         } else {
             [self presentViewController:alert animated:YES completion:nil];
         }
@@ -566,8 +574,8 @@
 #ifdef CONTAINER_APP
     
     //Edit Account
-    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser] andLoginMode:LoginModeExpire];
-    
+    self.resolveCredentialErrorViewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
+        
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
