@@ -54,15 +54,21 @@ struct K {
     @IBOutlet var imageViewLeftURL: UIImageView!
     @IBOutlet var textFieldURL: UITextField!
     @IBOutlet var buttonReconnection: UIButton!
-    @IBOutlet var imageViewUrlFooter: UIImageView!
-    @IBOutlet var labelUrlFooter: UILabel!
+    
+    @IBOutlet var imageViewURLFooter: UIImageView!
+    @IBOutlet var labelURLFooter: UILabel!
     
     //For Basic and edit account
     @IBOutlet var imageViewUsername: UIImageView!
     @IBOutlet var textFieldUsername: UITextField!
+    
     @IBOutlet var imageViewLeftPassword: UIImageView!
     @IBOutlet var textFieldPassword: UITextField!
     @IBOutlet var imageViewRightPassword: UIImageView!
+    
+    @IBOutlet var imageViewPasswordFooter: UIImageView!
+    @IBOutlet var labelPasswordFooter: UILabel!
+    
     
     @IBOutlet var buttonConnect: UIButton!
     @IBOutlet var buttonHelpLink: UIButton!
@@ -86,6 +92,10 @@ struct K {
         self.manageNetworkErrors.delegate = self
         textFieldURL.delegate = self;
         
+        if self.loginMode == .expire {
+            
+        }
+        
         //set branding style
         
         self.initUI()
@@ -105,6 +115,12 @@ struct K {
     
     //MARK: UI set up
     func initUI() {
+        
+        //init text
+        self.textFieldURL.text = k_default_url_server
+        self.textFieldUsername.text = ""
+        self.textFieldPassword.text = ""
+        
         
         if Customization.kHideUrlServer() {
             //hide and trim spaces below
