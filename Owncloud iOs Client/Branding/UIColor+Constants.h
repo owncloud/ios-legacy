@@ -60,7 +60,7 @@
 + (UIColor*)colorOfLoginBackground;
 //Text color of url in login view
 + (UIColor*)colorOfURLUserPassword;
-//Text color of login text
+//Text color of login text, used in Help Guide texts
 + (UIColor*)colorOfLoginText ;
 //Text color of error credentials
 + (UIColor*)colorOfLoginErrorText;
