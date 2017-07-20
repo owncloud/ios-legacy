@@ -2867,9 +2867,9 @@
 			isa = PBXGroup;
 			children = (
 				148DD5B21778436A00FB9977 /* Customization.h */,
+				407B51BB1F0A34DB00DDFA65 /* Customization.m */,
 				148DD5B31778436A00FB9977 /* UIColor+Constants.h */,
 				148DD5B41778436A00FB9977 /* UIColor+Constants.m */,
-				407B51BB1F0A34DB00DDFA65 /* Customization.m */,
 			);
 			name = Branding;
 			sourceTree = "<group>";
