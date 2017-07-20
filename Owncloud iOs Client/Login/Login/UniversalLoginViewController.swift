@@ -50,9 +50,9 @@ struct K {
 // MARK: IBOutlets
     
     @IBOutlet var imageViewLogo: UIImageView!
+    
+    @IBOutlet var imageViewLeftURL: UIImageView!
     @IBOutlet var textFieldURL: UITextField!
-    @IBOutlet var buttonConnect: UIButton!
-    @IBOutlet var buttonHelpLink: UIButton!
     @IBOutlet var buttonReconnection: UIButton!
     @IBOutlet var imageViewUrlFooter: UIImageView!
     @IBOutlet var labelUrlFooter: UILabel!
@@ -64,6 +64,8 @@ struct K {
     @IBOutlet var textFieldPassword: UITextField!
     @IBOutlet var imageViewRightPassword: UIImageView!
     
+    @IBOutlet var buttonConnect: UIButton!
+    @IBOutlet var buttonHelpLink: UIButton!
     
     var urlNormalized: String!
     var validatedServerURL: String!
@@ -80,15 +82,14 @@ struct K {
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        self.loginViewBasicAuthOrEditMode(isHidden: true)
-
         self.manageNetworkErrors = ManageNetworkErrors()
         self.manageNetworkErrors.delegate = self
         textFieldURL.delegate = self;
-        self.buttonConnect.isEnabled = false
-        // Do any additional setup after loading the view.
         
         //set branding style
+        
+        self.initUI()
+        
         print("Init login with loginMode: \(loginMode.rawValue) (0=Create,1=Update,2=Expire,3=Migrate)")
     }
     
@@ -103,12 +104,46 @@ struct K {
     
     
     //MARK: UI set up
-    func loginViewBasicAuthOrEditMode(isHidden: Bool) {
+    func initUI() {
         
-        self.imageViewUsername.isHidden = isHidden
-        self.textFieldUsername.isHidden = isHidden
-        self.imageViewLeftPassword.isHidden = isHidden
-        self.textFieldPassword.isHidden = isHidden
+        if Customization.kHideUrlServer() {
+            //hide and trim spaces below
+            
+            self.imageViewLeftURL.isHidden = true
+            self.textFieldURL.isHidden = true
+            
+            
+            
+        }
+        
+        let shouldBehiddenUserPassFields = (self.loginMode != .create) ? false : true ;
+        self.updateUserAndPassFields(hiddenStatus: shouldBehiddenUserPassFields)
+
+
+        self.buttonConnect.isEnabled = false
+        
+        
+        self.buttonHelpLink.isHidden = Customization.kIsShownHelpLinkOnLogin() ?  false : true
+        
+    }
+    
+    func updateUserAndPassFields(hiddenStatus: Bool) {
+        
+        self.imageViewUsername.isHidden = hiddenStatus
+        self.textFieldUsername.isHidden = hiddenStatus
+        self.imageViewLeftPassword.isHidden = hiddenStatus
+        self.textFieldPassword.isHidden = hiddenStatus
+        self.imageViewRightPassword.isHidden = hiddenStatus
+        
+        
+        if hiddenStatus {        //TODO: use constraints dependencies from above field instead
+
+            self.buttonConnect.center = self.textFieldUsername.center
+        } else {
+            
+             self.buttonConnect.center = self.textFieldUsername.center
+        }
+
         
     }
     
@@ -133,8 +168,15 @@ struct K {
                     
                     self.authMethodToLogin = DetectAuthenticationMethod().getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
                     
+                    
                     if (self.authMethodToLogin != .NONE) {
+                        
+                        if (self.authMethodToLogin == .BASIC_HTTP_AUTH) {
+                            self.updateUserAndPassFields(hiddenStatus: false)
+                        }
+                        
                         self.buttonConnect.isEnabled = true
+
                     } else {
                         self.buttonConnect.isEnabled = false
                         //TODO show error
@@ -163,8 +205,8 @@ struct K {
             break
 
         case .BASIC_HTTP_AUTH:
-            self.loginViewBasicAuthOrEditMode(isHidden: false)
             //TODO
+            
             break
 
         default:

@@ -20,8 +20,24 @@
 
 //Add all boolean constants to use in swift classes
 
++(BOOL)kHideUrlServer {
+    return k_hide_url_server;
+}
+
++(BOOL)kForceUpdateOfServerUrl {
+    return k_force_update_of_server_url;
+}
+
 +(BOOL)kIsSsoActive {
     return k_is_sso_active;
+}
+
++(BOOL)kIsTextLoginStatusBarWhite {
+    return k_is_text_login_status_bar_white;
+}
+
++(BOOL)kIsShownHelpLinkOnLogin {
+    return k_is_shown_help_link_on_login;
 }
 
 
