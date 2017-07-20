@@ -38,6 +38,12 @@ struct K {
 //    case Migrate
 //}
 
+@objc public enum URLMessageType: Int {
+    case Connection
+    case ConnectionSecure
+    case Error
+}
+
 
 //TODO: check if needed use the notification relaunchErrorCredentialFilesNotification from edit account mode
 //TODO: check if is needed property hidesBottomBarWhenPushed in this class to use with edit and add account modes
@@ -50,6 +56,9 @@ struct K {
 // MARK: IBOutlets
     
     @IBOutlet var imageViewLogo: UIImageView!
+    
+    @IBOutlet var imageViewTopInfo: UIImageView!
+    @IBOutlet var labelTopInfo: UILabel!
     
     @IBOutlet var imageViewLeftURL: UIImageView!
     @IBOutlet var textFieldURL: UITextField!
@@ -92,26 +101,98 @@ struct K {
         self.manageNetworkErrors.delegate = self
         textFieldURL.delegate = self;
         
-        if self.loginMode == .expire {
-            
-        }
         
+        self.setInitMessageCredentialsError()
+
+
         //set branding style
+        
+        self.setLabelsMessageStyle()
         
         self.initUI()
         
         print("Init login with loginMode: \(loginMode.rawValue) (0=Create,1=Update,2=Expire,3=Migrate)")
     }
     
-    override public func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func setInitMessageCredentialsError() {
+    
+        if self.loginMode == .migrate {
+            
+            self.setTopInfo(message: "error_updating_predefined_url")
+
+        } else if self.loginMode == .expire{
+            
+            if Customization.kIsSsoActive() {
+                
+                self.setTopInfo(message: "session_expired")
+                
+            } else {
+                
+                self.setPasswordFooter(message: "error_login_message")
+            }
+        }
+        
     }
     
-    func setLoginMode(loginMode: LoginMode) {
-        self.loginMode = loginMode
+    //MARK: Set up image and label with error/info
+    
+    func setTopInfo(message: String) {
+        
+        self.labelTopInfo.text = NSLocalizedString(message, comment: "");
+        
+        self.imageViewTopInfo.image = UIImage(named: "CredentialsError.png")!
     }
     
+    
+    func setURLFooter(message: String, isType type: URLMessageType) {
+        
+        switch type {
+        case .Connection:
+            self.imageViewURLFooter.image = UIImage(named: "NonSecureConnectionIcon.png")!
+
+            break
+        case .ConnectionSecure:
+            self.imageViewURLFooter.image = UIImage(named: "SecureConnectionIcon.png")!
+
+            break
+        case .Error:
+            self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
+            break
+        default:
+            self.imageViewURLFooter.image = nil
+        }
+        
+        self.labelURLFooter.text = NSLocalizedString(message, comment: "")
+        
+        self.imageViewURLFooter.isHidden = false
+        self.labelURLFooter.isHidden = false
+    }
+    
+    func setPasswordFooter(message: String) {
+        
+        self.labelPasswordFooter.text = NSLocalizedString(message, comment: "");
+        
+        self.imageViewPasswordFooter.image = UIImage(named: "CredentialsError.png")!
+    }
+    
+
+    //MARK: Set style
+    
+    func setLabelsMessageStyle() {
+        
+        self.labelTopInfo.backgroundColor = UIColor.clear
+        self.labelTopInfo.textColor = UIColor.ofLoginErrorText()
+        
+        self.labelURLFooter.backgroundColor = UIColor.clear
+        self.labelURLFooter.textColor = UIColor.ofLoginErrorText()
+        
+        self.labelPasswordFooter.backgroundColor = UIColor.clear
+        self.labelPasswordFooter.textColor = UIColor.ofLoginErrorText()
+    }
+    
+    
+
     
     //MARK: UI set up
     func initUI() {
@@ -151,13 +232,12 @@ struct K {
         self.textFieldPassword.isHidden = hiddenStatus
         self.imageViewRightPassword.isHidden = hiddenStatus
         
-        
-        if hiddenStatus {        //TODO: use constraints dependencies from above field instead
-
-            self.buttonConnect.center = self.textFieldUsername.center
-        } else {
-            
-             self.buttonConnect.center = self.textFieldUsername.center
+        if hiddenStatus {        //TODO: use constraints dependencies from above field instead,stack
+//
+//            self.buttonConnect.center = self.textFieldUsername.center
+//        } else {
+//            
+//             self.buttonConnect.center = self.textFieldUsername.center
         }
 
         
@@ -232,9 +312,6 @@ struct K {
 
     }
     
-    func openWebViewLogin() {
-        
-    }
     
     func navigateToSAMLLoginView() {
 
@@ -262,6 +339,7 @@ struct K {
     public func errorLogin() {
         //TOOD: SHow error in url footer
     }
+    
     
 // MARK: SSODelegate implementation
     
@@ -300,10 +378,9 @@ struct K {
 //MARK: Manage network errors delegate
     public func showError(_ message: String!) {
         DispatchQueue.main.async {
-            self.imageViewUrlFooter.image = UIImage(named: "CredentialsError.png")!
-            self.labelUrlFooter.text = message
-            self.imageViewUrlFooter.isHidden = false
-            self.labelUrlFooter.isHidden = false
+            
+            self.setURLFooter(message: message, isType: .Error)
+
         }
     }
 
@@ -402,6 +479,16 @@ struct K {
                                             }
         })
         
+    }
+    
+    
+    override public func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func setLoginMode(loginMode: LoginMode) {
+        self.loginMode = loginMode
     }
     
 }
