@@ -28,8 +28,8 @@
                                 <rect key="frame" x="24" y="177" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="qbb-S0-fYQ" userLabel="Label Top Info">
-                                <rect key="frame" x="57" y="177" width="261" height="30"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="wordWrap" numberOfLines="0" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="ahf-eU-sYc" userLabel="Label Top Info">
+                                <rect key="frame" x="57" y="174" width="261" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <nil key="textColor"/>
@@ -134,7 +134,7 @@
                         <outlet property="imageViewURLFooter" destination="w1a-U9-TaZ" id="G2d-FG-Lo1"/>
                         <outlet property="imageViewUsername" destination="TgF-b1-q7W" id="k70-cZ-xoz"/>
                         <outlet property="labelPasswordFooter" destination="RjH-tK-uMu" id="7Ij-Vh-WJb"/>
-                        <outlet property="labelTopInfo" destination="qbb-S0-fYQ" id="DPJ-qf-R4t"/>
+                        <outlet property="labelTopInfo" destination="ahf-eU-sYc" id="jn5-ss-t80"/>
                         <outlet property="labelURLFooter" destination="hxl-mo-UHl" id="gnP-fl-prX"/>
                         <outlet property="textFieldPassword" destination="3io-Sx-qiv" id="Kf4-lG-kZ3"/>
                         <outlet property="textFieldURL" destination="K3Y-mX-EWx" id="evx-Ry-FVD"/>
