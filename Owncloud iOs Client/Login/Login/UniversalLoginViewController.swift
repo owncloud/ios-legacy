@@ -301,7 +301,7 @@ connection_declined
             getPublicInfoFromServerJob.start(serverURL: self.urlNormalized, withCompletion: { (validatedURL: String?, _ serverAuthenticationMethods: Array<Any>?, _ error: Error?, _ httpStatusCode: NSInteger) in
                 
                 if error != nil {
-                    //TODO: show error
+                    self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: httpStatusCode, andError: error)
                     print ("error detecting authentication methods")
                     
                 } else if validatedURL != nil {
@@ -311,18 +311,19 @@ connection_declined
                     
                     self.authMethodToLogin = DetectAuthenticationMethod().getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
                     
-                    
                     if (self.authMethodToLogin != .NONE) {
                         
                         if (self.authMethodToLogin == .BASIC_HTTP_AUTH) {
                             self.updateUserAndPassFields(hiddenStatus: false)
+                            self.buttonConnect.isEnabled = false
                         }
+                        //else { //enabledafter enter password and no empty user pass
+                            self.buttonConnect.isEnabled = true
+                        //}
                         
-                        self.buttonConnect.isEnabled = true
-
                     } else {
                         self.buttonConnect.isEnabled = false
-                        //TODO show error
+                        self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: httpStatusCode, andError: nil)
                     }
                     
                 } else {
