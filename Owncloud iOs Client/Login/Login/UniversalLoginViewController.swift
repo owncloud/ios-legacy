@@ -138,7 +138,7 @@ connection_declined
         textFieldURL.delegate = self;
         
 
-        self.setInitMessageCredentialsError()
+        self.showInitMessageCredentialsError()
 
         let enabledEditUrlUsernamePassword : Bool = (self.loginMode == .create || self.loginMode == .migrate)
         self.textFieldURL.isEnabled = enabledEditUrlUsernamePassword ? true : false
@@ -158,7 +158,7 @@ connection_declined
     }
     
     
-    func setInitMessageCredentialsError() {
+    func showInitMessageCredentialsError() {
     
         if self.loginMode == .migrate {
             
@@ -166,17 +166,23 @@ connection_declined
 
         } else if self.loginMode == .expire{
             
-            if Customization.kIsSsoActive() {
-                
-                self.setTopInfo(message: "session_expired")
-                
-            } else {
-                
-                self.setPasswordFooter(message: "error_login_message")
-            }
+            self.showCredentialsError()
         }
         
     }
+    
+    func showCredentialsError() {
+        if Customization.kIsSsoActive() {
+            
+            self.setTopInfo(message: "session_expired")
+            
+        } else {
+            
+            self.setPasswordFooter(message: "error_login_message")
+        }
+    }
+    
+
     
     //MARK: Set up image and label with error/info
     
@@ -342,7 +348,13 @@ connection_declined
             break
 
         case .BASIC_HTTP_AUTH:
-            //TODO
+            
+            let userCredDto: CredentialsDto = CredentialsDto()
+            userCredDto.userName = self.textFieldUsername.text
+            userCredDto.accessToken = self.textFieldPassword.text
+            userCredDto.authenticationMethod = authMethod.rawValue
+            
+            validateCredentialsAndCreateNewAccount(credentials: userCredDto);
             
             break
 
@@ -378,7 +390,12 @@ connection_declined
 // MARK: ManageNetworkError delegate
     
     public func errorLogin() {
-        //TOOD: SHow error in url footer
+        
+        DispatchQueue.main.async {
+            
+            self.showCredentialsError()
+            
+        }
     }
     
     
@@ -496,6 +513,8 @@ connection_declined
         DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, credentials: credentials,
                                            withCompletion: { (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) in
                                             
+                                            let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+                                            
                                             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
                                                 
                                                 let user: UserDto = UserDto()
@@ -516,7 +535,7 @@ connection_declined
                                                 
                                             } else {
                                                 
-                                                self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: errorHttp!, andError: error)
+                                                self.manageNetworkErrors.manageErrorHttp(errorHttp!, andErrorConnection: error, andUser: app.activeUser)
                                             }
         })
         

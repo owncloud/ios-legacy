@@ -19,7 +19,7 @@ import Foundation
 
 @objc class DetectListOfFiles: NSObject {
     
-    func readFolderRequest(url: URL, /*authType: AuthenticationMethod, userName: String?, accessToken: String,*/ credentials: CredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) -> Void ) {
+    func readFolderRequest(url: URL, credentials: CredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) -> Void ) {
         
         self.setCredentialsAndUserAgentWith(credentials: credentials)
         
