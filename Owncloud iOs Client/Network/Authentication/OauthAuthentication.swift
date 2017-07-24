@@ -78,6 +78,7 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
                             userCredDto.refreshToken = dictJSON["refresh_token"] as? String
                             userCredDto.expiresIn = dictJSON["expires_in"] as? String
                             userCredDto.tokenType = dictJSON["token_type"] as? String
+                            userCredDto.authenticationMethod = AuthenticationMethod.BEARER_TOKEN.rawValue
                             
                             completion(userCredDto, nil)
                         }

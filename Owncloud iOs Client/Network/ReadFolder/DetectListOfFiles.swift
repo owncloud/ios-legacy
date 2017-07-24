@@ -58,6 +58,7 @@ import Foundation
         
         AppDelegate.sharedOCCommunication().setValueOfUserAgent(UtilsUrls.getUserAgent())
         let authenticationMethod = AuthenticationMethod(rawValue: credentials.authenticationMethod);
+        
         switch authenticationMethod! {
         case .BEARER_TOKEN:
             AppDelegate.sharedOCCommunication().setCredentialsOauthWithToken(credentials.accessToken)
