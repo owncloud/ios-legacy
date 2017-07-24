@@ -51,6 +51,42 @@ struct K {
 //TODO: check if need to setBarForCancelForLoadingFromModal in this class
 //TODO: check if neet to use the notification LoginViewControllerRotate from login view (- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration)
 
+/*****************/
+//TODO: call setURLFooter when checkurl success with type .connection or .connectionsecure
+//TODO: call manageNetworkError for all possible error after check url, not accepted certificate..
+
+
+/*
+ testing_connection
+ 
+ authentification_not_valid
+ 
+ secure_connection_established
+ 
+ https_non_secure_connection_established
+ 
+ connection_established
+ 
+server_instance_not_found
+ 
+ 
+ 
+connection_declined
+ 
+ error_updating_predefined_url -->migrate -->DONE
+
+ 
+ 
+ //    case Create
+ //    case Update
+ //    case Expire
+ //    case Migrate ->DONE
+ 
+ */
+
+
+//TODO: button , hideOrShowPassword
+
 @objc public class UniversalLoginViewController: UIViewController, UITextFieldDelegate, SSODelegate, ManageNetworkErrorsDelegate {
  
 // MARK: IBOutlets
@@ -101,13 +137,20 @@ struct K {
         self.manageNetworkErrors.delegate = self
         textFieldURL.delegate = self;
         
-        
+
         self.setInitMessageCredentialsError()
 
+        let enabledEditUrlUsernamePassword : Bool = (self.loginMode == .create || self.loginMode == .migrate)
+        self.textFieldURL.isEnabled = enabledEditUrlUsernamePassword ? true : false
+        self.textFieldUsername.isEnabled = enabledEditUrlUsernamePassword ? true : false
 
-        //set branding style
-        
-        self.setLabelsMessageStyle()
+
+     
+        //set branding styles
+        //Set background company color like a comanyImageColor
+        //Set background color of company image v
+        //status bar k_is_text_login_status_bar_white
+          self.setLabelsMessageStyle()
         
         self.initUI()
         
@@ -144,7 +187,7 @@ struct K {
         self.imageViewTopInfo.image = UIImage(named: "CredentialsError.png")!
     }
     
-    
+
     func setURLFooter(message: String, isType type: URLMessageType) {
         
         switch type {
@@ -159,8 +202,6 @@ struct K {
         case .Error:
             self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
             break
-        default:
-            self.imageViewURLFooter.image = nil
         }
         
         self.labelURLFooter.text = NSLocalizedString(message, comment: "")
