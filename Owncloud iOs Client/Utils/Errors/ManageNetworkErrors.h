@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -21,12 +21,12 @@
 
 @optional
 - (void)errorLogin;
-- (void)showError:(NSString *) message;
+- (void)showError:(NSString *)message;
 @end
 
 @interface ManageNetworkErrors : NSObject
 
-@property(nonatomic,strong) id<ManageNetworkErrorsDelegate> delegate;
+@property(nonatomic,strong) id <ManageNetworkErrorsDelegate> delegate;
 
 /*
  * Method called when receive an error from server
@@ -35,8 +35,11 @@
  * @user -> UserDto
  */
 
-- (void)manageErrorHttp:(NSInteger)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *)user;
-- (void)returnErrorMessageWithHttpStatusCode:(NSInteger) errorHttp andError:(NSError *) error;
+- (void)manageErrorHttp:(NSInteger)errorHttp
+     andErrorConnection:(NSError *)errorConnection
+                andUser:(UserDto *)user;
 
+- (void)returnErrorMessageWithHttpStatusCode:(NSInteger)errorHttp
+                                    andError:(NSError *)error;
 
 @end

@@ -51,6 +51,7 @@
         case kOCErrorSharedAPIWrong:    
         case kOCErrorServerForbidden:
         case kOCErrorServerPathNotFound:
+        case kCFURLErrorUnsupportedURL:
                 [self.delegate showError:errorConnection.localizedDescription];
             break;
             

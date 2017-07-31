@@ -24,6 +24,17 @@
 #import "MBProgressHUD.h"
 #import "SyncFolderManager.h"
 
+#ifdef CONTAINER_APP
+#import "Owncloud_iOs_Client-Swift.h"
+#elif FILE_PICKER
+#import "ownCloudExtApp-Swift.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
+#else
+#import "ownCloudExtAppFileProvider-Swift.h"
+#endif
+
+
 @class UniversalViewController;
 
 typedef enum {
