@@ -18,6 +18,7 @@
 #import "ManageCookiesStorageDB.h"
 #import "CookiesStorageDto.h"
 #import "UtilsUrls.h"
+#import "UtilsFramework.h"
 
 @implementation UtilsCookies
 
@@ -105,6 +106,40 @@
     
     [UtilsCookies eraseCredentialsWithURL:connectURL];
     [UtilsCookies eraseURLCache];
+}
+
+
++ (void) clearCookies {
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    //Clear the cookies before to try to do login
+    //1- Storage the new cookies on the Database
+    [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
+    //2- Clean the cookies storage
+    [UtilsFramework deleteAllCookies];
+}
+
+//-----------------------------------
+/// @name restoreTheCookiesOfActiveUserByNewUser
+///-----------------------------------
+
+/**
+ * Method to restore the cookies of the active after add a new user
+ *
+ * @param UserDto -> user
+ *
+ */
++ (void) restoreTheCookiesOfActiveUser {
+    DLog(@"_restoreTheCookiesOfActiveUser_");
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    //1- Clean the cookies storage
+    [UtilsFramework deleteAllCookies];
+    //2- We restore the previous cookies of the active user on the System cookies storage
+    [UtilsCookies setOnSystemStorageCookiesByUser:app.activeUser];
+    //3- We delete the cookies of the active user on the databse because it could change and it is not necessary keep them there
+    [ManageCookiesStorageDB deleteCookiesByUser:app.activeUser];
 }
 
 @end

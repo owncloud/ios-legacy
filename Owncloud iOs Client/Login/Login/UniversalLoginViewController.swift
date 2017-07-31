@@ -38,10 +38,12 @@ struct K {
 //    case Migrate
 //}
 
-@objc public enum URLMessageType: Int {
-    case Connection
-    case ConnectionSecure
-    case Error
+@objc public enum StateCheckedURL: Int {
+    case TestingConnection
+    case ConnectionEstablished
+    case ConnectionEstablishedSecure
+    case ConnectionEstablishedNonSecure
+    case ErrorConnectionNoEstablished
 }
 
 
@@ -57,16 +59,21 @@ struct K {
 
 
 /*
- testing_connection
+ 
  
  authentification_not_valid
  
+ 
+ checkurl
+ testing_connection
+ -->succes
  secure_connection_established
  
  https_non_secure_connection_established
  
  connection_established
  
+ --> error
 server_instance_not_found
  
  
@@ -102,6 +109,7 @@ connection_declined
     
     @IBOutlet var imageViewURLFooter: UIImageView!
     @IBOutlet var labelURLFooter: UILabel!
+    @IBOutlet var activityIndicatorURLFooter: UIActivityIndicatorView!
     
     //For Basic and edit account
     @IBOutlet var imageViewUsername: UIImageView!
@@ -125,40 +133,56 @@ connection_declined
     var authCodeReceived = ""
     var manageNetworkErrors: ManageNetworkErrors!
     var loginMode: LoginMode!
+    public var user: UserDto?
     
     let serverURLNormalizer: ServerURLNormalizer = ServerURLNormalizer()
     let getPublicInfoFromServerJob: GetPublicInfoFromServerJob = GetPublicInfoFromServerJob()
     
     
-    override public func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         self.manageNetworkErrors = ManageNetworkErrors()
         self.manageNetworkErrors.delegate = self
-        textFieldURL.delegate = self;
+        textFieldURL.delegate = self
+        textFieldUsername.delegate = self
+        textFieldPassword.delegate = self
         
-
-        self.showInitMessageCredentialsError()
+        self.showInitMessageCredentialsErrorIfNeeded()
 
         let enabledEditUrlUsernamePassword : Bool = (self.loginMode == .create || self.loginMode == .migrate)
         self.textFieldURL.isEnabled = enabledEditUrlUsernamePassword ? true : false
         self.textFieldUsername.isEnabled = enabledEditUrlUsernamePassword ? true : false
-
-
-     
+        
         //set branding styles
-        //Set background company color like a comanyImageColor
-        //Set background color of company image v
-        //status bar k_is_text_login_status_bar_white
-          self.setLabelsMessageStyle()
+            //Set background company color like a comanyImageColor
+            //Set background color of company image v
+            //status bar k_is_text_login_status_bar_white
+            self.setLabelsMessageStyle()
         
         self.initUI()
+        
+        
+        //UtilsCookies.clear()
+        
+        
         
         print("Init login with loginMode: \(loginMode.rawValue) (0=Create,1=Update,2=Expire,3=Migrate)")
     }
     
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if self.loginMode == .update || self.loginMode == .migrate {
+            UtilsCookies.restoreTheCookiesOfActiveUser()
+//TODO: check if need to nil checkaccesstoserver sharedManager
+        }
+    }
+
     
-    func showInitMessageCredentialsError() {
+    //MARK: Set up credentials error
+
+    func showInitMessageCredentialsErrorIfNeeded() {
     
         if self.loginMode == .migrate {
             
@@ -178,7 +202,7 @@ connection_declined
             
         } else {
             
-            self.setPasswordFooter(message: "error_login_message")
+            self.setPasswordFooterError(message: "error_login_message")
         }
     }
     
@@ -193,30 +217,56 @@ connection_declined
         self.imageViewTopInfo.image = UIImage(named: "CredentialsError.png")!
     }
     
+    
+    func setURLFotterSuccess(oNormalized: ServerURLNormalizer) {
+        
+        
+        var type: StateCheckedURL = .TestingConnection
+        type = .ConnectionEstablished         //TODO: check prefix show type of connection
 
-    func setURLFooter(message: String, isType type: URLMessageType) {
+        
+        self.setURLFooter(message: "", isType: type)
+    }
+
+    func setURLFooter(message: String, isType type: StateCheckedURL) {
+        
+        var footerMessage = message
         
         switch type {
-        case .Connection:
+        case .TestingConnection:
+            footerMessage = "testing_connection"
+            //TODO:set activity indicator
+            
+            break
+            
+        case .ConnectionEstablished:
             self.imageViewURLFooter.image = UIImage(named: "NonSecureConnectionIcon.png")!
-
+            footerMessage = "connection_established"
             break
-        case .ConnectionSecure:
+            
+        case .ConnectionEstablishedNonSecure:
+            self.imageViewURLFooter.image = UIImage(named: "NonSecureConnectionIcon.png")!
+            footerMessage = "https_non_secure_connection_established"
+            break
+            
+        case .ConnectionEstablishedSecure:
             self.imageViewURLFooter.image = UIImage(named: "SecureConnectionIcon.png")!
-
+            footerMessage = "secure_connection_established"
             break
-        case .Error:
+            
+        case .ErrorConnectionNoEstablished:
             self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
             break
+            
         }
         
-        self.labelURLFooter.text = NSLocalizedString(message, comment: "")
+        self.labelURLFooter.text = NSLocalizedString(footerMessage, comment: "")
         
         self.imageViewURLFooter.isHidden = false
         self.labelURLFooter.isHidden = false
     }
     
-    func setPasswordFooter(message: String) {
+    func setPasswordFooterError(message: String) {
         
         self.labelPasswordFooter.text = NSLocalizedString(message, comment: "");
         
@@ -246,9 +296,17 @@ connection_declined
         
         //init text
         self.textFieldURL.text = k_default_url_server
-        self.textFieldUsername.text = ""
-        self.textFieldPassword.text = ""
         
+        if self.loginMode == .update {
+            self.textFieldURL.text = UtilsUrls.getFullRemoteServerPath(self.user)
+            self.checkCurrentUrl()
+            self.textFieldUsername.text = self.user?.username
+            self.textFieldPassword.text = ""
+            self.setCancelBarButtonSystemItem()
+        } else {
+            self.textFieldUsername.text = ""
+            self.textFieldPassword.text = ""
+        }
         
         if Customization.kHideUrlServer() {
             //hide and trim spaces below
@@ -271,6 +329,15 @@ connection_declined
         
     }
     
+    func setCancelBarButtonSystemItem() {
+        
+        let cancelButton = UIBarButtonItem(barButtonSystemItem:UIBarButtonSystemItem.cancel,
+                                           target:self,
+                                           action:#selector(closeLoginView))
+        
+        self.navigationItem.leftBarButtonItem = cancelButton
+    }
+    
     func updateUserAndPassFields(hiddenStatus: Bool) {
         
         self.imageViewUsername.isHidden = hiddenStatus
@@ -286,8 +353,14 @@ connection_declined
 //            
 //             self.buttonConnect.center = self.textFieldUsername.center
         }
-
+    }
+    
+    
+    
+    // MARK: dismiss
+    func closeLoginView() {
         
+        self.dismiss(animated: true, completion: nil)
     }
     
 // MARK: checkUrl
@@ -306,6 +379,9 @@ connection_declined
                     
                 } else if validatedURL != nil {
 
+                    self.labelURLFooter.text = ""
+                    self.imageViewURLFooter.isHidden = true
+                    
                     self.validatedServerURL = validatedURL;
                     self.allAvailableAuthMethods = serverAuthenticationMethods as! [AuthenticationMethod]
                     
@@ -317,9 +393,11 @@ connection_declined
                             self.updateUserAndPassFields(hiddenStatus: false)
                             self.buttonConnect.isEnabled = false
                         }
-                        //else { //enabledafter enter password and no empty user pass
+                        //else { //TODO: enabledafter enter password and no empty user pass
                             self.buttonConnect.isEnabled = true
                         //}
+                        
+                        self.setURLFotterSuccess(oNormalized: self.serverURLNormalizer)
                         
                     } else {
                         self.buttonConnect.isEnabled = false
@@ -355,7 +433,12 @@ connection_declined
             userCredDto.accessToken = self.textFieldPassword.text
             userCredDto.authenticationMethod = authMethod.rawValue
             
-            validateCredentialsAndCreateNewAccount(credentials: userCredDto);
+            if loginMode == .create {
+                validateCredentialsAndCreateNewAccount(credentials: userCredDto);
+
+            } else {
+                //update credentials stored account
+            }
             
             break
 
@@ -411,41 +494,60 @@ connection_declined
      *
      */
 
-    public func setCookieForSSO(_ cookieString: String!, andSamlUserName samlUserName: String!) {
+    public func setCookieForSSO(_ cookieString: String?, andSamlUserName samlUserName: String?) {
         
-        print("BACK with cookieString %@ and samlUserName %@", cookieString, samlUserName);
+        if self.loginMode == .update {
+            ManageCookiesStorageDB.deleteCookies(byUser: self.user)
+            UtilsCookies.eraseCredentials(withURL: UtilsUrls.getFullRemoteServerPath(withWebDav: self.user))
+            UtilsCookies.eraseURLCache()
+        }
         
         if cookieString == nil || cookieString == "" {
-            // TODO show error
+            // TODO: check if show other message error
+            self.setPasswordFooterError(message: NSLocalizedString("authentification_not_valid", comment: "") )
+            
             return;
         }
         
         if samlUserName == nil || samlUserName == "" {
-            // TODO show error NSLocalizedString(@"saml_server_does_not_give_user_id", nil)
+            self.setPasswordFooterError(message: NSLocalizedString("saml_server_does_not_give_user_id", comment: "") )
+
             return
         }
+        
+        print("BACK with cookieString %@ and samlUserName %@", cookieString!, samlUserName!);
+
         
         let userCredDto: CredentialsDto = CredentialsDto()
         userCredDto.userName = samlUserName
         userCredDto.accessToken = cookieString
         userCredDto.authenticationMethod = self.authMethodToLogin.rawValue
         
-        validateCredentialsAndCreateNewAccount(credentials: userCredDto);
+        //We check if the user that we are editing is the same that we are using
+        if (self.loginMode == .update  && self.user?.username == samlUserName) || (self.loginMode == .migrate){
+            self.textFieldUsername.text = samlUserName
+            self.textFieldPassword.text = cookieString
+            
+            validateCredentialsAndCreateNewAccount(credentials: userCredDto);
+
+        } else {
+            
+            self.setPasswordFooterError(message: NSLocalizedString("credentials_different_user", comment: "") )
+        }
+        
+        
         
     }
     
 //MARK: Manage network errors delegate
     public func showError(_ message: String!) {
         DispatchQueue.main.async {
-            
-            self.setURLFooter(message: message, isType: .Error)
-
+            self.setURLFooter(message: message, isType: .ErrorConnectionNoEstablished)
         }
     }
-
+    
     
 // MARK: textField delegate
-    
     public func textFieldDidEndEditing(_ textField: UITextField) {
 
         self.checkCurrentUrl()
@@ -523,7 +625,12 @@ connection_declined
                                                 user.username = credentials.userName
                                                 
                                                 user.ssl = self.urlNormalized.hasPrefix("https")
-                                                user.activeaccount = true
+                                                
+                                                if (app.activeUser == nil) {
+                                                    //only set as active account the first account added
+                                                    user.activeaccount = true
+                                                }
+                                                
                                                 user.urlRedirected = (UIApplication.shared.delegate as! AppDelegate).urlServerRedirected
                                                 user.predefinedUrl = k_default_url_server
                                                 
@@ -535,8 +642,16 @@ connection_declined
                                                 (UIApplication.shared.delegate as! AppDelegate).generateAppInterface(fromLoginScreen: true)
                                                 
                                             } else {
+                                              
+                                                //TODO: check with https url without prefix, error unsupported URL
+//                                                if errorHttp == 0 {
+//                                                    self.setPasswordFooterError(message: NSLocalizedString("", comment: "") )
+//
+//                                                } else {
+                                                    self.manageNetworkErrors.manageErrorHttp((errorHttp)!, andErrorConnection: error, andUser: app.activeUser)
+                                                //}
+                                                    
                                                 
-                                                self.manageNetworkErrors.manageErrorHttp(errorHttp!, andErrorConnection: error, andUser: app.activeUser)
                                             }
         })
         

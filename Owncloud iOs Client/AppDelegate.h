@@ -59,8 +59,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
      
     RecentViewController *_recentViewController;
     FilesViewController *_filesViewController;
-    //Pointer to a actual files view controller where the user is.
-    FilesViewController *_presentFilesViewController;
+
     //FavouritesViewController *_favouritesViewController;
     SettingsViewController *_settingsViewController;
     //OCTabBarController *_tabBarController;
@@ -117,6 +116,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) SharedViewController *sharedViewController;
 @property (nonatomic, strong) RecentViewController *recentViewController;
 @property (nonatomic, strong) FilesViewController *filesViewController;
+//Pointer to a actual files view controller where the user is.
 @property (nonatomic, strong) FilesViewController *presentFilesViewController;
 @property (nonatomic, strong) SettingsViewController *settingsViewController;
 @property (nonatomic, strong) UISplitViewController *splitViewController;

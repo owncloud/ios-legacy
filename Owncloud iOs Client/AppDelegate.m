@@ -82,7 +82,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @synthesize filePathFromOtherApp=_filePathFromOtherApp;
 @synthesize isFileFromOtherAppWaitting=_isFileFromOtherAppWaitting;
 @synthesize isSharedToOwncloudPresent=_isSharedToOwncloudPresent;
-@synthesize presentFilesViewController=_presentFilesViewController;
 @synthesize isRefreshInProgress=_isRefreshInProgress;
 @synthesize oauthToken = _oauthToken;
 @synthesize avMoviePlayer=_avMoviePlayer;
@@ -2756,6 +2755,8 @@ float shortDelay = 0.3;
     [self.window makeKeyAndVisible];
     
 }
+
+
 
 #pragma mark - SplashScreenFake
 

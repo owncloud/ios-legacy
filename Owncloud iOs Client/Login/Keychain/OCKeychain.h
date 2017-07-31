@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -21,9 +21,21 @@
 +(BOOL)setCredentialsOfUser:(UserDto *)user;
 +(CredentialsDto *)getCredentialsById:(NSString *)idUser;
 +(BOOL)removeCredentialsById:(NSString *)idUser;
-+(BOOL)updateCredentialsById:(NSString *)idUser withUsername:(NSString *)userName andPassword:(NSString *)password;
-+(BOOL)updateKeychainForUseLockPropertyForUser:(NSString *)idUser;
++(BOOL)updateCredentialsOfUser:(UserDto *)user;
 +(BOOL)resetKeychain;
+
+
+///-----------------------------------
+/// @name updateAllKeychainsToUseTheLockProperty
+///-----------------------------------
+
+/**
+ * This method updates all the credentials to use a property to allow to access to them when the passcode system is set.
+ * Used in db update 12-13
+ */
 +(void)updateAllKeychainsToUseTheLockProperty;
+
++(BOOL)updateKeychainForUseLockPropertyForUser:(NSString *)idUser;
+
 
 @end
