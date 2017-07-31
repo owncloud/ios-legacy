@@ -44,12 +44,14 @@ import Foundation
             //TODO: chec redirectedserver in status
             if !isSamlCredentialsError {
                 
-                completion(nil, nil , items)
+                completion(0, nil , items)
             }
             
         }, failureRequest: { (response:HTTPURLResponse?, error: Error?, token: String?, redirectedServer: String?) in
             
-            completion(response?.statusCode, error, nil)
+            let statusCode: NSInteger = (response?.statusCode == nil) ? 0: (response?.statusCode)!
+            
+            completion(statusCode, error, nil)
         })
     }
     
