@@ -24,6 +24,7 @@
 
 @implementation AccountCell
 
+//TODO: use autolayout for cell 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];

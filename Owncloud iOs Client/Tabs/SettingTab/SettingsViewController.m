@@ -1770,10 +1770,12 @@
 - (void) didSelectEditAccount:(UserDto *)user  {
    
     UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeUpdate];
+    viewController.user = user;
     
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
+        
     } else {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         OCNavigationController *navController = nil;

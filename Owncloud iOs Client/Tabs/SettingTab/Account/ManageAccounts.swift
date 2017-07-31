@@ -36,8 +36,61 @@ import Foundation
             //error storing account
             print("Error storing account for \(user.username)")
         }
+    }
+    
+    func updateAccountOfUser(_ user: UserDto, withCredentials credDto: CredentialsDto) {
         
         
+        OCKeychain.updateCredentials(ofUser: user)
+        
+        if user.activeaccount {
+            UtilsCookies.eraseCredentialsAndUrlCacheOfActiveUser()
+            
+            CheckFeaturesSupported.updateServerFeaturesAndCapabilitiesOfActiveUser()
+        }
+        
+        //Change the state of user uploads with credential error
+        ManageUploadsDB.updateErrorCredentialFiles(user.idUser)
+        
+        self.restoreDownloadAndUploadsOfUser(user)
+        
+        
+        //TODO:check relaunchErrorCredentialFilesNotification if needed
+    }
+    
+    func migrateAccountOfUser(_ user: UserDto, withCredentials credDto: CredentialsDto) {
+        
+        //Update parameters after a force url and credentials have not been renewed
+        
+        if Customization.kIsSsoActive() {
+          //  user.username =
+        }
+        
+        user.urlRedirected = (UIApplication.shared.delegate as! AppDelegate).urlServerRedirected
+        user.predefinedUrl = k_default_url_server
+        
+        ManageUploadsDB.overrideAllUploads(withNewURL: UtilsUrls.getFullRemoteServerPath(user))
+        
+        ManageUsersDB.updateUser(by: user)
+        
+        
+        self.updateAccountOfUser(user, withCredentials: credDto)
+        
+        (UIApplication.shared.delegate as! AppDelegate).updateStateAndRestoreUploadsAndDownloads()
+        let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+         //[[APP_DELEGATE presentFilesViewController] initFilesView];
+        let instantUploadManager: InstantUpload = InstantUpload.instantUploadManager()
+        instantUploadManager.activate()
+    }
+    
+    func restoreDownloadAndUploadsOfUser(_ user : UserDto) {
+        
+        (UIApplication.shared.delegate as! AppDelegate).cancelTheCurrentUploads(ofTheUser: user.idUser)
+        
+        let downloadManager : ManageDownloads = (UIApplication.shared.delegate as! AppDelegate).downloadManager
+        downloadManager.cancelAndRefreshInterface()
+        
+        (UIApplication.shared.delegate as! AppDelegate).launchProcessToSyncAllFavorites()
     }
     
 }
