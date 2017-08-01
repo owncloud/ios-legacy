@@ -373,19 +373,10 @@
     }];
 }
 
-+(void) insertManyFiles:(NSMutableArray *)listOfFiles andFileId:(NSInteger)fileId {
++(void) insertManyFiles:(NSMutableArray *)listOfFiles ofFileId:(NSInteger)fileId andUser:(UserDto *)user {
     
     NSString *sql = @"";
     NSMutableArray *arrayOfSqlRequests = [NSMutableArray new];
-    
-    UserDto *mUser;
-    
-#ifdef CONTAINER_APP
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    mUser = app.activeUser;
-#else
-    mUser = [ManageUsersDB getActiveUser];
-#endif
     
     NSInteger numberOfInsertEachTime = 0;
     
@@ -397,7 +388,7 @@
                //INSERT INTO files(file_path, file_name, is_directory,user_id, is_download, size, file_id, date
                FileDto *current = [listOfFiles objectAtIndex:i];
                current.fileId = fileId;
-               current.userId = mUser.idUser;
+               current.userId = user.idUser;
                 
                 //to jump the first becouse it is not necesary (is the same directory) and the other if is to insert 450 by 450
                 if(numberOfInsertEachTime == 0) {
@@ -471,7 +462,7 @@
             }
             
             if (!correctQuery) {
-                DLog(@"Error in insertManyFiles");
+                DLog(@"Error inserting %lu files in DB for file directory id=%ld of user %@", (unsigned long)[listOfFiles count],  (long)fileId, user.username);
             } else {
                 DLog(@"Inserted %lu files in DB for file directory id=%ld", (unsigned long)[listOfFiles count], (long)fileId);
             }

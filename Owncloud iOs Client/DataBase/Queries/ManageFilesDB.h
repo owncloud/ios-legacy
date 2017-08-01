@@ -94,9 +94,10 @@
 /*
  * Method to insert all the files of a folder
  * @listOfFiles -> List of all the files
- * @fileId -> id of the folder father
+ * @fileId -> id of its parent folder
+ * @user -> UserDto owner of files
  */
-+(void) insertManyFiles:(NSMutableArray *)listOfFiles andFileId:(NSInteger)fileId;
++(void) insertManyFiles:(NSMutableArray *)listOfFiles ofFileId:(NSInteger)fileId andUser:(UserDto *)user;
 
 /*
  * Method to delete a file

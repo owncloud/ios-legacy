@@ -18,6 +18,7 @@
 
 #import "ManageFilesDB.h"
 #import "UserDto.h"
+#import "ManageUsersDB.h"
 
 @implementation FileListDBOperations
 
@@ -115,7 +116,16 @@
     DLog(@"name: %@", currentFolder.fileName);
     
   //  NSMutableArray *directoryList = [[req getDirectoryList] mutableCopy];
-    [ManageFilesDB insertManyFiles:arrayFromServer andFileId:currentFolder.idFile];
+    
+     UserDto *user;
+#ifdef CONTAINER_APP
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    user = app.activeUser;
+#else
+    user = [ManageUsersDB getActiveUser];
+#endif
+    
+    [ManageFilesDB insertManyFiles:arrayFromServer ofFileId:currentFolder.idFile andUser:user];
     
     //Read all backups folders and update on the old files related with the new ids
     [ManageFilesDB updateRelatedFilesFromBackup];
