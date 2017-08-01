@@ -156,6 +156,7 @@ connection_declined  Connection declined by user
             //Set background color of company image v
             //status bar k_is_text_login_status_bar_white
             self.setLabelsMessageStyle()
+            self.setConnectButtonStyle(isEnabled: false)
         
         self.initUI()
         
@@ -304,6 +305,18 @@ connection_declined  Connection declined by user
         
         self.labelPasswordFooter.backgroundColor = UIColor.clear
         self.labelPasswordFooter.textColor = UIColor.ofLoginErrorText()
+    }
+    
+    func setConnectButtonStyle(isEnabled: Bool) {
+        self.buttonConnect.layer.cornerRadius = self.buttonConnect.layer.bounds.height / 4
+        self.buttonConnect.setTitleColor(UIColor.ofLoginButtonText(), for: .normal)
+        
+      if isEnabled {
+            self.buttonConnect.backgroundColor = UIColor.ofLoginButtonBackground()
+        } else {
+            self.buttonConnect.backgroundColor = UIColor.ofLoginButtonBackground().withAlphaComponent(0.6)
+      }
+
     }
     
     
