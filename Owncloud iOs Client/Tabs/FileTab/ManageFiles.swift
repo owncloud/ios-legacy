@@ -21,17 +21,17 @@ import Foundation
     
     
     
-    func storeListOfFiles(_ listOfFiles: [FileDto] , forFileId fileId: Int) {
+    func storeListOfFiles(_ listOfFiles: [FileDto] , forFileId fileId: Int, andUser user: UserDto) {
         
         //Change the filePath from the library to our db format
         
         for currentFile:FileDto in listOfFiles {
             
-            currentFile.filePath = UtilsUrls.getFilePathOnDBByFilePath(onFileDto: currentFile.filePath, andUser:(UIApplication.shared.delegate as! AppDelegate).activeUser )
+            currentFile.filePath = UtilsUrls.getFilePathOnDBByFilePath(onFileDto: currentFile.filePath, andUser:user)
         }
         
         
-        ManageFilesDB.insertManyFiles(listOfFiles as! NSMutableArray, andFileId: fileId)
+        ManageFilesDB.insertManyFiles(listOfFiles as! NSMutableArray, ofFileId: fileId, andUser: user)
         
     }
     

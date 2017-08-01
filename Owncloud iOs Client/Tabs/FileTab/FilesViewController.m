@@ -1662,7 +1662,7 @@
    // DLog(@"The directory List have: %d elements", directoryList.count);
    // DLog(@"Directoy list: %@", directoryList);
     
-    [ManageFilesDB insertManyFiles:directoryList andFileId:_selectedFileDto.idFile];
+    [ManageFilesDB insertManyFiles:directoryList ofFileId:_selectedFileDto.idFile andUser:app.activeUser];
     
     [self navigateToUrl:_nextRemoteFolder andFileId:_selectedFileDto.idFile];
 }
