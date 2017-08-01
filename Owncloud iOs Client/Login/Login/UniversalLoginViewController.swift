@@ -123,6 +123,7 @@ connection_declined
     @IBOutlet var labelPasswordFooter: UILabel!
     
     
+    
     @IBOutlet var buttonConnect: UIButton!
     @IBOutlet var buttonHelpLink: UIButton!
     
@@ -433,12 +434,7 @@ connection_declined
             userCredDto.accessToken = self.textFieldPassword.text
             userCredDto.authenticationMethod = authMethod.rawValue
             
-            if loginMode == .create {
-                validateCredentialsAndCreateNewAccount(credentials: userCredDto);
-
-            } else {
-                //update credentials stored account
-            }
+            validateCredentialsAndAddAccount(credentials: userCredDto);
             
             break
 
@@ -528,7 +524,7 @@ connection_declined
             self.textFieldUsername.text = samlUserName
             self.textFieldPassword.text = cookieString
             
-            validateCredentialsAndCreateNewAccount(credentials: userCredDto);
+            validateCredentialsAndAddAccount(credentials: userCredDto);
 
         } else {
             
@@ -585,7 +581,7 @@ connection_declined
                 
                     if let userCredentials = userCredDto {
                         
-                        self.validateCredentialsAndCreateNewAccount(credentials: userCredentials);
+                        self.validateCredentialsAndAddAccount(credentials: userCredentials);
                         
                     } else {
                         // TODO show error?
@@ -609,7 +605,9 @@ connection_declined
     
 // MARK: 'private' methods
     
-    func validateCredentialsAndCreateNewAccount(credentials: CredentialsDto) {
+    
+    
+    func validateCredentialsAndAddAccount(credentials: CredentialsDto) {
         //get list of files in root to check session validty, if ok store new account
         let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.urlNormalized) )
         
@@ -620,26 +618,36 @@ connection_declined
                                             
                                             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
                                                 
-                                                let user: UserDto = UserDto()
-                                                user.url = self.urlNormalized
-                                                user.username = credentials.userName
+                                                if self.user == nil {
+                                                     self.user = UserDto()
+                                                }
                                                 
-                                                user.ssl = self.urlNormalized.hasPrefix("https")
+                                                self.user?.url = self.urlNormalized
+                                                self.user?.username = credentials.userName
+                                                self.user?.ssl = self.urlNormalized.hasPrefix("https")
+                                                self.user?.urlRedirected = app.urlServerRedirected
+                                                self.user?.predefinedUrl = k_default_url_server
                                                 
                                                 if (app.activeUser == nil) {
                                                     //only set as active account the first account added
-                                                    user.activeaccount = true
+                                                    self.user?.activeaccount = true
+                                                    app.activeUser = self.user
+                                                }
+
+                                                
+                                                if self.loginMode == .update {
+                                                    ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
+                                                } else {
+                                                    ManageAccounts().storeAccountOfUser(self.user!, withCredentials: credentials)
                                                 }
                                                 
-                                                user.urlRedirected = (UIApplication.shared.delegate as! AppDelegate).urlServerRedirected
-                                                user.predefinedUrl = k_default_url_server
+                                                ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
                                                 
-                                                ManageAccounts().storeAccountOfUser(user, withCredentials: credentials)
-                                                
-                                                ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0)
-                                                
-                                                //Generate the app interface
-                                                (UIApplication.shared.delegate as! AppDelegate).generateAppInterface(fromLoginScreen: true)
+                                                if self.loginMode == .create {
+                                                    app.generateAppInterface(fromLoginScreen: true)
+                                                } else {
+                                                    self.closeLoginView()
+                                                }
                                                 
                                             } else {
                                               
@@ -648,7 +656,7 @@ connection_declined
 //                                                    self.setPasswordFooterError(message: NSLocalizedString("", comment: "") )
 //
 //                                                } else {
-                                                    self.manageNetworkErrors.manageErrorHttp((errorHttp)!, andErrorConnection: error, andUser: app.activeUser)
+                                                    self.manageNetworkErrors.manageErrorHttp((errorHttp)!, andErrorConnection: error, andUser: self.user)
                                                 //}
                                                     
                                                 
