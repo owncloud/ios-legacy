@@ -62,14 +62,14 @@
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits"/>
                                                             </textField>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HUS-Qc-A5N" userLabel="Button Reconnection">
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eSw-Lz-XIR" userLabel="Button Reconnection">
                                                                 <rect key="frame" x="727" y="0.0" width="25" height="25"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="width" constant="25" id="zag-UY-pi0"/>
+                                                                    <constraint firstAttribute="width" constant="25" id="uI9-CC-Mzh"/>
                                                                 </constraints>
                                                                 <state key="normal" title="Button" image="ReconnectIcon.png"/>
                                                                 <connections>
-                                                                    <action selector="reconnectionButtonTapped:" destination="iPx-pb-eEh" eventType="touchUpInside" id="71L-sL-XqG"/>
+                                                                    <action selector="reconnectionButtonTapped:" destination="iPx-pb-eEh" eventType="touchUpInside" id="JwI-o5-N9T"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>
@@ -85,11 +85,21 @@
                                                                 </constraints>
                                                             </imageView>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="0NZ-MO-sTX" userLabel="Label URL Footer">
-                                                                <rect key="frame" x="33" y="0.0" width="719" height="25"/>
+                                                                <rect key="frame" x="33" y="0.0" width="686" height="25"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
+                                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HUS-Qc-A5N" userLabel="Button Reconnection">
+                                                                <rect key="frame" x="727" y="0.0" width="25" height="25"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" constant="25" id="zag-UY-pi0"/>
+                                                                </constraints>
+                                                                <state key="normal" title="Button" image="ReconnectIcon.png"/>
+                                                                <connections>
+                                                                    <action selector="reconnectionButtonTapped:" destination="iPx-pb-eEh" eventType="touchUpInside" id="71L-sL-XqG"/>
+                                                                </connections>
+                                                            </button>
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wsI-KP-W6G" userLabel="UsernameStackView">
