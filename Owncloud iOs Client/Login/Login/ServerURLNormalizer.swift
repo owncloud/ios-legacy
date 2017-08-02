@@ -24,23 +24,22 @@ class ServerURLNormalizer {
     let k_remove_to_suffix : String = "/index.php"
     let k_remove_to_contained_path : String = "/index.php/apps/"
     
-    var normalizedURL: String!
+    var normalizedURL = ""
     var user: String?
     var password: String?
+    var scheme: String? //TODO store scheme
     
-    func normalize(serverURL: String) -> String {
+    func normalize(serverURL: String) {
         
-        normalizedURL = serverURL;
+        self.normalizedURL = serverURL;
         
-        normalizedURL = stripAccidentalWhiteSpaces(inputURL: normalizedURL)
+        self.normalizedURL = stripAccidentalWhiteSpaces(inputURL: normalizedURL)
         
-        normalizedURL = stripUsernameAndPassword(inputURL: normalizedURL)
+        self.normalizedURL = stripUsernameAndPassword(inputURL: normalizedURL)
         
-        normalizedURL = stripIndexPhpOrAppsFilesFromUrl(inputURL: normalizedURL);
+        self.normalizedURL = stripIndexPhpOrAppsFilesFromUrl(inputURL: normalizedURL);
         
-        normalizedURL = grantFinalSlash(inputURL: normalizedURL)
-        
-        return normalizedURL;
+        self.normalizedURL = grantFinalSlash(inputURL: normalizedURL)
     }
     
     // Strip accidental white spaces at the end and beginning of the received URL.

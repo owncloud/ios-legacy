@@ -39,6 +39,7 @@ struct K {
 //}
 
 @objc public enum StateCheckedURL: Int {
+    case None
     case TestingConnection
     case ConnectionEstablished
     case ConnectionEstablishedSecure
@@ -54,7 +55,6 @@ struct K {
 //TODO: check if neet to use the notification LoginViewControllerRotate from login view (- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration)
 
 /*****************/
-//TODO: call setURLFooter when checkurl success with type .connection or .connectionsecure
 //TODO: call manageNetworkError for all possible error after check url, not accepted certificate..
 
 
@@ -122,12 +122,10 @@ connection_declined
     @IBOutlet var imageViewPasswordFooter: UIImageView!
     @IBOutlet var labelPasswordFooter: UILabel!
     
-    
-    
     @IBOutlet var buttonConnect: UIButton!
     @IBOutlet var buttonHelpLink: UIButton!
     
-    var urlNormalized: String!
+   // var urlNormalized: String!
     var validatedServerURL: String!
     var allAvailableAuthMethods = [AuthenticationMethod]()
     var authMethodToLogin: AuthenticationMethod!
@@ -221,23 +219,33 @@ connection_declined
     
     func setURLFotterSuccess(oNormalized: ServerURLNormalizer) {
         
-        
         var type: StateCheckedURL = .TestingConnection
-        type = .ConnectionEstablished         //TODO: check prefix show type of connection
+        type = .ConnectionEstablished         //TODO: check prefix show type of connection, if oNormalized.scheme
 
         
         self.setURLFooter(message: "", isType: type)
     }
 
+    func setActivityIndicator(isVisible: Bool) {
+        //TODO: add and connect with new element in UI and
+//        if isVisible {
+//            self.activityIndicatorURLFooter.isHidden = false
+//            self.activityIndicatorURLFooter.startAnimating()
+//        } else {
+//            self.activityIndicatorURLFooter.isHidden = true
+//            self.activityIndicatorURLFooter.stopAnimating()
+//        }
+    }
+    
     func setURLFooter(message: String, isType type: StateCheckedURL) {
         
         var footerMessage = message
+        self.setActivityIndicator(isVisible: false)
         
         switch type {
         case .TestingConnection:
             footerMessage = "testing_connection"
-            //TODO:set activity indicator
-            
+            self.setActivityIndicator(isVisible: true)
             break
             
         case .ConnectionEstablished:
@@ -258,13 +266,15 @@ connection_declined
         case .ErrorConnectionNoEstablished:
             self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
             break
-            
+         
+        case .None:
+            self.imageViewURLFooter.image = nil
+            footerMessage = ""
+            break
         }
         
         self.labelURLFooter.text = NSLocalizedString(footerMessage, comment: "")
         
-        self.imageViewURLFooter.isHidden = false
-        self.labelURLFooter.isHidden = false
     }
     
     func setPasswordFooterError(message: String) {
@@ -294,7 +304,10 @@ connection_declined
     
     //MARK: UI set up
     func initUI() {
+       //self.checkingURLIndicator = UIActivityIndicatorView(frame: self.imageViewURLFooter.frame)
         
+        //self.activityIndicatorURLFooter.frame = self.imageViewURLFooter.frame
+
         //init text
         self.textFieldURL.text = k_default_url_server
         
@@ -356,6 +369,13 @@ connection_declined
         }
     }
     
+    func updateUIWithNormalizedData(_ oNormalized: ServerURLNormalizer) {
+        self.textFieldURL.text = oNormalized.normalizedURL
+        self.textFieldUsername.text = oNormalized.user
+        self.textFieldPassword.text = oNormalized.password
+    }
+
+    
     
     
     // MARK: dismiss
@@ -368,20 +388,23 @@ connection_declined
     
     func checkCurrentUrl() {
         
+        self.setURLFooter(message: "", isType: .TestingConnection)
+        
         if let inputURL = textFieldURL.text {
-            self.urlNormalized = serverURLNormalizer.normalize(serverURL: inputURL)
+            self.serverURLNormalizer.normalize(serverURL: inputURL)
 
             // get public infor from server
-            getPublicInfoFromServerJob.start(serverURL: self.urlNormalized, withCompletion: { (validatedURL: String?, _ serverAuthenticationMethods: Array<Any>?, _ error: Error?, _ httpStatusCode: NSInteger) in
+            getPublicInfoFromServerJob.start(serverURL: self.serverURLNormalizer.normalizedURL, withCompletion: { (validatedURL: String?, _ serverAuthenticationMethods: Array<Any>?, _ error: Error?, _ httpStatusCode: NSInteger) in
                 
                 if error != nil {
                     self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: httpStatusCode, andError: error)
                     print ("error detecting authentication methods")
                     
                 } else if validatedURL != nil {
-
-                    self.labelURLFooter.text = ""
-                    self.imageViewURLFooter.isHidden = true
+                    
+                    self.updateUIWithNormalizedData(self.serverURLNormalizer)
+                    
+                    self.setURLFooter(message: "", isType: .None)
                     
                     self.validatedServerURL = validatedURL;
                     self.allAvailableAuthMethods = serverAuthenticationMethods as! [AuthenticationMethod]
@@ -450,15 +473,15 @@ connection_declined
 
         //Grant main thread
         DispatchQueue.main.async {
-            print("_showSSOLoginScreen_ url: %@", self.urlNormalized);
+            print("_showSSOLoginScreen_ url: %@", self.serverURLNormalizer.normalizedURL)
             
             //New SSO WebView controller
-            let ssoViewController: SSOViewController = SSOViewController(nibName: "SSOViewController", bundle: nil);
-            ssoViewController.urlString = self.urlNormalized;
-            ssoViewController.delegate = self;
+            let ssoViewController: SSOViewController = SSOViewController(nibName: "SSOViewController", bundle: nil)
+            ssoViewController.urlString = self.serverURLNormalizer.normalizedURL
+            ssoViewController.delegate = self
 
             //present it
-            ssoViewController.navigate(from: self);
+            ssoViewController.navigate(from: self)
         }
     }
     
@@ -576,7 +599,7 @@ connection_declined
             if !(webVC.authCode).isEmpty {
                 self.authCodeReceived = webVC.authCode
                 
-                let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.urlNormalized)
+                let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.serverURLNormalizer.normalizedURL)
                 OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { ( userCredDto: CredentialsDto?, error: String?) in
                 
                     if let userCredentials = userCredDto {
@@ -598,7 +621,7 @@ connection_declined
         if(segue.identifier == K.segueId.segueToWebLoginView) {
             
             let nextViewController = (segue.destination as! WebLoginViewController)
-            nextViewController.serverPath = self.urlNormalized
+            nextViewController.serverPath = self.serverURLNormalizer.normalizedURL
         }
     }
     
@@ -609,7 +632,7 @@ connection_declined
     
     func validateCredentialsAndAddAccount(credentials: CredentialsDto) {
         //get list of files in root to check session validty, if ok store new account
-        let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.urlNormalized) )
+        let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.serverURLNormalizer.normalizedURL) )
         
         DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, credentials: credentials,
                                            withCompletion: { (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) in
@@ -622,9 +645,9 @@ connection_declined
                                                      self.user = UserDto()
                                                 }
                                                 
-                                                self.user?.url = self.urlNormalized
+                                                self.user?.url = self.serverURLNormalizer.normalizedURL
                                                 self.user?.username = credentials.userName
-                                                self.user?.ssl = self.urlNormalized.hasPrefix("https")
+                                                self.user?.ssl = self.serverURLNormalizer.normalizedURL.hasPrefix("https")
                                                 self.user?.urlRedirected = app.urlServerRedirected
                                                 self.user?.predefinedUrl = k_default_url_server
                                                 
