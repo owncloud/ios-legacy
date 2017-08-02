@@ -388,7 +388,7 @@ connection_declined  Connection declined by user
         }
         
         let shouldBehiddenUserPassFields = (self.loginMode != .create) ? false : true ;
-        self.updateUserAndPassFields(hiddenStatus: shouldBehiddenUserPassFields)
+        self.showBasicAuthLoginStackViews(hiddenStatus: shouldBehiddenUserPassFields)
 
 
         self.disableLoginButton()
@@ -406,7 +406,7 @@ connection_declined  Connection declined by user
         self.navigationItem.leftBarButtonItem = cancelButton
     }
     
-    func updateUserAndPassFields(hiddenStatus: Bool) {
+    func showBasicAuthLoginStackViews(hiddenStatus: Bool) {
         
         UIView.animate(withDuration: 0.5, animations: {
             self.usernameStackView.isHidden = hiddenStatus
@@ -425,8 +425,9 @@ connection_declined  Connection declined by user
         }
     }
 
-    
-    
+    func showURLStackView(hiddenStatus: Bool) {
+        self.urlStackView.isHidden = hiddenStatus
+    }
     
     // MARK: dismiss
     func closeLoginView() {
@@ -451,7 +452,6 @@ connection_declined  Connection declined by user
                     print ("error detecting authentication methods")
                     
                 } else if validatedURL != nil {
-                    self.updateUserAndPassFields(hiddenStatus: false) //TEST
 
                     self.updateUIWithNormalizedData(self.serverURLNormalizer)
                     
@@ -465,7 +465,7 @@ connection_declined  Connection declined by user
                     if (self.authMethodToLogin != .NONE) {
                         
                         if (self.authMethodToLogin == .BASIC_HTTP_AUTH) {
-                            self.updateUserAndPassFields(hiddenStatus: false)
+                            self.showBasicAuthLoginStackViews(hiddenStatus: false)
                             self.enableLoginButton()
                         }
                         //else { //TODO: enabledafter enter password and no empty user pass
