@@ -447,7 +447,8 @@ connection_declined  Connection declined by user
                     print ("error detecting authentication methods")
                     
                 } else if validatedURL != nil {
-                    
+                    self.updateUserAndPassFields(hiddenStatus: false) //TEST
+
                     self.updateUIWithNormalizedData(self.serverURLNormalizer)
                     
                     self.setURLFooter(message: "", isType: .None)
@@ -461,16 +462,16 @@ connection_declined  Connection declined by user
                         
                         if (self.authMethodToLogin == .BASIC_HTTP_AUTH) {
                             self.updateUserAndPassFields(hiddenStatus: false)
-                            self.buttonConnect.isEnabled = false
+                            self.enableLoginButton()
                         }
                         //else { //TODO: enabledafter enter password and no empty user pass
-                            self.buttonConnect.isEnabled = true
+                            self.enableLoginButton()
                         //}
                         
                         self.setURLFotterSuccess(oNormalized: self.serverURLNormalizer)
                         
                     } else {
-                        self.buttonConnect.isEnabled = false
+                        self.disableLoginButton()
                         self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: httpStatusCode, andError: nil)
                     }
                     
