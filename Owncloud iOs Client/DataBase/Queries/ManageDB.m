@@ -1259,4 +1259,14 @@
 }
 
 
+
++ (void) updateDBVersion21To22 {
+    
+    //1.- Migrate the current password stored in keychain
+
+    [OCKeychain updateAllKeychainItemsUntilVersion21ToStoreCredentialsDtoWithBasicAuthenticationAsValue];
+    
+}
+
+
 @end

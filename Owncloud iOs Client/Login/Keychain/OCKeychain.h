@@ -16,14 +16,29 @@
 #import <Foundation/Foundation.h>
 #import "CredentialsDto.h"
 
+
 @interface OCKeychain : NSObject
 
 +(BOOL)setCredentialsOfUser:(UserDto *)user;
-+(CredentialsDto *)getCredentialsById:(NSString *)idUser;
+
+/**
+ * @return CredentialsDto -> New credentialDto with all the new data added to support oauth
+ */
++(CredentialsDto *)getNCredentialsById:(NSString *)idUser;
+
 +(BOOL)removeCredentialsById:(NSString *)idUser;
 +(BOOL)updateCredentialsOfUser:(UserDto *)user;
 +(BOOL)resetKeychain;
 
+
+/**
+ *   Following methods are used to migrate keychain items
+ */
+
+/**
+ * Deprecated, only used to migrate old keychain items in version 21to22
+ */
++(CredentialsDto *)getOldCredentialsById:(NSString *)idUser;
 
 ///-----------------------------------
 /// @name updateAllKeychainsToUseTheLockProperty
@@ -36,6 +51,9 @@
 +(void)updateAllKeychainsToUseTheLockProperty;
 
 +(BOOL)updateKeychainForUseLockPropertyForUser:(NSString *)idUser;
+
+
++(void)updateAllKeychainItemsUntilVersion21ToStoreCredentialsDtoWithBasicAuthenticationAsValue;
 
 
 @end

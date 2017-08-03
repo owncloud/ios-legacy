@@ -97,6 +97,47 @@
     return decodedCredDto;
 }
 
++(CredentialsDto *)getOldCredentialsById:(NSString *)idUser{
+    
+    CredentialsDto *output = nil;
+    
+    NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
+    
+    [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
+    [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
+    [keychainItem setObject:idUser forKey:(__bridge id)kSecAttrAccount];
+    [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
+    
+    [keychainItem setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
+    [keychainItem setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnAttributes];
+    
+    CFDictionaryRef result = nil;
+    
+    DLog(@"keychainItem: %@", keychainItem);
+    
+    OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, (CFTypeRef *)&result);
+    
+    DLog(@"(getCredentials)Error Code %d", (int)stsExist);
+    
+    if (stsExist != errSecSuccess) {
+        NSLog(@"Unable to get the item with id =%@ ",idUser);
+        
+    } else {
+        
+        NSDictionary *resultDict = (__bridge_transfer NSDictionary *)result;
+        
+        NSData *pswd = resultDict[(__bridge id)kSecValueData];
+        NSString *password = [[NSString alloc] initWithData:pswd encoding:NSUTF8StringEncoding];
+        output = [CredentialsDto new];
+        
+        output.accessToken = password;
+        output.userName = resultDict[(__bridge id)kSecAttrDescription];
+    }
+    
+    return output;
+
+}
+
 +(BOOL)removeCredentialsById:(NSString *)idUser{
     
     BOOL output = NO;
@@ -232,5 +273,21 @@
     return output;
 }
 
+
++ (void)updateAllKeychainItemsUntilVersion21ToStoreCredentialsDtoWithBasicAuthenticationAsValue {
+    
+    for (UserDto *user in [ManageUsersDB getAllUsersWithOutCredentialInfo]) {
+        
+        NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
+        
+        CredentialsDto *credentialDto = [OCKeychain getOldCredentialsById:idString];
+        
+        credentialDto.authenticationMethod =  @"BASIC_HTTP_AUTH";
+        
+        user.credDto = [credentialDto copy];
+        
+        [OCKeychain updateCredentialsOfUser:user];
+    }
+}
 
 @end
