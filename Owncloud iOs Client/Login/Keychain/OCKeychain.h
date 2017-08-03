@@ -24,7 +24,7 @@
 /**
  * @return CredentialsDto -> New credentialDto with all the new data added to support oauth
  */
-+(CredentialsDto *)getNCredentialsById:(NSString *)idUser;
++(CredentialsDto *)getCredentialsById:(NSString *)idUser;
 
 +(BOOL)removeCredentialsById:(NSString *)idUser;
 +(BOOL)updateCredentialsOfUser:(UserDto *)user;
