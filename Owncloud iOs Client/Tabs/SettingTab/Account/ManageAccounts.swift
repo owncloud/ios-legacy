@@ -19,8 +19,12 @@ import Foundation
 
 @objc class ManageAccounts: NSObject {
     
-    
-    func storeAccountOfUser(_ user: UserDto, withCredentials credDto: CredentialsDto) {
+    /*
+    * @param  UserDto   -> user to store
+    * @param  CredentialsDto -> credentials of user
+    * @return NSInteger -> id of user in DB
+    */
+    func storeAccountAndGetIdOfUser(_ user: UserDto, withCredentials credDto: CredentialsDto) -> NSInteger {
         
         if let userInDB = ManageUsersDB.insertUser(user) {
             
@@ -31,10 +35,15 @@ import Foundation
             
             (UIApplication.shared.delegate as! AppDelegate).activeUser = user
             
+            return userInDB.idUser
+            
         } else {
             //error storing account
             print("Error storing account for \(user.username)")
+            
+            return 0
         }
+        
     }
     
     func updateAccountOfUser(_ user: UserDto, withCredentials credDto: CredentialsDto) {

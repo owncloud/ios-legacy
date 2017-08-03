@@ -80,7 +80,7 @@ import Foundation
             
             if (listOfFiles != nil && !((listOfFiles?.isEmpty)!)) {
                 
-                print("\(String(describing: listOfFileDtos)) files found in this folder")
+                print("\(String(describing: listOfFiles)) files found in this folder")
                 
                 //Pass the listOfFiles with OCFileDto to FileDto Array
                 listOfFileDtos = UtilsDtos.pass(toFileDtoArrayThisOCFileDtoArray: listOfFiles) as? [FileDto]
