@@ -1054,17 +1054,16 @@
 - (void) didPressOnAddAccountButton{
    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    //Add Account
-    UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeCreate];
+
+    UniversalLoginViewController *loginViewController = [UtilsLogin getLoginVCWithMode:LoginModeCreate];
     
     if (IS_IPHONE)
     {
         //viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:NO];
+        [self.navigationController pushViewController:loginViewController animated:NO];
     } else {
         
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
     }
@@ -1769,17 +1768,17 @@
 
 - (void) didSelectEditAccount:(UserDto *)user  {
    
-    UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeUpdate];
-    viewController.user = user;
+    UniversalLoginViewController *loginViewController = [UtilsLogin getLoginVCWithMode:LoginModeUpdate];
+    loginViewController.user = user;
     
     if (IS_IPHONE) {
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
         
     } else {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         OCNavigationController *navController = nil;
-        navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
     }

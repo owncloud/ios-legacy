@@ -52,6 +52,7 @@
         case kOCErrorServerForbidden:
         case kOCErrorServerPathNotFound:
         case kCFURLErrorUnsupportedURL:
+        case kCFURLErrorCannotConnectToHost:
                 [self.delegate showError:errorConnection.localizedDescription];
             break;
             
