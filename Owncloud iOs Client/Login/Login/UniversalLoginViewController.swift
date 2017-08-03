@@ -44,8 +44,12 @@ struct K {
     case ConnectionEstablished
     case ConnectionEstablishedSecure
     case ConnectionEstablishedNonSecure
-    case ErrorConnectionNoEstablished
+    case ErrorServerInstanceNotFound
+    case ErrorConnectionDeclined
+    case ErrorNotPossibleConnectToServer
 }
+
+
 
 
 //TODO: check if needed use the notification relaunchErrorCredentialFilesNotification from edit account mode
@@ -58,6 +62,7 @@ struct K {
 //TODO: call manageNetworkError for all possible error after check url, not accepted certificate..
 
 
+
 /*
  
  
@@ -67,27 +72,20 @@ struct K {
  checkurl
  testing_connection
  -->succes
- secure_connection_established
+ secure_connection_established ->DONE
  
- https_non_secure_connection_established
+ https_non_secure_connection_established ->DONE
  
- connection_established
+ connection_established ->DONE
  
  --> error
-server_instance_not_found
+server_instance_not_found Server not found
  
+connection_declined  Connection declined by user
  
- 
-connection_declined
+ not_possible_connect_to_server It is not possible to connect to the server at this time
  
  error_updating_predefined_url -->migrate -->DONE
-
- 
- 
- //    case Create
- //    case Update
- //    case Expire
- //    case Migrate ->DONE
  
  */
 
@@ -191,7 +189,6 @@ connection_declined
             
             self.showCredentialsError()
         }
-        
     }
     
     func showCredentialsError() {
@@ -263,10 +260,20 @@ connection_declined
             footerMessage = "secure_connection_established"
             break
             
-        case .ErrorConnectionNoEstablished:
+        case .ErrorServerInstanceNotFound:
             self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
+            footerMessage = "server_instance_not_found"
+            break
+            
+        case .ErrorConnectionDeclined:
+            self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
+            footerMessage = "connection_declined"
             break
          
+        case .ErrorNotPossibleConnectToServer:
+            self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
+            footerMessage = "not_possible_connect_to_server"
+            break
         case .None:
             self.imageViewURLFooter.image = nil
             footerMessage = ""
@@ -311,14 +318,24 @@ connection_declined
         //init text
         self.textFieldURL.text = k_default_url_server
         
-        if self.loginMode == .update {
-            self.textFieldURL.text = UtilsUrls.getFullRemoteServerPath(self.user)
-            self.checkCurrentUrl()
-            self.textFieldUsername.text = self.user?.username
-            self.textFieldPassword.text = ""
-            self.setCancelBarButtonSystemItem()
-        } else {
+        if self.loginMode == .create {
             self.textFieldUsername.text = ""
+            self.textFieldPassword.text = ""
+        } else {
+            
+            if loginMode == .update {
+                self.setCancelBarButtonSystemItem()
+            }
+            
+            self.checkCurrentUrl()
+
+            if loginMode == .migrate {
+                self.textFieldURL.text = k_default_url_server
+            } else {
+                self.textFieldURL.text = UtilsUrls.getFullRemoteServerPath(self.user)
+            }
+        
+            self.textFieldUsername.text = self.user?.username
             self.textFieldPassword.text = ""
         }
         
@@ -371,8 +388,12 @@ connection_declined
     
     func updateUIWithNormalizedData(_ oNormalized: ServerURLNormalizer) {
         self.textFieldURL.text = oNormalized.normalizedURL
-        self.textFieldUsername.text = oNormalized.user
-        self.textFieldPassword.text = oNormalized.password
+        if (oNormalized.user != nil) && !(oNormalized.user?.isEmpty)! {
+            self.textFieldUsername.text = oNormalized.user
+        }
+        if (oNormalized.password != nil) && !(oNormalized.password?.isEmpty)! {
+            self.textFieldPassword.text = oNormalized.password
+        }
     }
 
     
@@ -561,7 +582,7 @@ connection_declined
 //MARK: Manage network errors delegate
     public func showError(_ message: String!) {
         DispatchQueue.main.async {
-            self.setURLFooter(message: message, isType: .ErrorConnectionNoEstablished)
+            self.setURLFooter(message: message, isType: .ErrorNotPossibleConnectToServer)
         }
     }
     
@@ -569,7 +590,7 @@ connection_declined
 // MARK: textField delegate
     public func textFieldDidEndEditing(_ textField: UITextField) {
 
-        self.checkCurrentUrl()
+       // self.checkCurrentUrl()
         
     }
 
@@ -628,8 +649,6 @@ connection_declined
     
 // MARK: 'private' methods
     
-    
-    
     func validateCredentialsAndAddAccount(credentials: CredentialsDto) {
         //get list of files in root to check session validty, if ok store new account
         let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.serverURLNormalizer.normalizedURL) )
@@ -642,7 +661,7 @@ connection_declined
                                             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
                                                 
                                                 if self.user == nil {
-                                                     self.user = UserDto()
+                                                    self.user = UserDto()
                                                 }
                                                 
                                                 self.user?.url = self.serverURLNormalizer.normalizedURL
@@ -656,37 +675,41 @@ connection_declined
                                                     self.user?.activeaccount = true
                                                     app.activeUser = self.user
                                                 }
-
                                                 
-                                                if self.loginMode == .update {
-                                                    ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
-                                                } else {
-                                                    ManageAccounts().storeAccountOfUser(self.user!, withCredentials: credentials)
-                                                }
-                                                
-                                                ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
                                                 
                                                 if self.loginMode == .create {
-                                                    app.generateAppInterface(fromLoginScreen: true)
+                                                    self.user?.idUser = ManageAccounts().storeAccountAndGetIdOfUser(self.user!, withCredentials: credentials)
+                                                    if self.user?.idUser != 0 {
+                                                        ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
+                                                        
+                                                        app.generateAppInterface(fromLoginScreen: true)
+
+                                                    } else {
+                                                        //error
+                                                    }
+                                                    
                                                 } else {
-                                                    self.closeLoginView()
+                                                    ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
+                                                    
+                                                     self.closeLoginView()
                                                 }
+                                              
                                                 
                                             } else {
-                                              
-                                                //TODO: check with https url without prefix, error unsupported URL
-//                                                if errorHttp == 0 {
-//                                                    self.setPasswordFooterError(message: NSLocalizedString("", comment: "") )
-//
-//                                                } else {
-                                                    self.manageNetworkErrors.manageErrorHttp((errorHttp)!, andErrorConnection: error, andUser: self.user)
-                                                //}
-                                                    
                                                 
-                                            }
-        })
-        
-    }
+                                                //TODO: check with https url without prefix, error unsupported URL
+                                                //                                                if errorHttp == 0 {
+                                                    //                                                    self.setPasswordFooterError(message: NSLocalizedString("", comment: "") )
+                                                    //
+                                                    //                                                } else {
+                                                    self.manageNetworkErrors.manageErrorHttp((errorHttp)!, andErrorConnection: error, andUser: self.user)
+                                                    //}
+                                                    
+                                                    
+                                                }
+                                            })
+                                            
+        }
     
     
     override public func didReceiveMemoryWarning() {

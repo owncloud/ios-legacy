@@ -3429,21 +3429,26 @@
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    //Edit Account
+    UniversalLoginViewController *loginViewController = nil;
+    
     BOOL requiredUpdateUrl = [UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:[ManageUsersDB getActiveUser].predefinedUrl];
+    
     if (requiredUpdateUrl) {
-        self.resolvedCredentialError = [UtilsLogin getLoginVCWithMode:LoginModeMigrate];
+        
+        loginViewController = [UtilsLogin getLoginVCWithMode:LoginModeMigrate];
     } else {
-        self.resolvedCredentialError = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
+        loginViewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
     }
     
+    loginViewController.user = app.activeUser;
+    
     if (IS_IPHONE) {
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:_resolvedCredentialError];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
         
         OCNavigationController *navController = nil;
-        navController = [[OCNavigationController alloc] initWithRootViewController:_resolvedCredentialError];
+        navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
     }
