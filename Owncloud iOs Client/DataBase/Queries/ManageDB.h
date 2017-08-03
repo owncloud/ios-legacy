@@ -266,5 +266,11 @@
  */
 + (void) updateDBVersion20To21;
 
+/**
+ * Changes:
+ *
+ * Alter Keychain items to use credentialsDto as value instead password
+ */
++ (void) updateDBVersion21To22;
 
 @end
