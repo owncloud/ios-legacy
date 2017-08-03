@@ -323,7 +323,11 @@ connection_declined  Connection declined by user
             self.textFieldPassword.text = ""
         } else {
             
-            if loginMode == .update {
+            if ( (Customization.kMultiaccountAvailable()
+                    && self.loginMode != .migrate
+                    && self.loginMode != .expire )
+                || self.loginMode == .update) {
+
                 self.setCancelBarButtonSystemItem()
             }
             
@@ -691,7 +695,7 @@ connection_declined  Connection declined by user
                                                 } else {
                                                     ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
                                                     
-                                                     self.closeLoginView()
+                                                    self.closeLoginView()
                                                 }
                                               
                                                 

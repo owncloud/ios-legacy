@@ -171,6 +171,7 @@
 
 +(BOOL)kHideUrlServer;
 +(BOOL)kForceUpdateOfServerUrl;
++(BOOL)kMultiaccountAvailable;
 +(BOOL)kIsSsoActive;
 +(BOOL)kIsTextLoginStatusBarWhite;
 +(BOOL)kIsShownHelpLinkOnLogin;

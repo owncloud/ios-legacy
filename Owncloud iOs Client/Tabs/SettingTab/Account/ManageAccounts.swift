@@ -50,6 +50,8 @@ import Foundation
         
         user.credDto = credDto.copy() as! CredentialsDto
         
+        ManageUsersDB.updateUser(by: user)
+
         OCKeychain.updateCredentials(ofUser: user)
         
         if user.activeaccount {
