@@ -28,6 +28,10 @@
     return k_force_update_of_server_url;
 }
 
++(BOOL)kMultiaccountAvailable {
+    return k_multiaccount_available;
+}
+
 +(BOOL)kIsSsoActive {
     return k_is_sso_active;
 }
