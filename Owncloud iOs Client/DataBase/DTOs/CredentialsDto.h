@@ -21,7 +21,7 @@
 @property (nonatomic, copy) NSString *accessToken; // password for basic auth, cookies for SAML, access token for OAuth2...
 @property (nonatomic, copy) NSString *authenticationMethod; //AuthenticationMethod rawValue
 
-//optionals credentials used with oauht
+//optionals credentials used with oauth2
 @property (nonatomic, copy) NSString *refreshToken;
 @property (nonatomic, copy) NSString *expiresIn;
 @property (nonatomic, copy) NSString *tokenType;
