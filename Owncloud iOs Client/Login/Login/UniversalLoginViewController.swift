@@ -625,6 +625,7 @@ connection_declined  Connection declined by user
                 self.authCodeReceived = webVC.authCode
                 
                 let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.serverURLNormalizer.normalizedURL)
+                
                 OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { ( userCredDto: CredentialsDto?, error: String?) in
                 
                     if let userCredentials = userCredDto {
