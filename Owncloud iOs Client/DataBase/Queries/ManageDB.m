@@ -618,7 +618,7 @@
 /**
  * Changes:
  *
- * Migrate the current usersname and password stored in users table to the new keychain
+ * Migrate the current username and password stored in users table to the new keychain
  * Do a backup of the users table in users_backup table
  * Remove users table
  * Create a new users table without username and password

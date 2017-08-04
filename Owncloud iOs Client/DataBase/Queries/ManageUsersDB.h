@@ -92,7 +92,7 @@
 +(void) removeUserAndDataByIdUser:(NSInteger)idUser;
 
 /*
- * Method that set the user storage of a user
+ * Method that set the user storage of a user, -> Not in use
  */
 +(void) updateStorageByUserDto:(UserDto *) user;
 
