@@ -167,6 +167,11 @@ connection_declined  Connection declined by user
         textFieldUsername.delegate = self
         textFieldPassword.delegate = self
         
+        // Tags for the Next navigation with the keyboard
+        self.textFieldURL.tag = 1
+        self.textFieldUsername.tag = 2
+        self.textFieldUsername.tag = 3
+        
         self.showInitMessageCredentialsErrorIfNeeded()
 
         let enabledEditUrlUsernamePassword : Bool = (self.loginMode == .create || self.loginMode == .migrate)
@@ -395,7 +400,6 @@ connection_declined  Connection declined by user
         self.setConnectButton(status: false)
         
         self.buttonHelpLink.isHidden = Customization.kIsShownHelpLinkOnLogin() ?  false : true
-        self.revealPasswordButton.setBackgroundImage(UIImage(named: "RevealPasswordIcon.png"), for: .normal)
 
     }
     
@@ -409,6 +413,12 @@ connection_declined  Connection declined by user
     }
     
     func setBasicAuthLoginStackViews(hiddenStatus: Bool) {
+        
+        self.textFieldUsername.text = ""
+        self.textFieldPassword.text = ""
+        self.revealPasswordButton.setBackgroundImage(UIImage(named: "RevealPasswordIcon.png"), for: .normal)
+        self.labelPasswordFooter.text = ""
+        self.imageViewPasswordFooter.image = nil
         
         UIView.animate(withDuration: 0.5, animations: {
             self.usernameStackView.isHidden = hiddenStatus
@@ -501,10 +511,15 @@ connection_declined  Connection declined by user
                         
                         if (self.authMethodToLogin == .BASIC_HTTP_AUTH) {
                             self.setBasicAuthLoginStackViews(hiddenStatus: false)
+                            self.textFieldURL.resignFirstResponder()
+                            self.textFieldUsername.becomeFirstResponder()
                         } else {
                             self.setBasicAuthLoginStackViews(hiddenStatus: true)
                             self.setConnectButton(status: true)
+                            self.startAuthenticationWith(authMethod: self.authMethodToLogin)
+                            
                         }
+                        
                         //else { //TODO: enabledafter enter password and no empty user pass
                         //}
                         
@@ -637,9 +652,6 @@ connection_declined  Connection declined by user
             
             self.setPasswordFooterError(message: NSLocalizedString("credentials_different_user", comment: "") )
         }
-        
-        
-        
     }
     
     
@@ -689,8 +701,27 @@ connection_declined  Connection declined by user
     }
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
+        
+        self.activeField = nil
+        switch textField.restorationIdentifier! {
+        case TextfieldType.url.rawValue:
+            textField.resignFirstResponder()
+            return true
+            break
+        case TextfieldType.username.rawValue:
+            textField.resignFirstResponder()
+            self.textFieldPassword.becomeFirstResponder()
+            break
+        case TextfieldType.password.rawValue:
+            if (self.textFieldUsername.text?.characters.count)! > 0 {
+                startAuthenticationWith(authMethod: .BASIC_HTTP_AUTH)
+            }
+            textField.resignFirstResponder()
+            break
+        default:
+            break
+        }
+        return false
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -741,7 +772,6 @@ connection_declined  Connection declined by user
     }
     
 // MARK: IBActions
-    
     @IBAction func reconnectionButtonTapped(_ sender: Any) {
         self.checkCurrentUrl()
     }
@@ -753,8 +783,7 @@ connection_declined  Connection declined by user
     }
     
     @IBAction func helpLinkButtonTapped(_ sender: Any) {
-        //open web view help
-        
+        UIApplication.shared.openURL(NSURL(string:  k_url_link_on_login)! as URL)
     }
     
     @IBAction func unwindToMainLoginView(segue:UIStoryboardSegue) {
@@ -802,7 +831,6 @@ connection_declined  Connection declined by user
     
     
 // MARK: 'private' methods
-    
     func validateCredentialsAndAddAccount(credentials: CredentialsDto) {
         //get list of files in root to check session validty, if ok store new account
         let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.serverURLNormalizer.normalizedURL) )
