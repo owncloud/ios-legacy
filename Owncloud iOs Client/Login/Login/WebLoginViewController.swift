@@ -40,6 +40,7 @@ import Foundation
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.cancelButton.title = NSLocalizedString("cancel", comment: "")
         self.webViewLogin.delegate = self
         // Do any additional setup after loading the view.
         
