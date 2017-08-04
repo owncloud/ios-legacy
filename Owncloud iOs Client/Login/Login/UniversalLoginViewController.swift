@@ -101,6 +101,7 @@ connection_declined  Connection declined by user
 @objc public class UniversalLoginViewController: UIViewController, UITextFieldDelegate, SSODelegate, ManageNetworkErrorsDelegate {
  
 // MARK: IBOutlets
+    @IBOutlet var scrollView: UIScrollView!
     
     @IBOutlet var imageViewLogo: UIImageView!
     
@@ -111,6 +112,7 @@ connection_declined  Connection declined by user
     @IBOutlet var textFieldURL: UITextField!
     @IBOutlet var buttonReconnection: UIButton!
     
+    @IBOutlet weak var buttonReconnectionURL: UIButton!
     @IBOutlet var imageViewURLFooter: UIImageView!
     @IBOutlet var labelURLFooter: UILabel!
     @IBOutlet var activityIndicatorURLFooter: UIActivityIndicatorView!
@@ -121,7 +123,7 @@ connection_declined  Connection declined by user
     
     @IBOutlet var imageViewLeftPassword: UIImageView!
     @IBOutlet var textFieldPassword: UITextField!
-    @IBOutlet var imageViewRightPassword: UIImageView!
+    @IBOutlet var revealPasswordButton: UIButton!
     
     @IBOutlet var imageViewPasswordFooter: UIImageView!
     @IBOutlet var labelPasswordFooter: UILabel!
@@ -149,6 +151,7 @@ connection_declined  Connection declined by user
     var manageNetworkErrors: ManageNetworkErrors!
     var loginMode: LoginMode!
     public var user: UserDto?
+    var activeField: UITextField!
     
     let serverURLNormalizer: ServerURLNormalizer = ServerURLNormalizer()
     let getPublicInfoFromServerJob: GetPublicInfoFromServerJob = GetPublicInfoFromServerJob()
@@ -157,6 +160,7 @@ connection_declined  Connection declined by user
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.listenNotificationsAboutKeyboard()
         self.manageNetworkErrors = ManageNetworkErrors()
         self.manageNetworkErrors.delegate = self
         textFieldURL.delegate = self
@@ -188,6 +192,7 @@ connection_declined  Connection declined by user
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        self.removeNotificationsAboutKeyboard()
         if self.loginMode == .update || self.loginMode == .migrate {
             UtilsCookies.restoreTheCookiesOfActiveUser()
 //TODO: check if need to nil checkaccesstoserver sharedManager
@@ -231,7 +236,6 @@ connection_declined  Connection declined by user
         self.imageViewTopInfo.image = UIImage(named: "CredentialsError.png")!
     }
     
-    
     func setURLFotterSuccess(oNormalized: ServerURLNormalizer) {
         
         var type: StateCheckedURL = .TestingConnection
@@ -242,14 +246,12 @@ connection_declined  Connection declined by user
     }
 
     func setActivityIndicator(isVisible: Bool) {
-        //TODO: add and connect with new element in UI and
-//        if isVisible {
-//            self.activityIndicatorURLFooter.isHidden = false
-//            self.activityIndicatorURLFooter.startAnimating()
-//        } else {
-//            self.activityIndicatorURLFooter.isHidden = true
-//            self.activityIndicatorURLFooter.stopAnimating()
-//        }
+        self.imageViewURLFooter.isHidden = isVisible
+        if isVisible {
+            self.activityIndicatorURLFooter.startAnimating()
+        } else {
+            self.activityIndicatorURLFooter.stopAnimating()
+        }
     }
     
     func setURLFooter(message: String, isType type: StateCheckedURL) {
@@ -281,16 +283,19 @@ connection_declined  Connection declined by user
         case .ErrorServerInstanceNotFound:
             self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
             footerMessage = "server_instance_not_found"
+            self.setReconnectionButtons(hiddenStatus: false)
             break
             
         case .ErrorConnectionDeclined:
             self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
             footerMessage = "connection_declined"
+            self.setReconnectionButtons(hiddenStatus: false)
             break
          
         case .ErrorNotPossibleConnectToServer:
             self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
             footerMessage = "not_possible_connect_to_server"
+            self.setReconnectionButtons(hiddenStatus: false)
             break
         case .None:
             self.imageViewURLFooter.image = nil
@@ -324,14 +329,9 @@ connection_declined  Connection declined by user
         self.labelPasswordFooter.textColor = UIColor.ofLoginErrorText()
     }
     
-    func enableLoginButton() {
-        self.buttonConnect.isEnabled = true
-        self.setConnectButtonStyle(isEnabled: true)
-    }
-    
-    func disableLoginButton() {
-        self.buttonConnect.isEnabled = false
-        self.setConnectButtonStyle(isEnabled: false)
+    func setConnectButton(status: Bool) {
+        self.buttonConnect.isEnabled = status
+        self.setConnectButtonStyle(isEnabled: status)
     }
     
     private func setConnectButtonStyle(isEnabled: Bool) {
@@ -345,8 +345,6 @@ connection_declined  Connection declined by user
       }
 
     }
-    
-    
 
     
     //MARK: UI set up
@@ -356,6 +354,7 @@ connection_declined  Connection declined by user
         //self.activityIndicatorURLFooter.frame = self.imageViewURLFooter.frame
 
         //init text
+        self.hideKeyboardWhenTappedAround()
         self.textFieldURL.text = k_default_url_server
         
         if self.loginMode == .create {
@@ -385,20 +384,19 @@ connection_declined  Connection declined by user
         
         if Customization.kHideUrlServer() {
             //hide and trim spaces below
-            
-            self.imageViewLeftURL.isHidden = true
-            self.textFieldURL.isHidden = true
+            self.setURLStackView(hiddenStatus: true)
             
         }
         
         let shouldBehiddenUserPassFields = (self.loginMode != .create) ? false : true ;
-        self.showBasicAuthLoginStackViews(hiddenStatus: shouldBehiddenUserPassFields)
+        self.setBasicAuthLoginStackViews(hiddenStatus: shouldBehiddenUserPassFields)
 
 
-        self.disableLoginButton()
+        self.setConnectButton(status: false)
         
         self.buttonHelpLink.isHidden = Customization.kIsShownHelpLinkOnLogin() ?  false : true
-        
+        self.revealPasswordButton.setBackgroundImage(UIImage(named: "RevealPasswordIcon.png"), for: .normal)
+
     }
     
     func setCancelBarButtonSystemItem() {
@@ -410,9 +408,13 @@ connection_declined  Connection declined by user
         self.navigationItem.leftBarButtonItem = cancelButton
     }
     
-    func showBasicAuthLoginStackViews(hiddenStatus: Bool) {
+    func setBasicAuthLoginStackViews(hiddenStatus: Bool) {
         
         UIView.animate(withDuration: 0.5, animations: {
+            self.usernameStackView.isHidden = hiddenStatus
+            self.passwordStackView.isHidden = hiddenStatus
+            self.basicAuthInfoStackView.isHidden = hiddenStatus
+        }, completion: {(_) in
             self.usernameStackView.isHidden = hiddenStatus
             self.passwordStackView.isHidden = hiddenStatus
             self.basicAuthInfoStackView.isHidden = hiddenStatus
@@ -429,17 +431,35 @@ connection_declined  Connection declined by user
         }
     }
 
-    func showURLStackView(hiddenStatus: Bool) {
+    func setURLStackView(hiddenStatus: Bool) {
         self.urlStackView.isHidden = hiddenStatus
     }
     
-
-    func showReloadButtonOnURLInfoStackView(hiddenStatus: Bool) {
-        self.urlInfoStackView.isHidden = hiddenStatus
+    func setReconnectionButtonOnURLInfoStackView(hiddenStatus: Bool) {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.buttonReconnection.isHidden = hiddenStatus
+        }, completion: {(_) in })
     }
     
-    func showPasswordEyeOnPasswordStackView(hiddenStatus: Bool) {
-        self.imageViewRightPassword.isHidden = hiddenStatus
+    func setReconnectionButtonOnURLStackView(hiddenStatus: Bool) {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.buttonReconnectionURL.isHidden = hiddenStatus
+        }, completion: { (_) in
+            self.buttonReconnectionURL.isHidden = hiddenStatus
+        })
+    }
+    func setPasswordEyeOnPasswordStackView(hiddenStatus: Bool) {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.revealPasswordButton.isHidden = hiddenStatus
+        }, completion: {(_) in })
+    }
+    
+    func setReconnectionButtons(hiddenStatus: Bool) {
+        if Customization.kHideUrlServer() {
+            self.setReconnectionButtonOnURLInfoStackView(hiddenStatus: hiddenStatus)
+        } else {
+            self.setReconnectionButtonOnURLStackView(hiddenStatus: hiddenStatus)
+        }
     }
     
     // MARK: dismiss
@@ -448,10 +468,11 @@ connection_declined  Connection declined by user
         self.dismiss(animated: true, completion: nil)
     }
     
-// MARK: checkUrl
     
+// MARK: checkUrl
     func checkCurrentUrl() {
-        
+        self.setConnectButton(status: false)
+        print("LOG ---> \(self.buttonReconnectionURL.isHidden)")
         self.setURLFooter(message: "", isType: .TestingConnection)
         
         if let inputURL = textFieldURL.text {
@@ -476,19 +497,22 @@ connection_declined  Connection declined by user
                     self.authMethodToLogin = DetectAuthenticationMethod().getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
                     
                     if (self.authMethodToLogin != .NONE) {
+                        self.setReconnectionButtons(hiddenStatus: true)
                         
                         if (self.authMethodToLogin == .BASIC_HTTP_AUTH) {
-                            self.showBasicAuthLoginStackViews(hiddenStatus: false)
-                            self.enableLoginButton()
+                            self.setBasicAuthLoginStackViews(hiddenStatus: false)
+                        } else {
+                            self.setBasicAuthLoginStackViews(hiddenStatus: true)
+                            self.setConnectButton(status: true)
                         }
                         //else { //TODO: enabledafter enter password and no empty user pass
-                            self.enableLoginButton()
                         //}
                         
                         self.setURLFotterSuccess(oNormalized: self.serverURLNormalizer)
                         
                     } else {
-                        self.disableLoginButton()
+                        self.setBasicAuthLoginStackViews(hiddenStatus: true)
+                        self.setConnectButton(status: false)
                         self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: httpStatusCode, andError: nil)
                     }
                     
@@ -501,7 +525,6 @@ connection_declined  Connection declined by user
     
     
 // MARK: start log in auth
-    
     func startAuthenticationWith(authMethod: AuthenticationMethod) {
         
         switch authMethod {
@@ -532,7 +555,6 @@ connection_declined  Connection declined by user
 
     }
     
-    
     func navigateToSAMLLoginView() {
 
         //Grant main thread
@@ -553,9 +575,7 @@ connection_declined  Connection declined by user
         performSegue(withIdentifier: K.segueId.segueToWebLoginView, sender: self)
     }
     
-
 // MARK: ManageNetworkError delegate
-    
     public func errorLogin() {
         
         DispatchQueue.main.async {
@@ -622,10 +642,12 @@ connection_declined  Connection declined by user
         
     }
     
+    
 //MARK: Manage network errors delegate
     public func showError(_ message: String!) {
         DispatchQueue.main.async {
             self.setURLFooter(message: message, isType: .ErrorNotPossibleConnectToServer)
+            self.setBasicAuthLoginStackViews(hiddenStatus: true)
         }
     }
     
@@ -633,42 +655,102 @@ connection_declined  Connection declined by user
 // MARK: textField delegate
     public func textFieldDidEndEditing(_ textField: UITextField) {
         
+        self.activeField = nil
         switch textField.restorationIdentifier! {
         case TextfieldType.password.rawValue:
-            //TODO
+            if textField.text == "" {
+                self.setPasswordEyeOnPasswordStackView(hiddenStatus: true)
+            }
             break
         case TextfieldType.url.rawValue:
             self.checkCurrentUrl()
             break
         case TextfieldType.username.rawValue:
-            //Todo
+            //TODO
             break
         default:
-            self.checkCurrentUrl()
             break
+        }
+        
+        if self.authMethodToLogin != nil && self.authMethodToLogin == .BASIC_HTTP_AUTH {
+            if (self.textFieldUsername.text!.characters.count > 0) && (self.textFieldPassword.text!.characters.count > 0) {
+                self.setConnectButton(status: true)
+            } else {
+                self.setConnectButton(status: false)
+            }
         }
     }
     
     public func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.activeField = textField
         if textField.restorationIdentifier! == TextfieldType.password.rawValue {
-            self.showPasswordEyeOnPasswordStackView(hiddenStatus: false)
+            self.setPasswordEyeOnPasswordStackView(hiddenStatus: false)
         }
     }
+    
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
 
-
+// MARK: Keyboard
+    
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UniversalLoginViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    
+    //MARK: Keyboard Notifications
+    
+    func listenNotificationsAboutKeyboard () {
+        NotificationCenter.default.addObserver(self, selector: #selector(UniversalLoginViewController.keyboardDidShow(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(UniversalLoginViewController.keyboardWillBeHidden(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func removeNotificationsAboutKeyboard () {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func keyboardDidShow(_ notification: Notification) {
+        if let activeField = self.activeField, let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height, right: 0.0)
+            self.scrollView.contentInset = contentInsets
+            self.scrollView.scrollIndicatorInsets = contentInsets
+            var aRect = self.view.frame
+            aRect.size.height -= keyboardSize.size.height
+            if (!aRect.contains(activeField.frame.origin)) {
+                self.scrollView.scrollRectToVisible(activeField.frame, animated: true)
+            }
+        }
+    }
+    
+    func keyboardWillBeHidden(_ notification: Notification) {
+        let contentInsets = UIEdgeInsets.zero
+        self.scrollView.contentInset = contentInsets
+        self.scrollView.scrollIndicatorInsets = contentInsets
+    }
+    
 // MARK: IBActions
     
     @IBAction func reconnectionButtonTapped(_ sender: Any) {
         self.checkCurrentUrl()
     }
     
-    
     @IBAction func connectButtonTapped(_ sender: Any) {
         
         self.startAuthenticationWith(authMethod: self.authMethodToLogin)
         
     }
-    
     
     @IBAction func helpLinkButtonTapped(_ sender: Any) {
         //open web view help
@@ -697,7 +779,17 @@ connection_declined  Connection declined by user
         }
     }
     
-
+    @IBAction func revealPasswordButtonTapped(_ sender: UIButton) {
+        
+        if self.textFieldPassword.isSecureTextEntry {
+            self.textFieldPassword.isSecureTextEntry = false
+            self.revealPasswordButton.setBackgroundImage(UIImage(named: "NonRevealPasswordIcon.png"), for: .normal)
+        } else {
+            self.textFieldPassword.isSecureTextEntry = true
+            self.revealPasswordButton.setBackgroundImage(UIImage(named: "RevealPasswordIcon.png"), for: .normal)
+        }
+    }
+    
 // MARK: segue
     override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -773,7 +865,6 @@ connection_declined  Connection declined by user
                                             
         }
     
-    
     override public func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -783,4 +874,5 @@ connection_declined  Connection declined by user
         self.loginMode = loginMode
     }
     
+    private func showURLError() {}
 }
