@@ -24,9 +24,9 @@
 /**
  * @return CredentialsDto -> New credentialDto with all the new data added to support oauth
  */
-+(CredentialsDto *)getCredentialsById:(NSString *)idUser;
++(CredentialsDto *)getCredentialsByUserId:(NSString *)userId;
 
-+(BOOL)removeCredentialsById:(NSString *)idUser;
++(BOOL)removeCredentialsByUserId:(NSString *)idUser;
 +(BOOL)updateCredentialsOfUser:(UserDto *)user;
 +(BOOL)resetKeychain;
 
@@ -38,7 +38,7 @@
 /**
  * Deprecated, only used to migrate old keychain items in version 21to22
  */
-+(CredentialsDto *)getOldCredentialsById:(NSString *)idUser;
++(CredentialsDto *)getOldCredentialsByUserId:(NSString *)userId;
 
 ///-----------------------------------
 /// @name updateAllKeychainsToUseTheLockProperty
@@ -50,7 +50,7 @@
  */
 +(void)updateAllKeychainsToUseTheLockProperty;
 
-+(BOOL)updateKeychainForUseLockPropertyForUser:(NSString *)idUser;
++(BOOL)updateKeychainForUseLockPropertyForUser:(NSString *)userId;
 
 
 +(void)updateAllKeychainItemsUntilVersion21ToStoreCredentialsDtoWithBasicAuthenticationAsValue;
