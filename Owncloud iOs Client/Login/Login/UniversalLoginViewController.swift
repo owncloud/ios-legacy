@@ -458,6 +458,7 @@ connection_declined  Connection declined by user
             self.buttonReconnectionURL.isHidden = hiddenStatus
         })
     }
+    
     func setPasswordEyeOnPasswordStackView(hiddenStatus: Bool) {
         UIView.animate(withDuration: 0.5, animations: {
             self.revealPasswordButton.isHidden = hiddenStatus
@@ -470,6 +471,15 @@ connection_declined  Connection declined by user
         } else {
             self.setReconnectionButtonOnURLStackView(hiddenStatus: hiddenStatus)
         }
+    }
+    
+    func setNetworkActivityIndicator(status: Bool) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = status
+    }
+    
+    func resetPasswordFooterMessage() {
+        self.imageViewPasswordFooter.image = nil
+        self.labelPasswordFooter.text = ""
     }
     
     // MARK: dismiss
@@ -487,11 +497,13 @@ connection_declined  Connection declined by user
         
         if let inputURL = textFieldURL.text {
             self.serverURLNormalizer.normalize(serverURL: inputURL)
-
+            self.setNetworkActivityIndicator(status: true)
             // get public infor from server
             getPublicInfoFromServerJob.start(serverURL: self.serverURLNormalizer.normalizedURL, withCompletion: { (validatedURL: String?, _ serverAuthenticationMethods: Array<Any>?, _ error: Error?, _ httpStatusCode: NSInteger) in
-                
+            
+                self.setNetworkActivityIndicator(status: false)
                 if error != nil {
+                    self.setConnectButton(status: false)
                     self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: httpStatusCode, andError: error)
                     print ("error detecting authentication methods")
                     
@@ -532,6 +544,7 @@ connection_declined  Connection declined by user
                     }
                     
                 } else {
+                    self.setConnectButton(status: false)
                     self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: httpStatusCode, andError: nil)
                 }
             })
@@ -545,15 +558,17 @@ connection_declined  Connection declined by user
         switch authMethod {
 
         case .SAML_WEB_SSO:
+            self.setNetworkActivityIndicator(status: false)
             navigateToSAMLLoginView();
             break
 
         case .BEARER_TOKEN:
+            self.setNetworkActivityIndicator(status: false)
             navigateToOAuthLoginView();
             break
 
         case .BASIC_HTTP_AUTH:
-            
+            self.resetPasswordFooterMessage()
             let userCredDto: CredentialsDto = CredentialsDto()
             userCredDto.userName = self.textFieldUsername.text
             userCredDto.accessToken = self.textFieldPassword.text
@@ -777,9 +792,8 @@ connection_declined  Connection declined by user
     }
     
     @IBAction func connectButtonTapped(_ sender: Any) {
-        
+        self.setNetworkActivityIndicator(status: true)
         self.startAuthenticationWith(authMethod: self.authMethodToLogin)
-        
     }
     
     @IBAction func helpLinkButtonTapped(_ sender: Any) {
@@ -837,7 +851,7 @@ connection_declined  Connection declined by user
         
         DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, credentials: credentials,
                                            withCompletion: { (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) in
-                                            
+                                            self.setNetworkActivityIndicator(status: false)
                                             let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
                                             
                                             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
@@ -879,14 +893,16 @@ connection_declined  Connection declined by user
                                                 
                                             } else {
                                                 
+                                                self.setNetworkActivityIndicator(status: false)
+                                                
                                                 //TODO: check with https url without prefix, error unsupported URL
-                                                //                                                if errorHttp == 0 {
-                                                    //                                                    self.setPasswordFooterError(message: NSLocalizedString("", comment: "") )
-                                                    //
-                                                    //                                                } else {
+                                                if errorHttp == 0 {
+                                                    //self.setPasswordFooterError(message: NSLocalizedString("", comment: "") )
+                                                    self.setPasswordFooterError(message: "Error with the credentials" )
+                                                } else {
                                                     self.manageNetworkErrors.manageErrorHttp((errorHttp)!, andErrorConnection: error, andUser: self.user)
-                                                    //}
-                                                    
+                                                }
+                                                
                                                     
                                                 }
                                             })
