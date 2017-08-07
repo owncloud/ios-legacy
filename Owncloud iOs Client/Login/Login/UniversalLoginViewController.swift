@@ -167,6 +167,10 @@ connection_declined  Connection declined by user
         textFieldUsername.delegate = self
         textFieldPassword.delegate = self
         
+        textFieldURL.textColor = UIColor.ofURLUserPassword()
+        textFieldUsername.textColor = UIColor.ofURLUserPassword()
+        textFieldPassword.textColor = UIColor.ofURLUserPassword()
+        
         // Tags for the Next navigation with the keyboard
         self.textFieldURL.tag = 1
         self.textFieldUsername.tag = 2
