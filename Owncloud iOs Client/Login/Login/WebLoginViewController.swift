@@ -39,11 +39,10 @@ import Foundation
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancelBarButtonPressed))
         self.navigationItem.leftBarButtonItem = cancelButton
         self.webViewLogin.delegate = self
-        
+    
         // Do any additional setup after loading the view.
         
         //TODO: set branding style navigation bar, cancel item title
