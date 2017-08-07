@@ -838,8 +838,12 @@ connection_declined  Connection declined by user
         
         if(segue.identifier == K.segueId.segueToWebLoginView) {
             
-            let nextViewController = (segue.destination as! WebLoginViewController)
-            nextViewController.serverPath = self.serverURLNormalizer.normalizedURL
+//            let nextViewController = (segue.destination as! WebLoginViewController)
+//            nextViewController.serverPath = self.serverURLNormalizer.normalizedURL
+            
+            let destinationNavigationController = segue.destination as! UINavigationController
+            let targetController = destinationNavigationController.topViewController as! WebLoginViewController
+            targetController.serverPath = self.serverURLNormalizer.normalizedURL
         }
     }
     
