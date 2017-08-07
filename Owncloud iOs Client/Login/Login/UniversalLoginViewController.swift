@@ -691,10 +691,13 @@ connection_declined  Connection declined by user
             }
             break
         case TextfieldType.url.rawValue:
-            self.checkCurrentUrl()
+            if textField.text != "" {
+                self.checkCurrentUrl()
+            }else{
+                self.setBasicAuthLoginStackViews(hiddenStatus: true)
+            }
             break
         case TextfieldType.username.rawValue:
-            //TODO
             break
         default:
             break
@@ -840,12 +843,9 @@ connection_declined  Connection declined by user
         
         if(segue.identifier == K.segueId.segueToWebLoginView) {
             
-//            let nextViewController = (segue.destination as! WebLoginViewController)
-//            nextViewController.serverPath = self.serverURLNormalizer.normalizedURL
-            
             let destinationNavigationController = segue.destination as! UINavigationController
             let targetController = destinationNavigationController.topViewController as! WebLoginViewController
-            targetController.serverPath = self.serverURLNormalizer.normalizedURL
+            targetController.serverPath = self.validatedServerURL
         }
     }
     
