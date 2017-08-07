@@ -395,7 +395,8 @@ connection_declined  Connection declined by user
         
         let shouldBehiddenUserPassFields = (self.loginMode != .create) ? false : true ;
         self.setBasicAuthLoginStackViews(hiddenStatus: shouldBehiddenUserPassFields)
-
+        self.scrollView.backgroundColor = UIColor.ofLoginBackground()
+        self.imageViewLogo.backgroundColor = UIColor.ofLoginTopBackground()
 
         self.setConnectButton(status: false)
         
@@ -788,6 +789,7 @@ connection_declined  Connection declined by user
     
 // MARK: IBActions
     @IBAction func reconnectionButtonTapped(_ sender: Any) {
+        self.dismissKeyboard()
         self.checkCurrentUrl()
     }
     
