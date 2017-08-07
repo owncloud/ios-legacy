@@ -61,13 +61,13 @@
                                                                 </constraints>
                                                             </imageView>
                                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="url" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="K3Y-mX-EWx" userLabel="Text Field URL">
-                                                                <rect key="frame" x="33" y="0.0" width="567" height="25"/>
+                                                                <rect key="frame" x="33" y="0.0" width="600" height="25"/>
                                                                 <nil key="textColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits"/>
                                                             </textField>
                                                             <button hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eSw-Lz-XIR" userLabel="Button Reconnection">
-                                                                <rect key="frame" x="608" y="0.0" width="25" height="25"/>
+                                                                <rect key="frame" x="633" y="0.0" width="0.0" height="25"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="25" id="d2d-vw-fSp"/>
                                                                     <constraint firstAttribute="width" constant="25" id="uI9-CC-Mzh"/>
@@ -111,13 +111,13 @@
                                                                 </constraints>
                                                             </view>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="0NZ-MO-sTX" userLabel="Label URL Footer">
-                                                                <rect key="frame" x="33" y="0.0" width="567" height="25"/>
+                                                                <rect key="frame" x="33" y="0.0" width="600" height="25"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HUS-Qc-A5N" userLabel="Button Reconnection">
-                                                                <rect key="frame" x="608" y="0.0" width="25" height="25"/>
+                                                                <rect key="frame" x="633" y="0.0" width="0.0" height="25"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="25" id="g7S-dq-MGB"/>
                                                                     <constraint firstAttribute="width" constant="25" id="qNr-gK-AbW"/>
@@ -158,13 +158,13 @@
                                                                 </constraints>
                                                             </imageView>
                                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="password" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="password" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3io-Sx-qiv" userLabel="Text Field Password">
-                                                                <rect key="frame" x="33" y="0.0" width="567" height="25"/>
+                                                                <rect key="frame" x="33" y="0.0" width="600" height="25"/>
                                                                 <nil key="textColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                                             </textField>
                                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-xb-EG9">
-                                                                <rect key="frame" x="608" y="0.0" width="25" height="25"/>
+                                                                <rect key="frame" x="633" y="0.0" width="0.0" height="25"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="25" id="ccj-FV-NUm"/>
                                                                     <constraint firstAttribute="height" constant="25" id="ojW-d0-sXL"/>
@@ -312,7 +312,7 @@
                         <outlet property="urlInfoStackView" destination="cOi-fS-vwf" id="JYO-mt-fcA"/>
                         <outlet property="urlStackView" destination="EnR-aJ-yK2" id="9NE-n3-QCd"/>
                         <outlet property="usernameStackView" destination="wsI-KP-W6G" id="d7c-AU-H12"/>
-                        <segue destination="f4N-GJ-PQD" kind="presentation" identifier="segueToWebLoginView" id="S2O-4z-eW2"/>
+                        <segue destination="T7Q-cG-tn1" kind="presentation" identifier="segueToWebLoginView" id="S2O-4z-eW2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1kC-5M-QFu" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -331,29 +331,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qbt-Jk-Nkc">
-                                <rect key="frame" x="0.0" y="44" width="768" height="980"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qbt-Jk-Nkc">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HV6-q5-DCr">
-                                <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <items>
-                                    <navigationItem id="Srt-MH-Z13">
-                                        <barButtonItem key="rightBarButtonItem" title="Item" id="Yhs-Ln-8f5" userLabel="Item cancel">
-                                            <connections>
-                                                <action selector="cancelButtonTapped:" destination="f4N-GJ-PQD" id="j7m-7k-00M"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="qbt-Jk-Nkc" secondAttribute="trailing" id="5kw-ES-bv6"/>
+                            <constraint firstItem="qbt-Jk-Nkc" firstAttribute="leading" secondItem="T26-kj-Ka7" secondAttribute="leading" id="pdl-g3-pXM"/>
+                            <constraint firstItem="qbt-Jk-Nkc" firstAttribute="top" secondItem="T26-kj-Ka7" secondAttribute="top" id="tQW-2b-WlN"/>
+                            <constraint firstItem="XkD-Kd-VX0" firstAttribute="top" secondItem="qbt-Jk-Nkc" secondAttribute="bottom" id="tWH-TO-pPd"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="Ixp-d8-gr3"/>
                     <connections>
-                        <outlet property="cancelButton" destination="Yhs-Ln-8f5" id="q4U-Xr-vI2"/>
                         <outlet property="webViewLogin" destination="qbt-Jk-Nkc" id="6yt-1o-xB0"/>
                         <segue destination="gOD-iC-eEd" kind="unwind" identifier="unwindToMainLoginView" unwindAction="unwindToMainLoginViewWithSegue:" id="hoy-NS-fHW"/>
                     </connections>
@@ -361,7 +353,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iLP-HP-ZaL" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="gOD-iC-eEd" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="891" y="-121"/>
+            <point key="canvasLocation" x="1656.25" y="-121.28906249999999"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="0uD-kd-dlo">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="T7Q-cG-tn1" customClass="OCNavigationController" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="o9e-Ar-I5G">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="f4N-GJ-PQD" kind="relationship" relationship="rootViewController" id="Gvm-OY-uw7"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Rc3-lz-mQM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="890.625" y="-121.28906249999999"/>
         </scene>
     </scenes>
     <resources>
