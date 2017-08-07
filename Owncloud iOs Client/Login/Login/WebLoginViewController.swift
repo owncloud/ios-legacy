@@ -25,7 +25,6 @@ import Foundation
     
     // MARK: IBOutlets
     @IBOutlet var webViewLogin: UIWebView!
-    @IBOutlet var cancelButton: UIBarButtonItem!
     
     @IBAction func cancelButtonTapped(_ sender: Any) {
         self.performCancelButtonTapped()
@@ -40,8 +39,11 @@ import Foundation
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.cancelButton.title = NSLocalizedString("cancel", comment: "")
+        
+        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancelBarButtonPressed))
+        self.navigationItem.leftBarButtonItem = cancelButton
         self.webViewLogin.delegate = self
+        
         // Do any additional setup after loading the view.
         
         //TODO: set branding style navigation bar, cancel item title
@@ -56,6 +58,9 @@ import Foundation
         // Dispose of any resources that can be recreated.
     }
     
+    func cancelBarButtonPressed(){
+        self.dismiss(animated: true, completion: nil)
+    }
     
     func loadWebViewWith (url : URL) {
        
