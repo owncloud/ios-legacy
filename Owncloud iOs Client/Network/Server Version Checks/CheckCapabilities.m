@@ -25,6 +25,7 @@
 #import "Customization.h"
 #import "FilesViewController.h"
 #import "UtilsUrls.h"
+#import "HandleCredentials.h"
 
 NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
 
@@ -35,6 +36,7 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if (app.activeUser) {
+        
         
         //Set the right credentials
         if (k_is_sso_active) {

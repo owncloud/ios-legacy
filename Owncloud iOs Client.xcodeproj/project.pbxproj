@@ -373,6 +373,7 @@
 		40C01ED91F0FA923002DCAAA /* DetectListOfFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C01ED81F0FA923002DCAAA /* DetectListOfFiles.swift */; };
 		40C0BDB91C46562A0057B1DD /* SharePrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */; };
 		40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */; };
+		40C4B6BE1F3A062B0009F11F /* HandleCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C4B6BD1F3A062B0009F11F /* HandleCredentials.m */; };
 		40C663AA1EFA4FBE004AF994 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40C663A91EFA4FBE004AF994 /* Main.storyboard */; };
 		40C663B01EFA94B1004AF994 /* UniversalLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C663AF1EFA94B1004AF994 /* UniversalLoginViewController.swift */; };
 		40C745A61F05229C00DB4968 /* OauthAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C745A51F05229C00DB4968 /* OauthAuthentication.swift */; };
@@ -1556,6 +1557,8 @@
 		40C01ED81F0FA923002DCAAA /* DetectListOfFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetectListOfFiles.swift; path = Network/ReadFolder/DetectListOfFiles.swift; sourceTree = "<group>"; };
 		40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SharePrivilegeCell.xib; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.xib; sourceTree = "<group>"; };
 		40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharePrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.swift; sourceTree = "<group>"; };
+		40C4B6BC1F3A062B0009F11F /* HandleCredentials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandleCredentials.h; sourceTree = "<group>"; };
+		40C4B6BD1F3A062B0009F11F /* HandleCredentials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HandleCredentials.m; sourceTree = "<group>"; };
 		40C663A91EFA4FBE004AF994 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		40C663AF1EFA94B1004AF994 /* UniversalLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniversalLoginViewController.swift; sourceTree = "<group>"; };
 		40C745A51F05229C00DB4968 /* OauthAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OauthAuthentication.swift; sourceTree = "<group>"; };
@@ -3080,6 +3083,8 @@
 			children = (
 				40904B2B1EF04ACE00C72619 /* DetectAuthenticationMethod.swift */,
 				40C745A51F05229C00DB4968 /* OauthAuthentication.swift */,
+				40C4B6BC1F3A062B0009F11F /* HandleCredentials.h */,
+				40C4B6BD1F3A062B0009F11F /* HandleCredentials.m */,
 			);
 			name = Authentication;
 			path = Network/Authentication;
@@ -4792,6 +4797,7 @@
 				EA68968D17F599060033B3C1 /* KKKeychain.m in Sources */,
 				148DD619177855D900FB9977 /* Reachability.m in Sources */,
 				40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */,
+				40C4B6BE1F3A062B0009F11F /* HandleCredentials.m in Sources */,
 				148DD62517785D6900FB9977 /* DetailViewController.m in Sources */,
 				EABF69171891379C00A2217C /* SWTableViewCell.m in Sources */,
 				EA8ADE681A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
@@ -5287,6 +5293,7 @@
 		132429BD15ADBB3800DF823E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -5335,6 +5342,7 @@
 		132429BE15ADBB3800DF823E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
