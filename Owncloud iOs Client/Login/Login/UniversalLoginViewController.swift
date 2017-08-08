@@ -546,7 +546,6 @@ connection_declined  Connection declined by user
                 }
             })
         }
-        self.setNetworkActivityIndicator(status: false)
     }
     
     
