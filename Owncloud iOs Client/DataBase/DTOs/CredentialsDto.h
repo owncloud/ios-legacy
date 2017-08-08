@@ -15,11 +15,19 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM (NSUInteger, AuthenticationMethod){
+    AuthenticationMethodUNKNOWN,
+    AuthenticationMethodNONE,
+    AuthenticationMethodBASIC_HTTP_AUTH,
+    AuthenticationMethodBEARER_TOKEN,
+    AuthenticationMethodSAML_WEB_SSO,
+};
+
 @interface CredentialsDto : NSObject <NSCopying>
 
 @property (nonatomic, copy) NSString *userName;
 @property (nonatomic, copy) NSString *accessToken; // password for basic auth, cookies for SAML, access token for OAuth2...
-@property (nonatomic, copy) NSString *authenticationMethod; //AuthenticationMethod rawValue
+@property (nonatomic) AuthenticationMethod authenticationMethod;
 
 //optionals credentials used with oauth2
 @property (nonatomic, copy) NSString *refreshToken;

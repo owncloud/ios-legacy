@@ -44,3 +44,4 @@
 #import "CheckFeaturesSupported.h"
 #import "InstantUpload.h"
 #import "ManageCookiesStorageDB.h"
+#import "HandleCredentials.h"
