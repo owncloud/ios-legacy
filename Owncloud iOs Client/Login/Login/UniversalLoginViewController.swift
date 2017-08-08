@@ -567,7 +567,7 @@ connection_declined  Connection declined by user
             let userCredDto: CredentialsDto = CredentialsDto()
             userCredDto.userName = self.textFieldUsername.text
             userCredDto.accessToken = self.textFieldPassword.text
-            userCredDto.authenticationMethod = authMethod.rawValue
+            userCredDto.authenticationMethod = authMethod
             
             validateCredentialsAndAddAccount(credentials: userCredDto);
             
@@ -649,7 +649,7 @@ connection_declined  Connection declined by user
         let userCredDto: CredentialsDto = CredentialsDto()
         userCredDto.userName = samlUserName
         userCredDto.accessToken = cookieString
-        userCredDto.authenticationMethod = self.authMethodToLogin.rawValue
+        userCredDto.authenticationMethod = self.authMethodToLogin
         
         //We check if the user that we are editing is the same that we are using
         if (self.loginMode == .update  && self.user?.username == samlUserName) || (self.loginMode == .migrate){

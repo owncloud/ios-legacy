@@ -21,7 +21,8 @@ import Foundation
     
     func readFolderRequest(url: URL, credentials: CredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) -> Void ) {
         
-        self.setCredentialsAndUserAgentWith(credentials: credentials)
+        HandleCredentials.setSharedOCCommunicationUserAgentAnd(credentials)
+        //HandleCredentials().setSharedOCCommunicationUserAgentAndCredentials(credentials)
         
         AppDelegate.sharedOCCommunication().readFolder(url.absoluteString, withUserSessionToken: credentials.accessToken, on: AppDelegate.sharedOCCommunication(),
             
@@ -53,22 +54,6 @@ import Foundation
             
             completion(statusCode, error, nil)
         })
-    }
-    
-    
-    func setCredentialsAndUserAgentWith(credentials: CredentialsDto) {
-        
-        AppDelegate.sharedOCCommunication().setValueOfUserAgent(UtilsUrls.getUserAgent())
-        let authenticationMethod = AuthenticationMethod(rawValue: credentials.authenticationMethod);
-        
-        switch authenticationMethod! {
-        case .BEARER_TOKEN:
-            AppDelegate.sharedOCCommunication().setCredentialsOauthWithToken(credentials.accessToken)
-        case .SAML_WEB_SSO:
-            AppDelegate.sharedOCCommunication().setCredentialsWithCookie(credentials.accessToken)
-        default:
-            AppDelegate.sharedOCCommunication().setCredentialsWithUser(credentials.userName, andPassword: credentials.accessToken)
-        }
     }
     
     

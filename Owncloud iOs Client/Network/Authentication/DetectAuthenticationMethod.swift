@@ -27,14 +27,6 @@ import Foundation
  * When successful, returns array of AuthenticationMethod available.
  */
 
-enum AuthenticationMethod: String {
-    case UNKNOWN
-    case NONE
-    case BASIC_HTTP_AUTH
-    case BEARER_TOKEN
-    case SAML_WEB_SSO
-}
-
 @objc class DetectAuthenticationMethod: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
     
     @objc func auth_request(_ url: URL, withCompletion completion: @escaping (_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
@@ -114,8 +106,9 @@ enum AuthenticationMethod: String {
         } else {
             print("Authentication methods found:")
             for element in allAvailableAuthMethods {
-                print(" " + element.rawValue )
+                print(" \(element.rawValue)" )
             }
+            print("0=UNKNOWN, 1=NONE, 2=BASIC_HTTP_AUTH, 3=BEARER_TOKEN, 4=SAML_WEB_SSO");
         }
         
         return allAvailableAuthMethods
