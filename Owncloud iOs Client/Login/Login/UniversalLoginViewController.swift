@@ -171,11 +171,6 @@ connection_declined  Connection declined by user
         textFieldUsername.textColor = UIColor.ofURLUserPassword()
         textFieldPassword.textColor = UIColor.ofURLUserPassword()
         
-        // Tags for the Next navigation with the keyboard
-        self.textFieldURL.tag = 1
-        self.textFieldUsername.tag = 2
-        self.textFieldUsername.tag = 3
-        
         self.showInitMessageCredentialsErrorIfNeeded()
 
         let enabledEditUrlUsernamePassword : Bool = (self.loginMode == .create || self.loginMode == .migrate)
@@ -513,8 +508,6 @@ connection_declined  Connection declined by user
                     print ("error detecting authentication methods")
                     
                 } else if validatedURL != nil {
-
-                    self.updateUIWithNormalizedData(self.serverURLNormalizer)
                     
                     self.setURLFooter(message: "", isType: .None)
                     
@@ -537,9 +530,6 @@ connection_declined  Connection declined by user
                             
                         }
                         
-                        //else { //TODO: enabledafter enter password and no empty user pass
-                        //}
-                        
                         self.setURLFotterSuccess(oNormalized: self.serverURLNormalizer)
                         
                     } else {
@@ -547,6 +537,8 @@ connection_declined  Connection declined by user
                         self.setConnectButton(status: false)
                         self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: httpStatusCode, andError: nil)
                     }
+                    self.updateUIWithNormalizedData(self.serverURLNormalizer)
+
                     
                 } else {
                     self.setConnectButton(status: false)
@@ -554,6 +546,7 @@ connection_declined  Connection declined by user
                 }
             })
         }
+        self.setNetworkActivityIndicator(status: false)
     }
     
     
@@ -563,12 +556,10 @@ connection_declined  Connection declined by user
         switch authMethod {
 
         case .SAML_WEB_SSO:
-            self.setNetworkActivityIndicator(status: false)
             navigateToSAMLLoginView();
             break
 
         case .BEARER_TOKEN:
-            self.setNetworkActivityIndicator(status: false)
             navigateToOAuthLoginView();
             break
 
@@ -679,7 +670,9 @@ connection_declined  Connection declined by user
     public func showError(_ message: String!) {
         DispatchQueue.main.async {
             self.setURLFooter(message: message, isType: .ErrorNotPossibleConnectToServer)
-            self.setBasicAuthLoginStackViews(hiddenStatus: true)
+            if !self.basicAuthInfoStackView.isHidden {
+                self.setBasicAuthLoginStackViews(hiddenStatus: true)
+            }
         }
     }
     
@@ -746,6 +739,7 @@ connection_declined  Connection declined by user
         }
         return false
     }
+
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
@@ -842,6 +836,12 @@ connection_declined  Connection declined by user
         }
     }
     
+    @IBAction func editingChanged(_ sender: UITextField) {
+        
+        if self.textFieldUsername.text != ""{
+            self.setConnectButton(status: (sender.text?.characters.count)! > 0)
+        }
+    }
 // MARK: segue
     override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
