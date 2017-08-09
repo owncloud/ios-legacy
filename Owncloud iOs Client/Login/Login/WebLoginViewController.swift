@@ -40,6 +40,7 @@ import Foundation
     override func viewDidLoad() {
         super.viewDidLoad()
         self.webViewLogin.delegate = self
+        self.webViewLogin.backgroundColor = UIColor.ofWebViewBackground()
     
         // Do any additional setup after loading the view.
         
