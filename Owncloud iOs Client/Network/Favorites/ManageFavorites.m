@@ -147,7 +147,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
         NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:user];
         NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:user], file.fileName];
         
-        path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        path = [path stringByRemovingPercentEncoding];
         
         //Check if the file is including in the sync files
         if (![self isOnAnUpdatingProcessThisFavoriteFile:file]) {
@@ -209,7 +209,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                                 //Get the current local folder
                                 AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
                                 NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:updatedFile.filePath andUser:user]];
-                                currentLocalFolder = [currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                                currentLocalFolder = [currentLocalFolder stringByRemovingPercentEncoding];
                                 
                                 Download *download = [Download new];
                                 download.delegate =self;
@@ -323,7 +323,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:favoriteFile.filePath andUser:app.activeUser], favoriteFile.fileName];
     
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    path = [path stringByRemovingPercentEncoding];
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         
@@ -477,7 +477,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:app.activeUser], file.fileName];
     
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    path = [path stringByRemovingPercentEncoding];
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
         

@@ -36,11 +36,10 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
     
     if (app.activeUser) {
         
-        
         [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
         
         [[AppDelegate sharedOCCommunication] setValueOfUserAgent:[UtilsUrls getUserAgent]];
-        
+
         [[AppDelegate sharedOCCommunication] getCapabilitiesOfServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, OCCapabilities *capabilities, NSString *redirectedServer) {
             
             BOOL isSamlCredentialsError=NO;
