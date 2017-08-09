@@ -28,15 +28,7 @@ struct K {
     struct vcId {
         static let vcIdWebViewLogin = "WebViewLoginViewController"
     }
-    
 }
-
-//@objc public enum LoginMode: Int {
-//    case Create
-//    case Update
-//    case Expire
-//    case Migrate
-//}
 
 public enum TextfieldType: String {
     case url = "url"
@@ -152,6 +144,7 @@ connection_declined  Connection declined by user
     var loginMode: LoginMode!
     public var user: UserDto?
     var activeField: UITextField!
+    var nextErrorShouldBeShownAfterPasswordField = false;
     
     let serverURLNormalizer: ServerURLNormalizer = ServerURLNormalizer()
     let getPublicInfoFromServerJob: GetPublicInfoFromServerJob = GetPublicInfoFromServerJob()
@@ -174,8 +167,8 @@ connection_declined  Connection declined by user
         self.showInitMessageCredentialsErrorIfNeeded()
 
         let enabledEditUrlUsernamePassword : Bool = (self.loginMode == .create || self.loginMode == .migrate)
-        self.textFieldURL.isEnabled = enabledEditUrlUsernamePassword ? true : false
-        self.textFieldUsername.isEnabled = enabledEditUrlUsernamePassword ? true : false
+        self.textFieldURL.isEnabled = enabledEditUrlUsernamePassword
+        self.textFieldUsername.isEnabled = enabledEditUrlUsernamePassword
         
         //set branding styles
             //Set background company color like a comanyImageColor
@@ -445,7 +438,7 @@ connection_declined  Connection declined by user
     }
     
     func updateUIWithNormalizedData(_ oNormalized: ServerURLNormalizer) {
-        self.textFieldURL.text = oNormalized.normalizedURL
+        self.textFieldURL.text = self.validatedServerURL
         if (oNormalized.user != nil) && !(oNormalized.user?.isEmpty)! {
             self.textFieldUsername.text = oNormalized.user
         }
@@ -581,8 +574,9 @@ connection_declined  Connection declined by user
             userCredDto.userName = self.textFieldUsername.text
             userCredDto.accessToken = self.textFieldPassword.text
             userCredDto.authenticationMethod = authMethod
+            nextErrorShouldBeShownAfterPasswordField = true
             
-            validateCredentialsAndAddAccount(credentials: userCredDto);
+            validateCredentialsAndStoreAccount(credentials: userCredDto);
             
             break
 
@@ -669,7 +663,7 @@ connection_declined  Connection declined by user
             self.textFieldUsername.text = samlUserName
             self.textFieldPassword.text = cookieString
             
-            validateCredentialsAndAddAccount(credentials: userCredDto);
+            validateCredentialsAndStoreAccount(credentials: userCredDto);
 
         } else {
             
@@ -682,9 +676,6 @@ connection_declined  Connection declined by user
     public func showError(_ message: String!) {
         DispatchQueue.main.async {
             self.setURLFooter(message: message, isType: .ErrorNotPossibleConnectToServer)
-            if !self.basicAuthInfoStackView.isHidden {
-                self.setBasicAuthLoginStackViews(hiddenStatus: true)
-            }
         }
     }
     
@@ -820,13 +811,13 @@ connection_declined  Connection declined by user
             if !(webVC.authCode).isEmpty {
                 self.authCodeReceived = webVC.authCode
                 
-                let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.serverURLNormalizer.normalizedURL)
+                let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.validatedServerURL)
                 
                 OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { ( userCredDto: CredentialsDto?, error: String?) in
                 
                     if let userCredentials = userCredDto {
                         
-                        self.validateCredentialsAndAddAccount(credentials: userCredentials);
+                        self.validateCredentialsAndStoreAccount(credentials: userCredentials);
                         
                     } else {
                         // TODO show error?
@@ -866,16 +857,18 @@ connection_declined  Connection declined by user
     
     
 // MARK: 'private' methods
-    func validateCredentialsAndAddAccount(credentials: CredentialsDto) {
+    func validateCredentialsAndStoreAccount(credentials: CredentialsDto) {
         //get list of files in root to check session validty, if ok store new account
-        let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: self.serverURLNormalizer.normalizedURL) )
+        let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: validatedServerURL) )
         
         DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, credentials: credentials,
                                            withCompletion: { (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) in
+                                            
                                             self.setNetworkActivityIndicator(status: false)
                                             let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
                                             
                                             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
+                                                /// credentials allowed access to root folder: well done
                                                 
                                                 if self.user == nil {
                                                     self.user = UserDto()
@@ -883,7 +876,7 @@ connection_declined  Connection declined by user
                                                 
                                                 self.user?.url = self.serverURLNormalizer.normalizedURL
                                                 self.user?.username = credentials.userName
-                                                self.user?.ssl = self.serverURLNormalizer.normalizedURL.hasPrefix("https")
+                                                self.user?.ssl = self.validatedServerURL.hasPrefix("https")
                                                 self.user?.urlRedirected = app.urlServerRedirected
                                                 self.user?.predefinedUrl = k_default_url_server
                                                 
@@ -902,7 +895,7 @@ connection_declined  Connection declined by user
                                                         app.generateAppInterface(fromLoginScreen: true)
 
                                                     } else {
-                                                        //error
+                                                        self.showError("error_could_not_add_account")
                                                     }
                                                     
                                                 } else {
@@ -914,19 +907,11 @@ connection_declined  Connection declined by user
                                                 
                                             } else {
                                                 
-                                                self.setNetworkActivityIndicator(status: false)
+                                                self.manageNetworkErrors.manageErrorHttp((errorHttp)!, andErrorConnection: error, andUser: self.user)
                                                 
-//                                                //TODO: check with https url without prefix, error unsupported URL
-//                                                if errorHttp == 0 {
-//                                                    //self.setPasswordFooterError(message: NSLocalizedString("", comment: "") )
-//                                                    self.setPasswordFooterError(message: "Error with the credentials" )
-//                                                } else {
-//                                                    self.manageNetworkErrors.manageErrorHttp((errorHttp)!, andErrorConnection: error, andUser: self.user)
-//                                                }
-                                                
-                                                    
-                                                }
-                                            })
+                                            }
+                                            
+                                        })
                                             
         }
     

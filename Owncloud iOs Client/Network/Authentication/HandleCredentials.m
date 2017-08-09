@@ -43,7 +43,7 @@
     
     [[AppDelegate sharedOCCommunication] setValueOfUserAgent:[UtilsUrls getUserAgent]];
     
-    [self setSharedOCCommunicationUserAgentAndCredentials:credentials];
+    [self setSharedOCCommunicationCredentials:credentials];
 }
 
 
