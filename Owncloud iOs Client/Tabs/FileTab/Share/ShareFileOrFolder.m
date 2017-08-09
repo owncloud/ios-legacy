@@ -52,9 +52,7 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    
     NSString *filePath = [UtilsUrls getFilePathOnDBwithRootSlashAndWithFileName:file.fileName ByFilePathOnFileDto:file.filePath andUser:app.activeUser];
-
     
     [[AppDelegate sharedOCCommunication] shareFileOrFolderByServerPath:[UtilsUrls getFullRemoteServerPath:app.activeUser] withFileOrFolderPath:filePath password:password expirationTime:expirationTime publicUpload:publicUpload linkName:linkName permissions:permissions onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
         

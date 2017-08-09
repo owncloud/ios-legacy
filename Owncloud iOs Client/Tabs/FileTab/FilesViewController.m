@@ -1997,7 +1997,6 @@
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     NSString *path = _currentRemoteFolder;
-    
     path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
@@ -2204,7 +2203,7 @@
         [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
 
         [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-        
+
         NSString *path = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser];
         path = [path stringByAppendingString:_fileIdToShowFiles.fileName];
         path = [path stringByRemovingPercentEncoding];
@@ -2786,7 +2785,6 @@
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     NSString *path = _nextRemoteFolder;
-    
     path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
@@ -3155,6 +3153,7 @@
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
     }
     
+    //TODO:check this rootFolder URL, it should be using utilsURL : getFullRemoteServerPathWithWebDav
     NSString *rootFolder =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
     
     [[AppDelegate sharedOCCommunication] checkServer:rootFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {

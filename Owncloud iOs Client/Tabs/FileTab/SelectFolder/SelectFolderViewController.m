@@ -310,7 +310,7 @@
 -(BOOL)checkForSameName:(NSString *)string
 {
     string = [string stringByAppendingString:@"/"];
-    string = [string stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];
+    string = [string stringByRemovingPercentEncoding];
     DLog(@"string: %@",string);
     NSString *dicName;
     FileDto *fileDto=nil;
@@ -320,7 +320,7 @@
         fileDto = [self.currentDirectoryArray objectAtIndex:i];       
         
         //DLog(@"%@", fileDto.fileName);
-        dicName=[fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];
+        dicName=[fileDto.fileName stringByRemovingPercentEncoding];
         
         if([string isEqualToString:dicName])
         {
@@ -341,26 +341,25 @@
         //Check if exist a folder with the same name
         if ([self checkForSameName:name] == NO) {
             
-            OCCommunication *communication = nil;
+            OCCommunication *sharedCommunication = nil;
             
 #ifdef SHARE_IN
-            communication = Managers.sharedOCCommunication;
+            sharedCommunication = Managers.sharedOCCommunication;
             [[Managers sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
 #else
-            communication = [AppDelegate sharedOCCommunication];
+            sharedCommunication = [AppDelegate sharedOCCommunication];
             [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
 #endif
             
             NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:self.currentFolder andUser:self.user];
 
             NSString *newURL = [NSString stringWithFormat:@"%@%@",remotePath,[name encodeString:NSUTF8StringEncoding]];
-            NSString *rootPath = [UtilsUrls getFilePathOnDBByFullPath:newURL andUser:self.user];
             
-            [communication setCredentials:self.user.credDto];
+            [sharedCommunication setCredentials:self.user.credDto];
 
-            NSString *pathOfNewFolder = [newURL stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *pathOfNewFolder = [newURL stringByRemovingPercentEncoding];
             
-            [communication createFolder:pathOfNewFolder onCommunication:communication withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+            [sharedCommunication createFolder:pathOfNewFolder onCommunication:sharedCommunication withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
                 
                 DLog(@"Folder created");
                 BOOL isSamlCredentialsError=NO;
@@ -552,7 +551,7 @@
     fileCell.labelTitle.font = fileFont;
     
     //Is directory
-    NSString *folderName =  [file.fileName stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+    NSString *folderName =  [file.fileName stringByRemovingPercentEncoding];
     //Quit the last character
     folderName = [folderName substringToIndex:[folderName length]-1];
     

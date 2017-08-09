@@ -176,7 +176,9 @@ typedef NS_ENUM (NSInteger, optionPermission){
         
         [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
         
-        [[AppDelegate sharedOCCommunication] updateShare:self.updatedOCShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:nil andExpirationTime:nil andPermissions:permissionValue onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+
+        //TODO:check "ofServerPath" with redirected server, it should be [UtilsUrls getFullRemoteServerPath
+        [[AppDelegate sharedOCCommunication] updateShare:self.updatedOCShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:nil andExpirationTime:nil andPublicUpload:nil andLinkName:nil andPermissions:permissionValue onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSData *responseData, NSString *redirectedServer) {
             
             BOOL isSamlCredentialsError=NO;
             

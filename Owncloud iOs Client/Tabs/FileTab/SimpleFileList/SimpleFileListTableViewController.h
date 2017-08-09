@@ -21,10 +21,10 @@
 #import "ManageNetworkErrors.h"
 #import "UtilsLogin.h"
 
+
 @class UserDto;
 @class FileDto;
 @class SimpleFileListTableViewController;
-@class UniversalLoginViewController;
 
 @interface SimpleFileListTableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MBProgressHUDDelegate, CheckAccessToServerDelegate, ManageNetworkErrorsDelegate>
 

@@ -264,7 +264,7 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
 
     NSString *pathToDelete = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:app.activeUser];
-    pathToDelete = [pathToDelete stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    pathToDelete = [pathToDelete stringByRemovingPercentEncoding];
     
     DLog(@"Path for delete: %@", pathToDelete);
     

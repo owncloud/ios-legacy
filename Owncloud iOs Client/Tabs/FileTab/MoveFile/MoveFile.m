@@ -121,8 +121,8 @@
     NSString *destinyFile = [NSString stringWithFormat:@"%@%@",self.destinationFolder, self.destinyFilename];
     
     //We remove the URL Encoding
-    originFile = [originFile stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    destinyFile = [destinyFile stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    originFile = [originFile stringByRemovingPercentEncoding];
+    destinyFile = [destinyFile stringByRemovingPercentEncoding];
     
     //In iPad set the global variable
     if (!IS_IPHONE) {
