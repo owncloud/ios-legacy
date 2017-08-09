@@ -22,7 +22,6 @@ import Foundation
     func readFolderRequest(url: URL, credentials: CredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) -> Void ) {
         
         HandleCredentials.setSharedOCCommunicationUserAgentAnd(credentials)
-        //HandleCredentials().setSharedOCCommunicationUserAgentAndCredentials(credentials)
         
         AppDelegate.sharedOCCommunication().readFolder(url.absoluteString, withUserSessionToken: credentials.accessToken, on: AppDelegate.sharedOCCommunication(),
             
@@ -39,14 +38,12 @@ import Foundation
                 if isSamlCredentialsError {
     
                     //Fail as credentials error
-                    completion(Int(kOCErrorServerUnauthorized), nil , nil)
+                    completion(Int(kOCErrorServerUnauthorized), UtilsFramework.getErrorWithCode(Int(kOCErrorServerUnauthorized), andCustomMessageFromTheServer: ""), nil)
+                    return;
                 }
             }
             //TODO: chec redirectedserver in status
-            if !isSamlCredentialsError {
-                
-                completion(0, nil , items)
-            }
+            completion(0, nil , items)
             
         }, failureRequest: { (response:HTTPURLResponse?, error: Error?, token: String?, redirectedServer: String?) in
             
