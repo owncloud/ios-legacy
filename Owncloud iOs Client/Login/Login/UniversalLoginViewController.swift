@@ -408,6 +408,11 @@ connection_declined  Connection declined by user
         self.setConnectButton(status: false)
         
         self.buttonHelpLink.isHidden = Customization.kIsShownHelpLinkOnLogin() ?  false : true
+        
+        let buttonHelpTitleWithoutAppName = NSLocalizedString(NSLocalizedString("help_link_login", comment: ""), comment: "")
+        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
+        let buttonHelpTitle = buttonHelpTitleWithoutAppName.replacingOccurrences(of: "$appname", with: appName)
+        self.buttonHelpLink.setTitle(buttonHelpTitle, for: .normal)
 
     }
     
