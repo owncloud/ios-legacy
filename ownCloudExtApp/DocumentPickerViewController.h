@@ -16,6 +16,7 @@
 #import <UIKit/UIKit.h>
 #import "FileListDocumentProviderViewController.h"
 #import "KKPasscodeViewController.h"
+#import "OCCommunication.h"
 
 
 @class SimpleFileListTableViewController;

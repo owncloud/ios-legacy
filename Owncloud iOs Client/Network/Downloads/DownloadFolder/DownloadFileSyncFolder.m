@@ -45,21 +45,21 @@
     }
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
     NSString *serverUrl = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:app.activeUser];
-    serverUrl = [serverUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    serverUrl = [serverUrl stringByRemovingPercentEncoding];
+    DLog(@"serverUrl: %@", serverUrl);
     
     [[AppDelegate sharedOCCommunicationDownloadFolder] setCredentials:app.activeUser.credDto];
 
     [[AppDelegate sharedOCCommunicationDownloadFolder] setUserAgent:[UtilsUrls getUserAgent]];
-    
-    DLog(@"serverUrl: %@", serverUrl);
     
     //get local path of server
     __block NSString *localPath = file.localFolder;
     
     if (file.isNecessaryUpdate) {
         //Change the local name for a temporal one
-        NSString *tmpUpdateFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *tmpUpdateFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [file.fileName stringByRemovingPercentEncoding]];
         localPath = [localPath substringToIndex:[localPath length] - file.fileName.length];
         localPath = [localPath stringByAppendingString: tmpUpdateFileName];
         

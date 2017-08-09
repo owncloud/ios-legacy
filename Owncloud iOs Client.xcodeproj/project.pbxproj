@@ -369,6 +369,9 @@
 		40AB65121EAFA10000379361 /* ShareLinkViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40AB65101EAFA10000379361 /* ShareLinkViewController.xib */; };
 		40B083991F1607D90072574A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B083981F1607D90072574A /* Log.swift */; };
 		40B5700F1F1E137D00A98A8E /* UtilsLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5700E1F1E137D00A98A8E /* UtilsLogin.m */; };
+		40BCC2BA1F3B5FA500F5DC6F /* HandleCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C4B6BD1F3A062B0009F11F /* HandleCredentials.m */; };
+		40BCC2BC1F3B5FA700F5DC6F /* HandleCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C4B6BD1F3A062B0009F11F /* HandleCredentials.m */; };
+		40BCC2BD1F3B5FA700F5DC6F /* HandleCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C4B6BD1F3A062B0009F11F /* HandleCredentials.m */; };
 		40C01ED91F0FA923002DCAAA /* DetectListOfFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C01ED81F0FA923002DCAAA /* DetectListOfFiles.swift */; };
 		40C0BDB91C46562A0057B1DD /* SharePrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */; };
 		40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */; };
@@ -5030,6 +5033,7 @@
 				EAC6E5FE1AB0A41900CCF8C4 /* OCNavigationController.m in Sources */,
 				EAF721871AB03DB9009F5596 /* ManageFilesDB.m in Sources */,
 				EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */,
+				40BCC2BD1F3B5FA700F5DC6F /* HandleCredentials.m in Sources */,
 				EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */,
 				EAF7217D1AAF2E0D009F5596 /* Managers.swift in Sources */,
 				4056551D1CE1DD5E001266EE /* UtilsFileSystem.m in Sources */,
@@ -5078,6 +5082,7 @@
 				59990A251A0BD67A00D3B842 /* InfoFileUtils.m in Sources */,
 				590849F11A0A811000D3E842 /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				EA8ADE601A31D759008D3612 /* DocumentPickerCell.m in Sources */,
+				40BCC2BA1F3B5FA500F5DC6F /* HandleCredentials.m in Sources */,
 				590849F21A0A811000D3E842 /* SWCellScrollView.m in Sources */,
 				EAD281BB1A38A2F900A00D54 /* DPDownload.m in Sources */,
 				590849F31A0A811000D3E842 /* SWLongPressGestureRecognizer.m in Sources */,
@@ -5128,6 +5133,7 @@
 				EA1F62D81A5EBFC700D6346F /* ManageUsersDB.m in Sources */,
 				EAE80E261A6D317C0061BD86 /* ManageUploadsDB.m in Sources */,
 				EA1F62D71A5EBF8500D6346F /* ManageFilesDB.m in Sources */,
+				40BCC2BC1F3B5FA700F5DC6F /* HandleCredentials.m in Sources */,
 				EA1F62D91A5EBFDF00D6346F /* OCKeychain.m in Sources */,
 				405D06C71BFB670200591604 /* ManageCapabilitiesDB.m in Sources */,
 				EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */,
