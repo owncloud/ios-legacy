@@ -911,13 +911,13 @@ connection_declined  Connection declined by user
                                                 
                                                 self.setNetworkActivityIndicator(status: false)
                                                 
-                                                //TODO: check with https url without prefix, error unsupported URL
-                                                if errorHttp == 0 {
-                                                    //self.setPasswordFooterError(message: NSLocalizedString("", comment: "") )
-                                                    self.setPasswordFooterError(message: "Error with the credentials" )
-                                                } else {
-                                                    self.manageNetworkErrors.manageErrorHttp((errorHttp)!, andErrorConnection: error, andUser: self.user)
-                                                }
+//                                                //TODO: check with https url without prefix, error unsupported URL
+//                                                if errorHttp == 0 {
+//                                                    //self.setPasswordFooterError(message: NSLocalizedString("", comment: "") )
+//                                                    self.setPasswordFooterError(message: "Error with the credentials" )
+//                                                } else {
+//                                                    self.manageNetworkErrors.manageErrorHttp((errorHttp)!, andErrorConnection: error, andUser: self.user)
+//                                                }
                                                 
                                                     
                                                 }
