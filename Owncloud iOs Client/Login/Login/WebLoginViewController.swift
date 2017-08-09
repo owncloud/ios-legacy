@@ -20,27 +20,28 @@ import Foundation
 
 @objc class WebLoginViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate {
 
-    
     var authCode = ""
     
     // MARK: IBOutlets
     @IBOutlet var webViewLogin: UIWebView!
     @IBOutlet var cancelButton: UIBarButtonItem!
-    
+
     @IBAction func cancelButtonTapped(_ sender: Any) {
         self.performCancelButtonTapped()
+
     }
 
     func performCancelButtonTapped() {
         self.performSegue(withIdentifier: K.unwindId.unwindToMainLoginView, sender: self)
     }
 
-    
     var serverPath: String!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.webViewLogin.delegate = self
+        self.webViewLogin.backgroundColor = UIColor.ofWebViewBackground()
+    
         // Do any additional setup after loading the view.
         
         //TODO: set branding style navigation bar, cancel item title
@@ -54,7 +55,6 @@ import Foundation
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
     
     func loadWebViewWith (url : URL) {
        
