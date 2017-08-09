@@ -802,7 +802,6 @@ connection_declined  Connection declined by user
     }
     
     @IBAction func connectButtonTapped(_ sender: Any) {
-        self.setNetworkActivityIndicator(status: true)
         self.startAuthenticationWith(authMethod: self.authMethodToLogin)
     }
     
