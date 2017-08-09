@@ -204,6 +204,14 @@ connection_declined  Connection declined by user
     }
 
     
+    public override var preferredStatusBarStyle: UIStatusBarStyle {
+        if Customization.kIsTextLoginStatusBarWhite() {
+            return .lightContent
+        }
+        return .default
+    }
+    
+    
     //MARK: Set up credentials error
 
     func showInitMessageCredentialsErrorIfNeeded() {
