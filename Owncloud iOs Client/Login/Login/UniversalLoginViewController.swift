@@ -505,7 +505,7 @@ connection_declined  Connection declined by user
     
     // MARK: dismiss
     func closeLoginView() {
-        self.setActivityIndicator(isVisible: false)
+        self.setNetworkActivityIndicator(status: true)
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -644,7 +644,7 @@ connection_declined  Connection declined by user
      */
 
     public func setCookieForSSO(_ cookieString: String?, andSamlUserName samlUserName: String?) {
-        self.setActivityIndicator(isVisible: false)
+        self.setNetworkActivityIndicator(status: false)
         if self.loginMode == .update {
             ManageCookiesStorageDB.deleteCookies(byUser: self.user)
             UtilsCookies.eraseCredentials(withURL: UtilsUrls.getFullRemoteServerPath(withWebDav: self.user))
@@ -690,7 +690,6 @@ connection_declined  Connection declined by user
     public func showError(_ message: String!) {
         DispatchQueue.main.async {
             self.setURLFooter(message: message, isType: .ErrorNotPossibleConnectToServer)
-            self.setConnectButton(status: true)
         }
     }
     
@@ -813,7 +812,7 @@ connection_declined  Connection declined by user
     }
     
     @IBAction func connectButtonTapped(_ sender: Any) {
-        self.setActivityIndicator(isVisible: true)
+        self.setNetworkActivityIndicator(status: true)
         self.setConnectButton(status: false)
         self.startAuthenticationWith(authMethod: self.authMethodToLogin)
     }
@@ -826,7 +825,7 @@ connection_declined  Connection declined by user
         if let sourceViewController = segue.source as? WebLoginViewController {
             let webVC: WebLoginViewController = sourceViewController
             if !(webVC.authCode).isEmpty {
-                self.setActivityIndicator(isVisible: false)
+                self.setNetworkActivityIndicator(status: false)
                 self.authCodeReceived = webVC.authCode
                 
                 let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.validatedServerURL)
