@@ -2775,7 +2775,7 @@ float shortDelay = 0.3;
 
 #pragma mark - CheckAccessToServerDelegate
 
--(void)connectionToTheServer:(BOOL)isConnection {
+-(void)connectionToTheServerWasChecked:(BOOL)isConnected withHttpStatusCode:(NSInteger)statusCode andError:(NSError *)error {
     ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
     [self showPassCodeIfNeeded];
 }
@@ -2783,7 +2783,7 @@ float shortDelay = 0.3;
     ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
     [self showPassCodeIfNeeded];
 }
--(void)badCertificateNoAcceptedByUser {
+-(void)badCertificateNotAcceptedByUser {
     ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
     [self showPassCodeIfNeeded];
 }

@@ -737,7 +737,7 @@
 
 #pragma mark - CheckAccessToServerDelegate
 
--(void)connectionToTheServer:(BOOL)isConnection {
+-(void)connectionToTheServerWasChecked:(BOOL)isConnected withHttpStatusCode:(NSInteger)statusCode andError:(NSError *)error {
 
 }
 
@@ -748,7 +748,7 @@
     [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.user.url];
 }
 
--(void)badCertificateNoAcceptedByUser {
+-(void)badCertificateNotAcceptedByUser {
     DLog(@"Certificate refushed by user");
 }
 
