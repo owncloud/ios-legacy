@@ -97,6 +97,7 @@ connection_declined  Connection declined by user
     
     @IBOutlet var imageViewLogo: UIImageView!
     
+    @IBOutlet weak var viewTopLogo: UIView!
     @IBOutlet var imageViewTopInfo: UIImageView!
     @IBOutlet var labelTopInfo: UILabel!
     
@@ -152,6 +153,10 @@ connection_declined  Connection declined by user
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let topTwentiConstraint = self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: -20)
+        
+        topTwentiConstraint.isActive = (self.navigationController == nil)
         
         self.listenNotificationsAboutKeyboard()
         self.manageNetworkErrors = ManageNetworkErrors()
@@ -358,7 +363,7 @@ connection_declined  Connection declined by user
         
         //self.activityIndicatorURLFooter.frame = self.imageViewURLFooter.frame
 
-        //Placeholders for the login buttons
+        //Placeholders for the login textfields
         self.textFieldURL.placeholder = NSLocalizedString("url_sample", comment: "")
         self.textFieldUsername.placeholder = NSLocalizedString("username", comment: "")
         self.textFieldPassword.placeholder = NSLocalizedString("password", comment: "")
@@ -402,6 +407,8 @@ connection_declined  Connection declined by user
         self.setBasicAuthLoginStackViews(hiddenStatus: shouldBehiddenUserPassFields)
         self.scrollView.backgroundColor = UIColor.ofLoginBackground()
         self.imageViewLogo.backgroundColor = UIColor.ofLoginTopBackground()
+        self.viewTopLogo.backgroundColor = UIColor.ofLoginTopBackground()
+        
 
         self.setConnectButton(status: false)
         
