@@ -58,8 +58,10 @@ import Foundation
     }
     
     
-    // analyze response, return all authentication methods available
-    
+    // Analyze server response and return all authentication methods accepted by it.
+    //
+    // Returns {AuthenticationMethod.UNKNOWN} if no method known by the client is supported,
+    // or if an HTTP error was returned.
     func analyzeResponse(httpResponse: HTTPURLResponse) -> Array<Any> {
         
         var allAvailableAuthMethods = [AuthenticationMethod]()

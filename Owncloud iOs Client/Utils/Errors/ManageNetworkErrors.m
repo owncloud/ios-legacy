@@ -48,7 +48,11 @@
             [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
             break;
             
-        case kOCErrorSharedAPIWrong:    
+        case OCErrorSslRecoverablePeerUnverified:
+            [_delegate showError:NSLocalizedString(@"server_certificate_untrusted", nil)];
+            break;
+            
+        case kOCErrorSharedAPIWrong:
         case kOCErrorServerForbidden:
         case kOCErrorServerPathNotFound:
         case kCFURLErrorUnsupportedURL:

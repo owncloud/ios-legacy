@@ -102,6 +102,12 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                             completionHandler:
                                   ^(NSData *data, NSURLResponse *response, NSError *error) {
                                       
+                                      NSInteger httpStatusCode = 0;
+                                      if (response != nil) {
+                                          NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *) response;
+                                          httpStatusCode = [httpResponse statusCode];
+                                      }
+                                      
                                       if(error != nil) {
                                           DLog(@"Error: %@", error);
                                           DLog(@"Error: %ld - %@",(long)[error code] , [error localizedDescription]);
@@ -119,7 +125,11 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                               
                                           } else {
                                               if(self.delegate) {
-                                                  [self.delegate connectionToTheServer:NO];
+                                                  [self.delegate
+                                                    connectionToTheServerWasChecked:NO
+                                                    withHttpStatusCode:httpStatusCode
+                                                    andError:error
+                                                   ];
                                               }
                                           }
                                       } else {
@@ -135,20 +145,20 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                           }
                                           
                                           BOOL installed = NO;
+                                          NSError *e = nil;
                                           if (data!= nil) {
-                                              
-                                              NSError *e = nil;
                                               NSMutableDictionary *jsonArray = [NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: &e];
                                               DLog(@"data_check_server: %@",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
                                               if (!jsonArray) {
                                                   DLog(@"Error parsing JSON: %@", e);
+                                                  
                                               } else {
                                                   installed = [[jsonArray valueForKey:@"installed"] boolValue];
                                               }
                                           }
                                           
                                           if(self.delegate) {
-                                              [self.delegate connectionToTheServer:installed];
+                                              [self.delegate connectionToTheServerWasChecked:installed withHttpStatusCode:httpStatusCode andError:e];
                                           }
                                           
                                       }
@@ -339,7 +349,7 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
         [self acceptCertificateAndRetryCheckToTheServer];
     } else {
         DLog(@"user pressed CANCEL");
-        [self.delegate badCertificateNoAcceptedByUser];
+        [self.delegate badCertificateNotAcceptedByUser];
     }
 }
 

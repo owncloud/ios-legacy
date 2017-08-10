@@ -24,10 +24,9 @@ typedef enum {
     sslStatusSignedOrNotSSL = 2 //Available for streaming
 } enumSslStatus;
 
-@optional
--(void)connectionToTheServer:(BOOL)isConnection;
+-(void)connectionToTheServerWasChecked:(BOOL)isConnected withHttpStatusCode:(NSInteger)statusCode andError:(NSError *)error;
 -(void)repeatTheCheckToTheServer;
--(void)badCertificateNoAcceptedByUser;
+-(void)badCertificateNotAcceptedByUser;
 @end
 
 @interface CheckAccessToServer : NSObject <UIAlertViewDelegate, NSURLSessionTaskDelegate, NSURLSessionDelegate> {
