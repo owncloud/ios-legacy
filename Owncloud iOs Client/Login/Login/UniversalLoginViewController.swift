@@ -358,6 +358,11 @@ connection_declined  Connection declined by user
         
         //self.activityIndicatorURLFooter.frame = self.imageViewURLFooter.frame
 
+        //Placeholders for the login buttons
+        self.textFieldURL.placeholder = NSLocalizedString("url_sample", comment: "")
+        self.textFieldUsername.placeholder = NSLocalizedString("username", comment: "")
+        self.textFieldPassword.placeholder = NSLocalizedString("password", comment: "")
+        
         //init text
         self.hideKeyboardWhenTappedAround()
         self.textFieldURL.text = k_default_url_server
