@@ -67,8 +67,8 @@ class GetPublicInfoFromServerJob: NSObject, CheckAccessToServerDelegate {
     
     // MARK:  CheckAccessToServerDelegate implementation
     
-    public func connection(toTheServer isConnection: Bool) {
-        if !isConnection {
+    public func connection(toTheServerWasChecked isConnected: Bool, withHttpStatusCode statusCode: Int, andError error: Error!) {
+        if !isConnected {
             print("No connection to the server")
             
             if serverURLHasNoScheme() && enforcedScheme == "https://" {
@@ -77,7 +77,7 @@ class GetPublicInfoFromServerJob: NSObject, CheckAccessToServerDelegate {
                 checkAccessToServer()
                 
             } else {
-                self.completion?(nil, nil, nil, 0)  // TODO: better error reporting; need to improve CheckAccessToServerDelegate.connectionToTheServer interface to receive Error
+                self.completion?(nil, nil, error, statusCode)
                 
                 print("No connection to the server")
             }
@@ -108,5 +108,9 @@ class GetPublicInfoFromServerJob: NSObject, CheckAccessToServerDelegate {
         checkAccessToServer()
     }
     
+    public func badCertificateNotAcceptedByUser() {
+        let error = UtilsFramework.getErrorWithCode(Int(OCErrorSslRecoverablePeerUnverified.rawValue), andCustomMessageFromTheServer: "")
+        self.completion?(nil, nil, error, 0)
+    }
     
 }

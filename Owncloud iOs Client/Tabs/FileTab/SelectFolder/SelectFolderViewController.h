@@ -22,7 +22,7 @@
 #import "SimpleFileListTableViewController.h"
 
 
-@interface SelectFolderViewController : SimpleFileListTableViewController <CheckAccessToServerDelegate, UIAlertViewDelegate, UITextFieldDelegate>{
+@interface SelectFolderViewController : SimpleFileListTableViewController <UIAlertViewDelegate, UITextFieldDelegate>{
     __weak id parent;
 }
 

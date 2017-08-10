@@ -3455,8 +3455,8 @@
 }
 
 #pragma mark - CheckAccessToServer
--(void)connectionToTheServer:(BOOL)isConnection {
-    if(isConnection) {
+-(void)connectionToTheServerWasChecked:(BOOL)isConnected withHttpStatusCode:(NSInteger)statusCode andError:(NSError *)error {
+    if(isConnected) {
         DLog(@"Ok, we have connection to the server");
     } else {        
         //Error msg
@@ -3472,7 +3472,7 @@
     [[CheckAccessToServer sharedManager]isConnectionToTheServerByUrl:APP_DELEGATE.activeUser.url];
 }
 
--(void)badCertificateNoAcceptedByUser {
+-(void)badCertificateNotAcceptedByUser {
     DLog(@"Certificate refushed by user");
 }
 
