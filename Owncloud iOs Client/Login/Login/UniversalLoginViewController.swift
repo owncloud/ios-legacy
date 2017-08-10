@@ -173,7 +173,10 @@ connection_declined  Connection declined by user
 
         let enabledEditUrlUsernamePassword : Bool = (self.loginMode == .create || self.loginMode == .migrate)
         self.textFieldURL.isEnabled = enabledEditUrlUsernamePassword
+        self.textFieldURL.isUserInteractionEnabled = enabledEditUrlUsernamePassword
         self.textFieldUsername.isEnabled = enabledEditUrlUsernamePassword
+        self.textFieldUsername.isUserInteractionEnabled = enabledEditUrlUsernamePassword
+
         
         //set branding styles
             //Set background company color like a comanyImageColor
@@ -372,7 +375,7 @@ connection_declined  Connection declined by user
         self.hideKeyboardWhenTappedAround()
         self.textFieldURL.text = k_default_url_server
         
-        if self.loginMode == .create {
+        if self.loginMode == .create && !ManageUsersDB.existAnyUser(){
             self.textFieldUsername.text = ""
             self.textFieldPassword.text = ""
         } else {
@@ -380,7 +383,7 @@ connection_declined  Connection declined by user
             if ( (Customization.kMultiaccountAvailable()
                     && self.loginMode != .migrate
                     && self.loginMode != .expire )
-                || self.loginMode == .update) {
+                || self.loginMode == .update || self.loginMode == .create ) {
 
                 self.setCancelBarButtonSystemItem()
             }
@@ -502,7 +505,7 @@ connection_declined  Connection declined by user
     
     // MARK: dismiss
     func closeLoginView() {
-        
+        self.setActivityIndicator(isVisible: false)
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -623,9 +626,8 @@ connection_declined  Connection declined by user
     public func errorLogin() {
         
         DispatchQueue.main.async {
-            
             self.showCredentialsError()
-            
+            self.setConnectButton(status: true)
         }
     }
     
@@ -642,7 +644,7 @@ connection_declined  Connection declined by user
      */
 
     public func setCookieForSSO(_ cookieString: String?, andSamlUserName samlUserName: String?) {
-        
+        self.setActivityIndicator(isVisible: false)
         if self.loginMode == .update {
             ManageCookiesStorageDB.deleteCookies(byUser: self.user)
             UtilsCookies.eraseCredentials(withURL: UtilsUrls.getFullRemoteServerPath(withWebDav: self.user))
@@ -688,6 +690,7 @@ connection_declined  Connection declined by user
     public func showError(_ message: String!) {
         DispatchQueue.main.async {
             self.setURLFooter(message: message, isType: .ErrorNotPossibleConnectToServer)
+            self.setConnectButton(status: true)
         }
     }
     
@@ -786,7 +789,7 @@ connection_declined  Connection declined by user
     
     func keyboardDidShow(_ notification: Notification) {
         if let activeField = self.activeField, let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height, right: 0.0)
+            let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height + 20, right: 0.0)
             self.scrollView.contentInset = contentInsets
             self.scrollView.scrollIndicatorInsets = contentInsets
             var aRect = self.view.frame
@@ -810,6 +813,8 @@ connection_declined  Connection declined by user
     }
     
     @IBAction func connectButtonTapped(_ sender: Any) {
+        self.setActivityIndicator(isVisible: true)
+        self.setConnectButton(status: false)
         self.startAuthenticationWith(authMethod: self.authMethodToLogin)
     }
     
@@ -821,6 +826,7 @@ connection_declined  Connection declined by user
         if let sourceViewController = segue.source as? WebLoginViewController {
             let webVC: WebLoginViewController = sourceViewController
             if !(webVC.authCode).isEmpty {
+                self.setActivityIndicator(isVisible: false)
                 self.authCodeReceived = webVC.authCode
                 
                 let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.validatedServerURL)
