@@ -874,7 +874,7 @@ connection_declined  Connection declined by user
                                                     self.user = UserDto()
                                                 }
                                                 
-                                                self.user?.url = self.serverURLNormalizer.normalizedURL
+                                                self.user?.url = self.validatedServerURL
                                                 self.user?.username = credentials.userName
                                                 self.user?.ssl = self.validatedServerURL.hasPrefix("https")
                                                 self.user?.urlRedirected = app.urlServerRedirected
