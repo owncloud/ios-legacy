@@ -505,7 +505,7 @@ connection_declined  Connection declined by user
     
     // MARK: dismiss
     func closeLoginView() {
-        self.setNetworkActivityIndicator(status: true)
+        self.setNetworkActivityIndicator(status: false)
         self.dismiss(animated: true, completion: nil)
     }
     
