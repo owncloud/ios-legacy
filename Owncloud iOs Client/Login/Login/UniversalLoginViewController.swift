@@ -435,11 +435,7 @@ connection_declined  Connection declined by user
     
     func setBasicAuthLoginStackViews(hiddenStatus: Bool) {
         
-        self.textFieldUsername.text = ""
-        self.textFieldPassword.text = ""
         self.revealPasswordButton.setBackgroundImage(UIImage(named: "RevealPasswordIcon.png"), for: .normal)
-        self.labelPasswordFooter.text = ""
-        self.imageViewPasswordFooter.image = nil
         
         UIView.animate(withDuration: 0.5, animations: {
             self.usernameStackView.isHidden = hiddenStatus
