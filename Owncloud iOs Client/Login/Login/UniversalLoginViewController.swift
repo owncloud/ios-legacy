@@ -178,6 +178,8 @@ connection_declined  Connection declined by user
         self.textFieldUsername.isUserInteractionEnabled = enabledEditUrlUsernamePassword
 
         
+
+        
         //set branding styles
             //Set background company color like a comanyImageColor
             //Set background color of company image v
@@ -185,7 +187,12 @@ connection_declined  Connection declined by user
             self.setLabelsMessageStyle()
         
         self.initUI()
-        
+        if self.loginMode == .update {
+            self.buttonReconnectionURL.isHidden = true
+            self.labelURLFooter.text = nil
+            self.imageViewURLFooter.image = nil
+            self.checkCurrentUrl()
+        }
         
         //UtilsCookies.clear()
         
@@ -388,7 +395,7 @@ connection_declined  Connection declined by user
                 self.setCancelBarButtonSystemItem()
             }
             
-            self.checkCurrentUrl()
+            //self.checkCurrentUrl()
 
             if loginMode == .migrate {
                 self.textFieldURL.text = k_default_url_server
@@ -402,8 +409,9 @@ connection_declined  Connection declined by user
         
         if Customization.kHideUrlServer() {
             //hide and trim spaces below
+            self.textFieldURL.text = k_default_url_server
             self.setURLStackView(hiddenStatus: true)
-            
+            checkCurrentUrl()
         }
         
         let shouldBehiddenUserPassFields = (self.loginMode != .create) ? false : true ;
@@ -513,7 +521,6 @@ connection_declined  Connection declined by user
 // MARK: checkUrl
     func checkCurrentUrl() {
         self.setConnectButton(status: false)
-        print("LOG ---> \(self.buttonReconnectionURL.isHidden)")
         self.setURLFooter(message: "", isType: .TestingConnection)
         
         if let inputURL = textFieldURL.text {
@@ -544,6 +551,11 @@ connection_declined  Connection declined by user
                             self.setBasicAuthLoginStackViews(hiddenStatus: false)
                             self.textFieldURL.resignFirstResponder()
                             self.textFieldUsername.becomeFirstResponder()
+                            
+                            if self.loginMode == .update {
+                                self.textFieldUsername.text = self.user?.username
+                                self.textFieldPassword.text = ""
+                            }
                         } else {
                             self.setBasicAuthLoginStackViews(hiddenStatus: true)
                             self.setConnectButton(status: true)
@@ -807,6 +819,7 @@ connection_declined  Connection declined by user
     
 // MARK: IBActions
     @IBAction func reconnectionButtonTapped(_ sender: Any) {
+        print("LOG ---> url = \(self.textFieldURL.text)")
         self.dismissKeyboard()
         self.checkCurrentUrl()
     }
