@@ -39,12 +39,9 @@ public enum TextfieldType: String {
 @objc public enum StateCheckedURL: Int {
     case None
     case TestingConnection
-    case ConnectionEstablished
     case ConnectionEstablishedSecure
     case ConnectionEstablishedNonSecure
-    case ErrorServerInstanceNotFound
-    case ErrorConnectionDeclined
-    case ErrorNotPossibleConnectToServer
+    case Error
 }
 
 
@@ -90,7 +87,7 @@ connection_declined  Connection declined by user
 
 //TODO: button , hideOrShowPassword
 
-@objc public class UniversalLoginViewController: UIViewController, UITextFieldDelegate, SSODelegate, ManageNetworkErrorsDelegate {
+@objc public class UniversalLoginViewController: UIViewController, UITextFieldDelegate, SSODelegate {
  
 // MARK: IBOutlets
     @IBOutlet var scrollView: UIScrollView!
@@ -160,7 +157,10 @@ connection_declined  Connection declined by user
         
         self.listenNotificationsAboutKeyboard()
         self.manageNetworkErrors = ManageNetworkErrors()
-        self.manageNetworkErrors.delegate = self
+            // using ManageNetworkErrors() without delegate; UniversalLoginViewController will call
+            // ManageNetworkErrors.returnErrorMessageWithHttpStatusCode when appropriate, and will show
+            // the message without a callback to a delegate method
+        
         textFieldURL.delegate = self
         textFieldUsername.delegate = self
         textFieldPassword.delegate = self
@@ -230,22 +230,10 @@ connection_declined  Connection declined by user
 
         } else if self.loginMode == .expire{
             
-            self.showCredentialsError()
-        }
-    }
-    
-    func showCredentialsError() {
-        if Customization.kIsSsoActive() {
-            
             self.setTopInfo(message: "session_expired")
             
-        } else {
-            
-            self.setPasswordFooterError(message: "error_login_message")
         }
     }
-    
-
     
     //MARK: Set up image and label with error/info
     
@@ -256,15 +244,6 @@ connection_declined  Connection declined by user
         self.imageViewTopInfo.image = UIImage(named: "CredentialsError.png")!
     }
     
-    func setURLFotterSuccess(oNormalized: ServerURLNormalizer) {
-        
-        var type: StateCheckedURL = .TestingConnection
-        type = .ConnectionEstablished         //TODO: check prefix show type of connection, if oNormalized.scheme
-
-        
-        self.setURLFooter(message: "", isType: type)
-    }
-
     func setActivityIndicator(isVisible: Bool) {
         self.imageViewURLFooter.isHidden = isVisible
         if isVisible {
@@ -274,20 +253,49 @@ connection_declined  Connection declined by user
         }
     }
     
-    func setURLFooter(message: String, isType type: StateCheckedURL) {
+    private func showURLError(_ message: String!) {
+        DispatchQueue.main.async {
+            self.setURLFooter(isType: .Error, errorMessage: message)
+        }
+    }
+    
+    private func showURLSuccess(_ serverIsSecure: Bool) {
+        DispatchQueue.main.async {
+            if serverIsSecure {
+                self.setURLFooter(isType: .ConnectionEstablishedSecure)
+            } else {
+                self.setURLFooter(isType: .ConnectionEstablishedNonSecure)
+            }
+        }
+    }
+    
+    private func showCredentialsError(_ message: String!) {
+        DispatchQueue.main.async {
+            if (self.basicAuthInfoStackView.isHidden) {
+                self.setURLFooter(isType: .Error, errorMessage: message)
+            } else {
+                self.setPasswordFooterError(errorMessage: message)
+            }
+            self.setConnectButton(status: true)
+        }
+    }
+    
+    private func setURLFooter(isType type: StateCheckedURL, errorMessage: String = "") {
         
-        var footerMessage = message
+        var footerMessage = ""
         self.setActivityIndicator(isVisible: false)
         
         switch type {
+
+        case .Error:
+            self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
+            self.labelURLFooter.text = errorMessage
+            self.setReconnectionButtons(hiddenStatus: false)
+            return      // beware: return here, break in the rest
+            
         case .TestingConnection:
             footerMessage = "testing_connection"
             self.setActivityIndicator(isVisible: true)
-            break
-            
-        case .ConnectionEstablished:
-            self.imageViewURLFooter.image = UIImage(named: "NonSecureConnectionIcon.png")!
-            footerMessage = "connection_established"
             break
             
         case .ConnectionEstablishedNonSecure:
@@ -300,23 +308,6 @@ connection_declined  Connection declined by user
             footerMessage = "secure_connection_established"
             break
             
-        case .ErrorServerInstanceNotFound:
-            self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
-            footerMessage = "server_instance_not_found"
-            self.setReconnectionButtons(hiddenStatus: false)
-            break
-            
-        case .ErrorConnectionDeclined:
-            self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
-            footerMessage = "connection_declined"
-            self.setReconnectionButtons(hiddenStatus: false)
-            break
-         
-        case .ErrorNotPossibleConnectToServer:
-            self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
-            footerMessage = "not_possible_connect_to_server"
-            self.setReconnectionButtons(hiddenStatus: false)
-            break
         case .None:
             self.imageViewURLFooter.image = nil
             footerMessage = ""
@@ -324,12 +315,12 @@ connection_declined  Connection declined by user
         }
         
         self.labelURLFooter.text = NSLocalizedString(footerMessage, comment: "")
-        
     }
     
-    func setPasswordFooterError(message: String) {
+    
+    func setPasswordFooterError(errorMessage: String) {
         
-        self.labelPasswordFooter.text = NSLocalizedString(message, comment: "");
+        self.labelPasswordFooter.text = errorMessage;
         
         self.imageViewPasswordFooter.image = UIImage(named: "CredentialsError.png")!
     }
@@ -522,7 +513,7 @@ connection_declined  Connection declined by user
 // MARK: checkUrl
     func checkCurrentUrl() {
         self.setConnectButton(status: false)
-        self.setURLFooter(message: "", isType: .TestingConnection)
+        self.setURLFooter(isType: .TestingConnection)
         
         if let inputURL = textFieldURL.text {
             self.serverURLNormalizer.normalize(serverURL: inputURL)
@@ -533,12 +524,16 @@ connection_declined  Connection declined by user
                 self.setNetworkActivityIndicator(status: false)
                 if error != nil {
                     self.setConnectButton(status: false)
-                    self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: httpStatusCode, andError: error)
-                    print ("error detecting authentication methods")
+                    self.showURLError(
+                        self.manageNetworkErrors.returnErrorMessage(
+                            withHttpStatusCode: httpStatusCode, andError: error
+                        )
+                    )
+                    print ("error getting information from URL")
                     
                 } else if validatedURL != nil {
                     
-                    self.setURLFooter(message: "", isType: .None)
+                    self.setURLFooter(isType: .None)
                     
                     self.validatedServerURL = validatedURL;
                     self.allAvailableAuthMethods = serverAuthenticationMethods as! [AuthenticationMethod]
@@ -564,19 +559,27 @@ connection_declined  Connection declined by user
                             
                         }
                         
-                        self.setURLFotterSuccess(oNormalized: self.serverURLNormalizer)
+                        self.showURLSuccess(self.validatedServerURL.hasPrefix("https://"))
                         
                     } else {
                         self.setBasicAuthLoginStackViews(hiddenStatus: true)
                         self.setConnectButton(status: false)
-                        self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: httpStatusCode, andError: nil)
+                        self.showURLError(
+                            self.manageNetworkErrors.returnErrorMessage(
+                                withHttpStatusCode: httpStatusCode, andError: nil
+                            )
+                        )
                     }
                     self.updateUIWithNormalizedData(self.serverURLNormalizer)
 
                     
                 } else {
                     self.setConnectButton(status: false)
-                    self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: httpStatusCode, andError: nil)
+                    self.showURLError(
+                        self.manageNetworkErrors.returnErrorMessage(
+                            withHttpStatusCode: httpStatusCode, andError: nil
+                        )
+                    )
                 }
             })
         }
@@ -634,16 +637,6 @@ connection_declined  Connection declined by user
         performSegue(withIdentifier: K.segueId.segueToWebLoginView, sender: self)
     }
     
-// MARK: ManageNetworkError delegate
-    public func errorLogin() {
-        
-        DispatchQueue.main.async {
-            self.showCredentialsError()
-            self.setConnectButton(status: true)
-        }
-    }
-    
-    
 // MARK: SSODelegate implementation
     
     /**
@@ -664,14 +657,13 @@ connection_declined  Connection declined by user
         }
         
         if cookieString == nil || cookieString == "" {
-            // TODO: check if show other message error
-            self.setPasswordFooterError(message: NSLocalizedString("authentification_not_valid", comment: "") )
+            self.showCredentialsError(NSLocalizedString("authentification_not_valid", comment: "") )
             
             return;
         }
         
         if samlUserName == nil || samlUserName == "" {
-            self.setPasswordFooterError(message: NSLocalizedString("saml_server_does_not_give_user_id", comment: "") )
+            self.showCredentialsError(NSLocalizedString("saml_server_does_not_give_user_id", comment: "") )
 
             return
         }
@@ -693,17 +685,10 @@ connection_declined  Connection declined by user
 
         } else {
             
-            self.setPasswordFooterError(message: NSLocalizedString("credentials_different_user", comment: "") )
+            self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
         }
     }
     
-    
-//MARK: Manage network errors delegate
-    public func showError(_ message: String!) {
-        DispatchQueue.main.async {
-            self.setURLFooter(message: message, isType: .ErrorNotPossibleConnectToServer)
-        }
-    }
     
     
 // MARK: textField delegate
@@ -922,7 +907,7 @@ connection_declined  Connection declined by user
                                                         app.generateAppInterface(fromLoginScreen: true)
 
                                                     } else {
-                                                        self.showError("error_could_not_add_account")
+                                                        self.showURLError(NSLocalizedString("error_could_not_add_account", comment: ""))
                                                     }
                                                     
                                                 } else {
@@ -933,9 +918,20 @@ connection_declined  Connection declined by user
                                               
                                                 
                                             } else {
-                                                
-                                                self.manageNetworkErrors.manageErrorHttp((errorHttp)!, andErrorConnection: error, andUser: self.user)
-                                                
+                                                if errorHttp == Int(kOCErrorServerUnauthorized) {
+                                                    self.showCredentialsError(
+                                                        self.manageNetworkErrors.returnErrorMessage(
+                                                            withHttpStatusCode: (errorHttp)!, andError: error
+                                                        )
+                                                    )
+                                                    
+                                                } else {
+                                                    self.showURLError(
+                                                        self.manageNetworkErrors.returnErrorMessage(
+                                                            withHttpStatusCode: (errorHttp)!, andError: error
+                                                        )
+                                                    )
+                                                }
                                             }
                                             
                                         })
@@ -951,5 +947,4 @@ connection_declined  Connection declined by user
         self.loginMode = loginMode
     }
     
-    private func showURLError() {}
 }
