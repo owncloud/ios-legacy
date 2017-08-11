@@ -18,11 +18,15 @@
 #import "CheckAccessToServer.h"
 #import "OCErrorMsg.h"
 #import "OCCommunication.h"
+#import "Customization.h"
 
 @implementation ManageNetworkErrors
 
 /*
  * Method called when receive an error from server
+ *
+ * THIS METHOD WILL CRASH IF NO DELEGATE IS SET TO ManageNetworkErrors BEFORE
+ *
  * @errorHttp -> WebDav Server Error of NSURLResponse
  * @errorConnection -> NSError of NSURLSession
  */
@@ -39,71 +43,87 @@
             [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
             break;
         }
-        case OCErrorForbiddenCharacters:
-            //Forbidden characters from the server side
-            [_delegate showError:NSLocalizedString(@"forbidden_characters_from_server", nil)];
-            break;
-            
+
         case NSURLErrorServerCertificateUntrusted: //-1202
             [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
             break;
             
-        case OCErrorSslRecoverablePeerUnverified:
-            [_delegate showError:NSLocalizedString(@"server_certificate_untrusted", nil)];
-            break;
-            
-        case kOCErrorSharedAPIWrong:
-        case kOCErrorServerForbidden:
-        case kOCErrorServerPathNotFound:
-        case kCFURLErrorUnsupportedURL:
-        case kCFURLErrorCannotConnectToHost:
-                [self.delegate showError:errorConnection.localizedDescription];
-            break;
-            
         default:
             //Web Dav Error Code
-            [self returnErrorMessageWithHttpStatusCode:errorHttp andError:errorConnection];
+            if (errorHttp == kOCErrorServerUnauthorized) {
+                [self.delegate errorLogin];
+            } else {
+                [self.delegate showError: [self returnErrorMessageWithHttpStatusCode:errorHttp andError:errorConnection] ];
+            }
             break;
     }
 }
 
 
 /*
- * Method that show the suitable webdav error message in the delegate class
- * @errorHttp -> WebDav Server Error
+ * Method that returns a user message appropriate for the given HTTP error code and/or NSError.
+ *
+ * THIS METHOD DOES NOT INTERACT WITH THE DELEGATE
+ *
+ * First step to get rid of ManageNetworkErrorsDelegate
+ *
+ * @errorHttp -> WebDav/HTTP Server Status code
+ * @error -> iOS error
  */
 
-- (void)returnErrorMessageWithHttpStatusCode:(NSInteger) errorHttp andError:(NSError *) error {
+- (NSString *)returnErrorMessageWithHttpStatusCode:(NSInteger) errorHttp andError:(NSError *) error {
+    
+    if (error != nil) {
+        switch (error.code) {
+            case OCErrorForbiddenCharacters:
+                //Forbidden characters from the server side
+                return NSLocalizedString(@"forbidden_characters_from_server", nil);
+                
+            case OCErrorSslRecoverablePeerUnverified:
+                return NSLocalizedString(@"server_certificate_untrusted", nil);
+                
+            case kOCErrorSharedAPIWrong:
+            case kOCErrorServerForbidden:
+            case kOCErrorServerPathNotFound:
+            case kCFURLErrorUnsupportedURL:
+            case kCFURLErrorCannotConnectToHost:
+                return error.localizedDescription;
+        }
+    }
     
     switch (errorHttp) {
         case kOCErrorServerUnauthorized:
             //Unauthorized (bad username or password)
-            [self.delegate errorLogin];
-            break;
+            if (k_is_sso_active) {
+                return NSLocalizedString(@"session_expired", nil);
+            } else {
+                return NSLocalizedString(@"error_login_message", nil);
+            }
+            
         case kOCErrorServerForbidden:
             //403 Forbidden
             if (error && error.code == OCErrorForbiddenUnknown) {
-                [_delegate showError:[error.userInfo objectForKey:NSLocalizedDescriptionKey]];
+                return [error.userInfo objectForKey:NSLocalizedDescriptionKey];
             } else {
-                [_delegate showError:NSLocalizedString(@"error_not_permission", nil)];
+                return NSLocalizedString(@"error_not_permission", nil);
             }
-            break;
+            
         case kOCErrorServerPathNotFound:
             //404 Not Found. When for example we try to access a path that now not exist
-            [_delegate showError:NSLocalizedString(@"error_path", nil)];
-            break;
+            return NSLocalizedString(@"error_path", nil);
+            
         case kOCErrorServerMethodNotPermitted:
             //405 Method not permitted
-            [_delegate showError:NSLocalizedString(@"not_possible_create_folder", nil)];
-            break;
+            return NSLocalizedString(@"not_possible_create_folder", nil);
+
         case kOCErrorServerMaintenanceError:
             //503 Maintenance Error
-            [_delegate showError:NSLocalizedString(@"maintenance_mode_on_server_message", nil)];
-            break;
+            return NSLocalizedString(@"maintenance_mode_on_server_message", nil);
+
         case kOCErrorServerTimeout:
         default:
-            [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-            break;
+            return NSLocalizedString(@"not_possible_connect_to_server", nil);
+            
     }
 }
 
