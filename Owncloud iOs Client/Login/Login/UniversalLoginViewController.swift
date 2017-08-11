@@ -419,6 +419,7 @@ connection_declined  Connection declined by user
         self.scrollView.backgroundColor = UIColor.ofLoginBackground()
         self.imageViewLogo.backgroundColor = UIColor.ofLoginTopBackground()
         self.viewTopLogo.backgroundColor = UIColor.ofLoginTopBackground()
+
         
 
         self.setConnectButton(status: false)
@@ -584,7 +585,6 @@ connection_declined  Connection declined by user
     
 // MARK: start log in auth
     func startAuthenticationWith(authMethod: AuthenticationMethod) {
-        
         switch authMethod {
 
         case .SAML_WEB_SSO:
@@ -723,8 +723,6 @@ connection_declined  Connection declined by user
                 self.setBasicAuthLoginStackViews(hiddenStatus: true)
             }
             break
-        case TextfieldType.username.rawValue:
-            break
         default:
             break
         }
@@ -752,13 +750,13 @@ connection_declined  Connection declined by user
         case TextfieldType.url.rawValue:
             textField.resignFirstResponder()
             return true
-            break
         case TextfieldType.username.rawValue:
-            textField.resignFirstResponder()
+            //textField.resignFirstResponder()
             self.textFieldPassword.becomeFirstResponder()
             break
         case TextfieldType.password.rawValue:
             if (self.textFieldUsername.text?.characters.count)! > 0 {
+                self.setNetworkActivityIndicator(status: true)
                 startAuthenticationWith(authMethod: .BASIC_HTTP_AUTH)
             }
             textField.resignFirstResponder()
@@ -819,7 +817,6 @@ connection_declined  Connection declined by user
     
 // MARK: IBActions
     @IBAction func reconnectionButtonTapped(_ sender: Any) {
-        print("LOG ---> url = \(self.textFieldURL.text)")
         self.dismissKeyboard()
         self.checkCurrentUrl()
     }
