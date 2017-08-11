@@ -116,8 +116,6 @@ import Foundation
         return allAvailableAuthMethods
     }
     
-
-
     
     func getAuthenticationMethodsAvailableBy(url: URL,  withCompletion completion: @escaping (_ authMethods: Array<Any>? ,_ error: Error?) -> Void)  {
         

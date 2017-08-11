@@ -29,7 +29,7 @@
             
         case AuthenticationMethodBEARER_TOKEN:
             
-            [sharedOCCommunication setCredentialsOauthWithToken:credentials.accessToken];
+            [sharedOCCommunication setCredentialsOauthWithToken:credentials.accessToken refreshToken:credentials.refreshToken expiresIn:credentials.expiresIn];
             break;
             
         default:
