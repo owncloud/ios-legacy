@@ -39,7 +39,7 @@
      andErrorConnection:(NSError *)errorConnection
                 andUser:(UserDto *)user;
 
-- (void)returnErrorMessageWithHttpStatusCode:(NSInteger)errorHttp
+- (NSString *)returnErrorMessageWithHttpStatusCode:(NSInteger)errorHttp
                                     andError:(NSError *)error;
 
 @end
