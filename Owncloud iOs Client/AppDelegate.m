@@ -565,6 +565,10 @@ float shortDelay = 0.3;
     
 }
 
++(void)testCallFunc {
+    NSLog(@"testCallFunc works");
+}
+
 #pragma mark - OCCommunications
 + (OCCommunication*)sharedOCCommunication
 {
@@ -588,7 +592,13 @@ float shortDelay = 0.3;
         OCURLSessionManager *uploadSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:configuration];
         [uploadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
         [uploadSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
-            return NSURLSessionAuthChallengePerformDefaultHandling;
+            
+            //TODO: get refresh token, store credentials
+            
+            //test call func
+            [self testCallFunc];
+            NSLog(@"uploadSessionManager enter in setSessionDidReceiveAuthenticationChallengeBlock ");
+            return NSURLSessionAuthChallengeUseCredential;
         }];
         
         NSURLSessionConfiguration *configurationDownload = nil;
@@ -607,7 +617,12 @@ float shortDelay = 0.3;
         OCURLSessionManager *downloadSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:configurationDownload];
         [downloadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
         [downloadSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
-            return NSURLSessionAuthChallengePerformDefaultHandling;
+            //TODO: get refresh token, store credentials
+            
+            //test call func
+            NSLog(@"downloadSessionManager enter in setSessionDidReceiveAuthenticationChallengeBlock ");
+            [self testCallFunc];
+            return NSURLSessionAuthChallengeUseCredential;
         }];
         
         NSURLSessionConfiguration *networkConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -618,6 +633,15 @@ float shortDelay = 0.3;
         OCURLSessionManager *networkSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:networkConfiguration];
         [networkSessionManager.operationQueue setMaxConcurrentOperationCount:1];
         networkSessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        [networkSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
+            
+            //TODO: get refresh token, store credentials
+            //UniversalViewController.getAuthDataBy(
+            NSLog(@"networksessionmanager enter in setSessionDidReceiveAuthenticationChallengeBlock ");
+            //test call func
+            [self testCallFunc];
+            return NSURLSessionAuthChallengeUseCredential;
+        }];
    
         sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:uploadSessionManager andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
