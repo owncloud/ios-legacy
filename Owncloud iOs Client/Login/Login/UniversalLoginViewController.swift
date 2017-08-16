@@ -165,9 +165,6 @@ connection_declined  Connection declined by user
         textFieldUsername.delegate = self
         textFieldPassword.delegate = self
         
-        textFieldURL.textColor = UIColor.ofURLUserPassword()
-        textFieldUsername.textColor = UIColor.ofURLUserPassword()
-        textFieldPassword.textColor = UIColor.ofURLUserPassword()
         
         self.showInitMessageCredentialsErrorIfNeeded()
 
@@ -177,16 +174,12 @@ connection_declined  Connection declined by user
         self.textFieldUsername.isEnabled = enabledEditUrlUsernamePassword
         self.textFieldUsername.isUserInteractionEnabled = enabledEditUrlUsernamePassword
 
-        
 
-        
-        //set branding styles
-            //Set background company color like a comanyImageColor
-            //Set background color of company image v
+        self.setBrandingStyle()
             //status bar k_is_text_login_status_bar_white
-            self.setLabelsMessageStyle()
         
         self.initUI()
+        
         if self.loginMode == .update {
             self.buttonReconnectionURL.isHidden = true
             self.labelURLFooter.text = nil
@@ -328,8 +321,9 @@ connection_declined  Connection declined by user
 
     //MARK: Set style
     
-    func setLabelsMessageStyle() {
+    func setBrandingStyle() {
         
+        //labels messages
         self.labelTopInfo.backgroundColor = UIColor.clear
         self.labelTopInfo.textColor = UIColor.ofLoginErrorText()
         
@@ -338,6 +332,17 @@ connection_declined  Connection declined by user
         
         self.labelPasswordFooter.backgroundColor = UIColor.clear
         self.labelPasswordFooter.textColor = UIColor.ofLoginErrorText()
+        
+        //text in text fields
+        textFieldURL.textColor = UIColor.ofURLUserPassword()
+        textFieldUsername.textColor = UIColor.ofURLUserPassword()
+        textFieldPassword.textColor = UIColor.ofURLUserPassword()
+        
+        //background
+        self.scrollView.backgroundColor = UIColor.ofLoginBackground()
+        self.imageViewLogo.backgroundColor = UIColor.ofLoginTopBackground()
+        self.viewTopLogo.backgroundColor = UIColor.ofLoginTopBackground()
+        
     }
     
     func setConnectButton(status: Bool) {
@@ -360,67 +365,63 @@ connection_declined  Connection declined by user
     
     //MARK: UI set up
     func initUI() {
-       //self.checkingURLIndicator = UIActivityIndicatorView(frame: self.imageViewURLFooter.frame)
         
-        //self.activityIndicatorURLFooter.frame = self.imageViewURLFooter.frame
-
+        let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        
+        self.hideKeyboardWhenTappedAround()
+        
+        
+        //set cancel button in navigation bar
+        if (  self.loginMode == .update
+            || (self.loginMode == .create && (app.activeUser != nil))
+            || (Customization.kMultiaccountAvailable() && (self.loginMode == .migrate || self.loginMode == .expire))
+            ) {
+            
+            self.setCancelBarButtonSystemItem()
+        }
+        
+        //set URL status
+        if Customization.kHideUrlServer() {
+            self.setURLStackView(hiddenStatus: true)
+        }
+        
+        //set user&pass status
+        let shouldBehiddenUserPassFields = (self.loginMode != .create) ? false : true ;
+        self.setBasicAuthLoginStackViews(hiddenStatus: shouldBehiddenUserPassFields)
+        
+        //set login button status
+        self.setConnectButton(status: false)
+        
+        //init help link button status
+        self.buttonHelpLink.isHidden = Customization.kIsShownHelpLinkOnLogin() ?  false : true
+        let buttonHelpTitleWithoutAppName = NSLocalizedString("help_link_login", comment: "")
+        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
+        let buttonHelpTitle = buttonHelpTitleWithoutAppName.replacingOccurrences(of: "$appname", with: appName)
+        self.buttonHelpLink.setTitle(buttonHelpTitle, for: .normal)
+        
+        
         //Placeholders for the login textfields
         self.textFieldURL.placeholder = NSLocalizedString("url_sample", comment: "")
         self.textFieldUsername.placeholder = NSLocalizedString("username", comment: "")
         self.textFieldPassword.placeholder = NSLocalizedString("password", comment: "")
         
-        //init text
-        self.hideKeyboardWhenTappedAround()
+        //init textField values
         self.textFieldURL.text = k_default_url_server
         
-        if self.loginMode == .create && !ManageUsersDB.existAnyUser(){
-            self.textFieldUsername.text = ""
-            self.textFieldPassword.text = ""
-        } else {
+        if self.loginMode != .create {
             
-            if ( (Customization.kMultiaccountAvailable()
-                    && self.loginMode != .migrate
-                    && self.loginMode != .expire )
-                || self.loginMode == .update || self.loginMode == .create ) {
-
-                self.setCancelBarButtonSystemItem()
-            }
-            
-            //self.checkCurrentUrl()
-
-            if loginMode == .migrate {
-                self.textFieldURL.text = k_default_url_server
-            } else {
+            if self.loginMode != .migrate {
                 self.textFieldURL.text = UtilsUrls.getFullRemoteServerPath(self.user)
             }
-        
+            
             self.textFieldUsername.text = self.user?.username
             self.textFieldPassword.text = ""
         }
         
-        if Customization.kHideUrlServer() {
-            //hide and trim spaces below
-            self.textFieldURL.text = k_default_url_server
-            self.setURLStackView(hiddenStatus: true)
-            checkCurrentUrl()
+        //auto launch check of URL
+        if self.textFieldURL.text != nil && self.textFieldURL.text != "" {
+            self.checkCurrentUrl()
         }
-        
-        let shouldBehiddenUserPassFields = (self.loginMode != .create) ? false : true ;
-        self.setBasicAuthLoginStackViews(hiddenStatus: shouldBehiddenUserPassFields)
-        self.scrollView.backgroundColor = UIColor.ofLoginBackground()
-        self.imageViewLogo.backgroundColor = UIColor.ofLoginTopBackground()
-        self.viewTopLogo.backgroundColor = UIColor.ofLoginTopBackground()
-
-        
-
-        self.setConnectButton(status: false)
-        
-        self.buttonHelpLink.isHidden = Customization.kIsShownHelpLinkOnLogin() ?  false : true
-        
-        let buttonHelpTitleWithoutAppName = NSLocalizedString("help_link_login", comment: "")
-        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
-        let buttonHelpTitle = buttonHelpTitleWithoutAppName.replacingOccurrences(of: "$appname", with: appName)
-        self.buttonHelpLink.setTitle(buttonHelpTitle, for: .normal)
 
     }
     
