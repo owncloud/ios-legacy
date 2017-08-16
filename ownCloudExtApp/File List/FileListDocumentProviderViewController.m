@@ -369,18 +369,14 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
             fileCell.labelTitle.textColor = [UIColor lightGrayColor];
             fileCell.labelInfoFile.textColor = [UIColor lightGrayColor];
             fileCell.fileImageView.alpha = k_Alpha_locked_cell;
-            fileCell.imageDownloaded.alpha = k_Alpha_locked_cell;
-            fileCell.sharedByLinkImage.alpha = k_Alpha_locked_cell;
-            fileCell.sharedWithUsImage.alpha = k_Alpha_locked_cell;
+            fileCell.imageFileStatus .alpha = k_Alpha_locked_cell;
             fileCell.circularPV.alpha = k_Alpha_locked_cell;
         }else{
             fileCell.userInteractionEnabled = YES;
             fileCell.labelTitle.textColor = [UIColor blackColor];
             fileCell.labelInfoFile.textColor = [UIColor blackColor];
             fileCell.fileImageView.alpha = k_Alpha_normal_cell;
-            fileCell.imageDownloaded.alpha = k_Alpha_normal_cell;
-            fileCell.sharedByLinkImage.alpha = k_Alpha_normal_cell;
-            fileCell.sharedWithUsImage.alpha = k_Alpha_normal_cell;
+            fileCell.imageFileStatus .alpha = k_Alpha_locked_cell;
             fileCell.circularPV.alpha = k_Alpha_normal_cell;
 
         }

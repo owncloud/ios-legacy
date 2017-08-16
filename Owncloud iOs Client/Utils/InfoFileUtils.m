@@ -197,18 +197,18 @@
         BOOL isFolderPendingToBeDownload = [[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:fileForSetTheStatusIcon];
 
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
-            fileCell.imageAvailableOffline.image=[UIImage imageNamed:@"file_available_offline_icon"];
+            fileCell.imageFileStatus.image=[UIImage imageNamed:@"file_available_offline_icon"];
         } else {
-            fileCell.imageAvailableOffline.image= nil;
+            fileCell.imageFileStatus.image= nil;
         }
 
         if (isFolderPendingToBeDownload) {
-            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
+            fileCell.imageFileStatus.image=[UIImage imageNamed:@"file_synchronizing_icon"];
         } else {
-            fileCell.imageDownloaded.image= nil;
+            fileCell.imageFileStatus.image= nil;
         }
 #else
-        fileCell.imageDownloaded.image= nil;
+        fileCell.imageFileStatus.image= nil;
 #endif   
         
     } else {
@@ -220,45 +220,47 @@
         
 
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
-            fileCell.imageAvailableOffline.image=[UIImage imageNamed:@"file_available_offline_icon"];
+            fileCell.imageFileStatus.image=[UIImage imageNamed:@"file_available_offline_icon"];
         } else {
-            fileCell.imageAvailableOffline.image= nil;
+            fileCell.imageFileStatus.image= nil;
         }
         
         if(fileForSetTheStatusIcon.isNecessaryUpdate || fileForSetTheStatusIcon.isDownload == updating) {
             //File is in updating
-            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_new_server_version_available_icon"];
+            fileCell.imageFileStatus.image=[UIImage imageNamed:@"file_new_server_version_available_icon"];
         } else if (fileForSetTheStatusIcon.isDownload == downloaded) {
             //File is in device
-            fileCell.imageDownloaded.image=[UIImage imageNamed:@"FileDownloadedIcon"];
+            fileCell.imageFileStatus.image=[UIImage imageNamed:@"FileDownloadedIcon"];
         } else if (fileForSetTheStatusIcon.isDownload == overwriting || fileForSetTheStatusIcon.isDownload == downloading || (fileForSetTheStatusIcon.isDownload == notDownload && (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder))) {
             //File is overwritten, downloading or pending to download in available offline folder
-            fileCell.imageDownloaded.image=[UIImage imageNamed:@"file_synchronizing_icon"];
+            fileCell.imageFileStatus.image=[UIImage imageNamed:@"file_synchronizing_icon"];
         } else {
-            fileCell.imageDownloaded.image= nil;
+            fileCell.imageFileStatus.image= nil;
         }
         
     }
     
+    [[fileCell.sharedInfoButton imageView] setContentMode: UIViewContentModeScaleAspectFit];
+    
     if (numberOfShares > 0 && allShares !=nil) {
         if (numberOfSharesByLink > 0 && sharesByLink !=nil && isShareAPIActive) {
-            fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedByLink.png"];
+            [fileCell.sharedInfoButton setImage:[UIImage imageNamed:@"fileSharedByLink.png"] forState:UIControlStateNormal];
         } else if((numberOfSharesByRemote > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
-            fileCell.sharedByLinkImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
+            [fileCell.sharedInfoButton setImage:[UIImage imageNamed:@"fileSharedWithUs.png"] forState:UIControlStateNormal];
         }
         else {
-            fileCell.sharedByLinkImage.image= nil;
+            fileCell.sharedInfoButton.imageView.image= nil;
         }
         
     } else {
-        fileCell.sharedByLinkImage.image= nil;
+        fileCell.sharedInfoButton.imageView.image= nil;
     }
     
     
     if ([fileForSetTheStatusIcon.permissions rangeOfString:k_permission_shared].location != NSNotFound){
-        fileCell.sharedWithUsImage.image=[UIImage imageNamed:@"fileSharedWithUs.png"];
+            [fileCell.sharedInfoButton setImage:[UIImage imageNamed:@"fileSharedWithUs.png"] forState:UIControlStateNormal];
     } else {
-        fileCell.sharedWithUsImage.image= nil;
+        fileCell.sharedInfoButton.imageView.image= nil;
     }
     
     return fileCell;

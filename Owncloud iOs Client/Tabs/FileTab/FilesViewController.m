@@ -64,6 +64,7 @@
 #import "SortManager.h"
 #import "EditFileViewController.h"
 #import "CheckFeaturesSupported.h"
+#import "UIButton+Extension.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -195,7 +196,8 @@
 
     _refreshControl = refresh;
     
-    
+    self.tableView.delaysContentTouches = YES;
+    self.tableView.canCancelContentTouches = NO;
     [_tableView addSubview:_refreshControl];
 
 }
@@ -1366,9 +1368,18 @@
         
         CustomCellFileAndDirectory *fileCell = (CustomCellFileAndDirectory *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
+        
         if (fileCell == nil) {
             NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"CustomCellFileAndDirectory" owner:self options:nil];
             fileCell = (CustomCellFileAndDirectory *)[topLevelObjects objectAtIndex:0];
+            [[fileCell.optionsButton imageView] setContentMode: UIViewContentModeScaleAspectFit];
+            [[fileCell.optionsButton imageView] setContentMode: UIViewContentModeScaleAspectFit];
+            [fileCell.optionsButton addTarget:self action:@selector(optionsButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+            [fileCell.optionsButton addTarget:self action:@selector(optionsButtonPressed) forControlEvents: UIControlEventTouchDown];
+            [fileCell.sharedInfoButton addTarget:self action:@selector(sharedInfobuttonPressed) forControlEvents:UIControlEventTouchUpInside];
+            [fileCell.sharedInfoButton setHitTestEdgeInsets:UIEdgeInsetsMake(-50, 50, -50, -18)];
+            [fileCell.optionsButton setHitTestEdgeInsets:UIEdgeInsetsMake(-60, -28, -60, -50)];
+
         }
         
         if (!IS_IPHONE) {
@@ -1398,8 +1409,6 @@
         if (![file isDirectory]) {
             //Is file
             //Font for file
-            UIFont *fileFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
-            fileCell.labelTitle.font = fileFont;
             fileCell.labelTitle.text = [file.fileName stringByRemovingPercentEncoding];
             
             NSString *fileSizeString = @"";
@@ -1433,8 +1442,6 @@
         } else {
             //Is directory
             //Font for folder
-            UIFont *fileFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
-            fileCell.labelTitle.font = fileFont;
             
             NSString *folderName = [file.fileName stringByRemovingPercentEncoding];
             //Quit the last character
@@ -1461,7 +1468,8 @@
         fileCell.delegate = self;
         
         //Selection style gray
-        fileCell.selectionStyle=UITableViewCellSelectionStyleGray;
+        //fileCell.selectionStyle=UITableViewCellSelectionStyleGray;
+        fileCell.selectionStyle=UITableViewCellSelectionStyleNone;
         
         //Check if set selected previously
         if (_selectedCell && [_selectedCell compare: indexPath] == NSOrderedSame) {
@@ -1504,7 +1512,7 @@
     if ([_currentDirectoryArray count] == 0) {
         height = [UtilsTableView getUITableViewHeightForSingleRowByNavigationBatHeight:self.navigationController.navigationBar.bounds.size.height andTabBarControllerHeight:self.tabBarController.tabBar.bounds.size.height andTableViewHeight:_tableView.bounds.size.height];
     } else {
-        height = 54.0;
+        height = 75.0;
     }
     return height;
 }
@@ -3750,6 +3758,50 @@
         [self downloadTheFile];
         
     }
+}
+
+- (void) optionsButtonPressed {
+    [_tableView setAllowsSelection: NO];
+    _tableView.allowsSelection = NO;
+    UIAlertController * alert = [UIAlertController
+                                 alertControllerWithTitle:@"Logout"
+                                 message:@"Are You Sure Want to Logout!"
+                                 preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    //Add Buttons
+    
+    UIAlertAction* yesButton = [UIAlertAction
+                                actionWithTitle:@"Yes"
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction * action) {
+                                    //Handle your yes please button action here
+                                }];
+    
+    UIAlertAction* noButton = [UIAlertAction
+                               actionWithTitle:@"Cancel"
+                               style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction * action) {
+                                   //Handle no, thanks button
+                               }];
+    
+    //Add your buttons to alert controller
+    
+    [alert addAction:yesButton];
+    [alert addAction:noButton];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+
+    DLog(@"Options button pressed");
+}
+
+-(void) sharedInfobuttonPressed {
+    [_tableView setAllowsSelection: NO];
+    _tableView.allowsSelection = NO;
+    DLog(@"Shared info button pressed");
+}
+
+- (void) touchUpCellButtons {
+    _tableView.allowsSelection = YES;
 }
 
 @end
