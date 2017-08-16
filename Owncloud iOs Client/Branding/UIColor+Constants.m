@@ -96,7 +96,7 @@
 
 //Background color of login view
 + (UIColor*)colorOfLoginBackground{
-    return [UIColor colorWithRed:245/255.0f green:245/255.0f blue:241/255.0f alpha:1.0f];
+    return [UIColor colorWithRed:255/255.0f green:255/255.0f blue:255/255.0f alpha:1.0f];
 }
 
 //Text color of url in login view
