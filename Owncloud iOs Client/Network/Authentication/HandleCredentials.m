@@ -29,7 +29,7 @@
             
         case AuthenticationMethodBEARER_TOKEN:
             
-            [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:credentials.accessToken];
+            [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:credentials.accessToken];
             break;
             
         default:
