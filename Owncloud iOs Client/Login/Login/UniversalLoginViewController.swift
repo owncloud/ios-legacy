@@ -599,6 +599,7 @@ connection_declined  Connection declined by user
     
 // MARK: start log in auth
     func startAuthenticationWith(authMethod: AuthenticationMethod) {
+        self.setConnectButton(status: false)
         switch authMethod {
 
         case .SAML_WEB_SSO:
@@ -722,14 +723,6 @@ connection_declined  Connection declined by user
         default:
             break
         }
-        
-        if self.authMethodToLogin != nil && self.authMethodToLogin == .BASIC_HTTP_AUTH {
-            if (self.textFieldUsername.text!.characters.count > 0) && (self.textFieldPassword.text!.characters.count > 0) {
-                self.setConnectButton(status: true)
-            } else {
-                self.setConnectButton(status: false)
-            }
-        }
     }
     
     public func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -740,6 +733,14 @@ connection_declined  Connection declined by user
     }
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        if self.authMethodToLogin != nil && self.authMethodToLogin == .BASIC_HTTP_AUTH {
+            if (self.textFieldUsername.text!.characters.count > 0) && (self.textFieldPassword.text!.characters.count > 0) {
+                self.setConnectButton(status: true)
+            } else {
+                self.setConnectButton(status: false)
+            }
+        }
         
         self.activeField = nil
         switch textField.restorationIdentifier! {
@@ -760,6 +761,7 @@ connection_declined  Connection declined by user
         default:
             break
         }
+
         return false
     }
 
@@ -818,6 +820,7 @@ connection_declined  Connection declined by user
     }
     
     @IBAction func connectButtonTapped(_ sender: Any) {
+        self.view.endEditing(true)
         self.setNetworkActivityIndicator(status: true)
         self.setConnectButton(status: false)
         self.startAuthenticationWith(authMethod: self.authMethodToLogin)
