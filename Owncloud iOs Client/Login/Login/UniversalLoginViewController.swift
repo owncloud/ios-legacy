@@ -307,7 +307,7 @@ connection_declined  Connection declined by user
             
         case .ConnectionEstablishedNonSecure:
             self.imageViewURLFooter.image = UIImage(named: "NonSecureConnectionIcon.png")!
-            footerMessage = "https_non_secure_connection_established"
+            footerMessage = "connection_established"
             break
             
         case .ConnectionEstablishedSecure:
