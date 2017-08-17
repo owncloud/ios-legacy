@@ -146,14 +146,18 @@ connection_declined  Connection declined by user
     
     let serverURLNormalizer: ServerURLNormalizer = ServerURLNormalizer()
     let getPublicInfoFromServerJob: GetPublicInfoFromServerJob = GetPublicInfoFromServerJob()
-    
+    var statusBarTintSubview: UIView!
+    var topTwentiConstraint: NSLayoutConstraint!
+
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        let topTwentiConstraint = self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: -20)
+        topTwentiConstraint = self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 0)
+
+        topTwentiConstraint.isActive = true
         
-        topTwentiConstraint.isActive = (self.navigationController == nil)
+        viewDidLayoutSubviews()
         
         self.listenNotificationsAboutKeyboard()
         self.manageNetworkErrors = ManageNetworkErrors()
@@ -189,8 +193,6 @@ connection_declined  Connection declined by user
         
         //UtilsCookies.clear()
         
-        
-        
         print("Init login with loginMode: \(loginMode.rawValue) (0=Create,1=Update,2=Expire,3=Migrate)")
     }
     
@@ -201,6 +203,18 @@ connection_declined  Connection declined by user
         if self.loginMode == .update || self.loginMode == .migrate {
             UtilsCookies.restoreTheCookiesOfActiveUser()
 //TODO: check if need to nil checkaccesstoserver sharedManager
+        }
+    }
+    
+    public override func viewDidLayoutSubviews() {
+        if self.navigationController == nil {
+            if  !UIApplication.shared.isStatusBarHidden {
+                topTwentiConstraint.constant = 0
+            } else {
+                topTwentiConstraint.constant = -64
+            }
+        } else {
+            topTwentiConstraint.constant = -10
         }
     }
 
