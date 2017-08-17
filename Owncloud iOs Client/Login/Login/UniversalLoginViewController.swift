@@ -470,6 +470,8 @@ connection_declined  Connection declined by user
         }
         if (oNormalized.password != nil) && !(oNormalized.password?.isEmpty)! {
             self.textFieldPassword.text = oNormalized.password
+            self.textFieldPassword.becomeFirstResponder()
+            self.setConnectButton(status: true)
         }
     }
 
