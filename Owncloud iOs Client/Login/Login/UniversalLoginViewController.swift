@@ -140,7 +140,7 @@ connection_declined  Connection declined by user
     var authCodeReceived = ""
     var manageNetworkErrors: ManageNetworkErrors!
     var loginMode: LoginMode!
-    public var user: UserDto?
+    var user: UserDto?
     var activeField: UITextField!
     var nextErrorShouldBeShownAfterPasswordField = false;
     
@@ -614,7 +614,7 @@ connection_declined  Connection declined by user
 
         case .BASIC_HTTP_AUTH:
             self.resetPasswordFooterMessage()
-            let userCredDto: CredentialsDto = CredentialsDto()
+            let userCredDto: OCCredentialsDto = OCCredentialsDto()
             userCredDto.userName = self.textFieldUsername.text
             userCredDto.accessToken = self.textFieldPassword.text
             userCredDto.authenticationMethod = authMethod
@@ -685,7 +685,7 @@ connection_declined  Connection declined by user
         print("BACK with cookieString %@ and samlUserName %@", cookieString!, samlUserName!);
 
         
-        let userCredDto: CredentialsDto = CredentialsDto()
+        let userCredDto: OCCredentialsDto = OCCredentialsDto()
         userCredDto.userName = samlUserName
         userCredDto.accessToken = cookieString
         userCredDto.authenticationMethod = self.authMethodToLogin
@@ -834,6 +834,8 @@ connection_declined  Connection declined by user
     
     @IBAction func unwindToMainLoginView(segue:UIStoryboardSegue) {
         if let sourceViewController = segue.source as? WebLoginViewController {
+            /// back from web view getting OAuth2 authorization code
+            
             let webVC: WebLoginViewController = sourceViewController
             if !(webVC.authCode).isEmpty {
                 self.setNetworkActivityIndicator(status: false)
@@ -841,7 +843,7 @@ connection_declined  Connection declined by user
                 
                 let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.validatedServerURL)
                 
-                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { ( userCredDto: CredentialsDto?, error: String?) in
+                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { ( userCredDto: OCCredentialsDto?, error: String?) in
                 
                     if let userCredentials = userCredDto {
                         
@@ -885,7 +887,7 @@ connection_declined  Connection declined by user
     
     
 // MARK: 'private' methods
-    func validateCredentialsAndStoreAccount(credentials: CredentialsDto) {
+    func validateCredentialsAndStoreAccount(credentials: OCCredentialsDto) {
         //get list of files in root to check session validty, if ok store new account
         let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: validatedServerURL) )
         
@@ -908,8 +910,9 @@ connection_declined  Connection declined by user
                                                 self.user?.urlRedirected = app.urlServerRedirected
                                                 self.user?.predefinedUrl = k_default_url_server
                                                 
-                                                if (app.activeUser == nil) {
-                                                    //only set as active account the first account added
+                                                if (app.activeUser == nil || (self.user?.activeaccount)!) {
+                                                    // only set as active account the first account added
+                                                    // OR if it is already the active user; otherwise cookies will not be correctly restored
                                                     self.user?.activeaccount = true
                                                     app.activeUser = self.user
                                                 }

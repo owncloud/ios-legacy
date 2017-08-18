@@ -48,15 +48,8 @@
     NSString *serverUrl = [UtilsUrls getFullRemoteServerFilePathByFile:file andUser:app.activeUser];
     serverUrl = [serverUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunicationDownloadFolder] setCredentialsWithCookie:app.activeUser.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunicationDownloadFolder] setCredentialsOauthWithToken:app.activeUser.password];
-    } else {
-        [[AppDelegate sharedOCCommunicationDownloadFolder] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-    }
-    
+    [[AppDelegate sharedOCCommunicationDownloadFolder] setCredentials:app.activeUser.credDto];
+
     [[AppDelegate sharedOCCommunicationDownloadFolder] setUserAgent:[UtilsUrls getUserAgent]];
     
     DLog(@"serverUrl: %@", serverUrl);

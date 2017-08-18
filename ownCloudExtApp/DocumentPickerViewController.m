@@ -26,7 +26,7 @@
 #import "OCURLSessionManager.h"
 #import "CheckAccessToServer.h"
 #import "OCKeychain.h"
-#import "CredentialsDto.h"
+#import "OCCredentialsDto.h"
 #import "FileListDBOperations.h"
 #import "ManageAppSettingsDB.h"
 #import "KKPasscodeViewController.h"

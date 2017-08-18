@@ -59,7 +59,7 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
     }
     
     
-    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ userCredDto: CredentialsDto? ,_ error: String?) -> Void)  {
+    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ userCredDto: OCCredentialsDto? ,_ error: String?) -> Void)  {
         
         self.accessTokenAuthRequest(url, authCode: authCode, withCompletion: { (data:Data?, httpResponse:HTTPURLResponse?, error:Error?) in
             
@@ -72,7 +72,7 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
                             completion(nil, resultError as? String)
                         } else {
                             
-                            let userCredDto: CredentialsDto = CredentialsDto()
+                            let userCredDto: OCCredentialsDto = OCCredentialsDto()
                             userCredDto.userName = dictJSON["user_id"] as? String
                             userCredDto.accessToken = dictJSON["access_token"] as? String
                             userCredDto.refreshToken = dictJSON["refresh_token"] as? String
@@ -171,7 +171,7 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
     }
     
     
-    func getAuthDataBy(url: URL, refreshToken: String, withCompletion completion: @escaping (_ userCredDto: CredentialsDto? ,_ error: String?) -> Void)  {
+    func getAuthDataBy(url: URL, refreshToken: String, withCompletion completion: @escaping (_ userCredDto: OCCredentialsDto? ,_ error: String?) -> Void)  {
         
         self.refreshTokenAuthRequest(url, refreshToken:refreshToken, withCompletion: { (data:Data?, httpResponse:HTTPURLResponse?, error:Error?) in
             
@@ -184,7 +184,7 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
                             completion(nil, resultError as? String)
                         } else {
                             
-                            let userCredDto: CredentialsDto = CredentialsDto()
+                            let userCredDto: OCCredentialsDto = OCCredentialsDto()
                             userCredDto.userName = dictJSON["user_id"] as? String
                             userCredDto.accessToken = dictJSON["access_token"] as? String
                             userCredDto.refreshToken = dictJSON["refresh_token"] as? String

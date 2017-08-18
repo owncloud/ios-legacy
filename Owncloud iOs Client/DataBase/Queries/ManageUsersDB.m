@@ -18,7 +18,7 @@
 #import "FMDatabase.h"
 #import "UserDto.h"
 #import "OCKeychain.h"
-#import "CredentialsDto.h"
+#import "OCCredentialsDto.h"
 #import "constants.h"
 #import "ManageCapabilitiesDB.h"
 
@@ -110,7 +110,7 @@
             
             NSString *idString = [NSString stringWithFormat:@"%ld", (long)output.idUser];
             
-            CredentialsDto *credDto = [OCKeychain getCredentialsByUserId:idString];
+            OCCredentialsDto *credDto = [OCKeychain getCredentialsByUserId:idString];
             output.username = credDto.userName;
             output.password = credDto.accessToken;
             output.credDto = credDto;
@@ -301,7 +301,7 @@
             
             NSString *idString = [NSString stringWithFormat:@"%ld", (long)current.idUser];
             
-            CredentialsDto *credDto = [OCKeychain getCredentialsByUserId:idString];
+            OCCredentialsDto *credDto = [OCKeychain getCredentialsByUserId:idString];
             current.username = credDto.userName;
             current.password = credDto.accessToken;
             current.credDto = credDto;

@@ -24,11 +24,11 @@ import Foundation
     * @param  CredentialsDto -> credentials of user
     * @return NSInteger -> id of user in DB
     */
-    func storeAccountAndGetIdOfUser(_ user: UserDto, withCredentials credDto: CredentialsDto) -> NSInteger {
+    func storeAccountAndGetIdOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) -> NSInteger {
         
         if let userInDB = ManageUsersDB.insertUser(user) {
             
-            userInDB.credDto = credDto.copy() as! CredentialsDto
+            userInDB.credDto = credDto.copy() as! OCCredentialsDto
             
             //userInDB contains the userId in DB, we add the credentials and store the user in keychain
             OCKeychain.setCredentialsOfUser(userInDB)
@@ -46,9 +46,9 @@ import Foundation
         
     }
     
-    func updateAccountOfUser(_ user: UserDto, withCredentials credDto: CredentialsDto) {
+    func updateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
         
-        user.credDto = credDto.copy() as! CredentialsDto
+        user.credDto = credDto.copy() as! OCCredentialsDto
         
         ManageUsersDB.updateUser(by: user)
 
@@ -69,7 +69,7 @@ import Foundation
         //TODO:check relaunchErrorCredentialFilesNotification if needed
     }
     
-    func migrateAccountOfUser(_ user: UserDto, withCredentials credDto: CredentialsDto) {
+    func migrateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
         
         //Update parameters after a force url and credentials have not been renewed
         let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)

@@ -165,15 +165,8 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-    }
-    
+    [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
+
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     
@@ -236,15 +229,8 @@
         _currentUpload.status=waitingForUpload;
     }
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:_userUploading.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:_userUploading.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:_userUploading.username andPassword:_userUploading.password];
-    }
-    
+    [[AppDelegate sharedOCCommunication] setCredentials:_userUploading.credDto];
+
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     
@@ -730,15 +716,8 @@
 
 - (void) updateTheEtagOfTheFile: (FileDto *) overwrittenFile {
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:self.userUploading.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:self.userUploading.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:self.userUploading.username andPassword:self.userUploading.password];
-    }
-    
+    [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
+
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
@@ -809,15 +788,8 @@
 
 - (void) checkTheEtagInTheServerOfTheFile:(FileDto *) overwrittenFile {
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:self.userUploading.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:self.userUploading.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:self.userUploading.username andPassword:self.userUploading.password];
-    }
-    
+    [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
+
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
