@@ -19,9 +19,11 @@ import Foundation
 
 @objc class DetectListOfFiles: NSObject {
     
-    func readFolderRequest(url: URL, credentials: CredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) -> Void ) {
+    func readFolderRequest(url: URL, credentials: OCCredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) -> Void ) {
         
-        HandleCredentials.setSharedOCCommunicationUserAgentAnd(credentials)
+        AppDelegate.sharedOCCommunication().setCredentials(credentials)
+        
+        AppDelegate.sharedOCCommunication().setValueOfUserAgent(UtilsUrls.getUserAgent())
         
         AppDelegate.sharedOCCommunication().readFolder(url.absoluteString, withUserSessionToken: credentials.accessToken, on: AppDelegate.sharedOCCommunication(),
             
@@ -54,7 +56,7 @@ import Foundation
     }
     
     
-    func getListOfFiles(url:URL, credentials: CredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) -> Void) {
+    func getListOfFiles(url:URL, credentials: OCCredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) -> Void) {
         
         self.readFolderRequest(url: url, credentials: credentials) { (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) in
             

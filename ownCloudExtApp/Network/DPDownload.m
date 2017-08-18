@@ -79,15 +79,8 @@
     
     OCCommunication *sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [sharedCommunication setCredentialsWithCookie:self.user.password];
-    } else if (k_is_oauth_active) {
-        [sharedCommunication setCredentialsOauthWithToken:self.user.password];
-    } else {
-        [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
-    }
-    
+    [sharedCommunication setCredentials:self.user.credDto];
+
     [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
@@ -223,18 +216,11 @@
         [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:updating];
     }
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [sharedCommunication setCredentialsWithCookie:self.user.password];
-    } else if (k_is_oauth_active) {
-        [sharedCommunication setCredentialsOauthWithToken:self.user.password];
-    } else {
-        [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
-    }
+    [sharedCommunication setCredentials:self.user.credDto];
     
-     [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
+    [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
     
-   self.state = downloadWorking;
+    self.state = downloadWorking;
     
     self.downloadTask = [sharedCommunication downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:sharedCommunication progress:^(NSProgress *progress) {
         

@@ -375,14 +375,7 @@
     sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
 #endif
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [sharedCommunication setCredentialsWithCookie:self.user.password];
-    } else if (k_is_oauth_active) {
-        [sharedCommunication setCredentialsOauthWithToken:self.user.password];
-    } else {
-        [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
-    }
+    [sharedCommunication setCredentials:self.user.credDto];
     
     [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
     
@@ -672,14 +665,7 @@
 #endif
     
     if (!self.isRefreshInProgress) {
-        //Set the right credentials
-        if (k_is_sso_active) {
-            [sharedCommunication setCredentialsWithCookie:self.user.password];
-        } else if (k_is_oauth_active) {
-            [sharedCommunication setCredentialsOauthWithToken:self.user.password];
-        } else {
-            [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
-        }
+        [sharedCommunication setCredentials:self.user.credDto];
         
         [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
         

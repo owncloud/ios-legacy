@@ -481,8 +481,10 @@ static NSString *const tmpFileName = @"tmp.der";
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
     
-    //Set the right credentials
-    [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:cookieString];
+    OCCredentialsDto* credentials = [[OCCredentialsDto alloc] init];
+    credentials.accessToken = cookieString;
+    credentials.authenticationMethod = AuthenticationMethodSAML_WEB_SSO;
+    [[AppDelegate sharedOCCommunication] setCredentials:credentials];
     
     [[AppDelegate sharedOCCommunication] getUserNameByCookie:cookieString ofServerPath:_urlString onCommunication:[AppDelegate sharedOCCommunication] success:^(NSHTTPURLResponse *response, NSData *responseData, NSString *redirectedServer) {
         
