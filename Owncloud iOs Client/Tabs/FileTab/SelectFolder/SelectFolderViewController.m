@@ -356,15 +356,8 @@
             NSString *newURL = [NSString stringWithFormat:@"%@%@",remotePath,[name encodeString:NSUTF8StringEncoding]];
             NSString *rootPath = [UtilsUrls getFilePathOnDBByFullPath:newURL andUser:self.user];
             
-            //Set the right credentials
-            if (k_is_sso_active) {
-                [communication setCredentialsWithCookie:self.user.password];
-            } else if (k_is_oauth_active) {
-                [communication setCredentialsOauthWithToken:self.user.password];
-            } else {
-                [communication setCredentialsWithUser:self.user.username andPassword:self.user.password];
-            }
-            
+            [communication setCredentials:self.user.credDto];
+
             NSString *pathOfNewFolder = [newURL stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
             [communication createFolder:pathOfNewFolder onCommunication:communication withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {

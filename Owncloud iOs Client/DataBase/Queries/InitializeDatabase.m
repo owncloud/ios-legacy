@@ -15,7 +15,7 @@
  */
 
 #import "InitializeDatabase.h"
-#import "CredentialsDto.h"
+#import "OCCredentialsDto.h"
 #import "OCKeychain.h"
 #import "ManageDB.h"
 #import "ManageFilesDB.h"

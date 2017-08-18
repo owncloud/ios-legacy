@@ -367,13 +367,11 @@
 		40AB650D1EAF4DCE00379361 /* ShareMainLinkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40AB650B1EAF4DCE00379361 /* ShareMainLinkCell.xib */; };
 		40AB65111EAFA10000379361 /* ShareLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AB650F1EAFA10000379361 /* ShareLinkViewController.m */; };
 		40AB65121EAFA10000379361 /* ShareLinkViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40AB65101EAFA10000379361 /* ShareLinkViewController.xib */; };
-		40AC24D219FE725600582867 /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
 		40B083991F1607D90072574A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B083981F1607D90072574A /* Log.swift */; };
 		40B5700F1F1E137D00A98A8E /* UtilsLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5700E1F1E137D00A98A8E /* UtilsLogin.m */; };
 		40C01ED91F0FA923002DCAAA /* DetectListOfFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C01ED81F0FA923002DCAAA /* DetectListOfFiles.swift */; };
 		40C0BDB91C46562A0057B1DD /* SharePrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */; };
 		40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */; };
-		40C4B6BE1F3A062B0009F11F /* HandleCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C4B6BD1F3A062B0009F11F /* HandleCredentials.m */; };
 		40C663AA1EFA4FBE004AF994 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40C663A91EFA4FBE004AF994 /* Main.storyboard */; };
 		40C663B01EFA94B1004AF994 /* UniversalLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C663AF1EFA94B1004AF994 /* UniversalLoginViewController.swift */; };
 		40C745A61F05229C00DB4968 /* OauthAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C745A51F05229C00DB4968 /* OauthAuthentication.swift */; };
@@ -521,7 +519,6 @@
 		599D99F81A026004008A9DB3 /* UserDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F148177C315D004A1A5A /* UserDto.m */; };
 		599D99F91A0294A0008A9DB3 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		599DDD4F1A19FBD3008725DE /* OCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FF874219F81396008B7C62 /* OCKeychain.m */; };
-		599DDD511A19FBF8008725DE /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
 		599E57351A08E62700744EC9 /* FileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F146177C315D004A1A5A /* FileDto.m */; };
 		599E5C271A0CD0E500E83C03 /* EmptyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B0083E18FD1B5B004CB06B /* EmptyCell.m */; };
 		599E5C291A0CD0EF00E83C03 /* EmptyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14B0083F18FD1B5B004CB06B /* EmptyCell.xib */; };
@@ -704,7 +701,6 @@
 		EA1F62D71A5EBF8500D6346F /* ManageFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13A177C2F73004A1A5A /* ManageFilesDB.m */; };
 		EA1F62D81A5EBFC700D6346F /* ManageUsersDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F140177C2FC1004A1A5A /* ManageUsersDB.m */; };
 		EA1F62D91A5EBFDF00D6346F /* OCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FF874219F81396008B7C62 /* OCKeychain.m */; };
-		EA1F62DA1A5EBFF100D6346F /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
 		EA1F62DD1A5EC08300D6346F /* libownCloudiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8667E118AA291C00D3550D /* libownCloudiOS.a */; };
 		EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F146177C315D004A1A5A /* FileDto.m */; };
 		EA2243EA1B71276D00F62E2A /* ShareLinkHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2243E81B71276D00F62E2A /* ShareLinkHeaderCell.swift */; };
@@ -942,7 +938,6 @@
 		EAF7217F1AAF2E5B009F5596 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F14F177C3392004A1A5A /* FMDatabase.m */; };
 		EAF721801AAF3325009F5596 /* Managers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7217C1AAF2E0D009F5596 /* Managers.swift */; };
 		EAF721811AAF33F8009F5596 /* OCKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FF874219F81396008B7C62 /* OCKeychain.m */; };
-		EAF721821AAF3402009F5596 /* CredentialsDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC24D119FE725600582867 /* CredentialsDto.m */; };
 		EAF721831AAF340D009F5596 /* ManageUsersDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F140177C2FC1004A1A5A /* ManageUsersDB.m */; };
 		EAF721841AAF3C5C009F5596 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F157177C3392004A1A5A /* FMResultSet.m */; };
 		EAF721851AAF3C86009F5596 /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
@@ -1549,16 +1544,12 @@
 		40AB650E1EAFA10000379361 /* ShareLinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareLinkViewController.h; path = Tabs/FileTab/Share/ShareLinkViewController.h; sourceTree = "<group>"; };
 		40AB650F1EAFA10000379361 /* ShareLinkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareLinkViewController.m; path = Tabs/FileTab/Share/ShareLinkViewController.m; sourceTree = "<group>"; };
 		40AB65101EAFA10000379361 /* ShareLinkViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareLinkViewController.xib; path = Tabs/FileTab/Share/ShareLinkViewController.xib; sourceTree = "<group>"; };
-		40AC24D019FE725600582867 /* CredentialsDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CredentialsDto.h; path = DataBase/DTOs/CredentialsDto.h; sourceTree = "<group>"; };
-		40AC24D119FE725600582867 /* CredentialsDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CredentialsDto.m; path = DataBase/DTOs/CredentialsDto.m; sourceTree = "<group>"; };
 		40B083981F1607D90072574A /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		40B5700D1F1E137D00A98A8E /* UtilsLogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilsLogin.h; sourceTree = "<group>"; };
 		40B5700E1F1E137D00A98A8E /* UtilsLogin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilsLogin.m; sourceTree = "<group>"; };
 		40C01ED81F0FA923002DCAAA /* DetectListOfFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetectListOfFiles.swift; path = Network/ReadFolder/DetectListOfFiles.swift; sourceTree = "<group>"; };
 		40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SharePrivilegeCell.xib; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.xib; sourceTree = "<group>"; };
 		40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharePrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.swift; sourceTree = "<group>"; };
-		40C4B6BC1F3A062B0009F11F /* HandleCredentials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandleCredentials.h; sourceTree = "<group>"; };
-		40C4B6BD1F3A062B0009F11F /* HandleCredentials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HandleCredentials.m; sourceTree = "<group>"; };
 		40C663A91EFA4FBE004AF994 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		40C663AF1EFA94B1004AF994 /* UniversalLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniversalLoginViewController.swift; sourceTree = "<group>"; };
 		40C745A51F05229C00DB4968 /* OauthAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OauthAuthentication.swift; sourceTree = "<group>"; };
@@ -2252,8 +2243,6 @@
 				1487F147177C315D004A1A5A /* UserDto.h */,
 				1487F148177C315D004A1A5A /* UserDto.m */,
 				59A9A723196E8A370042FEAC /* CookiesStorageDto.h */,
-				40AC24D019FE725600582867 /* CredentialsDto.h */,
-				40AC24D119FE725600582867 /* CredentialsDto.m */,
 				59A9A724196E8A370042FEAC /* CookiesStorageDto.m */,
 				EAC598581A56A150003192B2 /* ProvidingFileDto.h */,
 				EAC598591A56A150003192B2 /* ProvidingFileDto.m */,
@@ -3083,8 +3072,6 @@
 			children = (
 				40904B2B1EF04ACE00C72619 /* DetectAuthenticationMethod.swift */,
 				40C745A51F05229C00DB4968 /* OauthAuthentication.swift */,
-				40C4B6BC1F3A062B0009F11F /* HandleCredentials.h */,
-				40C4B6BD1F3A062B0009F11F /* HandleCredentials.m */,
 			);
 			name = Authentication;
 			path = Network/Authentication;
@@ -4797,7 +4784,6 @@
 				EA68968D17F599060033B3C1 /* KKKeychain.m in Sources */,
 				148DD619177855D900FB9977 /* Reachability.m in Sources */,
 				40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */,
-				40C4B6BE1F3A062B0009F11F /* HandleCredentials.m in Sources */,
 				148DD62517785D6900FB9977 /* DetailViewController.m in Sources */,
 				EABF69171891379C00A2217C /* SWTableViewCell.m in Sources */,
 				EA8ADE681A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
@@ -4963,7 +4949,6 @@
 				59C71D131A9216AE00F66166 /* ReaderConstants.m in Sources */,
 				148BEA62178C01C300696246 /* FailedUploadCell.m in Sources */,
 				EAF33C891C2AF5EE003A5AA2 /* ManageThumbnails.m in Sources */,
-				40AC24D219FE725600582867 /* CredentialsDto.m in Sources */,
 				596C060D1CF47278004BCF51 /* ELCImagePickerController.m in Sources */,
 				596C060E1CF47278004BCF51 /* ELCOverlayImageView.m in Sources */,
 				1339D939178DA3FC00002156 /* UtilsNetworkRequest.m in Sources */,
@@ -4997,7 +4982,6 @@
 				59F123E11C89BFB50094CF70 /* CustomCellFileAndDirectory.m in Sources */,
 				90D608FC1C8984760049CCE4 /* SortManager.m in Sources */,
 				905C594F1C50DA490051D223 /* ManageTouchID.m in Sources */,
-				EAF721821AAF3402009F5596 /* CredentialsDto.m in Sources */,
 				EAC6E5F91AB0985200CCF8C4 /* UINavigationController+KeyboardDismiss.m in Sources */,
 				EAF7216F1AADE7EE009F5596 /* UIColor+Constants.m in Sources */,
 				59E20C7C1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */,
@@ -5065,7 +5049,6 @@
 				59C3AC1C1A287DE3005433A1 /* KKPasscodeSettingsViewController.m in Sources */,
 				59C3AC1D1A287DE3005433A1 /* KKPasscodeViewController.m in Sources */,
 				59C521F91A1B7C3A00C5EF76 /* ManageNetworkErrors.m in Sources */,
-				599DDD511A19FBF8008725DE /* CredentialsDto.m in Sources */,
 				EAE80E281A6D31980061BD86 /* UploadsOfflineDto.m in Sources */,
 				EA8ADE691A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
 				599DDD4F1A19FBD3008725DE /* OCKeychain.m in Sources */,
@@ -5125,7 +5108,6 @@
 				EAE80E241A6CFDE50061BD86 /* UploadsOfflineDto.m in Sources */,
 				EAB0AB4719ED356A00764C31 /* FileProvider.m in Sources */,
 				EA1F62D21A5EBD2400D6346F /* ManageProvidingFilesDB.m in Sources */,
-				EA1F62DA1A5EBFF100D6346F /* CredentialsDto.m in Sources */,
 				EA1F62CF1A5EBCA800D6346F /* FMDatabaseQueue.m in Sources */,
 				EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */,
 				EA1F62D11A5EBD2000D6346F /* ProvidingFileDto.m in Sources */,

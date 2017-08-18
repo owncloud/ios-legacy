@@ -33,14 +33,7 @@
  */
 - (void)checkIfTheFileExistsWithThisPath:(NSString*)path andUser:(UserDto *) user {
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:user.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:user.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:user.username andPassword:user.password];
-    }
+    [[AppDelegate sharedOCCommunication] setCredentials:user.credDto];
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     

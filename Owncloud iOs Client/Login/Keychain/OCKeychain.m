@@ -15,7 +15,7 @@
 
 #import "OCKeychain.h"
 #import <Security/Security.h>
-#import "CredentialsDto.h"
+#import "OCCredentialsDto.h"
 #import "UtilsUrls.h"
 #import "ManageUsersDB.h"
 #import "UserDto.h"
@@ -105,9 +105,9 @@
 
 }
 
-+(CredentialsDto *)getCredentialsByUserId:(NSString *)userId{
++(OCCredentialsDto *)getCredentialsByUserId:(NSString *)userId{
     
-    CredentialsDto *credentialsDto = nil;
+    OCCredentialsDto *credentialsDto = nil;
     
     NSDictionary *resultKeychainDict = [self getKeychainDictionaryOfUserId:userId];
     
@@ -259,9 +259,9 @@
 
 #pragma mark - used to update from db version 21to22
 
-+(CredentialsDto *)getOldCredentialsByUserId:(NSString *)userId {
++(OCCredentialsDto *)getOldCredentialsByUserId:(NSString *)userId {
     
-    CredentialsDto *credentialsDto = nil;
+    OCCredentialsDto *credentialsDto = nil;
     
     NSDictionary *resultKeychainDict = [self getKeychainDictionaryOfUserId:userId];
     
@@ -269,7 +269,7 @@
         NSData *resultData = resultKeychainDict[(__bridge id)kSecValueData];
     
         if (resultData) {
-            credentialsDto = [CredentialsDto new];
+            credentialsDto = [OCCredentialsDto new];
             credentialsDto.userName = resultKeychainDict[(__bridge id)kSecAttrDescription];
             credentialsDto.accessToken = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
         }
