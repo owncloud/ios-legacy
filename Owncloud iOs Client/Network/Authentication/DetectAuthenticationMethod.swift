@@ -40,8 +40,8 @@ import Foundation
         request.httpBody = body.data(using: String.Encoding.utf8)
         
         let configuration = URLSessionConfiguration.ephemeral
+        configuration.urlCredentialStorage = nil;   // enforce that no credential is proposed for the auhtentication challenge
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-//        let session = URLSession(configuration: URLSessionConfiguration.default)
 
         let task = session.dataTask(with: request as URLRequest, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
 
@@ -157,17 +157,49 @@ import Foundation
     
 // MARK: UrlSession delegates
     
+    // Delegate method called when the server responded with an authentication challenge.
+    // Since iOS is so great, it is also called when the server certificate is not trusted, so that the client
+    // can decide what to do about it.
+    //
+    // In this case an authentication challenge from the server is an expected response, since we made an
+    // unauthenticated request to analyse the authentication challenge. We will just stop the process to grant
+    // there is no automatic retry and process the 401 response in the completion handler.
+    //
+    //
     func urlSession(_ session: URLSession,
                              task: URLSessionTask,
                              didReceive challenge: URLAuthenticationChallenge,
                              completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void){
         
+        // For the case that the call is due to server certificate not trusted, first we compare it with the server that
+        // could have been trusted by CheckAccessToServer in a previous call. Please, notice that DetectAuthenticationMethod is
+        // only used in the app as part of GetPublicInfoFromServerJob, and a successful call to CheckAccessToServer must have been
+        // finished before. That successful call could include the acceptance by the user of self-signed server certificates, and
+        // those are cached in CheckAccessToServer and considered in the call to CheckAccessToServer.isTrustedServer
         let checkAccessToServer: CheckAccessToServer = CheckAccessToServer.sharedManager() as! CheckAccessToServer
         let trusted: Bool = checkAccessToServer.isTrustedServer(with: challenge)
         if (trusted) {
             let credential = URLCredential(trust: challenge.protectionSpace.serverTrust!)
             completionHandler(.useCredential,credential);
+            
+        } else if (challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust ){
+            // If this method was called due to an unstrusted server certificate and this was not accepted by the user in
+            // CheckAccessToServer, .performDefaultHandling should be good enought to make the request fail due to the untrusted 
+            // certificate.
+            completionHandler(.performDefaultHandling, nil);
+            
         } else {
+            // If this method was called due to a real authentication challenge from the server, .performDefaultHandling with nil
+            // will repeat again the network request, wich is pretty unconvenient, but allows to handle the HTTP status code and 
+            // response in the analyzeResponse(...) as part of the request completion handler.
+            
+            // The only way to prevent that the request was repeated would be using .cancelAuthenticationChallenge instead of 
+            // .performDefaultHandling, but in that case I see no way to get the status code and the response headers in the completion
+            // handler, and since this callback itself cannot recognize Bearer authentication challenges, we cannot use it either to
+            // determine the list of authentication methods supported in the server.
+            
+            // "Deal with it" -- somebody in Apple.
+            //
             completionHandler(.performDefaultHandling, nil);
         }
     }
