@@ -12,10 +12,6 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
-
-
-
-
 #import <UIKit/UIKit.h>
 #import "UserDto.h"
 #import "MediaAVPlayerViewController.h"
@@ -27,6 +23,8 @@
 #import "DetailViewController.h"
 #import "ManageDownloads.h"
 #import "CheckAccessToServer.h"
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <RMActionController/RMActionController.h>
 
 @class FilesViewController;
 @class RecentViewController;

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01FC9B5C8222E8083E468EBC /* libPods-ownCloudExtApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6B455BAFE935986A535118 /* libPods-ownCloudExtApp.a */; };
 		1324297D15ADBB3700DF823E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1324297C15ADBB3700DF823E /* UIKit.framework */; };
 		1324297F15ADBB3700DF823E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1324297E15ADBB3700DF823E /* Foundation.framework */; };
 		1324298115ADBB3700DF823E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1324298015ADBB3700DF823E /* CoreGraphics.framework */; };
@@ -667,9 +668,11 @@
 		908A3C701D019EDD00A34FDB /* file_synchronizing_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064143E1D005B5C000AEFE5 /* file_synchronizing_icon@2x.png */; };
 		90D608FA1C89844E0049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		90D608FC1C8984760049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
+		AFEDEE45731FFC4D4F0F5FDD /* libPods-ownCloudExtAppFileProvider.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 008E16B4D8CBAA4A0DA0908E /* libPods-ownCloudExtAppFileProvider.a */; };
 		BC7765951EDD7C1500E32D89 /* PresentedViewUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = BC7765941EDD7C1500E32D89 /* PresentedViewUtils.m */; };
 		BC855ACD1E0D4B0200998CB7 /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BC855ACA1E0D4B0200998CB7 /* FLAnimatedImage.m */; };
 		BC855ACE1E0D4B0200998CB7 /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC855ACC1E0D4B0200998CB7 /* FLAnimatedImageView.m */; };
+		C528A332A05FAA64E63F7BB1 /* libPods-OC Share Sheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D89D7A9E47B4C573952A1AAD /* libPods-OC Share Sheet.a */; };
 		CB238ACB1E52FC2A006A03FA /* MediaAVPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB238ACA1E52FC2A006A03FA /* MediaAVPlayerViewController.m */; };
 		CB238ACD1E52FCA4006A03FA /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB238ACC1E52FCA4006A03FA /* AVKit.framework */; };
 		CB6ABBC21E4CA0C000F27940 /* OCURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A6B65619458F6E000B107D /* OCURLSessionManager.m */; };
@@ -946,6 +949,7 @@
 		EAF771311B73523800ED6E6E /* SystemConstants-swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF771301B73523800ED6E6E /* SystemConstants-swift.swift */; };
 		EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 		EAFE20A81AC4617D00BB888E /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */; };
+		F761136F2E5C10A10EA662C3 /* libPods-Owncloud iOs Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B14337B5D6A554D6DECEEE41 /* libPods-Owncloud iOs Client.a */; };
 		FCE228D11CFE08EF00E4827F /* InstantUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE228D01CFE08EF00E4827F /* InstantUpload.m */; };
 /* End PBXBuildFile section */
 
@@ -1053,6 +1057,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		008E16B4D8CBAA4A0DA0908E /* libPods-ownCloudExtAppFileProvider.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ownCloudExtAppFileProvider.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1324297815ADBB3700DF823E /* Owncloud iOs Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Owncloud iOs Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1324297C15ADBB3700DF823E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1324297E15ADBB3700DF823E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1410,6 +1415,8 @@
 		14EC1954195B297F00B02AB6 /* sharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@2x.png"; sourceTree = "<group>"; };
 		14EFCAEA17FAFEAA007A38B6 /* MainAppIcon_76-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76-76.png"; sourceTree = "<group>"; };
 		14EFCAEC17FAFF48007A38B6 /* MainAppIcon_40-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_40-40.png"; sourceTree = "<group>"; };
+		22340D90FF0385747344B419 /* Pods-ownCloudExtAppFileProvider.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudExtAppFileProvider.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudExtAppFileProvider/Pods-ownCloudExtAppFileProvider.debug.xcconfig"; sourceTree = "<group>"; };
+		3B8EDE4FAD36C53BCD6C32C1 /* Pods-Owncloud iOs Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Owncloud iOs Client.release.xcconfig"; path = "Pods/Target Support Files/Pods-Owncloud iOs Client/Pods-Owncloud iOs Client.release.xcconfig"; sourceTree = "<group>"; };
 		4002B01A1D421A7100520FB3 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4002B01C1D421A8300520FB3 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		400560741A03B1190030D502 /* MainAppIcon_40-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_40-40@2x.png"; sourceTree = "<group>"; };
@@ -1583,6 +1590,7 @@
 		40F2F6121C5A180700129F92 /* owncloudLogoFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = owncloudLogoFiles.png; sourceTree = "<group>"; };
 		40FF874119F81396008B7C62 /* OCKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCKeychain.h; sourceTree = "<group>"; };
 		40FF874219F81396008B7C62 /* OCKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCKeychain.m; sourceTree = "<group>"; };
+		59048A03396F687B7C755250 /* Pods-ownCloudExtApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudExtApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudExtApp/Pods-ownCloudExtApp.debug.xcconfig"; sourceTree = "<group>"; };
 		590F1FF91C7474AE00AAF1C7 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		590F1FFA1C7474B700AAF1C7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		593D14881C60BE1E005161E2 /* SplashImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SplashImage.png; sourceTree = "<group>"; };
@@ -1740,6 +1748,10 @@
 		9069EAA61CF5F07200810996 /* OCLoadingSpinner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCLoadingSpinner.m; path = Utils/OCLoadingSpinner.m; sourceTree = "<group>"; };
 		908A3C5A1D016FE500A34FDB /* file_available_offline_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_available_offline_icon@2x.png"; sourceTree = "<group>"; };
 		908A3C5C1D01732C00A34FDB /* file_available_offline_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_available_offline_icon.png; sourceTree = "<group>"; };
+		91C79933FFCB6DE93D9904D2 /* Pods-ownCloudExtAppFileProvider.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudExtAppFileProvider.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudExtAppFileProvider/Pods-ownCloudExtAppFileProvider.release.xcconfig"; sourceTree = "<group>"; };
+		9B6B455BAFE935986A535118 /* libPods-ownCloudExtApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ownCloudExtApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B14337B5D6A554D6DECEEE41 /* libPods-Owncloud iOs Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Owncloud iOs Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8F451301AF6C6B329B3C366 /* Pods-Owncloud iOs Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Owncloud iOs Client.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Owncloud iOs Client/Pods-Owncloud iOs Client.debug.xcconfig"; sourceTree = "<group>"; };
 		BC7765931EDD7C1500E32D89 /* PresentedViewUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PresentedViewUtils.h; path = Utils/PresentedViewUtils.h; sourceTree = "<group>"; };
 		BC7765941EDD7C1500E32D89 /* PresentedViewUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PresentedViewUtils.m; path = Utils/PresentedViewUtils.m; sourceTree = "<group>"; };
 		BC855AC91E0D4B0200998CB7 /* FLAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FLAnimatedImage.h; path = ExternalLibreries/FLAnimatedimage/FLAnimatedImage.h; sourceTree = "<group>"; };
@@ -1749,6 +1761,9 @@
 		CB238AC91E52FC2A006A03FA /* MediaAVPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MediaAVPlayerViewController.h; path = Files/PreviewSupportedFiles/Media/MediaAVPlayerViewController.h; sourceTree = "<group>"; };
 		CB238ACA1E52FC2A006A03FA /* MediaAVPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MediaAVPlayerViewController.m; path = Files/PreviewSupportedFiles/Media/MediaAVPlayerViewController.m; sourceTree = "<group>"; };
 		CB238ACC1E52FCA4006A03FA /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		CC8F4FAC51C97D11CB678D6C /* Pods-OC Share Sheet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OC Share Sheet.release.xcconfig"; path = "Pods/Target Support Files/Pods-OC Share Sheet/Pods-OC Share Sheet.release.xcconfig"; sourceTree = "<group>"; };
+		CD5384DB8F8DCB7A9E0E67F1 /* Pods-ownCloudExtApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudExtApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudExtApp/Pods-ownCloudExtApp.release.xcconfig"; sourceTree = "<group>"; };
+		D89D7A9E47B4C573952A1AAD /* libPods-OC Share Sheet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OC Share Sheet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D924DCBC1B973E88008B4BE7 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
 		D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
 		D924DCBF1B973E98008B4BE7 /* OCMArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
@@ -1759,6 +1774,7 @@
 		D924DCC41B973E98008B4BE7 /* OCMockObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMockObject.h; sourceTree = "<group>"; };
 		D924DCC51B973E98008B4BE7 /* OCMRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMRecorder.h; sourceTree = "<group>"; };
 		D924DCC61B973E98008B4BE7 /* OCMStubRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMStubRecorder.h; sourceTree = "<group>"; };
+		E7C67105EBFCEDA7584A9A5C /* Pods-OC Share Sheet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OC Share Sheet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OC Share Sheet/Pods-OC Share Sheet.debug.xcconfig"; sourceTree = "<group>"; };
 		EA0599831BB92B19002C2864 /* ShareUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareUserCell.swift; path = Tabs/FileTab/Share/Cells/ShareUserCell.swift; sourceTree = "<group>"; };
 		EA0599841BB92B19002C2864 /* ShareUserCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareUserCell.xib; path = Tabs/FileTab/Share/Cells/ShareUserCell.xib; sourceTree = "<group>"; };
 		EA0599901BB94F3F002C2864 /* ShareSearchUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareSearchUserViewController.h; path = Tabs/FileTab/Share/ShareSearchUserViewController.h; sourceTree = "<group>"; };
@@ -1967,6 +1983,7 @@
 				1324298115ADBB3700DF823E /* CoreGraphics.framework in Frameworks */,
 				13824C0A16034C2200A95EAD /* libcrypto.a in Frameworks */,
 				13824C0B16034C2200A95EAD /* libssl.a in Frameworks */,
+				F761136F2E5C10A10EA662C3 /* libPods-Owncloud iOs Client.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1988,6 +2005,7 @@
 				EAC6E5F41AB0911600CCF8C4 /* libssl.a in Frameworks */,
 				EAF7217A1AAF1B33009F5596 /* libsqlite3.0.dylib in Frameworks */,
 				EAF721791AAF1AEF009F5596 /* libownCloudiOS.a in Frameworks */,
+				C528A332A05FAA64E63F7BB1 /* libPods-OC Share Sheet.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2000,6 +2018,7 @@
 				59D700FC1A122BB6006DB0B7 /* MobileCoreServices.framework in Frameworks */,
 				599D99F41A025733008A9DB3 /* libsqlite3.0.dylib in Frameworks */,
 				597A87981A0143000071F2AF /* libownCloudiOS.a in Frameworks */,
+				01FC9B5C8222E8083E468EBC /* libPods-ownCloudExtApp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2012,6 +2031,7 @@
 				59E58B761B04ED15004E9739 /* libssl.a in Frameworks */,
 				EA1F62DD1A5EC08300D6346F /* libownCloudiOS.a in Frameworks */,
 				EA1F62D61A5EBDF900D6346F /* libsqlite3.0.dylib in Frameworks */,
+				AFEDEE45731FFC4D4F0F5FDD /* libPods-ownCloudExtAppFileProvider.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2039,6 +2059,7 @@
 				EA6606961AA767F800BA2C65 /* OC Share Sheet */,
 				1324297B15ADBB3700DF823E /* Frameworks */,
 				1324297915ADBB3700DF823E /* Products */,
+				81848E2D2A741EA402419A0A /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2080,6 +2101,10 @@
 				1324298015ADBB3700DF823E /* CoreGraphics.framework */,
 				13B721EC169D78BE00B24A51 /* Twitter.framework */,
 				13D8741E169DBE05000FBE6D /* MessageUI.framework */,
+				B14337B5D6A554D6DECEEE41 /* libPods-Owncloud iOs Client.a */,
+				D89D7A9E47B4C573952A1AAD /* libPods-OC Share Sheet.a */,
+				9B6B455BAFE935986A535118 /* libPods-ownCloudExtApp.a */,
+				008E16B4D8CBAA4A0DA0908E /* libPods-ownCloudExtAppFileProvider.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -3372,6 +3397,21 @@
 			path = ImageBranding/SplashScreen;
 			sourceTree = "<group>";
 		};
+		81848E2D2A741EA402419A0A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B8F451301AF6C6B329B3C366 /* Pods-Owncloud iOs Client.debug.xcconfig */,
+				3B8EDE4FAD36C53BCD6C32C1 /* Pods-Owncloud iOs Client.release.xcconfig */,
+				E7C67105EBFCEDA7584A9A5C /* Pods-OC Share Sheet.debug.xcconfig */,
+				CC8F4FAC51C97D11CB678D6C /* Pods-OC Share Sheet.release.xcconfig */,
+				59048A03396F687B7C755250 /* Pods-ownCloudExtApp.debug.xcconfig */,
+				CD5384DB8F8DCB7A9E0E67F1 /* Pods-ownCloudExtApp.release.xcconfig */,
+				22340D90FF0385747344B419 /* Pods-ownCloudExtAppFileProvider.debug.xcconfig */,
+				91C79933FFCB6DE93D9904D2 /* Pods-ownCloudExtAppFileProvider.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		905B3D3D1C8867EE00BCC93B /* Sort */ = {
 			isa = PBXGroup;
 			children = (
@@ -3892,11 +3932,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 132429BF15ADBB3800DF823E /* Build configuration list for PBXNativeTarget "Owncloud iOs Client" */;
 			buildPhases = (
+				42567282762F3C78C2A6397A /* [CP] Check Pods Manifest.lock */,
 				1324297415ADBB3700DF823E /* Sources */,
 				1324297515ADBB3700DF823E /* Frameworks */,
 				1324297615ADBB3700DF823E /* Resources */,
 				EAB0AB5919ED356A00764C31 /* Embed App Extensions */,
 				4074F2AF1C5782860029AAFE /* ShellScript */,
+				DE2A015255CFFCF9A32BDA0F /* [CP] Embed Pods Frameworks */,
+				71C52C23265D4F7D25C24717 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3936,9 +3979,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EA6606A31AA767F800BA2C65 /* Build configuration list for PBXNativeTarget "OC Share Sheet" */;
 			buildPhases = (
+				DA8F93746E5C3CBBB37F4BCD /* [CP] Check Pods Manifest.lock */,
 				EA6606911AA767F700BA2C65 /* Sources */,
 				EA6606921AA767F700BA2C65 /* Frameworks */,
 				EA6606931AA767F700BA2C65 /* Resources */,
+				9CA6F1C9244CDA9C658BB4A5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3954,9 +3999,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EAB0AB5819ED356A00764C31 /* Build configuration list for PBXNativeTarget "ownCloudExtApp" */;
 			buildPhases = (
+				E43EF44F07388A80658DBC03 /* [CP] Check Pods Manifest.lock */,
 				EAB0AB2E19ED356A00764C31 /* Sources */,
 				EAB0AB2F19ED356A00764C31 /* Frameworks */,
 				EAB0AB3019ED356A00764C31 /* Resources */,
+				5B46B5C3B9941080FF0F3CAC /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3972,9 +4019,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EAB0AB5719ED356A00764C31 /* Build configuration list for PBXNativeTarget "ownCloudExtAppFileProvider" */;
 			buildPhases = (
+				AAFB042741D5F9D5A507BD1E /* [CP] Check Pods Manifest.lock */,
 				EAB0AB3C19ED356A00764C31 /* Sources */,
 				EAB0AB3D19ED356A00764C31 /* Frameworks */,
 				EAB0AB3E19ED356A00764C31 /* Resources */,
+				B1D77774B54B9FEC1E3B2E6F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -4723,6 +4772,141 @@
 			shellPath = /bin/sh;
 			shellScript = "LASTGITCOMMIT=$(git rev-parse --short HEAD)\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"LastGitCommit\" \"${LASTGITCOMMIT}\"\n";
 		};
+		42567282762F3C78C2A6397A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		5B46B5C3B9941080FF0F3CAC /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ownCloudExtApp/Pods-ownCloudExtApp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		71C52C23265D4F7D25C24717 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Owncloud iOs Client/Pods-Owncloud iOs Client-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9CA6F1C9244CDA9C658BB4A5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OC Share Sheet/Pods-OC Share Sheet-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AAFB042741D5F9D5A507BD1E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B1D77774B54B9FEC1E3B2E6F /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ownCloudExtAppFileProvider/Pods-ownCloudExtAppFileProvider-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DA8F93746E5C3CBBB37F4BCD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		DE2A015255CFFCF9A32BDA0F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Owncloud iOs Client/Pods-Owncloud iOs Client-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E43EF44F07388A80658DBC03 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -5354,6 +5538,7 @@
 		};
 		132429C015ADBB3800DF823E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8F451301AF6C6B329B3C366 /* Pods-Owncloud iOs Client.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -5406,6 +5591,7 @@
 		};
 		132429C115ADBB3800DF823E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3B8EDE4FAD36C53BCD6C32C1 /* Pods-Owncloud iOs Client.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -5512,6 +5698,7 @@
 		};
 		EA6606A01AA767F800BA2C65 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E7C67105EBFCEDA7584A9A5C /* Pods-OC Share Sheet.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -5560,6 +5747,7 @@
 		};
 		EA6606A11AA767F800BA2C65 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CC8F4FAC51C97D11CB678D6C /* Pods-OC Share Sheet.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -5604,6 +5792,7 @@
 		};
 		EAB0AB5219ED356A00764C31 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 59048A03396F687B7C755250 /* Pods-ownCloudExtApp.debug.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -5668,6 +5857,7 @@
 		};
 		EAB0AB5319ED356A00764C31 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CD5384DB8F8DCB7A9E0E67F1 /* Pods-ownCloudExtApp.release.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -5727,6 +5917,7 @@
 		};
 		EAB0AB5419ED356A00764C31 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 22340D90FF0385747344B419 /* Pods-ownCloudExtAppFileProvider.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -5785,6 +5976,7 @@
 		};
 		EAB0AB5519ED356A00764C31 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 91C79933FFCB6DE93D9904D2 /* Pods-ownCloudExtAppFileProvider.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
