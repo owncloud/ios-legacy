@@ -1,0 +1,17 @@
+PODS:
+  - RMActionController (1.2.1)
+  - SDWebImage (3.7.6):
+    - SDWebImage/Core (= 3.7.6)
+  - SDWebImage/Core (3.7.6)
+
+DEPENDENCIES:
+  - RMActionController (~> 1.2.1)
+  - SDWebImage (~> 3.7.2)
+
+SPEC CHECKSUMS:
+  RMActionController: e516bc0651a61d675abb5eaf09ee79a92ae6155c
+  SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
+
+PODFILE CHECKSUM: aaaa377ab81451fa59738d228d216af5a046f69a
+
+COCOAPODS: 1.2.1
