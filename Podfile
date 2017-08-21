@@ -1,4 +1,4 @@
-platform :ios, '8.0'
+platform :ios, '9.0'
 
 target 'Owncloud iOs Client' do
 	pod 'SDWebImage','~> 3.7.2'

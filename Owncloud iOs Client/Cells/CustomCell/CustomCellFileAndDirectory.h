@@ -21,7 +21,6 @@
 @property(nonatomic, strong) IBOutlet UIImageView *imageFileStatus;
 @property(nonatomic, strong) IBOutlet UILabel *labelTitle;
 @property(nonatomic, strong) IBOutlet UILabel *labelInfoFile;
-@property(nonatomic, strong) IBOutlet UIButton *optionsButton;
 @property(nonatomic, strong) IBOutlet UIButton *sharedInfoButton;
 @property (weak, nonatomic) IBOutlet UILabel *sharedInfoLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *sharedInfoImageView;

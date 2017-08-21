@@ -1372,14 +1372,12 @@
         if (fileCell == nil) {
             NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"CustomCellFileAndDirectory" owner:self options:nil];
             fileCell = (CustomCellFileAndDirectory *)[topLevelObjects objectAtIndex:0];
-            [[fileCell.optionsButton imageView] setContentMode: UIViewContentModeScaleAspectFit];
-            [[fileCell.optionsButton imageView] setContentMode: UIViewContentModeScaleAspectFit];
-            [fileCell.optionsButton addTarget:self action:@selector(optionsButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-            [fileCell.optionsButton addTarget:self action:@selector(optionsButtonPressed) forControlEvents: UIControlEventTouchDown];
             [fileCell.sharedInfoButton addTarget:self action:@selector(sharedInfobuttonPressed) forControlEvents:UIControlEventTouchUpInside];
-            [fileCell.sharedInfoButton setHitTestEdgeInsets:UIEdgeInsetsMake(-50, 50, -50, -18)];
-            [fileCell.optionsButton setHitTestEdgeInsets:UIEdgeInsetsMake(-60, -28, -60, -50)];
-
+            UIButton *accessoryButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+            UIImage *accImage = [UIImage imageNamed:@"down-arrow-circle-button-fine.pngf"];
+            [accessoryButton setImage:accImage forState: UIControlStateNormal];
+            [accessoryButton addTarget:self action:@selector(optionsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            [fileCell setAccessoryView:accessoryButton];
         }
         
         if (!IS_IPHONE) {
@@ -3760,40 +3758,6 @@
     }
 }
 
-- (void) optionsButtonPressed {
-    [_tableView setAllowsSelection: NO];
-    _tableView.allowsSelection = NO;
-    UIAlertController * alert = [UIAlertController
-                                 alertControllerWithTitle:@"Logout"
-                                 message:@"Are You Sure Want to Logout!"
-                                 preferredStyle:UIAlertControllerStyleActionSheet];
-    
-    //Add Buttons
-    
-    UIAlertAction* yesButton = [UIAlertAction
-                                actionWithTitle:@"Yes"
-                                style:UIAlertActionStyleDefault
-                                handler:^(UIAlertAction * action) {
-                                    //Handle your yes please button action here
-                                }];
-    
-    UIAlertAction* noButton = [UIAlertAction
-                               actionWithTitle:@"Cancel"
-                               style:UIAlertActionStyleDefault
-                               handler:^(UIAlertAction * action) {
-                                   //Handle no, thanks button
-                               }];
-    
-    //Add your buttons to alert controller
-    
-    [alert addAction:yesButton];
-    [alert addAction:noButton];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-
-    DLog(@"Options button pressed");
-}
-
 -(void) sharedInfobuttonPressed {
     [_tableView setAllowsSelection: NO];
     _tableView.allowsSelection = NO;
@@ -3802,6 +3766,11 @@
 
 - (void) touchUpCellButtons {
     _tableView.allowsSelection = YES;
+}
+
+- (void) optionsButtonTapped:(id) sender {
+    DLog(@"Options button pressed");
+
 }
 
 @end
