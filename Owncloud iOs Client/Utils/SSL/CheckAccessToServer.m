@@ -84,17 +84,21 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
     DLog(@"_isConnectionToTheServerByUrl_ URL Status: |%@|", _urlStatusCheck);
     
     
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:0 timeoutInterval:timeout];
-    
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:timeout];
     //Add the user agent
     [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
     [request setHTTPShouldHandleCookies:false];
+    [request setValue:@"" forHTTPHeaderField:@"Authorization"];  // this is VERY IMPORTANT; for some reason, if not explicitly set,
+                                                                 // when the request is used to build the NSURLSessionDataTask below
+                                                                 // an authorization header will be added, reusing the last authorization header the app used;
+                                                                 // that credential will survive even after uninstalling and reinstalling the app!!!
     
     //Configure connectionSession
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     [configuration setHTTPShouldSetCookies:false];
     configuration.HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyNever;
     configuration.HTTPCookieStorage = nil;
+    configuration.URLCredentialStorage = nil;   // enforce no credential is set to the request
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
     
     
@@ -162,7 +166,8 @@ static SecCertificateRef SecTrustGetLeafCertificate(SecTrustRef trust)
                                           }
                                           
                                       }
-                                      
+                                   
+                                      [session finishTasksAndInvalidate];   // clean up!
                                   }];
     
     [task resume];
