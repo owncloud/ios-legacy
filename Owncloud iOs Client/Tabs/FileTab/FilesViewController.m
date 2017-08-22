@@ -311,7 +311,7 @@
     DLog(@"self.mUser.username: %@", _mUser.username);
     
     if(!([currentUser.username isEqualToString:_mUser.username] &&
-         [currentUser.password isEqualToString:_mUser.password] &&
+         [currentUser.credDto.accessToken isEqualToString:_mUser.credDto.accessToken] &&
          [currentUser.url isEqualToString:_mUser.url] &&
          currentUser.idUser == _mUser.idUser)) {
         //We are changing of user
