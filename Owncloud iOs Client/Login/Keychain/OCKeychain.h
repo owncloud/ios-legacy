@@ -36,9 +36,9 @@
  */
 
 /**
- * Deprecated, only used to migrate old keychain items in version 21to22
+ * Only used to migrate old database user into keychain items in change of DB version 9to10
  */
-+(OCCredentialsDto *)getOldCredentialsByUserId:(NSString *)userId;
++(BOOL)setCredentialsOfUserFromDBVersion9To10:(UserDto *)user;
 
 ///-----------------------------------
 /// @name updateAllKeychainsToUseTheLockProperty
@@ -50,10 +50,8 @@
  */
 +(void)updateAllKeychainsToUseTheLockProperty;
 
-+(BOOL)updateKeychainForUseLockPropertyForUser:(NSString *)userId;
 
-
-+(void)updateAllKeychainItemsUntilVersion21ToStoreCredentialsDtoWithBasicAuthenticationAsValue;
++(void)updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoWithBasicAuthenticationAsValue;
 
 
 @end

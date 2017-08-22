@@ -25,7 +25,12 @@
 
 
 +(BOOL)setCredentialsOfUser:(UserDto *)user {
+    return [OCKeychain setCredentialsOfUser:user migrating:NO];
+}
 
+// private implementation, common to both setCredentialsOfUser and setCredentialsOfUserToFromDbVersion9To10
++(BOOL)setCredentialsOfUser:(UserDto *)user migrating:(BOOL)fromDbVersion9To10 {
+    
     BOOL output = NO;
     NSString *userId = [NSString stringWithFormat:@"%ld",(long)user.idUser];
     
@@ -41,22 +46,20 @@
     } else if (user.username){
         [keychainItem setObject:user.username forKey:(__bridge id)kSecAttrDescription];
     }
-
     
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
     
     if(stsExist == errSecSuccess) {
         NSLog(@"Unable add item with id =%@ error",userId);
-    }else {
         
-        if (user.credDto) {
-            
+    } else if (user.credDto) {
+        
+        if (fromDbVersion9To10) {
+            //to support upgrades from 9to10 db version, in 21to22 is going to be updated to use credDto as kSecValueData
+            [keychainItem setObject:[user.credDto.accessToken dataUsingEncoding:NSUTF8StringEncoding] forKey:(__bridge id)kSecValueData];
+        } else {
             NSData *encodedCredDto = [NSKeyedArchiver archivedDataWithRootObject:user.credDto];
             [keychainItem setObject:encodedCredDto forKey:(__bridge id)kSecValueData];
-            
-        } else if (user.password){
-            //to support upgrades from 9to10 db version, in 21to22 is going to be updated to use credDto as kSecValueData
-            [keychainItem setObject:[user.password dataUsingEncoding:NSUTF8StringEncoding] forKey:(__bridge id)kSecValueData];
         }
         
         OSStatus stsAdd = SecItemAdd((__bridge CFDictionaryRef)keychainItem, NULL);
@@ -257,6 +260,11 @@
     return output;
 }
 
+#pragma mark - used to update from db version 9to10
++(BOOL)setCredentialsOfUserFromDBVersion9To10:(UserDto *)user {
+    return [OCKeychain setCredentialsOfUser:user migrating:YES];
+}
+
 #pragma mark - used to update from db version 21to22
 
 +(OCCredentialsDto *)getOldCredentialsByUserId:(NSString *)userId {
@@ -278,7 +286,7 @@
     return credentialsDto;
 }
 
-+ (void)updateAllKeychainItemsUntilVersion21ToStoreCredentialsDtoWithBasicAuthenticationAsValue {
++ (void)updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoWithBasicAuthenticationAsValue {
     
     for (UserDto *user in [ManageUsersDB getAllUsersWithOutCredentialInfo]) {
         
@@ -288,9 +296,7 @@
         
         if (user.credDto) {
             user.username = user.credDto.userName;
-            user.password = user.credDto.accessToken;
-            
-            user.credDto.authenticationMethod = k_is_sso_active ? @"SAML_WEB_SSO" : @"BASIC_HTTP_AUTH";
+            user.credDto.authenticationMethod = k_is_sso_active ? AuthenticationMethodSAML_WEB_SSO : AuthenticationMethodBASIC_HTTP_AUTH;
             
             [OCKeychain updateCredentialsOfUser:user];
             
