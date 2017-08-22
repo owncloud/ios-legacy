@@ -35,9 +35,9 @@
 + (UserDto *) getActiveUser;
 
 /*
- * This method returns the active user of the app without user name and password
+ * This method returns the active user of the app without credentials
  */
-+ (UserDto *) getActiveUserWithoutUserNameAndPassword;
++ (UserDto *) getActiveUserWithoutCredentials;
 
 /*
  * Method that returns the user object of the idUser
