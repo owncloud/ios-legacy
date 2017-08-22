@@ -103,13 +103,21 @@
     
     NSMutableDictionary *headers = [NSMutableDictionary new];
     
-    if (k_is_sso_active) {
-        [headers setValue:APP_DELEGATE.activeUser.password forKey:@"Cookie"];
-    } else if (k_is_oauth_active) {
-        [headers setValue:[NSString stringWithFormat:@"Bearer %@", APP_DELEGATE.activeUser.password] forKey:@"Authorization"];
-    } else {
-        NSString *basicAuthCredentials = [NSString stringWithFormat:@"%@:%@", APP_DELEGATE.activeUser.username, APP_DELEGATE.activeUser.password];
-        [headers setValue:[NSString stringWithFormat:@"Basic %@", [UtilsFramework AFBase64EncodedStringFromString:basicAuthCredentials]] forKey:@"Authorization"];
+    switch (APP_DELEGATE.activeUser.credDto.authenticationMethod) {
+            
+        case AuthenticationMethodSAML_WEB_SSO:
+            [headers setValue:APP_DELEGATE.activeUser.credDto.accessToken forKey:@"Cookie"];
+            break;
+            
+        case AuthenticationMethodBEARER_TOKEN:
+            [headers setValue:[NSString stringWithFormat:@"Bearer %@", APP_DELEGATE.activeUser.credDto.accessToken] forKey:@"Authorization"];
+            break;
+            
+        default: {
+            NSString *basicAuthCredentials = [NSString stringWithFormat:@"%@:%@", APP_DELEGATE.activeUser.username, APP_DELEGATE.activeUser.credDto.accessToken];
+            [headers setValue:[NSString stringWithFormat:@"Basic %@", [UtilsFramework AFBase64EncodedStringFromString:basicAuthCredentials]] forKey:@"Authorization"];
+        }
+            
     }
     
     [headers setValue:[UtilsUrls getUserAgent] forKey:@"User-Agent"];

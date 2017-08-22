@@ -375,7 +375,7 @@ float shortDelay = 0.3;
     [DownloadUtils setThePermissionsForFolderPath:localTempPath];
     
     //First Call when init the app
-     self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
+     self.activeUser = [ManageUsersDB getActiveUserWithoutCredentials];
     
     //if is null we do not have any active user on the database
     if(!self.activeUser) {
@@ -415,7 +415,7 @@ float shortDelay = 0.3;
 
 - (void) generateAppInterfaceFromLoginScreen:(BOOL)isFromLogin{
     
-    self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
+    self.activeUser = [ManageUsersDB getActiveUserWithoutCredentials];
     
     NSString *wevDavString = [UtilsUrls getFullRemoteServerPathWithWebDav:_activeUser];
     NSString *localSystemPath = nil;

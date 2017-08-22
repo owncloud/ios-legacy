@@ -21,6 +21,7 @@
 #import "OCCredentialsDto.h"
 #import "constants.h"
 #import "ManageCapabilitiesDB.h"
+#import "Customization.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -112,7 +113,6 @@
             
             OCCredentialsDto *credDto = [OCKeychain getCredentialsByUserId:idString];
             output.username = credDto.userName;
-            output.password = credDto.accessToken;
             output.credDto = credDto;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
@@ -128,9 +128,9 @@
 }
 
 
-+ (UserDto *) getActiveUserWithoutUserNameAndPassword {
++ (UserDto *) getActiveUserWithoutCredentials {
     
-    DLog(@"getActiveUser");
+    DLog(@"getActiveUserWithoutCredentials");
     
     __block UserDto *output = nil;
     
@@ -156,6 +156,7 @@
             output.hasShareeApiSupport = [rs intForColumn:@"has_sharee_api_support"];
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
             output.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
+            output.hasCapabilitiesSupport = [rs intForColumn:@"has_capabilities_support"];
             
             output.imageInstantUpload = [rs intForColumn:@"image_instant_upload"];
             output.videoInstantUpload = [rs intForColumn:@"video_instant_upload"];
@@ -168,7 +169,7 @@
             output.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
             output.username = nil;
-            output.password = nil;
+            output.credDto = nil;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
             
@@ -225,7 +226,6 @@
             
             user.credDto = [OCKeychain getCredentialsByUserId:idString];
             user.username = user.credDto.userName;
-            user.password = user.credDto.accessToken;
             
             user.sortingType = [rs intForColumn:@"sorting_type"];
             
@@ -303,7 +303,6 @@
             
             OCCredentialsDto *credDto = [OCKeychain getCredentialsByUserId:idString];
             current.username = credDto.userName;
-            current.password = credDto.accessToken;
             current.credDto = credDto;
             
             current.sortingType = [rs intForColumn:@"sorting_type"];
@@ -363,6 +362,9 @@
             
             current.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
+            current.username = nil;
+            current.credDto = nil;
+            
             current.sortingType = [rs intForColumn:@"sorting_type"];
             
             current.predefinedUrl = [rs stringForColumn:@"predefined_url"];
@@ -402,7 +404,10 @@
             current.idUser= [rs intForColumn:@"id"];
             current.url = [rs stringForColumn:@"url"];
             current.username = [rs stringForColumn:@"username"];
-            current.password = [rs stringForColumn:@"password"];
+            current.credDto = [OCCredentialsDto new];
+            current.credDto.userName = current.username;
+            current.credDto.accessToken = [rs stringForColumn:@"password"];
+            current.credDto.authenticationMethod = k_is_sso_active ? AuthenticationMethodSAML_WEB_SSO : AuthenticationMethodBASIC_HTTP_AUTH;
             current.ssl = [rs intForColumn:@"ssl"];
             current.activeaccount = [rs intForColumn:@"activeaccount"];
             current.storageOccupied = [rs longForColumn:@"storage_occupied"];
@@ -413,7 +418,7 @@
             
             DLog(@"url user: %@", current.url);
             DLog(@"username user: %@", current.username);
-            DLog(@"password user: %@", current.password);
+            DLog(@"password user: %@", current.credDto.accessToken);
             
             
             [output addObject:current];

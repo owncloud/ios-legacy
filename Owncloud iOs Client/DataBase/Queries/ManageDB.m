@@ -631,7 +631,7 @@
     NSArray *currentUsers = [NSArray arrayWithArray:[ManageUsersDB getAllOldUsersUntilVersion10]];
     
     for (UserDto *user in currentUsers) {
-        if (![OCKeychain setCredentialsOfUser:user]){
+        if (![OCKeychain setCredentialsOfUserFromDBVersion9To10:user]){
             DLog(@"Failed setting credentials");
         }
         
@@ -1264,7 +1264,7 @@
     
     //1.- Migrate the current password stored in keychain
 
-    [OCKeychain updateAllKeychainItemsUntilVersion21ToStoreCredentialsDtoWithBasicAuthenticationAsValue];
+    [OCKeychain updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoWithBasicAuthenticationAsValue];
     
 }
 
