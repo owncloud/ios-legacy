@@ -933,7 +933,7 @@
     } else {
         //Show the Login View in Edit Mode
         
-        UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
+        UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:app.activeUser];
         
         if (IS_IPHONE) {
             //viewController.hidesBottomBarWhenPushed = YES;

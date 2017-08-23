@@ -1693,20 +1693,15 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.downloadManager errorLogin];
     
-    if(k_is_oauth_active) {
-        NSURL *url = [NSURL URLWithString:k_oauth_login];
-        [[UIApplication sharedApplication] openURL:url];
-    } else {
-        //Edit Account
+    //Edit Account
         
-        UniversalLoginViewController *loginVC = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
+    UniversalLoginViewController *loginVC = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser: APP_DELEGATE.activeUser];
         
-        //viewController.hidesBottomBarWhenPushed = YES;
+    //viewController.hidesBottomBarWhenPushed = YES;
         
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginVC];
-        [self.navigationController presentViewController:navController animated:YES completion:nil];
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginVC];
+    [self.navigationController presentViewController:navController animated:YES completion:nil];
 
-    }
     [self didPressCancelButton:nil];
 }
 
