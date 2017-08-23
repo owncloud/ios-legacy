@@ -3385,14 +3385,8 @@
     
     BOOL requiredUpdateUrl = [UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:[ManageUsersDB getActiveUser].predefinedUrl];
     
-    if (requiredUpdateUrl) {
-        
-        loginViewController = [UtilsLogin getLoginVCWithMode:LoginModeMigrate];
-    } else {
-        loginViewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
-    }
-    
-    loginViewController.user = app.activeUser;
+    LoginMode loginMode = (requiredUpdateUrl) ? LoginModeMigrate : LoginModeExpire;
+    loginViewController = [UtilsLogin getLoginVCWithMode:loginMode andUser:app.activeUser];
     
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];

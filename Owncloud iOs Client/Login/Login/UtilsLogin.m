@@ -28,10 +28,10 @@
 
 @implementation UtilsLogin
 
-+ (UniversalLoginViewController *)getLoginVCWithMode:(LoginMode)loginMode {
++ (UniversalLoginViewController *)getLoginVCWithMode:(LoginMode)loginMode andUser:(UserDto *)user {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UniversalLoginViewController *universalLoginVC = (UniversalLoginViewController*)[storyboard instantiateViewControllerWithIdentifier:@"universalLoginViewController"];
-    [universalLoginVC setLoginModeWithLoginMode:loginMode];
+    [universalLoginVC setLoginModeWithLoginMode:loginMode user:user];
     //[];
      
     return universalLoginVC;

@@ -381,7 +381,7 @@ float shortDelay = 0.3;
     if(!self.activeUser) {
         
         //Show new universal login view
-        [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeCreate]];
+        [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeCreate andUser:nil]];
         
     } else {
         
@@ -409,7 +409,7 @@ float shortDelay = 0.3;
         _filesViewController.alert = nil;
     }
     
-    [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeCreate]];
+    [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeCreate andUser:nil]];
 }
 
 
@@ -1946,7 +1946,7 @@ float shortDelay = 0.3;
 
 -(void) delayLoadEditAccountAfterErroLogin {
     
-    [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeExpire]];
+    [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:self.activeUser]];
 
 }
 

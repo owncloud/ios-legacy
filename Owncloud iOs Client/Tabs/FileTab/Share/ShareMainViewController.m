@@ -811,7 +811,7 @@
 #ifdef CONTAINER_APP
     
     //Edit Account
-    self.resolveCredentialErrorViewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
+    self.resolveCredentialErrorViewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:APP_DELEGATE.activeUser];
         
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];

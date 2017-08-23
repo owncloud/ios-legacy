@@ -139,8 +139,8 @@ connection_declined  Connection declined by user
     var authMethodToLogin: AuthenticationMethod!
     var authCodeReceived = ""
     var manageNetworkErrors: ManageNetworkErrors!
-    var loginMode: LoginMode!
-    var user: UserDto?
+    private var loginMode: LoginMode!
+    private var user: UserDto?
     var activeField: UITextField!
     var nextErrorShouldBeShownAfterPasswordField = false;
     
@@ -962,8 +962,9 @@ connection_declined  Connection declined by user
         // Dispose of any resources that can be recreated.
     }
     
-    func setLoginMode(loginMode: LoginMode) {
+    func setLoginMode(loginMode: LoginMode, user: UserDto) {
         self.loginMode = loginMode
+        self.user = user
     }
     
 }

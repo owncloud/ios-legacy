@@ -1832,7 +1832,7 @@
     [appDelegate.downloadManager errorLogin];
 
     
-    UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
+    UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:APP_DELEGATE.activeUser];
     
     //[viewController setBarForCancelForLoadingFromModal];
     
