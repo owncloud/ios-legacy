@@ -23,8 +23,7 @@
 #import "DetailViewController.h"
 #import "ManageDownloads.h"
 #import "CheckAccessToServer.h"
-#import <SDWebImage/UIImageView+WebCache.h>
-#import <RMActionController/RMActionController.h>
+//#import <RMActionController/RMActionController.h>
 
 
 @class FilesViewController;

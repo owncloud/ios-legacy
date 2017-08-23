@@ -65,6 +65,7 @@
 #import "EditFileViewController.h"
 #import "CheckFeaturesSupported.h"
 #import "UIButton+Extension.h"
+#import "RMCustomViewController.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -1374,7 +1375,7 @@
             fileCell = (CustomCellFileAndDirectory *)[topLevelObjects objectAtIndex:0];
             [fileCell.sharedInfoButton addTarget:self action:@selector(sharedInfobuttonPressed) forControlEvents:UIControlEventTouchUpInside];
             UIButton *accessoryButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
-            UIImage *accImage = [UIImage imageNamed:@"down-arrow-circle-button-fine.pngf"];
+            UIImage *accImage = [UIImage imageNamed:@"down-arrow-circle-button-fine.png"];
             [accessoryButton setImage:accImage forState: UIControlStateNormal];
             [accessoryButton addTarget:self action:@selector(optionsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             [fileCell setAccessoryView:accessoryButton];
@@ -3769,8 +3770,83 @@
 }
 
 - (void) optionsButtonTapped:(id) sender {
-    DLog(@"Options button pressed");
+    RMActionControllerStyle style = RMActionControllerStyleWhite;
+    
+    RMAction *selectAction = [RMAction<UIView *> actionWithTitle:@"Select" style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [UIView animateWithDuration:0.5f animations:^{
+        self.tabBarController.tabBar.hidden = NO;
+        }];
 
+        NSLog(@"Action controller finished successfully");
+    }];
+    RMAction *selectAction1 = [RMAction<UIView *> actionWithTitle:@"Select" style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Action controller1 finished successfully");
+    }];
+    RMAction *selectAction2 = [RMAction<UIView *> actionWithTitle:@"Select" style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Action controller2 finished successfully");
+    }];
+    
+    RMAction *selectAction3 = [RMAction<UIView *> actionWithTitle:@"Select" style:RMActionStyleDefault andHandler:^(RMActionController<UIView *> *controller) {
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Action controller3 finished successfully");
+    }];
+    RMAction *selectAction4 = [RMAction<UIView *> actionWithTitle:@"Select" style:RMActionStyleDefault andHandler:^(RMActionController<UIView *> *controller) {
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Action controller3 finished successfully");
+    }];
+    
+    RMAction *cancelAction = [RMAction<UIView *> actionWithTitle:@"Cancel" style:RMActionStyleCancel andHandler:^(RMActionController<UIView *> *controller) {
+        self.tabBarController.tabBar.hidden = NO;
+        NSLog(@"Action controller was canceled");
+    }];
+    
+    RMCustomViewController *actionController = [RMCustomViewController actionControllerWithStyle:style];
+    
+    [actionController addAction:selectAction];
+    [actionController addAction:selectAction1];
+    [actionController addAction:selectAction2];
+    [actionController addAction:selectAction3];
+    [actionController addAction:selectAction4];
+    [actionController addAction:cancelAction];
+    actionController.disableBlurEffects = YES;
+    
+    [self presentActionController:actionController];
+    
+    DLog(@"Options button pressed");
 }
+
+-(void)presentActionController:(RMActionController *)actionController {
+    //On the iPad we want to show the map action controller within a popover. Fortunately, we can use iOS 8 API for this! :)
+    //(Of course only if we are running on iOS 8 or later)
+    if([actionController respondsToSelector:@selector(popoverPresentationController)] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+        //First we set the modal presentation style to the popover style
+        actionController.modalPresentationStyle = UIModalPresentationCustom;
+        
+        //Then we tell the popover presentation controller, where the popover should appear
+        actionController.popoverPresentationController.sourceView = self.tableView;
+        actionController.popoverPresentationController.sourceRect = [self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    }
+
+    actionController.hidesBottomBarWhenPushed = YES;
+    self.tabBarController.tabBar.hidden = YES;
+    
+    //Now just present the date selection controller using the standard iOS presentation method
+    [self presentViewController:actionController animated:YES completion:nil];
+}
+
 
 @end

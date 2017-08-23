@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		01FC9B5C8222E8083E468EBC /* libPods-ownCloudExtApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6B455BAFE935986A535118 /* libPods-ownCloudExtApp.a */; };
 		1324297D15ADBB3700DF823E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1324297C15ADBB3700DF823E /* UIKit.framework */; };
 		1324297F15ADBB3700DF823E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1324297E15ADBB3700DF823E /* Foundation.framework */; };
 		1324298115ADBB3700DF823E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1324298015ADBB3700DF823E /* CoreGraphics.framework */; };
@@ -272,6 +271,14 @@
 		14EC1956195B297F00B02AB6 /* sharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EC1954195B297F00B02AB6 /* sharedItem@2x.png */; };
 		14EFCAEB17FAFEAA007A38B6 /* MainAppIcon_76-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EFCAEA17FAFEAA007A38B6 /* MainAppIcon_76-76.png */; };
 		14EFCAED17FAFF48007A38B6 /* MainAppIcon_40-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EFCAEC17FAFF48007A38B6 /* MainAppIcon_40-40.png */; };
+		232F7B441F4D754D0033E414 /* RMActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B3E1F4D754D0033E414 /* RMActionController.m */; };
+		232F7B4A1F4D75740033E414 /* RMAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B471F4D75740033E414 /* RMAction.m */; };
+		232F7B4B1F4D75740033E414 /* RMImageAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B491F4D75740033E414 /* RMImageAction.m */; };
+		232F7B4E1F4D757A0033E414 /* RMActionControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B4D1F4D757A0033E414 /* RMActionControllerTransition.m */; };
+		232F7B531F4D75810033E414 /* NSProcessInfo+RMActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B501F4D75810033E414 /* NSProcessInfo+RMActionController.m */; };
+		232F7B541F4D75810033E414 /* UIView+RMActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B521F4D75810033E414 /* UIView+RMActionController.m */; };
+		232F7B591F4D75880033E414 /* RMGroupedAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B561F4D75880033E414 /* RMGroupedAction.m */; };
+		232F7B5A1F4D75880033E414 /* RMScrollableGroupedAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B581F4D75880033E414 /* RMScrollableGroupedAction.m */; };
 		233881571F41C7A7005A95B7 /* FileDownloadedIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 233881561F41C7A7005A95B7 /* FileDownloadedIcon.png */; };
 		23961FCC1F41B5CE00D09506 /* down-arrow-circle-button-fine.png in Resources */ = {isa = PBXBuildFile; fileRef = 23961FCB1F41B5CE00D09506 /* down-arrow-circle-button-fine.png */; };
 		239FF57D1F41D367004FCF9E /* UIButton+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 239FF57C1F41D367004FCF9E /* UIButton+Extension.m */; };
@@ -281,6 +288,7 @@
 		23CAC1E91F41BC660097EF1A /* fileSharedByLink.png in Resources */ = {isa = PBXBuildFile; fileRef = 23CAC1E81F41BC660097EF1A /* fileSharedByLink.png */; };
 		23CAC1EC1F41BC830097EF1A /* fileSharedWithUs.png in Resources */ = {isa = PBXBuildFile; fileRef = 23CAC1EB1F41BC830097EF1A /* fileSharedWithUs.png */; };
 		23CAC1EE1F41BE0C0097EF1A /* shared-with-user.png in Resources */ = {isa = PBXBuildFile; fileRef = 23CAC1ED1F41BE0C0097EF1A /* shared-with-user.png */; };
+		23DF05B71F4C062A0033F1F0 /* RMCustomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DF05B61F4C062A0033F1F0 /* RMCustomViewController.m */; };
 		23F778C21F418FD900DA3C1C /* SourceSansPro-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 23F778C01F418FD900DA3C1C /* SourceSansPro-Regular.otf */; };
 		23F778C31F418FD900DA3C1C /* SourceSansPro-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 23F778C11F418FD900DA3C1C /* SourceSansPro-Semibold.otf */; };
 		400560751A03B1190030D502 /* MainAppIcon_40-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400560741A03B1190030D502 /* MainAppIcon_40-40@2x.png */; };
@@ -662,11 +670,9 @@
 		908A3C701D019EDD00A34FDB /* file_synchronizing_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9064143E1D005B5C000AEFE5 /* file_synchronizing_icon@2x.png */; };
 		90D608FA1C89844E0049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		90D608FC1C8984760049CCE4 /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
-		AFEDEE45731FFC4D4F0F5FDD /* libPods-ownCloudExtAppFileProvider.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 008E16B4D8CBAA4A0DA0908E /* libPods-ownCloudExtAppFileProvider.a */; };
 		BC7765951EDD7C1500E32D89 /* PresentedViewUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = BC7765941EDD7C1500E32D89 /* PresentedViewUtils.m */; };
 		BC855ACD1E0D4B0200998CB7 /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = BC855ACA1E0D4B0200998CB7 /* FLAnimatedImage.m */; };
 		BC855ACE1E0D4B0200998CB7 /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC855ACC1E0D4B0200998CB7 /* FLAnimatedImageView.m */; };
-		C528A332A05FAA64E63F7BB1 /* libPods-OC Share Sheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D89D7A9E47B4C573952A1AAD /* libPods-OC Share Sheet.a */; };
 		CB238ACB1E52FC2A006A03FA /* MediaAVPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB238ACA1E52FC2A006A03FA /* MediaAVPlayerViewController.m */; };
 		CB238ACD1E52FCA4006A03FA /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB238ACC1E52FCA4006A03FA /* AVKit.framework */; };
 		CB6ABBC21E4CA0C000F27940 /* OCURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A6B65619458F6E000B107D /* OCURLSessionManager.m */; };
@@ -938,7 +944,6 @@
 		EAF771311B73523800ED6E6E /* SystemConstants-swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF771301B73523800ED6E6E /* SystemConstants-swift.swift */; };
 		EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = EAABAB2918585CD700909831 /* NSString+Encoding.m */; };
 		EAFE20A81AC4617D00BB888E /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE20A71AC4617D00BB888E /* UIImage+Resize.swift */; };
-		F761136F2E5C10A10EA662C3 /* libPods-Owncloud iOs Client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B14337B5D6A554D6DECEEE41 /* libPods-Owncloud iOs Client.a */; };
 		FCE228D11CFE08EF00E4827F /* InstantUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE228D01CFE08EF00E4827F /* InstantUpload.m */; };
 /* End PBXBuildFile section */
 
@@ -1046,7 +1051,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		008E16B4D8CBAA4A0DA0908E /* libPods-ownCloudExtAppFileProvider.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ownCloudExtAppFileProvider.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1324297815ADBB3700DF823E /* Owncloud iOs Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Owncloud iOs Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1324297C15ADBB3700DF823E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1324297E15ADBB3700DF823E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1386,8 +1390,24 @@
 		14EC1954195B297F00B02AB6 /* sharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@2x.png"; sourceTree = "<group>"; };
 		14EFCAEA17FAFEAA007A38B6 /* MainAppIcon_76-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76-76.png"; sourceTree = "<group>"; };
 		14EFCAEC17FAFF48007A38B6 /* MainAppIcon_40-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_40-40.png"; sourceTree = "<group>"; };
-		22340D90FF0385747344B419 /* Pods-ownCloudExtAppFileProvider.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudExtAppFileProvider.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudExtAppFileProvider/Pods-ownCloudExtAppFileProvider.debug.xcconfig"; sourceTree = "<group>"; };
-		3B8EDE4FAD36C53BCD6C32C1 /* Pods-Owncloud iOs Client.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Owncloud iOs Client.release.xcconfig"; path = "Pods/Target Support Files/Pods-Owncloud iOs Client/Pods-Owncloud iOs Client.release.xcconfig"; sourceTree = "<group>"; };
+		232F7B3D1F4D754D0033E414 /* RMActionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMActionController.h; sourceTree = "<group>"; };
+		232F7B3E1F4D754D0033E414 /* RMActionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMActionController.m; sourceTree = "<group>"; };
+		232F7B461F4D75740033E414 /* RMAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMAction.h; sourceTree = "<group>"; };
+		232F7B471F4D75740033E414 /* RMAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMAction.m; sourceTree = "<group>"; };
+		232F7B481F4D75740033E414 /* RMImageAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMImageAction.h; sourceTree = "<group>"; };
+		232F7B491F4D75740033E414 /* RMImageAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMImageAction.m; sourceTree = "<group>"; };
+		232F7B4C1F4D757A0033E414 /* RMActionControllerTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMActionControllerTransition.h; sourceTree = "<group>"; };
+		232F7B4D1F4D757A0033E414 /* RMActionControllerTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMActionControllerTransition.m; sourceTree = "<group>"; };
+		232F7B4F1F4D75810033E414 /* NSProcessInfo+RMActionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSProcessInfo+RMActionController.h"; sourceTree = "<group>"; };
+		232F7B501F4D75810033E414 /* NSProcessInfo+RMActionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSProcessInfo+RMActionController.m"; sourceTree = "<group>"; };
+		232F7B511F4D75810033E414 /* UIView+RMActionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RMActionController.h"; sourceTree = "<group>"; };
+		232F7B521F4D75810033E414 /* UIView+RMActionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RMActionController.m"; sourceTree = "<group>"; };
+		232F7B551F4D75880033E414 /* RMGroupedAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMGroupedAction.h; sourceTree = "<group>"; };
+		232F7B561F4D75880033E414 /* RMGroupedAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMGroupedAction.m; sourceTree = "<group>"; };
+		232F7B571F4D75880033E414 /* RMScrollableGroupedAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMScrollableGroupedAction.h; sourceTree = "<group>"; };
+		232F7B581F4D75880033E414 /* RMScrollableGroupedAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMScrollableGroupedAction.m; sourceTree = "<group>"; };
+		232F7B5B1F4D758E0033E414 /* RMAction+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RMAction+Private.h"; sourceTree = "<group>"; };
+		232F7B5C1F4D758E0033E414 /* RMActionController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RMActionController+Private.h"; sourceTree = "<group>"; };
 		233881561F41C7A7005A95B7 /* FileDownloadedIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FileDownloadedIcon.png; sourceTree = "<group>"; };
 		23961FCB1F41B5CE00D09506 /* down-arrow-circle-button-fine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "down-arrow-circle-button-fine.png"; sourceTree = "<group>"; };
 		239FF57C1F41D367004FCF9E /* UIButton+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIButton+Extension.m"; path = "Cells/CustomCell/UIButton+Extension.m"; sourceTree = "<group>"; };
@@ -1398,6 +1418,8 @@
 		23CAC1E81F41BC660097EF1A /* fileSharedByLink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fileSharedByLink.png; sourceTree = "<group>"; };
 		23CAC1EB1F41BC830097EF1A /* fileSharedWithUs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fileSharedWithUs.png; sourceTree = "<group>"; };
 		23CAC1ED1F41BE0C0097EF1A /* shared-with-user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shared-with-user.png"; sourceTree = "<group>"; };
+		23DF05B51F4C062A0033F1F0 /* RMCustomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMCustomViewController.h; path = Tabs/FileTab/RMCustomViewController.h; sourceTree = "<group>"; };
+		23DF05B61F4C062A0033F1F0 /* RMCustomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMCustomViewController.m; path = Tabs/FileTab/RMCustomViewController.m; sourceTree = "<group>"; };
 		23F778C01F418FD900DA3C1C /* SourceSansPro-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceSansPro-Regular.otf"; sourceTree = "<group>"; };
 		23F778C11F418FD900DA3C1C /* SourceSansPro-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceSansPro-Semibold.otf"; sourceTree = "<group>"; };
 		4002B01A1D421A7100520FB3 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1586,7 +1608,6 @@
 		40F2F6121C5A180700129F92 /* owncloudLogoFiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = owncloudLogoFiles.png; sourceTree = "<group>"; };
 		40FF874119F81396008B7C62 /* OCKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCKeychain.h; sourceTree = "<group>"; };
 		40FF874219F81396008B7C62 /* OCKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCKeychain.m; sourceTree = "<group>"; };
-		59048A03396F687B7C755250 /* Pods-ownCloudExtApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudExtApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudExtApp/Pods-ownCloudExtApp.debug.xcconfig"; sourceTree = "<group>"; };
 		590F1FF91C7474AE00AAF1C7 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		590F1FFA1C7474B700AAF1C7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		593D14881C60BE1E005161E2 /* SplashImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SplashImage.png; sourceTree = "<group>"; };
@@ -1744,10 +1765,6 @@
 		9069EAA61CF5F07200810996 /* OCLoadingSpinner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCLoadingSpinner.m; path = Utils/OCLoadingSpinner.m; sourceTree = "<group>"; };
 		908A3C5A1D016FE500A34FDB /* file_available_offline_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_available_offline_icon@2x.png"; sourceTree = "<group>"; };
 		908A3C5C1D01732C00A34FDB /* file_available_offline_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_available_offline_icon.png; sourceTree = "<group>"; };
-		91C79933FFCB6DE93D9904D2 /* Pods-ownCloudExtAppFileProvider.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudExtAppFileProvider.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudExtAppFileProvider/Pods-ownCloudExtAppFileProvider.release.xcconfig"; sourceTree = "<group>"; };
-		9B6B455BAFE935986A535118 /* libPods-ownCloudExtApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ownCloudExtApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B14337B5D6A554D6DECEEE41 /* libPods-Owncloud iOs Client.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Owncloud iOs Client.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8F451301AF6C6B329B3C366 /* Pods-Owncloud iOs Client.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Owncloud iOs Client.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Owncloud iOs Client/Pods-Owncloud iOs Client.debug.xcconfig"; sourceTree = "<group>"; };
 		BC7765931EDD7C1500E32D89 /* PresentedViewUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PresentedViewUtils.h; path = Utils/PresentedViewUtils.h; sourceTree = "<group>"; };
 		BC7765941EDD7C1500E32D89 /* PresentedViewUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PresentedViewUtils.m; path = Utils/PresentedViewUtils.m; sourceTree = "<group>"; };
 		BC855AC91E0D4B0200998CB7 /* FLAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FLAnimatedImage.h; path = ExternalLibreries/FLAnimatedimage/FLAnimatedImage.h; sourceTree = "<group>"; };
@@ -1757,9 +1774,6 @@
 		CB238AC91E52FC2A006A03FA /* MediaAVPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MediaAVPlayerViewController.h; path = Files/PreviewSupportedFiles/Media/MediaAVPlayerViewController.h; sourceTree = "<group>"; };
 		CB238ACA1E52FC2A006A03FA /* MediaAVPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MediaAVPlayerViewController.m; path = Files/PreviewSupportedFiles/Media/MediaAVPlayerViewController.m; sourceTree = "<group>"; };
 		CB238ACC1E52FCA4006A03FA /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
-		CC8F4FAC51C97D11CB678D6C /* Pods-OC Share Sheet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OC Share Sheet.release.xcconfig"; path = "Pods/Target Support Files/Pods-OC Share Sheet/Pods-OC Share Sheet.release.xcconfig"; sourceTree = "<group>"; };
-		CD5384DB8F8DCB7A9E0E67F1 /* Pods-ownCloudExtApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudExtApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudExtApp/Pods-ownCloudExtApp.release.xcconfig"; sourceTree = "<group>"; };
-		D89D7A9E47B4C573952A1AAD /* libPods-OC Share Sheet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OC Share Sheet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D924DCBC1B973E88008B4BE7 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = "<group>"; };
 		D924DCBE1B973E98008B4BE7 /* NSNotificationCenter+OCMAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+OCMAdditions.h"; sourceTree = "<group>"; };
 		D924DCBF1B973E98008B4BE7 /* OCMArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMArg.h; sourceTree = "<group>"; };
@@ -1770,7 +1784,6 @@
 		D924DCC41B973E98008B4BE7 /* OCMockObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMockObject.h; sourceTree = "<group>"; };
 		D924DCC51B973E98008B4BE7 /* OCMRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMRecorder.h; sourceTree = "<group>"; };
 		D924DCC61B973E98008B4BE7 /* OCMStubRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMStubRecorder.h; sourceTree = "<group>"; };
-		E7C67105EBFCEDA7584A9A5C /* Pods-OC Share Sheet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OC Share Sheet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OC Share Sheet/Pods-OC Share Sheet.debug.xcconfig"; sourceTree = "<group>"; };
 		EA0599831BB92B19002C2864 /* ShareUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareUserCell.swift; path = Tabs/FileTab/Share/Cells/ShareUserCell.swift; sourceTree = "<group>"; };
 		EA0599841BB92B19002C2864 /* ShareUserCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareUserCell.xib; path = Tabs/FileTab/Share/Cells/ShareUserCell.xib; sourceTree = "<group>"; };
 		EA0599901BB94F3F002C2864 /* ShareSearchUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareSearchUserViewController.h; path = Tabs/FileTab/Share/ShareSearchUserViewController.h; sourceTree = "<group>"; };
@@ -1979,7 +1992,6 @@
 				1324298115ADBB3700DF823E /* CoreGraphics.framework in Frameworks */,
 				13824C0A16034C2200A95EAD /* libcrypto.a in Frameworks */,
 				13824C0B16034C2200A95EAD /* libssl.a in Frameworks */,
-				F761136F2E5C10A10EA662C3 /* libPods-Owncloud iOs Client.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2001,7 +2013,6 @@
 				EAC6E5F41AB0911600CCF8C4 /* libssl.a in Frameworks */,
 				EAF7217A1AAF1B33009F5596 /* libsqlite3.0.dylib in Frameworks */,
 				EAF721791AAF1AEF009F5596 /* libownCloudiOS.a in Frameworks */,
-				C528A332A05FAA64E63F7BB1 /* libPods-OC Share Sheet.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2014,7 +2025,6 @@
 				59D700FC1A122BB6006DB0B7 /* MobileCoreServices.framework in Frameworks */,
 				599D99F41A025733008A9DB3 /* libsqlite3.0.dylib in Frameworks */,
 				597A87981A0143000071F2AF /* libownCloudiOS.a in Frameworks */,
-				01FC9B5C8222E8083E468EBC /* libPods-ownCloudExtApp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2027,7 +2037,6 @@
 				59E58B761B04ED15004E9739 /* libssl.a in Frameworks */,
 				EA1F62DD1A5EC08300D6346F /* libownCloudiOS.a in Frameworks */,
 				EA1F62D61A5EBDF900D6346F /* libsqlite3.0.dylib in Frameworks */,
-				AFEDEE45731FFC4D4F0F5FDD /* libPods-ownCloudExtAppFileProvider.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2055,7 +2064,6 @@
 				EA6606961AA767F800BA2C65 /* OC Share Sheet */,
 				1324297B15ADBB3700DF823E /* Frameworks */,
 				1324297915ADBB3700DF823E /* Products */,
-				81848E2D2A741EA402419A0A /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2097,10 +2105,6 @@
 				1324298015ADBB3700DF823E /* CoreGraphics.framework */,
 				13B721EC169D78BE00B24A51 /* Twitter.framework */,
 				13D8741E169DBE05000FBE6D /* MessageUI.framework */,
-				B14337B5D6A554D6DECEEE41 /* libPods-Owncloud iOs Client.a */,
-				D89D7A9E47B4C573952A1AAD /* libPods-OC Share Sheet.a */,
-				9B6B455BAFE935986A535118 /* libPods-ownCloudExtApp.a */,
-				008E16B4D8CBAA4A0DA0908E /* libPods-ownCloudExtAppFileProvider.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2202,6 +2206,8 @@
 				EA10B3661615B15000548F0C /* Select Folder */,
 				13A9C663187FE8B300C6EEE8 /* Share */,
 				905B3D3D1C8867EE00BCC93B /* Sort */,
+				23DF05B51F4C062A0033F1F0 /* RMCustomViewController.h */,
+				23DF05B61F4C062A0033F1F0 /* RMCustomViewController.m */,
 			);
 			name = "Files Tab";
 			sourceTree = "<group>";
@@ -2926,6 +2932,7 @@
 		148DD5DD1778549700FB9977 /* ExternalLibreries */ = {
 			isa = PBXGroup;
 			children = (
+				232F7B1C1F4D74560033E414 /* RMActionController */,
 				BC855AC71E0D4AE100998CB7 /* FLAnimatedImage */,
 				59915D9B1BBC00930015FBF3 /* CWLOrderedDictionary */,
 				EABD88CE1BBE827D00DA5281 /* TSMessages */,
@@ -3044,6 +3051,32 @@
 				14B0083F18FD1B5B004CB06B /* EmptyCell.xib */,
 			);
 			name = EmptyCell;
+			sourceTree = "<group>";
+		};
+		232F7B1C1F4D74560033E414 /* RMActionController */ = {
+			isa = PBXGroup;
+			children = (
+				232F7B3D1F4D754D0033E414 /* RMActionController.h */,
+				232F7B3E1F4D754D0033E414 /* RMActionController.m */,
+				232F7B461F4D75740033E414 /* RMAction.h */,
+				232F7B471F4D75740033E414 /* RMAction.m */,
+				232F7B481F4D75740033E414 /* RMImageAction.h */,
+				232F7B491F4D75740033E414 /* RMImageAction.m */,
+				232F7B4C1F4D757A0033E414 /* RMActionControllerTransition.h */,
+				232F7B4D1F4D757A0033E414 /* RMActionControllerTransition.m */,
+				232F7B4F1F4D75810033E414 /* NSProcessInfo+RMActionController.h */,
+				232F7B501F4D75810033E414 /* NSProcessInfo+RMActionController.m */,
+				232F7B511F4D75810033E414 /* UIView+RMActionController.h */,
+				232F7B551F4D75880033E414 /* RMGroupedAction.h */,
+				232F7B561F4D75880033E414 /* RMGroupedAction.m */,
+				232F7B571F4D75880033E414 /* RMScrollableGroupedAction.h */,
+				232F7B581F4D75880033E414 /* RMScrollableGroupedAction.m */,
+				232F7B521F4D75810033E414 /* UIView+RMActionController.m */,
+				232F7B5B1F4D758E0033E414 /* RMAction+Private.h */,
+				232F7B5C1F4D758E0033E414 /* RMActionController+Private.h */,
+			);
+			name = RMActionController;
+			path = ExternalLibreries/RMActionController;
 			sourceTree = "<group>";
 		};
 		23961FC91F41B59900D09506 /* File List */ = {
@@ -3414,21 +3447,6 @@
 			);
 			name = SplashScreen;
 			path = ImageBranding/SplashScreen;
-			sourceTree = "<group>";
-		};
-		81848E2D2A741EA402419A0A /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				B8F451301AF6C6B329B3C366 /* Pods-Owncloud iOs Client.debug.xcconfig */,
-				3B8EDE4FAD36C53BCD6C32C1 /* Pods-Owncloud iOs Client.release.xcconfig */,
-				E7C67105EBFCEDA7584A9A5C /* Pods-OC Share Sheet.debug.xcconfig */,
-				CC8F4FAC51C97D11CB678D6C /* Pods-OC Share Sheet.release.xcconfig */,
-				59048A03396F687B7C755250 /* Pods-ownCloudExtApp.debug.xcconfig */,
-				CD5384DB8F8DCB7A9E0E67F1 /* Pods-ownCloudExtApp.release.xcconfig */,
-				22340D90FF0385747344B419 /* Pods-ownCloudExtAppFileProvider.debug.xcconfig */,
-				91C79933FFCB6DE93D9904D2 /* Pods-ownCloudExtAppFileProvider.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		905B3D3D1C8867EE00BCC93B /* Sort */ = {
@@ -3951,14 +3969,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 132429BF15ADBB3800DF823E /* Build configuration list for PBXNativeTarget "Owncloud iOs Client" */;
 			buildPhases = (
-				42567282762F3C78C2A6397A /* [CP] Check Pods Manifest.lock */,
 				1324297415ADBB3700DF823E /* Sources */,
 				1324297515ADBB3700DF823E /* Frameworks */,
 				1324297615ADBB3700DF823E /* Resources */,
 				EAB0AB5919ED356A00764C31 /* Embed App Extensions */,
 				4074F2AF1C5782860029AAFE /* ShellScript */,
-				DE2A015255CFFCF9A32BDA0F /* [CP] Embed Pods Frameworks */,
-				71C52C23265D4F7D25C24717 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3998,11 +4013,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EA6606A31AA767F800BA2C65 /* Build configuration list for PBXNativeTarget "OC Share Sheet" */;
 			buildPhases = (
-				DA8F93746E5C3CBBB37F4BCD /* [CP] Check Pods Manifest.lock */,
 				EA6606911AA767F700BA2C65 /* Sources */,
 				EA6606921AA767F700BA2C65 /* Frameworks */,
 				EA6606931AA767F700BA2C65 /* Resources */,
-				9CA6F1C9244CDA9C658BB4A5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -4018,11 +4031,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EAB0AB5819ED356A00764C31 /* Build configuration list for PBXNativeTarget "ownCloudExtApp" */;
 			buildPhases = (
-				E43EF44F07388A80658DBC03 /* [CP] Check Pods Manifest.lock */,
 				EAB0AB2E19ED356A00764C31 /* Sources */,
 				EAB0AB2F19ED356A00764C31 /* Frameworks */,
 				EAB0AB3019ED356A00764C31 /* Resources */,
-				5B46B5C3B9941080FF0F3CAC /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -4038,11 +4049,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EAB0AB5719ED356A00764C31 /* Build configuration list for PBXNativeTarget "ownCloudExtAppFileProvider" */;
 			buildPhases = (
-				AAFB042741D5F9D5A507BD1E /* [CP] Check Pods Manifest.lock */,
 				EAB0AB3C19ED356A00764C31 /* Sources */,
 				EAB0AB3D19ED356A00764C31 /* Frameworks */,
 				EAB0AB3E19ED356A00764C31 /* Resources */,
-				B1D77774B54B9FEC1E3B2E6F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -4769,141 +4778,6 @@
 			shellPath = /bin/sh;
 			shellScript = "LASTGITCOMMIT=$(git rev-parse --short HEAD)\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"LastGitCommit\" \"${LASTGITCOMMIT}\"\n";
 		};
-		42567282762F3C78C2A6397A /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		5B46B5C3B9941080FF0F3CAC /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ownCloudExtApp/Pods-ownCloudExtApp-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		71C52C23265D4F7D25C24717 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Owncloud iOs Client/Pods-Owncloud iOs Client-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9CA6F1C9244CDA9C658BB4A5 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OC Share Sheet/Pods-OC Share Sheet-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AAFB042741D5F9D5A507BD1E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		B1D77774B54B9FEC1E3B2E6F /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ownCloudExtAppFileProvider/Pods-ownCloudExtAppFileProvider-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DA8F93746E5C3CBBB37F4BCD /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		DE2A015255CFFCF9A32BDA0F /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Owncloud iOs Client/Pods-Owncloud iOs Client-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E43EF44F07388A80658DBC03 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -4929,12 +4803,14 @@
 				59EC94E81BBAA0210085190F /* FolderSyncDto.m in Sources */,
 				148DD5C2177850B100FB9977 /* CustomCellFileAndDirectory.m in Sources */,
 				905B3D3B1C8867AA00BCC93B /* SortManager.m in Sources */,
+				232F7B4A1F4D75740033E414 /* RMAction.m in Sources */,
 				59C71D1D1A9216AE00F66166 /* ReaderThumbQueue.m in Sources */,
 				400A63731B4FD75600890579 /* IFTTTLabelAnimation.m in Sources */,
 				148DD5D9177851E700FB9977 /* UploadCell.m in Sources */,
 				148DD5DB177851E700FB9977 /* UploadRecentCell.m in Sources */,
 				EABF68E11889593100A2217C /* ShareLinkCell.m in Sources */,
 				40DC9C671CDA191B00F5F5EF /* EditFileViewController.m in Sources */,
+				232F7B5A1F4D75880033E414 /* RMScrollableGroupedAction.m in Sources */,
 				400A636A1B4FD75600890579 /* IFTTTConstraintConstantAnimation.m in Sources */,
 				59A6B65719458F6E000B107D /* OCURLSessionManager.m in Sources */,
 				1493D8CF185702D70090FEFB /* CheckSSOServer.m in Sources */,
@@ -4973,6 +4849,7 @@
 				596C060B1CF47278004BCF51 /* ELCAssetTablePicker.m in Sources */,
 				13D6B7CA18855EE40090A96C /* AppsActivityProvider.m in Sources */,
 				148DD63417785DF900FB9977 /* OfficeFileView.m in Sources */,
+				232F7B591F4D75880033E414 /* RMGroupedAction.m in Sources */,
 				400A63721B4FD75600890579 /* IFTTTInterpolatable.m in Sources */,
 				148DD63817785E2200FB9977 /* UploadFromOtherAppViewController.m in Sources */,
 				148DD6691778627200FB9977 /* Download.m in Sources */,
@@ -4995,6 +4872,7 @@
 				4096E2491EB8650200318240 /* ShareWarningLinkCell.swift in Sources */,
 				14AB382E18C8E35200B34697 /* InfoFileUtils.m in Sources */,
 				40CF2C6F1C491D200047969A /* ShareUserPrivilegeCell.swift in Sources */,
+				232F7B531F4D75810033E414 /* NSProcessInfo+RMActionController.m in Sources */,
 				40EDF89F1B4D123500700E3A /* HelpGuideViewController.m in Sources */,
 				239FF57D1F41D367004FCF9E /* UIButton+Extension.m in Sources */,
 				EABD892E1BBE82D900DA5281 /* HexColors.m in Sources */,
@@ -5042,6 +4920,7 @@
 				14987095187DB14A000D9C49 /* NotificationStatusBarViewController.m in Sources */,
 				148DD6C11778697100FB9977 /* AccountCell.m in Sources */,
 				400A637B1B4FD75600890579 /* IFTTTTransform3DAnimation.m in Sources */,
+				23DF05B71F4C062A0033F1F0 /* RMCustomViewController.m in Sources */,
 				400A637A1B4FD75600890579 /* IFTTTTextColorAnimation.m in Sources */,
 				14B0084018FD1B5B004CB06B /* EmptyCell.m in Sources */,
 				59C9D324195C0EFB00400AE2 /* ManageNetworkErrors.m in Sources */,
@@ -5052,6 +4931,7 @@
 				400A63671B4FD75600890579 /* IFTTTAnimation.m in Sources */,
 				EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */,
 				EA2243EA1B71276D00F62E2A /* ShareLinkHeaderCell.swift in Sources */,
+				232F7B541F4D75810033E414 /* UIView+RMActionController.m in Sources */,
 				EABF69191891379C00A2217C /* SWUtilityButtonView.m in Sources */,
 				400A636E1B4FD75600890579 /* IFTTTFillColorAnimation.m in Sources */,
 				148DD6D9177869C800FB9977 /* ImpressumViewController.m in Sources */,
@@ -5064,6 +4944,7 @@
 				148DD6EA17786A1400FB9977 /* WebViewController.m in Sources */,
 				EA4071031C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */,
 				EABF69151891379C00A2217C /* SWCellScrollView.m in Sources */,
+				232F7B441F4D754D0033E414 /* RMActionController.m in Sources */,
 				EABF69141891379C00A2217C /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */,
 				148DD6F617786BDA00FB9977 /* UIImage+Alpha.m in Sources */,
@@ -5086,6 +4967,7 @@
 				1487F135177C2F08004A1A5A /* ManageAppSettingsDB.m in Sources */,
 				402596051CF470640037A78A /* UtilsBrandedOptions.m in Sources */,
 				1487F138177C2F48004A1A5A /* ManageDB.m in Sources */,
+				232F7B4B1F4D75740033E414 /* RMImageAction.m in Sources */,
 				1487F13B177C2F73004A1A5A /* ManageFilesDB.m in Sources */,
 				1487F13E177C2F9C004A1A5A /* ManageUploadsDB.m in Sources */,
 				59A9A725196E8A370042FEAC /* CookiesStorageDto.m in Sources */,
@@ -5100,6 +4982,7 @@
 				400A63651B4FD75600890579 /* IFTTTAnimatedPagingScrollViewController.m in Sources */,
 				1487F14C177C315D004A1A5A /* UserDto.m in Sources */,
 				1487F158177C3392004A1A5A /* FMDatabase.m in Sources */,
+				232F7B4E1F4D757A0033E414 /* RMActionControllerTransition.m in Sources */,
 				1487F159177C3392004A1A5A /* FMDatabaseAdditions.m in Sources */,
 				906177E21C4FABF600BBE648 /* ManageTouchID.m in Sources */,
 				59EF1F0E1CE0BD8900184F8F /* DeleteUtils.m in Sources */,
@@ -5550,7 +5433,6 @@
 		};
 		132429C015ADBB3800DF823E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8F451301AF6C6B329B3C366 /* Pods-Owncloud iOs Client.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -5603,7 +5485,6 @@
 		};
 		132429C115ADBB3800DF823E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B8EDE4FAD36C53BCD6C32C1 /* Pods-Owncloud iOs Client.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -5710,7 +5591,6 @@
 		};
 		EA6606A01AA767F800BA2C65 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E7C67105EBFCEDA7584A9A5C /* Pods-OC Share Sheet.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -5761,7 +5641,6 @@
 		};
 		EA6606A11AA767F800BA2C65 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CC8F4FAC51C97D11CB678D6C /* Pods-OC Share Sheet.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -5808,7 +5687,6 @@
 		};
 		EAB0AB5219ED356A00764C31 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 59048A03396F687B7C755250 /* Pods-ownCloudExtApp.debug.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -5873,7 +5751,6 @@
 		};
 		EAB0AB5319ED356A00764C31 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CD5384DB8F8DCB7A9E0E67F1 /* Pods-ownCloudExtApp.release.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -5933,7 +5810,6 @@
 		};
 		EAB0AB5419ED356A00764C31 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 22340D90FF0385747344B419 /* Pods-ownCloudExtAppFileProvider.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -5992,7 +5868,6 @@
 		};
 		EAB0AB5519ED356A00764C31 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 91C79933FFCB6DE93D9904D2 /* Pods-ownCloudExtAppFileProvider.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
