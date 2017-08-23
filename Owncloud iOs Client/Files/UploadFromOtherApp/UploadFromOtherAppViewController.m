@@ -863,7 +863,8 @@
  */
 - (void)showEditAccountViewController{
     
-    UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser: app.activeUser];
     
     if (IS_IPHONE)
     {

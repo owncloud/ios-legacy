@@ -15,6 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "UserDto.h"
 
 
 @class UniversalLoginViewController;
@@ -29,6 +30,6 @@ typedef NS_ENUM (NSUInteger, LoginMode){
 @interface UtilsLogin : NSObject
 
 
-+ (UniversalLoginViewController *)getLoginVCWithMode:(LoginMode)loginMode;
++ (UniversalLoginViewController *)getLoginVCWithMode:(LoginMode)loginMode andUser:(UserDto *)user;
 
 @end
