@@ -690,16 +690,15 @@ connection_declined  Connection declined by user
         userCredDto.accessToken = cookieString
         userCredDto.authenticationMethod = self.authMethodToLogin
         
-        //We check if the user that we are editing is the same that we are using
-        if (self.loginMode == .update  && self.user?.username == samlUserName) || (self.loginMode == .migrate){
+        //We check if the user that we are updating is the same that we are using
+        if (self.loginMode == .update  && self.user?.username != samlUserName) {
+            self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
+            
+        } else {
             self.textFieldUsername.text = samlUserName
             self.textFieldPassword.text = cookieString
             
             validateCredentialsAndStoreAccount(credentials: userCredDto);
-
-        } else {
-            
-            self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
         }
     }
     
@@ -906,39 +905,45 @@ connection_declined  Connection declined by user
                                             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
                                                 /// credentials allowed access to root folder: well done
                                                 
-                                                if self.user == nil {
-                                                    self.user = UserDto()
-                                                }
-                                                
-                                                self.user?.url = self.validatedServerURL
-                                                self.user?.username = credentials.userName
-                                                self.user?.ssl = self.validatedServerURL.hasPrefix("https")
-                                                self.user?.urlRedirected = app.urlServerRedirected
-                                                self.user?.predefinedUrl = k_default_url_server
-                                                
-                                                if (app.activeUser == nil || (self.user?.activeaccount)!) {
-                                                    // only set as active account the first account added
-                                                    // OR if it is already the active user; otherwise cookies will not be correctly restored
-                                                    self.user?.activeaccount = true
-                                                    app.activeUser = self.user
-                                                }
-                                                
-                                                
-                                                if self.loginMode == .create {
-                                                    self.user?.idUser = ManageAccounts().storeAccountAndGetIdOfUser(self.user!, withCredentials: credentials)
-                                                    if self.user?.idUser != 0 {
-                                                        ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
-                                                        
-                                                        app.generateAppInterface(fromLoginScreen: true)
-
-                                                    } else {
-                                                        self.showURLError(NSLocalizedString("error_could_not_add_account", comment: ""))
-                                                    }
+                                                if (self.loginMode == LoginMode.update && credentials.userName != self.user?.username ) {
+                                                    self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
                                                     
                                                 } else {
-                                                    ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
+
+                                                    if self.user == nil {
+                                                        self.user = UserDto()
+                                                    }
+                                                
+                                                    self.user?.url = self.validatedServerURL
+                                                    self.user?.username = credentials.userName
+                                                    self.user?.ssl = self.validatedServerURL.hasPrefix("https")
+                                                    self.user?.urlRedirected = app.urlServerRedirected
+                                                    self.user?.predefinedUrl = k_default_url_server
+                                                
+                                                    if (app.activeUser == nil || (self.user?.activeaccount)!) {
+                                                        // only set as active account the first account added
+                                                        // OR if it is already the active user; otherwise cookies will not be correctly restored
+                                                        self.user?.activeaccount = true
+                                                        app.activeUser = self.user
+                                                    }
+                                                
+                                                
+                                                    if self.loginMode == .create {
+                                                        self.user?.idUser = ManageAccounts().storeAccountAndGetIdOfUser(self.user!, withCredentials: credentials)
+                                                        if self.user?.idUser != 0 {
+                                                            ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
+                                                        
+                                                            app.generateAppInterface(fromLoginScreen: true)
+
+                                                        } else {
+                                                            self.showURLError(NSLocalizedString("error_could_not_add_account", comment: ""))
+                                                        }
                                                     
-                                                    self.closeLoginView()
+                                                    } else {
+                                                        ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
+                                                    
+                                                        self.closeLoginView()
+                                                    }
                                                 }
                                               
                                                 
