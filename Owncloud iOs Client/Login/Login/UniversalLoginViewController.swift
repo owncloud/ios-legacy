@@ -853,6 +853,12 @@ connection_declined  Connection declined by user
                         // TODO show error?
                     }
                 })
+            } else if let error = webVC.error {
+                self.showURLError(
+                    self.manageNetworkErrors.returnErrorMessage(
+                        withHttpStatusCode: -1, andError: error
+                    )
+                )
             }
         }
     }

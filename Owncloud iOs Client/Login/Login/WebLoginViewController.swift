@@ -21,6 +21,7 @@ import Foundation
 @objc class WebLoginViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate {
 
     var authCode = ""
+    var error: Error? = nil
     
     // MARK: IBOutlets
     @IBOutlet var webViewLogin: UIWebView!
@@ -98,6 +99,20 @@ import Foundation
             if let code = getQueryStringParameter(url: urlToFollow, param: "code") {
                 self.authCode = code
                 print("contains url and code auth \(self.authCode)")
+                
+            } else if let errorString = getQueryStringParameter(url: urlToFollow, param: "error") {
+                if errorString == "access_denied" {
+                    error = UtilsFramework.getErrorWithCode(
+                        Int(OCErrorOAuth2ErrorAccessDenied.rawValue),
+                        andCustomMessageFromTheServer: NSLocalizedString("oauth_error", comment: "")
+                    );
+                } else {
+                    error = UtilsFramework.getErrorWithCode(
+                        Int(OCErrorOAuth2Error.rawValue),
+                        andCustomMessageFromTheServer: NSLocalizedString("oauth_error_access_denied", comment: "")
+                    );
+                }
+
             }
             
            return false;
