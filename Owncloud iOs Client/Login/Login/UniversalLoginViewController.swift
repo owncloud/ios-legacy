@@ -190,7 +190,7 @@ connection_declined  Connection declined by user
             self.imageViewURLFooter.image = nil
             self.checkCurrentUrl()
         }
-        
+                
         UtilsCookies.clear()    // network requests from log-in view need to be independent of existing sessions
         
         print("Init login with loginMode: \(loginMode.rawValue) (0=Create,1=Update,2=Expire,3=Migrate)")
