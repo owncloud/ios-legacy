@@ -59,7 +59,7 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
     }
     
     
-    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ userCredDto: OCCredentialsDto? ,_ error: String?) -> Void)  {
+    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ userCredDto: OCCredentialsDto? ,_ error: Error?) -> Void)  {
         
         self.accessTokenAuthRequest(url, authCode: authCode, withCompletion: { (data:Data?, httpResponse:HTTPURLResponse?, error:Error?) in
             
@@ -69,7 +69,13 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
                     if let dictJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary  {
                         
                         if let resultError = dictJSON["error"] {
-                            completion(nil, resultError as? String)
+                            completion(
+                                nil,
+                                UtilsFramework.getErrorWithCode(
+                                    Int(OCErrorOAuth2Error.rawValue),
+                                    andCustomMessageFromTheServer: resultError as? String
+                                )
+                            );
                         } else {
                             
                             let userCredDto: OCCredentialsDto = OCCredentialsDto()
@@ -83,16 +89,16 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
                             completion(userCredDto, nil)
                         }
                     } else {
-                        completion(nil, error?.localizedDescription)
+                        completion(nil, error)
                     }
                     
                 } catch let error {
                     print("accessTokenAuthRequest  no data error:", error.localizedDescription)
-                    completion(nil, error.localizedDescription)
+                    completion(nil, error)
                 }
                 
             } else {
-               completion(nil, error?.localizedDescription)
+               completion(nil, error)
             }
         })
         
