@@ -39,6 +39,7 @@
 
 + (instancetype)actionWithTitle:(NSString *)title image:(UIImage *)image style:(RMActionStyle)style andHandler:(void (^)(RMActionController<UIView *> * _Nonnull controller))handler {
     RMAction *action = [[self class] actionWithStyle:style andHandler:handler];
+
     action.title = title;
     action.image = image;
     
@@ -120,12 +121,12 @@
     [actionButton addTarget:self action:@selector(actionTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     if(self.style == RMActionStyleCancel) {
-        actionButton.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont buttonFontSize]];
+        actionButton.titleLabel.font = [UIFont fontWithName:@"SourceSansPro-Semibold" size:[UIFont buttonFontSize]];
     } else {
         [actionButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         [[actionButton titleLabel] setTextAlignment:NSTextAlignmentLeft];
         [actionButton setContentEdgeInsets:UIEdgeInsetsMake(0, 15, 0, 0)];
-        actionButton.titleLabel.font = [UIFont systemFontOfSize:[UIFont buttonFontSize]];
+        actionButton.titleLabel.font = [UIFont fontWithName:@"SourceSansPro-Regular" size:[UIFont buttonFontSize]];
     }
     
     if(!self.controller.disableBlurEffects) {
@@ -150,7 +151,7 @@
     [actionButton addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[actionButton(height)]" options:0 metrics:@{@"height": @([NSProcessInfo runningAtLeastiOS9] ? 55 : 44)} views:NSDictionaryOfVariableBindings(actionButton)]];
     
     if(self.style == RMActionStyleDestructive) {
-        [actionButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        [actionButton setTitleColor:[UIColor colorWithRed:249.0f green:95.0f/255.0f blue:98/255.0f alpha:1.0f] forState:UIControlStateNormal];
     }else {
         [actionButton setTitleColor:[UIColor colorWithRed:0.0f green:166.0f/255.0f blue:255/255.0f alpha:1.0f] forState:UIControlStateNormal];
     }

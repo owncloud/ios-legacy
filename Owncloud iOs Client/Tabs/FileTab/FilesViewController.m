@@ -3578,7 +3578,7 @@
         case 0:
         {
             DLog(@"Click on index 0 - More");
-            [self didSelectMoreOptions];
+            // [self didSelectMoreOptions];
             break;
         }
         case 1:
@@ -3643,103 +3643,6 @@
     return YES;
 }
 
-
-///-----------------------------------
-/// @name didSelectMoreOptions
-///-----------------------------------
-
-/**
- * Method to show the ActionSheet after click over "More" on the swipe menu
- *
- */
-- (void) didSelectMoreOptions {
-    
-    if (self.moreActionSheet) {
-        self.moreActionSheet = nil;
-    }
-    
-    NSString *title = [self.selectedFileDto.fileName stringByRemovingPercentEncoding];
-    
-    if(self.selectedFileDto.isDirectory) {
-        
-        title = [title substringToIndex:[title length]-1];
-        
-        if ([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:self.selectedFileDto]) {
-            if (self.isCurrentFolderSonOfFavoriteFolder) {
-                NSString *msg = NSLocalizedString(@"msg_while_downloads", nil);
-                _alert = [[UIAlertView alloc] initWithTitle:msg message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
-                [_alert show];
-            } else if (self.selectedFileDto.isFavorite) {
-                self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"not_available_offline", nil), nil];
-                self.moreActionSheet.tag=220;
-            } else {
-                self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"cancel_download", nil), nil];
-                self.moreActionSheet.tag=210;
-            }
-        } else {
-            
-            NSString *favoriteOrUnfavoriteString = @"";
-            
-            if (_selectedFileDto.isFavorite && !self.isCurrentFolderSonOfFavoriteFolder) {
-                favoriteOrUnfavoriteString = NSLocalizedString(@"not_available_offline", nil);
-            } else {
-                favoriteOrUnfavoriteString = NSLocalizedString(@"available_offline", nil);
-            }
-            
-            self.moreActionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), NSLocalizedString(@"download_folder", nil), favoriteOrUnfavoriteString, nil];
-            self.moreActionSheet.tag=200;
-        }
-        
-        if (IS_IPHONE) {
-            [self.moreActionSheet showInView:self.tabBarController.view];
-        }else {
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            if (IS_IOS8 || IS_IOS9) {
-                [self.moreActionSheet showInView:app.splitViewController.view];
-            } else {
-                [self.moreActionSheet showInView:app.detailViewController.view];
-            }
-        }
-    } else {
-        
-        NSString *availableOfflineOrNotString = @"";
-        
-        if (_selectedFileDto.isFavorite && !self.isCurrentFolderSonOfFavoriteFolder) {
-            availableOfflineOrNotString = NSLocalizedString(@"not_available_offline", nil);
-        } else {
-            availableOfflineOrNotString = NSLocalizedString(@"available_offline", nil);
-        }
-        
-        NSString *downloadFileCancelDownload;
-        
-        if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
-            self.selectedFileDto.isDownload == downloaded) {
-            downloadFileCancelDownload = nil;
-        } else {
-            if (self.selectedFileDto.isDownload == downloading ||
-                self.selectedFileDto.isDownload == updating) {
-                downloadFileCancelDownload = NSLocalizedString(@"cancel_download", nil);
-            } else {
-                downloadFileCancelDownload = NSLocalizedString(@"download_file", nil);
-            }
-        }
-        
-        self.moreActionSheet = [[UIActionSheet alloc]initWithTitle:title delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle: nil otherButtonTitles:NSLocalizedString(@"open_with_label", nil), NSLocalizedString(@"rename_long_press", nil), NSLocalizedString(@"move_long_press", nil), availableOfflineOrNotString, downloadFileCancelDownload, nil];
-        self.moreActionSheet.tag=200;
-        
-        if (IS_IPHONE) {
-            [self.moreActionSheet showInView:self.tabBarController.view];
-        }else {
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            if (IS_IOS8 || IS_IOS9) {
-                [self.moreActionSheet showInView:app.splitViewController.view];
-            } else {
-                [self.moreActionSheet showInView:app.detailViewController.view];
-            }
-        }
-    }
-}
-
 #pragma mark - ManageFavoritesDelegate
 
 - (void) fileHaveNewVersion:(BOOL)isNewVersionAvailable {
@@ -3770,61 +3673,280 @@
 }
 
 - (void) optionsButtonTapped:(id) sender {
-    RMActionControllerStyle style = RMActionControllerStyleWhite;
     
-    RMAction *selectAction = [RMAction<UIView *> actionWithTitle:@"Select" style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
-        [UIView animateWithDuration:0.5f animations:^{
-        self.tabBarController.tabBar.hidden = NO;
-        }];
+    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+    _selectedIndexPath     = [self.tableView indexPathForRowAtPoint:buttonPosition];
+    _selectedFileDto = (FileDto *)[[_sortedArray objectAtIndex:_selectedIndexPath.section]objectAtIndex:_selectedIndexPath.row];
 
-        NSLog(@"Action controller finished successfully");
-    }];
-    RMAction *selectAction1 = [RMAction<UIView *> actionWithTitle:@"Select" style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    if ([_selectedFileDto.fileName isEqualToString:app.detailViewController.file.fileName] &&
+        [_selectedFileDto.filePath isEqualToString:app.detailViewController.file.filePath] &&
+        _selectedFileDto.userId == app.detailViewController.file.userId) {
+        app.detailViewController.file = _selectedFileDto;
+    }
+    
+    if (self.rmActionController) {
+        self.rmActionController = nil;
+    }
+    
+    NSString *title = [self.selectedFileDto.fileName stringByRemovingPercentEncoding];
+    NSString *path = [self.selectedFileDto.filePath stringByRemovingPercentEncoding];
+    
+    RMAction *deleteAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"delete_label", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
+        [self didSelectDeleteOption];
         [UIView animateWithDuration:0.5f animations:^{
             self.tabBarController.tabBar.hidden = NO;
         }];
         
-        NSLog(@"Action controller1 finished successfully");
+        NSLog(@"Delete finished successfully");
     }];
-    RMAction *selectAction2 = [RMAction<UIView *> actionWithTitle:@"Select" style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+    
+    RMAction *shareAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"share_link_long_press", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self didSelectShareLinkOption];
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        NSLog(@"Share action finished successfully");
+    }];
+    
+    RMAction *cancelAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel", nil) style:RMActionStyleCancel andHandler:^(RMActionController<UIView *> *controller) {
         [UIView animateWithDuration:0.5f animations:^{
             self.tabBarController.tabBar.hidden = NO;
         }];
         
-        NSLog(@"Action controller2 finished successfully");
+        NSLog(@"Cancel action finished successfully");
     }];
     
-    RMAction *selectAction3 = [RMAction<UIView *> actionWithTitle:@"Select" style:RMActionStyleDefault andHandler:^(RMActionController<UIView *> *controller) {
+    RMAction *okAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"ok", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        NSLog(@"OK acion finished successfully");
+    }];
+    
+    RMAction *notAvailableOfflineAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"not_available_offline", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        
+        if (self.isCurrentFolderSonOfFavoriteFolder) {
+            [self performSelectorOnMainThread:@selector(showAlertView:)
+                                   withObject:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)
+                                waitUntilDone:YES];
+        } else {
+            if (self.selectedFileDto.isDirectory) {
+                [self didSelectCancelFavoriteFolder];
+            } else {
+                [self didSelectFavoriteOption];
+            }
+        }
+        
         [UIView animateWithDuration:0.5f animations:^{
             self.tabBarController.tabBar.hidden = NO;
         }];
         
-        NSLog(@"Action controller3 finished successfully");
+        NSLog(@"notAvailableOffline action finished successfully");
     }];
-    RMAction *selectAction4 = [RMAction<UIView *> actionWithTitle:@"Select" style:RMActionStyleDefault andHandler:^(RMActionController<UIView *> *controller) {
+    
+    RMAction *cancelFolderDownloadAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel_download", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
+        [self didSelectCancelDownloadFolder];
         [UIView animateWithDuration:0.5f animations:^{
             self.tabBarController.tabBar.hidden = NO;
         }];
         
-        NSLog(@"Action controller3 finished successfully");
+        NSLog(@"Cancel folder download action finished successfully");
     }];
     
-    RMAction *cancelAction = [RMAction<UIView *> actionWithTitle:@"Cancel" style:RMActionStyleCancel andHandler:^(RMActionController<UIView *> *controller) {
-        self.tabBarController.tabBar.hidden = NO;
-        NSLog(@"Action controller was canceled");
+    RMAction *cancelFileDownloadAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel_download", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
+        
+        if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
+            self.selectedFileDto.isDownload == downloaded) {
+            DLog(@"Cancel");
+        } else {
+            [self didSelectCancelDownloadFileOption];
+        }
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Action cancel finished successfully");
     }];
     
-    RMCustomViewController *actionController = [RMCustomViewController actionControllerWithStyle:style];
+    RMAction *renameAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"rename_long_press", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self didSelectRenameOption];
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Rename action finished successfully");
+    }];
     
-    [actionController addAction:selectAction];
-    [actionController addAction:selectAction1];
-    [actionController addAction:selectAction2];
-    [actionController addAction:selectAction3];
-    [actionController addAction:selectAction4];
-    [actionController addAction:cancelAction];
-    actionController.disableBlurEffects = YES;
+    RMAction *moveAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"move_long_press", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self didSelectMoveOption];
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Move action finished successfully");
+    }];
     
-    [self presentActionController:actionController];
+    RMAction *downloadFolderAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"download_folder", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self performSelectorInBackground:@selector(didSelectDownloadFolder) withObject:nil];
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Download folder action finished successfully");
+    }];
+    
+    RMAction *availableOfflineAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"available_offline", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        
+        if (self.isCurrentFolderSonOfFavoriteFolder) {
+            [self performSelectorOnMainThread:@selector(showAlertView:)
+                                   withObject:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)
+                                waitUntilDone:YES];
+        } else {
+            if (self.selectedFileDto.isDirectory) {
+                [self didSelectFavoriteFolder];
+            } else {
+                [self didSelectFavoriteOption];
+            }
+        }
+        
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Action cancel finished successfully");
+    }];
+    
+    RMAction *downloadFileAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"download_file", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        
+        if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
+            self.selectedFileDto.isDownload == downloaded) {
+            DLog(@"Cancel");
+        } else {
+            [self didSelectDownloadFileOption];
+        }
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Action cancel finished successfully");
+    }];
+    
+    RMAction *openWithAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"open_with_label", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        if (_selectedFileDto.isDownload || [[CheckAccessToServer sharedManager] isNetworkIsReachable]){
+            [self didSelectOpenWithOptionAndFile:_selectedFileDto];
+        } else {
+            [self performSelectorOnMainThread:@selector(showAlertView:)
+                                   withObject:NSLocalizedString(@"not_possible_connect_to_server", nil)
+                                waitUntilDone:YES];
+        
+        }
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Action cancel finished successfully");
+    }];
+    
+    RMActionControllerStyle style = RMActionControllerStyleWhite;
+    DLog(@"LOG ---> file name %@, file path %@", title, path);
+    _rmActionController = [RMCustomViewController actionControllerWithStyle:style];
+    _rmActionController.disableBlurEffects = YES;
+    
+    [_rmActionController addAction:deleteAction];
+    
+    if(self.selectedFileDto.isDirectory) {
+        
+        title = [title substringToIndex:[title length]-1];
+        if ([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:self.selectedFileDto]) {
+            if (self.isCurrentFolderSonOfFavoriteFolder) {
+                
+                [_rmActionController addAction:okAction];
+            } else if (self.selectedFileDto.isFavorite) {
+                [_rmActionController addAction:cancelAction];
+                [_rmActionController addAction:notAvailableOfflineAction];
+                //                self.moreActionSheet.tag=220;
+            } else {
+                //                self.moreActionSheet.tag=210;
+                [_rmActionController addAction:cancelAction];
+                [_rmActionController addAction:cancelFolderDownloadAction];
+            }
+        } else {
+            
+            if (_selectedFileDto.isFavorite && !self.isCurrentFolderSonOfFavoriteFolder) {
+                [_rmActionController addAction:notAvailableOfflineAction];
+            } else {
+                [_rmActionController addAction:availableOfflineAction];
+            }
+            
+            [_rmActionController addAction:cancelAction];
+            [_rmActionController addAction:renameAction];
+            [_rmActionController addAction:moveAction];
+            [_rmActionController addAction:downloadFolderAction];
+            //            self.moreActionSheet.tag=200;
+        }
+        
+        
+        //        TODO: show the custom action sheet on the split view when is in ipad;
+        //        if (IS_IPHONE) {
+        //            [self.rmActionController showInView:self.tabBarController.view];
+        //        }else {
+        //            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        //            if (IS_IOS8 || IS_IOS9) {
+        //                [self.rmActionController showInView:app.splitViewController.view];
+        //            } else {
+        //                [self.rmActionController showInView:app.detailViewController.view];
+        //            }
+        //        }
+    } else {
+        
+        [_rmActionController addAction:cancelAction];
+        [_rmActionController addAction:openWithAction];
+        [_rmActionController addAction:renameAction];
+        [_rmActionController addAction:moveAction];
+        
+        if (_selectedFileDto.isFavorite && !self.isCurrentFolderSonOfFavoriteFolder) {
+            [_rmActionController addAction:notAvailableOfflineAction];
+        } else {
+            [_rmActionController addAction:availableOfflineAction];
+        }
+        
+        
+        if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
+            self.selectedFileDto.isDownload == downloaded) {
+        } else {
+            if (self.selectedFileDto.isDownload == downloading ||
+                self.selectedFileDto.isDownload == updating) {
+                [_rmActionController addAction:cancelFileDownloadAction];
+            } else {
+                [_rmActionController addAction:downloadFileAction];
+            }
+        }
+        
+        //        if (IS_IPHONE) {
+        //            [self.moreActionSheet showInView:self.tabBarController.view];
+        //        }else {
+        //            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        //            if (IS_IOS8 || IS_IOS9) {
+        //                [self.moreActionSheet showInView:app.splitViewController.view];
+        //            } else {
+        //                [self.moreActionSheet showInView:app.detailViewController.view];
+        //            }
+        //        }
+        
+        
+    }
+    
+    if (self.userHasShareCapabilities) {
+        [_rmActionController addAction:shareAction];
+    }
+    
+    CustomCellFileAndDirectory *cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
+    [_rmActionController.fileIconImageView setImage:cell.fileImageView.image];
+    [_rmActionController.fileNameLabel setText:title];
+    [_rmActionController.filePathLabel setText:path];
+    [self presentActionController:_rmActionController];
     
     DLog(@"Options button pressed");
 }
@@ -3847,6 +3969,8 @@
     //Now just present the date selection controller using the standard iOS presentation method
     [self presentViewController:actionController animated:YES completion:nil];
 }
-
+-(BOOL)userHasShareCapabilities {
+    return !((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled));
+}
 
 @end

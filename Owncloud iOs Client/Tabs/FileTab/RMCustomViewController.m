@@ -11,49 +11,55 @@
 @implementation RMCustomViewController
 
 #pragma mark - Init and Dealloc
+
 - (instancetype)initWithStyle:(RMActionControllerStyle)aStyle title:(NSString *)aTitle message:(NSString *)aMessage selectAction:(RMAction *)selectAction andCancelAction:(RMAction *)cancelAction {
-    self = [super initWithStyle:aStyle title:aTitle message:aMessage selectAction:selectAction andCancelAction:cancelAction];
+    
+    
+    
+    self = [super initWithStyle:aStyle title:@"" message:@"" selectAction:selectAction andCancelAction:cancelAction];
     if(self) {
         self.contentView = [[UIView alloc] initWithFrame:CGRectZero];
         self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView setFrame:CGRectMake(self.contentView.bounds.origin.x, self.contentView.bounds.origin.y, self.contentView.bounds.size.width, 75)];
         
-        UIImageView *fileImage = [[UIImageView alloc] initWithFrame:CGRectZero];
-        fileImage.translatesAutoresizingMaskIntoConstraints = NO;
-        [fileImage setImage: [UIImage imageNamed:@"file_icon"]];
-        [fileImage setContentMode: UIViewContentModeScaleToFill];
-        [self.contentView addSubview:fileImage];
+        self.fileIconImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _fileIconImageView.translatesAutoresizingMaskIntoConstraints = NO;
+        [_fileIconImageView setImage: self.fileIcon];
+        [_fileIconImageView setContentMode: UIViewContentModeScaleToFill];
+        [self.contentView addSubview:_fileIconImageView];
         
-        UILabel *fileName = [[UILabel alloc] initWithFrame:CGRectZero];
-        fileName.translatesAutoresizingMaskIntoConstraints = NO;
-        fileName.text = @"FileName";
-        fileName.font = [UIFont fontWithName:@"SourceSansPro-bold" size:15];
-        [self.contentView addSubview:fileName];
+        self.fileNameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _fileNameLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        _fileNameLabel.text = self.fileName;
+        _fileNameLabel.textColor = [[UIColor alloc] initWithRed:90.0f/255.0f green:105.0f/255.0f blue:120.0f/255.0f alpha:1.0];
+        _fileNameLabel.font = [UIFont fontWithName:@"SourceSansPro-Semibold" size:15];
+        [self.contentView addSubview:_fileNameLabel];
         
-        UILabel *filePath = [[UILabel alloc] initWithFrame:CGRectZero];
-        filePath.translatesAutoresizingMaskIntoConstraints = NO;
-        filePath.text = @"FilePath";
-        filePath.font = [UIFont fontWithName:@"SourceSansPro-Regular" size:15];
-        [self.contentView addSubview:filePath];
+        self.filePathLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _filePathLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        _filePathLabel.text = self.filePath;
+        _filePathLabel.textColor = [[UIColor alloc] initWithRed:150.0f/255.0f green:159.0f/255.0f blue:170.0f/255.0f alpha:1.0];
+        _filePathLabel.font = [UIFont fontWithName:@"SourceSansPro-Regular" size:15];
+        [self.contentView addSubview:_filePathLabel];
 
         
-        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem: fileImage
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:_fileIconImageView
                                                             attribute:NSLayoutAttributeWidth
                                                             relatedBy:NSLayoutRelationEqual
                                                             toItem:nil
                                                             attribute:NSLayoutAttributeNotAnAttribute
                                                             multiplier:1.0
-                                                            constant:25]];
+                                                            constant:50]];
         
-        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem: fileImage
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:_fileIconImageView
                                                             attribute:NSLayoutAttributeHeight
                                                             relatedBy:NSLayoutRelationEqual
                                                             toItem:nil
                                                             attribute:NSLayoutAttributeNotAnAttribute
                                                             multiplier:1.0
-                                                            constant:25]];
+                                                            constant:50]];
         
-        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:fileImage
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:_fileIconImageView
                                                             attribute:NSLayoutAttributeLeft
                                                             relatedBy:NSLayoutRelationEqual
                                                             toItem:self.contentView
@@ -61,7 +67,7 @@
                                                             multiplier:1
                                                             constant:15]];
         
-        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:fileImage
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:_fileIconImageView
                                                             attribute:NSLayoutAttributeCenterY
                                                             relatedBy:NSLayoutRelationEqual
                                                             toItem:self.contentView
@@ -69,15 +75,15 @@
                                                             multiplier:1
                                                             constant:0]];
         
-        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:fileName
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:_fileNameLabel
                                                             attribute:NSLayoutAttributeLeft
                                                             relatedBy:NSLayoutRelationEqual
-                                                            toItem:fileImage
+                                                            toItem:_fileIconImageView
                                                             attribute:NSLayoutAttributeRight
                                                             multiplier:1
                                                             constant:15]];
         
-        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:fileName
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:_fileNameLabel
                                                             attribute:NSLayoutAttributeCenterY
                                                             relatedBy:NSLayoutRelationEqual
                                                             toItem:self.contentView
@@ -85,15 +91,15 @@
                                                             multiplier:1
                                                             constant:-10]];
         
-        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:filePath
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:_filePathLabel
                                                             attribute:NSLayoutAttributeLeft
                                                             relatedBy:NSLayoutRelationEqual
-                                                            toItem:fileImage
+                                                            toItem:_fileIconImageView
                                                             attribute:NSLayoutAttributeRight
                                                             multiplier:1
                                                             constant:15]];
         
-        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:filePath
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:_filePathLabel
                                                             attribute:NSLayoutAttributeCenterY
                                                             relatedBy:NSLayoutRelationEqual
                                                             toItem:self.contentView

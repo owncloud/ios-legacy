@@ -46,6 +46,7 @@
 #import "SelectFolderViewController.h"
 #import "SelectFolderNavigation.h"
 #import "ManageFavorites.h"
+#import "RMCustomViewController.h"
 
 #ifdef CONTAINER_APP
 #import "Owncloud_iOs_Client-Swift.h"
@@ -106,6 +107,8 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 @property(nonatomic, strong) UIRefreshControl *refreshControl;
 //UIActionSheet for "more" option on swipe
 @property (nonatomic,strong) UIActionSheet *moreActionSheet;
+//RRMcontroller for the options custom action sheet
+@property (nonatomic, strong) RMCustomViewController *rmActionController;
 //UIActionSheet for + button
 @property (nonatomic,strong) UIActionSheet *plusActionSheet;
 //An exist file
@@ -143,6 +146,8 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 //Favorites
 @property(nonatomic, strong) ManageFavorites *manageFavorites;
 
+//Check the share capabilities for the user
+-(BOOL)userHasShareCapabilities;
 
 // init method to load view from nib with an array of files
 - (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(NSInteger) fileIdToShowFiles andCurrentLocalFolder:(NSString *)currentLocalFoler;

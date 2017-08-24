@@ -52,6 +52,7 @@
 @property (nonatomic, strong) NSMutableArray *doneActions;
 @property (nonatomic, strong) NSMutableArray *cancelActions;
 
+@property (nonatomic, strong) UIScrollView *topViewScrollView;
 @property (nonatomic, strong) UIView *topContainer;
 @property (nonatomic, strong) UIView *bottomContainer;
 
@@ -102,6 +103,7 @@
 - (instancetype)initWithStyle:(RMActionControllerStyle)aStyle title:(NSString *)aTitle message:(NSString *)aMessage selectAction:(RMAction *)selectAction andCancelAction:(RMAction *)cancelAction {
     self = [super initWithNibName:nil bundle:nil];
     if(self) {
+        
         [self setup];
         
         self.style = aStyle;
@@ -162,10 +164,10 @@
 }
 
 - (void)setupContainerElements {
+    
     //Top container
     if(self.disableBlurEffects) {
         self.topContainer = [[UIView alloc] initWithFrame:CGRectZero];
-        
         [self.topContainer addSubview:self.contentView];
         
         if([self.headerTitleLabel.text length] > 0) {
@@ -249,6 +251,8 @@
     self.topContainer.clipsToBounds = YES;
     self.topContainer.translatesAutoresizingMaskIntoConstraints = NO;
     
+    
+    
     if(!self.disableBlurEffects) {
         self.topContainer.backgroundColor = [UIColor clearColor];
     } else {
@@ -294,7 +298,7 @@
     }
     
     //Top container content constraints
-    __block UIView *currentTopView = nil;
+    __block UIScrollView *currentTopView = nil;
     __weak RMActionController *blockself = self;
     [self.doneActions enumerateObjectsUsingBlock:^(RMAction *action, NSUInteger index, BOOL *stop) {
         UIView *seperator = [UIView seperatorView];
@@ -445,8 +449,8 @@
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-(0)-[BGView]-(0)-|" options:0 metrics:nil views:@{@"BGView": self.backgroundView}]];
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(0)-[BGView]-(0)-|" options:0 metrics:nil views:@{@"BGView": self.backgroundView}]];
     }
-    
-    [self.view addSubview:self.topContainer];
+
+    [self.view addSubview:self.topContainer]; //AQUI ANTES HAY QUE AÑADIR UN SCROLLVIEW Y AÑADIR ESE
     if([self.cancelActions count] > 0) {
         [self.view addSubview:self.bottomContainer];
     }
@@ -471,6 +475,7 @@
         [self.view addMotionEffect:motionEffectGroup];
     }
     
+    
     CGSize minimalSize = [self.view systemLayoutSizeFittingSize:CGSizeMake(999, 999)];
     self.preferredContentSize = CGSizeMake(minimalSize.width, minimalSize.height+10);
     
@@ -479,9 +484,14 @@
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    DLog(@"self.fileIdToShowFiles: %f", _topContainer.bounds.size.height);
     self.hasBeenDismissed = NO;
 }
 
