@@ -71,14 +71,12 @@
 //Text color of the text of the login button
 +(UIColor *)colorOfLoginButtonTextColor;
 
+
 //FILE LIST
 
-//Text color of selected folder
-+ (UIColor*)colorOfTxtSelectFolderToolbar;
-//Section index color
+//Section index color, Color of the letter separators shown when there are more than 20 files.
 + (UIColor*)colorOfSectionIndexColorFileList;
-//Header section index color
-+ (UIColor*)colorOfHeaderTableSectionFileList;
+
 
 //WEB VIEW
 
