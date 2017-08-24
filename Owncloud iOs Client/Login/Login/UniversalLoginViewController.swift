@@ -842,14 +842,18 @@ connection_declined  Connection declined by user
                 
                 let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.validatedServerURL)
                 
-                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { ( userCredDto: OCCredentialsDto?, error: String?) in
+                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { ( userCredDto: OCCredentialsDto?, error: Error?) in
                 
                     if let userCredentials = userCredDto {
                         
                         self.validateCredentialsAndStoreAccount(credentials: userCredentials);
                         
                     } else {
-                        // TODO show error?
+                        self.showURLError(
+                            self.manageNetworkErrors.returnErrorMessage(
+                                withHttpStatusCode: -1, andError: error
+                            )
+                        )
                     }
                 })
             } else if let error = webVC.error {
