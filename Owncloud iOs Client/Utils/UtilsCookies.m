@@ -115,7 +115,9 @@
     
     //Clear the cookies before to try to do login
     //1- Storage the new cookies on the Database
-    [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
+    if (app.activeUser != nil) {
+        [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
+    }
     //2- Clean the cookies storage
     [UtilsFramework deleteAllCookies];
 }
