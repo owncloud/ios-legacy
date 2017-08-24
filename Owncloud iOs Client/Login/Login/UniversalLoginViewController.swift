@@ -625,8 +625,8 @@ connection_declined  Connection declined by user
             break
 
         default:
-            //TODO: show footer Error
-            break
+            showURLError(NSLocalizedString("authentification_not_valid", comment: ""))
+            
         }
 
     }
