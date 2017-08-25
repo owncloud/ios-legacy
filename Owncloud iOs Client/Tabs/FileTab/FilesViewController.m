@@ -53,7 +53,6 @@
 #import "ManageNetworkErrors.h"
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
-//#import "Owncloud_iOs_Client-Swift.h"
 #import "ManageUsersDB.h"
 #import "UtilsFramework.h"
 #import "ShareMainViewController.h"
@@ -371,6 +370,11 @@
         //Checking the etag
         NSString *path = _currentRemoteFolder;
         path = [path stringByRemovingPercentEncoding];
+        
+        
+        [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
+        
+        [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
         
         [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
             
@@ -1753,7 +1757,7 @@
  */
 -(void) goToFolderWithoutCheck {
     
-    _isLoadingForNavigate = YES;
+    self.isLoadingForNavigate = YES;
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -1761,8 +1765,7 @@
 
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    NSString *path = _nextRemoteFolder;
-    
+    NSString *path = self.nextRemoteFolder;
     path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
@@ -1996,7 +1999,7 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    NSString *path = _currentRemoteFolder;
+    NSString *path = self.currentRemoteFolder;
     path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
