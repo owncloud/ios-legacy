@@ -1723,22 +1723,16 @@ float shortDelay = 0.3;
             [self.presentFilesViewController.openWith.documentInteractionController dismissMenuAnimated:NO];
             self.presentFilesViewController.openWith.documentInteractionController = nil;
         }
-        //Close the delete option in FilesViewController
-        if (self.presentFilesViewController.mDeleteFile.popupQuery) {
-            [self.presentFilesViewController.mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
-            self.presentFilesViewController.mDeleteFile.popupQuery = nil;
-        }
+//        //Close the delete option in FilesViewController
+//        if (self.presentFilesViewController.mDeleteFile.popupQuery) {
+//            [self.presentFilesViewController.mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:NO];
+//            self.presentFilesViewController.mDeleteFile.popupQuery = nil;
+//        }
         
         //Close the more view controller on the list of FilesViewController
         if (self.presentFilesViewController.moreActionSheet) {
             [self.presentFilesViewController.moreActionSheet dismissWithClickedButtonIndex:self.presentFilesViewController.moreActionSheet.cancelButtonIndex animated:NO];
             self.presentFilesViewController.moreActionSheet = nil;
-        }
-        
-        //Close the plus view controller on the list of FilesViewController
-        if (self.presentFilesViewController.plusActionSheet) {
-            [self.presentFilesViewController.plusActionSheet dismissWithClickedButtonIndex:self.presentFilesViewController.plusActionSheet.cancelButtonIndex animated:NO];
-            self.presentFilesViewController.plusActionSheet = nil;
         }
         
         //Close the sort view controller on the list of FilesViewController
@@ -1830,11 +1824,11 @@ float shortDelay = 0.3;
                 _presentFilesViewController.moreActionSheet = nil;
 
             }
-            if (_presentFilesViewController.plusActionSheet){
-                [_presentFilesViewController.plusActionSheet dismissWithClickedButtonIndex:k_max_number_options_plus_menu animated:NO];
-                _presentFilesViewController.plusActionSheet = nil;
-
-            }
+//            if (_presentFilesViewController.plusActionSheet){
+//                [_presentFilesViewController.plusActionSheet dismissWithClickedButtonIndex:k_max_number_options_plus_menu animated:NO];
+//                _presentFilesViewController.plusActionSheet = nil;
+//
+//            }
             if (_presentFilesViewController.sortingActionSheet) {
                 [_presentFilesViewController.sortingActionSheet dismissWithClickedButtonIndex:k_max_number_options_sort_menu animated:NO];
                 _presentFilesViewController.sortingActionSheet = nil;

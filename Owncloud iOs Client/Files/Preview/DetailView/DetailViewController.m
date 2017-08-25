@@ -1752,7 +1752,7 @@
     
     DLog(@"will Animate Rotation");
     
-    [_mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:YES];
+    //[_mDeleteFile.popupQuery dismissWithClickedButtonIndex:0 animated:YES];
     
     if (_readerPDFViewController) {
         [_readerPDFViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];

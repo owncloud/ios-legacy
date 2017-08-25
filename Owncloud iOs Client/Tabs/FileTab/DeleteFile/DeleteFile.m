@@ -29,6 +29,7 @@
 #import "UtilsUrls.h"
 #import "ManageThumbnails.h"
 #import "ManageUsersDB.h"
+#import "RMOCViewController.h"
 
 
 @implementation DeleteFile
@@ -38,7 +39,7 @@
     _deleteFromFilePreview=NO;
 }
 
-- (void)askToDeleteFileByFileDto: (FileDto *) file {
+- (RMActionController *)askToDeleteFileByFileDto: (FileDto *) file {
     
     _file = file;
     _isFilesDownloadedInFolder = NO;
@@ -49,48 +50,58 @@
         _manageNetworkErrors.delegate = self;
     }
     
-    //If the device is an iPhone and its orientation is landscape
-    if ((IS_IPHONE) &&
-        (!IS_PORTRAIT)) {
-        DLog(@"iPhone in landscape");
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
-                                                           message:NSLocalizedString(@"not_show_potrait", nil)
-                                                          delegate:nil
-                                                 cancelButtonTitle:nil
-                                                 otherButtonTitles:NSLocalizedString(@"ok",nil), nil];
-        [alertView show];
-    } else {
-        //If the file is a directory, checks if contains downloaded files
-        if (_file.isDirectory) {
-            DLog(@"Delete a folder");
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            //Remove: /owncloud/remote.php/webdav/ to the pathFolder
-            NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
-            //Obtains the number of the downloaded files in DB which filepath contains the folder that the user want delete
-            _isFilesDownloadedInFolder=[ManageFilesDB isGetFilesByDownloadState:downloaded andByUser:app.activeUser andFolder:pathFolder];
-        }
-        if((_file.isDownload || _isFilesDownloadedInFolder == YES) && (!_file.isFavorite && ![[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.file])) {
-            DLog(@"Delete downloaded files or folder with downloaded files");
-            
-            if (self.popupQuery) {
-                self.popupQuery = nil;
-            }
-            
-            self.popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:NSLocalizedString(@"delete_local_server", nil) otherButtonTitles:NSLocalizedString(@"delete_local", nil), nil];
-        } else {
-            
-            if (self.popupQuery) {
-                self.popupQuery = nil;
-            }
-            DLog(@"Delete files or folder from server");
-            self.popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:NSLocalizedString(@"delete_server", nil) otherButtonTitles:nil];
-        }
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
-            [self.popupQuery showInView:_viewToShow];
-        } else {
-            [self.popupQuery showInView:[_viewToShow window]];
-        }
+    if (self.popupQuery) {
+        self.popupQuery = nil;
     }
+    
+    RMAction *deleteLocalAndServer = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"delete_local_server", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
+        _deleteFromFlag = deleteFromServerAndLocal;
+        [self executeDeleteItemInServer];
+    }];
+    
+    RMAction *deleteLocal = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"delete_local", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        _deleteFromFlag = deleteFromLocal;
+        [self executeDeleteItemInDevice];
+    }];
+    
+    RMAction *deleteServer= [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"delete_server", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
+        _deleteFromFlag = deleteFromServerAndLocal;
+        [self executeDeleteItemInServer];
+    }];
+    RMAction *cancelAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel", nil) style:RMActionStyleCancel andHandler:^(RMActionController<UIView *> *controller) {
+    }];
+    
+    self.popupQuery = [RMOCViewController actionControllerWithStyle:RMActionControllerStyleWhite];
+    self.popupQuery.disableBlurEffects = YES;
+    
+    //If the file is a directory, checks if contains downloaded files
+    if (_file.isDirectory) {
+        DLog(@"Delete a folder");
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        //Remove: /owncloud/remote.php/webdav/ to the pathFolder
+        NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
+        //Obtains the number of the downloaded files in DB which filepath contains the folder that the user want delete
+        _isFilesDownloadedInFolder=[ManageFilesDB isGetFilesByDownloadState:downloaded andByUser:app.activeUser andFolder:pathFolder];
+    }
+    if((_file.isDownload || _isFilesDownloadedInFolder == YES) && (!_file.isFavorite && ![[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.file])) {
+        DLog(@"Delete downloaded files or folder with downloaded files");
+        
+        [self.popupQuery addAction:cancelAction];
+        [self.popupQuery addAction:deleteLocalAndServer];
+        [self.popupQuery addAction:deleteLocal];
+        
+    } else {
+        
+        [self.popupQuery addAction:cancelAction];
+        [self.popupQuery addAction:deleteServer];
+        
+    }
+    //        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
+    //            [self.popupQuery showInView:_viewToShow];
+    //        } else {
+    //            [self.popupQuery showInView:[_viewToShow window]];
+    //        }
+    return self.popupQuery;
 }
 
 
@@ -497,6 +508,5 @@
         app.isLoadingVisible = NO;
     }
 }
-
 
 @end

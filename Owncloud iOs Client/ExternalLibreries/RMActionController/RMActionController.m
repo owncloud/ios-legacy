@@ -100,7 +100,10 @@
     return self;
 }
 
+
+
 - (instancetype)initWithStyle:(RMActionControllerStyle)aStyle title:(NSString *)aTitle message:(NSString *)aMessage selectAction:(RMAction *)selectAction andCancelAction:(RMAction *)cancelAction {
+    [self.navigationController.tabBarController.tabBar setHidden:YES];
     self = [super initWithNibName:nil bundle:nil];
     if(self) {
         
@@ -428,10 +431,22 @@
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(10)-[topContainer]" options:0 metrics:nil views:@{@"topContainer": self.topContainer}]];
 }
 
+-(void) viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.tabBarController.tabBar setHidden:NO];
+
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.tabBarController.tabBar setHidden:NO];
+}
+
 - (void)viewDidLoad {
     NSAssert(self.contentView != nil, @"Error: The view of an RMActionController has been loaded before a contentView has been set. You have to set the contentView before presenting a RMActionController.");
     
     [super viewDidLoad];
+
     
 #ifdef DEBUG
     self.view.accessibilityLabel = @"ActionControllerView";
@@ -490,7 +505,8 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
+    [self.tabBarController.tabBar setHidden:YES];
+
     DLog(@"self.fileIdToShowFiles: %f", _topContainer.bounds.size.height);
     self.hasBeenDismissed = NO;
 }

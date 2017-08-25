@@ -18,6 +18,7 @@
 #import <Foundation/Foundation.h>
 #import "FileDto.h"
 #import "ManageNetworkErrors.h"
+#import "RMOCViewController.h"
 
 @protocol DeleteFileDelegate
 
@@ -42,13 +43,13 @@ typedef enum {
 @property(nonatomic,weak) __weak id<DeleteFileDelegate> delegate; 
 @property(nonatomic,strong)NSString *currentLocalFolder;
 @property(nonatomic,strong)UIView *viewToShow;
-@property(nonatomic,strong)UIActionSheet *popupQuery;
+@property(nonatomic,strong)RMOCViewController *popupQuery;
 @property int deleteFromFlag;
 @property(nonatomic)BOOL deleteFromFilePreview;
 @property(nonatomic)BOOL isFilesDownloadedInFolder;
 @property(nonatomic, strong) ManageNetworkErrors *manageNetworkErrors;
 
-- (void)askToDeleteFileByFileDto: (FileDto *) file;
+- (RMOCViewController *)askToDeleteFileByFileDto: (FileDto *) file;
 - (void)deleteItemFromDeviceByFileDto: (FileDto *) file;
 - (void)errorLogin;
 

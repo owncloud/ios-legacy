@@ -47,6 +47,7 @@
 #import "SelectFolderNavigation.h"
 #import "ManageFavorites.h"
 #import "RMCustomViewController.h"
+#import "RMOCViewController.h"
 
 #ifdef CONTAINER_APP
 #import "Owncloud_iOs_Client-Swift.h"
@@ -110,7 +111,7 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 //RRMcontroller for the options custom action sheet
 @property (nonatomic, strong) RMCustomViewController *rmActionController;
 //UIActionSheet for + button
-@property (nonatomic,strong) UIActionSheet *plusActionSheet;
+@property (nonatomic,strong) RMOCViewController *plusActionSheet;
 //An exist file
 @property (nonatomic, strong) OverwriteFileOptions *overWritteOption;
 //Class to manage the Network erros
@@ -146,6 +147,9 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 //Favorites
 @property(nonatomic, strong) ManageFavorites *manageFavorites;
 
+
+@property (nonatomic, strong) UIBarButtonItem *addButtonItem;
+
 //Check the share capabilities for the user
 -(BOOL)userHasShareCapabilities;
 
@@ -160,6 +164,7 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 - (void)reloadTableFileList;
 - (void)goToSelectedFileOrFolder:(FileDto *) selectedFile andForceDownload:(BOOL) isForceDownload;
 - (void)initFilesView;
+-(void)openOptions:(UIEvent *)sender;
 
 @end;
 

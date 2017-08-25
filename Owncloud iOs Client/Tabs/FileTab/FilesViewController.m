@@ -66,6 +66,7 @@
 #import "CheckFeaturesSupported.h"
 #import "UIButton+Extension.h"
 #import "RMCustomViewController.h"
+#import "RMOCViewController.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -73,7 +74,6 @@
 #define k_navigation_bar_height_in_iphone_landscape 32
 
 @interface FilesViewController ()
-
 @property (nonatomic, strong) ELCAlbumPickerController *albumController;
 @property (nonatomic, strong) ELCImagePickerController *elcPicker;
 @property (nonatomic) BOOL didLayoutSubviews;
@@ -170,8 +170,9 @@
     _mUser = app.activeUser;
     
     //Add a more button
-    UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more-filled"] style:UIBarButtonItemStylePlain target:self action:@selector(showOptions)];
-    self.navigationItem.rightBarButtonItem = addButtonItem;
+    //self.addButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more-filled"] style:UIBarButtonItemStylePlain target:self action:@selector(showNavBarOptions:)];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more-filled"] style:UIBarButtonItemStylePlain target:self action:@selector(openOptions:)];
     
     // Create a searchBar and a displayController "Future Option"
     //UISearchBar *searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)];
@@ -626,17 +627,10 @@
     }
 }
 
-
-
-
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
     if (self.openWith && !IS_IPHONE) {
         [self.openWith.documentInteractionController dismissMenuAnimated:NO];
-    }
-    
-    if (self.plusActionSheet) {
-        [self.plusActionSheet dismissWithClickedButtonIndex:4 animated:NO];
     }
     
     if(self.sortingActionSheet){
@@ -1104,34 +1098,77 @@
 /*
  * Method that show the options when the user tap ... button
  */
-- (void)showOptions {
+
+-(void)openOptions:(UIEvent *)sender {
     
     if (self.plusActionSheet) {
         self.plusActionSheet = nil;
     }
     
-    self.plusActionSheet = [[UIActionSheet alloc]
-                            initWithTitle:nil
-                            delegate:self
-                            cancelButtonTitle:NSLocalizedString(@"cancel", nil)
-                            destructiveButtonTitle:nil
-                            otherButtonTitles:NSLocalizedString(@"menu_upload", nil), NSLocalizedString(@"menu_folder", nil), NSLocalizedString(@"menu_text_file", nil), NSLocalizedString(@"sort_menu_title", nil), nil];
-    
-    self.plusActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
-    self.plusActionSheet.tag=100;
-    
-    if (IS_IPHONE) {
-        [self.plusActionSheet showInView:self.tabBarController.view];
-    } else {
+    RMAction *cancelAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel", nil) style:RMActionStyleCancel andHandler:^(RMActionController<UIView *> *controller) {
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
         
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        NSLog(@"Action cancel finished successfully");
+    }];
+    RMAction *uploadAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"menu_upload", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self addPhotoOrVideo];
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
         
-        if (IS_IOS8 || IS_IOS9)  {
-            [self.plusActionSheet showInView:app.splitViewController.view];
-        } else {
-            [self.plusActionSheet showInView:app.detailViewController.view];
-        }
-    }
+        NSLog(@"Action cancel finished successfully");
+    }];
+    RMAction *createFolderAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"menu_folder", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self showCreateFolder];
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Action cancel finished successfully");
+    }];
+    RMAction *newTextFileAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"menu_text_file", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self showCreateTextFile];
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Action cancel finished successfully");
+    }];
+    RMAction *sortAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"sort_menu_title", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self showSortingOptions];
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Action cancel finished successfully");
+    }];
+
+     self.plusActionSheet = [RMOCViewController actionControllerWithStyle:RMActionControllerStyleWhite];
+    self.plusActionSheet.disableBlurEffects = YES;
+
+    [self.plusActionSheet addAction:cancelAction];
+    [self.plusActionSheet addAction:sortAction];
+    [self.plusActionSheet addAction:newTextFileAction];
+    [self.plusActionSheet addAction:createFolderAction];
+    [self.plusActionSheet addAction:uploadAction];
+
+    
+    [self presentActionController:self.plusActionSheet];
+    
+//    if (IS_IPHONE) {
+//        [self.plusActionSheet showInView:self.tabBarController.view];
+//    } else {
+//        
+//        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//        
+//        if (IS_IOS8 || IS_IOS9)  {
+//            [self.plusActionSheet showInView:app.splitViewController.view];
+//        } else {
+//            [self.plusActionSheet showInView:app.detailViewController.view];
+//        }
+//    }
 }
 
 
@@ -2367,27 +2404,7 @@
 
 #pragma mark - UIActionSheetDelegate
 
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
-    
-    //Upload, create folder, cancel options (+ menu)
-    if (actionSheet.tag==100) {
-        switch (buttonIndex) {
-            case 0:
-                [self addPhotoOrVideo]; 
-                break;
-            case 1:
-                [self showCreateFolder];
-                break;
-            case 2:
-                [self showCreateTextFile];
-                break;
-            case 3:
-                [self showSortingOptions];
-                break;
-            default:
-                break;
-        }
-    }
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     
     //Long press menu    
     if (actionSheet.tag==200) {
@@ -2687,14 +2704,13 @@
         self.mDeleteFile.delegate = self;
         self.mDeleteFile.currentLocalFolder = _currentLocalFolder;
         
-        if(IS_IPHONE) {
-            self.mDeleteFile.viewToShow = self.view;
-        } else {
-            self.mDeleteFile.viewToShow = app.detailViewController.view;
-        }
-        
-        [self.mDeleteFile askToDeleteFileByFileDto:_selectedFileDto];
-        
+//        if(IS_IPHONE) {
+//            self.mDeleteFile.viewToShow = self.view;
+//        } else {
+//            self.mDeleteFile.viewToShow = app.detailViewController.view;
+//        }
+
+        [self presentActionController:[self.mDeleteFile askToDeleteFileByFileDto:_selectedFileDto]];
     }
 }
 
@@ -3694,35 +3710,19 @@
     NSString *path = [self.selectedFileDto.filePath stringByRemovingPercentEncoding];
     
     RMAction *deleteAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"delete_label", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
+        [self.rmActionController dismissViewControllerAnimated:true completion:nil];
         [self didSelectDeleteOption];
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Delete finished successfully");
+
     }];
     
     RMAction *shareAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"share_link_long_press", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
         [self didSelectShareLinkOption];
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        NSLog(@"Share action finished successfully");
     }];
     
     RMAction *cancelAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel", nil) style:RMActionStyleCancel andHandler:^(RMActionController<UIView *> *controller) {
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Cancel action finished successfully");
     }];
     
     RMAction *okAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"ok", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        NSLog(@"OK acion finished successfully");
     }];
     
     RMAction *notAvailableOfflineAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"not_available_offline", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
@@ -3738,21 +3738,10 @@
                 [self didSelectFavoriteOption];
             }
         }
-        
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"notAvailableOffline action finished successfully");
     }];
     
     RMAction *cancelFolderDownloadAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel_download", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
         [self didSelectCancelDownloadFolder];
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Cancel folder download action finished successfully");
     }];
     
     RMAction *cancelFileDownloadAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel_download", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
@@ -3763,38 +3752,18 @@
         } else {
             [self didSelectCancelDownloadFileOption];
         }
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Action cancel finished successfully");
     }];
     
     RMAction *renameAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"rename_long_press", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
         [self didSelectRenameOption];
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Rename action finished successfully");
     }];
     
     RMAction *moveAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"move_long_press", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
         [self didSelectMoveOption];
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Move action finished successfully");
     }];
     
     RMAction *downloadFolderAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"download_folder", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
         [self performSelectorInBackground:@selector(didSelectDownloadFolder) withObject:nil];
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Download folder action finished successfully");
     }];
     
     RMAction *availableOfflineAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"available_offline", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
@@ -3810,12 +3779,6 @@
                 [self didSelectFavoriteOption];
             }
         }
-        
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Action cancel finished successfully");
     }];
     
     RMAction *downloadFileAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"download_file", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
@@ -3826,11 +3789,6 @@
         } else {
             [self didSelectDownloadFileOption];
         }
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Action cancel finished successfully");
     }];
     
     RMAction *openWithAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"open_with_label", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
@@ -3842,11 +3800,6 @@
                                 waitUntilDone:YES];
         
         }
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Action cancel finished successfully");
     }];
     
     RMActionControllerStyle style = RMActionControllerStyleWhite;
@@ -3956,19 +3909,24 @@
     //(Of course only if we are running on iOS 8 or later)
     if([actionController respondsToSelector:@selector(popoverPresentationController)] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
         //First we set the modal presentation style to the popover style
-        actionController.modalPresentationStyle = UIModalPresentationCustom;
+        actionController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         
         //Then we tell the popover presentation controller, where the popover should appear
         actionController.popoverPresentationController.sourceView = self.tableView;
         actionController.popoverPresentationController.sourceRect = [self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     }
-
-    actionController.hidesBottomBarWhenPushed = YES;
-    self.tabBarController.tabBar.hidden = YES;
+//
+//    actionController.hidesBottomBarWhenPushed = YES;
+//    self.tabBarController.tabBar.hidden = YES;
     
     //Now just present the date selection controller using the standard iOS presentation method
-    [self presentViewController:actionController animated:YES completion:nil];
+    if(IS_IPHONE) {
+        [self.tabBarController presentViewController:actionController animated:YES completion:nil];
+    } else {
+        [self.splitViewController presentViewController:actionController animated:YES completion:nil];
+    }
 }
+
 -(BOOL)userHasShareCapabilities {
     return !((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled));
 }
