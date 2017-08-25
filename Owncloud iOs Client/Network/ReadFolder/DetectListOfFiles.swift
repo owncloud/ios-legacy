@@ -19,15 +19,16 @@ import Foundation
 
 @objc class DetectListOfFiles: NSObject {
     
-    func readFolderRequest(url: URL, credentials: OCCredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) -> Void ) {
+    func readFolderRetryingNumberOfTimes(ntimes:NSInteger, url: NSURL, credentials: OCCredentialsDto,
+                           success: ( @escaping (_ listOfFiles: [Any]?) -> Void ),
+                            failure: (@escaping (_ errorHttp: NSInteger?,_ error: NSError?) -> Void) ) {
         
         AppDelegate.sharedOCCommunication().setCredentials(credentials)
-        
         AppDelegate.sharedOCCommunication().setValueOfUserAgent(UtilsUrls.getUserAgent())
         
         AppDelegate.sharedOCCommunication().readFolder(url.absoluteString, withUserSessionToken: credentials.accessToken, on: AppDelegate.sharedOCCommunication(),
             
-           successRequest: { (response: HTTPURLResponse?, items: [Any]?, redirectedServer: String?, token: String?) in
+           successRequest: { (response: HTTPURLResponse?, items: [Any]?, redirectedServer: String?, token: String? ) in
             
             if (response != nil) {
                 print("Operation success response code:\(String(describing: response?.statusCode))")
@@ -40,26 +41,39 @@ import Foundation
                 if isSamlCredentialsError {
     
                     //Fail as credentials error
-                    completion(Int(kOCErrorServerUnauthorized), UtilsFramework.getErrorWithCode(Int(kOCErrorServerUnauthorized), andCustomMessageFromTheServer: ""), nil)
+                    failure(Int(kOCErrorServerUnauthorized),
+                            UtilsFramework.getErrorWithCode(Int(kOCErrorServerUnauthorized), andCustomMessageFromTheServer: "")! as NSError)
                     return;
                 }
             }
             //TODO: chec redirectedserver in status
-            completion(0, nil , items)
+            if (items?.isEmpty)! {
+                let statusCode: NSInteger = (response?.statusCode == nil) ? 0: (response?.statusCode)!
+               failure(statusCode, UtilsFramework.getErrorWithCode(Int(kOCErrorServerUnauthorized), andCustomMessageFromTheServer: "")! as NSError)
+            } else {
+                success(items)
+            }
             
         }, failureRequest: { (response:HTTPURLResponse?, error: Error?, token: String?, redirectedServer: String?) in
             
-            let statusCode: NSInteger = (response?.statusCode == nil) ? 0: (response?.statusCode)!
+            if (ntimes <= 0) {
+                let statusCode: NSInteger = (response?.statusCode == nil) ? 0: (response?.statusCode)!
+                
+                failure(statusCode, error! as NSError)
+
+            } else {
+                
+                self.readFolderRetryingNumberOfTimes(ntimes: ntimes - 1, url: url, credentials: credentials, success: success, failure: failure)
+            }
             
-            completion(statusCode, error, nil)
-        })
+       })
     }
     
     
-    func getListOfFiles(url:URL, credentials: OCCredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) -> Void) {
+
+ func getListOfFiles(url:NSURL, credentials: OCCredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: NSError?, _ listOfFileDtos: [FileDto]? ) -> Void) {
         
-        self.readFolderRequest(url: url, credentials: credentials) { (_ errorHttp: NSInteger?,_ error: Error?,_ listOfFiles: [Any]?) in
-            
+        self.readFolderRetryingNumberOfTimes(ntimes: 2, url: url, credentials: credentials, success: { (_ listOfFiles: [Any]?) in
             var listOfFileDtos: [FileDto]? = nil
             
             if (listOfFiles != nil && !((listOfFiles?.isEmpty)!)) {
@@ -69,11 +83,17 @@ import Foundation
                 //Pass the listOfFiles with OCFileDto to FileDto Array
                 listOfFileDtos = UtilsDtos.pass(toFileDtoArrayThisOCFileDtoArray: listOfFiles) as? [FileDto]
                 
-                completion(errorHttp, error, listOfFileDtos)
-            } else {
-                 completion(errorHttp, error, nil)
+                completion(nil, nil, listOfFileDtos)
             }
+            
+        }) { (_ errorHttp: NSInteger?,_ error: NSError?) in
+            
+            completion(errorHttp, error, nil)
         }
+
     }
     
+    func aaa(){
+    
+    }
 }
