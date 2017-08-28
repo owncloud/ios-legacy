@@ -201,6 +201,8 @@
     self.tableView.delaysContentTouches = YES;
     self.tableView.canCancelContentTouches = NO;
     [_tableView addSubview:_refreshControl];
+    
+    self.definesPresentationContext = YES;
 
 }
 
@@ -1054,10 +1056,12 @@
     
     if (self.albumController) {
         self.albumController = nil;
+        [self.albumController removeFromParentViewController];
     }
     
     if (self.elcPicker) {
         self.elcPicker = nil;
+        [self.elcPicker removeFromParentViewController];
     }
     
     self.albumController = [[ELCAlbumPickerController alloc] initWithNibName: nil bundle: nil];
@@ -1106,43 +1110,28 @@
     }
     
     RMAction *cancelAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel", nil) style:RMActionStyleCancel andHandler:^(RMActionController<UIView *> *controller) {
-        [UIView animateWithDuration:0.5f animations:^{
             self.tabBarController.tabBar.hidden = NO;
-        }];
+
         
         NSLog(@"Action cancel finished successfully");
     }];
     RMAction *uploadAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"menu_upload", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
-        [self addPhotoOrVideo];
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Action cancel finished successfully");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self addPhotoOrVideo];
+        });
     }];
     RMAction *createFolderAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"menu_folder", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
         [self showCreateFolder];
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Action cancel finished successfully");
+
     }];
     RMAction *newTextFileAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"menu_text_file", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
-        [self showCreateTextFile];
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Action cancel finished successfully");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showCreateTextFile];
+        });
     }];
     RMAction *sortAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"sort_menu_title", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
         [self showSortingOptions];
-        [UIView animateWithDuration:0.5f animations:^{
-            self.tabBarController.tabBar.hidden = NO;
-        }];
-        
-        NSLog(@"Action cancel finished successfully");
+
     }];
 
      self.plusActionSheet = [RMOCViewController actionControllerWithStyle:RMActionControllerStyleWhite];
@@ -2402,129 +2391,129 @@
 }
 
 
-#pragma mark - UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    
-    //Long press menu    
-    if (actionSheet.tag==200) {
-        if(_selectedFileDto.isDirectory) {
-            switch (buttonIndex) {
-                case 0:
-                    [self didSelectRenameOption];
-                    break;
-                case 1:
-                    [self didSelectMoveOption];
-                    break;
-                case 2:
-                    [self performSelectorInBackground:@selector(didSelectDownloadFolder) withObject:nil];
-                    break;
-                case 3:
-                    
-                    if (self.isCurrentFolderSonOfFavoriteFolder) {
-                        [self performSelectorOnMainThread:@selector(showAlertView:)
-                                               withObject:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)
-                                            waitUntilDone:YES];
-                    } else {
-                        if (self.selectedFileDto.isFavorite) {
-                            [self didSelectCancelFavoriteFolder];
-                        } else {
-                            [self didSelectFavoriteFolder];
-                        }
-                    }
-                    
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            switch (buttonIndex) {
-                case 0:
-                    
-                    if (_selectedFileDto.isDownload || [[CheckAccessToServer sharedManager] isNetworkIsReachable]){
-                        [self didSelectOpenWithOptionAndFile:_selectedFileDto];
-                    } else {
-                        [self performSelectorOnMainThread:@selector(showAlertView:)
-                                               withObject:NSLocalizedString(@"not_possible_connect_to_server", nil)
-                                            waitUntilDone:YES];
-                    }
-                    break;
-                case 1:
-                    [self didSelectRenameOption];
-                    break;
-                case 2:
-                    [self didSelectMoveOption];
-                    break;
-                case 3:
-                    if (self.isCurrentFolderSonOfFavoriteFolder) {
-                        [self performSelectorOnMainThread:@selector(showAlertView:)
-                                               withObject:NSLocalizedString(@"parent_folder_is_available_offline_file_child", nil)
-                                            waitUntilDone:YES];
-                    } else {
-                        [self didSelectFavoriteOption];
-                    }
-                    break;
-                case 4:
-                    if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
-                        self.selectedFileDto.isDownload == downloaded) {
-                        DLog(@"Cancel");
-                    } else {
-                        if (self.selectedFileDto.isDownload == downloading ||
-                            self.selectedFileDto.isDownload == updating) {
-                            [self didSelectCancelDownloadFileOption];
-                        } else {
-                            [self didSelectDownloadFileOption];
-                        }
-                    }
-                default:
-                    break;
-            }
-        }
-    }
-    
-    if (actionSheet.tag==210) {
-        switch (buttonIndex) {
-            case 0:
-                [self didSelectCancelDownloadFolder];
-                break;
-            default:
-                break;
-        }
-    }
-    
-    if (actionSheet.tag==220) {
-        switch (buttonIndex) {
-            case 0:
-                [self didSelectCancelFavoriteFolder];
-                break;
-            default:
-                break;
-        }
-    }
-    
-    //Sorting options
-    if (actionSheet.tag==300) {
-        enumSortingType storedSorting = APP_DELEGATE.activeUser.sortingType;
-        switch (buttonIndex) {
-            case 0:
-                if(storedSorting != sortByName){
-                    [self updateActiveUserSortingChoiceTo:sortByName];
-                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
-                    [self reloadTableFileList];
-                }
-                break;
-            case 1:
-                if(storedSorting != sortByModificationDate){
-                    [self updateActiveUserSortingChoiceTo:sortByModificationDate];
-                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
-                    [self reloadTableFileList];
-                }
-                break;
-            default:
-                break;
-        }
-    }
-}
+//#pragma mark - UIActionSheetDelegate
+//
+//- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+//    
+//    //Long press menu    
+//    if (actionSheet.tag==200) {
+//        if(_selectedFileDto.isDirectory) {
+//            switch (buttonIndex) {
+//                case 0:
+//                    [self didSelectRenameOption];
+//                    break;
+//                case 1:
+//                    [self didSelectMoveOption];
+//                    break;
+//                case 2:
+//                    [self performSelectorInBackground:@selector(didSelectDownloadFolder) withObject:nil];
+//                    break;
+//                case 3:
+//                    
+//                    if (self.isCurrentFolderSonOfFavoriteFolder) {
+//                        [self performSelectorOnMainThread:@selector(showAlertView:)
+//                                               withObject:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)
+//                                            waitUntilDone:YES];
+//                    } else {
+//                        if (self.selectedFileDto.isFavorite) {
+//                            [self didSelectCancelFavoriteFolder];
+//                        } else {
+//                            [self didSelectFavoriteFolder];
+//                        }
+//                    }
+//                    
+//                    break;
+//                default:
+//                    break;
+//            }
+//        } else {
+//            switch (buttonIndex) {
+//                case 0:
+//                    
+//                    if (_selectedFileDto.isDownload || [[CheckAccessToServer sharedManager] isNetworkIsReachable]){
+//                        [self didSelectOpenWithOptionAndFile:_selectedFileDto];
+//                    } else {
+//                        [self performSelectorOnMainThread:@selector(showAlertView:)
+//                                               withObject:NSLocalizedString(@"not_possible_connect_to_server", nil)
+//                                            waitUntilDone:YES];
+//                    }
+//                    break;
+//                case 1:
+//                    [self didSelectRenameOption];
+//                    break;
+//                case 2:
+//                    [self didSelectMoveOption];
+//                    break;
+//                case 3:
+//                    if (self.isCurrentFolderSonOfFavoriteFolder) {
+//                        [self performSelectorOnMainThread:@selector(showAlertView:)
+//                                               withObject:NSLocalizedString(@"parent_folder_is_available_offline_file_child", nil)
+//                                            waitUntilDone:YES];
+//                    } else {
+//                        [self didSelectFavoriteOption];
+//                    }
+//                    break;
+//                case 4:
+//                    if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
+//                        self.selectedFileDto.isDownload == downloaded) {
+//                        DLog(@"Cancel");
+//                    } else {
+//                        if (self.selectedFileDto.isDownload == downloading ||
+//                            self.selectedFileDto.isDownload == updating) {
+//                            [self didSelectCancelDownloadFileOption];
+//                        } else {
+//                            [self didSelectDownloadFileOption];
+//                        }
+//                    }
+//                default:
+//                    break;
+//            }
+//        }
+//    }
+//    
+//    if (actionSheet.tag==210) {
+//        switch (buttonIndex) {
+//            case 0:
+//                [self didSelectCancelDownloadFolder];
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+//    
+//    if (actionSheet.tag==220) {
+//        switch (buttonIndex) {
+//            case 0:
+//                [self didSelectCancelFavoriteFolder];
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+//    
+//    //Sorting options
+//    if (actionSheet.tag==300) {
+//        enumSortingType storedSorting = APP_DELEGATE.activeUser.sortingType;
+//        switch (buttonIndex) {
+//            case 0:
+//                if(storedSorting != sortByName){
+//                    [self updateActiveUserSortingChoiceTo:sortByName];
+//                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+//                    [self reloadTableFileList];
+//                }
+//                break;
+//            case 1:
+//                if(storedSorting != sortByModificationDate){
+//                    [self updateActiveUserSortingChoiceTo:sortByModificationDate];
+//                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+//                    [self reloadTableFileList];
+//                }
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+//}
 
 #pragma mark - File/Folder
 

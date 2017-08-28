@@ -297,7 +297,8 @@
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topContainer]-(10)-|" options:0 metrics:nil views:bindingsDict]];
     } else {
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-(10)-[bottomContainer]-(10)-|" options:0 metrics:nil views:bindingsDict]];
-        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topContainer]-(10)-[bottomContainer]-(10)-|" options:0 metrics:nil views:bindingsDict]];
+        
+            [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topContainer]-(10)-[bottomContainer]-(10)-|" options:0 metrics:nil views:bindingsDict]];
     }
     
     //Top container content constraints
