@@ -17,11 +17,12 @@
 
 @interface CustomCellFileAndDirectory : SWTableViewCell
 
-@property(nonatomic, strong) IBOutlet UIImageView *fileImageView;
-@property(nonatomic, strong) IBOutlet UIImageView *imageFileStatus;
-@property(nonatomic, strong) IBOutlet UILabel *labelTitle;
-@property(nonatomic, strong) IBOutlet UILabel *labelInfoFile;
-@property(nonatomic, strong) IBOutlet UIButton *sharedInfoButton;
+@property(weak, nonatomic) IBOutlet UIImageView *fileImageView;
+@property(weak, nonatomic) IBOutlet UIImageView *imageFileStatus;
+@property(weak, nonatomic) IBOutlet UILabel *labelTitle;
+@property(weak, nonatomic) IBOutlet UILabel *labelInfoFile;
+@property(weak, nonatomic) IBOutlet UIButton *sharedInfoButton;
+@property (weak, nonatomic) IBOutlet UIButton *sharedWithMeButton;
 @property (weak, nonatomic) IBOutlet UILabel *sharedInfoLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *sharedInfoImageView;
 

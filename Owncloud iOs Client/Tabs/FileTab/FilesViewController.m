@@ -1399,12 +1399,9 @@
         if (fileCell == nil) {
             NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"CustomCellFileAndDirectory" owner:self options:nil];
             fileCell = (CustomCellFileAndDirectory *)[topLevelObjects objectAtIndex:0];
-            [fileCell.sharedInfoButton addTarget:self action:@selector(sharedInfobuttonPressed) forControlEvents:UIControlEventTouchUpInside];
-            UIButton *accessoryButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
-            UIImage *accImage = [UIImage imageNamed:@"down-arrow-circle-button-fine.png"];
-            [accessoryButton setImage:accImage forState: UIControlStateNormal];
-            [accessoryButton addTarget:self action:@selector(optionsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-            [fileCell setAccessoryView:accessoryButton];
+            [fileCell.sharedInfoButton addTarget:self action:@selector(sharedInfobuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            [fileCell.sharedWithMeButton addTarget:self action:@selector(sharedInfobuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            [self changeAccessoryButtonStyle:NO forCell:fileCell];
         }
         
         if (!IS_IPHONE) {
@@ -3667,10 +3664,39 @@
     }
 }
 
--(void) sharedInfobuttonPressed {
-    [_tableView setAllowsSelection: NO];
-    _tableView.allowsSelection = NO;
-    DLog(@"Shared info button pressed");
+-(void) sharedInfobuttonPressed:(id)sender {
+    
+    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+    _selectedIndexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
+    _selectedFileDto = (FileDto *)[[_sortedArray objectAtIndex:_selectedIndexPath.section]objectAtIndex:_selectedIndexPath.row];
+    CustomCellFileAndDirectory *cell = [self.tableView cellForRowAtIndexPath:_selectedIndexPath];
+    
+//    switch (_selectedFileDto.mandanga) {
+//        case "iconoShare":
+//            //TODO
+//            break;
+//        case "icono":
+//            //TODO
+//            break;
+//        case "iconoShare":
+//            //TODO
+//            break;
+//        default:
+//            break;
+//    }
+//
+    
+    [UIView animateWithDuration:0.5f delay:1.f options:UIViewAnimationOptionTransitionCurlDown animations:^{
+        [cell.sharedInfoImageView setAlpha:1.0f];
+        [cell.sharedInfoLabel setAlpha:1.0f];
+
+    } completion:nil];
+    
+    [UIView animateWithDuration:0.5f delay:4.f options:UIViewAnimationOptionTransitionCurlDown animations:^{
+    [cell.sharedInfoImageView setAlpha:0.0f];
+    [cell.sharedInfoLabel setAlpha:0.0f];
+    } completion:nil];
+    
 }
 
 - (void) touchUpCellButtons {
@@ -3682,6 +3708,9 @@
     CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
     _selectedIndexPath     = [self.tableView indexPathForRowAtPoint:buttonPosition];
     _selectedFileDto = (FileDto *)[[_sortedArray objectAtIndex:_selectedIndexPath.section]objectAtIndex:_selectedIndexPath.row];
+    CustomCellFileAndDirectory *cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
+    
+    [self changeAccessoryButtonStyle:YES forCell:cell];
 
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
@@ -3701,20 +3730,26 @@
     RMAction *deleteAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"delete_label", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
         [self.rmActionController dismissViewControllerAnimated:true completion:nil];
         [self didSelectDeleteOption];
-
+        [self changeAccessoryButtonStyle:NO forCell:cell];
     }];
     
     RMAction *shareAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"share_link_long_press", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
-        [self didSelectShareLinkOption];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self didSelectShareLinkOption];
+        });
+        [self changeAccessoryButtonStyle:NO forCell:cell];
     }];
     
     RMAction *cancelAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel", nil) style:RMActionStyleCancel andHandler:^(RMActionController<UIView *> *controller) {
+        [self changeAccessoryButtonStyle:NO forCell:cell];
     }];
     
     RMAction *okAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"ok", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self changeAccessoryButtonStyle:NO forCell:cell];
     }];
     
     RMAction *notAvailableOfflineAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"not_available_offline", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self changeAccessoryButtonStyle:NO forCell:cell];
         
         if (self.isCurrentFolderSonOfFavoriteFolder) {
             [self performSelectorOnMainThread:@selector(showAlertView:)
@@ -3730,10 +3765,12 @@
     }];
     
     RMAction *cancelFolderDownloadAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel_download", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
+        [self changeAccessoryButtonStyle:NO forCell:cell];
         [self didSelectCancelDownloadFolder];
     }];
     
     RMAction *cancelFileDownloadAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel_download", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
+        [self changeAccessoryButtonStyle:NO forCell:cell];
         
         if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
             self.selectedFileDto.isDownload == downloaded) {
@@ -3744,19 +3781,25 @@
     }];
     
     RMAction *renameAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"rename_long_press", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self changeAccessoryButtonStyle:NO forCell:cell];
         [self didSelectRenameOption];
     }];
     
     RMAction *moveAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"move_long_press", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
-        [self didSelectMoveOption];
+        [self changeAccessoryButtonStyle:NO forCell:cell];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self didSelectShareLinkOption];
+        });
     }];
     
     RMAction *downloadFolderAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"download_folder", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self changeAccessoryButtonStyle:NO forCell:cell];
         [self performSelectorInBackground:@selector(didSelectDownloadFolder) withObject:nil];
     }];
     
     RMAction *availableOfflineAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"available_offline", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
-        
+        [self changeAccessoryButtonStyle:NO forCell:cell];
         if (self.isCurrentFolderSonOfFavoriteFolder) {
             [self performSelectorOnMainThread:@selector(showAlertView:)
                                    withObject:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)
@@ -3771,7 +3814,7 @@
     }];
     
     RMAction *downloadFileAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"download_file", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
-        
+        [self changeAccessoryButtonStyle:NO forCell:cell];
         if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
             self.selectedFileDto.isDownload == downloaded) {
             DLog(@"Cancel");
@@ -3781,6 +3824,7 @@
     }];
     
     RMAction *openWithAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"open_with_label", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+        [self changeAccessoryButtonStyle:NO forCell:cell];
         if (_selectedFileDto.isDownload || [[CheckAccessToServer sharedManager] isNetworkIsReachable]){
             [self didSelectOpenWithOptionAndFile:_selectedFileDto];
         } else {
@@ -3884,7 +3928,6 @@
         [_rmActionController addAction:shareAction];
     }
     
-    CustomCellFileAndDirectory *cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
     [_rmActionController.fileIconImageView setImage:cell.fileImageView.image];
     [_rmActionController.fileNameLabel setText:title];
     [_rmActionController.filePathLabel setText:path];
@@ -3920,4 +3963,18 @@
     return !((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled));
 }
 
+-(void)changeAccessoryButtonStyle:(BOOL)pressed forCell:(CustomCellFileAndDirectory *)cell  {
+
+    UIButton *accessoryButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+    [accessoryButton addTarget:self action:@selector(optionsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    UIImage *accImage = [UIImage alloc];
+    if (pressed) {
+        accImage = [UIImage imageNamed:@"down-arrow-circle-button-fine-selected"];
+    }else {
+        accImage = [UIImage imageNamed:@"down-arrow-circle-button-fine.png"];
+    }
+    [accessoryButton setImage:accImage forState: UIControlStateNormal];
+    [cell setAccessoryView:accessoryButton];
+
+}
 @end
