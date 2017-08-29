@@ -3789,7 +3789,7 @@
         [self changeAccessoryButtonStyle:NO forCell:cell];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self didSelectShareLinkOption];
+            [self didSelectMoveOption];
         });
     }];
     
@@ -3819,7 +3819,9 @@
             self.selectedFileDto.isDownload == downloaded) {
             DLog(@"Cancel");
         } else {
-            [self didSelectDownloadFileOption];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self didSelectDownloadFileOption];
+            });
         }
     }];
     

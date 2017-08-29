@@ -225,8 +225,6 @@
         
         if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
             fileCell.imageFileStatus.image=[UIImage imageNamed:@"file_available_offline_icon"];
-        } else {
-            fileCell.imageFileStatus.image= nil;
         }
         
     }
