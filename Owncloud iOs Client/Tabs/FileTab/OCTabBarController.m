@@ -37,6 +37,7 @@
             [self.tabBar setBarTintColor:[UIColor colorOfTintUITabBar]];
             [self.tabBar setBackgroundImage:[ImageUtils imageWithColor:[UIColor colorOfBackgroundNavBarImage]]];
             [self.tabBar setTintColor:[UIColor colorOfTintSelectedUITabBar]];
+            [self.tabBar setTranslucent:NO];
             
             [self manageBackgroundView:NO];
 

@@ -190,7 +190,11 @@
         if (isFolderPendingToBeDownload) {
             fileCell.imageFileStatus.image=[UIImage imageNamed:@"file_synchronizing_icon"];
         } else {
-            fileCell.imageFileStatus.image= nil;
+            if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
+                fileCell.imageFileStatus.image=[UIImage imageNamed:@"file_available_offline_icon"];
+            } else {
+                fileCell.imageFileStatus.image= nil;
+            }
         }
 #else
         fileCell.imageFileStatus.image= nil;
@@ -204,11 +208,7 @@
         fileCell.fileImageView.image = [self getIconOfFile:fileForSetTheStatusIcon andUser:user];
         
 
-        if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
-            fileCell.imageFileStatus.image=[UIImage imageNamed:@"file_available_offline_icon"];
-        } else {
-            fileCell.imageFileStatus.image= nil;
-        }
+
         
         if(fileForSetTheStatusIcon.isNecessaryUpdate || fileForSetTheStatusIcon.isDownload == updating) {
             //File is in updating
@@ -219,6 +219,12 @@
         } else if (fileForSetTheStatusIcon.isDownload == overwriting || fileForSetTheStatusIcon.isDownload == downloading || (fileForSetTheStatusIcon.isDownload == notDownload && (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder))) {
             //File is overwritten, downloading or pending to download in available offline folder
             fileCell.imageFileStatus.image=[UIImage imageNamed:@"file_synchronizing_icon"];
+        } else {
+            fileCell.imageFileStatus.image= nil;
+        }
+        
+        if (fileForSetTheStatusIcon.isFavorite || isCurrentFolderSonOfFavoriteFolder) {
+            fileCell.imageFileStatus.image=[UIImage imageNamed:@"file_available_offline_icon"];
         } else {
             fileCell.imageFileStatus.image= nil;
         }

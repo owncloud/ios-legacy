@@ -74,12 +74,16 @@
     
     self.navigationBar.barTintColor = [UIColor colorOfNavigationBar];
     
+    [self.navigationBar setBarStyle:UIBarStyleBlackOpaque];
+    
     [self.navigationBar setBackgroundImage:[ImageUtils imageWithColor:[UIColor colorOfBackgroundNavBarImage]] forBarMetrics:UIBarMetricsDefault];
     
     //Add background view in nav bar
     [self manageBackgroundView:NO];
     
     [self.navigationBar setTintColor:[UIColor colorOfNavigationItems]];
+    
+    [self.navigationBar setTranslucent:NO];
     
     [self.navigationBar setTitleTextAttributes:[UtilsBrandedOptions titleAttributesToNavigationBar]];
     
