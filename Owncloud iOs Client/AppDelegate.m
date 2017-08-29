@@ -511,7 +511,7 @@ float shortDelay = 0.3;
         recentsNavigationController.tabBarItem.title = NSLocalizedString(@"uploads_tab", nil);
         sharedNavigationController.tabBarItem.title = NSLocalizedString(@"shared_tab", nil);
         settingsNavigationController.tabBarItem.title = NSLocalizedString(@"settings", nil);
-        
+
         
         //Create custom tab bar controllers
         _ocTabBarController = [OCTabBarController new];

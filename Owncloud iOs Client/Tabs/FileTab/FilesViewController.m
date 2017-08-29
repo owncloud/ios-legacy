@@ -3725,7 +3725,7 @@
     }
     
     NSString *title = [self.selectedFileDto.fileName stringByRemovingPercentEncoding];
-    NSString *path = [self.selectedFileDto.filePath stringByRemovingPercentEncoding];
+    NSString *path = [[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:APP_DELEGATE.activeUser] stringByRemovingPercentEncoding];
     
     RMAction *deleteAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"delete_label", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
         [self.rmActionController dismissViewControllerAnimated:true completion:nil];
