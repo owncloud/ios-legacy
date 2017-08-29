@@ -1941,10 +1941,10 @@ float shortDelay = 0.3;
 
 - (void) errorLogin {
 
-    [self performSelector:@selector(delayLoadEditAccountAfterErroLogin) withObject:nil afterDelay:0.1];
+    [self performSelector:@selector(delayLoadEditAccountAfterErrorLogin) withObject:nil afterDelay:0.1];
 }
 
--(void) delayLoadEditAccountAfterErroLogin {
+-(void) delayLoadEditAccountAfterErrorLogin {
     
     [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:self.activeUser]];
 
