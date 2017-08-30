@@ -634,6 +634,7 @@
 		59F470321C5F97BA005B6091 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 59F470311C5F97BA005B6091 /* Launch Screen.storyboard */; };
 		7F9B91BD1F1F472700B77260 /* ServerURLNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B91BC1F1F472700B77260 /* ServerURLNormalizer.swift */; };
 		7F9B91C81F1F817700B77260 /* GetPublicInfoFromServerJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B91C71F1F817700B77260 /* GetPublicInfoFromServerJob.swift */; };
+		7FE5D00D1F558D1D00A9760F /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FE5D00C1F558D1D00A9760F /* SSLCertificateManager.m */; };
 		905B3D3B1C8867AA00BCC93B /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		905C594F1C50DA490051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
 		905C59501C50DA680051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
@@ -1724,6 +1725,8 @@
 		59F470311C5F97BA005B6091 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		7F9B91BC1F1F472700B77260 /* ServerURLNormalizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerURLNormalizer.swift; sourceTree = "<group>"; };
 		7F9B91C71F1F817700B77260 /* GetPublicInfoFromServerJob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetPublicInfoFromServerJob.swift; sourceTree = "<group>"; };
+		7FE5D00A1F558CE600A9760F /* SSLCertificateManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SSLCertificateManager.h; path = Utils/SSL/SSLCertificateManager.h; sourceTree = "<group>"; };
+		7FE5D00C1F558D1D00A9760F /* SSLCertificateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSLCertificateManager.m; path = Utils/SSL/SSLCertificateManager.m; sourceTree = "<group>"; };
 		905B3D3A1C8867AA00BCC93B /* SortManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SortManager.m; path = Tabs/FileTab/Sort/SortManager.m; sourceTree = "<group>"; };
 		905B3D3E1C88681000BCC93B /* SortManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SortManager.h; path = Tabs/FileTab/Sort/SortManager.h; sourceTree = "<group>"; };
 		906177E11C4FABF600BBE648 /* ManageTouchID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageTouchID.m; sourceTree = "<group>"; };
@@ -3256,6 +3259,8 @@
 			children = (
 				59A0DADA1941A7A60088FECD /* CheckAccessToServer.h */,
 				59A0DAD91941A7A60088FECD /* CheckAccessToServer.m */,
+				7FE5D00A1F558CE600A9760F /* SSLCertificateManager.h */,
+				7FE5D00C1F558D1D00A9760F /* SSLCertificateManager.m */,
 			);
 			name = SSL;
 			sourceTree = "<group>";
@@ -4883,6 +4888,7 @@
 				59D774CE1910EE0F004322BA /* UtilsTableView.m in Sources */,
 				148DD6EA17786A1400FB9977 /* WebViewController.m in Sources */,
 				EA4071031C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */,
+				7FE5D00D1F558D1D00A9760F /* SSLCertificateManager.m in Sources */,
 				EABF69151891379C00A2217C /* SWCellScrollView.m in Sources */,
 				EABF69141891379C00A2217C /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */,
