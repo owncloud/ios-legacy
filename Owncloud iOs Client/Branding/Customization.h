@@ -86,7 +86,7 @@
 #define k_is_customize_uitabbar YES
 
 //Customize Unselected UITabBarItems (The images of tabBar should be the unseleted tabs)
-#define k_is_customize_unselectedUITabBarItems NO
+#define k_is_customize_unselectedUITabBarItems YES
 
 //Set Image on Preview Bottom toolBar on iPhone
 #define k_set_image_on_preview_bottom_toolBar_on_iPhone NO

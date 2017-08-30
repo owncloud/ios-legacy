@@ -60,6 +60,7 @@
 #import "OCKeychain.h"
 #import "UtilsCookies.h"
 #import "PresentedViewUtils.h"
+#import "UIImage+Tint.h"
 
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
@@ -479,32 +480,37 @@ float shortDelay = 0.3;
         _settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
         OCNavigationController *settingsNavigationController = [[OCNavigationController alloc]initWithRootViewController:_settingsViewController];
         
-        UIImage *tabBarImageSelected = [UIImage imageNamed:@"TABfiles.png"];
-        UIImage *tabBarRecentSelected = [UIImage imageNamed:@"TABrecents.png"];
-        UIImage *tabBarSharedSelected = [UIImage imageNamed:@"TABShares.png"];
-        UIImage *tabBarSettingSelected = [UIImage imageNamed:@"TABsettings.png"];
+
+        UIImage *tabBarImageSelected = [[[UIImage imageNamed:@"TABfiles-selected.png"] tintedImageWithColor: [UIColor colorOfTintSelectedUITabBar]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *tabBarRecentSelected = [[[UIImage imageNamed:@"TABrecents.png"] tintedImageWithColor:[UIColor colorOfTintSelectedUITabBar]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *tabBarSharedSelected = [[[UIImage imageNamed:@"TABShares.png"] tintedImageWithColor:[UIColor colorOfTintSelectedUITabBar]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *tabBarSettingSelected = [[[UIImage imageNamed:@"TABsettings.png"] tintedImageWithColor:[UIColor colorOfTintSelectedUITabBar]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        
+        UIImage *tabBarImageUnselected = [[[UIImage imageNamed:@"TABfiles.png"] tintedImageWithColor: [UIColor colorOfTintNonSelectedUITabBar]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *tabBarRecentUnselected = [[[UIImage imageNamed:@"TABrecents.png"] tintedImageWithColor:[UIColor colorOfTintNonSelectedUITabBar]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *tabBarSharedUnselected = [[[UIImage imageNamed:@"TABShares.png"] tintedImageWithColor:[UIColor colorOfTintNonSelectedUITabBar]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *tabBarSettingUnselected = [[[UIImage imageNamed:@"TABsettings.png"] tintedImageWithColor:[UIColor colorOfTintNonSelectedUITabBar]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+
+        
         
         //Set the selected and unselected images
-        if (k_is_customize_unselectedUITabBarItems) {
+//        if (k_is_customize_unselectedUITabBarItems) {
             
-            UIImage *tabBarImageUnselected = [tabBarImageSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
             filesNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarImageUnselected selectedImage:tabBarImageSelected];
             
-            UIImage *tabBarRecentUnselected = [tabBarRecentSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
             recentsNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarRecentUnselected selectedImage:tabBarRecentSelected];
             
-            UIImage *tabBarSharedUnselected = [tabBarSharedSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
             sharedNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarSharedUnselected selectedImage:tabBarSharedSelected];
             
-            UIImage *tabBarSettingUnselected = [tabBarSettingSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-            settingsNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarSettingUnselected selectedImage:tabBarSettingSelected];
-            
-        } else {
-            filesNavigationController.tabBarItem.image = tabBarImageSelected;
-            recentsNavigationController.tabBarItem.image = tabBarRecentSelected;
-            sharedNavigationController.tabBarItem.image = tabBarSharedSelected;
-            settingsNavigationController.tabBarItem.image = tabBarSettingSelected;
-        }
+            settingsNavigationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil image:tabBarSettingUnselected selectedImage:tabBarSettingSelected ];
+        
+//        } else {
+//            filesNavigationController.tabBarItem.image = tabBarImageSelected;
+//            recentsNavigationController.tabBarItem.image = tabBarRecentSelected;
+//            sharedNavigationController.tabBarItem.image = tabBarSharedSelected;
+//            settingsNavigationController.tabBarItem.image = tabBarSettingSelected;
+//        }
+        
         
         //Set titles
         filesNavigationController.tabBarItem.title = NSLocalizedString(@"files_tab", nil);

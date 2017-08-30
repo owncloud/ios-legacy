@@ -84,8 +84,7 @@
         CGRect bgFrame = self.tabBar.bounds;
         _backgroundView = [[PassthroughView alloc] initWithFrame:bgFrame];
         _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _backgroundView.backgroundColor = [UIColor colorOfNavigationBar];
-        _backgroundView.alpha = 0.6;
+        _backgroundView.backgroundColor = [UIColor colorOfTintUITabBar];
         [self.tabBar addSubview:_backgroundView];
         [self.tabBar sendSubviewToBack:_backgroundView];
         

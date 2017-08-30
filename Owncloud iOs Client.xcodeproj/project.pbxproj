@@ -298,6 +298,10 @@
 		23CAC1E91F41BC660097EF1A /* fileSharedByLink.png in Resources */ = {isa = PBXBuildFile; fileRef = 23CAC1E81F41BC660097EF1A /* fileSharedByLink.png */; };
 		23CAC1EC1F41BC830097EF1A /* fileSharedWithUs.png in Resources */ = {isa = PBXBuildFile; fileRef = 23CAC1EB1F41BC830097EF1A /* fileSharedWithUs.png */; };
 		23CAC1EE1F41BE0C0097EF1A /* shared-with-user.png in Resources */ = {isa = PBXBuildFile; fileRef = 23CAC1ED1F41BE0C0097EF1A /* shared-with-user.png */; };
+		23DCD8001F56C48F00F2EAA9 /* UIImage+Tint.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DCD7FF1F56C48F00F2EAA9 /* UIImage+Tint.m */; };
+		23DCD8041F56CC5D00F2EAA9 /* TABfiles-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DCD8011F56CC5D00F2EAA9 /* TABfiles-selected.png */; };
+		23DCD8051F56CC5D00F2EAA9 /* TABfiles-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DCD8021F56CC5D00F2EAA9 /* TABfiles-selected@2x.png */; };
+		23DCD8061F56CC5D00F2EAA9 /* TABfiles-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DCD8031F56CC5D00F2EAA9 /* TABfiles-selected@3x.png */; };
 		23DF05B71F4C062A0033F1F0 /* RMCustomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DF05B61F4C062A0033F1F0 /* RMCustomViewController.m */; };
 		23F778C21F418FD900DA3C1C /* SourceSansPro-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 23F778C01F418FD900DA3C1C /* SourceSansPro-Regular.otf */; };
 		23F778C31F418FD900DA3C1C /* SourceSansPro-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 23F778C11F418FD900DA3C1C /* SourceSansPro-Semibold.otf */; };
@@ -1397,6 +1401,11 @@
 		23CAC1E81F41BC660097EF1A /* fileSharedByLink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fileSharedByLink.png; sourceTree = "<group>"; };
 		23CAC1EB1F41BC830097EF1A /* fileSharedWithUs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fileSharedWithUs.png; sourceTree = "<group>"; };
 		23CAC1ED1F41BE0C0097EF1A /* shared-with-user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shared-with-user.png"; sourceTree = "<group>"; };
+		23DCD7FE1F56C48F00F2EAA9 /* UIImage+Tint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Tint.h"; path = "Utils/ImagenScale/UIImage+Tint.h"; sourceTree = "<group>"; };
+		23DCD7FF1F56C48F00F2EAA9 /* UIImage+Tint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Tint.m"; path = "Utils/ImagenScale/UIImage+Tint.m"; sourceTree = "<group>"; };
+		23DCD8011F56CC5D00F2EAA9 /* TABfiles-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TABfiles-selected.png"; sourceTree = "<group>"; };
+		23DCD8021F56CC5D00F2EAA9 /* TABfiles-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TABfiles-selected@2x.png"; sourceTree = "<group>"; };
+		23DCD8031F56CC5D00F2EAA9 /* TABfiles-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TABfiles-selected@3x.png"; sourceTree = "<group>"; };
 		23DF05B51F4C062A0033F1F0 /* RMCustomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMCustomViewController.h; path = Tabs/FileTab/RMCustomViewController.h; sourceTree = "<group>"; };
 		23DF05B61F4C062A0033F1F0 /* RMCustomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMCustomViewController.m; path = Tabs/FileTab/RMCustomViewController.m; sourceTree = "<group>"; };
 		23F778C01F418FD900DA3C1C /* SourceSansPro-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceSansPro-Regular.otf"; sourceTree = "<group>"; };
@@ -2318,6 +2327,8 @@
 				148DD6F517786BDA00FB9977 /* UIImage+RoundedCorner.m */,
 				EA4070FC1C11B82B008B1507 /* UIImage+Thumbnail.h */,
 				EA4070FD1C11B82B008B1507 /* UIImage+Thumbnail.m */,
+				23DCD7FE1F56C48F00F2EAA9 /* UIImage+Tint.h */,
+				23DCD7FF1F56C48F00F2EAA9 /* UIImage+Tint.m */,
 			);
 			name = "Image Scale";
 			sourceTree = "<group>";
@@ -2632,6 +2643,9 @@
 				235F0E321F556314009865FE /* TABfiles.png */,
 				235F0E331F556314009865FE /* TABfiles@2x.png */,
 				235F0E341F556314009865FE /* TABfiles@3x.png */,
+				23DCD8011F56CC5D00F2EAA9 /* TABfiles-selected.png */,
+				23DCD8021F56CC5D00F2EAA9 /* TABfiles-selected@2x.png */,
+				23DCD8031F56CC5D00F2EAA9 /* TABfiles-selected@3x.png */,
 				235F0E3F1F556371009865FE /* TABShares.png */,
 				235F0E401F556371009865FE /* TABShares@2x.png */,
 				235F0E411F556371009865FE /* TABShares@3x.png */,
@@ -4324,6 +4338,7 @@
 				1487F244177C35AA004A1A5A /* CredentialsError.png in Resources */,
 				EA42FA5B180C13710006DB7C /* cancel_download_white@2x.png in Resources */,
 				1487F245177C35AA004A1A5A /* CredentialsError@2x.png in Resources */,
+				23DCD8051F56CC5D00F2EAA9 /* TABfiles-selected@2x.png in Resources */,
 				1487F246177C35AA004A1A5A /* NonRevealPasswordIcon.png in Resources */,
 				23CAC1EE1F41BE0C0097EF1A /* shared-with-user.png in Resources */,
 				40CC7F0D1B4E665400231D73 /* Images.xcassets in Resources */,
@@ -4360,6 +4375,7 @@
 				14A4796218EBF174003500BA /* favoriteTB@2x.png in Resources */,
 				4052B4DA1B4ECD3A000788DA /* btnHelpPage0.png in Resources */,
 				1487F252177C35AA004A1A5A /* genericFile_icon.png in Resources */,
+				23DCD8041F56CC5D00F2EAA9 /* TABfiles-selected.png in Resources */,
 				1487F253177C35AA004A1A5A /* genericFile_icon@2x.png in Resources */,
 				1487F254177C35AA004A1A5A /* imageSelected.png in Resources */,
 				1487F255177C35AA004A1A5A /* imageSelected@2x.png in Resources */,
@@ -4373,6 +4389,7 @@
 				59EDC41C1C611C630050939C /* owncloudLogoFiles@2x.png in Resources */,
 				13A5ADB618883C77000EB617 /* CopyLinkShareiphone@2x.png in Resources */,
 				23A83C861F541790005023D4 /* down-arrow-circle-button-fine-selected.png in Resources */,
+				23DCD8061F56CC5D00F2EAA9 /* TABfiles-selected@3x.png in Resources */,
 				1487F25A177C35AA004A1A5A /* arrow_button.png in Resources */,
 				596C06171CF47285004BCF51 /* Overlay.png in Resources */,
 				40F2F6131C5A180700129F92 /* owncloudLogoFiles.png in Resources */,
@@ -4853,6 +4870,7 @@
 				40C663B01EFA94B1004AF994 /* UniversalLoginViewController.swift in Sources */,
 				40C01ED91F0FA923002DCAAA /* DetectListOfFiles.swift in Sources */,
 				40AB65111EAFA10000379361 /* ShareLinkViewController.m in Sources */,
+				23DCD8001F56C48F00F2EAA9 /* UIImage+Tint.m in Sources */,
 				EAAD688F1C560AF2005F3B28 /* ShareUtils.m in Sources */,
 				14987095187DB14A000D9C49 /* NotificationStatusBarViewController.m in Sources */,
 				148DD6C11778697100FB9977 /* AccountCell.m in Sources */,
