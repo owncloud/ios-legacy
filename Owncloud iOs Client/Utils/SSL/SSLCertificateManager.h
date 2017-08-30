@@ -35,8 +35,6 @@
 
 - (BOOL) isUntrustedServerCertificate:(NSError*) error;
 
-- (void) isAcceptedCertificateIn:(NSURLRequest *) request;
-
 @end
 
 
