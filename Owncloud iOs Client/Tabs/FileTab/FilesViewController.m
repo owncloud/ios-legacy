@@ -1399,8 +1399,8 @@
         if (fileCell == nil) {
             NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"CustomCellFileAndDirectory" owner:self options:nil];
             fileCell = (CustomCellFileAndDirectory *)[topLevelObjects objectAtIndex:0];
-            [fileCell.sharedInfoButton addTarget:self action:@selector(sharedInfobuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-            [fileCell.sharedWithMeButton addTarget:self action:@selector(sharedInfobuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            [fileCell.sharedInfoButton addTarget:self action:@selector(topSharedInfobuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            [fileCell.sharedWithMeButton addTarget:self action:@selector(bottomSharedInfobuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
             [self changeAccessoryButtonStyle:NO forCell:fileCell];
         }
         
@@ -3664,38 +3664,48 @@
     }
 }
 
--(void) sharedInfobuttonPressed:(id)sender {
+
+-(void) topSharedInfobuttonPressed:(id)sender {
     
     CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
-    _selectedIndexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
-    _selectedFileDto = (FileDto *)[[_sortedArray objectAtIndex:_selectedIndexPath.section]objectAtIndex:_selectedIndexPath.row];
-    CustomCellFileAndDirectory *cell = [self.tableView cellForRowAtIndexPath:_selectedIndexPath];
+    CustomCellFileAndDirectory *cell = [self.tableView cellForRowAtIndexPath: [self.tableView indexPathForRowAtPoint:buttonPosition]];
+    UIButton *buttonTapped = (UIButton *) sender;
     
-//    switch (_selectedFileDto.mandanga) {
-//        case "iconoShare":
-//            //TODO
-//            break;
-//        case "icono":
-//            //TODO
-//            break;
-//        case "iconoShare":
-//            //TODO
-//            break;
-//        default:
-//            break;
-//    }
-//
+    switch (buttonTapped.tag) {
+        case 1:
+            [self showShareInfoMessage:cell message:@"The item is shared by link"];
+            break;
+        case 2:
+            [self showShareInfoMessage:cell message:@"The item is shared with users"];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void) bottomSharedInfobuttonPressed:()sender {
+    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+    CustomCellFileAndDirectory *cell = [self.tableView cellForRowAtIndexPath: [self.tableView indexPathForRowAtPoint:buttonPosition]];
+    
+    [self showShareInfoMessage:cell message:@"Das Element wird mit Ihnen für andere Benutzer geteilt"];
+
+}
+
+- (void) showShareInfoMessage:(CustomCellFileAndDirectory *)cell message:(NSString *)message {
+    
+    [cell.sharedInfoLabel setText:message];
     
     [UIView animateWithDuration:0.5f delay:1.f options:UIViewAnimationOptionTransitionCurlDown animations:^{
         [cell.sharedInfoImageView setAlpha:1.0f];
         [cell.sharedInfoLabel setAlpha:1.0f];
-
+        
     } completion:nil];
     
     [UIView animateWithDuration:0.5f delay:4.f options:UIViewAnimationOptionTransitionCurlDown animations:^{
-    [cell.sharedInfoImageView setAlpha:0.0f];
-    [cell.sharedInfoLabel setAlpha:0.0f];
+        [cell.sharedInfoImageView setAlpha:0.0f];
+        [cell.sharedInfoLabel setAlpha:0.0f];
     } completion:nil];
+    
     
 }
 
@@ -3936,6 +3946,7 @@
     [self presentActionController:_rmActionController];
     
     DLog(@"Options button pressed");
+
 }
 
 -(void)presentActionController:(RMActionController *)actionController {

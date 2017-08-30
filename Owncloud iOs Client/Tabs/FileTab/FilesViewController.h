@@ -48,6 +48,7 @@
 #import "ManageFavorites.h"
 #import "RMCustomViewController.h"
 #import "RMOCViewController.h"
+#import "CustomCellFileAndDirectory.h"
 
 #ifdef CONTAINER_APP
 #import "Owncloud_iOs_Client-Swift.h"
@@ -165,6 +166,8 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 - (void)goToSelectedFileOrFolder:(FileDto *) selectedFile andForceDownload:(BOOL) isForceDownload;
 - (void)initFilesView;
 -(void)openOptions:(UIEvent *)sender;
+- (void) showShareInfoMessage:(CustomCellFileAndDirectory *)cell message:(NSString *)message;
+
 
 @end;
 

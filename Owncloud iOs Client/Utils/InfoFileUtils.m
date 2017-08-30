@@ -236,16 +236,17 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [fileCell.sharedInfoButton setHidden:NO];
                 [fileCell.sharedInfoButton setImage:[UIImage imageNamed:@"fileSharedByLink"] forState:UIControlStateNormal];
+                [fileCell.sharedInfoButton setTag:1];
             });
             
         } else if((numberOfSharesByRemote > 0 && sharesByRemote != nil && !isShareAPIActive) || isShareAPIActive){
             dispatch_async(dispatch_get_main_queue(), ^{
                 [fileCell.sharedInfoButton setHidden:NO];
                 [fileCell.sharedInfoButton setImage:[UIImage imageNamed:@"shared-with-user"] forState:UIControlStateNormal];
+                [fileCell.sharedInfoButton setTag:2];
             });
 
-        }
-        else {
+        } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 fileCell.sharedInfoButton.imageView.image= nil;
                 [fileCell.sharedInfoButton setHidden:YES];
