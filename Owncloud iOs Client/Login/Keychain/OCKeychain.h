@@ -15,9 +15,15 @@
 
 #import <Foundation/Foundation.h>
 #import "OCCredentialsDto.h"
+#import "UtilsUrls.h"
+#import "ManageUsersDB.h"
+#import "UserDto.h"
+#import "Customization.h"
+#import "OCCredentialsStorage.h"
 
 
-@interface OCKeychain : NSObject
+@interface OCKeychain : NSObject <OCCredentialsStorageDelegate>
+
 
 +(BOOL)setCredentialsOfUser:(UserDto *)user;
 
