@@ -15,14 +15,13 @@
 
 #import "OCKeychain.h"
 #import <Security/Security.h>
-#import "OCCredentialsDto.h"
-#import "UtilsUrls.h"
-#import "ManageUsersDB.h"
-#import "UserDto.h"
-#import "Customization.h"
+
 
 @implementation OCKeychain
 
+- (void) storeCredentials:(OCCredentialsDto *)credentials {
+    //TODO: get url from library
+}
 
 +(BOOL)setCredentialsOfUser:(UserDto *)user {
     return [OCKeychain setCredentialsOfUser:user migrating:NO];
