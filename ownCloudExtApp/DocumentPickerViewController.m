@@ -41,6 +41,8 @@
 #import "ManageUploadsDB.h"
 #import "UtilsDtos.h"
 #import "ManageTouchID.h"
+#import "OCOAuth2Configuration.h"
+#import "Customization.h"
 
 @interface DocumentPickerViewController ()
 
@@ -160,7 +162,20 @@
         sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
         //Cookies is allways available in current supported Servers
-        sharedOCCommunication.isCookiesAvailable = YES;
+        [sharedOCCommunication setIsCookiesAvailable:YES];
+        
+        UserDto *user = [ManageUsersDB getActiveUser];
+        if (user && user.credDto.authenticationMethod == AuthenticationMethodBEARER_TOKEN) {
+            NSURL *url = [NSURL URLWithString:[UtilsUrls getFullRemoteServerPath:user]];
+            [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                                        initWithURL:url clientId:k_oauth2_client_id
+                                                                        clientSecret:k_oauth2_client_secret
+                                                                        redirectUri:k_oauth2_redirect_uri
+                                                                        authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                                        tokenEndpoint:k_oauth2_token_endpoint]];
+        }
+        
+        [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
         
     }
     return sharedOCCommunication;
