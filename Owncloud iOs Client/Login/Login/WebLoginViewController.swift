@@ -18,10 +18,16 @@
 import Foundation
 
 
-@objc class WebLoginViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate {
+@objc class WebLoginViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate, SSLCertificateManagerDelegate {
+
 
     var authCode = ""
     var error: Error? = nil
+    
+    var sslCertificateManager: SSLCertificateManager? = nil;
+
+    var currentRequest: URLRequest? = nil;
+
     
     // MARK: IBOutlets
     @IBOutlet var webViewLogin: UIWebView!
@@ -85,14 +91,27 @@ import Foundation
     
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
         print("An error happened during load: \(error)");
-
-        self.performCancelButtonTapped()
         
+        if let sslCertMgr = sslCertificateManager {
+            
+            if sslCertMgr.isUntrustedServerCertificate(error) {
+                sslCertMgr.delegate = self;
+                sslCertMgr.isAcceptedCertificate(in: currentRequest)
+                return; // no error yet
+            }
+            
+        }
+        self.error = error
+        self.performCancelButtonTapped()
+
     }
 
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         
         let urlToFollow: String = (request.url?.absoluteString)!
+
+        // We store the request to inspect the server certificate and retry it in case of SSL error
+        self.currentRequest = request;
 
         if urlToFollow.contains(k_oauth2_redirect_uri){
             
@@ -125,6 +144,20 @@ import Foundation
     func getQueryStringParameter(url: String, param: String) -> String? {
         guard let url = URLComponents(string: url) else { return nil }
         return url.queryItems?.first(where: { $0.name == param })?.value
+    }
+ 
+    
+    // MARK: SSLCertificateManager delegate methods
+    func certificateWasChecked(_ isAccepted: Bool) {
+
+        if isAccepted {
+            // retry it; should work! :S
+            self.webViewLogin.loadRequest(currentRequest!)
+            
+        } else {
+            // TODO askToAcceptCertificate()
+            print("TODO: askToAcceptCertificate()");
+        }
     }
     
 }

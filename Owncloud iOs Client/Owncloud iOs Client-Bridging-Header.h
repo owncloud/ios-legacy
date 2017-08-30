@@ -35,6 +35,7 @@
 #import "ManageFilesDB.h"
 #import "OCErrorMsg.h"
 #import "CheckAccessToServer.h"
+#import "SSLCertificateManager.h"
 #import "Customization.h"
 #import "UtilsFramework.h"
 #import "OCKeychain.h"
