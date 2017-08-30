@@ -18,7 +18,7 @@
 import Foundation
 
 
-@objc class WebLoginViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate, SSLCertificateManagerDelegate {
+@objc class WebLoginViewController: UIViewController, UIWebViewDelegate, UITextFieldDelegate, NSURLConnectionDelegate {
 
 
     var authCode = ""
@@ -95,9 +95,8 @@ import Foundation
         if let sslCertMgr = sslCertificateManager {
             
             if sslCertMgr.isUntrustedServerCertificate(error) {
-                sslCertMgr.delegate = self;
-                sslCertMgr.isAcceptedCertificate(in: currentRequest)
-                return; // no error yet
+                self.retryIfCertificateInCurrentRequestWasAcceptedByUser()
+                return;
             }
             
         }
@@ -146,17 +145,57 @@ import Foundation
         return url.queryItems?.first(where: { $0.name == param })?.value
     }
  
-    
-    // MARK: SSLCertificateManager delegate methods
-    func certificateWasChecked(_ isAccepted: Bool) {
 
-        if isAccepted {
-            // retry it; should work! :S
+    // MARK - HACK on UIWebView to allow access to servers with insecure certificates that were already accepted by the user
+    
+    func retryIfCertificateInCurrentRequestWasAcceptedByUser() -> Void {
+        // Start an NSURLConnection with the current request to receive an authentication challenge that we can accept or not
+        NSURLConnection.init(request: currentRequest!, delegate: self)
+            // TODO - check if hack works also with NSURLSession
+    }
+    
+    // MARK NSURLConnection Delegate Method, part of the HACK on UIWebView
+    
+    public func connection(_ connection: NSURLConnection, willSendRequestFor challenge: URLAuthenticationChallenge) {
+        var trusted: Bool = false
+
+        if (challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust) {
+    
+            /// TODO check if certificate corresponds to known certificates
+            let inspectedHost: String? = requestToInspectCertificate?.url?.host
+            // 1. GET SERVER CERTIFICATE
+            // 2. ASK TO USER-ACCEPTED CERTIFICATE STORE IF IT'S INCLUDED
+            
+            if (challenge.protectionSpace.host == inspectedHost) {
+                print("trusting connection to host %@", challenge.protectionSpace.host)
+    
+                trusted = true;
+    
+                challenge.sender?.use(URLCredential.init(trust: challenge.protectionSpace.serverTrust!), for: challenge)
+    
+            } else {
+                print("Not trusting connection to host %@", challenge.protectionSpace.host);
+            }
+    
+        } else {
+            print("WARNING: expecting NSURLAuthenticationMethodServerTrust, received %@ instead, will continue without credentials", challenge);
+        }
+    
+        if (!trusted) {
+            challenge.sender?.continueWithoutCredential(for: challenge)
+        }
+    
+        connection.cancel()
+            // nothing else is needed from the connection once that challenge.sender is "instructed";
+            // ir will cache the response for future uses, what allows to load the request again in the webview successfully
+        
+        if (trusted) {
+            // retry it; should work now!
             self.webViewLogin.loadRequest(currentRequest!)
             
         } else {
             // TODO askToAcceptCertificate()
-            print("TODO: askToAcceptCertificate()");
+            print("TODO: askToAcceptCertificate() or direct error");
         }
     }
     
