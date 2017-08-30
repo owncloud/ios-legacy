@@ -61,6 +61,7 @@
 #import "UtilsCookies.h"
 #import "PresentedViewUtils.h"
 #import "OCLoadingSpinner.h"
+#import "OCOAuth2Configuration.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -565,10 +566,6 @@ float shortDelay = 0.3;
     
 }
 
-+(void)testCallFunc {
-    NSLog(@"testCallFunc works");
-}
-
 #pragma mark - OCCommunications
 + (OCCommunication*)sharedOCCommunication
 {
@@ -592,13 +589,7 @@ float shortDelay = 0.3;
         OCURLSessionManager *uploadSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:configuration];
         [uploadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
         [uploadSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
-            
-            //TODO: get refresh token, store credentials
-            
-            //test call func
-            [self testCallFunc];
-            NSLog(@"uploadSessionManager enter in setSessionDidReceiveAuthenticationChallengeBlock ");
-            return NSURLSessionAuthChallengeUseCredential;
+            return NSURLSessionAuthChallengePerformDefaultHandling;
         }];
         
         NSURLSessionConfiguration *configurationDownload = nil;
@@ -617,12 +608,7 @@ float shortDelay = 0.3;
         OCURLSessionManager *downloadSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:configurationDownload];
         [downloadSessionManager.operationQueue setMaxConcurrentOperationCount:1];
         [downloadSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
-            //TODO: get refresh token, store credentials
-            
-            //test call func
-            NSLog(@"downloadSessionManager enter in setSessionDidReceiveAuthenticationChallengeBlock ");
-            [self testCallFunc];
-            return NSURLSessionAuthChallengeUseCredential;
+            return NSURLSessionAuthChallengePerformDefaultHandling;
         }];
         
         NSURLSessionConfiguration *networkConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -633,21 +619,24 @@ float shortDelay = 0.3;
         OCURLSessionManager *networkSessionManager = [[OCURLSessionManager alloc] initWithSessionConfiguration:networkConfiguration];
         [networkSessionManager.operationQueue setMaxConcurrentOperationCount:1];
         networkSessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
-        [networkSessionManager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition (NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential) {
-            
-            //TODO: get refresh token, store credentials
-            //UniversalViewController.getAuthDataBy(
-            NSLog(@"networksessionmanager enter in setSessionDidReceiveAuthenticationChallengeBlock ");
-            //test call func
-            [self testCallFunc];
-            return NSURLSessionAuthChallengeUseCredential;
-        }];
    
         sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:uploadSessionManager andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
         //Cookies is allways available in current supported Servers
-        sharedOCCommunication.isCookiesAvailable = YES;
-
+        [sharedOCCommunication setIsCookiesAvailable:YES];
+        
+        if (APP_DELEGATE.activeUser && APP_DELEGATE.activeUser.credDto.authenticationMethod == AuthenticationMethodBEARER_TOKEN) {
+            
+            NSURL *url = [NSURL URLWithString:[UtilsUrls getFullRemoteServerPath:APP_DELEGATE.activeUser]];
+            [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                          initWithURL:url clientId:k_oauth2_client_id
+                                                                        clientSecret:k_oauth2_client_secret
+                                                                        redirectUri:k_oauth2_redirect_uri
+                                                                        authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                                        tokenEndpoint:k_oauth2_token_endpoint]];
+        }
+        
+        [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
 	}
 	return sharedOCCommunication;
 }
@@ -674,7 +663,19 @@ float shortDelay = 0.3;
         sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:nil];
         
         //Cookies is allways available in current supported Servers
-        sharedOCCommunicationDownloadFolder.isCookiesAvailable = YES;
+        [sharedOCCommunicationDownloadFolder setIsCookiesAvailable:YES];
+        
+        if (APP_DELEGATE.activeUser && APP_DELEGATE.activeUser.credDto.authenticationMethod == AuthenticationMethodBEARER_TOKEN) {
+            NSURL *url = [NSURL URLWithString:[UtilsUrls getFullRemoteServerPath:APP_DELEGATE.activeUser]];
+            [sharedOCCommunicationDownloadFolder setOauth2Configuration:[[OCOAuth2Configuration alloc]
+                                                                         initWithURL:url clientId:k_oauth2_client_id
+                                                                         clientSecret:k_oauth2_client_secret
+                                                                         redirectUri:k_oauth2_redirect_uri
+                                                                         authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                                         tokenEndpoint:k_oauth2_token_endpoint]];
+        }
+        
+        [sharedOCCommunicationDownloadFolder setUserAgent:[UtilsUrls getUserAgent]];
         
     }
     return sharedOCCommunicationDownloadFolder;
