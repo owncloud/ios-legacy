@@ -92,8 +92,7 @@ static NSString *const tmpFileName = @"tmp.der";
 
 
 
-- (void) acceptCurrentCertificate {
-    //Save temporal certificate
+- (void) trustCurrentCertificate {
     
     NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
     

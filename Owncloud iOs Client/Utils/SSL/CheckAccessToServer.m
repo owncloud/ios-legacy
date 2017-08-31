@@ -252,7 +252,7 @@
 }
 
 - (void) acceptCertificateAndRetryCheckToTheServer {
-    [self.sslCertificateManager acceptCurrentCertificate];
+    [self.sslCertificateManager trustCurrentCertificate];
     [self.delegate repeatTheCheckToTheServer];
 }
 

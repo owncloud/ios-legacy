@@ -625,7 +625,7 @@ static NSString *const tmpFileName = @"tmp.der";
     if (alertView.tag == 2) {
         if (buttonIndex == 1) {
             DLog(@"user pressed YES");
-            [self.sslCertificateManager acceptCurrentCertificate];
+            [self.sslCertificateManager trustCurrentCertificate];
         } else {
             NSLog(@"user pressed CANCEL");
             [self dismissThisView];
