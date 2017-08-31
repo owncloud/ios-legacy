@@ -174,8 +174,8 @@ import Foundation
         // only used in the app as part of GetPublicInfoFromServerJob, and a successful call to CheckAccessToServer must have been
         // finished before. That successful call could include the acceptance by the user of self-signed server certificates, and
         // those are cached in CheckAccessToServer and considered in the call to CheckAccessToServer.isTrustedServer
-        let checkAccessToServer: CheckAccessToServer = CheckAccessToServer.sharedManager() as! CheckAccessToServer
-        let trusted: Bool = checkAccessToServer.isTrustedServer(with: challenge)
+        let sslCertificateManager: SSLCertificateManager = SSLCertificateManager();
+        let trusted: Bool = sslCertificateManager.isTrustedServerCertificate(in: challenge)
         if (trusted) {
             let credential = URLCredential(trust: challenge.protectionSpace.serverTrust!)
             completionHandler(.useCredential,credential);

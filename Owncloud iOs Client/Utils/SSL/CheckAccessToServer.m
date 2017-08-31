@@ -103,7 +103,7 @@
                                               error.code == kCFURLErrorServerCertificateHasUnknownRoot    ||
                                               error.code == kCFURLErrorServerCertificateNotYetValid)
                                           {
-                                              if (![self isTemporalCertificateTrusted]) {
+                                              if (![self.sslCertificateManager isCurrentCertificateTrusted]) {
                                                   [self askToAcceptCertificate];
                                               }
                                               
@@ -202,24 +202,13 @@
   
     NSURLCredential *credential = nil;
     
-    BOOL trusted = [self isTrustedServerWithChallenge:challenge];
-    if (trusted) {
+    self.isSameCertificateSelfSigned = [self.sslCertificateManager isTrustedServerCertificateIn:challenge];
+    if (self.isSameCertificateSelfSigned) {
         credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
         completionHandler(NSURLSessionAuthChallengeUseCredential,credential);
     } else {
         completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, credential);
     }
-}
-
-- (BOOL) isTrustedServerWithChallenge:(NSURLAuthenticationChallenge *)challenge {
-    BOOL trusted = [self.sslCertificateManager isTrustedServerCertificateIn:challenge];
-    self.isSameCertificateSelfSigned = trusted;
-    return trusted;
-}
-
-
-- (void)saveCertificate:(SecTrustRef) trust withName:(NSString *) certName {
-    [self.sslCertificateManager saveCertificate:trust withName:certName];
 }
 
 /*
@@ -254,6 +243,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     
     if (buttonIndex == 1) {
+        DLog(@"user pressed YES");
         [self acceptCertificateAndRetryCheckToTheServer];
     } else {
         DLog(@"user pressed CANCEL");
@@ -262,13 +252,8 @@
 }
 
 - (void) acceptCertificateAndRetryCheckToTheServer {
-    [self acceptCertificate];
-    [self.delegate repeatTheCheckToTheServer];
-}
-
-- (void) acceptCertificate {
-    DLog(@"user pressed YES");
     [self.sslCertificateManager acceptCurrentCertificate];
+    [self.delegate repeatTheCheckToTheServer];
 }
 
 - (void)URLSession:(NSURLSession *)session
@@ -332,12 +317,6 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)redirectResponse
     }
 }
 
-
-- (BOOL) isTemporalCertificateTrusted {
-    BOOL trusted = [self.sslCertificateManager isCurrentCertificateTrusted];
-    self.isSameCertificateSelfSigned = trusted;
-    return trusted;
-}
 
 - (NSInteger) getSslStatus {
     return self.sslStatus;

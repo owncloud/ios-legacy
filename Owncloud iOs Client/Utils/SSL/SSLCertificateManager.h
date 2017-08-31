@@ -18,18 +18,7 @@
 #ifndef SSLCertificateManager_h
 #define SSLCertificateManager_h
 
-@protocol SSLCertificateManagerDelegate
-
-- (void) certificateWasChecked:(BOOL)isAccepted;
-
-@end
-
-
-@interface SSLCertificateManager : NSObject <NSURLSessionDelegate, UIAlertViewDelegate, NSURLSessionTaskDelegate> {
-    __weak id<SSLCertificateManagerDelegate> _delegate;
-}
-
-@property (nonatomic, weak) __weak id<SSLCertificateManagerDelegate> delegate;
+@interface SSLCertificateManager : NSObject <NSURLSessionDelegate, UIAlertViewDelegate, NSURLSessionTaskDelegate>
 
 - (BOOL) isUntrustedServerCertificate:(NSError*) error;
 
@@ -38,7 +27,9 @@
 
 - (void) acceptCurrentCertificate;
 
+/*
 - (void) saveCertificate:(SecTrustRef) trust withName:(NSString *) certName;
+ */
 
 @end
 

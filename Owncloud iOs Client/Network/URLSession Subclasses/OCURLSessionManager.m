@@ -32,35 +32,11 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
  completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler
 {
     
-    DLog(@"willSendRequestForAuthenticationChallenge");
+    DLog(@"didReceiveChallenge");
     
-    BOOL trusted = NO;
-    SecTrustRef trust;
-    NSURLProtectionSpace *protectionSpace;
-    
-    protectionSpace = [challenge protectionSpace];
-    trust = [protectionSpace serverTrust];
-    
-    if(trust != nil) {
-        [[CheckAccessToServer sharedManager] saveCertificate:trust withName:tmpFileName];
-        
-        NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
-        
-        NSMutableArray *listCertificateLocation = [ManageAppSettingsDB getAllCertificatesLocation];
-        
-        for (int i = 0 ; i < [listCertificateLocation count] ; i++) {
-            
-            NSString *currentLocalCertLocation = [listCertificateLocation objectAtIndex:i];
-            NSFileManager *fileManager = [ NSFileManager defaultManager];
-            if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder,tmpFileName] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
-                DLog(@"Is the same certificate!!!");
-                trusted = YES;
-            }
-        }
-    } else {
-        trusted = NO;
-    }
-    
+    SSLCertificateManager* sslCertificateManager = [SSLCertificateManager new];
+    BOOL trusted = [sslCertificateManager isTrustedServerCertificateIn:challenge];
+
     __block NSURLCredential *credential = nil;
     credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
     
