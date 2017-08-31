@@ -18,18 +18,41 @@
 #ifndef SSLCertificateManager_h
 #define SSLCertificateManager_h
 
+/*
+ * Class to interact with the app-level trust store. 
+ *
+ * Allows to check if an X509 server certificate contained in an NSURLAuthenticationChallenge is already contained 
+ * in the trust store or not, and add it to the trust store later. This should be done only after the user explicilty
+ * approved it.
+ */
 @interface SSLCertificateManager : NSObject <NSURLSessionDelegate, UIAlertViewDelegate, NSURLSessionTaskDelegate>
 
-- (BOOL) isUntrustedServerCertificate:(NSError*) error;
-
+/*
+ * Checks if the challenge passed as a parameter corresponds to server certificate not trusted by iOS system, 
+ * and if it is trusted by the user anyway, searching for it in the app-level store of certificates that 
+ * were previously approved by her.
+ *
+ * As a SIDE EFFECT, the server certificate in the challenge becomes the CURRENT certificate.
+ */
 - (BOOL) isTrustedServerCertificateIn:(NSURLAuthenticationChallenge *) challenge;
-- (BOOL) isCurrentCertificateTrusted;
-
-- (void) acceptCurrentCertificate;
 
 /*
-- (void) saveCertificate:(SecTrustRef) trust withName:(NSString *) certName;
+ * Checks if the CURRENT certificate (i.e: the last certificate that was passed to the method isTrustedServerCertificateIn)
+ * is contained in the app-level store of certificates approved previously by the user.
  */
+- (BOOL) isCurrentCertificateTrusted;
+
+/*
+ * Adds the CURRENT certificate (i.e: the last certificate that was passed to the method isTrustedServerCertificateIn)
+ * to the app-level store of certificates approved by the user, so that any request about trust on the same certificate
+ * via isTrustedServerCertificateIn or isCurrentCertificateTrusted will return 'YES'.
+ */
+- (void) trustCurrentCertificate;
+
+/*
+ * Helper method to check if a given NSError corresponds to a server certificate not trusted by iOS
+ */
+- (BOOL) isUntrustedServerCertificate:(NSError*) error;
 
 @end
 
