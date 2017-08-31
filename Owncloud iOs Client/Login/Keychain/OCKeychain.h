@@ -25,14 +25,14 @@
 @interface OCKeychain : NSObject <OCCredentialsStorageDelegate>
 
 
-+(BOOL)setCredentialsOfUser:(UserDto *)user;
++(BOOL)setCredentials:(OCCredentialsDto *)credentials withServer:(NSString *)serverPath;
 
 /**
  * @return CredentialsDto -> New credentialDto with all the new data added to support oauth
  */
-+(OCCredentialsDto *)getCredentialsByUserId:(NSString *)userId;
++(OCCredentialsDto *)getCredentialsByUser:(UserDto *)user;
 
-+(BOOL)removeCredentialsByUserId:(NSString *)idUser;
++(BOOL)removeCredentialsByUser:(UserDto *)user;
 +(BOOL)updateCredentialsOfUser:(UserDto *)user;
 +(BOOL)resetKeychain;
 
@@ -54,10 +54,10 @@
  * This method updates all the credentials to use a property to allow to access to them when the passcode system is set.
  * Used in db update 12-13
  */
-+(void)updateAllKeychainsToUseTheLockProperty;
++(BOOL)updateAllOCKeychainItemsToUseTheLockProperty;
 
 
-+(void)updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoWithBasicAuthenticationAsValue;
++(void)updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoAsValueAndAuthenticationType;
 
 
 @end

@@ -264,7 +264,7 @@
 
     [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: APP_DELEGATE.activeUser.idUser];
     
-    [ManageUsersDB removeUserAndDataByIdUser: APP_DELEGATE.activeUser.idUser];
+    [ManageUsersDB removeUserAndDataByUser:APP_DELEGATE.activeUser];
     
     [UtilsFramework deleteAllCookies];
     
@@ -1729,7 +1729,7 @@
     [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: user.idUser];
     
     //Delete the tables of this user
-    [ManageUsersDB removeUserAndDataByIdUser: user.idUser];
+    [ManageUsersDB removeUserAndDataByUser:user];
     
     [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:user];
     
