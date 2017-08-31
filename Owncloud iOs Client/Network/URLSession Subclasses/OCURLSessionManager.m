@@ -41,8 +41,6 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
     protectionSpace = [challenge protectionSpace];
     trust = [protectionSpace serverTrust];
     
-    [[CheckAccessToServer sharedManager] createFolderToSaveCertificates];
-    
     if(trust != nil) {
         [[CheckAccessToServer sharedManager] saveCertificate:trust withName:tmpFileName];
         

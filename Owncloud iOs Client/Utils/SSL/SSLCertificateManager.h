@@ -20,8 +20,6 @@
 
 @protocol SSLCertificateManagerDelegate
 
-//-(void)connectionToTheServerWasChecked:(BOOL)isConnected withHttpStatusCode:(NSInteger)statusCode andError:(NSError *)error;
-
 - (void) certificateWasChecked:(BOOL)isAccepted;
 
 @end
@@ -34,6 +32,13 @@
 @property (nonatomic, weak) __weak id<SSLCertificateManagerDelegate> delegate;
 
 - (BOOL) isUntrustedServerCertificate:(NSError*) error;
+
+- (BOOL) isTrustedServerCertificateIn:(NSURLAuthenticationChallenge *) challenge;
+- (BOOL) isCurrentCertificateTrusted;
+
+- (void) acceptCurrentCertificate;
+
+- (void) saveCertificate:(SecTrustRef) trust withName:(NSString *) certName;
 
 @end
 
