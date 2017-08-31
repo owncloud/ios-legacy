@@ -22,26 +22,20 @@ import Foundation
     /*
     * @param  UserDto   -> user to store
     * @param  CredentialsDto -> credentials of user
-    * @return NSInteger -> id of user in DB
     */
-    func storeAccountAndGetIdOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) -> NSInteger {
+    
+    func storeAccountOfUser(_ user: UserDto, withCredentials credentials: OCCredentialsDto) {
         
-        if let userInDB = ManageUsersDB.insertUser(user) {
+        if (ManageUsersDB.insertUser(user) != nil) {
             
-            userInDB.credDto = credDto.copy() as! OCCredentialsDto
-            
-            //userInDB contains the userId in DB, we add the credentials and store the user in keychain
-            OCKeychain.setCredentialsOfUser(userInDB)
+            let url = UtilsUrls.getFullRemoteServerPath(user)
+
+            OCKeychain.setCredentials(credentials, withServer: url)
             
             (UIApplication.shared.delegate as! AppDelegate).activeUser = user
             
-            return userInDB.idUser
-            
         } else {
-            //error storing account
             print("Error storing account for \(user.username)")
-            
-            return 0
         }
         
     }

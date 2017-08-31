@@ -166,17 +166,20 @@
         
         UserDto *user = [ManageUsersDB getActiveUser];
         if (user && user.credDto.authenticationMethod == AuthenticationMethodBEARER_TOKEN) {
-            NSURL *url = [NSURL URLWithString:[UtilsUrls getFullRemoteServerPath:user]];
+            NSString *urlString = [UtilsUrls getFullRemoteServerPath:user];
             [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
-                                                                        initWithURL:url clientId:k_oauth2_client_id
-                                                                        clientSecret:k_oauth2_client_secret
-                                                                        redirectUri:k_oauth2_redirect_uri
-                                                                        authorizationEndpoint:k_oauth2_authorization_endpoint
-                                                                        tokenEndpoint:k_oauth2_token_endpoint]];
+                                                            initWithURLString:urlString clientId:k_oauth2_client_id
+                                                            clientSecret:k_oauth2_client_secret
+                                                            redirectUri:k_oauth2_redirect_uri
+                                                            authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                            tokenEndpoint:k_oauth2_token_endpoint]];
+
         }
         
         [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
         
+        [sharedOCCommunication setCredentialsStorage:[OCKeychain new]];
+
     }
     return sharedOCCommunication;
 }
