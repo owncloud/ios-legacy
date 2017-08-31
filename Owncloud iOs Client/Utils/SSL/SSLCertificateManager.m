@@ -23,8 +23,6 @@ static NSString *const tmpFileName = @"tmp.der";
 
 @implementation SSLCertificateManager
 
-@synthesize delegate = _delegate;
-
 - (BOOL) isUntrustedServerCertificate: (NSError*) error {
     return (
             [error.domain isEqualToString: NSURLErrorDomain]    &&

@@ -46,15 +46,7 @@ typedef enum {
 - (void) isConnectionToTheServerByUrl:(NSString *) url;
 - (void) isConnectionToTheServerByUrl:(NSString *) url withTimeout:(NSInteger) timeout;
 - (BOOL) isNetworkIsReachable;
-- (void) saveCertificate:(SecTrustRef) trust withName:(NSString *) certName;
-- (BOOL) isTemporalCertificateTrusted;
-- (void) acceptCertificate;
-- (void) askToAcceptCertificate;
 - (NSInteger) getSslStatus;
-
-
-- (BOOL) isTrustedServerWithChallenge:(NSURLAuthenticationChallenge *)challenge;
-
 
 @end
 

@@ -50,6 +50,8 @@ static NSString *const tmpFileName = @"tmp.der";
 
 @interface SSOViewController ()
 
+@property SSLCertificateManager* sslCertificateManager;
+
 @end
 
 @implementation SSOViewController
@@ -73,6 +75,9 @@ static NSString *const tmpFileName = @"tmp.der";
         }
         //2- Delete the current cookies because we delete the current active user
         [UtilsFramework deleteAllCookies];
+        
+        //3- Init SSLCertificateManager instance to access user-accepted server certificates
+        self.sslCertificateManager = [SSLCertificateManager new];
 
     }
     return self;
@@ -212,7 +217,7 @@ static NSString *const tmpFileName = @"tmp.der";
             error.code == kCFURLErrorServerCertificateNotYetValid)
         {
             
-            if (![[CheckAccessToServer sharedManager] isTemporalCertificateTrusted]) {
+            if (![self.sslCertificateManager isCurrentCertificateTrusted]) {
                 [self askToAcceptCertificate];
             }
           
@@ -395,7 +400,7 @@ static NSString *const tmpFileName = @"tmp.der";
             error.code == kCFURLErrorServerCertificateNotYetValid)
         {
             
-            if (![[CheckAccessToServer sharedManager] isTemporalCertificateTrusted]) {
+            if (![self.sslCertificateManager isCurrentCertificateTrusted]) {
                 [self initParemetersAndRetryOpenLink];
             }
         }
@@ -600,33 +605,8 @@ static NSString *const tmpFileName = @"tmp.der";
     
     NSLog(@"willSendRequestForAuthenticationChallenge");
     
-    BOOL trusted = NO;
-    SecTrustRef trust;
-    NSURLProtectionSpace *protectionSpace;
-    
-    protectionSpace = [challenge protectionSpace];
-    trust = [protectionSpace serverTrust];
-    
-    if(trust != nil) {
-        [[CheckAccessToServer sharedManager] saveCertificate:trust withName:tmpFileName];
+    BOOL trusted = [self.sslCertificateManager isTrustedServerCertificateIn:challenge];
         
-        NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
-        
-        NSMutableArray *listCertificateLocation = [ManageAppSettingsDB getAllCertificatesLocation];
-        
-        for (int i = 0 ; i < [listCertificateLocation count] ; i++) {
-            
-            NSString *currentLocalCertLocation = [listCertificateLocation objectAtIndex:i];
-            NSFileManager *fileManager = [ NSFileManager defaultManager];
-            if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder,tmpFileName] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
-                NSLog(@"Is the same certificate!!!");
-                trusted = YES;
-            }
-        }
-    } else {
-        trusted = NO;
-    }
-
     if (trusted) {
         self.authenticated = YES;
         
@@ -644,7 +624,8 @@ static NSString *const tmpFileName = @"tmp.der";
     
     if (alertView.tag == 2) {
         if (buttonIndex == 1) {
-            [[CheckAccessToServer sharedManager] acceptCertificate];
+            DLog(@"user pressed YES");
+            [self.sslCertificateManager acceptCurrentCertificate];
         } else {
             NSLog(@"user pressed CANCEL");
             [self dismissThisView];
