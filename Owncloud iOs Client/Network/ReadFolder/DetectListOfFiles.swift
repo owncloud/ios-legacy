@@ -23,6 +23,7 @@ import Foundation
                            success: ( @escaping (_ listOfFiles: [Any]?) -> Void ),
                             failure: (@escaping (_ errorHttp: NSInteger?,_ error: NSError?) -> Void) ) {
         
+        
         AppDelegate.sharedOCCommunication().setCredentials(credentials)
         AppDelegate.sharedOCCommunication().setValueOfUserAgent(UtilsUrls.getUserAgent())
         
