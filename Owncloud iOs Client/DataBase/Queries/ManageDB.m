@@ -1264,7 +1264,7 @@
     
     //1.- Migrate the current password stored in keychain
 
-    [OCKeychain updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoWithBasicAuthenticationAsValue];
+    [OCKeychain updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoAsValueAndAuthenticationType];
     
 }
 

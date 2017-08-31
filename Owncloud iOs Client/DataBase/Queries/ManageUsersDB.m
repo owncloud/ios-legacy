@@ -108,21 +108,19 @@
             output.timestampInstantUploadVideo = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
             
             output.urlRedirected = [rs stringForColumn:@"url_redirected"];
-            
-            NSString *idString = [NSString stringWithFormat:@"%ld", (long)output.idUser];
-            
-            OCCredentialsDto *credDto = [OCKeychain getCredentialsByUserId:idString];
-            output.username = credDto.userName;
-            output.credDto = credDto;
-            
             output.sortingType = [rs intForColumn:@"sorting_type"];
-            
             output.predefinedUrl = [rs stringForColumn:@"predefined_url"];
         }
         
         [rs close];
         
     }];
+    
+    if (output != nil) {
+        OCCredentialsDto *credDto = [OCKeychain getCredentialsByUser:output];
+        output.username = credDto.userName;
+        output.credDto = credDto;
+    }
     
     return output;
 }
@@ -221,14 +219,7 @@
             user.timestampInstantUploadVideo = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
             
             user.urlRedirected = [rs stringForColumn:@"url_redirected"];
-            
-            NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
-            
-            user.credDto = [OCKeychain getCredentialsByUserId:idString];
-            user.username = user.credDto.userName;
-            
             user.sortingType = [rs intForColumn:@"sorting_type"];
-            
             user.predefinedUrl = [rs stringForColumn:@"predefined_url"];
         }
         
@@ -236,6 +227,10 @@
         
     }];
     
+    if (user != nil) {
+        user.credDto = [OCKeychain getCredentialsByUser:user];
+        user.username = user.credDto.userName;
+    }
     
     return user;
 }
@@ -299,15 +294,13 @@
             
             current.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
-            NSString *idString = [NSString stringWithFormat:@"%ld", (long)current.idUser];
-            
-            OCCredentialsDto *credDto = [OCKeychain getCredentialsByUserId:idString];
-            current.username = credDto.userName;
-            current.credDto = credDto;
-            
             current.sortingType = [rs intForColumn:@"sorting_type"];
             
             current.predefinedUrl = [rs stringForColumn:@"predefined_url"];
+            
+            OCCredentialsDto *credDto = [OCKeychain getCredentialsByUser:current];
+            current.username = credDto.userName;
+            current.credDto = credDto;
             
             [output addObject:current];
             
@@ -488,49 +481,49 @@
 }
 
 
-+(void) removeUserAndDataByIdUser:(NSInteger)idUser {
++(void) removeUserAndDataByUser:(UserDto *)user {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"DELETE FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM users WHERE id = ?", [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from files users table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from files files table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM files_backup WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM files_backup WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from files_backup backup table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM uploads_offline WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM uploads_offline WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from uploads uploads_offline table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error delete info of shared table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
         
         if (!correctQuery) {
             DLog(@"Error delete info of cookies_storage table");
@@ -539,8 +532,7 @@
         
     }];
     
-    NSString *idString = [NSString stringWithFormat:@"%ld", (long)idUser];
-    if (![OCKeychain removeCredentialsByUserId:idString]) {
+    if (![OCKeychain removeCredentialsByUser:user]) {
         DLog(@"Error delete keychain credentials");
         
     }
