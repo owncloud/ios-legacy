@@ -577,11 +577,7 @@ connection_declined  Connection declined by user
                     } else {
                         self.setBasicAuthLoginStackViews(hiddenStatus: true)
                         self.setConnectButton(status: false)
-                        self.showURLError(
-                            self.manageNetworkErrors.returnErrorMessage(
-                                withHttpStatusCode: httpStatusCode, andError: nil
-                            )
-                        )
+                        self.showURLError(NSLocalizedString("authentification_not_valid", comment: ""))
                     }
                     self.updateUIWithNormalizedData(self.serverURLNormalizer)
 
@@ -635,11 +631,11 @@ connection_declined  Connection declined by user
 
         //Grant main thread
         DispatchQueue.main.async {
-            print("_showSSOLoginScreen_ url: %@", self.serverURLNormalizer.normalizedURL)
+            print("_showSSOLoginScreen_ url: %@", self.validatedServerURL)
             
             //New SSO WebView controller
             let ssoViewController: SSOViewController = SSOViewController(nibName: "SSOViewController", bundle: nil)
-            ssoViewController.urlString = self.serverURLNormalizer.normalizedURL
+            ssoViewController.urlString = self.validatedServerURL
             ssoViewController.delegate = self
 
             //present it
