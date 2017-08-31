@@ -139,7 +139,6 @@ connection_declined  Connection declined by user
     var authMethodToLogin: AuthenticationMethod!
     var authCodeReceived = ""
     var manageNetworkErrors: ManageNetworkErrors!
-    let sslCertificateManager =  SSLCertificateManager()
     private var loginMode: LoginMode!
     private var user: UserDto?
     var activeField: UITextField!
@@ -892,7 +891,6 @@ connection_declined  Connection declined by user
             let destinationNavigationController = segue.destination as! UINavigationController
             let targetController = destinationNavigationController.topViewController as! WebLoginViewController
             targetController.serverPath = self.validatedServerURL
-            targetController.sslCertificateManager = self.sslCertificateManager
         }
     }
     

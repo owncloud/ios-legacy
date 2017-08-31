@@ -15,6 +15,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "SSLCertificateManager.h"
 
 @protocol CheckAccessToServerDelegate
 
@@ -37,15 +38,15 @@ typedef enum {
 @property (nonatomic, strong) NSString *urlStatusCheck;
 @property (nonatomic, strong) UIViewController *viewControllerToShow;
 @property (nonatomic, strong) NSString *urlUserToCheck;
+@property (nonatomic, strong) SSLCertificateManager *sslCertificateManager;
 @property NSInteger sslStatus;
 @property BOOL isSameCertificateSelfSigned;
 
 + (id)sharedManager;
 - (void) isConnectionToTheServerByUrl:(NSString *) url;
-- (void)isConnectionToTheServerByUrl:(NSString *) url withTimeout:(NSInteger) timeout;
+- (void) isConnectionToTheServerByUrl:(NSString *) url withTimeout:(NSInteger) timeout;
 - (BOOL) isNetworkIsReachable;
-- (void)createFolderToSaveCertificates;
-- (void)saveCertificate:(SecTrustRef) trust withName:(NSString *) certName;
+- (void) saveCertificate:(SecTrustRef) trust withName:(NSString *) certName;
 - (BOOL) isTemporalCertificateTrusted;
 - (void) acceptCertificate;
 - (void) askToAcceptCertificate;

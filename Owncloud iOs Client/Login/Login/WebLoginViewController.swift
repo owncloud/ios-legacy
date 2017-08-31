@@ -24,7 +24,7 @@ import Foundation
     var authCode = ""
     var error: Error? = nil
     
-    var sslCertificateManager: SSLCertificateManager? = nil;
+    let sslCertificateManager: SSLCertificateManager = SSLCertificateManager();
 
     var currentRequest: URLRequest? = nil;
 
@@ -92,19 +92,15 @@ import Foundation
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
         print("An error happened during load: \(error)");
         
-        if let sslCertMgr = sslCertificateManager {
-            
-            if sslCertMgr.isUntrustedServerCertificate(error) {
-                self.retryIfCertificateInCurrentRequestWasAcceptedByUser()
-                return;
-            }
-            
+        if sslCertificateManager.isUntrustedServerCertificate(error) {
+            self.retryIfCertificateInCurrentRequestWasAcceptedByUser()
+            return;
         }
         self.error = error
         self.performCancelButtonTapped()
-
     }
 
+    
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         
         let urlToFollow: String = (request.url?.absoluteString)!
@@ -116,6 +112,7 @@ import Foundation
             
             if let code = getQueryStringParameter(url: urlToFollow, param: "code") {
                 self.authCode = code
+                self.error = nil;
                 print("contains url and code auth \(self.authCode)")
                 
             } else if let errorString = getQueryStringParameter(url: urlToFollow, param: "error") {
@@ -158,15 +155,8 @@ import Foundation
     
     public func connection(_ connection: NSURLConnection, willSendRequestFor challenge: URLAuthenticationChallenge) {
         var trusted: Bool = false
-
         if (challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust) {
-    
-            /// TODO check if certificate corresponds to known certificates
-            let inspectedHost: String? = requestToInspectCertificate?.url?.host
-            // 1. GET SERVER CERTIFICATE
-            // 2. ASK TO USER-ACCEPTED CERTIFICATE STORE IF IT'S INCLUDED
-            
-            if (challenge.protectionSpace.host == inspectedHost) {
+            if sslCertificateManager.isTrustedServerCertificate(in: challenge) {
                 print("trusting connection to host %@", challenge.protectionSpace.host)
     
                 trusted = true;

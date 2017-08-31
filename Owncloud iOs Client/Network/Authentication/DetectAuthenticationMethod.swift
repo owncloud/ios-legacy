@@ -162,9 +162,7 @@ import Foundation
     // can decide what to do about it.
     //
     // In this case an authentication challenge from the server is an expected response, since we made an
-    // unauthenticated request to analyse the authentication challenge. We will just stop the process to grant
-    // there is no automatic retry and process the 401 response in the completion handler.
-    //
+    // unauthenticated request to analyse the authentication challenge. 
     //
     func urlSession(_ session: URLSession,
                              task: URLSessionTask,

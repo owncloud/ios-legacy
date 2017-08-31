@@ -635,6 +635,8 @@
 		7F9B91BD1F1F472700B77260 /* ServerURLNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B91BC1F1F472700B77260 /* ServerURLNormalizer.swift */; };
 		7F9B91C81F1F817700B77260 /* GetPublicInfoFromServerJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B91C71F1F817700B77260 /* GetPublicInfoFromServerJob.swift */; };
 		7FE5D00D1F558D1D00A9760F /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FE5D00C1F558D1D00A9760F /* SSLCertificateManager.m */; };
+		7FE5D0121F571D3200A9760F /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FE5D00C1F558D1D00A9760F /* SSLCertificateManager.m */; };
+		7FE5D0131F571D6600A9760F /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FE5D00C1F558D1D00A9760F /* SSLCertificateManager.m */; };
 		905B3D3B1C8867AA00BCC93B /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		905C594F1C50DA490051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
 		905C59501C50DA680051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
@@ -5020,6 +5022,7 @@
 				EAC6E5FF1AB0A43C00CCF8C4 /* SelectFolderViewController.m in Sources */,
 				EAF7217F1AAF2E5B009F5596 /* FMDatabase.m in Sources */,
 				EAF721741AAF1A13009F5596 /* UserDto.m in Sources */,
+				7FE5D0131F571D6600A9760F /* SSLCertificateManager.m in Sources */,
 				EAC6E5F61AB0917400CCF8C4 /* CheckAccessToServer.m in Sources */,
 				59C762321AB85B5900A64C1F /* ManageUploadsDB.m in Sources */,
 				EAF721831AAF340D009F5596 /* ManageUsersDB.m in Sources */,
@@ -5059,6 +5062,7 @@
 				EA8ADE691A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
 				599DDD4F1A19FBD3008725DE /* OCKeychain.m in Sources */,
 				59A6F4ED1A1625C300345229 /* ManageAppSettingsDB.m in Sources */,
+				7FE5D0121F571D3200A9760F /* SSLCertificateManager.m in Sources */,
 				59A6F4E91A1612B700345229 /* CheckAccessToServer.m in Sources */,
 				599956A41A13BC8A00229FC4 /* FileListDBOperations.m in Sources */,
 				599956A21A136B6900229FC4 /* MBProgressHUD.m in Sources */,
