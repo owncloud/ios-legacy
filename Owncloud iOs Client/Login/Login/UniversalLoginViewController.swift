@@ -936,6 +936,10 @@ connection_declined  Connection declined by user
                                                         
                                                             self.user?.idUser = ManageAccounts().storeAccountAndGetIdOfUser(self.user!, withCredentials: credentials)
                                                             if self.user?.idUser != 0 {
+                                                                // grant that settings of instant uploads are the same for the new account that for the currently active account
+                                                                // TODO: get rid of this
+                                                                ManageAppSettingsDB.updateInstantUploadAllUser();
+                                                                
                                                                 ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
                                                         
                                                                 app.generateAppInterface(fromLoginScreen: true)
