@@ -22,39 +22,33 @@
 #pragma mark - OCCredentialsStorageDelegate
 + (void) storeCurrentCredentialsOfSharedOCCommunication:(OCCommunication *)sharedOCCommunication {
 
-    [self setCredentials:sharedOCCommunication.credDto withServer:sharedOCCommunication.oauth2Configuration.url];
-
+    [self updateCredentials:sharedOCCommunication.credDto];
 }
 
 #pragma mark - set credentials
-+(BOOL)setCredentials:(OCCredentialsDto *)credentials withServer:(NSString *)serverPath {
-    return [OCKeychain setCredentials:credentials withServer:serverPath userId:nil migratingFromDB9to10:NO];
+
++(BOOL)setCredentials:(OCCredentialsDto *)credentials {
+    return [OCKeychain setCredentials:credentials migratingFromDB9to10:NO];
 }
 
 // private implementation, common to both setCredentialsOfUser and setCredentialsOfUserToFromDbVersion9To10
-+(BOOL)setCredentials:(OCCredentialsDto *)credDto withServer:(NSString *)serverPath userId:(NSString *)userId migratingFromDB9to10:(BOOL)migratingFromDB9to10 {
++(BOOL)setCredentials:(OCCredentialsDto *)credDto migratingFromDB9to10:(BOOL)migratingFromDB9to10 {
     
     BOOL output = NO;
     
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
-    [keychainItem setObject:(__bridge id)(kSecClassInternetPassword) forKey:(__bridge id)kSecClass];
+    [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
     [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
-    if (migratingFromDB9to10) {
-        [keychainItem setObject:userId forKey:(__bridge id)kSecAttrAccount];
-        [keychainItem setObject:credDto.userName forKey:(__bridge id)kSecAttrDescription];
-    } else {
-        [keychainItem setObject:credDto.userName forKey:(__bridge id)kSecAttrAccount];
-        [keychainItem setObject:serverPath forKey:(__bridge id)kSecAttrServer];
-    }
+    [keychainItem setObject:credDto.userId forKey:(__bridge id)kSecAttrAccount];
+    [keychainItem setObject:credDto.userName forKey:(__bridge id)kSecAttrDescription];
     
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
     
     if(stsExist == errSecSuccess) {
         NSLog(@"Error, unable to add keychain item with username =%@",credDto.userName);
-        DLog(@"and server =%@ ", serverPath);
         
     } else {
         
@@ -80,22 +74,16 @@
 
 #pragma mark - get credentials
 
-+(NSDictionary *)getKeychainDictionaryOfUser:(UserDto *)user fromPreviousDBVersion22:(BOOL)previousDB22{
++(NSDictionary *)getKeychainDictionaryOfUserId:(NSString *)userId {
     
     NSDictionary *resultDict = nil;
-    NSString *serverPath = [UtilsUrls getFullRemoteServerPath:user];
 
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
+    [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
-    if (previousDB22) {
-        NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
-        [keychainItem setObject:idString forKey:(__bridge id)kSecAttrAccount];
-    } else {
-        [keychainItem setObject:user.username forKey:(__bridge id)kSecAttrAccount];
-        [keychainItem setObject:serverPath forKey:(__bridge id)kSecAttrServer];
-    }
+    [keychainItem setObject:userId forKey:(__bridge id)kSecAttrAccount];
 
     [keychainItem setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
     [keychainItem setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnAttributes];
@@ -109,7 +97,7 @@
     DLog(@"(getCredentials)Error Code %d (0 = success)", (int)stsExist);
     
     if (stsExist != errSecSuccess) {
-        NSLog(@"Unable to get the item with username=%@ and serverPath=%@ ",user.credDto.userName, serverPath);
+        NSLog(@"Unable to get the item with userId=%@ ",userId);
         
     } else {
         
@@ -127,7 +115,8 @@
     
     OCCredentialsDto *credentialsDto = nil;
     
-    NSDictionary *resultKeychainDict = [self getKeychainDictionaryOfUser:user fromPreviousDBVersion22:previousDB22];
+    NSString *userId = [NSString stringWithFormat:@"%ld",(long)user.idUser];
+    NSDictionary *resultKeychainDict = [self getKeychainDictionaryOfUserId:userId];
     
     if (resultKeychainDict) {
         
@@ -137,6 +126,7 @@
             
             if (previousDB22) {
                 credentialsDto = [OCCredentialsDto new];
+                credentialsDto.userId = resultKeychainDict[(__bridge id)kSecAttrAccount];
                 credentialsDto.userName = resultKeychainDict[(__bridge id)kSecAttrDescription];
                 credentialsDto.accessToken = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
             } else {
@@ -154,20 +144,20 @@
 +(BOOL)removeCredentialsByUser:(UserDto *)user {
     
     BOOL output = NO;
-    NSString *serverPath = [UtilsUrls getFullRemoteServerPath:user];
-
+    
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
+    [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
-    [keychainItem setObject:user.username forKey:(__bridge id)kSecAttrAccount];
-    [keychainItem setObject:serverPath forKey:(__bridge id)kSecAttrServer];
+    
+    [keychainItem setObject:user.credDto.userId forKey:(__bridge id)kSecAttrAccount];
 
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
     
     NSLog(@"(removeCredentials)Error Code: %d", (int)stsExist);
     
     if(stsExist != errSecSuccess) {
-        NSLog(@"Unable to delete the item with username=%@ and server=%@ ",user.credDto.userName, serverPath);
+        NSLog(@"Unable to delete the item with username=%@ ",user.credDto.userName);
     } else {
         OSStatus sts = SecItemDelete((__bridge CFDictionaryRef)keychainItem);
         NSLog(@"Error Code: %d (0 = success)", (int)sts);
@@ -182,55 +172,39 @@
 
 #pragma mark - update credentials
 
-+(BOOL)updateCredentialsOfUser:(UserDto *)user{
-    return [OCKeychain updateCredentialsOfUser:user fromDB21to22:NO];
-}
-
-+(BOOL)updateCredentialsOfUser:(UserDto *)user fromDB21to22:(BOOL)fromDB21to22 {
++(BOOL)updateCredentials:(OCCredentialsDto *)credDto {
     
     BOOL output = NO;
-    NSString *serverPath = [UtilsUrls getFullRemoteServerPath:user];
     
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
+    [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
-    if (fromDB21to22) {
-        NSString *userId = [NSString stringWithFormat:@"%ld",(long)user.idUser];
-        [keychainItem setObject:userId forKey:(__bridge id)kSecAttrAccount];
-    } else {
-        [keychainItem setObject:user.username forKey:(__bridge id)kSecAttrAccount];
-        [keychainItem setObject:serverPath forKey:(__bridge id)kSecAttrServer];
-    }
+    [keychainItem setObject:credDto.userId forKey:(__bridge id)kSecAttrAccount];
+
     
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
     
     if(stsExist != errSecSuccess) {
-        NSLog(@"Unable to update keychain item with username=%@ and server=%@ ",user.credDto.userName,serverPath);
+        NSLog(@"Unable to update keychain item with userId=%@",credDto.userId);
     }else {
         
         NSMutableDictionary *attrToUpdate = [NSMutableDictionary dictionary];
         
-        if (user.credDto && user.credDto.userName && user.credDto.accessToken){
-            
-            [attrToUpdate setObject:(__bridge id)(kSecClassInternetPassword) forKey:(__bridge id)kSecClass];
-            [attrToUpdate setObject:user.username forKey:(__bridge id)kSecAttrAccount];
-            [attrToUpdate setObject:serverPath forKey:(__bridge id)kSecAttrServer];
-
-            NSData *encodedCredDto = [NSKeyedArchiver archivedDataWithRootObject:user.credDto];
-            [attrToUpdate setObject:encodedCredDto forKey:(__bridge id)kSecValueData];
-            [attrToUpdate setObject:user.username forKey:(__bridge id)kSecAttrDescription];
-            
-            OSStatus stsUpd = SecItemUpdate((__bridge CFDictionaryRef)(keychainItem), (__bridge CFDictionaryRef)(attrToUpdate));
-            
-            NSLog(@"(updateKeychainCredentials)Error Code: %d (0 = success)", (int)stsUpd);
-            
-            if (stsUpd == errSecSuccess) {
-                output = YES;
-            }
+        NSData *encodedCredDto = [NSKeyedArchiver archivedDataWithRootObject:credDto];
+        [attrToUpdate setObject:encodedCredDto forKey:(__bridge id)kSecValueData];
+        [attrToUpdate setObject:credDto.userName forKey:(__bridge id)kSecAttrDescription];
+        
+        OSStatus stsUpd = SecItemUpdate((__bridge CFDictionaryRef)(keychainItem), (__bridge CFDictionaryRef)(attrToUpdate));
+        
+        NSLog(@"(updateKeychainCredentials)Error Code: %d (0 = success)", (int)stsUpd);
+        
+        if (stsUpd == errSecSuccess) {
+            output = YES;
         }
+        
     }
-    
     return output;
 }
 
@@ -264,6 +238,7 @@
     
     NSMutableDictionary *keychainQuery = [NSMutableDictionary dictionary];
     
+    [keychainQuery setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
     [keychainQuery setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
     NSMutableDictionary *attrToUpdate = [NSMutableDictionary dictionary];
@@ -283,9 +258,7 @@
 #pragma mark - used to update from db version 9to10, from db to keychain
 +(BOOL)setCredentialsOfUserFromDBVersion9To10:(UserDto *)user {
     
-    NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
-    
-    return [OCKeychain setCredentials:user.credDto withServer:nil userId:idString migratingFromDB9to10:YES];
+    return [OCKeychain setCredentials:user.credDto migratingFromDB9to10:YES];
 }
 
 #pragma mark - used to update from db version 21to22
@@ -299,7 +272,7 @@
         if (user.credDto) {
             user.credDto.authenticationMethod = k_is_sso_active ? AuthenticationMethodSAML_WEB_SSO : AuthenticationMethodBASIC_HTTP_AUTH;
             
-            [OCKeychain updateCredentialsOfUser:user fromDB21to22:YES];
+            [OCKeychain updateCredentials:user.credDto];
             
         } else {
             DLog(@"Not possible to update keychain with userId: %ld", (long)user.idUser);

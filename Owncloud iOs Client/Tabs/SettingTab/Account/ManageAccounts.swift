@@ -27,12 +27,10 @@ import Foundation
     func storeAccountOfUser(_ user: UserDto, withCredentials credentials: OCCredentialsDto) {
         
         if (ManageUsersDB.insertUser(user) != nil) {
-            
-            let url = UtilsUrls.getFullRemoteServerPath(user)
-
+    
             user.credDto = credentials.copy() as! OCCredentialsDto
             
-            OCKeychain.setCredentials(credentials, withServer: url)
+            OCKeychain.setCredentials(credentials)
             
             (UIApplication.shared.delegate as! AppDelegate).activeUser = user
             
