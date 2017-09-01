@@ -24,9 +24,11 @@ import Foundation
     var authCode = ""
     var error: Error? = nil
     
-    let sslCertificateManager: SSLCertificateManager = SSLCertificateManager();
+    private let sslCertificateManager: SSLCertificateManager = SSLCertificateManager();
 
-    var currentRequest: URLRequest? = nil;
+    private var currentRequest: URLRequest? = nil;
+    
+    private var loadInterrupted: Bool = false;
 
     
     // MARK: IBOutlets
@@ -56,6 +58,8 @@ import Foundation
         //load login url in web view
         let urlToGetAuthCode = OauthAuthentication().oauthUrlTogetAuthCodeWith(serverPath: serverPath)
         self.loadWebViewWith(url: urlToGetAuthCode)
+        
+        self.loadInterrupted = false;
     }
     
     override func didReceiveMemoryWarning() {
@@ -95,12 +99,15 @@ import Foundation
         if sslCertificateManager.isUntrustedServerCertificate(error) {
             self.retryIfCertificateInCurrentRequestWasAcceptedByUser()
             return;
-        }
-        self.error = error
+            
+        } else if !self.loadInterrupted {
+            self.error = error
+
+        } //else, let the error set in webView(webView, shouldStartLoadWith, navigationType), if any
+        
         self.performCancelButtonTapped()
     }
 
-    
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         
         let urlToFollow: String = (request.url?.absoluteString)!
@@ -108,34 +115,47 @@ import Foundation
         // We store the request to inspect the server certificate and retry it in case of SSL error
         self.currentRequest = request;
 
-        if urlToFollow.contains(k_oauth2_redirect_uri){
+        if urlToFollow.hasPrefix(k_oauth2_redirect_uri){
+            processFinalRedirect(urlToFollow);
+            self.loadInterrupted = true;
+            return false;      // will trigger webView(webView, didFailLoadWithError), with error due to cancellation
             
-            if let code = getQueryStringParameter(url: urlToFollow, param: "code") {
-                self.authCode = code
-                self.error = nil;
-                print("contains url and code auth \(self.authCode)")
-                
-            } else if let errorString = getQueryStringParameter(url: urlToFollow, param: "error") {
-                if errorString == "access_denied" {
-                    error = UtilsFramework.getErrorWithCode(
-                        Int(OCErrorOAuth2ErrorAccessDenied.rawValue),
-                        andCustomMessageFromTheServer: NSLocalizedString("oauth_error", comment: "")
-                    );
-                } else {
-                    error = UtilsFramework.getErrorWithCode(
-                        Int(OCErrorOAuth2Error.rawValue),
-                        andCustomMessageFromTheServer: NSLocalizedString("oauth_error_access_denied", comment: "")
-                    );
-                }
-
-            }
-            
-           return false;
+        } else if urlToFollow.hasPrefix(serverPath + k_url_path_list_of_files_in_web) {
+            self.error = UtilsFramework.getErrorWithCode(
+                Int(OCErrorOAuth2Error.rawValue),
+                andCustomMessageFromTheServer: NSLocalizedString("oauth_error", comment: "")
+            );
+            self.loadInterrupted = true;
+            // for some reason, this time "return false" will NOT trigger webView(webView, didFailLoadWithError), with error due to cancellation
+            // so, let's solve it here:
+            self.performCancelButtonTapped()
+            return false;
         }
         
         return true;
     }
     
+    func processFinalRedirect(_ urlToFollow: String) -> Void {
+        if let code = getQueryStringParameter(url: urlToFollow, param: "code") {
+            self.authCode = code
+            self.error = nil;
+            print("contains url and code auth \(self.authCode)")
+            
+        } else if let errorString = getQueryStringParameter(url: urlToFollow, param: "error") {
+            if errorString == "access_denied" {
+                error = UtilsFramework.getErrorWithCode(
+                    Int(OCErrorOAuth2ErrorAccessDenied.rawValue),
+                    andCustomMessageFromTheServer: NSLocalizedString("oauth_error_access_denied", comment: "")
+                );
+            } else {
+                error = UtilsFramework.getErrorWithCode(
+                    Int(OCErrorOAuth2Error.rawValue),
+                    andCustomMessageFromTheServer: NSLocalizedString("oauth_error", comment: "")
+                );
+            }
+            
+        }
+    }
     
     func getQueryStringParameter(url: String, param: String) -> String? {
         guard let url = URLComponents(string: url) else { return nil }
