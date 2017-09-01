@@ -25,7 +25,7 @@
 @interface OCKeychain : NSObject <OCCredentialsStorageDelegate>
 
 
-+(BOOL)setCredentials:(OCCredentialsDto *)credentials withServer:(NSString *)serverPath;
++(BOOL)setCredentials:(OCCredentialsDto *)credentials;
 
 /**
  * @return CredentialsDto -> New credentialDto with all the new data added to support oauth
@@ -33,7 +33,7 @@
 +(OCCredentialsDto *)getCredentialsByUser:(UserDto *)user;
 
 +(BOOL)removeCredentialsByUser:(UserDto *)user;
-+(BOOL)updateCredentialsOfUser:(UserDto *)user;
++(BOOL)updateCredentials:(OCCredentialsDto *)credDto;
 +(BOOL)resetKeychain;
 
 
