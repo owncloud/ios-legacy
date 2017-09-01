@@ -90,7 +90,7 @@
             case k_DB_version_8:
                 [ManageDB updateDBVersion8To9];
             case k_DB_version_9:
-                [ManageDB updateDBVersion9To10];
+                [ManageDB updateDBVersion9To10];//Updates in Keychain
             case k_DB_version_10:
                 [ManageDB updateDBVersion10To11];
             case k_DB_version_11:
@@ -98,7 +98,7 @@
             case k_DB_version_12:
                 [ManageDB updateDBVersion12To13];
                 //Update keychain of all the users
-                [OCKeychain updateAllOCKeychainItemsToUseTheLockProperty];
+                [OCKeychain updateAllOCKeychainItemsToUseTheLockProperty];//Updates in Keychain
             case k_DB_version_13:
                 [ManageDB updateDBVersion13To14];
             case k_DB_version_14:
@@ -116,7 +116,7 @@
             case k_DB_version_20:
                 [ManageDB updateDBVersion20To21];
             case k_DB_version_21:
-                [ManageDB updateDBVersion21To22];
+                [ManageDB updateDBVersion21To22];//Updates in Keychain
                 break; //Insert your migration above this final break.
         }
     }
