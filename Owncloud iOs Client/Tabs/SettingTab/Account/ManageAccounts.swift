@@ -30,6 +30,8 @@ import Foundation
             
             let url = UtilsUrls.getFullRemoteServerPath(user)
 
+            user.credDto = credentials.copy() as! OCCredentialsDto
+            
             OCKeychain.setCredentials(credentials, withServer: url)
             
             (UIApplication.shared.delegate as! AppDelegate).activeUser = user
