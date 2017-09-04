@@ -30,9 +30,9 @@
 /**
  * @return CredentialsDto -> New credentialDto with all the new data added to support oauth
  */
-+(OCCredentialsDto *)getCredentialsByUser:(UserDto *)user;
++(OCCredentialsDto *)getCredentialsOfUser:(UserDto *)user;
 
-+(BOOL)removeCredentialsByUser:(UserDto *)user;
++(BOOL)removeCredentialsOfUser:(UserDto *)user;
 +(BOOL)updateCredentials:(OCCredentialsDto *)credDto;
 +(BOOL)resetKeychain;
 

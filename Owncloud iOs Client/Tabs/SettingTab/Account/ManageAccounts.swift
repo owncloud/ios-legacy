@@ -24,18 +24,30 @@ import Foundation
     * @param  CredentialsDto -> credentials of user
     */
     
-    func storeAccountOfUser(_ user: UserDto, withCredentials credentials: OCCredentialsDto) {
+    func storeAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) -> UserDto? {
         
-        if (ManageUsersDB.insertUser(user) != nil) {
+        if let userInDB = ManageUsersDB.insertUser(user) {
     
-            user.credDto = credentials.copy() as! OCCredentialsDto
+            userInDB.credDto = credDto.copy() as! OCCredentialsDto
+            credDto.userId = String(userInDB.idUser)
             
-            OCKeychain.setCredentials(credentials)
+            //userInDB contains the userId in DB, we add the credentials and store the user in keychain
+            OCKeychain.setCredentials(userInDB.credDto)
             
-            (UIApplication.shared.delegate as! AppDelegate).activeUser = user
+            let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+            
+            if (app.activeUser == nil || (userInDB.activeaccount)) {
+                // only set as active account the first account added
+                // OR if it is already the active user; otherwise cookies will not be correctly restored
+                userInDB.activeaccount = true
+                app.activeUser = userInDB
+            }
+            
+            return userInDB;
             
         } else {
             print("Error storing account for \(user.username)")
+            return nil;
         }
         
     }
@@ -46,7 +58,7 @@ import Foundation
         
         ManageUsersDB.updateUser(by: user)
 
-        OCKeychain.updateCredentials(ofUser: user)
+        OCKeychain.updateCredentials(user.credDto)
         
         if user.activeaccount {
             UtilsCookies.eraseCredentialsAndUrlCacheOfActiveUser()

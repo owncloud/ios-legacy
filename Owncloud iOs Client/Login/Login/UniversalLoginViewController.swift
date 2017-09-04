@@ -927,32 +927,36 @@ connection_declined  Connection declined by user
                                                         app.activeUser = self.user
                                                     }
 
-                                                if self.loginMode == .create {
-                                                    
-                                                    if (ManageUsersDB.isExistUser(self.user)) {
-                                                        self.showURLError(NSLocalizedString("account_not_new", comment: ""))
+                                                    if self.loginMode == .create {
                                                         
+                                                        if (ManageUsersDB.isExistUser(self.user)) {
+                                                            self.showURLError(NSLocalizedString("account_not_new", comment: ""))
+                                                            
+                                                        } else {
+                                                            
+                                                            self.user = ManageAccounts().storeAccountOfUser(self.user!, withCredentials: credentials)
+                                                            
+                                                            if self.user != nil {
+                                                                ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
+                                                        
+                                                                // grant that settings of instant uploads are the same for the new account that for the currently active account
+                                                                // TODO: get rid of this
+                                                                ManageAppSettingsDB.updateInstantUploadAllUser();
+                                                            
+                                                                app.generateAppInterface(fromLoginScreen: true)
+                                                        
+                                                            } else {
+                                                                self.showURLError(NSLocalizedString("error_could_not_add_account", comment: ""))
+                                                            }
+                                                    
+                                                        }
                                                     } else {
-                                                    
-                                                        ManageAccounts().storeAccountOfUser(self.user!, withCredentials: credentials)
-                                                    
-                                                        // grant that settings of instant uploads are the same for the new account that for the currently active account
-                                                        // TODO: get rid of this
-                                                        ManageAppSettingsDB.updateInstantUploadAllUser();
-                                                    
-                                                        ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
-                                                        
-                                                        app.generateAppInterface(fromLoginScreen: true)
-                                                    
-                                                    }
-                                                } else {
                                                         ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
                                                     
                                                         self.closeLoginView()
                                                     }
                                                 }
 
-                                                
                                             } else {
                                                 if errorHttp == Int(kOCErrorServerUnauthorized) {
                                                     self.showCredentialsError(

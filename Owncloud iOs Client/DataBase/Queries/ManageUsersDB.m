@@ -117,7 +117,7 @@
     }];
     
     if (output != nil) {
-        OCCredentialsDto *credDto = [OCKeychain getCredentialsByUser:output];
+        OCCredentialsDto *credDto = [OCKeychain getCredentialsOfUser:output];
         output.username = credDto.userName;
         output.credDto = credDto;
     }
@@ -228,7 +228,7 @@
     }];
     
     if (user != nil) {
-        user.credDto = [OCKeychain getCredentialsByUser:user];
+        user.credDto = [OCKeychain getCredentialsOfUser:user];
         user.username = user.credDto.userName;
     }
     
@@ -298,7 +298,7 @@
             
             current.predefinedUrl = [rs stringForColumn:@"predefined_url"];
             
-            OCCredentialsDto *credDto = [OCKeychain getCredentialsByUser:current];
+            OCCredentialsDto *credDto = [OCKeychain getCredentialsOfUser:current];
             current.username = credDto.userName;
             current.credDto = credDto;
             
@@ -532,7 +532,7 @@
         
     }];
     
-    if (![OCKeychain removeCredentialsByUser:user]) {
+    if (![OCKeychain removeCredentialsOfUser:user]) {
         DLog(@"Error delete keychain credentials");
         
     }

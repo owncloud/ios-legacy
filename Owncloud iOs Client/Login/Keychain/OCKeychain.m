@@ -107,11 +107,11 @@
     return resultDict;
 }
 
-+(OCCredentialsDto *)getCredentialsByUser:(UserDto *)user {
-    return [self getCredentialsByUser:user fromPreviousDBVersion22:NO] ;;
++(OCCredentialsDto *)getCredentialsOfUser:(UserDto *)user {
+    return [self getCredentialsOfUser:user fromPreviousDBVersion22:NO] ;;
 }
 
-+(OCCredentialsDto *)getCredentialsByUser:(UserDto *)user fromPreviousDBVersion22:(BOOL)previousDB22{
++(OCCredentialsDto *)getCredentialsOfUser:(UserDto *)user fromPreviousDBVersion22:(BOOL)previousDB22{
     
     OCCredentialsDto *credentialsDto = nil;
     
@@ -141,7 +141,7 @@
 
 #pragma mark - remove credentials
 
-+(BOOL)removeCredentialsByUser:(UserDto *)user {
++(BOOL)removeCredentialsOfUser:(UserDto *)user {
     
     BOOL output = NO;
     
@@ -149,8 +149,8 @@
     [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
-    
-    [keychainItem setObject:user.credDto.userId forKey:(__bridge id)kSecAttrAccount];
+    NSString *userId = [NSString stringWithFormat:@"%ld",(long)user.idUser];
+    [keychainItem setObject:userId forKey:(__bridge id)kSecAttrAccount];
 
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
     
@@ -267,7 +267,7 @@
     
     for (UserDto *user in [ManageUsersDB getAllUsersWithOutCredentialInfo]) {
         
-        user.credDto = [OCKeychain getCredentialsByUser:user fromPreviousDBVersion22:YES];
+        user.credDto = [OCKeychain getCredentialsOfUser:user fromPreviousDBVersion22:YES];
         
         if (user.credDto) {
             user.credDto.authenticationMethod = k_is_sso_active ? AuthenticationMethodSAML_WEB_SSO : AuthenticationMethodBASIC_HTTP_AUTH;
