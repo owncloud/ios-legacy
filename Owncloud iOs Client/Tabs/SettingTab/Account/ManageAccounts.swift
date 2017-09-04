@@ -29,7 +29,7 @@ import Foundation
         if let userInDB = ManageUsersDB.insertUser(user) {
     
             userInDB.credDto = credDto.copy() as! OCCredentialsDto
-            credDto.userId = String(userInDB.idUser)
+            userInDB.credDto.userId = String(userInDB.idUser)
             
             //userInDB contains the userId in DB, we add the credentials and store the user in keychain
             OCKeychain.setCredentials(userInDB.credDto)
