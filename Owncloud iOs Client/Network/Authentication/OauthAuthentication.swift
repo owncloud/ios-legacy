@@ -58,7 +58,7 @@ import Foundation
     }
     
 
-@objc    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ userCredDto: OCCredentialsDto? ,_ error: String?) -> Void)  {
+@objc    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ userCredDto: OCCredentialsDto? ,_ error: Error?) -> Void)  {
         
         self.accessTokenAuthRequest(url, authCode: authCode, withCompletion: { (data:Data?, httpResponse:HTTPURLResponse?, error:Error?) in
             
