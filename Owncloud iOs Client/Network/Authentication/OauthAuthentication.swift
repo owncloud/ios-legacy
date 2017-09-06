@@ -152,83 +152,83 @@ import Foundation
     }
     
     
-    
-    // MARK : get authData by refreshToken
-    
-@objc    func refreshTokenAuthRequest(_ url: URL, refreshToken: String, withCompletion completion: @escaping (_ data: Data?,_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        
-        request.setValue(UtilsUrls.getUserAgent(), forHTTPHeaderField: "User-Agent")
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        
-        let authId = k_oauth2_client_id+":"+k_oauth2_client_secret
-        let base64EncodedAuthId: String = UtilsFramework.afBase64EncodedString(from: authId)
-        request.setValue("Basic \(base64EncodedAuthId)", forHTTPHeaderField: "Authorization")
-        
-        let body =  "grant_type=refresh_token&refresh_token=\(refreshToken)&redirect_uri=\(k_oauth2_redirect_uri)&client_id=\(k_oauth2_client_id)"
-        let bodyEncoded = body.data(using: String.Encoding.utf8)
-        request.httpBody = bodyEncoded
-        
-        let configuration = URLSessionConfiguration.ephemeral
-        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-        //        let session = URLSession(configuration: URLSessionConfiguration.default)
-        
-        let task = session.dataTask(with: request as URLRequest, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            
-            if let error = error {
-                print(error.localizedDescription)
-                completion(nil, nil, error)
-                
-            } else if let data = data {
-                completion(data , response as? HTTPURLResponse, error)
-                
-            } else {
-                completion(nil, response as? HTTPURLResponse, error)
-            }
-        })
-        task.resume()
-    }
-    
-    
-@objc    func getAuthDataBy(url: URL, refreshToken: String, withCompletion completion: @escaping (_ userCredDto: OCCredentialsDto? ,_ error: String?) -> Void)  {
-        
-        self.refreshTokenAuthRequest(url, refreshToken:refreshToken, withCompletion: { (data:Data?, httpResponse:HTTPURLResponse?, error:Error?) in
-            
-            if data != nil {
-                
-                do {
-                    if let dictJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary  {
-                        
-                        if let resultError = dictJSON["error"] {
-                            completion(nil, resultError as? String)
-                        } else {
-                            
-                            let userCredDto: OCCredentialsDto = OCCredentialsDto()
-                            userCredDto.userName = dictJSON["user_id"] as? String
-                            userCredDto.accessToken = dictJSON["access_token"] as? String
-                            userCredDto.refreshToken = dictJSON["refresh_token"] as? String
-                            userCredDto.expiresIn = dictJSON["expires_in"] as? String
-                            userCredDto.tokenType = dictJSON["token_type"] as? String
-                            userCredDto.authenticationMethod = AuthenticationMethod.BEARER_TOKEN
-                            
-                            completion(userCredDto, nil)
-                        }
-                    } else {
-                        completion(nil, error?.localizedDescription)
-                    }
-                    
-                } catch let error {
-                    print("accessTokenAuthRequest  no data error:", error.localizedDescription)
-                    completion(nil, error.localizedDescription)
-                }
-                
-            } else {
-                completion(nil, error?.localizedDescription)
-            }
-        })
-    }
+//MOVED TO OC LIBRARY
+//    // MARK : get authData by refreshToken
+//    
+//@objc    func refreshTokenAuthRequest(_ url: URL, refreshToken: String, withCompletion completion: @escaping (_ data: Data?,_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
+//        
+//        var request = URLRequest(url: url)
+//        request.httpMethod = "POST"
+//        
+//        request.setValue(UtilsUrls.getUserAgent(), forHTTPHeaderField: "User-Agent")
+//        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+//        
+//        let authId = k_oauth2_client_id+":"+k_oauth2_client_secret
+//        let base64EncodedAuthId: String = UtilsFramework.afBase64EncodedString(from: authId)
+//        request.setValue("Basic \(base64EncodedAuthId)", forHTTPHeaderField: "Authorization")
+//        
+//        let body =  "grant_type=refresh_token&refresh_token=\(refreshToken)&redirect_uri=\(k_oauth2_redirect_uri)&client_id=\(k_oauth2_client_id)"
+//        let bodyEncoded = body.data(using: String.Encoding.utf8)
+//        request.httpBody = bodyEncoded
+//        
+//        let configuration = URLSessionConfiguration.ephemeral
+//        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+//        //        let session = URLSession(configuration: URLSessionConfiguration.default)
+//        
+//        let task = session.dataTask(with: request as URLRequest, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+//            
+//            if let error = error {
+//                print(error.localizedDescription)
+//                completion(nil, nil, error)
+//                
+//            } else if let data = data {
+//                completion(data , response as? HTTPURLResponse, error)
+//                
+//            } else {
+//                completion(nil, response as? HTTPURLResponse, error)
+//            }
+//        })
+//        task.resume()
+//    }
+//    
+//    
+//@objc    func getAuthDataBy(url: URL, refreshToken: String, withCompletion completion: @escaping (_ userCredDto: OCCredentialsDto? ,_ error: String?) -> Void)  {
+//        
+//        self.refreshTokenAuthRequest(url, refreshToken:refreshToken, withCompletion: { (data:Data?, httpResponse:HTTPURLResponse?, error:Error?) in
+//            
+//            if data != nil {
+//                
+//                do {
+//                    if let dictJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary  {
+//                        
+//                        if let resultError = dictJSON["error"] {
+//                            completion(nil, resultError as? String)
+//                        } else {
+//                            
+//                            let userCredDto: OCCredentialsDto = OCCredentialsDto()
+//                            userCredDto.userName = dictJSON["user_id"] as? String
+//                            userCredDto.accessToken = dictJSON["access_token"] as? String
+//                            userCredDto.refreshToken = dictJSON["refresh_token"] as? String
+//                            userCredDto.expiresIn = dictJSON["expires_in"] as? String
+//                            userCredDto.tokenType = dictJSON["token_type"] as? String
+//                            userCredDto.authenticationMethod = AuthenticationMethod.BEARER_TOKEN
+//                            
+//                            completion(userCredDto, nil)
+//                        }
+//                    } else {
+//                        completion(nil, error?.localizedDescription)
+//                    }
+//                    
+//                } catch let error {
+//                    print("accessTokenAuthRequest  no data error:", error.localizedDescription)
+//                    completion(nil, error.localizedDescription)
+//                }
+//                
+//            } else {
+//                completion(nil, error?.localizedDescription)
+//            }
+//        })
+//    }
 
 /// MARK : methods from URLSessionDelegate
     
