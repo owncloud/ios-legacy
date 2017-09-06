@@ -920,14 +920,6 @@ connection_declined  Connection declined by user
                                                     self.user?.urlRedirected = app.urlServerRedirected
                                                     self.user?.predefinedUrl = k_default_url_server
                                                 
-                                                    if (app.activeUser == nil || (self.user?.activeaccount)!) {
-                                                        // only set as active account the first account added
-                                                        // OR if it is already the active user; otherwise cookies will not be correctly restored
-                                                        self.user?.activeaccount = true
-                                                        app.activeUser = self.user
-                                                    }
-                                                
-                                                
                                                     if self.loginMode == .create {
                                                         if (ManageUsersDB.isExistUser(self.user)) {
                                                             self.showURLError(NSLocalizedString("account_not_new", comment: ""))
@@ -942,7 +934,11 @@ connection_declined  Connection declined by user
                                                                 
                                                                 ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
                                                         
-                                                                app.generateAppInterface(fromLoginScreen: true)
+                                                                app.switchActiveUser(to: self.user, inHardMode: true, withCompletionHandler:
+                                                                    { 
+                                                                        app.generateAppInterface(fromLoginScreen: true)
+                                                                })
+                                                                
 
                                                             } else {
                                                                 self.showURLError(NSLocalizedString("error_could_not_add_account", comment: ""))

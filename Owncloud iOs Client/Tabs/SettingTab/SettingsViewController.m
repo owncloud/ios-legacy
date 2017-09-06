@@ -1099,91 +1099,32 @@
 - (void) didPressOnAccountIndexPath:(NSIndexPath*)indexPath {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    app.userSessionCurrentToken = nil;
-    
     UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
+
     //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
     [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:[UtilsUrls getFullRemoteServerPath:selectedUser]];
 
+    
     //Method to change the account
-    AccountCell *cell = (AccountCell *) [self.settingsTableView cellForRowAtIndexPath:indexPath];
-    [cell activeAccount:nil];
-    
-}
-
-#pragma mark - AccountCell Delegate Methods
-
--(void)activeAccountByPosition:(NSInteger)position {
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:position];
-    
-    if (app.activeUser.idUser != selectedUser.idUser) {
-        //Cancel downloads of the previous user
-    
-        [[OCLoadingSpinner sharedOCLoadingSpinner] initLoadingForViewController: self];
-    
-        [AppDelegate sharedSyncFolderManager].delegate = self;
+    [[OCLoadingSpinner sharedOCLoadingSpinner] initLoadingForViewController: self];
+    [app switchActiveUserTo:selectedUser inHardMode:NO withCompletionHandler:^{
+        DLog(@"refreshing list of accounts after user was switched");
         
-        [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
+        [[OCLoadingSpinner sharedOCLoadingSpinner] endLoading];
+        
+        //If ipad, clean the detail view
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            [app presentWithView];
+        }
+        
+        //[CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
+        
+        self.listUsers = [ManageUsersDB getAllUsers];
+        [self.settingsTableView reloadData];
+        
+    } ];
     
-        [self continueChangingUser:selectedUser];
-    }
-}
-
-- (void) continueChangingUser:(UserDto *) selectedUser {
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    app.userSessionCurrentToken = nil;
-    
-    self.semaphoreChangeUser = dispatch_semaphore_create(0);
-    
-    // Run loop
-    while (dispatch_semaphore_wait(self.semaphoreChangeUser, DISPATCH_TIME_NOW)) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
-                                 beforeDate:[NSDate dateWithTimeIntervalSinceNow:k_timeout_upload]];
-    }
-    
-    DLog(@"continueChangingUser");
-    
-    [[OCLoadingSpinner sharedOCLoadingSpinner] endLoading];
-    
-    [UtilsFramework deleteAllCookies];
-    
-    //[self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
-    
-    //If ipad, clean the detail view
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        [app presentWithView];
-    }
-    
-    [ManageUsersDB setAllUsersNoActive];
-    [ManageUsersDB setActiveAccountByIdUser:selectedUser.idUser];
-    selectedUser.activeaccount = YES;
-    
-    //Restore the cookies of the future activeUser
-    //1- Storage the new cookies on the Database
-    [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
-    //2- Clean the cookies storage
-    [UtilsFramework deleteAllCookies];
-    //3- We restore the previous cookies of the active user on the System cookies storage
-    [UtilsCookies setOnSystemStorageCookiesByUser:selectedUser];
-    //4- We delete the cookies of the active user on the databse because it could change and it is not necessary keep them there
-    [ManageCookiesStorageDB deleteCookiesByUser:selectedUser];
-    
-    //Change the active user in appDelegate global variable
-    app.activeUser = selectedUser;
-    
-    [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
-    
-    [UtilsCookies eraseURLCache];
-    
-    self.listUsers = [ManageUsersDB getAllUsers];
-    [self.settingsTableView reloadData];
-    
-    [self createFolderForUser:selectedUser];
-    
-    app.isNewUser = YES;
 }
 
 - (void) createFolderForUser:(UserDto *) user {

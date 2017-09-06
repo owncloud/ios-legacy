@@ -60,7 +60,7 @@
 #import "OCKeychain.h"
 #import "UtilsCookies.h"
 #import "PresentedViewUtils.h"
-
+#import "OCLoadingSpinner.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -2787,5 +2787,98 @@ float shortDelay = 0.3;
     ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
     [self showPassCodeIfNeeded];
 }
+
+
+#pragma mark - Active User
+
+- (void) switchActiveUserTo:(UserDto *)user inHardMode:(BOOL)hardMode withCompletionHandler:(void (^)(void)) completionHandler {
+    
+    self.userSessionCurrentToken = nil;
+        // should be here or right after checking the user really changed? for the moment, here
+        
+    // 3. from AccountCellDelegate#activeAccountByPosition:(NSInteger)position implementation in SettingsViewController
+    if (self.activeUser.idUser != user.idUser || hardMode) {
+
+        //We delete the cookies on SAML
+        if (k_is_sso_active) {
+            [UtilsCookies eraseCredentialsAndUrlCacheOfActiveUser];
+        }
+        
+        // Cancel downloads of the previous user, in BACKGROUND
+        [AppDelegate sharedSyncFolderManager].delegate = self;
+        [self performSelectorInBackground:@selector(portedCancelAllDownloads) withObject:nil];
+        
+        // Run wait loop 'til cancellation of download finishes
+        self.semaphoreChangeUser = dispatch_semaphore_create(0);
+        while (dispatch_semaphore_wait(self.semaphoreChangeUser, DISPATCH_TIME_NOW)) {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
+                                     beforeDate:[NSDate dateWithTimeIntervalSinceNow:k_timeout_upload]];
+        }
+        
+        DLog(@"continue switching user after cancelling downloads");
+        
+        [UtilsFramework deleteAllCookies];
+        
+        [ManageUsersDB setAllUsersNoActive];
+        [ManageUsersDB setActiveAccountByIdUser:user.idUser];
+        user.activeaccount = YES;
+        
+        //Restore the cookies of the future activeUser
+        //1- Store the new cookies on the Database
+        [UtilsCookies setOnDBStorageCookiesByUser:self.activeUser];
+        //2- Clean the cookies storage
+        [UtilsFramework deleteAllCookies];
+        //3- We restore the previous cookies of the active user on the System cookies storage
+        [UtilsCookies setOnSystemStorageCookiesByUser:user];
+        //4- We delete the cookies of the active user on the database because it could change and it is not necessary keep them there
+        [ManageCookiesStorageDB deleteCookiesByUser:user];
+        
+        //Change the active user in appDelegate global variable
+        self.activeUser = user;
+        
+        [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
+        
+        [UtilsCookies eraseURLCache];
+        
+        // code still duplicatied in SettingsViewController#createFolderForUser:(UserDto *)
+        //We get the current folder to create the local tree
+        //we create the user folder to haver multiuser
+        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)user.idUser];
+        DLog(@"current: %@", currentLocalFileToCreateFolder);
+        
+        if (![[NSFileManager defaultManager] fileExistsAtPath:currentLocalFileToCreateFolder]) {
+            NSError *error = nil;
+            [[NSFileManager defaultManager] createDirectoryAtPath:currentLocalFileToCreateFolder withIntermediateDirectories:NO attributes:nil error:&error];
+            DLog(@"Error: %@", [error localizedDescription]);
+        }
+        
+        self.isNewUser = YES;
+    }
+    
+    if (completionHandler) {
+        completionHandler();
+    }
+}
+
+
+- (void) portedCancelAllDownloads {
+    //Cancel downloads in ipad
+    [self.downloadManager cancelDownloads];
+    
+    [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
+}
+
+
+#pragma mark - Method for SyncFolderManagerDelegate
+
+- (void) releaseSemaphoreToContinueChangingUser {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_semaphore_signal(self.semaphoreChangeUser);
+        
+        [AppDelegate sharedSyncFolderManager].delegate = nil;
+    });
+}
+
+
 
 @end
