@@ -36,11 +36,11 @@ import Foundation
     @IBOutlet var cancelButton: UIBarButtonItem!
 
     @IBAction func cancelButtonTapped(_ sender: Any) {
-        self.performCancelButtonTapped()
+        self.closeLoginViewController()
 
     }
 
-    func performCancelButtonTapped() {
+    func closeLoginViewController() {
         self.performSegue(withIdentifier: K.unwindId.unwindToMainLoginView, sender: self)
     }
 
@@ -69,10 +69,9 @@ import Foundation
     
     func loadWebViewWith (url : URL) {
        
-        //clearAllCookies
-
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: TimeInterval(k_timeout_upload))
         request.addValue(UtilsUrls.getUserAgent(), forHTTPHeaderField: "User-Agent")
+        request.setValue("", forHTTPHeaderField: "Cookie")
         
         self.webViewLogin.loadRequest(request)
 
@@ -105,7 +104,7 @@ import Foundation
 
         } //else, let the error set in webView(webView, shouldStartLoadWith, navigationType), if any
         
-        self.performCancelButtonTapped()
+        self.closeLoginViewController()
     }
 
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
@@ -128,7 +127,7 @@ import Foundation
             self.loadInterrupted = true;
             // for some reason, this time "return false" will NOT trigger webView(webView, didFailLoadWithError), with error due to cancellation
             // so, let's solve it here:
-            self.performCancelButtonTapped()
+            self.closeLoginViewController()
             return false;
         }
         
