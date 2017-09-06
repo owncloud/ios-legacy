@@ -253,4 +253,31 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
 
     }
     
+/// MARK : methods from URLSessionTaskDelegate
+
+    // Delegate method called when the server responsed with a redirection
+    //
+    // In this case we need to grant that redirections are just followed, but not with the request proposed by the system.
+    // The requests to access token endpoint are POSTs, and iOS proposes GETs for the redirections
+    //
+    func urlSession(_ session: URLSession,
+                    task: URLSessionTask,
+                    willPerformHTTPRedirection response: HTTPURLResponse,
+                    newRequest request: URLRequest,
+                    completionHandler: @escaping (URLRequest?) -> Void) {
+        
+        print("DetectAuthenticationMethod: redirect detected in URLSessionTaskDelegate implementation")
+        
+        // let's resuse the last request performed by the task (it's a POST) and set in it the redirected URL from the request proposed by the system
+        if var newRequest: URLRequest = task.currentRequest {
+            newRequest.url = request.url
+        
+            //follow
+            completionHandler(newRequest)   // follow
+            
+        } else {
+            completionHandler(nil)  // we don't know where to redirect, something was really wrong -> stop
+        }
+    }
+    
 }
