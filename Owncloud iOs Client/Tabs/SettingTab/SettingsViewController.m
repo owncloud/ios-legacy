@@ -1664,17 +1664,6 @@
     [self refreshTable];
 }
 
-#pragma mark - Semaphore
-
-- (void) releaseSemaphoreToContinueChangingUser {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        dispatch_semaphore_signal(self.semaphoreChangeUser);
-        
-        [AppDelegate sharedSyncFolderManager].delegate = nil;
-    });
-}
-
-
 # pragma mark - menu account
 
 - (void)showMenuAccountOptions:(UIButton *)sender {
