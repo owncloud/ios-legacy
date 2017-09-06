@@ -78,4 +78,18 @@
 }
 
 
++ (void) createFolderForUser:(UserDto *) user {
+    //We get the current folder to create the local tree
+    //we create the user folder to haver multiuser
+    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)user.idUser];
+    DLog(@"current: %@", currentLocalFileToCreateFolder);
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:currentLocalFileToCreateFolder]) {
+        NSError *error = nil;
+        [[NSFileManager defaultManager] createDirectoryAtPath:currentLocalFileToCreateFolder withIntermediateDirectories:NO attributes:nil error:&error];
+        DLog(@"Error: %@", [error localizedDescription]);
+    }
+}
+
+
 @end

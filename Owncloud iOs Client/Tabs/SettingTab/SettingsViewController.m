@@ -44,6 +44,7 @@
 #import "OCLoadingSpinner.h"
 #import "InstantUpload.h"
 #import "CheckFeaturesSupported.h"
+#import "UtilsFileSystem.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -1127,19 +1128,6 @@
     
 }
 
-- (void) createFolderForUser:(UserDto *) user {
-    //We get the current folder to create the local tree
-    //we create the user folder to haver multiuser
-    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)user.idUser];
-    DLog(@"current: %@", currentLocalFileToCreateFolder);
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:currentLocalFileToCreateFolder]) {
-        NSError *error = nil;
-        [[NSFileManager defaultManager] createDirectoryAtPath:currentLocalFileToCreateFolder withIntermediateDirectories:NO attributes:nil error:&error];
-        DLog(@"Error: %@", [error localizedDescription]);
-    }
-}
-
 #pragma mark - AddAccountDelegate
 
 - (void) refreshTable {
@@ -1761,7 +1749,7 @@
         
         [self setCookiesOfActiveAccount];
         
-        [self createFolderForUser:APP_DELEGATE.activeUser];
+        [UtilsFileSystem createFolderForUser:APP_DELEGATE.activeUser];
         
         //If ipad, clean the detail view
         if (!IS_IPHONE) {
