@@ -625,21 +625,18 @@ float shortDelay = 0.3;
         //Cookies is allways available in current supported Servers
         [sharedOCCommunication setIsCookiesAvailable:YES];
         
-        if (APP_DELEGATE.activeUser && APP_DELEGATE.activeUser.credDto.authenticationMethod == AuthenticationMethodBEARER_TOKEN) {
-            
-            NSString *urlString = [UtilsUrls getFullRemoteServerPath:APP_DELEGATE.activeUser];
-            [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
-                                                          initWithURLString:urlString clientId:k_oauth2_client_id
-                                                                        clientSecret:k_oauth2_client_secret
-                                                                        redirectUri:k_oauth2_redirect_uri
-                                                                        authorizationEndpoint:k_oauth2_authorization_endpoint
-                                                                        tokenEndpoint:k_oauth2_token_endpoint]];
-        }
+        [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                                      initWithClientId:k_oauth2_client_id
+                                                                      clientSecret:k_oauth2_client_secret
+                                                                      redirectUri:k_oauth2_redirect_uri
+                                                                      authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                                      tokenEndpoint:k_oauth2_token_endpoint]];
         
         [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
         
-        [sharedOCCommunication setCredentialsStorage:[OCKeychain new]];
-	}
+        OCKeychain *oKeychain = [[OCKeychain alloc] init];
+        [sharedOCCommunication setValueCredentialsStorage:oKeychain];
+    }
 	return sharedOCCommunication;
 }
 
@@ -667,20 +664,17 @@ float shortDelay = 0.3;
         //Cookies is allways available in current supported Servers
         [sharedOCCommunicationDownloadFolder setIsCookiesAvailable:YES];
         
-        if (APP_DELEGATE.activeUser && APP_DELEGATE.activeUser.credDto.authenticationMethod == AuthenticationMethodBEARER_TOKEN) {
-            NSString *urlString = [UtilsUrls getFullRemoteServerPath:APP_DELEGATE.activeUser];
-            [sharedOCCommunicationDownloadFolder setOauth2Configuration: [[OCOAuth2Configuration alloc]
-                                                            initWithURLString:urlString clientId:k_oauth2_client_id
-                                                            clientSecret:k_oauth2_client_secret
-                                                            redirectUri:k_oauth2_redirect_uri
-                                                            authorizationEndpoint:k_oauth2_authorization_endpoint
-                                                            tokenEndpoint:k_oauth2_token_endpoint]];
-        }
+        [sharedOCCommunicationDownloadFolder setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                                      initWithClientId:k_oauth2_client_id
+                                                                      clientSecret:k_oauth2_client_secret
+                                                                      redirectUri:k_oauth2_redirect_uri
+                                                                      authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                                      tokenEndpoint:k_oauth2_token_endpoint]];
         
         [sharedOCCommunicationDownloadFolder setUserAgent:[UtilsUrls getUserAgent]];
         
-        [sharedOCCommunicationDownloadFolder setCredentialsStorage:[OCKeychain new]];
-
+        OCKeychain *oKeychain = [[OCKeychain alloc] init];
+        [sharedOCCommunicationDownloadFolder setValueCredentialsStorage:oKeychain];
     }
     return sharedOCCommunicationDownloadFolder;
 }

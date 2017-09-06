@@ -23,6 +23,7 @@
     #import <Foundation/Foundation.h>
     #import <SystemConfiguration/SystemConfiguration.h>
     #import "SystemConstants.h"
+    #import "OCFrameworkConstants.h"
 #endif
 
 #ifdef DEBUG_MODE

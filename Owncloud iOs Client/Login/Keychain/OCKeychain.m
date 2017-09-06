@@ -20,9 +20,13 @@
 @implementation OCKeychain
 
 #pragma mark - OCCredentialsStorageDelegate
-+ (void) storeCurrentCredentialsOfSharedOCCommunication:(OCCommunication *)sharedOCCommunication {
+- (void) storeCurrentCredentialsOfSharedOCCommunication:(OCCommunication *)sharedOCCommunication {
 
-    [self updateCredentials:sharedOCCommunication.credDto];
+    [OCKeychain updateCredentials:sharedOCCommunication.credDto];
+    
+#ifdef CONTAINER_APP
+    APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
+#endif
 }
 
 #pragma mark - set credentials
