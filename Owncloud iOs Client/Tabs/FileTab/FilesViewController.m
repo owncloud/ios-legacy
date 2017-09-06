@@ -311,7 +311,6 @@
     DLog(@"self.mUser.username: %@", _mUser.username);
     
     if(!([currentUser.username isEqualToString:_mUser.username] &&
-         [currentUser.credDto.accessToken isEqualToString:_mUser.credDto.accessToken] &&
          [currentUser.url isEqualToString:_mUser.url] &&
          currentUser.idUser == _mUser.idUser)) {
         //We are changing of user
@@ -357,16 +356,12 @@
             [self initLoading];
         }
         
-        //Reload table from DB
-        [self reloadTableFromDataBase];
-        
         _isEtagRequestNecessary = YES;
-    } else {
-        [self reloadTableFromDataBase];
     }
     
     //Update active user
     _mUser = currentUser;
+    [self reloadTableFromDataBase];
     
     if(_isEtagRequestNecessary && isGoToRootView==NO) {
         

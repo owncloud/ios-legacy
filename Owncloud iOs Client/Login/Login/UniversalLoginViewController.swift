@@ -947,6 +947,9 @@ connection_declined  Connection declined by user
                                                     
                                                     } else {
                                                         ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
+                                                        if (app.activeUser != nil && app.activeUser.idUser == self.user?.idUser) {
+                                                            app.activeUser = self.user;
+                                                        }
                                                     
                                                         self.closeLoginView()
                                                     }
