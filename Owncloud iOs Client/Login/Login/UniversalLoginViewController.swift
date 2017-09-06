@@ -913,15 +913,6 @@ connection_declined  Connection declined by user
                                                     self.user?.ssl = self.validatedServerURL.hasPrefix("https")
                                                     self.user?.urlRedirected = app.urlServerRedirected
                                                     self.user?.predefinedUrl = k_default_url_server
-                                                   
-                           
-                                                                
-                                                    if (app.activeUser == nil || (self.user?.activeaccount)!) {
-                                                        // only set as active account the first account added
-                                                        // OR if it is already the active user; otherwise cookies will not be correctly restored
-                                                        self.user?.activeaccount = true
-                                                        app.activeUser = self.user
-                                                    }
 
                                                     if self.loginMode == .create {
                                                         
