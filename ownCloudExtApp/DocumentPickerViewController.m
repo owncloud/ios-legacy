@@ -164,22 +164,17 @@
         //Cookies is allways available in current supported Servers
         [sharedOCCommunication setIsCookiesAvailable:YES];
         
-        UserDto *user = [ManageUsersDB getActiveUser];
-        if (user && user.credDto.authenticationMethod == AuthenticationMethodBEARER_TOKEN) {
-            NSString *urlString = [UtilsUrls getFullRemoteServerPath:user];
-            [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
-                                                            initWithURLString:urlString clientId:k_oauth2_client_id
+        [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                            initWithClientId:k_oauth2_client_id
                                                             clientSecret:k_oauth2_client_secret
                                                             redirectUri:k_oauth2_redirect_uri
                                                             authorizationEndpoint:k_oauth2_authorization_endpoint
                                                             tokenEndpoint:k_oauth2_token_endpoint]];
-
-        }
         
         [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
         
-        [sharedOCCommunication setCredentialsStorage:[OCKeychain new]];
-
+        OCKeychain *oKeychain = [[OCKeychain alloc] init];
+        [sharedOCCommunication setValueCredentialsStorage:oKeychain];
     }
     return sharedOCCommunication;
 }

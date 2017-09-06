@@ -13,13 +13,6 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
-//URL for webdav
-//#define k_url_webdav_server @"remote.php/odav/"
-#define k_url_webdav_server @"remote.php/webdav/"
-#define k_url_webdav_server_without_last_slash @"remote.php/webdav"
-
-//URL path for list of files in web interface
-#define k_url_path_list_of_files_in_web @"index.php/apps/files"
 
 //Chunk length
 #define k_lenght_chunk 1024//256

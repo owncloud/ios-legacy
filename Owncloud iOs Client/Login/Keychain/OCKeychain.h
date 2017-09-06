@@ -24,7 +24,6 @@
 
 @interface OCKeychain : NSObject <OCCredentialsStorageDelegate>
 
-
 +(BOOL)setCredentials:(OCCredentialsDto *)credentials;
 
 /**
