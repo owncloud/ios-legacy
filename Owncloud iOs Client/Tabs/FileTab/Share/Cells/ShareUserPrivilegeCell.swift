@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.htm
 
 import UIKit
 
-class ShareUserPrivilegeCell: UITableViewCell {
+@objc class ShareUserPrivilegeCell: UITableViewCell {
     
     @IBOutlet weak var fileName: UILabel!
     

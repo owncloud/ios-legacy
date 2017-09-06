@@ -418,6 +418,30 @@
 
 
 ///-----------------------------------
+/// @name getFullRemoteServerPathWithWebDavByNormalizedUrl
+///-----------------------------------
+/**
+ * Return the full server path with webdav components by url
+ *
+ * @param url -> url normalized -> http://domain/(subfolders)/
+ *                                 http://domain/sub1/sub2/
+ *
+ * @return  fullPath -> http://domain/(subfolders)/k_url_webdav_server/
+ *                      http://domain/sub1/sub2/remote.php/webdav/
+ *
+ */
+
++ (NSString *) getFullRemoteServerPathWithWebDavByNormalizedUrl:(NSString *)url {
+    
+    NSString *fullWevDavPath = nil;
+    
+    fullWevDavPath = [NSString stringWithFormat: @"%@%@", url,k_url_webdav_server];
+    
+    return fullWevDavPath;
+    
+}
+
+///-----------------------------------
 /// @name getPathWithAppName
 ///-----------------------------------
 /**

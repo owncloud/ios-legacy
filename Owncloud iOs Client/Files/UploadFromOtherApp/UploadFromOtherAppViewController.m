@@ -31,7 +31,6 @@
 #import "OCErrorMsg.h"
 #import "FileNameUtils.h"
 #import "UtilsNetworkRequest.h"
-#import "EditAccountViewController.h"
 #import "Download.h"
 #import "FilePreviewViewController.h"
 #import "NSString+Encoding.h"
@@ -865,8 +864,7 @@
 - (void)showEditAccountViewController{
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andLoginMode:LoginModeExpire];
+    UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser: app.activeUser];
     
     if (IS_IPHONE)
     {

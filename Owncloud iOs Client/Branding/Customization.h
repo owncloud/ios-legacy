@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -41,12 +41,12 @@
 #define k_have_image_background_navigation_bar NO
 
 //Have oauth active
-#define k_is_oauth_active NO
+#define k_is_oauth_active NO //Not use, oauth is auto detected if the server supports it
 
 //Have SAML active
 #define k_is_sso_active NO
 
-//OAuth server
+//OAuth server //not use, use Oauth2 instead
 #define k_oauth_login @""
 #define k_oauth_authorize @""
 #define k_oauth_token @""
@@ -157,3 +157,23 @@
 //Force passcode
 #define k_is_passcode_forced NO
 
+//Oauth2
+#define k_oauth2_authorization_endpoint @"index.php/apps/oauth2/authorize"
+#define k_oauth2_token_endpoint @"index.php/apps/oauth2/api/v1/token"
+#define k_oauth2_redirect_uri @"oc://ios.owncloud.com"
+#define k_oauth2_client_id @"mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1"
+#define k_oauth2_client_secret @"KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx"
+
+
+
+//Following getters required to Bridging with Swift
+@interface Customization : NSObject
+
++(BOOL)kHideUrlServer;
++(BOOL)kForceUpdateOfServerUrl;
++(BOOL)kMultiaccountAvailable;
++(BOOL)kIsSsoActive;
++(BOOL)kIsTextLoginStatusBarWhite;
++(BOOL)kIsShownHelpLinkOnLogin;
+
+@end

@@ -12,10 +12,6 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
-
-
-
-
 #import <UIKit/UIKit.h>
 #import "UserDto.h"
 #import "MediaAVPlayerViewController.h"
@@ -27,11 +23,11 @@
 #import "DetailViewController.h"
 #import "ManageDownloads.h"
 #import "CheckAccessToServer.h"
+#import "UtilsLogin.h"
 
 @class FilesViewController;
 @class RecentViewController;
 @class SettingsViewController;
-@class LoginViewController;
 @class HelpGuideViewController;
 @class Download;
 @class OCCommunication;
@@ -41,6 +37,8 @@
 @class ManageFavorites;
 @class CheckHasShareSupport;
 @class CheckCapabilities;
+@class UniversalLoginViewController;
+
 
 extern NSString * CloseAlertViewWhenApplicationDidEnterBackground;
 extern NSString * RefreshSharesItemsAfterCheckServerVersion;
@@ -59,8 +57,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
      
     RecentViewController *_recentViewController;
     FilesViewController *_filesViewController;
-    //Pointer to a actual files view controller where the user is.
-    FilesViewController *_presentFilesViewController;
+
     //FavouritesViewController *_favouritesViewController;
     SettingsViewController *_settingsViewController;
     //OCTabBarController *_tabBarController;
@@ -108,10 +105,8 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
     
 }
 
-@property (strong, nonatomic) LoginViewController *loginWindowViewController;
 @property (strong, nonatomic) HelpGuideViewController *helpGuideWindowViewController;
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) LoginViewController *loginViewController;
 @property (strong, nonatomic) UserDto *activeUser;
 @property (strong, nonatomic) OCTabBarController *ocTabBarController;
 @property (nonatomic, strong) NSMutableArray *uploadArray;
@@ -119,6 +114,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) SharedViewController *sharedViewController;
 @property (nonatomic, strong) RecentViewController *recentViewController;
 @property (nonatomic, strong) FilesViewController *filesViewController;
+//Pointer to a actual files view controller where the user is.
 @property (nonatomic, strong) FilesViewController *presentFilesViewController;
 @property (nonatomic, strong) SettingsViewController *settingsViewController;
 @property (nonatomic, strong) UISplitViewController *splitViewController;
@@ -180,9 +176,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 - (void) updateRecents;
 - (void) updateProgressView:(NSUInteger)num withPercent:(float)percent;
 - (void) restartAppAfterDeleteAllAccounts;
-- (void) showLoginView;
-
-- (void)doLoginWithOauthToken;
 
 //Method that erase the data of the detail view in iPad.
 - (void)presentWithView;
@@ -301,19 +294,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  *
  */
 - (void) generateAppInterfaceFromLoginScreen:(BOOL)isFromLogin;
-
-///-----------------------------------
-/// @name Check if server support different things
-///-----------------------------------
-
-/**
- * This method check if the server support multipple things:
- * - If support Share
- * - If support Cookies
- *
- */
-- (void)checkIfServerSupportThings;
-
 
 
 //-----------------------------------

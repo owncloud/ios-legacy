@@ -263,7 +263,7 @@
 
     [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: APP_DELEGATE.activeUser.idUser];
     
-    [ManageUsersDB removeUserAndDataByIdUser: APP_DELEGATE.activeUser.idUser];
+    [ManageUsersDB removeUserAndDataByUser:APP_DELEGATE.activeUser];
     
     [UtilsFramework deleteAllCookies];
     
@@ -690,9 +690,7 @@
         case 0:
             
             if (k_is_passcode_forced) {
-                //static NSString *CellIdentifier = @"AddAccountCell";
 
-                //cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
                 cell.textLabel.text = NSLocalizedString(@"title_app_pin_forced", nil);
                 cell.selectionStyle = UITableViewCellSelectionStyleBlue;
                 cell.textLabel.font = k_settings_bold_font;
@@ -1056,18 +1054,17 @@
 - (void) didPressOnAddAccountButton{
    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    //Add Account
-    AddAccountViewController *viewController = [[AddAccountViewController alloc]initWithNibName:@"AddAccountViewController_iPhone" bundle:nil];
-    viewController.delegate = self;
+
+    UniversalLoginViewController *loginViewController = [UtilsLogin getLoginVCWithMode:LoginModeCreate andUser:nil];
     
     if (IS_IPHONE)
     {
-        viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:NO];
+        //viewController.hidesBottomBarWhenPushed = YES;
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
         
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
     }
@@ -1772,15 +1769,16 @@
 
 - (void) didSelectEditAccount:(UserDto *)user  {
    
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:user andLoginMode:LoginModeUpdate];
+    UniversalLoginViewController *loginViewController = [UtilsLogin getLoginVCWithMode:LoginModeUpdate andUser:user];
     
     if (IS_IPHONE) {
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
+        
     } else {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         OCNavigationController *navController = nil;
-        navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
     }
@@ -1813,7 +1811,7 @@
     [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: user.idUser];
     
     //Delete the tables of this user
-    [ManageUsersDB removeUserAndDataByIdUser: user.idUser];
+    [ManageUsersDB removeUserAndDataByUser:user];
     
     [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:user];
     
@@ -1823,7 +1821,7 @@
     NSError *error;
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
     
-    //if previous account is active we active the first by iduser
+    //if previous account is active we active the first by userId
     if(user.activeaccount) {
         
         [ManageUsersDB setActiveAccountAutomatically];

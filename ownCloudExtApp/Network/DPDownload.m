@@ -79,22 +79,15 @@
     
     OCCommunication *sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [sharedCommunication setCredentialsWithCookie:self.user.password];
-    } else if (k_is_oauth_active) {
-        [sharedCommunication setCredentialsOauthWithToken:self.user.password];
-    } else {
-        [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
-    }
-    
+    [sharedCommunication setCredentials:self.user.credDto];
+
     [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
     NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:self.user];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.file.filePath andUser:self.user], self.file.fileName];
     
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    path = [path stringByRemovingPercentEncoding];
     
     
     [self.progressView startSpinProgressBackgroundLayer];
@@ -201,16 +194,16 @@
     NSArray *splitedUrl = [[UtilsUrls getFullRemoteServerPath:self.user] componentsSeparatedByString:@"/"];
     NSString *serverUrl = [NSString stringWithFormat:@"%@%@%@",[NSString stringWithFormat:@"%@/%@/%@",[splitedUrl objectAtIndex:0],[splitedUrl objectAtIndex:1],[splitedUrl objectAtIndex:2]], self.file.filePath, self.file.fileName];
     
-    serverUrl = [serverUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    serverUrl = [serverUrl stringByRemovingPercentEncoding];
     
     __block NSString *localPath = nil;
     
     if (self.file.isNecessaryUpdate) {
         //Change the local name for a temporal one
-        self.temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [self.file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        self.temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [self.file.fileName stringByRemovingPercentEncoding]];
         localPath = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, self.temporalFileName];
     } else {
-        localPath = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, [self.file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        localPath = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, [self.file.fileName stringByRemovingPercentEncoding]];
     }
     
     self.deviceLocalPath = localPath;
@@ -223,18 +216,11 @@
         [ManageFilesDB setFileIsDownloadState:self.file.idFile andState:updating];
     }
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [sharedCommunication setCredentialsWithCookie:self.user.password];
-    } else if (k_is_oauth_active) {
-        [sharedCommunication setCredentialsOauthWithToken:self.user.password];
-    } else {
-        [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
-    }
+    [sharedCommunication setCredentials:self.user.credDto];
     
-     [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
+    [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
     
-   self.state = downloadWorking;
+    self.state = downloadWorking;
     
     self.downloadTask = [sharedCommunication downloadFileSession:serverUrl toDestiny:localPath defaultPriority:NO onCommunication:sharedCommunication progress:^(NSProgress *progress) {
         

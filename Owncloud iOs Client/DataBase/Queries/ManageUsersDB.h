@@ -27,7 +27,7 @@
  * Method that adds user into database
  * @userDto -> userDto (Object of a user info)
  */
-+(void) insertUser:(UserDto *)userDto;
++(UserDto *) insertUser:(UserDto *)userDto;
 
 /*
  * This method returns the active user of the app
@@ -35,9 +35,9 @@
 + (UserDto *) getActiveUser;
 
 /*
- * This method returns the active user of the app without user name and password
+ * This method returns the active user of the app without credentials
  */
-+ (UserDto *) getActiveUserWithoutUserNameAndPassword;
++ (UserDto *) getActiveUserWithoutCredentials;
 
 /*
  * Method that returns the user object of the idUser
@@ -89,10 +89,10 @@
  * Method that removes user data in all tables
  * @idUser -> id user
  */
-+(void) removeUserAndDataByIdUser:(NSInteger)idUser;
++(void) removeUserAndDataByUser:(UserDto *)user;
 
 /*
- * Method that set the user storage of a user
+ * Method that set the user storage of a user, -> Not in use
  */
 +(void) updateStorageByUserDto:(UserDto *) user;
 

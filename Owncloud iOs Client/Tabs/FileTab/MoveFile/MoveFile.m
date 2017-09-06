@@ -121,8 +121,8 @@
     NSString *destinyFile = [NSString stringWithFormat:@"%@%@",self.destinationFolder, self.destinyFilename];
     
     //We remove the URL Encoding
-    originFile = [originFile stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    destinyFile = [destinyFile stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    originFile = [originFile stringByRemovingPercentEncoding];
+    destinyFile = [destinyFile stringByRemovingPercentEncoding];
     
     //In iPad set the global variable
     if (!IS_IPHONE) {
@@ -130,14 +130,7 @@
         app.isLoadingVisible = YES;
     }
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-    }
+    [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     

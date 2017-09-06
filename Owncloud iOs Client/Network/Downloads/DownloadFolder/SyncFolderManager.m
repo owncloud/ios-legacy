@@ -174,19 +174,12 @@ static float const kDelayAfterCancelAll = 3.0;
         
     } else {
         
-        //Set the right credentials
-        if (k_is_sso_active) {
-            [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
-        } else if (k_is_oauth_active) {
-            [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
-        } else {
-            [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-        }
+        [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
         
         [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-        
+
         NSString *path = [UtilsUrls getFullRemoteServerFilePathByFile:currentFolder andUser:app.activeUser];
-        path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        path = [path stringByRemovingPercentEncoding];
         
         DLog(@"PathRquest: %@", path);
         

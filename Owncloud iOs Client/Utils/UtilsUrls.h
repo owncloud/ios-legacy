@@ -46,6 +46,8 @@
 
 + (NSString *) getFullRemoteServerPath:(UserDto *)mUserDto;
 
++ (NSString *) getFullRemoteServerPathWithWebDavByNormalizedUrl:(NSString *)url;
+
 + (NSString *) getRemoteServerPathWithoutFolders:(UserDto *)mUser;
 
 + (NSString *) getFullRemoteServerPathWithWebDav:(UserDto *)mUserDto;

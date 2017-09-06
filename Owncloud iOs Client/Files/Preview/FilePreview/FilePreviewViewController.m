@@ -19,7 +19,6 @@
 #import "UIColor+Constants.h"
 #import "constants.h"
 #import "AppDelegate.h"
-#import "EditAccountViewController.h"
 #import "UtilsDtos.h"
 #import "UIImage+Resize.h"
 #import "UserDto.h"
@@ -1694,21 +1693,15 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.downloadManager errorLogin];
     
-    if(k_is_oauth_active) {
-        NSURL *url = [NSURL URLWithString:k_oauth_login];
-        [[UIApplication sharedApplication] openURL:url];
-    } else {
-        //Edit Account
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    //Edit Account
         
-        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andLoginMode:LoginModeExpire];
+    UniversalLoginViewController *loginVC = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser: APP_DELEGATE.activeUser];
         
-        viewController.hidesBottomBarWhenPushed = YES;
+    //viewController.hidesBottomBarWhenPushed = YES;
         
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        [self.navigationController presentViewController:navController animated:YES completion:nil];
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginVC];
+    [self.navigationController presentViewController:navController animated:YES completion:nil];
 
-    }
     [self didPressCancelButton:nil];
 }
 

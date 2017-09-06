@@ -39,7 +39,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 
-@objc class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, KKPasscodeViewControllerDelegate, CheckAccessToServerDelegate {
+@objc class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, KKPasscodeViewControllerDelegate {
     
     @IBOutlet weak var navigationBar: UINavigationBar?
     @IBOutlet weak var shareTable: UITableView?
@@ -344,7 +344,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
                                 if error == nil {
                                     if let url = item as? URL{
                                         
-                                        print("item as url: \(item)")
+                                        print("item as url: \(url)")
                                         
                                         self.filesSelected.append(url)
                                         

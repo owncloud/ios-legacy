@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -14,6 +14,7 @@
  */
 
 #import "OCCapabilities.h"
+#import "OCCredentialsDto.h"
 
 typedef enum {
     serverFunctionalityNotChecked = 0,
@@ -32,7 +33,8 @@ typedef enum {
 @property NSInteger idUser;
 @property (nonatomic, copy) NSString *url;
 @property (nonatomic, copy) NSString *username;
-@property (nonatomic, copy) NSString *password;
+@property (nonatomic, copy) OCCredentialsDto *credDto;
+
 @property BOOL ssl;
 @property BOOL activeaccount;
 @property long storageOccupied;

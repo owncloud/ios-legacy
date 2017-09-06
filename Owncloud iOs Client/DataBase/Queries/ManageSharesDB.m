@@ -69,7 +69,7 @@
 
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         
-        BOOL correctQuery = NO;
+        BOOL correctQuery = YES;
         
        // DLog(@"shared items: %@", elements);
         
@@ -95,7 +95,7 @@
                              shareDto.name,
                              shareDto.url];
             
-            correctQuery = [db executeUpdate:sqlQuery];
+            correctQuery &= [db executeUpdate:sqlQuery];
         }
         
         if (!correctQuery) {

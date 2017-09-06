@@ -34,6 +34,7 @@
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
 #import "ManageAppSettingsDB.h"
+#import "OCNavigationController.h"
 
 //Cookie
 #define k_cookie_user_value_name @"oc_username"
@@ -48,6 +49,8 @@ static NSString *const tmpFileName = @"tmp.der";
 
 
 @interface SSOViewController ()
+
+@property SSLCertificateManager* sslCertificateManager;
 
 @end
 
@@ -72,6 +75,9 @@ static NSString *const tmpFileName = @"tmp.der";
         }
         //2- Delete the current cookies because we delete the current active user
         [UtilsFramework deleteAllCookies];
+        
+        //3- Init SSLCertificateManager instance to access user-accepted server certificates
+        self.sslCertificateManager = [SSLCertificateManager new];
 
     }
     return self;
@@ -211,7 +217,7 @@ static NSString *const tmpFileName = @"tmp.der";
             error.code == kCFURLErrorServerCertificateNotYetValid)
         {
             
-            if (![[CheckAccessToServer sharedManager] isTemporalCertificateTrusted]) {
+            if (![self.sslCertificateManager isCurrentCertificateTrusted]) {
                 [self askToAcceptCertificate];
             }
           
@@ -394,7 +400,7 @@ static NSString *const tmpFileName = @"tmp.der";
             error.code == kCFURLErrorServerCertificateNotYetValid)
         {
             
-            if (![[CheckAccessToServer sharedManager] isTemporalCertificateTrusted]) {
+            if (![self.sslCertificateManager isCurrentCertificateTrusted]) {
                 [self initParemetersAndRetryOpenLink];
             }
         }
@@ -412,17 +418,6 @@ static NSString *const tmpFileName = @"tmp.der";
     
     DLog(@"Request: %@", request.URL.absoluteString);
     DLog(@"redirectResponse: %@", redirectResponse.URL.absoluteString);
-    if (redirectResponse)
-    {
-        NSMutableURLRequest *newRequest = [request mutableCopy]; // original request
-        
-        [newRequest setURL: [request URL]];
-        
-        NSLog (@"redirected");
-        self.authRequest = newRequest;
-        return newRequest;
-    }
-    
     return request;
 }
 
@@ -491,8 +486,10 @@ static NSString *const tmpFileName = @"tmp.der";
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
     
-    //Set the right credentials
-    [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:cookieString];
+    OCCredentialsDto* credentials = [[OCCredentialsDto alloc] init];
+    credentials.accessToken = cookieString;
+    credentials.authenticationMethod = AuthenticationMethodSAML_WEB_SSO;
+    [[AppDelegate sharedOCCommunication] setCredentials:credentials];
     
     [[AppDelegate sharedOCCommunication] getUserNameByCookie:cookieString ofServerPath:_urlString onCommunication:[AppDelegate sharedOCCommunication] success:^(NSHTTPURLResponse *response, NSData *responseData, NSString *redirectedServer) {
         
@@ -526,7 +523,7 @@ static NSString *const tmpFileName = @"tmp.der";
         
         userName = nil;
         
-        [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:response.statusCode andError:error];
+        [self showError: [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:response.statusCode andError:error] ];
         
         //Error we do not have user
         dispatch_semaphore_signal(semaphore);
@@ -608,35 +605,8 @@ static NSString *const tmpFileName = @"tmp.der";
     
     NSLog(@"willSendRequestForAuthenticationChallenge");
     
-    BOOL trusted = NO;
-    SecTrustRef trust;
-    NSURLProtectionSpace *protectionSpace;
-    
-    protectionSpace = [challenge protectionSpace];
-    trust = [protectionSpace serverTrust];
-    
-    [[CheckAccessToServer sharedManager] createFolderToSaveCertificates];
-    
-    if(trust != nil) {
-        [[CheckAccessToServer sharedManager] saveCertificate:trust withName:tmpFileName];
+    BOOL trusted = [self.sslCertificateManager isTrustedServerCertificateIn:challenge];
         
-        NSString *localCertificatesFolder = [UtilsUrls getLocalCertificatesPath];
-        
-        NSMutableArray *listCertificateLocation = [ManageAppSettingsDB getAllCertificatesLocation];
-        
-        for (int i = 0 ; i < [listCertificateLocation count] ; i++) {
-            
-            NSString *currentLocalCertLocation = [listCertificateLocation objectAtIndex:i];
-            NSFileManager *fileManager = [ NSFileManager defaultManager];
-            if([fileManager contentsEqualAtPath:[NSString stringWithFormat:@"%@%@",localCertificatesFolder,tmpFileName] andPath:[NSString stringWithFormat:@"%@",currentLocalCertLocation]]) {
-                NSLog(@"Is the same certificate!!!");
-                trusted = YES;
-            }
-        }
-    } else {
-        trusted = NO;
-    }
-
     if (trusted) {
         self.authenticated = YES;
         
@@ -654,7 +624,8 @@ static NSString *const tmpFileName = @"tmp.der";
     
     if (alertView.tag == 2) {
         if (buttonIndex == 1) {
-            [[CheckAccessToServer sharedManager] acceptCertificate];
+            DLog(@"user pressed YES");
+            [self.sslCertificateManager trustCurrentCertificate];
         } else {
             NSLog(@"user pressed CANCEL");
             [self dismissThisView];
@@ -675,6 +646,22 @@ static NSString *const tmpFileName = @"tmp.der";
 
 
 
+
+#pragma mark - navigation
+
+- (void) navigateFrom:(UIViewController *)currentVC {
+
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self];
+
+    //Check if is iPhone or iPad
+    if (!IS_IPHONE) {
+        //iPad
+        navController.modalTransitionStyle=UIModalTransitionStyleCoverVertical;
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    }
+    [currentVC presentViewController:navController animated:YES completion:nil];
+    
+}
 
 
 

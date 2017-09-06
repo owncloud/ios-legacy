@@ -19,12 +19,10 @@
 #import "CheckAccessToServer.h"
 #import "DetailViewController.h"
 #import "constants.h"
-#import "LoginViewController.h"
 #import "UploadFromOtherAppViewController.h"
 #import "AuthenticationDbService.h"
 #import "RetrieveRefreshAndAccessTokenTask.h"
 #import "Download.h"
-#import "EditAccountViewController.h"
 #import "UIColor+Constants.h"
 #import "Customization.h"
 #import "FMDatabaseQueue.h"
@@ -62,6 +60,8 @@
 #import "OCKeychain.h"
 #import "UtilsCookies.h"
 #import "PresentedViewUtils.h"
+#import "OCOAuth2Configuration.h"
+
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -71,7 +71,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize loginViewController = _loginViewController;
 @synthesize uploadArray=_uploadArray;
 @synthesize webDavArray=_webDavArray;
 @synthesize recentViewController=_recentViewController;
@@ -84,7 +83,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @synthesize filePathFromOtherApp=_filePathFromOtherApp;
 @synthesize isFileFromOtherAppWaitting=_isFileFromOtherAppWaitting;
 @synthesize isSharedToOwncloudPresent=_isSharedToOwncloudPresent;
-@synthesize presentFilesViewController=_presentFilesViewController;
 @synthesize isRefreshInProgress=_isRefreshInProgress;
 @synthesize oauthToken = _oauthToken;
 @synthesize avMoviePlayer=_avMoviePlayer;
@@ -378,17 +376,13 @@ float shortDelay = 0.3;
     [DownloadUtils setThePermissionsForFolderPath:localTempPath];
     
     //First Call when init the app
-     self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
+     self.activeUser = [ManageUsersDB getActiveUserWithoutCredentials];
     
     //if is null we do not have any active user on the database
     if(!self.activeUser) {
         
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        
-        self.loginViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
-        
-        self.window.rootViewController = self.loginViewController;
-        [self.window makeKeyAndVisible];
+        //Show new universal login view
+        [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeCreate andUser:nil]];
         
     } else {
         
@@ -407,35 +401,6 @@ float shortDelay = 0.3;
     }
 }
 
-- (void) doLoginWithOauthToken {
-    
-    if (_activeUser.username==nil) {
-        _activeUser=[ManageUsersDB getActiveUser];
-    }    
-    
-    if(_activeUser.idUser > 0) {
-        _activeUser.password = self.oauthToken;
-        
-        //update keychain user
-        if(![OCKeychain updateCredentialsById:[NSString stringWithFormat:@"%ld", (long)_activeUser.idUser] withUsername:_activeUser.username andPassword:_activeUser.password]) {
-            DLog(@"Error updating credentials of userId:%ld on keychain",(long)_activeUser.idUser);
-        }
-        
-        [UtilsCookies eraseCredentialsAndUrlCacheOfActiveUser];
-        
-        [self initAppWithEtagRequest:NO];
-    } else {
-        self.loginViewController.usernameTextField = [[UITextField alloc] init];
-        self.loginViewController.usernameTextField.text = @"OAuth";
-        
-        self.loginViewController.passwordTextField = [[UITextField alloc] init];
-        self.loginViewController.passwordTextField.text = self.oauthToken;
-        
-        [self.loginViewController goTryToDoLogin];
-    }
-    
-}
-
 
 - (void) restartAppAfterDeleteAllAccounts {
     DLog(@"Restart After Delete All Accounts");
@@ -445,34 +410,13 @@ float shortDelay = 0.3;
         _filesViewController.alert = nil;
     }
     
-    self.loginWindowViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
-    
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-    self.window.rootViewController = self.loginWindowViewController;
-    [self.window makeKeyAndVisible];
+    [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeCreate andUser:nil]];
 }
 
-///-----------------------------------
-/// @name Generate App Interface
-///-----------------------------------
 
-/**
- * This method generate the app interface
- * 
- * For iPhone: 
- *    - TabBarController with three items:
- *           - File list
- *           - Recents view
- *           - Settings view
- * For iPad:
- *    - The same TabBarController with three items.
- *    - Detail View.
- *
- */
 - (void) generateAppInterfaceFromLoginScreen:(BOOL)isFromLogin{
     
-    self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
+    self.activeUser = [ManageUsersDB getActiveUserWithoutCredentials];
     
     NSString *wevDavString = [UtilsUrls getFullRemoteServerPathWithWebDav:_activeUser];
     NSString *localSystemPath = nil;
@@ -679,8 +623,22 @@ float shortDelay = 0.3;
         sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:uploadSessionManager andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
         //Cookies is allways available in current supported Servers
-        sharedOCCommunication.isCookiesAvailable = YES;
-
+        [sharedOCCommunication setIsCookiesAvailable:YES];
+        
+        if (APP_DELEGATE.activeUser && APP_DELEGATE.activeUser.credDto.authenticationMethod == AuthenticationMethodBEARER_TOKEN) {
+            
+            NSString *urlString = [UtilsUrls getFullRemoteServerPath:APP_DELEGATE.activeUser];
+            [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                          initWithURLString:urlString clientId:k_oauth2_client_id
+                                                                        clientSecret:k_oauth2_client_secret
+                                                                        redirectUri:k_oauth2_redirect_uri
+                                                                        authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                                        tokenEndpoint:k_oauth2_token_endpoint]];
+        }
+        
+        [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
+        
+        [sharedOCCommunication setCredentialsStorage:[OCKeychain new]];
 	}
 	return sharedOCCommunication;
 }
@@ -707,8 +665,22 @@ float shortDelay = 0.3;
         sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:nil];
         
         //Cookies is allways available in current supported Servers
-        sharedOCCommunicationDownloadFolder.isCookiesAvailable = YES;
+        [sharedOCCommunicationDownloadFolder setIsCookiesAvailable:YES];
         
+        if (APP_DELEGATE.activeUser && APP_DELEGATE.activeUser.credDto.authenticationMethod == AuthenticationMethodBEARER_TOKEN) {
+            NSString *urlString = [UtilsUrls getFullRemoteServerPath:APP_DELEGATE.activeUser];
+            [sharedOCCommunicationDownloadFolder setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                            initWithURLString:urlString clientId:k_oauth2_client_id
+                                                            clientSecret:k_oauth2_client_secret
+                                                            redirectUri:k_oauth2_redirect_uri
+                                                            authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                            tokenEndpoint:k_oauth2_token_endpoint]];
+        }
+        
+        [sharedOCCommunicationDownloadFolder setUserAgent:[UtilsUrls getUserAgent]];
+        
+        [sharedOCCommunicationDownloadFolder setCredentialsStorage:[OCKeychain new]];
+
     }
     return sharedOCCommunicationDownloadFolder;
 }
@@ -1998,23 +1970,13 @@ float shortDelay = 0.3;
 
 - (void) errorLogin {
 
-    [self performSelector:@selector(delayLoadEditAccountAfterErroLogin) withObject:nil afterDelay:0.1];
+    [self performSelector:@selector(delayLoadEditAccountAfterErrorLogin) withObject:nil afterDelay:0.1];
 }
 
--(void) delayLoadEditAccountAfterErroLogin {
+-(void) delayLoadEditAccountAfterErrorLogin {
     
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:_activeUser andLoginMode:LoginModeExpire];
-    
-    if (IS_IPHONE)
-    {
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        [_ocTabBarController presentViewController:navController animated:YES completion:nil];
-    } else {
-        
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self.splitViewController presentViewController:navController animated:YES completion:nil];
-    }
+    [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:self.activeUser]];
+
 }
 
 
@@ -2808,16 +2770,22 @@ float shortDelay = 0.3;
     FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:[folderToRemoveName encodeString:NSUTF8StringEncoding] andFilePath:[folderToRemovePath encodeString:NSUTF8StringEncoding] andUser:app.activeUser];
     [self reloadCellByFile:folderRemoved];
 }
-- (void) showLoginView {
-    DLog(@"ShowLoginView");
-    
-    self.loginWindowViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
+
+
+
+- (void)showLoginView:(UniversalLoginViewController *)loginView {
+//TODO: move to utils login, and window var
+    DLog(@"ShowUniversalLoginView in window root vc");
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    self.window.rootViewController = self.loginWindowViewController;
+    self.window.rootViewController = loginView;
+    
     [self.window makeKeyAndVisible];
+    
 }
+
+
 
 #pragma mark - SplashScreenFake
 
@@ -2836,7 +2804,7 @@ float shortDelay = 0.3;
 
 #pragma mark - CheckAccessToServerDelegate
 
--(void)connectionToTheServer:(BOOL)isConnection {
+-(void)connectionToTheServerWasChecked:(BOOL)isConnected withHttpStatusCode:(NSInteger)statusCode andError:(NSError *)error {
     ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
     [self showPassCodeIfNeeded];
 }
@@ -2844,7 +2812,7 @@ float shortDelay = 0.3;
     ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
     [self showPassCodeIfNeeded];
 }
--(void)badCertificateNoAcceptedByUser {
+-(void)badCertificateNotAcceptedByUser {
     ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
     [self showPassCodeIfNeeded];
 }

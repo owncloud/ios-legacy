@@ -33,19 +33,12 @@
  */
 - (void)checkIfTheFileExistsWithThisPath:(NSString*)path andUser:(UserDto *) user {
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:user.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:user.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:user.username andPassword:user.password];
-    }
+    [[AppDelegate sharedOCCommunication] setCredentials:user.credDto];
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    path = [path stringByRemovingPercentEncoding];
     DLog(@"Path to check: %@", path);
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
@@ -110,13 +103,21 @@
     
     NSMutableDictionary *headers = [NSMutableDictionary new];
     
-    if (k_is_sso_active) {
-        [headers setValue:APP_DELEGATE.activeUser.password forKey:@"Cookie"];
-    } else if (k_is_oauth_active) {
-        [headers setValue:[NSString stringWithFormat:@"Bearer %@", APP_DELEGATE.activeUser.password] forKey:@"Authorization"];
-    } else {
-        NSString *basicAuthCredentials = [NSString stringWithFormat:@"%@:%@", APP_DELEGATE.activeUser.username, APP_DELEGATE.activeUser.password];
-        [headers setValue:[NSString stringWithFormat:@"Basic %@", [UtilsFramework AFBase64EncodedStringFromString:basicAuthCredentials]] forKey:@"Authorization"];
+    switch (APP_DELEGATE.activeUser.credDto.authenticationMethod) {
+            
+        case AuthenticationMethodSAML_WEB_SSO:
+            [headers setValue:APP_DELEGATE.activeUser.credDto.accessToken forKey:@"Cookie"];
+            break;
+            
+        case AuthenticationMethodBEARER_TOKEN:
+            [headers setValue:[NSString stringWithFormat:@"Bearer %@", APP_DELEGATE.activeUser.credDto.accessToken] forKey:@"Authorization"];
+            break;
+            
+        default: {
+            NSString *basicAuthCredentials = [NSString stringWithFormat:@"%@:%@", APP_DELEGATE.activeUser.username, APP_DELEGATE.activeUser.credDto.accessToken];
+            [headers setValue:[NSString stringWithFormat:@"Basic %@", [UtilsFramework AFBase64EncodedStringFromString:basicAuthCredentials]] forKey:@"Authorization"];
+        }
+            
     }
     
     [headers setValue:[UtilsUrls getUserAgent] forKey:@"User-Agent"];

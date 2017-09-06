@@ -15,6 +15,9 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "OCCommunication.h"
+#import "UtilsUrls.h"
+#import "AppDelegate.h"
 
 @interface PresentedViewUtils : NSObject
 

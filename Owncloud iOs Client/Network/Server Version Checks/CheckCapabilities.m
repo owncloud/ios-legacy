@@ -36,17 +36,10 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
     
     if (app.activeUser) {
         
-        //Set the right credentials
-        if (k_is_sso_active) {
-            [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
-        } else if (k_is_oauth_active) {
-            [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
-        } else {
-            [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-        }
+        [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
         
-        [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-        
+        [[AppDelegate sharedOCCommunication] setValueOfUserAgent:[UtilsUrls getUserAgent]];
+
         [[AppDelegate sharedOCCommunication] getCapabilitiesOfServer:app.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, OCCapabilities *capabilities, NSString *redirectedServer) {
             
             BOOL isSamlCredentialsError=NO;

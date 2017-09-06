@@ -23,7 +23,6 @@
 #import "UIColor+Constants.h"
 #import "OCNavigationController.h"
 #import "ManageUsersDB.h"
-#import "EditAccountViewController.h"
 #import "Customization.h"
 #import "ManageSharesDB.h"
 #import "UtilsFramework.h"
@@ -78,11 +77,11 @@
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
 @property (nonatomic, strong) UIActivityViewController *activityView;
-@property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
+@property (nonatomic, strong) UniversalLoginViewController *resolveCredentialErrorViewController;
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
 
 //Enum to restore the option after get an error
-typedef NS_ENUM (NSInteger, enumUpload){
+typedef NS_ENUM (NSInteger, optionPermission){
     optionPermissionNothingYet=0,
     optionPermissionCanEdit=1,
     optionPermissionCanCreate=2,
@@ -173,18 +172,13 @@ typedef NS_ENUM (NSInteger, enumUpload){
         
         [self initLoading];
         
-        //Set the right credentials
-        if (k_is_sso_active) {
-            [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:APP_DELEGATE.activeUser.password];
-        } else if (k_is_oauth_active) {
-            [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:APP_DELEGATE.activeUser.password];
-        } else {
-            [[AppDelegate sharedOCCommunication] setCredentialsWithUser:APP_DELEGATE.activeUser.username andPassword:APP_DELEGATE.activeUser.password];
-        }
+        [[AppDelegate sharedOCCommunication] setCredentials:APP_DELEGATE.activeUser.credDto];
         
         [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
         
-        [[AppDelegate sharedOCCommunication] updateShare:self.updatedOCShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:nil andExpirationTime:nil andPermissions:permissionValue onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
+
+        //TODO:check "ofServerPath" with redirected server, it should be [UtilsUrls getFullRemoteServerPath
+        [[AppDelegate sharedOCCommunication] updateShare:self.updatedOCShare.idRemoteShared ofServerPath:app.activeUser.url withPasswordProtect:nil andExpirationTime:nil andPublicUpload:nil andLinkName:nil andPermissions:permissionValue onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSData *responseData, NSString *redirectedServer) {
             
             BOOL isSamlCredentialsError=NO;
             
@@ -601,7 +595,8 @@ typedef NS_ENUM (NSInteger, enumUpload){
 #ifdef CONTAINER_APP
     
     //Edit Account
-    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser] andLoginMode:LoginModeExpire];
+    
+    self.resolveCredentialErrorViewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:APP_DELEGATE.activeUser];
     
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
