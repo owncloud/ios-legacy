@@ -45,7 +45,7 @@ typedef enum {
     
 } enumInfoSetting;
 
-@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, AccountCellDelegate, MBProgressHUDDelegate, SyncFolderManagerDelegate>
+@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, AccountCellDelegate, MBProgressHUDDelegate>
 
 @property(nonatomic,strong)IBOutlet UITableView *settingsTableView;
 @property(nonatomic,strong)UISwitch *switchPasscode;
@@ -68,7 +68,6 @@ typedef enum {
 
 //View for loading screen
 @property(nonatomic, strong) MBProgressHUD  *HUD;
-@property(nonatomic, strong) dispatch_semaphore_t semaphoreChangeUser;
 
 @property (nonatomic,strong) UIActionSheet *menuAccountActionSheet;
 @property (nonatomic,strong) UserDto *selectedUserAccount;

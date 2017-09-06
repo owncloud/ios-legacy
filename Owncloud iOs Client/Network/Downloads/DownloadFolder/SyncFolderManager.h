@@ -21,8 +21,6 @@
 @class IndexedForest;
 
 @protocol SyncFolderManagerDelegate
-
-@optional
 - (void) releaseSemaphoreToContinueChangingUser;
 @end
 
