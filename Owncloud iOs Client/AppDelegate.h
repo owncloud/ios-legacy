@@ -47,7 +47,7 @@ extern NSString * NotReachableNetworkForUploadsNotification;
 extern NSString * NotReachableNetworkForDownloadsNotification;
 
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, PrepareFilesToUploadDelegate, KKPasscodeViewControllerDelegate, CheckAccessToServerDelegate, SyncFolderManagerDelegate> {
+@interface AppDelegate : UIResponder <UIApplicationDelegate, PrepareFilesToUploadDelegate, KKPasscodeViewControllerDelegate, CheckAccessToServerDelegate> {
   
     
     UserDto *_activeUser;
@@ -149,8 +149,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) NSString *urlServerRedirected;
 @property (nonatomic, strong) ManageDownloads *downloadManager;
 @property (nonatomic, strong) NSString *userSessionCurrentToken;
-
-@property(nonatomic, strong) dispatch_semaphore_t semaphoreChangeUser;
 
 /*
  * Method to get a Singleton of the OCCommunication to manage all the communications
