@@ -287,15 +287,9 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)redirectResponse
         app.activeUser = [ManageUsersDB getActiveUser];
 #endif
 
-        DLog(@"responseURLString: %@", responseURLString);
-        DLog(@"requestRedirect.HTTPMethod: %@", request.HTTPMethod);
-        
-        NSMutableURLRequest *requestRedirect = [request mutableCopy];
-        
+        // reuse current request and set redirected URL into it to prevent undesired changes in request by the system, such as undesired authorization headers
+        NSMutableURLRequest *requestRedirect = [task.currentRequest mutableCopy];
         [requestRedirect setURL: [NSURL URLWithString:responseURLString]];
-        requestRedirect.HTTPMethod = @"GET";
-        [requestRedirect setHTTPShouldHandleCookies:false];
-        
         completionHandler(requestRedirect);
         
     } else {
