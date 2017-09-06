@@ -60,12 +60,12 @@
     self.urlUserToCheck = url;
     self.isSameCertificateSelfSigned = NO;
     
-    _urlStatusCheck = [NSString stringWithFormat:@"%@status.php", url];
+    self.urlStatusCheck = [NSString stringWithFormat:@"%@status.php", url];
     
-    DLog(@"_isConnectionToTheServerByUrl_ URL Status: |%@|", _urlStatusCheck);
+    DLog(@"_isConnectionToTheServerByUrl_ URL Status: |%@|", self.urlStatusCheck);
     
     
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlStatusCheck] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:timeout];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.urlStatusCheck] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:timeout];
     //Add the user agent
     [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
     [request setHTTPShouldHandleCookies:false];
