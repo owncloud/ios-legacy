@@ -204,10 +204,8 @@ import Foundation
     
     func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Swift.Void) {
         
-        print("Redirect detected, in URLSession delegate")
+        print("DetectAuthenticationMethod: redirect detected in URLSessionTaskDelegate implementation")
         let newRequest = request
-        
-        print(newRequest.description);
         
         let isSAML: Bool = FileNameUtils.isURL(withSamlFragment:response)
         
