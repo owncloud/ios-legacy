@@ -41,16 +41,13 @@
     // Configure the view for the selected state
 }
 
+/*
 -(IBAction)activeAccount:(id)sender {
-    
-    //We delete the cookies on SAML
-    if (k_is_sso_active) {        
-        [UtilsCookies eraseCredentialsAndUrlCacheOfActiveUser];
-    }
     
     [self.delegate activeAccountByPosition:self.activeButton.tag];
 
 }
+ */
 
 
 @end
