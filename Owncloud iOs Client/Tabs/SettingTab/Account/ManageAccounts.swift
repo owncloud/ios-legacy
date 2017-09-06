@@ -24,7 +24,7 @@ import Foundation
     * @param  CredentialsDto -> credentials of user
     */
     
-    func storeAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) -> UserDto? {
+@objc func storeAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) -> UserDto? {
         
         if let userInDB = ManageUsersDB.insertUser(user) {
     
@@ -52,7 +52,7 @@ import Foundation
         
     }
     
-    func updateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
+@objc func updateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
         
         user.credDto = credDto.copy() as! OCCredentialsDto
         
@@ -75,7 +75,7 @@ import Foundation
         //TODO:check relaunchErrorCredentialFilesNotification if needed
     }
     
-    func migrateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
+@objc func migrateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
         
         //Update parameters after a force url and credentials have not been renewed
         let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
@@ -100,7 +100,7 @@ import Foundation
         instantUploadManager.activate()
     }
     
-    func restoreDownloadAndUploadsOfUser(_ user : UserDto) {
+@objc func restoreDownloadAndUploadsOfUser(_ user : UserDto) {
         let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
         app.cancelTheCurrentUploads(ofTheUser: user.idUser)
         
