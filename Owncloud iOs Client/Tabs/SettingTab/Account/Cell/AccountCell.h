@@ -31,7 +31,7 @@
 @property(nonatomic, weak) __weak id <AccountCellDelegate> delegate;
 
 
-- (IBAction)activeAccount:(id)sender;
+//- (IBAction)activeAccount:(id)sender;
 
 
 

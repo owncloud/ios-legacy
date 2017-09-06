@@ -24,6 +24,7 @@
 #import "ManageDownloads.h"
 #import "CheckAccessToServer.h"
 #import "UtilsLogin.h"
+#import "SyncFolderManager.h"
 
 @class FilesViewController;
 @class RecentViewController;
@@ -46,7 +47,7 @@ extern NSString * NotReachableNetworkForUploadsNotification;
 extern NSString * NotReachableNetworkForDownloadsNotification;
 
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, PrepareFilesToUploadDelegate, KKPasscodeViewControllerDelegate, CheckAccessToServerDelegate> {
+@interface AppDelegate : UIResponder <UIApplicationDelegate, PrepareFilesToUploadDelegate, KKPasscodeViewControllerDelegate, CheckAccessToServerDelegate, SyncFolderManagerDelegate> {
   
     
     UserDto *_activeUser;
@@ -149,6 +150,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) ManageDownloads *downloadManager;
 @property (nonatomic, strong) NSString *userSessionCurrentToken;
 
+@property(nonatomic, strong) dispatch_semaphore_t semaphoreChangeUser;
 
 /*
  * Method to get a Singleton of the OCCommunication to manage all the communications
@@ -316,5 +318,17 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 - (void) launchProcessToSyncAllFavorites;
 
 - (void) showPassCodeIfNeeded;
+
+
+//---------------------------
+/// @name switchActiveUser
+///-------------------------
+
+/**
+ * Method that switches the active user to that passed as a parameter
+ *
+ * @param user -> UserDto to set as active user
+ */
+- (void) switchActiveUserTo:(UserDto *) user inHardMode:(BOOL)hardMode withCompletionHandler:(void (^)(void)) completionHandler;
 
 @end
