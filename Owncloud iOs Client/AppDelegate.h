@@ -24,7 +24,6 @@
 #import "ManageDownloads.h"
 #import "CheckAccessToServer.h"
 #import "UtilsLogin.h"
-#import "SyncFolderManager.h"
 
 @class FilesViewController;
 @class RecentViewController;
