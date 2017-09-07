@@ -134,7 +134,7 @@ import Foundation
     }
     
     
-    func getAuthMethodToLoginFrom(availableAuthMethods: [AuthenticationMethod]) -> AuthenticationMethod {
+    static func getAuthMethodToLoginFrom(availableAuthMethods: [AuthenticationMethod]) -> AuthenticationMethod {
         
         var authMethod: AuthenticationMethod? = .NONE
         
