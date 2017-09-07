@@ -679,7 +679,7 @@ connection_declined  Connection declined by user
         let userCredDto: OCCredentialsDto = OCCredentialsDto()
         userCredDto.userName = samlUserName
         userCredDto.accessToken = cookieString
-        userCredDto.authenticationMethod = self.authMethodToLogin
+        userCredDto.authenticationMethod = .SAML_WEB_SSO
         
         //We check if the user that we are updating is the same that we are using
         if (self.loginMode == .update  && self.user?.username != samlUserName) {
@@ -913,6 +913,8 @@ connection_declined  Connection declined by user
                                                     self.user?.ssl = self.validatedServerURL.hasPrefix("https")
                                                     self.user?.urlRedirected = app.urlServerRedirected
                                                     self.user?.predefinedUrl = k_default_url_server
+                                                    
+                                                    credentials.baseURL = UtilsUrls.getFullRemoteServerPath(self.user)
 
                                                     if self.loginMode == .create {
                                                         

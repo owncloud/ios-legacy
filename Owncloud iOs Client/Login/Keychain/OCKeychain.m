@@ -133,6 +133,7 @@
                 credentialsDto.userId = resultKeychainDict[(__bridge id)kSecAttrAccount];
                 credentialsDto.userName = resultKeychainDict[(__bridge id)kSecAttrDescription];
                 credentialsDto.accessToken = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
+                credentialsDto.baseURL = [UtilsUrls getFullRemoteServerPath:user];
             } else {
                 credentialsDto = [NSKeyedUnarchiver unarchiveObjectWithData: resultData];
             }
