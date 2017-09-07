@@ -597,7 +597,6 @@ connection_declined  Connection declined by user
     
 // MARK: start log in auth
     func startAuthenticationWith(authMethod: AuthenticationMethod) {
-        self.setConnectButton(status: false)
         switch authMethod {
 
         case .SAML_WEB_SSO:
@@ -609,6 +608,7 @@ connection_declined  Connection declined by user
             break
 
         case .BASIC_HTTP_AUTH:
+            self.setConnectButton(status: false)
             self.resetPasswordFooterMessage()
             let userCredDto: OCCredentialsDto = OCCredentialsDto()
             userCredDto.userName = self.textFieldUsername.text
