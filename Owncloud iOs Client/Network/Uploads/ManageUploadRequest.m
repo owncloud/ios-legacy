@@ -228,7 +228,10 @@
         self.currentUpload.status=waitingForUpload;
     }
     
-    [[AppDelegate sharedOCCommunication] setCredentials:_userUploading.credDto];
+    self.userUploading = [ManageUsersDB getUserByIdUser:_currentUpload.userId];
+
+    [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
+    
 
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
