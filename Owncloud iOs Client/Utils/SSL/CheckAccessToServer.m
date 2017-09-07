@@ -28,6 +28,8 @@
 #import "UtilsDtos.h"
 #import "Customization.h"
 #import "ManageUsersDB.h"
+#import "UtilsFramework.h"
+#import "OCCommunication.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -130,6 +132,7 @@
                                           }
                                           
                                           BOOL installed = NO;
+                                          BOOL maintenance = NO;
                                           NSError *e = nil;
                                           if (data!= nil) {
                                               NSMutableDictionary *jsonArray = [NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: &e];
@@ -139,11 +142,15 @@
                                                   
                                               } else {
                                                   installed = [[jsonArray valueForKey:@"installed"] boolValue];
+                                                  maintenance = [[jsonArray valueForKey:@"maintenance"] boolValue];
+                                                  if (maintenance) {
+                                                      e = [UtilsFramework getErrorByCodeId:OCErrorServerMaintenanceMode];
+                                                  }
                                               }
                                           }
                                           
                                           if(self.delegate) {
-                                              [self.delegate connectionToTheServerWasChecked:installed withHttpStatusCode:httpStatusCode andError:e];
+                                              [self.delegate connectionToTheServerWasChecked:(installed && !maintenance) withHttpStatusCode:httpStatusCode andError:e];
                                           }
                                           
                                       }

@@ -551,7 +551,7 @@ connection_declined  Connection declined by user
                     self.validatedServerURL = validatedURL;
                     self.allAvailableAuthMethods = serverAuthenticationMethods as! [AuthenticationMethod]
                     
-                    self.authMethodToLogin = DetectAuthenticationMethod().getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
+                    self.authMethodToLogin = DetectAuthenticationMethod.getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
                     
                     if (self.authMethodToLogin != .NONE) {
                         self.setReconnectionButtons(hiddenStatus: true)
