@@ -72,9 +72,7 @@
 }
 
 -(void) checkIfExistOnserverAndBeginUpload {
-    
-    _userUploading = [ManageUsersDB getUserByIdUser:_currentUpload.userId];
-    
+        
     if (_currentUpload.isNotNecessaryCheckIfExist) {
         [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
     } else {
