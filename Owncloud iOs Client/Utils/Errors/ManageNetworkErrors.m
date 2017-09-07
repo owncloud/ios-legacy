@@ -82,12 +82,6 @@
             case OCErrorSslRecoverablePeerUnverified:
             //case NSURLErrorServerCertificateUntrusted: //-1202
                 return NSLocalizedString(@"server_certificate_untrusted", nil);
-
-            default:
-                // this could be good enough for general network errors ;
-                // for app-specific errors, this is perfect provided that the error object is created with
-                // correct values for code, domain and userInfo.localizedDescription
-                return error.localizedDescription;
         }
     }
     
@@ -118,10 +112,18 @@
 
         case kOCErrorServerTimeout:
             //408
-        default:
             return NSLocalizedString(@"not_possible_connect_to_server", nil);
-            
     }
+    
+    if (error != nil) {
+        // this could be good enough for general network errors ;
+        // for app-specific errors, this is perfect provided that the error object is created with
+        // correct values for code, domain and userInfo.localizedDescription
+        return error.localizedDescription;
+    } else {
+        return NSLocalizedString(@"not_possible_connect_to_server", nil);
+    }
+    
 }
 
 @end
