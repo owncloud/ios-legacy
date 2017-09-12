@@ -25,7 +25,10 @@
     [OCKeychain updateCredentials:sharedOCCommunication.credDto];
     
 #ifdef CONTAINER_APP
-    APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
+    
+    if ([sharedOCCommunication.credDto.userId integerValue] ==  [ManageUsersDB getActiveUser].idUser) {
+        APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
+    }
 #endif
 }
 
