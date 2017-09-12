@@ -950,8 +950,14 @@ connection_declined  Connection declined by user
                                                         if (app.activeUser != nil && app.activeUser.idUser == self.user?.idUser) {
                                                             app.activeUser = self.user;
                                                         }
-                                                    
-                                                        self.closeLoginView()
+
+                                                        if self.loginMode == .migrate {
+                                                            // migration mode needs to start a fresh list of files, so that it is updated with the new URL
+                                                            app.generateAppInterface(fromLoginScreen: true)
+                                                            
+                                                        } else {
+                                                            self.closeLoginView()
+                                                        }
                                                     }
                                                 }
                                               
