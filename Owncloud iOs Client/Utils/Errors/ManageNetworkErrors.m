@@ -75,6 +75,9 @@
     
     if (error != nil) {
         switch (error.code) {
+            case NSURLErrorNotConnectedToInternet:
+                return NSLocalizedString(@"not_connected_to_internet", nil);
+                
             case OCErrorForbiddenCharacters:
                 //Forbidden characters from the server side
                 return NSLocalizedString(@"forbidden_characters_from_server", nil);
