@@ -136,7 +136,7 @@ connection_declined  Connection declined by user
     //var urlNormalized: String!
     var validatedServerURL: String!
     var allAvailableAuthMethods = [AuthenticationMethod]()
-    var authMethodToLogin: AuthenticationMethod!
+    var authMethodToLogin: AuthenticationMethod! = .UNKNOWN
     var authCodeReceived = ""
     var manageNetworkErrors: ManageNetworkErrors!
     private var loginMode: LoginMode!
@@ -399,9 +399,8 @@ connection_declined  Connection declined by user
             self.setURLStackView(hiddenStatus: true)
         }
         
-        //set user&pass status
-        let shouldBehiddenUserPassFields = (self.loginMode != .create) ? false : true ;
-        self.setBasicAuthLoginStackViews(hiddenStatus: shouldBehiddenUserPassFields)
+        //set user&pass visibility
+        self.updateInputFieldsFromCurrentAuthMethodToLogin()
         
         //set login button status
         self.setConnectButton(status: false)
@@ -446,6 +445,11 @@ connection_declined  Connection declined by user
                                            action:#selector(closeLoginView))
         
         self.navigationItem.leftBarButtonItem = cancelButton
+    }
+    
+    func updateInputFieldsFromCurrentAuthMethodToLogin() {
+        let shouldBehiddenUserPassFields = (self.authMethodToLogin == nil || self.authMethodToLogin != AuthenticationMethod.BASIC_HTTP_AUTH);
+        self.setBasicAuthLoginStackViews(hiddenStatus: shouldBehiddenUserPassFields)
     }
     
     func setBasicAuthLoginStackViews(hiddenStatus: Bool) {
@@ -535,7 +539,8 @@ connection_declined  Connection declined by user
             getPublicInfoFromServerJob.start(serverURL: self.serverURLNormalizer.normalizedURL, withCompletion: { (validatedURL: String?, _ serverAuthenticationMethods: Array<Any>?, _ error: Error?, _ httpStatusCode: NSInteger) in
             
                 self.setNetworkActivityIndicator(status: false)
-                if error != nil {
+                if (error != nil || validatedURL == nil) {
+                    
                     self.setConnectButton(status: false)
                     self.showURLError(
                         self.manageNetworkErrors.returnErrorMessage(
@@ -555,9 +560,8 @@ connection_declined  Connection declined by user
                     
                     if (self.authMethodToLogin != .NONE) {
                         self.setReconnectionButtons(hiddenStatus: true)
-                        
+
                         if (self.authMethodToLogin == .BASIC_HTTP_AUTH) {
-                            self.setBasicAuthLoginStackViews(hiddenStatus: false)
                             self.textFieldURL.resignFirstResponder()
                             self.textFieldUsername.becomeFirstResponder()
                             
@@ -566,30 +570,20 @@ connection_declined  Connection declined by user
                                 self.textFieldPassword.text = ""
                             }
                         } else {
-                            self.setBasicAuthLoginStackViews(hiddenStatus: true)
                             self.setConnectButton(status: false)
                             self.startAuthenticationWith(authMethod: self.authMethodToLogin)
-                            
                         }
                         
                         self.showURLSuccess(self.validatedServerURL.hasPrefix("https://"))
                         
                     } else {
-                        self.setBasicAuthLoginStackViews(hiddenStatus: true)
                         self.setConnectButton(status: false)
                         self.showURLError(NSLocalizedString("authentification_not_valid", comment: ""))
                     }
                     self.updateUIWithNormalizedData(self.serverURLNormalizer)
-
-                    
-                } else {
-                    self.setConnectButton(status: false)
-                    self.showURLError(
-                        self.manageNetworkErrors.returnErrorMessage(
-                            withHttpStatusCode: httpStatusCode, andError: nil
-                        )
-                    )
                 }
+                
+                self.updateInputFieldsFromCurrentAuthMethodToLogin()
             })
         }
     }
@@ -714,8 +708,6 @@ connection_declined  Connection declined by user
         case TextfieldType.url.rawValue:
             if textField.text != "" {
                 self.checkCurrentUrl()
-            }else{
-                self.setBasicAuthLoginStackViews(hiddenStatus: true)
             }
             break
         default:
