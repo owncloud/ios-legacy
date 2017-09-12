@@ -567,7 +567,7 @@ connection_declined  Connection declined by user
                             }
                         } else {
                             self.setBasicAuthLoginStackViews(hiddenStatus: true)
-                            self.setConnectButton(status: true)
+                            self.setConnectButton(status: false)
                             self.startAuthenticationWith(authMethod: self.authMethodToLogin)
                             
                         }
@@ -601,14 +601,15 @@ connection_declined  Connection declined by user
 
         case .SAML_WEB_SSO:
             navigateToSAMLLoginView();
+            self.setConnectButton(status: true) // work of the buttong was already done
             break
 
         case .BEARER_TOKEN:
             navigateToOAuthLoginView();
+            self.setConnectButton(status: true) // work of the buttong was already done
             break
 
         case .BASIC_HTTP_AUTH:
-            self.setConnectButton(status: false)
             self.resetPasswordFooterMessage()
             let userCredDto: OCCredentialsDto = OCCredentialsDto()
             userCredDto.userName = self.textFieldUsername.text
@@ -751,6 +752,7 @@ connection_declined  Connection declined by user
         case TextfieldType.password.rawValue:
             if (self.textFieldUsername.text?.characters.count)! > 0 {
                 self.setNetworkActivityIndicator(status: true)
+                self.setConnectButton(status: false)
                 startAuthenticationWith(authMethod: .BASIC_HTTP_AUTH)
             }
             textField.resignFirstResponder()
@@ -819,7 +821,7 @@ connection_declined  Connection declined by user
     @IBAction func connectButtonTapped(_ sender: Any) {
         self.view.endEditing(true)
         self.setNetworkActivityIndicator(status: true)
-        self.setConnectButton(status: false)
+        self.setConnectButton(status: false)    // prevent multiple taps
         self.startAuthenticationWith(authMethod: self.authMethodToLogin)
     }
     
