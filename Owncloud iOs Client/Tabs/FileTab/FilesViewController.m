@@ -1081,11 +1081,7 @@
         
         self.elcPicker.modalPresentationStyle = UIModalPresentationFormSheet;
        
-        if (IS_IOS8 || IS_IOS9)  {
-            [app.detailViewController presentViewController:self.elcPicker animated:YES completion:nil];
-        } else {
-            [app.splitViewController presentViewController:self.elcPicker animated:YES completion:nil];
-        }
+        [app.detailViewController presentViewController:self.elcPicker animated:YES completion:nil];
     }
     
 }
@@ -1115,11 +1111,7 @@
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
-        if (IS_IOS8 || IS_IOS9)  {
-            [self.plusActionSheet showInView:app.splitViewController.view];
-        } else {
-            [self.plusActionSheet showInView:app.detailViewController.view];
-        }
+        [self.plusActionSheet showInView:app.splitViewController.view];
     }
 }
 
@@ -1155,17 +1147,6 @@
     
     NSArray *info = [args objectForKey:@"info"];
     NSString *remoteURLToUpload = [args objectForKey:@"remoteURLToUpload"];
-        
-    /*
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-    {
-        [self dismissModalViewControllerAnimated:YES];
-        
-        
-    } else {
-        [app.splitViewController dismissModalViewControllerAnimated:YES];
-    }*/
     
     if([info count]>0){
         
@@ -1216,11 +1197,7 @@
     if (IS_IPHONE){
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
-        if (IS_IOS8 || IS_IOS9)  {
-            [app.detailViewController dismissViewControllerAnimated:YES completion:nil];
-        } else {
-            [app.splitViewController dismissViewControllerAnimated:YES completion:nil];
-        }
+        [app.detailViewController dismissViewControllerAnimated:YES completion:nil];
     }
     
     app.isUploadViewVisible = NO;
@@ -2268,11 +2245,7 @@
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
-        if (IS_IOS8 || IS_IOS9)  {
-            [self.sortingActionSheet showInView:app.splitViewController.view];
-        } else {
-            [self.sortingActionSheet showInView:app.detailViewController.view];
-        }
+        [self.sortingActionSheet showInView:app.splitViewController.view];
     }
 }
 
@@ -3595,11 +3568,7 @@
             [self.moreActionSheet showInView:self.tabBarController.view];
         }else {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            if (IS_IOS8 || IS_IOS9) {
-                [self.moreActionSheet showInView:app.splitViewController.view];
-            } else {
-                [self.moreActionSheet showInView:app.detailViewController.view];
-            }
+            [self.moreActionSheet showInView:app.splitViewController.view];
         }
     } else {
         
@@ -3632,11 +3601,7 @@
             [self.moreActionSheet showInView:self.tabBarController.view];
         }else {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            if (IS_IOS8 || IS_IOS9) {
-                [self.moreActionSheet showInView:app.splitViewController.view];
-            } else {
-                [self.moreActionSheet showInView:app.detailViewController.view];
-            }
+            [self.moreActionSheet showInView:app.splitViewController.view];
         }
     }
 }
