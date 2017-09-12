@@ -226,7 +226,7 @@
         self.currentUpload.status=waitingForUpload;
     }
     
-    self.userUploading = [ManageUsersDB getUserByIdUser:_currentUpload.userId];
+    self.userUploading = [ManageUsersDB getUserByIdUser:self.currentUpload.userId];
 
     [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
     
@@ -715,6 +715,8 @@
 
 - (void) updateTheEtagOfTheFile: (FileDto *) overwrittenFile {
     
+    self.userUploading = [ManageUsersDB getUserByIdUser:self.currentUpload.userId];
+    
     [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
 
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
@@ -786,6 +788,8 @@
 // Check the etag in the case that in the server has changed
 
 - (void) checkTheEtagInTheServerOfTheFile:(FileDto *) overwrittenFile {
+    
+    self.userUploading = [ManageUsersDB getUserByIdUser:self.userUploading.idUser];
     
     [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
 
