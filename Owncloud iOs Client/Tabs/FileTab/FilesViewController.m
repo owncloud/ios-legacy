@@ -1133,57 +1133,22 @@
  */
 - (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info inURL:(NSString*)remoteURLToUpload
 {
-    [self initLoading];
-    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
-
-    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-    
     NSString *path = _nextRemoteFolder;
-    
     path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
     }
-
-    NSString *rootFolder =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
     
+    NSDictionary * args = [NSDictionary dictionaryWithObjectsAndKeys:
+                           (NSArray *) info, @"info",
+                           (NSString *) remoteURLToUpload, @"remoteURLToUpload", nil];
+    [self performSelectorInBackground:@selector(initUploadFileFromGalleryInOtherThread:) withObject:args];
     
-    [[AppDelegate sharedOCCommunication] checkServer:rootFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
-        [self endLoading];
-        NSDictionary * args = [NSDictionary dictionaryWithObjectsAndKeys:
-                               (NSArray *) info, @"info",
-                               (NSString *) remoteURLToUpload, @"remoteURLToUpload", nil];
-        
-        [self performSelectorInBackground:@selector(initUploadFileFromGalleryInOtherThread:) withObject:args];
-        
-        app.isUploadViewVisible = NO;
-        
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
-        [self endLoading];
-        
-        app.isUploadViewVisible = NO;
-        
-        DLog(@"error: %@", error);
-        DLog(@"Operation error: %ld", (long)response.statusCode);
-        
-        BOOL isSamlCredentialsError = NO;
-        
-        //Check the login error in shibboleth
-        if (k_is_sso_active) {
-            //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
-            if (isSamlCredentialsError) {
-                [self errorLogin];
-            }
-        }
-        if (!isSamlCredentialsError) {
-            [self manageServerErrors:response.statusCode and:error];
-        }
-    }];
+    app.isUploadViewVisible = NO;
+   
 }
 
 - (void)initUploadFileFromGalleryInOtherThread:(NSDictionary *) args {
