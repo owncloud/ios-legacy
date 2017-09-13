@@ -109,7 +109,6 @@
                                                   [self askToAcceptCertificate];
                                               }
                                               
-                                              
                                           } else {
                                               if(self.delegate) {
                                                   [self.delegate
@@ -119,8 +118,9 @@
                                                    ];
                                               }
                                           }
-                                      } else {
                                           
+                                      } else {
+                                      
                                           if ([[self.urlStatusCheck lowercaseString] hasPrefix:@"http:"]) {
                                               self.sslStatus = sslStatusSignedOrNotSSL;
                                           } else {
@@ -134,7 +134,8 @@
                                           BOOL installed = NO;
                                           BOOL maintenance = NO;
                                           NSError *e = nil;
-                                          if (data!= nil) {
+                                          
+                                          if (httpStatusCode == 200 && data!= nil) {
                                               NSMutableDictionary *jsonArray = [NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: &e];
                                               DLog(@"data_check_server: %@",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
                                               if (!jsonArray) {
