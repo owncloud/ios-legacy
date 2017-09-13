@@ -960,7 +960,7 @@ connection_declined  Connection declined by user
                                                 if errorHttp == Int(kOCErrorServerUnauthorized) {
                                                     self.showCredentialsError(
                                                         self.manageNetworkErrors.returnErrorMessage(
-                                                            withHttpStatusCode: (errorHttp)!, andError: error
+                                                            withHttpStatusCode: (errorHttp)!, andError: nil
                                                         )
                                                     )
                                                     
