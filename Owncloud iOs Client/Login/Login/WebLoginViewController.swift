@@ -120,10 +120,7 @@ import Foundation
             return false;      // will trigger webView(webView, didFailLoadWithError), with error due to cancellation
             
         } else if urlToFollow.hasPrefix(serverPath + k_url_path_list_of_files_in_web) {
-            self.error = UtilsFramework.getErrorWithCode(
-                Int(OCErrorOAuth2Error.rawValue),
-                andCustomMessageFromTheServer: NSLocalizedString("oauth_error", comment: "")
-            );
+            self.error = UtilsFramework.getErrorByCodeId(Int32(OCErrorOAuth2Error.rawValue))
             self.loadInterrupted = true;
             // for some reason, this time "return false" will NOT trigger webView(webView, didFailLoadWithError), with error due to cancellation
             // so, let's solve it here:
@@ -142,15 +139,9 @@ import Foundation
             
         } else if let errorString = getQueryStringParameter(url: urlToFollow, param: "error") {
             if errorString == "access_denied" {
-                error = UtilsFramework.getErrorWithCode(
-                    Int(OCErrorOAuth2ErrorAccessDenied.rawValue),
-                    andCustomMessageFromTheServer: NSLocalizedString("oauth_error_access_denied", comment: "")
-                );
+                self.error = UtilsFramework.getErrorByCodeId(Int32(OCErrorOAuth2ErrorAccessDenied.rawValue))
             } else {
-                error = UtilsFramework.getErrorWithCode(
-                    Int(OCErrorOAuth2Error.rawValue),
-                    andCustomMessageFromTheServer: NSLocalizedString("oauth_error", comment: "")
-                );
+                self.error = UtilsFramework.getErrorByCodeId(Int32(OCErrorOAuth2Error.rawValue))
             }
             
         }
