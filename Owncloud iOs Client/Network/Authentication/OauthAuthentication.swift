@@ -62,43 +62,59 @@ class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate 
         
         self.accessTokenAuthRequest(url, authCode: authCode, withCompletion: { (data:Data?, httpResponse:HTTPURLResponse?, error:Error?) in
             
-            if data != nil {
-
+            var returnUserCredDto: OCCredentialsDto? = nil
+            var returnError: Error? = nil
+            
+            if (error != nil) {
+                returnError = error
+                
+            } else if (httpResponse != nil && httpResponse!.statusCode < 200 || httpResponse!.statusCode >= 300) {
+                // errored HTTP response from server
+                returnError = UtilsFramework.getErrorWithCode(
+                    Int(OCErrorOAuth2Error.rawValue),
+                    andCustomMessageFromTheServer: ManageNetworkErrors().returnErrorMessage(
+                        withHttpStatusCode:  httpResponse!.statusCode,
+                        andError: nil
+                    )
+                );
+                
+            } else if (httpResponse == nil || data == nil) {
+                // generic OAuth2 error, who knows what happened...
+                returnError =  UtilsFramework.getErrorByCodeId(Int32(OCErrorOAuth2Error.rawValue));
+                
+            } else {
                 do {
                     if let dictJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary  {
                         
-                        if let resultError = dictJSON["error"] {
-                            completion(
-                                nil,
-                                UtilsFramework.getErrorWithCode(
-                                    Int(OCErrorOAuth2Error.rawValue),
-                                    andCustomMessageFromTheServer: resultError as? String
-                                )
-                            );
+                        if let errorElement = dictJSON["error"] {
+                            if errorElement as! String == "access_denied" {
+                                returnError = UtilsFramework.getErrorByCodeId(Int32(OCErrorOAuth2ErrorAccessDenied.rawValue));
+                            } else {
+                                returnError = UtilsFramework.getErrorByCodeId(Int32(OCErrorOAuth2Error.rawValue));
+                            }
+                            
                         } else {
                             
-                            let userCredDto: OCCredentialsDto = OCCredentialsDto()
-                            userCredDto.userName = dictJSON["user_id"] as? String
-                            userCredDto.accessToken = dictJSON["access_token"] as? String
-                            userCredDto.refreshToken = dictJSON["refresh_token"] as? String
-                            userCredDto.expiresIn = dictJSON["expires_in"] as? String
-                            userCredDto.tokenType = dictJSON["token_type"] as? String
-                            userCredDto.authenticationMethod = AuthenticationMethod.BEARER_TOKEN
+                            returnUserCredDto = OCCredentialsDto()
+                            returnUserCredDto!.userName = dictJSON["user_id"] as? String
+                            returnUserCredDto!.accessToken = dictJSON["access_token"] as? String
+                            returnUserCredDto!.refreshToken = dictJSON["refresh_token"] as? String
+                            returnUserCredDto!.expiresIn = dictJSON["expires_in"] as? String
+                            returnUserCredDto!.tokenType = dictJSON["token_type"] as? String
+                            returnUserCredDto!.authenticationMethod = AuthenticationMethod.BEARER_TOKEN
                             
-                            completion(userCredDto, nil)
                         }
                     } else {
-                        completion(nil, error)
+                        returnError = UtilsFramework.getErrorByCodeId(Int32(OCErrorOAuth2Error.rawValue));
                     }
                     
                 } catch let error {
-                    print("accessTokenAuthRequest  no data error:", error.localizedDescription)
-                    completion(nil, error)
+                    print("accessTokenAuthRequest no data error:", error.localizedDescription)
+                    returnError = error;
                 }
-                
-            } else {
-               completion(nil, error)
             }
+            
+            completion(returnUserCredDto, returnError)
         })
         
     }
