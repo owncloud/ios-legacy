@@ -98,7 +98,7 @@
             case k_DB_version_12:
                 [ManageDB updateDBVersion12To13];
                 //Update keychain of all the users
-                [OCKeychain updateAllOCKeychainItemsToUseTheLockProperty];//Updates in Keychain
+                [OCKeychain updateAllKeychainItemsToUseTheLockProperty];//Updates in Keychain
             case k_DB_version_13:
                 [ManageDB updateDBVersion13To14];
             case k_DB_version_14:
