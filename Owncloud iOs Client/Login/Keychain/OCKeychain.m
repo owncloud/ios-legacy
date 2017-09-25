@@ -20,13 +20,13 @@
 @implementation OCKeychain
 
 #pragma mark - OCCredentialsStorageDelegate
-- (void) storeCurrentCredentialsOfSharedOCCommunication:(OCCommunication *)sharedOCCommunication {
+- (void) storeCredentials:(OCCredentialsDto *)credDto {
 
-    [OCKeychain updateCredentials:sharedOCCommunication.credDto];
+    [OCKeychain updateCredentials:credDto];
     
 #ifdef CONTAINER_APP
     
-    if ([sharedOCCommunication.credDto.userId integerValue] ==  [ManageUsersDB getActiveUser].idUser) {
+    if ([credDto.userId integerValue] ==  [ManageUsersDB getActiveUser].idUser) {
         APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
     }
 #endif
