@@ -20,7 +20,7 @@
 @implementation OCKeychain
 
 #pragma mark - OCCredentialsStorageDelegate
-- (void) storeCredentials:(OCCredentialsDto *)credDto {
+- (void) saveCredentials:(OCCredentialsDto *)credDto {
 
     [OCKeychain updateCredentials:credDto];
     
@@ -34,12 +34,12 @@
 
 #pragma mark - set credentials
 
-+(BOOL)setCredentials:(OCCredentialsDto *)credentials {
-    return [OCKeychain setCredentials:credentials migratingFromDB9to10:NO];
++(BOOL)storeCredentials:(OCCredentialsDto *)credDto {
+    return [OCKeychain storeCredentials:credDto migratingFromDB9to10:NO];
 }
 
 // private implementation, common to both setCredentialsOfUser and setCredentialsOfUserToFromDbVersion9To10
-+(BOOL)setCredentials:(OCCredentialsDto *)credDto migratingFromDB9to10:(BOOL)migratingFromDB9to10 {
++(BOOL)storeCredentials:(OCCredentialsDto *)credDto migratingFromDB9to10:(BOOL)migratingFromDB9to10 {
     
     BOOL output = NO;
     
@@ -115,7 +115,7 @@
 }
 
 +(OCCredentialsDto *)getCredentialsOfUser:(UserDto *)user {
-    return [self getCredentialsOfUser:user fromPreviousDBVersion22:NO] ;;
+    return [self getCredentialsOfUser:user fromPreviousDBVersion22:NO];
 }
 
 +(OCCredentialsDto *)getCredentialsOfUser:(UserDto *)user fromPreviousDBVersion22:(BOOL)previousDB22{
@@ -240,7 +240,7 @@
 
 #pragma mark - Update all OC keychain items
 
-+ (BOOL) updateAllOCKeychainItemsToUseTheLockProperty {
++ (BOOL) updateAllKeychainItemsToUseTheLockProperty {
     
     BOOL output = NO;
     
@@ -264,9 +264,9 @@
 #pragma mark - keychain updates after some db updates
 
 #pragma mark - used to update from db version 9to10, from db to keychain
-+(BOOL)setCredentialsOfUserFromDBVersion9To10:(UserDto *)user {
++(BOOL)storeCredentialsOfUserFromDBVersion9To10:(UserDto *)user {
     
-    return [OCKeychain setCredentials:user.credDto migratingFromDB9to10:YES];
+    return [OCKeychain storeCredentials:user.credDto migratingFromDB9to10:YES];
 }
 
 #pragma mark - used to update from db version 21to22

@@ -32,7 +32,7 @@ import Foundation
             userInDB.credDto.userId = String(userInDB.idUser)
             
             //userInDB contains the userId in DB, we add the credentials and store the user in keychain
-            OCKeychain.setCredentials(userInDB.credDto)
+            OCKeychain.storeCredentials(userInDB.credDto)
             
             let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
             
