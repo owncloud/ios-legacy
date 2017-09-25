@@ -71,7 +71,6 @@ import Foundation
     }
     
     
-
  func getListOfFiles(url:NSURL, credentials: OCCredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: NSError?, _ listOfFileDtos: [FileDto]? ) -> Void) {
         
         self.readFolderRetryingNumberOfTimes(ntimes: 2, url: url, credentials: credentials, success: { (_ listOfFiles: [Any]?) in
@@ -93,8 +92,5 @@ import Foundation
         }
 
     }
-    
-    func aaa(){
-    
-    }
+
 }
