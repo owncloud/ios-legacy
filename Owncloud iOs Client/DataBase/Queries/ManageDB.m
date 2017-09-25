@@ -631,7 +631,7 @@
     NSArray *currentUsers = [NSArray arrayWithArray:[ManageUsersDB getAllOldUsersUntilVersion10]];
     
     for (UserDto *user in currentUsers) {
-        if (![OCKeychain setCredentialsOfUserFromDBVersion9To10:user]){
+        if (![OCKeychain storeCredentialsOfUserFromDBVersion9To10:user]){
             DLog(@"Failed setting credentials");
         }
         
