@@ -52,12 +52,11 @@ import Foundation
         self.webViewLogin.backgroundColor = UIColor.ofWebViewBackground()
     
         // Do any additional setup after loading the view.
-        
-        //TODO: set branding style navigation bar, cancel item title
-        
+                
         //load login url in web view
-        let urlToGetAuthCode = OauthAuthentication().oauthUrlTogetAuthCodeWith(serverPath: serverPath)
-        self.loadWebViewWith(url: urlToGetAuthCode)
+        let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        let urlToGetAuthCode = OCOAuth2Manager.getOAuth2URLToGetAuthCode(by: app.oauth2Configuration, withServerPath: serverPath)
+        self.loadWebViewWith(url: urlToGetAuthCode!)
         
         self.loadInterrupted = false;
     }

@@ -47,5 +47,7 @@
 #import "ManageCookiesStorageDB.h"
 #import "OCCredentialsStorage.h"
 #import "OCFrameworkConstants.h"
+#import "OCOAuth2Manager.h"
+#import "OCOAuth2Configuration.h"
 
 

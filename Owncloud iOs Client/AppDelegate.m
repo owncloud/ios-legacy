@@ -211,6 +211,14 @@ float shortDelay = 0.3;
     //Set up user agent, so this way all UIWebView will use it
     NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:[UtilsUrls getUserAgent], @"UserAgent", nil];
     [[NSUserDefaults standardUserDefaults] registerDefaults:dictionary];
+    
+    //Set OAuth2Configuration object
+    self.oauth2Configuration = [[OCOAuth2Configuration alloc]
+                                initWithClientId:k_oauth2_client_id
+                                clientSecret:k_oauth2_client_secret
+                                redirectUri:k_oauth2_redirect_uri
+                                authorizationEndpoint:k_oauth2_authorization_endpoint
+                                tokenEndpoint:k_oauth2_token_endpoint];
 
     return YES;
 }

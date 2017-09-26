@@ -369,9 +369,12 @@
 		40AB65121EAFA10000379361 /* ShareLinkViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40AB65101EAFA10000379361 /* ShareLinkViewController.xib */; };
 		40B083991F1607D90072574A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B083981F1607D90072574A /* Log.swift */; };
 		40B5700F1F1E137D00A98A8E /* UtilsLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5700E1F1E137D00A98A8E /* UtilsLogin.m */; };
-		40BCC2BA1F3B5FA500F5DC6F /* HandleCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C4B6BD1F3A062B0009F11F /* HandleCredentials.m */; };
-		40BCC2BC1F3B5FA700F5DC6F /* HandleCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C4B6BD1F3A062B0009F11F /* HandleCredentials.m */; };
-		40BCC2BD1F3B5FA700F5DC6F /* HandleCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C4B6BD1F3A062B0009F11F /* HandleCredentials.m */; };
+		40B5AB7E1F7AB6420022F3A2 /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5AB7D1F7AB6420022F3A2 /* SSLCertificateManager.m */; };
+		40B5AB801F7ABBE70022F3A2 /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5AB7D1F7AB6420022F3A2 /* SSLCertificateManager.m */; };
+		40B5AB821F7ABBE70022F3A2 /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5AB7D1F7AB6420022F3A2 /* SSLCertificateManager.m */; };
+		40BCC2BA1F3B5FA500F5DC6F /* (null) in Sources */ = {isa = PBXBuildFile; };
+		40BCC2BC1F3B5FA700F5DC6F /* (null) in Sources */ = {isa = PBXBuildFile; };
+		40BCC2BD1F3B5FA700F5DC6F /* (null) in Sources */ = {isa = PBXBuildFile; };
 		40C01ED91F0FA923002DCAAA /* DetectListOfFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C01ED81F0FA923002DCAAA /* DetectListOfFiles.swift */; };
 		40C0BDB91C46562A0057B1DD /* SharePrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */; };
 		40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */; };
@@ -637,9 +640,6 @@
 		59F470321C5F97BA005B6091 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 59F470311C5F97BA005B6091 /* Launch Screen.storyboard */; };
 		7F9B91BD1F1F472700B77260 /* ServerURLNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B91BC1F1F472700B77260 /* ServerURLNormalizer.swift */; };
 		7F9B91C81F1F817700B77260 /* GetPublicInfoFromServerJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B91C71F1F817700B77260 /* GetPublicInfoFromServerJob.swift */; };
-		7FE5D00D1F558D1D00A9760F /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FE5D00C1F558D1D00A9760F /* SSLCertificateManager.m */; };
-		7FE5D0121F571D3200A9760F /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FE5D00C1F558D1D00A9760F /* SSLCertificateManager.m */; };
-		7FE5D0131F571D6600A9760F /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FE5D00C1F558D1D00A9760F /* SSLCertificateManager.m */; };
 		905B3D3B1C8867AA00BCC93B /* SortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B3D3A1C8867AA00BCC93B /* SortManager.m */; };
 		905C594F1C50DA490051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
 		905C59501C50DA680051D223 /* ManageTouchID.m in Sources */ = {isa = PBXBuildFile; fileRef = 906177E11C4FABF600BBE648 /* ManageTouchID.m */; };
@@ -1553,6 +1553,8 @@
 		40B083981F1607D90072574A /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		40B5700D1F1E137D00A98A8E /* UtilsLogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilsLogin.h; sourceTree = "<group>"; };
 		40B5700E1F1E137D00A98A8E /* UtilsLogin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilsLogin.m; sourceTree = "<group>"; };
+		40B5AB7C1F7AB6420022F3A2 /* SSLCertificateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSLCertificateManager.h; path = Utils/SSL/SSLCertificateManager.h; sourceTree = "<group>"; };
+		40B5AB7D1F7AB6420022F3A2 /* SSLCertificateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSLCertificateManager.m; path = Utils/SSL/SSLCertificateManager.m; sourceTree = "<group>"; };
 		40C01ED81F0FA923002DCAAA /* DetectListOfFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetectListOfFiles.swift; path = Network/ReadFolder/DetectListOfFiles.swift; sourceTree = "<group>"; };
 		40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SharePrivilegeCell.xib; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.xib; sourceTree = "<group>"; };
 		40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharePrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.swift; sourceTree = "<group>"; };
@@ -1730,8 +1732,6 @@
 		59F470311C5F97BA005B6091 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		7F9B91BC1F1F472700B77260 /* ServerURLNormalizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerURLNormalizer.swift; sourceTree = "<group>"; };
 		7F9B91C71F1F817700B77260 /* GetPublicInfoFromServerJob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetPublicInfoFromServerJob.swift; sourceTree = "<group>"; };
-		7FE5D00A1F558CE600A9760F /* SSLCertificateManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SSLCertificateManager.h; path = Utils/SSL/SSLCertificateManager.h; sourceTree = "<group>"; };
-		7FE5D00C1F558D1D00A9760F /* SSLCertificateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSLCertificateManager.m; path = Utils/SSL/SSLCertificateManager.m; sourceTree = "<group>"; };
 		905B3D3A1C8867AA00BCC93B /* SortManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SortManager.m; path = Tabs/FileTab/Sort/SortManager.m; sourceTree = "<group>"; };
 		905B3D3E1C88681000BCC93B /* SortManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SortManager.h; path = Tabs/FileTab/Sort/SortManager.h; sourceTree = "<group>"; };
 		906177E11C4FABF600BBE648 /* ManageTouchID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageTouchID.m; sourceTree = "<group>"; };
@@ -3262,10 +3262,10 @@
 		59A0DAD71941A5060088FECD /* SSL */ = {
 			isa = PBXGroup;
 			children = (
+				40B5AB7C1F7AB6420022F3A2 /* SSLCertificateManager.h */,
+				40B5AB7D1F7AB6420022F3A2 /* SSLCertificateManager.m */,
 				59A0DADA1941A7A60088FECD /* CheckAccessToServer.h */,
 				59A0DAD91941A7A60088FECD /* CheckAccessToServer.m */,
-				7FE5D00A1F558CE600A9760F /* SSLCertificateManager.h */,
-				7FE5D00C1F558D1D00A9760F /* SSLCertificateManager.m */,
 			);
 			name = SSL;
 			sourceTree = "<group>";
@@ -4893,7 +4893,7 @@
 				59D774CE1910EE0F004322BA /* UtilsTableView.m in Sources */,
 				148DD6EA17786A1400FB9977 /* WebViewController.m in Sources */,
 				EA4071031C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */,
-				7FE5D00D1F558D1D00A9760F /* SSLCertificateManager.m in Sources */,
+				40B5AB7E1F7AB6420022F3A2 /* SSLCertificateManager.m in Sources */,
 				EABF69151891379C00A2217C /* SWCellScrollView.m in Sources */,
 				EABF69141891379C00A2217C /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */,
@@ -4987,6 +4987,7 @@
 			files = (
 				59F123E61C89C14D0094CF70 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				59F123E41C89C1250094CF70 /* SWCellScrollView.m in Sources */,
+				40B5AB821F7ABBE70022F3A2 /* SSLCertificateManager.m in Sources */,
 				59F123E51C89C1250094CF70 /* SWLongPressGestureRecognizer.m in Sources */,
 				59F123E31C89C1180094CF70 /* SWUtilityButtonView.m in Sources */,
 				59F123E21C89C0E00094CF70 /* SWTableViewCell.m in Sources */,
@@ -5025,7 +5026,6 @@
 				EAC6E5FF1AB0A43C00CCF8C4 /* SelectFolderViewController.m in Sources */,
 				EAF7217F1AAF2E5B009F5596 /* FMDatabase.m in Sources */,
 				EAF721741AAF1A13009F5596 /* UserDto.m in Sources */,
-				7FE5D0131F571D6600A9760F /* SSLCertificateManager.m in Sources */,
 				EAC6E5F61AB0917400CCF8C4 /* CheckAccessToServer.m in Sources */,
 				59C762321AB85B5900A64C1F /* ManageUploadsDB.m in Sources */,
 				EAF721831AAF340D009F5596 /* ManageUsersDB.m in Sources */,
@@ -5033,7 +5033,7 @@
 				EAC6E5FE1AB0A41900CCF8C4 /* OCNavigationController.m in Sources */,
 				EAF721871AB03DB9009F5596 /* ManageFilesDB.m in Sources */,
 				EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */,
-				40BCC2BD1F3B5FA700F5DC6F /* HandleCredentials.m in Sources */,
+				40BCC2BD1F3B5FA700F5DC6F /* (null) in Sources */,
 				EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */,
 				EAF7217D1AAF2E0D009F5596 /* Managers.swift in Sources */,
 				4056551D1CE1DD5E001266EE /* UtilsFileSystem.m in Sources */,
@@ -5057,6 +5057,7 @@
 				EA1C3B601BC29B7F0085F540 /* ManageSharesDB.m in Sources */,
 				59C3AC1A1A287DE3005433A1 /* KKKeychain.m in Sources */,
 				59C3AC1B1A287DE3005433A1 /* KKPasscodeLock.m in Sources */,
+				40B5AB801F7ABBE70022F3A2 /* SSLCertificateManager.m in Sources */,
 				EA4070FF1C11B82B008B1507 /* UIImage+Thumbnail.m in Sources */,
 				EAE80E271A6D31810061BD86 /* ManageUploadsDB.m in Sources */,
 				59C3AC1C1A287DE3005433A1 /* KKPasscodeSettingsViewController.m in Sources */,
@@ -5066,7 +5067,6 @@
 				EA8ADE691A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
 				599DDD4F1A19FBD3008725DE /* OCKeychain.m in Sources */,
 				59A6F4ED1A1625C300345229 /* ManageAppSettingsDB.m in Sources */,
-				7FE5D0121F571D3200A9760F /* SSLCertificateManager.m in Sources */,
 				59A6F4E91A1612B700345229 /* CheckAccessToServer.m in Sources */,
 				599956A41A13BC8A00229FC4 /* FileListDBOperations.m in Sources */,
 				599956A21A136B6900229FC4 /* MBProgressHUD.m in Sources */,
@@ -5082,7 +5082,7 @@
 				59990A251A0BD67A00D3B842 /* InfoFileUtils.m in Sources */,
 				590849F11A0A811000D3E842 /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				EA8ADE601A31D759008D3612 /* DocumentPickerCell.m in Sources */,
-				40BCC2BA1F3B5FA500F5DC6F /* HandleCredentials.m in Sources */,
+				40BCC2BA1F3B5FA500F5DC6F /* (null) in Sources */,
 				590849F21A0A811000D3E842 /* SWCellScrollView.m in Sources */,
 				EAD281BB1A38A2F900A00D54 /* DPDownload.m in Sources */,
 				590849F31A0A811000D3E842 /* SWLongPressGestureRecognizer.m in Sources */,
@@ -5133,7 +5133,7 @@
 				EA1F62D81A5EBFC700D6346F /* ManageUsersDB.m in Sources */,
 				EAE80E261A6D317C0061BD86 /* ManageUploadsDB.m in Sources */,
 				EA1F62D71A5EBF8500D6346F /* ManageFilesDB.m in Sources */,
-				40BCC2BC1F3B5FA700F5DC6F /* HandleCredentials.m in Sources */,
+				40BCC2BC1F3B5FA700F5DC6F /* (null) in Sources */,
 				EA1F62D91A5EBFDF00D6346F /* OCKeychain.m in Sources */,
 				405D06C71BFB670200591604 /* ManageCapabilitiesDB.m in Sources */,
 				EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */,

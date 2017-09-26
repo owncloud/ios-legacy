@@ -21,7 +21,7 @@ import Foundation
 @objc class OauthAuthentication: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
     
 // MARK : get authData by authcode
-
+//MOVED
 @objc func accessTokenAuthRequest(_ url: URL, authCode: String, withCompletion completion: @escaping (_ data: Data?,_ httpResponse: HTTPURLResponse?, _ error: Error?) -> Void) {
      
         var request = URLRequest(url: url)
@@ -57,7 +57,7 @@ import Foundation
         task.resume()
     }
     
-
+//MOVED
 @objc    func getAuthDataBy(url: URL, authCode: String, withCompletion completion: @escaping (_ userCredDto: OCCredentialsDto? ,_ error: Error?) -> Void)  {
         
         self.accessTokenAuthRequest(url, authCode: authCode, withCompletion: { (data:Data?, httpResponse:HTTPURLResponse?, error:Error?) in
@@ -119,7 +119,7 @@ import Foundation
         
     }
     
-    
+ //MOVED
 @objc    func oauthUrlTogetAuthCodeWith (serverPath : String) -> URL {
         
         let oauth2RedirectUri = k_oauth2_redirect_uri
@@ -140,6 +140,7 @@ import Foundation
         
     }
 
+    //MOVED
 @objc    func oauthUrlToGetTokenWith(serverPath : String) -> URL {
     
         var serverPathUrl = URL(string: serverPath)
