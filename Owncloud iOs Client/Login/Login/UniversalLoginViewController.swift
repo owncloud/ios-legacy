@@ -830,21 +830,25 @@ connection_declined  Connection declined by user
                 self.setNetworkActivityIndicator(status: false)
                 self.authCodeReceived = webVC.authCode
                 
-                let urlToGetAuthData = OauthAuthentication().oauthUrlToGetTokenWith(serverPath: self.validatedServerURL)
+                let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
                 
-                OauthAuthentication().getAuthDataBy(url: urlToGetAuthData, authCode: self.authCodeReceived, withCompletion: { ( userCredDto: OCCredentialsDto?, error: Error?) in
-                
-                    if let userCredentials = userCredDto {
-                        
-                        self.validateCredentialsAndStoreAccount(credentials: userCredentials);
-                        
-                    } else {
-                        self.showURLError(
-                            self.manageNetworkErrors.returnErrorMessage(
-                                withHttpStatusCode: -1, andError: error
-                            )
-                        )
-                    }
+                OCOAuth2Manager.authData(by: app.oauth2Configuration,
+                                withBaseURL: self.validatedServerURL,
+                                   authCode: self.authCodeReceived ,
+                                  userAgent: UtilsUrls.getUserAgent(),
+                             withCompletion: { (userCredDto: OCCredentialsDto?, error: Error?) in
+                                
+                                if let userCredentials = userCredDto {
+                                        
+                                    self.validateCredentialsAndStoreAccount(credentials: userCredentials);
+                                        
+                                 } else {
+                                    
+                                    self.showURLError(
+                                        self.manageNetworkErrors.returnErrorMessage(withHttpStatusCode: -1, andError: error)
+                                    )
+                                 }
+                                    
                 })
             } else if let error = webVC.error {
                 self.showURLError(

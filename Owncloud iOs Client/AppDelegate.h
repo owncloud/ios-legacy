@@ -24,6 +24,7 @@
 #import "ManageDownloads.h"
 #import "CheckAccessToServer.h"
 #import "UtilsLogin.h"
+#import "OCOAuth2Configuration.h"
 
 @class FilesViewController;
 @class RecentViewController;
@@ -148,6 +149,8 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) NSString *urlServerRedirected;
 @property (nonatomic, strong) ManageDownloads *downloadManager;
 @property (nonatomic, strong) NSString *userSessionCurrentToken;
+
+@property (nonatomic, strong) OCOAuth2Configuration *oauth2Configuration;
 
 /*
  * Method to get a Singleton of the OCCommunication to manage all the communications
