@@ -72,9 +72,7 @@
 }
 
 -(void) checkIfExistOnserverAndBeginUpload {
-    
-    _userUploading = [ManageUsersDB getUserByIdUser:_currentUpload.userId];
-    
+        
     if (_currentUpload.isNotNecessaryCheckIfExist) {
         [self performSelectorInBackground:@selector(startUploadFile) withObject:nil];
     } else {
@@ -169,7 +167,6 @@
 
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    
     [[AppDelegate sharedOCCommunication] createFolder:pathRemoteFolder onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport]
      successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
          
@@ -219,23 +216,25 @@
 
 
 - (void) startUploadFile {
-    _isFromBackground = NO;
+    self.isFromBackground = NO;
     
-    DLog(@"self.currentUpload: %@", _currentUpload.uploadFileName);
+    DLog(@"self.currentUpload: %@", self.currentUpload.uploadFileName);
     
-    if (_currentUpload.isNotNecessaryCheckIfExist) {
+    if (self.currentUpload.isNotNecessaryCheckIfExist) {
         //Upload ready, continue with next
         [ManageUploadsDB setStatus:waitingForUpload andKindOfError:notAnError byUploadOffline:self.currentUpload];
-        _currentUpload.status=waitingForUpload;
+        self.currentUpload.status=waitingForUpload;
     }
     
-    [[AppDelegate sharedOCCommunication] setCredentials:_userUploading.credDto];
+    self.userUploading = [ManageUsersDB getUserByIdUser:self.currentUpload.userId];
+
+    [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
+    
 
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    
-    NSString *urlClean = [NSString stringWithFormat:@"%@%@", _currentUpload.destinyFolder, _currentUpload.uploadFileName];
-    urlClean = [urlClean stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *urlClean = [NSString stringWithFormat:@"%@%@", self.currentUpload.destinyFolder, self.currentUpload.uploadFileName];
+    urlClean = [urlClean stringByRemovingPercentEncoding];
     
     __block BOOL firstTime = YES;
     __weak typeof(self) weakSelf = self;
@@ -716,6 +715,8 @@
 
 - (void) updateTheEtagOfTheFile: (FileDto *) overwrittenFile {
     
+    self.userUploading = [ManageUsersDB getUserByIdUser:self.currentUpload.userId];
+    
     [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
 
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
@@ -724,7 +725,7 @@
     NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:self.userUploading];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    path = [path stringByRemovingPercentEncoding];
     
     __weak typeof(self) weakSelf = self;
     
@@ -788,6 +789,8 @@
 
 - (void) checkTheEtagInTheServerOfTheFile:(FileDto *) overwrittenFile {
     
+    self.userUploading = [ManageUsersDB getUserByIdUser:self.userUploading.idUser];
+    
     [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
 
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
@@ -796,7 +799,7 @@
     NSString *serverPath = [UtilsUrls getFullRemoteServerPathWithWebDav:self.userUploading];
     NSString *path = [NSString stringWithFormat:@"%@%@%@",serverPath, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:overwrittenFile.filePath andUser:self.userUploading], overwrittenFile.fileName];
     
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    path = [path stringByRemovingPercentEncoding];
     
     __weak typeof(self) weakSelf = self;
     

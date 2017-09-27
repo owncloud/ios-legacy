@@ -22,37 +22,43 @@ import Foundation
     /*
     * @param  UserDto   -> user to store
     * @param  CredentialsDto -> credentials of user
-    * @return NSInteger -> id of user in DB
     */
-    func storeAccountAndGetIdOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) -> NSInteger {
+    
+@objc func storeAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) -> UserDto? {
         
         if let userInDB = ManageUsersDB.insertUser(user) {
-            
+    
             userInDB.credDto = credDto.copy() as! OCCredentialsDto
+            userInDB.credDto.userId = String(userInDB.idUser)
             
             //userInDB contains the userId in DB, we add the credentials and store the user in keychain
-            OCKeychain.setCredentialsOfUser(userInDB)
+            OCKeychain.storeCredentials(userInDB.credDto)
             
-            (UIApplication.shared.delegate as! AppDelegate).activeUser = user
+            let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
             
-            return userInDB.idUser
+            if (app.activeUser == nil || (userInDB.activeaccount)) {
+                // only set as active account the first account added
+                // OR if it is already the active user; otherwise cookies will not be correctly restored
+                userInDB.activeaccount = true
+                app.activeUser = userInDB
+            }
+            
+            return userInDB;
             
         } else {
-            //error storing account
             print("Error storing account for \(user.username)")
-            
-            return 0
+            return nil;
         }
         
     }
     
-    func updateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
+@objc func updateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
         
         user.credDto = credDto.copy() as! OCCredentialsDto
         
         ManageUsersDB.updateUser(by: user)
 
-        OCKeychain.updateCredentials(ofUser: user)
+        OCKeychain.updateCredentials(user.credDto)
         
         if user.activeaccount {
             UtilsCookies.eraseCredentialsAndUrlCacheOfActiveUser()
@@ -69,7 +75,7 @@ import Foundation
         //TODO:check relaunchErrorCredentialFilesNotification if needed
     }
     
-    func migrateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
+@objc func migrateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
         
         //Update parameters after a force url and credentials have not been renewed
         let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
@@ -94,7 +100,7 @@ import Foundation
         instantUploadManager.activate()
     }
     
-    func restoreDownloadAndUploadsOfUser(_ user : UserDto) {
+@objc func restoreDownloadAndUploadsOfUser(_ user : UserDto) {
         let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
         app.cancelTheCurrentUploads(ofTheUser: user.idUser)
         

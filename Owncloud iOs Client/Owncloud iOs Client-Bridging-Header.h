@@ -45,3 +45,7 @@
 #import "CheckFeaturesSupported.h"
 #import "InstantUpload.h"
 #import "ManageCookiesStorageDB.h"
+#import "OCCredentialsStorage.h"
+#import "OCFrameworkConstants.h"
+
+

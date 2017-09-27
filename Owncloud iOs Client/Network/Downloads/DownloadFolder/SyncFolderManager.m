@@ -177,9 +177,9 @@ static float const kDelayAfterCancelAll = 3.0;
         [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
         
         [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-        
+
         NSString *path = [UtilsUrls getFullRemoteServerFilePathByFile:currentFolder andUser:app.activeUser];
-        path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        path = [path stringByRemovingPercentEncoding];
         
         DLog(@"PathRquest: %@", path);
         

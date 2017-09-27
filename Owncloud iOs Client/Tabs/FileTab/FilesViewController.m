@@ -53,7 +53,6 @@
 #import "ManageNetworkErrors.h"
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
-//#import "Owncloud_iOs_Client-Swift.h"
 #import "ManageUsersDB.h"
 #import "UtilsFramework.h"
 #import "ShareMainViewController.h"
@@ -371,6 +370,11 @@
         //Checking the etag
         NSString *path = _currentRemoteFolder;
         path = [path stringByRemovingPercentEncoding];
+        
+        
+        [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
+        
+        [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
         
         [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
             
@@ -1077,11 +1081,7 @@
         
         self.elcPicker.modalPresentationStyle = UIModalPresentationFormSheet;
        
-        if (IS_IOS8 || IS_IOS9)  {
-            [app.detailViewController presentViewController:self.elcPicker animated:YES completion:nil];
-        } else {
-            [app.splitViewController presentViewController:self.elcPicker animated:YES completion:nil];
-        }
+        [app.detailViewController presentViewController:self.elcPicker animated:YES completion:nil];
     }
     
 }
@@ -1111,11 +1111,7 @@
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
-        if (IS_IOS8 || IS_IOS9)  {
-            [self.plusActionSheet showInView:app.splitViewController.view];
-        } else {
-            [self.plusActionSheet showInView:app.detailViewController.view];
-        }
+        [self.plusActionSheet showInView:app.splitViewController.view];
     }
 }
 
@@ -1129,74 +1125,28 @@
  */
 - (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info inURL:(NSString*)remoteURLToUpload
 {
-    [self initLoading];
-    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
-
-    [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-    
     NSString *path = _nextRemoteFolder;
-    
     path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
     }
-
-    NSString *rootFolder =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
     
+    NSDictionary * args = [NSDictionary dictionaryWithObjectsAndKeys:
+                           (NSArray *) info, @"info",
+                           (NSString *) remoteURLToUpload, @"remoteURLToUpload", nil];
+    [self performSelectorInBackground:@selector(initUploadFileFromGalleryInOtherThread:) withObject:args];
     
-    [[AppDelegate sharedOCCommunication] checkServer:rootFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
-        [self endLoading];
-        NSDictionary * args = [NSDictionary dictionaryWithObjectsAndKeys:
-                               (NSArray *) info, @"info",
-                               (NSString *) remoteURLToUpload, @"remoteURLToUpload", nil];
-        
-        [self performSelectorInBackground:@selector(initUploadFileFromGalleryInOtherThread:) withObject:args];
-        
-        app.isUploadViewVisible = NO;
-        
-    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
-        [self endLoading];
-        
-        app.isUploadViewVisible = NO;
-        
-        DLog(@"error: %@", error);
-        DLog(@"Operation error: %ld", (long)response.statusCode);
-        
-        BOOL isSamlCredentialsError = NO;
-        
-        //Check the login error in shibboleth
-        if (k_is_sso_active) {
-            //Check if there are fragmens of saml in url, in this case there are a credential error
-            isSamlCredentialsError = [FileNameUtils isURLWithSamlFragment:response];
-            if (isSamlCredentialsError) {
-                [self errorLogin];
-            }
-        }
-        if (!isSamlCredentialsError) {
-            [self manageServerErrors:response.statusCode and:error];
-        }
-    }];
+    app.isUploadViewVisible = NO;
+   
 }
 
 - (void)initUploadFileFromGalleryInOtherThread:(NSDictionary *) args {
     
     NSArray *info = [args objectForKey:@"info"];
     NSString *remoteURLToUpload = [args objectForKey:@"remoteURLToUpload"];
-        
-    /*
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-    {
-        [self dismissModalViewControllerAnimated:YES];
-        
-        
-    } else {
-        [app.splitViewController dismissModalViewControllerAnimated:YES];
-    }*/
     
     if([info count]>0){
         
@@ -1247,11 +1197,7 @@
     if (IS_IPHONE){
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
-        if (IS_IOS8 || IS_IOS9)  {
-            [app.detailViewController dismissViewControllerAnimated:YES completion:nil];
-        } else {
-            [app.splitViewController dismissViewControllerAnimated:YES completion:nil];
-        }
+        [app.detailViewController dismissViewControllerAnimated:YES completion:nil];
     }
     
     app.isUploadViewVisible = NO;
@@ -1753,7 +1699,7 @@
  */
 -(void) goToFolderWithoutCheck {
     
-    _isLoadingForNavigate = YES;
+    self.isLoadingForNavigate = YES;
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -1761,8 +1707,7 @@
 
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    NSString *path = _nextRemoteFolder;
-    
+    NSString *path = self.nextRemoteFolder;
     path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
@@ -1996,8 +1941,7 @@
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    NSString *path = _currentRemoteFolder;
-    
+    NSString *path = self.currentRemoteFolder;
     path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
@@ -2204,7 +2148,7 @@
         [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
 
         [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-        
+
         NSString *path = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser];
         path = [path stringByAppendingString:_fileIdToShowFiles.fileName];
         path = [path stringByRemovingPercentEncoding];
@@ -2301,11 +2245,7 @@
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
-        if (IS_IOS8 || IS_IOS9)  {
-            [self.sortingActionSheet showInView:app.splitViewController.view];
-        } else {
-            [self.sortingActionSheet showInView:app.detailViewController.view];
-        }
+        [self.sortingActionSheet showInView:app.splitViewController.view];
     }
 }
 
@@ -2786,7 +2726,6 @@
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     NSString *path = _nextRemoteFolder;
-    
     path = [path stringByRemovingPercentEncoding];
     
     if (!app.userSessionCurrentToken) {
@@ -3155,6 +3094,7 @@
         app.userSessionCurrentToken = [UtilsFramework getUserSessionToken];
     }
     
+    //TODO:check this rootFolder URL, it should be using utilsURL : getFullRemoteServerPathWithWebDav
     NSString *rootFolder =[NSString stringWithFormat:@"%@%@",app.activeUser.url,k_url_webdav_server];
     
     [[AppDelegate sharedOCCommunication] checkServer:rootFolder onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
@@ -3628,11 +3568,7 @@
             [self.moreActionSheet showInView:self.tabBarController.view];
         }else {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            if (IS_IOS8 || IS_IOS9) {
-                [self.moreActionSheet showInView:app.splitViewController.view];
-            } else {
-                [self.moreActionSheet showInView:app.detailViewController.view];
-            }
+            [self.moreActionSheet showInView:app.splitViewController.view];
         }
     } else {
         
@@ -3665,11 +3601,7 @@
             [self.moreActionSheet showInView:self.tabBarController.view];
         }else {
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            if (IS_IOS8 || IS_IOS9) {
-                [self.moreActionSheet showInView:app.splitViewController.view];
-            } else {
-                [self.moreActionSheet showInView:app.detailViewController.view];
-            }
+            [self.moreActionSheet showInView:app.splitViewController.view];
         }
     }
 }

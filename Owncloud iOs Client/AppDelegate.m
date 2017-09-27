@@ -61,6 +61,7 @@
 #import "UtilsCookies.h"
 #import "PresentedViewUtils.h"
 #import "OCLoadingSpinner.h"
+#import "OCOAuth2Configuration.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -622,9 +623,20 @@ float shortDelay = 0.3;
         sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:uploadSessionManager andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
         //Cookies is allways available in current supported Servers
-        sharedOCCommunication.isCookiesAvailable = YES;
-
-	}
+        [sharedOCCommunication setIsCookiesAvailable:YES];
+        
+        [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                                      initWithClientId:k_oauth2_client_id
+                                                                      clientSecret:k_oauth2_client_secret
+                                                                      redirectUri:k_oauth2_redirect_uri
+                                                                      authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                                      tokenEndpoint:k_oauth2_token_endpoint]];
+        
+        [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
+        
+        OCKeychain *oKeychain = [[OCKeychain alloc] init];
+        [sharedOCCommunication setValueCredentialsStorage:oKeychain];
+    }
 	return sharedOCCommunication;
 }
 
@@ -650,8 +662,19 @@ float shortDelay = 0.3;
         sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:nil];
         
         //Cookies is allways available in current supported Servers
-        sharedOCCommunicationDownloadFolder.isCookiesAvailable = YES;
+        [sharedOCCommunicationDownloadFolder setIsCookiesAvailable:YES];
         
+        [sharedOCCommunicationDownloadFolder setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                                      initWithClientId:k_oauth2_client_id
+                                                                      clientSecret:k_oauth2_client_secret
+                                                                      redirectUri:k_oauth2_redirect_uri
+                                                                      authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                                      tokenEndpoint:k_oauth2_token_endpoint]];
+        
+        [sharedOCCommunicationDownloadFolder setUserAgent:[UtilsUrls getUserAgent]];
+        
+        OCKeychain *oKeychain = [[OCKeychain alloc] init];
+        [sharedOCCommunicationDownloadFolder setValueCredentialsStorage:oKeychain];
     }
     return sharedOCCommunicationDownloadFolder;
 }

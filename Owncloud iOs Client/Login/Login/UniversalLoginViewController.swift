@@ -679,7 +679,7 @@ connection_declined  Connection declined by user
         let userCredDto: OCCredentialsDto = OCCredentialsDto()
         userCredDto.userName = samlUserName
         userCredDto.accessToken = cookieString
-        userCredDto.authenticationMethod = self.authMethodToLogin
+        userCredDto.authenticationMethod = .SAML_WEB_SSO
         
         //We check if the user that we are updating is the same that we are using
         if (self.loginMode == .update  && self.user?.username != samlUserName) {
@@ -888,10 +888,10 @@ connection_declined  Connection declined by user
 // MARK: 'private' methods
     func validateCredentialsAndStoreAccount(credentials: OCCredentialsDto) {
         //get list of files in root to check session validty, if ok store new account
-        let urlToGetRootFiles = URL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: validatedServerURL) )
+        let urlToGetRootFiles = NSURL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: validatedServerURL) )
         
         DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, credentials: credentials,
-                                           withCompletion: { (_ errorHttp: NSInteger?,_ error: Error?, _ listOfFileDtos: [FileDto]? ) in
+                                           withCompletion: { (_ errorHttp: NSInteger?,_ error: NSError?, _ listOfFileDtos: [FileDto]? ) in
                                             
                                             self.setNetworkActivityIndicator(status: false)
                                             let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
@@ -913,32 +913,33 @@ connection_declined  Connection declined by user
                                                     self.user?.ssl = self.validatedServerURL.hasPrefix("https")
                                                     self.user?.urlRedirected = app.urlServerRedirected
                                                     self.user?.predefinedUrl = k_default_url_server
-                                                
+                                                    
+                                                    credentials.baseURL = UtilsUrls.getFullRemoteServerPath(self.user)
+
                                                     if self.loginMode == .create {
+                                                        
                                                         if (ManageUsersDB.isExistUser(self.user)) {
                                                             self.showURLError(NSLocalizedString("account_not_new", comment: ""))
                                                             
                                                         } else {
+                                                            
+                                                            self.user = ManageAccounts().storeAccountOfUser(self.user!, withCredentials: credentials)
+                                                            
+                                                            if self.user != nil {
+                                                                ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
                                                         
-                                                            self.user?.idUser = ManageAccounts().storeAccountAndGetIdOfUser(self.user!, withCredentials: credentials)
-                                                            if self.user?.idUser != 0 {
                                                                 // grant that settings of instant uploads are the same for the new account that for the currently active account
                                                                 // TODO: get rid of this
                                                                 ManageAppSettingsDB.updateInstantUploadAllUser();
-                                                                
-                                                                ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
-                                                        
+                                                            
                                                                 app.switchActiveUser(to: self.user, inHardMode: true, withCompletionHandler:
-                                                                    { 
-                                                                        app.generateAppInterface(fromLoginScreen: true)
+                                                                    {
+                                                                    app.generateAppInterface(fromLoginScreen: true)
                                                                 })
-                                                                
-
                                                             } else {
                                                                 self.showURLError(NSLocalizedString("error_could_not_add_account", comment: ""))
                                                             }
                                                         }
-                                                    
                                                     } else {
                                                         ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
                                                         if (app.activeUser != nil && app.activeUser.idUser == self.user?.idUser) {
@@ -954,8 +955,7 @@ connection_declined  Connection declined by user
                                                         }
                                                     }
                                                 }
-                                              
-                                                
+
                                             } else {
                                                 if errorHttp == Int(kOCErrorServerUnauthorized) {
                                                     self.showCredentialsError(
@@ -973,9 +973,9 @@ connection_declined  Connection declined by user
                                                 }
                                             }
                                             
-                                        })
-                                            
-        }
+        })
+        
+    }
     
     override public func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

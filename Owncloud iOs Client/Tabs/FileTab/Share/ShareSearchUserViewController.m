@@ -263,12 +263,12 @@
         }
     }
     
-     [self initLoadingWithDelay:loadingVisibleSearchDelay];
+    [self initLoadingWithDelay:loadingVisibleSearchDelay];
     
     [[AppDelegate sharedOCCommunication] setCredentials:APP_DELEGATE.activeUser.credDto];
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
-    
+
     [[AppDelegate sharedOCCommunication] searchUsersAndGroupsWith:self.searchString forPage:self.indexSearchPage with:searchResultsPerPage ofServer: APP_DELEGATE.activeUser.url onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *itemList, NSString *redirectedServer) {
         
         [self endLoading];

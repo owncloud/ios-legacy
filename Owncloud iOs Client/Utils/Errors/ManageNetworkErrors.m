@@ -35,29 +35,34 @@
 - (void)manageErrorHttp:(NSInteger)errorHttp andErrorConnection:(NSError *)errorConnection andUser:(UserDto *)user {
     
     DLog(@"Error code from  web dav server: %ld", (long) errorHttp);
-    DLog(@"Error code from server: %ld", (long)errorConnection.code);
-    
-    //Server connection error
-    switch (errorConnection.code) {
-        case kCFURLErrorUserCancelledAuthentication: { //-1012
-            [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
-            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
-            break;
-        }
-
-        case NSURLErrorServerCertificateUntrusted: //-1202
-            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
-            break;
-            
-        default:
-            //Web Dav Error Code
-            if (errorHttp == kOCErrorServerUnauthorized) {
-                [self.delegate errorLogin];
-            } else {
-                [self.delegate showError: [self returnErrorMessageWithHttpStatusCode:errorHttp andError:errorConnection] ];
+    if (errorConnection != nil && [errorConnection isKindOfClass:[NSError class]]) {
+        DLog(@"Error code from server: %ld", (long)errorConnection.code);
+        
+        //Server connection error
+        switch (errorConnection.code) {
+            case kCFURLErrorUserCancelledAuthentication: { //-1012
+                [_delegate showError:NSLocalizedString(@"not_possible_connect_to_server", nil)];
+                [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
+                break;
             }
-            break;
+                
+            case NSURLErrorServerCertificateUntrusted: //-1202
+                [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
+                break;
+                
+            default:
+                //Web Dav Error Code
+                if (errorHttp == kOCErrorServerUnauthorized) {
+                    [self.delegate errorLogin];
+                } else {
+                    [self.delegate showError: [self returnErrorMessageWithHttpStatusCode:errorHttp andError:errorConnection] ];
+                }
+                break;
+        }
+    } else {
+        
     }
+    //TODO: take into account possible errorConnection nil
 }
 
 
@@ -74,7 +79,7 @@
 
 - (NSString *)returnErrorMessageWithHttpStatusCode:(NSInteger) errorHttp andError:(NSError *) error {
     
-    if (error != nil) {
+    if (error != nil && [error isKindOfClass:[NSError class]]) {
         switch (error.code) {
             case NSURLErrorNotConnectedToInternet:
                 return NSLocalizedString(@"not_connected_to_internet", nil);

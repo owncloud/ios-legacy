@@ -23,6 +23,7 @@
 #import "OCErrorMsg.h"
 #import "UtilsUrls.h"
 #import "UtilsFramework.h"
+#import "ManageUsersDB.h"
 
 @implementation UtilsNetworkRequest
 
@@ -33,12 +34,13 @@
  */
 - (void)checkIfTheFileExistsWithThisPath:(NSString*)path andUser:(UserDto *) user {
     
-    [[AppDelegate sharedOCCommunication] setCredentials:user.credDto];
+    UserDto *userUpdated = [ManageUsersDB getUserByIdUser:user.idUser];
+    [[AppDelegate sharedOCCommunication] setCredentials:userUpdated.credDto];
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     //FileName full path
-    path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    path = [path stringByRemovingPercentEncoding];
     DLog(@"Path to check: %@", path);
     
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {

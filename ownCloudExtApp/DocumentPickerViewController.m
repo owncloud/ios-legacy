@@ -41,6 +41,8 @@
 #import "ManageUploadsDB.h"
 #import "UtilsDtos.h"
 #import "ManageTouchID.h"
+#import "OCOAuth2Configuration.h"
+#import "Customization.h"
 
 @interface DocumentPickerViewController ()
 
@@ -160,8 +162,19 @@
         sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
         //Cookies is allways available in current supported Servers
-        sharedOCCommunication.isCookiesAvailable = YES;
+        [sharedOCCommunication setIsCookiesAvailable:YES];
         
+        [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                            initWithClientId:k_oauth2_client_id
+                                                            clientSecret:k_oauth2_client_secret
+                                                            redirectUri:k_oauth2_redirect_uri
+                                                            authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                            tokenEndpoint:k_oauth2_token_endpoint]];
+        
+        [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
+        
+        OCKeychain *oKeychain = [[OCKeychain alloc] init];
+        [sharedOCCommunication setValueCredentialsStorage:oKeychain];
     }
     return sharedOCCommunication;
 }

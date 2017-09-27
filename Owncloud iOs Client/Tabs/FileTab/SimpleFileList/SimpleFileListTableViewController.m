@@ -667,8 +667,6 @@
     if (!self.isRefreshInProgress) {
         [sharedCommunication setCredentials:self.user.credDto];
         
-        [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
-        
         NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:self.currentFolder andUser:self.user];
         remotePath = [remotePath stringByRemovingPercentEncoding];
         
