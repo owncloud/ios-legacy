@@ -148,6 +148,8 @@ connection_declined  Connection declined by user
     let getPublicInfoFromServerJob: GetPublicInfoFromServerJob = GetPublicInfoFromServerJob()
     var statusBarTintSubview: UIView!
     var topTwentiConstraint: NSLayoutConstraint!
+    
+    private let oAuth2Manager: OCOAuth2Manager = OCOAuth2Manager()
 
     
     public override func viewDidLoad() {
@@ -832,7 +834,7 @@ connection_declined  Connection declined by user
                 
                 let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
                 
-                OCOAuth2Manager.authData(by: app.oauth2Configuration,
+                self.oAuth2Manager.authData(by: app.oauth2Configuration,
                                 withBaseURL: self.validatedServerURL,
                                    authCode: self.authCodeReceived ,
                                   userAgent: UtilsUrls.getUserAgent(),
