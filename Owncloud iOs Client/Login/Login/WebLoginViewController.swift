@@ -30,6 +30,7 @@ import Foundation
     
     private var loadInterrupted: Bool = false;
 
+    private let oAuth2Manager: OCOAuth2Manager = OCOAuth2Manager()
     
     // MARK: IBOutlets
     @IBOutlet var webViewLogin: UIWebView!
@@ -55,7 +56,7 @@ import Foundation
                 
         //load login url in web view
         let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-        let urlToGetAuthCode = OCOAuth2Manager.getOAuth2URLToGetAuthCode(by: app.oauth2Configuration, withServerPath: serverPath)
+        let urlToGetAuthCode = self.oAuth2Manager.getOAuth2URLToGetAuthCode(by: app.oauth2Configuration, withServerPath: serverPath)
         self.loadWebViewWith(url: urlToGetAuthCode!)
         
         self.loadInterrupted = false;
