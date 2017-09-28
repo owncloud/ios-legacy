@@ -380,7 +380,6 @@
 		40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */; };
 		40C663AA1EFA4FBE004AF994 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40C663A91EFA4FBE004AF994 /* Main.storyboard */; };
 		40C663B01EFA94B1004AF994 /* UniversalLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C663AF1EFA94B1004AF994 /* UniversalLoginViewController.swift */; };
-		40C745A61F05229C00DB4968 /* OauthAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C745A51F05229C00DB4968 /* OauthAuthentication.swift */; };
 		40CC7F0D1B4E665400231D73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40CC7F0C1B4E665400231D73 /* Images.xcassets */; };
 		40CF2C6C1C491C610047969A /* ShareUserPrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40CF2C6B1C491C610047969A /* ShareUserPrivilegeCell.xib */; };
 		40CF2C6F1C491D200047969A /* ShareUserPrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CF2C6E1C491D200047969A /* ShareUserPrivilegeCell.swift */; };
@@ -1560,7 +1559,6 @@
 		40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SharePrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/SharePrivilegeCell.swift; sourceTree = "<group>"; };
 		40C663A91EFA4FBE004AF994 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		40C663AF1EFA94B1004AF994 /* UniversalLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniversalLoginViewController.swift; sourceTree = "<group>"; };
-		40C745A51F05229C00DB4968 /* OauthAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OauthAuthentication.swift; sourceTree = "<group>"; };
 		40CC7F0C1B4E665400231D73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		40CF2C6B1C491C610047969A /* ShareUserPrivilegeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareUserPrivilegeCell.xib; path = Tabs/FileTab/Share/Cells/ShareUserPrivilegeCell.xib; sourceTree = "<group>"; };
 		40CF2C6E1C491D200047969A /* ShareUserPrivilegeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareUserPrivilegeCell.swift; path = Tabs/FileTab/Share/Cells/ShareUserPrivilegeCell.swift; sourceTree = "<group>"; };
@@ -3079,7 +3077,6 @@
 			isa = PBXGroup;
 			children = (
 				40904B2B1EF04ACE00C72619 /* DetectAuthenticationMethod.swift */,
-				40C745A51F05229C00DB4968 /* OauthAuthentication.swift */,
 			);
 			name = Authentication;
 			path = Network/Authentication;
@@ -4922,7 +4919,6 @@
 				59A9A725196E8A370042FEAC /* CookiesStorageDto.m in Sources */,
 				7F9B91BD1F1F472700B77260 /* ServerURLNormalizer.swift in Sources */,
 				59A9A721196E89170042FEAC /* ManageCookiesStorageDB.m in Sources */,
-				40C745A61F05229C00DB4968 /* OauthAuthentication.swift in Sources */,
 				1487F141177C2FC1004A1A5A /* ManageUsersDB.m in Sources */,
 				59C71D1E1A9216AE00F66166 /* ReaderThumbRender.m in Sources */,
 				1487F14B177C315D004A1A5A /* FileDto.m in Sources */,
