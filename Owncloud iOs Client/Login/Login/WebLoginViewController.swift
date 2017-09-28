@@ -56,6 +56,7 @@ import Foundation
                 
         //load login url in web view
         let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        self.oAuth2Manager.trustedCertificatesStore = self.sslCertificateManager
         let urlToGetAuthCode = self.oAuth2Manager.getOAuth2URLToGetAuthCode(by: app.oauth2Configuration, withServerPath: serverPath)
         self.loadWebViewWith(url: urlToGetAuthCode!)
         

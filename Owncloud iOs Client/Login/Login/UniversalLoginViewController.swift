@@ -186,6 +186,7 @@ connection_declined  Connection declined by user
         
         self.initUI()
         
+        self.oAuth2Manager.trustedCertificatesStore = SSLCertificateManager()
         if self.loginMode == .update {
             self.buttonReconnectionURL.isHidden = true
             self.labelURLFooter.text = nil

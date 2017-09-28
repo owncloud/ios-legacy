@@ -644,6 +644,9 @@ float shortDelay = 0.3;
         
         OCKeychain *oKeychain = [[OCKeychain alloc] init];
         [sharedOCCommunication setValueCredentialsStorage:oKeychain];
+        
+        SSLCertificateManager *sslCertificateManager = [[SSLCertificateManager alloc] init];
+        [sharedOCCommunication setValueTrustedCertificatesStore: sslCertificateManager];
     }
 	return sharedOCCommunication;
 }
@@ -683,6 +686,10 @@ float shortDelay = 0.3;
         
         OCKeychain *oKeychain = [[OCKeychain alloc] init];
         [sharedOCCommunicationDownloadFolder setValueCredentialsStorage:oKeychain];
+        
+        SSLCertificateManager *sslCertificateManager = [[SSLCertificateManager alloc] init];
+        [sharedOCCommunicationDownloadFolder setValueTrustedCertificatesStore:sslCertificateManager];
+
     }
     return sharedOCCommunicationDownloadFolder;
 }

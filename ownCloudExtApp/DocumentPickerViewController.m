@@ -175,6 +175,10 @@
         
         OCKeychain *oKeychain = [[OCKeychain alloc] init];
         [sharedOCCommunication setValueCredentialsStorage:oKeychain];
+        
+        SSLCertificateManager *sslCertificateManager = [[SSLCertificateManager alloc] init];
+        [sharedOCCommunication setValueTrustedCertificatesStore:sslCertificateManager];
+
     }
     return sharedOCCommunication;
 }

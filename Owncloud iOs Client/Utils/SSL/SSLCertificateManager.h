@@ -18,6 +18,8 @@
 #ifndef SSLCertificateManager_h
 #define SSLCertificateManager_h
 
+#import "OCTrustedCertificatesStore.h"
+
 /*
  * Class to interact with the app-level trust store. 
  *
@@ -25,16 +27,22 @@
  * in the trust store or not, and add it to the trust store later. This should be done only after the user explicilty
  * approved it.
  */
-@interface SSLCertificateManager : NSObject <NSURLSessionDelegate, UIAlertViewDelegate, NSURLSessionTaskDelegate>
+@interface SSLCertificateManager : NSObject <NSURLSessionDelegate, UIAlertViewDelegate, NSURLSessionTaskDelegate, OCTrustedCertificatesStore>
+
+#pragma mark Implementation of OCTrustedCertificatesStore protocol
 
 /*
  * Checks if the challenge passed as a parameter corresponds to server certificate not trusted by iOS system, 
  * and if it is trusted by the user anyway, searching for it in the app-level store of certificates that 
  * were previously approved by her.
  *
- * As a SIDE EFFECT, the server certificate in the challenge becomes the CURRENT certificate.
+ * In this implementation, as a SIDE EFFECT, the server certificate in the challenge becomes the CURRENT certificate.
  */
 - (BOOL) isTrustedServerCertificateIn:(NSURLAuthenticationChallenge *) challenge;
+
+
+
+#pragma mark Own methods
 
 /*
  * Checks if the CURRENT certificate (i.e: the last certificate that was passed to the method isTrustedServerCertificateIn)
