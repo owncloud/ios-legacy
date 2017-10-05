@@ -11,6 +11,7 @@
 #import "FileDto.h"
 #import "UtilsUrls.h"
 #import "InfoFileUtils.h"
+#import "constants.h"
 
 #define k_share_link_middle_part_url_before_version_8 @"public.php?service=files&t="
 #define k_share_link_middle_part_url_after_version_8 @"index.php/s/"
@@ -156,6 +157,46 @@
         (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingPasswordEnforcedEnabled) ) {
         
         return YES;
+    }
+    
+    return NO;
+}
+
++ (BOOL)isAllowedReshareForFile:(FileDto *)file {
+    
+    BOOL fileSharedWithMe = [file.permissions rangeOfString:k_permission_shared].location != NSNotFound ;
+    
+    if (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported &&
+        APP_DELEGATE.activeUser.capabilitiesDto &&
+        !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingReSharingEnabled &&
+        fileSharedWithMe) {
+        
+        return NO;
+    }
+    
+    return YES;
+}
+
++(BOOL)hasShareOptionToBeHidden {
+    
+    if ((k_hide_share_options) ||
+        (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported &&
+         APP_DELEGATE.activeUser.capabilitiesDto &&
+         !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
+             return YES;
+         }
+    
+    return NO;
+}
+
++(BOOL)hasShareOptionToBeHiddenForFile:(FileDto *)file {
+    
+    if ((k_hide_share_options) ||
+        (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported &&
+         APP_DELEGATE.activeUser.capabilitiesDto &&
+         (!APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled ||
+          ![ShareUtils isAllowedReshareForFile:file]) )) {
+             return YES;
     }
     
     return NO;
