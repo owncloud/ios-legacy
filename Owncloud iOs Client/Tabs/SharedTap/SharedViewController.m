@@ -832,12 +832,14 @@
         NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"ShareLinkCell" owner:self options:nil];
         // Grab a pointer to the first object (presumably the custom cell, as that's all the XIB should contain).
         sharedLinkCell = (ShareLinkCell *)[topLevelObjects objectAtIndex:0];
-
+        
+        OCSharedDto *sharedDto = [_sharedLinkItems objectAtIndex:indexPath.row];
+        FileDto *file = [ManageFilesDB getFileEqualWithShareDtoPath:sharedDto.path andByUser:APP_DELEGATE.activeUser];
         
         //Custom cell for SWTableViewCell with right swipe options
         sharedLinkCell.containingTableView = tableView;
         [sharedLinkCell setCellHeight:sharedLinkCell.frame.size.height];
-        sharedLinkCell.leftUtilityButtons = [self setSwipeLeftButtons];
+        sharedLinkCell.leftUtilityButtons = [self setSwipeLeftButtonsForFile:file];
         
         sharedLinkCell.rightUtilityButtons = nil;
         sharedLinkCell.delegate = self;
@@ -848,7 +850,7 @@
             [sharedLinkCell.parentPathLabel setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         }
         
-        OCSharedDto *sharedDto = [_sharedLinkItems objectAtIndex:indexPath.row];
+        
         
         //Set this data
         sharedLinkCell.fileNameLabel.text = [FileNameUtils getTheNameOfSharedPath:sharedDto.path isDirectory:sharedDto.isDirectory];
@@ -1093,22 +1095,23 @@
  *
  */
 
-- (NSArray *)setSwipeLeftButtons
+- (NSArray *)setSwipeLeftButtonsForFile:(FileDto *)file
 {
     //Check the share options should be presented
     if ([ShareUtils hasShareOptionToBeHidden]) {
         
         return nil;
         
-    }else{
+    } else {
         
-        //Share gray button
         NSMutableArray *rightUtilityButtons = [NSMutableArray new];
         
-        
-        [rightUtilityButtons sw_addUtilityTwoLinesButtonWithColor:
-         [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
-                                                            title:NSLocalizedString(@"share_link_long_press", nil)];
+        if (![ShareUtils hasShareOptionToBeHiddenForFile:file]) {
+            //Share gray button
+            [rightUtilityButtons sw_addUtilityTwoLinesButtonWithColor:
+             [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0]
+                                                                title:NSLocalizedString(@"share_link_long_press", nil)];
+        }
         
         //UnShare red button
         [rightUtilityButtons sw_addUtilityTwoLinesButtonWithColor:
@@ -1116,7 +1119,6 @@
                                                             title:NSLocalizedString(@"unshare_link", nil)];
         
         return rightUtilityButtons;
-        
     }
     
 }
@@ -1138,58 +1140,33 @@
     //Get shared token and create the url
     NSIndexPath *cellIndexPath = [self.sharedTableView indexPathForCell:cell];
     OCSharedDto *sharedDto = [self.sharedLinkItems objectAtIndex:cellIndexPath.row];
-    
-    
+
     switch (index) {
         case 0: {
-            DLog(@"Share Link Option");
             
-            //Get the FileDto
+            [cell hideUtilityButtonsAnimated:YES];
             FileDto *file = [ManageFilesDB getFileEqualWithShareDtoPath:sharedDto.path andByUser:APP_DELEGATE.activeUser];
             
             if (!file) {
                 file = [self getFileNotCatchedBySharedPath:sharedDto];
             }
             
-            if (file) {
+            if ([ShareUtils hasShareOptionToBeHiddenForFile:file]) {
                 
-                ShareMainViewController *share = [[ShareMainViewController alloc] initWithFileDto:file];
-                OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
+                [self unShareLinkOptionSelectedForRemoteFileId:sharedDto.idRemoteShared];
+
+            } else {
                 
-                if (IS_IPHONE) {
-                    [self presentViewController:nav animated:YES completion:nil];
-                } else {
-                    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                    nav.modalPresentationStyle = UIModalPresentationFormSheet;
-                    [app.splitViewController presentViewController:nav animated:YES completion:nil];
-                }
+                [self shareOptionSelectedForFile:file];
                 
-            }else{
-                [self showError:NSLocalizedString(@"default_not_possible_msg", nil)];
+                [self performSelector:@selector(refreshSharedItems) withObject:nil afterDelay:0.5];
             }
-            
-            [cell hideUtilityButtonsAnimated:YES];
-            
-            [self performSelector:@selector(refreshSharedItems) withObject:nil afterDelay:0.5];
             
             break;
         } case 1: {
-            DLog(@"Unshare button pressed");
             
-            if (_mShareFileOrFolder) {
-                //Create new object
-                self.mShareFileOrFolder = nil;
-            }
-            
-            //Create new object
-            self.mShareFileOrFolder = [ShareFileOrFolder new];
-            self.mShareFileOrFolder.delegate = self;
-            
-            [self.mShareFileOrFolder unshareTheFileByIdRemoteShared:sharedDto.idRemoteShared];
             [cell hideUtilityButtonsAnimated:YES];
-            
-            //Refresh the list of share items
-            [self performSelector:@selector(refreshSharedItems) withObject:nil afterDelay:0.5];
+            [self unShareLinkOptionSelectedForRemoteFileId:sharedDto.idRemoteShared];
             
             break;
         }
@@ -1197,6 +1174,49 @@
             break;
     }
 }
+
+- (void) shareOptionSelectedForFile:(FileDto *)file {
+    DLog(@"Share Link Option");
+    
+    if (file) {
+        
+        ShareMainViewController *share = [[ShareMainViewController alloc] initWithFileDto:file];
+        OCNavigationController *nav = [[OCNavigationController alloc] initWithRootViewController:share];
+        
+        if (IS_IPHONE) {
+            [self presentViewController:nav animated:YES completion:nil];
+        } else {
+            AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+            nav.modalPresentationStyle = UIModalPresentationFormSheet;
+            [app.splitViewController presentViewController:nav animated:YES completion:nil];
+        }
+        
+    }else{
+        [self showError:NSLocalizedString(@"default_not_possible_msg", nil)];
+    }
+
+}
+
+- (void) unShareLinkOptionSelectedForRemoteFileId:(NSInteger)remoteFileId {
+    
+    DLog(@"Unshare button pressed");
+    
+    if (_mShareFileOrFolder) {
+        //Create new object
+        self.mShareFileOrFolder = nil;
+    }
+    
+    //Create new object
+    self.mShareFileOrFolder = [ShareFileOrFolder new];
+    self.mShareFileOrFolder.delegate = self;
+    
+    [self.mShareFileOrFolder unshareTheFileByIdRemoteShared:remoteFileId];
+    
+    //Refresh the list of share items
+    [self performSelector:@selector(refreshSharedItems) withObject:nil afterDelay:0.5];
+    
+}
+
 
 ///-----------------------------------
 /// @name Button of Right Called
