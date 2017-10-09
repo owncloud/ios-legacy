@@ -120,6 +120,9 @@
         OCCredentialsDto *credDto = [OCKeychain getCredentialsOfUser:output];
         output.username = credDto.userName;
         output.credDto = credDto;
+        
+        OCCapabilities *capDB = [ManageCapabilitiesDB getCapabilitiesOfUserId: output.idUser];
+        output.capabilitiesDto = capDB;
     }
     
     return output;
