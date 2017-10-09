@@ -213,7 +213,8 @@
         numberOfSections--;
     }
     
-    if (!k_is_share_by_link_available || !(APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingShareLinkEnabled)) {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    if (!k_is_share_by_link_available || !(app.activeUser.hasCapabilitiesSupport && app.activeUser.capabilitiesDto.isFilesSharingShareLinkEnabled)) {
         numberOfSections--;
     }
     
