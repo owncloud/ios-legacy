@@ -55,7 +55,8 @@ import Foundation
 @objc func updateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
         
         user.credDto = credDto.copy() as! OCCredentialsDto
-        
+        user.credDto.userId = String(user.idUser)
+    
         ManageUsersDB.updateUser(by: user)
 
         OCKeychain.updateCredentials(user.credDto)
