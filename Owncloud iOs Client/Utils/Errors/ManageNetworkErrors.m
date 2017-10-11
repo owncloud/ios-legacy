@@ -50,6 +50,10 @@
                 [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url];
                 break;
                 
+            case OCErrorOAuth2Error:
+            case OCErrorOAuth2ErrorAccessDenied:
+                    [self.delegate errorLogin];
+                break;
             default:
                 //Web Dav Error Code
                 if (errorHttp == kOCErrorServerUnauthorized) {
