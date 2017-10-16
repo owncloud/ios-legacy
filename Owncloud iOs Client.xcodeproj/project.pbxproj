@@ -251,14 +251,13 @@
 		14EC1956195B297F00B02AB6 /* sharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EC1954195B297F00B02AB6 /* sharedItem@2x.png */; };
 		14EFCAEB17FAFEAA007A38B6 /* MainAppIcon_76-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EFCAEA17FAFEAA007A38B6 /* MainAppIcon_76-76.png */; };
 		14EFCAED17FAFF48007A38B6 /* MainAppIcon_40-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EFCAEC17FAFF48007A38B6 /* MainAppIcon_40-40.png */; };
-		232F7B441F4D754D0033E414 /* RMActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B3E1F4D754D0033E414 /* RMActionController.m */; };
-		232F7B4A1F4D75740033E414 /* RMAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B471F4D75740033E414 /* RMAction.m */; };
-		232F7B4B1F4D75740033E414 /* RMImageAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B491F4D75740033E414 /* RMImageAction.m */; };
-		232F7B4E1F4D757A0033E414 /* RMActionControllerTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B4D1F4D757A0033E414 /* RMActionControllerTransition.m */; };
-		232F7B531F4D75810033E414 /* NSProcessInfo+RMActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B501F4D75810033E414 /* NSProcessInfo+RMActionController.m */; };
-		232F7B541F4D75810033E414 /* UIView+RMActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B521F4D75810033E414 /* UIView+RMActionController.m */; };
-		232F7B591F4D75880033E414 /* RMGroupedAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B561F4D75880033E414 /* RMGroupedAction.m */; };
-		232F7B5A1F4D75880033E414 /* RMScrollableGroupedAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F7B581F4D75880033E414 /* RMScrollableGroupedAction.m */; };
+		2358B32A1F94C8220025FEFE /* PCAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2358B3291F94C8220025FEFE /* PCAction.swift */; };
+		2358B32D1F94C86E0025FEFE /* PCActionSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2358B32C1F94C86E0025FEFE /* PCActionSheetViewController.swift */; };
+		2358B32F1F94C8A80025FEFE /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2358B32E1F94C8A80025FEFE /* UIColor+Extension.swift */; };
+		2358B3311F94C8CB0025FEFE /* PCAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2358B3301F94C8CB0025FEFE /* PCAnimationController.swift */; };
+		2358B3351F94CB800025FEFE /* PCDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2358B3341F94CB800025FEFE /* PCDismissalAnimator.swift */; };
+		2358B3371F94CBA60025FEFE /* PCTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2358B3361F94CBA60025FEFE /* PCTransitioningDelegate.swift */; };
+		2358B3391F94CBCC0025FEFE /* PCPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2358B3381F94CBCC0025FEFE /* PCPresentationAnimator.swift */; };
 		235F0E351F556314009865FE /* TABfiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 235F0E321F556314009865FE /* TABfiles.png */; };
 		235F0E361F556314009865FE /* TABfiles@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 235F0E331F556314009865FE /* TABfiles@2x.png */; };
 		235F0E371F556314009865FE /* TABfiles@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 235F0E341F556314009865FE /* TABfiles@3x.png */; };
@@ -271,7 +270,6 @@
 		235F0E481F5563AC009865FE /* TABrecents.png in Resources */ = {isa = PBXBuildFile; fileRef = 235F0E451F5563AC009865FE /* TABrecents.png */; };
 		235F0E491F5563AC009865FE /* TABrecents@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 235F0E461F5563AC009865FE /* TABrecents@2x.png */; };
 		235F0E4A1F5563AC009865FE /* TABrecents@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 235F0E471F5563AC009865FE /* TABrecents@3x.png */; };
-		237CECE01F4FF8E700F26EB5 /* RMOCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 237CECDF1F4FF8E700F26EB5 /* RMOCViewController.m */; };
 		23961FCC1F41B5CE00D09506 /* down-arrow-circle-button-fine.png in Resources */ = {isa = PBXBuildFile; fileRef = 23961FCB1F41B5CE00D09506 /* down-arrow-circle-button-fine.png */; };
 		239FF57D1F41D367004FCF9E /* UIButton+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 239FF57C1F41D367004FCF9E /* UIButton+Extension.m */; };
 		23A83C861F541790005023D4 /* down-arrow-circle-button-fine-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 23A83C851F541790005023D4 /* down-arrow-circle-button-fine-selected.png */; };
@@ -325,7 +323,6 @@
 		23DCD85D1F56D6D400F2EAA9 /* file_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DCD85A1F56D6D300F2EAA9 /* file_icon.png */; };
 		23DCD85E1F56D6D400F2EAA9 /* file_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DCD85B1F56D6D300F2EAA9 /* file_icon@2x.png */; };
 		23DCD85F1F56D6D400F2EAA9 /* file_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DCD85C1F56D6D400F2EAA9 /* file_icon@3x.png */; };
-		23DF05B71F4C062A0033F1F0 /* RMCustomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DF05B61F4C062A0033F1F0 /* RMCustomViewController.m */; };
 		23F778C21F418FD900DA3C1C /* SourceSansPro-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 23F778C01F418FD900DA3C1C /* SourceSansPro-Regular.otf */; };
 		23F778C31F418FD900DA3C1C /* SourceSansPro-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 23F778C11F418FD900DA3C1C /* SourceSansPro-Semibold.otf */; };
 		400560751A03B1190030D502 /* MainAppIcon_40-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400560741A03B1190030D502 /* MainAppIcon_40-40@2x.png */; };
@@ -1301,24 +1298,13 @@
 		14EC1954195B297F00B02AB6 /* sharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@2x.png"; sourceTree = "<group>"; };
 		14EFCAEA17FAFEAA007A38B6 /* MainAppIcon_76-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76-76.png"; sourceTree = "<group>"; };
 		14EFCAEC17FAFF48007A38B6 /* MainAppIcon_40-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_40-40.png"; sourceTree = "<group>"; };
-		232F7B3D1F4D754D0033E414 /* RMActionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMActionController.h; sourceTree = "<group>"; };
-		232F7B3E1F4D754D0033E414 /* RMActionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMActionController.m; sourceTree = "<group>"; };
-		232F7B461F4D75740033E414 /* RMAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMAction.h; sourceTree = "<group>"; };
-		232F7B471F4D75740033E414 /* RMAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMAction.m; sourceTree = "<group>"; };
-		232F7B481F4D75740033E414 /* RMImageAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMImageAction.h; sourceTree = "<group>"; };
-		232F7B491F4D75740033E414 /* RMImageAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMImageAction.m; sourceTree = "<group>"; };
-		232F7B4C1F4D757A0033E414 /* RMActionControllerTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMActionControllerTransition.h; sourceTree = "<group>"; };
-		232F7B4D1F4D757A0033E414 /* RMActionControllerTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMActionControllerTransition.m; sourceTree = "<group>"; };
-		232F7B4F1F4D75810033E414 /* NSProcessInfo+RMActionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSProcessInfo+RMActionController.h"; sourceTree = "<group>"; };
-		232F7B501F4D75810033E414 /* NSProcessInfo+RMActionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSProcessInfo+RMActionController.m"; sourceTree = "<group>"; };
-		232F7B511F4D75810033E414 /* UIView+RMActionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RMActionController.h"; sourceTree = "<group>"; };
-		232F7B521F4D75810033E414 /* UIView+RMActionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RMActionController.m"; sourceTree = "<group>"; };
-		232F7B551F4D75880033E414 /* RMGroupedAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMGroupedAction.h; sourceTree = "<group>"; };
-		232F7B561F4D75880033E414 /* RMGroupedAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMGroupedAction.m; sourceTree = "<group>"; };
-		232F7B571F4D75880033E414 /* RMScrollableGroupedAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMScrollableGroupedAction.h; sourceTree = "<group>"; };
-		232F7B581F4D75880033E414 /* RMScrollableGroupedAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMScrollableGroupedAction.m; sourceTree = "<group>"; };
-		232F7B5B1F4D758E0033E414 /* RMAction+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RMAction+Private.h"; sourceTree = "<group>"; };
-		232F7B5C1F4D758E0033E414 /* RMActionController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RMActionController+Private.h"; sourceTree = "<group>"; };
+		2358B3291F94C8220025FEFE /* PCAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PCAction.swift; path = ExternalLibreries/PCActionSheet/PCAction.swift; sourceTree = "<group>"; };
+		2358B32C1F94C86E0025FEFE /* PCActionSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCActionSheetViewController.swift; sourceTree = "<group>"; };
+		2358B32E1F94C8A80025FEFE /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIColor+Extension.swift"; path = "ExternalLibreries/PCActionSheet/UIColor+Extension.swift"; sourceTree = "<group>"; };
+		2358B3301F94C8CB0025FEFE /* PCAnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PCAnimationController.swift; path = ExternalLibreries/PCActionSheet/PCAnimationController.swift; sourceTree = "<group>"; };
+		2358B3341F94CB800025FEFE /* PCDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PCDismissalAnimator.swift; path = ExternalLibreries/PCActionSheet/PCDismissalAnimator.swift; sourceTree = "<group>"; };
+		2358B3361F94CBA60025FEFE /* PCTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PCTransitioningDelegate.swift; path = ExternalLibreries/PCActionSheet/PCTransitioningDelegate.swift; sourceTree = "<group>"; };
+		2358B3381F94CBCC0025FEFE /* PCPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PCPresentationAnimator.swift; path = ExternalLibreries/PCActionSheet/PCPresentationAnimator.swift; sourceTree = "<group>"; };
 		235F0E321F556314009865FE /* TABfiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TABfiles.png; sourceTree = "<group>"; };
 		235F0E331F556314009865FE /* TABfiles@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TABfiles@2x.png"; sourceTree = "<group>"; };
 		235F0E341F556314009865FE /* TABfiles@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TABfiles@3x.png"; sourceTree = "<group>"; };
@@ -1331,8 +1317,6 @@
 		235F0E451F5563AC009865FE /* TABrecents.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TABrecents.png; sourceTree = "<group>"; };
 		235F0E461F5563AC009865FE /* TABrecents@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TABrecents@2x.png"; sourceTree = "<group>"; };
 		235F0E471F5563AC009865FE /* TABrecents@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TABrecents@3x.png"; sourceTree = "<group>"; };
-		237CECDE1F4FF8E700F26EB5 /* RMOCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMOCViewController.h; path = Tabs/FileTab/ActionSheets/RMOCViewController.h; sourceTree = "<group>"; };
-		237CECDF1F4FF8E700F26EB5 /* RMOCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMOCViewController.m; path = Tabs/FileTab/ActionSheets/RMOCViewController.m; sourceTree = "<group>"; };
 		23961FCB1F41B5CE00D09506 /* down-arrow-circle-button-fine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "down-arrow-circle-button-fine.png"; path = "File List/down-arrow-circle-button-fine.png"; sourceTree = "<group>"; };
 		239FF57C1F41D367004FCF9E /* UIButton+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIButton+Extension.m"; path = "Cells/CustomCell/UIButton+Extension.m"; sourceTree = "<group>"; };
 		239FF57E1F41D375004FCF9E /* UIButton+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIButton+Extension.h"; path = "Cells/CustomCell/UIButton+Extension.h"; sourceTree = "<group>"; };
@@ -1388,8 +1372,6 @@
 		23DCD85A1F56D6D300F2EAA9 /* file_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_icon.png; sourceTree = "<group>"; };
 		23DCD85B1F56D6D300F2EAA9 /* file_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@2x.png"; sourceTree = "<group>"; };
 		23DCD85C1F56D6D400F2EAA9 /* file_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@3x.png"; sourceTree = "<group>"; };
-		23DF05B51F4C062A0033F1F0 /* RMCustomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMCustomViewController.h; path = Tabs/FileTab/RMCustomViewController.h; sourceTree = "<group>"; };
-		23DF05B61F4C062A0033F1F0 /* RMCustomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMCustomViewController.m; path = Tabs/FileTab/RMCustomViewController.m; sourceTree = "<group>"; };
 		23F778C01F418FD900DA3C1C /* SourceSansPro-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceSansPro-Regular.otf"; sourceTree = "<group>"; };
 		23F778C11F418FD900DA3C1C /* SourceSansPro-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceSansPro-Semibold.otf"; sourceTree = "<group>"; };
 		4002B01A1D421A7100520FB3 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2154,8 +2136,6 @@
 				13A9C663187FE8B300C6EEE8 /* Share */,
 				905B3D3D1C8867EE00BCC93B /* Sort */,
 				138EF93E16F739D9007C9B1E /* Overwrite File Options */,
-				23DF05B61F4C062A0033F1F0 /* RMCustomViewController.m */,
-				23DF05B51F4C062A0033F1F0 /* RMCustomViewController.h */,
 			);
 			name = "Files Tab";
 			sourceTree = "<group>";
@@ -2893,7 +2873,7 @@
 		148DD5DD1778549700FB9977 /* ExternalLibreries */ = {
 			isa = PBXGroup;
 			children = (
-				232F7B1C1F4D74560033E414 /* RMActionController */,
+				2358B3271F94C7F70025FEFE /* PCActionSheet */,
 				BC855AC71E0D4AE100998CB7 /* FLAnimatedImage */,
 				59915D9B1BBC00930015FBF3 /* CWLOrderedDictionary */,
 				EABD88CE1BBE827D00DA5281 /* TSMessages */,
@@ -2975,7 +2955,6 @@
 		148DD689177865A900FB9977 /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
-				237CECE21F4FF8F000F26EB5 /* Action Sheets */,
 				EABF68D11889336B00A2217C /* Shared Tab */,
 				132429C515ADC5F900DF823E /* Files Tab */,
 				A9267F1815D04C1B004D4403 /* Recent Tab */,
@@ -3015,39 +2994,18 @@
 			name = EmptyCell;
 			sourceTree = "<group>";
 		};
-		232F7B1C1F4D74560033E414 /* RMActionController */ = {
+		2358B3271F94C7F70025FEFE /* PCActionSheet */ = {
 			isa = PBXGroup;
 			children = (
-				232F7B3D1F4D754D0033E414 /* RMActionController.h */,
-				232F7B3E1F4D754D0033E414 /* RMActionController.m */,
-				232F7B461F4D75740033E414 /* RMAction.h */,
-				232F7B471F4D75740033E414 /* RMAction.m */,
-				232F7B481F4D75740033E414 /* RMImageAction.h */,
-				232F7B491F4D75740033E414 /* RMImageAction.m */,
-				232F7B4C1F4D757A0033E414 /* RMActionControllerTransition.h */,
-				232F7B4D1F4D757A0033E414 /* RMActionControllerTransition.m */,
-				232F7B4F1F4D75810033E414 /* NSProcessInfo+RMActionController.h */,
-				232F7B501F4D75810033E414 /* NSProcessInfo+RMActionController.m */,
-				232F7B511F4D75810033E414 /* UIView+RMActionController.h */,
-				232F7B551F4D75880033E414 /* RMGroupedAction.h */,
-				232F7B561F4D75880033E414 /* RMGroupedAction.m */,
-				232F7B571F4D75880033E414 /* RMScrollableGroupedAction.h */,
-				232F7B581F4D75880033E414 /* RMScrollableGroupedAction.m */,
-				232F7B521F4D75810033E414 /* UIView+RMActionController.m */,
-				232F7B5B1F4D758E0033E414 /* RMAction+Private.h */,
-				232F7B5C1F4D758E0033E414 /* RMActionController+Private.h */,
+				2358B3291F94C8220025FEFE /* PCAction.swift */,
+				2358B32C1F94C86E0025FEFE /* PCActionSheetViewController.swift */,
+				2358B32E1F94C8A80025FEFE /* UIColor+Extension.swift */,
+				2358B3301F94C8CB0025FEFE /* PCAnimationController.swift */,
+				2358B3341F94CB800025FEFE /* PCDismissalAnimator.swift */,
+				2358B3361F94CBA60025FEFE /* PCTransitioningDelegate.swift */,
+				2358B3381F94CBCC0025FEFE /* PCPresentationAnimator.swift */,
 			);
-			name = RMActionController;
-			path = ExternalLibreries/RMActionController;
-			sourceTree = "<group>";
-		};
-		237CECE21F4FF8F000F26EB5 /* Action Sheets */ = {
-			isa = PBXGroup;
-			children = (
-				237CECDE1F4FF8E700F26EB5 /* RMOCViewController.h */,
-				237CECDF1F4FF8E700F26EB5 /* RMOCViewController.m */,
-			);
-			name = "Action Sheets";
+			name = PCActionSheet;
 			sourceTree = "<group>";
 		};
 		23F778BA1F418F1F00DA3C1C /* Fonts */ = {
@@ -4697,14 +4655,12 @@
 				59EC94E81BBAA0210085190F /* FolderSyncDto.m in Sources */,
 				148DD5C2177850B100FB9977 /* CustomCellFileAndDirectory.m in Sources */,
 				905B3D3B1C8867AA00BCC93B /* SortManager.m in Sources */,
-				232F7B4A1F4D75740033E414 /* RMAction.m in Sources */,
 				59C71D1D1A9216AE00F66166 /* ReaderThumbQueue.m in Sources */,
 				400A63731B4FD75600890579 /* IFTTTLabelAnimation.m in Sources */,
 				148DD5D9177851E700FB9977 /* UploadCell.m in Sources */,
 				148DD5DB177851E700FB9977 /* UploadRecentCell.m in Sources */,
 				EABF68E11889593100A2217C /* ShareLinkCell.m in Sources */,
 				40DC9C671CDA191B00F5F5EF /* EditFileViewController.m in Sources */,
-				232F7B5A1F4D75880033E414 /* RMScrollableGroupedAction.m in Sources */,
 				400A636A1B4FD75600890579 /* IFTTTConstraintConstantAnimation.m in Sources */,
 				59A6B65719458F6E000B107D /* OCURLSessionManager.m in Sources */,
 				1493D8CF185702D70090FEFB /* CheckSSOServer.m in Sources */,
@@ -4737,16 +4693,17 @@
 				EABF69171891379C00A2217C /* SWTableViewCell.m in Sources */,
 				EA8ADE681A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
 				148DD62A17785D9800FB9977 /* FilePreviewViewController.m in Sources */,
+				2358B32A1F94C8220025FEFE /* PCAction.swift in Sources */,
 				148DD62E17785DDE00FB9977 /* GalleryView.m in Sources */,
 				EABD893A1BBE82D900DA5281 /* TSMessageView.m in Sources */,
 				148DD63117785DE900FB9977 /* MediaViewController.m in Sources */,
 				596C060B1CF47278004BCF51 /* ELCAssetTablePicker.m in Sources */,
 				13D6B7CA18855EE40090A96C /* AppsActivityProvider.m in Sources */,
 				148DD63417785DF900FB9977 /* OfficeFileView.m in Sources */,
-				232F7B591F4D75880033E414 /* RMGroupedAction.m in Sources */,
 				400A63721B4FD75600890579 /* IFTTTInterpolatable.m in Sources */,
 				148DD63817785E2200FB9977 /* UploadFromOtherAppViewController.m in Sources */,
 				148DD6691778627200FB9977 /* Download.m in Sources */,
+				2358B32F1F94C8A80025FEFE /* UIColor+Extension.swift in Sources */,
 				59C71D251A9216AE00F66166 /* UIXToolbarView.m in Sources */,
 				400A63771B4FD75600890579 /* IFTTTShapeLayerAnimation.m in Sources */,
 				EA42FA4B18041E2F0006DB7C /* PassthroughView.m in Sources */,
@@ -4766,7 +4723,6 @@
 				4096E2491EB8650200318240 /* ShareWarningLinkCell.swift in Sources */,
 				14AB382E18C8E35200B34697 /* InfoFileUtils.m in Sources */,
 				40CF2C6F1C491D200047969A /* ShareUserPrivilegeCell.swift in Sources */,
-				232F7B531F4D75810033E414 /* NSProcessInfo+RMActionController.m in Sources */,
 				40EDF89F1B4D123500700E3A /* HelpGuideViewController.m in Sources */,
 				239FF57D1F41D367004FCF9E /* UIButton+Extension.m in Sources */,
 				EABD892E1BBE82D900DA5281 /* HexColors.m in Sources */,
@@ -4805,6 +4761,7 @@
 				EABE4BE3187D5AE6006DEC96 /* ManageSharesDB.m in Sources */,
 				148DD6B2177866A400FB9977 /* FilesViewController.m in Sources */,
 				EA707223199CC59E00CE7079 /* ManageDownloads.m in Sources */,
+				2358B3371F94CBA60025FEFE /* PCTransitioningDelegate.swift in Sources */,
 				148DD6B71778693000FB9977 /* RecentViewController.m in Sources */,
 				400A636F1B4FD75600890579 /* IFTTTFilmstrip.m in Sources */,
 				40C663B01EFA94B1004AF994 /* UniversalLoginViewController.swift in Sources */,
@@ -4815,21 +4772,21 @@
 				14987095187DB14A000D9C49 /* NotificationStatusBarViewController.m in Sources */,
 				148DD6C11778697100FB9977 /* AccountCell.m in Sources */,
 				400A637B1B4FD75600890579 /* IFTTTTransform3DAnimation.m in Sources */,
-				23DF05B71F4C062A0033F1F0 /* RMCustomViewController.m in Sources */,
 				400A637A1B4FD75600890579 /* IFTTTTextColorAnimation.m in Sources */,
 				14B0084018FD1B5B004CB06B /* EmptyCell.m in Sources */,
 				59C9D324195C0EFB00400AE2 /* ManageNetworkErrors.m in Sources */,
 				BC855ACD1E0D4B0200998CB7 /* FLAnimatedImage.m in Sources */,
 				EA68969017F599060033B3C1 /* KKPasscodeSettingsViewController.m in Sources */,
 				40B083991F1607D90072574A /* Log.swift in Sources */,
+				2358B3311F94C8CB0025FEFE /* PCAnimationController.swift in Sources */,
 				59C71D121A9216AE00F66166 /* CGPDFDocument.m in Sources */,
 				400A63671B4FD75600890579 /* IFTTTAnimation.m in Sources */,
 				EAD036C019053BEE003665CD /* ManageFavorites.m in Sources */,
 				EA2243EA1B71276D00F62E2A /* ShareLinkHeaderCell.swift in Sources */,
-				232F7B541F4D75810033E414 /* UIView+RMActionController.m in Sources */,
 				EABF69191891379C00A2217C /* SWUtilityButtonView.m in Sources */,
 				400A636E1B4FD75600890579 /* IFTTTFillColorAnimation.m in Sources */,
 				148DD6D9177869C800FB9977 /* ImpressumViewController.m in Sources */,
+				2358B3391F94CBCC0025FEFE /* PCPresentationAnimator.swift in Sources */,
 				400A636D1B4FD75600890579 /* IFTTTEasingFunction.m in Sources */,
 				40904B2C1EF04ACE00C72619 /* DetectAuthenticationMethod.swift in Sources */,
 				59915D9E1BBC00930015FBF3 /* CWLOrderedDictionary.m in Sources */,
@@ -4839,10 +4796,10 @@
 				148DD6EA17786A1400FB9977 /* WebViewController.m in Sources */,
 				EA4071031C11CAA0008B1507 /* NSObject+AssociatedObject.m in Sources */,
 				EABF69151891379C00A2217C /* SWCellScrollView.m in Sources */,
-				232F7B441F4D754D0033E414 /* RMActionController.m in Sources */,
 				EABF69141891379C00A2217C /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				EA68968F17F599060033B3C1 /* KKPasscodeLock.m in Sources */,
 				148DD6F617786BDA00FB9977 /* UIImage+Alpha.m in Sources */,
+				2358B32D1F94C86E0025FEFE /* PCActionSheetViewController.swift in Sources */,
 				400A63791B4FD75600890579 /* IFTTTStrokeStartAnimation.m in Sources */,
 				148DD6F717786BDA00FB9977 /* UIImage+Resize.m in Sources */,
 				148DD6F817786BDA00FB9977 /* UIImage+RoundedCorner.m in Sources */,
@@ -4862,8 +4819,6 @@
 				1487F135177C2F08004A1A5A /* ManageAppSettingsDB.m in Sources */,
 				402596051CF470640037A78A /* UtilsBrandedOptions.m in Sources */,
 				1487F138177C2F48004A1A5A /* ManageDB.m in Sources */,
-				232F7B4B1F4D75740033E414 /* RMImageAction.m in Sources */,
-				237CECE01F4FF8E700F26EB5 /* RMOCViewController.m in Sources */,
 				1487F13B177C2F73004A1A5A /* ManageFilesDB.m in Sources */,
 				1487F13E177C2F9C004A1A5A /* ManageUploadsDB.m in Sources */,
 				59A9A725196E8A370042FEAC /* CookiesStorageDto.m in Sources */,
@@ -4872,13 +4827,13 @@
 				40C745A61F05229C00DB4968 /* OauthAuthentication.swift in Sources */,
 				1487F141177C2FC1004A1A5A /* ManageUsersDB.m in Sources */,
 				59C71D1E1A9216AE00F66166 /* ReaderThumbRender.m in Sources */,
+				2358B3351F94CB800025FEFE /* PCDismissalAnimator.swift in Sources */,
 				1487F14B177C315D004A1A5A /* FileDto.m in Sources */,
 				EAF7712C1B7340C400ED6E6E /* ShareLinkButtonCell.swift in Sources */,
 				400A637D1B4FD75600890579 /* IFTTTViewAnimation.m in Sources */,
 				400A63651B4FD75600890579 /* IFTTTAnimatedPagingScrollViewController.m in Sources */,
 				1487F14C177C315D004A1A5A /* UserDto.m in Sources */,
 				1487F158177C3392004A1A5A /* FMDatabase.m in Sources */,
-				232F7B4E1F4D757A0033E414 /* RMActionControllerTransition.m in Sources */,
 				1487F159177C3392004A1A5A /* FMDatabaseAdditions.m in Sources */,
 				906177E21C4FABF600BBE648 /* ManageTouchID.m in Sources */,
 				59EF1F0E1CE0BD8900184F8F /* DeleteUtils.m in Sources */,

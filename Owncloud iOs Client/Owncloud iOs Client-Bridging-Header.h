@@ -45,3 +45,4 @@
 #import "InstantUpload.h"
 #import "ManageCookiesStorageDB.h"
 #import "HandleCredentials.h"
+#import "DeleteFile.h"

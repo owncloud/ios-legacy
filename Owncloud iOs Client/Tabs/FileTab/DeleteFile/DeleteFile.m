@@ -29,8 +29,6 @@
 #import "UtilsUrls.h"
 #import "ManageThumbnails.h"
 #import "ManageUsersDB.h"
-#import "RMOCViewController.h"
-
 
 @implementation DeleteFile
 
@@ -39,7 +37,7 @@
     _deleteFromFilePreview=NO;
 }
 
-- (RMActionController *)askToDeleteFileByFileDto: (FileDto *) file {
+- (PCActionSheetViewController *)askToDeleteFileByFileDto: (FileDto *) file {
     
     _file = file;
     _isFilesDownloadedInFolder = NO;
@@ -49,30 +47,39 @@
         _manageNetworkErrors = [ManageNetworkErrors new];
         _manageNetworkErrors.delegate = self;
     }
+
+    PCActionSheetViewController *ctrl = [[PCActionSheetViewController alloc] init];
     
-    if (self.popupQuery) {
-        self.popupQuery = nil;
-    }
-    
-    RMAction *deleteLocalAndServer = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"delete_local_server", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
+    PCAction *deleteLocalAndServer = [PCAction alloc];
+    [deleteLocalAndServer setTitle:NSLocalizedString(@"delete_local_server", nil)];
+    [deleteLocalAndServer setType: PCActionTypeDestructive];
+    [deleteLocalAndServer setAction:^{
         _deleteFromFlag = deleteFromServerAndLocal;
         [self executeDeleteItemInServer];
     }];
     
-    RMAction *deleteLocal = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"delete_local", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+    PCAction *deleteLocal = [PCAction alloc];
+    [deleteLocal setTitle:NSLocalizedString(@"delete_local", nil)];
+    [deleteLocal setType: PCActionTypeDestructive];
+    [deleteLocal setAction:^{
         _deleteFromFlag = deleteFromLocal;
         [self executeDeleteItemInDevice];
     }];
     
-    RMAction *deleteServer= [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"delete_server", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
+    PCAction *deleteServer = [PCAction alloc];
+    [deleteServer setTitle:NSLocalizedString(@"delete_server", nil)];
+    [deleteServer setType: PCActionTypeDestructive];
+    [deleteServer setAction:^{
         _deleteFromFlag = deleteFromServerAndLocal;
         [self executeDeleteItemInServer];
     }];
-    RMAction *cancelAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel", nil) style:RMActionStyleCancel andHandler:^(RMActionController<UIView *> *controller) {
-    }];
     
-    self.popupQuery = [RMOCViewController actionControllerWithStyle:RMActionControllerStyleWhite];
-    self.popupQuery.disableBlurEffects = YES;
+    PCAction *cancelAction = [PCAction alloc];
+    [cancelAction setTitle:NSLocalizedString(@"cancel", nil)];
+    [cancelAction setType: PCActionTypeCancel];
+    [cancelAction setAction:^{
+        
+    }];
     
     //If the file is a directory, checks if contains downloaded files
     if (_file.isDirectory) {
@@ -86,22 +93,18 @@
     if((_file.isDownload || _isFilesDownloadedInFolder == YES) && (!_file.isFavorite && ![[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.file])) {
         DLog(@"Delete downloaded files or folder with downloaded files");
         
-        [self.popupQuery addAction:cancelAction];
-        [self.popupQuery addAction:deleteLocalAndServer];
-        [self.popupQuery addAction:deleteLocal];
+        [ctrl setBottomAction:cancelAction];
+        [ctrl addActionWithAction:deleteLocalAndServer];
+        [ctrl addActionWithAction:deleteLocal];
         
     } else {
         
-        [self.popupQuery addAction:cancelAction];
-        [self.popupQuery addAction:deleteServer];
+        [ctrl setBottomAction:cancelAction];
+        [ctrl addActionWithAction:deleteServer];
         
     }
-    //        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
-    //            [self.popupQuery showInView:_viewToShow];
-    //        } else {
-    //            [self.popupQuery showInView:[_viewToShow window]];
-    //        }
-    return self.popupQuery;
+
+    return ctrl;
 }
 
 

@@ -46,9 +46,8 @@
 #import "SelectFolderViewController.h"
 #import "SelectFolderNavigation.h"
 #import "ManageFavorites.h"
-#import "RMCustomViewController.h"
-#import "RMOCViewController.h"
 #import "CustomCellFileAndDirectory.h"
+#import "Owncloud_iOs_Client-Swift.h"
 
 #ifdef CONTAINER_APP
 #import "Owncloud_iOs_Client-Swift.h"
@@ -109,17 +108,15 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 @property(nonatomic, strong) UIRefreshControl *refreshControl;
 //UIActionSheet for "more" option on swipe
 @property (nonatomic,strong) UIActionSheet *moreActionSheet;
-//RRMcontroller for the options custom action sheet
-@property (nonatomic, strong) RMCustomViewController *rmActionController;
 //UIActionSheet for + button
-@property (nonatomic,strong) RMOCViewController *plusActionSheet;
+@property (nonatomic,strong) PCActionSheetViewController *plusActionSheet;
 //An exist file
 @property (nonatomic, strong) OverwriteFileOptions *overWritteOption;
 //Class to manage the Network erros
 @property (nonatomic, strong) ManageNetworkErrors *manageNetworkErrors;
 @property (nonatomic, strong) UIView *viewToShow;
 //UIActionSheet for sorting files and folders
-@property(nonatomic, strong) UIActionSheet *sortingActionSheet;
+@property(nonatomic, strong) PCActionSheetViewController *sortingActionSheet;
 
 //Select folder views used by move options
 @property (nonatomic, strong) SelectFolderViewController *selectFolderViewController;

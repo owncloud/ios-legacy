@@ -23,7 +23,6 @@
 #import "DetailViewController.h"
 #import "ManageDownloads.h"
 #import "CheckAccessToServer.h"
-//#import <RMActionController/RMActionController.h>
 
 
 @class FilesViewController;

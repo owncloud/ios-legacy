@@ -1741,12 +1741,6 @@ float shortDelay = 0.3;
             self.presentFilesViewController.moreActionSheet = nil;
         }
         
-        //Close the sort view controller on the list of FilesViewController
-        if (self.presentFilesViewController.sortingActionSheet) {
-            [self.presentFilesViewController.sortingActionSheet dismissWithClickedButtonIndex:self.presentFilesViewController.sortingActionSheet.cancelButtonIndex animated:NO];
-            self.presentFilesViewController.sortingActionSheet = nil;
-        }
-        
         //Create folder
         if (self.presentFilesViewController.folderView) {
             [self.presentFilesViewController.folderView dismissWithClickedButtonIndex:self.presentFilesViewController.folderView.cancelButtonIndex animated:NO];
@@ -1828,16 +1822,6 @@ float shortDelay = 0.3;
             if (_presentFilesViewController.moreActionSheet){
                 [_presentFilesViewController.moreActionSheet dismissWithClickedButtonIndex:k_max_number_options_more_menu animated:NO];
                 _presentFilesViewController.moreActionSheet = nil;
-
-            }
-//            if (_presentFilesViewController.plusActionSheet){
-//                [_presentFilesViewController.plusActionSheet dismissWithClickedButtonIndex:k_max_number_options_plus_menu animated:NO];
-//                _presentFilesViewController.plusActionSheet = nil;
-//
-//            }
-            if (_presentFilesViewController.sortingActionSheet) {
-                [_presentFilesViewController.sortingActionSheet dismissWithClickedButtonIndex:k_max_number_options_sort_menu animated:NO];
-                _presentFilesViewController.sortingActionSheet = nil;
 
             }
         }

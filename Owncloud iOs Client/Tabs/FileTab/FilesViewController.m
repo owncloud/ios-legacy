@@ -53,7 +53,7 @@
 #import "ManageNetworkErrors.h"
 #import "UIAlertView+Blocks.h"
 #import "UtilsUrls.h"
-//#import "Owncloud_iOs_Client-Swift.h"
+#import "Owncloud_iOs_Client-Swift.h"
 #import "ManageUsersDB.h"
 #import "UtilsFramework.h"
 #import "ShareMainViewController.h"
@@ -64,6 +64,7 @@
 #import "SortManager.h"
 #import "EditFileViewController.h"
 #import "CheckFeaturesSupported.h"
+#import "Owncloud_iOs_Client-Swift.h"
 #import "UIButton+Extension.h"
 #import "RMCustomViewController.h"
 #import "RMOCViewController.h"
@@ -635,10 +636,6 @@
         [self.openWith.documentInteractionController dismissMenuAnimated:NO];
     }
     
-    if(self.sortingActionSheet){
-        [self.sortingActionSheet dismissWithClickedButtonIndex:2 animated:NO];
-    }
-    
     DLog(@"Files view Controller willRotate");
     if (IS_PORTRAIT) {
         //Vertical
@@ -1109,55 +1106,52 @@
         self.plusActionSheet = nil;
     }
     
-    RMAction *cancelAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel", nil) style:RMActionStyleCancel andHandler:^(RMActionController<UIView *> *controller) {
-            self.tabBarController.tabBar.hidden = NO;
-
-        
-        NSLog(@"Action cancel finished successfully");
-    }];
-    RMAction *uploadAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"menu_upload", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+    PCActionSheetViewController *ctrl = [[PCActionSheetViewController alloc] init];
+    
+    PCAction *cancelAction = [PCAction alloc];
+    [cancelAction setTitle:NSLocalizedString(@"cancel", nil)];
+    [cancelAction setType:PCActionTypeCancel];
+    [cancelAction setAction:^{}];
+    
+    PCAction *uploadAction = [PCAction alloc];
+    [uploadAction setTitle:NSLocalizedString(@"menu_upload", nil)];
+    [uploadAction setType:PCActionTypeNormalAction];
+    [uploadAction setAction:^(){
         dispatch_async(dispatch_get_main_queue(), ^{
             [self addPhotoOrVideo];
         });
     }];
-    RMAction *createFolderAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"menu_folder", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+    
+    PCAction *createFolderAction = [PCAction alloc];
+    [createFolderAction setTitle:NSLocalizedString(@"menu_folder", nil)];
+    [createFolderAction setType:PCActionTypeNormalAction];
+    [createFolderAction setAction:^(){
         [self showCreateFolder];
-
     }];
-    RMAction *newTextFileAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"menu_text_file", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+    
+    PCAction *newTextFileAction = [PCAction alloc];
+    [newTextFileAction setTitle:NSLocalizedString(@"menu_text_file", nil)];
+    [newTextFileAction setType:PCActionTypeNormalAction];
+    [newTextFileAction setAction:^(){
         dispatch_async(dispatch_get_main_queue(), ^{
             [self showCreateTextFile];
         });
     }];
-    RMAction *sortAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"sort_menu_title", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+    
+    PCAction *sortAction = [PCAction alloc];
+    [sortAction setTitle:NSLocalizedString(@"sort_menu_title", nil)];
+    [sortAction setType:PCActionTypeNormalAction];
+    [sortAction setAction:^(){
         [self showSortingOptions];
-
     }];
-
-     self.plusActionSheet = [RMOCViewController actionControllerWithStyle:RMActionControllerStyleWhite];
-    self.plusActionSheet.disableBlurEffects = YES;
-
-    [self.plusActionSheet addAction:cancelAction];
-    [self.plusActionSheet addAction:sortAction];
-    [self.plusActionSheet addAction:newTextFileAction];
-    [self.plusActionSheet addAction:createFolderAction];
-    [self.plusActionSheet addAction:uploadAction];
-
     
-    [self presentActionController:self.plusActionSheet];
+    [ctrl setBottomAction:cancelAction];
+    [ctrl addActionWithAction:uploadAction];
+    [ctrl addActionWithAction:createFolderAction];
+    [ctrl addActionWithAction:newTextFileAction];
+    [ctrl addActionWithAction:sortAction];
     
-//    if (IS_IPHONE) {
-//        [self.plusActionSheet showInView:self.tabBarController.view];
-//    } else {
-//        
-//        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-//        
-//        if (IS_IOS8 || IS_IOS9)  {
-//            [self.plusActionSheet showInView:app.splitViewController.view];
-//        } else {
-//            [self.plusActionSheet showInView:app.detailViewController.view];
-//        }
-//    }
+    [self presentViewController:ctrl animated:YES completion:nil];
 }
 
 
@@ -2354,28 +2348,38 @@
         self.sortingActionSheet = nil;
     }
     
-    self.sortingActionSheet = [[UIActionSheet alloc]
-                               initWithTitle:sortByTitle
-                               delegate:self
-                               cancelButtonTitle:NSLocalizedString(@"cancel", nil)
-                               destructiveButtonTitle:nil
-                               otherButtonTitles:NSLocalizedString(@"sort_menu_by_name_option", nil), NSLocalizedString(@"sort_menu_by_modification_date_option", nil), nil];
+    self.sortingActionSheet = [[PCActionSheetViewController alloc] init];
     
-    self.sortingActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
-    self.sortingActionSheet.tag=300;
+    PCAction *cancelAction = [PCAction alloc];
+    [cancelAction setTitle:NSLocalizedString(@"cancel", nil)];
+    [cancelAction setType:PCActionTypeCancel];
+    [cancelAction setAction:^{}];
     
-    if (IS_IPHONE) {
-        [self.sortingActionSheet showInView:self.tabBarController.view];
-    } else {
-        
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        
-        if (IS_IOS8 || IS_IOS9)  {
-            [self.sortingActionSheet showInView:app.splitViewController.view];
-        } else {
-            [self.sortingActionSheet showInView:app.detailViewController.view];
-        }
-    }
+    PCAction *sortByDate = [PCAction alloc];
+    [sortByDate setTitle:NSLocalizedString(@"sort_menu_by_name_option", nil)];
+    [sortByDate setType:PCActionTypeNormalAction];
+    [sortByDate setAction:^(){
+        [self updateActiveUserSortingChoiceTo:sortByName];
+        _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+        [self reloadTableFileList];
+    }];
+    
+    PCAction *sortByModificationDateAction = [PCAction alloc];
+    [sortByModificationDateAction setTitle:NSLocalizedString(@"sort_menu_by_modification_date_option", nil)];
+    [sortByModificationDateAction setType:PCActionTypeNormalAction];
+    [sortByModificationDateAction setAction:^(){
+        [self updateActiveUserSortingChoiceTo:sortByModificationDate];
+        _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+        [self reloadTableFileList];
+    }];
+    
+    [self.sortingActionSheet setBottomAction:cancelAction];
+    [self.sortingActionSheet addActionWithAction:sortByDate];
+    [self.sortingActionSheet addActionWithAction:sortByModificationDateAction];
+    
+    
+    
+    [self presentViewController:self.sortingActionSheet animated:YES completion:nil];
 }
 
 
@@ -3730,35 +3734,50 @@
         app.detailViewController.file = _selectedFileDto;
     }
     
-    if (self.rmActionController) {
-        self.rmActionController = nil;
-    }
+    
+    PCActionSheetViewController *ctrl = [[PCActionSheetViewController alloc] init];
     
     NSString *title = [self.selectedFileDto.fileName stringByRemovingPercentEncoding];
-    NSString *path = [[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:APP_DELEGATE.activeUser] stringByRemovingPercentEncoding];
+    NSString *path = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:APP_DELEGATE.activeUser];
     
-    RMAction *deleteAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"delete_label", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
-        [self.rmActionController dismissViewControllerAnimated:true completion:nil];
-        [self didSelectDeleteOption];
-        [self changeAccessoryButtonStyle:NO forCell:cell];
+    [ctrl setHeaderViewParamsWithIcon:cell.fileImageView.image name:title path:path];
+    
+    PCAction *cancelAction = [PCAction alloc];
+    [cancelAction setTitle:NSLocalizedString(@"cancel", nil)];
+    [cancelAction setType:PCActionTypeCancel];
+    [cancelAction setAction:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self changeAccessoryButtonStyle:NO forCell:cell];
+        });
     }];
     
-    RMAction *shareAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"share_link_long_press", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+    PCAction *deleteAction = [PCAction alloc];
+    [deleteAction setTitle:NSLocalizedString(@"Delete", nil)];
+    [deleteAction setType:PCActionTypeDestructive];
+    [deleteAction setAction:^(){
+        [self changeAccessoryButtonStyle:NO forCell:cell];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.rmActionController dismissViewControllerAnimated:true completion:nil];
+            [self didSelectDeleteOption];
+            [self changeAccessoryButtonStyle:NO forCell:cell];
+        });
+    }];
+    
+    PCAction *shareAction = [PCAction alloc];
+    [shareAction setTitle:NSLocalizedString(@"Share", nil)];
+    [shareAction setType:PCActionTypeNormalAction];
+    [shareAction setAction:^(){
+        [self changeAccessoryButtonStyle:NO forCell:cell];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self didSelectShareLinkOption];
         });
         [self changeAccessoryButtonStyle:NO forCell:cell];
     }];
     
-    RMAction *cancelAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel", nil) style:RMActionStyleCancel andHandler:^(RMActionController<UIView *> *controller) {
-        [self changeAccessoryButtonStyle:NO forCell:cell];
-    }];
-    
-    RMAction *okAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"ok", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
-        [self changeAccessoryButtonStyle:NO forCell:cell];
-    }];
-    
-    RMAction *notAvailableOfflineAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"not_available_offline", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+    PCAction *notAvailableOfflineAction = [PCAction alloc];
+    [notAvailableOfflineAction setTitle:NSLocalizedString(@"No Available Offline", nil)];
+    [notAvailableOfflineAction setType:PCActionTypeNormalAction];
+    [notAvailableOfflineAction setAction:^(){
         [self changeAccessoryButtonStyle:NO forCell:cell];
         
         if (self.isCurrentFolderSonOfFavoriteFolder) {
@@ -3772,14 +3791,31 @@
                 [self didSelectFavoriteOption];
             }
         }
+        
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"notAvailableOffline action finished successfully");
     }];
     
-    RMAction *cancelFolderDownloadAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel_download", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
+    PCAction *cancelFolderDownloadAction = [PCAction alloc];
+    [cancelFolderDownloadAction setTitle:NSLocalizedString(@"cancel_download", nil)];
+    [cancelFolderDownloadAction setType:PCActionTypeNormalAction];
+    [cancelFolderDownloadAction setAction:^(){
         [self changeAccessoryButtonStyle:NO forCell:cell];
         [self didSelectCancelDownloadFolder];
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
+        
+        NSLog(@"Cancel folder download action finished successfully");
     }];
     
-    RMAction *cancelFileDownloadAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"cancel_download", nil) style:RMActionStyleDestructive andHandler:^(RMActionController<UIView *> *controller) {
+    PCAction *cancelFileDownloadAction = [PCAction alloc];
+    [cancelFileDownloadAction setTitle:NSLocalizedString(@"sort_menu_title", nil)];
+    [cancelFileDownloadAction setType:PCActionTypeNormalAction];
+    [cancelFileDownloadAction setAction:^(){
         [self changeAccessoryButtonStyle:NO forCell:cell];
         
         if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
@@ -3788,27 +3824,48 @@
         } else {
             [self didSelectCancelDownloadFileOption];
         }
+        
+        NSLog(@"Action cancel finished successfully");
+        
     }];
     
-    RMAction *renameAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"rename_long_press", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+    PCAction *renameAction = [PCAction alloc];
+    [renameAction setTitle:NSLocalizedString(@"rename_long_press", nil)];
+    [renameAction setType:PCActionTypeNormalAction];
+    [renameAction setAction:^(){
         [self changeAccessoryButtonStyle:NO forCell:cell];
         [self didSelectRenameOption];
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+        }];
     }];
     
-    RMAction *moveAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"move_long_press", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
-        [self changeAccessoryButtonStyle:NO forCell:cell];
-        
+    PCAction *moveAction = [PCAction alloc];
+    [moveAction setTitle:NSLocalizedString(@"move_long_press", nil)];
+    [moveAction setType:PCActionTypeNormalAction];
+    [moveAction setAction:^(){
         dispatch_async(dispatch_get_main_queue(), ^{
             [self didSelectMoveOption];
+            [self changeAccessoryButtonStyle:NO forCell:cell];
         });
     }];
     
-    RMAction *downloadFolderAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"download_folder", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+    PCAction *downloadFolderAction = [PCAction alloc];
+    [downloadFolderAction setTitle:NSLocalizedString(@"download_folder", nil)];
+    [downloadFolderAction setType:PCActionTypeNormalAction];
+    [downloadFolderAction setAction:^(){
         [self changeAccessoryButtonStyle:NO forCell:cell];
         [self performSelectorInBackground:@selector(didSelectDownloadFolder) withObject:nil];
+        [UIView animateWithDuration:0.5f animations:^{
+            self.tabBarController.tabBar.hidden = NO;
+            
+        }];
     }];
     
-    RMAction *availableOfflineAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"available_offline", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
+    PCAction *availableOfflineAction = [PCAction alloc];
+    [availableOfflineAction setTitle:NSLocalizedString(@"available_offline", nil)];
+    [availableOfflineAction setType:PCActionTypeNormalAction];
+    [availableOfflineAction setAction:^(){
         [self changeAccessoryButtonStyle:NO forCell:cell];
         if (self.isCurrentFolderSonOfFavoriteFolder) {
             [self performSelectorOnMainThread:@selector(showAlertView:)
@@ -3820,11 +3877,12 @@
             } else {
                 [self didSelectFavoriteOption];
             }
-        }
-    }];
+        }    }];
     
-    RMAction *downloadFileAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"download_file", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
-        [self changeAccessoryButtonStyle:NO forCell:cell];
+    PCAction *downloadFileAction = [PCAction alloc];
+    [downloadFileAction setTitle:NSLocalizedString(@"download_file", nil)];
+    [downloadFileAction setType:PCActionTypeNormalAction];
+    [downloadFileAction setAction:^(){
         if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
             self.selectedFileDto.isDownload == downloaded) {
             DLog(@"Cancel");
@@ -3835,79 +3893,63 @@
         }
     }];
     
-    RMAction *openWithAction = [RMAction<UIView *> actionWithTitle:NSLocalizedString(@"open_with_label", nil) style:RMActionStyleDone andHandler:^(RMActionController<UIView *> *controller) {
-        [self changeAccessoryButtonStyle:NO forCell:cell];
+    PCAction *openWithAction = [PCAction alloc];
+    [openWithAction setTitle:NSLocalizedString(@"open_with_label", nil)];
+    [openWithAction setType:PCActionTypeNormalAction];
+    [openWithAction setAction:^(){
         if (_selectedFileDto.isDownload || [[CheckAccessToServer sharedManager] isNetworkIsReachable]){
             [self didSelectOpenWithOptionAndFile:_selectedFileDto];
         } else {
             [self performSelectorOnMainThread:@selector(showAlertView:)
                                    withObject:NSLocalizedString(@"not_possible_connect_to_server", nil)
                                 waitUntilDone:YES];
-        
+            
         }
+        
     }];
     
-    RMActionControllerStyle style = RMActionControllerStyleWhite;
-    DLog(@"LOG ---> file name %@, file path %@", title, path);
-    _rmActionController = [RMCustomViewController actionControllerWithStyle:style];
-    _rmActionController.disableBlurEffects = YES;
-    
-    [_rmActionController addAction:deleteAction];
+    [ctrl addActionWithAction:deleteAction];
     
     if(self.selectedFileDto.isDirectory) {
         
         title = [title substringToIndex:[title length]-1];
         if ([[AppDelegate sharedSyncFolderManager].forestOfFilesAndFoldersToBeDownloaded isFolderPendingToBeDownload:self.selectedFileDto]) {
             if (self.isCurrentFolderSonOfFavoriteFolder) {
-                
-                [_rmActionController addAction:okAction];
+                [ctrl setBottomAction:cancelAction];
             } else if (self.selectedFileDto.isFavorite) {
-                [_rmActionController addAction:cancelAction];
-                [_rmActionController addAction:notAvailableOfflineAction];
-                //                self.moreActionSheet.tag=220;
+                [ctrl setBottomAction:cancelAction];
+                [ctrl addActionWithAction:notAvailableOfflineAction];
             } else {
-                //                self.moreActionSheet.tag=210;
-                [_rmActionController addAction:cancelAction];
-                [_rmActionController addAction:cancelFolderDownloadAction];
+                [ctrl setBottomAction:cancelAction];
+                [ctrl addActionWithAction:cancelFolderDownloadAction];
             }
         } else {
-            
             if (_selectedFileDto.isFavorite && !self.isCurrentFolderSonOfFavoriteFolder) {
-                [_rmActionController addAction:notAvailableOfflineAction];
+                
+                [ctrl addActionWithAction:notAvailableOfflineAction];
+                
+                [ctrl setBottomAction:cancelAction];
+                
             } else {
-                [_rmActionController addAction:availableOfflineAction];
+                [ctrl addActionWithAction:availableOfflineAction];
             }
             
-            [_rmActionController addAction:cancelAction];
-            [_rmActionController addAction:renameAction];
-            [_rmActionController addAction:moveAction];
-            [_rmActionController addAction:downloadFolderAction];
-            //            self.moreActionSheet.tag=200;
+            [ctrl setBottomAction:cancelAction];
+            [ctrl addActionWithAction:renameAction];
+            [ctrl addActionWithAction:moveAction];
+            [ctrl addActionWithAction:downloadFolderAction];
         }
-        
-        
-        //        TODO: show the custom action sheet on the split view when is in ipad;
-        //        if (IS_IPHONE) {
-        //            [self.rmActionController showInView:self.tabBarController.view];
-        //        }else {
-        //            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        //            if (IS_IOS8 || IS_IOS9) {
-        //                [self.rmActionController showInView:app.splitViewController.view];
-        //            } else {
-        //                [self.rmActionController showInView:app.detailViewController.view];
-        //            }
-        //        }
     } else {
         
-        [_rmActionController addAction:cancelAction];
-        [_rmActionController addAction:openWithAction];
-        [_rmActionController addAction:renameAction];
-        [_rmActionController addAction:moveAction];
+        [ctrl setBottomAction:cancelAction];
+        [ctrl addActionWithAction:openWithAction];
+        [ctrl addActionWithAction:renameAction];
+        [ctrl addActionWithAction:moveAction];
         
         if (_selectedFileDto.isFavorite && !self.isCurrentFolderSonOfFavoriteFolder) {
-            [_rmActionController addAction:notAvailableOfflineAction];
+            [ctrl addActionWithAction:notAvailableOfflineAction];
         } else {
-            [_rmActionController addAction:availableOfflineAction];
+            [ctrl addActionWithAction:availableOfflineAction];
         }
         
         
@@ -3916,34 +3958,18 @@
         } else {
             if (self.selectedFileDto.isDownload == downloading ||
                 self.selectedFileDto.isDownload == updating) {
-                [_rmActionController addAction:cancelFileDownloadAction];
+                [ctrl addActionWithAction:cancelFileDownloadAction];
             } else {
-                [_rmActionController addAction:downloadFileAction];
+                [ctrl addActionWithAction:availableOfflineAction];
             }
         }
-        
-        //        if (IS_IPHONE) {
-        //            [self.moreActionSheet showInView:self.tabBarController.view];
-        //        }else {
-        //            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        //            if (IS_IOS8 || IS_IOS9) {
-        //                [self.moreActionSheet showInView:app.splitViewController.view];
-        //            } else {
-        //                [self.moreActionSheet showInView:app.detailViewController.view];
-        //            }
-        //        }
-        
-        
     }
     
     if (self.userHasShareCapabilities) {
-        [_rmActionController addAction:shareAction];
+        [ctrl addActionWithAction:shareAction];
     }
     
-    [_rmActionController.fileIconImageView setImage:cell.fileImageView.image];
-    [_rmActionController.fileNameLabel setText:title];
-    [_rmActionController.filePathLabel setText:path];
-    [self presentActionController:_rmActionController];
+    [self presentViewController:ctrl animated:YES completion:nil];
     
     DLog(@"Options button pressed");
 
@@ -3979,6 +4005,7 @@
 -(void)changeAccessoryButtonStyle:(BOOL)pressed forCell:(CustomCellFileAndDirectory *)cell  {
 
     UIButton *accessoryButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+    [accessoryButton setHitTestEdgeInsets:UIEdgeInsetsMake(-20, -10, -20, -20)];
     [accessoryButton addTarget:self action:@selector(optionsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     UIImage *accImage = [UIImage alloc];
     if (pressed) {

@@ -13,13 +13,17 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
-
-#import <UIKit/UIKit.h>
-#import <Foundation/Foundation.h>
+//#import <UIKit/UIKit.h>
+//#import <Foundation/Foundation.h>
 #import "FileDto.h"
 #import "ManageNetworkErrors.h"
-#import "RMOCViewController.h"
 
+#ifdef CONTAINER_APP
+#import "AppDelegate.h"
+#import "Owncloud_iOs_Client-Swift.h"
+#endif
+
+@class PCActionSheetViewController;
 @protocol DeleteFileDelegate
 
 @optional
@@ -43,13 +47,12 @@ typedef enum {
 @property(nonatomic,weak) __weak id<DeleteFileDelegate> delegate; 
 @property(nonatomic,strong)NSString *currentLocalFolder;
 @property(nonatomic,strong)UIView *viewToShow;
-@property(nonatomic,strong)RMOCViewController *popupQuery;
 @property int deleteFromFlag;
 @property(nonatomic)BOOL deleteFromFilePreview;
 @property(nonatomic)BOOL isFilesDownloadedInFolder;
 @property(nonatomic, strong) ManageNetworkErrors *manageNetworkErrors;
 
-- (RMOCViewController *)askToDeleteFileByFileDto: (FileDto *) file;
+- (PCActionSheetViewController *)askToDeleteFileByFileDto: (FileDto *) file;
 - (void)deleteItemFromDeviceByFileDto: (FileDto *) file;
 - (void)errorLogin;
 
