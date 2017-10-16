@@ -17,7 +17,6 @@
  */
 
 
-
 #import "AppDelegate.h"
 #import "SSOViewController.h"
 #import "UserDto.h"
@@ -38,11 +37,6 @@
 
 //Cookie
 #define k_cookie_user_value_name @"oc_username"
-
-//JSON structure values
-#define k_json_ocs @"ocs"
-#define k_json_ocs_data @"data"
-#define k_json_ocs_data_display_name @"display-name"
 
 
 static NSString *const tmpFileName = @"tmp.der";
@@ -107,7 +101,6 @@ static NSString *const tmpFileName = @"tmp.der";
     
     //Set Background color
     [_webView setBackgroundColor:[UIColor colorOfWebViewBackground]];
-    
    
 }
 
@@ -179,7 +172,6 @@ static NSString *const tmpFileName = @"tmp.der";
         DLog(@"Delete cookie");
         [storage deleteCookie:cookie];
     }
-    
 }
 
 #pragma mark UIWebView Delegate methods
@@ -263,7 +255,6 @@ static NSString *const tmpFileName = @"tmp.der";
     if ([currentURL isEqualToString:_ownCloudServerUrlString]) {
         //Login is success with the third part server
         
-        
         //Catch the cookie storage
         NSHTTPCookieStorage *cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
         
@@ -273,33 +264,17 @@ static NSString *const tmpFileName = @"tmp.der";
         NSMutableString * cookieString = nil;
         cookieString = [NSMutableString new];
         
-        NSString *samlNameUser=nil;
-        
-        //DLog(@" %d cookies", cookiesArray.count);
-        
         //Loop for the cookies
         for (NSHTTPCookie * cookie in cookiesArray) {
             
-            if ([cookie.name isEqualToString:k_cookie_user_value_name]) {
-                samlNameUser = cookie.value;
-            }
+            [cookie.name isEqualToString:k_cookie_user_value_name];
             
            // DLog(@"url: %@", webView.request.URL.absoluteString);
-            //DLog(@"cookie: %@", cookie);
             [cookieString appendFormat:@"%@=%@;", cookie.name, cookie.value];
         }
         
-        samlNameUser = [self requestForUserNameByCookie: cookieString];
-        
-        if (samlNameUser) {
-            DLog(@"samlNameUser: %@", samlNameUser);
-            DLog(@"currentURL: %@", currentURL);
-            
-            //Send to the delegate class the cookie receive from the server
-            [_delegate setCookieForSSO:cookieString andSamlUserName:samlNameUser];
-        }
-        
-
+        //Send to the delegate class the cookie receive from the server
+        [_delegate setCookieForSSO:cookieString serverPath:_urlString];
         
         //Close this view
         [self cancel:nil];
@@ -465,79 +440,6 @@ static NSString *const tmpFileName = @"tmp.der";
     [self retryOpenLink:self.urlStringToRetryTheWholeProcess];
 }
 
-///-----------------------------------
-/// @name Request For User Name
-///-----------------------------------
-
-/**
- * This method gets the user display name for the ownCloud api and
- * then return this. 
- *
- * @param cookieString --> saml cookie
- *
- * @return userName
- *
- */
-- (NSString *) requestForUserNameByCookie:(NSString *) cookieString {
-    DLog(@"_requestForUserNameByCookie:_ %@", cookieString);
-    __block NSString *userName = @"";
-
-    //We create a semaphore to wait until we recive the responses from Async calls
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    
-    
-    OCCredentialsDto* credentials = [[OCCredentialsDto alloc] init];
-    credentials.accessToken = cookieString;
-    credentials.authenticationMethod = AuthenticationMethodSAML_WEB_SSO;
-    [[AppDelegate sharedOCCommunication] setCredentials:credentials];
-    
-    [[AppDelegate sharedOCCommunication] getUserNameByCookie:cookieString ofServerPath:_urlString onCommunication:[AppDelegate sharedOCCommunication] success:^(NSHTTPURLResponse *response, NSData *responseData, NSString *redirectedServer) {
-        
-        //NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-        //DLog(@"Response: %@", responseString);
-        NSError *jsonError = nil;
-        //Get the json dictionary object
-        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&jsonError];
-        
-        if (!jsonDict) {
-            //Error
-            DLog(@"json error: %@", jsonError);
-        } else {
-            
-            //Get the ocs dictionary object
-            NSDictionary *ocsDict = [jsonDict objectForKey:k_json_ocs];
-            
-            //Get the data dictionary object
-            NSDictionary *userDataDict = [ocsDict objectForKey:k_json_ocs_data];
-            
-            //Display Name
-            userName = [userDataDict objectForKey:k_json_ocs_data_display_name];
-            // DLog(@"UserName is: %@", userName);
-        }
-        
-        dispatch_semaphore_signal(semaphore);
-        
-    } failure:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
-        
-        DLog(@"Error: %@", error);
-        
-        userName = nil;
-        
-        [self showError: [self.manageNetworkErrors returnErrorMessageWithHttpStatusCode:response.statusCode andError:error] ];
-        
-        //Error we do not have user
-        dispatch_semaphore_signal(semaphore);
-        
-    }];
-    
-    // Run loop
-    while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
-                                 beforeDate:[NSDate dateWithTimeIntervalSinceNow:k_timeout_upload]];
-    }
-    
-    return userName;
-}
 
 #pragma mark - Credentials interface
 

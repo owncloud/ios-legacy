@@ -50,7 +50,6 @@
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
     [keychainItem setObject:credDto.userId forKey:(__bridge id)kSecAttrAccount];
-    [keychainItem setObject:credDto.userName forKey:(__bridge id)kSecAttrDescription];
     
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
     
@@ -62,6 +61,7 @@
         if (migratingFromDB9to10) {
             //to support upgrades from 9to10 db version, in 21to22 is going to be updated to use credDto as kSecValueData
             [keychainItem setObject:[credDto.accessToken dataUsingEncoding:NSUTF8StringEncoding] forKey:(__bridge id)kSecValueData];
+            [keychainItem setObject:credDto.userName forKey:(__bridge id)kSecAttrDescription];
         } else {
             NSData *encodedCredDto = [NSKeyedArchiver archivedDataWithRootObject:credDto];
             [keychainItem setObject:encodedCredDto forKey:(__bridge id)kSecValueData];
@@ -202,7 +202,6 @@
         
         NSData *encodedCredDto = [NSKeyedArchiver archivedDataWithRootObject:credDto];
         [attrToUpdate setObject:encodedCredDto forKey:(__bridge id)kSecValueData];
-        [attrToUpdate setObject:credDto.userName forKey:(__bridge id)kSecAttrDescription];
         
         OSStatus stsUpd = SecItemUpdate((__bridge CFDictionaryRef)(keychainItem), (__bridge CFDictionaryRef)(attrToUpdate));
         

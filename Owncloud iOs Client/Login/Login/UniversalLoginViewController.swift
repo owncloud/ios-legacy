@@ -614,7 +614,7 @@ connection_declined  Connection declined by user
             userCredDto.authenticationMethod = authMethod
             nextErrorShouldBeShownAfterPasswordField = true
             
-            validateCredentialsAndStoreAccount(credentials: userCredDto);
+            self.detectUserDataAndValidate(credentials: userCredDto, serverPath: self.validatedServerURL)
             
             break
 
@@ -648,15 +648,14 @@ connection_declined  Connection declined by user
 // MARK: SSODelegate implementation
     
     /**
-     * This delegate method is called from SSOViewController when the user
-     * successfully logs-in.
+     * This delegate method is called from SSOViewController when the user successfully logs-in.
      *
-     * @param cookieString -> NSString      Cookies in last state of the SSO WebView , including SSO cookie & OC session cookie.
-     * @param samlUserName -> NSString      Username.
+     * @param cookieString -> NSString Cookies in last state of the SSO WebView , including SSO cookie & OC session cookie.
      *
      */
-
-    public func setCookieForSSO(_ cookieString: String?, andSamlUserName samlUserName: String?) {
+    
+    public func setCookieForSSO(_ cookieString: String?, serverPath: String?) {
+        
         self.setNetworkActivityIndicator(status: false)
         if self.loginMode == .update {
             ManageCookiesStorageDB.deleteCookies(byUser: self.user)
@@ -664,40 +663,22 @@ connection_declined  Connection declined by user
             UtilsCookies.eraseURLCache()
         }
         
+        let userCredDto :OCCredentialsDto =  OCCredentialsDto()
+        userCredDto.accessToken = cookieString;
+        userCredDto.authenticationMethod = .SAML_WEB_SSO;
+        
+        
         if cookieString == nil || cookieString == "" {
             self.showCredentialsError(NSLocalizedString("authentification_not_valid", comment: "") )
             
             return;
         }
         
-        if samlUserName == nil || samlUserName == "" {
-            self.showCredentialsError(NSLocalizedString("saml_server_does_not_give_user_id", comment: "") )
-
-            return
-        }
+        self.detectUserDataAndValidate(credentials: userCredDto, serverPath: serverPath!)
         
-        print("BACK with cookieString %@ and samlUserName %@", cookieString!, samlUserName!);
-
-        
-        let userCredDto: OCCredentialsDto = OCCredentialsDto()
-        userCredDto.userName = samlUserName
-        userCredDto.accessToken = cookieString
-        userCredDto.authenticationMethod = .SAML_WEB_SSO
-        
-        //We check if the user that we are updating is the same that we are using
-        if (self.loginMode == .update  && self.user?.username != samlUserName) {
-            self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
-            
-        } else {
-            self.textFieldUsername.text = samlUserName
-            self.textFieldPassword.text = cookieString
-            
-            validateCredentialsAndStoreAccount(credentials: userCredDto);
-        }
     }
     
-    
-    
+
 // MARK: textField delegate
     public func textFieldDidEndEditing(_ textField: UITextField) {
         
@@ -842,9 +823,9 @@ connection_declined  Connection declined by user
                              withCompletion: { (userCredDto: OCCredentialsDto?, error: Error?) in
                                 
                                 if let userCredentials = userCredDto {
-                                        
-                                    self.validateCredentialsAndStoreAccount(credentials: userCredentials);
-                                        
+                                    
+                                    self.detectUserDataAndValidate(credentials: userCredentials, serverPath: self.validatedServerURL)
+                                    
                                  } else {
                                     
                                     self.showURLError(
@@ -893,6 +874,26 @@ connection_declined  Connection declined by user
     
     
 // MARK: 'private' methods
+    
+    func detectUserDataAndValidate(credentials: OCCredentialsDto, serverPath: String) {
+        
+        DetectUserData().getUserDisplayNameOfServer(path: serverPath, credentials: credentials) { (displayName, errorHttp, error) in
+            
+            if (displayName == nil || displayName == "") {
+                self.showCredentialsError(NSLocalizedString("server_does_not_give_user_id", comment: "") )
+                
+            } else {
+                if self.authMethodToLogin == .SAML_WEB_SSO {
+                    credentials.userName = displayName
+                }
+                credentials.userDisplayName = displayName
+                
+                self.validateCredentialsAndStoreAccount(credentials: credentials)
+            }
+        }
+    }
+    
+    
     func validateCredentialsAndStoreAccount(credentials: OCCredentialsDto) {
         //get list of files in root to check session validty, if ok store new account
         let urlToGetRootFiles = NSURL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: validatedServerURL) )
