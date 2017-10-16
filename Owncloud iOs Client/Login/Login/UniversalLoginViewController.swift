@@ -833,6 +833,7 @@ public enum TextfieldType: String {
     
     func detectUserDataAndValidate(credentials: OCCredentialsDto, serverPath: String) {
         
+
         DetectUserData .getUserDisplayName(ofServer: serverPath, credentials: credentials) { (displayName, error) in
             
              if (displayName != nil) {
@@ -848,7 +849,9 @@ public enum TextfieldType: String {
             self.validateCredentialsAndStoreAccount(credentials: credentials)
         }
         
+        
     }
+    
     
     
     func validateCredentialsAndStoreAccount(credentials: OCCredentialsDto) {
