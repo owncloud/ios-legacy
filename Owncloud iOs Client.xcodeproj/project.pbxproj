@@ -251,6 +251,12 @@
 		14EC1956195B297F00B02AB6 /* sharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EC1954195B297F00B02AB6 /* sharedItem@2x.png */; };
 		14EFCAEB17FAFEAA007A38B6 /* MainAppIcon_76-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EFCAEA17FAFEAA007A38B6 /* MainAppIcon_76-76.png */; };
 		14EFCAED17FAFF48007A38B6 /* MainAppIcon_40-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EFCAEC17FAFF48007A38B6 /* MainAppIcon_40-40.png */; };
+		234B037F1F95F56300BD3807 /* MGSwipeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 234B037C1F95F56300BD3807 /* MGSwipeButton.m */; };
+		234B03801F95F56300BD3807 /* MGSwipeTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 234B037E1F95F56300BD3807 /* MGSwipeTableCell.m */; };
+		234B03811F95FB5400BD3807 /* MGSwipeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 234B037C1F95F56300BD3807 /* MGSwipeButton.m */; };
+		234B03821F95FB5500BD3807 /* MGSwipeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 234B037C1F95F56300BD3807 /* MGSwipeButton.m */; };
+		234B03831F95FB5900BD3807 /* MGSwipeTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 234B037E1F95F56300BD3807 /* MGSwipeTableCell.m */; };
+		234B03841F95FB5A00BD3807 /* MGSwipeTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 234B037E1F95F56300BD3807 /* MGSwipeTableCell.m */; };
 		2358B32A1F94C8220025FEFE /* PCAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2358B3291F94C8220025FEFE /* PCAction.swift */; };
 		2358B32D1F94C86E0025FEFE /* PCActionSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2358B32C1F94C86E0025FEFE /* PCActionSheetViewController.swift */; };
 		2358B32F1F94C8A80025FEFE /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2358B32E1F94C8A80025FEFE /* UIColor+Extension.swift */; };
@@ -1298,6 +1304,10 @@
 		14EC1954195B297F00B02AB6 /* sharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@2x.png"; sourceTree = "<group>"; };
 		14EFCAEA17FAFEAA007A38B6 /* MainAppIcon_76-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76-76.png"; sourceTree = "<group>"; };
 		14EFCAEC17FAFF48007A38B6 /* MainAppIcon_40-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_40-40.png"; sourceTree = "<group>"; };
+		234B037B1F95F56300BD3807 /* MGSwipeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGSwipeButton.h; path = ExternalLibreries/MGSwipeTableCell/MGSwipeButton.h; sourceTree = "<group>"; };
+		234B037C1F95F56300BD3807 /* MGSwipeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGSwipeButton.m; path = ExternalLibreries/MGSwipeTableCell/MGSwipeButton.m; sourceTree = "<group>"; };
+		234B037D1F95F56300BD3807 /* MGSwipeTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGSwipeTableCell.h; path = ExternalLibreries/MGSwipeTableCell/MGSwipeTableCell.h; sourceTree = "<group>"; };
+		234B037E1F95F56300BD3807 /* MGSwipeTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGSwipeTableCell.m; path = ExternalLibreries/MGSwipeTableCell/MGSwipeTableCell.m; sourceTree = "<group>"; };
 		2358B3291F94C8220025FEFE /* PCAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PCAction.swift; path = ExternalLibreries/PCActionSheet/PCAction.swift; sourceTree = "<group>"; };
 		2358B32C1F94C86E0025FEFE /* PCActionSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCActionSheetViewController.swift; sourceTree = "<group>"; };
 		2358B32E1F94C8A80025FEFE /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIColor+Extension.swift"; path = "ExternalLibreries/PCActionSheet/UIColor+Extension.swift"; sourceTree = "<group>"; };
@@ -2873,6 +2883,7 @@
 		148DD5DD1778549700FB9977 /* ExternalLibreries */ = {
 			isa = PBXGroup;
 			children = (
+				234B037A1F95F54500BD3807 /* MGSwipeTableCell */,
 				2358B3271F94C7F70025FEFE /* PCActionSheet */,
 				BC855AC71E0D4AE100998CB7 /* FLAnimatedImage */,
 				59915D9B1BBC00930015FBF3 /* CWLOrderedDictionary */,
@@ -2992,6 +3003,17 @@
 				14B0083F18FD1B5B004CB06B /* EmptyCell.xib */,
 			);
 			name = EmptyCell;
+			sourceTree = "<group>";
+		};
+		234B037A1F95F54500BD3807 /* MGSwipeTableCell */ = {
+			isa = PBXGroup;
+			children = (
+				234B037B1F95F56300BD3807 /* MGSwipeButton.h */,
+				234B037C1F95F56300BD3807 /* MGSwipeButton.m */,
+				234B037D1F95F56300BD3807 /* MGSwipeTableCell.h */,
+				234B037E1F95F56300BD3807 /* MGSwipeTableCell.m */,
+			);
+			name = MGSwipeTableCell;
 			sourceTree = "<group>";
 		};
 		2358B3271F94C7F70025FEFE /* PCActionSheet */ = {
@@ -3994,7 +4016,7 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0900;
 				TargetAttributes = {
 					1324297715ADBB3700DF823E = {
 						DevelopmentTeam = 9B5WD74GWJ;
@@ -4667,6 +4689,7 @@
 				4056551B1CE0A204001266EE /* UtilsFileSystem.m in Sources */,
 				148DD5FD1778556500FB9977 /* MBProgressHUD.m in Sources */,
 				EAC5985A1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
+				234B037F1F95F56300BD3807 /* MGSwipeButton.m in Sources */,
 				400A63641B4FD75600890579 /* IFTTTAlphaAnimation.m in Sources */,
 				59C71D161A9216AE00F66166 /* ReaderContentView.m in Sources */,
 				148DD612177855B600FB9977 /* AuthenticationDbService.m in Sources */,
@@ -4821,6 +4844,7 @@
 				1487F138177C2F48004A1A5A /* ManageDB.m in Sources */,
 				1487F13B177C2F73004A1A5A /* ManageFilesDB.m in Sources */,
 				1487F13E177C2F9C004A1A5A /* ManageUploadsDB.m in Sources */,
+				234B03801F95F56300BD3807 /* MGSwipeTableCell.m in Sources */,
 				59A9A725196E8A370042FEAC /* CookiesStorageDto.m in Sources */,
 				7F9B91BD1F1F472700B77260 /* ServerURLNormalizer.swift in Sources */,
 				59A9A721196E89170042FEAC /* ManageCookiesStorageDB.m in Sources */,
@@ -4917,12 +4941,14 @@
 				EAEDC08E1AB194F8004836EB /* MBProgressHUD.m in Sources */,
 				EAC6E5FC1AB0987D00CCF8C4 /* NSString+Encoding.m in Sources */,
 				EAF721811AAF33F8009F5596 /* OCKeychain.m in Sources */,
+				234B03841F95FB5A00BD3807 /* MGSwipeTableCell.m in Sources */,
 				59E20C7F1AEFB45900554D7E /* ManageDB.m in Sources */,
 				402596081CF473320037A78A /* UtilsBrandedOptions.m in Sources */,
 				EAC6E5F71AB097B800CCF8C4 /* ManageAppSettingsDB.m in Sources */,
 				EAC6E5F81AB097F500CCF8C4 /* UtilsDtos.m in Sources */,
 				405D06C51BFB670100591604 /* ManageCapabilitiesDB.m in Sources */,
 				EAF721851AAF3C86009F5596 /* UtilsUrls.m in Sources */,
+				234B03821F95FB5500BD3807 /* MGSwipeButton.m in Sources */,
 				EA4B8E1D1AC92DCF004F335E /* KKPasscodeSettingsViewController.m in Sources */,
 				EACA74731AADB1EB0074BA2D /* FileNameUtils.m in Sources */,
 				EA4B8E1C1AC92DCC004F335E /* KKPasscodeLock.m in Sources */,
@@ -4999,6 +5025,8 @@
 				EAC598611A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */,
 				593C16D01A09008C006C20AF /* ManageFilesDB.m in Sources */,
 				EAD281B61A38986600A00D54 /* NSString+Encoding.m in Sources */,
+				234B03811F95FB5400BD3807 /* MGSwipeButton.m in Sources */,
+				234B03831F95FB5900BD3807 /* MGSwipeTableCell.m in Sources */,
 				599E57351A08E62700744EC9 /* FileDto.m in Sources */,
 				599D99F81A026004008A9DB3 /* UserDto.m in Sources */,
 				599D99F71A025F24008A9DB3 /* ManageUsersDB.m in Sources */,
@@ -5198,13 +5226,19 @@
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -5232,6 +5266,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
@@ -5247,13 +5282,19 @@
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -5273,6 +5314,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_SWIFT_FLAGS = "";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
@@ -5292,7 +5334,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
-				DEFINES_MODULE = NO;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5320,6 +5362,7 @@
 					"$(SRCROOT)",
 				);
 				OTHER_LDFLAGS = "-ObjC";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.iOSmobileapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -5344,7 +5387,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
-				DEFINES_MODULE = NO;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5367,6 +5410,7 @@
 					"$(SRCROOT)",
 				);
 				OTHER_LDFLAGS = "-ObjC";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.iOSmobileapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

@@ -281,12 +281,6 @@
         //Thumbnail
         fileCell.thumbnailSessionTask = [InfoFileUtils updateThumbnail:file andUser:self.user tableView:tableView cellForRowAtIndexPath:indexPath];
         
-        //Custom cell for SWTableViewCell with right swipe options
-        fileCell.containingTableView = tableView;
-        [fileCell setCellHeight:fileCell.frame.size.height];
-        
-        fileCell.rightUtilityButtons = nil;
-        
         //Selection style gray
         fileCell.selectionStyle=UITableViewCellSelectionStyleGray;
         

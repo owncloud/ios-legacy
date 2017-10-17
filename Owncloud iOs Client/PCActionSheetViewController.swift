@@ -18,7 +18,7 @@ import UIKit
     }
 }
 
-@objc public class PCActionSheetViewController: NSObject, UIViewController {
+@objc public class PCActionSheetViewController: UIViewController {
     
     var actionsTableView: UITableView! = nil
     var bottomButton: UIButton! = nil

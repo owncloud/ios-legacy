@@ -66,8 +66,6 @@
 #import "CheckFeaturesSupported.h"
 #import "Owncloud_iOs_Client-Swift.h"
 #import "UIButton+Extension.h"
-#import "RMCustomViewController.h"
-#import "RMOCViewController.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -521,7 +519,7 @@
     if (_selectedCell) {
         //Deselect selected cell
         CustomCellFileAndDirectory *newRow = (CustomCellFileAndDirectory*) [_tableView cellForRowAtIndexPath:_selectedCell];
-        [newRow setSelectedStrong:NO];
+        [newRow setSelected:YES];
     }
     
     [self stopPullRefresh];
@@ -1320,7 +1318,8 @@
         //Select in detail view
         if (_selectedCell) {
             CustomCellFileAndDirectory *temp = (CustomCellFileAndDirectory*) [_tableView cellForRowAtIndexPath:_selectedCell];
-            [temp setSelectedStrong:NO];
+            [temp setSelected:NO];
+
         }
         
         if(selectedFile.isDirectory){
@@ -1333,7 +1332,7 @@
             [app.detailViewController handleFile:selectedFile fromController:fileListManagerController andIsForceDownload:NO];
             
             CustomCellFileAndDirectory *sharedLink = (CustomCellFileAndDirectory*) [_tableView cellForRowAtIndexPath:indexPath];
-            [sharedLink setSelectedStrong:YES];
+            [sharedLink setSelected:NO];
             _selectedCell = indexPath;
         }
     }
@@ -1395,6 +1394,7 @@
             fileCell = (CustomCellFileAndDirectory *)[topLevelObjects objectAtIndex:0];
             [fileCell.sharedInfoButton addTarget:self action:@selector(topSharedInfobuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
             [fileCell.sharedWithMeButton addTarget:self action:@selector(bottomSharedInfobuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            [fileCell setUserInteractionEnabled:YES ];
             [self changeAccessoryButtonStyle:NO forCell:fileCell];
         }
         
@@ -1475,24 +1475,20 @@
         //Thumbnail
         fileCell.thumbnailSessionTask = [InfoFileUtils updateThumbnail:file andUser:APP_DELEGATE.activeUser tableView:tableView cellForRowAtIndexPath:indexPath];
         
-        //Custom cell for SWTableViewCell with right swipe options
-        fileCell.containingTableView = tableView;
-        [fileCell setCellHeight:fileCell.frame.size.height];
-        fileCell.leftUtilityButtons = [self setSwipeLeftButtons];
-        
-        fileCell.rightUtilityButtons = nil;
         fileCell.delegate = self;
         
         //Selection style gray
-        //fileCell.selectionStyle=UITableViewCellSelectionStyleGray;
-        fileCell.selectionStyle=UITableViewCellSelectionStyleNone;
+        fileCell.selectionStyle=UITableViewCellSelectionStyleGray;
         
         //Check if set selected previously
         if (_selectedCell && [_selectedCell compare: indexPath] == NSOrderedSame) {
-            [fileCell setSelectedStrong:YES];
+            [fileCell setSelected: YES];
         }else{
-            [fileCell setSelectedStrong:NO];
+            [fileCell setSelected: NO];
         }
+        
+        cell = fileCell;
+
         
         cell = fileCell;
         
@@ -2391,131 +2387,6 @@
     [ManageUsersDB updateSortingWayForUserDto:APP_DELEGATE.activeUser];
 }
 
-
-//#pragma mark - UIActionSheetDelegate
-//
-//- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-//    
-//    //Long press menu    
-//    if (actionSheet.tag==200) {
-//        if(_selectedFileDto.isDirectory) {
-//            switch (buttonIndex) {
-//                case 0:
-//                    [self didSelectRenameOption];
-//                    break;
-//                case 1:
-//                    [self didSelectMoveOption];
-//                    break;
-//                case 2:
-//                    [self performSelectorInBackground:@selector(didSelectDownloadFolder) withObject:nil];
-//                    break;
-//                case 3:
-//                    
-//                    if (self.isCurrentFolderSonOfFavoriteFolder) {
-//                        [self performSelectorOnMainThread:@selector(showAlertView:)
-//                                               withObject:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)
-//                                            waitUntilDone:YES];
-//                    } else {
-//                        if (self.selectedFileDto.isFavorite) {
-//                            [self didSelectCancelFavoriteFolder];
-//                        } else {
-//                            [self didSelectFavoriteFolder];
-//                        }
-//                    }
-//                    
-//                    break;
-//                default:
-//                    break;
-//            }
-//        } else {
-//            switch (buttonIndex) {
-//                case 0:
-//                    
-//                    if (_selectedFileDto.isDownload || [[CheckAccessToServer sharedManager] isNetworkIsReachable]){
-//                        [self didSelectOpenWithOptionAndFile:_selectedFileDto];
-//                    } else {
-//                        [self performSelectorOnMainThread:@selector(showAlertView:)
-//                                               withObject:NSLocalizedString(@"not_possible_connect_to_server", nil)
-//                                            waitUntilDone:YES];
-//                    }
-//                    break;
-//                case 1:
-//                    [self didSelectRenameOption];
-//                    break;
-//                case 2:
-//                    [self didSelectMoveOption];
-//                    break;
-//                case 3:
-//                    if (self.isCurrentFolderSonOfFavoriteFolder) {
-//                        [self performSelectorOnMainThread:@selector(showAlertView:)
-//                                               withObject:NSLocalizedString(@"parent_folder_is_available_offline_file_child", nil)
-//                                            waitUntilDone:YES];
-//                    } else {
-//                        [self didSelectFavoriteOption];
-//                    }
-//                    break;
-//                case 4:
-//                    if ([[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.selectedFileDto] || self.selectedFileDto.isFavorite  ||
-//                        self.selectedFileDto.isDownload == downloaded) {
-//                        DLog(@"Cancel");
-//                    } else {
-//                        if (self.selectedFileDto.isDownload == downloading ||
-//                            self.selectedFileDto.isDownload == updating) {
-//                            [self didSelectCancelDownloadFileOption];
-//                        } else {
-//                            [self didSelectDownloadFileOption];
-//                        }
-//                    }
-//                default:
-//                    break;
-//            }
-//        }
-//    }
-//    
-//    if (actionSheet.tag==210) {
-//        switch (buttonIndex) {
-//            case 0:
-//                [self didSelectCancelDownloadFolder];
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-//    
-//    if (actionSheet.tag==220) {
-//        switch (buttonIndex) {
-//            case 0:
-//                [self didSelectCancelFavoriteFolder];
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-//    
-//    //Sorting options
-//    if (actionSheet.tag==300) {
-//        enumSortingType storedSorting = APP_DELEGATE.activeUser.sortingType;
-//        switch (buttonIndex) {
-//            case 0:
-//                if(storedSorting != sortByName){
-//                    [self updateActiveUserSortingChoiceTo:sortByName];
-//                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
-//                    [self reloadTableFileList];
-//                }
-//                break;
-//            case 1:
-//                if(storedSorting != sortByModificationDate){
-//                    [self updateActiveUserSortingChoiceTo:sortByModificationDate];
-//                    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
-//                    [self reloadTableFileList];
-//                }
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-//}
-
 #pragma mark - File/Folder
 
 ///-----------------------------------
@@ -2694,13 +2565,7 @@
         self.mDeleteFile.delegate = self;
         self.mDeleteFile.currentLocalFolder = _currentLocalFolder;
         
-//        if(IS_IPHONE) {
-//            self.mDeleteFile.viewToShow = self.view;
-//        } else {
-//            self.mDeleteFile.viewToShow = app.detailViewController.view;
-//        }
-
-        [self presentActionController:[self.mDeleteFile askToDeleteFileByFileDto:_selectedFileDto]];
+//        [self presentActionController:[self.mDeleteFile askToDeleteFileByFileDto:_selectedFileDto]];
     }
 }
 
@@ -2961,7 +2826,7 @@
         //Select in detail view
         if (_selectedCell) {
             CustomCellFileAndDirectory *temp = (CustomCellFileAndDirectory*) [_tableView cellForRowAtIndexPath:_selectedCell];
-            [temp setSelectedStrong:NO];
+            [temp setSelected:NO];
         }
         
         //Select in detail
@@ -3153,7 +3018,7 @@
         //Deselect old selected row
         if (_selectedCell) {
             CustomCellFileAndDirectory *selectedRow = (CustomCellFileAndDirectory*) [_tableView cellForRowAtIndexPath:_selectedCell];
-            [selectedRow setSelectedStrong: NO];
+            [selectedRow setSelected: NO];
         } else {
             DLog(@"_selectedCell IS NIL!!!!");
         }
@@ -3189,7 +3054,7 @@
             
             //Select the new row
             CustomCellFileAndDirectory *newRow = (CustomCellFileAndDirectory*) [_tableView cellForRowAtIndexPath:fileIndexPath];
-            [newRow setSelectedStrong:YES];
+            [newRow setSelected:YES];
         }
     }
 }
@@ -3491,6 +3356,83 @@
 
 #pragma mark - SWTableViewDelegate  Datasource
 
+- (BOOL)swipeTableCell:(MGSwipeTableCell *)cell canSwipe:(MGSwipeDirection)direction fromPoint:(CGPoint)point {
+    return YES;
+}
+
+-(NSArray*) swipeTableCell:(MGSwipeTableCell*) cell swipeButtonsForDirection:(MGSwipeDirection)direction
+             swipeSettings:(MGSwipeSettings*) swipeSettings expansionSettings:(MGSwipeExpansionSettings*) expansionSettings
+{
+    
+    _selectedIndexPath = [_tableView indexPathForCell: cell];
+    _selectedFileDto = (FileDto *)[[_sortedArray objectAtIndex:_selectedIndexPath.section]objectAtIndex:_selectedIndexPath.row];
+    
+    UIColor *availableOfflineColor = [UIColor colorWithRed:223.0f/255.0f green:1.0f/255.0f blue:190.f/255.0f alpha:1.0f];
+    UIColor *shareColor = [UIColor colorWithRed:61.0f/255.0f green:131.0f/255.0f blue:225.f/255.0f alpha:1.0f];
+    
+    swipeSettings.transition = MGSwipeTransitionBorder;
+    expansionSettings.buttonIndex = 0;
+    CGFloat padding = 50;
+    
+    __weak FilesViewController * me = self;
+    
+    if (direction == MGSwipeDirectionLeftToRight) {
+        
+        expansionSettings.fillOnTrigger = YES;
+        expansionSettings.threshold = 2;
+        return @[[MGSwipeButton buttonWithTitle:@"" icon:[UIImage imageNamed:@"file_available_offline_icon"] backgroundColor:availableOfflineColor padding: 50 callback:^BOOL(MGSwipeTableCell *sender) {
+            
+            if (self.selectedFileDto.isFavorite){
+                if (self.isCurrentFolderSonOfFavoriteFolder) {
+                    [self performSelectorOnMainThread:@selector(showAlertView:)
+                                           withObject:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)
+                                        waitUntilDone:YES];
+                } else {
+                    if (self.selectedFileDto.isDirectory) {
+                        [self didSelectCancelFavoriteFolder];
+                    } else {
+                        [self didSelectFavoriteOption];
+                    }
+                }
+            } else {
+                if (self.isCurrentFolderSonOfFavoriteFolder) {
+                    [self performSelectorOnMainThread:@selector(showAlertView:)
+                                           withObject:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)
+                                        waitUntilDone:YES];
+                } else {
+                    if (self.selectedFileDto.isDirectory) {
+                        [self didSelectFavoriteFolder];
+                    } else {
+                        [self didSelectFavoriteOption];
+                    }
+                }
+                
+            }
+            
+            
+            return YES;
+            
+        }]];
+    }else {
+        
+        if (self.userHasShareCapabilities) {
+            expansionSettings.fillOnTrigger = YES;
+            expansionSettings.threshold = 1.1;
+            
+            return @[[MGSwipeButton buttonWithTitle:@"" icon:[UIImage imageNamed:@"fileSharedWithUs"] backgroundColor:shareColor padding:padding callback:^BOOL(MGSwipeTableCell *sender) {
+                DLog(@"RightToleft");
+                [self didSelectShareLinkOption];
+                return YES;
+                
+            }]];
+        }
+    }
+    
+    return nil;
+}
+
+
+
 ///-----------------------------------
 /// @name Set Swipe Right Buttons
 ///-----------------------------------
@@ -3503,9 +3445,19 @@
  */
 - (NSArray *)setSwipeRightButtons
 {
-    //No Right buttons
     
-    return nil;
+    NSMutableArray *leftUtilityButtons = [NSMutableArray new];
+    
+    if (self.userHasShareCapabilities) {
+        UIColor *availableOfflineColor = [UIColor colorWithRed:223.0f/255.0f green:1.0f/255.0f blue:190.f/255.0f alpha:1.0f];
+        
+        [leftUtilityButtons addObject: @[[MGSwipeButton buttonWithTitle:@"" icon:[UIImage imageNamed:@"file_available_offline_icon"] backgroundColor:availableOfflineColor]]];
+        
+        return leftUtilityButtons;
+    } else {
+        return nil;
+        
+    }
 }
 
 ///-----------------------------------
@@ -3522,30 +3474,17 @@
     //Share gray button
     NSMutableArray *rightUtilityButtons = [NSMutableArray new];
     
-    BOOL areTwoButtonsInTheSwipe = false;
-    if ( (k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled) ) {
-        //Two buttons
-        areTwoButtonsInTheSwipe = true;
-    }else{
-        //Three buttons
-        areTwoButtonsInTheSwipe = false;
-    }
-    
-    UIColor *normalColor = [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0f];
-    UIColor *destructiveColor = [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f];
-    
-    
-    //More
-    [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:normalColor title:NSLocalizedString(@"more_swipe", nil) andImage:[UIImage imageNamed:@"more-filled.png"]  forTwoButtons:areTwoButtonsInTheSwipe];
-    
-    if (!areTwoButtonsInTheSwipe) {
-        //Share
-        [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:normalColor title:NSLocalizedString(@"share_link_long_press", nil) andImage:[UIImage imageNamed:@"sharedItemSwipe.png"]  forTwoButtons:areTwoButtonsInTheSwipe];
-        
-    }
+    //    if ( (k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled) ) {
+    //        //Two buttons
+    //        areTwoButtonsInTheSwipe = true;
+    //    }else{
+    //        //Three buttons
+    //        areTwoButtonsInTheSwipe = false;
+    //    }
+    UIColor *availableOfflineColor = [UIColor colorWithRed:223.0f/255.0f green:1.0f/255.0f blue:190.f/255.0f alpha:1.0f];
     
     //Delete
-    [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:destructiveColor title:NSLocalizedString(@"delete_label", nil) andImage:[UIImage imageNamed:@"deleteBlack.png"] forTwoButtons:areTwoButtonsInTheSwipe];
+    [rightUtilityButtons sw_addUtilityOneLineButtonWithColor:availableOfflineColor title: @"" andImage:[UIImage imageNamed:@"file_available_offline_icon"] forTwoButtons:false];
     
     
     
@@ -3738,7 +3677,7 @@
     PCActionSheetViewController *ctrl = [[PCActionSheetViewController alloc] init];
     
     NSString *title = [self.selectedFileDto.fileName stringByRemovingPercentEncoding];
-    NSString *path = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:APP_DELEGATE.activeUser];
+    NSString *path = [[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:APP_DELEGATE.activeUser] stringByRemovingPercentEncoding];
     
     [ctrl setHeaderViewParamsWithIcon:cell.fileImageView.image name:title path:path];
     
@@ -3757,7 +3696,6 @@
     [deleteAction setAction:^(){
         [self changeAccessoryButtonStyle:NO forCell:cell];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.rmActionController dismissViewControllerAnimated:true completion:nil];
             [self didSelectDeleteOption];
             [self changeAccessoryButtonStyle:NO forCell:cell];
         });
@@ -3975,29 +3913,6 @@
 
 }
 
--(void)presentActionController:(RMActionController *)actionController {
-    //On the iPad we want to show the map action controller within a popover. Fortunately, we can use iOS 8 API for this! :)
-    //(Of course only if we are running on iOS 8 or later)
-    if([actionController respondsToSelector:@selector(popoverPresentationController)] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-        //First we set the modal presentation style to the popover style
-        actionController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-        
-        //Then we tell the popover presentation controller, where the popover should appear
-        actionController.popoverPresentationController.sourceView = self.tableView;
-        actionController.popoverPresentationController.sourceRect = [self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    }
-//
-//    actionController.hidesBottomBarWhenPushed = YES;
-//    self.tabBarController.tabBar.hidden = YES;
-    
-    //Now just present the date selection controller using the standard iOS presentation method
-    if(IS_IPHONE) {
-        [self.tabBarController presentViewController:actionController animated:YES completion:nil];
-    } else {
-        [self.splitViewController presentViewController:actionController animated:YES completion:nil];
-    }
-}
-
 -(BOOL)userHasShareCapabilities {
     return !((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled));
 }
@@ -4005,6 +3920,7 @@
 -(void)changeAccessoryButtonStyle:(BOOL)pressed forCell:(CustomCellFileAndDirectory *)cell  {
 
     UIButton *accessoryButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+
     [accessoryButton setHitTestEdgeInsets:UIEdgeInsetsMake(-20, -10, -20, -20)];
     [accessoryButton addTarget:self action:@selector(optionsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     UIImage *accImage = [UIImage alloc];

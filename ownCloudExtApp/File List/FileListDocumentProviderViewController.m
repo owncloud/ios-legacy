@@ -388,13 +388,6 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
             [fileCell.circularPV setHidden:YES];
         }
         
-        
-        //Custom cell for SWTableViewCell with right swipe options
-        fileCell.containingTableView = tableView;
-        [fileCell setCellHeight:fileCell.frame.size.height];
-        
-        fileCell.rightUtilityButtons = nil;
-        
         //Selection style gray
         fileCell.selectionStyle = UITableViewCellSelectionStyleNone;
         

@@ -37,75 +37,75 @@
     _deleteFromFilePreview=NO;
 }
 
-- (PCActionSheetViewController *)askToDeleteFileByFileDto: (FileDto *) file {
-    
-    _file = file;
-    _isFilesDownloadedInFolder = NO;
-    
-    //We init the ManageNetworkErrors
-    if (!_manageNetworkErrors) {
-        _manageNetworkErrors = [ManageNetworkErrors new];
-        _manageNetworkErrors.delegate = self;
-    }
-
-    PCActionSheetViewController *ctrl = [[PCActionSheetViewController alloc] init];
-    
-    PCAction *deleteLocalAndServer = [PCAction alloc];
-    [deleteLocalAndServer setTitle:NSLocalizedString(@"delete_local_server", nil)];
-    [deleteLocalAndServer setType: PCActionTypeDestructive];
-    [deleteLocalAndServer setAction:^{
-        _deleteFromFlag = deleteFromServerAndLocal;
-        [self executeDeleteItemInServer];
-    }];
-    
-    PCAction *deleteLocal = [PCAction alloc];
-    [deleteLocal setTitle:NSLocalizedString(@"delete_local", nil)];
-    [deleteLocal setType: PCActionTypeDestructive];
-    [deleteLocal setAction:^{
-        _deleteFromFlag = deleteFromLocal;
-        [self executeDeleteItemInDevice];
-    }];
-    
-    PCAction *deleteServer = [PCAction alloc];
-    [deleteServer setTitle:NSLocalizedString(@"delete_server", nil)];
-    [deleteServer setType: PCActionTypeDestructive];
-    [deleteServer setAction:^{
-        _deleteFromFlag = deleteFromServerAndLocal;
-        [self executeDeleteItemInServer];
-    }];
-    
-    PCAction *cancelAction = [PCAction alloc];
-    [cancelAction setTitle:NSLocalizedString(@"cancel", nil)];
-    [cancelAction setType: PCActionTypeCancel];
-    [cancelAction setAction:^{
-        
-    }];
-    
-    //If the file is a directory, checks if contains downloaded files
-    if (_file.isDirectory) {
-        DLog(@"Delete a folder");
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        //Remove: /owncloud/remote.php/webdav/ to the pathFolder
-        NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
-        //Obtains the number of the downloaded files in DB which filepath contains the folder that the user want delete
-        _isFilesDownloadedInFolder=[ManageFilesDB isGetFilesByDownloadState:downloaded andByUser:app.activeUser andFolder:pathFolder];
-    }
-    if((_file.isDownload || _isFilesDownloadedInFolder == YES) && (!_file.isFavorite && ![[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.file])) {
-        DLog(@"Delete downloaded files or folder with downloaded files");
-        
-        [ctrl setBottomAction:cancelAction];
-        [ctrl addActionWithAction:deleteLocalAndServer];
-        [ctrl addActionWithAction:deleteLocal];
-        
-    } else {
-        
-        [ctrl setBottomAction:cancelAction];
-        [ctrl addActionWithAction:deleteServer];
-        
-    }
-
-    return ctrl;
-}
+//- (PCActionSheetViewController *)askToDeleteFileByFileDto: (FileDto *) file {
+//    
+//    _file = file;
+//    _isFilesDownloadedInFolder = NO;
+//    
+//    //We init the ManageNetworkErrors
+//    if (!_manageNetworkErrors) {
+//        _manageNetworkErrors = [ManageNetworkErrors new];
+//        _manageNetworkErrors.delegate = self;
+//    }
+//
+//    PCActionSheetViewController *ctrl = [[PCActionSheetViewController alloc] init];
+//    
+//    PCAction *deleteLocalAndServer = [PCAction alloc];
+//    [deleteLocalAndServer setTitle:NSLocalizedString(@"delete_local_server", nil)];
+//    [deleteLocalAndServer setType: PCActionTypeDestructive];
+//    [deleteLocalAndServer setAction:^{
+//        _deleteFromFlag = deleteFromServerAndLocal;
+//        [self executeDeleteItemInServer];
+//    }];
+//    
+//    PCAction *deleteLocal = [PCAction alloc];
+//    [deleteLocal setTitle:NSLocalizedString(@"delete_local", nil)];
+//    [deleteLocal setType: PCActionTypeDestructive];
+//    [deleteLocal setAction:^{
+//        _deleteFromFlag = deleteFromLocal;
+//        [self executeDeleteItemInDevice];
+//    }];
+//    
+//    PCAction *deleteServer = [PCAction alloc];
+//    [deleteServer setTitle:NSLocalizedString(@"delete_server", nil)];
+//    [deleteServer setType: PCActionTypeDestructive];
+//    [deleteServer setAction:^{
+//        _deleteFromFlag = deleteFromServerAndLocal;
+//        [self executeDeleteItemInServer];
+//    }];
+//    
+//    PCAction *cancelAction = [PCAction alloc];
+//    [cancelAction setTitle:NSLocalizedString(@"cancel", nil)];
+//    [cancelAction setType: PCActionTypeCancel];
+//    [cancelAction setAction:^{
+//        
+//    }];
+//    
+//    //If the file is a directory, checks if contains downloaded files
+//    if (_file.isDirectory) {
+//        DLog(@"Delete a folder");
+//        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//        //Remove: /owncloud/remote.php/webdav/ to the pathFolder
+//        NSString *pathFolder = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser];
+//        //Obtains the number of the downloaded files in DB which filepath contains the folder that the user want delete
+//        _isFilesDownloadedInFolder=[ManageFilesDB isGetFilesByDownloadState:downloaded andByUser:app.activeUser andFolder:pathFolder];
+//    }
+//    if((_file.isDownload || _isFilesDownloadedInFolder == YES) && (!_file.isFavorite && ![[AppDelegate sharedManageFavorites] isInsideAFavoriteFolderThisFile:self.file])) {
+//        DLog(@"Delete downloaded files or folder with downloaded files");
+//        
+//        [ctrl setBottomAction:cancelAction];
+//        [ctrl addActionWithAction:deleteLocalAndServer];
+//        [ctrl addActionWithAction:deleteLocal];
+//        
+//    } else {
+//        
+//        [ctrl setBottomAction:cancelAction];
+//        [ctrl addActionWithAction:deleteServer];
+//        
+//    }
+//
+//    return ctrl;
+//}
 
 
 /*

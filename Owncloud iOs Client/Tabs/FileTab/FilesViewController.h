@@ -47,6 +47,7 @@
 #import "SelectFolderNavigation.h"
 #import "ManageFavorites.h"
 #import "CustomCellFileAndDirectory.h"
+#import "MGSwipeTableCell.h"
 #import "Owncloud_iOs_Client-Swift.h"
 
 #ifdef CONTAINER_APP

@@ -13,9 +13,9 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "SWTableViewCell.h"
+#import "MGSwipeTableCell.h"
 
-@interface CustomCellFileAndDirectory : SWTableViewCell
+@interface CustomCellFileAndDirectory : MGSwipeTableCell
 
 @property(weak, nonatomic) IBOutlet UIImageView *fileImageView;
 @property(weak, nonatomic) IBOutlet UIImageView *imageFileStatus;

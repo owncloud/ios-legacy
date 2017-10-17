@@ -1160,7 +1160,7 @@
         
         DLog(@"idFile: %ld", (long)_file.idFile);
         
-        [self.mDeleteFile askToDeleteFileByFileDto:self.file];
+//        [self.mDeleteFile askToDeleteFileByFileDto:self.file];
     }
 }
 

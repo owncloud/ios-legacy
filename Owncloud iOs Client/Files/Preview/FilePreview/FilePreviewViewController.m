@@ -1268,8 +1268,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
          //Update the file
          _file = [ManageFilesDB getFileDtoByIdFile:_file.idFile];
          
-         [_mDeleteFile askToDeleteFileByFileDto:_file];
-    }    
+//         [_mDeleteFile askToDeleteFileByFileDto:_file];
+    }
 }
 
 /*
