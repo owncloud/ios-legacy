@@ -488,7 +488,7 @@
             uploadCell.cancelButton.tag=indexPath.row;
             [uploadCell.cancelButton addTarget:self action:@selector(cancelUploadTapped:) forControlEvents:UIControlEventTouchUpInside];
             
-            uploadCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            uploadCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByRemovingPercentEncoding];
             uploadCell.progressView.progress=currentManageUploadRequest.transferProgress;
             currentManageUploadRequest.progressTag=uploadCell.progressView.tag;
             
@@ -622,12 +622,12 @@
             
             NSString *lengthAndError = [NSString stringWithFormat:@"%@, %@", length, msgError];
             
-            failedCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            failedCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByRemovingPercentEncoding];
             failedCell.labelLengthAndError.text=lengthAndError;
-            failedCell.labelUserName.text=[UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUsername:currentManageUploadRequest.userUploading];
+            failedCell.labelUserName.text=[UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:currentManageUploadRequest.userUploading];
             //If there are SAML replacind the percents escapes with UTF8 coding
             if (k_is_sso_active) {
-                failedCell.labelUserName.text = [failedCell.labelUserName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                failedCell.labelUserName.text = [failedCell.labelUserName.text stringByRemovingPercentEncoding];
             }
             failedCell.labelPath.text=currentManageUploadRequest.pathOfUpload;
             
@@ -676,13 +676,14 @@
             
             NSString *labelLengthAndDateString = [NSString stringWithFormat:@"%@, %@", length, timeAgo];
             
-            uploadRecentCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            uploadRecentCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByRemovingPercentEncoding];
             uploadRecentCell.labelLengthAndDate.text=labelLengthAndDateString;
             uploadRecentCell.labelPath.text=currentManageUploadRequest.pathOfUpload;
-            uploadRecentCell.labelUserName.text=[NSString stringWithFormat:@"%@@%@", currentManageUploadRequest.userUploading.username, [UtilsUrls getUrlServerWithoutHttpOrHttps:currentManageUploadRequest.userUploading.url]];
+            uploadRecentCell.labelUserName.text = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:currentManageUploadRequest.userUploading];
+
             //If there are SAML replacind the percents escapes with UTF8 coding
             if (k_is_sso_active) {
-                uploadRecentCell.labelUserName.text = [uploadRecentCell.labelUserName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                uploadRecentCell.labelUserName.text = [uploadRecentCell.labelUserName.text stringByRemovingPercentEncoding];
             }
             
         } else {
@@ -881,12 +882,12 @@
         
     } else {
         UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
-        NSString *userName = userSelected.username;
+        NSString *userDisplayAccountName = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:userSelected];
         //if SAML is enabled replace the percent of the samlusername by utf8
         if (k_is_sso_active) {
-            userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            userDisplayAccountName = [userDisplayAccountName stringByRemovingPercentEncoding];
         }
-        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
+        NSString* temp=[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"change_active_user", nil), userDisplayAccountName];
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                            message:temp
                                                           delegate:nil
@@ -918,12 +919,12 @@
     UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
     
     if (selectedUpload.userId != (app.activeUser.idUser)) {
-        NSString *userName = userSelected.username;
+        NSString *userDisplayAccountName = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:userSelected];
         //if SAML is enabled replace the percent of the samlusername by utf8
         if (k_is_sso_active) {
-            userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            userDisplayAccountName= [userDisplayAccountName stringByRemovingPercentEncoding];
         }
-        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
+        NSString* temp=[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"change_active_user", nil),userDisplayAccountName];
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                            message:temp
                                                           delegate:nil
@@ -978,7 +979,7 @@
             _selectedUploadToResolveTheConflict = selectedUpload;
             
             FileDto *file = [[FileDto alloc] init];
-            file.fileName = [_selectedUploadToResolveTheConflict.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            file.fileName = [_selectedUploadToResolveTheConflict.uploadFileName stringByRemovingPercentEncoding];
             file.isDirectory = NO;
             
             if (!self.overWritteOption) {
@@ -996,13 +997,13 @@
             
         } else {
             UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
-            NSString *userName=userSelected.username;
+            NSString *userDisplayAccountName = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:userSelected];
             //if SAML is enabled replace the percent of the samlusername by utf8
             if (k_is_sso_active) {
-                userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                userDisplayAccountName= [userDisplayAccountName stringByRemovingPercentEncoding];
             }
 
-            NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
+            NSString* temp=[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"change_active_user", nil), userDisplayAccountName];
             UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                                message:temp
                                                               delegate:nil
@@ -1036,12 +1037,12 @@
         
     }else{
         UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
-        NSString *userName = userSelected.username;
+        NSString *userDisplayAccountName = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:userSelected];
         //if SAML is enabled replace the percent of the samlusername by utf8
         if (k_is_sso_active) {
-            userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            userDisplayAccountName= [userDisplayAccountName stringByRemovingPercentEncoding];
         }
-        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
+        NSString* temp=[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"change_active_user", nil), userDisplayAccountName];
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                            message:temp
                                                           delegate:nil
@@ -1070,12 +1071,12 @@
         [ManageUploadsDB updateErrorOfAllUploadsOfUser:selectedUpload.userId withCurrentError:errorInsufficientStorage toNewError:notAnError];
     } else {
         UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
-        NSString *userName = userSelected.username;
+        NSString *userDisplayAccountName = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:userSelected];
         //if SAML is enabled replace the percent of the samlusername by utf8
         if (k_is_sso_active) {
-            userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            userDisplayAccountName= [userDisplayAccountName stringByRemovingPercentEncoding];
         }
-        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
+        NSString* temp=[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"change_active_user", nil), userDisplayAccountName];
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                            message:temp
                                                           delegate:nil
