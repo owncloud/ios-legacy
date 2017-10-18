@@ -72,7 +72,7 @@ import Foundation
        
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: TimeInterval(k_timeout_upload))
         request.addValue(UtilsUrls.getUserAgent(), forHTTPHeaderField: "User-Agent")
-        request.setValue("", forHTTPHeaderField: "Cookie")
+        //request.setValue("", forHTTPHeaderField: "Cookie")
         
         self.webViewLogin.loadRequest(request)
 
