@@ -111,6 +111,6 @@
 
 + (BOOL) isNecessaryUpdateToPredefinedUrlByPreviousUrl:(NSString *)oldPredefinedUrl;
 
-+ (NSString *) getFullRemoteServerPathWithoutProtocolBeginningWithUsername:(UserDto *)mUserDto;
++ (NSString *) getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:(UserDto *)mUserDto;
 
 @end

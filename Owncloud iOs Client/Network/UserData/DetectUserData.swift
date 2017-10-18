@@ -19,24 +19,35 @@ import Foundation
 
 @objc class DetectUserData: NSObject {
     
-    func getUserDisplayNameOfServer(path: String, credentials: OCCredentialsDto,
-                                    withCompletion completion:(@escaping (_ displayName: String?,_ errorHttp: NSInteger?,_ error: NSError?) -> Void ) ){
+    
+    @objc func getUserDisplayNameOfServer(path: String, credentials: OCCredentialsDto, withCompletion completion: @escaping (_ displayName: String?,_ errorHttp: NSNumber?,_ error: Error?) -> Void ) {
+    
+    let sharedOCCommunication : OCCommunication;
+    
+    #if CONTAINER_APP
+        sharedOCCommunication = AppDelegate.sharedOCCommunication();
+        sharedOCCommunication.setCredentials(credentials)
+        sharedOCCommunication.setValueOfUserAgent(UtilsUrls.getUserAgent())
         
-        AppDelegate.sharedOCCommunication().setCredentials(credentials)
-        AppDelegate.sharedOCCommunication().setValueOfUserAgent(UtilsUrls.getUserAgent())
-        
-        AppDelegate.sharedOCCommunication().getUserDisplayName(ofServer: path,
-                                                               on: AppDelegate.sharedOCCommunication(),
-                                                               success: { (response: HTTPURLResponse?, displayName: String?, redirectServer: String?) in
-                                                                
-                                                                completion(displayName, response?.statusCode, nil)
-                                                                
+        sharedOCCommunication.getUserDisplayName(ofServer: path,
+                                                 on: sharedOCCommunication,
+                                                 success: { (response: HTTPURLResponse?, displayName: String?, redirectServer: String?) in
+                                                    
+                                                    let statusCode: NSNumber = (response?.statusCode == nil) ? 0: (response?.statusCode)! as NSNumber
+                                                    
+                                                    completion(displayName,statusCode, nil)
+                                                    
         },failure: { (response: HTTPURLResponse?, error: Error?, redirectServer: String?) in
             
-            let statusCode: NSInteger = (response?.statusCode == nil) ? 0: (response?.statusCode)!
+            let statusCode: NSNumber = (response?.statusCode == nil) ? 0: (response?.statusCode)! as NSNumber
             
-            completion(nil, statusCode, error! as NSError)
+            completion(nil,statusCode , error! as Error)
         })
+        
+    #else
+        completion(nil,nil,nil)
+    #endif
+
     }
     
     
