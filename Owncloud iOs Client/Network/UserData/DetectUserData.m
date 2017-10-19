@@ -19,17 +19,13 @@
 #import "UtilsUrls.h"
 #import "UtilsFramework.h"
 #import "OCErrorMsg.h"
-
-//#ifdef CONTAINER_APP
 #import "AppDelegate.h"
-//#endif
 
 @implementation DetectUserData
 
 
 + (void) getUserDisplayNameOfServer:(NSString*)path credentials:(OCCredentialsDto *)credentials
                             withCompletion:(void(^)(NSString *displayName, NSError *error))completion {
-//#ifdef CONTAINER_APP
     OCCommunication *sharedCommunication;
 
     sharedCommunication = [AppDelegate sharedOCCommunication];
@@ -49,9 +45,7 @@
             } failure:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                 DLog(@"error when try to get server displayName: %@", error);
                 completion(nil, error);
-            }];
-//#endif
-    
+            }];    
 }
 
 
