@@ -877,20 +877,23 @@ connection_declined  Connection declined by user
     
     func detectUserDataAndValidate(credentials: OCCredentialsDto, serverPath: String) {
         
-        DetectUserData().getUserDisplayNameOfServer(path: serverPath, credentials: credentials) { (displayName, errorHttp, error) in
+        DetectUserData .getUserDisplayName(ofServer: serverPath, credentials: credentials) { (displayName, error) in
             
-            if (displayName == nil || displayName == "") {
-                self.showCredentialsError(NSLocalizedString("server_does_not_give_user_id", comment: "") )
+             if (displayName != nil) {
                 
-            } else {
-                if self.authMethodToLogin == .SAML_WEB_SSO {
+                if credentials.authenticationMethod == .SAML_WEB_SSO {
+                    
                     credentials.userName = displayName
                 }
                 credentials.userDisplayName = displayName
-                
-                self.validateCredentialsAndStoreAccount(credentials: credentials)
-            }
+    
+             } else {
+                self.showCredentialsError(NSLocalizedString("server_does_not_give_user_id", comment: "") )
+             }
+            
+            self.validateCredentialsAndStoreAccount(credentials: credentials)
         }
+        
     }
     
     
@@ -899,88 +902,88 @@ connection_declined  Connection declined by user
         let urlToGetRootFiles = NSURL (string: UtilsUrls.getFullRemoteServerPathWithWebDav(byNormalizedUrl: validatedServerURL) )
         
         DetectListOfFiles().getListOfFiles(url: urlToGetRootFiles!, credentials: credentials,
-                                           withCompletion: { (_ errorHttp: NSInteger?,_ error: NSError?, _ listOfFileDtos: [FileDto]? ) in
-                                            
-                                            self.setNetworkActivityIndicator(status: false)
-                                            let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-                                            
-                                            if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
-                                                /// credentials allowed access to root folder: well done
-                                                
-                                                if (self.loginMode == LoginMode.update && credentials.userName != self.user?.username ) {
-                                                    self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
-                                                    
-                                                } else {
+           withCompletion: { (_ errorHttp: NSInteger?,_ error: NSError?, _ listOfFileDtos: [FileDto]? ) in
+            
+            self.setNetworkActivityIndicator(status: false)
+            let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+            
+            if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
+                /// credentials allowed access to root folder: well done
+                
+                if (self.loginMode == LoginMode.update && credentials.userName != self.user?.username ) {
+                    self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
+                    
+                } else {
 
-                                                    if self.user == nil {
-                                                        self.user = UserDto()
-                                                    }
-                                                
-                                                    self.user?.url = self.validatedServerURL
-                                                    self.user?.username = credentials.userName
-                                                    self.user?.ssl = self.validatedServerURL.hasPrefix("https")
-                                                    self.user?.urlRedirected = app.urlServerRedirected
-                                                    self.user?.predefinedUrl = k_default_url_server
-                                                    
-                                                    credentials.baseURL = UtilsUrls.getFullRemoteServerPath(self.user)
+                    if self.user == nil {
+                        self.user = UserDto()
+                    }
+                
+                    self.user?.url = self.validatedServerURL
+                    self.user?.username = credentials.userName
+                    self.user?.ssl = self.validatedServerURL.hasPrefix("https")
+                    self.user?.urlRedirected = app.urlServerRedirected
+                    self.user?.predefinedUrl = k_default_url_server
+                    
+                    credentials.baseURL = UtilsUrls.getFullRemoteServerPath(self.user)
 
-                                                    if self.loginMode == .create {
-                                                        
-                                                        if (ManageUsersDB.isExistUser(self.user)) {
-                                                            self.showURLError(NSLocalizedString("account_not_new", comment: ""))
-                                                            
-                                                        } else {
-                                                            
-                                                            self.user = ManageAccounts().storeAccountOfUser(self.user!, withCredentials: credentials)
-                                                            
-                                                            if self.user != nil {
-                                                                ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
-                                                        
-                                                                // grant that settings of instant uploads are the same for the new account that for the currently active account
-                                                                // TODO: get rid of this
-                                                                ManageAppSettingsDB.updateInstantUploadAllUser();
-                                                            
-                                                                app.switchActiveUser(to: self.user, inHardMode: true, withCompletionHandler:
-                                                                    {
-                                                                    app.generateAppInterface(fromLoginScreen: true)
-                                                                })
-                                                            } else {
-                                                                self.showURLError(NSLocalizedString("error_could_not_add_account", comment: ""))
-                                                            }
-                                                        }
-                                                    } else {
-                                                        ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
-                                                        if (app.activeUser != nil && app.activeUser.idUser == self.user?.idUser) {
-                                                            app.activeUser = self.user;
-                                                        }
+                    if self.loginMode == .create {
+                        
+                        if (ManageUsersDB.isExistUser(self.user)) {
+                            self.showURLError(NSLocalizedString("account_not_new", comment: ""))
+                            
+                        } else {
+                            
+                            self.user = ManageAccounts().storeAccountOfUser(self.user!, withCredentials: credentials)
+                            
+                            if self.user != nil {
+                                ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
+                        
+                                // grant that settings of instant uploads are the same for the new account that for the currently active account
+                                // TODO: get rid of this
+                                ManageAppSettingsDB.updateInstantUploadAllUser();
+                            
+                                app.switchActiveUser(to: self.user, inHardMode: true, withCompletionHandler:
+                                    {
+                                    app.generateAppInterface(fromLoginScreen: true)
+                                })
+                            } else {
+                                self.showURLError(NSLocalizedString("error_could_not_add_account", comment: ""))
+                            }
+                        }
+                    } else {
+                        ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
+                        if (app.activeUser != nil && app.activeUser.idUser == self.user?.idUser) {
+                            app.activeUser = self.user;
+                        }
 
-                                                        if self.loginMode == .migrate {
-                                                            // migration mode needs to start a fresh list of files, so that it is updated with the new URL
-                                                            app.generateAppInterface(fromLoginScreen: true)
-                                                            
-                                                        } else {
-                                                            self.closeLoginView()
-                                                        }
-                                                    }
-                                                }
+                        if self.loginMode == .migrate {
+                            // migration mode needs to start a fresh list of files, so that it is updated with the new URL
+                            app.generateAppInterface(fromLoginScreen: true)
+                            
+                        } else {
+                            self.closeLoginView()
+                        }
+                    }
+                }
 
-                                            } else {
-                                                if errorHttp == Int(kOCErrorServerUnauthorized) {
-                                                    self.showCredentialsError(
-                                                        self.manageNetworkErrors.returnErrorMessage(
-                                                            withHttpStatusCode: (errorHttp)!, andError: nil
-                                                        )
-                                                    )
-                                                    
-                                                } else {
-                                                    self.showURLError(
-                                                        self.manageNetworkErrors.returnErrorMessage(
-                                                            withHttpStatusCode: (errorHttp)!, andError: error
-                                                        )
-                                                    )
-                                                }
-                                            }
-                                            
+            } else {
+                if errorHttp == Int(kOCErrorServerUnauthorized) {
+                    self.showCredentialsError(
+                        self.manageNetworkErrors.returnErrorMessage(
+                            withHttpStatusCode: (errorHttp)!, andError: nil
+                        )
+                    )
+                    
+                } else {
+                    self.showURLError(
+                        self.manageNetworkErrors.returnErrorMessage(
+                            withHttpStatusCode: (errorHttp)!, andError: error
+                        )
+                    )
+                }
+            }
+            
         })
         
     }

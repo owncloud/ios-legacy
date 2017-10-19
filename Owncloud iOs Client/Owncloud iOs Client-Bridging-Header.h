@@ -49,5 +49,6 @@
 #import "OCFrameworkConstants.h"
 #import "OCOAuth2Manager.h"
 #import "OCOAuth2Configuration.h"
+#import "DetectUserData.h"
 
 
