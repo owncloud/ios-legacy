@@ -59,4 +59,8 @@ typedef enum {
 @property enumSortingType sortingType;
 @property (nonatomic, copy) NSString *predefinedUrl;
 
+
+- (NSString *) nameToDisplay;
+
+
 @end

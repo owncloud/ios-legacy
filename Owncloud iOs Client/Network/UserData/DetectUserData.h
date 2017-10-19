@@ -1,8 +1,9 @@
 //
-//  UserDto.m
+//  DetectUserData.h
 //  Owncloud iOs Client
 //
-//  Created by Javier Gonzalez on 7/18/12.
+//  Created by Noelia Alvarez on 18/10/2017.
+//
 //
 
 /*
@@ -13,21 +14,11 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
-#import "UserDto.h"
+#import <Foundation/Foundation.h>
 
-@implementation UserDto
+@interface DetectUserData : NSObject
 
-
-- (NSString *) nameToDisplay {
-    
-    if (self.credDto.userDisplayName == nil || [self.credDto.userDisplayName isEqualToString:@""]) {
-        
-        return self.credDto.userName;
-        
-    } else {
-        
-        return self.credDto.userDisplayName;
-    }
-}
++ (void) getUserDisplayNameOfServer:(NSString*)path credentials:(OCCredentialsDto *)credentials
+                     withCompletion:(void(^)(NSString *displayName, NSError *error))completion;
 
 @end

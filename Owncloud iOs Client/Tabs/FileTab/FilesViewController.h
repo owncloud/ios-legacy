@@ -46,6 +46,7 @@
 #import "SelectFolderViewController.h"
 #import "SelectFolderNavigation.h"
 #import "ManageFavorites.h"
+#import "DetectUserData.h"
 
 #ifdef CONTAINER_APP
 #import "Owncloud_iOs_Client-Swift.h"
@@ -56,6 +57,7 @@
 #else
 #import "ownCloudExtAppFileProvider-Swift.h"
 #endif
+
 
 @class UniversalViewController;
 

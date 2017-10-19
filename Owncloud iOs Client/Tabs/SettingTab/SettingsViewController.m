@@ -809,7 +809,7 @@
     [accountCell.activeButton setTag:row];
     
     accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
-    accountCell.userName.text = userAccout.credDto.userDisplayName;
+    accountCell.userName.text = [userAccout nameToDisplay];
     
     //If saml needs change the name to utf8
     if (k_is_sso_active) {
