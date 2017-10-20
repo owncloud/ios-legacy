@@ -910,7 +910,7 @@ connection_declined  Connection declined by user
             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
                 /// credentials allowed access to root folder: well done
                 
-                if (self.loginMode == LoginMode.update && credentials.userName != self.user?.username ) {
+                if ( (self.loginMode == .update || self.loginMode == .expire) && credentials.userName != self.user?.username ) {
                     self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
                     
                 } else {
@@ -951,7 +951,9 @@ connection_declined  Connection declined by user
                                 self.showURLError(NSLocalizedString("error_could_not_add_account", comment: ""))
                             }
                         }
+                        
                     } else {
+                        
                         ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
                         if (app.activeUser != nil && app.activeUser.idUser == self.user?.idUser) {
                             app.activeUser = self.user;

@@ -197,7 +197,7 @@
     
     [_tableView addSubview:_refreshControl];
     
-    
+    //TODO: move other method
     //Update displayName of all users if needed
     for (UserDto *user in [ManageUsersDB getAllUsers]) {
         
