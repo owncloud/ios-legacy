@@ -15,10 +15,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.htm
 
 import UIKit
 
-class Managers: NSObject {
+@objc class Managers: NSObject {
 
     //MARK: FMDatabaseQueue
-    class var sharedDatabase: FMDatabaseQueue {
+    @objc class var sharedDatabase: FMDatabaseQueue {
        struct Static {
         static let sharedDatabase: FMDatabaseQueue = FMDatabaseQueue(path:((UtilsUrls.getOwnCloudFilePath()).appending("DB.sqlite")), flags: SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_FILEPROTECTION_NONE)
         }
@@ -28,7 +28,7 @@ class Managers: NSObject {
     
     
     //MARK: OCCommunication
-    class var sharedOCCommunication: OCCommunication {
+    @objc class var sharedOCCommunication: OCCommunication {
         struct Static {
             static let sharedOCCommunication: OCCommunication = OCCommunication()
         }

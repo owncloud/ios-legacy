@@ -162,14 +162,14 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         self.destinyFolderButton?.title = destiny
     }
     
-    func cancelView() {
+    @objc func cancelView() {
        
         self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
         return
        
     }
     
-    func uploadButtonTapped() {
+    @objc func uploadButtonTapped() {
         
         let activeUser = ManageUsersDB.getActiveUser()
         
