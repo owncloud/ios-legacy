@@ -524,7 +524,7 @@ connection_declined  Connection declined by user
     }
     
     // MARK: dismiss
-    func closeLoginView() {
+    @objc func closeLoginView() {
         self.setNetworkActivityIndicator(status: false)
         self.dismiss(animated: true, completion: nil)
     }
@@ -752,7 +752,7 @@ connection_declined  Connection declined by user
         view.addGestureRecognizer(tap)
     }
     
-    func dismissKeyboard() {
+    @objc func dismissKeyboard() {
         view.endEditing(true)
     }
     
@@ -769,7 +769,7 @@ connection_declined  Connection declined by user
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    func keyboardDidShow(_ notification: Notification) {
+    @objc func keyboardDidShow(_ notification: Notification) {
         if let activeField = self.activeField, let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height + 20, right: 0.0)
             self.scrollView.contentInset = contentInsets
@@ -782,7 +782,7 @@ connection_declined  Connection declined by user
         }
     }
     
-    func keyboardWillBeHidden(_ notification: Notification) {
+    @objc func keyboardWillBeHidden(_ notification: Notification) {
         let contentInsets = UIEdgeInsets.zero
         self.scrollView.contentInset = contentInsets
         self.scrollView.scrollIndicatorInsets = contentInsets
@@ -993,7 +993,7 @@ connection_declined  Connection declined by user
         // Dispose of any resources that can be recreated.
     }
     
-    func setLoginMode(loginMode: LoginMode, user: UserDto) {
+    @objc func setLoginMode(loginMode: LoginMode, user: UserDto) {
         self.loginMode = loginMode
         self.user = user
     }
