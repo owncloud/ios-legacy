@@ -151,6 +151,7 @@
     
     [super viewDidLoad];
     
+    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     self.view.backgroundColor = [UIColor whiteColor];
@@ -186,8 +187,8 @@
     //Init Refresh Control
     UIRefreshControl *refresh = [UIRefreshControl new];
     //For the moment in the iOS 7 GM the attributedTitle not show properly.
-    //refresh.attributedTitle =[[NSAttributedString alloc] initWithString: NSLocalizedString(@"pull_down_refresh", nil)];
-    refresh.attributedTitle =nil;
+    refresh.attributedTitle =[[NSAttributedString alloc] initWithString: NSLocalizedString(@"pull_down_refresh", nil)];
+//    refresh.attributedTitle =nil;
     [refresh addTarget:self
                  action:@selector(pullRefreshView:)
                  forControlEvents:UIControlEventValueChanged];
@@ -232,19 +233,19 @@
         }
     }
     
-    //If is a new user set the file list
-    if (app.isNewUser) {
-        //We are changing of user
-        //Show the file list in the correct place
-        if (!IS_IPHONE){
-            [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height + k_status_bar_height)) animated:animated];
-        } else if (IS_IPHONE && !IS_PORTRAIT) {
-            [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height_in_iphone_landscape + k_status_bar_height)) animated:animated];
-        } else {
-            [_tableView setContentOffset:CGPointMake(0,-(k_status_bar_height + k_navigation_bar_height)) animated:animated];
-        }
-        app.isNewUser = NO;
-    }
+////    //If is a new user set the file list
+//    if (app.isNewUser) {
+//        //We are changing of user
+//        //Show the file list in the correct place
+//        if (!IS_IPHONE){
+//            [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height + k_status_bar_height)) animated:animated];
+//        } else if (IS_IPHONE && !IS_PORTRAIT) {
+//            [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height_in_iphone_landscape + k_status_bar_height)) animated:animated];
+//        } else {
+//            [_tableView setContentOffset:CGPointMake(0,-(k_status_bar_height + k_navigation_bar_height)) animated:animated];
+//        }
+//        app.isNewUser = NO;
+//    }
     
 }
 
@@ -255,9 +256,13 @@
     
     self.willLayoutSubviews = true;
     
-    self.edgesForExtendedLayout = UIRectEdgeAll;
-    self.extendedLayoutIncludesOpaqueBars = true;
-    self.automaticallyAdjustsScrollViewInsets = true;
+//    self.extendedLayoutIncludesOpaqueBars = true;
+    self.automaticallyAdjustsScrollViewInsets = false;
+    self.tableView.autoresizingMask = false;
+    self.tableView.estimatedRowHeight = 0;
+    self.tableView.estimatedSectionHeaderHeight = 0;
+    self.tableView.estimatedSectionFooterHeight = 0;
+    self.tableView.contentInset = UIEdgeInsetsZero;
 
     
     //Appear the tabBar
@@ -316,7 +321,7 @@
          currentUser.userId == _mUser.userId)) {
         //We are changing of user
         //Show the file list in the correct place
-        [self.tableView setContentOffset:CGPointMake(0,0) animated:YES];
+//        [self.tableView setContentOffset:CGPointMake(0,0) animated:YES];
         
         //We check if the user have root folder at true on the DB
         if([ManageFilesDB isExistRootFolderByUser:app.activeUser]) {
@@ -559,10 +564,11 @@
         [self.tableView setLayoutMargins:UIEdgeInsetsZero];
     }
     
-    
-    CGRect rect = self.navigationController.navigationBar.frame;
-    float y = rect.size.height + rect.origin.y;
-    self.tableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+    if (!IS_IOS11) {
+        CGRect rect = self.navigationController.navigationBar.frame;
+        float y = rect.size.height + rect.origin.y;
+        self.tableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+    }
     
     if (self.didLayoutSubviews == false){
         self.didLayoutSubviews = true;
