@@ -21,7 +21,7 @@ import Foundation
     
     
     
-    func storeListOfFiles(_ listOfFiles: [FileDto] , forFileId fileId: Int, andUser user: UserDto) {
+    func storeListOfFiles(_ listOfFiles: [FileDto], forFileId fileId: Int, andUser user: UserDto) {
         
         //Change the filePath from the library to our db format
         
@@ -31,8 +31,9 @@ import Foundation
         }
         
         
-        ManageFilesDB.insertManyFiles(listOfFiles as! NSMutableArray, ofFileId: fileId, andUser: user)
-        
+        if let files = (listOfFiles as? NSArray)?.mutableCopy() {
+            ManageFilesDB.insertManyFiles(files as! NSMutableArray, ofFileId: fileId, andUser: user)
+        }
     }
     
 }

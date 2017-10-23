@@ -174,11 +174,11 @@
             [self.settingsTableView setLayoutMargins:UIEdgeInsetsZero];
         }
         
-        
-        CGRect rect = self.navigationController.navigationBar.frame;
-        float y = rect.size.height + rect.origin.y;
-        self.settingsTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
-        
+        if (!IS_IOS11) {
+            CGRect rect = self.navigationController.navigationBar.frame;
+            float y = rect.size.height + rect.origin.y;
+            self.settingsTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+        }
     }
     
 }

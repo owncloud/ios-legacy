@@ -148,11 +148,14 @@
     if ([self.sharedTableView respondsToSelector:@selector(setLayoutMargins:)]) {
         [self.sharedTableView setLayoutMargins:UIEdgeInsetsZero];
     }
-        
-        
-    CGRect rect = self.navigationController.navigationBar.frame;
-    float y = rect.size.height + rect.origin.y;
-    self.sharedTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+    
+    if (!IS_IOS11) {
+        CGRect rect = self.navigationController.navigationBar.frame;
+        float y = rect.size.height + rect.origin.y;
+        self.sharedTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+    }
+    
+    
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
