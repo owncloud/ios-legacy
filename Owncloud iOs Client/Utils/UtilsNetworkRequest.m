@@ -116,7 +116,7 @@
             break;
             
         default: {
-            NSString *basicAuthCredentials = [NSString stringWithFormat:@"%@:%@", APP_DELEGATE.activeUser.username, APP_DELEGATE.activeUser.credDto.accessToken];
+            NSString *basicAuthCredentials = [NSString stringWithFormat:@"%@:%@", APP_DELEGATE.activeUser.credDto.userName, APP_DELEGATE.activeUser.credDto.accessToken];
             [headers setValue:[NSString stringWithFormat:@"Basic %@", [UtilsFramework AFBase64EncodedStringFromString:basicAuthCredentials]] forKey:@"Authorization"];
         }
             

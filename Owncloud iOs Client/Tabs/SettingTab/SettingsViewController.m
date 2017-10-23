@@ -791,7 +791,8 @@
     static NSString *CellIdentifier = @"AccountCell";
     
     AccountCell *accountCell = (AccountCell *) [self.settingsTableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    UserDto *userAccout = [self.listUsers objectAtIndex:row];
+    UserDto *userAccount = [UserDto new];
+    userAccount = [self.listUsers objectAtIndex:row];
     
     if (accountCell == nil) {
         
@@ -809,18 +810,18 @@
     [accountCell.activeButton setTag:row];
     
     accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
-    accountCell.userName.text = [userAccout nameToDisplay];
+    accountCell.userName.text = [userAccount nameToDisplay];
     
     //If saml needs change the name to utf8
     if (k_is_sso_active) {
         accountCell.userName.text = [accountCell.userName.text stringByRemovingPercentEncoding];
     }
     
-    if ([UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:userAccout.predefinedUrl]) {
+    if ([UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:userAccount.predefinedUrl]) {
         accountCell.urlServer.text = NSLocalizedString(@"pending_migration_to_new_url", nil);
         accountCell.urlServer.textColor = [UIColor colorOfLoginErrorText];
     } else {
-        accountCell.urlServer.text = userAccout.url;
+        accountCell.urlServer.text = userAccount.url;
     }
     
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -1413,7 +1414,7 @@
                 NSString *subject= k_subject_recommend_mail;
                 @try {
                     if(_user) {
-                        [self.mailer setSubject:[subject stringByReplacingOccurrencesOfString:@"$username" withString:_user.username]];
+                        [self.mailer setSubject:[subject stringByReplacingOccurrencesOfString:@"$username" withString:[self.user nameToDisplay]]];
                     } else {
                         [self.mailer setSubject:[subject stringByReplacingOccurrencesOfString:@"$username" withString:@""]];
                     }
@@ -1438,7 +1439,7 @@
         
         if(k_is_custom_recommend_mail) {
             if(k_is_sign_custom_usign_username) {
-                [self.mailer setMessageBody:[NSString stringWithFormat:@"%@%@",k_text_recommend_mail,_user.username] isHTML:NO];
+                [self.mailer setMessageBody:[NSString stringWithFormat:@"%@%@",k_text_recommend_mail,[self.user nameToDisplay]] isHTML:NO];
             } else {
                 [self.mailer setMessageBody:k_text_recommend_mail isHTML:NO];
             }

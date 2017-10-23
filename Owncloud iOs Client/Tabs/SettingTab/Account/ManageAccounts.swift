@@ -113,4 +113,34 @@ import Foundation
         }
     }
     
+    
+@objc func updateDisplayNameOfUser(_ userToUpdate :UserDto) {
+        
+        DetectUserData.getUserDisplayName(ofServer: userToUpdate.credDto.baseURL, credentials: userToUpdate.credDto) { (displayName, error) in
+            if ((displayName) != nil) {
+                if (displayName != userToUpdate.credDto.userDisplayName) {
+                    
+                    if (userToUpdate.credDto.authenticationMethod == .SAML_WEB_SSO) {
+                        userToUpdate.username = displayName
+                    }
+                    
+                    userToUpdate.credDto.userDisplayName = displayName
+                    
+                    OCKeychain.updateCredentials(userToUpdate.credDto)
+                    
+                    if (userToUpdate.activeaccount) {
+                        let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+
+                        app.activeUser.credDto.userDisplayName = userToUpdate.credDto.userDisplayName
+                        app.activeUser.credDto.userName = userToUpdate.credDto.userName
+                        app.activeUser.username = userToUpdate.credDto.userName
+                    }
+                }
+            } else {
+                print("DisplayName not updated")
+            }
+        }
+        
+    }
+    
 }

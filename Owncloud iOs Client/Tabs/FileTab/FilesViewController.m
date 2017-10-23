@@ -197,36 +197,12 @@
     
     [_tableView addSubview:_refreshControl];
     
-    //TODO: move other method
     //Update displayName of all users if needed
-    for (UserDto *user in [ManageUsersDB getAllUsers]) {
-        
-        [DetectUserData getUserDisplayNameOfServer:user.credDto.baseURL credentials:user.credDto withCompletion:^(NSString *displayName, NSError *error) {
-            
-            if (displayName) {
-                
-                if (![displayName isEqualToString:user.credDto.userDisplayName]) {
-                    
-                    if (user.credDto.authenticationMethod == AuthenticationMethodSAML_WEB_SSO){
-                        
-                        user.credDto.userName = displayName;
-                    }
-                    
-                    user.credDto.userDisplayName = displayName;
-                    
-                    [OCKeychain updateCredentials:user.credDto];
-                    
-                    if (user.activeaccount) {
-                        app.activeUser.credDto.userDisplayName = user.credDto.userDisplayName;
-                        app.activeUser.credDto.userName = user.credDto.userName;
-                    }
-                }
-                
-            } else {
-                DLog(@"displayName not updated");
-            }
-            
-        }];
+    NSArray *dbUsers = [ManageUsersDB getAllUsers];
+    for (UserDto *user in dbUsers) {
+    
+        ManageAccounts *manageAccounts = [ManageAccounts new];
+        [manageAccounts updateDisplayNameOfUser:user];
     }
 
 }

@@ -60,6 +60,7 @@
 
 
 @class UniversalViewController;
+@class ManageAccounts;
 
 @interface FilesViewController : UIViewController
 <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate,

@@ -887,8 +887,6 @@ connection_declined  Connection declined by user
                 }
                 credentials.userDisplayName = displayName
     
-             } else {
-                self.showCredentialsError(NSLocalizedString("server_does_not_give_user_id", comment: "") )
              }
             
             self.validateCredentialsAndStoreAccount(credentials: credentials)
