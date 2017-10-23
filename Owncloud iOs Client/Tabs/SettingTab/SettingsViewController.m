@@ -164,7 +164,7 @@
 -(void)viewDidLayoutSubviews
 {
     
-    if (IS_IOS8 || IS_IOS9) {
+    if (IS_IOS9or10 || IS_IOS11) {
         
         if ([self.settingsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
             [self.settingsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
