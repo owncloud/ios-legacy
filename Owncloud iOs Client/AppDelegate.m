@@ -202,9 +202,6 @@ float shortDelay = 0.3;
         
         [self showPassCodeIfNeeded];
     }
-
-    //Show TouchID dialog if active
-     [self performSelector:@selector(showTouchIdIfNeeded) withObject:nil afterDelay:oneSecondDelay];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:user.predefinedUrl]) {
