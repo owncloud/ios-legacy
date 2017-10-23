@@ -1523,14 +1523,6 @@
 - (void) cancelGetThumbnailByCell:(UITableViewCell *) cell {
     @try {
         CustomCellFileAndDirectory *customCell = (CustomCellFileAndDirectory *) cell;
-        
-        if (!IS_IOS9) {
-            if ([customCell isKindOfClass:[CustomCellFileAndDirectory class]] && customCell.thumbnailSessionTask) {
-           
-                DLog(@"Cancel thumbnailOperation");
-                [customCell.thumbnailSessionTask cancel];
-            }
-        }
     }
     @catch (NSException *exception) {
         DLog(@"Exception: %@", exception);

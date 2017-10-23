@@ -1705,27 +1705,14 @@
 
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
-    
-    if (IS_IOS7) {
-        [self customWillRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    }
-    
 }
 
 -(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    
-    if (IS_IOS7) {
-       [self customWillAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    }
  
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
     
-    if (IS_IOS7) {
-        [self customDidRotateFromInterfaceOrientation:fromInterfaceOrientation];
-    }
-
 }
 
 #pragma mark - Interface Rotations
@@ -2042,7 +2029,7 @@
         CGFloat deltaWidth = k_delta_width_for_split_transition;
         
 
-        if (IS_IOS8 || IS_IOS9) {
+        if (IS_IOS9or10 || IS_IOS11) {
             
             selfFrame.size.width += deltaWidth;
             selfFrame.origin.x -= deltaWidth;
@@ -2063,7 +2050,7 @@
         
         self.hideMaster = !self.hideMaster;
         
-        if (IS_IOS9) {
+        if (IS_IOS9or10 || IS_IOS11) {
             [self.splitViewController viewWillTransitionToSize:self.splitViewController.view.frame.size withTransitionCoordinator:self.splitViewController.transitionCoordinator];
         }
         
@@ -2100,7 +2087,7 @@
             
             CGFloat deltaWidth = k_delta_width_for_split_transition;
             
-            if (IS_IOS8 || IS_IOS9) {
+            if (IS_IOS9or10 || IS_IOS11) {
                 
                 selfFrame.size.width -= deltaWidth;
                 selfFrame.origin.x += deltaWidth;
@@ -2168,7 +2155,7 @@
     
     if (self.hideMaster) {
         
-        if (IS_IOS8 || IS_IOS9) {
+        if (IS_IOS9or10 || IS_IOS11) {
             frame = self.view.window.bounds;
         }else{
             
@@ -2222,7 +2209,7 @@
                      animations:^(void)
      {
        
-         if (!self.hideMaster && IS_IOS9) {
+         if (!self.hideMaster && (IS_IOS9or10 || IS_IOS11)) {
              [self.splitViewController.view setNeedsLayout];
              self.splitViewController.delegate = nil;
              self.splitViewController.delegate = self;
@@ -2232,7 +2219,7 @@
          
          CGFloat deltaWidth = k_delta_width_for_split_transition;
          
-         if (IS_IOS8 || IS_IOS9) {
+         if (IS_IOS9or10 || IS_IOS11) {
              
              if (self.hideMaster)
              {
@@ -2275,7 +2262,7 @@
 
          [self.splitViewController.view setFrame:selfFrame];
          
-         if (!self.hideMaster && IS_IOS9) {
+         if (!self.hideMaster && (IS_IOS9or10 || IS_IOS11)) {
               [self.splitViewController.view layoutIfNeeded];
          }
          
