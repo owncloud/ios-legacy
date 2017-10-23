@@ -54,17 +54,12 @@
         
     } else {
         tableViewHeight = tableViewHeightForIphone;
-        
-        if (IS_IOS7) {
-            height = tableViewHeight- tabBarControllerHeight - navigationBarHeight - k_status_bar_height;
-        }else{
             
             if (IS_PORTRAIT) {
                  height = tableViewHeight- tabBarControllerHeight - navigationBarHeight - k_status_bar_height;
             }else{
                 height = tableViewHeight- tabBarControllerHeight - navigationBarHeight;
             }
-        }
     }
     
     return height;
