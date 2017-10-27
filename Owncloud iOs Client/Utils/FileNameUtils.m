@@ -69,7 +69,7 @@
     
     NSString *ext=[self getExtension:fileName];
     
-    if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"TIFF"] || [ext isEqualToString:@"TIF"] || [ext isEqualToString:@"BMP"] || [ext isEqualToString:@"JPEG"])
+    if([ext isEqualToString:@"JPG"] || [ext isEqualToString:@"PNG"] || [ext isEqualToString:@"TIFF"] || [ext isEqualToString:@"TIF"] || [ext isEqualToString:@"BMP"] || [ext isEqualToString:@"JPEG"] || [ext isEqualToString:@"HEIC"])
     {
         return YES;
     }
