@@ -186,7 +186,7 @@ float shortDelay = 0.3;
         
         ManageAccounts *manageAccounts = [ManageAccounts new];
         [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
-        
+
         //if we are migrating url not relaunch sync
         if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
             //Update favorites files if there are active user
