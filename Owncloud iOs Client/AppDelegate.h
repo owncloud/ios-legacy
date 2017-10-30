@@ -38,7 +38,9 @@
 @class ManageFavorites;
 @class CheckHasShareSupport;
 @class CheckCapabilities;
+
 @class UniversalLoginViewController;
+@class ManageAccounts;
 
 
 extern NSString * CloseAlertViewWhenApplicationDidEnterBackground;

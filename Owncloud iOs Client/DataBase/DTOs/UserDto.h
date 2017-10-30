@@ -16,19 +16,18 @@
 #import "OCCapabilities.h"
 #import "OCCredentialsDto.h"
 
-typedef enum {
+typedef NS_ENUM(NSInteger, enumHasShareApiSupport) {
     serverFunctionalityNotChecked = 0,
-    serverFunctionalitySupported =1 ,
+    serverFunctionalitySupported = 1,
     serverFunctionalityNotSupported = 2
-    
-} enumHasShareApiSupport;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, enumSortingType) {
     sortByName = 0,
-    sortByModificationDate = 1
-} enumSortingType;
+    sortByModificationDate = 1,
+};
 
-@interface UserDto : NSObject
+@interface UserDto : NSObject <NSCopying>
 
 @property NSInteger idUser;
 @property (nonatomic, copy) NSString *url;
@@ -59,6 +58,9 @@ typedef enum {
 @property enumSortingType sortingType;
 @property (nonatomic, copy) NSString *predefinedUrl;
 
+
+- (void)encodeWithCoder:(NSCoder *)aCoder;
+- (id)initWithCoder:(NSCoder *)aDecoder;
 
 - (NSString *) nameToDisplay;
 

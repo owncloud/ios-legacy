@@ -63,7 +63,7 @@
     NSArray *listOfCookiesStorageDto = [ManageCookiesStorageDB getCookiesByUser:user];
     
     for (CookiesStorageDto *current in listOfCookiesStorageDto) {
-        NSLog(@"Current: %@", current.cookie);
+        DLog(@"Current cookie: %@", current.cookie);
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:current.cookie];
     }
 }

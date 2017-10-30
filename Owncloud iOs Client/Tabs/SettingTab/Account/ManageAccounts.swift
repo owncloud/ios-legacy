@@ -114,31 +114,33 @@ import Foundation
     }
     
     
-@objc func updateDisplayNameOfUser(_ userToUpdate :UserDto) {
+    @objc func updateDisplayNameOfUser(user :UserDto) {
         
-        DetectUserData.getUserDisplayName(ofServer: userToUpdate.credDto.baseURL, credentials: userToUpdate.credDto) { (displayName, error) in
+        DetectUserData.getUserDisplayName(ofServer: user.credDto.baseURL, credentials: user.credDto) { (displayName, error) in
             if ((displayName) != nil) {
-                if (displayName != userToUpdate.credDto.userDisplayName) {
+                if (displayName != user.credDto.userDisplayName) {
                     
-                    if (userToUpdate.credDto.authenticationMethod == .SAML_WEB_SSO) {
-                        userToUpdate.username = displayName
+                    if (user.credDto.authenticationMethod == .SAML_WEB_SSO) {
+                        user.username = displayName
                     }
                     
-                    userToUpdate.credDto.userDisplayName = displayName
+                    user.credDto.userDisplayName = displayName
                     
-                    OCKeychain.updateCredentials(userToUpdate.credDto)
+                    OCKeychain.updateCredentials(user.credDto)
                     
-                    if (userToUpdate.activeaccount) {
+                    
+                    if (user.activeaccount) {
                         let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-
-                        app.activeUser.credDto.userDisplayName = userToUpdate.credDto.userDisplayName
-                        app.activeUser.credDto.userName = userToUpdate.credDto.userName
-                        app.activeUser.username = userToUpdate.credDto.userName
+                        
+                        app.activeUser.credDto.userDisplayName = user.credDto.userDisplayName
+                        app.activeUser.credDto.userName = user.credDto.userName
+                        app.activeUser.username = user.credDto.userName
                     }
                 }
             } else {
                 print("DisplayName not updated")
             }
+            
         }
         
     }

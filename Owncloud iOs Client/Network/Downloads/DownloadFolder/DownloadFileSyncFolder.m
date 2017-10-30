@@ -82,7 +82,7 @@
         }
     } failureRequest:^(NSURLResponse *response, NSError *error) {
         DLog(@"Error: %@", error);
-        DLog(@"error.code: %ld", (long)error.code);
+        DLog(@"download error.code: %ld", (long)error.code);
         
         if (error.code != kCFURLErrorCancelled) {
             [weakSelf failureDownloadProcess];

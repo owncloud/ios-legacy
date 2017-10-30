@@ -96,9 +96,7 @@
     [keychainItem setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnAttributes];
     
     CFDictionaryRef result = nil;
-    
-    DLog(@"keychainItem: %@", keychainItem);
-    
+        
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, (CFTypeRef *)&result);
     
     DLog(@"(getCredentials)Error Code %d (0 = success)", (int)stsExist);

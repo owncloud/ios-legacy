@@ -153,6 +153,7 @@ float shortDelay = 0.3;
     //Check if the server support shared api
     [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
     
+    
     //Needed to use on background tasks
     if (!k_is_sso_active) {
         [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
@@ -184,6 +185,11 @@ float shortDelay = 0.3;
         
         ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
+        
+        ManageAccounts *manageAccounts = [ManageAccounts new];
+        [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
+        
+        UserDto *testc = user;
         
         //if we are migrating url not relaunch sync
         if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
@@ -2873,6 +2879,9 @@ float shortDelay = 0.3;
             [UtilsFileSystem createFolderForUser:APP_DELEGATE.activeUser];
             
             self.isNewUser = YES;
+            
+            ManageAccounts *manageAccounts = [ManageAccounts new];
+            [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
         }
     
         // completion handler is called in main thread

@@ -197,13 +197,6 @@
     
     [_tableView addSubview:_refreshControl];
     
-    //Update displayName of all users if needed
-    NSArray *dbUsers = [ManageUsersDB getAllUsers];
-    for (UserDto *user in dbUsers) {
-    
-        ManageAccounts *manageAccounts = [ManageAccounts new];
-        [manageAccounts updateDisplayNameOfUser:user];
-    }
 
 }
 

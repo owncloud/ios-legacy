@@ -1119,9 +1119,7 @@
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             [app presentWithView];
         }
-        
-        //[CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
-        
+                
         self.listUsers = [ManageUsersDB getAllUsers];
         [self.settingsTableView reloadData];
         
