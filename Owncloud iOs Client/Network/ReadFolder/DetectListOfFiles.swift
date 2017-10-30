@@ -19,7 +19,7 @@ import Foundation
 
 @objc class DetectListOfFiles: NSObject {
     
-    func readFolderRetryingNumberOfTimes(ntimes:NSInteger, url: NSURL, credentials: OCCredentialsDto,
+    func readFolderOfURL(_ url: NSURL, credentials: OCCredentialsDto,
                            success: ( @escaping (_ listOfFiles: [Any]?) -> Void ),
                             failure: (@escaping (_ errorHttp: NSInteger?,_ error: NSError?) -> Void) ) {
         
@@ -57,23 +57,17 @@ import Foundation
             
         }, failureRequest: { (response:HTTPURLResponse?, error: Error?, token: String?, redirectedServer: String?) in
             
-            if (ntimes <= 0) {
-                let statusCode: NSInteger = (response?.statusCode == nil) ? 0: (response?.statusCode)!
+            let statusCode: NSInteger = (response?.statusCode == nil) ? 0: (response?.statusCode)!
                 
-                failure(statusCode, error! as NSError)
+            failure(statusCode, error! as NSError)
 
-            } else {
-                
-                self.readFolderRetryingNumberOfTimes(ntimes: ntimes - 1, url: url, credentials: credentials, success: success, failure: failure)
-            }
-            
        })
     }
     
     
  func getListOfFiles(url:NSURL, credentials: OCCredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: NSError?, _ listOfFileDtos: [FileDto]? ) -> Void) {
-        
-        self.readFolderRetryingNumberOfTimes(ntimes: 2, url: url, credentials: credentials, success: { (_ listOfFiles: [Any]?) in
+    
+    self.readFolderOfURL(url, credentials: credentials, success: { (_ listOfFiles: [Any]?) in
             var listOfFileDtos: [FileDto]? = nil
             
             if (listOfFiles != nil && !((listOfFiles?.isEmpty)!)) {
