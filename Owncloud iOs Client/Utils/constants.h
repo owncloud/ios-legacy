@@ -81,5 +81,6 @@
 #define k_max_number_options_sort_menu 2
 #define k_max_number_options_account_menu 3
 
-
-
+//Customize top warning Messages view (TSMessage)
+#define messageAlpha 0.96
+#define messageDuration 3.5

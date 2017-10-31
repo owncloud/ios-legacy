@@ -36,8 +36,6 @@
 #define loadingVisibleSearchDelay 2.0
 #define loadingVisibleSortDelay 0.1
 #define searchResultsPerPage 30
-#define messageAlpha 0.96
-#define messageDuration 3.5
 #define shareSearchUserLaunchRequestDelay 1.0
 
 @interface ShareSearchUserViewController ()
