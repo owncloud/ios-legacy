@@ -1027,6 +1027,27 @@
     [_alert show];
 }
 
+
+#pragma mark - TSMessages
+
+- (void)showWarningMessageWithText: (NSString *) message {
+    
+    //Run UI Updates
+    [TSMessage setDelegate:self];
+    [TSMessage showNotificationInViewController:self title:message subtitle:nil type:TSMessageNotificationTypeWarning];
+    
+}
+
+#pragma mark - TSMessage Delegate
+
+- (void)customizeMessageView:(TSMessageView *)messageView
+{
+    messageView.alpha = messageAlpha;
+    messageView.duration = messageDuration;
+}
+
+
+
 #pragma mark - UITextFieldDelegate methods
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
@@ -1683,7 +1704,7 @@
             [self goToFolderWithoutCheck];
         } else {
             
-            [self performSelectorOnMainThread:@selector(showAlertView:)
+            [self performSelectorOnMainThread:@selector(showWarningMessageWithText:)
                                    withObject:NSLocalizedString(@"not_possible_connect_to_server", nil)
                                 waitUntilDone:YES];
             [self endLoading];
@@ -2298,7 +2319,7 @@
                 case 3:
                     
                     if (self.isCurrentFolderSonOfFavoriteFolder) {
-                        [self performSelectorOnMainThread:@selector(showAlertView:)
+                        [self performSelectorOnMainThread:@selector(showWarningMessageWithText:)
                                                withObject:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)
                                             waitUntilDone:YES];
                     } else {
@@ -2320,7 +2341,7 @@
                     if (_selectedFileDto.isDownload || [[CheckAccessToServer sharedManager] isNetworkIsReachable]){
                         [self didSelectOpenWithOptionAndFile:_selectedFileDto];
                     } else {
-                        [self performSelectorOnMainThread:@selector(showAlertView:)
+                        [self performSelectorOnMainThread:@selector(showWarningMessageWithText:)
                                                withObject:NSLocalizedString(@"not_possible_connect_to_server", nil)
                                             waitUntilDone:YES];
                     }
@@ -2333,7 +2354,7 @@
                     break;
                 case 3:
                     if (self.isCurrentFolderSonOfFavoriteFolder) {
-                        [self performSelectorOnMainThread:@selector(showAlertView:)
+                        [self performSelectorOnMainThread:@selector(showWarningMessageWithText:)
                                                withObject:NSLocalizedString(@"parent_folder_is_available_offline_file_child", nil)
                                             waitUntilDone:YES];
                     } else {
@@ -3285,7 +3306,7 @@
  */
 - (void)showError:(NSString *) message {
     
-    [self performSelectorOnMainThread:@selector(showAlertView:)
+    [self performSelectorOnMainThread:@selector(showWarningMessageWithText:)
                                withObject:message
                             waitUntilDone:YES];
   
@@ -3340,8 +3361,8 @@
         DLog(@"Ok, we have connection to the server");
     } else {        
         //Error msg
-        //Call showAlertView in main thread
-        [self performSelectorOnMainThread:@selector(showAlertView:)
+        //Call show error in main thread
+        [self performSelectorOnMainThread:@selector(showWarningMessageWithText:)
                                withObject:NSLocalizedString(@"not_possible_connect_to_server", nil)
                             waitUntilDone:YES];
     }
