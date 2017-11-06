@@ -43,6 +43,9 @@ import Foundation
                 app.activeUser = userInDB
             }
             
+            // grant that settings of instant uploads are the same for the new account that for the currently active account
+            ManageAppSettingsDB.updateInstantUploadAllUser();
+            
             return userInDB;
             
         } else {

@@ -678,7 +678,6 @@ public enum TextfieldType: String {
             textField.resignFirstResponder()
             return true
         case TextfieldType.username.rawValue:
-            //textField.resignFirstResponder()
             self.textFieldPassword.becomeFirstResponder()
             break
         case TextfieldType.password.rawValue:
@@ -817,6 +816,7 @@ public enum TextfieldType: String {
             self.setConnectButton(status: (sender.text?.characters.count)! > 0)
         }
     }
+    
 // MARK: segue
     override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -892,10 +892,6 @@ public enum TextfieldType: String {
                             
                             if self.user != nil {
                                 ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
-                        
-                                // grant that settings of instant uploads are the same for the new account that for the currently active account
-                                // TODO: get rid of this
-                                ManageAppSettingsDB.updateInstantUploadAllUser();
                             
                                 app.switchActiveUser(to: self.user, inHardMode: true, withCompletionHandler:
                                     {
