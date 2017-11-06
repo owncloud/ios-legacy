@@ -91,7 +91,6 @@ public enum TextfieldType: String {
     @IBOutlet weak var helpButtonStackView: UIStackView!
     
     
-    //var urlNormalized: String!
     var validatedServerURL: String!
     var allAvailableAuthMethods = [AuthenticationMethod]()
     var authMethodToLogin: AuthenticationMethod! = .UNKNOWN
@@ -140,7 +139,6 @@ public enum TextfieldType: String {
 
 
         self.setBrandingStyle()
-            //status bar k_is_text_login_status_bar_white
         
         self.initUI()
         
