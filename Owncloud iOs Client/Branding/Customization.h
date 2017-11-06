@@ -40,9 +40,6 @@
 //Have image background on navigation bar
 #define k_have_image_background_navigation_bar NO
 
-//Have oauth active
-#define k_is_oauth_active NO //Not use, oauth is auto detected if the server supports it
-
 //Have SAML active
 #define k_is_sso_active NO
 

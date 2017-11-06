@@ -20,8 +20,6 @@
 #import "DetailViewController.h"
 #import "constants.h"
 #import "UploadFromOtherAppViewController.h"
-#import "AuthenticationDbService.h"
-#import "RetrieveRefreshAndAccessTokenTask.h"
 #import "Download.h"
 #import "UIColor+Constants.h"
 #import "Customization.h"
@@ -269,80 +267,34 @@ float shortDelay = 0.3;
 -(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication
         annotation:(id)annotation {
     
-    //OAuth
-    AuthenticationDbService *dbService = [AuthenticationDbService sharedInstance];
-    NSString *scheme = [dbService getScheme];
+    DLog(@"URL from %@ application", sourceApplication);
+    DLog(@"the path is: %@", url.path);
     
-    if ([[ url scheme] isEqualToString:scheme] ) {
-        if (dbService.isDebugLogEnabled) {
-            DLog(@"found %@", scheme);
-        }
-        AuthenticationDbService * dbService = [AuthenticationDbService sharedInstance];
-        NSString *text = [url absoluteString];
-        
-        if ([[ dbService getResponseType] isEqualToString:@"code"]) {
-            if (dbService.isTraceLogEnabled) {
-                DLog(@"Response type = code");
-            }
-            NSArray *param_s = [text componentsSeparatedByString:@"?"];
-            
-            if (param_s.count > 1) {
-                NSString *param_1 = [param_s objectAtIndex:1];
-                
-                NSMutableDictionary *result = [NSMutableDictionary dictionary];
-                NSArray *parameters = [param_1 componentsSeparatedByString:@"&"];
-                for (NSString *parameter in parameters)
-                {
-                    NSArray *parts = [parameter componentsSeparatedByString:@"="];
-                    NSString *key = [[parts objectAtIndex:0] stringByRemovingPercentEncoding];
-                    if ([parts count] > 1)
-                    {
-                        id value = [[parts objectAtIndex:1] stringByRemovingPercentEncoding];
-                        [result setObject:value forKey:key];
-                    }
-                }
-                if (dbService.isDebugLogEnabled) {
-                    DLog(@"code = %@", [result objectForKey:@"code"]);
-                    self.oauthToken = [result objectForKey:@"code"];
-                }
-                AuthenticationDbService * dbService = [AuthenticationDbService sharedInstance];
-                [dbService setAuthorizationCode:[result objectForKey:@"code"]];
-                
-                RetrieveRefreshAndAccessTokenTask *task = [[RetrieveRefreshAndAccessTokenTask alloc] init];
-                [task executeRetrieveTask];
-            }
-        }
-    } else {
-        DLog(@"URL from %@ application", sourceApplication);
-        DLog(@"the path is: %@", url.path);
-        
-        
-        //Create File Path
-        NSArray *splitedUrl = [url.path componentsSeparatedByString:@"/"];
-        NSString *fileName = [NSString stringWithFormat:@"%@",[splitedUrl objectAtIndex:([splitedUrl count]-1)]];
-        NSString *filePath;
-        
-        //We have a bug on iOS8 that can not upload a file on background from Documents/Inbox. So we move the file to the getTempFolderForUploadFiles
-        [[NSFileManager defaultManager]moveItemAtPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Inbox"] stringByAppendingPathComponent:fileName] toPath:[[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName] error:nil];
-
-        filePath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
-        
-        _filePathFromOtherApp=filePath;
-        
-        DLog(@"File path: %@", filePath);
-        
-        if (_activeUser.username==nil) {
-             _activeUser = [ManageUsersDB getActiveUser];
-        }
-        
-        //_firstInit don't works yet
-        if (_activeUser.username==nil || [ManageAppSettingsDB isPasscode] || _isLoadingVisible==YES) {
-            //Deleta file
-            //[[NSFileManager defaultManager] removeItemAtPath: filePath error: nil];
-            _isFileFromOtherAppWaitting=YES;
-        }else{
-            [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:halfASecondDelay];
-        }
+    //Create File Path
+    NSArray *splitedUrl = [url.path componentsSeparatedByString:@"/"];
+    NSString *fileName = [NSString stringWithFormat:@"%@",[splitedUrl objectAtIndex:([splitedUrl count]-1)]];
+    NSString *filePath;
+    
+    //We have a bug on iOS8 that can not upload a file on background from Documents/Inbox. So we move the file to the getTempFolderForUploadFiles
+    [[NSFileManager defaultManager]moveItemAtPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Inbox"] stringByAppendingPathComponent:fileName] toPath:[[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName] error:nil];
+    
+    filePath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
+    
+    _filePathFromOtherApp=filePath;
+    
+    DLog(@"File path: %@", filePath);
+    
+    if (_activeUser.username==nil) {
+        _activeUser = [ManageUsersDB getActiveUser];
+    }
+    
+    //_firstInit don't works yet
+    if (_activeUser.username==nil || [ManageAppSettingsDB isPasscode] || _isLoadingVisible==YES) {
+        //Deleta file
+        //[[NSFileManager defaultManager] removeItemAtPath: filePath error: nil];
+        _isFileFromOtherAppWaitting=YES;
+    }else{
+        [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:halfASecondDelay];
     }
     
     return YES;

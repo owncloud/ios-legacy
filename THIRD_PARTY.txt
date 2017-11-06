@@ -83,13 +83,6 @@ The third party software included and used by this project is:
 	Original license document included at ExternalLibreries/LoadingScreen/LICENSE.
    	See https://github.com/jdg/MBProgressHUD
 
- * 	OAuth - SURFnetConextIOSClient 
-   	Copyright (c) 2012 SURFnet bv, The Netherlands
-   	Licensed under Apache License, Version 2.0.
-   	Placed at ExternalLibreries/OAuth.
-	Original license document included at ExternalLibreries/OAuth/LICENSE.
-   	See https://github.com/OpenConextApps/ios-oauth-app
-
  * 	UIAlertView-Blocks
    	Copyright (c) 2013 Ryan Maxwell.
    	Licensed under MIT License.

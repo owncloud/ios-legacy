@@ -186,11 +186,6 @@
 		148DD5DB177851E700FB9977 /* UploadRecentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5D5177851E700FB9977 /* UploadRecentCell.m */; };
 		148DD5DC177851E700FB9977 /* UploadRecentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD5D6177851E700FB9977 /* UploadRecentCell.xib */; };
 		148DD5FD1778556500FB9977 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD5FC1778556500FB9977 /* MBProgressHUD.m */; };
-		148DD612177855B600FB9977 /* AuthenticationDbService.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD609177855B600FB9977 /* AuthenticationDbService.m */; };
-		148DD613177855B600FB9977 /* AuthenticationResponseTypeCodeTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD60B177855B600FB9977 /* AuthenticationResponseTypeCodeTask.m */; };
-		148DD614177855B600FB9977 /* RetrieveAccessTokenTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD60D177855B600FB9977 /* RetrieveAccessTokenTask.m */; };
-		148DD615177855B600FB9977 /* RetrieveDataResponseTypeCodeTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD60F177855B600FB9977 /* RetrieveDataResponseTypeCodeTask.m */; };
-		148DD616177855B600FB9977 /* RetrieveRefreshAndAccessTokenTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD611177855B600FB9977 /* RetrieveRefreshAndAccessTokenTask.m */; };
 		148DD619177855D900FB9977 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD618177855D900FB9977 /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		148DD62417785D6900FB9977 /* DetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 148DD61F17785D6900FB9977 /* DetailView.xib */; };
 		148DD62517785D6900FB9977 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 148DD62117785D6900FB9977 /* DetailViewController.m */; };
@@ -1275,16 +1270,6 @@
 		148DD5D6177851E700FB9977 /* UploadRecentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = UploadRecentCell.xib; path = Cells/UploadCell/UploadRecentCell.xib; sourceTree = "<group>"; };
 		148DD5FB1778556500FB9977 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = ExternalLibreries/LoadingScreen/MBProgressHUD.h; sourceTree = "<group>"; };
 		148DD5FC1778556500FB9977 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = ExternalLibreries/LoadingScreen/MBProgressHUD.m; sourceTree = "<group>"; };
-		148DD608177855B600FB9977 /* AuthenticationDbService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthenticationDbService.h; path = ExternalLibreries/OAuth/AuthenticationDbService.h; sourceTree = "<group>"; };
-		148DD609177855B600FB9977 /* AuthenticationDbService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthenticationDbService.m; path = ExternalLibreries/OAuth/AuthenticationDbService.m; sourceTree = "<group>"; };
-		148DD60A177855B600FB9977 /* AuthenticationResponseTypeCodeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthenticationResponseTypeCodeTask.h; path = ExternalLibreries/OAuth/AuthenticationResponseTypeCodeTask.h; sourceTree = "<group>"; };
-		148DD60B177855B600FB9977 /* AuthenticationResponseTypeCodeTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthenticationResponseTypeCodeTask.m; path = ExternalLibreries/OAuth/AuthenticationResponseTypeCodeTask.m; sourceTree = "<group>"; };
-		148DD60C177855B600FB9977 /* RetrieveAccessTokenTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RetrieveAccessTokenTask.h; path = ExternalLibreries/OAuth/RetrieveAccessTokenTask.h; sourceTree = "<group>"; };
-		148DD60D177855B600FB9977 /* RetrieveAccessTokenTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RetrieveAccessTokenTask.m; path = ExternalLibreries/OAuth/RetrieveAccessTokenTask.m; sourceTree = "<group>"; };
-		148DD60E177855B600FB9977 /* RetrieveDataResponseTypeCodeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RetrieveDataResponseTypeCodeTask.h; path = ExternalLibreries/OAuth/RetrieveDataResponseTypeCodeTask.h; sourceTree = "<group>"; };
-		148DD60F177855B600FB9977 /* RetrieveDataResponseTypeCodeTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RetrieveDataResponseTypeCodeTask.m; path = ExternalLibreries/OAuth/RetrieveDataResponseTypeCodeTask.m; sourceTree = "<group>"; };
-		148DD610177855B600FB9977 /* RetrieveRefreshAndAccessTokenTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RetrieveRefreshAndAccessTokenTask.h; path = ExternalLibreries/OAuth/RetrieveRefreshAndAccessTokenTask.h; sourceTree = "<group>"; };
-		148DD611177855B600FB9977 /* RetrieveRefreshAndAccessTokenTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RetrieveRefreshAndAccessTokenTask.m; path = ExternalLibreries/OAuth/RetrieveRefreshAndAccessTokenTask.m; sourceTree = "<group>"; };
 		148DD617177855D900FB9977 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = ExternalLibreries/Reachability/Reachability.h; sourceTree = "<group>"; };
 		148DD618177855D900FB9977 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = ExternalLibreries/Reachability/Reachability.m; sourceTree = "<group>"; };
 		148DD61F17785D6900FB9977 /* DetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DetailView.xib; path = Files/Preview/DetailView/DetailView.xib; sourceTree = "<group>"; };
@@ -2927,7 +2912,6 @@
 				EA68968317F598EB0033B3C1 /* KKPasscodeLock */,
 				13A9FCDD17E9857300FF48D7 /* ELCPickerLib */,
 				148DD5FA177854D900FB9977 /* LoadingScreen */,
-				148DD6071778559D00FB9977 /* OAuth */,
 				595333F81A1DF26000C57ED5 /* UIAlertViewWithBlocks */,
 				EAC3AC3B15ED2A4F00B59805 /* Reachability */,
 				59C71CE81A9216AE00F66166 /* VFR Pdf Reader */,
@@ -2942,23 +2926,6 @@
 				148DD5FC1778556500FB9977 /* MBProgressHUD.m */,
 			);
 			name = LoadingScreen;
-			sourceTree = "<group>";
-		};
-		148DD6071778559D00FB9977 /* OAuth */ = {
-			isa = PBXGroup;
-			children = (
-				148DD608177855B600FB9977 /* AuthenticationDbService.h */,
-				148DD609177855B600FB9977 /* AuthenticationDbService.m */,
-				148DD60A177855B600FB9977 /* AuthenticationResponseTypeCodeTask.h */,
-				148DD60B177855B600FB9977 /* AuthenticationResponseTypeCodeTask.m */,
-				148DD60C177855B600FB9977 /* RetrieveAccessTokenTask.h */,
-				148DD60D177855B600FB9977 /* RetrieveAccessTokenTask.m */,
-				148DD60E177855B600FB9977 /* RetrieveDataResponseTypeCodeTask.h */,
-				148DD60F177855B600FB9977 /* RetrieveDataResponseTypeCodeTask.m */,
-				148DD610177855B600FB9977 /* RetrieveRefreshAndAccessTokenTask.h */,
-				148DD611177855B600FB9977 /* RetrieveRefreshAndAccessTokenTask.m */,
-			);
-			name = OAuth;
 			sourceTree = "<group>";
 		};
 		148DD61D17785D4200FB9977 /* Files */ = {
@@ -4786,20 +4753,15 @@
 				EAC5985A1A56A150003192B2 /* ProvidingFileDto.m in Sources */,
 				400A63641B4FD75600890579 /* IFTTTAlphaAnimation.m in Sources */,
 				59C71D161A9216AE00F66166 /* ReaderContentView.m in Sources */,
-				148DD612177855B600FB9977 /* AuthenticationDbService.m in Sources */,
 				EA0599931BB94F3F002C2864 /* ShareSearchUserViewController.m in Sources */,
 				59C71D1C1A9216AE00F66166 /* ReaderThumbFetch.m in Sources */,
 				EA5C6F841B70BEE30088071B /* ShareFileCell.swift in Sources */,
 				59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */,
 				EABD88C91BBE638300DA5281 /* ShareLoadingCell.swift in Sources */,
 				EA42FA54180565CB0006DB7C /* OCTabBarController.m in Sources */,
-				148DD613177855B600FB9977 /* AuthenticationResponseTypeCodeTask.m in Sources */,
 				7F9B91C81F1F817700B77260 /* GetPublicInfoFromServerJob.swift in Sources */,
-				148DD614177855B600FB9977 /* RetrieveAccessTokenTask.m in Sources */,
 				59C71D171A9216AE00F66166 /* ReaderDocument.m in Sources */,
-				148DD615177855B600FB9977 /* RetrieveDataResponseTypeCodeTask.m in Sources */,
 				400A636C1B4FD75600890579 /* IFTTTCornerRadiusAnimation.m in Sources */,
-				148DD616177855B600FB9977 /* RetrieveRefreshAndAccessTokenTask.m in Sources */,
 				EAD774F31AD2B01E0007C4DB /* OCSplitViewController.m in Sources */,
 				59EA98941BC5718600C3125D /* DownloadFileSyncFolder.m in Sources */,
 				EA68968D17F599060033B3C1 /* KKKeychain.m in Sources */,
