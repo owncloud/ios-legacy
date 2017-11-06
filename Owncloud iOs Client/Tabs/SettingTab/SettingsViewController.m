@@ -1119,8 +1119,7 @@
             [app presentWithView];
         }
                 
-        self.listUsers = [ManageUsersDB getAllUsers];
-        [self.settingsTableView reloadData];
+        [self refreshTable];
         
     } ];
     
