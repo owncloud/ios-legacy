@@ -45,40 +45,6 @@ public enum TextfieldType: String {
 }
 
 
-/*****************/
-//TODO: call manageNetworkError for all possible error after check url, not accepted certificate..
-
-
-
-/*
- 
- 
- authentification_not_valid
- 
- 
- checkurl
- testing_connection
- -->succes
- secure_connection_established ->DONE
- 
- https_non_secure_connection_established ->DONE
- 
- connection_established ->DONE
- 
- --> error
-server_instance_not_found Server not found
- 
-connection_declined  Connection declined by user
- 
- not_possible_connect_to_server It is not possible to connect to the server at this time
- 
- error_updating_predefined_url -->migrate -->DONE
- 
- */
-
-
-//TODO: button , hideOrShowPassword
-
 @objc public class UniversalLoginViewController: UIViewController, UITextFieldDelegate, SSODelegate {
  
 // MARK: IBOutlets
