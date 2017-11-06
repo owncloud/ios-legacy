@@ -66,7 +66,6 @@
     } else {
         
     }
-    //TODO: take into account possible errorConnection nil
 }
 
 
