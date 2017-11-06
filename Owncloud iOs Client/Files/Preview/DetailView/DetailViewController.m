@@ -1833,9 +1833,7 @@
 
     
     UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:APP_DELEGATE.activeUser];
-    
-    //[viewController setBarForCancelForLoadingFromModal];
-    
+        
     OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
     navController.modalPresentationStyle = UIModalPresentationFormSheet;
     [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
