@@ -33,7 +33,6 @@ extern NSString *const IpadShowNotConnectionWithServerMessageNotification;
 extern NSString *const IPhoneDoneEditFileTextMessageNotification;
 
 extern NSString *const RelaunchErrorCredentialFilesNotification;
-extern NSString *const LoginViewControllerRotate;
 
 @interface UtilsNotifications : NSObject
 

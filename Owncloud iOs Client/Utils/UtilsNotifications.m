@@ -34,7 +34,6 @@ NSString *const IpadShowNotConnectionWithServerMessageNotification = @"IpadShowN
 NSString *const IPhoneDoneEditFileTextMessageNotification = @"IPhoneDoneEditFileTextMessageNotification";
 
 NSString *const RelaunchErrorCredentialFilesNotification = @"RelaunchErrorCredentialFilesNotification";
-NSString *const LoginViewControllerRotate = @"LoginViewControllerRotate";
 
 @end
 

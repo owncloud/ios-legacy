@@ -768,10 +768,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endLoading) name:EndLoadingFileListNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initLoading) name:InitLoadingFileListNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFromDataBase) name:ReloadFileListFromDataBaseNotification object:nil];
-    
-    //Add an observer for know when the LoginViewController rotate
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willRotateToInterfaceOrientation:duration:) name:LoginViewControllerRotate object:nil];
-    
+        
     //Add an observer for know when the Checked Share of server is done
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSharedPath) name:RefreshSharesItemsAfterCheckServerVersion object:nil];
     

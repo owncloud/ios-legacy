@@ -45,8 +45,6 @@ public enum TextfieldType: String {
 }
 
 
-//TODO: check if neet to use the notification LoginViewControllerRotate from login view (- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration)
-
 /*****************/
 //TODO: call manageNetworkError for all possible error after check url, not accepted certificate..
 
