@@ -71,9 +71,8 @@ import Foundation
         ManageUploadsDB.updateErrorCredentialFiles(user.idUser)
         
         self.restoreDownloadAndUploadsOfUser(user)
-        
-        
-        //TODO:check relaunchErrorCredentialFilesNotification if needed
+    
+        NotificationCenter.default.post(name: NSNotification.Name.RelaunchErrorCredentialFiles, object: nil)
     }
     
 @objc func migrateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {

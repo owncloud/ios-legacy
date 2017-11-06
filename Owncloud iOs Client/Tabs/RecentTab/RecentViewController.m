@@ -937,7 +937,6 @@
         UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:app.activeUser];
         
         if (IS_IPHONE) {
-            //viewController.hidesBottomBarWhenPushed = YES;
             OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
             [self.navigationController presentViewController:navController animated:YES completion:nil];
         } else {

@@ -230,7 +230,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         navController.navigationBar.translucent = NO;
         
         if (IS_IPHONE) {
-            viewController.hidesBottomBarWhenPushed = YES;
             [self presentViewController:navController animated:YES completion:nil];
         } else {
             navController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -1697,7 +1696,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
     UniversalLoginViewController *loginVC = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser: APP_DELEGATE.activeUser];
         
-    //viewController.hidesBottomBarWhenPushed = YES;
         
     OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginVC];
     [self.navigationController presentViewController:navController animated:YES completion:nil];

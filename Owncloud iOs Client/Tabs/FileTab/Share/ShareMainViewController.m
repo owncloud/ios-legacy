@@ -686,7 +686,6 @@
     
     if (IS_IPHONE)
     {
-        viewController.hidesBottomBarWhenPushed = YES;
         [self presentViewController:navController animated:YES completion:nil];
     } else {
         OCNavigationController *navController = nil;
@@ -706,7 +705,6 @@
     
     if (IS_IPHONE)
     {
-        viewController.hidesBottomBarWhenPushed = YES;
         [self presentViewController:navController animated:YES completion:nil];
     } else {
         OCNavigationController *navController = nil;

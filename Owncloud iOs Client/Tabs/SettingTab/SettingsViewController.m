@@ -1061,7 +1061,6 @@
     
     if (IS_IPHONE)
     {
-        //viewController.hidesBottomBarWhenPushed = YES;
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {

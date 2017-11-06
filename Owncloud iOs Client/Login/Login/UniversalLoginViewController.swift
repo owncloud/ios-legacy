@@ -47,8 +47,6 @@ public enum TextfieldType: String {
 
 
 
-//TODO: check if needed use the notification relaunchErrorCredentialFilesNotification from edit account mode
-//TODO: check if is needed property hidesBottomBarWhenPushed in this class to use with edit and add account modes
 //TODO: check if need to call delegate #pragma mark - AddAccountDelegate- (void) refreshTable  in settings after add account
 //TODO: check if need to setBarForCancelForLoadingFromModal in this class
 //TODO: check if neet to use the notification LoginViewControllerRotate from login view (- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration)
