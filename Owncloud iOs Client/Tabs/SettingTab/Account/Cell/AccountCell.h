@@ -15,23 +15,14 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol AccountCellDelegate
-
-@optional
-- (void)activeAccountByPosition:(NSInteger) position;
-@end
-
 @interface AccountCell : UITableViewCell
-
 
 @property(nonatomic, weak) IBOutlet UILabel *userName;
 @property(nonatomic, weak) IBOutlet UILabel *urlServer;
 @property(nonatomic, weak) IBOutlet UIButton *activeButton;
 @property (weak, nonatomic) IBOutlet UIButton *menuButton;
-@property(nonatomic, weak) __weak id <AccountCellDelegate> delegate;
 
 
-//- (IBAction)activeAccount:(id)sender;
 
 
 

@@ -45,7 +45,7 @@ typedef enum {
     
 } enumInfoSetting;
 
-@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, AccountCellDelegate, MBProgressHUDDelegate>
+@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, MBProgressHUDDelegate>
 
 @property(nonatomic,strong)IBOutlet UITableView *settingsTableView;
 @property(nonatomic,strong)UISwitch *switchPasscode;

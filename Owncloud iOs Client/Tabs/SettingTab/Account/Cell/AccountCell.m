@@ -41,13 +41,6 @@
     // Configure the view for the selected state
 }
 
-/*
--(IBAction)activeAccount:(id)sender {
-    
-    [self.delegate activeAccountByPosition:self.activeButton.tag];
-
-}
- */
 
 
 @end

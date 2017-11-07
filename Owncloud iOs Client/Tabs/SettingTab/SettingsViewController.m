@@ -806,7 +806,6 @@
         }
     }
     
-    accountCell.delegate = self;
     [accountCell.activeButton setTag:row];
     
     accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
