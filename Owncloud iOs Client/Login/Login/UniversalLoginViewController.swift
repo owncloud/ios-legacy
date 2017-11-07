@@ -161,7 +161,7 @@ public enum TextfieldType: String {
         self.removeNotificationsAboutKeyboard()
         if self.loginMode == .update || self.loginMode == .migrate {
             UtilsCookies.restoreTheCookiesOfActiveUser()
-//TODO: check if need to nil checkaccesstoserver sharedManager
+
         }
     }
     

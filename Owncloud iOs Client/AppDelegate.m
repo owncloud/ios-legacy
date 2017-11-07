@@ -2739,7 +2739,6 @@ float shortDelay = 0.3;
 
 
 - (void)showLoginView:(UniversalLoginViewController *)loginView {
-//TODO: move to utils login, and window var
     DLog(@"ShowUniversalLoginView in window root vc");
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

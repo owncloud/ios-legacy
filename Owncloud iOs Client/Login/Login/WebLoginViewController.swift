@@ -74,7 +74,6 @@ import Foundation
         request.addValue(UtilsUrls.getUserAgent(), forHTTPHeaderField: "User-Agent")
         
         self.webViewLogin.loadRequest(request)
-
     }
     
     
@@ -83,13 +82,11 @@ import Foundation
     func webViewDidStartLoad(_ webView: UIWebView) {
         
         print("Loading login in webView with url:\(String(describing: webView.request?.mainDocumentURL))")
-        //TODO: show loading activityIndicator.startAnimating()
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
         
         print("Loaded url:\(String(describing: webView.request?.mainDocumentURL))")
-        
     }
     
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
