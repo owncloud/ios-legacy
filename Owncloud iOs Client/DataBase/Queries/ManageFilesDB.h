@@ -547,10 +547,15 @@
 ///-----------------------------------
 /// @name update file with task identifier
 ///-----------------------------------
-
 + (void) updateFile:(NSInteger)idFile withTaskIdentifier:(NSInteger)taskIdentifier;
 
+///-----------------------------------
+/// @name deleteAlleTagOfTheDirectoties
+///-----------------------------------
 
+/**
+ * This method is necessary for updateDBVersion7To8. With it the etag are deleted in order to force the refresh of the file list
+ */
 +(void) deleteAlleTagOfTheDirectoties;
 
 

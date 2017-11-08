@@ -36,13 +36,9 @@
 
 @implementation ManageFilesDB
 
-/*
- * Method that give all files from a single folder
- * @fileId -> id of the folder father and we want all his files and folders
- */
+
 + (NSMutableArray *) getFilesByFileIdForActiveUser:(NSInteger) fileId {
 
-    
     UserDto *mUser;
     
 #ifdef CONTAINER_APP
@@ -90,10 +86,7 @@
     return output;
 }
 
-/*
- * Method that give all folders from a single folder
- * @fileId -> id of the folder father and we want all his files and folders
- */
+
 + (NSMutableArray *) getFoldersByFileIdForActiveUser:(NSInteger) fileId {
     
     UserDto *mUser;
@@ -144,19 +137,7 @@
     return output;
 }
 
-///-----------------------------------
-/// @name Get Files by idFile
-///-----------------------------------
 
-/**
- * Method that return an array of files, this files are sons of fileId
- *
- * @param fileId -> NSInteger
- *
- * @return list of files -> NSMutableArray
- *
- * @warning For filePath and localFolder is necessary the user, but we call this method before to check the user
- */
 + (NSMutableArray *) getFilesByFileId:(NSInteger) fileId {
     
     __block NSMutableArray *output = [NSMutableArray new];
@@ -243,6 +224,7 @@
     return output;
 }
 
+
 +(FileDto *) getFileDtoByFileName:(NSString *) fileName andFilePath:(NSString *) filePath andUser:(UserDto *) user {
     
     __block FileDto *output = nil;
@@ -283,6 +265,7 @@
     return output;
 }
 
+
 +(NSMutableArray *) getAllFoldersByBeginFilePath:(NSString *) beginFilePath {
     
     DLog(@"getAllFoldersByBeginFilePath");
@@ -321,6 +304,7 @@
     return output;
 }
 
+
 +(void) setFileIsDownloadState: (NSInteger) idFile andState:(enumDownload)downloadState {
     
     DLog(@"setFileIsDownloadState");
@@ -356,6 +340,7 @@
     }];
 }
 
+
 +(void) setFilePath: (NSString * ) filePath byIdFile: (NSInteger) idFile {
     
     DLog(@"NewFilePath: %@", filePath);
@@ -372,6 +357,7 @@
         
     }];
 }
+
 
 +(void) insertManyFiles:(NSMutableArray *)listOfFiles ofFileId:(NSInteger)fileId andUser:(UserDto *)user {
     
@@ -468,7 +454,6 @@
             }
             
         }];
-        
     }
 }
 
@@ -498,15 +483,7 @@
     }];
 }
 
-///-----------------------------------
-/// @name Delete File by idfile
-///-----------------------------------
 
-/**
- * Method that delete a file/folder of the database
- *
- * @param idFile -> NSInteger (Item to delete)
- */
 +(void) deleteFileByIdFile:(NSInteger) idFile {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -522,6 +499,7 @@
         
     }];
 }
+
 
 +(void) deleteFilesFromDBBeforeRefreshByFileId: (NSInteger) fileId {
     
@@ -549,6 +527,7 @@
         
     }];
 }
+
 
 + (void) backupOfTheProcessingFilesAndFoldersByFileId:(NSInteger) fileId {
     
@@ -628,19 +607,6 @@
 }
 
 
-///-----------------------------------
-/// @name updateFilesFromBackup
-///-----------------------------------
-
-/**
- * This method update the files DB with the datas located on the files_backup DB
- * 
- * If the file is overwritten we update the fileds: is_download, shared_file_source and
- * is_overwritten
- *
- * If other case we update the fields: is_download, shared_file_source and is_overwritten
- * AND etag
- */
 +(void) updateFilesFromBackup {
     
     //1 - Select the files from the files_backup DB that want to be updated on the files DB
@@ -691,18 +657,7 @@
     }];
 }
 
-///-----------------------------------
-/// @name setUpdateIsNecessaryFromBackup
-///-----------------------------------
 
-/**
- * This method set the field isNecessaryUpdate to YES on the files DB when the file stored etag 
- * on the files DB is diferent that the one stored on the files_backup DB
- * The only exception is that the field is not set to YES is the file is overwritten, in this
- * case the etag must be updated on the files DB: check the method updateFilesFromBackup
- *
- * @param idFile -> NSInteger, the file that want to update
- */
 +(void) setUpdateIsNecessaryFromBackup:(NSInteger) idFile {
     
     //1-Select the files from the files_backup DB
@@ -768,15 +723,6 @@
 }
 
 
-///-----------------------------------
-/// @name setIsNecessaryUpdateOfTheFile
-///-----------------------------------
-
-/**
- * This method updates the is_necessary_update field of the file
- *
- * @param idFile -> int
- */
 + (void) setIsNecessaryUpdateOfTheFile: (NSInteger) idFile {
     DLog(@"setIsNecessaryUpdateOfTheFile");
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -793,18 +739,6 @@
 }
 
 
-///-----------------------------------
-/// @name Delete OffSpring of this Folder
-///-----------------------------------
-
-/**
- *
- * Recursive method to delete the offspring of a specific folder.
- * This is neccesary when in the server array after a proffind process
- * the folder does not appear.
- *
- * @param folder -> FileDto
- */
 + (void) deleteOffspringOfThisFolder:(FileDto *)folder{
     
     //Get Files of the Folder
@@ -888,6 +822,7 @@
     }
 }
 
+
 +(void) deleteAllThumbnailsWithDifferentEtagFromBackup {
     
     DLog(@"deleteAllThumbnailsWithDifferentEtagFromBackup");
@@ -952,6 +887,7 @@
     }];
 }
 
+
 + (void) deleteFilesBackup {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -968,6 +904,7 @@
     }];
 }
 
+
 +(void) renameFileByFileDto:(FileDto *) file andNewName:(NSString *) mNewName {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -983,6 +920,7 @@
         
     }];
 }
+
 
 +(void) renameFolderByFileDto:(FileDto *) file andNewName:(NSString *) mNewName {
     
@@ -1001,6 +939,7 @@
         
     }];
 }
+
 
 +(BOOL) isFileOnDataBase: (FileDto *)fileDto {
     
@@ -1025,6 +964,7 @@
     
     return output;
 }
+
 
 +(void) deleteFileByFilePath: (NSString *) filePathToDelete andFileName: (NSString*)fileName {
     
@@ -1051,6 +991,7 @@
         }
     }];
 }
+
 
 +(FileDto *) getFolderByFilePath: (NSString *) newFilePath andFileName: (NSString *) fileName {
 
@@ -1094,6 +1035,7 @@
     return output;
 }
 
+
 + (void) updateFolderOfFileDtoByNewFilePath:(NSString *) newFilePath andDestinationFileDto:(FileDto *) folderDto andNewFileName:(NSString *)changedFileName andFileDto:(FileDto *) selectedFile {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -1109,6 +1051,7 @@
         
     }];
 }
+
 
 +(void) updatePath:(NSString *) oldFilePath withNew:(NSString *) newFilePath andFileId:(NSInteger) fileId andSelectedFileId:(NSInteger) selectedFileId andChangedFileName:(NSString *) fileName {
     
@@ -1135,6 +1078,7 @@
     }];
 }
 
+
 +(void) updatePathwithNewPath:(NSString *) newFilePath andFileDto:(FileDto *) selectedFile {
     
     UserDto *mUser;
@@ -1160,6 +1104,7 @@
     }];
 }
 
+
 +(BOOL) isExistRootFolderByUser:(UserDto *) currentUser {
     
     __block int size = 0;
@@ -1184,6 +1129,7 @@
     return output;
 }
 
+
 +(void) insertFile:(FileDto *)fileDto {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -1198,6 +1144,7 @@
         }
     }];
 }
+
 
 +(FileDto *) getRootFileDtoByUser:(UserDto *) currentUser {
     
@@ -1256,7 +1203,6 @@
 }
 
 
-
 +(void) updateEtagOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withNewEtag: (NSString *)etag {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -1271,6 +1217,7 @@
         }
     }];
 }
+
 
 + (void) updateFilesWithFileId:(NSInteger) oldFileId withNewFileId:(NSInteger) fileId {
     
@@ -1296,6 +1243,7 @@
         
     }];
 }
+
 
 + (void) setFile:(NSInteger)idFile isNecessaryUpdate:(BOOL)isNecessaryUpdate {
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -1334,20 +1282,7 @@
     return output;
 }
 
-///-----------------------------------
-/// @name File is in the Path?
-///-----------------------------------
 
-/**
- * Method that indicate if a specific file is into a specific path
- *
- * @param idFile -> NSInteger of file id
- * @param userId -> NSInteger of user id
- * @param folder -> Folder path
- *
- * @return YES/NO
- *
- */
 + (BOOL) isThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)userId intoThisFolder:(NSString *)folder{
     
     DLog(@"ManageFiles -> idFile: %ld", (long)idFile);
@@ -1376,9 +1311,8 @@
     }];
     
     return output;
-    
-    
 }
+
 
 + (void) updateFilesByUser:(UserDto *) currentUser andFolder:(NSString *) folder toDownloadState:(enumDownload)downloadState andIsNecessaryUpdate:(BOOL) isNecessaryUpdate {
     
@@ -1396,22 +1330,9 @@
     }];
 }
 
+
 #pragma mark - Share Querys.
 
-
-///-----------------------------------
-/// @name Update Share File Source
-///-----------------------------------
-
-/**
- * Method that update share file source
- *
- *
- * @param value -> NSInteger
- * @param idFile -> NSInteger
- * @param userId -> NSInteger
- *
- */
 + (void) updateShareFileSource:(NSInteger)value forThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)userId{
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -1444,16 +1365,7 @@
     }];
 }
 
-///-----------------------------------
-/// @name updateFilesAndSetSharedOfUser
-///-----------------------------------
 
-/**
- * This method update the Files table and set the relation with the shared
- *
- * @param userId -> NSInteger
- *
- */
 + (void) updateFilesAndSetSharedOfUser:(NSInteger)userId {
     
     NSMutableArray *listOfFileSource = [NSMutableArray new];
@@ -1491,19 +1403,9 @@
         }
         
     }];
-
 }
 
-///-----------------------------------
-/// @name Delete Shared Data of a list of files
-///-----------------------------------
 
-/**
- * This method update to 0 {not shared by link} the status of a list of files
- *
- * @param pathItems -> NSArray
- * @param userId -> NSInteger
- */
 + (void) deleteShareDataOfThisFiles:(NSArray*)pathItems ofUser:(NSInteger)userId{
     
     for (FileDto *file in pathItems) {
@@ -1514,18 +1416,6 @@
 }
 
 
-
-///-----------------------------------
-/// @name Get files by download status
-///-----------------------------------
-
-/**
- * This method get all the file where the download status is equal to status
- *
- * @param int -> The download status
- *
- * @return NSMutableArray -> The array with the files
- */
 + (NSMutableArray *) getFilesByDownloadStatus:(NSInteger) status andUser:(UserDto *) user {
     __block NSMutableArray *output = [NSMutableArray new];
     DLog(@"getFilesByDownloadStatus: %ld",(long)status);
@@ -1567,17 +1457,6 @@
 }
 
 
-
-///-----------------------------------
-/// @name setUnShareFilesByListOfOCShared
-///-----------------------------------
-
-/**
- * Method to unshare by link the files that are not unshare anymore
- *
- * @param listOfRemoved -> NSArray
- *
- */
 + (void) setUnShareFilesByUser:(UserDto *) user {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -1615,22 +1494,9 @@
             }
         }];
     }*/
-     
 }
 
-///-----------------------------------
-/// @name Get the filedto equal with the share dto pah
-///-----------------------------------
 
-/**
- * This method return a FileDto with equal share dto path, if 
- * is not catched this method return nil
- *
- * @param path -> NSString
- *
- * @return FileDto
- *
- */
 + (FileDto *) getFileEqualWithShareDtoPath:(NSString*)path andByUser:(UserDto *) user {
     
     UserDto *mUser;
@@ -1689,17 +1555,7 @@
     return output;
 }
 
-///-----------------------------------
-/// @name is Catched in data base this path
-///-----------------------------------
 
-/**
- * This method check if a path is inside the DB
- *
- * @param path -> NSString {/folder1/folder1_1}
- *
- * @return YES/NO
- */
 + (BOOL) isCatchedInDataBaseThisPath: (NSString*)path{
     
     //Ex: /folder1/folder1_1/folder1_1_1/folder1_1_1_1
@@ -1739,19 +1595,9 @@
     }];
 
     return isExist;
-    
 }
 
-///-----------------------------------
-/// @name setUnShareFilesOfFolder
-///-----------------------------------
 
-/**
- * Method to unshare all the shared of a folder
- *
- * @param folder -> FileDto
- *
- */
 + (void) setUnShareFilesOfFolder:(FileDto *) folder {
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -1768,16 +1614,6 @@
 
 #pragma mark - Favorites method
 
-///-----------------------------------
-/// @name updateTheFileID:asFavorite:
-///-----------------------------------
-
-/**
- * This method updates the favorite field of the file
- *
- * @param idFile -> int
- * @param isFavorite -> BOOL
- */
 + (void) updateTheFileID: (NSInteger)idFile asFavorite: (BOOL) isFavorite {
     DLog(@"updateTheFavoriteFile");
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -1793,17 +1629,7 @@
     }];
 }
 
-///-----------------------------------
-/// @name getAllFavoritesFilesOfUserId:userId
-///-----------------------------------
 
-/**
- * This method returned all favorites files of a specific user
- *
- * @param userId -> NSInterger
- *
- * @return NSArray -> Array of favorites items
- */
 + (NSArray*) getAllFavoritesFilesOfUserId:(NSInteger)userId {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -1847,20 +1673,9 @@
     tempArray = nil;
     
     return output;
-
 }
 
-///-----------------------------------
-/// @name getAllFavoritesByFolder:userId
-///-----------------------------------
 
-/**
- * This method returned all favorites files of a specific user
- *
- * @param folder -> FolderDto
- *
- * @return NSArray -> Array of favorites items
- */
 + (NSArray*) getAllFavoritesByFolder:(FileDto *) folder {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -1904,19 +1719,9 @@
     tempArray = nil;
     
     return output;
-    
 }
 
-///-----------------------------------
-/// @name setNoFavoritesAllFilesOfAFolder
-///-----------------------------------
 
-/**
- * This method set all files and folders of a folder as no favorite
- *
- * @param folder -> FolderDto
- *
- */
 + (void) setNoFavoritesAllFilesOfAFolder:(FileDto *) folder {
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -1999,17 +1804,9 @@
     tempArray = nil;
     
     return output;
-
 }
 
 
-///-----------------------------------
-/// @name deleteAlleTagOfTheDirectoties
-///-----------------------------------
-
-/**
- * This method is necessary for updateDBVersion7To8. With it the etag are deleted in order to force the refresh of the file list
- */
 +(void) deleteAlleTagOfTheDirectoties {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
@@ -2026,10 +1823,6 @@
 }
 
 #pragma mark - TaskIdentifier methods
-
-///-----------------------------------
-/// @name update file with task identifier
-///-----------------------------------
 
 + (void) updateFile:(NSInteger)idFile withTaskIdentifier:(NSInteger)taskIdentifier {
 
@@ -2061,12 +1854,9 @@
             DLog(@"Error in update providing file");
         }
     }];
-
-    
 }
 
 + (FileDto *) getFileDtoRelatedWithProvidingFileId:(NSInteger)providingFileId ofUser:(NSInteger)userId{
-    
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -2106,9 +1896,7 @@
         [rs close];
     }];
     
-
     return fileTemp;
-    
 }
 
 @end
