@@ -94,9 +94,10 @@
 /*
  * Method to insert all the files of a folder
  * @listOfFiles -> List of all the files
- * @fileId -> id of the folder father
+ * @fileId -> id of its parent folder
+ * @user -> UserDto owner of files
  */
-+(void) insertManyFiles:(NSMutableArray *)listOfFiles andFileId:(NSInteger)fileId;
++(void) insertManyFiles:(NSMutableArray *)listOfFiles ofFileId:(NSInteger)fileId andUser:(UserDto *)user;
 
 /*
  * Method to delete a file
@@ -330,14 +331,14 @@
 /**
  * Method that indicate if a specific file is into a specific path
  *
- * @param idFile -> NSInteger of id file
- * @param idUser -> NSInteger of id user
+ * @param idFile -> NSInteger of file id
+ * @param userId -> NSInteger of user id
  * @param folder -> Folder path
  *
  * @return YES/NO
  *
  */
-+ (BOOL) isThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)idUser intoThisFolder:(NSString *)folder;
++ (BOOL) isThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)userId intoThisFolder:(NSString *)folder;
 
 
 /*
@@ -373,23 +374,23 @@
  *
  * @param value -> NSInteger
  * @param idFile -> NSInteger
- * @param idUser -> NSInteger
+ * @param userId -> NSInteger
  *
  */
-+ (void) updateShareFileSource:(NSInteger)value forThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)idUser;
++ (void) updateShareFileSource:(NSInteger)value forThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)userId;
 
 
 ///-----------------------------------
-/// @name setUnShareAllFilesByIdUser
+/// @name setUnShareAllFilesByUserId
 ///-----------------------------------
 
 /**
  * Method to unshare all the files of one user
  *
- * @param idUser -> NSInteger
+ * @param userId -> NSInteger
  *
  */
-+ (void) setUnShareAllFilesByIdUser:(NSInteger)idUser;
++ (void) setUnShareAllFilesByUserId:(NSInteger)userId;
 
 ///-----------------------------------
 /// @name updateFilesAndSetSharedOfUser
@@ -546,10 +547,15 @@
 ///-----------------------------------
 /// @name update file with task identifier
 ///-----------------------------------
-
 + (void) updateFile:(NSInteger)idFile withTaskIdentifier:(NSInteger)taskIdentifier;
 
+///-----------------------------------
+/// @name deleteAlleTagOfTheDirectoties
+///-----------------------------------
 
+/**
+ * This method is necessary for updateDBVersion7To8. With it the etag are deleted in order to force the refresh of the file list
+ */
 +(void) deleteAlleTagOfTheDirectoties;
 
 

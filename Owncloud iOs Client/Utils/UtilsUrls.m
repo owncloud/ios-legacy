@@ -198,14 +198,14 @@
 //We generate de local path of the files dinamically
 +(NSString *)getLocalFolderByFilePath:(NSString*) filePath andFileName:(NSString*) fileName andUserDto:(UserDto *) mUser {
     
-    //NSString *newLocalFolder= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", mUser.idUser]];
-    NSString *newLocalFolder= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", (int)mUser.idUser]];
+    //NSString *newLocalFolder= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", mUser.userId]];
+    NSString *newLocalFolder= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", (int)mUser.userId]];
     
     NSString *urlWithoutAddress = [self getFilePathOnDBByFilePathOnFileDto:filePath andUser:mUser];
     newLocalFolder = [NSString stringWithFormat:@"%@/%@%@", newLocalFolder,urlWithoutAddress,fileName];
     
     //We remove the http encoding
-    newLocalFolder = [newLocalFolder stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+    newLocalFolder = [newLocalFolder stringByRemovingPercentEncoding];
     
     //NSLog(@"newLocalFolder: %@", newLocalFolder);
     return newLocalFolder;
@@ -418,6 +418,30 @@
 
 
 ///-----------------------------------
+/// @name getFullRemoteServerPathWithWebDavByNormalizedUrl
+///-----------------------------------
+/**
+ * Return the full server path with webdav components by url
+ *
+ * @param url -> url normalized -> http://domain/(subfolders)/
+ *                                 http://domain/sub1/sub2/
+ *
+ * @return  fullPath -> http://domain/(subfolders)/k_url_webdav_server/
+ *                      http://domain/sub1/sub2/remote.php/webdav/
+ *
+ */
+
++ (NSString *) getFullRemoteServerPathWithWebDavByNormalizedUrl:(NSString *)url {
+    
+    NSString *fullWevDavPath = nil;
+    
+    fullWevDavPath = [NSString stringWithFormat: @"%@%@", url,k_url_webdav_server];
+    
+    return fullWevDavPath;
+    
+}
+
+///-----------------------------------
 /// @name getPathWithAppName
 ///-----------------------------------
 /**
@@ -437,7 +461,7 @@
     NSString *pathFile = [self getFilePathOnDBByFullPath:destinyPath andUser:mUserDto];
     NSString *pathWithAppName = [NSString stringWithFormat:@"%@/%@",appName,pathFile];
     
-    return  [pathWithAppName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding];
+    return  [pathWithAppName stringByRemovingPercentEncoding];
     
 }
 
@@ -578,7 +602,7 @@
         
         checkPath = [NSString stringWithFormat:@"%@%@", current.destinyFolder, current.uploadFileName];
         
-        if ([checkPath isEqualToString:path] && current.userId == user.idUser) {
+        if ([checkPath isEqualToString:path] && current.userId == user.userId) {
             
             isFileUploading = YES;
             break;
@@ -621,16 +645,16 @@
  * @param NSString -> fullRemotePath -->http://domain/(subfolders)/k_url_webdav_server/folderA/fileA.txt
  * @param UserDto -> user
  *
- * @return NSString fullLocalDestiny --> /fullLocalSystemPath/idUser/folderA/fileA.txt
+ * @return NSString fullLocalDestiny --> /fullLocalSystemPath/userId/folderA/fileA.txt
  *
  */
 + (NSString *) getFileLocalSystemPathByFullPath:(NSString *)fullRemotePath andUser:(UserDto *)user{
 
     NSString *localDestiny = [UtilsUrls  getFilePathOnDBByFullPath:fullRemotePath andUser:user];
     
-    NSString *ocLocalFolder = [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)user.idUser]];
+    NSString *ocLocalFolder = [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)user.userId]];
 
-    NSString *fullLocalDestiny = [NSString stringWithFormat:@"%@/%@",ocLocalFolder,[localDestiny stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *fullLocalDestiny = [NSString stringWithFormat:@"%@/%@",ocLocalFolder,[localDestiny stringByRemovingPercentEncoding]];
 
     return fullLocalDestiny;
 }
@@ -645,14 +669,14 @@
  * @param FileDto ->  fileDto
  * @param UserDto ->  user
  *
- * @return NSString fullLocalDestiny --> /fullLocalSystemPath/idUser/folderA/fileA.txt
+ * @return NSString fullLocalDestiny --> /fullLocalSystemPath/userId/folderA/fileA.txt
  *
  */
 + (NSString *) getFileLocalSystemPathByFileDto:(FileDto *)fileDto andUser:(UserDto *)user{
     
-    NSString *ocLocalFolder = [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)user.idUser]];
+    NSString *ocLocalFolder = [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)user.userId]];
     NSString *fullDBPath = [self getFilePathOnDBWithFileName:fileDto.fileName ByFilePathOnFileDto:fileDto.filePath andUser:user];
-    NSString *fullLocalDestiny = [NSString stringWithFormat:@"%@/%@",ocLocalFolder,[fullDBPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *fullLocalDestiny = [NSString stringWithFormat:@"%@/%@",ocLocalFolder,[fullDBPath stringByRemovingPercentEncoding]];
     
     return fullLocalDestiny;
 }
@@ -723,22 +747,22 @@
  
  
  ///-----------------------------------
- /// @name getFullRemoteServerPathWithoutProtocolBeginningWithUsername
+ /// @name getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName
  ///-----------------------------------
 /**
- * Return the domain serverpath with subfolderserver and beginning with the username
- * Used to show path in the uploads view
+ * Return the domain serverpath with subfolderserver and beginning with the userDisplayName or username
+ * Used to show path in the uploads view and in settings view as title of account menu
  *
  * @param mUserDto -> user dto
  *
- * @return  fullPath -> username@domainName/sub1/sub2/...
- *                   -> username@domainName/(subfoldersServer)
+ * @return  fullPath -> userDisplayName @ domainName/sub1/sub2/...
+ *                   -> userDisplayName @ domainName/(subfoldersServer)
  */
- + (NSString *) getFullRemoteServerPathWithoutProtocolBeginningWithUsername:(UserDto *)mUserDto {
+ + (NSString *) getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:(UserDto *)mUserDto {
      
      NSString *path = nil;
      
-     path = [NSString stringWithFormat:@"%@@%@", mUserDto.username, [UtilsUrls getFullRemoteServerPathWithoutProtocol:mUserDto]];
+     path = [NSString stringWithFormat:@"%@ @ %@", [mUserDto nameToDisplay], [UtilsUrls getFullRemoteServerPathWithoutProtocol:mUserDto]];
 
      return path;
  }

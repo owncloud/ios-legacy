@@ -19,12 +19,8 @@
 #import "CheckAccessToServer.h"
 #import "DetailViewController.h"
 #import "constants.h"
-#import "LoginViewController.h"
 #import "UploadFromOtherAppViewController.h"
-#import "AuthenticationDbService.h"
-#import "RetrieveRefreshAndAccessTokenTask.h"
 #import "Download.h"
-#import "EditAccountViewController.h"
 #import "UIColor+Constants.h"
 #import "Customization.h"
 #import "FMDatabaseQueue.h"
@@ -62,6 +58,8 @@
 #import "OCKeychain.h"
 #import "UtilsCookies.h"
 #import "PresentedViewUtils.h"
+#import "OCLoadingSpinner.h"
+#import "OCOAuth2Configuration.h"
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -71,7 +69,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize loginViewController = _loginViewController;
 @synthesize uploadArray=_uploadArray;
 @synthesize webDavArray=_webDavArray;
 @synthesize recentViewController=_recentViewController;
@@ -84,7 +81,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @synthesize filePathFromOtherApp=_filePathFromOtherApp;
 @synthesize isFileFromOtherAppWaitting=_isFileFromOtherAppWaitting;
 @synthesize isSharedToOwncloudPresent=_isSharedToOwncloudPresent;
-@synthesize presentFilesViewController=_presentFilesViewController;
 @synthesize isRefreshInProgress=_isRefreshInProgress;
 @synthesize oauthToken = _oauthToken;
 @synthesize avMoviePlayer=_avMoviePlayer;
@@ -155,6 +151,7 @@ float shortDelay = 0.3;
     //Check if the server support shared api
     [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
     
+    
     //Needed to use on background tasks
     if (!k_is_sso_active) {
         [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
@@ -187,6 +184,9 @@ float shortDelay = 0.3;
         ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
         
+        ManageAccounts *manageAccounts = [ManageAccounts new];
+        [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
+        
         //if we are migrating url not relaunch sync
         if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
             //Update favorites files if there are active user
@@ -213,6 +213,14 @@ float shortDelay = 0.3;
     //Set up user agent, so this way all UIWebView will use it
     NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:[UtilsUrls getUserAgent], @"UserAgent", nil];
     [[NSUserDefaults standardUserDefaults] registerDefaults:dictionary];
+    
+    //Set OAuth2Configuration object
+    self.oauth2Configuration = [[OCOAuth2Configuration alloc]
+                                initWithClientId:k_oauth2_client_id
+                                clientSecret:k_oauth2_client_secret
+                                redirectUri:k_oauth2_redirect_uri
+                                authorizationEndpoint:k_oauth2_authorization_endpoint
+                                tokenEndpoint:k_oauth2_token_endpoint];
 
     return YES;
 }
@@ -257,80 +265,34 @@ float shortDelay = 0.3;
 -(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication
         annotation:(id)annotation {
     
-    //OAuth
-    AuthenticationDbService *dbService = [AuthenticationDbService sharedInstance];
-    NSString *scheme = [dbService getScheme];
+    DLog(@"URL from %@ application", sourceApplication);
+    DLog(@"the path is: %@", url.path);
     
-    if ([[ url scheme] isEqualToString:scheme] ) {
-        if (dbService.isDebugLogEnabled) {
-            DLog(@"found %@", scheme);
-        }
-        AuthenticationDbService * dbService = [AuthenticationDbService sharedInstance];
-        NSString *text = [url absoluteString];
-        
-        if ([[ dbService getResponseType] isEqualToString:@"code"]) {
-            if (dbService.isTraceLogEnabled) {
-                DLog(@"Response type = code");
-            }
-            NSArray *param_s = [text componentsSeparatedByString:@"?"];
-            
-            if (param_s.count > 1) {
-                NSString *param_1 = [param_s objectAtIndex:1];
-                
-                NSMutableDictionary *result = [NSMutableDictionary dictionary];
-                NSArray *parameters = [param_1 componentsSeparatedByString:@"&"];
-                for (NSString *parameter in parameters)
-                {
-                    NSArray *parts = [parameter componentsSeparatedByString:@"="];
-                    NSString *key = [[parts objectAtIndex:0] stringByRemovingPercentEncoding];
-                    if ([parts count] > 1)
-                    {
-                        id value = [[parts objectAtIndex:1] stringByRemovingPercentEncoding];
-                        [result setObject:value forKey:key];
-                    }
-                }
-                if (dbService.isDebugLogEnabled) {
-                    DLog(@"code = %@", [result objectForKey:@"code"]);
-                    self.oauthToken = [result objectForKey:@"code"];
-                }
-                AuthenticationDbService * dbService = [AuthenticationDbService sharedInstance];
-                [dbService setAuthorizationCode:[result objectForKey:@"code"]];
-                
-                RetrieveRefreshAndAccessTokenTask *task = [[RetrieveRefreshAndAccessTokenTask alloc] init];
-                [task executeRetrieveTask];
-            }
-        }
-    } else {
-        DLog(@"URL from %@ application", sourceApplication);
-        DLog(@"the path is: %@", url.path);
-        
-        
-        //Create File Path
-        NSArray *splitedUrl = [url.path componentsSeparatedByString:@"/"];
-        NSString *fileName = [NSString stringWithFormat:@"%@",[splitedUrl objectAtIndex:([splitedUrl count]-1)]];
-        NSString *filePath;
-        
-        //We have a bug on iOS8 that can not upload a file on background from Documents/Inbox. So we move the file to the getTempFolderForUploadFiles
-        [[NSFileManager defaultManager]moveItemAtPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Inbox"] stringByAppendingPathComponent:fileName] toPath:[[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName] error:nil];
-
-        filePath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
-        
-        _filePathFromOtherApp=filePath;
-        
-        DLog(@"File path: %@", filePath);
-        
-        if (_activeUser.username==nil) {
-             _activeUser = [ManageUsersDB getActiveUser];
-        }
-        
-        //_firstInit don't works yet
-        if (_activeUser.username==nil || [ManageAppSettingsDB isPasscode] || _isLoadingVisible==YES) {
-            //Deleta file
-            //[[NSFileManager defaultManager] removeItemAtPath: filePath error: nil];
-            _isFileFromOtherAppWaitting=YES;
-        }else{
-            [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:halfASecondDelay];
-        }
+    //Create File Path
+    NSArray *splitedUrl = [url.path componentsSeparatedByString:@"/"];
+    NSString *fileName = [NSString stringWithFormat:@"%@",[splitedUrl objectAtIndex:([splitedUrl count]-1)]];
+    NSString *filePath;
+    
+    //We have a bug on iOS8 that can not upload a file on background from Documents/Inbox. So we move the file to the getTempFolderForUploadFiles
+    [[NSFileManager defaultManager]moveItemAtPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Inbox"] stringByAppendingPathComponent:fileName] toPath:[[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName] error:nil];
+    
+    filePath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:fileName];
+    
+    _filePathFromOtherApp=filePath;
+    
+    DLog(@"File path: %@", filePath);
+    
+    if (_activeUser.credDto.userName==nil) {
+        _activeUser = [ManageUsersDB getActiveUser];
+    }
+    
+    //_firstInit don't works yet
+    if (_activeUser.username==nil || [ManageAppSettingsDB isPasscode] || _isLoadingVisible==YES) {
+        //Deleta file
+        //[[NSFileManager defaultManager] removeItemAtPath: filePath error: nil];
+        _isFileFromOtherAppWaitting=YES;
+    }else{
+        [self performSelector:@selector(presentUploadFromOtherApp) withObject:nil afterDelay:halfASecondDelay];
     }
     
     return YES;
@@ -378,17 +340,13 @@ float shortDelay = 0.3;
     [DownloadUtils setThePermissionsForFolderPath:localTempPath];
     
     //First Call when init the app
-     self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
+     self.activeUser = [ManageUsersDB getActiveUserWithoutCredentials];
     
     //if is null we do not have any active user on the database
     if(!self.activeUser) {
         
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        
-        self.loginViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
-        
-        self.window.rootViewController = self.loginViewController;
-        [self.window makeKeyAndVisible];
+        //Show new universal login view
+        [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeCreate andUser:nil]];
         
     } else {
         
@@ -407,35 +365,6 @@ float shortDelay = 0.3;
     }
 }
 
-- (void) doLoginWithOauthToken {
-    
-    if (_activeUser.username==nil) {
-        _activeUser=[ManageUsersDB getActiveUser];
-    }    
-    
-    if(_activeUser.idUser > 0) {
-        _activeUser.password = self.oauthToken;
-        
-        //update keychain user
-        if(![OCKeychain updateCredentialsById:[NSString stringWithFormat:@"%ld", (long)_activeUser.idUser] withUsername:_activeUser.username andPassword:_activeUser.password]) {
-            DLog(@"Error updating credentials of userId:%ld on keychain",(long)_activeUser.idUser);
-        }
-        
-        [UtilsCookies eraseCredentialsAndUrlCacheOfActiveUser];
-        
-        [self initAppWithEtagRequest:NO];
-    } else {
-        self.loginViewController.usernameTextField = [[UITextField alloc] init];
-        self.loginViewController.usernameTextField.text = @"OAuth";
-        
-        self.loginViewController.passwordTextField = [[UITextField alloc] init];
-        self.loginViewController.passwordTextField.text = self.oauthToken;
-        
-        [self.loginViewController goTryToDoLogin];
-    }
-    
-}
-
 
 - (void) restartAppAfterDeleteAllAccounts {
     DLog(@"Restart After Delete All Accounts");
@@ -445,34 +374,13 @@ float shortDelay = 0.3;
         _filesViewController.alert = nil;
     }
     
-    self.loginWindowViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
-    
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-    self.window.rootViewController = self.loginWindowViewController;
-    [self.window makeKeyAndVisible];
+    [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeCreate andUser:nil]];
 }
 
-///-----------------------------------
-/// @name Generate App Interface
-///-----------------------------------
 
-/**
- * This method generate the app interface
- * 
- * For iPhone: 
- *    - TabBarController with three items:
- *           - File list
- *           - Recents view
- *           - Settings view
- * For iPad:
- *    - The same TabBarController with three items.
- *    - Detail View.
- *
- */
 - (void) generateAppInterfaceFromLoginScreen:(BOOL)isFromLogin{
     
-    self.activeUser = [ManageUsersDB getActiveUserWithoutUserNameAndPassword];
+    self.activeUser = [ManageUsersDB getActiveUserWithoutCredentials];
     
     NSString *wevDavString = [UtilsUrls getFullRemoteServerPathWithWebDav:_activeUser];
     NSString *localSystemPath = nil;
@@ -480,7 +388,7 @@ float shortDelay = 0.3;
     //Check if we generate the interface from login screen or not
     if (isFromLogin) {
         //From login screen we create the user folder to haver multiuser
-        localSystemPath = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)_activeUser.idUser];
+        localSystemPath = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)_activeUser.userId];
         //DLog(@"current: %@", localSystemPath);
         
         //If not exist we create
@@ -492,7 +400,7 @@ float shortDelay = 0.3;
         
     } else {
         //We get the current folder to create the local tree
-        localSystemPath = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)_activeUser.idUser];
+        localSystemPath = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)_activeUser.userId];
         //DLog(@"localRootUrlString: %@", localSystemPath);
     }
 
@@ -679,9 +587,23 @@ float shortDelay = 0.3;
         sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:uploadSessionManager andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
         //Cookies is allways available in current supported Servers
-        sharedOCCommunication.isCookiesAvailable = YES;
-
-	}
+        [sharedOCCommunication setIsCookiesAvailable:YES];
+        
+        [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                                      initWithClientId:k_oauth2_client_id
+                                                                      clientSecret:k_oauth2_client_secret
+                                                                      redirectUri:k_oauth2_redirect_uri
+                                                                      authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                                      tokenEndpoint:k_oauth2_token_endpoint]];
+        
+        [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
+        
+        OCKeychain *oKeychain = [[OCKeychain alloc] init];
+        [sharedOCCommunication setValueCredentialsStorage:oKeychain];
+        
+        SSLCertificateManager *sslCertificateManager = [[SSLCertificateManager alloc] init];
+        [sharedOCCommunication setValueTrustedCertificatesStore: sslCertificateManager];
+    }
 	return sharedOCCommunication;
 }
 
@@ -707,8 +629,23 @@ float shortDelay = 0.3;
         sharedOCCommunicationDownloadFolder = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:nil];
         
         //Cookies is allways available in current supported Servers
-        sharedOCCommunicationDownloadFolder.isCookiesAvailable = YES;
+        [sharedOCCommunicationDownloadFolder setIsCookiesAvailable:YES];
         
+        [sharedOCCommunicationDownloadFolder setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                                      initWithClientId:k_oauth2_client_id
+                                                                      clientSecret:k_oauth2_client_secret
+                                                                      redirectUri:k_oauth2_redirect_uri
+                                                                      authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                                      tokenEndpoint:k_oauth2_token_endpoint]];
+        
+        [sharedOCCommunicationDownloadFolder setUserAgent:[UtilsUrls getUserAgent]];
+        
+        OCKeychain *oKeychain = [[OCKeychain alloc] init];
+        [sharedOCCommunicationDownloadFolder setValueCredentialsStorage:oKeychain];
+        
+        SSLCertificateManager *sslCertificateManager = [[SSLCertificateManager alloc] init];
+        [sharedOCCommunicationDownloadFolder setValueTrustedCertificatesStore:sslCertificateManager];
+
     }
     return sharedOCCommunicationDownloadFolder;
 }
@@ -744,7 +681,7 @@ float shortDelay = 0.3;
 - (void) launchProcessToSyncAllFavorites {
     
     //Do operations in background thread
-    [[AppDelegate sharedManageFavorites] syncAllFavoritesOfUser:self.activeUser.idUser];
+    [[AppDelegate sharedManageFavorites] syncAllFavoritesOfUser:self.activeUser.userId];
     
 }
 
@@ -1104,7 +1041,7 @@ float shortDelay = 0.3;
                     //Set uploadOffline
                     currentManageUploadRequest.currentUpload = uploadDB;
                     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadDB.estimateLength];
-                    currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadDB.userId];
+                    currentManageUploadRequest.userUploading = [ManageUsersDB getUserByUserId:uploadDB.userId];
                     
                     currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadDB.destinyFolder andUser:currentManageUploadRequest.userUploading];
                     
@@ -1245,7 +1182,7 @@ float shortDelay = 0.3;
                     
                     //Local folder
                     NSString *localFolder = nil;
-                    localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:self.activeUser]];
+                    localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.userId, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:self.activeUser]];
                     localFolder = [localFolder stringByRemovingPercentEncoding];
                     
                     download.currentLocalFolder = localFolder;
@@ -1928,7 +1865,7 @@ float shortDelay = 0.3;
     currentUpload.uploadFileName = name;
     currentUpload.kindOfError = notAnError;
     currentUpload.estimateLength = (long)fileLength;
-    currentUpload.userId = _activeUser.idUser;
+    currentUpload.userId = _activeUser.userId;
     currentUpload.isLastUploadFileOfThisArray = YES;
     currentUpload.status = waitingAddToUploadList;
     currentUpload.chunksLength = k_lenght_chunk;
@@ -1998,23 +1935,13 @@ float shortDelay = 0.3;
 
 - (void) errorLogin {
 
-    [self performSelector:@selector(delayLoadEditAccountAfterErroLogin) withObject:nil afterDelay:0.1];
+    [self performSelector:@selector(delayLoadEditAccountAfterErrorLogin) withObject:nil afterDelay:0.1];
 }
 
--(void) delayLoadEditAccountAfterErroLogin {
+-(void) delayLoadEditAccountAfterErrorLogin {
     
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:_activeUser andLoginMode:LoginModeExpire];
-    
-    if (IS_IPHONE)
-    {
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        [_ocTabBarController presentViewController:navController animated:YES completion:nil];
-    } else {
-        
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self.splitViewController presentViewController:navController animated:YES completion:nil];
-    }
+    [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:self.activeUser]];
+
 }
 
 
@@ -2061,13 +1988,13 @@ float shortDelay = 0.3;
  * for a specific user
  *
  */
-- (void) cancelTheCurrentUploadsWithTheSameUserId:(NSInteger)idUser{
+- (void) cancelTheCurrentUploadsWithTheSameUserId:(NSInteger)userId{
     
     __block ManageUploadRequest *currentManageUploadRequest = nil;
     
     //__block BOOL shouldBeContinue=NO;
     
-    DLog(@"id user: %ld", (long)idUser);
+    DLog(@"id user: %ld", (long)userId);
     
     NSArray *currentUploadsTemp = [NSArray arrayWithArray:_uploadArray];
     
@@ -2079,7 +2006,7 @@ float shortDelay = 0.3;
         if (currentManageUploadRequest.currentUpload.status == waitingForUpload ||
             currentManageUploadRequest.currentUpload.status == uploading) {
             DLog(@"this upload is waiting for upload");
-            if (currentManageUploadRequest.currentUpload.userId == idUser) {
+            if (currentManageUploadRequest.currentUpload.userId == userId) {
                 //change the credentiasl
                 [currentManageUploadRequest changeTheStatusToFailForCredentials];
                 DLog(@"%@ its change to fail", currentManageUploadRequest.currentUpload.originPath);
@@ -2351,7 +2278,7 @@ float shortDelay = 0.3;
     //Set uploadOffline
     currentManageUploadRequest.currentUpload = currentUploadBackground;
     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:currentUploadBackground.estimateLength];
-    currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:currentUploadBackground.userId];
+    currentManageUploadRequest.userUploading = [ManageUsersDB getUserByUserId:currentUploadBackground.userId];
     
     currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:currentUploadBackground.destinyFolder andUser:currentManageUploadRequest.userUploading];
     
@@ -2411,7 +2338,7 @@ float shortDelay = 0.3;
         //Set uploadOffline
         currentManageUploadRequest.currentUpload = current;
         currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:current.estimateLength];
-        currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:current.userId];
+        currentManageUploadRequest.userUploading = [ManageUsersDB getUserByUserId:current.userId];
         
         currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:current.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
@@ -2443,7 +2370,7 @@ float shortDelay = 0.3;
         //Set uploadOffline
         currentManageUploadRequest.currentUpload = uploadOffline;
         currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadOffline.estimateLength];
-        currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadOffline.userId];
+        currentManageUploadRequest.userUploading = [ManageUsersDB getUserByUserId:uploadOffline.userId];
         
         currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadOffline.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
@@ -2470,7 +2397,7 @@ float shortDelay = 0.3;
         //Set uploadOffline
         currentManageUploadRequest.currentUpload = uploadOffline;
         currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadOffline.estimateLength];
-        currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadOffline.userId];
+        currentManageUploadRequest.userUploading = [ManageUsersDB getUserByUserId:uploadOffline.userId];
         
         currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadOffline.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
@@ -2615,7 +2542,7 @@ float shortDelay = 0.3;
         
         ManageUploadRequest *current = [_uploadArray objectAtIndex:i];
         
-        if (current.currentUpload.userId == user.idUser) {
+        if (current.currentUpload.userId == user.userId) {
             [arrayOfPositionsToDelete addObject:[NSNumber numberWithInt:i]];
         }
     }
@@ -2641,7 +2568,7 @@ float shortDelay = 0.3;
  * @param userId -> id of user
  *
  */
-- (void) cancelTheCurrentUploadsOfTheUser:(NSInteger)idUser{
+- (void) cancelTheCurrentUploadsOfTheUser:(NSInteger)userId{
     
     //Check the currents uploads from a user
     NSArray *uploadsArray = [NSArray arrayWithArray:_uploadArray];
@@ -2652,7 +2579,7 @@ float shortDelay = 0.3;
         
         currentManageUploadRequest=obj;
         
-        if (currentManageUploadRequest.currentUpload.kindOfError == notAnError && currentManageUploadRequest.currentUpload.status != uploaded && currentManageUploadRequest.currentUpload.userId == idUser) {
+        if (currentManageUploadRequest.currentUpload.kindOfError == notAnError && currentManageUploadRequest.currentUpload.status != uploaded && currentManageUploadRequest.currentUpload.userId == userId) {
             //Indicate Error Credentials
             [currentManageUploadRequest changeTheStatusToFailForCredentials];
         }
@@ -2670,12 +2597,12 @@ float shortDelay = 0.3;
  * In this method we changed the kind of error of uploads failed "errorCredentials" to "notAndError"
  * for a specific user
  *
- * @param idUser -> idUser for a scpecific user.
+ * @param userId -> userId for a scpecific user.
  *
  * @discussion Maybe could be better move this kind of method to a singleton class inicializate in appDelegate.
  *
  */
-- (void)changeTheStatusOfCredentialsFilesErrorOfAnUserId:(NSInteger)idUser{
+- (void)changeTheStatusOfCredentialsFilesErrorOfAnUserId:(NSInteger)userId{
     
     __block ManageUploadRequest *currentManageUploadRequest;
     
@@ -2684,7 +2611,7 @@ float shortDelay = 0.3;
     [failedUploadsTemp enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         currentManageUploadRequest = obj;
         
-        if (currentManageUploadRequest.currentUpload.kindOfError == errorCredentials && currentManageUploadRequest.currentUpload.userId == idUser) {
+        if (currentManageUploadRequest.currentUpload.kindOfError == errorCredentials && currentManageUploadRequest.currentUpload.userId == userId) {
             DLog(@"ub with name %@ not an error", currentManageUploadRequest.currentUpload.uploadFileName);
             currentManageUploadRequest.currentUpload.kindOfError=notAnError;
             [ManageUploadsDB setStatus:currentManageUploadRequest.currentUpload.status andKindOfError:notAnError byUploadOffline:currentManageUploadRequest.currentUpload];
@@ -2808,16 +2735,21 @@ float shortDelay = 0.3;
     FileDto *folderRemoved = [ManageFilesDB getFileDtoByFileName:[folderToRemoveName encodeString:NSUTF8StringEncoding] andFilePath:[folderToRemovePath encodeString:NSUTF8StringEncoding] andUser:app.activeUser];
     [self reloadCellByFile:folderRemoved];
 }
-- (void) showLoginView {
-    DLog(@"ShowLoginView");
-    
-    self.loginWindowViewController = [[LoginViewController alloc] initWithLoginMode:LoginModeCreate];
+
+
+
+- (void)showLoginView:(UniversalLoginViewController *)loginView {
+    DLog(@"ShowUniversalLoginView in window root vc");
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    self.window.rootViewController = self.loginWindowViewController;
+    self.window.rootViewController = loginView;
+    
     [self.window makeKeyAndVisible];
+    
 }
+
+
 
 #pragma mark - SplashScreenFake
 
@@ -2836,17 +2768,85 @@ float shortDelay = 0.3;
 
 #pragma mark - CheckAccessToServerDelegate
 
--(void)connectionToTheServer:(BOOL)isConnection {
-    ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
-    [self showPassCodeIfNeeded];
+-(void)connectionToTheServerWasChecked:(BOOL)isConnected withHttpStatusCode:(NSInteger)statusCode andError:(NSError *)error {
+    [self repeatTheCheckToTheServer];
 }
 -(void)repeatTheCheckToTheServer {
     ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
     [self showPassCodeIfNeeded];
 }
--(void)badCertificateNoAcceptedByUser {
-    ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = nil;
-    [self showPassCodeIfNeeded];
+-(void)badCertificateNotAcceptedByUser {
+    [self repeatTheCheckToTheServer];
 }
+
+
+#pragma mark - Active User
+
+- (void) switchActiveUserTo:(UserDto *)user inHardMode:(BOOL)hardMode withCompletionHandler:(void (^)(void)) completionHandler {
+    
+    // all the switch is performed in background, without blocking the caller thread, that should be main
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    
+        self.userSessionCurrentToken = nil;
+            // should be here or right after checking the user really changed? for the moment, here
+        
+        if (self.activeUser.userId != user.userId || hardMode) {
+
+            //We delete the cookies on SAML
+            if (k_is_sso_active) {
+                [UtilsCookies eraseCredentialsAndUrlCacheOfActiveUser];
+            }
+        
+            // Cancel downloads of the previous user, in the same background thread
+            [self portedCancelAllDownloads];
+        
+            // update active state of users in DB
+            [ManageUsersDB setAllUsersNoActive];
+            [ManageUsersDB setActiveAccountByUserId:user.userId];
+            user.activeaccount = YES;
+        
+            //Restore the cookies of the future activeUser
+            //1- Store the new cookies on the Database
+            [UtilsCookies setOnDBStorageCookiesByUser:self.activeUser];
+            //2- Clean the cookies storage
+            [UtilsFramework deleteAllCookies];
+            //3- We restore the previous cookies of the active user on the System cookies storage
+            [UtilsCookies setOnSystemStorageCookiesByUser:user];
+            //4- We delete the cookies of the active user on the database because it could change and it is not necessary keep them there
+            [ManageCookiesStorageDB deleteCookiesByUser:user];
+        
+            //Change the active user in appDelegate global variable
+            self.activeUser = user;
+        
+            [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
+        
+            [UtilsCookies eraseURLCache];
+        
+            //we create the user folder to haver multiuser
+            [UtilsFileSystem createFolderForUser:APP_DELEGATE.activeUser];
+            
+            self.isNewUser = YES;
+            
+            ManageAccounts *manageAccounts = [ManageAccounts new];
+            [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
+        }
+    
+        // completion handler is called in main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completionHandler) {
+                completionHandler();
+            }
+        });
+    });
+}
+
+
+- (void) portedCancelAllDownloads {
+    //Cancel downloads in ipad
+    [self.downloadManager cancelDownloads];
+    
+    [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
+}
+
 
 @end

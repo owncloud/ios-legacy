@@ -27,7 +27,7 @@
  * Method that adds user into database
  * @userDto -> userDto (Object of a user info)
  */
-+(void) insertUser:(UserDto *)userDto;
++(UserDto *) insertUser:(UserDto *)userDto;
 
 /*
  * This method returns the active user of the app
@@ -35,15 +35,15 @@
 + (UserDto *) getActiveUser;
 
 /*
- * This method returns the active user of the app without user name and password
+ * This method returns the active user of the app without credentials
  */
-+ (UserDto *) getActiveUserWithoutUserNameAndPassword;
++ (UserDto *) getActiveUserWithoutCredentials;
 
 /*
- * Method that returns the user object of the idUser
- * @idUser -> id User.
+ * Method that returns the user object of the userId
+ * @userId -> User id.
  */
-+ (UserDto *) getUserByIdUser:(NSInteger) idUser;
++ (UserDto *) getUserByUserId:(NSInteger) userId;
 
 /*
  * Method that returns if the user exist or not
@@ -70,9 +70,9 @@
 
 /*
  * Method that sets a user like a active account
- * @idUser -> id user
+ * @userId -> user id
  */
-+(void) setActiveAccountByIdUser: (NSInteger) idUser;
++(void) setActiveAccountByUserId: (NSInteger) userId;
 
 /*
  * Method that sets all acount as a no active.
@@ -87,12 +87,12 @@
 
 /*
  * Method that removes user data in all tables
- * @idUser -> id user
+ * @user -> userDto
  */
-+(void) removeUserAndDataByIdUser:(NSInteger)idUser;
++(void) removeUserAndDataByUser:(UserDto *)user;
 
 /*
- * Method that set the user storage of a user
+ * Method that set the user storage of a user, -> Not in use
  */
 +(void) updateStorageByUserDto:(UserDto *) user;
 

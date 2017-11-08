@@ -96,7 +96,7 @@
 
 //Background color of login view
 + (UIColor*)colorOfLoginBackground{
-    return [UIColor colorWithRed:245/255.0f green:245/255.0f blue:241/255.0f alpha:1.0f];
+    return [UIColor colorWithRed:255/255.0f green:255/255.0f blue:255/255.0f alpha:1.0f];
 }
 
 //Text color of url in login view
@@ -133,20 +133,11 @@
 
 //FILE LIST
 
-//Text color of selected folder
-+ (UIColor*)colorOfTxtSelectFolderToolbar {
-    return [UIColor whiteColor];
-}
-
-//Section index color
+//Section index color, Color of the letter separators shown when there are more than 20 files.
 + (UIColor*)colorOfSectionIndexColorFileList {
     return [UIColor colorWithRed:28/255.0f green:44/255.0f blue:67/255.0f alpha:0.7f];
 }
 
-//Header section index color
-+ (UIColor*)colorOfHeaderTableSectionFileList {
-    return [UIColor colorWithRed:248/255.0f green:248/255.0f blue:248/255.0f alpha:0.85f];
-}
 
 //WEB VIEW
 

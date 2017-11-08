@@ -44,6 +44,7 @@
 #import "OCLoadingSpinner.h"
 #import "InstantUpload.h"
 #import "CheckFeaturesSupported.h"
+#import "UtilsFileSystem.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -261,16 +262,16 @@
 -(void)disconnectUser {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
 
-    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: APP_DELEGATE.activeUser.idUser];
+    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: APP_DELEGATE.activeUser.userId];
     
-    [ManageUsersDB removeUserAndDataByIdUser: APP_DELEGATE.activeUser.idUser];
+    [ManageUsersDB removeUserAndDataByUser:APP_DELEGATE.activeUser];
     
     [UtilsFramework deleteAllCookies];
     
-    DLog(@"ID to delete user: %ld", (long)app.activeUser.idUser);
+    DLog(@"ID to delete user: %ld", (long)app.activeUser.userId);
     
     //Delete files os user in the system
-    NSString *userFolder = [NSString stringWithFormat:@"/%ld", (long)app.activeUser.idUser];
+    NSString *userFolder = [NSString stringWithFormat:@"/%ld", (long)app.activeUser.userId];
     NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
     
     NSError *error;     
@@ -690,9 +691,7 @@
         case 0:
             
             if (k_is_passcode_forced) {
-                //static NSString *CellIdentifier = @"AddAccountCell";
 
-                //cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
                 cell.textLabel.text = NSLocalizedString(@"title_app_pin_forced", nil);
                 cell.selectionStyle = UITableViewCellSelectionStyleBlue;
                 cell.textLabel.font = k_settings_bold_font;
@@ -792,7 +791,8 @@
     static NSString *CellIdentifier = @"AccountCell";
     
     AccountCell *accountCell = (AccountCell *) [self.settingsTableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    UserDto *userAccout = [self.listUsers objectAtIndex:row];
+    UserDto *userAccount = [UserDto new];
+    userAccount = [self.listUsers objectAtIndex:row];
     
     if (accountCell == nil) {
         
@@ -806,22 +806,21 @@
         }
     }
     
-    accountCell.delegate = self;
     [accountCell.activeButton setTag:row];
     
     accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
-    accountCell.userName.text = userAccout.username;
+    accountCell.userName.text = [userAccount nameToDisplay];
     
     //If saml needs change the name to utf8
     if (k_is_sso_active) {
         accountCell.userName.text = [accountCell.userName.text stringByRemovingPercentEncoding];
     }
     
-    if ([UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:userAccout.predefinedUrl]) {
+    if ([UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:userAccount.predefinedUrl]) {
         accountCell.urlServer.text = NSLocalizedString(@"pending_migration_to_new_url", nil);
         accountCell.urlServer.textColor = [UIColor colorOfLoginErrorText];
     } else {
-        accountCell.urlServer.text = userAccout.url;
+        accountCell.urlServer.text = userAccount.url;
     }
     
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -1056,18 +1055,16 @@
 - (void) didPressOnAddAccountButton{
    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    //Add Account
-    AddAccountViewController *viewController = [[AddAccountViewController alloc]initWithNibName:@"AddAccountViewController_iPhone" bundle:nil];
-    viewController.delegate = self;
+
+    UniversalLoginViewController *loginViewController = [UtilsLogin getLoginVCWithMode:LoginModeCreate andUser:nil];
     
     if (IS_IPHONE)
     {
-        viewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:viewController animated:NO];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
     } else {
         
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
     }
@@ -1102,104 +1099,29 @@
 - (void) didPressOnAccountIndexPath:(NSIndexPath*)indexPath {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    app.userSessionCurrentToken = nil;
-    
     UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
+
     //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
     [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:[UtilsUrls getFullRemoteServerPath:selectedUser]];
 
+    
     //Method to change the account
-    AccountCell *cell = (AccountCell *) [self.settingsTableView cellForRowAtIndexPath:indexPath];
-    [cell activeAccount:nil];
-    
-}
-
-#pragma mark - AccountCell Delegate Methods
-
--(void)activeAccountByPosition:(NSInteger)position {
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:position];
-    
-    if (app.activeUser.idUser != selectedUser.idUser) {
-        //Cancel downloads of the previous user
-    
-        [[OCLoadingSpinner sharedOCLoadingSpinner] initLoadingForViewController: self];
-    
-        [AppDelegate sharedSyncFolderManager].delegate = self;
+    [[OCLoadingSpinner sharedOCLoadingSpinner] initLoadingForViewController: self];
+    [app switchActiveUserTo:selectedUser inHardMode:NO withCompletionHandler:^{
+        DLog(@"refreshing list of accounts after user was switched");
         
-        [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
+        [[OCLoadingSpinner sharedOCLoadingSpinner] endLoading];
+        
+        //If ipad, clean the detail view
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            [app presentWithView];
+        }
+                
+        [self refreshTable];
+        
+    } ];
     
-        [self continueChangingUser:selectedUser];
-    }
-}
-
-- (void) continueChangingUser:(UserDto *) selectedUser {
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    app.userSessionCurrentToken = nil;
-    
-    self.semaphoreChangeUser = dispatch_semaphore_create(0);
-    
-    // Run loop
-    while (dispatch_semaphore_wait(self.semaphoreChangeUser, DISPATCH_TIME_NOW)) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
-                                 beforeDate:[NSDate dateWithTimeIntervalSinceNow:k_timeout_upload]];
-    }
-    
-    DLog(@"continueChangingUser");
-    
-    [[OCLoadingSpinner sharedOCLoadingSpinner] endLoading];
-    
-    [UtilsFramework deleteAllCookies];
-    
-    //[self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
-    
-    //If ipad, clean the detail view
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        [app presentWithView];
-    }
-    
-    [ManageUsersDB setAllUsersNoActive];
-    [ManageUsersDB setActiveAccountByIdUser:selectedUser.idUser];
-    selectedUser.activeaccount = YES;
-    
-    //Restore the cookies of the future activeUser
-    //1- Storage the new cookies on the Database
-    [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
-    //2- Clean the cookies storage
-    [UtilsFramework deleteAllCookies];
-    //3- We restore the previous cookies of the active user on the System cookies storage
-    [UtilsCookies setOnSystemStorageCookiesByUser:selectedUser];
-    //4- We delete the cookies of the active user on the databse because it could change and it is not necessary keep them there
-    [ManageCookiesStorageDB deleteCookiesByUser:selectedUser];
-    
-    //Change the active user in appDelegate global variable
-    app.activeUser = selectedUser;
-    
-    [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
-    
-    [UtilsCookies eraseURLCache];
-    
-    self.listUsers = [ManageUsersDB getAllUsers];
-    [self.settingsTableView reloadData];
-    
-    [self createFolderForUser:selectedUser];
-    
-    app.isNewUser = YES;
-}
-
-- (void) createFolderForUser:(UserDto *) user {
-    //We get the current folder to create the local tree
-    //we create the user folder to haver multiuser
-    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)user.idUser];
-    DLog(@"current: %@", currentLocalFileToCreateFolder);
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:currentLocalFileToCreateFolder]) {
-        NSError *error = nil;
-        [[NSFileManager defaultManager] createDirectoryAtPath:currentLocalFileToCreateFolder withIntermediateDirectories:NO attributes:nil error:&error];
-        DLog(@"Error: %@", [error localizedDescription]);
-    }
 }
 
 #pragma mark - AddAccountDelegate
@@ -1260,7 +1182,7 @@
     [uploadsArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         currentManageUploadRequest = obj;
         
-        if (currentManageUploadRequest.userUploading.idUser == selectedUser.idUser) {
+        if (currentManageUploadRequest.userUploading.userId == selectedUser.userId) {
             [currentManageUploadRequest cancelUpload];
         }
         
@@ -1487,7 +1409,7 @@
                 NSString *subject= k_subject_recommend_mail;
                 @try {
                     if(_user) {
-                        [self.mailer setSubject:[subject stringByReplacingOccurrencesOfString:@"$username" withString:_user.username]];
+                        [self.mailer setSubject:[subject stringByReplacingOccurrencesOfString:@"$username" withString:[self.user nameToDisplay]]];
                     } else {
                         [self.mailer setSubject:[subject stringByReplacingOccurrencesOfString:@"$username" withString:@""]];
                     }
@@ -1512,7 +1434,7 @@
         
         if(k_is_custom_recommend_mail) {
             if(k_is_sign_custom_usign_username) {
-                [self.mailer setMessageBody:[NSString stringWithFormat:@"%@%@",k_text_recommend_mail,_user.username] isHTML:NO];
+                [self.mailer setMessageBody:[NSString stringWithFormat:@"%@%@",k_text_recommend_mail,[self.user nameToDisplay]] isHTML:NO];
             } else {
                 [self.mailer setMessageBody:k_text_recommend_mail isHTML:NO];
             }
@@ -1726,23 +1648,13 @@
     [self refreshTable];
 }
 
-#pragma mark - Semaphore
-
-- (void) releaseSemaphoreToContinueChangingUser {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        dispatch_semaphore_signal(self.semaphoreChangeUser);
-        
-        [AppDelegate sharedSyncFolderManager].delegate = nil;
-    });
-}
-
-
 # pragma mark - menu account
 
 - (void)showMenuAccountOptions:(UIButton *)sender {
 
     self.selectedUserAccount = [self.listUsers objectAtIndex:sender.tag];
-    NSString *titleMenu = [NSString stringWithFormat:@"%@@%@",self.selectedUserAccount .username,self.selectedUserAccount .url];
+    NSString *titleMenu = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName: self.selectedUserAccount];
+    
     
     if (self.menuAccountActionSheet) {
         self.menuAccountActionSheet = nil;
@@ -1772,15 +1684,16 @@
 
 - (void) didSelectEditAccount:(UserDto *)user  {
    
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil  andUser:user andLoginMode:LoginModeUpdate];
+    UniversalLoginViewController *loginViewController = [UtilsLogin getLoginVCWithMode:LoginModeUpdate andUser:user];
     
     if (IS_IPHONE) {
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
+        
     } else {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         OCNavigationController *navController = nil;
-        navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+        navController = [[OCNavigationController alloc] initWithRootViewController:loginViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [app.splitViewController presentViewController:navController animated:YES completion:nil];
     }
@@ -1810,20 +1723,20 @@
     
     [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
     
-    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: user.idUser];
+    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: user.userId];
     
     //Delete the tables of this user
-    [ManageUsersDB removeUserAndDataByIdUser: user.idUser];
+    [ManageUsersDB removeUserAndDataByUser:user];
     
     [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:user];
     
     //Delete files of user in the system
-    NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)user.idUser];
+    NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)user.userId];
     NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
     NSError *error;
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
     
-    //if previous account is active we active the first by iduser
+    //if previous account is active we active the first by userId
     if(user.activeaccount) {
         
         [ManageUsersDB setActiveAccountAutomatically];
@@ -1833,7 +1746,7 @@
         
         [self setCookiesOfActiveAccount];
         
-        [self createFolderForUser:APP_DELEGATE.activeUser];
+        [UtilsFileSystem createFolderForUser:APP_DELEGATE.activeUser];
         
         //If ipad, clean the detail view
         if (!IS_IPHONE) {

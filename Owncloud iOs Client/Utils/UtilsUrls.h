@@ -46,6 +46,8 @@
 
 + (NSString *) getFullRemoteServerPath:(UserDto *)mUserDto;
 
++ (NSString *) getFullRemoteServerPathWithWebDavByNormalizedUrl:(NSString *)url;
+
 + (NSString *) getRemoteServerPathWithoutFolders:(UserDto *)mUser;
 
 + (NSString *) getFullRemoteServerPathWithWebDav:(UserDto *)mUserDto;
@@ -109,6 +111,6 @@
 
 + (BOOL) isNecessaryUpdateToPredefinedUrlByPreviousUrl:(NSString *)oldPredefinedUrl;
 
-+ (NSString *) getFullRemoteServerPathWithoutProtocolBeginningWithUsername:(UserDto *)mUserDto;
++ (NSString *) getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:(UserDto *)mUserDto;
 
 @end

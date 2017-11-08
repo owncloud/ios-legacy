@@ -24,7 +24,7 @@
 @protocol SSODelegate
 
 @optional
-- (void)setCookieForSSO:(NSString *) cookieString andSamlUserName:(NSString*)samlUserName;
+- (void)setCookieForSSO:(NSString *) cookieString serverPath:(NSString*)serverPath;
 @end
 
 @interface SSOViewController : UIViewController <UIWebViewDelegate, UIAlertViewDelegate, UITextFieldDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate, ManageNetworkErrorsDelegate>
@@ -62,5 +62,9 @@
 @property ManageNetworkErrors *manageNetworkErrors;
 
 - (IBAction)cancel:(id)sender;
+
+//Navigate to this instance
+- (void) navigateFrom:(UIViewController *)currentVC;
+
 
 @end

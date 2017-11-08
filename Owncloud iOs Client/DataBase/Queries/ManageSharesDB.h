@@ -41,9 +41,9 @@
 /**
  * Method that delete all shares element of a specific user
  *
- * @param idUser -> NSInteger
+ * @param userId -> NSInteger
  */
-+ (void) deleteAllSharesOfUser:(NSInteger)idUser;
++ (void) deleteAllSharesOfUser:(NSInteger)userId;
 
 
 ///-----------------------------------
@@ -54,7 +54,7 @@
  * Get the shared items of a specific path of a specific user
  *
  * @param path -> NSString
- * @param idUser -> NSInteger
+ * @param userId -> NSInteger
  *
  * @return NSMutableArray
  *
@@ -70,7 +70,7 @@
  * Get the shared items of a specific folder
  *
  * @param path -> NSString
- * @param idUser -> NSInteger
+ * @param userId -> NSInteger
  *
  * @return NSMutableArray
  *
@@ -85,13 +85,13 @@
 /**
  * Get the shared items of a specific user and path
  *
- * @param idUser -> NSInteger
+ * @param userId -> NSInteger
  * @param path -> NSString
  *
  * @return NSMutableArray
  *
  */
-+ (NSMutableArray*) getSharesByUser:(NSInteger)idUser andPath:(NSString *) path;
++ (NSMutableArray*) getSharesByUser:(NSInteger)userId andPath:(NSString *) path;
 
 
 
@@ -103,12 +103,12 @@
  * Get the shared items of a specific path of a specific user
  *
  * @param sharedFileSource -> NSInteger
- * @param idUser -> NSInteger
+ * @param userId -> NSInteger
  *
  * @return NSMutableArray
  *
  */
-+ (NSMutableArray*) getSharesBySharedFileSource:(NSInteger) sharedFileSource forUser:(NSInteger)idUser;
++ (NSMutableArray*) getSharesBySharedFileSource:(NSInteger) sharedFileSource forUser:(NSInteger)userId;
 
 
 ///-----------------------------------
@@ -118,10 +118,10 @@
 /**
  * Method to return all shares that have a user
  *
- * @param idUser -> NSInteger
+ * @param userId -> NSInteger
  *
  */
-+ (NSMutableArray *) getAllSharesByUser:(NSInteger)idUser;
++ (NSMutableArray *) getAllSharesByUser:(NSInteger)userId;
 
 
 ///-----------------------------------
@@ -132,11 +132,11 @@
 /**
  * Method to return all shares that have a user of shared type
  *
- * @param idUser -> NSInteger
+ * @param userId -> NSInteger
  * @param sharedType -> NSInteger
  *
  */
-+ (NSMutableArray *) getAllSharesByUser:(NSInteger)idUser anTypeOfShare: (NSInteger) shareType;
++ (NSMutableArray *) getAllSharesByUser:(NSInteger)userId anTypeOfShare: (NSInteger) shareType;
 
 
 ///-----------------------------------

@@ -22,7 +22,6 @@
 
 #import "UserDto.h"
 #import "constants.h"
-#import "EditAccountViewController.h"
 #import "UtilsDtos.h"
 #import "ManageUploadsDB.h"
 #import "FileNameUtils.h"
@@ -157,7 +156,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
             currentUpload.destinyFolder = remoteFolder;
             currentUpload.uploadFileName = fileName;
             currentUpload.estimateLength = imageData.length;;
-            currentUpload.userId = currentUser.idUser;
+            currentUpload.userId = currentUser.userId;
             currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
             currentUpload.status = waitingAddToUploadList;
             currentUpload.chunksLength = k_lenght_chunk;
@@ -214,7 +213,7 @@ NSString *ReloadFileListFromDataBaseNotification = @"ReloadFileListFromDataBaseN
                 currentUpload.destinyFolder = remoteFolder;
                 currentUpload.uploadFileName = fileName;
                 currentUpload.estimateLength = videoData.length;;
-                currentUpload.userId = currentUser.idUser;
+                currentUpload.userId = currentUser.userId;
                 currentUpload.isLastUploadFileOfThisArray = isLastUploadFileOfThisArray;
                 currentUpload.status = waitingAddToUploadList;
                 currentUpload.chunksLength = k_lenght_chunk;

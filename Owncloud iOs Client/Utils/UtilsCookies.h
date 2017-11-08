@@ -27,4 +27,8 @@
 + (void) eraseURLCache;
 + (void) eraseCredentialsAndUrlCacheOfActiveUser;
 
++ (void) clearCookies;
+
++ (void) restoreTheCookiesOfActiveUser;
+
 @end

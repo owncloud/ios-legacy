@@ -19,7 +19,6 @@
 #import "UIColor+Constants.h"
 #import "constants.h"
 #import "AppDelegate.h"
-#import "EditAccountViewController.h"
 #import "UtilsDtos.h"
 #import "UIImage+Resize.h"
 #import "UserDto.h"
@@ -129,8 +128,8 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     //Get current local folder
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
-    _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.userId, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
+    _currentLocalFolder = [_currentLocalFolder stringByRemovingPercentEncoding];
     
     //Obtain the type of file
     _typeOfFile = [FileNameUtils checkTheTypeOfFile:_file.fileName];
@@ -231,7 +230,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         navController.navigationBar.translucent = NO;
         
         if (IS_IPHONE) {
-            viewController.hidesBottomBarWhenPushed = YES;
             [self presentViewController:navController animated:YES completion:nil];
         } else {
             navController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -359,7 +357,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         }
         
         //File name
-        NSString *notificationText = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"updating", nil), [nameFileToUpdate stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *notificationText = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"updating", nil), [nameFileToUpdate stringByRemovingPercentEncoding]];
         DLog(@"name: %@",notificationText);
         [_notification displayNotificationWithMessage:notificationText completion:nil];
     }
@@ -1694,21 +1692,14 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.downloadManager errorLogin];
     
-    if(k_is_oauth_active) {
-        NSURL *url = [NSURL URLWithString:k_oauth_login];
-        [[UIApplication sharedApplication] openURL:url];
-    } else {
-        //Edit Account
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    //Edit Account
         
-        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andLoginMode:LoginModeExpire];
+    UniversalLoginViewController *loginVC = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser: APP_DELEGATE.activeUser];
         
-        viewController.hidesBottomBarWhenPushed = YES;
         
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        [self.navigationController presentViewController:navController animated:YES completion:nil];
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginVC];
+    [self.navigationController presentViewController:navController animated:YES completion:nil];
 
-    }
     [self didPressCancelButton:nil];
 }
 

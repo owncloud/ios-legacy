@@ -22,7 +22,6 @@
 #import "UIColor+Constants.h"
 #import "NSString+Encoding.h"
 #import "constants.h"
-#import "EditAccountViewController.h"
 #import "ManageUsersDB.h"
 #import "ManageUploadsDB.h"
 #import "ManageFilesDB.h"
@@ -298,7 +297,7 @@
             if ([[uploadsOfflineDict allKeys] containsObject:[NSNumber numberWithInteger:currentManageUploadRequest.currentUpload.idUploadsOffline]]) {
                 //Update the upload offline data
                 currentManageUploadRequest.currentUpload = [uploadsOfflineDict objectForKey:[NSNumber numberWithInteger:currentManageUploadRequest.currentUpload.idUploadsOffline]];
-                currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:currentManageUploadRequest.currentUpload.userId];
+                currentManageUploadRequest.userUploading = [ManageUsersDB getUserByUserId:currentManageUploadRequest.currentUpload.userId];
             }
             
             //Depends of kind of error we assings the upload to appropiate array
@@ -489,7 +488,7 @@
             uploadCell.cancelButton.tag=indexPath.row;
             [uploadCell.cancelButton addTarget:self action:@selector(cancelUploadTapped:) forControlEvents:UIControlEventTouchUpInside];
             
-            uploadCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            uploadCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByRemovingPercentEncoding];
             uploadCell.progressView.progress=currentManageUploadRequest.transferProgress;
             currentManageUploadRequest.progressTag=uploadCell.progressView.tag;
             
@@ -623,12 +622,12 @@
             
             NSString *lengthAndError = [NSString stringWithFormat:@"%@, %@", length, msgError];
             
-            failedCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            failedCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByRemovingPercentEncoding];
             failedCell.labelLengthAndError.text=lengthAndError;
-            failedCell.labelUserName.text=[UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUsername:currentManageUploadRequest.userUploading];
+            failedCell.labelUserName.text=[UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:currentManageUploadRequest.userUploading];
             //If there are SAML replacind the percents escapes with UTF8 coding
             if (k_is_sso_active) {
-                failedCell.labelUserName.text = [failedCell.labelUserName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                failedCell.labelUserName.text = [failedCell.labelUserName.text stringByRemovingPercentEncoding];
             }
             failedCell.labelPath.text=currentManageUploadRequest.pathOfUpload;
             
@@ -677,13 +676,14 @@
             
             NSString *labelLengthAndDateString = [NSString stringWithFormat:@"%@, %@", length, timeAgo];
             
-            uploadRecentCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            uploadRecentCell.labelTitle.text=[currentManageUploadRequest.currentUpload.uploadFileName stringByRemovingPercentEncoding];
             uploadRecentCell.labelLengthAndDate.text=labelLengthAndDateString;
             uploadRecentCell.labelPath.text=currentManageUploadRequest.pathOfUpload;
-            uploadRecentCell.labelUserName.text=[NSString stringWithFormat:@"%@@%@", currentManageUploadRequest.userUploading.username, [UtilsUrls getUrlServerWithoutHttpOrHttps:currentManageUploadRequest.userUploading.url]];
+            uploadRecentCell.labelUserName.text = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:currentManageUploadRequest.userUploading];
+
             //If there are SAML replacind the percents escapes with UTF8 coding
             if (k_is_sso_active) {
-                uploadRecentCell.labelUserName.text = [uploadRecentCell.labelUserName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                uploadRecentCell.labelUserName.text = [uploadRecentCell.labelUserName.text stringByRemovingPercentEncoding];
             }
             
         } else {
@@ -850,11 +850,11 @@
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    DLog(@"user: %ld", (long)app.activeUser.idUser);
+    DLog(@"user: %ld", (long)app.activeUser.userId);
     DLog(@"user: %ld", (long)selectedUpload.userId);
     
     
-    if(selectedUpload.userId == app.activeUser.idUser){
+    if(selectedUpload.userId == app.activeUser.userId){
         
         _selectedUploadToResolveTheConflict=selectedUpload;
         SelectFolderViewController *sf = [[SelectFolderViewController alloc] initWithNibName:@"SelectFolderViewController" onFolder:[ManageFilesDB getRootFileDtoByUser:app.activeUser]];
@@ -881,13 +881,13 @@
         }
         
     } else {
-        UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
-        NSString *userName = userSelected.username;
+        UserDto *userSelected = [ManageUsersDB getUserByUserId:selectedUpload.userId];
+        NSString *userDisplayAccountName = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:userSelected];
         //if SAML is enabled replace the percent of the samlusername by utf8
         if (k_is_sso_active) {
-            userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            userDisplayAccountName = [userDisplayAccountName stringByRemovingPercentEncoding];
         }
-        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
+        NSString* temp=[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"change_active_user", nil), userDisplayAccountName];
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                            message:temp
                                                           delegate:nil
@@ -905,7 +905,7 @@
 /**
  * This method is called when the user tap to resolve a error in a file and
  * the error is an "credential error"
- * This method prepare and show the EditAccount Screen
+ * This method prepare and show the Login View in Edit Mode
  *
  * @param selectedUpload -> UploadsOfflineDto of the selected file by the user
  *
@@ -916,15 +916,15 @@
     _selectedUploadToResolveTheConflict=selectedUpload;
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     //Get the update of the user
-    UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
+    UserDto *userSelected = [ManageUsersDB getUserByUserId:selectedUpload.userId];
     
-    if (selectedUpload.userId != (app.activeUser.idUser)) {
-        NSString *userName = userSelected.username;
+    if (selectedUpload.userId != (app.activeUser.userId)) {
+        NSString *userDisplayAccountName = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:userSelected];
         //if SAML is enabled replace the percent of the samlusername by utf8
         if (k_is_sso_active) {
-            userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            userDisplayAccountName= [userDisplayAccountName stringByRemovingPercentEncoding];
         }
-        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
+        NSString* temp=[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"change_active_user", nil),userDisplayAccountName];
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                            message:temp
                                                           delegate:nil
@@ -932,11 +932,11 @@
                                                  otherButtonTitles:NSLocalizedString(@"ok",nil), nil];
         [alertView show];
     } else {
-        //Show the Edit Account Screen
-        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:userSelected andLoginMode:LoginModeExpire];
+        //Show the Login View in Edit Mode
+        
+        UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:app.activeUser];
         
         if (IS_IPHONE) {
-            viewController.hidesBottomBarWhenPushed = YES;
             OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
             [self.navigationController presentViewController:navController animated:YES completion:nil];
         } else {
@@ -973,12 +973,12 @@
         
         AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         
-        if(selectedUpload.userId == app.activeUser.idUser){
+        if(selectedUpload.userId == app.activeUser.userId){
             
             _selectedUploadToResolveTheConflict = selectedUpload;
             
             FileDto *file = [[FileDto alloc] init];
-            file.fileName = [_selectedUploadToResolveTheConflict.uploadFileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            file.fileName = [_selectedUploadToResolveTheConflict.uploadFileName stringByRemovingPercentEncoding];
             file.isDirectory = NO;
             
             if (!self.overWritteOption) {
@@ -995,14 +995,14 @@
             [_overWritteOption showOverWriteOptionActionSheet];
             
         } else {
-            UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
-            NSString *userName=userSelected.username;
+            UserDto *userSelected = [ManageUsersDB getUserByUserId:selectedUpload.userId];
+            NSString *userDisplayAccountName = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:userSelected];
             //if SAML is enabled replace the percent of the samlusername by utf8
             if (k_is_sso_active) {
-                userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                userDisplayAccountName= [userDisplayAccountName stringByRemovingPercentEncoding];
             }
 
-            NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
+            NSString* temp=[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"change_active_user", nil), userDisplayAccountName];
             UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                                message:temp
                                                               delegate:nil
@@ -1026,22 +1026,22 @@
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    DLog(@"user: %ld", (long)app.activeUser.idUser);
+    DLog(@"user: %ld", (long)app.activeUser.userId);
     DLog(@"user: %ld", (long)selectedUpload.userId);
     
-    if(selectedUpload.userId == app.activeUser.idUser){
+    if(selectedUpload.userId == app.activeUser.userId){
         
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"error_permission_alert_message", nil) message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) otherButtonTitles:NSLocalizedString(@"choose_folder", nil), nil];
         [alertView show];
         
     }else{
-        UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
-        NSString *userName = userSelected.username;
+        UserDto *userSelected = [ManageUsersDB getUserByUserId:selectedUpload.userId];
+        NSString *userDisplayAccountName = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:userSelected];
         //if SAML is enabled replace the percent of the samlusername by utf8
         if (k_is_sso_active) {
-            userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            userDisplayAccountName= [userDisplayAccountName stringByRemovingPercentEncoding];
         }
-        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
+        NSString* temp=[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"change_active_user", nil), userDisplayAccountName];
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                            message:temp
                                                           delegate:nil
@@ -1066,16 +1066,16 @@
 - (void) resolveInsufficientStorage:(UploadsOfflineDto *) selectedUpload {
  
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    if(selectedUpload.userId == app.activeUser.idUser){
+    if(selectedUpload.userId == app.activeUser.userId){
         [ManageUploadsDB updateErrorOfAllUploadsOfUser:selectedUpload.userId withCurrentError:errorInsufficientStorage toNewError:notAnError];
     } else {
-        UserDto *userSelected = [ManageUsersDB getUserByIdUser:selectedUpload.userId];
-        NSString *userName = userSelected.username;
+        UserDto *userSelected = [ManageUsersDB getUserByUserId:selectedUpload.userId];
+        NSString *userDisplayAccountName = [UtilsUrls getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName:userSelected];
         //if SAML is enabled replace the percent of the samlusername by utf8
         if (k_is_sso_active) {
-            userName= [userName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            userDisplayAccountName= [userDisplayAccountName stringByRemovingPercentEncoding];
         }
-        NSString* temp=[NSString stringWithFormat:@"%@ %@@%@", NSLocalizedString(@"change_active_user", nil), userName, [UtilsUrls getUrlServerWithoutHttpOrHttps:userSelected.url]];
+        NSString* temp=[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"change_active_user", nil), userDisplayAccountName];
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil
                                                            message:temp
                                                           delegate:nil
@@ -1165,7 +1165,7 @@
     if (self.selectedFileDtoToResolveNotPermission) {
         
         //If exist file related with the select upload put in downloaded state
-        //UserDto *user = [ManageUsersDB getUserByIdUser:self.selectedFileDtoToResolveNotPermission.userId];
+        //UserDto *user = [ManageUsersDB getUserByUserId:self.selectedFileDtoToResolveNotPermission.userId];
         
        // NSString *parentFolder = [UtilsUrls getFilePathOnDBByFullPath:self.selectedFileDtoToResolveNotPermission.destinyFolder andUser:user];
         
@@ -1253,7 +1253,7 @@
  * This method addObservers for notifications to this class
  */
 -(void)setNotificationForCommunicationBetweenViews{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(relaunchErrorCredentialFiles:) name:relaunchErrorCredentialFilesNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(relaunchErrorCredentialFiles:) name:RelaunchErrorCredentialFilesNotification object:nil];
 }
 
 
@@ -1279,7 +1279,7 @@
      UserDto *userDto = (UserDto*)[notification object];
 
     //Change the status of the Credencial files error on a specific user
-    [app changeTheStatusOfCredentialsFilesErrorOfAnUserId:userDto.idUser];
+    [app changeTheStatusOfCredentialsFilesErrorOfAnUserId:userDto.userId];
     
     //Update the uploads table view
     [self updateRecents];

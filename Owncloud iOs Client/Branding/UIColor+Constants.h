@@ -60,7 +60,7 @@
 + (UIColor*)colorOfLoginBackground;
 //Text color of url in login view
 + (UIColor*)colorOfURLUserPassword;
-//Text color of login text
+//Text color of login text, used in Help Guide texts
 + (UIColor*)colorOfLoginText ;
 //Text color of error credentials
 + (UIColor*)colorOfLoginErrorText;
@@ -71,14 +71,12 @@
 //Text color of the text of the login button
 +(UIColor *)colorOfLoginButtonTextColor;
 
+
 //FILE LIST
 
-//Text color of selected folder
-+ (UIColor*)colorOfTxtSelectFolderToolbar;
-//Section index color
+//Section index color, Color of the letter separators shown when there are more than 20 files.
 + (UIColor*)colorOfSectionIndexColorFileList;
-//Header section index color
-+ (UIColor*)colorOfHeaderTableSectionFileList;
+
 
 //WEB VIEW
 

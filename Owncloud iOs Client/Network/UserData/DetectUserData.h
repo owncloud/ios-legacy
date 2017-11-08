@@ -1,12 +1,13 @@
 //
-//  CredentialsDto.h
+//  DetectUserData.h
 //  Owncloud iOs Client
 //
-//  Created by Noelia Alvarez on 27/10/14.
+//  Created by Noelia Alvarez on 18/10/2017.
+//
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -15,10 +16,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CredentialsDto : NSObject
+@interface DetectUserData : NSObject
 
-@property (nonatomic, copy) NSString *userName;
-@property (nonatomic, copy) NSString *password;
-
++ (void) getUserDisplayNameOfServer:(NSString*)path credentials:(OCCredentialsDto *)credentials
+                     withCompletion:(void(^)(NSString *displayName, NSError *error))completion;
 
 @end

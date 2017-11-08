@@ -24,5 +24,6 @@
 + (BOOL) moveFileOnTheFileSystemFrom:(NSString *)origin toDestiny:(NSString *)destiny;
 + (BOOL) existFileOnFileSystemByPath:(NSString *)filePath;
 + (void) storeVersionUsed;
++ (void) createFolderForUser:(UserDto *) user;
 
 @end

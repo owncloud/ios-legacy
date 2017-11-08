@@ -165,7 +165,7 @@
 
 - (void) createUploadOfflineWithFile:(FileDto *) file fromPath:(NSString *)path withUser:(NSInteger)userId {
     
-    UserDto *user = [ManageUsersDB getUserByIdUser:userId];
+    UserDto *user = [ManageUsersDB getUserByUserId:userId];
     
     NSString *remotePath = [NSString stringWithFormat: @"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:user],[UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:user]];
     
@@ -270,7 +270,7 @@
         upload.uploadFileName = temp.lastPathComponent;
         upload.kindOfError = notAnError;
         upload.estimateLength = (long)fileLength;
-        upload.userId = user.idUser;
+        upload.userId = user.userId;
         upload.isLastUploadFileOfThisArray = YES;
         upload.status = generatedByDocumentProvider;
         upload.chunksLength = k_lenght_chunk;

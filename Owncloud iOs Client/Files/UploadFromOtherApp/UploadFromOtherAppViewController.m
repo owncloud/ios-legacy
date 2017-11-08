@@ -31,7 +31,6 @@
 #import "OCErrorMsg.h"
 #import "FileNameUtils.h"
 #import "UtilsNetworkRequest.h"
-#import "EditAccountViewController.h"
 #import "Download.h"
 #import "FilePreviewViewController.h"
 #import "NSString+Encoding.h"
@@ -400,7 +399,7 @@
         NSString *accountString=[NSString stringWithFormat:@"%@@%@", _userName, _serverName];
         //If SAML enabled replacing the escapes 
         if (k_is_sso_active) {
-            accountString=[accountString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            accountString=[accountString stringByRemovingPercentEncoding];
         }
         cell.textLabel.text=accountString;
         cell.textLabel.font=cellBoldFont;       
@@ -410,7 +409,7 @@
     }else if (indexPath.section==2) {
         
         cell.selectionStyle=UITableViewCellSelectionStyleBlue;
-        NSString *fName= [_folderName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *fName= [_folderName stringByRemovingPercentEncoding];
         cell.textLabel.text=fName;
         cell.textLabel.font=cellBoldFont;
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
@@ -442,7 +441,7 @@
         } else {
             NSString *fileName;
             fileName=[self getFileName:_filePath];
-            [_nameFileTextField setText:[fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            [_nameFileTextField setText:[fileName stringByRemovingPercentEncoding]];
         }
         
         [cell.contentView addSubview:_nameFileTextField];
@@ -486,7 +485,7 @@
         sf.currentRemoteFolder=_remoteFolder;
         
         //We get the current folder to create the local tree
-        NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser];
+        NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.userId];
         
         sf.currentLocalFolder = localRootUrlString;
         
@@ -568,7 +567,7 @@
         [nameLabel setLineBreakMode:NSLineBreakByTruncatingMiddle];        
         [nameLabel setClipsToBounds:YES];
         
-       nameLabel.text=[fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+       nameLabel.text=[fileName stringByRemovingPercentEncoding];
        // nameLabel.text=fileName;
         
         //Label of size
@@ -865,8 +864,7 @@
 - (void)showEditAccountViewController{
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:app.activeUser andLoginMode:LoginModeExpire];
+    UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser: app.activeUser];
     
     if (IS_IPHONE)
     {

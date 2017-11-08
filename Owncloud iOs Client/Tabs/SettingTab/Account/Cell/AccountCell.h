@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -15,23 +15,14 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol AccountCellDelegate
-
-@optional
-- (void)activeAccountByPosition:(NSInteger) position;
-@end
-
 @interface AccountCell : UITableViewCell
-
 
 @property(nonatomic, weak) IBOutlet UILabel *userName;
 @property(nonatomic, weak) IBOutlet UILabel *urlServer;
 @property(nonatomic, weak) IBOutlet UIButton *activeButton;
 @property (weak, nonatomic) IBOutlet UIButton *menuButton;
-@property(nonatomic, weak) __weak id <AccountCellDelegate> delegate;
 
 
-- (IBAction)activeAccount:(id)sender;
 
 
 

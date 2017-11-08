@@ -67,10 +67,10 @@
 
     if(self.selectedFileDto.isDirectory) {
         if ( [self.selectedFileDto.fileName length] > 0) {
-            [_renameAlertView textFieldAtIndex:0].text = [[self.selectedFileDto.fileName substringToIndex:[self.selectedFileDto.fileName length] - 1]stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            [_renameAlertView textFieldAtIndex:0].text = [[self.selectedFileDto.fileName substringToIndex:[self.selectedFileDto.fileName length] - 1]stringByRemovingPercentEncoding];
         }
     } else {
-        [_renameAlertView textFieldAtIndex:0].text = [self.selectedFileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        [_renameAlertView textFieldAtIndex:0].text = [self.selectedFileDto.fileName stringByRemovingPercentEncoding];
     }
     
     [_renameAlertView show];
@@ -243,8 +243,8 @@
     NSString *newURLString = [NSString stringWithFormat:@"%@%@", [UtilsUrls getFullRemoteServerPathWithWebDav:app.activeUser], self.destinationFile];
     NSString *originalURLString = [UtilsUrls getFullRemoteServerFilePathByFile:self.selectedFileDto andUser:app.activeUser];
     
-    originalURLString = [originalURLString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    newURLString = [newURLString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    originalURLString = [originalURLString stringByRemovingPercentEncoding];
+    newURLString = [newURLString stringByRemovingPercentEncoding];
     
     if ([originalURLString hasSuffix:@"/"]) {
         originalURLString = [originalURLString substringToIndex:[originalURLString length] - 1];
@@ -255,15 +255,8 @@
     
     DLog(@"After checking the original and destiny path Move request");
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-    }
-    
+    [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
+
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
     [[AppDelegate sharedOCCommunication] moveFileOrFolder:originalURLString toDestiny:newURLString onCommunication:[AppDelegate sharedOCCommunication] withForbiddenCharactersSupported:[ManageUsersDB hasTheServerOfTheActiveUserForbiddenCharactersSupport] successRequest:^(NSHTTPURLResponse *response, NSString *redirectedServer) {
@@ -431,9 +424,9 @@
         
         NSError *error;
         
-        NSString *localUrl = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, [originalName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *localUrl = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, [originalName stringByRemovingPercentEncoding]];
         
-        NSString *newFile = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, [self.mNewName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *newFile = [NSString stringWithFormat:@"%@%@", self.currentLocalFolder, [self.mNewName stringByRemovingPercentEncoding]];
         
         NSString *documentPath= [UtilsUrls getOwnCloudFilePath];
         
@@ -472,7 +465,7 @@
             // Create file manager
             NSFileManager *fileMgr = [[NSFileManager alloc] init];
             
-            NSString *fileNameWithoutPercents = [self.selectedFileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *fileNameWithoutPercents = [self.selectedFileDto.fileName stringByRemovingPercentEncoding];
             
             DLog(@"FileName: %@", fileNameWithoutPercents);
             DLog(@"Delete: %@", self.selectedFileDto.localFolder);
@@ -504,13 +497,13 @@
     if (!IS_IPHONE) {
         if (app.detailViewController.file.idFile == _selectedFileDto.idFile) {
             app.detailViewController.file = [ManageFilesDB getFileDtoByFileName:[_mNewName encodeString:NSUTF8StringEncoding] andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
-            app.detailViewController.titleLabel.text = [app.detailViewController.file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            app.detailViewController.titleLabel.text = [app.detailViewController.file.fileName stringByRemovingPercentEncoding];
             
         }
     }
     
     //To update the audio player
-    NSString *oldPath = [NSString stringWithFormat:@"%@%@",_currentLocalFolder, [self.selectedFileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *oldPath = [NSString stringWithFormat:@"%@%@",_currentLocalFolder, [self.selectedFileDto.fileName stringByRemovingPercentEncoding]];
     
     if ([app isMediaPlayerRunningWithThisFilePath: oldPath]) {
         NSString *pathOfNewFile = [NSString stringWithFormat:@"%@%@",_currentLocalFolder, _mNewName];

@@ -15,7 +15,7 @@
  */
 
 #import "InitializeDatabase.h"
-#import "CredentialsDto.h"
+#import "OCCredentialsDto.h"
 #import "OCKeychain.h"
 #import "ManageDB.h"
 #import "ManageFilesDB.h"
@@ -44,6 +44,7 @@
 #define k_DB_version_19 19
 #define k_DB_version_20 20
 #define k_DB_version_21 21
+#define k_DB_version_22 22
 
 @implementation InitializeDatabase
 
@@ -57,7 +58,7 @@
 + (void) initDataBase {
     
     //New version
-    static int dbVersion = k_DB_version_21;
+    static int dbVersion = k_DB_version_22;
     
     //This method make a new database
     [ManageDB createDataBase];
@@ -89,7 +90,7 @@
             case k_DB_version_8:
                 [ManageDB updateDBVersion8To9];
             case k_DB_version_9:
-                [ManageDB updateDBVersion9To10];
+                [ManageDB updateDBVersion9To10];//Updates in Keychain
             case k_DB_version_10:
                 [ManageDB updateDBVersion10To11];
             case k_DB_version_11:
@@ -97,7 +98,7 @@
             case k_DB_version_12:
                 [ManageDB updateDBVersion12To13];
                 //Update keychain of all the users
-                [OCKeychain updateAllKeychainsToUseTheLockProperty];
+                [OCKeychain updateAllKeychainItemsToUseTheLockProperty];//Updates in Keychain
             case k_DB_version_13:
                 [ManageDB updateDBVersion13To14];
             case k_DB_version_14:
@@ -114,6 +115,8 @@
                 [ManageDB updateDBVersion19To20];
             case k_DB_version_20:
                 [ManageDB updateDBVersion20To21];
+            case k_DB_version_21:
+                [ManageDB updateDBVersion21To22];//Updates in Keychain
                 break; //Insert your migration above this final break.
         }
     }

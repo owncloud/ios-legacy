@@ -14,6 +14,8 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 #import "SimpleFileListTableViewController.h"
 #import "ManageUsersDB.h"
 #import "ManageFilesDB.h"
@@ -36,13 +38,19 @@
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
-#import "EditAccountViewController.h"
 #import "OCNavigationController.h"
+#import "Owncloud_iOs_Client-Swift.h"
+#elif FILE_PICKER
+#import "DocumentPickerViewController.h"
+#import "ownCloudExtApp-Swift.h"
 #elif SHARE_IN
 #import "OC_Share_Sheet-Swift.h"
 #else
 #import "DocumentPickerViewController.h"
+#import "ownCloudExtAppFileProvider-Swift.h"
 #endif
+
+@class UniversalLoginViewController;
 
 @interface SimpleFileListTableViewController ()
 
@@ -367,14 +375,7 @@
     sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
 #endif
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [sharedCommunication setCredentialsWithCookie:self.user.password];
-    } else if (k_is_oauth_active) {
-        [sharedCommunication setCredentialsOauthWithToken:self.user.password];
-    } else {
-        [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
-    }
+    [sharedCommunication setCredentials:self.user.credDto];
     
     [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
     
@@ -553,11 +554,8 @@
                              }];
         [alert addAction:ok];
         
-        if ([self.navigationController isViewLoaded] && self.navigationController.view.window && self.resolveCredentialErrorViewController != nil) {
-            [self.resolveCredentialErrorViewController presentViewController:alert animated:YES completion:nil];
-        } else {
-            [self presentViewController:alert animated:YES completion:nil];
-        }
+        [self presentViewController:alert animated:YES completion:nil];
+
     });
 }
 
@@ -566,8 +564,8 @@
 #ifdef CONTAINER_APP
     
     //Edit Account
-    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser] andLoginMode:LoginModeExpire];
-    
+    self.resolveCredentialErrorViewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser: self.user];
+        
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];
@@ -664,16 +662,7 @@
 #endif
     
     if (!self.isRefreshInProgress) {
-        //Set the right credentials
-        if (k_is_sso_active) {
-            [sharedCommunication setCredentialsWithCookie:self.user.password];
-        } else if (k_is_oauth_active) {
-            [sharedCommunication setCredentialsOauthWithToken:self.user.password];
-        } else {
-            [sharedCommunication setCredentialsWithUser:self.user.username andPassword:self.user.password];
-        }
-        
-        [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
+        [sharedCommunication setCredentials:self.user.credDto];
         
         NSString *remotePath = [UtilsUrls getFullRemoteServerFilePathByFile:self.currentFolder andUser:self.user];
         remotePath = [remotePath stringByRemovingPercentEncoding];
@@ -729,7 +718,7 @@
 
 #pragma mark - CheckAccessToServerDelegate
 
--(void)connectionToTheServer:(BOOL)isConnection {
+-(void)connectionToTheServerWasChecked:(BOOL)isConnected withHttpStatusCode:(NSInteger)statusCode andError:(NSError *)error {
 
 }
 
@@ -740,7 +729,7 @@
     [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.user.url];
 }
 
--(void)badCertificateNoAcceptedByUser {
+-(void)badCertificateNotAcceptedByUser {
     DLog(@"Certificate refushed by user");
 }
 

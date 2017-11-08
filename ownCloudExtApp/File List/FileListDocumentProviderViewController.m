@@ -311,7 +311,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
             //Font for file
             UIFont *fileFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
             fileCell.labelTitle.font = fileFont;
-            fileCell.labelTitle.text = [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            fileCell.labelTitle.text = [file.fileName stringByRemovingPercentEncoding];
             
             
             NSString *fileSizeString = @"";
@@ -352,7 +352,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
             UIFont *fileFont = [UIFont fontWithName:@"HelveticaNeue" size:17];
             fileCell.labelTitle.font = fileFont;
             
-            NSString *folderName = [file.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *folderName = [file.fileName stringByRemovingPercentEncoding];
             //Quit the last character
             folderName = [folderName substringToIndex:[folderName length]-1];
             
@@ -416,7 +416,7 @@ NSString *userHasCloseDocumentPicker = @"userHasCloseDocumentPicker";
     
     BOOL isTheSameUser = NO;
     
-    if (userFromDB.idUser == self.user.idUser) {
+    if (userFromDB.userId == self.user.userId) {
         self.user = userFromDB;
         isTheSameUser = YES;
     }

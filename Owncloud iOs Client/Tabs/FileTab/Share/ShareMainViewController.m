@@ -24,7 +24,6 @@
 #import "UIColor+Constants.h"
 #import "OCNavigationController.h"
 #import "ManageUsersDB.h"
-#import "EditAccountViewController.h"
 #import "Customization.h"
 #import "ShareSearchUserViewController.h"
 #import "ManageSharesDB.h"
@@ -74,7 +73,7 @@
 @property (nonatomic, strong) ShareFileOrFolder* sharedFileOrFolder;
 @property (nonatomic, strong) MBProgressHUD* loadingView;
 @property (nonatomic, strong) UIActivityViewController *activityView;
-@property (nonatomic, strong) EditAccountViewController *resolveCredentialErrorViewController;
+@property (nonatomic, strong) UniversalLoginViewController *resolveCredentialErrorViewController;
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
 @property (nonatomic, strong) NSMutableArray *sharedUsersOrGroups;
 @property (nonatomic, strong) NSMutableArray *sharedPublicLinks;
@@ -145,7 +144,7 @@
     [self.sharesOfFile removeAllObjects];
     [self.sharedPublicLinks removeAllObjects];
     
-    self.sharesOfFile = [ManageSharesDB getSharesByUser:APP_DELEGATE.activeUser.idUser andPath:path];
+    self.sharesOfFile = [ManageSharesDB getSharesByUser:APP_DELEGATE.activeUser.userId andPath:path];
     
     DLog(@"Number of Shares of file: %lu", (unsigned long)self.sharesOfFile.count);
     
@@ -214,7 +213,8 @@
         numberOfSections--;
     }
     
-    if (!k_is_share_by_link_available || !(APP_DELEGATE.activeUser.hasCapabilitiesSupport && APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingShareLinkEnabled)) {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    if (!k_is_share_by_link_available || !(app.activeUser.hasCapabilitiesSupport && app.activeUser.capabilitiesDto.isFilesSharingShareLinkEnabled)) {
         numberOfSections--;
     }
     
@@ -686,7 +686,6 @@
     
     if (IS_IPHONE)
     {
-        viewController.hidesBottomBarWhenPushed = YES;
         [self presentViewController:navController animated:YES completion:nil];
     } else {
         OCNavigationController *navController = nil;
@@ -706,7 +705,6 @@
     
     if (IS_IPHONE)
     {
-        viewController.hidesBottomBarWhenPushed = YES;
         [self presentViewController:navController animated:YES completion:nil];
     } else {
         OCNavigationController *navController = nil;
@@ -812,8 +810,8 @@
 #ifdef CONTAINER_APP
     
     //Edit Account
-    self.resolveCredentialErrorViewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:[ManageUsersDB getActiveUser] andLoginMode:LoginModeExpire];
-    
+    self.resolveCredentialErrorViewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:APP_DELEGATE.activeUser];
+        
     if (IS_IPHONE) {
         OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:self.resolveCredentialErrorViewController];
         [self.navigationController presentViewController:navController animated:YES completion:nil];

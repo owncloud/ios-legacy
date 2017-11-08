@@ -21,10 +21,21 @@
 #import "UserDto.h"
 #import "KKPasscodeViewController.h"
 #import "AccountCell.h"
-#import "AddAccountViewController.h"
 #import "MBProgressHUD.h"
 #import "SyncFolderManager.h"
 
+#ifdef CONTAINER_APP
+#import "Owncloud_iOs_Client-Swift.h"
+#elif FILE_PICKER
+#import "ownCloudExtApp-Swift.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
+#else
+#import "ownCloudExtAppFileProvider-Swift.h"
+#endif
+
+
+@class UniversalViewController;
 
 typedef enum {
     help = 0,
@@ -34,7 +45,7 @@ typedef enum {
     
 } enumInfoSetting;
 
-@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, AccountCellDelegate, AddAccountDelegate, MBProgressHUDDelegate, SyncFolderManagerDelegate>
+@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, KKPasscodeViewControllerDelegate, MBProgressHUDDelegate>
 
 @property(nonatomic,strong)IBOutlet UITableView *settingsTableView;
 @property(nonatomic,strong)UISwitch *switchPasscode;
@@ -57,7 +68,6 @@ typedef enum {
 
 //View for loading screen
 @property(nonatomic, strong) MBProgressHUD  *HUD;
-@property(nonatomic, strong) dispatch_semaphore_t semaphoreChangeUser;
 
 @property (nonatomic,strong) UIActionSheet *menuAccountActionSheet;
 @property (nonatomic,strong) UserDto *selectedUserAccount;

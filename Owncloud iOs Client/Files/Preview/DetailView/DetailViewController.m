@@ -18,7 +18,6 @@
 #import "AppDelegate.h"
 #import "UIColor+Constants.h"
 #import "constants.h"
-#import "EditAccountViewController.h"
 #import "UtilsDtos.h"
 #import "UIImage+Resize.h"
 #import "FileNameUtils.h"
@@ -160,7 +159,7 @@
     
     //TitleLabel
     if (_file) {
-        [_titleLabel setText:[_file.fileName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding]];
+        [_titleLabel setText:[_file.fileName stringByRemovingPercentEncoding]];
     } else if (_isFileCharged==NO && _file==nil){
         [_titleLabel setText:_linkTitle];
     } else {
@@ -270,8 +269,8 @@
     self.isForceDownload = isForceDownload;
     
     //Get the current local folder
-    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:myFile.filePath andUser:app.activeUser]];
-    _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.userId, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:myFile.filePath andUser:app.activeUser]];
+    _currentLocalFolder = [_currentLocalFolder stringByRemovingPercentEncoding];
 
     //Quit the title
     _linkTitle=@"";
@@ -286,7 +285,7 @@
         //Stop the notification
         [self stopNotificationUpdatingFile];
         //Put the title in the toolBar
-        [_titleLabel setText:[_file.fileName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding]];
+        [_titleLabel setText:[_file.fileName stringByRemovingPercentEncoding]];
         _isViewBlocked = NO;
         
         //Remove the views
@@ -728,7 +727,7 @@
  */
 - (void)putTitleInNavBarByName:(NSString *) fileName{
     
-    [_titleLabel setText:[fileName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding]];
+    [_titleLabel setText:[fileName stringByRemovingPercentEncoding]];
 }
 
 
@@ -1831,20 +1830,13 @@
     
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.downloadManager errorLogin];
-    
-    if(k_is_oauth_active) {
-        NSURL *url = [NSURL URLWithString:k_oauth_login];
-        [[UIApplication sharedApplication] openURL:url];
-        
-    } else {
 
-        EditAccountViewController *viewController = [[EditAccountViewController alloc]initWithNibName:@"EditAccountViewController_iPhone" bundle:nil andUser:appDelegate.activeUser andLoginMode:LoginModeExpire];
-        [viewController setBarForCancelForLoadingFromModal];
+    
+    UniversalLoginViewController *viewController = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:APP_DELEGATE.activeUser];
         
-        OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
-    }
+    OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:viewController];
+    navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [appDelegate.splitViewController presentViewController:navController animated:YES completion:nil];
 }
 
 #pragma mark - Notifications methods
@@ -1957,7 +1949,7 @@
         }
         
         //File name
-        NSString *notificationText = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"updating", nil), [nameFileToUpdate stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *notificationText = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"updating", nil), [nameFileToUpdate stringByRemovingPercentEncoding]];
         DLog(@"name: %@",notificationText);
         [_notification displayNotificationWithMessage:notificationText completion:nil];
     }

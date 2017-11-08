@@ -40,13 +40,27 @@
 #import "PrepareFilesToUpload.h"
 #import "RenameFile.h"
 #import "MoveFile.h"
-#import "EditAccountViewController.h"
 #import "SWTableViewCell.h"
 #import "OverwriteFileOptions.h"
 #import "ManageNetworkErrors.h"
 #import "SelectFolderViewController.h"
 #import "SelectFolderNavigation.h"
 #import "ManageFavorites.h"
+#import "DetectUserData.h"
+
+#ifdef CONTAINER_APP
+#import "Owncloud_iOs_Client-Swift.h"
+#elif FILE_PICKER
+#import "ownCloudExtApp-Swift.h"
+#elif SHARE_IN
+#import "OC_Share_Sheet-Swift.h"
+#else
+#import "ownCloudExtAppFileProvider-Swift.h"
+#endif
+
+
+@class UniversalViewController;
+@class ManageAccounts;
 
 @interface FilesViewController : UIViewController
 <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate,
@@ -93,8 +107,6 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 @property(nonatomic)UIBackgroundTaskIdentifier moveTask;
 //Refresh Control
 @property(nonatomic, strong) UIRefreshControl *refreshControl;
-//View about credentials error
-@property (nonatomic,strong) EditAccountViewController *resolvedCredentialError;
 //UIActionSheet for "more" option on swipe
 @property (nonatomic,strong) UIActionSheet *moreActionSheet;
 //UIActionSheet for + button

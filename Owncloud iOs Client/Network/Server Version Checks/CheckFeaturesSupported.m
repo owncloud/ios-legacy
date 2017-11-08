@@ -60,7 +60,7 @@
             } failure:^(NSError *error) {
                 DLog(@"error getting capabilities from server, we use previous capabilities from DB to update active user");
                 
-                app.activeUser.capabilitiesDto =  [ManageCapabilitiesDB getCapabilitiesOfUserId:app.activeUser.idUser];
+                app.activeUser.capabilitiesDto =  [ManageCapabilitiesDB getCapabilitiesOfUserId:app.activeUser.userId];
             }];
         }
     });

@@ -618,7 +618,7 @@
 /**
  * Changes:
  *
- * Migrate the current usersname and password stored in users table to the new keychain
+ * Migrate the current username and password stored in users table to the new keychain
  * Do a backup of the users table in users_backup table
  * Remove users table
  * Create a new users table without username and password
@@ -631,8 +631,7 @@
     NSArray *currentUsers = [NSArray arrayWithArray:[ManageUsersDB getAllOldUsersUntilVersion10]];
     
     for (UserDto *user in currentUsers) {
-         NSString *idString = [NSString stringWithFormat:@"%ld", (long)user.idUser];
-        if (![OCKeychain setCredentialsById:idString withUsername:user.username andPassword:user.password]){
+        if (![OCKeychain storeCredentialsOfUserFromDBVersion9To10:user]){
             DLog(@"Failed setting credentials");
         }
         
@@ -1257,6 +1256,16 @@
         
     }];
 
+}
+
+
+
++ (void) updateDBVersion21To22 {
+    
+    //1.- Migrate the current password stored in keychain
+
+    [OCKeychain updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoAsValueAndAuthenticationType];
+    
 }
 
 

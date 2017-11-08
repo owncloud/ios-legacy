@@ -66,7 +66,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, cookie, user_id FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id, cookie, user_id FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         while ([rs next]) {
             
@@ -102,7 +102,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"DELETE FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error deleting an upload offline");

@@ -26,7 +26,7 @@
 #import "OCURLSessionManager.h"
 #import "CheckAccessToServer.h"
 #import "OCKeychain.h"
-#import "CredentialsDto.h"
+#import "OCCredentialsDto.h"
 #import "FileListDBOperations.h"
 #import "ManageAppSettingsDB.h"
 #import "KKPasscodeViewController.h"
@@ -41,6 +41,8 @@
 #import "ManageUploadsDB.h"
 #import "UtilsDtos.h"
 #import "ManageTouchID.h"
+#import "OCOAuth2Configuration.h"
+#import "Customization.h"
 
 @interface DocumentPickerViewController ()
 
@@ -160,8 +162,23 @@
         sharedOCCommunication = [[OCCommunication alloc] initWithUploadSessionManager:nil andDownloadSessionManager:downloadSessionManager andNetworkSessionManager:networkSessionManager];
         
         //Cookies is allways available in current supported Servers
-        sharedOCCommunication.isCookiesAvailable = YES;
+        [sharedOCCommunication setIsCookiesAvailable:YES];
         
+        [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
+                                                            initWithClientId:k_oauth2_client_id
+                                                            clientSecret:k_oauth2_client_secret
+                                                            redirectUri:k_oauth2_redirect_uri
+                                                            authorizationEndpoint:k_oauth2_authorization_endpoint
+                                                            tokenEndpoint:k_oauth2_token_endpoint]];
+        
+        [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
+        
+        OCKeychain *oKeychain = [[OCKeychain alloc] init];
+        [sharedOCCommunication setValueCredentialsStorage:oKeychain];
+        
+        SSLCertificateManager *sslCertificateManager = [[SSLCertificateManager alloc] init];
+        [sharedOCCommunication setValueTrustedCertificatesStore:sslCertificateManager];
+
     }
     return sharedOCCommunication;
 }
@@ -184,7 +201,7 @@
     
     if (self.mode == UIDocumentPickerModeImport) {
         //Import mode return the name without encoding
-        destinationUrl = [destinationUrl URLByAppendingPathComponent:[fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] ;
+        destinationUrl = [destinationUrl URLByAppendingPathComponent:[fileDto.fileName stringByRemovingPercentEncoding]] ;
     } else {
         destinationUrl = [destinationUrl URLByAppendingPathComponent:fileDto.fileName];
     }
@@ -212,7 +229,7 @@
     //Some error in the process to send the file to the document picker.
    if (attributes && !error) {
        
-       ProvidingFileDto *providingFile = [ManageProvidingFilesDB insertProvidingFileDtoWithPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:destinationUrl.path] byUserId:self.user.idUser];
+       ProvidingFileDto *providingFile = [ManageProvidingFilesDB insertProvidingFileDtoWithPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:destinationUrl.path] byUserId:self.user.userId];
        [ManageFilesDB updateFile:fileDto.idFile withProvidingFile:providingFile.idProvidingFile];
        
        [self dismissGrantingAccessToURL:destinationUrl];
@@ -293,7 +310,7 @@
                         upload.uploadFileName = temp.lastPathComponent;
                         upload.kindOfError = notAnError;
                         upload.estimateLength = (long)fileLength;
-                        upload.userId = user.idUser;
+                        upload.userId = user.userId;
                         upload.isLastUploadFileOfThisArray = YES;
                         upload.status = generatedByDocumentProvider;
                         upload.chunksLength = k_lenght_chunk;

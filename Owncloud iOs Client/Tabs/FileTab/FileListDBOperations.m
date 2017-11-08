@@ -18,6 +18,7 @@
 
 #import "ManageFilesDB.h"
 #import "UserDto.h"
+#import "ManageUsersDB.h"
 
 @implementation FileListDBOperations
 
@@ -37,7 +38,7 @@
             
             DLog(@"Current folder to create: %@%@",currentFile.filePath, currentFile.fileName);
             
-            NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%@",localFolder,[currentFile.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%@",localFolder,[currentFile.fileName stringByRemovingPercentEncoding]];
             
             DLog(@"currentLocalFileToCreateFolder: %@", currentLocalFileToCreateFolder);
             
@@ -67,7 +68,7 @@
     initialRootFolder.ocId = @"";
     initialRootFolder.filePath = @"";
     initialRootFolder.fileName = @"";
-    initialRootFolder.userId = user.idUser;
+    initialRootFolder.userId = user.userId;
     initialRootFolder.isDirectory = YES;
     initialRootFolder.isDownload = notDownload;
     initialRootFolder.fileId = -1;
@@ -115,7 +116,16 @@
     DLog(@"name: %@", currentFolder.fileName);
     
   //  NSMutableArray *directoryList = [[req getDirectoryList] mutableCopy];
-    [ManageFilesDB insertManyFiles:arrayFromServer andFileId:currentFolder.idFile];
+    
+     UserDto *user;
+#ifdef CONTAINER_APP
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    user = app.activeUser;
+#else
+    user = [ManageUsersDB getActiveUser];
+#endif
+    
+    [ManageFilesDB insertManyFiles:arrayFromServer ofFileId:currentFolder.idFile andUser:user];
     
     //Read all backups folders and update on the old files related with the new ids
     [ManageFilesDB updateRelatedFilesFromBackup];
@@ -139,7 +149,7 @@
     
     DLog(@"Current folder to create: %@", folderName);
     
-    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%@",localFolder,[folderName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%@",localFolder,[folderName stringByRemovingPercentEncoding]];
     
     DLog(@"currentLocalFileToCreateFolder: %@", currentLocalFileToCreateFolder);
     

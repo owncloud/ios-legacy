@@ -3,7 +3,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -33,4 +33,23 @@
 #import "MBProgressHUD.h"
 #import "AppDelegate.h"
 #import "ManageFilesDB.h"
+#import "OCErrorMsg.h"
+#import "CheckAccessToServer.h"
+#import "SSLCertificateManager.h"
+#import "Customization.h"
+#import "UtilsFramework.h"
+#import "OCKeychain.h"
+#import "SSOViewController.h"
+#import "UtilsLogin.h"
+#import "UtilsCookies.h"
+#import "CheckFeaturesSupported.h"
+#import "InstantUpload.h"
+#import "ManageCookiesStorageDB.h"
+#import "OCCredentialsStorage.h"
+#import "OCFrameworkConstants.h"
+#import "OCOAuth2Manager.h"
+#import "OCOAuth2Configuration.h"
+#import "DetectUserData.h"
+#import "UtilsNotifications.h"
+
 

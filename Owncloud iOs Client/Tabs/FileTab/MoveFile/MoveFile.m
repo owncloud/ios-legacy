@@ -121,8 +121,8 @@
     NSString *destinyFile = [NSString stringWithFormat:@"%@%@",self.destinationFolder, self.destinyFilename];
     
     //We remove the URL Encoding
-    originFile = [originFile stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    destinyFile = [destinyFile stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    originFile = [originFile stringByRemovingPercentEncoding];
+    destinyFile = [destinyFile stringByRemovingPercentEncoding];
     
     //In iPad set the global variable
     if (!IS_IPHONE) {
@@ -130,14 +130,7 @@
         app.isLoadingVisible = YES;
     }
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-    }
+    [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
@@ -455,11 +448,11 @@
     //Delete files os user in the system
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    //NSString *newLocalFolder= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", currentUser.idUser]];
-    NSString *newLocalFolder= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)app.activeUser.idUser]];
+    //NSString *newLocalFolder= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", userId]];
+    NSString *newLocalFolder= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)app.activeUser.userId]];
     
     NSString *newStr = [UtilsUrls getFilePathOnDBByFullPath:self.destinationFolder andUser:app.activeUser];
-    newLocalFolder = [NSString stringWithFormat:@"%@/%@%@", newLocalFolder,[newStr stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding],[_destinyFilename stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    newLocalFolder = [NSString stringWithFormat:@"%@/%@%@", newLocalFolder,[newStr stringByRemovingPercentEncoding],[_destinyFilename stringByRemovingPercentEncoding]];
     
     return newLocalFolder;
 }

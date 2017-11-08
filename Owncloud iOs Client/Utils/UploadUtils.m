@@ -115,7 +115,7 @@
  */
 + (FileDto *) getFileDtoByUploadOffline:(UploadsOfflineDto *) uploadsOfflineDto {
     
-    UserDto *user = [ManageUsersDB getUserByIdUser:uploadsOfflineDto.userId];
+    UserDto *user = [ManageUsersDB getUserByUserId:uploadsOfflineDto.userId];
     
     NSString *partToRemoveOfPah = [UtilsUrls getFullRemoteServerPathWithWebDav:user];
     

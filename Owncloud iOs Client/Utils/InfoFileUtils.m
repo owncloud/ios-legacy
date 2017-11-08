@@ -164,7 +164,7 @@
     
     NSString *path = [NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:fileForSetTheStatusIcon.filePath andUser:user], fileForSetTheStatusIcon.fileName];
     
-    NSMutableArray *allShares = [ManageSharesDB getSharesByUser:user.idUser andPath:path];
+    NSMutableArray *allShares = [ManageSharesDB getSharesByUser:user.userId andPath:path];
     NSInteger numberOfShares = allShares.count;
     NSPredicate *predicateShareByLink = [NSPredicate predicateWithFormat:@"shareType == %i", shareTypeLink];
     NSArray *sharesByLink = [allShares filteredArrayUsingPredicate:predicateShareByLink];
@@ -313,14 +313,7 @@
             sharedCommunication = [DocumentPickerViewController sharedOCCommunication];
 #endif
             
-            //Set the right credentials
-            if (k_is_sso_active) {
-                [sharedCommunication setCredentialsWithCookie:user.password];
-            } else if (k_is_oauth_active) {
-                [sharedCommunication setCredentialsOauthWithToken:user.password];
-            } else {
-                [sharedCommunication setCredentialsWithUser:user.username andPassword:user.password];
-            }
+            [sharedCommunication setCredentials:user.credDto];
             
             [sharedCommunication setUserAgent:[UtilsUrls getUserAgent]];
             

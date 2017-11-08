@@ -48,20 +48,11 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-    }
+    [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
-    
     NSString *filePath = [UtilsUrls getFilePathOnDBwithRootSlashAndWithFileName:file.fileName ByFilePathOnFileDto:file.filePath andUser:app.activeUser];
-
     
     [[AppDelegate sharedOCCommunication] shareFileOrFolderByServerPath:[UtilsUrls getFullRemoteServerPath:app.activeUser] withFileOrFolderPath:filePath password:password expirationTime:expirationTime publicUpload:publicUpload linkName:linkName permissions:permissions onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSString *token, NSString *redirectedServer) {
         
@@ -110,14 +101,7 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-    }
+    [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
@@ -182,14 +166,7 @@
         app.isLoadingVisible = YES;
     }
     
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:app.activeUser.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:app.activeUser.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:app.activeUser.username andPassword:app.activeUser.password];
-    }
+    [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
@@ -254,14 +231,7 @@
         app.isLoadingVisible = YES;
     }
 
-    //Set the right credentials
-    if (k_is_sso_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithCookie:APP_DELEGATE.activeUser.password];
-    } else if (k_is_oauth_active) {
-        [[AppDelegate sharedOCCommunication] setCredentialsOauthWithToken:APP_DELEGATE.activeUser.password];
-    } else {
-        [[AppDelegate sharedOCCommunication] setCredentialsWithUser:APP_DELEGATE.activeUser.username andPassword:APP_DELEGATE.activeUser.password];
-    }
+    [[AppDelegate sharedOCCommunication] setCredentials:APP_DELEGATE.activeUser.credDto];
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
     
@@ -297,7 +267,7 @@
             //4. We add the new shared on the share list
             [ManageSharesDB insertSharedList:listOfShared];
             //5. Update the files with shared info of this folder
-            [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
+            [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.userId];
             
             [self endLoading];
             
@@ -342,7 +312,7 @@
 - (void) clickOnUnShare {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:_file.sharedFileSource forUser:app.activeUser.idUser];
+    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:_file.sharedFileSource forUser:app.activeUser.userId];
     OCSharedDto *sharedByLink;
     
     for (OCSharedDto *current in sharesOfFile) {
@@ -365,7 +335,7 @@
     
     [ManageSharesDB insertSharedList:items];
     
-    [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
+    [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.userId];
 }
 
 

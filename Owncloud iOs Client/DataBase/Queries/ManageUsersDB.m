@@ -18,9 +18,10 @@
 #import "FMDatabase.h"
 #import "UserDto.h"
 #import "OCKeychain.h"
-#import "CredentialsDto.h"
+#import "OCCredentialsDto.h"
 #import "constants.h"
 #import "ManageCapabilitiesDB.h"
+#import "Customization.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -36,9 +37,8 @@
 @implementation ManageUsersDB
 
 
-+(void) insertUser:(UserDto *)userDto {
++(UserDto *) insertUser:(UserDto *)userDto {
     
-    DLog(@"Insert user");
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -54,13 +54,17 @@
         
     }];
     
-    //Insert last user inserted in the keychain
-    UserDto *lastUser = [self getLastUserInserted];
-    NSString *idString = [NSString stringWithFormat:@"%ld", (long)lastUser.idUser];
     
-    if (![OCKeychain setCredentialsById:idString withUsername:userDto.username andPassword:userDto.password]) {
-        DLog(@"Failed setting credentials");
+    UserDto *lastUser = [self getLastUserInserted];
+    
+    if (lastUser) {
+        lastUser.username = userDto.username;
+        DLog(@"User %@ inserted in DB", userDto.username);
+    } else {
+        DLog(@"Error, not possible to insert user %@ in DB", userDto.username);
     }
+    
+    return lastUser;
     
 }
 
@@ -74,7 +78,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_capabilities_support, has_forbidden_characters_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, predefined_url FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
         
         DLog(@"RSColumnt count: %d", rs.columnCount);
         
@@ -83,7 +87,7 @@
             
             output=[UserDto new];
             
-            output.idUser = [rs intForColumn:@"id"];
+            output.userId = [rs intForColumn:@"id"];
             output.url = [rs stringForColumn:@"url"];
             output.ssl = [rs intForColumn:@"ssl"];
             output.activeaccount = [rs intForColumn:@"activeaccount"];
@@ -104,15 +108,7 @@
             output.timestampInstantUploadVideo = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
             
             output.urlRedirected = [rs stringForColumn:@"url_redirected"];
-            
-            NSString *idString = [NSString stringWithFormat:@"%ld", (long)output.idUser];
-            
-            CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
-            output.username = credDto.userName;
-            output.password = credDto.password;
-            
             output.sortingType = [rs intForColumn:@"sorting_type"];
-            
             output.predefinedUrl = [rs stringForColumn:@"predefined_url"];
         }
         
@@ -120,20 +116,29 @@
         
     }];
     
+    if (output != nil) {
+        OCCredentialsDto *credDto = [OCKeychain getCredentialsOfUser:output];
+        output.username = credDto.userName;
+        output.credDto = credDto;
+        
+        OCCapabilities *capDB = [ManageCapabilitiesDB getCapabilitiesOfUserId: output.userId];
+        output.capabilitiesDto = capDB;
+    }
+    
     return output;
 }
 
 
-+ (UserDto *) getActiveUserWithoutUserNameAndPassword {
++ (UserDto *) getActiveUserWithoutCredentials {
     
-    DLog(@"getActiveUser");
+    DLog(@"getActiveUserWithoutCredentials");
     
     __block UserDto *output = nil;
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, predefined_url FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
         
         DLog(@"RSColumnt count: %d", rs.columnCount);
         
@@ -142,60 +147,7 @@
             
             output=[UserDto new];
             
-            output.idUser = [rs intForColumn:@"id"];
-            output.url = [rs stringForColumn:@"url"];
-            output.ssl = [rs intForColumn:@"ssl"];
-            output.activeaccount = [rs intForColumn:@"activeaccount"];
-            output.storageOccupied = [rs longForColumn:@"storage_occupied"];
-            output.storage = [rs longForColumn:@"storage"];
-            output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
-            output.hasShareeApiSupport = [rs intForColumn:@"has_sharee_api_support"];
-            output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
-            output.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
-            
-            output.imageInstantUpload = [rs intForColumn:@"image_instant_upload"];
-            output.videoInstantUpload = [rs intForColumn:@"video_instant_upload"];
-            output.backgroundInstantUpload = [rs intForColumn:@"background_instant_upload"];
-            output.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
-            output.onlyWifiInstantUpload = [rs intForColumn:@"only_wifi_instant_upload"];
-            output.timestampInstantUploadImage = [rs doubleForColumn:@"timestamp_last_instant_upload_image"];
-            output.timestampInstantUploadVideo = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
-            
-            output.urlRedirected = [rs stringForColumn:@"url_redirected"];
-            
-            output.username = nil;
-            output.password = nil;
-            
-            output.sortingType = [rs intForColumn:@"sorting_type"];
-            
-            output.predefinedUrl = [rs stringForColumn:@"predefined_url"];
-        }
-        
-        [rs close];
-        
-    }];
-    
-    
-    return output;
-}
-
-
-+ (UserDto *) getUserByIdUser:(NSInteger) idUser {
-    
-    DLog(@"getUserByIdUser:(int) idUser");
-    
-    __block UserDto *output = nil;
-    
-    output=[UserDto new];
-    
-    FMDatabaseQueue *queue = Managers.sharedDatabase;
-    
-    [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, predefined_url FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
-        
-        while ([rs next]) {
-            
-            output.idUser = [rs intForColumn:@"id"];
+            output.userId = [rs intForColumn:@"id"];
             output.url = [rs stringForColumn:@"url"];
             output.ssl = [rs intForColumn:@"ssl"];
             output.activeaccount = [rs intForColumn:@"activeaccount"];
@@ -217,11 +169,8 @@
             
             output.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
-            NSString *idString = [NSString stringWithFormat:@"%ld", (long)output.idUser];
-            
-            CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
-            output.username = credDto.userName;
-            output.password = credDto.password;
+            output.username = nil;
+            output.credDto = nil;
             
             output.sortingType = [rs intForColumn:@"sorting_type"];
             
@@ -234,6 +183,59 @@
     
     
     return output;
+}
+
+
++ (UserDto *) getUserByUserId:(NSInteger) userId {
+    
+    DLog(@"getUserByUserId:(int) userId");
+    
+    __block UserDto *user = nil;
+    
+    user = [UserDto new];
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM users WHERE id = ?", [NSNumber numberWithInteger:userId]];
+        
+        while ([rs next]) {
+            
+            user.userId = [rs intForColumn:@"id"];
+            user.url = [rs stringForColumn:@"url"];
+            user.ssl = [rs intForColumn:@"ssl"];
+            user.activeaccount = [rs intForColumn:@"activeaccount"];
+            user.storageOccupied = [rs longForColumn:@"storage_occupied"];
+            user.storage = [rs longForColumn:@"storage"];
+            user.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
+            user.hasShareeApiSupport = [rs intForColumn:@"has_sharee_api_support"];
+            user.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
+            user.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
+            user.hasCapabilitiesSupport = [rs intForColumn:@"has_capabilities_support"];
+            
+            user.imageInstantUpload = [rs intForColumn:@"image_instant_upload"];
+            user.videoInstantUpload = [rs intForColumn:@"video_instant_upload"];
+            user.backgroundInstantUpload = [rs intForColumn:@"background_instant_upload"];
+            user.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
+            user.onlyWifiInstantUpload = [rs intForColumn:@"only_wifi_instant_upload"];
+            user.timestampInstantUploadImage = [rs doubleForColumn:@"timestamp_last_instant_upload_image"];
+            user.timestampInstantUploadVideo = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
+            
+            user.urlRedirected = [rs stringForColumn:@"url_redirected"];
+            user.sortingType = [rs intForColumn:@"sorting_type"];
+            user.predefinedUrl = [rs stringForColumn:@"predefined_url"];
+        }
+        
+        [rs close];
+        
+    }];
+    
+    if (user != nil) {
+        user.credDto = [OCKeychain getCredentialsOfUser:user];
+        user.username = user.credDto.userName;
+    }
+    
+    return user;
 }
 
 
@@ -265,7 +267,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, predefined_url FROM users ORDER BY id ASC"];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM users ORDER BY id ASC"];
         
         UserDto *current = nil;
         
@@ -273,7 +275,7 @@
             
             current = [UserDto new];
             
-            current.idUser= [rs intForColumn:@"id"];
+            current.userId= [rs intForColumn:@"id"];
             current.url = [rs stringForColumn:@"url"];
             current.ssl = [rs intForColumn:@"ssl"];
             current.activeaccount = [rs intForColumn:@"activeaccount"];
@@ -295,15 +297,13 @@
             
             current.urlRedirected = [rs stringForColumn:@"url_redirected"];
             
-            NSString *idString = [NSString stringWithFormat:@"%ld", (long)current.idUser];
-            
-            CredentialsDto *credDto = [OCKeychain getCredentialsById:idString];
-            current.username = credDto.userName;
-            current.password = credDto.password;
-            
             current.sortingType = [rs intForColumn:@"sorting_type"];
             
             current.predefinedUrl = [rs stringForColumn:@"predefined_url"];
+            
+            OCCredentialsDto *credDto = [OCKeychain getCredentialsOfUser:current];
+            current.username = credDto.userName;
+            current.credDto = credDto;
             
             [output addObject:current];
             
@@ -328,7 +328,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, sorting_type, predefined_url FROM users ORDER BY id ASC"];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM users ORDER BY id ASC"];
         
         UserDto *current = nil;
         
@@ -336,7 +336,7 @@
             
             current = [UserDto new];
             
-            current.idUser= [rs intForColumn:@"id"];
+            current.userId= [rs intForColumn:@"id"];
             current.url = [rs stringForColumn:@"url"];
             current.ssl = [rs intForColumn:@"ssl"];
             current.activeaccount = [rs intForColumn:@"activeaccount"];
@@ -357,6 +357,9 @@
             current.timestampInstantUploadVideo = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
             
             current.urlRedirected = [rs stringForColumn:@"url_redirected"];
+            
+            current.username = nil;
+            current.credDto = nil;
             
             current.sortingType = [rs intForColumn:@"sorting_type"];
             
@@ -394,21 +397,24 @@
             
             current = [UserDto new];
             
-            current.idUser= [rs intForColumn:@"id"];
+            current.userId= [rs intForColumn:@"id"];
             current.url = [rs stringForColumn:@"url"];
             current.username = [rs stringForColumn:@"username"];
-            current.password = [rs stringForColumn:@"password"];
+            current.credDto = [OCCredentialsDto new];
+            current.credDto.userName = current.username;
+            current.credDto.accessToken = [rs stringForColumn:@"password"];
+            current.credDto.authenticationMethod = k_is_sso_active ? AuthenticationMethodSAML_WEB_SSO : AuthenticationMethodBASIC_HTTP_AUTH;
             current.ssl = [rs intForColumn:@"ssl"];
             current.activeaccount = [rs intForColumn:@"activeaccount"];
             current.storageOccupied = [rs longForColumn:@"storage_occupied"];
             current.storage = [rs longForColumn:@"storage"];
             current.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             
-            DLog(@"id user: %ld", (long)current.idUser);
+            DLog(@"id user: %ld", (long)current.userId);
             
             DLog(@"url user: %@", current.url);
             DLog(@"username user: %@", current.username);
-            DLog(@"password user: %@", current.password);
+            DLog(@"password user: %@", current.credDto.accessToken);
             
             
             [output addObject:current];
@@ -424,14 +430,14 @@
 }
 
 
-+(void) setActiveAccountByIdUser: (NSInteger) idUser {
++(void) setActiveAccountByUserId: (NSInteger) userId {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET activeaccount=1 WHERE id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET activeaccount=1 WHERE id = ?", [NSNumber numberWithInteger:userId]];
         
         if (!correctQuery) {
             DLog(@"Error setting the active account");
@@ -478,49 +484,49 @@
 }
 
 
-+(void) removeUserAndDataByIdUser:(NSInteger)idUser {
++(void) removeUserAndDataByUser:(UserDto *)user {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"DELETE FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM users WHERE id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from files users table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from files files table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM files_backup WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM files_backup WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from files_backup backup table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM uploads_offline WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM uploads_offline WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from uploads uploads_offline table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error delete info of shared table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error delete info of cookies_storage table");
@@ -529,8 +535,7 @@
         
     }];
     
-    NSString *idString = [NSString stringWithFormat:@"%ld", (long)idUser];
-    if (![OCKeychain removeCredentialsById:idString]) {
+    if (![OCKeychain removeCredentialsOfUser:user]) {
         DLog(@"Error delete keychain credentials");
         
     }
@@ -544,7 +549,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET storage_occupied=?, storage=? WHERE id = ?", [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET storage_occupied=?, storage=? WHERE id = ?", [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error updating storage of user");
@@ -565,11 +570,11 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT id, url, ssl, activeaccount, storage_occupied, storage, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, image_instant_upload, video_instant_upload, background_instant_upload, path_instant_upload, only_wifi_instant_upload, timestamp_last_instant_upload_image, timestamp_last_instant_upload_video, url_redirected, sorting_type, predefined_url FROM users ORDER BY id DESC LIMIT 1"];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM users ORDER BY id DESC LIMIT 1"];
         
         while ([rs next]) {
             
-            output.idUser = [rs intForColumn:@"id"];
+            output.userId = [rs intForColumn:@"id"];
             output.url = [rs stringForColumn:@"url"];
             output.ssl = [rs intForColumn:@"ssl"];
             output.activeaccount = [rs intForColumn:@"activeaccount"];
@@ -611,7 +616,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_sharee_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, has_capabilities_support=?, image_instant_upload=?, video_instant_upload=?, background_instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, timestamp_last_instant_upload_image=?, timestamp_last_instant_upload_video=?, url_redirected=?, sorting_type=?, predefined_url=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport], [NSNumber numberWithInteger:user.hasShareeApiSupport], [NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:user.hasCapabilitiesSupport], [NSNumber numberWithBool:user.imageInstantUpload], [NSNumber numberWithBool:user.videoInstantUpload], [NSNumber numberWithBool:user.backgroundInstantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.timestampInstantUploadImage], [NSNumber numberWithLong:user.timestampInstantUploadVideo], user.urlRedirected, [NSNumber numberWithInteger:user.sortingType],user.predefinedUrl, [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_sharee_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, has_capabilities_support=?, image_instant_upload=?, video_instant_upload=?, background_instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, timestamp_last_instant_upload_image=?, timestamp_last_instant_upload_video=?, url_redirected=?, sorting_type=?, predefined_url=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport], [NSNumber numberWithInteger:user.hasShareeApiSupport], [NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:user.hasCapabilitiesSupport], [NSNumber numberWithBool:user.imageInstantUpload], [NSNumber numberWithBool:user.videoInstantUpload], [NSNumber numberWithBool:user.backgroundInstantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.timestampInstantUploadImage], [NSNumber numberWithLong:user.timestampInstantUploadVideo], user.urlRedirected, [NSNumber numberWithInteger:user.sortingType],user.predefinedUrl, [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error updating a user");
@@ -645,7 +650,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET sorting_type=? WHERE id = ?", [NSNumber numberWithInteger:user.sortingType], [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET sorting_type=? WHERE id = ?", [NSNumber numberWithInteger:user.sortingType], [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error updating sorting type");
@@ -663,7 +668,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url_redirected=? WHERE id = ?", newValue, [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET url_redirected=? WHERE id = ?", newValue, [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error updating url_redirected");
@@ -679,7 +684,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT url_redirected FROM users  WHERE id = ?", [NSNumber numberWithInteger:user.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT url_redirected FROM users  WHERE id = ?", [NSNumber numberWithInteger:user.userId]];
         
         while ([rs next]) {
             
