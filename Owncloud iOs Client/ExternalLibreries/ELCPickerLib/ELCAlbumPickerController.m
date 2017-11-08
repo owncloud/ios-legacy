@@ -319,7 +319,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     //Button to select folder to upload
     
     NSString *folderName = [NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"location", nil), _locationInfo];
-    folderName = [[NSString stringWithString:folderName] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    folderName = [[NSString stringWithString:folderName] stringByRemovingPercentEncoding];
     [_folderToUploadButton setTitle:folderName];
     
     NSShadow *shadow = [[NSShadow alloc] init];
@@ -360,7 +360,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     sf.currentRemoteFolder=self.currentRemoteFolder;
     
     //We get the current folder to create the local tree
-    NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser];
+    NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.userId];
     
     sf.currentLocalFolder = localRootUrlString;
     
@@ -393,7 +393,7 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     // int cont = [splitedUrl count];
     NSString *folderName = [NSString stringWithFormat:@"%@",[splitedUrl objectAtIndex:([splitedUrl count]-2)]];
     
-    folderName = [[NSString stringWithString:folderName] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    folderName = [[NSString stringWithString:folderName] stringByRemovingPercentEncoding];
     
     DLog(@"Folder is:%@", folderName);
     if ([self.currentRemoteFolder isEqualToString:[NSString stringWithFormat:@"%@%@", app.activeUser.url,k_url_webdav_server]]) {

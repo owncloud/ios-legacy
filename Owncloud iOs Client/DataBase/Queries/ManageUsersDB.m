@@ -87,7 +87,7 @@
             
             output=[UserDto new];
             
-            output.idUser = [rs intForColumn:@"id"];
+            output.userId = [rs intForColumn:@"id"];
             output.url = [rs stringForColumn:@"url"];
             output.ssl = [rs intForColumn:@"ssl"];
             output.activeaccount = [rs intForColumn:@"activeaccount"];
@@ -121,7 +121,7 @@
         output.username = credDto.userName;
         output.credDto = credDto;
         
-        OCCapabilities *capDB = [ManageCapabilitiesDB getCapabilitiesOfUserId: output.idUser];
+        OCCapabilities *capDB = [ManageCapabilitiesDB getCapabilitiesOfUserId: output.userId];
         output.capabilitiesDto = capDB;
     }
     
@@ -147,7 +147,7 @@
             
             output=[UserDto new];
             
-            output.idUser = [rs intForColumn:@"id"];
+            output.userId = [rs intForColumn:@"id"];
             output.url = [rs stringForColumn:@"url"];
             output.ssl = [rs intForColumn:@"ssl"];
             output.activeaccount = [rs intForColumn:@"activeaccount"];
@@ -186,9 +186,9 @@
 }
 
 
-+ (UserDto *) getUserByIdUser:(NSInteger) idUser {
++ (UserDto *) getUserByUserId:(NSInteger) userId {
     
-    DLog(@"getUserByIdUser:(int) idUser");
+    DLog(@"getUserByUserId:(int) userId");
     
     __block UserDto *user = nil;
     
@@ -197,11 +197,11 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM users WHERE id = ?", [NSNumber numberWithInteger:idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM users WHERE id = ?", [NSNumber numberWithInteger:userId]];
         
         while ([rs next]) {
             
-            user.idUser = [rs intForColumn:@"id"];
+            user.userId = [rs intForColumn:@"id"];
             user.url = [rs stringForColumn:@"url"];
             user.ssl = [rs intForColumn:@"ssl"];
             user.activeaccount = [rs intForColumn:@"activeaccount"];
@@ -275,7 +275,7 @@
             
             current = [UserDto new];
             
-            current.idUser= [rs intForColumn:@"id"];
+            current.userId= [rs intForColumn:@"id"];
             current.url = [rs stringForColumn:@"url"];
             current.ssl = [rs intForColumn:@"ssl"];
             current.activeaccount = [rs intForColumn:@"activeaccount"];
@@ -336,7 +336,7 @@
             
             current = [UserDto new];
             
-            current.idUser= [rs intForColumn:@"id"];
+            current.userId= [rs intForColumn:@"id"];
             current.url = [rs stringForColumn:@"url"];
             current.ssl = [rs intForColumn:@"ssl"];
             current.activeaccount = [rs intForColumn:@"activeaccount"];
@@ -397,7 +397,7 @@
             
             current = [UserDto new];
             
-            current.idUser= [rs intForColumn:@"id"];
+            current.userId= [rs intForColumn:@"id"];
             current.url = [rs stringForColumn:@"url"];
             current.username = [rs stringForColumn:@"username"];
             current.credDto = [OCCredentialsDto new];
@@ -410,7 +410,7 @@
             current.storage = [rs longForColumn:@"storage"];
             current.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             
-            DLog(@"id user: %ld", (long)current.idUser);
+            DLog(@"id user: %ld", (long)current.userId);
             
             DLog(@"url user: %@", current.url);
             DLog(@"username user: %@", current.username);
@@ -430,14 +430,14 @@
 }
 
 
-+(void) setActiveAccountByIdUser: (NSInteger) idUser {
++(void) setActiveAccountByUserId: (NSInteger) userId {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET activeaccount=1 WHERE id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET activeaccount=1 WHERE id = ?", [NSNumber numberWithInteger:userId]];
         
         if (!correctQuery) {
             DLog(@"Error setting the active account");
@@ -491,42 +491,42 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"DELETE FROM users WHERE id = ?", [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM users WHERE id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from files users table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from files files table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM files_backup WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM files_backup WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from files_backup backup table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM uploads_offline WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM uploads_offline WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error delete files from uploads uploads_offline table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error delete info of shared table");
             
         }
         
-        correctQuery = [db executeUpdate:@"DELETE FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM cookies_storage WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error delete info of cookies_storage table");
@@ -549,7 +549,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET storage_occupied=?, storage=? WHERE id = ?", [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET storage_occupied=?, storage=? WHERE id = ?", [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error updating storage of user");
@@ -574,7 +574,7 @@
         
         while ([rs next]) {
             
-            output.idUser = [rs intForColumn:@"id"];
+            output.userId = [rs intForColumn:@"id"];
             output.url = [rs stringForColumn:@"url"];
             output.ssl = [rs intForColumn:@"ssl"];
             output.activeaccount = [rs intForColumn:@"activeaccount"];
@@ -616,7 +616,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_sharee_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, has_capabilities_support=?, image_instant_upload=?, video_instant_upload=?, background_instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, timestamp_last_instant_upload_image=?, timestamp_last_instant_upload_video=?, url_redirected=?, sorting_type=?, predefined_url=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport], [NSNumber numberWithInteger:user.hasShareeApiSupport], [NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:user.hasCapabilitiesSupport], [NSNumber numberWithBool:user.imageInstantUpload], [NSNumber numberWithBool:user.videoInstantUpload], [NSNumber numberWithBool:user.backgroundInstantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.timestampInstantUploadImage], [NSNumber numberWithLong:user.timestampInstantUploadVideo], user.urlRedirected, [NSNumber numberWithInteger:user.sortingType],user.predefinedUrl, [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_sharee_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, has_capabilities_support=?, image_instant_upload=?, video_instant_upload=?, background_instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, timestamp_last_instant_upload_image=?, timestamp_last_instant_upload_video=?, url_redirected=?, sorting_type=?, predefined_url=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport], [NSNumber numberWithInteger:user.hasShareeApiSupport], [NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:user.hasCapabilitiesSupport], [NSNumber numberWithBool:user.imageInstantUpload], [NSNumber numberWithBool:user.videoInstantUpload], [NSNumber numberWithBool:user.backgroundInstantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.timestampInstantUploadImage], [NSNumber numberWithLong:user.timestampInstantUploadVideo], user.urlRedirected, [NSNumber numberWithInteger:user.sortingType],user.predefinedUrl, [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error updating a user");
@@ -650,7 +650,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET sorting_type=? WHERE id = ?", [NSNumber numberWithInteger:user.sortingType], [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET sorting_type=? WHERE id = ?", [NSNumber numberWithInteger:user.sortingType], [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error updating sorting type");
@@ -668,7 +668,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url_redirected=? WHERE id = ?", newValue, [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET url_redirected=? WHERE id = ?", newValue, [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error updating url_redirected");
@@ -684,7 +684,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT url_redirected FROM users  WHERE id = ?", [NSNumber numberWithInteger:user.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT url_redirected FROM users  WHERE id = ?", [NSNumber numberWithInteger:user.userId]];
         
         while ([rs next]) {
             

@@ -448,11 +448,11 @@
     //Delete files os user in the system
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    //NSString *newLocalFolder= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", currentUser.idUser]];
-    NSString *newLocalFolder= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)app.activeUser.idUser]];
+    //NSString *newLocalFolder= [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", userId]];
+    NSString *newLocalFolder= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%ld", (long)app.activeUser.userId]];
     
     NSString *newStr = [UtilsUrls getFilePathOnDBByFullPath:self.destinationFolder andUser:app.activeUser];
-    newLocalFolder = [NSString stringWithFormat:@"%@/%@%@", newLocalFolder,[newStr stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding],[_destinyFilename stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    newLocalFolder = [NSString stringWithFormat:@"%@/%@%@", newLocalFolder,[newStr stringByRemovingPercentEncoding],[_destinyFilename stringByRemovingPercentEncoding]];
     
     return newLocalFolder;
 }

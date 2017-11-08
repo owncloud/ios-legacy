@@ -138,7 +138,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
  */
 - (void) syncFavoritesOfList:(NSArray*)favoritesFilesAndFolders ofThisUser:(NSInteger)userId{
     
-    UserDto *user = [ManageUsersDB getUserByIdUser:userId];
+    UserDto *user = [ManageUsersDB getUserByUserId:userId];
     
     //Loop for favorites
     for (FileDto *file in favoritesFilesAndFolders) {
@@ -208,7 +208,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
                                 //Data to download
                                 //Get the current local folder
                                 AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                                NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:updatedFile.filePath andUser:user]];
+                                NSString *currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)user.userId, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:updatedFile.filePath andUser:user]];
                                 currentLocalFolder = [currentLocalFolder stringByRemovingPercentEncoding];
                                 
                                 Download *download = [Download new];

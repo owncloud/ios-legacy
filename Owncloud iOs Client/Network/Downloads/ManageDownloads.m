@@ -83,7 +83,7 @@
     
     for (Download *download in temp) {
         if (!user) {
-            user = [ManageUsersDB getUserByIdUser:download.fileDto.userId];
+            user = [ManageUsersDB getUserByUserId:download.fileDto.userId];
         }
         download.user = user;
         [download cancelDownload];

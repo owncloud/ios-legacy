@@ -262,16 +262,16 @@
 -(void)disconnectUser {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
 
-    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: APP_DELEGATE.activeUser.idUser];
+    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: APP_DELEGATE.activeUser.userId];
     
     [ManageUsersDB removeUserAndDataByUser:APP_DELEGATE.activeUser];
     
     [UtilsFramework deleteAllCookies];
     
-    DLog(@"ID to delete user: %ld", (long)app.activeUser.idUser);
+    DLog(@"ID to delete user: %ld", (long)app.activeUser.userId);
     
     //Delete files os user in the system
-    NSString *userFolder = [NSString stringWithFormat:@"/%ld", (long)app.activeUser.idUser];
+    NSString *userFolder = [NSString stringWithFormat:@"/%ld", (long)app.activeUser.userId];
     NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
     
     NSError *error;     
@@ -1182,7 +1182,7 @@
     [uploadsArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         currentManageUploadRequest = obj;
         
-        if (currentManageUploadRequest.userUploading.idUser == selectedUser.idUser) {
+        if (currentManageUploadRequest.userUploading.userId == selectedUser.userId) {
             [currentManageUploadRequest cancelUpload];
         }
         
@@ -1723,7 +1723,7 @@
     
     [self performSelectorInBackground:@selector(cancelAllDownloads) withObject:nil];
     
-    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: user.idUser];
+    [[ManageThumbnails sharedManager] deleteThumbnailCacheFolderOfUserId: user.userId];
     
     //Delete the tables of this user
     [ManageUsersDB removeUserAndDataByUser:user];
@@ -1731,7 +1731,7 @@
     [self performSelectorInBackground:@selector(cancelAndRemoveFromTabRecentsAllInfoByUser:) withObject:user];
     
     //Delete files of user in the system
-    NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)user.idUser];
+    NSString *userFolder = [NSString stringWithFormat:@"/%ld",(long)user.userId];
     NSString *path= [[UtilsUrls getOwnCloudFilePath] stringByAppendingPathComponent:userFolder];
     NSError *error;
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];

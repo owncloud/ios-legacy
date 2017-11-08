@@ -313,7 +313,7 @@
     
     if(!([currentUser.username isEqualToString:_mUser.username] &&
          [currentUser.url isEqualToString:_mUser.url] &&
-         currentUser.idUser == _mUser.idUser)) {
+         currentUser.userId == _mUser.userId)) {
         //We are changing of user
         //Show the file list in the correct place
         [self.tableView setContentOffset:CGPointMake(0,0) animated:YES];
@@ -346,7 +346,7 @@
         _currentRemoteFolder = [UtilsUrls getFullRemoteServerPathWithWebDav:currentUser];
         
         //We get the current folder to create the local tree
-        _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)currentUser.idUser];
+        _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)currentUser.userId];
         _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
         //Update de actual active user
         _mUser = currentUser;
@@ -380,7 +380,7 @@
         
         [[AppDelegate sharedOCCommunication] readFile:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
             
-            if (currentUser.idUser == app.activeUser.idUser) {
+            if (currentUser.userId == app.activeUser.userId) {
                 DLog(@"Operation response code: %ld", (long)response.statusCode);
                 
                 BOOL isSamlCredentialsError = NO;
@@ -1907,7 +1907,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         //Launch the method to sync the favorites files with specific path
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        [[AppDelegate sharedManageFavorites] syncFavoritesOfFolder:folder withUser:app.activeUser.idUser];
+        [[AppDelegate sharedManageFavorites] syncFavoritesOfFolder:folder withUser:app.activeUser.userId];
     
     });
     
@@ -2142,7 +2142,7 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     //Check if the server has share support
-    if ((app.activeUser.hasShareApiSupport == serverFunctionalitySupported) && (app.activeUser.idUser == _mUser.idUser)) {
+    if ((app.activeUser.hasShareApiSupport == serverFunctionalitySupported) && (app.activeUser.userId == _mUser.userId)) {
         
         [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
 
@@ -2194,7 +2194,7 @@
                     //4. We add the new shared on the share list
                     [ManageSharesDB insertSharedList:items];
                     //5. Update the files with shared info of this folder
-                    [ManageFilesDB updateFilesAndSetSharedOfUser:app.activeUser.idUser];
+                    [ManageFilesDB updateFilesAndSetSharedOfUser:app.activeUser.userId];
 
                     dispatch_async(dispatch_get_main_queue(), ^{
                         //Make operations in main thread
@@ -2678,7 +2678,7 @@
         
         //We get the current folder to create the local tree
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath], (long)_mUser.idUser];
+        NSString *localRootUrlString = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath], (long)_mUser.userId];
         
         self.selectFolderViewController.currentLocalFolder = localRootUrlString;
         self.selectFolderNavigation.delegate=self;

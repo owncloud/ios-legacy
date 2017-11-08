@@ -90,7 +90,7 @@
                              shareDto.token,
                              shareDto.shareWithDisplayName,
                              shareDto.isDirectory,
-                             (long)mUser.idUser,
+                             (long)mUser.userId,
                              (long)shareDto.idRemoteShared,
                              shareDto.name,
                              shareDto.url];
@@ -107,14 +107,14 @@
 }
 
 
-+ (void) deleteAllSharesOfUser:(NSInteger)idUser{
++ (void) deleteAllSharesOfUser:(NSInteger)userId{
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:userId]];
         
         if (!correctQuery) {
             DLog(@"Error in delete shares of user");
@@ -183,14 +183,14 @@
 }
 
 
-+ (NSMutableArray*) getSharesByUser:(NSInteger)idUser andPath:(NSString *) path {
++ (NSMutableArray*) getSharesByUser:(NSInteger)userId andPath:(NSString *) path {
     
     __block NSMutableArray *output = [NSMutableArray new];
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE path = ? AND user_id = ? ", path, [NSNumber numberWithInteger:idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE path = ? AND user_id = ? ", path, [NSNumber numberWithInteger:userId]];
         
         while ([rs next]) {
             
@@ -203,7 +203,7 @@
 }
 
 
-+ (NSMutableArray*) getSharesBySharedFileSource:(NSInteger) sharedFileSource forUser:(NSInteger)idUser {
++ (NSMutableArray*) getSharesBySharedFileSource:(NSInteger) sharedFileSource forUser:(NSInteger)userId {
     
     __block NSMutableArray *output = [NSMutableArray new];
 
@@ -211,7 +211,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
 
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ? AND file_source = ?", [NSNumber numberWithInteger:idUser], [NSNumber numberWithInteger:sharedFileSource]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ? AND file_source = ?", [NSNumber numberWithInteger:userId], [NSNumber numberWithInteger:sharedFileSource]];
         while ([rs next]) {
             
             [output addObject:[self shareDtoFromDBResults:rs]];
@@ -223,14 +223,14 @@
 }
 
 
-+ (NSMutableArray *) getAllSharesByUser:(NSInteger)idUser {
++ (NSMutableArray *) getAllSharesByUser:(NSInteger)userId {
     
     __block NSMutableArray *output = [NSMutableArray new];
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:userId]];
         while ([rs next]) {
             
             [output addObject:[self shareDtoFromDBResults:rs]];
@@ -242,14 +242,14 @@
 }
 
 
-+ (NSMutableArray *) getAllSharesByUser:(NSInteger)idUser anTypeOfShare: (NSInteger) shareType {
++ (NSMutableArray *) getAllSharesByUser:(NSInteger)userId anTypeOfShare: (NSInteger) shareType {
     
     __block NSMutableArray *output = [NSMutableArray new];
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ? AND share_type = ?", [NSNumber numberWithInteger:idUser], [NSNumber numberWithInteger:shareType]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ? AND share_type = ?", [NSNumber numberWithInteger:userId], [NSNumber numberWithInteger:shareType]];
         while ([rs next]) {
             
             [output addObject:[self shareDtoFromDBResults:rs]];
@@ -289,7 +289,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ? AND file_source NOT IN (SELECT shared_file_source FROM files WHERE user_id = ?)", [NSNumber numberWithInteger:user.idUser], [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM shared WHERE user_id = ? AND file_source NOT IN (SELECT shared_file_source FROM files WHERE user_id = ?)", [NSNumber numberWithInteger:user.userId], [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error in deleteListOfSharedByList");
@@ -311,7 +311,7 @@
     __block NSString *comparePath = nil;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:mUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ?", [NSNumber numberWithInteger:mUser.userId]];
         while ([rs next]) {
             
             comparePath = [rs stringForColumn:@"path"];
@@ -339,7 +339,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ? AND file_source = ? AND share_type = ?", [NSNumber numberWithInteger:user.idUser], [NSNumber numberWithInteger:file.sharedFileSource], [NSNumber numberWithInteger:shareType]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM shared WHERE user_id = ? AND file_source = ? AND share_type = ?", [NSNumber numberWithInteger:user.userId], [NSNumber numberWithInteger:file.sharedFileSource], [NSNumber numberWithInteger:shareType]];
         while ([rs next]) {
             
             sharedDto = [self shareDtoFromDBResults:rs];

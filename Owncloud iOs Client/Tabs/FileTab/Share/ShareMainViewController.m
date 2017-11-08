@@ -144,7 +144,7 @@
     [self.sharesOfFile removeAllObjects];
     [self.sharedPublicLinks removeAllObjects];
     
-    self.sharesOfFile = [ManageSharesDB getSharesByUser:APP_DELEGATE.activeUser.idUser andPath:path];
+    self.sharesOfFile = [ManageSharesDB getSharesByUser:APP_DELEGATE.activeUser.userId andPath:path];
     
     DLog(@"Number of Shares of file: %lu", (unsigned long)self.sharesOfFile.count);
     

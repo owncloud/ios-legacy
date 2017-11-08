@@ -372,7 +372,7 @@
             //Check if the id file is in the files into this folder
             DLog(@"path folder: %@", pathFolder);
             
-            if ([ManageFilesDB isThisFile:app.detailViewController.file.idFile ofThisUserId:app.activeUser.idUser intoThisFolder:pathFolder]) {
+            if ([ManageFilesDB isThisFile:app.detailViewController.file.idFile ofThisUserId:app.activeUser.userId intoThisFolder:pathFolder]) {
                 [app.detailViewController unselectCurrentFile];
             }
         }

@@ -201,7 +201,7 @@
     
     if (self.mode == UIDocumentPickerModeImport) {
         //Import mode return the name without encoding
-        destinationUrl = [destinationUrl URLByAppendingPathComponent:[fileDto.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] ;
+        destinationUrl = [destinationUrl URLByAppendingPathComponent:[fileDto.fileName stringByRemovingPercentEncoding]] ;
     } else {
         destinationUrl = [destinationUrl URLByAppendingPathComponent:fileDto.fileName];
     }
@@ -229,7 +229,7 @@
     //Some error in the process to send the file to the document picker.
    if (attributes && !error) {
        
-       ProvidingFileDto *providingFile = [ManageProvidingFilesDB insertProvidingFileDtoWithPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:destinationUrl.path] byUserId:self.user.idUser];
+       ProvidingFileDto *providingFile = [ManageProvidingFilesDB insertProvidingFileDtoWithPath:[UtilsUrls getRelativePathForDocumentProviderUsingAboslutePath:destinationUrl.path] byUserId:self.user.userId];
        [ManageFilesDB updateFile:fileDto.idFile withProvidingFile:providingFile.idProvidingFile];
        
        [self dismissGrantingAccessToURL:destinationUrl];
@@ -310,7 +310,7 @@
                         upload.uploadFileName = temp.lastPathComponent;
                         upload.kindOfError = notAnError;
                         upload.estimateLength = (long)fileLength;
-                        upload.userId = user.idUser;
+                        upload.userId = user.userId;
                         upload.isLastUploadFileOfThisArray = YES;
                         upload.status = generatedByDocumentProvider;
                         upload.chunksLength = k_lenght_chunk;

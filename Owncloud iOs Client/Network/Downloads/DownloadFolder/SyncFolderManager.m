@@ -149,7 +149,7 @@ static float const kDelayAfterCancelAll = 3.0;
 
                         //Add the file to the indexed forest of files downloading
                         //We check if the user is the same that when we started to check
-                        if (currentUser.idUser == app.activeUser.idUser) {
+                        if (currentUser.userId == app.activeUser.userId) {
                             [self.forestOfFilesAndFoldersToBeDownloaded addFileToTheForest:currentFile];
                             [self downloadTheFile:currentFile andNewEtag:currentFile .etag];
                         }
@@ -390,7 +390,7 @@ static float const kDelayAfterCancelAll = 3.0;
     for (DownloadFileSyncFolder *current in listOfFilesToBeDownloadedCopy) {
         
         if (!user) {
-            user = [ManageUsersDB getUserByIdUser:current.file.userId];
+            user = [ManageUsersDB getUserByUserId:current.file.userId];
         }
         
         current.user = user;

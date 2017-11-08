@@ -267,7 +267,7 @@
             //4. We add the new shared on the share list
             [ManageSharesDB insertSharedList:listOfShared];
             //5. Update the files with shared info of this folder
-            [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
+            [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.userId];
             
             [self endLoading];
             
@@ -312,7 +312,7 @@
 - (void) clickOnUnShare {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:_file.sharedFileSource forUser:app.activeUser.idUser];
+    NSArray *sharesOfFile = [ManageSharesDB getSharesBySharedFileSource:_file.sharedFileSource forUser:app.activeUser.userId];
     OCSharedDto *sharedByLink;
     
     for (OCSharedDto *current in sharesOfFile) {
@@ -335,7 +335,7 @@
     
     [ManageSharesDB insertSharedList:items];
     
-    [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.idUser];
+    [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.userId];
 }
 
 

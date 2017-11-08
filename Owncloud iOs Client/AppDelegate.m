@@ -282,7 +282,7 @@ float shortDelay = 0.3;
     
     DLog(@"File path: %@", filePath);
     
-    if (_activeUser.username==nil) {
+    if (_activeUser.credDto.userName==nil) {
         _activeUser = [ManageUsersDB getActiveUser];
     }
     
@@ -388,7 +388,7 @@ float shortDelay = 0.3;
     //Check if we generate the interface from login screen or not
     if (isFromLogin) {
         //From login screen we create the user folder to haver multiuser
-        localSystemPath = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)_activeUser.idUser];
+        localSystemPath = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)_activeUser.userId];
         //DLog(@"current: %@", localSystemPath);
         
         //If not exist we create
@@ -400,7 +400,7 @@ float shortDelay = 0.3;
         
     } else {
         //We get the current folder to create the local tree
-        localSystemPath = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)_activeUser.idUser];
+        localSystemPath = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)_activeUser.userId];
         //DLog(@"localRootUrlString: %@", localSystemPath);
     }
 
@@ -681,7 +681,7 @@ float shortDelay = 0.3;
 - (void) launchProcessToSyncAllFavorites {
     
     //Do operations in background thread
-    [[AppDelegate sharedManageFavorites] syncAllFavoritesOfUser:self.activeUser.idUser];
+    [[AppDelegate sharedManageFavorites] syncAllFavoritesOfUser:self.activeUser.userId];
     
 }
 
@@ -1041,7 +1041,7 @@ float shortDelay = 0.3;
                     //Set uploadOffline
                     currentManageUploadRequest.currentUpload = uploadDB;
                     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadDB.estimateLength];
-                    currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadDB.userId];
+                    currentManageUploadRequest.userUploading = [ManageUsersDB getUserByUserId:uploadDB.userId];
                     
                     currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadDB.destinyFolder andUser:currentManageUploadRequest.userUploading];
                     
@@ -1182,7 +1182,7 @@ float shortDelay = 0.3;
                     
                     //Local folder
                     NSString *localFolder = nil;
-                    localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:self.activeUser]];
+                    localFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath], (long)self.activeUser.userId, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:self.activeUser]];
                     localFolder = [localFolder stringByRemovingPercentEncoding];
                     
                     download.currentLocalFolder = localFolder;
@@ -1865,7 +1865,7 @@ float shortDelay = 0.3;
     currentUpload.uploadFileName = name;
     currentUpload.kindOfError = notAnError;
     currentUpload.estimateLength = (long)fileLength;
-    currentUpload.userId = _activeUser.idUser;
+    currentUpload.userId = _activeUser.userId;
     currentUpload.isLastUploadFileOfThisArray = YES;
     currentUpload.status = waitingAddToUploadList;
     currentUpload.chunksLength = k_lenght_chunk;
@@ -1988,13 +1988,13 @@ float shortDelay = 0.3;
  * for a specific user
  *
  */
-- (void) cancelTheCurrentUploadsWithTheSameUserId:(NSInteger)idUser{
+- (void) cancelTheCurrentUploadsWithTheSameUserId:(NSInteger)userId{
     
     __block ManageUploadRequest *currentManageUploadRequest = nil;
     
     //__block BOOL shouldBeContinue=NO;
     
-    DLog(@"id user: %ld", (long)idUser);
+    DLog(@"id user: %ld", (long)userId);
     
     NSArray *currentUploadsTemp = [NSArray arrayWithArray:_uploadArray];
     
@@ -2006,7 +2006,7 @@ float shortDelay = 0.3;
         if (currentManageUploadRequest.currentUpload.status == waitingForUpload ||
             currentManageUploadRequest.currentUpload.status == uploading) {
             DLog(@"this upload is waiting for upload");
-            if (currentManageUploadRequest.currentUpload.userId == idUser) {
+            if (currentManageUploadRequest.currentUpload.userId == userId) {
                 //change the credentiasl
                 [currentManageUploadRequest changeTheStatusToFailForCredentials];
                 DLog(@"%@ its change to fail", currentManageUploadRequest.currentUpload.originPath);
@@ -2278,7 +2278,7 @@ float shortDelay = 0.3;
     //Set uploadOffline
     currentManageUploadRequest.currentUpload = currentUploadBackground;
     currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:currentUploadBackground.estimateLength];
-    currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:currentUploadBackground.userId];
+    currentManageUploadRequest.userUploading = [ManageUsersDB getUserByUserId:currentUploadBackground.userId];
     
     currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:currentUploadBackground.destinyFolder andUser:currentManageUploadRequest.userUploading];
     
@@ -2338,7 +2338,7 @@ float shortDelay = 0.3;
         //Set uploadOffline
         currentManageUploadRequest.currentUpload = current;
         currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:current.estimateLength];
-        currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:current.userId];
+        currentManageUploadRequest.userUploading = [ManageUsersDB getUserByUserId:current.userId];
         
         currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:current.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
@@ -2370,7 +2370,7 @@ float shortDelay = 0.3;
         //Set uploadOffline
         currentManageUploadRequest.currentUpload = uploadOffline;
         currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadOffline.estimateLength];
-        currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadOffline.userId];
+        currentManageUploadRequest.userUploading = [ManageUsersDB getUserByUserId:uploadOffline.userId];
         
         currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadOffline.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
@@ -2397,7 +2397,7 @@ float shortDelay = 0.3;
         //Set uploadOffline
         currentManageUploadRequest.currentUpload = uploadOffline;
         currentManageUploadRequest.lenghtOfFile = [UploadUtils makeLengthString:uploadOffline.estimateLength];
-        currentManageUploadRequest.userUploading = [ManageUsersDB getUserByIdUser:uploadOffline.userId];
+        currentManageUploadRequest.userUploading = [ManageUsersDB getUserByUserId:uploadOffline.userId];
         
         currentManageUploadRequest.pathOfUpload = [UtilsUrls getPathWithAppNameByDestinyPath:uploadOffline.destinyFolder andUser:currentManageUploadRequest.userUploading];
         
@@ -2542,7 +2542,7 @@ float shortDelay = 0.3;
         
         ManageUploadRequest *current = [_uploadArray objectAtIndex:i];
         
-        if (current.currentUpload.userId == user.idUser) {
+        if (current.currentUpload.userId == user.userId) {
             [arrayOfPositionsToDelete addObject:[NSNumber numberWithInt:i]];
         }
     }
@@ -2568,7 +2568,7 @@ float shortDelay = 0.3;
  * @param userId -> id of user
  *
  */
-- (void) cancelTheCurrentUploadsOfTheUser:(NSInteger)idUser{
+- (void) cancelTheCurrentUploadsOfTheUser:(NSInteger)userId{
     
     //Check the currents uploads from a user
     NSArray *uploadsArray = [NSArray arrayWithArray:_uploadArray];
@@ -2579,7 +2579,7 @@ float shortDelay = 0.3;
         
         currentManageUploadRequest=obj;
         
-        if (currentManageUploadRequest.currentUpload.kindOfError == notAnError && currentManageUploadRequest.currentUpload.status != uploaded && currentManageUploadRequest.currentUpload.userId == idUser) {
+        if (currentManageUploadRequest.currentUpload.kindOfError == notAnError && currentManageUploadRequest.currentUpload.status != uploaded && currentManageUploadRequest.currentUpload.userId == userId) {
             //Indicate Error Credentials
             [currentManageUploadRequest changeTheStatusToFailForCredentials];
         }
@@ -2597,12 +2597,12 @@ float shortDelay = 0.3;
  * In this method we changed the kind of error of uploads failed "errorCredentials" to "notAndError"
  * for a specific user
  *
- * @param idUser -> idUser for a scpecific user.
+ * @param userId -> userId for a scpecific user.
  *
  * @discussion Maybe could be better move this kind of method to a singleton class inicializate in appDelegate.
  *
  */
-- (void)changeTheStatusOfCredentialsFilesErrorOfAnUserId:(NSInteger)idUser{
+- (void)changeTheStatusOfCredentialsFilesErrorOfAnUserId:(NSInteger)userId{
     
     __block ManageUploadRequest *currentManageUploadRequest;
     
@@ -2611,7 +2611,7 @@ float shortDelay = 0.3;
     [failedUploadsTemp enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         currentManageUploadRequest = obj;
         
-        if (currentManageUploadRequest.currentUpload.kindOfError == errorCredentials && currentManageUploadRequest.currentUpload.userId == idUser) {
+        if (currentManageUploadRequest.currentUpload.kindOfError == errorCredentials && currentManageUploadRequest.currentUpload.userId == userId) {
             DLog(@"ub with name %@ not an error", currentManageUploadRequest.currentUpload.uploadFileName);
             currentManageUploadRequest.currentUpload.kindOfError=notAnError;
             [ManageUploadsDB setStatus:currentManageUploadRequest.currentUpload.status andKindOfError:notAnError byUploadOffline:currentManageUploadRequest.currentUpload];
@@ -2790,7 +2790,7 @@ float shortDelay = 0.3;
         self.userSessionCurrentToken = nil;
             // should be here or right after checking the user really changed? for the moment, here
         
-        if (self.activeUser.idUser != user.idUser || hardMode) {
+        if (self.activeUser.userId != user.userId || hardMode) {
 
             //We delete the cookies on SAML
             if (k_is_sso_active) {
@@ -2802,7 +2802,7 @@ float shortDelay = 0.3;
         
             // update active state of users in DB
             [ManageUsersDB setAllUsersNoActive];
-            [ManageUsersDB setActiveAccountByIdUser:user.idUser];
+            [ManageUsersDB setActiveAccountByUserId:user.userId];
             user.activeaccount = YES;
         
             //Restore the cookies of the future activeUser

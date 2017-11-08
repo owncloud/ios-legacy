@@ -189,7 +189,7 @@
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    _sharedLinkItems = [ManageSharesDB getAllSharesByUser:app.activeUser.idUser anTypeOfShare:shareTypeLink];
+    _sharedLinkItems = [ManageSharesDB getAllSharesByUser:app.activeUser.userId anTypeOfShare:shareTypeLink];
     
     //Sorted by share time
     _sharedLinkItems = [self getArraySortByShareDate:_sharedLinkItems];
@@ -347,12 +347,12 @@
                 if (!isSamlCredentialsError) {
                     
                     //Delete the shared files of a user
-                    [ManageSharesDB deleteAllSharesOfUser:app.activeUser.idUser];
+                    [ManageSharesDB deleteAllSharesOfUser:app.activeUser.userId];
                     
                     //Insert the new shared files of a user
                     [ManageSharesDB insertSharedList:items];
                     
-                    _sharedLinkItems = [ManageSharesDB getAllSharesByUser:app.activeUser.idUser anTypeOfShare:shareTypeLink];
+                    _sharedLinkItems = [ManageSharesDB getAllSharesByUser:app.activeUser.userId anTypeOfShare:shareTypeLink];
                     //Sorted by share time
                     _sharedLinkItems = [self getArraySortByShareDate:_sharedLinkItems];
                     
@@ -389,7 +389,7 @@
                 
                 if (!isSamlCredentialsError) {
                 
-                    _sharedLinkItems = [ManageSharesDB getAllSharesByUser:app.activeUser.idUser anTypeOfShare:shareTypeLink];
+                    _sharedLinkItems = [ManageSharesDB getAllSharesByUser:app.activeUser.userId anTypeOfShare:shareTypeLink];
                     
                     //Sorted by share time
                     _sharedLinkItems = [self getArraySortByShareDate:_sharedLinkItems];
@@ -628,7 +628,7 @@
         //Create FileDto object with subPath and parentDto data
         FileDto *newFolder = [FileDto new];
         newFolder.fileId = parentDto.idFile;
-        newFolder.userId = app.activeUser.idUser;
+        newFolder.userId = app.activeUser.userId;
         newFolder.filePath = filePath;
         newFolder.fileName = fileName;
         newFolder.isDirectory = YES;
@@ -657,7 +657,7 @@
 
         //Obtain the path where the folder will be created in the file system
         NSString *rootPath = [NSString stringWithFormat:@"%@", newFolder.filePath];
-        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser,[rootPath stringByRemovingPercentEncoding]];
+        NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/%@",[UtilsUrls getOwnCloudFilePath],(long)app.activeUser.userId,[rootPath stringByRemovingPercentEncoding]];
         //Remove the "/"
         NSString *name = [newFolder.fileName substringToIndex:[newFolder.fileName length]-1];
         
@@ -668,7 +668,7 @@
     //5. Create in DB the file.
     FileDto *newFile = [FileDto new];
     newFile.fileId = parentDto.idFile;
-    newFile.userId = app.activeUser.idUser;
+    newFile.userId = app.activeUser.userId;
     newFile.filePath = finalFilePath;
     newFile.fileName = finalFileName;
     newFile.isDirectory = NO;

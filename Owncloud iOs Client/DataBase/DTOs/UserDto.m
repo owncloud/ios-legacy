@@ -21,7 +21,7 @@
 
 -(id) copyWithZone:(NSZone *)zone {
     UserDto *userCopy = [[UserDto alloc]init];
-    userCopy.idUser = self.idUser;
+    userCopy.userId = self.userId;
     userCopy.url = self.url;
     userCopy.username = self.username;
     userCopy.credDto = self.credDto;
@@ -60,7 +60,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
-    [coder encodeInteger:self.idUser  forKey:@"idUser"];
+    [coder encodeInteger:self.userId  forKey:@"userId"];
     [coder encodeObject:self.url forKey:@"url"];
     [coder encodeObject:self.username forKey:@"username"];
     [coder encodeObject:self.credDto  forKey:@"credDto"];
@@ -92,7 +92,7 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
     if (self = [super init]) {
-        self.idUser = [decoder decodeIntegerForKey:@"idUser"];
+        self.userId = [decoder decodeIntegerForKey:@"userId"];
         self.url = [decoder decodeObjectForKey:@"url"];
         self.username = [decoder decodeObjectForKey:@"username"];
         self.credDto = [decoder decodeObjectForKey:@"credDto"];

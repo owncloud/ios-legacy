@@ -220,8 +220,8 @@
  */
 - (void)updateTheCurrentLocalFolder{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
-    _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.userId, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser]];
+    _currentLocalFolder = [_currentLocalFolder stringByRemovingPercentEncoding];
     
 }
 

@@ -70,12 +70,12 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    OCCapabilities *capDB = [ManageCapabilitiesDB getCapabilitiesOfUserId: app.activeUser.idUser];
+    OCCapabilities *capDB = [ManageCapabilitiesDB getCapabilitiesOfUserId: app.activeUser.userId];
     
     if (capDB == nil) {
-        [ManageCapabilitiesDB insertCapabilities:capabilities ofUserId: app.activeUser.idUser];
+        [ManageCapabilitiesDB insertCapabilities:capabilities ofUserId: app.activeUser.userId];
     }else{
-        [ManageCapabilitiesDB updateCapabilitiesWith:capabilities ofUserId: app.activeUser.idUser];
+        [ManageCapabilitiesDB updateCapabilitiesWith:capabilities ofUserId: app.activeUser.userId];
     }
 }
 

@@ -29,7 +29,7 @@ import Foundation
         if let userInDB = ManageUsersDB.insertUser(user) {
     
             userInDB.credDto = credDto.copy() as! OCCredentialsDto
-            userInDB.credDto.userId = String(userInDB.idUser)
+            userInDB.credDto.userId = String(userInDB.userId)
             
             //userInDB contains the userId in DB, we add the credentials and store the user in keychain
             OCKeychain.storeCredentials(userInDB.credDto)
@@ -58,7 +58,7 @@ import Foundation
 @objc func updateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
         
         user.credDto = credDto.copy() as! OCCredentialsDto
-        user.credDto.userId = String(user.idUser)
+        user.credDto.userId = String(user.userId)
     
         ManageUsersDB.updateUser(by: user)
 
@@ -71,7 +71,7 @@ import Foundation
         }
         
         //Change the state of user uploads with credential error
-        ManageUploadsDB.updateErrorCredentialFiles(user.idUser)
+        ManageUploadsDB.updateErrorCredentialFiles(user.userId)
         
         self.restoreDownloadAndUploadsOfUser(user)
     
@@ -105,7 +105,7 @@ import Foundation
     
 @objc func restoreDownloadAndUploadsOfUser(_ user : UserDto) {
         let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-        app.cancelTheCurrentUploads(ofTheUser: user.idUser)
+        app.cancelTheCurrentUploads(ofTheUser: user.userId)
         
         let downloadManager : ManageDownloads = app.downloadManager
         downloadManager.cancelAndRefreshInterface()

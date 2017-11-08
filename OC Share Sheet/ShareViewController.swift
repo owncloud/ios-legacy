@@ -255,7 +255,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
                     upload.uploadFileName = fileName
                     upload.kindOfError = enumKindOfError.notAnError.rawValue
                     upload.estimateLength = fileLength
-                    upload.userId = (user?.idUser)!
+                    upload.userId = (user?.userId)!
                     upload.status = enumUpload.generatedByDocumentProvider.rawValue
                     upload.chunksLength = Int(k_lenght_chunk)
                     upload.isNotNecessaryCheckIfExist = false

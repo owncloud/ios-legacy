@@ -159,7 +159,7 @@
     
     //TitleLabel
     if (_file) {
-        [_titleLabel setText:[_file.fileName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding]];
+        [_titleLabel setText:[_file.fileName stringByRemovingPercentEncoding]];
     } else if (_isFileCharged==NO && _file==nil){
         [_titleLabel setText:_linkTitle];
     } else {
@@ -269,8 +269,8 @@
     self.isForceDownload = isForceDownload;
     
     //Get the current local folder
-    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.idUser, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:myFile.filePath andUser:app.activeUser]];
-    _currentLocalFolder = [_currentLocalFolder stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    _currentLocalFolder = [NSString stringWithFormat:@"%@%ld/%@", [UtilsUrls getOwnCloudFilePath],(long)app.activeUser.userId, [UtilsUrls getFilePathOnDBByFilePathOnFileDto:myFile.filePath andUser:app.activeUser]];
+    _currentLocalFolder = [_currentLocalFolder stringByRemovingPercentEncoding];
 
     //Quit the title
     _linkTitle=@"";
@@ -285,7 +285,7 @@
         //Stop the notification
         [self stopNotificationUpdatingFile];
         //Put the title in the toolBar
-        [_titleLabel setText:[_file.fileName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding]];
+        [_titleLabel setText:[_file.fileName stringByRemovingPercentEncoding]];
         _isViewBlocked = NO;
         
         //Remove the views
@@ -727,7 +727,7 @@
  */
 - (void)putTitleInNavBarByName:(NSString *) fileName{
     
-    [_titleLabel setText:[fileName stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)NSUTF8StringEncoding]];
+    [_titleLabel setText:[fileName stringByRemovingPercentEncoding]];
 }
 
 
@@ -1949,7 +1949,7 @@
         }
         
         //File name
-        NSString *notificationText = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"updating", nil), [nameFileToUpdate stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *notificationText = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"updating", nil), [nameFileToUpdate stringByRemovingPercentEncoding]];
         DLog(@"name: %@",notificationText);
         [_notification displayNotificationWithMessage:notificationText completion:nil];
     }

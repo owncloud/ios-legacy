@@ -905,7 +905,7 @@ public enum TextfieldType: String {
                     } else {
                         
                         ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
-                        if (app.activeUser != nil && app.activeUser.idUser == self.user?.idUser) {
+                        if (app.activeUser != nil && app.activeUser.userId == self.user?.userId) {
                             app.activeUser = self.user;
                         }
 

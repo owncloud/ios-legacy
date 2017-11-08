@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, enumSortingType) {
 
 @interface UserDto : NSObject <NSCopying>
 
-@property NSInteger idUser;
+@property NSInteger userId;
 @property (nonatomic, copy) NSString *url;
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) OCCredentialsDto *credDto;

@@ -66,7 +66,7 @@
     
     [self updateRecentsTab];
     
-    self.userUploading = [ManageUsersDB getUserByIdUser:_currentUpload.userId];
+    self.userUploading = [ManageUsersDB getUserByUserId:_currentUpload.userId];
     
     [self checkIfExistOnserverAndBeginUpload];
 }
@@ -226,7 +226,7 @@
         self.currentUpload.status=waitingForUpload;
     }
     
-    self.userUploading = [ManageUsersDB getUserByIdUser:self.currentUpload.userId];
+    self.userUploading = [ManageUsersDB getUserByUserId:self.currentUpload.userId];
 
     [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
     
@@ -715,7 +715,7 @@
 
 - (void) updateTheEtagOfTheFile: (FileDto *) overwrittenFile {
     
-    self.userUploading = [ManageUsersDB getUserByIdUser:self.currentUpload.userId];
+    self.userUploading = [ManageUsersDB getUserByUserId:self.currentUpload.userId];
     
     [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
 
@@ -789,7 +789,7 @@
 
 - (void) checkTheEtagInTheServerOfTheFile:(FileDto *) overwrittenFile {
     
-    self.userUploading = [ManageUsersDB getUserByIdUser:self.userUploading.idUser];
+    self.userUploading = [ManageUsersDB getUserByUserId:self.userUploading.userId];
     
     [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
 

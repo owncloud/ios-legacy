@@ -42,7 +42,7 @@
         
         CookiesStorageDto *newCookieStorage = [CookiesStorageDto new];
         newCookieStorage.cookie = current;
-        newCookieStorage.userId = user.idUser;
+        newCookieStorage.userId = user.userId;
         
         [ManageCookiesStorageDB insertCookie:newCookieStorage];
     }

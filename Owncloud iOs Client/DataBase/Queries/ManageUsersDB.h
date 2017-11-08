@@ -40,10 +40,10 @@
 + (UserDto *) getActiveUserWithoutCredentials;
 
 /*
- * Method that returns the user object of the idUser
- * @idUser -> id User.
+ * Method that returns the user object of the userId
+ * @userId -> User id.
  */
-+ (UserDto *) getUserByIdUser:(NSInteger) idUser;
++ (UserDto *) getUserByUserId:(NSInteger) userId;
 
 /*
  * Method that returns if the user exist or not
@@ -70,9 +70,9 @@
 
 /*
  * Method that sets a user like a active account
- * @idUser -> id user
+ * @userId -> user id
  */
-+(void) setActiveAccountByIdUser: (NSInteger) idUser;
++(void) setActiveAccountByUserId: (NSInteger) userId;
 
 /*
  * Method that sets all acount as a no active.
@@ -87,7 +87,7 @@
 
 /*
  * Method that removes user data in all tables
- * @idUser -> id user
+ * @user -> userDto
  */
 +(void) removeUserAndDataByUser:(UserDto *)user;
 

@@ -34,7 +34,7 @@
  */
 - (void)checkIfTheFileExistsWithThisPath:(NSString*)path andUser:(UserDto *) user {
     
-    UserDto *userUpdated = [ManageUsersDB getUserByIdUser:user.idUser];
+    UserDto *userUpdated = [ManageUsersDB getUserByUserId:user.userId];
     [[AppDelegate sharedOCCommunication] setCredentials:userUpdated.credDto];
     
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];

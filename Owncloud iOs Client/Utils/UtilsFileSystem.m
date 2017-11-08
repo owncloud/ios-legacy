@@ -21,7 +21,7 @@
 
 + (NSString *) temporalFileNameByName:(NSString *)fileName {
     //Use a temporal name with a date identification
-    NSString *temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *temporalFileName = [NSString stringWithFormat:@"%@-%@", [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]], [fileName stringByRemovingPercentEncoding]];
     NSString *tempPath = [[UtilsUrls getTempFolderForUploadFiles] stringByAppendingPathComponent:temporalFileName];
     
     return tempPath;
@@ -81,7 +81,7 @@
 + (void) createFolderForUser:(UserDto *) user {
     //We get the current folder to create the local tree
     //we create the user folder to haver multiuser
-    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)user.idUser];
+    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%ld/",[UtilsUrls getOwnCloudFilePath],(long)user.userId];
     DLog(@"current: %@", currentLocalFileToCreateFolder);
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:currentLocalFileToCreateFolder]) {

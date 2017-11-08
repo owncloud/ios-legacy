@@ -26,7 +26,7 @@
     
 #ifdef CONTAINER_APP
     
-    if ([credDto.userId integerValue] ==  [ManageUsersDB getActiveUser].idUser) {
+    if ([credDto.userId integerValue] ==  [ManageUsersDB getActiveUser].userId) {
         APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
     }
 #endif
@@ -120,7 +120,7 @@
     
     OCCredentialsDto *credentialsDto = nil;
     
-    NSString *userId = [NSString stringWithFormat:@"%ld",(long)user.idUser];
+    NSString *userId = [NSString stringWithFormat:@"%ld",(long)user.userId];
     NSDictionary *resultKeychainDict = [self getKeychainDictionaryOfUserId:userId];
     
     if (resultKeychainDict) {
@@ -156,7 +156,7 @@
     [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
-    NSString *userId = [NSString stringWithFormat:@"%ld",(long)user.idUser];
+    NSString *userId = [NSString stringWithFormat:@"%ld",(long)user.userId];
     [keychainItem setObject:userId forKey:(__bridge id)kSecAttrAccount];
 
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, NULL);
@@ -281,7 +281,7 @@
             [OCKeychain updateCredentials:user.credDto];
             
         } else {
-            DLog(@"Not possible to update keychain with userId: %ld", (long)user.idUser);
+            DLog(@"Not possible to update keychain with userId: %ld", (long)user.userId);
         }
     }
 }

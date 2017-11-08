@@ -331,14 +331,14 @@
 /**
  * Method that indicate if a specific file is into a specific path
  *
- * @param idFile -> NSInteger of id file
- * @param idUser -> NSInteger of id user
+ * @param idFile -> NSInteger of file id
+ * @param userId -> NSInteger of user id
  * @param folder -> Folder path
  *
  * @return YES/NO
  *
  */
-+ (BOOL) isThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)idUser intoThisFolder:(NSString *)folder;
++ (BOOL) isThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)userId intoThisFolder:(NSString *)folder;
 
 
 /*
@@ -374,23 +374,23 @@
  *
  * @param value -> NSInteger
  * @param idFile -> NSInteger
- * @param idUser -> NSInteger
+ * @param userId -> NSInteger
  *
  */
-+ (void) updateShareFileSource:(NSInteger)value forThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)idUser;
++ (void) updateShareFileSource:(NSInteger)value forThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)userId;
 
 
 ///-----------------------------------
-/// @name setUnShareAllFilesByIdUser
+/// @name setUnShareAllFilesByUserId
 ///-----------------------------------
 
 /**
  * Method to unshare all the files of one user
  *
- * @param idUser -> NSInteger
+ * @param userId -> NSInteger
  *
  */
-+ (void) setUnShareAllFilesByIdUser:(NSInteger)idUser;
++ (void) setUnShareAllFilesByUserId:(NSInteger)userId;
 
 ///-----------------------------------
 /// @name updateFilesAndSetSharedOfUser

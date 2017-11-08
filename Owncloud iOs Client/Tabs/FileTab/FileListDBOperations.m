@@ -38,7 +38,7 @@
             
             DLog(@"Current folder to create: %@%@",currentFile.filePath, currentFile.fileName);
             
-            NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%@",localFolder,[currentFile.fileName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%@",localFolder,[currentFile.fileName stringByRemovingPercentEncoding]];
             
             DLog(@"currentLocalFileToCreateFolder: %@", currentLocalFileToCreateFolder);
             
@@ -68,7 +68,7 @@
     initialRootFolder.ocId = @"";
     initialRootFolder.filePath = @"";
     initialRootFolder.fileName = @"";
-    initialRootFolder.userId = user.idUser;
+    initialRootFolder.userId = user.userId;
     initialRootFolder.isDirectory = YES;
     initialRootFolder.isDownload = notDownload;
     initialRootFolder.fileId = -1;
@@ -149,7 +149,7 @@
     
     DLog(@"Current folder to create: %@", folderName);
     
-    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%@",localFolder,[folderName stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *currentLocalFileToCreateFolder = [NSString stringWithFormat:@"%@%@",localFolder,[folderName stringByRemovingPercentEncoding]];
     
     DLog(@"currentLocalFileToCreateFolder: %@", currentLocalFileToCreateFolder);
     

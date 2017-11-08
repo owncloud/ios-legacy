@@ -58,7 +58,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE file_id = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:mUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE file_id = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:mUser.userId]];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];
@@ -111,7 +111,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
 
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE file_id = ? AND is_directory = 1 AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:mUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE file_id = ? AND is_directory = 1 AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:mUser.userId]];
 
         while ([rs next]) {
             
@@ -211,7 +211,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
 
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE id = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:idFile], [NSNumber numberWithInteger:mUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE id = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:idFile], [NSNumber numberWithInteger:mUser.userId]];
 
         while ([rs next]) {
             
@@ -250,7 +250,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE file_name = ? AND file_path= ? AND user_id = ? ORDER BY file_name ASC",fileName, filePath, [NSNumber numberWithInteger:user.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE file_name = ? AND file_path= ? AND user_id = ? ORDER BY file_name ASC",fileName, filePath, [NSNumber numberWithInteger:user.userId]];
         
         while ([rs next]) {
             
@@ -304,7 +304,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT DISTINCT file_path, file_name, id FROM files WHERE user_id = ? AND file_path LIKE ? ORDER BY file_name ASC", [NSNumber numberWithInteger:mUser.idUser], beginFilePath];
+        FMResultSet *rs = [db executeQuery:@"SELECT DISTINCT file_path, file_name, id FROM files WHERE user_id = ? AND file_path LIKE ? ORDER BY file_name ASC", [NSNumber numberWithInteger:mUser.userId], beginFilePath];
         while ([rs next]) {
             
             FileDto *currentFile = [FileDto new];
@@ -347,7 +347,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET is_download=? WHERE file_path = ? AND file_name=? AND user_id = ?", [NSNumber numberWithInt:downloadState], filePath, fileName, [NSNumber numberWithInteger:aciveUser.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET is_download=? WHERE file_path = ? AND file_name=? AND user_id = ?", [NSNumber numberWithInt:downloadState], filePath, fileName, [NSNumber numberWithInteger:aciveUser.userId]];
         
         if (!correctQuery) {
             DLog(@"Error in setFileIsDownloadState");
@@ -388,7 +388,7 @@
                //INSERT INTO files(file_path, file_name, is_directory,user_id, is_download, size, file_id, date
                FileDto *current = [listOfFiles objectAtIndex:i];
                current.fileId = fileId;
-               current.userId = user.idUser;
+               current.userId = user.userId;
                 
                 //to jump the first becouse it is not necesary (is the same directory) and the other if is to insert 450 by 450
                 if(numberOfInsertEachTime == 0) {
@@ -489,7 +489,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE id = ? AND user_id = ?",[NSNumber numberWithInteger:idFile], [NSNumber numberWithInteger:mUser.idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE id = ? AND user_id = ?",[NSNumber numberWithInteger:idFile], [NSNumber numberWithInteger:mUser.userId]];
         
         if (!correctQuery) {
             DLog(@"Error in deleteFileByIdFile");
@@ -541,7 +541,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE file_id = ? AND user_id = ?", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:mUser.idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE file_id = ? AND user_id = ?", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:mUser.userId]];
         
         if (!correctQuery) {
             DLog(@"Error in deleteFilesFromDBBeforeRefreshByFileId");
@@ -566,7 +566,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"INSERT INTO files_backup SELECT * FROM files WHERE user_id =? and file_id=?", [NSNumber numberWithInteger:mUser.idUser], [NSNumber numberWithInteger:fileId]];
+        correctQuery = [db executeUpdate:@"INSERT INTO files_backup SELECT * FROM files WHERE user_id =? and file_id=?", [NSNumber numberWithInteger:mUser.userId], [NSNumber numberWithInteger:fileId]];
         
         if (!correctQuery) {
             DLog(@"Error in backupFoldersDownloadedFavoritesByFileId");
@@ -590,7 +590,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT files.id, back.file_id, back.etag, back.is_favorite FROM files, (SELECT DISTINCT files.file_id, files_backup.file_path, files_backup.file_name, files_backup.etag, files_backup.is_favorite FROM files_backup, files WHERE files.file_id = files_backup.id AND files_backup.is_directory = 1) back WHERE user_id = ? AND files.file_path = back.file_path AND files.file_name = back.file_name ORDER BY id DESC", [NSNumber numberWithInteger:mUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT files.id, back.file_id, back.etag, back.is_favorite FROM files, (SELECT DISTINCT files.file_id, files_backup.file_path, files_backup.file_name, files_backup.etag, files_backup.is_favorite FROM files_backup, files WHERE files.file_id = files_backup.id AND files_backup.is_directory = 1) back WHERE user_id = ? AND files.file_path = back.file_path AND files.file_name = back.file_name ORDER BY id DESC", [NSNumber numberWithInteger:mUser.userId]];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];
@@ -843,7 +843,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT files_backup.id, files_backup.file_path, files_backup.file_name, files_backup.is_directory FROM files_backup WHERE files_backup.id NOT IN (SELECT back.id FROM (SELECT id, file_path, file_name FROM files_backup) back, (SELECT id, file_path, file_name FROM files WHERE user_id = ?) files WHERE files.file_path = back.file_path AND files.file_name = back.file_name)", [NSNumber numberWithInteger:mUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT files_backup.id, files_backup.file_path, files_backup.file_name, files_backup.is_directory FROM files_backup WHERE files_backup.id NOT IN (SELECT back.id FROM (SELECT id, file_path, file_name FROM files_backup) back, (SELECT id, file_path, file_name FROM files WHERE user_id = ?) files WHERE files.file_path = back.file_path AND files.file_name = back.file_name)", [NSNumber numberWithInteger:mUser.userId]];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];
@@ -1044,7 +1044,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE file_path = ? AND file_name = ? AND user_id = ?",filePathToDelete, fileName, [NSNumber numberWithInteger:mUser.idUser]];
+        correctQuery = [db executeUpdate:@"DELETE FROM files WHERE file_path = ? AND file_name = ? AND user_id = ?",filePathToDelete, fileName, [NSNumber numberWithInteger:mUser.userId]];
         
         if (!correctQuery) {
             DLog(@"Error in deleteFileByFilePath");
@@ -1068,7 +1068,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE file_path = ? AND file_name = ? AND user_id = ? AND is_directory = 1 ORDER BY file_name ASC", newFilePath, fileName, [NSNumber numberWithInteger:mUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE file_path = ? AND file_name = ? AND user_id = ? AND is_directory = 1 ORDER BY file_name ASC", newFilePath, fileName, [NSNumber numberWithInteger:mUser.userId]];
                 
         while ([rs next]) {
             
@@ -1126,7 +1126,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET file_path=?, file_id=?, file_name=? WHERE user_id = ? AND id = ?", newFilePath, [NSNumber numberWithInteger:fileId], fileName, [NSNumber numberWithInteger:mUser.idUser], [NSNumber numberWithInteger:selectedFileId]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET file_path=?, file_id=?, file_name=? WHERE user_id = ? AND id = ?", newFilePath, [NSNumber numberWithInteger:fileId], fileName, [NSNumber numberWithInteger:mUser.userId], [NSNumber numberWithInteger:selectedFileId]];
                 
         if (!correctQuery) {
             DLog(@"Error in updateFolderOfFileDtoByNewFilePath");
@@ -1151,7 +1151,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET file_path=? WHERE user_id = ? AND id=?", newFilePath, [NSNumber numberWithInteger:mUser.idUser], [NSNumber numberWithInteger:selectedFile.idFile]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET file_path=? WHERE user_id = ? AND id=?", newFilePath, [NSNumber numberWithInteger:mUser.userId], [NSNumber numberWithInteger:selectedFile.idFile]];
         
         if (!correctQuery) {
             DLog(@"Error in updatePathwithNewPath");
@@ -1170,7 +1170,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT COUNT(*) AS NUM FROM files WHERE user_id = ? AND is_root_folder = 1", [NSNumber numberWithInteger:currentUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT COUNT(*) AS NUM FROM files WHERE user_id = ? AND is_root_folder = 1", [NSNumber numberWithInteger:currentUser.userId]];
         while ([rs next]) {
             size = [rs intForColumn:@"NUM"];
         }
@@ -1206,7 +1206,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE user_id = ? AND is_root_folder = 1 ORDER BY file_name ASC", [NSNumber numberWithInteger:currentUser.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE user_id = ? AND is_root_folder = 1 ORDER BY file_name ASC", [NSNumber numberWithInteger:currentUser.userId]];
         
         while ([rs next]) {
             
@@ -1264,7 +1264,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET etag=? WHERE file_path = ? AND file_name=? AND user_id = ?", etag, filePath, fileName, [NSNumber numberWithInteger:aciveUser.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET etag=? WHERE file_path = ? AND file_name=? AND user_id = ?", etag, filePath, fileName, [NSNumber numberWithInteger:aciveUser.userId]];
         
         if (!correctQuery) {
             DLog(@"Error in updatePathwithNewPath");
@@ -1288,7 +1288,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET file_id=? WHERE file_id = ? AND user_id = ?", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:oldFileId], [NSNumber numberWithInteger:mUser.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET file_id=? WHERE file_id = ? AND user_id = ?", [NSNumber numberWithInteger:fileId], [NSNumber numberWithInteger:oldFileId], [NSNumber numberWithInteger:mUser.userId]];
         
         if (!correctQuery) {
             DLog(@"Error in updatePathwithNewPath");
@@ -1321,7 +1321,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-     FMResultSet *rs = [db executeQuery:@"SELECT COUNT(*) as NUM FROM files WHERE is_download = ? AND user_id = ? AND file_path LIKE ? ORDER BY file_name ASC", [NSNumber numberWithInteger:downloadState], [NSNumber numberWithInteger:currentUser.idUser], [NSString stringWithFormat:@"%@%%", folder]];
+     FMResultSet *rs = [db executeQuery:@"SELECT COUNT(*) as NUM FROM files WHERE is_download = ? AND user_id = ? AND file_path LIKE ? ORDER BY file_name ASC", [NSNumber numberWithInteger:downloadState], [NSNumber numberWithInteger:currentUser.userId], [NSString stringWithFormat:@"%@%%", folder]];
         while ([rs next]) {
             int numberOfFiles = [rs intForColumn:@"NUM"];
             if(numberOfFiles > 0) {
@@ -1341,17 +1341,17 @@
 /**
  * Method that indicate if a specific file is into a specific path
  *
- * @param idFile -> NSInteger of id file
- * @param idUser -> NSInteger of id user
+ * @param idFile -> NSInteger of file id
+ * @param userId -> NSInteger of user id
  * @param folder -> Folder path
  *
  * @return YES/NO
  *
  */
-+ (BOOL) isThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)idUser intoThisFolder:(NSString *)folder{
++ (BOOL) isThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)userId intoThisFolder:(NSString *)folder{
     
     DLog(@"ManageFiles -> idFile: %ld", (long)idFile);
-    DLog(@"ManageFiles -> idUser: %ld", (long)idUser);
+    DLog(@"ManageFiles -> userId: %ld", (long)userId);
 
     DLog(@"ManageFiles -> folder: %@", folder);
     
@@ -1360,7 +1360,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT id FROM files WHERE user_id = ? AND file_path LIKE ?", [NSNumber numberWithInteger:idUser], [NSString stringWithFormat:@"%@%%", folder]];
+        FMResultSet *rs = [db executeQuery:@"SELECT id FROM files WHERE user_id = ? AND file_path LIKE ?", [NSNumber numberWithInteger:userId], [NSString stringWithFormat:@"%@%%", folder]];
        
         
         while ([rs next]) {
@@ -1387,7 +1387,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET is_download = ?, is_necessary_update = ? WHERE user_id = ? AND file_path LIKE ? ", [NSNumber numberWithInteger:downloadState],[NSNumber numberWithInt:isNecessaryUpdate], [NSNumber numberWithInteger:currentUser.idUser], [NSString stringWithFormat:@"%@%%", folder]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET is_download = ?, is_necessary_update = ? WHERE user_id = ? AND file_path LIKE ? ", [NSNumber numberWithInteger:downloadState],[NSNumber numberWithInt:isNecessaryUpdate], [NSNumber numberWithInteger:currentUser.userId], [NSString stringWithFormat:@"%@%%", folder]];
         
         if (!correctQuery) {
             DLog(@"Error in updateFilesByUserAndFolder");
@@ -1409,17 +1409,17 @@
  *
  * @param value -> NSInteger
  * @param idFile -> NSInteger
- * @param idUser -> NSInteger
+ * @param userId -> NSInteger
  *
  */
-+ (void) updateShareFileSource:(NSInteger)value forThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)idUser{
++ (void) updateShareFileSource:(NSInteger)value forThisFile:(NSInteger)idFile ofThisUserId:(NSInteger)userId{
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = ? WHERE id = ? AND user_id= ?", [NSNumber numberWithInteger:value], [NSNumber numberWithInteger:idFile],[NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = ? WHERE id = ? AND user_id= ?", [NSNumber numberWithInteger:value], [NSNumber numberWithInteger:idFile],[NSNumber numberWithInteger:userId]];
         
         if (!correctQuery) {
             DLog(@"Error in update share file source");
@@ -1428,23 +1428,14 @@
     }];
 }
 
-///-----------------------------------
-/// @name setUnShareAllFilesByIdUser
-///-----------------------------------
 
-/**
- * Method to unshare all the files of one user
- *
- * @param idUser -> NSInteger
- *
- */
-+ (void) setUnShareAllFilesByIdUser:(NSInteger)idUser {
++ (void) setUnShareAllFilesByUserId:(NSInteger)userId {
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = 0 WHERE user_id= ?", [NSNumber numberWithInteger:idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = 0 WHERE user_id= ?", [NSNumber numberWithInteger:userId]];
         
         if (!correctQuery) {
             DLog(@"Error in update share file source");
@@ -1543,7 +1534,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
         
-    FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE is_download = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:status], [NSNumber numberWithInteger:user.idUser]];
+    FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE is_download = ? AND user_id = ? ORDER BY file_name ASC", [NSNumber numberWithInteger:status], [NSNumber numberWithInteger:user.userId]];
         while ([rs next]) {
             
             FileDto *currentFile = [[FileDto alloc] init];
@@ -1594,7 +1585,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = 0 WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
+        correctQuery = [db executeUpdate:@"UPDATE files SET shared_file_source = 0 WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         
         if (!correctQuery) {
             DLog(@"Error in update share file source");
@@ -1658,7 +1649,7 @@
     __block NSString *comparePath = nil;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE user_id = ?", [NSNumber numberWithInteger:user.idUser]];
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE user_id = ?", [NSNumber numberWithInteger:user.userId]];
         while ([rs next]) {
             
             comparePath = [NSString stringWithFormat:@"/%@%@", [rs stringForColumn:@"file_path"], [rs stringForColumn:@"file_name"]];
@@ -1730,7 +1721,7 @@
     
     [queue inDatabase:^(FMDatabase *db) {
 
-    FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE user_id = ? AND is_directory = 1", [NSNumber numberWithInteger:mUser.idUser]];
+    FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE user_id = ? AND is_directory = 1", [NSNumber numberWithInteger:mUser.userId]];
 
         while ([rs next]) {
             
@@ -1819,7 +1810,7 @@
     
     NSMutableArray *tempArray = [NSMutableArray new];
     //Get the user
-    UserDto *mUser = [ManageUsersDB getUserByIdUser:userId];
+    UserDto *mUser = [ManageUsersDB getUserByUserId:userId];
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE is_favorite = 1 AND user_id = ? AND is_directory = 0", [NSNumber numberWithInteger:userId]];
@@ -1961,7 +1952,7 @@
     NSMutableArray *tempArray = [NSMutableArray new];
     
     //Get the user
-    UserDto *mUser = [ManageUsersDB getUserByIdUser:userId];
+    UserDto *mUser = [ManageUsersDB getUserByUserId:userId];
     
     __block NSString *comparePath = nil;
     
@@ -2082,7 +2073,7 @@
     __block FileDto *fileTemp = nil;
     
     //Get the user
-    UserDto *user = [ManageUsersDB getUserByIdUser:userId];
+    UserDto *user = [ManageUsersDB getUserByUserId:userId];
     
     [queue inDatabase:^(FMDatabase *db) {
         FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE providing_file_id = ?", [NSNumber numberWithInteger:providingFileId]];
