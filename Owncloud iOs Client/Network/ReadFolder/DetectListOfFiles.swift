@@ -20,7 +20,7 @@ import Foundation
 @objc class DetectListOfFiles: NSObject {
     
     func readFolderOfURL(_ url: NSURL, credentials: OCCredentialsDto,
-                           success: ( @escaping (_ listOfFiles: [Any]?) -> Void ),
+                           success: ( @escaping (_ listOfFiles: [Any]) -> Void ),
                             failure: (@escaping (_ errorHttp: NSInteger?,_ error: NSError?) -> Void) ) {
         
         
@@ -48,11 +48,12 @@ import Foundation
                 }
             }
             //TODO: chec redirectedserver in status
-            if (items?.isEmpty)! {
-                let statusCode: NSInteger = (response?.statusCode == nil) ? 0: (response?.statusCode)!
-               failure(statusCode, UtilsFramework.getErrorWithCode(Int(kOCErrorServerUnauthorized), andCustomMessageFromTheServer: "")! as NSError)
+            
+            if ( items != nil && !(items!.isEmpty) ) {
+                success(items!)
             } else {
-                success(items)
+                let statusCode: NSInteger = (response?.statusCode == nil) ? 0: (response?.statusCode)!
+                failure(statusCode, UtilsFramework.getErrorWithCode(Int(kOCErrorServerUnauthorized), andCustomMessageFromTheServer: "")! as NSError)
             }
             
         }, failureRequest: { (response:HTTPURLResponse?, error: Error?, token: String?, redirectedServer: String?) in
@@ -67,19 +68,16 @@ import Foundation
     
  func getListOfFiles(url:NSURL, credentials: OCCredentialsDto, withCompletion completion: @escaping (_ errorHttp: NSInteger?,_ error: NSError?, _ listOfFileDtos: [FileDto]? ) -> Void) {
     
-    self.readFolderOfURL(url, credentials: credentials, success: { (_ listOfFiles: [Any]?) in
+    self.readFolderOfURL(url, credentials: credentials, success: { (_ listOfFiles: [Any]) in
             var listOfFileDtos: [FileDto]? = nil
-            
-            if (listOfFiles != nil && !((listOfFiles?.isEmpty)!)) {
                 
-                print("\(String(describing: listOfFiles)) files found in this folder")
+            print("\(String(describing: listOfFiles)) files found in this folder")
                 
-                //Pass the listOfFiles with OCFileDto to FileDto Array
-                listOfFileDtos = UtilsDtos.pass(toFileDtoArrayThisOCFileDtoArray: listOfFiles) as? [FileDto]
-                
-                completion(nil, nil, listOfFileDtos)
-            }
-            
+            //Pass the listOfFiles with OCFileDto to FileDto Array
+            listOfFileDtos = UtilsDtos.pass(toFileDtoArrayThisOCFileDtoArray: listOfFiles) as? [FileDto]
+        
+            completion(nil, nil, listOfFileDtos)
+
         }) { (_ errorHttp: NSInteger?,_ error: NSError?) in
             
             completion(errorHttp, error, nil)
