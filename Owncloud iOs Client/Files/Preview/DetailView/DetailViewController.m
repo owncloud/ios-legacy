@@ -186,7 +186,9 @@
         _titleLabelMarginRightConstraint.constant = 210;
         _updatingProgressMarginUpdatingRightConstraint.constant = 210;
         
-        if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
+        //Check if share link button should be appear.
+        if ([ShareUtils hasShareOptionToBeHiddenForFile:self.file]) {
+            
             [items insertObject:_deleteButtonBar atIndex:indexPosition++];
             
             if ([FileNameUtils isEditTextViewSupportedThisFile:self.file.fileName]) {
