@@ -1381,7 +1381,7 @@
         //Custom cell for SWTableViewCell with right swipe options
         fileCell.containingTableView = tableView;
         [fileCell setCellHeight:fileCell.frame.size.height];
-        fileCell.leftUtilityButtons = [self setSwipeLeftButtons];
+        fileCell.leftUtilityButtons = [self setSwipeLeftButtonsForFile:file];
         
         fileCell.rightUtilityButtons = nil;
         fileCell.delegate = self;
@@ -3384,13 +3384,13 @@
  *
  */
 
-- (NSArray *)setSwipeLeftButtons
+- (NSArray *)setSwipeLeftButtonsForFile:(FileDto *)file
 {
     //Share gray button
     NSMutableArray *rightUtilityButtons = [NSMutableArray new];
     
     BOOL areTwoButtonsInTheSwipe = false;
-    if ( (k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled) ) {
+    if ([ShareUtils hasShareOptionToBeHiddenForFile:file]) {
         //Two buttons
         areTwoButtonsInTheSwipe = true;
     }else{
@@ -3456,7 +3456,7 @@
         }
         case 1:
         {
-            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
+            if ([ShareUtils hasShareOptionToBeHiddenForFile:self.selectedFileDto]) {
                 DLog(@"Click on index 2 - Delete");
                 [self didSelectDeleteOption];
                 break;
@@ -3469,8 +3469,7 @@
         }
         case 2:
         {
-            if ((k_hide_share_options) || (APP_DELEGATE.activeUser.hasCapabilitiesSupport == serverFunctionalitySupported && APP_DELEGATE.activeUser.capabilitiesDto && !APP_DELEGATE.activeUser.capabilitiesDto.isFilesSharingAPIEnabled)) {
-            }else{
+            if (![ShareUtils hasShareOptionToBeHiddenForFile:self.selectedFileDto]) {
                 DLog(@"Click on index 2 - Delete");
                 [self didSelectDeleteOption];
                 break;
