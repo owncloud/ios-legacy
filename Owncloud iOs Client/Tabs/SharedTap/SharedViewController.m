@@ -1073,12 +1073,6 @@
 /// @name Set Swipe Right Buttons
 ///-----------------------------------
 
-/**
- * This method set the two right buttons for the swipe
- * Share button in gray
- * UnShare button in red
- *
- */
 - (NSArray *)setSwipeRightButtons
 {
     //No Right buttons
@@ -1089,12 +1083,12 @@
 ///-----------------------------------
 /// @name Set Swipe Left Buttons
 ///-----------------------------------
-
 /**
- * This method is empty now because we don't need left swippe buttons
+ * This method set the two left buttons for the swipe, one or none if it is not allowed to share
+ * Share button in gray
+ * UnShare button in red
  *
  */
-
 - (NSArray *)setSwipeLeftButtonsForFile:(FileDto *)file
 {
     //Check the share options should be presented
@@ -1202,19 +1196,15 @@
     DLog(@"Unshare button pressed");
     
     if (_mShareFileOrFolder) {
-        //Create new object
         self.mShareFileOrFolder = nil;
     }
     
-    //Create new object
     self.mShareFileOrFolder = [ShareFileOrFolder new];
     self.mShareFileOrFolder.delegate = self;
     
     [self.mShareFileOrFolder unshareTheFileByIdRemoteShared:remoteFileId];
     
-    //Refresh the list of share items
     [self performSelector:@selector(refreshSharedItems) withObject:nil afterDelay:0.5];
-    
 }
 
 
