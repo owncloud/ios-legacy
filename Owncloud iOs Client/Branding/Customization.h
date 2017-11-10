@@ -43,13 +43,6 @@
 //Have SAML active
 #define k_is_sso_active NO
 
-//OAuth server //not use, use Oauth2 instead
-#define k_oauth_login @""
-#define k_oauth_authorize @""
-#define k_oauth_token @""
-#define k_oauth_webservice @""
-#define k_oauth_client_id @"" //the same in k_oauth_login
-
 //Mail feedback
 #define k_mail_feedback @"apps@owncloud.com"
 
@@ -161,6 +154,19 @@
 #define k_oauth2_client_id @"mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1"
 #define k_oauth2_client_secret @"KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx"
 
+
+
+//Following not in use in 3.7.0
+/****************************************************************/
+//Have oauth active
+#define k_is_oauth_active NO
+//OAuth server //not use, use Oauth2 instead
+#define k_oauth_login @""
+#define k_oauth_authorize @""
+#define k_oauth_token @""
+#define k_oauth_webservice @""
+#define k_oauth_client_id @"" //the same in k_oauth_login
+/***************************************************************/
 
 
 //Following getters required to Bridging with Swift
