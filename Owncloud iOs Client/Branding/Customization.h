@@ -19,8 +19,6 @@
 
 //URLs Setting
 #define k_help_url @"http://owncloud.com/mobile/help"
-#define k_recomended_url @"http://owncloud.com/mobile/recommend"
-#define k_send_feedback @"http://owncloud.com/mobile/feedback"
 
 //Hide url server
 #define k_hide_url_server NO
@@ -33,9 +31,6 @@
 
 //Show multiaccount or disconnect
 #define k_multiaccount_available YES
- 
-//Have icon on backbutton
-#define k_have_icon_on_popover YES
 
 //Have image background on navigation bar
 #define k_have_image_background_navigation_bar NO
@@ -69,17 +64,11 @@
 //Show impressum
 #define k_show_imprint_option_on_settings NO
 
-//Buy more storage company name
-#define k_company_name_buy_more_storage @""
-
 //Customize UITabBar
 #define k_is_customize_uitabbar YES
 
 //Customize Unselected UITabBarItems (The images of tabBar should be the unseleted tabs)
 #define k_is_customize_unselectedUITabBarItems NO
-
-//Set Image on Preview Bottom toolBar on iPhone
-#define k_set_image_on_preview_bottom_toolBar_on_iPhone NO
 
 //Impressum is a File
 #define k_impressum_is_file YES
@@ -90,25 +79,16 @@
 //Customize recomend mail
 #define k_is_custom_recommend_mail NO
 #define k_is_username_recommend_mail NO
-//#define k_subject_recommend_mail @"Sehen Sie sich die mobilcom-debitel Cloud an!"
 #define k_subject_recommend_mail @""
 // /r/n needed for CR and LF
 #define k_text_recommend_mail @""
 #define k_is_sign_custom_usign_username NO
-
-//Customize background of bar bottom preview with image or color
-#define k_is_image_background_preview_bottom_bar NO
 
 //Social customize
 #define k_is_custom_twitter NO
 #define k_custom_twitter_message @""
 #define k_is_custom_facebook NO
 #define k_custom_facebook_message @""
-
-//Autocomplete Login
-#define k_is_autocomplete_username_necessary NO
-#define k_letter_to_begin_autocomplete @"@"
-#define k_text_to_autocomplete @""
 
 //Number of uploads shown in recents tab from the database
 #define k_number_uploads_shown 30
@@ -166,6 +146,11 @@
 #define k_oauth_token @""
 #define k_oauth_webservice @""
 #define k_oauth_client_id @"" //the same in k_oauth_login
+
+//Autocomplete Login
+#define k_is_autocomplete_username_necessary NO
+#define k_letter_to_begin_autocomplete @"@"
+#define k_text_to_autocomplete @""
 /***************************************************************/
 
 
