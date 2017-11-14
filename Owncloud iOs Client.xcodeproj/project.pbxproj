@@ -271,6 +271,18 @@
 		14EC1955195B297F00B02AB6 /* sharedItem.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EC1953195B297F00B02AB6 /* sharedItem.png */; };
 		14EC1956195B297F00B02AB6 /* sharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EC1954195B297F00B02AB6 /* sharedItem@2x.png */; };
 		230233B11F9DF401007ED1C5 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230233B01F9DF401007ED1C5 /* LocalAuthentication.framework */; };
+<<<<<<< HEAD
+=======
+		236AA0D31FBB1F480096F9B3 /* FolderProviderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236AA0D21FBB1F480096F9B3 /* FolderProviderItem.swift */; };
+		238E54031FAC967600978D80 /* OCFileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238E54021FAC967600978D80 /* OCFileProvider.swift */; };
+		23A40FFF1FB0447F0094743A /* DirectoryEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A40FFE1FB0447F0094743A /* DirectoryEnumerator.swift */; };
+		23A410021FB046300094743A /* FileProviderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A410011FB046300094743A /* FileProviderItem.swift */; };
+		23A410041FB04AB40094743A /* FileProviderEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A410031FB04AB40094743A /* FileProviderEnumerator.swift */; };
+		23A522431FBAD94B00C5A222 /* doc_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F178177C35AA004A1A5A /* doc_icon.png */; };
+		400560751A03B1190030D502 /* MainAppIcon_40-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400560741A03B1190030D502 /* MainAppIcon_40-40@2x.png */; };
+		400560771A03B4F80030D502 /* MainAppIcon_40-40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400560761A03B4F80030D502 /* MainAppIcon_40-40@3x.png */; };
+		4005607C1A03CEEE0030D502 /* MainAppIcon_60-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4005607B1A03CEEE0030D502 /* MainAppIcon_60-60@2x.png */; };
+>>>>>>> 9026466c... root folder names appear in files app
 		4007876D1C44EAEE00486A26 /* ShareEditUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4007876C1C44EAEE00486A26 /* ShareEditUserViewController.xib */; };
 		400787721C44F4D400486A26 /* ShareEditUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 400787711C44F4D400486A26 /* ShareEditUserViewController.m */; };
 		400A63641B4FD75600890579 /* IFTTTAlphaAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A632D1B4FD75600890579 /* IFTTTAlphaAnimation.m */; };
@@ -1380,6 +1392,11 @@
 		14EC1953195B297F00B02AB6 /* sharedItem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sharedItem.png; sourceTree = "<group>"; };
 		14EC1954195B297F00B02AB6 /* sharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@2x.png"; sourceTree = "<group>"; };
 		230233B01F9DF401007ED1C5 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
+		236AA0D21FBB1F480096F9B3 /* FolderProviderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderProviderItem.swift; sourceTree = "<group>"; };
+		238E54021FAC967600978D80 /* OCFileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCFileProvider.swift; sourceTree = "<group>"; };
+		23A40FFE1FB0447F0094743A /* DirectoryEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryEnumerator.swift; sourceTree = "<group>"; };
+		23A410011FB046300094743A /* FileProviderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderItem.swift; sourceTree = "<group>"; };
+		23A410031FB04AB40094743A /* FileProviderEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderEnumerator.swift; sourceTree = "<group>"; };
 		4002B01A1D421A7100520FB3 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4002B01C1D421A8300520FB3 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4007876C1C44EAEE00486A26 /* ShareEditUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareEditUserViewController.xib; path = Tabs/FileTab/Share/ShareEditUserViewController.xib; sourceTree = "<group>"; };
@@ -3617,6 +3634,11 @@
 				EAB0AB4519ED356A00764C31 /* FileProvider.h */,
 				EAB0AB4619ED356A00764C31 /* FileProvider.m */,
 				EAB0AB4219ED356A00764C31 /* Supporting Files */,
+				238E54021FAC967600978D80 /* OCFileProvider.swift */,
+				23A40FFE1FB0447F0094743A /* DirectoryEnumerator.swift */,
+				23A410031FB04AB40094743A /* FileProviderEnumerator.swift */,
+				23A410011FB046300094743A /* FileProviderItem.swift */,
+				236AA0D21FBB1F480096F9B3 /* FolderProviderItem.swift */,
 			);
 			path = ownCloudExtAppFileProvider;
 			sourceTree = "<group>";
@@ -4642,6 +4664,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA5FA47F1A6403A0000C1F80 /* Owncloud iOs Client.entitlements in Resources */,
+				23A522431FBAD94B00C5A222 /* doc_icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5058,6 +5081,9 @@
 				EA1F62D21A5EBD2400D6346F /* ManageProvidingFilesDB.m in Sources */,
 				EA1F62CF1A5EBCA800D6346F /* FMDatabaseQueue.m in Sources */,
 				EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */,
+				238E54031FAC967600978D80 /* OCFileProvider.swift in Sources */,
+				23A410041FB04AB40094743A /* FileProviderEnumerator.swift in Sources */,
+				236AA0D31FBB1F480096F9B3 /* FolderProviderItem.swift in Sources */,
 				EA1F62D11A5EBD2000D6346F /* ProvidingFileDto.m in Sources */,
 				EA1F62D41A5EBDA700D6346F /* FMDatabasePool.m in Sources */,
 				4056551E1CE1DD67001266EE /* UtilsFileSystem.m in Sources */,
@@ -5070,10 +5096,12 @@
 				EA1F62D91A5EBFDF00D6346F /* OCKeychain.m in Sources */,
 				405D06C71BFB670200591604 /* ManageCapabilitiesDB.m in Sources */,
 				EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */,
+				23A410021FB046300094743A /* FileProviderItem.swift in Sources */,
 				EA1F62D31A5EBDA100D6346F /* FMResultSet.m in Sources */,
 				EA1F62CD1A5EBC2100D6346F /* UtilsUrls.m in Sources */,
 				EA1F62D51A5EBDAA00D6346F /* FMDatabaseAdditions.m in Sources */,
 				EA6462841A6F98F300991913 /* UtilsDtos.m in Sources */,
+				23A40FFF1FB0447F0094743A /* DirectoryEnumerator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

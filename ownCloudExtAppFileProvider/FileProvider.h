@@ -16,6 +16,6 @@
 #import <UIKit/UIKit.h>
 #import "FMDatabaseQueue.h"
 
-@interface FileProvider : NSFileProviderExtension
+@interface FileProvider: NSFileProviderExtension
 
 @end

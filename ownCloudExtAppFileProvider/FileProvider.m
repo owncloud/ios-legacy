@@ -28,7 +28,7 @@
 #import "ManageUploadsDB.h"
 #import "UtilsDtos.h"
 #import "NSString+Encoding.h"
-
+#import "FileProvider.h"
 
 @interface FileProvider ()
 
@@ -37,12 +37,14 @@
 @implementation FileProvider
 
 - (NSFileCoordinator *)fileCoordinator {
+    DLog(@" LOG ---> Pasa por el file provider fileCoordinator");
     NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] init];
     [fileCoordinator setPurposeIdentifier:[self providerIdentifier]];
     return fileCoordinator;
 }
 
 - (instancetype)init {
+    DLog(@" LOG ---> Pasa por el file provider init");
     self = [super init];
     if (self) {
         [self.fileCoordinator coordinateWritingItemAtURL:[self documentStorageURL] options:0 error:nil byAccessor:^(NSURL *newURL) {
@@ -56,6 +58,8 @@
 
 - (void)providePlaceholderAtURL:(NSURL *)url completionHandler:(void (^)(NSError *error))completionHandler {
     // Should call + writePlaceholderAtURL:withMetadata:error: with the placeholder URL, then call the completion handler with the error if applicable.
+    DLog(@" LOG ---> Pasa por el file provider providePlaceholder");
+
     NSString* fileName = [url lastPathComponent];
     
     NSURL *placeholderURL = [NSFileProviderExtension placeholderURLForURL:[self.documentStorageURL URLByAppendingPathComponent:fileName]];
@@ -284,5 +288,83 @@
 }
 
 
+//Override all methods.
 
+//- (id<NSFileProviderEnumerator>)enumeratorForContainerItemIdentifier:(NSFileProviderItemIdentifier)containerItemIdentifier error:(NSError * _Nullable *)error {
+//    DLog(@" LOG ---> Pasa por el file provider");
+//}
+
+-(NSFileProviderItemIdentifier)persistentIdentifierForItemAtURL:(NSURL *)url {
+    DLog(@" LOG ---> Pasa por el file provider");
+    return nil;
+}
+
+-(NSURL *)URLForItemWithPersistentIdentifier:(NSFileProviderItemIdentifier)identifier {
+    DLog(@" LOG ---> Pasa por el file provider");
+    return nil;
+}
+
+-(NSFileProviderItem)itemForIdentifier:(NSFileProviderItemIdentifier)identifier error:(NSError *__autoreleasing  _Nullable *)error {
+    DLog(@" LOG ---> Pasa por el file provider");
+    return nil;
+}
+
+- (void)createDirectoryWithName:(NSString *)directoryName
+         inParentItemIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier
+              completionHandler:(void (^)(NSFileProviderItem createdDirectoryItem, NSError *error))completionHandler {
+    DLog(@" LOG ---> Pasa por el file provider");
+}
+
+- (void)deleteItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier
+               completionHandler:(void (^)(NSError *error))completionHandler {
+    DLog(@" LOG ---> Pasa por el file provider");
+}
+
+- (void)importDocumentAtURL:(NSURL *)fileURL
+     toParentItemIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier
+          completionHandler:(void (^)(NSFileProviderItem importedDocumentItem, NSError *error))completionHandler {
+    DLog(@" LOG ---> Pasa por el file provider");
+}
+
+- (void)renameItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier
+                          toName:(NSString *)itemName
+               completionHandler:(void (^)(NSFileProviderItem renamedItem, NSError *error))completionHandler {
+    DLog(@" LOG ---> Pasa por el file provider");
+}
+
+- (void)reparentItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier
+        toParentItemWithIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier
+                           newName:(NSString *)newName
+                 completionHandler:(void (^)(NSFileProviderItem reparentedItem, NSError *error))completionHandler {
+    DLog(@" LOG ---> Pasa por el file provider");
+}
+
+- (void)setFavoriteRank:(NSNumber *)favoriteRank
+      forItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier
+      completionHandler:(void (^)(NSFileProviderItem favoriteItem, NSError *error))completionHandler {
+    DLog(@" LOG ---> Pasa por el file provider");
+}
+
+- (void)setLastUsedDate:(NSDate *)lastUsedDate
+      forItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier
+      completionHandler:(void (^)(NSFileProviderItem recentlyUsedItem, NSError *error))completionHandler {
+    DLog(@" LOG ---> Pasa por el file provider");
+}
+
+- (void)setTagData:(NSData *)tagData
+ forItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier
+ completionHandler:(void (^)(NSFileProviderItem taggedItem, NSError *error))completionHandler {
+    DLog(@" LOG ---> Pasa por el file provider");
+}
+
+- (void)trashItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier
+              completionHandler:(void (^)(NSFileProviderItem trashedItem, NSError *error))completionHandler {
+    DLog(@" LOG ---> Pasa por el file provider");
+}
+
+- (void)untrashItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier
+           toParentItemIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier
+                completionHandler:(void (^)(NSFileProviderItem untrashedItem, NSError *error))completionHandler {
+    DLog(@" LOG ---> Pasa por el file provider");
+}
 @end

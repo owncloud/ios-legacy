@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>ownCloudExtAppFileProvider</string>
+	<string>OwnCloud</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -33,12 +33,16 @@
 	</dict>
 	<key>NSExtension</key>
 	<dict>
+		<key>NSExtensionFileProviderSupportsEnumeration</key>
+		<true/>
 		<key>NSExtensionFileProviderDocumentGroup</key>
 		<string>group.com.owncloud.iOSmobileapp</string>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.fileprovider-nonui</string>
 		<key>NSExtensionPrincipalClass</key>
-		<string>FileProvider</string>
+		<string>$(PRODUCT_NAME).OCFileProvider</string>
 	</dict>
+	<key>NSExtensionFileProviderSupportsEnumeration</key>
+	<true/>
 </dict>
 </plist>
