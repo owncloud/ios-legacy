@@ -2787,12 +2787,9 @@ float shortDelay = 0.3;
 }
 
 
-#pragma mark - Active User
+#pragma mark - Switch Active User
 
-- (void) switchActiveUserTo:(UserDto *)user isNewAccount:(BOOL)isNewAccount withCompletionHandler:(void (^)(void)) completionHandler {
-    
-    // all the switch is performed in background, without blocking the caller thread, that should be main
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+- (void) switchActiveUserTo:(UserDto *)user isNewAccount:(BOOL)isNewAccount {
     
         self.userSessionCurrentToken = nil;
             // should be here or right after checking the user really changed? for the moment, here
@@ -2808,9 +2805,9 @@ float shortDelay = 0.3;
                 [UtilsCookies eraseCredentialsAndUrlCacheOfActiveUser];
             }
         
-            // Cancel downloads of the previous user, in the same background thread
+            // Cancel downloads of the previous user
             [self portedCancelAllDownloads];
-        
+            
             // update active state of users in DB
             [ManageUsersDB setAllUsersNoActive];
             [ManageUsersDB setActiveAccountByUserId:user.userId];
@@ -2826,29 +2823,24 @@ float shortDelay = 0.3;
             [UtilsCookies eraseURLCache];
         
             //we create the user folder to haver multiuser
-            [UtilsFileSystem createFolderForUser:APP_DELEGATE.activeUser];
+            [UtilsFileSystem createFolderForUser:user];
             
             self.isNewUser = YES;
             
             ManageAccounts *manageAccounts = [ManageAccounts new];
-            [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
+            [manageAccounts updateDisplayNameOfUserWithUser:user];
         }
-    
-        // completion handler is called in main thread
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completionHandler) {
-                completionHandler();
-            }
-        });
-    });
 }
 
 
 - (void) portedCancelAllDownloads {
     //Cancel downloads in ipad
-    [self.downloadManager cancelDownloads];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+
+        [self.downloadManager cancelDownloads];
     
-    [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
+        [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
+    });
 }
 
 
