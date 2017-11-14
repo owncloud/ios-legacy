@@ -912,10 +912,9 @@ public enum TextfieldType: String {
                             if self.user != nil {
                                 ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
                             
-                                app.switchActiveUser(to: self.user, isNewAccount: true, withCompletionHandler:
-                                    {
-                                    app.generateAppInterface(fromLoginScreen: true)
-                                })
+                                app.switchActiveUser(to: self.user, isNewAccount: true)
+                                app.generateAppInterface(fromLoginScreen: true)
+                                
                             } else {
                                 self.showURLError(NSLocalizedString("error_could_not_add_account", comment: ""))
                             }
@@ -931,7 +930,7 @@ public enum TextfieldType: String {
                         if self.loginMode == .migrate {
                             // migration mode needs to start a fresh list of files, so that it is updated with the new URL
                             app.generateAppInterface(fromLoginScreen: true)
-                            
+                              
                         } else {
                             self.closeLoginView()
                         }

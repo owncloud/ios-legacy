@@ -1814,15 +1814,13 @@
  * show this data in the tableview.
  */
 -(void)reloadTableFromDataBase {
-        
-  //  DLog(@"self.fileIdToShowFiles.idFile: %d", self.fileIdToShowFiles.idFile);
     
-    //Ad the files of the folder
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    //Add the files of the folder
     _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
-   // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:app.activeUser];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -1843,12 +1841,25 @@
 
 
 -(void)reloadTableFileListAfterCapabilitiesUpdated {
-    _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
-    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self reloadTableFileList];
-    });
+    
+    [self updateCurrentFileToShowIfNeeded];
+    
+    [self reloadTableFromDataBase];
 }
+
+- (void) updateCurrentFileToShowIfNeeded {
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    //Workaround to find the _fileIdToShowFiles because some times there are problems with the changes active user, and this method is launched before the viewwillappear
+    if (app.activeUser) {
+        FileDto *rootFileDtoOfActiveUser = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
+        if (self.fileIdToShowFiles.userId != rootFileDtoOfActiveUser.userId) {
+            _fileIdToShowFiles = rootFileDtoOfActiveUser;
+            DLog(@"Changing between accounts, update _fileIdToShowFiles with root file of active user");
+        }
+    }
+}
+
 -(void)reloadTableFileList{
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 }
@@ -1860,13 +1871,14 @@
 -(void)reloadTableFromDataBaseWithoutEndLoading {
     
     //  DLog(@"self.fileIdToShowFiles.idFile: %d", self.fileIdToShowFiles.idFile);
-    
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
     //Ad the files of the folder
     _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
     // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:app.activeUser];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -2205,18 +2217,8 @@
                 
                 //GCD to do things async in background queue
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                    //Do operations in background thread
                     
-                    //Workaround to find the _fileIdToShowFiles because some times there are problems with the changes active user, and this method is launched before the viewwillappear
-                    if (app.activeUser) {
-                        FileDto *rootFileDto = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
-                        NSString *pathActiveUser = rootFileDto.filePath;
-                       
-                        if ([_fileIdToShowFiles.filePath rangeOfString:pathActiveUser].location == NSNotFound) {
-                            _fileIdToShowFiles = rootFileDto;
-                            DLog(@"Changing between accounts, update _fileIdToShowFiles with root path with the active user");
-                        }
-                    }
+                    [self updateCurrentFileToShowIfNeeded];
                     
                     NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser], _fileIdToShowFiles.fileName]];
                     
@@ -2289,6 +2291,7 @@
  */
 - (void) updateActiveUserSortingChoiceTo: (enumSortingType)sortingChoice{
     APP_DELEGATE.activeUser.sortingType = sortingChoice;
+    _mUser.sortingType = sortingChoice;
     [ManageUsersDB updateSortingWayForUserDto:APP_DELEGATE.activeUser];
 }
 
