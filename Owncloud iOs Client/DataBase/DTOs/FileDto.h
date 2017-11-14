@@ -35,7 +35,7 @@ typedef enum {
 @property long size;
 @property long date;
 @property (nonatomic, copy) NSString *etag;
-@property NSInteger idFile;
+@property NSInteger idFile; //this is the parent id.
 @property NSInteger userId;
 @property BOOL needRefresh;
 @property NSInteger isDownload;
