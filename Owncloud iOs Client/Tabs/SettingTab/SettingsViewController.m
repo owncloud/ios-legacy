@@ -1106,7 +1106,7 @@
     DLog(@"refreshing list of accounts after user was switched");
         
     [[OCLoadingSpinner sharedOCLoadingSpinner] endLoading];
-        
+    
     //If ipad, clean the detail view
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
