@@ -2798,7 +2798,7 @@ float shortDelay = 0.3;
             
             ManageAccounts *manageAccounts = [ManageAccounts new];
             [manageAccounts updateDisplayNameOfUserWithUser:user];
-
+            
         }
 }
 
