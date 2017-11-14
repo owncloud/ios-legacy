@@ -43,6 +43,10 @@
     
     BOOL output = NO;
     
+    if (credDto.userDisplayName == nil) {
+        credDto.userDisplayName = @"";
+    }
+    
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
     [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
@@ -182,6 +186,10 @@
 +(BOOL)updateCredentials:(OCCredentialsDto *)credDto {
     
     BOOL output = NO;
+    
+    if (credDto.userDisplayName == nil) {
+        credDto.userDisplayName = @"";
+    }
     
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
