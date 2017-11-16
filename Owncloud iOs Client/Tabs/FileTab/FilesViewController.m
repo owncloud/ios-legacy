@@ -1034,8 +1034,22 @@
     
     //Run UI Updates
     [TSMessage setDelegate:self];
-    [TSMessage showNotificationInViewController:self title:message subtitle:nil type:TSMessageNotificationTypeWarning];
     
+    if (self.navigationController.navigationBarHidden){
+        [self.navigationController setNavigationBarHidden:NO];
+    }
+    
+    [TSMessage showNotificationInViewController:self.navigationController
+                                          title:message
+                                       subtitle:nil
+                                          image:nil
+                                           type:TSMessageNotificationTypeWarning
+                                       duration:TSMessageNotificationDurationAutomatic
+                                       callback:nil
+                                    buttonTitle:nil
+                                 buttonCallback:nil
+                                     atPosition:TSMessageNotificationPositionNavBarOverlay
+                           canBeDismissedByUser:YES];
 }
 
 #pragma mark - TSMessage Delegate
