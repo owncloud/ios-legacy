@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MobileCoreServices
 
 public enum ItemType {
     case directory
@@ -28,11 +29,15 @@ class FileProviderItem: NSObject, NSFileProviderItem {
     var size: Int
     var lastModified: Date
     
-    init(parent: NSFileProviderItemIdentifier, type: ItemType, ocFile: FileDto) {
-        self.itemIdentifier = NSFileProviderItemIdentifier(ocFile.etag)
-        self.parentItemIdentifier = parent
+    init(ocFile: FileDto) {
+        self.itemIdentifier = NSFileProviderItemIdentifier("\(ocFile.idFile)")
+        if #available(iOSApplicationExtension 11.0, *) {
+            self.parentItemIdentifier = NSFileProviderItemIdentifier.init("\(ocFile.idFile)")
+        } else {
+            self.parentItemIdentifier = NSFileProviderItemIdentifier("test")
+        }
         self.filename = ocFile.fileName!
-        self.typeIdentifier = "dir"
+        self.typeIdentifier = kUTTypeFolder as String
         
         if ocFile.isDirectory {
             self.type = .directory
@@ -45,13 +50,39 @@ class FileProviderItem: NSObject, NSFileProviderItem {
         self.lastModified = Date()
         
         // EXTRA
-        self.isShared = true
+        self.isShared = false
+        self.childItemCount = 10
+        self.isDownloaded = false
+    }
+    
+    init(root: Bool, ocFile: FileDto){
+        self.itemIdentifier = NSFileProviderItemIdentifier("\(ocFile.idFile)")
+        if #available(iOSApplicationExtension 11.0, *) {
+            self.parentItemIdentifier = NSFileProviderItemIdentifier.rootContainer
+        } else {
+            self.parentItemIdentifier = NSFileProviderItemIdentifier("test")
+        }
+        self.filename = ocFile.fileName!
+        self.typeIdentifier = kUTTypePDF as String
+        
+        if ocFile.isDirectory {
+            self.type = .directory
+        } else {
+            self.type = .file
+        }
+        
+        self.size = ocFile.size
+        // TODO: need to get the last modified.
+        self.lastModified = Date()
+        
+        // EXTRA
+        self.isShared = false
         self.childItemCount = 10
         self.isDownloaded = false
     }
     
     init(dummy: String) {
-        self.itemIdentifier = NSFileProviderItemIdentifier("\(arc4random_uniform(100))"
+        self.itemIdentifier = NSFileProviderItemIdentifier("dummy"
         )
         if #available(iOSApplicationExtension 11.0, *) {
             self.parentItemIdentifier = NSFileProviderItemIdentifier.rootContainer
@@ -61,7 +92,7 @@ class FileProviderItem: NSObject, NSFileProviderItem {
 
         
         self.filename = dummy
-        self.typeIdentifier = "dir"
+        self.typeIdentifier = kUTTypeFolder as String
         self.type = .directory
         self.size = 40
         self.lastModified = Date()
@@ -70,7 +101,6 @@ class FileProviderItem: NSObject, NSFileProviderItem {
         self.isShared = true
         self.childItemCount = 10
         self.isDownloaded = false
-
     }
     
     deinit {

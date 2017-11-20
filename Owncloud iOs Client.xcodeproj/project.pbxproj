@@ -282,6 +282,8 @@
 		230233B11F9DF401007ED1C5 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230233B01F9DF401007ED1C5 /* LocalAuthentication.framework */; };
 		236AA0D31FBB1F480096F9B3 /* FolderProviderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236AA0D21FBB1F480096F9B3 /* FolderProviderItem.swift */; };
 		238E54031FAC967600978D80 /* OCFileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238E54021FAC967600978D80 /* OCFileProvider.swift */; };
+		238EB6961FBC36C700B15BCF /* RootContainerEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238EB6951FBC36C700B15BCF /* RootContainerEnumerator.swift */; };
+		239738EE1FBEEA38002A4E8B /* OCFileProviderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239738ED1FBEEA38002A4E8B /* OCFileProviderManager.swift */; };
 		23A40FFF1FB0447F0094743A /* DirectoryEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A40FFE1FB0447F0094743A /* DirectoryEnumerator.swift */; };
 		23A410021FB046300094743A /* FileProviderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A410011FB046300094743A /* FileProviderItem.swift */; };
 		23A410041FB04AB40094743A /* FileProviderEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A410031FB04AB40094743A /* FileProviderEnumerator.swift */; };
@@ -1418,6 +1420,8 @@
 		230233B01F9DF401007ED1C5 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		236AA0D21FBB1F480096F9B3 /* FolderProviderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderProviderItem.swift; sourceTree = "<group>"; };
 		238E54021FAC967600978D80 /* OCFileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCFileProvider.swift; sourceTree = "<group>"; };
+		238EB6951FBC36C700B15BCF /* RootContainerEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootContainerEnumerator.swift; sourceTree = "<group>"; };
+		239738ED1FBEEA38002A4E8B /* OCFileProviderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCFileProviderManager.swift; sourceTree = "<group>"; };
 		23A40FFE1FB0447F0094743A /* DirectoryEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryEnumerator.swift; sourceTree = "<group>"; };
 		23A410011FB046300094743A /* FileProviderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderItem.swift; sourceTree = "<group>"; };
 		23A410031FB04AB40094743A /* FileProviderEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderEnumerator.swift; sourceTree = "<group>"; };
@@ -3052,6 +3056,16 @@
 			name = EmptyCell;
 			sourceTree = "<group>";
 		};
+		238EB6981FBC3F0800B15BCF /* Folders */ = {
+			isa = PBXGroup;
+			children = (
+				23A40FFE1FB0447F0094743A /* DirectoryEnumerator.swift */,
+				236AA0D21FBB1F480096F9B3 /* FolderProviderItem.swift */,
+				238EB6951FBC36C700B15BCF /* RootContainerEnumerator.swift */,
+			);
+			name = Folders;
+			sourceTree = "<group>";
+		};
 		400A63251B4FD2C100890579 /* HelpGuide */ = {
 			isa = PBXGroup;
 			children = (
@@ -3691,14 +3705,14 @@
 		EAB0AB4119ED356A00764C31 /* ownCloudExtAppFileProvider */ = {
 			isa = PBXGroup;
 			children = (
+				238EB6981FBC3F0800B15BCF /* Folders */,
 				EAB0AB4519ED356A00764C31 /* FileProvider.h */,
 				EAB0AB4619ED356A00764C31 /* FileProvider.m */,
 				EAB0AB4219ED356A00764C31 /* Supporting Files */,
 				238E54021FAC967600978D80 /* OCFileProvider.swift */,
-				23A40FFE1FB0447F0094743A /* DirectoryEnumerator.swift */,
 				23A410031FB04AB40094743A /* FileProviderEnumerator.swift */,
 				23A410011FB046300094743A /* FileProviderItem.swift */,
-				236AA0D21FBB1F480096F9B3 /* FolderProviderItem.swift */,
+				239738ED1FBEEA38002A4E8B /* OCFileProviderManager.swift */,
 			);
 			path = ownCloudExtAppFileProvider;
 			sourceTree = "<group>";
@@ -5158,11 +5172,13 @@
 				EA1F62CF1A5EBCA800D6346F /* FMDatabaseQueue.m in Sources */,
 				EA1F62DE1A5EC11900D6346F /* FileDto.m in Sources */,
 				238E54031FAC967600978D80 /* OCFileProvider.swift in Sources */,
+				238EB6961FBC36C700B15BCF /* RootContainerEnumerator.swift in Sources */,
 				23A410041FB04AB40094743A /* FileProviderEnumerator.swift in Sources */,
 				236AA0D31FBB1F480096F9B3 /* FolderProviderItem.swift in Sources */,
 				EA1F62D11A5EBD2000D6346F /* ProvidingFileDto.m in Sources */,
 				EA1F62D41A5EBDA700D6346F /* FMDatabasePool.m in Sources */,
 				4056551E1CE1DD67001266EE /* UtilsFileSystem.m in Sources */,
+				239738EE1FBEEA38002A4E8B /* OCFileProviderManager.swift in Sources */,
 				EA1F62CE1A5EBC2A00D6346F /* UserDto.m in Sources */,
 				EA1F62D01A5EBCAE00D6346F /* FMDatabase.m in Sources */,
 				EA1F62D81A5EBFC700D6346F /* ManageUsersDB.m in Sources */,

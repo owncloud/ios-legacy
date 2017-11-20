@@ -35,11 +35,11 @@ typedef enum {
 @property long size;
 @property long date;
 @property (nonatomic, copy) NSString *etag;
-@property NSInteger idFile; //this is the parent id.
+@property NSInteger idFile;
 @property NSInteger userId;
 @property BOOL needRefresh;
 @property NSInteger isDownload;
-@property NSInteger fileId;
+@property NSInteger fileId; //this is the parent id.
 @property (nonatomic, copy) NSString *localFolder;
 @property BOOL isFavorite;
 @property BOOL isRootFolder;

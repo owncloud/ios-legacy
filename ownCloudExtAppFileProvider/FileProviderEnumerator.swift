@@ -41,11 +41,11 @@ class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
     func enumerateItems(for observer: NSFileProviderEnumerationObserver, startingAt page: NSFileProviderPage) {
         print("LOG ---> enumerateItems")
         
-        print("LOG ---> \(observer.description)")
-        
+        print("LOG ---> observer description \(observer.description)")
+        observer.finishEnumerating(upTo: nil)
+
         /* TODO:
          - inspect the page to determine whether this is an initial or a follow-up request
-         
          If this is an enumerator for a directory, the root container or all directories:
          - perform a server request to fetch directory contents
          If this is an enumerator for the active set:
@@ -59,9 +59,16 @@ class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
     }
     
     func enumerateChanges(for observer: NSFileProviderChangeObserver, from syncAnchor: NSFileProviderSyncAnchor) {
-        // TODO: enumerate changes.
         print("LOG ---> enumerateChanges")
-
+        /* TODO:
+         - query the server for updates since the passed-in sync anchor
+         
+         If this is an enumerator for the active set:
+         - note the changes in your local database
+         
+         - inform the observer about item deletions and updates (modifications + insertions)
+         - inform the observer when you have finished enumerating up to a subsequent sync anchor
+         */
     }
     
     func listDirectory(path: String, parent: NSFileProviderItemIdentifier) throws -> [NSFileProviderItemProtocol] {
@@ -80,10 +87,10 @@ class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
             if #available(iOSApplicationExtension 11.0, *) {
                 
                 if !(file as! FileDto).isDirectory {
-                    let item = FileProviderItem(parent: NSFileProviderItemIdentifier.rootContainer, type: .directory, ocFile: file as! FileDto)
+                    let item = FileProviderItem(root: true, ocFile: file as! FileDto)
                     items.append(item)
                 } else {
-                    let item = FolderProviderItem(folder: file as! FileDto)
+                    let item = FolderProviderItem(directory: file as! FileDto)
                     items.append(item)
                 }
 

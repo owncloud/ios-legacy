@@ -1255,8 +1255,6 @@
     }];
 }
 
-
-
 +(void) updateEtagOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withNewEtag: (NSString *)etag {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
