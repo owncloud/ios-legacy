@@ -50,10 +50,7 @@
 #import "OCOAuth2Manager.h"
 #import "OCOAuth2Configuration.h"
 #import "DetectUserData.h"
-<<<<<<< HEAD
 #import "UtilsNotifications.h"
-=======
 #import "ManageThumbnails.h"
->>>>>>> 9026466c... root folder names appear in files app
 
 

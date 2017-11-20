@@ -1,14 +1,14 @@
 //
-//  DirectoryEnumerator.swift
+//  RootContainerEnumerator.swift
 //  ownCloudExtAppFileProvider
 //
-//  Created by Pablo Carrascal on 06/11/2017.
+//  Created by Pablo Carrascal on 15/11/2017.
 //
 
 import UIKit
 
-class DirectoryEnumerator: FileProviderEnumerator {
-    
+class RootContainerEnumerator: FileProviderEnumerator {
+
     deinit {
         print("Directory Enumerator being deallocated")
     }
@@ -17,7 +17,7 @@ class DirectoryEnumerator: FileProviderEnumerator {
         var listing: [NSFileProviderItemProtocol] = []
         
         do {
-            try listing = listDirectory(path: enumeratedItemIdentifier.rawValue, parent: enumeratedItemIdentifier) 
+            try listing = listDirectory(path: enumeratedItemIdentifier.rawValue, parent: enumeratedItemIdentifier)
         } catch {
             print("LOG ---> error enumerateItems\(error.localizedDescription)")
             observer.finishEnumeratingWithError(error)
@@ -25,14 +25,14 @@ class DirectoryEnumerator: FileProviderEnumerator {
         }
         
         // inspect the page to determine whether this is an initial or a follow-up request
-//        switch page {
-//        case NSFileProviderPage.initialPageSortedByName:
-//            listing = sortByName(listing: listing)
-//        case NSFileProviderPage.initialPageSortedByDate:
-//            listing = sortByDate(listing: listing)
-//        default:
-//            print("Not implemented: request for page starting at specific page")
-//        }
+        //        switch page {
+        //        case NSFileProviderPage.initialPageSortedByName:
+        //            listing = sortByName(listing: listing)
+        //        case NSFileProviderPage.initialPageSortedByDate:
+        //            listing = sortByDate(listing: listing)
+        //        default:
+        //            print("Not implemented: request for page starting at specific page")
+        //        }
         observer.didEnumerate(listing)
         observer.finishEnumerating(upTo: nil)
     }
@@ -42,13 +42,13 @@ class DirectoryEnumerator: FileProviderEnumerator {
         var items: [NSFileProviderItemProtocol] = []
         
         let activeUser: UserDto = ManageUsersDB.getActiveUser()
-        print("LOG ---> files count \(activeUser.username)")
         
-        let files = ManageFilesDB.getFilesByFileId(forActiveUser: Int(parent.rawValue)!)
+        let rootFolder = ManageFilesDB.getRootFileDto(byUser: activeUser)
+        
+        let files = ManageFilesDB.getFilesByFileId(forActiveUser: rootFolder!.idFile)
         
         for file in files! {
             if #available(iOSApplicationExtension 11.0, *) {
-                
                 if !(file as! FileDto).isDirectory {
                     let item = FileProviderItem(root: true, ocFile: file as! FileDto)
                     items.append(item)
@@ -61,7 +61,6 @@ class DirectoryEnumerator: FileProviderEnumerator {
                 // Fallback on earlier versions
             }
         }
-        
         return items
     }
 }

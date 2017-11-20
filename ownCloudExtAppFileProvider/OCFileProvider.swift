@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MobileCoreServices
 
 @available(iOSApplicationExtension 11.0, *)
 class OCFileProvider: NSFileProviderExtension {
@@ -38,18 +39,30 @@ class OCFileProvider: NSFileProviderExtension {
     override func persistentIdentifierForItem(at url: URL) -> NSFileProviderItemIdentifier? {
         
         //return the unique id if exists a file with the url getted as parameter.
-        
-        return NSFileProviderItemIdentifier.init("elePitele")
-        
+        return NSFileProviderItemIdentifier.init("40")
+
 //        ManageFilesDB.getFileDto(
 //
     }
     
     override func urlForItem(withPersistentIdentifier identifier: NSFileProviderItemIdentifier) -> URL? {
-       
-        print("LOG ---> urlForItem")
         
-        return URL(fileURLWithPath: "pepe")
+        guard let item = try? item(for: identifier) else {
+            return nil
+        }
+        
+        //TODO: Change the scheme to the OC scheme.
+        let manager = NSFileProviderManager.default
+        let perItemDirectory = manager.documentStorageURL.appendingPathComponent(identifier.rawValue, isDirectory: true)
+        
+        var finalPath: URL
+        if item.typeIdentifier == (kUTTypeFolder as String) {
+            finalPath = perItemDirectory.appendingPathComponent(item.filename, isDirectory:true)
+        } else {
+            finalPath = perItemDirectory.appendingPathComponent(item.filename, isDirectory:false)
+        }
+
+        return finalPath
     }
     
     override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
@@ -61,10 +74,18 @@ class OCFileProvider: NSFileProviderExtension {
             let rootFolder = ManageFilesDB.getRootFileDto(byUser: activeUser)
             print("LOG ---> files count \(rootFolder?.idFile)")
 
-            return FileProviderItem(parent: .rootContainer, type: .directory, ocFile: rootFolder!)
+            return FolderProviderItem(directory: rootFolder!)
         }
         
-        return FileProviderItem(dummy: "dummy")
+        let fileDTO: FileDto = ManageFilesDB.getFileDto(byIdFile: Int(identifier.rawValue)!)
+        
+        print("LOG ---> fileDTO \(fileDTO.fileName)")
+        
+        if fileDTO.isDirectory {
+            return FolderProviderItem(directory: fileDTO)
+        } else {
+            return FileProviderItem(ocFile: fileDTO)
+        }
     }
     
     override func itemChanged(at url: URL) {
@@ -72,7 +93,7 @@ class OCFileProvider: NSFileProviderExtension {
     }
     
     override func providePlaceholder(at url: URL, completionHandler: @escaping (Error?) -> Void) {
-        
+
         guard let identifier = persistentIdentifierForItem(at: url) else {
 
             completionHandler(NSFileProviderError(.noSuchItem))
@@ -82,9 +103,9 @@ class OCFileProvider: NSFileProviderExtension {
         do {
             let fileProviderItem = try item(for: identifier)
             let fileName:String = url.lastPathComponent
-            
+
             let placeholderURL: URL = NSFileProviderManager.placeholderURL(for: self.fileProviderManager.documentStorageURL.appendingPathComponent(fileName))
-            
+
             try NSFileProviderManager.writePlaceholder(at: placeholderURL, withMetadata: FileProviderItem(dummy: "du"))
 
             completionHandler(nil)
@@ -177,16 +198,27 @@ class OCFileProvider: NSFileProviderExtension {
         print("LOG ---> containerItemIdentifier \(containerItemIdentifier)")
         switch containerItemIdentifier {
                 case .rootContainer:
-                // TODO: instantiate an enumerator for the container root
-                maybeEnumerator = DirectoryEnumerator(enumeratedItemIdentifier: containerItemIdentifier)
+                maybeEnumerator = RootContainerEnumerator(enumeratedItemIdentifier: containerItemIdentifier)
                 case .workingSet:
                 // TODO: instantiate an enumerator for the working set
                 maybeEnumerator = DirectoryEnumerator(enumeratedItemIdentifier: containerItemIdentifier)
                 default:
-                // TODO: determine if the item is a directory or a file
-                // - for a directory, instantiate an enumerator of its subitems
-                // - for a file, instantiate an enumerator that observes changes to the file
-                maybeEnumerator = DirectoryEnumerator(enumeratedItemIdentifier: containerItemIdentifier)
+                    do{
+                        let item = try self.item(for: containerItemIdentifier)
+                        
+                        if item.typeIdentifier == kUTTypeFolder as String {
+                            // - for a directory, instantiate an enumerator of its subitems
+                            maybeEnumerator = DirectoryEnumerator(enumeratedItemIdentifier: containerItemIdentifier)
+                        } else {
+                            // - for a file, instantiate an enumerator that observes changes to the file
+                            maybeEnumerator = DirectoryEnumerator(enumeratedItemIdentifier: containerItemIdentifier)
+                        }
+                        
+                    } catch let error {
+                        print("LOG ---> \(error)")
+                        maybeEnumerator = nil
+                        
+                    }
             }
             
             guard let enumerator = maybeEnumerator else {
