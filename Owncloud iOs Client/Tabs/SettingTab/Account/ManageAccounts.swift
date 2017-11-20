@@ -134,8 +134,7 @@ import Foundation
                     if (user.activeaccount) {
                         let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
                         
-                        app.activeUser.credDto.userDisplayName = user.credDto.userDisplayName
-                        app.activeUser.credDto.userName = user.credDto.userName
+                        app.activeUser.credDto = user.credDto.copy() as! OCCredentialsDto
                         app.activeUser.username = user.credDto.userName
                     }
                 }
