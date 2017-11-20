@@ -42,20 +42,18 @@
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
+    __block BOOL correctQuery=NO;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-        BOOL correctQuery=NO;
-        
-        correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, url_redirected, predefined_url) Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithInteger:userDto.hasShareeApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport], [NSNumber numberWithInteger:userDto.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:userDto.hasCapabilitiesSupport], userDto.urlRedirected, userDto.predefinedUrl];
-        
-        if (!correctQuery) {
-            DLog(@"Error in insertUser");
-        }
-        
+        correctQuery = [db executeUpdate:@"INSERT INTO users(url, ssl, activeaccount, has_share_api_support, has_sharee_api_support, has_cookies_support, has_forbidden_characters_support, has_capabilities_support, url_redirected, predefined_url, has_fed_shares_option_share_support, has_public_share_link_option_name_support, has_public_share_link_option_upload_only_support) Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", userDto.url, [NSNumber numberWithBool:userDto.ssl],  [NSNumber numberWithBool:userDto.activeaccount] , [NSNumber numberWithInteger:userDto.hasShareApiSupport], [NSNumber numberWithInteger:userDto.hasShareeApiSupport], [NSNumber numberWithBool:userDto.hasCookiesSupport], [NSNumber numberWithInteger:userDto.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:userDto.hasCapabilitiesSupport], userDto.urlRedirected, userDto.predefinedUrl, [NSNumber numberWithInteger:userDto.hasFedSharesOptionShareSupport], [NSNumber numberWithInteger:userDto.hasPublicShareLinkOptionNameSupport], [NSNumber numberWithInteger:userDto.hasPublicShareLinkOptionUploadOnlySupport] ];
     }];
     
+    if (!correctQuery) {
+        DLog(@"Error in insertUser");
+        return nil;
+    }
     
-    UserDto *lastUser = [self getLastUserInserted];
+    UserDto *lastUser = [self getLastUserInsertedWithoutCredentials];
     
     if (lastUser) {
         lastUser.username = userDto.username;
@@ -93,6 +91,7 @@
             output.activeaccount = [rs intForColumn:@"activeaccount"];
             output.storageOccupied = [rs longForColumn:@"storage_occupied"];
             output.storage = [rs longForColumn:@"storage"];
+            
             output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             output.hasShareeApiSupport = [rs intForColumn:@"has_sharee_api_support"];
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
@@ -110,6 +109,10 @@
             output.urlRedirected = [rs stringForColumn:@"url_redirected"];
             output.sortingType = [rs intForColumn:@"sorting_type"];
             output.predefinedUrl = [rs stringForColumn:@"predefined_url"];
+            
+            output.hasFedSharesOptionShareSupport = [rs intForColumn:@"has_fed_shares_option_share_support"];
+            output.hasPublicShareLinkOptionNameSupport = [rs intForColumn:@"has_public_share_link_option_name_support"];
+            output.hasPublicShareLinkOptionUploadOnlySupport = [rs intForColumn:@"has_public_share_link_option_upload_only_support"];
         }
         
         [rs close];
@@ -153,6 +156,7 @@
             output.activeaccount = [rs intForColumn:@"activeaccount"];
             output.storageOccupied = [rs longForColumn:@"storage_occupied"];
             output.storage = [rs longForColumn:@"storage"];
+            
             output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             output.hasShareeApiSupport = [rs intForColumn:@"has_sharee_api_support"];
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
@@ -168,13 +172,15 @@
             output.timestampInstantUploadVideo = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
             
             output.urlRedirected = [rs stringForColumn:@"url_redirected"];
+            output.sortingType = [rs intForColumn:@"sorting_type"];
+            output.predefinedUrl = [rs stringForColumn:@"predefined_url"];
+            
+            output.hasFedSharesOptionShareSupport = [rs intForColumn:@"has_fed_shares_option_share_support"];
+            output.hasPublicShareLinkOptionNameSupport = [rs intForColumn:@"has_public_share_link_option_name_support"];
+            output.hasPublicShareLinkOptionUploadOnlySupport = [rs intForColumn:@"has_public_share_link_option_upload_only_support"];
             
             output.username = nil;
             output.credDto = nil;
-            
-            output.sortingType = [rs intForColumn:@"sorting_type"];
-            
-            output.predefinedUrl = [rs stringForColumn:@"predefined_url"];
         }
         
         [rs close];
@@ -207,6 +213,7 @@
             user.activeaccount = [rs intForColumn:@"activeaccount"];
             user.storageOccupied = [rs longForColumn:@"storage_occupied"];
             user.storage = [rs longForColumn:@"storage"];
+            
             user.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             user.hasShareeApiSupport = [rs intForColumn:@"has_sharee_api_support"];
             user.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
@@ -224,6 +231,10 @@
             user.urlRedirected = [rs stringForColumn:@"url_redirected"];
             user.sortingType = [rs intForColumn:@"sorting_type"];
             user.predefinedUrl = [rs stringForColumn:@"predefined_url"];
+            
+            user.hasFedSharesOptionShareSupport = [rs intForColumn:@"has_fed_shares_option_share_support"];
+            user.hasPublicShareLinkOptionNameSupport = [rs intForColumn:@"has_public_share_link_option_name_support"];
+            user.hasPublicShareLinkOptionUploadOnlySupport = [rs intForColumn:@"has_public_share_link_option_upload_only_support"];
         }
         
         [rs close];
@@ -281,6 +292,7 @@
             current.activeaccount = [rs intForColumn:@"activeaccount"];
             current.storageOccupied = [rs longForColumn:@"storage_occupied"];
             current.storage = [rs longForColumn:@"storage"];
+            
             current.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             current.hasShareeApiSupport = [rs intForColumn:@"has_sharee_api_support"];
             current.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
@@ -296,10 +308,12 @@
             current.timestampInstantUploadVideo = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
             
             current.urlRedirected = [rs stringForColumn:@"url_redirected"];
-            
             current.sortingType = [rs intForColumn:@"sorting_type"];
-            
             current.predefinedUrl = [rs stringForColumn:@"predefined_url"];
+            
+            current.hasFedSharesOptionShareSupport = [rs intForColumn:@"has_fed_shares_option_share_support"];
+            current.hasPublicShareLinkOptionNameSupport = [rs intForColumn:@"has_public_share_link_option_name_support"];
+            current.hasPublicShareLinkOptionUploadOnlySupport = [rs intForColumn:@"has_public_share_link_option_upload_only_support"];
             
             OCCredentialsDto *credDto = [OCKeychain getCredentialsOfUser:current];
             current.username = credDto.userName;
@@ -342,6 +356,7 @@
             current.activeaccount = [rs intForColumn:@"activeaccount"];
             current.storageOccupied = [rs longForColumn:@"storage_occupied"];
             current.storage = [rs longForColumn:@"storage"];
+            
             current.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             current.hasShareeApiSupport = [rs intForColumn:@"has_sharee_api_support"];
             current.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
@@ -357,16 +372,17 @@
             current.timestampInstantUploadVideo = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
             
             current.urlRedirected = [rs stringForColumn:@"url_redirected"];
+            current.sortingType = [rs intForColumn:@"sorting_type"];
+            current.predefinedUrl = [rs stringForColumn:@"predefined_url"];
+            
+            current.hasFedSharesOptionShareSupport = [rs intForColumn:@"has_fed_shares_option_share_support"];
+            current.hasPublicShareLinkOptionNameSupport = [rs intForColumn:@"has_public_share_link_option_name_support"];
+            current.hasPublicShareLinkOptionUploadOnlySupport = [rs intForColumn:@"has_public_share_link_option_upload_only_support"];
             
             current.username = nil;
             current.credDto = nil;
             
-            current.sortingType = [rs intForColumn:@"sorting_type"];
-            
-            current.predefinedUrl = [rs stringForColumn:@"predefined_url"];
-            
             [output addObject:current];
-            
         }
         
         [rs close];
@@ -560,7 +576,7 @@
 }
 
 
-+ (UserDto *) getLastUserInserted {
++ (UserDto *) getLastUserInsertedWithoutCredentials {
     
     __block UserDto *output = nil;
     
@@ -580,6 +596,7 @@
             output.activeaccount = [rs intForColumn:@"activeaccount"];
             output.storageOccupied = [rs longForColumn:@"storage_occupied"];
             output.storage = [rs longForColumn:@"storage"];
+            
             output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
             output.hasShareeApiSupport = [rs intForColumn:@"has_sharee_api_support"];
             output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
@@ -595,10 +612,12 @@
             output.timestampInstantUploadVideo = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
             
             output.urlRedirected = [rs stringForColumn:@"url_redirected"];
-            
             output.sortingType = [rs intForColumn:@"sorting_type"];
-            
             output.predefinedUrl = [rs stringForColumn:@"predefined_url"];
+            
+            output.hasFedSharesOptionShareSupport = [rs intForColumn:@"has_fed_shares_option_share_support"];
+            output.hasPublicShareLinkOptionNameSupport = [rs intForColumn:@"has_public_share_link_option_name_support"];
+            output.hasPublicShareLinkOptionUploadOnlySupport = [rs intForColumn:@"has_public_share_link_option_upload_only_support"];
         }
         
         [rs close];
@@ -616,7 +635,7 @@
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL correctQuery=NO;
         
-        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_sharee_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, has_capabilities_support=?, image_instant_upload=?, video_instant_upload=?, background_instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, timestamp_last_instant_upload_image=?, timestamp_last_instant_upload_video=?, url_redirected=?, sorting_type=?, predefined_url=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport], [NSNumber numberWithInteger:user.hasShareeApiSupport], [NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:user.hasCapabilitiesSupport], [NSNumber numberWithBool:user.imageInstantUpload], [NSNumber numberWithBool:user.videoInstantUpload], [NSNumber numberWithBool:user.backgroundInstantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.timestampInstantUploadImage], [NSNumber numberWithLong:user.timestampInstantUploadVideo], user.urlRedirected, [NSNumber numberWithInteger:user.sortingType],user.predefinedUrl, [NSNumber numberWithInteger:user.userId]];
+        correctQuery = [db executeUpdate:@"UPDATE users SET url=?, ssl=?, activeaccount=?, storage_occupied=?, storage=?, has_share_api_support=?, has_sharee_api_support=?, has_cookies_support=?, has_forbidden_characters_support=?, has_capabilities_support=?, image_instant_upload=?, video_instant_upload=?, background_instant_upload=?, path_instant_upload=?, only_wifi_instant_upload=?, timestamp_last_instant_upload_image=?, timestamp_last_instant_upload_video=?, url_redirected=?, sorting_type=?, predefined_url=?, has_fed_shares_option_share_support=?, has_public_share_link_option_name_support=?, has_public_share_link_option_upload_only_support=? WHERE id = ?", user.url, [NSNumber numberWithBool:user.ssl], [NSNumber numberWithBool:user.activeaccount], [NSNumber numberWithLong:user.storageOccupied], [NSNumber numberWithLong:user.storage], [NSNumber numberWithInteger:user.hasShareApiSupport], [NSNumber numberWithInteger:user.hasShareeApiSupport], [NSNumber numberWithInteger:user.hasCookiesSupport], [NSNumber numberWithInteger:user.hasForbiddenCharactersSupport], [NSNumber numberWithInteger:user.hasCapabilitiesSupport], [NSNumber numberWithBool:user.imageInstantUpload], [NSNumber numberWithBool:user.videoInstantUpload], [NSNumber numberWithBool:user.backgroundInstantUpload], user.pathInstantUpload, [NSNumber numberWithBool:user.onlyWifiInstantUpload], [NSNumber numberWithLong:user.timestampInstantUploadImage], [NSNumber numberWithLong:user.timestampInstantUploadVideo], user.urlRedirected, [NSNumber numberWithInteger:user.sortingType],user.predefinedUrl, [NSNumber numberWithInteger:user.userId], [NSNumber numberWithInteger:user.hasFedSharesOptionShareSupport], [NSNumber numberWithInteger:user.hasPublicShareLinkOptionNameSupport], [NSNumber numberWithInteger:user.hasPublicShareLinkOptionUploadOnlySupport]];
         
         if (!correctQuery) {
             DLog(@"Error updating a user");
