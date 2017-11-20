@@ -151,7 +151,8 @@ typedef NS_ENUM (NSInteger, LinkOption){
 
 
 -(NSInteger) getNumberOfOptionsAvailable {
-    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
     NSInteger nOfOptionsAvailable = nOfSectionsWithAllOptionsAvailable;
     
     if (![ShareUtils hasOptionLinkNameToBeShown]) {
