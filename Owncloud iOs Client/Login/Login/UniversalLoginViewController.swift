@@ -864,20 +864,20 @@ public enum TextfieldType: String {
             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
                 /// credentials allowed access to root folder: well done
                 
+                if self.user == nil {
+                    self.user = UserDto()
+                }
+                
                 if ( (self.loginMode == .update || self.loginMode == .expire) && credentials.userName != self.user?.username ) {
                     self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
                     
                 } else {
 
-                    if self.user == nil {
-                        self.user = UserDto()
-                    }
-                
-                    self.user?.url = self.validatedServerURL
-                    self.user?.username = credentials.userName
-                    self.user?.ssl = self.validatedServerURL.hasPrefix("https")
-                    self.user?.urlRedirected = app.urlServerRedirected
-                    self.user?.predefinedUrl = k_default_url_server
+                    self.user!.url = self.validatedServerURL
+                    self.user!.username = credentials.userName
+                    self.user!.ssl = self.validatedServerURL.hasPrefix("https")
+                    self.user!.urlRedirected = app.urlServerRedirected
+                    self.user!.predefinedUrl = k_default_url_server
                     
                     credentials.baseURL = UtilsUrls.getFullRemoteServerPath(self.user)
 
