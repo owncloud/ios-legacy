@@ -864,15 +864,14 @@ public enum TextfieldType: String {
             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
                 /// credentials allowed access to root folder: well done
                 
-                if self.user == nil {
-                    self.user = UserDto()
-                }
+                let tryingToUpdateDifferentUser = (self.user != nil && (self.loginMode == .update || self.loginMode == .expire) && credentials.userName != self.user?.username)
                 
-                if ( (self.loginMode == .update || self.loginMode == .expire) && credentials.userName != self.user?.username ) {
+                if tryingToUpdateDifferentUser {
                     self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
                     
                 } else {
 
+                    self.user = UserDto()
                     self.user!.url = self.validatedServerURL
                     self.user!.username = credentials.userName
                     self.user!.ssl = self.validatedServerURL.hasPrefix("https")
@@ -902,7 +901,7 @@ public enum TextfieldType: String {
                             }
                         }
                         
-                    } else {
+                     } else {
                         
                         ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
                         if (app.activeUser != nil && app.activeUser.userId == self.user?.userId) {
