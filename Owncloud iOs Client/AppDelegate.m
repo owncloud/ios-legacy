@@ -148,10 +148,6 @@ float shortDelay = 0.3;
     
     [self showSplashScreenFake];
     
-    //Check if the server support shared api
-    [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
-    
-    
     //Needed to use on background tasks
     if (!k_is_sso_active) {
         [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
@@ -183,6 +179,8 @@ float shortDelay = 0.3;
         
         ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
+        
+        [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
         
         ManageAccounts *manageAccounts = [ManageAccounts new];
         [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];

@@ -1134,27 +1134,6 @@
 
 #pragma mark - Manage Accounts Methods
 
-//-----------------------------------
-/// @name setCookiesOfActiveAccount
-///-----------------------------------
-
-/**
- * Method to delete the current cookies and add the cookies of the active account
- *
- * @warning we have to take in account that the cookies of the active account must to be in the database
- */
-- (void) setCookiesOfActiveAccount {
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    //1- Delete the current cookies because we delete the current active user
-    [UtilsFramework deleteAllCookies];
-    //2- We restore the previous cookies of the active user on the System cookies storage
-    [UtilsCookies setOnSystemStorageCookiesByUser:app.activeUser];
-    //3- We delete the cookies of the active user on the databse because it could change and it is not necessary keep them there
-    [ManageCookiesStorageDB deleteCookiesByUser:app.activeUser];
-}
-
 ///-----------------------------------
 /// @name cancelAndRemoveFromTabRecentsAllInfoByUser
 ///-----------------------------------
@@ -1741,10 +1720,9 @@
         
         [ManageUsersDB setActiveAccountAutomatically];
         
-        //Update in appDelegate the active user
         APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
         
-        [self setCookiesOfActiveAccount];
+        [UtilsCookies restoreTheCookiesOfActiveUser];
         
         [UtilsFileSystem createFolderForUser:APP_DELEGATE.activeUser];
         
