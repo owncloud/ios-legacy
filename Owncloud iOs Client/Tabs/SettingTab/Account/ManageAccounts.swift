@@ -34,15 +34,6 @@ import Foundation
             //userInDB contains the userId in DB, we add the credentials and store the user in keychain
             OCKeychain.storeCredentials(userInDB.credDto)
             
-            let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-            
-            if (app.activeUser == nil || (userInDB.activeaccount)) {
-                // only set as active account the first account added
-                // OR if it is already the active user; otherwise cookies will not be correctly restored
-                userInDB.activeaccount = true
-                app.activeUser = userInDB
-            }
-            
             // grant that settings of instant uploads are the same for the new account that for the currently active account
             ManageAppSettingsDB.updateInstantUploadAllUser();
             
