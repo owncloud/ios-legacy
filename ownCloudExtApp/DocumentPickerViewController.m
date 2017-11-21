@@ -164,12 +164,14 @@
         //Cookies is allways available in current supported Servers
         [sharedOCCommunication setIsCookiesAvailable:YES];
         
-        [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
-                                                            initWithClientId:k_oauth2_client_id
-                                                            clientSecret:k_oauth2_client_secret
-                                                            redirectUri:k_oauth2_redirect_uri
-                                                            authorizationEndpoint:k_oauth2_authorization_endpoint
-                                                            tokenEndpoint:k_oauth2_token_endpoint]];
+        OCOAuth2Configuration *ocOAuth2conf = [[OCOAuth2Configuration alloc]
+                                               initWithClientId:k_oauth2_client_id
+                                               clientSecret:k_oauth2_client_secret
+                                               redirectUri:k_oauth2_redirect_uri
+                                               authorizationEndpoint:k_oauth2_authorization_endpoint
+                                               tokenEndpoint:k_oauth2_token_endpoint];
+        
+        [sharedOCCommunication setOauth2Configuration: ocOAuth2conf];
         
         [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
         
