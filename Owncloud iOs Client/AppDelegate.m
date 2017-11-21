@@ -176,6 +176,7 @@ float shortDelay = 0.3;
     
     if (user) {
         self.activeUser = user;
+        [UtilsCookies deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser];
         
         ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
@@ -587,12 +588,14 @@ float shortDelay = 0.3;
         //Cookies is allways available in current supported Servers
         [sharedOCCommunication setIsCookiesAvailable:YES];
         
-        [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
-                                                                      initWithClientId:k_oauth2_client_id
-                                                                      clientSecret:k_oauth2_client_secret
-                                                                      redirectUri:k_oauth2_redirect_uri
-                                                                      authorizationEndpoint:k_oauth2_authorization_endpoint
-                                                                      tokenEndpoint:k_oauth2_token_endpoint]];
+        OCOAuth2Configuration *ocOAuth2conf = [[OCOAuth2Configuration alloc]
+                                              initWithClientId:k_oauth2_client_id
+                                              clientSecret:k_oauth2_client_secret
+                                              redirectUri:k_oauth2_redirect_uri
+                                              authorizationEndpoint:k_oauth2_authorization_endpoint
+                                              tokenEndpoint:k_oauth2_token_endpoint];
+        
+        [sharedOCCommunication setOauth2Configuration: ocOAuth2conf];
         
         [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
         
@@ -629,12 +632,14 @@ float shortDelay = 0.3;
         //Cookies is allways available in current supported Servers
         [sharedOCCommunicationDownloadFolder setIsCookiesAvailable:YES];
         
-        [sharedOCCommunicationDownloadFolder setOauth2Configuration: [[OCOAuth2Configuration alloc]
-                                                                      initWithClientId:k_oauth2_client_id
-                                                                      clientSecret:k_oauth2_client_secret
-                                                                      redirectUri:k_oauth2_redirect_uri
-                                                                      authorizationEndpoint:k_oauth2_authorization_endpoint
-                                                                      tokenEndpoint:k_oauth2_token_endpoint]];
+        OCOAuth2Configuration *ocOAuth2conf = [[OCOAuth2Configuration alloc]
+                                               initWithClientId:k_oauth2_client_id
+                                               clientSecret:k_oauth2_client_secret
+                                               redirectUri:k_oauth2_redirect_uri
+                                               authorizationEndpoint:k_oauth2_authorization_endpoint
+                                               tokenEndpoint:k_oauth2_token_endpoint];
+        
+        [sharedOCCommunicationDownloadFolder setOauth2Configuration:ocOAuth2conf];
         
         [sharedOCCommunicationDownloadFolder setUserAgent:[UtilsUrls getUserAgent]];
         
@@ -972,6 +977,10 @@ float shortDelay = 0.3;
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     
     //Set on the user defaults that the app has been killed by user
+    
+    //Store active user cookies on the Database
+    [UtilsCookies saveCurrentOfActiveUserAndClean];
+    
     NSUserDefaults * standardUserDefaults = [NSUserDefaults standardUserDefaults];
     [standardUserDefaults setBool:YES forKey:k_app_killed_by_user];
     [standardUserDefaults synchronize];
@@ -2807,15 +2816,7 @@ float shortDelay = 0.3;
             [ManageUsersDB setActiveAccountByUserId:user.userId];
             user.activeaccount = YES;
         
-            //Restore the cookies of the future activeUser
-            //1- Store the new cookies on the Database
-            [UtilsCookies setOnDBStorageCookiesByUser:self.activeUser];
-            //2- Clean the cookies storage
-            [UtilsFramework deleteAllCookies];
-            //3- We restore the previous cookies of the active user on the System cookies storage
-            [UtilsCookies setOnSystemStorageCookiesByUser:user];
-            //4- We delete the cookies of the active user on the database because it could change and it is not necessary keep them there
-            [ManageCookiesStorageDB deleteCookiesByUser:user];
+            [UtilsCookies saveActiveUserCookiesAndRestoreCookiesOfUser:user];
         
             //Change the active user in appDelegate global variable
             self.activeUser = user;

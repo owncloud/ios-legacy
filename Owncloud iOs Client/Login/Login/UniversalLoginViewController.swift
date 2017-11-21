@@ -150,7 +150,7 @@ public enum TextfieldType: String {
             self.checkCurrentUrl()
         }
                 
-        UtilsCookies.clear()    // network requests from log-in view need to be independent of existing sessions
+        UtilsCookies.saveCurrentOfActiveUserAndClean()    // network requests from log-in view need to be independent of existing sessions
         
         print("Init login with loginMode: \(loginMode.rawValue) (0=Create,1=Update,2=Expire,3=Migrate)")
     }
@@ -159,8 +159,9 @@ public enum TextfieldType: String {
         super.viewWillDisappear(animated)
         
         self.removeNotificationsAboutKeyboard()
+        
         if self.loginMode == .update || self.loginMode == .migrate {
-            UtilsCookies.restoreTheCookiesOfActiveUser()
+            UtilsCookies.deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser()
 
         }
     }

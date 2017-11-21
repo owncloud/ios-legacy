@@ -1722,7 +1722,7 @@
         
         APP_DELEGATE.activeUser = [ManageUsersDB getActiveUser];
         
-        [UtilsCookies restoreTheCookiesOfActiveUser];
+        [UtilsCookies deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser];
         
         [UtilsFileSystem createFolderForUser:APP_DELEGATE.activeUser];
         
