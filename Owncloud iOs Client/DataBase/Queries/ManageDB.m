@@ -1261,13 +1261,10 @@
 
 
 + (void) updateDBVersion21To22 {
-        
-    //1.- Migrate the current password stored in keychain
-
-    [OCKeychain updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoAsValueAndAuthenticationType];
     
 
-    //2.- Alter users table to add more supported share options
+    //1.- Alter users table to add more supported share options
+    
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -1290,6 +1287,11 @@
         }
         
     }];
+    
+    
+    //2.- Migrate the current password stored in keychain
+    
+    [OCKeychain updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoAsValueAndAuthenticationType];
     
     
     
