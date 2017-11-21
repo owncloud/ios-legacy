@@ -330,7 +330,8 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  * Method that switches the active user to that passed as a parameter
  *
  * @param user -> UserDto to set as active user
+ * @param isNewAccount -> BOOL if this user is a new account added
  */
-- (void) switchActiveUserTo:(UserDto *) user inHardMode:(BOOL)hardMode withCompletionHandler:(void (^)(void)) completionHandler;
+- (void) switchActiveUserTo:(UserDto *)user isNewAccount:(BOOL)isNewAccount withCompletionHandler:(void (^)(void)) completionHandler;
 
 @end

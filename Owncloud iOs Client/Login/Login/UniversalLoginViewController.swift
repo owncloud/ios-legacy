@@ -892,7 +892,7 @@ public enum TextfieldType: String {
                             if self.user != nil {
                                 ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
                             
-                                app.switchActiveUser(to: self.user, inHardMode: true, withCompletionHandler:
+                                app.switchActiveUser(to: self.user, isNewAccount: true, withCompletionHandler:
                                     {
                                     app.generateAppInterface(fromLoginScreen: true)
                                 })
