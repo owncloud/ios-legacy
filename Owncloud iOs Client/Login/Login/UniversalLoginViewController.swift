@@ -864,20 +864,19 @@ public enum TextfieldType: String {
             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
                 /// credentials allowed access to root folder: well done
                 
-                if ( (self.loginMode == .update || self.loginMode == .expire) && credentials.userName != self.user?.username ) {
+                let tryingToUpdateDifferentUser = (self.user != nil && (self.loginMode == .update || self.loginMode == .expire) && credentials.userName != self.user?.username)
+                
+                if tryingToUpdateDifferentUser {
                     self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
                     
                 } else {
 
-                    if self.user == nil {
-                        self.user = UserDto()
-                    }
-                
-                    self.user?.url = self.validatedServerURL
-                    self.user?.username = credentials.userName
-                    self.user?.ssl = self.validatedServerURL.hasPrefix("https")
-                    self.user?.urlRedirected = app.urlServerRedirected
-                    self.user?.predefinedUrl = k_default_url_server
+                    self.user = UserDto()
+                    self.user!.url = self.validatedServerURL
+                    self.user!.username = credentials.userName
+                    self.user!.ssl = self.validatedServerURL.hasPrefix("https")
+                    self.user!.urlRedirected = app.urlServerRedirected
+                    self.user!.predefinedUrl = k_default_url_server
                     
                     credentials.baseURL = UtilsUrls.getFullRemoteServerPath(self.user)
 
@@ -893,7 +892,7 @@ public enum TextfieldType: String {
                             if self.user != nil {
                                 ManageFiles().storeListOfFiles(listOfFileDtos!, forFileId: 0, andUser: self.user!)
                             
-                                app.switchActiveUser(to: self.user, inHardMode: true, withCompletionHandler:
+                                app.switchActiveUser(to: self.user, isNewAccount: true, withCompletionHandler:
                                     {
                                     app.generateAppInterface(fromLoginScreen: true)
                                 })
@@ -902,7 +901,7 @@ public enum TextfieldType: String {
                             }
                         }
                         
-                    } else {
+                     } else {
                         
                         ManageAccounts().updateAccountOfUser(self.user!, withCredentials: credentials)
                         if (app.activeUser != nil && app.activeUser.userId == self.user?.userId) {

@@ -2782,7 +2782,7 @@ float shortDelay = 0.3;
 
 #pragma mark - Active User
 
-- (void) switchActiveUserTo:(UserDto *)user inHardMode:(BOOL)hardMode withCompletionHandler:(void (^)(void)) completionHandler {
+- (void) switchActiveUserTo:(UserDto *)user isNewAccount:(BOOL)isNewAccount withCompletionHandler:(void (^)(void)) completionHandler {
     
     // all the switch is performed in background, without blocking the caller thread, that should be main
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -2790,7 +2790,11 @@ float shortDelay = 0.3;
         self.userSessionCurrentToken = nil;
             // should be here or right after checking the user really changed? for the moment, here
         
-        if (self.activeUser.userId != user.userId || hardMode) {
+        if (!self.activeUser) {
+            self.activeUser = user;
+        }
+        
+        if (self.activeUser.userId != user.userId || isNewAccount) {
 
             //We delete the cookies on SAML
             if (k_is_sso_active) {

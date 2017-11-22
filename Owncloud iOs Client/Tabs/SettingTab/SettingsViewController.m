@@ -1107,7 +1107,7 @@
     
     //Method to change the account
     [[OCLoadingSpinner sharedOCLoadingSpinner] initLoadingForViewController: self];
-    [app switchActiveUserTo:selectedUser inHardMode:NO withCompletionHandler:^{
+    [app switchActiveUserTo:selectedUser isNewAccount:NO withCompletionHandler:^{
         DLog(@"refreshing list of accounts after user was switched");
         
         [[OCLoadingSpinner sharedOCLoadingSpinner] endLoading];

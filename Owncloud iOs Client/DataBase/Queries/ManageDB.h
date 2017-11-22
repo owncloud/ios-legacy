@@ -269,8 +269,12 @@
 /**
  * Changes:
  *
+ * Support version 3.7.0
  * Alter Keychain items to use credentialsDto as value instead password
+ * Alter users table, added new field to store that the server has fed shares, share link option name and share link option upload only API support.
  */
 + (void) updateDBVersion21To22;
+
+
 
 @end
