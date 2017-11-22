@@ -595,9 +595,9 @@ float shortDelay = 0.3;
                                               authorizationEndpoint:k_oauth2_authorization_endpoint
                                               tokenEndpoint:k_oauth2_token_endpoint];
         
-        [sharedOCCommunication setOauth2Configuration: ocOAuth2conf];
+        [sharedOCCommunication setValueOauth2Configuration: ocOAuth2conf];
         
-        [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
+        [sharedOCCommunication setValueOfUserAgent:[UtilsUrls getUserAgent]];
         
         OCKeychain *oKeychain = [[OCKeychain alloc] init];
         [sharedOCCommunication setValueCredentialsStorage:oKeychain];
@@ -639,9 +639,9 @@ float shortDelay = 0.3;
                                                authorizationEndpoint:k_oauth2_authorization_endpoint
                                                tokenEndpoint:k_oauth2_token_endpoint];
         
-        [sharedOCCommunicationDownloadFolder setOauth2Configuration:ocOAuth2conf];
+        [sharedOCCommunicationDownloadFolder setValueOauth2Configuration:ocOAuth2conf];
         
-        [sharedOCCommunicationDownloadFolder setUserAgent:[UtilsUrls getUserAgent]];
+        [sharedOCCommunicationDownloadFolder setValueOfUserAgent:[UtilsUrls getUserAgent]];
         
         OCKeychain *oKeychain = [[OCKeychain alloc] init];
         [sharedOCCommunicationDownloadFolder setValueCredentialsStorage:oKeychain];
