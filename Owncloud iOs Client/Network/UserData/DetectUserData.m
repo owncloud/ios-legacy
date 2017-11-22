@@ -26,16 +26,12 @@
 
 + (void) getUserDisplayNameOfServer:(NSString*)path credentials:(OCCredentialsDto *)credentials
                             withCompletion:(void(^)(NSString *displayName, NSError *error))completion {
-    OCCommunication *sharedCommunication;
 
-    sharedCommunication = [AppDelegate sharedOCCommunication];
-
-
-        [sharedCommunication setCredentials:credentials];
+        [[AppDelegate sharedOCCommunication] setCredentials:credentials];
         
-        [sharedCommunication setValueOfUserAgent:[UtilsUrls getUserAgent]];
+        [[AppDelegate sharedOCCommunication] setValueOfUserAgent:[UtilsUrls getUserAgent]];
         
-        [sharedCommunication getUserDisplayNameOfServer:path onCommunication:sharedCommunication
+        [[AppDelegate sharedOCCommunication] getUserDisplayNameOfServer:path onCommunication:[AppDelegate sharedOCCommunication]
             success:^(NSHTTPURLResponse *response, NSString *displayName, NSString *redirectedServer) {
                 if (displayName && ![displayName isEqualToString:@""]) {
                     completion(displayName, nil);
