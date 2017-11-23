@@ -117,7 +117,7 @@
 }
 
 + (void) restoreCookiesOfUser:(UserDto *)user {
-    DLog(@"_srestoreCookiesOfUser_ %ld", (long)user.userId);
+    DLog(@"_restoreCookiesOfUser_ %ld", (long)user.userId);
     
     //1-Restore the previous cookies of user on the System Cookie Storage
     [UtilsCookies setOnSystemCookieStorageDBCookiesOfUser:user];
