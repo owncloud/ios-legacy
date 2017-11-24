@@ -36,7 +36,7 @@ class FileProviderItem: NSObject, NSFileProviderItem {
         } else {
             self.parentItemIdentifier = NSFileProviderItemIdentifier("test")
         }
-        self.filename = ocFile.fileName!
+        self.filename = ocFile.fileName!.removingPercentEncoding!
         self.typeIdentifier = kUTTypeFolder as String
         
         if ocFile.isDirectory {
@@ -62,7 +62,7 @@ class FileProviderItem: NSObject, NSFileProviderItem {
         } else {
             self.parentItemIdentifier = NSFileProviderItemIdentifier("test")
         }
-        self.filename = ocFile.fileName!
+        self.filename = ocFile.fileName!.removingPercentEncoding!
         self.typeIdentifier = kUTTypePDF as String
         
         if ocFile.isDirectory {
@@ -110,7 +110,9 @@ class FileProviderItem: NSObject, NSFileProviderItem {
     var capabilities: NSFileProviderItemCapabilities {
         // Limit the capabilities, add new capabilities when we support them
         // https://developer.apple.com/documentation/fileprovider/nsfileprovideritemcapabilities
-        return .allowsAll
+        return [ .allowsAddingSubItems, .allowsContentEnumerating, .allowsReading ]
+
+//        return .allowsAll
 
 //        switch self.type {
 //        case .directory:

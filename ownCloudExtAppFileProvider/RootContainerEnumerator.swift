@@ -53,7 +53,7 @@ class RootContainerEnumerator: FileProviderEnumerator {
                     let item = FileProviderItem(root: true, ocFile: file as! FileDto)
                     items.append(item)
                 } else {
-                    let item = FolderProviderItem(directory: file as! FileDto)
+                    let item = FolderProviderItem(directory: file as! FileDto, root: true)
                     items.append(item)
                 }
                 

@@ -16,10 +16,16 @@ class FolderProviderItem: NSObject, NSFileProviderItem {
     
     var childItemCount: NSNumber?
     
-    init(directory: FileDto) {
+    init(directory: FileDto, root: Bool) {
+        
+        print("LOG ---> CREATED DIRECTORY WITH NAME \(directory.fileName) and idFile \(directory.idFile) and fileID \(directory.fileId)")
         self.itemIdentifier = NSFileProviderItemIdentifier("\(directory.idFile)")
         if #available(iOSApplicationExtension 11.0, *) {
-            self.parentItemIdentifier = NSFileProviderItemIdentifier.rootContainer
+            if root {
+                self.parentItemIdentifier = NSFileProviderItemIdentifier.rootContainer
+            } else {
+                self.parentItemIdentifier = NSFileProviderItemIdentifier(rawValue: String(directory.fileId))
+            }
         } else {
             self.parentItemIdentifier = NSFileProviderItemIdentifier("\(directory.fileId)")
         }
