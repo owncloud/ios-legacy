@@ -22,7 +22,6 @@ class OCFileProvider: NSFileProviderExtension {
         
         let activeUser: UserDto = ManageUsersDB.getActiveUser()
         print("LOG ---> files count \(activeUser.username)")
-
         let userLocalPath: String = UtilsUrls.getOwnCloudFilePath().appendingFormat("%ld", activeUser.idUser)
         
         let currentUserDomain: NSFileProviderDomain = NSFileProviderDomain(identifier: NSFileProviderDomainIdentifier(String(activeUser.idUser)) , displayName: activeUser.credDto.userDisplayName, pathRelativeToDocumentStorage: userLocalPath)
@@ -74,15 +73,15 @@ class OCFileProvider: NSFileProviderExtension {
             let rootFolder = ManageFilesDB.getRootFileDto(byUser: activeUser)
             print("LOG ---> files count \(rootFolder?.idFile)")
 
-            return FolderProviderItem(directory: rootFolder!)
+            return FolderProviderItem(directory: rootFolder!, root: true)
         }
-        
+        print("LOG ---> identifier value = \(identifier.rawValue)")
         let fileDTO: FileDto = ManageFilesDB.getFileDto(byIdFile: Int(identifier.rawValue)!)
         
-        print("LOG ---> fileDTO \(fileDTO.fileName)")
+        print("LOG ---> fileDTO \(fileDTO.fileName) fileDTOPercentage \(fileDTO.fileName.removingPercentEncoding!)")
         
         if fileDTO.isDirectory {
-            return FolderProviderItem(directory: fileDTO)
+            return FolderProviderItem(directory: fileDTO, root: false)
         } else {
             return FileProviderItem(ocFile: fileDTO)
         }

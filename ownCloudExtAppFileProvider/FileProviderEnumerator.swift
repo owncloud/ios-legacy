@@ -75,30 +75,30 @@ class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
 
         var items: [NSFileProviderItemProtocol] = []
         
-        let activeUser: UserDto = ManageUsersDB.getActiveUser()
-        print("LOG ---> files count \(activeUser.username)")
-        
-        let rootFolder = ManageFilesDB.getRootFileDto(byUser: activeUser)
-        print("LOG ---> files count \(rootFolder?.idFile)")
-        
-        let files = ManageFilesDB.getFilesByFileId(forActiveUser: rootFolder!.idFile)
-        
-        for file in files! {
-            if #available(iOSApplicationExtension 11.0, *) {
-                
-                if !(file as! FileDto).isDirectory {
-                    let item = FileProviderItem(root: true, ocFile: file as! FileDto)
-                    items.append(item)
-                } else {
-                    let item = FolderProviderItem(directory: file as! FileDto)
-                    items.append(item)
-                }
-
-            } else {
-                // Fallback on earlier versions
-            }
-        }
-        
+//        let activeUser: UserDto = ManageUsersDB.getActiveUser()
+//        print("LOG ---> files count \(activeUser.username)")
+//        
+//        let rootFolder = ManageFilesDB.getRootFileDto(byUser: activeUser)
+//        print("LOG ---> files count \(rootFolder?.idFile)")
+//        
+//        let files = ManageFilesDB.getFilesByFileId(forActiveUser: rootFolder!.idFile)
+//        
+//        for file in files! {
+//            if #available(iOSApplicationExtension 11.0, *) {
+//                
+//                if !(file as! FileDto).isDirectory {
+//                    let item = FileProviderItem(root: true, ocFile: file as! FileDto)
+//                    items.append(item)
+//                } else {
+//                    let item = FolderProviderItem(directory: file as! FileDto)
+//                    items.append(item)
+//                }
+//
+//            } else {
+//                // Fallback on earlier versions
+//            }
+//        }
+//        
         return items
     }
     

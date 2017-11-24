@@ -42,24 +42,27 @@ class DirectoryEnumerator: FileProviderEnumerator {
         var items: [NSFileProviderItemProtocol] = []
         
         let activeUser: UserDto = ManageUsersDB.getActiveUser()
-        print("LOG ---> files count \(activeUser.username)")
         
-        let files = ManageFilesDB.getFilesByFileId(forActiveUser: Int(parent.rawValue)!)
+        let files = ManageFilesDB.getFilesByFileId(forActiveUser: Int(path)!)
+        print("LOG --->  listDirectory directory enimerator files count \(files?.count)")
+
         
-        for file in files! {
-            if #available(iOSApplicationExtension 11.0, *) {
+        if #available(iOSApplicationExtension 11.0, *) {
+            for file in files! {
+                print("LOG ---> #available(iOSApplicationExtension 11.0, *)")
                 
                 if !(file as! FileDto).isDirectory {
                     let item = FileProviderItem(root: true, ocFile: file as! FileDto)
                     items.append(item)
                 } else {
-                    let item = FolderProviderItem(directory: file as! FileDto)
+                    let item = FolderProviderItem(directory: file as! FileDto, root: false)
                     items.append(item)
                 }
                 
-            } else {
-                // Fallback on earlier versions
             }
+        } else {
+            // Fallback on earlier versions
+            print("LOG ---> System version lower than 11.0")
         }
         
         return items
