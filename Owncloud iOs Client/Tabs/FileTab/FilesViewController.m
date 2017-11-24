@@ -1341,6 +1341,9 @@
         
         FileDto *file = (FileDto *)[[_sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
         
+        DLog(@"LOG ---> filename =  %@ & id = %ld, etag = %@", file.fileName, (long)file.idFile, file.etag);
+
+        
         NSDate* date = [NSDate dateWithTimeIntervalSince1970:file.date];
         NSString *fileDateString;
         if (file.date > 0) {

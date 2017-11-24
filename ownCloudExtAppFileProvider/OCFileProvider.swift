@@ -37,11 +37,14 @@ class OCFileProvider: NSFileProviderExtension {
     
     override func persistentIdentifierForItem(at url: URL) -> NSFileProviderItemIdentifier? {
         
-        //return the unique id if exists a file with the url getted as parameter.
-        return NSFileProviderItemIdentifier.init("40")
-
-//        ManageFilesDB.getFileDto(
-//
+        // resolve the given URL to a persistent identifier using a database
+        let pathComponents = url.pathComponents
+        
+        // exploit the fact that the path structure has been defined as
+        // <base storage directory>/<item identifier>/<item file name> above
+        assert(pathComponents.count > 2)
+        
+        return NSFileProviderItemIdentifier(pathComponents[pathComponents.count - 2])
     }
     
     override func urlForItem(withPersistentIdentifier identifier: NSFileProviderItemIdentifier) -> URL? {
@@ -55,10 +58,14 @@ class OCFileProvider: NSFileProviderExtension {
         let perItemDirectory = manager.documentStorageURL.appendingPathComponent(identifier.rawValue, isDirectory: true)
         
         var finalPath: URL
+        print("LOG ---> name = \(item.filename.removingPercentEncoding!) = \(item.typeIdentifier)")
         if item.typeIdentifier == (kUTTypeFolder as String) {
             finalPath = perItemDirectory.appendingPathComponent(item.filename, isDirectory:true)
+            print("LOG ---> finalPath folder \(identifier) =\(finalPath)")
+
         } else {
             finalPath = perItemDirectory.appendingPathComponent(item.filename, isDirectory:false)
+            print("LOG ---> finalPath file \(identifier) =\(finalPath)")
         }
 
         return finalPath
@@ -75,15 +82,19 @@ class OCFileProvider: NSFileProviderExtension {
 
             return FolderProviderItem(directory: rootFolder!, root: true)
         }
-        print("LOG ---> identifier value = \(identifier.rawValue)")
-        let fileDTO: FileDto = ManageFilesDB.getFileDto(byIdFile: Int(identifier.rawValue)!)
+        print("LOG ---> identifier value = \(Int(identifier.rawValue))")
         
-        print("LOG ---> fileDTO \(fileDTO.fileName) fileDTOPercentage \(fileDTO.fileName.removingPercentEncoding!)")
-        
-        if fileDTO.isDirectory {
-            return FolderProviderItem(directory: fileDTO, root: false)
+        if let fileDTO: FileDto = ManageFilesDB.getFileDto(byIdFile: Int(identifier.rawValue)!) {
+            
+            print("LOG ---> fileDTO \(fileDTO.fileName) fileDTOPercentage \(fileDTO.fileName.removingPercentEncoding!)")
+            
+            if fileDTO.isDirectory {
+                return FolderProviderItem(directory: fileDTO, root: false)
+            } else {
+                return FileProviderItem(ocFile: fileDTO)
+            }
         } else {
-            return FileProviderItem(ocFile: fileDTO)
+            throw NSError(domain: NSCocoaErrorDomain, code: NSFileNoSuchFileError, userInfo:[:])
         }
     }
     
@@ -105,7 +116,7 @@ class OCFileProvider: NSFileProviderExtension {
 
             let placeholderURL: URL = NSFileProviderManager.placeholderURL(for: self.fileProviderManager.documentStorageURL.appendingPathComponent(fileName))
 
-            try NSFileProviderManager.writePlaceholder(at: placeholderURL, withMetadata: FileProviderItem(dummy: "du"))
+            try NSFileProviderManager.writePlaceholder(at: placeholderURL, withMetadata: fileProviderItem)
 
             completionHandler(nil)
         }
@@ -212,11 +223,10 @@ class OCFileProvider: NSFileProviderExtension {
                             // - for a file, instantiate an enumerator that observes changes to the file
                             maybeEnumerator = DirectoryEnumerator(enumeratedItemIdentifier: containerItemIdentifier)
                         }
-                        
+          
                     } catch let error {
-                        print("LOG ---> \(error)")
                         maybeEnumerator = nil
-                        
+                        throw NSError(domain: NSCocoaErrorDomain, code: NSFileNoSuchFileError, userInfo:[:])
                     }
             }
             

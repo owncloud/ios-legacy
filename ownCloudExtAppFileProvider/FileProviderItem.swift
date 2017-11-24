@@ -30,14 +30,15 @@ class FileProviderItem: NSObject, NSFileProviderItem {
     var lastModified: Date
     
     init(ocFile: FileDto) {
+        print("LOG ---> item's name = \(ocFile.fileName!.removingPercentEncoding!) & id = \(ocFile.idFile)")
         self.itemIdentifier = NSFileProviderItemIdentifier("\(ocFile.idFile)")
         if #available(iOSApplicationExtension 11.0, *) {
             self.parentItemIdentifier = NSFileProviderItemIdentifier.init("\(ocFile.idFile)")
         } else {
             self.parentItemIdentifier = NSFileProviderItemIdentifier("test")
         }
-        self.filename = ocFile.fileName!.removingPercentEncoding!
-        self.typeIdentifier = kUTTypeFolder as String
+        self.filename = ocFile.fileName!
+        self.typeIdentifier = kUTTypePDF as String
         
         if ocFile.isDirectory {
             self.type = .directory
@@ -56,6 +57,7 @@ class FileProviderItem: NSObject, NSFileProviderItem {
     }
     
     init(root: Bool, ocFile: FileDto){
+        print("LOG ---> item's name = \(ocFile.fileName!.removingPercentEncoding!) & id = \(ocFile.idFile)")
         self.itemIdentifier = NSFileProviderItemIdentifier("\(ocFile.idFile)")
         if #available(iOSApplicationExtension 11.0, *) {
             self.parentItemIdentifier = NSFileProviderItemIdentifier.rootContainer
@@ -92,7 +94,7 @@ class FileProviderItem: NSObject, NSFileProviderItem {
 
         
         self.filename = dummy
-        self.typeIdentifier = kUTTypeFolder as String
+        self.typeIdentifier = kUTTypePDF as String
         self.type = .directory
         self.size = 40
         self.lastModified = Date()
