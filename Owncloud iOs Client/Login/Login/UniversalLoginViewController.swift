@@ -60,7 +60,7 @@ public enum TextfieldType: String {
     @IBOutlet var textFieldURL: UITextField!
     @IBOutlet var buttonReconnection: UIButton!
     
-    @IBOutlet weak var buttonReconnectionURL: UIButton!
+    @IBOutlet var buttonReconnectionURL: UIButton!
     @IBOutlet var imageViewURLFooter: UIImageView!
     @IBOutlet var labelURLFooter: UILabel!
     @IBOutlet var activityIndicatorURLFooter: UIActivityIndicatorView!
@@ -144,13 +144,12 @@ public enum TextfieldType: String {
         
         self.oAuth2Manager.trustedCertificatesStore = SSLCertificateManager()
         if self.loginMode == .update {
-            self.buttonReconnectionURL.isHidden = true
-            self.labelURLFooter.text = nil
-            self.imageViewURLFooter.image = nil
+            self.setReconnectionButtons(hiddenStatus: true)
+            self.setURLFooter(isType: .None)
             self.checkCurrentUrl()
         }
                 
-        UtilsCookies.clear()    // network requests from log-in view need to be independent of existing sessions
+        UtilsCookies.saveCurrentOfActiveUserAndClean()    // network requests from log-in view need to be independent of existing sessions
         
         print("Init login with loginMode: \(loginMode.rawValue) (0=Create,1=Update,2=Expire,3=Migrate)")
     }
@@ -159,8 +158,9 @@ public enum TextfieldType: String {
         super.viewWillDisappear(animated)
         
         self.removeNotificationsAboutKeyboard()
+        
         if self.loginMode == .update || self.loginMode == .migrate {
-            UtilsCookies.restoreTheCookiesOfActiveUser()
+            UtilsCookies.deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser()
 
         }
     }
@@ -239,10 +239,12 @@ public enum TextfieldType: String {
         DispatchQueue.main.async {
             if (self.basicAuthInfoStackView.isHidden) {
                 self.setURLFooter(isType: .Error, errorMessage: message)
+                self.setConnectButton(status: false)
+
             } else {
                 self.setPasswordFooterError(errorMessage: message)
+                self.setConnectButton(status: true)
             }
-            self.setConnectButton(status: true)
         }
     }
     
@@ -257,21 +259,28 @@ public enum TextfieldType: String {
             self.imageViewURLFooter.image = UIImage(named: "CredentialsError.png")!
             self.labelURLFooter.text = errorMessage
             self.setReconnectionButtons(hiddenStatus: false)
+            self.setConnectButton(status: false)
             return      // beware: return here, break in the rest
             
         case .TestingConnection:
             footerMessage = "testing_connection"
             self.setActivityIndicator(isVisible: true)
+            self.setConnectButton(status: false)
+
             break
             
         case .ConnectionEstablishedNonSecure:
             self.imageViewURLFooter.image = UIImage(named: "NonSecureConnectionIcon.png")!
             footerMessage = "connection_established"
+            self.setConnectButton(status: true)
+
             break
             
         case .ConnectionEstablishedSecure:
             self.imageViewURLFooter.image = UIImage(named: "SecureConnectionIcon.png")!
             footerMessage = "secure_connection_established"
+            self.setConnectButton(status: true)
+
             break
             
         case .None:
@@ -482,6 +491,7 @@ public enum TextfieldType: String {
     // MARK: dismiss
     func closeLoginView() {
         self.setNetworkActivityIndicator(status: false)
+        UtilsCookies.deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser()
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -867,6 +877,8 @@ public enum TextfieldType: String {
                 let tryingToUpdateDifferentUser = (self.user != nil && (self.loginMode == .update || self.loginMode == .expire) && credentials.userName != self.user?.username)
                 
                 if tryingToUpdateDifferentUser {
+                    //Delete current wrong cookies and relaunch check url to get correct ones
+                    UtilsFramework.deleteAllCookies()
                     self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
                     
                 } else {
@@ -883,6 +895,8 @@ public enum TextfieldType: String {
                     if self.loginMode == .create {
                         
                         if (ManageUsersDB.isExistUser(self.user)) {
+                            //Delete current wrong cookies and relaunch check url to get correct ones
+                            UtilsFramework.deleteAllCookies()
                             self.showURLError(NSLocalizedString("account_not_new", comment: ""))
                             
                         } else {
