@@ -15,7 +15,6 @@ class OCFileProvider: NSFileProviderExtension {
     var fileProviderManager: NSFileProviderManager!
     var fileManager: FileManager!
     
-    
     override init() {
         print("FileProviderExtension is being created")
         super.init()
@@ -44,7 +43,8 @@ class OCFileProvider: NSFileProviderExtension {
         // <base storage directory>/<item identifier>/<item file name> above
         assert(pathComponents.count > 2)
         
-        return NSFileProviderItemIdentifier(pathComponents[pathComponents.count - 2])
+        let itemIdentifier = NSFileProviderItemIdentifier(pathComponents[pathComponents.count - 2])
+        return itemIdentifier
     }
     
     override func urlForItem(withPersistentIdentifier identifier: NSFileProviderItemIdentifier) -> URL? {
@@ -103,24 +103,52 @@ class OCFileProvider: NSFileProviderExtension {
     }
     
     override func providePlaceholder(at url: URL, completionHandler: @escaping (Error?) -> Void) {
-
+        
         guard let identifier = persistentIdentifierForItem(at: url) else {
-
             completionHandler(NSFileProviderError(.noSuchItem))
             return
         }
+        
+        let fileName:String = url.lastPathComponent
 
+        var formedURL: URL = self.fileProviderManager.documentStorageURL.appendingPathComponent(identifier.rawValue, isDirectory: true)
+        formedURL.appendPathComponent(fileName, isDirectory: false)
+        
         do {
             let fileProviderItem = try item(for: identifier)
-            let fileName:String = url.lastPathComponent
 
-            let placeholderURL: URL = NSFileProviderManager.placeholderURL(for: self.fileProviderManager.documentStorageURL.appendingPathComponent(fileName))
-
-            try NSFileProviderManager.writePlaceholder(at: placeholderURL, withMetadata: fileProviderItem)
-
-            completionHandler(nil)
-        }
-        catch let error {
+            let placeholderURL = NSFileProviderManager.placeholderURL(for: url)
+            let placecholderDirectoryUrl = placeholderURL.deletingLastPathComponent()
+            var createDirectoryError:Error?
+            
+            if (!fileManager.fileExists(atPath: placecholderDirectoryUrl.absoluteString)) {
+                var fcError: NSError?
+                self.fileCoordinator().coordinate(writingItemAt: placecholderDirectoryUrl, options: NSFileCoordinator.WritingOptions(rawValue: 0), error: &fcError
+                    , byAccessor: { (newUrl) in
+                        do {
+                            createDirectoryError = fcError;
+                            if (fcError == nil) {
+                                try fileManager.createDirectory(at: newUrl, withIntermediateDirectories: true, attributes: nil)
+                            }
+                        } catch let fmError {
+                            NSLog("createError = %@", fmError.localizedDescription)
+                            createDirectoryError = fmError
+                        }
+                })
+            }
+            
+            if let placeholderError = createDirectoryError {
+                throw placeholderError
+            }
+            else {
+                NSLog("placeholderURL = %@", placeholderURL.absoluteString)
+                try NSFileProviderManager.writePlaceholder(at: placeholderURL,
+                                                           withMetadata: fileProviderItem)
+                completionHandler(nil)
+            }
+            
+        } catch let error {
+            NSLog("writePlaceholder error = %@", error.localizedDescription)
             completionHandler(error)
         }
     }
