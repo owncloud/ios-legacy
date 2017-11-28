@@ -34,4 +34,6 @@
 #import "OCErrorMsg.h"
 #import "UtilsLogin.h"
 #import "OCCredentialsStorage.h"
+#import "DocumentPickerViewController.h"
+#import "SimpleFileListTableViewController.h"
 

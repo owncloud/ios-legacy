@@ -38,7 +38,7 @@ class FileProviderItem: NSObject, NSFileProviderItem {
             self.parentItemIdentifier = NSFileProviderItemIdentifier("test")
         }
         self.filename = ocFile.fileName!
-        self.typeIdentifier = kUTTypePDF as String
+        self.typeIdentifier = kUTTypePNG as String
         
         if ocFile.isDirectory {
             self.type = .directory
@@ -65,7 +65,7 @@ class FileProviderItem: NSObject, NSFileProviderItem {
             self.parentItemIdentifier = NSFileProviderItemIdentifier("test")
         }
         self.filename = ocFile.fileName!.removingPercentEncoding!
-        self.typeIdentifier = kUTTypePDF as String
+        self.typeIdentifier = kUTTypePNG as String
         
         if ocFile.isDirectory {
             self.type = .directory
