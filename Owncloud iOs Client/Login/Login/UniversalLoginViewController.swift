@@ -367,6 +367,9 @@ public enum TextfieldType: String {
             self.setURLStackView(hiddenStatus: true)
         }
         
+        self.textFieldUsername.autocorrectionType = .no
+        self.textFieldURL.autocorrectionType = .no
+        
         //set user&pass visibility
         self.updateInputFieldsFromCurrentAuthMethodToLogin()
         
