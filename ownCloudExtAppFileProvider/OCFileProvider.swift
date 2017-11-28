@@ -61,11 +61,8 @@ class OCFileProvider: NSFileProviderExtension {
         print("LOG ---> name = \(item.filename.removingPercentEncoding!) = \(item.typeIdentifier)")
         if item.typeIdentifier == (kUTTypeFolder as String) {
             finalPath = perItemDirectory.appendingPathComponent(item.filename, isDirectory:true)
-            print("LOG ---> finalPath folder \(identifier) =\(finalPath)")
-
         } else {
             finalPath = perItemDirectory.appendingPathComponent(item.filename, isDirectory:false)
-            print("LOG ---> finalPath file \(identifier) =\(finalPath)")
         }
 
         return finalPath
@@ -160,6 +157,7 @@ class OCFileProvider: NSFileProviderExtension {
     }
     
     override func startProvidingItem(at url: URL, completionHandler: @escaping (Error?) -> Void) {
+        
         print("LOG --->startproviding")
 
     }

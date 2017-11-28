@@ -277,6 +277,7 @@
 		23A410021FB046300094743A /* FileProviderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A410011FB046300094743A /* FileProviderItem.swift */; };
 		23A410041FB04AB40094743A /* FileProviderEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A410031FB04AB40094743A /* FileProviderEnumerator.swift */; };
 		23A522431FBAD94B00C5A222 /* doc_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1487F178177C35AA004A1A5A /* doc_icon.png */; };
+		23C093DE1FCC387F007E747E /* FileListDocumentProviderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 599D80B01A2338100071B66E /* FileListDocumentProviderViewController.m */; };
 		400560751A03B1190030D502 /* MainAppIcon_40-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400560741A03B1190030D502 /* MainAppIcon_40-40@2x.png */; };
 		400560771A03B4F80030D502 /* MainAppIcon_40-40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400560761A03B4F80030D502 /* MainAppIcon_40-40@3x.png */; };
 		4005607C1A03CEEE0030D502 /* MainAppIcon_60-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4005607B1A03CEEE0030D502 /* MainAppIcon_60-60@2x.png */; };
@@ -5090,6 +5091,7 @@
 				EAE80E261A6D317C0061BD86 /* ManageUploadsDB.m in Sources */,
 				EA1F62D71A5EBF8500D6346F /* ManageFilesDB.m in Sources */,
 				40BCC2BC1F3B5FA700F5DC6F /* (null) in Sources */,
+				23C093DE1FCC387F007E747E /* FileListDocumentProviderViewController.m in Sources */,
 				EA1F62D91A5EBFDF00D6346F /* OCKeychain.m in Sources */,
 				405D06C71BFB670200591604 /* ManageCapabilitiesDB.m in Sources */,
 				EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */,
