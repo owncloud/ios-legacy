@@ -50,7 +50,7 @@
 
 + (NSURL *) getNormalizedURLOfShareLink:(OCSharedDto *)sharedLink {
     
-    NSString *urlSharedLink = (![sharedLink.url  isEqual: @"(null)"]) ? sharedLink.url : sharedLink.token;
+    NSString *urlSharedLink = ([sharedLink.name length] == 0 || [sharedLink.url  isEqual: @"(null)"]) ? sharedLink.token : sharedLink.url;
     
     NSString *url = nil;
     // From ownCloud server 8.2 the url field is always set for public shares
