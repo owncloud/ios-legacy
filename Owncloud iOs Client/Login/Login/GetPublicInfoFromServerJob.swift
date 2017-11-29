@@ -77,9 +77,7 @@ class GetPublicInfoFromServerJob: NSObject, CheckAccessToServerDelegate {
                 checkAccessToServer()
                 
             } else {
-                self.completion?(nil, nil, error, statusCode)
-                
-                print("No connection to the server")
+                self.completion?(nil, nil, error, statusCode)                
             }
             
         } else {
