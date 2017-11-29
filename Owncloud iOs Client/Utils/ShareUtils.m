@@ -68,7 +68,7 @@
             url = [NSString stringWithFormat:@"%@%@%@", APP_DELEGATE.activeUser.url, k_share_link_middle_part_url_before_version_8, urlSharedLink];
         }
     }
-    NSLog(@"the url for the public link is  %@",url);
+    DLog(@"the url for the public link is  %@",url);
     
     return  [NSURL URLWithString:url];
 }
