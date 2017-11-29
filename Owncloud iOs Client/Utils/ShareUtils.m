@@ -50,8 +50,7 @@
 
 + (NSURL *) getNormalizedURLOfShareLink:(OCSharedDto *)sharedLink {
     
-    
-    NSString *urlSharedLink = sharedLink.url ? sharedLink.url : sharedLink.token;
+    NSString *urlSharedLink = (![sharedLink.url  isEqual: @"(null)"]) ? sharedLink.url : sharedLink.token;
     
     NSString *url = nil;
     // From ownCloud server 8.2 the url field is always set for public shares
@@ -64,11 +63,12 @@
         
         if (firstNumber.integerValue >= k_server_version_with_new_shared_schema) {
             // From ownCloud server version 8 on, a different share link scheme is used.
-            url = [NSString stringWithFormat:@"%@%@%@", APP_DELEGATE.activeUser.url, k_share_link_middle_part_url_after_version_8, sharedLink];
+            url = [NSString stringWithFormat:@"%@%@%@", APP_DELEGATE.activeUser.url, k_share_link_middle_part_url_after_version_8, urlSharedLink];
         }else{
-            url = [NSString stringWithFormat:@"%@%@%@", APP_DELEGATE.activeUser.url, k_share_link_middle_part_url_before_version_8, sharedLink];
+            url = [NSString stringWithFormat:@"%@%@%@", APP_DELEGATE.activeUser.url, k_share_link_middle_part_url_before_version_8, urlSharedLink];
         }
     }
+    NSLog(@"the url for the public link is  %@",url);
     
     return  [NSURL URLWithString:url];
 }
