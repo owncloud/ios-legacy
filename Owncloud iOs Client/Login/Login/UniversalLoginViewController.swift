@@ -886,13 +886,21 @@ public enum TextfieldType: String {
                     
                 } else {
 
-                    self.user = UserDto()
-                    self.user!.url = self.validatedServerURL
-                    self.user!.username = credentials.userName
-                    self.user!.ssl = self.validatedServerURL.hasPrefix("https")
-                    self.user!.urlRedirected = app.urlServerRedirected
-                    self.user!.predefinedUrl = k_default_url_server
                     
+                    if self.loginMode == .create || self.loginMode == .migrate {
+                        let newUser = UserDto()
+                        if self.loginMode == .migrate {
+                            newUser.userId = self.user!.userId
+                        }
+                        newUser.url = self.validatedServerURL
+                        newUser.username = credentials.userName
+                        newUser.ssl = self.validatedServerURL.hasPrefix("https")
+                        newUser.urlRedirected = app.urlServerRedirected
+                        newUser.predefinedUrl = k_default_url_server
+                        
+                        self.user = newUser.copy() as? UserDto
+                    }
+
                     credentials.baseURL = UtilsUrls.getFullRemoteServerPath(self.user)
 
                     if self.loginMode == .create {
@@ -903,7 +911,7 @@ public enum TextfieldType: String {
                             self.showURLError(NSLocalizedString("account_not_new", comment: ""))
                             
                         } else {
-                            
+
                             self.user = ManageAccounts().storeAccountOfUser(self.user!, withCredentials: credentials)
                             
                             if self.user != nil {
