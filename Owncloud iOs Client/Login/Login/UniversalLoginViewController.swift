@@ -631,6 +631,11 @@ public enum TextfieldType: String {
         userCredDto.accessToken = cookieString;
         userCredDto.authenticationMethod = .SAML_WEB_SSO;
         
+        if self.loginMode == .expire {
+            let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+            userCredDto.userName = app.activeUser.username
+        }
+        
         
         if cookieString == nil || cookieString == "" {
             self.showCredentialsError(NSLocalizedString("authentification_not_valid", comment: "") )
@@ -841,23 +846,32 @@ public enum TextfieldType: String {
     
     func detectUserDataAndValidate(credentials: OCCredentialsDto, serverPath: String) {
         
-        DetectUserData .getUserDisplayName(ofServer: serverPath, credentials: credentials) { (displayName, error) in
+        DetectUserData .getUserDisplayName(ofServer: serverPath, credentials: credentials) { (serverUserID, displayName, error) in
             
-             if (displayName != nil) {
+            if (serverUserID != nil && displayName != nil) {
                 
                 if credentials.authenticationMethod == .SAML_WEB_SSO {
-                    
-                    credentials.userName = displayName
+                    if credentials.userName == nil {
+                        credentials.userName = serverUserID
+                        credentials.userDisplayName = displayName
+                    } else {
+                        if (serverUserID == credentials.userName) {
+                            credentials.userName = serverUserID
+                        }
+                    }
+                } else {
+
+                    if (serverUserID == credentials.userName) {
+                        
+                        if (displayName != credentials.userDisplayName){
+                            credentials.userDisplayName = displayName
+                        }
+                    }
                 }
-                credentials.userDisplayName = displayName
-    
-             }
-            
+            }
             self.validateCredentialsAndStoreAccount(credentials: credentials)
         }
-        
     }
-    
     
     func validateCredentialsAndStoreAccount(credentials: OCCredentialsDto) {
         //get list of files in root to check session validty, if ok store new account
