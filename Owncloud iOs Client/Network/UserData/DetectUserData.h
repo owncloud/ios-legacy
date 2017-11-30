@@ -19,6 +19,6 @@
 @interface DetectUserData : NSObject
 
 + (void) getUserDisplayNameOfServer:(NSString*)path credentials:(OCCredentialsDto *)credentials
-                     withCompletion:(void(^)(NSString *displayName, NSError *error))completion;
+                     withCompletion:(void(^)(NSString *serverUserID, NSString *displayName, NSError *error))completion;
 
 @end
