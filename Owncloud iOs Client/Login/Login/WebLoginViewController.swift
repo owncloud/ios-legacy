@@ -42,6 +42,12 @@ import Foundation
     }
 
     func closeLoginViewController() {
+//        UtilsFramework.deleteAllCookies()
+        let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        
+        if app.activeUser != nil {
+            UtilsCookies.deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser()
+        }
         self.performSegue(withIdentifier: K.unwindId.unwindToMainLoginView, sender: self)
     }
 
@@ -51,11 +57,15 @@ import Foundation
         super.viewDidLoad()
         self.webViewLogin.delegate = self
         self.webViewLogin.backgroundColor = UIColor.ofWebViewBackground()
-    
-        // Do any additional setup after loading the view.
-                
-        //load login url in web view
         let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        // Do any additional setup after loading the view.
+        
+        if let user = app.activeUser {
+            UtilsCookies.setOnDBStorageCookiesByUser(user)
+        }
+        
+        //load login url in web view
+
         self.oAuth2Manager.trustedCertificatesStore = self.sslCertificateManager
         let urlToGetAuthCode = self.oAuth2Manager.getOAuth2URLToGetAuthCode(by: app.oauth2Configuration, withServerPath: serverPath)
         self.loadWebViewWith(url: urlToGetAuthCode!)
@@ -75,7 +85,6 @@ import Foundation
         
         self.webViewLogin.loadRequest(request)
     }
-    
     
     // MARK: webView delegates
     
@@ -114,6 +123,7 @@ import Foundation
         if urlToFollow.hasPrefix(k_oauth2_redirect_uri){
             processFinalRedirect(urlToFollow);
             self.loadInterrupted = true;
+            
             return false;      // will trigger webView(webView, didFailLoadWithError), with error due to cancellation
             
         } else if urlToFollow.hasPrefix(serverPath + k_url_path_list_of_files_in_web) {
