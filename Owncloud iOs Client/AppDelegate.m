@@ -2802,11 +2802,6 @@ float shortDelay = 0.3;
         }
         
         if (self.activeUser.userId != user.userId || isNewAccount) {
-
-            //We delete the cookies on SAML
-            if (k_is_sso_active) {
-                [UtilsCookies eraseCredentialsAndUrlCacheOfActiveUser];
-            }
         
             // Cancel downloads of the previous user, in the same background thread
             [self portedCancelAllDownloads];

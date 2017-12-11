@@ -626,11 +626,6 @@ public enum TextfieldType: String {
     public func setCookieForSSO(_ cookieString: String?, serverPath: String?) {
         
         self.setNetworkActivityIndicator(status: false)
-        if self.loginMode == .update {
-            ManageCookiesStorageDB.deleteCookies(byUser: self.user)
-            UtilsCookies.eraseCredentials(withURL: UtilsUrls.getFullRemoteServerPath(withWebDav: self.user))
-            UtilsCookies.eraseURLCache()
-        }
         
         let userCredDto :OCCredentialsDto =  OCCredentialsDto()
         userCredDto.accessToken = cookieString;
