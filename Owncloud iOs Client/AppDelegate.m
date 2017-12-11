@@ -2453,8 +2453,10 @@ float shortDelay = 0.3;
         //We get all the files that are with any error
         NSMutableArray *listOfUploadsFailed = [ManageUploadsDB getUploadsByStatus:errorUploading andByKindOfError:notAnError];
         NSMutableArray *listOfPendingToBeCheckFiles = [ManageUploadsDB getUploadsByStatus:pendingToBeCheck andByKindOfError:notAnError];
+        NSString* appID = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
         DLog(@"There are: %ld in the list of uploads failed", (long)listOfUploadsFailed.count);
         DLog(@"There are: %ld files in the list of pending to be check", (long)listOfPendingToBeCheckFiles.count);
+        DLog(@"appid %@", appID);
         
         //First, check if there are
         if (listOfUploadsFailed.count > 0) {
@@ -2813,5 +2815,15 @@ float shortDelay = 0.3;
     });
 }
 
+
+#pragma mark - Open in app URL
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
+
+    NSString *accessedURL = userActivity.activityType;
+    DLog(@"The accessed url for the private link is: %@", accessedURL);
+    
+    return YES;
+}
 
 @end

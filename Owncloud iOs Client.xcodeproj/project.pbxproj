@@ -3965,6 +3965,9 @@
 							com.apple.Keychain = {
 								enabled = 1;
 							};
+							com.apple.SafariKeychain = {
+								enabled = 1;
+							};
 						};
 					};
 					EA6606941AA767F700BA2C65 = {
