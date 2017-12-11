@@ -56,8 +56,6 @@ import Foundation
         OCKeychain.updateCredentials(user.credDto)
         
         if user.activeaccount {
-            UtilsCookies.eraseCredentialsAndUrlCacheOfActiveUser()
-            
             CheckFeaturesSupported.updateServerFeaturesAndCapabilitiesOfActiveUser()
         }
         

@@ -405,7 +405,7 @@
                 }
             } else {
                 DLog(@"User changed while check a folder");
-                [UtilsFramework deleteAllCookies];
+                [UtilsCookies restoreCookiesOfUser:app.activeUser];
             }
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
             
