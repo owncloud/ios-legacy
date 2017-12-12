@@ -102,10 +102,11 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 
 - (void) syncAllFavoritesOfUser:(NSInteger)userId{
    
-    NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesFilesOfUserId:userId];
-    
-    [self syncFavoritesOfList:dataBaseFavorites ofThisUser:userId];
-    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesFilesOfUserId:userId];
+        [self syncFavoritesOfList:dataBaseFavorites ofThisUser:userId];
+    });
 }
 
 
@@ -122,9 +123,10 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
  */
 - (void) syncFavoritesOfFolder:(FileDto *)folder withUser:(NSInteger)userId {
     
-    NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesByFolder:folder];
-    [self syncFavoritesOfList:dataBaseFavorites ofThisUser:userId];
-    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSArray *dataBaseFavorites = [ManageFilesDB getAllFavoritesByFolder:folder];
+        [self syncFavoritesOfList:dataBaseFavorites ofThisUser:userId];
+    });
 }
 
 ///-----------------------------------
