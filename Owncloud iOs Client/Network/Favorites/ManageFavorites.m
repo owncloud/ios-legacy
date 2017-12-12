@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2017, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -51,15 +51,6 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 }
 
 
-///-----------------------------------
-/// @name isOnAnUpdatingProcessThisFavoriteFile
-///-----------------------------------
-
-/**
- * This method checks if the file is currently on an updating process. It is check by fileName, filePath and userId
- *
- * @param favoriteFile > FileDto. The file which is going to be checked
- */
 - (BOOL) isOnAnUpdatingProcessThisFavoriteFile:(FileDto *)favoriteFile {
 
     //Create a copy of the favorite array
@@ -85,21 +76,6 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 }
 
 
-///-----------------------------------
-/// @name Sync All Favorites of User
-///-----------------------------------
-
-/**
- * Method that begin a process to update all favorites files of a specific user
- *
- * 1.- Get all favorites of a specific user
- *
- * 2.- Send the list to a specific method to update the favorites
- *
- * @param NSInteger -> userId
- *
- */
-
 - (void) syncAllFavoritesOfUser:(NSInteger)userId{
    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -110,17 +86,6 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 }
 
 
-///-----------------------------------
-/// @name Sync Favorites of Folder with User
-///-----------------------------------
-
-/**
- * Method that begin a process to sync favorites of a specific path and user
- *
- * @param idFolder -> NSInteger
- * @param userId -> NSInteger
- *
- */
 - (void) syncFavoritesOfFolder:(FileDto *)folder withUser:(NSInteger)userId {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -256,15 +221,6 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 }
 
 
-///-----------------------------------
-/// @name Remove of sync process file
-///-----------------------------------
-
-/**
- * Method that find the equal file stored in _favoritesSyncing and remove it
- *
- * @param file -> FileDto
- */
 - (void) removeOfSyncProcessFile:(FileDto*)file{
     
     FileDto *fileDto = [self getFileEqualTo:file];
@@ -305,15 +261,6 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 }
 
 
-///-----------------------------------
-/// @name thereIsANewVersionAvailableOfThisFile
-///-----------------------------------
-
-/**
- * This method check if there is a new version on the server for a concret file
- *
- * @param favoriteFile -> FileDto
- */
 - (void) thereIsANewVersionAvailableOfThisFile: (FileDto *)favoriteFile {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
@@ -395,11 +342,7 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
     return isSonOfFavorite;
 }
 
-/**
- * This method mark all files and folders behind "folder" as not favorites
- *
- * @param folder > FileDto. The folder parent
- */
+
 - (void) setAllFilesAndFoldersAsNoFavoriteBehindFolder:(FileDto *) folder {
     NSMutableArray *listOfFoldersToMarkAsNotFavorite = [NSMutableArray new];
     [listOfFoldersToMarkAsNotFavorite addObject:folder];
@@ -461,13 +404,6 @@ NSString *FavoriteFileIsSync = @"FavoriteFileIsSync";
 
 #pragma mark - Update just single file
 
-///-----------------------------------
-/// @name downloadSingleFavoriteFileSonOfFavoriteFolder
-///-----------------------------------
-
-/**
- * Method force the download of a favorite file son of a favorite folder
- */
 - (void) downloadSingleFavoriteFileSonOfFavoriteFolder:(FileDto *) file {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
