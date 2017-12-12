@@ -107,32 +107,34 @@ import Foundation
     
     @objc func updateDisplayNameOfUser(user :UserDto) {
         
-        DetectUserData.getUserDisplayName(ofServer: user.credDto.baseURL, credentials: user.credDto) { (displayName, error) in
-            if ((displayName) != nil) {
-                if (displayName != user.credDto.userDisplayName) {
-                    
-                    if (user.credDto.authenticationMethod == .SAML_WEB_SSO) {
-                        user.username = displayName
+        DetectUserData.getUserDisplayName(ofServer: user.credDto.baseURL, credentials: user.credDto) { (serverUserID, displayName, error) in
+            if ((serverUserID) != nil) {
+                if (serverUserID == user.credDto.userName) {
+                    if ((displayName) != nil) {
+                        if (displayName != user.credDto.userDisplayName) {
+                            
+                            if (user.credDto.authenticationMethod == .SAML_WEB_SSO) {
+                                user.username = displayName
+                            }
+                            
+                            user.credDto.userDisplayName = displayName
+                            
+                            OCKeychain.updateCredentials(user.credDto)
+                            
+                            
+                            if (user.activeaccount) {
+                                let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+                                
+                                app.activeUser.credDto = user.credDto.copy() as! OCCredentialsDto
+                                app.activeUser.username = user.credDto.userName
+                            }
+                        }
+                    } else {
+                        print("DisplayName not updated")
                     }
-                    
-                    user.credDto.userDisplayName = displayName
-                    
-                    OCKeychain.updateCredentials(user.credDto)
-                    
-                    
-                    if (user.activeaccount) {
-                        let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-                        
-                        app.activeUser.credDto = user.credDto.copy() as! OCCredentialsDto
-                        app.activeUser.username = user.credDto.userName
-                    }
+
                 }
-            } else {
-                print("DisplayName not updated")
             }
-            
         }
-        
     }
-    
 }

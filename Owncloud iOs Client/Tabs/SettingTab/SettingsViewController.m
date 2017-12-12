@@ -791,8 +791,7 @@
     static NSString *CellIdentifier = @"AccountCell";
     
     AccountCell *accountCell = (AccountCell *) [self.settingsTableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    UserDto *userAccount = [UserDto new];
-    userAccount = [self.listUsers objectAtIndex:row];
+    UserDto *userAccount = [self.listUsers objectAtIndex:row];
     
     if (accountCell == nil) {
         
@@ -1104,24 +1103,20 @@
     //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
     [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:[UtilsUrls getFullRemoteServerPath:selectedUser]];
 
-    
     //Method to change the account
     [[OCLoadingSpinner sharedOCLoadingSpinner] initLoadingForViewController: self];
-    [app switchActiveUserTo:selectedUser isNewAccount:NO withCompletionHandler:^{
-        DLog(@"refreshing list of accounts after user was switched");
+    [app switchActiveUserTo:selectedUser isNewAccount:NO];
+    DLog(@"refreshing list of accounts after user was switched");
         
-        [[OCLoadingSpinner sharedOCLoadingSpinner] endLoading];
+    [[OCLoadingSpinner sharedOCLoadingSpinner] endLoading];
         
-        //If ipad, clean the detail view
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            [app presentWithView];
-        }
-                
-        [self refreshTable];
-        
-    } ];
+    //If ipad, clean the detail view
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        [app presentWithView];
+    }
     
+    [self refreshTable];
 }
 
 #pragma mark - AddAccountDelegate
