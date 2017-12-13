@@ -854,11 +854,7 @@ public enum TextfieldType: String {
                     if credentials.userName == nil {
                         credentials.userName = serverUserID
                         credentials.userDisplayName = displayName
-                    } else {
-                        if (serverUserID == credentials.userName) {
-                            credentials.userName = serverUserID
-                        }
-                    }
+                    } 
                 } else {
 
                     if (serverUserID == credentials.userName) {
