@@ -49,7 +49,7 @@
 #endif
     __block NSMutableArray *output = [NSMutableArray new];
 
-    DLog(@"getFilesByFileId: %ld for active user",(long)fileId);
+    DLog(@"getFilesByFileId: %ld for active user %ld, %@",(long)fileId, mUser.userId, mUser.username);
 
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
