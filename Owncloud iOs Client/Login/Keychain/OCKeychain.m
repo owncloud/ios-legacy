@@ -103,7 +103,7 @@
         
     OSStatus stsExist = SecItemCopyMatching((__bridge CFDictionaryRef)keychainItem, (CFTypeRef *)&result);
     
-    DLog(@"(getCredentials)Error Code %d (0 = success)", (int)stsExist);
+    DLog(@"(getCredentials of userId %@)Error Code %d (0 = success)", userId, (int)stsExist);
     
     if (stsExist != errSecSuccess) {
         NSLog(@"Unable to get the item with userId=%@ ",userId);

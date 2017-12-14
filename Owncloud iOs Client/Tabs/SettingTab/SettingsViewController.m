@@ -1100,9 +1100,6 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     UserDto *selectedUser = (UserDto *)[self.listUsers objectAtIndex:indexPath.row];
 
-    //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
-    [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:[UtilsUrls getFullRemoteServerPath:selectedUser]];
-
     //Method to change the account
     [[OCLoadingSpinner sharedOCLoadingSpinner] initLoadingForViewController: self];
     [app switchActiveUserTo:selectedUser isNewAccount:NO];
