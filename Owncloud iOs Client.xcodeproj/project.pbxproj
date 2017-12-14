@@ -271,6 +271,10 @@
 		14EC1955195B297F00B02AB6 /* sharedItem.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EC1953195B297F00B02AB6 /* sharedItem.png */; };
 		14EC1956195B297F00B02AB6 /* sharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EC1954195B297F00B02AB6 /* sharedItem@2x.png */; };
 		230233B11F9DF401007ED1C5 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230233B01F9DF401007ED1C5 /* LocalAuthentication.framework */; };
+		2320DFF91FE14CC000D7DEFD /* OpenInAppHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2320DFF81FE14CC000D7DEFD /* OpenInAppHandler.m */; };
+		400560751A03B1190030D502 /* MainAppIcon_40-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400560741A03B1190030D502 /* MainAppIcon_40-40@2x.png */; };
+		400560771A03B4F80030D502 /* MainAppIcon_40-40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400560761A03B4F80030D502 /* MainAppIcon_40-40@3x.png */; };
+		4005607C1A03CEEE0030D502 /* MainAppIcon_60-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4005607B1A03CEEE0030D502 /* MainAppIcon_60-60@2x.png */; };
 		4007876D1C44EAEE00486A26 /* ShareEditUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4007876C1C44EAEE00486A26 /* ShareEditUserViewController.xib */; };
 		400787721C44F4D400486A26 /* ShareEditUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 400787711C44F4D400486A26 /* ShareEditUserViewController.m */; };
 		400A63641B4FD75600890579 /* IFTTTAlphaAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A632D1B4FD75600890579 /* IFTTTAlphaAnimation.m */; };
@@ -1378,6 +1382,8 @@
 		14EC1953195B297F00B02AB6 /* sharedItem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sharedItem.png; sourceTree = "<group>"; };
 		14EC1954195B297F00B02AB6 /* sharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@2x.png"; sourceTree = "<group>"; };
 		230233B01F9DF401007ED1C5 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
+		2320DFF71FE14CC000D7DEFD /* OpenInAppHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenInAppHandler.h; sourceTree = "<group>"; };
+		2320DFF81FE14CC000D7DEFD /* OpenInAppHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenInAppHandler.m; sourceTree = "<group>"; };
 		4002B01A1D421A7100520FB3 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4002B01C1D421A8300520FB3 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4007876C1C44EAEE00486A26 /* ShareEditUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareEditUserViewController.xib; path = Tabs/FileTab/Share/ShareEditUserViewController.xib; sourceTree = "<group>"; };

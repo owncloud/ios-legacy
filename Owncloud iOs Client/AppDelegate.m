@@ -60,6 +60,11 @@
 #import "PresentedViewUtils.h"
 #import "OCLoadingSpinner.h"
 #import "OCOAuth2Configuration.h"
+<<<<<<< HEAD
+=======
+#import "OpenInAppHandler.h"
+#import "UtilsUrls.h"
+>>>>>>> 07820923... created handler for the open in app links
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -2826,34 +2831,8 @@ float shortDelay = 0.3;
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
         NSURL *tappedLinkURL = userActivity.webpageURL;
         
-        OpenInAppHandler *handler = [[OpenInAppHandler alloc] initWithLink:tappedLinkURL andUser:_activeUser];
-        
-        [handler handleLink];
-        
-//        [handler handleLink:^(NSString *items) {
-//            
-//            NSArray *elts = [items componentsSeparatedByString:@"/"];
-//                        
-//            NSString *url = @"/remote.php/";
-//            
-//            for (int i = 4; i < elts.count - 2; i++) {
-//                NSString *tmp = elts[i];
-//                tmp = [tmp stringByAppendingString:@"/"];
-//                url = [url stringByAppendingString:tmp];
-//                NSString *name = [elts[i+1] stringByAppendingString:@"/"];
-//                
-//                NSString *tmpURL = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:url andUser:self.activeUser];
-//                FileDto *checkedFile = [ManageFilesDB getFileDtoByFileName: name  andFilePath:tmpURL andUser:self.activeUser];
-//                
-//                if (checkedFile != nil) {
-//                    [_presentFilesViewController navigateTo: checkedFile];
-//                    [NSThread sleepForTimeInterval:2];
-//                }
-//            }
-//
-//        } failure:^(NSError *error) {
-//            NSLog(@"LOG ---> error getting the redirection");
-//        }];
+        OpenInAppHandler *handler = [[OpenInAppHandler alloc] initWithTappedLinkURL:tappedLinkURL];
+        [handler openLink];
     }
 
     return YES;

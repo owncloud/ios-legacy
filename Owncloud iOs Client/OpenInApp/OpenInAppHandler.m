@@ -17,11 +17,9 @@
 #define FOLDER_PATH 0
 #define FILE_PATH 1
 
-
 @implementation OpenInAppHandler
 
 -(id)initWithLink:(NSURL *)linkURL andUser:(UserDto *) user {
-    
     self = [super init];
     
     if (self) {
@@ -139,6 +137,12 @@
     }
     
     [ManageFilesDB insertManyFiles:downloadedFolder ofFileId:parent.idFile andUser:APP_DELEGATE.activeUser];
+
+-(void)openLink {
+
+    DLog(@"the tapped link for the open in app is: %@", _tappedLinkURL.absoluteString);
+    _finalURL = [[AppDelegate sharedOCCommunication] getFullPathFromPrivateLink: _tappedLinkURL];
+    
 }
 
 @end

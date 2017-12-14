@@ -2,6 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+<<<<<<< HEAD
+=======
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+<<<<<<< HEAD
+		<string>applinks:pablos-mbp.solidgear.prv</string>
+=======
+		<string>applinks:*Pablos-MBP.solidgear.prv*</string>
+		<string>applinks:pablos-mbp.solidgear.prv</string>
+		<string>applinks:*pablos-mbp.solidgear.prv*</string>
+>>>>>>> created handler for the open in app links
+	</array>
+>>>>>>> 07820923... created handler for the open in app links
 	<key>com.apple.security.application-groups</key>
 	<array>
 		<string>group.com.owncloud.iOSmobileapp</string>
