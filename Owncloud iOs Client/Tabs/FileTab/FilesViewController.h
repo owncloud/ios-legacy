@@ -47,6 +47,8 @@
 #import "SelectFolderNavigation.h"
 #import "ManageFavorites.h"
 #import "DetectUserData.h"
+#import "TSMessage.h"
+#import "TSMessageView.h"
 
 #ifdef CONTAINER_APP
 #import "Owncloud_iOs_Client-Swift.h"
@@ -64,7 +66,7 @@
 
 @interface FilesViewController : UIViewController
 <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate,
-ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBProgressHUDDelegate, UITextFieldDelegate, DeleteFileDelegate, OpenWithDelegate, DownloadViewControllerDelegate, CheckAccessToServerDelegate, RenameDelegate, MoveFileDelegate, SWTableViewCellDelegate, ManageNetworkErrorsDelegate, ManageFavoritesDelegate>
+ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBProgressHUDDelegate, UITextFieldDelegate, DeleteFileDelegate, OpenWithDelegate, DownloadViewControllerDelegate, CheckAccessToServerDelegate, RenameDelegate, MoveFileDelegate, SWTableViewCellDelegate, ManageNetworkErrorsDelegate, ManageFavoritesDelegate, TSMessageViewProtocol>
 
 //Table view
 @property(nonatomic, strong) IBOutlet UITableView *tableView;
