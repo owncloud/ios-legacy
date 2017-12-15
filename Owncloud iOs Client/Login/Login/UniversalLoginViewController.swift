@@ -643,6 +643,7 @@ public enum TextfieldType: String {
             return;
         }
         
+        UtilsCookies.updateOfActiveUserInDB()
         self.detectUserDataAndValidate(credentials: userCredDto, serverPath: serverPath!)
         
     }

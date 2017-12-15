@@ -25,6 +25,8 @@
 
 + (void) eraseURLCache;
 
++ (void) updateCookiesOfActiveUserInDB;
+
 + (void) saveCurrentOfActiveUserAndClean;
 
 + (void) restoreCookiesOfUser:(UserDto *)user;
