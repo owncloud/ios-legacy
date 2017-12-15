@@ -49,7 +49,7 @@
 #endif
     __block NSMutableArray *output = [NSMutableArray new];
 
-    DLog(@"getFilesByFileId: %ld",(long)fileId);
+    DLog(@"getFilesByFileId: %ld for active user",(long)fileId);
 
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -307,7 +307,7 @@
 
 +(void) setFileIsDownloadState: (NSInteger) idFile andState:(enumDownload)downloadState {
     
-    DLog(@"setFileIsDownloadState");
+    DLog(@"_setFileIsDownloadState id =%ld",(long)idFile);
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -316,7 +316,7 @@
         correctQuery = [db executeUpdate:@"UPDATE files SET is_download=? WHERE id = ?", [NSNumber numberWithInt:downloadState], [NSNumber numberWithInteger:idFile]];
         
         if (!correctQuery) {
-            DLog(@"Error in setFileIsDownloadState");
+            DLog(@"Error in setFileIsDownloadState id =%ld",(long)idFile);
         }
         
     }];
@@ -1261,10 +1261,10 @@
 }
 
 
-+ (BOOL) isGetFilesByDownloadState:(enumDownload)downloadState andByUser:(UserDto *) currentUser andFolder:(NSString *) folder {
++ (BOOL) isGetFilesByDownloadState:(enumDownload)downloadState andByUser:(UserDto *)currentUser andFolder:(NSString *)folder {
     
     __block BOOL output = NO;
-    DLog(@"getFilesByFileId:(int) fileId");
+    DLog(@"isGetFilesByDownloadState: %d andByUser: %@",downloadState, currentUser);
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     

@@ -148,9 +148,7 @@ float shortDelay = 0.3;
     
     [self showSplashScreenFake];
     
-    //Check if the server support shared api
     [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
-    
     
     //Needed to use on background tasks
     if (!k_is_sso_active) {
@@ -180,6 +178,7 @@ float shortDelay = 0.3;
     
     if (user) {
         self.activeUser = user;
+        [UtilsCookies deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser];
         
         ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
@@ -589,14 +588,16 @@ float shortDelay = 0.3;
         //Cookies is allways available in current supported Servers
         [sharedOCCommunication setIsCookiesAvailable:YES];
         
-        [sharedOCCommunication setOauth2Configuration: [[OCOAuth2Configuration alloc]
-                                                                      initWithClientId:k_oauth2_client_id
-                                                                      clientSecret:k_oauth2_client_secret
-                                                                      redirectUri:k_oauth2_redirect_uri
-                                                                      authorizationEndpoint:k_oauth2_authorization_endpoint
-                                                                      tokenEndpoint:k_oauth2_token_endpoint]];
+        OCOAuth2Configuration *ocOAuth2conf = [[OCOAuth2Configuration alloc]
+                                              initWithClientId:k_oauth2_client_id
+                                              clientSecret:k_oauth2_client_secret
+                                              redirectUri:k_oauth2_redirect_uri
+                                              authorizationEndpoint:k_oauth2_authorization_endpoint
+                                              tokenEndpoint:k_oauth2_token_endpoint];
         
-        [sharedOCCommunication setUserAgent:[UtilsUrls getUserAgent]];
+        [sharedOCCommunication setValueOauth2Configuration: ocOAuth2conf];
+        
+        [sharedOCCommunication setValueOfUserAgent:[UtilsUrls getUserAgent]];
         
         OCKeychain *oKeychain = [[OCKeychain alloc] init];
         [sharedOCCommunication setValueCredentialsStorage:oKeychain];
@@ -631,14 +632,16 @@ float shortDelay = 0.3;
         //Cookies is allways available in current supported Servers
         [sharedOCCommunicationDownloadFolder setIsCookiesAvailable:YES];
         
-        [sharedOCCommunicationDownloadFolder setOauth2Configuration: [[OCOAuth2Configuration alloc]
-                                                                      initWithClientId:k_oauth2_client_id
-                                                                      clientSecret:k_oauth2_client_secret
-                                                                      redirectUri:k_oauth2_redirect_uri
-                                                                      authorizationEndpoint:k_oauth2_authorization_endpoint
-                                                                      tokenEndpoint:k_oauth2_token_endpoint]];
+        OCOAuth2Configuration *ocOAuth2conf = [[OCOAuth2Configuration alloc]
+                                               initWithClientId:k_oauth2_client_id
+                                               clientSecret:k_oauth2_client_secret
+                                               redirectUri:k_oauth2_redirect_uri
+                                               authorizationEndpoint:k_oauth2_authorization_endpoint
+                                               tokenEndpoint:k_oauth2_token_endpoint];
         
-        [sharedOCCommunicationDownloadFolder setUserAgent:[UtilsUrls getUserAgent]];
+        [sharedOCCommunicationDownloadFolder setValueOauth2Configuration:ocOAuth2conf];
+        
+        [sharedOCCommunicationDownloadFolder setValueOfUserAgent:[UtilsUrls getUserAgent]];
         
         OCKeychain *oKeychain = [[OCKeychain alloc] init];
         [sharedOCCommunicationDownloadFolder setValueCredentialsStorage:oKeychain];
@@ -974,6 +977,10 @@ float shortDelay = 0.3;
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     
     //Set on the user defaults that the app has been killed by user
+    
+    //Store active user cookies on the Database
+    [UtilsCookies saveCurrentOfActiveUserAndClean];
+    
     NSUserDefaults * standardUserDefaults = [NSUserDefaults standardUserDefaults];
     [standardUserDefaults setBool:YES forKey:k_app_killed_by_user];
     [standardUserDefaults synchronize];
@@ -2780,40 +2787,28 @@ float shortDelay = 0.3;
 }
 
 
-#pragma mark - Active User
+#pragma mark - Switch Active User
 
-- (void) switchActiveUserTo:(UserDto *)user inHardMode:(BOOL)hardMode withCompletionHandler:(void (^)(void)) completionHandler {
-    
-    // all the switch is performed in background, without blocking the caller thread, that should be main
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+- (void) switchActiveUserTo:(UserDto *)user isNewAccount:(BOOL)isNewAccount {
     
         self.userSessionCurrentToken = nil;
             // should be here or right after checking the user really changed? for the moment, here
         
-        if (self.activeUser.userId != user.userId || hardMode) {
-
-            //We delete the cookies on SAML
-            if (k_is_sso_active) {
-                [UtilsCookies eraseCredentialsAndUrlCacheOfActiveUser];
-            }
+        if (!self.activeUser) {
+            self.activeUser = user;
+        }
         
-            // Cancel downloads of the previous user, in the same background thread
+        if (self.activeUser.userId != user.userId || isNewAccount) {
+        
+            // Cancel downloads of the previous user
             [self portedCancelAllDownloads];
-        
+            
             // update active state of users in DB
             [ManageUsersDB setAllUsersNoActive];
             [ManageUsersDB setActiveAccountByUserId:user.userId];
             user.activeaccount = YES;
         
-            //Restore the cookies of the future activeUser
-            //1- Store the new cookies on the Database
-            [UtilsCookies setOnDBStorageCookiesByUser:self.activeUser];
-            //2- Clean the cookies storage
-            [UtilsFramework deleteAllCookies];
-            //3- We restore the previous cookies of the active user on the System cookies storage
-            [UtilsCookies setOnSystemStorageCookiesByUser:user];
-            //4- We delete the cookies of the active user on the database because it could change and it is not necessary keep them there
-            [ManageCookiesStorageDB deleteCookiesByUser:user];
+            [UtilsCookies saveActiveUserCookiesAndRestoreCookiesOfUser:user];
         
             //Change the active user in appDelegate global variable
             self.activeUser = user;
@@ -2823,29 +2818,24 @@ float shortDelay = 0.3;
             [UtilsCookies eraseURLCache];
         
             //we create the user folder to haver multiuser
-            [UtilsFileSystem createFolderForUser:APP_DELEGATE.activeUser];
+            [UtilsFileSystem createFolderForUser:user];
             
             self.isNewUser = YES;
             
             ManageAccounts *manageAccounts = [ManageAccounts new];
-            [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
+            [manageAccounts updateDisplayNameOfUserWithUser:user];
         }
-    
-        // completion handler is called in main thread
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completionHandler) {
-                completionHandler();
-            }
-        });
-    });
 }
 
 
 - (void) portedCancelAllDownloads {
     //Cancel downloads in ipad
-    [self.downloadManager cancelDownloads];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+
+        [self.downloadManager cancelDownloads];
     
-    [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
+        [[AppDelegate sharedSyncFolderManager] cancelAllDownloads];
+    });
 }
 
 

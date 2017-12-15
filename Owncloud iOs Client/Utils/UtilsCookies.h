@@ -21,14 +21,16 @@
 @interface UtilsCookies : NSObject
 
 + (void) setOnDBStorageCookiesByUser:(UserDto *) user;
-+ (void) setOnSystemStorageCookiesByUser:(UserDto *) user;
++ (void) setOnSystemCookieStorageDBCookiesOfUser:(UserDto *) user;
 
-+ (void) eraseCredentialsWithURL:(NSString *)connectURL;
 + (void) eraseURLCache;
-+ (void) eraseCredentialsAndUrlCacheOfActiveUser;
 
-+ (void) clearCookies;
++ (void) saveCurrentOfActiveUserAndClean;
 
-+ (void) restoreTheCookiesOfActiveUser;
++ (void) restoreCookiesOfUser:(UserDto *)user;
+
++ (void) deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser;
+
++ (void) saveActiveUserCookiesAndRestoreCookiesOfUser:(UserDto *)user;
 
 @end
