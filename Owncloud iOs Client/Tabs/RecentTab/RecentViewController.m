@@ -139,7 +139,8 @@
     self.edgesForExtendedLayout = UIRectEdgeAll;
     self.extendedLayoutIncludesOpaqueBars = true;
     self.automaticallyAdjustsScrollViewInsets = true;
-
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName: RelaunchErrorCredentialFilesNotification object: nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -1279,7 +1280,7 @@
      UserDto *userDto = (UserDto*)[notification object];
 
     //Change the status of the Credencial files error on a specific user
-    [app changeTheStatusOfCredentialsFilesErrorOfAnUserId:userDto.userId];
+    [ManageUploadsDB updateErrorCredentialFiles:userDto.userId];
     
     //Update the uploads table view
     [self updateRecents];

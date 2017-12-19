@@ -2593,39 +2593,6 @@ float shortDelay = 0.3;
     }
 }
 
-
-///-----------------------------------
-/// @name Change the Status in uploads with Credential Error 
-///-----------------------------------
-
-/**
- * This method is called after that this class receive the notification that the user
- * has resolved the credentials error.
- * In this method we changed the kind of error of uploads failed "errorCredentials" to "notAndError"
- * for a specific user
- *
- * @param userId -> userId for a scpecific user.
- *
- * @discussion Maybe could be better move this kind of method to a singleton class inicializate in appDelegate.
- *
- */
-- (void)changeTheStatusOfCredentialsFilesErrorOfAnUserId:(NSInteger)userId{
-    
-    __block ManageUploadRequest *currentManageUploadRequest;
-    
-    NSArray *failedUploadsTemp = [NSArray arrayWithArray:_uploadArray];
-    
-    [failedUploadsTemp enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        currentManageUploadRequest = obj;
-        
-        if (currentManageUploadRequest.currentUpload.kindOfError == errorCredentials && currentManageUploadRequest.currentUpload.userId == userId) {
-            DLog(@"ub with name %@ not an error", currentManageUploadRequest.currentUpload.uploadFileName);
-            currentManageUploadRequest.currentUpload.kindOfError=notAnError;
-            [ManageUploadsDB setStatus:currentManageUploadRequest.currentUpload.status andKindOfError:notAnError byUploadOffline:currentManageUploadRequest.currentUpload];
-        }
-    }];
-}
-
 - (void) changeUploadsToWaitingForServerConnection{
     
     if (self.uploadArray.count > 0) {

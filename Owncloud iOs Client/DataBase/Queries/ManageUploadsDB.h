@@ -122,7 +122,7 @@
 +(void) saveInUploadsOfflineTableTheFirst:(NSUInteger)uploads;
 
 /*
- * Method that update all the files with error credential that have been corrected by user
+ * Method that update all the uploads with credentialsError to a notAnError by user
  */
 + (void) updateErrorCredentialFiles:(NSInteger) userSelected;
 
