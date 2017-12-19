@@ -270,15 +270,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 - (void) cancelTheCurrentUploadsOfTheUser:(NSInteger)userId;
 
-/*
- * This method is called after that this class receive the notification that the user
- * has resolved the credentials error.
- * In this method we changed the kind of error of uploads failed "errorCredentials" to "notAndError"
- * for a specific user
- * @userId -> userId for a scpecific user.
- */
-- (void)changeTheStatusOfCredentialsFilesErrorOfAnUserId:(NSInteger)userId;
-
 
 ///-----------------------------------
 /// @name Generate App Interface
