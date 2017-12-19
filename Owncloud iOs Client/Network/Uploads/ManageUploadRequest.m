@@ -229,6 +229,8 @@
     self.userUploading = [ManageUsersDB getUserByUserId:self.currentUpload.userId];
 
     [[AppDelegate sharedOCCommunication] setCredentials:self.userUploading.credDto];
+    DLog(@"starting to upload to destinyFolder: %@, uploadFileName:%@, of user:%@ with accessToken:%@ and refreshToken:%@",self.currentUpload.destinyFolder, self.currentUpload.uploadFileName, _userUploading.credDto.userId, _userUploading.credDto.accessToken, _userUploading.credDto.refreshToken);
+
     
 
     [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
