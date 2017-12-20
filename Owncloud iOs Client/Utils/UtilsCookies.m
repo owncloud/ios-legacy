@@ -66,22 +66,29 @@
     [[NSURLCache sharedURLCache] setDiskCapacity:0];
 }
 
++ (void) updateCookiesOfActiveUserInDB {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
+    if (app.activeUser != nil) {
+        DLog(@"_updateCookiesOfActiveUserInDB_");
+        
+        //1- Try to Delete the cookies of the active user
+        [ManageCookiesStorageDB deleteCookiesByUser:app.activeUser];
+        
+        //2- Store the current cookies on the Database
+        [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
+    }
+}
+
 
 + (void) saveCurrentOfActiveUserAndClean {
     DLog(@"_saveAndCleanCookies_");
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
     //Clear the cookies before to try to do login
     
-    //1- Try to Delete the cookies of the active user
-      [ManageCookiesStorageDB deleteCookiesByUser:app.activeUser];
-
-    //2- Store the current cookies on the Database
-    if (app.activeUser != nil) {
-        [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
-    }
-    //3- Clean the cookies storage
+    [self updateCookiesOfActiveUserInDB];
+    
+    //Clean the cookies storage
     [UtilsFramework deleteAllCookies];
 }
 

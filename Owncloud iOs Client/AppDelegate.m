@@ -2791,6 +2791,7 @@ float shortDelay = 0.3;
 
 - (void) switchActiveUserTo:(UserDto *)user isNewAccount:(BOOL)isNewAccount {
     
+
         self.userSessionCurrentToken = nil;
             // should be here or right after checking the user really changed? for the moment, here
         
@@ -2802,28 +2803,30 @@ float shortDelay = 0.3;
         
             // Cancel downloads of the previous user
             [self portedCancelAllDownloads];
+        
+            [UtilsCookies saveActiveUserCookiesAndRestoreCookiesOfUser:user];
             
             // update active state of users in DB
             [ManageUsersDB setAllUsersNoActive];
             [ManageUsersDB setActiveAccountByUserId:user.userId];
             user.activeaccount = YES;
-        
-            [UtilsCookies saveActiveUserCookiesAndRestoreCookiesOfUser:user];
-        
+            
             //Change the active user in appDelegate global variable
             self.activeUser = user;
-        
+            
+            //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
+            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:[UtilsUrls getFullRemoteServerPath:user]];
+            
             [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
-        
-            [UtilsCookies eraseURLCache];
-        
-            //we create the user folder to haver multiuser
+
+            //we create the user folder to have multiuser
             [UtilsFileSystem createFolderForUser:user];
             
             self.isNewUser = YES;
             
             ManageAccounts *manageAccounts = [ManageAccounts new];
             [manageAccounts updateDisplayNameOfUserWithUser:user];
+
         }
 }
 

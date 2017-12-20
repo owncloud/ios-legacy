@@ -1855,7 +1855,7 @@
         FileDto *rootFileDtoOfActiveUser = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
         if (self.fileIdToShowFiles.userId != rootFileDtoOfActiveUser.userId) {
             _fileIdToShowFiles = rootFileDtoOfActiveUser;
-            DLog(@"Changing between accounts, update _fileIdToShowFiles with root file of active user");
+            DLog(@"Changing between accounts, update _fileIdToShowFiles with root file of active user %ld, %@", (long)app.activeUser.userId, app.activeUser.username);
         }
     }
 }

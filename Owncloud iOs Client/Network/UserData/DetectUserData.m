@@ -28,6 +28,7 @@
                             withCompletion:(void(^)(NSString *serverUserID, NSString *displayName, NSError *error))completion {
 
         [[AppDelegate sharedOCCommunication] setCredentials:credentials];
+    DLog(@"credDto: %@",credentials.userName);
         
         [[AppDelegate sharedOCCommunication] setValueOfUserAgent:[UtilsUrls getUserAgent]];
         
