@@ -844,8 +844,12 @@
     self.view.backgroundColor = [UIColor colorOfBackgroundDetailViewiPad];
     
     _titleLabel.text = @"";
-    
-    [_openWith.documentInteractionController dismissMenuAnimated:YES];
+
+    if (k_use_open_with_UIDocumentInteractionController) {
+        [_openWith.documentInteractionController dismissMenuAnimated:YES];
+    } else {
+        [_openWith.activityPopoverController dismissPopoverAnimated:YES];
+    }
     
     [self removeThePreviousViews];
     
@@ -1055,8 +1059,15 @@
 - (IBAction)didPressShareLinkButton:(id)sender {
     DLog(@"Share button clicked");
     
-    if (_openWith && _openWith.documentInteractionController) {
-        [_openWith.documentInteractionController dismissMenuAnimated:YES];
+    if (k_use_open_with_UIDocumentInteractionController) {
+
+        if (_openWith && _openWith.documentInteractionController) {
+            [_openWith.documentInteractionController dismissMenuAnimated:YES];
+        }
+    } else {
+        if (_openWith && _openWith.activityView) {
+            [_openWith.activityPopoverController dismissPopoverAnimated:YES];
+        }
     }
     
     DLog(@"Share Link Option");
@@ -1746,7 +1757,12 @@
     }
     
     if (_openWith) {
-        [_openWith.documentInteractionController dismissMenuAnimated:NO];
+        
+        if (k_use_open_with_UIDocumentInteractionController) {
+            [_openWith.documentInteractionController dismissMenuAnimated:NO];
+        } else {
+            [_openWith.activityPopoverController dismissPopoverAnimated:NO];
+        }
     }
     
 }
