@@ -134,10 +134,6 @@
 #define k_oauth2_client_id @"mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1"
 #define k_oauth2_client_secret @"KFeFWWEZO9TkisIQzR3fo7hfiMXlOpaqP8CFuTbSHzV1TUuGECglPxpiVKJfOXIx"
 
-//openWith mode
-//only use open with UIDocumentInteraciton with iOS<11 until fix the issue with UIDocumentInteractionController in iOS11
-#define k_use_open_with_UIDocumentInteractionController !IS_IOS11
-
 
 //Following not in use in 3.7.0
 /****************************************************************/
