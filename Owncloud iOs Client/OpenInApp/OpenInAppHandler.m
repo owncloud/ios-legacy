@@ -13,6 +13,9 @@
 #import "ManageFilesDB.h"
 #import "UtilsDtos.h"
 
+#define FOLDER_PATH 0
+#define FILE_PATH 1
+
 
 #define FOLDER_PATH 0
 #define FILE_PATH 1
@@ -20,6 +23,7 @@
 @implementation OpenInAppHandler
 
 -(id)initWithLink:(NSURL *)linkURL andUser:(UserDto *) user {
+
     self = [super init];
     
     if (self) {
@@ -33,12 +37,12 @@
     
     [[AppDelegate sharedOCCommunication] getFullPathFromPrivateLink:_tappedLinkURL success:^(NSURL *path) {
         success(path.absoluteString);
-
     } failure:^(NSError *error){
         failure(error);
     }];
 }
 
+<<<<<<< HEAD
 -(NSMutableArray *)getQueryParameters:(NSString *) url {
     
     
@@ -138,11 +142,74 @@
     
     [ManageFilesDB insertManyFiles:downloadedFolder ofFileId:parent.idFile andUser:APP_DELEGATE.activeUser];
 
--(void)openLink {
-
-    DLog(@"the tapped link for the open in app is: %@", _tappedLinkURL.absoluteString);
-    _finalURL = [[AppDelegate sharedOCCommunication] getFullPathFromPrivateLink: _tappedLinkURL];
+-(NSString *)transformURL:(NSURL *)redirectedURL {
     
+    NSMutableArray *params = [self queryDictionary:redirectedURL.absoluteString];
+    NSString *folderName = [params[FOLDER_PATH] substringFromIndex:1];
+    NSString *fileName = [[NSString alloc] init];
+    
+    if (params.count < 2) {
+        fileName = @"";
+    } else {
+        fileName = params[FILE_PATH];
+    }
+    
+    NSString *finalPathInServer = [NSString stringWithFormat:@"%@%@%@%@",[UtilsUrls getFullRemoteServerPathWithWebDav:_user],folderName, @"/",fileName];
+    return finalPathInServer;
+}
+
+-(void)handleLink:(void (^)(NSString *))success failure:(void (^)(NSError *))failure {
+    [self getRedirection:_tappedLinkURL success:^(NSString *redirectedURL) {
+
+        [self getFilesFrom:redirectedURL success:^(NSArray *items){
+            NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
+//            [self cacheDownloadedFolder:directoryList];
+            success(redirectedURL);
+        } failure:^(NSError *error) {
+            failure(error);
+        }];
+        
+    } failure:^(NSError *error) {
+        failure(error);
+    }];
+}
+
+-(void)cacheDownloadedFolder:(NSMutableArray *)downloadedFolder {
+    
+    FileDto *fileToBeOpened = downloadedFolder[0];
+    
+    FileDto *cachedFile = [ManageFilesDB getFolderByFilePath:fileToBeOpened.filePath andFileName:fileToBeOpened.fileName];
+    
+    if (cachedFile == nil) {
+        [ManageFilesDB insertManyFiles:downloadedFolder ofFileId:17000 andUser:APP_DELEGATE.activeUser];
+    }
+    
+}
+
+-(void)cachePreviousFolders: (NSString *)fullPath {
+    NSArray *elts = [fullPath componentsSeparatedByString:@"/"];
+    
+    FileDto *rootFolder = [ManageFilesDB getRootFileDtoByUser: APP_DELEGATE.activeUser];
+    NSString *url = rootFolder.filePath;
+    for (int i = 5; i < elts.count - 1; i++) {
+        NSString *tmp = elts[i];
+        tmp = [tmp stringByAppendingString:@"/"];
+        url = [url stringByAppendingString:tmp];
+        NSLog(@"Log ---> URL Siguiente = %@", url);
+    }
+}
+
+-(NSMutableArray *)queryDictionary:(NSString *) url
+{
+    
+    NSMutableArray *params = [[NSMutableArray alloc] init];
+    for (NSString *param in [url componentsSeparatedByString:@"&"]) {
+        NSArray *elts = [param componentsSeparatedByString:@"="];
+        if([elts count] < 2) continue;
+        [params addObject:[elts lastObject]];
+    }
+    
+    return params;
 }
 
 @end

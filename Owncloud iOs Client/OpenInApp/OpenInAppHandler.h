@@ -11,7 +11,6 @@
 @interface OpenInAppHandler : NSObject
 @property  (readonly) NSURL *tappedLinkURL;
 @property  NSURL *finalURL;
-<<<<<<< HEAD
 @property  UserDto *user;
 
 /**
@@ -91,12 +90,7 @@
 
 -(void)cacheDownloadedFolder:(NSMutableArray *)downloadedFolder withParent:(FileDto *)parent;
 
-
-=======
-
-
 -(id)initWithTappedLinkURL:(NSURL *) linkURL;
 -(void)openLink;
->>>>>>> created handler for the open in app links
 
 @end
