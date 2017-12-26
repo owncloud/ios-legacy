@@ -1,3 +1,20 @@
+## 3.7.0 (December 2017)
+- OAuth2 support with automatically refresh of new tokens
+- New login view redesign
+- Improve the automatic parse of valid URL in login view
+- Automatic detection of authentication method available from the URL
+- Improve network error messages inside the login view and all the app
+- Improve UX for network warnings shown on the top of file list view
+- Improve accounts handling
+- Improve cookie sessions handling
+- Improve switching between accounts
+- Improve credentials handling in all requests and keychain
+- Upgrade new db version
+- New option in public share link that allows you to share a folder with only the option of uploading files to it
+- Reflect forbidden reshare server capability in app
+- Changes in Open-with feature to support whitelisted apps
+- Bugs fixing 
+
 ## 3.6.2 (June 2017)
 - Support for private links
 - Fix crash in public share links on iPads with iOS10 

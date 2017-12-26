@@ -64,13 +64,10 @@ static NSString *const tmpFileName = @"tmp.der";
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
 
         if (app.activeUser) {
-            //1- Storage the active account cookies on the Database
-            [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
+            [UtilsCookies saveCurrentOfActiveUserAndClean];
         }
-        //2- Delete the current cookies because we delete the current active user
-        [UtilsFramework deleteAllCookies];
         
-        //3- Init SSLCertificateManager instance to access user-accepted server certificates
+        //Init SSLCertificateManager instance to access user-accepted server certificates
         self.sslCertificateManager = [SSLCertificateManager new];
 
     }

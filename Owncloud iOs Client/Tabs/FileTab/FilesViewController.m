@@ -405,7 +405,7 @@
                 }
             } else {
                 DLog(@"User changed while check a folder");
-                [UtilsFramework deleteAllCookies];
+                [UtilsCookies restoreCookiesOfUser:app.activeUser];
             }
         } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
             
@@ -630,7 +630,11 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
     if (self.openWith && !IS_IPHONE) {
-        [self.openWith.documentInteractionController dismissMenuAnimated:NO];
+        if (k_use_open_with_UIDocumentInteractionController) {
+            [self.openWith.documentInteractionController dismissMenuAnimated:NO];
+        } else {
+            [self.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
+        }
     }
     
     if (self.plusActionSheet) {
@@ -1026,6 +1030,41 @@
     _alert = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
     [_alert show];
 }
+
+
+#pragma mark - TSMessages
+
+- (void)showWarningMessageWithText: (NSString *) message {
+    
+    //Run UI Updates
+    [TSMessage setDelegate:self];
+    
+    if (self.navigationController.navigationBarHidden){
+        [self.navigationController setNavigationBarHidden:NO];
+    }
+    
+    [TSMessage showNotificationInViewController:self.navigationController
+                                          title:message
+                                       subtitle:nil
+                                          image:nil
+                                           type:TSMessageNotificationTypeWarning
+                                       duration:TSMessageNotificationDurationAutomatic
+                                       callback:nil
+                                    buttonTitle:nil
+                                 buttonCallback:nil
+                                     atPosition:TSMessageNotificationPositionNavBarOverlay
+                           canBeDismissedByUser:YES];
+}
+
+#pragma mark - TSMessage Delegate
+
+- (void)customizeMessageView:(TSMessageView *)messageView
+{
+    messageView.alpha = messageAlpha;
+    messageView.duration = messageDuration;
+}
+
+
 
 #pragma mark - UITextFieldDelegate methods
 
@@ -1683,7 +1722,7 @@
             [self goToFolderWithoutCheck];
         } else {
             
-            [self performSelectorOnMainThread:@selector(showAlertView:)
+            [self performSelectorOnMainThread:@selector(showWarningMessageWithText:)
                                    withObject:NSLocalizedString(@"not_possible_connect_to_server", nil)
                                 waitUntilDone:YES];
             [self endLoading];
@@ -1779,15 +1818,13 @@
  * show this data in the tableview.
  */
 -(void)reloadTableFromDataBase {
-        
-  //  DLog(@"self.fileIdToShowFiles.idFile: %d", self.fileIdToShowFiles.idFile);
     
-    //Ad the files of the folder
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    //Add the files of the folder
     _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
-   // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:app.activeUser];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -1808,12 +1845,25 @@
 
 
 -(void)reloadTableFileListAfterCapabilitiesUpdated {
-    _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
-    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self reloadTableFileList];
-    });
+    
+    [self updateCurrentFileToShowIfNeeded];
+    
+    [self reloadTableFromDataBase];
 }
+
+- (void) updateCurrentFileToShowIfNeeded {
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    //Workaround to find the _fileIdToShowFiles because some times there are problems with the changes active user, and this method is launched before the viewwillappear
+    if (app.activeUser) {
+        FileDto *rootFileDtoOfActiveUser = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
+        if (self.fileIdToShowFiles.userId != rootFileDtoOfActiveUser.userId) {
+            _fileIdToShowFiles = rootFileDtoOfActiveUser;
+            DLog(@"Changing between accounts, update _fileIdToShowFiles with root file of active user %ld, %@", (long)app.activeUser.userId, app.activeUser.username);
+        }
+    }
+}
+
 -(void)reloadTableFileList{
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 }
@@ -1825,13 +1875,14 @@
 -(void)reloadTableFromDataBaseWithoutEndLoading {
     
     //  DLog(@"self.fileIdToShowFiles.idFile: %d", self.fileIdToShowFiles.idFile);
-    
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
     //Ad the files of the folder
     _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
     // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
     
     //Sorted the files array
-    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:app.activeUser];
     
     //update gallery array
     [self updateArrayImagesInGallery];
@@ -2170,18 +2221,8 @@
                 
                 //GCD to do things async in background queue
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                    //Do operations in background thread
                     
-                    //Workaround to find the _fileIdToShowFiles because some times there are problems with the changes active user, and this method is launched before the viewwillappear
-                    if (app.activeUser) {
-                        FileDto *rootFileDto = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
-                        NSString *pathActiveUser = rootFileDto.filePath;
-                       
-                        if ([_fileIdToShowFiles.filePath rangeOfString:pathActiveUser].location == NSNotFound) {
-                            _fileIdToShowFiles = rootFileDto;
-                            DLog(@"Changing between accounts, update _fileIdToShowFiles with root path with the active user");
-                        }
-                    }
+                    [self updateCurrentFileToShowIfNeeded];
                     
                     NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser], _fileIdToShowFiles.fileName]];
                     
@@ -2254,6 +2295,7 @@
  */
 - (void) updateActiveUserSortingChoiceTo: (enumSortingType)sortingChoice{
     APP_DELEGATE.activeUser.sortingType = sortingChoice;
+    _mUser.sortingType = sortingChoice;
     [ManageUsersDB updateSortingWayForUserDto:APP_DELEGATE.activeUser];
 }
 
@@ -2298,7 +2340,7 @@
                 case 3:
                     
                     if (self.isCurrentFolderSonOfFavoriteFolder) {
-                        [self performSelectorOnMainThread:@selector(showAlertView:)
+                        [self performSelectorOnMainThread:@selector(showWarningMessageWithText:)
                                                withObject:NSLocalizedString(@"parent_folder_is_available_offline_folder_child", nil)
                                             waitUntilDone:YES];
                     } else {
@@ -2320,7 +2362,7 @@
                     if (_selectedFileDto.isDownload || [[CheckAccessToServer sharedManager] isNetworkIsReachable]){
                         [self didSelectOpenWithOptionAndFile:_selectedFileDto];
                     } else {
-                        [self performSelectorOnMainThread:@selector(showAlertView:)
+                        [self performSelectorOnMainThread:@selector(showWarningMessageWithText:)
                                                withObject:NSLocalizedString(@"not_possible_connect_to_server", nil)
                                             waitUntilDone:YES];
                     }
@@ -2333,7 +2375,7 @@
                     break;
                 case 3:
                     if (self.isCurrentFolderSonOfFavoriteFolder) {
-                        [self performSelectorOnMainThread:@selector(showAlertView:)
+                        [self performSelectorOnMainThread:@selector(showWarningMessageWithText:)
                                                withObject:NSLocalizedString(@"parent_folder_is_available_offline_file_child", nil)
                                             waitUntilDone:YES];
                     } else {
@@ -2516,7 +2558,11 @@
             if (_selectedIndexPath) {
                 cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
                 _openWith.parentView =_tableView;
-                _openWith.cellFrame = [self.tableView rectForRowAtIndexPath:self.selectedIndexPath];
+                if (k_use_open_with_UIDocumentInteractionController) {
+                    _openWith.cellFrame = [self.tableView rectForRowAtIndexPath:self.selectedIndexPath];
+                } else {
+                    _openWith.cellFrame = cell.frame;
+                }
                 _openWith.isTheParentViewACell = YES;
                 
             } else {
@@ -3285,7 +3331,7 @@
  */
 - (void)showError:(NSString *) message {
     
-    [self performSelectorOnMainThread:@selector(showAlertView:)
+    [self performSelectorOnMainThread:@selector(showWarningMessageWithText:)
                                withObject:message
                             waitUntilDone:YES];
   
@@ -3340,8 +3386,8 @@
         DLog(@"Ok, we have connection to the server");
     } else {        
         //Error msg
-        //Call showAlertView in main thread
-        [self performSelectorOnMainThread:@selector(showAlertView:)
+        //Call show error in main thread
+        [self performSelectorOnMainThread:@selector(showWarningMessageWithText:)
                                withObject:NSLocalizedString(@"not_possible_connect_to_server", nil)
                             waitUntilDone:YES];
     }

@@ -34,15 +34,6 @@ import Foundation
             //userInDB contains the userId in DB, we add the credentials and store the user in keychain
             OCKeychain.storeCredentials(userInDB.credDto)
             
-            let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-            
-            if (app.activeUser == nil || (userInDB.activeaccount)) {
-                // only set as active account the first account added
-                // OR if it is already the active user; otherwise cookies will not be correctly restored
-                userInDB.activeaccount = true
-                app.activeUser = userInDB
-            }
-            
             // grant that settings of instant uploads are the same for the new account that for the currently active account
             ManageAppSettingsDB.updateInstantUploadAllUser();
             
@@ -65,8 +56,6 @@ import Foundation
         OCKeychain.updateCredentials(user.credDto)
         
         if user.activeaccount {
-            UtilsCookies.eraseCredentialsAndUrlCacheOfActiveUser()
-            
             CheckFeaturesSupported.updateServerFeaturesAndCapabilitiesOfActiveUser()
         }
         
@@ -118,33 +107,34 @@ import Foundation
     
     @objc func updateDisplayNameOfUser(user :UserDto) {
         
-        DetectUserData.getUserDisplayName(ofServer: user.credDto.baseURL, credentials: user.credDto) { (displayName, error) in
-            if ((displayName) != nil) {
-                if (displayName != user.credDto.userDisplayName) {
-                    
-                    if (user.credDto.authenticationMethod == .SAML_WEB_SSO) {
-                        user.username = displayName
+        DetectUserData.getUserDisplayName(ofServer: user.credDto.baseURL, credentials: user.credDto) { (serverUserID, displayName, error) in
+            if ((serverUserID) != nil) {
+                if (serverUserID == user.credDto.userName) {
+                    if ((displayName) != nil) {
+                        if (displayName != user.credDto.userDisplayName) {
+                            
+                            if (user.credDto.authenticationMethod == .SAML_WEB_SSO) {
+                                user.username = displayName
+                            }
+                            
+                            user.credDto.userDisplayName = displayName
+                            
+                            OCKeychain.updateCredentials(user.credDto)
+                            
+                            
+                            if (user.activeaccount) {
+                                let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+                                
+                                app.activeUser.credDto = user.credDto.copy() as! OCCredentialsDto
+                                app.activeUser.username = user.credDto.userName
+                            }
+                        }
+                    } else {
+                        print("DisplayName not updated")
                     }
-                    
-                    user.credDto.userDisplayName = displayName
-                    
-                    OCKeychain.updateCredentials(user.credDto)
-                    
-                    
-                    if (user.activeaccount) {
-                        let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-                        
-                        app.activeUser.credDto.userDisplayName = user.credDto.userDisplayName
-                        app.activeUser.credDto.userName = user.credDto.userName
-                        app.activeUser.username = user.credDto.userName
-                    }
+
                 }
-            } else {
-                print("DisplayName not updated")
             }
-            
         }
-        
     }
-    
 }
