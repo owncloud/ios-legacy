@@ -13,7 +13,8 @@
 - New option in public share link that allows you to share a folder with only the option of uploading files to it
 - Reflect forbidden reshare server capability in app
 - Changes in Open-with feature to support whitelisted apps
-- Bugs fixing 
+- Bug fixing
+- Please, notice that this will be the latest version with support for iOS 9 
 
 ## 3.6.2 (June 2017)
 - Support for private links
