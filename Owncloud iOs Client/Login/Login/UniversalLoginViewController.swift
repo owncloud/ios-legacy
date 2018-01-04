@@ -7,7 +7,7 @@
 //
 
 /*
- Copyright (C) 2017, ownCloud GmbH.
+ Copyright (C) 2018, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -846,7 +846,11 @@ public enum TextfieldType: String {
 // MARK: 'private' methods
     
     func detectUserDataAndValidate(credentials: OCCredentialsDto, serverPath: String) {
+        if loginMode == .migrate {
+            UtilsCookies.deleteAllCookiesOfActiveUser()
+        }
         
+        sleep(UInt32(2))
         DetectUserData .getUserDisplayName(ofServer: serverPath, credentials: credentials) { (serverUserID, displayName, error) in
             
             if (serverUserID != nil && displayName != nil) {
@@ -897,12 +901,13 @@ public enum TextfieldType: String {
                         let newUser = UserDto()
                         if self.loginMode == .migrate {
                             newUser.userId = self.user!.userId
+                            newUser.predefinedUrl = k_default_url_server
                         }
                         newUser.url = self.validatedServerURL
                         newUser.username = credentials.userName
                         newUser.ssl = self.validatedServerURL.hasPrefix("https")
                         newUser.urlRedirected = app.urlServerRedirected
-                        newUser.predefinedUrl = k_default_url_server
+                        newUser.activeaccount = true
                         
                         self.user = newUser.copy() as? UserDto
                     }

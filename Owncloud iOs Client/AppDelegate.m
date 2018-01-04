@@ -5,7 +5,7 @@
 //  Created by Javier Gonzalez on 7/11/12.
 
 /*
- Copyright (C) 2017, ownCloud GmbH.
+ Copyright (C) 2018, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -148,8 +148,6 @@ float shortDelay = 0.3;
     
     [self showSplashScreenFake];
     
-    [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
-    
     //Needed to use on background tasks
     if (!k_is_sso_active) {
         [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
@@ -178,18 +176,25 @@ float shortDelay = 0.3;
     
     if (user) {
         self.activeUser = user;
-        [UtilsCookies deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser];
         
         ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
-        
-        ManageAccounts *manageAccounts = [ManageAccounts new];
-        [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
-        
-        //if we are migrating url not relaunch sync
+
+        //if we are migrating url not relaunch sync, neither update cookies and server checks
         if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
+            
+            [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
+            
+            [UtilsCookies deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser];
+            
+            ManageAccounts *manageAccounts = [ManageAccounts new];
+            [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
+            
             //Update favorites files if there are active user
             [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:fiveSecondsDelay];
+            
+        } else {
+             [UtilsCookies deleteAllCookiesOfActiveUser];
         }
         
     } else if (k_show_main_help_guide && [ManageDB getShowHelpGuide]) {

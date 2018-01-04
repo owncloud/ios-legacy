@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2018, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -116,6 +116,16 @@
     [self saveCurrentOfActiveUserAndClean];
 
     [self restoreCookiesOfUser:user];
+}
+
++ (void) deleteAllCookiesOfActiveUser {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
+    //1- Clean the cookies storage
+    [UtilsFramework deleteAllCookies];
+    
+    //2- Try to Delete the cookies of the active user
+    [ManageCookiesStorageDB deleteCookiesByUser:app.activeUser];
 }
 
 @end
