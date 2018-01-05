@@ -25,26 +25,23 @@
 
 
 + (void) getUserDisplayNameOfServer:(NSString*)path credentials:(OCCredentialsDto *)credentials
-                            withCompletion:(void(^)(NSString *displayName, NSError *error))completion {
-    OCCommunication *sharedCommunication;
+                            withCompletion:(void(^)(NSString *serverUserID, NSString *displayName, NSError *error))completion {
 
-    sharedCommunication = [AppDelegate sharedOCCommunication];
-
-
-        [sharedCommunication setCredentials:credentials];
+        [[AppDelegate sharedOCCommunication] setCredentials:credentials];
+    DLog(@"credDto: %@",credentials.userName);
         
-        [sharedCommunication setValueOfUserAgent:[UtilsUrls getUserAgent]];
+        [[AppDelegate sharedOCCommunication] setValueOfUserAgent:[UtilsUrls getUserAgent]];
         
-        [sharedCommunication getUserDisplayNameOfServer:path onCommunication:sharedCommunication
-            success:^(NSHTTPURLResponse *response, NSString *displayName, NSString *redirectedServer) {
+        [[AppDelegate sharedOCCommunication] getUserDisplayNameOfServer:path onCommunication:[AppDelegate sharedOCCommunication]
+            success:^(NSHTTPURLResponse *response,NSString *serverUserID, NSString *displayName, NSString *redirectedServer) {
                 if (displayName && ![displayName isEqualToString:@""]) {
-                    completion(displayName, nil);
+                    completion(serverUserID, displayName, nil);
                 } else {
-                    completion(nil, [UtilsFramework getErrorWithCode:0 andCustomMessageFromTheServer:NSLocalizedString(@"server_does_not_give_user_id", nil)]);
+                    completion(nil, nil, [UtilsFramework getErrorWithCode:0 andCustomMessageFromTheServer:NSLocalizedString(@"server_does_not_give_user_id", nil)]);
                 }
             } failure:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
                 DLog(@"error when try to get server displayName: %@", error);
-                completion(nil, error);
+                completion(nil, nil, error);
             }];    
 }
 

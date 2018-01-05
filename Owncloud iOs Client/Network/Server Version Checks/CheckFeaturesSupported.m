@@ -40,10 +40,7 @@
                 if (capabilities) {
                     [CheckCapabilities updateServerCapabilitiesOfActiveAccountInDB:capabilities];
                     
-                    //if server version change update supported features
-                    if (![app.activeUser.capabilitiesDto.versionString isEqualToString:capabilities.versionString]) {
-                        [self updateServerFeaturesOfActiveUserForVersion:capabilities.versionString];
-                    }
+                    [self updateServerFeaturesOfActiveUserForVersion:capabilities.versionString];
                     
                     //update file list view if needed
                     BOOL capabilitiesShareAPIChanged = (app.activeUser.capabilitiesDto.isFilesSharingAPIEnabled == capabilities.isFilesSharingAPIEnabled)? NO:YES;

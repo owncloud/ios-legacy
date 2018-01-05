@@ -99,7 +99,7 @@
 /*
  * Method that returns last user inserted on the Database
  */
-+ (UserDto *) getLastUserInserted;
++ (UserDto *) getLastUserInsertedWithoutCredentials;
 
 
 //-----------------------------------

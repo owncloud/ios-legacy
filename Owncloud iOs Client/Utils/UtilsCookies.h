@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2018, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -21,14 +21,20 @@
 @interface UtilsCookies : NSObject
 
 + (void) setOnDBStorageCookiesByUser:(UserDto *) user;
-+ (void) setOnSystemStorageCookiesByUser:(UserDto *) user;
++ (void) setOnSystemCookieStorageDBCookiesOfUser:(UserDto *) user;
 
-+ (void) eraseCredentialsWithURL:(NSString *)connectURL;
 + (void) eraseURLCache;
-+ (void) eraseCredentialsAndUrlCacheOfActiveUser;
 
-+ (void) clearCookies;
++ (void) updateCookiesOfActiveUserInDB;
 
-+ (void) restoreTheCookiesOfActiveUser;
++ (void) saveCurrentOfActiveUserAndClean;
+
++ (void) restoreCookiesOfUser:(UserDto *)user;
+
++ (void) deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser;
+
++ (void) saveActiveUserCookiesAndRestoreCookiesOfUser:(UserDto *)user;
+
++ (void) deleteAllCookiesOfActiveUser;
 
 @end

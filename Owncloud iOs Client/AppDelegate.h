@@ -270,15 +270,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 - (void) cancelTheCurrentUploadsOfTheUser:(NSInteger)userId;
 
-/*
- * This method is called after that this class receive the notification that the user
- * has resolved the credentials error.
- * In this method we changed the kind of error of uploads failed "errorCredentials" to "notAndError"
- * for a specific user
- * @userId -> userId for a scpecific user.
- */
-- (void)changeTheStatusOfCredentialsFilesErrorOfAnUserId:(NSInteger)userId;
-
 
 ///-----------------------------------
 /// @name Generate App Interface
@@ -295,7 +286,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  * For iPad:
  *    - The same TabBarController with three items.
  *    - Detail View.
- *
+ * 
  */
 - (void) generateAppInterfaceFromLoginScreen:(BOOL)isFromLogin;
 
@@ -330,7 +321,8 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  * Method that switches the active user to that passed as a parameter
  *
  * @param user -> UserDto to set as active user
+ * @param isNewAccount -> BOOL if this user is a new account added
  */
-- (void) switchActiveUserTo:(UserDto *) user inHardMode:(BOOL)hardMode withCompletionHandler:(void (^)(void)) completionHandler;
+- (void) switchActiveUserTo:(UserDto *) user isNewAccount:(BOOL)isNewAccount;
 
 @end
