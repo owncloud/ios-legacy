@@ -143,7 +143,6 @@ float shortDelay = 0.3;
     if (![ManageUsersDB existAnyUser]) {
         //Reset all keychain items when db need to be updated or when db first init after app has been removed and reinstalled
         [OCKeychain resetKeychain];
-        
     }
     
     [self showSplashScreenFake];
@@ -177,14 +176,13 @@ float shortDelay = 0.3;
     UserDto *user = [ManageUsersDB getActiveUser];
     
     if (user) {
-        self.activeUser = user;
+        self.activeUser = [user copy];
         [UtilsCookies deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser];
         
         ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
         
-        ManageAccounts *manageAccounts = [ManageAccounts new];
-        [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
+        [self performSelector:@selector(launchProcessToUpdateDisplayNameOfUser) withObject:nil afterDelay:fiveSecondsDelay];
         
         //if we are migrating url not relaunch sync
         if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
@@ -686,6 +684,23 @@ float shortDelay = 0.3;
     //Do operations in background thread
     [[AppDelegate sharedManageFavorites] syncAllFavoritesOfUser:self.activeUser.userId];
     
+}
+
+#pragma mark - UpdateDisplayNameOfUser
+
+/*
+ * This method is for launch the process update the displayName of user in background
+ */
+- (void) launchProcessToUpdateDisplayNameOfUser {
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        if (self.activeUser.username == nil) {
+            self.activeUser = [ManageUsersDB getActiveUser];
+        }
+        ManageAccounts *manageAccounts = [ManageAccounts new];
+        [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
+    });
 }
 
 #pragma mark - DetailViewController Methods for iPad
