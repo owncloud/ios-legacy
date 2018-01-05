@@ -4,11 +4,11 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.mst.owncloud.ios</string>
+		<string>group.com.owncloud.iOSmobileapp</string>
 	</array>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)group.com.mst.owncloud.ios</string>
+		<string>$(AppIdentifierPrefix)group.com.owncloud.iOSmobileapp</string>
 	</array>
 </dict>
 </plist>
