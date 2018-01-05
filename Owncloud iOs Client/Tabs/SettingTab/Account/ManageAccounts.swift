@@ -107,6 +107,10 @@ import Foundation
     
     @objc func updateDisplayNameOfUser(user :UserDto) {
         
+        guard (user.credDto) != nil else {
+            return
+        }
+        
         DetectUserData.getUserDisplayName(ofServer: user.credDto.baseURL, credentials: user.credDto) { (serverUserID, displayName, error) in
             if ((serverUserID) != nil) {
                 if (serverUserID == user.credDto.userName) {
