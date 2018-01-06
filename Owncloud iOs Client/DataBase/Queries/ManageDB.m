@@ -1262,8 +1262,7 @@
 
 + (void) updateDBVersion21To22 {
     
-
-    //1.- Alter users table to add more supported share options
+    //Alter users table to add more supported share options
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
@@ -1287,13 +1286,6 @@
         }
         
     }];
-    
-    
-    //2.- Migrate the current password stored in keychain
-    
-    [OCKeychain updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoAsValueAndAuthenticationType];
-    
-    
     
 }
 

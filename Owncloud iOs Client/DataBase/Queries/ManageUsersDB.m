@@ -122,7 +122,7 @@
     if (output != nil) {
         OCCredentialsDto *credDto = [OCKeychain getCredentialsOfUser:output];
         output.username = credDto.userName;
-        output.credDto = credDto;
+        output.credDto = [credDto copy];
         
         OCCapabilities *capDB = [ManageCapabilitiesDB getCapabilitiesOfUserId: output.userId];
         output.capabilitiesDto = capDB;
@@ -317,7 +317,7 @@
             
             OCCredentialsDto *credDto = [OCKeychain getCredentialsOfUser:current];
             current.username = credDto.userName;
-            current.credDto = credDto;
+            current.credDto = [credDto copy];
             
             [output addObject:current];
             
@@ -417,6 +417,7 @@
             current.url = [rs stringForColumn:@"url"];
             current.username = [rs stringForColumn:@"username"];
             current.credDto = [OCCredentialsDto new];
+            current.credDto.userId = [NSString stringWithFormat: @"%ld", (long)current.userId];
             current.credDto.userName = current.username;
             current.credDto.accessToken = [rs stringForColumn:@"password"];
             current.credDto.authenticationMethod = k_is_sso_active ? AuthenticationMethodSAML_WEB_SSO : AuthenticationMethodBASIC_HTTP_AUTH;

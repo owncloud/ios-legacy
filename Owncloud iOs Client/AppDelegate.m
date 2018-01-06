@@ -1970,9 +1970,8 @@ float shortDelay = 0.3;
 }
 
 -(void) delayLoadEditAccountAfterErrorLogin {
-    
+    self.activeUser = [ManageUsersDB getActiveUser];
     [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:self.activeUser]];
-
 }
 
 

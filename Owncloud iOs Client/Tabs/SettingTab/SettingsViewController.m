@@ -840,12 +840,14 @@
     }
     
     //Accesibility support for Automation
-    NSString *accesibilityCellString = ACS_SETTINGS_USER_ACCOUNT_CELL;
-    accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$user" withString:accountCell.userName.text];
-    accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
+    if (accountCell.userName.text != nil && accountCell.urlServer.text != nil) {
 
-    [accountCell setAccessibilityLabel:accesibilityCellString];
-    
+        NSString *accesibilityCellString = ACS_SETTINGS_USER_ACCOUNT_CELL;
+        accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$user" withString:accountCell.userName.text];
+        accesibilityCellString = [accesibilityCellString stringByReplacingOccurrencesOfString:@"$server" withString:accountCell.urlServer.text];
+        [accountCell setAccessibilityLabel:accesibilityCellString];
+    }
+        
     return accountCell;
     
 }
