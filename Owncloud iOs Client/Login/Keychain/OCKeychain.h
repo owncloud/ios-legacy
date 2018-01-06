@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2017, ownCloud GmbH.
+ Copyright (C) 2018, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -56,7 +56,7 @@
 +(BOOL)updateAllKeychainItemsToUseTheLockProperty;
 
 
-+(void)updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoAsValueAndAuthenticationType;
++(BOOL)updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType;
 
 
 @end

@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2017, ownCloud GmbH.
+ Copyright (C) 2018, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -22,7 +22,9 @@
 #pragma mark - OCCredentialsStorageDelegate
 - (void) saveCredentials:(OCCredentialsDto *)credDto {
 
-    [OCKeychain updateCredentials:credDto];
+    if (credDto.accessToken != nil) {
+        [OCKeychain updateCredentials:credDto];
+    }
     
 #ifdef CONTAINER_APP
     
@@ -62,13 +64,13 @@
         
     } else {
         
-        if (migratingFromDB9to10) {
+        if (!migratingFromDB9to10) {
+            NSData *encodedCredDto = [NSKeyedArchiver archivedDataWithRootObject:credDto];
+            [keychainItem setObject:encodedCredDto forKey:(__bridge id)kSecValueData];
+        } else {
             //to support upgrades from 9to10 db version, in 21to22 is going to be updated to use credDto as kSecValueData
             [keychainItem setObject:[credDto.accessToken dataUsingEncoding:NSUTF8StringEncoding] forKey:(__bridge id)kSecValueData];
             [keychainItem setObject:credDto.userName forKey:(__bridge id)kSecAttrDescription];
-        } else {
-            NSData *encodedCredDto = [NSKeyedArchiver archivedDataWithRootObject:credDto];
-            [keychainItem setObject:encodedCredDto forKey:(__bridge id)kSecValueData];
         }
         
         OSStatus stsAdd = SecItemAdd((__bridge CFDictionaryRef)keychainItem, NULL);
@@ -117,35 +119,37 @@
 }
 
 +(OCCredentialsDto *)getCredentialsOfUser:(UserDto *)user {
-    return [self getCredentialsOfUser:user fromPreviousDBVersion22:NO];
+    return [self getCredentialsOfUser:user migratingFromDB21or22to23:NO];
 }
 
-+(OCCredentialsDto *)getCredentialsOfUser:(UserDto *)user fromPreviousDBVersion22:(BOOL)previousDB22{
++(OCCredentialsDto *)getCredentialsOfUser:(UserDto *)user migratingFromDB21or22to23:(BOOL)previousDB23{
     
     OCCredentialsDto *credentialsDto = nil;
     
-    NSString *userId = [NSString stringWithFormat:@"%ld",(long)user.userId];
-    NSDictionary *resultKeychainDict = [self getKeychainDictionaryOfUserId:userId];
-    
-    if (resultKeychainDict) {
+    if (user != nil && user.userId != 0) {
         
-        NSData *resultData = resultKeychainDict[(__bridge id)kSecValueData];
+        NSString *userId = [NSString stringWithFormat:@"%ld",(long)user.userId];
+        NSDictionary *resultKeychainDict = [self getKeychainDictionaryOfUserId:userId];
         
-        if (resultData) {
+        if (resultKeychainDict) {
             
-            if (previousDB22) {
-                credentialsDto = [OCCredentialsDto new];
-                credentialsDto.userId = resultKeychainDict[(__bridge id)kSecAttrAccount];
-                credentialsDto.userName = resultKeychainDict[(__bridge id)kSecAttrDescription];
-                credentialsDto.accessToken = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
-                credentialsDto.baseURL = [UtilsUrls getFullRemoteServerPath:user];
-                credentialsDto.userDisplayName = @"";
-            } else {
-                credentialsDto = [NSKeyedUnarchiver unarchiveObjectWithData: resultData];
+            NSData *resultData = resultKeychainDict[(__bridge id)kSecValueData];
+            
+            if (resultData) {
+                
+                if (!previousDB23) {
+                    credentialsDto = [NSKeyedUnarchiver unarchiveObjectWithData: resultData];
+                } else {
+                    credentialsDto = [OCCredentialsDto new];
+                    credentialsDto.userId = resultKeychainDict[(__bridge id)kSecAttrAccount];
+                    credentialsDto.userName = resultKeychainDict[(__bridge id)kSecAttrDescription];
+                    credentialsDto.accessToken = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
+                    credentialsDto.baseURL = [UtilsUrls getFullRemoteServerPath:user];
+                    credentialsDto.userDisplayName = @"";
+                }
             }
         }
     }
-    
     return credentialsDto;
 }
 
@@ -275,25 +279,28 @@
     return [OCKeychain storeCredentials:user.credDto migratingFromDB9to10:YES];
 }
 
-#pragma mark - used to update from db version 21to22
+#pragma mark - used to update from db version 22to23
 
-+ (void)updateAllKeychainItemsFromDBVersion21To22ToStoreCredentialsDtoAsValueAndAuthenticationType {
++ (BOOL)updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType {
+    
+    BOOL isUpdated = YES;
     
     for (UserDto *user in [ManageUsersDB getAllUsersWithOutCredentialInfo]) {
         
-        user.credDto = [OCKeychain getCredentialsOfUser:user fromPreviousDBVersion22:YES];
+        user.credDto = [OCKeychain getCredentialsOfUser:user migratingFromDB21or22to23:YES];
         
-        if (user.credDto) {
+        if (user.credDto && user.credDto.userName != nil && user.credDto.accessToken != nil && user.credDto.userId != nil) {
+            
             user.credDto.authenticationMethod = k_is_sso_active ? AuthenticationMethodSAML_WEB_SSO : AuthenticationMethodBASIC_HTTP_AUTH;
-            
-            [OCKeychain updateCredentials:user.credDto];
-            
+
+            isUpdated &= [OCKeychain updateCredentials:user.credDto];;
         } else {
+            isUpdated &= NO;
             DLog(@"Not possible to update keychain with userId: %ld", (long)user.userId);
         }
     }
+    return isUpdated;
 }
-
 
 
 @end

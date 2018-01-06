@@ -1695,7 +1695,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     
     //Edit Account
         
-    UniversalLoginViewController *loginVC = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser: APP_DELEGATE.activeUser];
+    UniversalLoginViewController *loginVC = [UtilsLogin getLoginVCWithMode:LoginModeExpire andUser: appDelegate.activeUser];
         
         
     OCNavigationController *navController = [[OCNavigationController alloc] initWithRootViewController:loginVC];
