@@ -305,8 +305,6 @@
          [currentUser.url isEqualToString:_mUser.url] &&
          currentUser.userId == _mUser.userId)) {
         //We are changing of user
-        //Show the file list in the correct place
-//        [self.tableView setContentOffset:CGPointMake(0,0) animated:YES];
         
         //We check if the user have root folder at true on the DB
         if([ManageFilesDB isExistRootFolderByUser:app.activeUser]) {
