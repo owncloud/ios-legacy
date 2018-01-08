@@ -18,7 +18,6 @@
 #define SCREEN_WIDTH ([[UIScreen mainScreen] bounds].size.width)
 #define SCREEN_HEIGHT ([[UIScreen mainScreen] bounds].size.height)
 #define SCREEN_MAX_LENGTH (MAX(SCREEN_WIDTH, SCREEN_HEIGHT))
-#define IS_IOS9or10 ([[[UIDevice currentDevice] systemVersion] floatValue] == 9 || [[[UIDevice currentDevice] systemVersion] floatValue] == 10)
 #define IS_IOS11 ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11)
 #define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 #define IS_PORTRAIT (([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) || [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortraitUpsideDown)

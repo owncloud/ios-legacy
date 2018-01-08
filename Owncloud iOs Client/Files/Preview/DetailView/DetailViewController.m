@@ -2045,31 +2045,14 @@
         
         CGFloat deltaWidth = k_delta_width_for_split_transition;
         
-
-        if (IS_IOS9or10 || IS_IOS11) {
-            
-            selfFrame.size.width += deltaWidth;
-            selfFrame.origin.x -= deltaWidth;
-            
-        }else{
-            
-            if (IS_PORTRAIT) {
-                selfFrame.size.width += deltaWidth;
-                selfFrame.origin.x -= deltaWidth;
-            }else{
-                selfFrame.size.height += deltaWidth;
-                selfFrame.origin.y -= deltaWidth;
-            }
-            
-        }
+        selfFrame.size.width += deltaWidth;
+        selfFrame.origin.x -= deltaWidth;
         
         [self.splitViewController.view setFrame:selfFrame];
         
         self.hideMaster = !self.hideMaster;
         
-        if (IS_IOS9or10 || IS_IOS11) {
-            [self.splitViewController viewWillTransitionToSize:self.splitViewController.view.frame.size withTransitionCoordinator:self.splitViewController.transitionCoordinator];
-        }
+        [self.splitViewController viewWillTransitionToSize:self.splitViewController.view.frame.size withTransitionCoordinator:self.splitViewController.transitionCoordinator];
         
         [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
         
@@ -2104,22 +2087,8 @@
             
             CGFloat deltaWidth = k_delta_width_for_split_transition;
             
-            if (IS_IOS9or10 || IS_IOS11) {
-                
-                selfFrame.size.width -= deltaWidth;
-                selfFrame.origin.x += deltaWidth;
-                
-            }else{
-                
-                if (IS_PORTRAIT) {
-                    selfFrame.size.width -= deltaWidth;
-                    selfFrame.origin.x += deltaWidth;
-                }else{
-                    selfFrame.size.height -= deltaWidth;
-                    selfFrame.origin.y += deltaWidth;
-                }
-                
-            }
+            selfFrame.size.width -= deltaWidth;
+            selfFrame.origin.x += deltaWidth;
             
             [self.splitViewController.view setFrame:selfFrame];
             [self.splitViewController willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
@@ -2172,16 +2141,7 @@
     
     if (self.hideMaster) {
         
-        if (IS_IOS9or10 || IS_IOS11) {
-            frame = self.view.window.bounds;
-        }else{
-            
-            if (IS_PORTRAIT) {
-                frame = self.view.window.bounds;
-            }else{
-                frame = CGRectMake(0.0, 0.0, self.view.window.bounds.size.height, self.view.window.bounds.size.width);
-            }
-        }
+        frame = self.view.window.bounds;
         
     }else{
         
@@ -2226,7 +2186,7 @@
                      animations:^(void)
      {
        
-         if (!self.hideMaster && (IS_IOS9or10 || IS_IOS11)) {
+         if (!self.hideMaster) {
              [self.splitViewController.view setNeedsLayout];
              self.splitViewController.delegate = nil;
              self.splitViewController.delegate = self;
@@ -2236,58 +2196,23 @@
          
          CGFloat deltaWidth = k_delta_width_for_split_transition;
          
-         if (IS_IOS9or10 || IS_IOS11) {
-             
-             if (self.hideMaster)
-             {
-                 selfFrame.size.width += deltaWidth;
-                 selfFrame.origin.x -= deltaWidth;
-                 
-             }
-             else
-             {
-                 selfFrame.size.width -= deltaWidth;
-                 selfFrame.origin.x += deltaWidth;
-
-             }
-
-         }else{
-             
-             if (self.hideMaster)
-             {
-                 if (IS_PORTRAIT) {
-                     selfFrame.size.width += deltaWidth;
-                     selfFrame.origin.x -= deltaWidth;
-                 }else{
-                     selfFrame.size.height += deltaWidth;
-                     selfFrame.origin.y -= deltaWidth;
-                 }
- 
-             }
-             else
-             {
-                 if (IS_PORTRAIT) {
-                     selfFrame.size.width -= deltaWidth;
-                     selfFrame.origin.x += deltaWidth;
-                 }else{
-                     selfFrame.size.height -= deltaWidth;
-                     selfFrame.origin.y += deltaWidth;
-                 }
-             }
-
+         if (self.hideMaster) {
+             selfFrame.size.width += deltaWidth;
+             selfFrame.origin.x -= deltaWidth;
+         } else {
+             selfFrame.size.width -= deltaWidth;
+             selfFrame.origin.x += deltaWidth;
          }
-
+         
          [self.splitViewController.view setFrame:selfFrame];
          
-         if (!self.hideMaster && (IS_IOS9or10 || IS_IOS11)) {
+         if (!self.hideMaster) {
               [self.splitViewController.view layoutIfNeeded];
          }
-         
          
      }completion:^(BOOL finished){
          if (finished)
          {
-             
              if (completionBlock)
              {
                  completionBlock();

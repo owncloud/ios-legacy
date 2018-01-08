@@ -163,24 +163,19 @@
 
 -(void)viewDidLayoutSubviews
 {
-    
-    if (IS_IOS9or10 || IS_IOS11) {
-        
-        if ([self.settingsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.settingsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
-        }
-        
-        if ([self.settingsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
-            [self.settingsTableView setLayoutMargins:UIEdgeInsetsZero];
-        }
-        
-        if (!IS_IOS11) {
-            CGRect rect = self.navigationController.navigationBar.frame;
-            float y = rect.size.height + rect.origin.y;
-            self.settingsTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
-        }
+    if ([self.settingsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.settingsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
     }
     
+    if ([self.settingsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.settingsTableView setLayoutMargins:UIEdgeInsetsZero];
+    }
+    
+    if (!IS_IOS11) {
+        CGRect rect = self.navigationController.navigationBar.frame;
+        float y = rect.size.height + rect.origin.y;
+        self.settingsTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
+    }
 }
 
 -(void)viewWillLayoutSubviews
