@@ -142,8 +142,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic,strong) UserDto *userUploadWithError;
 @property (nonatomic) long dateLastRelaunch;
 @property (nonatomic) long dateLastCheckingWaiting;
-//New user
-@property (nonatomic) BOOL isNewUser;
 //AlertView to control that we do not show the same error multiple times
 @property (nonatomic, strong) UIAlertView *downloadErrorAlertView;
 @property (copy) void (^backgroundSessionCompletionHandler)();
