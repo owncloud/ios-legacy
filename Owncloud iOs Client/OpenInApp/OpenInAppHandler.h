@@ -89,7 +89,6 @@
  */
 
 -(void)cacheDownloadedFolder:(NSMutableArray *)downloadedFolder withParent:(FileDto *)parent;
-
 -(id)initWithTappedLinkURL:(NSURL *) linkURL;
 -(void)openLink;
 

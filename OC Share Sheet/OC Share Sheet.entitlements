@@ -6,11 +6,6 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:pablos-mbp.solidgear.prv</string>
-<<<<<<< HEAD
-=======
-		<string>applinks:*Pablos-MBP.solidgear.prv*</string>
-		<string>applinks:*pablos-mbp.solidgear.prv*</string>
->>>>>>> 7727ad32... acces to files step by step
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
