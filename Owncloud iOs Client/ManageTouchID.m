@@ -44,6 +44,17 @@
     }
 }
 
+- (BOOL) isDeviceFaceIDCompatible {
+    LAContext* laContext = [[LAContext alloc] init];
+    if (@available(iOS 11.0, *)) {
+        BOOL canAuthenticateWithBiometrics = [laContext canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:nil];
+        if (canAuthenticateWithBiometrics) {
+            return laContext.biometryType == LABiometryTypeFaceID;
+        }
+    }
+    return false;
+}
+
 /* Use isTouchIDAvailable before */
 - (void)showTouchIDAuth {
     if (self.isTouchIDAvailable) {

@@ -16,7 +16,6 @@
 
 
 import Foundation
-
 @objc class DetectListOfFiles: NSObject {
     
     func readFolderOfURL(_ url: NSURL, credentials: OCCredentialsDto,
