@@ -1680,6 +1680,7 @@ float shortDelay = 0.3;
             if (!_isPasscodeVisible){
                 [rootController presentViewController:oc animated:IS_IPHONE completion:^{
                     [self showTouchIdIfNeeded];
+                    
                 }];
             }
         });
@@ -1716,6 +1717,7 @@ float shortDelay = 0.3;
             }
             
             if (!_isPasscodeVisible){
+                [self performSelector:@selector(showTouchIdIfNeeded) withObject:nil afterDelay:oneSecondDelay];
                 [presentedView presentViewController:oc animated:NO completion:^{
                     DLog(@"present complete");
                 }];
