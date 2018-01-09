@@ -49,7 +49,8 @@ import Foundation
             //TODO: chec redirectedserver in status
             
             if ( items != nil && !(items!.isEmpty) ) {
-                success(items!)
+                let files = UtilsDtos.pass(toFileDtoArrayThisOCFileDtoArray: items!) as! [FileDto]
+                success(files)
             } else {
                 let statusCode: NSInteger = (response?.statusCode == nil) ? 0: (response?.statusCode)!
                 failure(statusCode, UtilsFramework.getErrorWithCode(Int(kOCErrorServerUnauthorized), andCustomMessageFromTheServer: "")! as NSError)
