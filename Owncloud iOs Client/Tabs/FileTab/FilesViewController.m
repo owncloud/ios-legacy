@@ -242,11 +242,19 @@
     self.willLayoutSubviews = true;
     
 //    self.extendedLayoutIncludesOpaqueBars = true;
-    self.automaticallyAdjustsScrollViewInsets = false;
-    self.tableView.estimatedRowHeight = 0;
-    self.tableView.estimatedSectionHeaderHeight = 0;
-    self.tableView.estimatedSectionFooterHeight = 0;
-
+    if (@available(iOS 11.0, *)) {
+        self.automaticallyAdjustsScrollViewInsets = false;
+        self.tableView.estimatedRowHeight = 0;
+        self.tableView.estimatedSectionHeaderHeight = 0;
+        self.tableView.estimatedSectionFooterHeight = 0;
+        
+    } else {
+        self.automaticallyAdjustsScrollViewInsets = true;
+        self.edgesForExtendedLayout = UIRectEdgeAll;
+        self.extendedLayoutIncludesOpaqueBars = true;
+        self.automaticallyAdjustsScrollViewInsets = true;
+    }
+    
     //Appear the tabBar
     self.tabBarController.tabBar.hidden=NO;
     
