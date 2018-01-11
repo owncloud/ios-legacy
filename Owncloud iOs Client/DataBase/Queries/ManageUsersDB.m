@@ -121,72 +121,13 @@
     
     if (output != nil) {
         OCCredentialsDto *credDto = [OCKeychain getCredentialsOfUser:output];
-        output.username = credDto.userName;
-        output.credDto = [credDto copy];
-        
+        if (credDto != nil && credDto.userName != nil) {
+            output.username = credDto.userName;
+            output.credDto = [credDto copy];
+        }
         OCCapabilities *capDB = [ManageCapabilitiesDB getCapabilitiesOfUserId: output.userId];
         output.capabilitiesDto = capDB;
     }
-    
-    return output;
-}
-
-
-+ (UserDto *) getActiveUserWithoutCredentials {
-    
-    DLog(@"getActiveUserWithoutCredentials");
-    
-    __block UserDto *output = nil;
-    
-    FMDatabaseQueue *queue = Managers.sharedDatabase;
-    
-    [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT * FROM users WHERE activeaccount = 1  ORDER BY id ASC LIMIT 1"];
-        
-        DLog(@"RSColumnt count: %d", rs.columnCount);
-        
-        
-        while ([rs next]) {
-            
-            output=[UserDto new];
-            
-            output.userId = [rs intForColumn:@"id"];
-            output.url = [rs stringForColumn:@"url"];
-            output.ssl = [rs intForColumn:@"ssl"];
-            output.activeaccount = [rs intForColumn:@"activeaccount"];
-            output.storageOccupied = [rs longForColumn:@"storage_occupied"];
-            output.storage = [rs longForColumn:@"storage"];
-            
-            output.hasShareApiSupport = [rs intForColumn:@"has_share_api_support"];
-            output.hasShareeApiSupport = [rs intForColumn:@"has_sharee_api_support"];
-            output.hasCookiesSupport = [rs intForColumn:@"has_cookies_support"];
-            output.hasForbiddenCharactersSupport = [rs intForColumn:@"has_forbidden_characters_support"];
-            output.hasCapabilitiesSupport = [rs intForColumn:@"has_capabilities_support"];
-            
-            output.imageInstantUpload = [rs intForColumn:@"image_instant_upload"];
-            output.videoInstantUpload = [rs intForColumn:@"video_instant_upload"];
-            output.backgroundInstantUpload = [rs intForColumn:@"background_instant_upload"];
-            output.pathInstantUpload = [rs stringForColumn:@"path_instant_upload"];
-            output.onlyWifiInstantUpload = [rs intForColumn:@"only_wifi_instant_upload"];
-            output.timestampInstantUploadImage = [rs doubleForColumn:@"timestamp_last_instant_upload_image"];
-            output.timestampInstantUploadVideo = [rs doubleForColumn:@"timestamp_last_instant_upload_video"];
-            
-            output.urlRedirected = [rs stringForColumn:@"url_redirected"];
-            output.sortingType = [rs intForColumn:@"sorting_type"];
-            output.predefinedUrl = [rs stringForColumn:@"predefined_url"];
-            
-            output.hasFedSharesOptionShareSupport = [rs intForColumn:@"has_fed_shares_option_share_support"];
-            output.hasPublicShareLinkOptionNameSupport = [rs intForColumn:@"has_public_share_link_option_name_support"];
-            output.hasPublicShareLinkOptionUploadOnlySupport = [rs intForColumn:@"has_public_share_link_option_upload_only_support"];
-            
-            output.username = nil;
-            output.credDto = nil;
-        }
-        
-        [rs close];
-        
-    }];
-    
     
     return output;
 }

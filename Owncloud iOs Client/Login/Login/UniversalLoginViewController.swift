@@ -383,13 +383,14 @@ public enum TextfieldType: String {
         let buttonHelpTitle = buttonHelpTitleWithoutAppName.replacingOccurrences(of: "$appname", with: appName)
         self.buttonHelpLink.setTitle(buttonHelpTitle, for: .normal)
         
-        
         //Placeholders for the login textfields
         self.textFieldURL.placeholder = NSLocalizedString("url_sample", comment: "")
         self.textFieldUsername.placeholder = NSLocalizedString("username", comment: "")
         self.textFieldPassword.placeholder = NSLocalizedString("password", comment: "")
         
+        
         //init textField values
+        
         self.textFieldURL.text = k_default_url_server
         
         //test
@@ -399,13 +400,13 @@ public enum TextfieldType: String {
         
         if self.loginMode != .create {
             
-            let noCredentialsAvailable = self.loginMode == .expire &&
-                (self.user?.username == nil || self.user?.username == "")
+            let noCredentialsAvailable = (self.loginMode == .expire && (self.user?.username == nil || self.user?.username == ""))
             
             if (noCredentialsAvailable) {
                 
+                //TODO:show OCLoadingSpinner
                 OCKeychain.updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType()
-                sleep(3)
+                sleep(5)
                 self.user = ManageUsersDB.getActiveUser()
                 
                 if (self.user?.credDto != nil && self.user?.credDto.userName != nil
@@ -416,8 +417,8 @@ public enum TextfieldType: String {
                 } else {
                     //can not get credentials from keychain
                     OCKeychain.removeCredentials(ofUser: self.user)
-                    self.forceAccountMigration = true
                     //TODO:expire all accounts and force migration
+                    self.forceAccountMigration = true
                 }
             }
             
@@ -878,6 +879,7 @@ public enum TextfieldType: String {
     
     func detectUserDataAndValidate(serverPath: String) {
         if loginMode == .migrate || self.forceAccountMigration{
+            //credentials may have changed, remove cookies
             UtilsCookies.deleteAllCookiesOfActiveUser()
         }
         

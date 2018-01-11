@@ -34,7 +34,9 @@
             app.activeUser = [ManageUsersDB getActiveUser];
         }
         
-        if (app.activeUser) {
+        UserDto *activeUser = [ManageUsersDB getActiveUser];
+        
+        if (activeUser) {
             
             [CheckCapabilities getServerCapabilitiesOfActiveAccount:^(OCCapabilities *capabilities) {
                 
@@ -46,9 +48,7 @@
                     //update file list view if needed
                     BOOL capabilitiesShareAPIChanged = (app.activeUser.capabilitiesDto.isFilesSharingAPIEnabled == capabilities.isFilesSharingAPIEnabled)? NO:YES;
                     if(capabilitiesShareAPIChanged){
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [CheckCapabilities reloadFileList];
-                        });
+                        [CheckCapabilities reloadFileList];
                     }
                     
                     app.activeUser.capabilitiesDto = [OCCapabilities new];
@@ -61,8 +61,6 @@
                 app.activeUser.capabilitiesDto =  [ManageCapabilitiesDB getCapabilitiesOfUserId:app.activeUser.userId];
             }];
         }
-    });
-    
 }
 
 + (void) updateServerFeaturesOfActiveUserForVersion:(NSString *)versionString {
