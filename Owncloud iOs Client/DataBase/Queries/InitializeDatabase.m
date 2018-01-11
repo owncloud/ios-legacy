@@ -45,6 +45,7 @@
 #define k_DB_version_20 20
 #define k_DB_version_21 21
 #define k_DB_version_22 22
+#define k_DB_version_23 23
 
 @implementation InitializeDatabase
 
@@ -58,7 +59,7 @@
 + (void) initDataBase {
     
     //New version
-    static int dbVersion = k_DB_version_22;
+    static int dbVersion = k_DB_version_23;
     
     //This method make a new database
     [ManageDB createDataBase];
@@ -116,7 +117,9 @@
             case k_DB_version_20:
                 [ManageDB updateDBVersion20To21];
             case k_DB_version_21:
-                [ManageDB updateDBVersion21To22];//Updates in Keychain
+                [ManageDB updateDBVersion21To22];
+            case k_DB_version_22:
+                //Updates in Keychain, will be made later
                 break; //Insert your migration above this final break.
         }
     }

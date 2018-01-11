@@ -1532,48 +1532,49 @@
  * This method set the label on the table footer with the quantity of files and folder
  */
 - (void) setTheLabelOnTheTableFooter {
+    
     [self obtainTheQuantityOfFilesAndFolders];
     
-    //Set the text of the footer section
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 40 + self.tabBarController.tabBar.frame.size.height)];
-    footerView.backgroundColor = [UIColor clearColor];
-    
-    UILabel *footerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 40)];
-    
-    UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:16];
-    
-    footerLabel.font = appFont;
-    footerLabel.textColor = [UIColor grayColor];
-    footerLabel.backgroundColor = [UIColor clearColor];
-    footerLabel.textAlignment = NSTextAlignmentCenter;
-    
-    NSString *folders;
-    NSString *files;
-    NSString *footerText;
-    if (_numberOfFiles > 1) {
-        folders = [NSString stringWithFormat:@"%d %@", _numberOfFiles, NSLocalizedString(@"files", nil)];
-    } else if (_numberOfFiles == 1){
-        folders = [NSString stringWithFormat:@"%d %@", _numberOfFiles, NSLocalizedString(@"file", nil)];
-    } else {
-        folders = @"";
-    }
-    if (_numberOfFolders > 1) {
-        files = [NSString stringWithFormat:@"%d %@", _numberOfFolders, NSLocalizedString(@"folders", nil)];
-    } else if (_numberOfFolders == 1){
-        files = [NSString stringWithFormat:@"%d %@", _numberOfFolders, NSLocalizedString(@"folder", nil)];
-    } else {
-        files = @"";
-    }
-    if ([folders isEqualToString:@""]) {
-        footerText = files;
-    } else if ([files isEqualToString:@""]) {
-        footerText = folders;
-    } else {
-        footerText = [NSString stringWithFormat:@"%@, %@", folders, files];
-    }
-    footerLabel.text = footerText;
-    
     dispatch_async(dispatch_get_main_queue(), ^{
+        //Set the text of the footer section
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 40 + self.tabBarController.tabBar.frame.size.height)];
+        footerView.backgroundColor = [UIColor clearColor];
+        
+        UILabel *footerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 40)];
+        
+        UIFont *appFont = [UIFont fontWithName:@"HelveticaNeue" size:16];
+        
+        footerLabel.font = appFont;
+        footerLabel.textColor = [UIColor grayColor];
+        footerLabel.backgroundColor = [UIColor clearColor];
+        footerLabel.textAlignment = NSTextAlignmentCenter;
+        
+        NSString *folders;
+        NSString *files;
+        NSString *footerText;
+        if (_numberOfFiles > 1) {
+            folders = [NSString stringWithFormat:@"%d %@", _numberOfFiles, NSLocalizedString(@"files", nil)];
+        } else if (_numberOfFiles == 1){
+            folders = [NSString stringWithFormat:@"%d %@", _numberOfFiles, NSLocalizedString(@"file", nil)];
+        } else {
+            folders = @"";
+        }
+        if (_numberOfFolders > 1) {
+            files = [NSString stringWithFormat:@"%d %@", _numberOfFolders, NSLocalizedString(@"folders", nil)];
+        } else if (_numberOfFolders == 1){
+            files = [NSString stringWithFormat:@"%d %@", _numberOfFolders, NSLocalizedString(@"folder", nil)];
+        } else {
+            files = @"";
+        }
+        if ([folders isEqualToString:@""]) {
+            footerText = files;
+        } else if ([files isEqualToString:@""]) {
+            footerText = folders;
+        } else {
+            footerText = [NSString stringWithFormat:@"%@, %@", folders, files];
+        }
+        footerLabel.text = footerText;
+        
         [footerView addSubview:footerLabel];
         [_tableView setTableFooterView:footerView];
     });
@@ -1812,13 +1813,13 @@
     //Sorted the files array
     _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:app.activeUser];
     
-    //update gallery array
-    [self updateArrayImagesInGallery];
-    
-    //Update the table footer
-    [self setTheLabelOnTheTableFooter];
-    
     dispatch_async(dispatch_get_main_queue(), ^{
+        //update gallery array
+        [self updateArrayImagesInGallery];
+    
+        //Update the table footer
+        [self setTheLabelOnTheTableFooter];
+    
         //Reload data in the table
         [self reloadTableFileList];
     });
@@ -1831,23 +1832,25 @@
 
 
 -(void)reloadTableFileListAfterCapabilitiesUpdated {
-    
-    [self updateCurrentFileToShowIfNeeded];
-    
-    [self reloadTableFromDataBase];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateCurrentFileToShowIfNeeded];
+        [self reloadTableFromDataBase];
+    });
 }
 
 - (void) updateCurrentFileToShowIfNeeded {
-    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    
-    //Workaround to find the _fileIdToShowFiles because some times there are problems with the changes active user, and this method is launched before the viewwillappear
-    if (app.activeUser) {
-        FileDto *rootFileDtoOfActiveUser = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
-        if (self.fileIdToShowFiles.userId != rootFileDtoOfActiveUser.userId) {
-            _fileIdToShowFiles = rootFileDtoOfActiveUser;
-            DLog(@"Changing between accounts, update _fileIdToShowFiles with root file of active user %ld, %@", (long)app.activeUser.userId, app.activeUser.username);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        
+        //Workaround to find the _fileIdToShowFiles because some times there are problems with the changes active user, and this method is launched before the viewwillappear
+        if (app.activeUser) {
+            FileDto *rootFileDtoOfActiveUser = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
+            if (self.fileIdToShowFiles.userId != rootFileDtoOfActiveUser.userId) {
+                _fileIdToShowFiles = rootFileDtoOfActiveUser;
+                DLog(@"Changing between accounts, update _fileIdToShowFiles with root file of active user %ld, %@", (long)app.activeUser.userId, app.activeUser.username);
+            }
         }
-    }
+    });
 }
 
 -(void)reloadTableFileList{
@@ -1860,20 +1863,20 @@
  */
 -(void)reloadTableFromDataBaseWithoutEndLoading {
     
-    //  DLog(@"self.fileIdToShowFiles.idFile: %d", self.fileIdToShowFiles.idFile);
-    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-    //Ad the files of the folder
-    _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
-    // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
-    
-    //Sorted the files array
-    _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:app.activeUser];
-    
-    //update gallery array
-    [self updateArrayImagesInGallery];
-    
     dispatch_async(dispatch_get_main_queue(), ^{
+        //  DLog(@"self.fileIdToShowFiles.idFile: %d", self.fileIdToShowFiles.idFile);
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+        //Ad the files of the folder
+        _currentDirectoryArray = [ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile];
+        // DLog(@"self.fileIdToShowFiles: %d", [self.currentDirectoryArray count]);
+    
+        //Sorted the files array
+        _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:app.activeUser];
+    
+        //update gallery array
+        [self updateArrayImagesInGallery];
+
         //Reload data in the table
         [_tableView reloadData];
     });
@@ -1894,11 +1897,9 @@
     if (!IS_IPHONE) {
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (app.detailViewController.galleryView) {
-                [app.detailViewController.galleryView updateImagesArrayWithNewArray:_sortedArray];
-            }
-        });
+        if (app.detailViewController.galleryView) {
+            [app.detailViewController.galleryView updateImagesArrayWithNewArray:_sortedArray];
+        }
     }
 }
 
@@ -1941,12 +1942,9 @@
  */
 - (void) syncFavoritesByFolder:(FileDto *) folder {
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        //Launch the method to sync the favorites files with specific path
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        [[AppDelegate sharedManageFavorites] syncFavoritesOfFolder:folder withUser:app.activeUser.userId];
-    
-    });
+    //Launch the method to sync the favorites files with specific path
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    [[AppDelegate sharedManageFavorites] syncFavoritesOfFolder:folder withUser:app.activeUser.userId];
     
 }
 
@@ -2141,25 +2139,29 @@
         //Sorted the files array
         _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
         
-        //update gallery array
-        [self updateArrayImagesInGallery];
+         dispatch_async(dispatch_get_main_queue(), ^{
+             //update gallery array
+             [self updateArrayImagesInGallery];
         
-        //Update the table footer
-        [self setTheLabelOnTheTableFooter];
+             //Update the table footer
+             [self setTheLabelOnTheTableFooter];
       
-        [_tableView reloadData];
-        [self stopPullRefresh];
-        _showLoadingAfterChangeUser = NO;
+             [_tableView reloadData];
+             [self stopPullRefresh];
+             _showLoadingAfterChangeUser = NO;
 
-        //TODO: Remove this to prevent duplicate files
-        [self endLoading];
+             //TODO: Remove this to prevent duplicate files
+             [self endLoading];
         
-        [self performSelector:@selector(disableRefreshInProgress) withObject:nil afterDelay:0.5];
+             [self performSelector:@selector(disableRefreshInProgress) withObject:nil afterDelay:0.5];
+        });
         
     } else {
-        DLog(@"Inflag");
-       [self stopPullRefresh];
-       [self endLoading];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            DLog(@"Inflag");
+            [self stopPullRefresh];
+            [self endLoading];
+        });
     }
 }
 
@@ -2206,9 +2208,10 @@
             if (!isSamlCredentialsError) {
                 
                 //GCD to do things async in background queue
+                [self updateCurrentFileToShowIfNeeded];
+
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                     
-                    [self updateCurrentFileToShowIfNeeded];
                     
                     NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:_fileIdToShowFiles.filePath andUser:app.activeUser], _fileIdToShowFiles.fileName]];
                     

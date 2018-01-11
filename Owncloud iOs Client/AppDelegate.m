@@ -184,15 +184,35 @@ float shortDelay = 0.3;
         [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
 
         //if we are migrating url not relaunch sync, neither update cookies and server checks
-        if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
+        BOOL isNeccessaryMigrateURL = [UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl];
+        int currentDBVersion = [ManageDB getDatabaseVersion];
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSInteger firstOpenAfterUpgrade = [defaults integerForKey:@"firstOpenAfterUpgrade"];
+        
+        //Change kind of credentials in DB version 22
+        if (!isNeccessaryMigrateURL && currentDBVersion != 23) {
             
             [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
             
             //Update favorites files if there are active user
             [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:fiveSecondsDelay];
             
-        } else {
+        } else if (isNeccessaryMigrateURL == YES){
              [UtilsCookies deleteAllCookiesOfActiveUser];
+        } else if (currentDBVersion == 23 && firstOpenAfterUpgrade == 1){
+            sleep(3);
+            bool migrated = [OCKeychain updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType];
+            sleep(3);
+            self.activeUser = [ManageUsersDB getActiveUser];
+            
+            if (!migrated) {
+                DLog(@"No migrated credentials at init");
+            } else {
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                [defaults setInteger:1 forKey:@"firstOpenAfterUpgrade"];
+                [defaults synchronize];
+            }
         }
         
     } else if (k_show_main_help_guide && [ManageDB getShowHelpGuide]) {
@@ -339,7 +359,7 @@ float shortDelay = 0.3;
     [DownloadUtils setThePermissionsForFolderPath:localTempPath];
     
     //First Call when init the app
-     self.activeUser = [ManageUsersDB getActiveUserWithoutCredentials];
+     self.activeUser = [ManageUsersDB getActiveUser];
     
     //if is null we do not have any active user on the database
     if(!self.activeUser) {
@@ -378,8 +398,7 @@ float shortDelay = 0.3;
 
 
 - (void) generateAppInterfaceFromLoginScreen:(BOOL)isFromLogin{
-    
-    self.activeUser = [ManageUsersDB getActiveUserWithoutCredentials];
+    self.activeUser = [ManageUsersDB getActiveUser];
     
     NSString *wevDavString = [UtilsUrls getFullRemoteServerPathWithWebDav:_activeUser];
     NSString *localSystemPath = nil;
@@ -516,8 +535,8 @@ float shortDelay = 0.3;
             
         }
         
-        self.activeUser = [ManageUsersDB getActiveUser];
         
+        self.activeUser = [ManageUsersDB getActiveUser];
         //if is file from other app wainting, present the upload from other app view
         if (self.isFileFromOtherAppWaitting==YES) {
             [self presentUploadFromOtherApp];
@@ -532,6 +551,7 @@ float shortDelay = 0.3;
 #pragma mark - OCCommunications
 + (OCCommunication*)sharedOCCommunication
 {
+    
 	static OCCommunication* sharedOCCommunication = nil;
 	if (sharedOCCommunication == nil)
 	{
@@ -645,10 +665,9 @@ float shortDelay = 0.3;
         
         OCKeychain *oKeychain = [[OCKeychain alloc] init];
         [sharedOCCommunicationDownloadFolder setValueCredentialsStorage:oKeychain];
-        
+
         SSLCertificateManager *sslCertificateManager = [[SSLCertificateManager alloc] init];
         [sharedOCCommunicationDownloadFolder setValueTrustedCertificatesStore:sslCertificateManager];
-
     }
     return sharedOCCommunicationDownloadFolder;
 }

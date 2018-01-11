@@ -35,11 +35,6 @@
 + (UserDto *) getActiveUser;
 
 /*
- * This method returns the active user of the app without credentials
- */
-+ (UserDto *) getActiveUserWithoutCredentials;
-
-/*
  * Method that returns the user object of the userId
  * @userId -> User id.
  */

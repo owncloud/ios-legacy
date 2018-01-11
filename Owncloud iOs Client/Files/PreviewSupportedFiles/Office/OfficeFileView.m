@@ -134,48 +134,52 @@ CGPoint _lastContentOffset;
  * Method to load a document by filePath.
  */
 - (void)openOfficeFileWithPath:(NSString*)filePath andFileName: (NSString *) fileName {
-    _isDocument=YES;
-    
-    [self configureWebView];
-    NSURL *url = [NSURL fileURLWithPath:filePath];
-    
-    NSString *ext=@"";
-    ext = [FileNameUtils getExtension:fileName];
-    
-    if ( [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"TEX"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] ) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _isDocument=YES;
         
-        NSString *dataFile = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:url] encoding:NSASCIIStringEncoding];
-
-        if (IS_IPHONE) {
-            [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_iphone,k_txt_files_font_family,dataFile] baseURL:nil];
-        }else{
-            [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_ipad,k_txt_files_font_family,dataFile] baseURL:nil];
+        [self configureWebView];
+        NSURL *url = [NSURL fileURLWithPath:filePath];
+        
+        NSString *ext=@"";
+        ext = [FileNameUtils getExtension:fileName];
+        
+        if ( [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"TEX"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] ) {
+            
+            NSString *dataFile = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:url] encoding:NSASCIIStringEncoding];
+            
+            if (IS_IPHONE) {
+                [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_iphone,k_txt_files_font_family,dataFile] baseURL:nil];
+            }else{
+                [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_ipad,k_txt_files_font_family,dataFile] baseURL:nil];
+            }
+            
+        } else if ([ext isEqualToString:@"TXT"]) {
+            
+            NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+            NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:nil delegateQueue:nil];
+            
+            NSMutableURLRequest *headRequest = [NSMutableURLRequest requestWithURL:url];
+            [headRequest setHTTPMethod:@"HEAD"];
+            
+            NSURLSessionDataTask *task = [session dataTaskWithRequest:headRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_webView loadData:[NSData dataWithContentsOfURL: url] MIMEType:response.MIMEType textEncodingName:@"utf-8" baseURL:url];
+                });
+            }];
+            
+            [task resume];
+            
+        } else if ([ext isEqualToString:@"PDF"]) {
+            NSURL *targetURL = [NSURL fileURLWithPath:filePath];
+            NSData *pdfData = [[NSData alloc] initWithContentsOfURL:targetURL];
+            [self.webView loadData:pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:url];
+        } else {
+            [self.webView loadRequest:[NSMutableURLRequest requestWithURL:url]];
         }
         
-    } else if ([ext isEqualToString:@"TXT"]) {
-        
-        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:nil delegateQueue:nil];
-
-        NSMutableURLRequest *headRequest = [NSMutableURLRequest requestWithURL:url];
-        [headRequest setHTTPMethod:@"HEAD"];
-        
-        NSURLSessionDataTask *task = [session dataTaskWithRequest:headRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            [_webView loadData:[NSData dataWithContentsOfURL: url] MIMEType:response.MIMEType textEncodingName:@"utf-8" baseURL:url];
-        }];
-        
-        [task resume];
-        
-    } else if ([ext isEqualToString:@"PDF"]) {
-        NSURL *targetURL = [NSURL fileURLWithPath:filePath];
-        NSData *pdfData = [[NSData alloc] initWithContentsOfURL:targetURL];
-        [self.webView loadData:pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:url];
-    } else {
-        [self.webView loadRequest:[NSMutableURLRequest requestWithURL:url]];
-    }
-    
-    [_webView setHidden:NO];
-    [_webView setScalesPageToFit:YES];
+        [_webView setHidden:NO];
+        [_webView setScalesPageToFit:YES];
+    });
 }
 
 /*
