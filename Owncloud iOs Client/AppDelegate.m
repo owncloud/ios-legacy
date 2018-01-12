@@ -183,7 +183,7 @@ float shortDelay = 0.3;
         int currentDBVersion = [ManageDB getDatabaseVersion];
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSInteger openAfterUpgrade = [defaults integerForKey:@"firstOpenAfterUpgrade"];
+        NSInteger openAfterUpgrade = [defaults integerForKey:@"openAfterUpgrade"];
         
         if (currentDBVersion == 23 && openAfterUpgrade != 1){
             NSLog(@"Migrating after first open upgrade, Change kind of credentials in DB version from 21or22 to23");
