@@ -412,7 +412,7 @@ public enum TextfieldType: String {
                 
                 if (self.user?.credDto != nil && self.user?.credDto.userName != nil
                     && self.user?.credDto.userName != "") {
-                    //new credentials, upgrade active user
+                    print("New credentials, update active user")
                     let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
                     app.activeUser = self.user;
                 } else {
