@@ -26,8 +26,9 @@
 
 + (void) updateServerFeaturesAndCapabilitiesOfActiveUser{
     
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
         if (app.activeUser.username == nil) {
             app.activeUser = [ManageUsersDB getActiveUser];
