@@ -180,30 +180,16 @@ float shortDelay = 0.3;
         ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
         
-        ManageAccounts *manageAccounts = [ManageAccounts new];
-        [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
-
-        //if we are migrating url not relaunch sync, neither update cookies and server checks
-        BOOL isNeccessaryMigrateURL = [UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl];
         int currentDBVersion = [ManageDB getDatabaseVersion];
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSInteger firstOpenAfterUpgrade = [defaults integerForKey:@"firstOpenAfterUpgrade"];
         
-        //Change kind of credentials in DB version 22
-        if (!isNeccessaryMigrateURL && currentDBVersion != 23) {
-            
-            [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
-            
-            //Update favorites files if there are active user
-            [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:fiveSecondsDelay];
-            
-        } else if (isNeccessaryMigrateURL == YES){
-             [UtilsCookies deleteAllCookiesOfActiveUser];
-        } else if (currentDBVersion == 23 && firstOpenAfterUpgrade == 1){
+        if (currentDBVersion == 23 && firstOpenAfterUpgrade == 1){
+            DLog(@"Migrating after first open upgrade, Change kind of credentials in DB version 22");
             sleep(3);
             bool migrated = [OCKeychain updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType];
-            sleep(3);
+            sleep(5);
             self.activeUser = [ManageUsersDB getActiveUser];
             
             if (!migrated) {
@@ -214,6 +200,24 @@ float shortDelay = 0.3;
                 [defaults synchronize];
             }
         }
+        
+        ManageAccounts *manageAccounts = [ManageAccounts new];
+        [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
+
+        //if we are migrating url not relaunch sync, neither update cookies and server checks
+        BOOL isNeccessaryMigrateURL = [UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl];
+        
+        if (!isNeccessaryMigrateURL) {
+            
+            [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
+            
+            //Update favorites files if there are active user
+            [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:fiveSecondsDelay];
+            
+        } else if (isNeccessaryMigrateURL == YES){
+            [UtilsCookies deleteAllCookiesOfActiveUser];
+        }
+        
         
     } else if (k_show_main_help_guide && [ManageDB getShowHelpGuide]) {
             self.helpGuideWindowViewController = [HelpGuideViewController new];
