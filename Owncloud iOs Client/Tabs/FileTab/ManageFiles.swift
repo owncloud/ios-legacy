@@ -31,7 +31,7 @@ import Foundation
         }
         
         
-        ManageFilesDB.insertManyFiles(listOfFiles as! NSMutableArray, ofFileId: fileId, andUser: user)
+        ManageFilesDB.insertManyFiles(listOfFiles, ofFileId: fileId, andUser: user)
         
     }
     
