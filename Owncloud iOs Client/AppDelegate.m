@@ -183,9 +183,9 @@ float shortDelay = 0.3;
         int currentDBVersion = [ManageDB getDatabaseVersion];
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSInteger migratedCredInDB23 = [defaults integerForKey:@"migratedCredInDB23"];
+        NSInteger openAfterUpgradeDB23 = [defaults integerForKey:@"openAfterUpgradeDB23"];
         
-        if (currentDBVersion == 23 && migratedCredInDB23 != 1){
+        if (currentDBVersion == 23 && openAfterUpgradeDB23 != 1){
             NSLog(@"Migrating after first open upgrade, Change kind of credentials in DB version from 21or22 to23");
             sleep(3);
             bool migrated = [OCKeychain updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType];
@@ -196,10 +196,11 @@ float shortDelay = 0.3;
                 NSLog(@"No migrated credentials at init");
             } else {
                 NSLog(@"Migrated credentials at init");
-                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                [defaults setInteger:1 forKey:@"migratedCredInDB23"];
-                [defaults synchronize];
             }
+            //Some users could have migrated correctly from 3.6.2 to 3.7.0.
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setInteger:1 forKey:@"openAfterUpgradeDB23"];
+            [defaults synchronize];
         }
         
         ManageAccounts *manageAccounts = [ManageAccounts new];
