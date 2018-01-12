@@ -82,21 +82,10 @@
 		<key>NSExceptionDomains</key>
 		<dict/>
 	</dict>
-<<<<<<< HEAD
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Used to instantly upload your new photos after a significant change in your location</string>
-<<<<<<< HEAD
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Used to instantly upload your new photos after a significant change in your location</string>
-=======
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 60837bef... acces to files step by step
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Used to instantly upload your new photos after a significant change in your location</string>
->>>>>>> acces to files step by step
->>>>>>> 7727ad32... acces to files step by step
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Used to instantly upload your new photos after a significant change in your location</string>
 	<key>NSPhotoLibraryUsageDescription</key>

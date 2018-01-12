@@ -281,6 +281,17 @@
 }
 
 
++ (NSString *) getSharedLinkArgumentsFromWebLink:(NSString *)filePath andUser:(UserDto *)mUserDto {
+    NSString *pathOnDB = @"";
+    
+    NSString *partToRemove = [NSString stringWithFormat:@"%@%@",[self getFullRemoteServerPath:mUserDto],k_url_files_share_link];
+    if([filePath length] >= [partToRemove length]){
+        pathOnDB = [filePath substringFromIndex:[partToRemove length]];
+    }
+    
+    return pathOnDB;
+}
+
 //----------------------------------------------
 /// @name getFilePathOnDBByFilePathOnFileDto
 ///---------------------------------------------

@@ -77,7 +77,7 @@
  *
  */
 
--(void)handleLink: (void(^)(NSString *items))success failure:(void(^)(NSError *error)) failure;
+-(void)handleLink: (void(^)(NSArray *items))success failure:(void(^)(NSError *error)) failure;
 
 -(void)handleLink;
 
@@ -89,6 +89,10 @@
  */
 
 -(void)cacheDownloadedFolder:(NSMutableArray *)downloadedFolder withParent:(FileDto *)parent;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3ad119f4... added support for subpaths in the link
 -(id)initWithTappedLinkURL:(NSURL *) linkURL;
 -(void)openLink;
 

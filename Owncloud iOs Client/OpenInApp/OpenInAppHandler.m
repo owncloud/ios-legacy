@@ -37,30 +37,11 @@
     
     [[AppDelegate sharedOCCommunication] getFullPathFromPrivateLink:_tappedLinkURL success:^(NSURL *path) {
         success(path.absoluteString);
-<<<<<<< HEAD
-=======
-
->>>>>>> remaked the algorithm for taking all the files tree in this feature
     } failure:^(NSError *error){
         failure(error);
     }];
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
--(NSMutableArray *)getQueryParameters:(NSString *) url {
-    
-    
-    NSMutableArray *params = [[NSMutableArray alloc] init];
-    for (NSString *param in [url componentsSeparatedByString:@"&"]) {
-        NSArray *elts = [param componentsSeparatedByString:@"="];
-        if([elts count] < 2) continue;
-        [params addObject:[elts lastObject]];
-    }
-    
-    return params;
-}
-
 -(BOOL)isFolder: (NSArray *)queryParameters {
     if (queryParameters.count >= 2) {
         return NO;
@@ -83,116 +64,51 @@
 
 -(void)handleLink {
     
-    [self getRedirection:_tappedLinkURL success:^(NSString *redirectedURL) {
-        NSArray *queryParameters = [self getQueryParameters:redirectedURL];
-        NSMutableArray *detachedFolderPath = [[queryParameters[0] componentsSeparatedByString:@"/"] mutableCopy];
-        [detachedFolderPath removeObjectAtIndex:0];
-        if (![self isFolder:queryParameters]) {
-            [detachedFolderPath addObject:queryParameters[1]];
-        } else {
-            [detachedFolderPath removeLastObject];
-        }
-        
-        NSMutableArray *urls = [self getURlsForFilesWithQueryParameters:detachedFolderPath andBaseURL:@"https://pablos-mbp.solidgear.prv/remote.php/webdav/"];
-        
-        FileDto *rootFolder = [ManageFilesDB getRootFileDtoByUser: APP_DELEGATE.activeUser];
-        
-        for(int i = 0; i < urls.count; i++) {
-            [self getFilesFrom:urls[i] success:^(NSArray *items) {
-                NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
-                if (i == 0) {
-                    [self cacheDownloadedFolder:directoryList withParent:rootFolder];
-                }
-                
-                NSLog(@"LOG ---> success la request de get files con %@", urls[i]);
-            } failure:^(NSError *error) {
-                NSLog(@"LOG ---> failure la request de get files con %@", urls[i]);
-                
-            }];
-        }
-    } failure:^(NSError *error) {
-        NSLog(@"LOG ---> failure del handle link");
-
-    }];
+    
     
     
 }
 
--(void)getFilesFrom:(NSString *)folderPath success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
+-(NSMutableArray *)getQueryParameters:(NSString *) url {
+    
+    
+    NSMutableArray *params = [[NSMutableArray alloc] init];
+    for (NSString *param in [url componentsSeparatedByString:@"&"]) {
+        NSArray *elts = [param componentsSeparatedByString:@"="];
+        if([elts count] < 2) continue;
+        [params addObject:[elts lastObject]];
+    }
+    
+    return params;
+}
+
+<<<<<<< HEAD
+
+-(BOOL)isFolder: (NSArray *)queryParameters {
+    if (queryParameters.count >= 2) {
+        return NO;
+    }
+    return YES;
+}
+
+-(NSMutableArray *)getURlsForFilesWithQueryParameters: (NSMutableArray *)detachedFolderPath andBaseURL: (NSString *)baseURL {
 =======
--(NSMutableArray *)getQueryParameters:(NSString *) url {
->>>>>>> remaked the algorithm for taking all the files tree in this feature
+-(void)cacheDownloadedFolder:(NSMutableArray *)downloadedFolder withParent:(FileDto *)parent {
     
     
-    NSMutableArray *params = [[NSMutableArray alloc] init];
-    for (NSString *param in [url componentsSeparatedByString:@"&"]) {
-        NSArray *elts = [param componentsSeparatedByString:@"="];
-        if([elts count] < 2) continue;
-        [params addObject:[elts lastObject]];
-    }
-    
-    return params;
-}
-
-
--(BOOL)isFolder: (NSArray *)queryParameters {
-    if (queryParameters.count >= 2) {
-        return NO;
-    }
-    return YES;
-}
-
--(NSMutableArray *)getURlsForFilesWithQueryParameters: (NSMutableArray *)detachedFolderPath andBaseURL: (NSString *)baseURL {
-    
-    NSMutableArray *urls = [[NSMutableArray alloc] init];
-    NSString *tmpURL = baseURL;
-    [urls addObject:tmpURL];
-    for(int i = 0; i < detachedFolderPath.count; i++) {
-        tmpURL = [tmpURL stringByAppendingString:[detachedFolderPath[i] stringByAppendingString: @"/"]];
-        [urls addObject:tmpURL];
-    }
-    
-    return urls;
-}
-
--(void)handleLink {
-    
-    [self getRedirection:_tappedLinkURL success:^(NSString *redirectedURL) {
-        NSArray *queryParameters = [self getQueryParameters:redirectedURL];
-        NSMutableArray *detachedFolderPath = [[queryParameters[0] componentsSeparatedByString:@"/"] mutableCopy];
-        [detachedFolderPath removeObjectAtIndex:0];
-        if (![self isFolder:queryParameters]) {
-            [detachedFolderPath addObject:queryParameters[1]];
-        } else {
-            [detachedFolderPath removeLastObject];
+    for (int i = 1; i < downloadedFolder.count; i++) {
+        FileDto *tmpFileDTO = downloadedFolder[i];
+        FileDto *cachedFile = [ManageFilesDB getFolderByFilePath:tmpFileDTO.filePath andFileName:tmpFileDTO.fileName];
+        if (cachedFile != nil) {
+            [downloadedFolder removeObjectAtIndex:i];
         }
-        
-        NSMutableArray *urls = [self getURlsForFilesWithQueryParameters:detachedFolderPath andBaseURL:@"https://pablos-mbp.solidgear.prv/remote.php/webdav/"];
-        
-        FileDto *rootFolder = [ManageFilesDB getRootFileDtoByUser: APP_DELEGATE.activeUser];
-        
-        for(int i = 0; i < urls.count; i++) {
-            [self getFilesFrom:urls[i] success:^(NSArray *items) {
-                NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
-                if (i == 0) {
-                    [self cacheDownloadedFolder:directoryList withParent:rootFolder];
-                }
-                
-                NSLog(@"LOG ---> success la request de get files con %@", urls[i]);
-            } failure:^(NSError *error) {
-                NSLog(@"LOG ---> failure la request de get files con %@", urls[i]);
-                
-            }];
-        }
-    } failure:^(NSError *error) {
-        NSLog(@"LOG ---> failure del handle link");
-
-    }];
+    }
     
-    
+    [ManageFilesDB insertManyFiles:downloadedFolder ofFileId:5 andUser:APP_DELEGATE.activeUser];
 }
 
 -(void)getFilesFrom:(NSString *)folderPath success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
+>>>>>>> 3ad119f4... added support for subpaths in the link
     
     [[AppDelegate sharedOCCommunication] readFolder:folderPath withUserSessionToken:APP_DELEGATE.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
         
@@ -207,19 +123,58 @@
     
 }
 
--(void)cacheDownloadedFolder:(NSMutableArray *)downloadedFolder withParent:(FileDto *)parent {
+-(void)handleLink:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
     
-    [downloadedFolder removeObjectAtIndex:0];
-    
-    for (int i = 0; i < downloadedFolder.count; i++) {
-        FileDto *tmpFileDTO = downloadedFolder[i];
-        FileDto *cachedFile = [ManageFilesDB getFolderByFilePath:tmpFileDTO.filePath andFileName:tmpFileDTO.fileName];
-        if (cachedFile != nil) {
-            [downloadedFolder removeObjectAtIndex:i];
+    [self getRedirection:_tappedLinkURL success:^(NSString *redirectedURL) {
+        
+        
+        NSString *fileRedirectedURL = [UtilsUrls getSharedLinkArgumentsFromWebLink:redirectedURL andUser:_user];
+        NSArray *queryParameters = [self getQueryParameters:fileRedirectedURL];
+        
+        NSMutableArray *detachedFolderPath = [[queryParameters[0] componentsSeparatedByString:@"/"] mutableCopy];
+        [detachedFolderPath removeObjectAtIndex:0];
+        if (![self isFolder:queryParameters]) {
+            [detachedFolderPath addObject:queryParameters[1]];
+        } else {
+            [detachedFolderPath removeLastObject];
         }
-    }
+        
+        __block NSMutableArray *urls = [self getURlsForFilesWithQueryParameters:detachedFolderPath andBaseURL: [UtilsUrls getFullRemoteServerPathWithWebDav:_user]];
+        
+        __block NSMutableArray *files = [[NSMutableArray alloc] initWithCapacity:urls.count];
+        
+        dispatch_group_t group = dispatch_group_create();
+        dispatch_group_enter(group);
+        
+        dispatch_group_async(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+            [urls enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [self getFilesFrom:urls[idx] success:^(NSArray *items) {
+                    NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
+                    files[idx] = directoryList;
+                    NSLog(@"LOG ---> success la request de get files con %@", urls[idx]);
+                    
+                    if (idx == urls.count - 1) {
+                        dispatch_group_leave(group);
+                    }
+                } failure:^(NSError *error) {
+                    NSLog(@"LOG ---> failure la request de get files con %@", urls[idx]);
+                    //TODO: stop requests and show error message to user.
+                }];
+            }];
+        });
+        
+        dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+            FileDto *parent = [ManageFilesDB getRootFileDtoByUser: _user];
+            for (int i = 1; i < files.count; i ++) {
+                [self cacheDownloadedFolder:files[i] withParent:parent];
+            }
+            NSLog(@"LOG ---> all requests finished %@", files[0][0]);
+        });
+        
+    } failure:^(NSError *error) {
+        NSLog(@"LOG ---> failure del handle link");
+    }];
     
-    [ManageFilesDB insertManyFiles:downloadedFolder ofFileId:parent.idFile andUser:APP_DELEGATE.activeUser];
 }
 
 @end

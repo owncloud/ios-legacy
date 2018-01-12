@@ -2825,34 +2825,16 @@ float shortDelay = 0.3;
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
         NSURL *tappedLinkURL = userActivity.webpageURL;
         
-        OpenInAppHandler *handler = [[OpenInAppHandler alloc] initWithLink:tappedLinkURL andUser:_activeUser];
-        
-        [handler handleLink];
-        
-//        [handler handleLink:^(NSString *items) {
-//            
-//            NSArray *elts = [items componentsSeparatedByString:@"/"];
-//                        
-//            NSString *url = @"/remote.php/";
-//            
-//            for (int i = 4; i < elts.count - 2; i++) {
-//                NSString *tmp = elts[i];
-//                tmp = [tmp stringByAppendingString:@"/"];
-//                url = [url stringByAppendingString:tmp];
-//                NSString *name = [elts[i+1] stringByAppendingString:@"/"];
-//                
-//                NSString *tmpURL = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:url andUser:self.activeUser];
-//                FileDto *checkedFile = [ManageFilesDB getFileDtoByFileName: name  andFilePath:tmpURL andUser:self.activeUser];
-//                
-//                if (checkedFile != nil) {
-//                    [_presentFilesViewController navigateTo: checkedFile];
-//                    [NSThread sleepForTimeInterval:2];
-//                }
-//            }
-//
-//        } failure:^(NSError *error) {
-//            NSLog(@"LOG ---> error getting the redirection");
-//        }];
+        UserDto *currentUser = [_activeUser copy];
+        __block OpenInAppHandler *handler = [[OpenInAppHandler alloc] initWithLink:tappedLinkURL andUser:currentUser]; 
+                
+        [handler handleLink:^(NSArray<FileDto *> *items) {
+            for(int i = 0; i < items.count; i++){
+                [_presentFilesViewController navigateTo: items[i]];
+            }
+        } failure:^(NSError *error) {
+            NSLog(@"LOG ---> error getting the redirection");
+        }];
     }
 
     return YES;
