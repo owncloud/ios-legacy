@@ -405,6 +405,7 @@ public enum TextfieldType: String {
             if (noCredentialsAvailable) {
                 
                 //TODO:show OCLoadingSpinner
+                print("Migrating keychain from login view")
                 OCKeychain.updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType()
                 sleep(5)
                 self.user = ManageUsersDB.getActiveUser()
@@ -415,7 +416,7 @@ public enum TextfieldType: String {
                     let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
                     app.activeUser = self.user;
                 } else {
-                    //can not get credentials from keychain
+                    print("Can not get credentials from keychain in login view")
                     OCKeychain.removeCredentials(ofUser: self.user)
                     //TODO:expire all accounts and force migration
                     self.forceAccountMigration = true

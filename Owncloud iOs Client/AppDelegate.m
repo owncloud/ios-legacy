@@ -186,15 +186,16 @@ float shortDelay = 0.3;
         NSInteger openAfterUpgrade = [defaults integerForKey:@"firstOpenAfterUpgrade"];
         
         if (currentDBVersion == 23 && openAfterUpgrade != 1){
-            DLog(@"Migrating after first open upgrade, Change kind of credentials in DB version 22");
+            NSLog(@"Migrating after first open upgrade, Change kind of credentials in DB version from 21or22 to23");
             sleep(3);
             bool migrated = [OCKeychain updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType];
             sleep(5);
             self.activeUser = [ManageUsersDB getActiveUser];
             
             if (!migrated) {
-                DLog(@"No migrated credentials at init");
+                NSLog(@"No migrated credentials at init");
             } else {
+                NSLog(@"Migrated credentials at init");
                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                 [defaults setInteger:1 forKey:@"openAfterUpgrade"];
                 [defaults synchronize];
