@@ -359,7 +359,7 @@
 }
 
 
-+(void) insertManyFiles:(NSMutableArray *)listOfFiles ofFileId:(NSInteger)fileId andUser:(UserDto *)user {
++(void) insertManyFiles:(NSArray *)listOfFiles ofFileId:(NSInteger)fileId andUser:(UserDto *)user {
     
     NSString *sql = @"";
     NSMutableArray *arrayOfSqlRequests = [NSMutableArray new];
