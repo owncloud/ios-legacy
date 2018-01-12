@@ -980,6 +980,7 @@ public enum TextfieldType: String {
                         if ( (self.user?.username == nil || self.user?.username == "")
                             && self.userNewCredentials.userName != nil ){
                             self.user?.username = self.userNewCredentials.userName
+                            self.user?.credDto = (self.userNewCredentials.copy() as? OCCredentialsDto)!
                         }
                         
                         if (app.activeUser != nil && app.activeUser.userId == self.user?.userId) {
