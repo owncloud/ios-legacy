@@ -27,9 +27,7 @@
 + (void) updateServerFeaturesAndCapabilitiesOfActiveUser{
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
+    
         if (app.activeUser.username == nil) {
             app.activeUser = [ManageUsersDB getActiveUser];
         }
@@ -61,7 +59,6 @@
                 app.activeUser.capabilitiesDto =  [ManageCapabilitiesDB getCapabilitiesOfUserId:app.activeUser.userId];
             }];
         }
-    });
 }
 
 + (void) updateServerFeaturesOfActiveUserForVersion:(NSString *)versionString {
