@@ -106,18 +106,16 @@
     //Set the table footer
     [self setTheLabelOnTheTableFooter];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        //Do operations in background thread
-        //If the server has not been checked, do it
-        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-        if (app.activeUser.hasShareApiSupport == serverFunctionalityNotChecked) {
-            [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
-        }
-        
-        //Do the request to get the shared items
-        [self performSelector:@selector(refreshSharedItems) withObject:nil];
-       
-    });
+    //Do operations in background thread
+    //If the server has not been checked, do it
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if (app.activeUser.hasShareApiSupport == serverFunctionalityNotChecked) {
+        [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
+    }
+    
+    //Do the request to get the shared items
+    [self performSelector:@selector(refreshSharedItems) withObject:nil];
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
