@@ -34,7 +34,7 @@ NSString * CapabilitiesUpdatedNotification = @"CapabilitiesUpdatedNotification";
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    if (app.activeUser) {
+    if (app.activeUser && app.activeUser.credDto) {
         
         [[AppDelegate sharedOCCommunication] setCredentials:app.activeUser.credDto];
         
