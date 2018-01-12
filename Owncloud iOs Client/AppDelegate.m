@@ -176,19 +176,18 @@ float shortDelay = 0.3;
     if (user) {
 
         self.activeUser = [user copy];
+        [UtilsCookies deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser];
         
         ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
+        
+        ManageAccounts *manageAccounts = [ManageAccounts new];
+        [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
 
         //if we are migrating url not relaunch sync, neither update cookies and server checks
         if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
             
             [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
-            
-            [UtilsCookies deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser];
-            
-            ManageAccounts *manageAccounts = [ManageAccounts new];
-            [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
             
             //Update favorites files if there are active user
             [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:fiveSecondsDelay];
