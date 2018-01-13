@@ -189,7 +189,7 @@ float shortDelay = 0.3;
             NSLog(@"Migrating after first open upgrade, Change kind of credentials in DB version from 21or22 to23");
             sleep(3);
             bool migrated = [OCKeychain updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType];
-            sleep(5);
+            sleep(4);
             self.activeUser = [ManageUsersDB getActiveUser];
             
             if (!migrated) {
