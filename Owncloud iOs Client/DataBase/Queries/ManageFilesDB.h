@@ -97,7 +97,7 @@
  * @fileId -> id of its parent folder
  * @user -> UserDto owner of files
  */
-+(void) insertManyFiles:(NSMutableArray *)listOfFiles ofFileId:(NSInteger)fileId andUser:(UserDto *)user;
++(void) insertManyFiles:(NSArray *)listOfFiles ofFileId:(NSInteger)fileId andUser:(UserDto *)user;
 
 /*
  * Method to delete a file

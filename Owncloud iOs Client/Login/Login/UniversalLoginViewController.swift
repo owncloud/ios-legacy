@@ -907,7 +907,6 @@ public enum TextfieldType: String {
                         newUser.username = credentials.userName
                         newUser.ssl = self.validatedServerURL.hasPrefix("https")
                         newUser.urlRedirected = app.urlServerRedirected
-                        newUser.activeaccount = true
                         
                         self.user = newUser.copy() as? UserDto
                     }
