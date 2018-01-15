@@ -165,8 +165,15 @@
         
         dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             FileDto *parent = [ManageFilesDB getRootFileDtoByUser: _user];
+            FileDto *documents = [ManageFilesDB getFileDtoByFileName:@"Documents/" andFilePath:@"" andUser:_user];
+            NSLog(@"LOG ---> parent id%ld", (long)documents.idFile);
             for (int i = 1; i < files.count; i ++) {
-                [self cacheDownloadedFolder:files[i] withParent:parent];
+                NSString *path = [UtilsUrls getFilePathOnDBByFullPath:urls[i - 1] andUser:_user];
+                NSString *name = [UtilsUrls getFilePathOnDBByFullPath:urls[i] andUser:_user];
+
+                NSLog(@"LOG ---> path %@ and name %@", path, name);
+                FileDto *documents = [ManageFilesDB getFileDtoByFileName:@"Documents/" andFilePath:path andUser:_user];
+                [self cacheDownloadedFolder:files[i] withParent:documents];
             }
             NSLog(@"LOG ---> all requests finished %@", files[0][0]);
         });
