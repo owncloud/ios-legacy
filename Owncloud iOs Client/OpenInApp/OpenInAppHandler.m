@@ -82,17 +82,6 @@
     return params;
 }
 
-<<<<<<< HEAD
-
--(BOOL)isFolder: (NSArray *)queryParameters {
-    if (queryParameters.count >= 2) {
-        return NO;
-    }
-    return YES;
-}
-
--(NSMutableArray *)getURlsForFilesWithQueryParameters: (NSMutableArray *)detachedFolderPath andBaseURL: (NSString *)baseURL {
-=======
 -(void)cacheDownloadedFolder:(NSMutableArray *)downloadedFolder withParent:(FileDto *)parent {
     
     
@@ -108,7 +97,6 @@
 }
 
 -(void)getFilesFrom:(NSString *)folderPath success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
->>>>>>> 3ad119f4... added support for subpaths in the link
     
     [[AppDelegate sharedOCCommunication] readFolder:folderPath withUserSessionToken:APP_DELEGATE.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
         
@@ -165,15 +153,8 @@
         
         dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             FileDto *parent = [ManageFilesDB getRootFileDtoByUser: _user];
-            FileDto *documents = [ManageFilesDB getFileDtoByFileName:@"Documents/" andFilePath:@"" andUser:_user];
-            NSLog(@"LOG ---> parent id%ld", (long)documents.idFile);
             for (int i = 1; i < files.count; i ++) {
-                NSString *path = [UtilsUrls getFilePathOnDBByFullPath:urls[i - 1] andUser:_user];
-                NSString *name = [UtilsUrls getFilePathOnDBByFullPath:urls[i] andUser:_user];
-
-                NSLog(@"LOG ---> path %@ and name %@", path, name);
-                FileDto *documents = [ManageFilesDB getFileDtoByFileName:@"Documents/" andFilePath:path andUser:_user];
-                [self cacheDownloadedFolder:files[i] withParent:documents];
+                [self cacheDownloadedFolder:files[i] withParent:parent];
             }
             NSLog(@"LOG ---> all requests finished %@", files[0][0]);
         });
