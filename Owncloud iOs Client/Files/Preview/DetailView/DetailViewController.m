@@ -845,11 +845,7 @@
     
     _titleLabel.text = @"";
 
-    if (k_use_open_with_UIDocumentInteractionController) {
-        [_openWith.documentInteractionController dismissMenuAnimated:YES];
-    } else {
-        [_openWith.activityPopoverController dismissPopoverAnimated:YES];
-    }
+    [_openWith.documentInteractionController dismissMenuAnimated:YES];
     
     [self removeThePreviousViews];
     
@@ -1058,16 +1054,9 @@
  */
 - (IBAction)didPressShareLinkButton:(id)sender {
     DLog(@"Share button clicked");
-    
-    if (k_use_open_with_UIDocumentInteractionController) {
 
-        if (_openWith && _openWith.documentInteractionController) {
-            [_openWith.documentInteractionController dismissMenuAnimated:YES];
-        }
-    } else {
-        if (_openWith && _openWith.activityView) {
-            [_openWith.activityPopoverController dismissPopoverAnimated:YES];
-        }
+    if (_openWith && _openWith.documentInteractionController) {
+        [_openWith.documentInteractionController dismissMenuAnimated:YES];
     }
     
     DLog(@"Share Link Option");
@@ -1747,11 +1736,7 @@
     
     if (_openWith) {
         
-        if (k_use_open_with_UIDocumentInteractionController) {
-            [_openWith.documentInteractionController dismissMenuAnimated:NO];
-        } else {
-            [_openWith.activityPopoverController dismissPopoverAnimated:NO];
-        }
+        [_openWith.documentInteractionController dismissMenuAnimated:NO];
     }
     
 }

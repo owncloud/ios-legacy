@@ -624,11 +624,7 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
     if (self.openWith && !IS_IPHONE) {
-        if (k_use_open_with_UIDocumentInteractionController) {
-            [self.openWith.documentInteractionController dismissMenuAnimated:NO];
-        } else {
-            [self.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
-        }
+        [self.openWith.documentInteractionController dismissMenuAnimated:NO];
     }
     
     if (self.plusActionSheet) {
@@ -2547,11 +2543,7 @@
             if (_selectedIndexPath) {
                 cell = [_tableView cellForRowAtIndexPath:_selectedIndexPath];
                 _openWith.parentView =_tableView;
-                if (k_use_open_with_UIDocumentInteractionController) {
-                    _openWith.cellFrame = [self.tableView rectForRowAtIndexPath:self.selectedIndexPath];
-                } else {
-                    _openWith.cellFrame = cell.frame;
-                }
+                _openWith.cellFrame = [self.tableView rectForRowAtIndexPath:self.selectedIndexPath];
                 _openWith.isTheParentViewACell = YES;
                 
             } else {
