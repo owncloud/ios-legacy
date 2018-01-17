@@ -101,18 +101,16 @@
             
             if (_isTheParentViewACell) {
                 
-                [self.documentInteractionController presentOpenInMenuFromRect:self.cellFrame inView:self.parentView animated:YES];
+                [self.documentInteractionController presentOptionsMenuFromRect:self.cellFrame inView:self.parentView animated:YES];
                 
             } else {
                 
                 if (IS_IPHONE) {
-                    [self.documentInteractionController presentOpenInMenuFromRect:CGRectZero inView:presentedView.view animated:YES];
-                    
+                    [self.documentInteractionController presentOptionsMenuFromRect:CGRectZero inView:presentedView.view animated:YES];
+
                 } else {
-                    [self.documentInteractionController presentOpenInMenuFromBarButtonItem:self.parentButton animated:YES];
-                    
+                    [self.documentInteractionController presentOptionsMenuFromBarButtonItem:self.parentButton animated:YES];
                 }
-                
             }
             
         } else {

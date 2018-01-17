@@ -26,4 +26,4 @@
 
 //openWith mode
 //only use open with UIDocumentInteraciton with iOS<11 until fix the issue with UIDocumentInteractionController in iOS11
-#define k_use_open_with_UIDocumentInteractionController !IS_IOS11
+#define k_use_open_with_UIDocumentInteractionController YES
