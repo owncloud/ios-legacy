@@ -84,6 +84,7 @@
 
 -(void)cacheDownloadedFolder:(NSMutableArray *)downloadedFolder withParent:(FileDto *)parent {
     
+<<<<<<< HEAD
     
     for (int i = 1; i < downloadedFolder.count; i++) {
         FileDto *tmpFileDTO = downloadedFolder[i];
@@ -94,6 +95,21 @@
     }
     
     [ManageFilesDB insertManyFiles:downloadedFolder ofFileId:5 andUser:APP_DELEGATE.activeUser];
+=======
+    NSMutableArray *folderToCache = [NSMutableArray new];
+    int numberOfFiles = (int) downloadedFolder.count;
+    for (int i = 0; i < numberOfFiles; i++) {
+        FileDto *tmpFileDTO = downloadedFolder[i];
+        tmpFileDTO.filePath = [tmpFileDTO.filePath stringByReplacingOccurrencesOfString:@"/remote.php/webdav/" withString:@""];
+        FileDto *fileToCache = [ManageFilesDB getFileDtoByFileName:tmpFileDTO.fileName andFilePath:tmpFileDTO.filePath andUser:_user];
+        
+        if (fileToCache == nil) {
+            [folderToCache addObject:tmpFileDTO];
+        }
+    }
+
+    [ManageFilesDB insertManyFiles:folderToCache ofFileId:parent.idFile andUser:APP_DELEGATE.activeUser];
+>>>>>>> 991cd514... fix for the syncing algorithm in open in app the private links
 }
 
 -(void)getFilesFrom:(NSString *)folderPath success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
@@ -154,7 +170,26 @@
         dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             FileDto *parent = [ManageFilesDB getRootFileDtoByUser: _user];
             for (int i = 1; i < files.count; i ++) {
+<<<<<<< HEAD
                 [self cacheDownloadedFolder:files[i] withParent:parent];
+=======
+                
+                NSString *urlToGetAsParent = urls[i];
+                NSString *shortedFileURL = [UtilsUrls getFilePathOnDBByFullPath:urlToGetAsParent andUser:_user];
+                NSString *name = [self getFileNameFromURLWithURL:shortedFileURL];
+                NSString *path = [self getFilePathFromURLWithURL:shortedFileURL andFileName:name];
+                if ([path isEqualToString:@"/remote.php/webdav/"]) {
+                    path = @"";
+                }
+                
+                documents = [ManageFilesDB getFileDtoByFileName:name andFilePath:path andUser:_user];
+                if (documents != nil) {
+//                    documents.filePath = [documents.filePath stringByReplacingOccurrencesOfString:@"/remote.php/webdav" withString:@""];
+                    [filesToReturn addObject:documents];
+                }
+                [self cacheDownloadedFolder:files[i] withParent:documents];
+
+>>>>>>> 991cd514... fix for the syncing algorithm in open in app the private links
             }
             NSLog(@"LOG ---> all requests finished %@", files[0][0]);
         });

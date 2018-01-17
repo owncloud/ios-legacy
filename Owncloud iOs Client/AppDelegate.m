@@ -2829,11 +2829,14 @@ float shortDelay = 0.3;
         __block OpenInAppHandler *handler = [[OpenInAppHandler alloc] initWithLink:tappedLinkURL andUser:currentUser]; 
         
         [handler handleLink:^(NSArray<FileDto *> *items) {
-            for(int i = 0; i < items.count; i++){
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [_presentFilesViewController navigateTo: items[i]];
+                    [_presentFilesViewController navigateTo: items[items.count - 1]];
                 });
-            }
+//            for(int i = 0; i < items.count; i++){
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [_presentFilesViewController navigateTo: items[i]];
+//                });
+//            }
         } failure:^(NSError *error) {
             //TODO: manage the failures.
             DLog(@"Error getting the redirection");
