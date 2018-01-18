@@ -37,6 +37,13 @@
 @property(nonatomic,weak) __weak id<OpenWithDelegate> delegate; 
 @property(nonatomic, strong) UIView *parentView;
 @property(nonatomic, strong) UIDocumentInteractionController *documentInteractionController;
+
+/* Use UIActivityViewController and UIPopoverController instead of UIDocumentInteractionController
+ *  for open with option until fix for UIDocumentInteractionController in iOS11
+ */
+@property(nonatomic, strong) UIActivityViewController *activityView;
+@property (nonatomic, strong) UIPopoverController *activityPopoverController;
+
 @property(nonatomic, strong) UIBarButtonItem *parentButton;
 @property(nonatomic, strong) Download *download;
 @property(nonatomic, strong) NSString *currentLocalFolder;
