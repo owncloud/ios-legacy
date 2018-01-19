@@ -90,96 +90,26 @@
     if (file.localFolder) {
         
         DLog(@"File path is %@", file.localFolder);
-        if (!IS_IOS11) {
-            //Pass path to url
-            NSURL *url = [NSURL fileURLWithPath:file.localFolder];
-            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:url];
-            [self.documentInteractionController setDelegate:self];
+        
+        //Pass path to url
+        NSURL *url = [NSURL fileURLWithPath:file.localFolder];
+        self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:url];
+        [self.documentInteractionController setDelegate:self];
+        
+        if (_isTheParentViewACell) {
             
-            if (_isTheParentViewACell) {
-                
-                [self.documentInteractionController presentOptionsMenuFromRect:self.cellFrame inView:self.parentView animated:YES];
-                
-            } else {
-                
-                if (IS_IPHONE) {
-                    [self.documentInteractionController presentOptionsMenuFromRect:CGRectZero inView:self.parentView animated:YES];
-                    
-                } else {
-                    [self.documentInteractionController presentOptionsMenuFromBarButtonItem:self.parentButton animated:YES];
-                }
-            }
-        }else {
+            [self.documentInteractionController presentOptionsMenuFromRect:self.cellFrame inView:self.parentView animated:YES];
             
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            
-            DLog(@"File path is %@", file.localFolder);
-            
-            //Pass path to url
-            NSURL *url = [NSURL fileURLWithPath:file.localFolder];
-            
-            TTOpenInAppActivity *openInAppActivity;
-            
-            if (_isTheParentViewACell) {
-                openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.parentView andRect:_cellFrame];
-                
-            }else{
-                openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.parentView andBarButtonItem:self.parentButton];
-            }
-            
-            
-            if (self.activityView) {
-                [self.activityView dismissViewControllerAnimated:YES completion:nil];
-                self.activityView = nil;
-            }
-            
-            if (self.activityPopoverController) {
-                [self.activityPopoverController dismissPopoverAnimated:YES];
-                self.activityPopoverController = nil;
-            }
-            
-            self.activityView = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:@[openInAppActivity]];
+        } else {
             
             if (IS_IPHONE) {
+                [self.documentInteractionController presentOptionsMenuFromRect:CGRectZero inView:self.parentView animated:YES];
                 
-                openInAppActivity.superViewController = self.activityView;
-                
-                [app.ocTabBarController presentViewController:self.activityView animated:YES completion:nil];
             } else {
-                
-                if (self.activityPopoverController) {
-                    [self.activityPopoverController setContentViewController:self.activityView];
-                } else {
-                    self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:self.activityView];
-                }
-                
-                openInAppActivity.superViewController = self.activityPopoverController;
-                
-                if (_isTheParentViewACell && IS_PORTRAIT) {
-                    
-                    [self.activityPopoverController presentPopoverFromRect:CGRectMake(app.detailViewController.view.frame.size.width/2, app.detailViewController.view.frame.size.width/2, 100, 100) inView:app.detailViewController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-                    
-                }else{
-                    
-                    if (_isTheParentViewACell) {
-                        //Present view from cell from file list
-                        [self.activityPopoverController presentPopoverFromRect:_cellFrame inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-                        
-                    } else if (_parentButton) {
-                        //Present view from bar button item
-                        [self.activityPopoverController presentPopoverFromBarButtonItem:_parentButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-                        
-                    } else {
-                        //Present  view from rect
-                        [self.activityPopoverController presentPopoverFromRect:CGRectMake(100, 100, 200, 400) inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-                    }
-                }
+                [self.documentInteractionController presentOptionsMenuFromBarButtonItem:self.parentButton animated:YES];
             }
-            
         }
     }
-    
-    
 }
 
 #pragma mark - UIDocumentInteractionControllerDelegate methods
