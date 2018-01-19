@@ -84,18 +84,6 @@
 
 -(void)cacheDownloadedFolder:(NSMutableArray *)downloadedFolder withParent:(FileDto *)parent {
     
-<<<<<<< HEAD
-    
-    for (int i = 1; i < downloadedFolder.count; i++) {
-        FileDto *tmpFileDTO = downloadedFolder[i];
-        FileDto *cachedFile = [ManageFilesDB getFolderByFilePath:tmpFileDTO.filePath andFileName:tmpFileDTO.fileName];
-        if (cachedFile != nil) {
-            [downloadedFolder removeObjectAtIndex:i];
-        }
-    }
-    
-    [ManageFilesDB insertManyFiles:downloadedFolder ofFileId:5 andUser:APP_DELEGATE.activeUser];
-=======
     NSMutableArray *folderToCache = [NSMutableArray new];
     int numberOfFiles = (int) downloadedFolder.count;
     for (int i = 0; i < numberOfFiles; i++) {
@@ -109,7 +97,6 @@
     }
 
     [ManageFilesDB insertManyFiles:folderToCache ofFileId:parent.idFile andUser:APP_DELEGATE.activeUser];
->>>>>>> 991cd514... fix for the syncing algorithm in open in app the private links
 }
 
 -(void)getFilesFrom:(NSString *)folderPath success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
@@ -170,9 +157,6 @@
         dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             FileDto *parent = [ManageFilesDB getRootFileDtoByUser: _user];
             for (int i = 1; i < files.count; i ++) {
-<<<<<<< HEAD
-                [self cacheDownloadedFolder:files[i] withParent:parent];
-=======
                 
                 NSString *urlToGetAsParent = urls[i];
                 NSString *shortedFileURL = [UtilsUrls getFilePathOnDBByFullPath:urlToGetAsParent andUser:_user];
@@ -189,7 +173,6 @@
                 }
                 [self cacheDownloadedFolder:files[i] withParent:documents];
 
->>>>>>> 991cd514... fix for the syncing algorithm in open in app the private links
             }
             NSLog(@"LOG ---> all requests finished %@", files[0][0]);
         });

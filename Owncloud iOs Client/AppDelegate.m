@@ -2824,21 +2824,26 @@ float shortDelay = 0.3;
 
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
         NSURL *tappedLinkURL = userActivity.webpageURL;
-        
+
         UserDto *currentUser = [_activeUser copy];
-        __block OpenInAppHandler *handler = [[OpenInAppHandler alloc] initWithLink:tappedLinkURL andUser:currentUser]; 
-        
+        __block OpenInAppHandler *handler = [[OpenInAppHandler alloc] initWithLink:tappedLinkURL andUser:currentUser];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_presentFilesViewController initLoading];
+        });
+
         [handler handleLink:^(NSArray<FileDto *> *items) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [_presentFilesViewController navigateTo: items[items.count - 1]];
+                    if (items.count > 0) {
+                        [_presentFilesViewController endLoading];
+                        [_presentFilesViewController navigateTo: items[items.count - 1]];
+                    }
                 });
-//            for(int i = 0; i < items.count; i++){
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [_presentFilesViewController navigateTo: items[i]];
-//                });
-//            }
         } failure:^(NSError *error) {
-            //TODO: manage the failures.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_presentFilesViewController showError:@"Sorry :( an error happened trying to show to you the external link"];
+                [_presentFilesViewController endLoading];
+            });
             DLog(@"Error getting the redirection");
         }];
     }
