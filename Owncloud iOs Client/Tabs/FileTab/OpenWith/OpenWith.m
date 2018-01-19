@@ -25,6 +25,7 @@
 #import "Customization.h"
 
 
+
 @implementation OpenWith
 
 
@@ -110,7 +111,6 @@
             }
         }else {
             
-            
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             
             DLog(@"File path is %@", file.localFolder);
@@ -118,93 +118,63 @@
             //Pass path to url
             NSURL *url = [NSURL fileURLWithPath:file.localFolder];
             
+            TTOpenInAppActivity *openInAppActivity;
             
-            UIActivityItemProvider *activityProvider = [[UIActivityItemProvider alloc] initWithPlaceholderItem:url];
-            NSArray *items = @[activityProvider,url];
-            
-            NSMutableArray *activities = [NSMutableArray new];
-            
-            
-            self.activityView = [[UIActivityViewController alloc]
-                                                      initWithActivityItems:items
-                                                      applicationActivities:activities];
-            
-                [self.activityView setExcludedActivityTypes:
-                 @[UIActivityTypeAssignToContact,
-                   UIActivityTypeCopyToPasteboard,
-                   UIActivityTypePrint,
-                   UIActivityTypeSaveToCameraRoll,
-                   UIActivityTypePostToWeibo]];
-            
-            if (IS_IPHONE) {
-
-                [app.ocTabBarController presentViewController:self.activityView animated:YES completion:nil];
+            if (_isTheParentViewACell) {
+                openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.parentView andRect:_cellFrame];
+                
+            }else{
+                openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.parentView andBarButtonItem:self.parentButton];
             }
             
-//            else {
-//
-//                self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:self.activityView];
-//
-//                [self.activityPopoverController presentPopoverFromRect:CGRectMake(100, 100, 200, 400) inView:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-//            }
             
-//            TTOpenInAppActivity *openInAppActivity;
-//
-//            if (_isTheParentViewACell) {
-//                openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.parentView andRect:_cellFrame];
-//
-//            }else{
-//                openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.parentView andBarButtonItem:self.parentButton];
-//            }
-//
-//
-//            if (self.activityView) {
-//                [self.activityView dismissViewControllerAnimated:YES completion:nil];
-//                self.activityView = nil;
-//            }
-//
-//            if (self.activityPopoverController) {
-//                [self.activityPopoverController dismissPopoverAnimated:YES];
-//                self.activityPopoverController = nil;
-//            }
-//
-//            self.activityView = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:@[openInAppActivity]];
-//
-//            if (IS_IPHONE) {
-//
-//                openInAppActivity.superViewController = self.activityView;
-//
-//                [app.ocTabBarController presentViewController:self.activityView animated:YES completion:nil];
-//            } else {
-//
-//                if (self.activityPopoverController) {
-//                    [self.activityPopoverController setContentViewController:self.activityView];
-//                } else {
-//                    self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:self.activityView];
-//                }
-//
-//                openInAppActivity.superViewController = self.activityPopoverController;
-//
-//                if (_isTheParentViewACell && IS_PORTRAIT) {
-//
-//                    [self.activityPopoverController presentPopoverFromRect:CGRectMake(app.detailViewController.view.frame.size.width/2, app.detailViewController.view.frame.size.width/2, 100, 100) inView:app.detailViewController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-//
-//                }else{
-//
-//                    if (_isTheParentViewACell) {
-//                        //Present view from cell from file list
-//                        [self.activityPopoverController presentPopoverFromRect:_cellFrame inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-//
-//                    } else if (_parentButton) {
-//                        //Present view from bar button item
-//                        [self.activityPopoverController presentPopoverFromBarButtonItem:_parentButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-//
-//                    } else {
-//                        //Present  view from rect
-//                        [self.activityPopoverController presentPopoverFromRect:CGRectMake(100, 100, 200, 400) inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-//                    }
-//                }
-//            }
+            if (self.activityView) {
+                [self.activityView dismissViewControllerAnimated:YES completion:nil];
+                self.activityView = nil;
+            }
+            
+            if (self.activityPopoverController) {
+                [self.activityPopoverController dismissPopoverAnimated:YES];
+                self.activityPopoverController = nil;
+            }
+            
+            self.activityView = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:@[openInAppActivity]];
+            
+            if (IS_IPHONE) {
+                
+                openInAppActivity.superViewController = self.activityView;
+                
+                [app.ocTabBarController presentViewController:self.activityView animated:YES completion:nil];
+            } else {
+                
+                if (self.activityPopoverController) {
+                    [self.activityPopoverController setContentViewController:self.activityView];
+                } else {
+                    self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:self.activityView];
+                }
+                
+                openInAppActivity.superViewController = self.activityPopoverController;
+                
+                if (_isTheParentViewACell && IS_PORTRAIT) {
+                    
+                    [self.activityPopoverController presentPopoverFromRect:CGRectMake(app.detailViewController.view.frame.size.width/2, app.detailViewController.view.frame.size.width/2, 100, 100) inView:app.detailViewController.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                    
+                }else{
+                    
+                    if (_isTheParentViewACell) {
+                        //Present view from cell from file list
+                        [self.activityPopoverController presentPopoverFromRect:_cellFrame inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+                        
+                    } else if (_parentButton) {
+                        //Present view from bar button item
+                        [self.activityPopoverController presentPopoverFromBarButtonItem:_parentButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+                        
+                    } else {
+                        //Present  view from rect
+                        [self.activityPopoverController presentPopoverFromRect:CGRectMake(100, 100, 200, 400) inView:_parentView permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+                    }
+                }
+            }
             
         }
     }
