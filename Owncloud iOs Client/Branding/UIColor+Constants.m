@@ -25,7 +25,7 @@
 }
 //Color of background view in navigation bar
 + (UIColor*)colorOfBackgroundNavBarImage {
-    return [UIColor colorWithRed:28/255.0f green:44/255.0f blue:67/255.0f alpha:0.7f];
+    return [UIColor colorWithRed:28/255.0f green:44/255.0f blue:67/255.0f alpha:1.0f];
 }
 
 //Color of letters in navigation bar

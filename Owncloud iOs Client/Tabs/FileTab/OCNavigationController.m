@@ -74,6 +74,10 @@
     
     self.navigationBar.barTintColor = [UIColor colorOfNavigationBar];
     
+    if (@available(iOS 11.0, *)) {
+        self.navigationBar.prefersLargeTitles = NO;
+    }
+    
     [self.navigationBar setBackgroundImage:[ImageUtils imageWithColor:[UIColor colorOfBackgroundNavBarImage]] forBarMetrics:UIBarMetricsDefault];
     
     //Add background view in nav bar

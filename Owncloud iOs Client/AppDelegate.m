@@ -128,7 +128,6 @@ float shortDelay = 0.3;
     _isLoadingVisible = NO;
     _isOverwriteProcess = NO; //Flag for detect if a overwrite process is in progress
     _isPasscodeVisible = NO;
-    _isNewUser = NO;
     
     [self moveIfIsNecessaryFilesAfterUpdateAppFromTheOldFolderArchitecture];
     
@@ -203,9 +202,6 @@ float shortDelay = 0.3;
         
         [self showPassCodeIfNeeded];
     }
-
-    //Show TouchID dialog if active
-     [self performSelector:@selector(showTouchIdIfNeeded) withObject:nil afterDelay:oneSecondDelay];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:user.predefinedUrl]) {
@@ -1684,6 +1680,7 @@ float shortDelay = 0.3;
             if (!_isPasscodeVisible){
                 [rootController presentViewController:oc animated:IS_IPHONE completion:^{
                     [self showTouchIdIfNeeded];
+                    
                 }];
             }
         });
@@ -1720,6 +1717,7 @@ float shortDelay = 0.3;
             }
             
             if (!_isPasscodeVisible){
+                [self performSelector:@selector(showTouchIdIfNeeded) withObject:nil afterDelay:oneSecondDelay];
                 [presentedView presentViewController:oc animated:NO completion:^{
                     DLog(@"present complete");
                 }];
@@ -2814,8 +2812,6 @@ float shortDelay = 0.3;
 
             //we create the user folder to have multiuser
             [UtilsFileSystem createFolderForUser:user];
-            
-            self.isNewUser = YES;
             
             ManageAccounts *manageAccounts = [ManageAccounts new];
             [manageAccounts updateDisplayNameOfUserWithUser:user];

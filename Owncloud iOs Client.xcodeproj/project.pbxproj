@@ -274,6 +274,7 @@
 		14EC1956195B297F00B02AB6 /* sharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EC1954195B297F00B02AB6 /* sharedItem@2x.png */; };
 		14EFCAEB17FAFEAA007A38B6 /* MainAppIcon_76-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EFCAEA17FAFEAA007A38B6 /* MainAppIcon_76-76.png */; };
 		14EFCAED17FAFF48007A38B6 /* MainAppIcon_40-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EFCAEC17FAFF48007A38B6 /* MainAppIcon_40-40.png */; };
+		230233B11F9DF401007ED1C5 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230233B01F9DF401007ED1C5 /* LocalAuthentication.framework */; };
 		400560751A03B1190030D502 /* MainAppIcon_40-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400560741A03B1190030D502 /* MainAppIcon_40-40@2x.png */; };
 		400560771A03B4F80030D502 /* MainAppIcon_40-40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 400560761A03B4F80030D502 /* MainAppIcon_40-40@3x.png */; };
 		4005607C1A03CEEE0030D502 /* MainAppIcon_60-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4005607B1A03CEEE0030D502 /* MainAppIcon_60-60@2x.png */; };
@@ -1393,6 +1394,7 @@
 		14EC1954195B297F00B02AB6 /* sharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@2x.png"; sourceTree = "<group>"; };
 		14EFCAEA17FAFEAA007A38B6 /* MainAppIcon_76-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_76-76.png"; sourceTree = "<group>"; };
 		14EFCAEC17FAFF48007A38B6 /* MainAppIcon_40-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_40-40.png"; sourceTree = "<group>"; };
+		230233B01F9DF401007ED1C5 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		4002B01A1D421A7100520FB3 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4002B01C1D421A8300520FB3 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		400560741A03B1190030D502 /* MainAppIcon_40-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainAppIcon_40-40@2x.png"; sourceTree = "<group>"; };
@@ -1941,6 +1943,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				230233B11F9DF401007ED1C5 /* LocalAuthentication.framework in Frameworks */,
 				CB238ACD1E52FCA4006A03FA /* AVKit.framework in Frameworks */,
 				59C71D281A921A5100F66166 /* ImageIO.framework in Frameworks */,
 				404FDA241A36E5E5008AB4E1 /* CoreLocation.framework in Frameworks */,
@@ -2055,6 +2058,7 @@
 		1324297B15ADBB3700DF823E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				230233B01F9DF401007ED1C5 /* LocalAuthentication.framework */,
 				CB238ACC1E52FCA4006A03FA /* AVKit.framework */,
 				59C71D271A921A5100F66166 /* ImageIO.framework */,
 				404FDA231A36E5E5008AB4E1 /* CoreLocation.framework */,
@@ -3992,7 +3996,7 @@
 				TargetAttributes = {
 					1324297715ADBB3700DF823E = {
 						DevelopmentTeam = 9B5WD74GWJ;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -4005,7 +4009,7 @@
 					EA6606941AA767F700BA2C65 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = 9B5WD74GWJ;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -4018,7 +4022,7 @@
 					EAB0AB3119ED356A00764C31 = {
 						CreatedOnToolsVersion = 6.0.1;
 						DevelopmentTeam = 9B5WD74GWJ;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -4031,7 +4035,7 @@
 					EAB0AB3F19ED356A00764C31 = {
 						CreatedOnToolsVersion = 6.0.1;
 						DevelopmentTeam = 9B5WD74GWJ;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -5400,7 +5404,8 @@
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -5447,7 +5452,8 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "CONTAINER_APP=1";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/Owncloud iOS Client-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -5560,7 +5566,8 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(SWIFT_MODULE_NAME)-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -5607,7 +5614,8 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SHARE_IN=1";
 				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(SWIFT_MODULE_NAME)-Swift.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -5673,7 +5681,8 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "FILE_PICKER=1";
 				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -5734,7 +5743,8 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "FILE_PICKER=1";
 				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -5792,7 +5802,8 @@
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -5845,7 +5856,8 @@
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Owncloud iOs Client/OCExtensions-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

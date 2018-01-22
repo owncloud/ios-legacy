@@ -28,6 +28,7 @@
 
 + (ManageTouchID *)sharedSingleton;
 - (BOOL)isTouchIDAvailable;
+- (BOOL)isDeviceFaceIDCompatible;
 - (void)showTouchIDAuth;
 
 @property (nonatomic, weak) id delegate;

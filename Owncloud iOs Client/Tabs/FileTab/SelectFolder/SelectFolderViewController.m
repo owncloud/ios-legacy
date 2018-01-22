@@ -81,14 +81,12 @@
 
 -(void)viewDidLayoutSubviews
 {
-    if (IS_IOS8 || IS_IOS9) {
-        if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 15, 0, 0)];
-        }
-        
-        if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
-            [self.tableView setLayoutMargins:UIEdgeInsetsZero];
-        }
+    if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 15, 0, 0)];
+    }
+    
+    if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.tableView setLayoutMargins:UIEdgeInsetsZero];
     }
 }
 
@@ -99,16 +97,12 @@
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 15, 0, 0)];
+    }
     
-    if (IS_IOS8 || IS_IOS9) {
-        if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 15, 0, 0)];
-        }
-        
-        if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
-            [self.tableView setLayoutMargins:UIEdgeInsetsZero];
-        }
-        
+    if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.tableView setLayoutMargins:UIEdgeInsetsZero];
     }
 }
 

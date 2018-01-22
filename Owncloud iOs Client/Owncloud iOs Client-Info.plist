@@ -85,6 +85,8 @@
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 	<key>LastGitCommit</key>
 	<string></string>
 	<key>NSAppTransportSecurity</key>
@@ -94,6 +96,14 @@
 		<key>NSExceptionDomains</key>
 		<dict/>
 	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Used to instantly upload your new photos after a significant change in your location</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used to instantly upload your new photos after a significant change in your location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Used to instantly upload your new photos after a significant change in your location</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Upload your selected photos to your account</string>
 	<key>UIApplicationExitsOnSuspend</key>
 	<false/>
 	<key>UIBackgroundModes</key>
@@ -101,6 +111,8 @@
 		<string>audio</string>
 		<string>fetch</string>
 	</array>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 	<key>UIInterfaceOrientation</key>
 	<string>UIInterfaceOrientationPortrait</string>
 	<key>UILaunchStoryboardName</key>
@@ -140,11 +152,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Upload your selected photos to your account</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Used to instantly upload your new photos after a significant change in your location</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Used to instantly upload your new photos after a significant change in your location</string>
+	<key>privacy</key>
+	<string></string>
 </dict>
 </plist>

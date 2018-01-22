@@ -163,24 +163,19 @@
 
 -(void)viewDidLayoutSubviews
 {
+    if ([self.settingsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.settingsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
+    }
     
-    if (IS_IOS8 || IS_IOS9) {
-        
-        if ([self.settingsTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-            [self.settingsTableView setSeparatorInset:UIEdgeInsetsMake(0, 10, 0, 0)];
-        }
-        
-        if ([self.settingsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
-            [self.settingsTableView setLayoutMargins:UIEdgeInsetsZero];
-        }
-        
-        
+    if ([self.settingsTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.settingsTableView setLayoutMargins:UIEdgeInsetsZero];
+    }
+    
+    if (!IS_IOS11) {
         CGRect rect = self.navigationController.navigationBar.frame;
         float y = rect.size.height + rect.origin.y;
         self.settingsTableView.contentInset = UIEdgeInsetsMake(y,0,0,0);
-        
     }
-    
 }
 
 -(void)viewWillLayoutSubviews
@@ -703,8 +698,12 @@
 
             } else {
                 if([self isTouchIDAvailable] && !self.switchPasscode.on) {
-                    cell.textLabel.text = NSLocalizedString(@"title_app_pin_and_touchID", nil);
                     
+                    if ([[ManageTouchID sharedSingleton] isDeviceFaceIDCompatible]) {
+                        cell.textLabel.text = NSLocalizedString(@"title_app_pin_and_faceID", nil);
+                    } else {
+                        cell.textLabel.text = NSLocalizedString(@"title_app_pin_and_touchID", nil);
+                    }
                 } else {
                     cell.textLabel.text = NSLocalizedString(@"title_app_pin", nil);
                 }
@@ -722,7 +721,12 @@
             break;
             
         case 1:
-            cell.textLabel.text = NSLocalizedString(@"title_app_touchID", nil);
+            
+            if ([[ManageTouchID sharedSingleton] isDeviceFaceIDCompatible]) {
+                cell.textLabel.text = NSLocalizedString(@"title_app_faceID", nil);
+            } else {
+                cell.textLabel.text = NSLocalizedString(@"title_app_touchID", nil);
+            }
             self.switchTouchID = [[UISwitch alloc] initWithFrame:CGRectZero];
             cell.accessoryView = self.switchTouchID;
             [self.switchTouchID setOn:[ManageAppSettingsDB isTouchID] animated:YES];
