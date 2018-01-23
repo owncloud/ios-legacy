@@ -1556,56 +1556,59 @@
 - (void)downloadCompleted:(FileDto *)fileDto {
     DLog(@"Hey, file is in device, go to preview");
     
-    if (_typeOfFile == imageFileType) {
-        _isUpdatingFile = NO;
-    }
-   
-    //Update fileDto
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
-    
-    //Only if the file is the same
-     if ([fileDto.localFolder isEqualToString: _file.localFolder]) {
-        
-        _isDownloading = NO;
-        
-        _cancelButton.hidden = YES;
-        _isFileCharged = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (_typeOfFile == imageFileType) {
+            _isUpdatingFile = NO;
+        }
         
         //Update fileDto
-        _file=[ManageFilesDB getFileDtoByIdFile:_file.idFile];
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        _file = [ManageFilesDB getFileDtoByFileName:_file.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:_file.filePath andUser:app.activeUser] andUser:app.activeUser];
         
-
-        //Quit the player if exist
-        if (self.avMoviePlayer) {
-            [self removeMediaPlayer];
-        }
-        
-        //Depend if the file is an image or other "openimage" or "openfile"
-        
-        if (_file != nil) {
-            if (_typeOfFile == officeFileType) {
-                [self performSelector:@selector(openFileOffice) withObject:nil afterDelay:0.0];
-            } else if (_typeOfFile == gifFileType) {
-                [self performSelector:@selector(openGifFile) withObject:nil afterDelay:0.0];
-            } else if(_typeOfFile == audioFileType) {
-                [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.0];
-            } else if(_typeOfFile == videoFileType) {
-                [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.0];
-            }  else if (_typeOfFile == imageFileType){
-                DLog(@"Image file");
-            } else {
-                [self performSelector:@selector(openFile) withObject:nil afterDelay:0.0];
+        //Only if the file is the same
+        if ([fileDto.localFolder isEqualToString: _file.localFolder]) {
+            
+            _isDownloading = NO;
+            
+            _cancelButton.hidden = YES;
+            _isFileCharged = YES;
+            
+            //Update fileDto
+            _file=[ManageFilesDB getFileDtoByIdFile:_file.idFile];
+            
+            
+            //Quit the player if exist
+            if (self.avMoviePlayer) {
+                [self removeMediaPlayer];
             }
+            
+            //Depend if the file is an image or other "openimage" or "openfile"
+            
+            if (_file != nil) {
+                if (_typeOfFile == officeFileType) {
+                    [self performSelector:@selector(openFileOffice) withObject:nil afterDelay:0.0];
+                } else if (_typeOfFile == gifFileType) {
+                    [self performSelector:@selector(openGifFile) withObject:nil afterDelay:0.0];
+                } else if(_typeOfFile == audioFileType) {
+                    [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.0];
+                } else if(_typeOfFile == videoFileType) {
+                    [self performSelector:@selector(playMediaFile) withObject:nil afterDelay:0.0];
+                }  else if (_typeOfFile == imageFileType){
+                    DLog(@"Image file");
+                } else {
+                    [self performSelector:@selector(openFile) withObject:nil afterDelay:0.0];
+                }
+            }
+            
+            [self performSelector:@selector(hiddenButtonsAfterDownload) withObject:nil afterDelay:0.0];
         }
+        //Stop the notification
+        [self stopNotificationUpdatingFile];
+        //Enable view
+        _isViewBlocked = NO;
+        [self unBlockFileList];
         
-        [self performSelector:@selector(hiddenButtonsAfterDownload) withObject:nil afterDelay:0.0];
-    }
-    //Stop the notification
-    [self stopNotificationUpdatingFile];
-    //Enable view
-    _isViewBlocked = NO;
-    [self unBlockFileList];
+    });
 }
 
 /*
@@ -1641,18 +1644,17 @@
 }
 
 - (void) showErrorMessageIfNotIsShowingWithString:(NSString *)string{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    if (!app.downloadErrorAlertView) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        if (!app.downloadErrorAlertView) {
+        
             app.downloadErrorAlertView = [[UIAlertView alloc] initWithTitle:string message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil, nil];
             app.downloadErrorAlertView.tag = k_alertview_for_download_error;
         
             [app.downloadErrorAlertView show];
-        });
-    }
-    
+        }
+    });
 }
 
 - (void)showNotConnectionWithServerMessage{

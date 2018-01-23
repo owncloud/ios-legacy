@@ -180,20 +180,46 @@ float shortDelay = 0.3;
         ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
         [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
         
+        int currentDBVersion = [ManageDB getDatabaseVersion];
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSInteger openAfterUpgradeDB23 = [defaults integerForKey:@"openAfterUpgradeDB23"];
+        
+        if (currentDBVersion == 23 && openAfterUpgradeDB23 != 1){
+            NSLog(@"Migrating after first open upgrade, Change kind of credentials in DB version from 21or22 to23");
+            sleep(3);
+            bool migrated = [OCKeychain updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType];
+            sleep(4);
+            self.activeUser = [ManageUsersDB getActiveUser];
+            
+            if (!migrated) {
+                NSLog(@"No migrated credentials at init");
+            } else {
+                NSLog(@"Migrated credentials at init");
+            }
+            //Some users could have migrated correctly from 3.6.2 to 3.7.0.
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setInteger:1 forKey:@"openAfterUpgradeDB23"];
+            [defaults synchronize];
+        }
+        
         ManageAccounts *manageAccounts = [ManageAccounts new];
         [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
 
         //if we are migrating url not relaunch sync, neither update cookies and server checks
-        if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
+        BOOL isNeccessaryMigrateURL = [UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl];
+        
+        if (!isNeccessaryMigrateURL) {
             
             [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
             
             //Update favorites files if there are active user
             [self performSelector:@selector(launchProcessToSyncAllFavorites) withObject:nil afterDelay:fiveSecondsDelay];
             
-        } else {
-             [UtilsCookies deleteAllCookiesOfActiveUser];
+        } else if (isNeccessaryMigrateURL == YES){
+            [UtilsCookies deleteAllCookiesOfActiveUser];
         }
+        
         
     } else if (k_show_main_help_guide && [ManageDB getShowHelpGuide]) {
             self.helpGuideWindowViewController = [HelpGuideViewController new];
@@ -339,7 +365,7 @@ float shortDelay = 0.3;
     [DownloadUtils setThePermissionsForFolderPath:localTempPath];
     
     //First Call when init the app
-     self.activeUser = [ManageUsersDB getActiveUserWithoutCredentials];
+     self.activeUser = [ManageUsersDB getActiveUser];
     
     //if is null we do not have any active user on the database
     if(!self.activeUser) {
@@ -378,8 +404,7 @@ float shortDelay = 0.3;
 
 
 - (void) generateAppInterfaceFromLoginScreen:(BOOL)isFromLogin{
-    
-    self.activeUser = [ManageUsersDB getActiveUserWithoutCredentials];
+    self.activeUser = [ManageUsersDB getActiveUser];
     
     NSString *wevDavString = [UtilsUrls getFullRemoteServerPathWithWebDav:_activeUser];
     NSString *localSystemPath = nil;
@@ -516,8 +541,8 @@ float shortDelay = 0.3;
             
         }
         
-        self.activeUser = [ManageUsersDB getActiveUser];
         
+        self.activeUser = [ManageUsersDB getActiveUser];
         //if is file from other app wainting, present the upload from other app view
         if (self.isFileFromOtherAppWaitting==YES) {
             [self presentUploadFromOtherApp];
@@ -532,6 +557,7 @@ float shortDelay = 0.3;
 #pragma mark - OCCommunications
 + (OCCommunication*)sharedOCCommunication
 {
+    
 	static OCCommunication* sharedOCCommunication = nil;
 	if (sharedOCCommunication == nil)
 	{
@@ -645,10 +671,9 @@ float shortDelay = 0.3;
         
         OCKeychain *oKeychain = [[OCKeychain alloc] init];
         [sharedOCCommunicationDownloadFolder setValueCredentialsStorage:oKeychain];
-        
+
         SSLCertificateManager *sslCertificateManager = [[SSLCertificateManager alloc] init];
         [sharedOCCommunicationDownloadFolder setValueTrustedCertificatesStore:sslCertificateManager];
-
     }
     return sharedOCCommunicationDownloadFolder;
 }
@@ -1970,9 +1995,8 @@ float shortDelay = 0.3;
 }
 
 -(void) delayLoadEditAccountAfterErrorLogin {
-    
+    self.activeUser = [ManageUsersDB getActiveUser];
     [self showLoginView:[UtilsLogin getLoginVCWithMode:LoginModeExpire andUser:self.activeUser]];
-
 }
 
 

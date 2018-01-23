@@ -2,7 +2,7 @@ If you want to start help developing ownCloud please follow the [contribution gu
 
 ### 1. Fork and download ios-issues/master repository:
 
-NOTE: To compile the code you need Xcode 8.
+NOTE: To compile the code you need Xcode 9.
   
 * Navigate to https://github.com/owncloud/ios, click fork.
 * Clone your new repo:```git clone git@github.com:YOURGITHUBNAME/ios.git```

@@ -1,3 +1,15 @@
+## 3.7.2 (January 2017)
+- This release brings important bug fixes for some users, iOS11 and iPhoneX support.
+- Fix an issue related with the loss of credentials after the upgrade from 3.6.2 for some users
+- In case the login view still appears in expiration mode, the username field should be enabled, please log in again with your credentials
+- Fix some tweaks with iOS11 and optimised for iPhoneX 
+- FaceId support for iPhoneX, enable your passcode from Settings view
+- Replace app icon images with new Asset format 
+- Bug fixing and stability improvements
+
+## 3.7.1 (January 2017)
+- Fix a crash when openning the app after the upgrade for some users
+
 ## 3.7.0 (December 2017)
 - OAuth2 support with automatically refresh of new tokens
 - New login view redesign

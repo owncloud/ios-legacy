@@ -15,6 +15,7 @@
 
 #import "OCCapabilities.h"
 #import "OCCredentialsDto.h"
+#import "OCKeychain.h"
 
 typedef NS_ENUM(NSInteger, enumHasShareApiSupport) {
     serverFunctionalityNotChecked = 0,

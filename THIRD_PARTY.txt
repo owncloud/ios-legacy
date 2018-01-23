@@ -109,7 +109,7 @@ The third party software included and used by this project is:
 	Original license document included at ExternalLibreries/VFR Pdf Reader/LICENSE.
    	See https://github.com/vfr/Reader
 
- * 	ownCloud iOS Library v 2.2.0
+ * 	ownCloud iOS Library v 2.2.1
    	Copyright (c) 2017, ownCloud GmbH. (http://www.owncloud.org/)
    	Licensed under MIT License.
    	Placed at OCCommunicationLib

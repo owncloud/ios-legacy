@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2018, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -27,14 +27,14 @@
 + (void) updateServerFeaturesAndCapabilitiesOfActiveUser{
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
+    
         if (app.activeUser.username == nil) {
             app.activeUser = [ManageUsersDB getActiveUser];
         }
         
-        if (app.activeUser) {
+        UserDto *activeUser = [ManageUsersDB getActiveUser];
+        
+        if (activeUser) {
             
             [CheckCapabilities getServerCapabilitiesOfActiveAccount:^(OCCapabilities *capabilities) {
                 
@@ -46,9 +46,7 @@
                     //update file list view if needed
                     BOOL capabilitiesShareAPIChanged = (app.activeUser.capabilitiesDto.isFilesSharingAPIEnabled == capabilities.isFilesSharingAPIEnabled)? NO:YES;
                     if(capabilitiesShareAPIChanged){
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [CheckCapabilities reloadFileList];
-                        });
+                        [CheckCapabilities reloadFileList];
                     }
                     
                     app.activeUser.capabilitiesDto = [OCCapabilities new];
@@ -61,8 +59,6 @@
                 app.activeUser.capabilitiesDto =  [ManageCapabilitiesDB getCapabilitiesOfUserId:app.activeUser.userId];
             }];
         }
-    });
-    
 }
 
 + (void) updateServerFeaturesOfActiveUserForVersion:(NSString *)versionString {
