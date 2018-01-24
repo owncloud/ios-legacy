@@ -91,7 +91,11 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Used to instantly upload your new photos after a significant change in your location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Upload your selected photos to your account</string>
+	<string>Used to upload your selected photos to your account</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Used to save your selected photo to your camera roll</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Used to allow you unlock your app with your face</string>
 	<key>UIApplicationExitsOnSuspend</key>
 	<false/>
 	<key>UIBackgroundModes</key>

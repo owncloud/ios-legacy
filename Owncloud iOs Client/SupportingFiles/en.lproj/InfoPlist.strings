@@ -6,7 +6,9 @@
 
 */
 
-
-"NSPhotoLibraryUsageDescription" = "Upload your selected photos to your account";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Used to instantly upload your new photos after a significant change in your location";
 "NSLocationAlwaysUsageDescription" = "Used to instantly upload your new photos after a significant change in your location";
 "NSLocationWhenInUseUsageDescription" = "Used to instantly upload your new photos after a significant change in your location";
+"NSPhotoLibraryUsageDescription" = "Upload your selected photos to your account";
+"NSPhotoLibraryAddUsageDescription" = "Used to save your selected photo to your camera roll";
+"NSFaceIDUsageDescription" = "Used to allow you unlock your app with your face";
