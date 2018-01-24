@@ -59,7 +59,6 @@
                 app.activeUser.capabilitiesDto =  [ManageCapabilitiesDB getCapabilitiesOfUserId:app.activeUser.userId];
             }];
         }
-    });
 }
 
 + (void) updateServerFeaturesOfActiveUserForVersion:(NSString *)versionString {
