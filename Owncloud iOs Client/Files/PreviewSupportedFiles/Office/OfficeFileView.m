@@ -134,7 +134,6 @@ CGPoint _lastContentOffset;
  * Method to load a document by filePath.
  */
 - (void)openOfficeFileWithPath:(NSString*)filePath andFileName: (NSString *) fileName {
-    dispatch_async(dispatch_get_main_queue(), ^{
         _isDocument=YES;
         
         [self configureWebView];
@@ -179,7 +178,6 @@ CGPoint _lastContentOffset;
         
         [_webView setHidden:NO];
         [_webView setScalesPageToFit:YES];
-    });
 }
 
 /*
