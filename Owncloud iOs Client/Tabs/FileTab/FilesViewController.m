@@ -623,7 +623,7 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
-    if (self.openWith && !IS_IPHONE) {
+    if (self.openWith && self.openWith.documentInteractionController && !IS_IPHONE) {
         [self.openWith.documentInteractionController dismissMenuAnimated:NO];
     }
     

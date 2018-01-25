@@ -1764,7 +1764,7 @@ float shortDelay = 0.3;
     
     if (self.presentFilesViewController){
         //Close the openWith option in FileViewController
-        if (self.presentFilesViewController.openWith) {
+        if (self.presentFilesViewController.openWith && self.presentFilesViewController.openWith.documentInteractionController) {
             [self.presentFilesViewController.openWith.documentInteractionController dismissMenuAnimated:NO];
             self.presentFilesViewController.openWith.documentInteractionController = nil;
         }

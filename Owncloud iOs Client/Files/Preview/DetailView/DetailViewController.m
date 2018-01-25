@@ -844,9 +844,10 @@
     self.view.backgroundColor = [UIColor colorOfBackgroundDetailViewiPad];
     
     _titleLabel.text = @"";
-
-    [_openWith.documentInteractionController dismissMenuAnimated:YES];
-    
+    if (_openWith && _openWith.documentInteractionController) {
+        [_openWith.documentInteractionController dismissMenuAnimated:YES];
+    }
+        
     [self removeThePreviousViews];
     
     _isFileCharged = NO;
@@ -1734,8 +1735,7 @@
         [self.readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
     
-    if (_openWith) {
-        
+     if (_openWith && _openWith.documentInteractionController) {
         [_openWith.documentInteractionController dismissMenuAnimated:NO];
     }
     
