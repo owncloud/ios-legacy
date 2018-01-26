@@ -1764,14 +1764,9 @@ float shortDelay = 0.3;
     
     if (self.presentFilesViewController){
         //Close the openWith option in FileViewController
-        if (self.presentFilesViewController.openWith) {
-            if (k_use_open_with_UIDocumentInteractionController) {
-                [self.presentFilesViewController.openWith.documentInteractionController dismissMenuAnimated:NO];
-                self.presentFilesViewController.openWith.documentInteractionController = nil;
-            } else {
-                [self.presentFilesViewController.openWith.activityView dismissViewControllerAnimated:NO completion:nil];
-                self.presentFilesViewController.openWith.activityView = nil;
-            }
+        if (self.presentFilesViewController.openWith && self.presentFilesViewController.openWith.documentInteractionController) {
+            [self.presentFilesViewController.openWith.documentInteractionController dismissMenuAnimated:NO];
+            self.presentFilesViewController.openWith.documentInteractionController = nil;
         }
         //Close the delete option in FilesViewController
         if (self.presentFilesViewController.mDeleteFile.popupQuery) {

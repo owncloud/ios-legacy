@@ -844,13 +844,10 @@
     self.view.backgroundColor = [UIColor colorOfBackgroundDetailViewiPad];
     
     _titleLabel.text = @"";
-
-    if (k_use_open_with_UIDocumentInteractionController) {
+    if (_openWith && _openWith.documentInteractionController) {
         [_openWith.documentInteractionController dismissMenuAnimated:YES];
-    } else {
-        [_openWith.activityPopoverController dismissPopoverAnimated:YES];
     }
-    
+        
     [self removeThePreviousViews];
     
     _isFileCharged = NO;
@@ -1058,16 +1055,9 @@
  */
 - (IBAction)didPressShareLinkButton:(id)sender {
     DLog(@"Share button clicked");
-    
-    if (k_use_open_with_UIDocumentInteractionController) {
 
-        if (_openWith && _openWith.documentInteractionController) {
-            [_openWith.documentInteractionController dismissMenuAnimated:YES];
-        }
-    } else {
-        if (_openWith && _openWith.activityView) {
-            [_openWith.activityPopoverController dismissPopoverAnimated:YES];
-        }
+    if (_openWith && _openWith.documentInteractionController) {
+        [_openWith.documentInteractionController dismissMenuAnimated:YES];
     }
     
     DLog(@"Share Link Option");
@@ -1745,13 +1735,8 @@
         [self.readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
     
-    if (_openWith) {
-        
-        if (k_use_open_with_UIDocumentInteractionController) {
-            [_openWith.documentInteractionController dismissMenuAnimated:NO];
-        } else {
-            [_openWith.activityPopoverController dismissPopoverAnimated:NO];
-        }
+     if (_openWith && _openWith.documentInteractionController) {
+        [_openWith.documentInteractionController dismissMenuAnimated:NO];
     }
     
 }

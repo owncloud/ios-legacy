@@ -23,7 +23,3 @@
 #define IS_PORTRAIT (([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) || [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortraitUpsideDown)
 #define APP_DELEGATE ((AppDelegate *)[[UIApplication sharedApplication] delegate])
 #define IS_IPHONE_PLUS (IS_IPHONE && SCREEN_MAX_LENGTH == 736.0)
-
-//openWith mode
-//only use open with UIDocumentInteraciton with iOS<11 until fix the issue with UIDocumentInteractionController in iOS11
-#define k_use_open_with_UIDocumentInteractionController !IS_IOS11
