@@ -1108,6 +1108,9 @@
 
     //Method to change the account
     [[OCLoadingSpinner sharedOCLoadingSpinner] initLoadingForViewController: self];
+    
+    [UtilsCookies saveActiveUserCookiesAndRestoreCookiesOfUser:selectedUser];
+    
     [app switchActiveUserTo:selectedUser isNewAccount:NO];
     DLog(@"refreshing list of accounts after user was switched");
         

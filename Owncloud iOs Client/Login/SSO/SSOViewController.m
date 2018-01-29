@@ -9,7 +9,7 @@
 //
 
 /*
- Copyright (C) 2017, ownCloud GmbH.
+ Copyright (C) 2018, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -61,15 +61,8 @@ static NSString *const tmpFileName = @"tmp.der";
             _manageNetworkErrors.delegate = self;
         }
         
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-
-        if (app.activeUser) {
-            [UtilsCookies saveCurrentOfActiveUserAndClean];
-        }
-        
         //Init SSLCertificateManager instance to access user-accepted server certificates
         self.sslCertificateManager = [SSLCertificateManager new];
-
     }
     return self;
 }
@@ -77,7 +70,6 @@ static NSString *const tmpFileName = @"tmp.der";
 - (void) viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-    
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -98,7 +90,6 @@ static NSString *const tmpFileName = @"tmp.der";
     
     //Set Background color
     [_webView setBackgroundColor:[UIColor colorOfWebViewBackground]];
-   
 }
 
 - (void)didReceiveMemoryWarning
@@ -124,8 +115,6 @@ static NSString *const tmpFileName = @"tmp.der";
     NSString *connectURL =[NSString stringWithFormat:@"%@%@",urlString, k_url_webdav_server_without_last_slash];
     DLog(@"_openLink_ URL of shibbolet: %@",connectURL);
     _ownCloudServerUrlString = connectURL;
-    
-    [self clearAllCookies];
     
     NSURL *url = [NSURL URLWithString:connectURL];
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:k_timeout_upload];
@@ -158,17 +147,6 @@ static NSString *const tmpFileName = @"tmp.der";
     _webView.delegate = self;
     [_webView setScalesPageToFit:YES];
     [_webView loadRequest:request];
-}
-
-- (void)clearAllCookies {
-    
-    NSHTTPCookie *cookie;
-    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    for (cookie in [storage cookies])
-    {
-        DLog(@"Delete cookie");
-        [storage deleteCookie:cookie];
-    }
 }
 
 #pragma mark UIWebView Delegate methods

@@ -70,14 +70,20 @@
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
 
     if (app.activeUser != nil) {
-        DLog(@"_updateCookiesOfActiveUserInDB_");
         
-        //1- Try to Delete the cookies of the active user
-        [ManageCookiesStorageDB deleteCookiesByUser:app.activeUser];
-        
-        //2- Store the current cookies on the Database
-        [UtilsCookies setOnDBStorageCookiesByUser:app.activeUser];
+        [self updateCookiesInDBOfUser:app.activeUser];
     }
+}
+
++ (void) updateCookiesInDBOfUser:(UserDto *)user {
+    
+    DLog(@"_updateCookiesInDBofUser_: %ld",(long)user.userId );
+    
+    //1- Try to Delete the cookies of the active user
+    [ManageCookiesStorageDB deleteCookiesByUser:user];
+    
+    //2- Store the current cookies on the Database
+    [UtilsCookies setOnDBStorageCookiesByUser:user];
 }
 
 

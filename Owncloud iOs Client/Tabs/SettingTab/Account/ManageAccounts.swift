@@ -34,6 +34,8 @@ import Foundation
             //userInDB contains the userId in DB, we add the credentials and store the user in keychain
             OCKeychain.storeCredentials(userInDB.credDto)
             
+            UtilsCookies.update(inDBOfUser: userInDB)
+            
             // grant that settings of instant uploads are the same for the new account that for the currently active account
             ManageAppSettingsDB.updateInstantUploadAllUser();
             
@@ -54,6 +56,8 @@ import Foundation
         ManageUsersDB.updateUser(by: user)
 
         OCKeychain.updateCredentials(user.credDto)
+    
+        UtilsCookies.update(inDBOfUser: user)
         
         if user.activeaccount {
             CheckFeaturesSupported.updateServerFeaturesAndCapabilitiesOfActiveUser()

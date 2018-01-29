@@ -2813,8 +2813,6 @@ float shortDelay = 0.3;
         
             // Cancel downloads of the previous user
             [self portedCancelAllDownloads];
-        
-            [UtilsCookies saveActiveUserCookiesAndRestoreCookiesOfUser:user];
             
             // update active state of users in DB
             [ManageUsersDB setAllUsersNoActive];
