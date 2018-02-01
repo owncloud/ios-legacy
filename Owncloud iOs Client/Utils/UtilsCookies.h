@@ -27,6 +27,8 @@
 
 + (void) updateCookiesOfActiveUserInDB;
 
++ (void) updateCookiesInDBOfUser:(UserDto *)user;
+
 + (void) saveCurrentOfActiveUserAndClean;
 
 + (void) restoreCookiesOfUser:(UserDto *)user;

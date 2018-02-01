@@ -522,6 +522,7 @@ public enum TextfieldType: String {
     
     // MARK: dismiss
     @objc func closeLoginView() {
+        UtilsCookies.deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser()
         self.setNetworkActivityIndicator(status: false)
         self.dismiss(animated: true, completion: nil)
     }
@@ -673,12 +674,8 @@ public enum TextfieldType: String {
             return;
         }
         
-        //TODO:review cookie handle
-        UtilsCookies.updateOfActiveUserInDB()
-        
         self.userNewCredentials = (userCredDto.copy() as? OCCredentialsDto)!
         self.detectUserDataAndValidate(serverPath: serverPath!)
-        
     }
     
 
