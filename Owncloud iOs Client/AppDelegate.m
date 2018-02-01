@@ -713,23 +713,6 @@ float shortDelay = 0.3;
     
 }
 
-#pragma mark - UpdateDisplayNameOfUser
-
-/*
- * This method is for launch the process update the displayName of user in background
- */
-- (void) launchProcessToUpdateDisplayNameOfUser {
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        if (self.activeUser.username == nil) {
-            self.activeUser = [ManageUsersDB getActiveUser];
-        }
-        ManageAccounts *manageAccounts = [ManageAccounts new];
-        [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
-    });
-}
-
 #pragma mark - DetailViewController Methods for iPad
 
 - (void)cancelDonwloadInDetailView{
