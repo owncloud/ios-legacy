@@ -275,6 +275,27 @@
     return output;
 }
 
++ (BOOL) updateAllKeychainItemsToUseAccessibleAlwaysProperty {
+    
+    BOOL output = NO;
+    
+    NSMutableDictionary *keychainQuery = [NSMutableDictionary dictionary];
+    
+    [keychainQuery setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
+    [keychainQuery setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
+    
+    NSMutableDictionary *attrToUpdate = [NSMutableDictionary dictionary];
+    [attrToUpdate setObject:(__bridge id)(kSecAttrAccessibleAlways) forKey:(__bridge id)kSecAttrAccessible];
+    
+    OSStatus stsUpd = SecItemUpdate((__bridge CFDictionaryRef)(keychainQuery), (__bridge CFDictionaryRef)(attrToUpdate));
+    DLog(@"(updateLockPropertyToAccessibleAlways)Error Code: %d (0 = success)", (int)stsUpd);
+    if (stsUpd == errSecSuccess) {
+        output = YES;
+    }
+    
+    return output;
+}
+
 #pragma mark - keychain updates after some db updates
 
 #pragma mark - used to update from db version 9to10, from db to keychain

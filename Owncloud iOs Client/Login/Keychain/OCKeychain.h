@@ -55,6 +55,16 @@
  */
 +(BOOL)updateAllKeychainItemsToUseTheLockProperty;
 
+///-----------------------------------
+/// @name updateAllKeychainItemsToUseAccessibleAlwaysProperty
+///-----------------------------------
+
+/**
+ * This method updates all the credentials to use a property to allow access whit AccessibleAlwaysProperty.
+ * Used in db update 23-24
+ */
++(BOOL)updateAllKeychainItemsToUseAccessibleAlwaysProperty;
+
 
 +(BOOL)updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType;
 
