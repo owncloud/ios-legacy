@@ -606,14 +606,12 @@ public enum TextfieldType: String {
 
         case .BASIC_HTTP_AUTH:
             self.resetPasswordFooterMessage()
-            let userCredDto: OCCredentialsDto = OCCredentialsDto()
-            userCredDto.userName = self.textFieldUsername.text
-            userCredDto.accessToken = self.textFieldPassword.text
-            userCredDto.authenticationMethod = authMethod
+            self.userNewCredentials = OCCredentialsDto()
+            self.userNewCredentials.userName = self.textFieldUsername.text
+            self.userNewCredentials.accessToken = self.textFieldPassword.text
+            self.userNewCredentials.authenticationMethod = authMethod
             nextErrorShouldBeShownAfterPasswordField = true
-            
-            self.userNewCredentials = (userCredDto.copy() as? OCCredentialsDto)!
-            
+                        
             self.detectUserDataAndValidate(serverPath: self.validatedServerURL)
             
             break
@@ -658,13 +656,13 @@ public enum TextfieldType: String {
         
         self.setNetworkActivityIndicator(status: false)
         
-        let userCredDto :OCCredentialsDto =  OCCredentialsDto()
-        userCredDto.accessToken = cookieString;
-        userCredDto.authenticationMethod = .SAML_WEB_SSO;
+        self.userNewCredentials =  OCCredentialsDto()
+        self.userNewCredentials.accessToken = cookieString;
+        self.userNewCredentials.authenticationMethod = .SAML_WEB_SSO;
         
         if self.loginMode == .expire {
             let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-            userCredDto.userName = app.activeUser.username
+            self.userNewCredentials.userName = app.activeUser.username
         }
         
         
@@ -674,7 +672,6 @@ public enum TextfieldType: String {
             return;
         }
         
-        self.userNewCredentials = (userCredDto.copy() as? OCCredentialsDto)!
         self.detectUserDataAndValidate(serverPath: serverPath!)
     }
     
@@ -916,9 +913,6 @@ public enum TextfieldType: String {
             
             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
                 /// credentials allowed access to root folder: well done
-                if self.forceAccountMigration {
-                    OCKeychain.storeCredentials(self.userNewCredentials)
-                }
                 
                 let tryingToUpdateDifferentUser = (self.user != nil &&
                     (self.loginMode == .update || self.loginMode == .expire)
@@ -933,24 +927,34 @@ public enum TextfieldType: String {
                     
                 } else {
 
+                    //1.Generate correct user
+                    if self.loginMode == .create {
+                        self.user = UserDto()
+                    }
+                    
                     if self.loginMode == .create || self.loginMode == .migrate || self.forceAccountMigration {
-                        let newUser = UserDto()
+
                         if self.loginMode != .create {
-                            newUser.userId = self.user!.userId
+                            self.userNewCredentials.userId = String(self.user!.userId)
+                            
                             if self.loginMode == .migrate {
-                                newUser.predefinedUrl = k_default_url_server
+                                self.user!.predefinedUrl = k_default_url_server
                             }
                         }
-                        newUser.url = self.validatedServerURL
-                        newUser.username = self.userNewCredentials.userName
-                        newUser.ssl = self.validatedServerURL.hasPrefix("https")
-                        newUser.urlRedirected = app.urlServerRedirected
-                        
-                        self.user = newUser.copy() as? UserDto
+                        self.user!.url = self.validatedServerURL
+                        self.user!.username = self.userNewCredentials.userName
+                        self.user!.ssl = self.validatedServerURL.hasPrefix("https")
+                        self.user!.urlRedirected = app.urlServerRedirected
                     }
 
                     self.userNewCredentials.baseURL = UtilsUrls.getFullRemoteServerPath(self.user)
+                    
+                    if self.forceAccountMigration {
+                        OCKeychain.storeCredentials(self.userNewCredentials)
+                    }
+                    
 
+                    //2.Store account
                     if self.loginMode == .create {
                         
                         if (ManageUsersDB.isExistUser(self.user)) {
@@ -975,23 +979,28 @@ public enum TextfieldType: String {
                         
                      } else {
                         
+                        self.user?.credDto = (self.userNewCredentials.copy() as? OCCredentialsDto)!
+                        
                         if ( (self.user?.username == nil || self.user?.username == "")
                             && self.userNewCredentials.userName != nil ){
                             self.user?.username = self.userNewCredentials.userName
-                            self.user?.credDto = (self.userNewCredentials.copy() as? OCCredentialsDto)!
                         }
                         
+                        //update active user
                         if (app.activeUser != nil && app.activeUser.userId == self.user?.userId) {
                             app.activeUser = self.user;
                         }
                         
-                        ManageAccounts().updateAccountOfUser(self.user!, withCredentials: self.userNewCredentials)
-                        
+                        //update account
                         if self.loginMode == .migrate || self.forceAccountMigration {
+                             ManageAccounts().migrateAccountOfUser(self.user!, withCredentials: self.userNewCredentials)
+                            
                             // migration mode needs to start a fresh list of files, so that it is updated with the new URL
                             app.generateAppInterface(fromLoginScreen: true)
                               
                         } else {
+                            ManageAccounts().updateAccountOfUser(self.user!, withCredentials: self.userNewCredentials)
+
                             self.closeLoginView()
                         }
                     }
