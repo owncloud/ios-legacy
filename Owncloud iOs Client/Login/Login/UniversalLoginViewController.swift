@@ -538,53 +538,54 @@ public enum TextfieldType: String {
             self.setNetworkActivityIndicator(status: true)
             // get public infor from server
             getPublicInfoFromServerJob.start(serverURL: self.serverURLNormalizer.normalizedURL, withCompletion: { (validatedURL: String?, _ serverAuthenticationMethods: Array<Any>?, _ error: Error?, _ httpStatusCode: NSInteger) in
-            
-                self.setNetworkActivityIndicator(status: false)
-                if (error != nil || validatedURL == nil) {
-                    
-                    self.setConnectButton(status: false)
-                    self.showURLError(
-                        self.manageNetworkErrors.returnErrorMessage(
-                            withHttpStatusCode: httpStatusCode, andError: error
+                
+                DispatchQueue.main.async {
+                    self.setNetworkActivityIndicator(status: false)
+                    if (error != nil || validatedURL == nil) {
+                        
+                        self.setConnectButton(status: false)
+                        self.showURLError(
+                            self.manageNetworkErrors.returnErrorMessage(
+                                withHttpStatusCode: httpStatusCode, andError: error
+                            )
                         )
-                    )
-                    print ("error getting information from URL")
-                    
-                } else if validatedURL != nil {
-                    
-                    self.setURLFooter(isType: .None)
-                    
-                    self.validatedServerURL = validatedURL;
-                    self.allAvailableAuthMethods = serverAuthenticationMethods as! [AuthenticationMethod]
-                    
-                    self.authMethodToLogin = DetectAuthenticationMethod.getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
-                    
-                    if (self.authMethodToLogin != .NONE) {
-                        self.setReconnectionButtons(hiddenStatus: true)
-
-                        if (self.authMethodToLogin == .BASIC_HTTP_AUTH) {
-                            self.textFieldURL.resignFirstResponder()
-                            self.textFieldUsername.becomeFirstResponder()
+                        print ("error getting information from URL")
+                        
+                    } else if validatedURL != nil {
+                        
+                        self.setURLFooter(isType: .None)
+                        
+                        self.validatedServerURL = validatedURL;
+                        self.allAvailableAuthMethods = serverAuthenticationMethods as! [AuthenticationMethod]
+                        
+                        self.authMethodToLogin = DetectAuthenticationMethod.getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
+                        
+                        if (self.authMethodToLogin != .NONE) {
+                            self.setReconnectionButtons(hiddenStatus: true)
                             
-                            if self.loginMode == .update {
-                                self.textFieldUsername.text = self.user?.username
-                                self.textFieldPassword.text = ""
+                            if (self.authMethodToLogin == .BASIC_HTTP_AUTH) {
+                                self.textFieldURL.resignFirstResponder()
+                                self.textFieldUsername.becomeFirstResponder()
+                                
+                                if self.loginMode == .update {
+                                    self.textFieldUsername.text = self.user?.username
+                                    self.textFieldPassword.text = ""
+                                }
+                            } else {
+                                self.setConnectButton(status: false)
+                                self.startAuthenticationWith(authMethod: self.authMethodToLogin)
                             }
+                            
+                            self.showURLSuccess(self.validatedServerURL.hasPrefix("https://"))
+                            
                         } else {
                             self.setConnectButton(status: false)
-                            self.startAuthenticationWith(authMethod: self.authMethodToLogin)
+                            self.showURLError(NSLocalizedString("authentification_not_valid", comment: ""))
                         }
-                        
-                        self.showURLSuccess(self.validatedServerURL.hasPrefix("https://"))
-                        
-                    } else {
-                        self.setConnectButton(status: false)
-                        self.showURLError(NSLocalizedString("authentification_not_valid", comment: ""))
+                        self.updateUIWithNormalizedData(self.serverURLNormalizer)
                     }
-                    self.updateUIWithNormalizedData(self.serverURLNormalizer)
+                    self.updateInputFieldsFromCurrentAuthMethodToLogin()
                 }
-                
-                self.updateInputFieldsFromCurrentAuthMethodToLogin()
             })
         }
     }
