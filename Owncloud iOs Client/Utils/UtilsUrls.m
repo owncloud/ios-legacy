@@ -816,15 +816,18 @@
 
     NSMutableArray *detachedFolderParameters = [[queryParameters[0] componentsSeparatedByString:@"/"] mutableCopy];
 
+    NSNumber *isFile = 0;
+
 //     if the parameters is only a folder, remove the whitespace. If not, add the file to the parameters.
     if (queryParameters.count == 1) {
 //        [detachedFolderParameters removeLastObject];
     } else {
+        isFile = [NSNumber numberWithInt:1];
         [detachedFolderParameters addObject:queryParameters[1]];
     }
 
-    NSArray<NSString *> *urls = [self getUrlsForFilesFromPath:detachedFolderParameters andBaseServerUrl:[self getFullRemoteServerPathWithWebDav:user]];
-
+    NSArray<NSString *> *urls = [self getUrlsForFilesFromPath:detachedFolderParameters andBaseServerUrl:[self getFullRemoteServerPathWithWebDav:user] andIsFile:isFile];
+    
     return urls;
 
 }
@@ -879,13 +882,17 @@
  *  @return An array of urls sorted from root to the desired folder.
  */
 + (NSMutableArray *)getUrlsForFilesFromPath: (NSMutableArray*) path
-                                              andBaseServerUrl: (NSString *)baseServerUrl {
+                           andBaseServerUrl: (NSString *)baseServerUrl andIsFile: (NSNumber *) isFile {
     NSMutableArray *urls = [[NSMutableArray alloc] init];
     NSString *urlToAdd = baseServerUrl;
     [urls addObject:urlToAdd];
     for(int i = 1; i < path.count; i++) {
-        if(![path[i] isEqualToString: @"/"]){
-            urlToAdd = [urlToAdd stringByAppendingString:[path[i] stringByAppendingString: @"/"]];
+        if(![path[i] isEqualToString: @""]){
+            if (i == path.count - 1 && [isFile isEqual:[[NSNumber alloc] initWithInt:1]]) {
+                urlToAdd = [urlToAdd stringByAppendingString:[path[i] stringByRemovingPercentEncoding]];
+            } else {
+                urlToAdd = [urlToAdd stringByAppendingString:[path[i] stringByAppendingString: @"/"]];
+            }
         }
         [urls addObject:urlToAdd];
     }

@@ -3679,4 +3679,39 @@
     }
 }
 
+<<<<<<< HEAD
+=======
+-(void)navigateTo:(FileDto *)file {
+    
+    _selectedFileDto = file;
+    
+    if (IS_IPHONE){
+        [self goToSelectedFileOrFolder:file andForceDownload:NO];
+    } else {
+        
+        if(file.isDirectory){
+            [self initLoading];
+            [self goToFolder:file];
+        } else {
+            //Select in detail
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            app.detailViewController.sortedArray=_sortedArray;
+            [app.detailViewController handleFile:file fromController:fileListManagerController andIsForceDownload:NO];
+//            [app.detailViewController handleFile:file fromController:fileListManagerController andIsForceDownload:YES];
+        }
+    }
+}
+
+-(void)openFileInPreview:(FileDto *)file {
+    if (IS_IPHONE){
+        [self goToSelectedFileOrFolder:file andForceDownload:NO];
+    } else {
+        //Select in detail
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        app.detailViewController.sortedArray=_sortedArray;
+        [app.detailViewController handleFile:file fromController:fileListManagerController andIsForceDownload:YES];
+    }
+}
+
+>>>>>>> b483dc66... fix for open photos and files  inside the app and the root file bug
 @end

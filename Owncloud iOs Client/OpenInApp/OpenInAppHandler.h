@@ -94,4 +94,7 @@
  */
 -(void)handleLink: (void(^)(NSArray *items))success failure:(void(^)(NSError *error)) failure;
 
+-(void)handleLink1: (void(^)(FileDto *item))success failure:(void(^)(NSError *error))failure;
+
+
 @end

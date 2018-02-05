@@ -161,5 +161,11 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 - (void)goToSelectedFileOrFolder:(FileDto *) selectedFile andForceDownload:(BOOL) isForceDownload;
 - (void)initFilesView;
 
+<<<<<<< HEAD
+=======
+-(void)navigateTo:(FileDto *)file;
+-(void)openFileInPreview:(FileDto *)file;
+
+>>>>>>> b483dc66... fix for open photos and files  inside the app and the root file bug
 @end;
 

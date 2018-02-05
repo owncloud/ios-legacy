@@ -2833,16 +2833,36 @@ float shortDelay = 0.3;
         });
 
         [handler handleLink:^(NSArray<FileDto *> *items) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_presentFilesViewController endLoading];
+            });
+            if (items.count > 0) {
+                FileDto *fileToOpen =  items.lastObject;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if (items.count > 0) {
-                        [_presentFilesViewController endLoading];
-                        [_presentFilesViewController navigateTo: items[items.count - 1]];
+                    if (fileToOpen.isDirectory) {
+                        [_presentFilesViewController navigateTo:fileToOpen];
+                    } else {
+                        [_presentFilesViewController navigateTo: items[items.count - 2]];
                     }
                 });
+
+                [NSThread sleepForTimeInterval:4.0f];
+
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_presentFilesViewController openFileInPreview:fileToOpen];
+                });
+
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_presentFilesViewController showError:@"Sorry :( an error happened trying to show to you the external link"];
+                });
+            }
+
         } failure:^(NSError *error) {
+
             dispatch_async(dispatch_get_main_queue(), ^{
-                [_presentFilesViewController showError:@"Sorry :( an error happened trying to show to you the external link"];
                 [_presentFilesViewController endLoading];
+                [_presentFilesViewController showError:@"Sorry :( an error happened trying to show to you the external link!"];
             });
             DLog(@"Error getting the redirection");
         }];
