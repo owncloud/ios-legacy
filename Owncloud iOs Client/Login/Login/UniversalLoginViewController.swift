@@ -661,12 +661,6 @@ public enum TextfieldType: String {
         self.userNewCredentials.accessToken = cookieString;
         self.userNewCredentials.authenticationMethod = .SAML_WEB_SSO;
         
-        if self.loginMode == .expire {
-            let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-            self.userNewCredentials.userName = app.activeUser.username
-        }
-        
-        
         if cookieString == nil || cookieString == "" {
             self.showCredentialsError(NSLocalizedString("authentification_not_valid", comment: "") )
             
@@ -874,9 +868,10 @@ public enum TextfieldType: String {
 // MARK: 'private' methods
     
     func detectUserDataAndValidate(serverPath: String) {
-        if loginMode == .migrate || self.forceAccountMigration{
-            //credentials may have changed, remove cookies
-            UtilsCookies.deleteAllCookiesOfActiveUser()
+        
+        if loginMode != .create {
+            //credentials may have changed, remove and update cookies
+            UtilsCookies.updateOfActiveUserInDB()
         }
         
         DetectUserData .getUserDisplayName(ofServer: serverPath, credentials: self.userNewCredentials) { (serverUserID, displayName, error) in
