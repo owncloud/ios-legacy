@@ -936,17 +936,14 @@ public enum TextfieldType: String {
 
                         if self.loginMode != .create {
                             self.userNewCredentials.userId = String(self.user!.userId)
-                            
-                            if self.loginMode == .migrate {
-                                self.user!.predefinedUrl = k_default_url_server
-                            }
                         }
                         self.user!.url = self.validatedServerURL
                         self.user!.username = self.userNewCredentials.userName
                         self.user!.ssl = self.validatedServerURL.hasPrefix("https")
                         self.user!.urlRedirected = app.urlServerRedirected
                     }
-
+                    
+                    self.user!.predefinedUrl = k_default_url_server
                     self.userNewCredentials.baseURL = UtilsUrls.getFullRemoteServerPath(self.user)
                     
                     if self.forceAccountMigration {
