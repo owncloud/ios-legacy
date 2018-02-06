@@ -177,9 +177,6 @@ float shortDelay = 0.3;
         self.activeUser = [user copy];
         [UtilsCookies deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser];
         
-        ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
-        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
-        
         int currentDBVersion = [ManageDB getDatabaseVersion];
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -202,14 +199,17 @@ float shortDelay = 0.3;
             [defaults setInteger:1 forKey:@"openAfterUpgradeDB23"];
             [defaults synchronize];
         }
-        
-        ManageAccounts *manageAccounts = [ManageAccounts new];
-        [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
 
         //if we are migrating url not relaunch sync, neither update cookies and server checks
         BOOL isNeccessaryMigrateURL = [UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl];
         
         if (!isNeccessaryMigrateURL) {
+            
+            ((CheckAccessToServer*)[CheckAccessToServer sharedManager]).delegate = self;
+            [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:user.url withTimeout:k_timeout_fast];
+            
+            ManageAccounts *manageAccounts = [ManageAccounts new];
+            [manageAccounts updateDisplayNameOfUserWithUser:self.activeUser];
             
             [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
             
@@ -218,6 +218,7 @@ float shortDelay = 0.3;
             
         } else if (isNeccessaryMigrateURL == YES){
             [UtilsCookies deleteAllCookiesOfActiveUser];
+            [self showPassCodeIfNeeded];
         }
         
         
@@ -375,12 +376,12 @@ float shortDelay = 0.3;
         
     } else {
         
-        [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             
             // if we are migrating the url no relaunch pending uploads
             if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
+                
+                [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:self.activeUser.url];
                 [self updateStateAndRestoreUploadsAndDownloads];
                 [self launchUploadsOfflineFromDocumentProvider];
             }
@@ -548,8 +549,11 @@ float shortDelay = 0.3;
             [self presentUploadFromOtherApp];
         }
         
-        //Check the version of the server to know if has shared support
-        [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
+        // if we are migrating the url no launch check server features
+        if (![UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl]) {
+            //Check the version of the server to know if has shared support
+            [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
+        }
     });
     
 }
