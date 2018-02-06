@@ -61,7 +61,8 @@
 #import "OCLoadingSpinner.h"
 #import "OCOAuth2Configuration.h"
 #import "OpenInAppHandler.h"
-#import "UtilsUrls.h"
+#import "FileNameUtils.h"
+
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -2850,10 +2851,18 @@ float shortDelay = 0.3;
                 [NSThread sleepForTimeInterval:1.0f];
 
                 if (!fileToOpen.isDirectory){
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [_presentFilesViewController openFileInPreview:fileToOpen];
-                        [_presentFilesViewController scrollToFile:fileToOpen];
-                    });
+
+                    NSInteger type = [FileNameUtils checkTheTypeOfFile:fileToOpen.fileName];
+
+                    if (type == otherFileType) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [_presentFilesViewController scrollToFile:fileToOpen];
+                        });
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [_presentFilesViewController openFileInPreview:fileToOpen];
+                        });
+                    }
                 }
 
             } else {
