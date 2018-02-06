@@ -135,16 +135,18 @@ float shortDelay = 0.3;
     
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
-    
-    //Init and update the DataBase
-    [InitializeDatabase initDataBase];
+
+    [self showSplashScreenFake];
     
     if (![ManageUsersDB existAnyUser]) {
         //Reset all keychain items when db need to be updated or when db first init after app has been removed and reinstalled
         [OCKeychain resetKeychain];
+    } else {
+        [self waitUntilAccessToKeychain];
     }
     
-    [self showSplashScreenFake];
+    //Init and update the DataBase
+    [InitializeDatabase initDataBase];
     
     //Needed to use on background tasks
     if (!k_is_sso_active) {
@@ -170,8 +172,9 @@ float shortDelay = 0.3;
     [NSURLCache setSharedURLCache:sharedCache];
     sleep(1); //Important sleep. Very ugly but neccesarry.
     
-    UserDto *user = [ManageUsersDB getActiveUser];
     
+    UserDto *user = [ManageUsersDB getActiveUser];
+
     if (user) {
 
         self.activeUser = [user copy];
@@ -250,6 +253,31 @@ float shortDelay = 0.3;
 
     return YES;
 }
+
+
+- (void) waitUntilAccessToKeychain {
+    
+    //We create a semaphore to wait until we have access to the keychain
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_time_t timeout =  timeout = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15.0 * NSEC_PER_SEC));
+    
+    [OCKeychain  checkAccessKeychainWithCompletion:^(BOOL hasAccess) {
+        if (hasAccess){
+            dispatch_semaphore_signal(semaphore);
+        }
+    }];
+    
+    if (dispatch_semaphore_wait(semaphore, timeout)) {
+        NSLog(@"Waiting for access to the keychain timeout");
+    } else {
+        NSLog(@"We get access to the keychain");
+    }
+    
+}
+
+
+
+
 
 
 

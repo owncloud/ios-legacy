@@ -35,7 +35,7 @@
 +(BOOL)updateCredentials:(OCCredentialsDto *)credDto;
 +(BOOL)resetKeychain;
 
-
++(void)checkAccessKeychainWithCompletion:(void(^)(BOOL hasAccess))completion;
 /**
  *   Following methods are used to migrate keychain items
  */

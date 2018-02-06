@@ -328,4 +328,18 @@
 }
 
 
++ (void) checkAccessKeychainWithCompletion:(void(^)(BOOL hasAccess))completion{
+    
+    UserDto *user = [ManageUsersDB getActiveUser];
+    OCCredentialsDto *userCred = nil;
+
+    while (userCred == nil) {
+
+        userCred = [OCKeychain getCredentialsOfUser:user];
+    }
+
+    completion(YES);
+
+}
+
 @end
