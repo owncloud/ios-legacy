@@ -162,6 +162,7 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 - (void)initFilesView;
 -(void)navigateTo:(FileDto *)file;
 -(void)openFileInPreview:(FileDto *)file;
+-(void)scrollToFile:(FileDto *)file;
 
 @end;
 

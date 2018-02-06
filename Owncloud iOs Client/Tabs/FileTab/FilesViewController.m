@@ -3711,4 +3711,26 @@
     }
 }
 
+-(void)scrollToFile:(FileDto *)file {
+
+    NSIndexPath *indexpathOfFile = [NSIndexPath alloc];
+
+    for(int i = 0; i < _sortedArray.count; i++) {
+        NSArray *files = _sortedArray[i];
+        for(int j = 0; j < files.count; j++) {
+            FileDto *tmpFile = files[j];
+            if([tmpFile.fileName isEqualToString:file.fileName]) {
+                indexpathOfFile = [NSIndexPath indexPathForRow:j inSection:i];
+                NSLog(@"LOG ---> filename %@", file.fileName);
+            }
+        }
+    }
+
+    [self.tableView scrollToRowAtIndexPath:indexpathOfFile atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+
+    CustomCellFileAndDirectory *cell = [self.tableView cellForRowAtIndexPath:indexpathOfFile];
+    [cell blinkWithColor:[UIColor yellowColor] count:6];
+
+}
+
 @end

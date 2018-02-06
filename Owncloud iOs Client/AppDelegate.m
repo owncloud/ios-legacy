@@ -2852,6 +2852,7 @@ float shortDelay = 0.3;
                 if (!fileToOpen.isDirectory){
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [_presentFilesViewController openFileInPreview:fileToOpen];
+                        [_presentFilesViewController scrollToFile:fileToOpen];
                     });
                 }
 
