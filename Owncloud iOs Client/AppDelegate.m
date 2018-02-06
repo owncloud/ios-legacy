@@ -94,7 +94,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @synthesize isUploadViewVisible = _isUploadViewVisible;
 @synthesize isLoadingVisible = _isLoadingVisible;
 
-
 //Delay Constants
 float fiveSecondsDelay = 5.0;
 float oneSecondDelay = 1.0;
@@ -2824,64 +2823,80 @@ float shortDelay = 0.3;
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
 
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
+
         NSURL *tappedLinkURL = userActivity.webpageURL;
 
-        UserDto *currentUser = [_activeUser copy];
-        __block OpenInAppHandler *handler = [[OpenInAppHandler alloc] initWithLink:tappedLinkURL andUser:currentUser];
+        __block id blockForPasscodeSecurity;
 
+        blockForPasscodeSecurity = [[NSNotificationCenter defaultCenter] addObserverForName:@"dismissPassCodeNotification" object:nil queue:nil usingBlock:^(NSNotification *notification) {
+            [self openLinksInAppWithLink:tappedLinkURL];
+            [[NSNotificationCenter defaultCenter] removeObserver:blockForPasscodeSecurity name:@"dismissPassCodeNotification" object:nil];
+        }];
+
+
+        if (!_isPasscodeVisible) {
+            [self openLinksInAppWithLink:tappedLinkURL];
+        }
+
+    }
+    return YES;
+}
+
+- (void)openLinksInAppWithLink:(NSURL *)url {
+
+    UserDto *currentUser = [_activeUser copy];
+    __block OpenInAppHandler *handler = [[OpenInAppHandler alloc] initWithLink:url andUser:currentUser];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_presentFilesViewController initLoading];
+    });
+
+    [handler handleLink:^(NSArray<FileDto *> *items) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_presentFilesViewController initLoading];
+            [_presentFilesViewController endLoading];
         });
-
-        [handler handleLink:^(NSArray<FileDto *> *items) {
+        if (items.count > 0) {
+            FileDto *fileToOpen =  items.lastObject;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [_presentFilesViewController endLoading];
-            });
-            if (items.count > 0) {
-                FileDto *fileToOpen =  items.lastObject;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (fileToOpen.isDirectory) {
-                        [_presentFilesViewController navigateTo:fileToOpen];
-                    } else {
-                        [_presentFilesViewController navigateTo: items[items.count - 2]];
-                    }
-                });
-
-                // TODO: this sleep is necessary until we found some better way to handle the preview.
-                [NSThread sleepForTimeInterval:1.0f];
-
-                if (!fileToOpen.isDirectory){
-
-                    NSInteger type = [FileNameUtils checkTheTypeOfFile:fileToOpen.fileName];
-
-                    if (type == otherFileType) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [_presentFilesViewController scrollToFile:fileToOpen];
-                        });
-                    } else {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [_presentFilesViewController openFileInPreview:fileToOpen];
-                        });
-                    }
+                if (fileToOpen.isDirectory) {
+                    [_presentFilesViewController navigateTo:fileToOpen];
+                } else {
+                    [_presentFilesViewController navigateTo: items[items.count - 2]];
                 }
+            });
 
-            } else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [_presentFilesViewController showError:@"Sorry :( an error happened trying to show to you the external link"];
-                });
+            // TODO: this sleep is necessary until we found a better way to handle the preview.
+            [NSThread sleepForTimeInterval:1.0f];
+
+            if (!fileToOpen.isDirectory){
+
+                NSInteger type = [FileNameUtils checkTheTypeOfFile:fileToOpen.fileName];
+
+                if (type == otherFileType) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [_presentFilesViewController scrollToFile:fileToOpen];
+                    });
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [_presentFilesViewController openFileInPreview:fileToOpen];
+                    });
+                }
             }
 
-        } failure:^(NSError *error) {
-
+        } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [_presentFilesViewController endLoading];
-                [_presentFilesViewController showError:@"Sorry :( an error happened trying to show to you the external link!"];
+                [_presentFilesViewController showError:@"Sorry :( an error happened trying to show to you the external link"];
             });
-            DLog(@"Error getting the redirection");
-        }];
-    }
+        }
 
-    return YES;
+    } failure:^(NSError *error) {
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_presentFilesViewController endLoading];
+            [_presentFilesViewController showError:@"Sorry :( an error happened trying to show to you the external link!"];
+        });
+        DLog(@"Error getting the redirection");
+    }];
 }
 
 @end

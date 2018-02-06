@@ -346,6 +346,9 @@
 #else
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 #endif
+
+    [[NSNotificationCenter defaultCenter] postNotification:
+     [[NSNotification alloc] initWithName:@"dismissPassCodeNotification" object:nil userInfo:nil]];
 }
 
 

@@ -3721,7 +3721,6 @@
             FileDto *tmpFile = files[j];
             if([tmpFile.fileName isEqualToString:file.fileName]) {
                 indexpathOfFile = [NSIndexPath indexPathForRow:j inSection:i];
-                NSLog(@"LOG ---> filename %@", file.fileName);
             }
         }
     }
