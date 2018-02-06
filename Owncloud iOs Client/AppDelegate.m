@@ -2846,11 +2846,14 @@ float shortDelay = 0.3;
                     }
                 });
 
-                [NSThread sleepForTimeInterval:4.0f];
+                // TODO: this sleep is necessary until we found some better way to handle the preview.
+                [NSThread sleepForTimeInterval:1.0f];
 
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [_presentFilesViewController openFileInPreview:fileToOpen];
-                });
+                if (!fileToOpen.isDirectory){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [_presentFilesViewController openFileInPreview:fileToOpen];
+                    });
+                }
 
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{

@@ -30,27 +30,6 @@
  */
 @property  NSURL *finalURL;
 
-/**
- * Converts the url from form https://server/
- *
- * @param userId -> id of user
- *
- * @return NSString with the url of the redirection propperly formed.
- * for example https://server/
- */
--(NSString *)transformURL: (NSURL *)redirectedURL;
-
-/**
- * Obtain the files inside a folder
- *
- * @param folderPath -> url of the folder you want the files.
- *
- * @success
- * @return items -> array with the files inside a folder.
- *
- * @failure
- * @return error -> error of this request.
- *
 /*!
  *  Current active user in the app.
  */
