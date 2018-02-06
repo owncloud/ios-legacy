@@ -46,6 +46,7 @@
 #define k_DB_version_21 21
 #define k_DB_version_22 22
 #define k_DB_version_23 23
+#define k_DB_version_24 24
 
 @implementation InitializeDatabase
 
@@ -120,6 +121,9 @@
                 [ManageDB updateDBVersion21To22];
             case k_DB_version_22:
                 //Updates in Keychain, will be made later
+            case k_DB_version_24:
+                //Update access property all items in Keychain
+                [OCKeychain updateAllKeychainItemsToUseTheLockProperty];
                 break; //Insert your migration above this final break.
         }
     }
