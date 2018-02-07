@@ -1202,10 +1202,6 @@
     }];
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> dc5f3bd7... fix for the type of the files and folders in the FileItemProvider
 +(void) updateEtagOfFileDtoByFileName:(NSString *) fileName andFilePath: (NSString *) filePath andActiveUser: (UserDto *) aciveUser withNewEtag: (NSString *)etag {
     
     FMDatabaseQueue *queue = Managers.sharedDatabase;
