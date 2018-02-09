@@ -7,7 +7,7 @@
 //
 
 /*
- Copyright (C) 2016, ownCloud GmbH.
+ Copyright (C) 2018, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -60,7 +60,7 @@
 + (void) initDataBase {
     
     //New version
-    static int dbVersion = k_DB_version_23;
+    static int dbVersion = k_DB_version_24;
     
     //This method make a new database
     [ManageDB createDataBase];
@@ -120,11 +120,10 @@
             case k_DB_version_21:
                 [ManageDB updateDBVersion21To22];
             case k_DB_version_22:
-                //Updates in Keychain, will be made later
+                [OCKeychain waitUntilKindOfCredentialsInAllKeychainItemsAreUpdatedFromDB22to23];//Updates in Keychain
             case k_DB_version_24:
-                //Update access property all items in Keychain
-                [OCKeychain updateAllKeychainItemsToUseTheLockProperty];
-                break; //Insert your migration above this final break.
+                [OCKeychain updateAllKeychainItemsToUseAccessibleAlwaysProperty]; //Updates in keychain, accesibility property
+            break; //Insert your migration above this final break.
         }
     }
     

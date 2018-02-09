@@ -299,14 +299,14 @@
 #pragma mark - keychain updates after some db updates
 
 #pragma mark - used to update from db version 9to10, from db to keychain
-+(BOOL)storeCredentialsOfUserFromDBVersion9To10:(UserDto *)user {
++(BOOL) storeCredentialsOfUserFromDBVersion9To10:(UserDto *)user {
     
     return [OCKeychain storeCredentials:user.credDto migratingFromDB9to10:YES];
 }
 
 #pragma mark - used to update from db version 22to23
 
-+ (BOOL)updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType {
++ (void) updateAllKeychainItemsFromDBVersion22To23ToStoreCredentialsDtoAsValueAndAuthenticationTypeWithCompletion:(void(^)(BOOL isUpdated))completion {
     
     BOOL isUpdated = YES;
     
@@ -318,17 +318,39 @@
             
             user.credDto.authenticationMethod = k_is_sso_active ? AuthenticationMethodSAML_WEB_SSO : AuthenticationMethodBASIC_HTTP_AUTH;
 
-            isUpdated &= [OCKeychain updateCredentials:user.credDto];;
+            isUpdated &= [OCKeychain updateCredentials:user.credDto];
         } else {
             isUpdated &= NO;
             DLog(@"Not possible to update keychain with userId: %ld", (long)user.userId);
         }
     }
-    return isUpdated;
+    completion(isUpdated);
 }
 
 
-+ (void) checkAccessKeychainWithCompletion:(void(^)(BOOL hasAccess))completion{
++ (void) waitUntilKindOfCredentialsInAllKeychainItemsAreUpdatedFromDB22to23 {
+    NSLog(@"Migrating kind of credentials of all keychain items");
+    
+    //We create a semaphore to wait until we have access to the keychain
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_time_t timeout =  timeout = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10.0 * NSEC_PER_SEC));
+
+    [OCKeychain updateAllKeychainItemsFromDBVersion22To23ToStoreCredentialsDtoAsValueAndAuthenticationTypeWithCompletion:^(BOOL isUpdated) {
+        if (isUpdated){
+            dispatch_semaphore_signal(semaphore);
+        }
+    }];
+    
+    if (dispatch_semaphore_wait(semaphore, timeout)) {
+        NSLog(@"Waiting for access to the keychain timeout. No migrated credentials at init");
+    } else {
+        NSLog(@"Migrated credentials at init");
+    }
+}
+
+#pragma mark - check access
+
++ (void) checkAccessKeychainWithCompletion:(void(^)(BOOL hasAccess))completion {
     
     UserDto *user = [ManageUsersDB getActiveUser];
     OCCredentialsDto *userCred = nil;
@@ -339,7 +361,26 @@
     }
 
     completion(YES);
-
 }
+
++ (void) waitUntilAccessToKeychain {
+    
+    //We create a semaphore to wait until we have access to the keychain
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_time_t timeout =  timeout = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15.0 * NSEC_PER_SEC));
+    
+    [OCKeychain  checkAccessKeychainWithCompletion:^(BOOL hasAccess) {
+        if (hasAccess){
+            dispatch_semaphore_signal(semaphore);
+        }
+    }];
+    
+    if (dispatch_semaphore_wait(semaphore, timeout)) {
+        NSLog(@"Waiting for access to the keychain timeout. No access to the keychain");
+    } else {
+        NSLog(@"We get access to the keychain");
+    }
+}
+
 
 @end

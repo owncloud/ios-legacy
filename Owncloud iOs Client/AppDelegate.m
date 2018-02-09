@@ -142,7 +142,7 @@ float shortDelay = 0.3;
         //Reset all keychain items when db need to be updated or when db first init after app has been removed and reinstalled
         [OCKeychain resetKeychain];
     } else {
-        [self waitUntilAccessToKeychain];
+        [OCKeychain waitUntilAccessToKeychain];
     }
     
     //Init and update the DataBase
@@ -179,29 +179,6 @@ float shortDelay = 0.3;
 
         self.activeUser = [user copy];
         [UtilsCookies deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser];
-        
-        int currentDBVersion = [ManageDB getDatabaseVersion];
-        
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSInteger openAfterUpgradeDB23 = [defaults integerForKey:@"openAfterUpgradeDB23"];
-        
-        if (currentDBVersion == 23 && openAfterUpgradeDB23 != 1){
-            NSLog(@"Migrating after first open upgrade, Change kind of credentials in DB version from 21or22 to23");
-            sleep(3);
-            bool migrated = [OCKeychain updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType];
-            sleep(4);
-            self.activeUser = [ManageUsersDB getActiveUser];
-            
-            if (!migrated) {
-                NSLog(@"No migrated credentials at init");
-            } else {
-                NSLog(@"Migrated credentials at init");
-            }
-            //Some users could have migrated correctly from 3.6.2 to 3.7.0.
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            [defaults setInteger:1 forKey:@"openAfterUpgradeDB23"];
-            [defaults synchronize];
-        }
 
         //if we are migrating url not relaunch sync, neither update cookies and server checks
         BOOL isNeccessaryMigrateURL = [UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl];
@@ -253,32 +230,6 @@ float shortDelay = 0.3;
 
     return YES;
 }
-
-
-- (void) waitUntilAccessToKeychain {
-    
-    //We create a semaphore to wait until we have access to the keychain
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    dispatch_time_t timeout =  timeout = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15.0 * NSEC_PER_SEC));
-    
-    [OCKeychain  checkAccessKeychainWithCompletion:^(BOOL hasAccess) {
-        if (hasAccess){
-            dispatch_semaphore_signal(semaphore);
-        }
-    }];
-    
-    if (dispatch_semaphore_wait(semaphore, timeout)) {
-        NSLog(@"Waiting for access to the keychain timeout");
-    } else {
-        NSLog(@"We get access to the keychain");
-    }
-    
-}
-
-
-
-
-
 
 
 ///-----------------------------------

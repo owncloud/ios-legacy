@@ -36,6 +36,8 @@
 +(BOOL)resetKeychain;
 
 +(void)checkAccessKeychainWithCompletion:(void(^)(BOOL hasAccess))completion;
++(void)waitUntilAccessToKeychain;
+
 /**
  *   Following methods are used to migrate keychain items
  */
@@ -66,7 +68,7 @@
 +(BOOL)updateAllKeychainItemsToUseAccessibleAlwaysProperty;
 
 
-+(BOOL)updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType;
-
++(void)updateAllKeychainItemsFromDBVersion22To23ToStoreCredentialsDtoAsValueAndAuthenticationTypeWithCompletion:(void(^)(BOOL isUpdated))completion;
++(void)waitUntilKindOfCredentialsInAllKeychainItemsAreUpdatedFromDB22to23;
 
 @end
