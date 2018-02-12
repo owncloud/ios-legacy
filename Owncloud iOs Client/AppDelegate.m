@@ -132,7 +132,7 @@ float shortDelay = 0.3;
     _isPasscodeVisible = NO;
     
     [self moveIfIsNecessaryFilesAfterUpdateAppFromTheOldFolderArchitecture];
-    
+
     [self moveIfIsNecessaryFolderOfOwnCloudFromContainerAppSandboxToAppGroupSanbox];
     
     //Configuration UINavigation Bar apperance
@@ -2856,8 +2856,12 @@ float shortDelay = 0.3;
             [_presentFilesViewController endLoading];
         });
         if (items.count > 0) {
+
             FileDto *fileToOpen =  items.lastObject;
             dispatch_async(dispatch_get_main_queue(), ^{
+
+                [_ocTabBarController setSelectedIndex:0];
+
                 if (fileToOpen.isDirectory) {
                     [_presentFilesViewController navigateTo:fileToOpen];
                 } else {
