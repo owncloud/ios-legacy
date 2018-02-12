@@ -142,7 +142,7 @@ float shortDelay = 0.3;
         //Reset all keychain items when db need to be updated or when db first init after app has been removed and reinstalled
         [OCKeychain resetKeychain];
     } else {
-        [OCKeychain waitUntilAccessToKeychain];
+        [OCKeychain waitUntilAccessToKeychainFromDBVersion:[ManageDB getDatabaseVersion]];
     }
     
     //Init and update the DataBase
