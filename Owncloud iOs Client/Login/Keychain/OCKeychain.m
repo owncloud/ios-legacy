@@ -337,14 +337,16 @@
 
     [OCKeychain updateAllKeychainItemsFromDBVersion22To23ToStoreCredentialsDtoAsValueAndAuthenticationTypeWithCompletion:^(BOOL isUpdated) {
         if (isUpdated){
-            dispatch_semaphore_signal(semaphore);
+            NSLog(@"Migrated credentials at init");
+        }  else {
+            NSLog(@"No Migrated credentials at init");
         }
+        
+        dispatch_semaphore_signal(semaphore);
     }];
     
     if (dispatch_semaphore_wait(semaphore, timeout)) {
-        NSLog(@"Waiting for access to the keychain timeout. No migrated credentials at init");
-    } else {
-        NSLog(@"Migrated credentials at init");
+        NSLog(@"Waiting for access to the keychain timeout. No Migrated credentials at init");
     }
 }
 
