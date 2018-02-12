@@ -136,7 +136,7 @@ float shortDelay = 0.3;
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
 
-    [self showSplashScreenFake];
+    [self showSplashScreen];
     
     if (![ManageUsersDB existAnyUser]) {
         //Reset all keychain items when db need to be updated or when db first init after app has been removed and reinstalled
@@ -2736,9 +2736,9 @@ float shortDelay = 0.3;
 
 #pragma mark - SplashScreenFake
 
-- (void) showSplashScreenFake {
+- (void) showSplashScreen {
     
-    DLog(@"showSplashScreenFake");
+    DLog(@"showSplashScreen");
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Launch Screen" bundle:nil];
     UIViewController *splashScreenView = [storyboard instantiateViewControllerWithIdentifier:@"SplashScreen"];

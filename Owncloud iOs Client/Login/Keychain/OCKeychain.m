@@ -308,7 +308,7 @@
 
 #pragma mark - used to update from db version 22to23
 
-+ (void) updateAllKeychainItemsFromDBVersion22To23ToStoreCredentialsDtoAsValueAndAuthenticationTypeWithCompletion:(void(^)(BOOL isUpdated))completion {
++ (void) updateAllKeychainItemsFromDBVersion22To23ToStoreNewKindOfCredentialsDtoAsValueWithCompletion:(void(^)(BOOL isUpdated))completion {
     
     BOOL isUpdated = YES;
     
@@ -337,7 +337,7 @@
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     dispatch_time_t timeout =  timeout = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10.0 * NSEC_PER_SEC));
 
-    [OCKeychain updateAllKeychainItemsFromDBVersion22To23ToStoreCredentialsDtoAsValueAndAuthenticationTypeWithCompletion:^(BOOL isUpdated) {
+    [OCKeychain updateAllKeychainItemsFromDBVersion22To23ToStoreNewKindOfCredentialsDtoAsValueWithCompletion:^(BOOL isUpdated) {
         if (isUpdated){
             NSLog(@"Migrated credentials at init");
         }  else {

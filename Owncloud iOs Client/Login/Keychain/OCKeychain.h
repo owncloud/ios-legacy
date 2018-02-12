@@ -68,7 +68,7 @@
 +(BOOL)updateAllKeychainItemsToUseAccessibleAlwaysProperty;
 
 
-+(void)updateAllKeychainItemsFromDBVersion22To23ToStoreCredentialsDtoAsValueAndAuthenticationTypeWithCompletion:(void(^)(BOOL isUpdated))completion;
++(void)updateAllKeychainItemsFromDBVersion22To23ToStoreNewKindOfCredentialsDtoAsValueWithCompletion:(void(^)(BOOL isUpdated))completion;
 +(void)waitUntilKindOfCredentialsInAllKeychainItemsAreUpdatedFromDB22to23;
 
 @end
