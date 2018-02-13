@@ -28,6 +28,14 @@ struct K {
     struct vcId {
         static let vcIdWebViewLogin = "WebViewLoginViewController"
     }
+    
+    struct constant {
+        static let httpsProtocol = "https://"
+        static let httpProtocol = "http://"
+        static let httpsPrefix = "https"
+        static let httpPrefix = "http"
+
+    }
 }
 
 public enum TextfieldType: String {
@@ -577,7 +585,7 @@ public enum TextfieldType: String {
                                 self.startAuthenticationWith(authMethod: self.authMethodToLogin)
                             }
                             
-                            self.showURLSuccess(self.validatedServerURL.hasPrefix("https://"))
+                            self.showURLSuccess(self.validatedServerURL.hasPrefix(K.constant.httpsProtocol))
                             
                         } else {
                             self.setConnectButton(status: false)
@@ -936,7 +944,7 @@ public enum TextfieldType: String {
                         }
                         self.user!.url = self.validatedServerURL
                         self.user!.username = self.userNewCredentials.userName
-                        self.user!.ssl = self.validatedServerURL.hasPrefix("https")
+                        self.user!.ssl = self.validatedServerURL.hasPrefix(K.constant.httpsPrefix)
                         self.user!.urlRedirected = app.urlServerRedirected
                     }
                     
