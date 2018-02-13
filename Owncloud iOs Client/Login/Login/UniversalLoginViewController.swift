@@ -551,11 +551,12 @@ public enum TextfieldType: String {
                         )
                         print ("error getting information from URL")
                         
-                    } else if validatedURL != nil {
+                    } else if (validatedURL != nil && (serverAuthenticationMethods != nil && serverAuthenticationMethods!.count > 0) ) {
                         
                         self.setURLFooter(isType: .None)
                         
                         self.validatedServerURL = validatedURL;
+                        
                         self.allAvailableAuthMethods = serverAuthenticationMethods as! [AuthenticationMethod]
                         
                         self.authMethodToLogin = DetectAuthenticationMethod.getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
@@ -908,7 +909,7 @@ public enum TextfieldType: String {
             let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
             
             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
-                /// credentials allowed access to root folder: well done
+                print("credentials allowed access to root folder: well done!")
                 
                 let tryingToUpdateDifferentUser = (self.user != nil &&
                     (self.loginMode == .update || self.loginMode == .expire)
