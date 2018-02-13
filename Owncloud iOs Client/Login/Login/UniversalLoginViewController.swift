@@ -932,31 +932,27 @@ public enum TextfieldType: String {
                     
                 } else {
 
-                    //1.Generate correct user
-                    if self.loginMode == .create {
-                        self.user = UserDto()
-                    }
-                    
-                    if self.loginMode == .create || self.loginMode == .migrate || self.forceAccountMigration {
-
-                        if self.loginMode != .create {
+                    switch self.loginMode! {
+                        case .create:
+                            self.user = UserDto()
+                            self.setCurrentUrlUsernameSSLAndUrlRedirectedUserProperties()
+                            break
+                        case .migrate:
                             self.userNewCredentials.userId = String(self.user!.userId)
-                        }
-                        self.user!.url = self.validatedServerURL
-                        self.user!.username = self.userNewCredentials.userName
-                        self.user!.ssl = self.validatedServerURL.hasPrefix(K.constant.httpsPrefix)
-                        self.user!.urlRedirected = app.urlServerRedirected
+                            self.setCurrentUrlUsernameSSLAndUrlRedirectedUserProperties()
+                            break
+                        default:
+                            break
                     }
                     
                     self.user!.predefinedUrl = k_default_url_server
                     self.userNewCredentials.baseURL = UtilsUrls.getFullRemoteServerPath(self.user)
                     
                     if self.forceAccountMigration {
+                        self.userNewCredentials.userId = String(self.user!.userId)
                         OCKeychain.storeCredentials(self.userNewCredentials)
                     }
-                    
 
-                    //2.Store account
                     if self.loginMode == .create {
                         
                         if (ManageUsersDB.isExistUser(self.user)) {
@@ -1037,6 +1033,15 @@ public enum TextfieldType: String {
     @objc func setLoginMode(loginMode: LoginMode, user: UserDto) {
         self.loginMode = loginMode
         self.user = user
+    }
+    
+    func setCurrentUrlUsernameSSLAndUrlRedirectedUserProperties() {
+        let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
+
+        self.user!.url = self.validatedServerURL
+        self.user!.username = self.userNewCredentials.userName
+        self.user!.ssl = self.validatedServerURL.hasPrefix("https")
+        self.user!.urlRedirected = app.urlServerRedirected
     }
     
 }
