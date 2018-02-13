@@ -935,11 +935,11 @@ public enum TextfieldType: String {
                     switch self.loginMode! {
                         case .create:
                             self.user = UserDto()
-                            self.user = self.setPropertiesOfUser(user: self.user!, url: self.validatedServerURL, username: self.userNewCredentials.userName, urlServerRedirected: app.urlServerRedirected)
+                            self.setPropertiesOfGlobalUser(url: self.validatedServerURL, username: self.userNewCredentials.userName, urlServerRedirected: app.urlServerRedirected)
                             break
                         case .migrate:
                             self.userNewCredentials.userId = String(self.user!.userId)
-                            self.user = self.setPropertiesOfUser(user: self.user!, url: self.validatedServerURL, username: self.userNewCredentials.userName, urlServerRedirected: app.urlServerRedirected)
+                            self.setPropertiesOfGlobalUser(url: self.validatedServerURL, username: self.userNewCredentials.userName, urlServerRedirected: app.urlServerRedirected)
                             break
                         default:
                             break
@@ -1036,14 +1036,12 @@ public enum TextfieldType: String {
     }
     
     
-    func setPropertiesOfUser(user: UserDto, url: String, username: String, urlServerRedirected: String) -> UserDto {
+    func setPropertiesOfGlobalUser(url: String, username: String, urlServerRedirected: String) {
        
-        user.url = url
-        user.username = username
-        user.ssl = url.hasPrefix(K.constant.httpsPrefix)
-        user.urlRedirected = urlServerRedirected
-        
-        return user
+        self.user!.url = url
+        self.user!.username = username
+        self.user!.ssl = url.hasPrefix(K.constant.httpsPrefix)
+        self.user!.urlRedirected = urlServerRedirected
     }
     
 }

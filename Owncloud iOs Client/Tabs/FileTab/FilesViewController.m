@@ -1324,7 +1324,7 @@
         if (fileCell == nil) {
             NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"CustomCellFileAndDirectory" owner:self options:nil];
             fileCell = (CustomCellFileAndDirectory *)[topLevelObjects objectAtIndex:0];
-        }
+        } 
         
         if (!IS_IPHONE) {
             fileCell.labelTitle.adjustsFontSizeToFitWidth=YES;
@@ -1339,6 +1339,9 @@
             [fileCell.labelInfoFile setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         }
         
+        if (indexPath.section && indexPath.row) {
+            
+        }
         FileDto *file = (FileDto *)[[_sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
         
         NSDate* date = [NSDate dateWithTimeIntervalSince1970:file.date];
