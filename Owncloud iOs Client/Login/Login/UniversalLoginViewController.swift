@@ -931,15 +931,15 @@ public enum TextfieldType: String {
                     self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
                     
                 } else {
-
+                    
                     switch self.loginMode! {
                         case .create:
                             self.user = UserDto()
-                            self.setCurrentUrlUsernameSSLAndUrlRedirectedUserProperties()
+                            self.user = self.setPropertiesOfUser(user: self.user!, url: self.validatedServerURL, username: self.userNewCredentials.userName, urlServerRedirected: app.urlServerRedirected)
                             break
                         case .migrate:
                             self.userNewCredentials.userId = String(self.user!.userId)
-                            self.setCurrentUrlUsernameSSLAndUrlRedirectedUserProperties()
+                            self.user = self.setPropertiesOfUser(user: self.user!, url: self.validatedServerURL, username: self.userNewCredentials.userName, urlServerRedirected: app.urlServerRedirected)
                             break
                         default:
                             break
@@ -1035,13 +1035,15 @@ public enum TextfieldType: String {
         self.user = user
     }
     
-    func setCurrentUrlUsernameSSLAndUrlRedirectedUserProperties() {
-        let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-
-        self.user!.url = self.validatedServerURL
-        self.user!.username = self.userNewCredentials.userName
-        self.user!.ssl = self.validatedServerURL.hasPrefix(K.constant.httpsPrefix)
-        self.user!.urlRedirected = app.urlServerRedirected
+    
+    func setPropertiesOfUser(user: UserDto, url: String, username: String, urlServerRedirected: String) -> UserDto {
+       
+        user.url = url
+        user.username = username
+        user.ssl = url.hasPrefix(K.constant.httpsPrefix)
+        user.urlRedirected = urlServerRedirected
+        
+        return user
     }
     
 }
