@@ -1040,7 +1040,7 @@ public enum TextfieldType: String {
 
         self.user!.url = self.validatedServerURL
         self.user!.username = self.userNewCredentials.userName
-        self.user!.ssl = self.validatedServerURL.hasPrefix("https")
+        self.user!.ssl = self.validatedServerURL.hasPrefix(K.constant.httpsPrefix)
         self.user!.urlRedirected = app.urlServerRedirected
     }
     
