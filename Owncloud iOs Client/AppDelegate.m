@@ -62,6 +62,8 @@
 #import "OCOAuth2Configuration.h"
 #import "OpenInAppHandler.h"
 #import "FileNameUtils.h"
+#import "UniversalLinksContext.h"
+#import "OpenInAppHandlerNoInternet.h"
 
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
@@ -2845,16 +2847,24 @@ float shortDelay = 0.3;
 - (void)openLinksInAppWithLink:(NSURL *)url {
 
     UserDto *currentUser = [_activeUser copy];
-    __block OpenInAppHandler *handler = [[OpenInAppHandler alloc] initWithLink:url andUser:currentUser];
+
+    UniversalLinksContext * universalLinkscontext = [[UniversalLinksContext alloc] init];
+    OpenInAppHandler *handlerNetworkAvailable = [[OpenInAppHandler alloc] initWithLink:url andUser:currentUser];
+    OpenInAppHandlerNoInternet *handlerNetworkUnavailable = [[OpenInAppHandlerNoInternet alloc] initWithLink:url andUser:currentUser];
+
+    if ([[CheckAccessToServer sharedManager] isNetworkIsReachable]) {
+        [universalLinkscontext setStrategy:handlerNetworkAvailable];
+
+    } else {
+        [universalLinkscontext setStrategy:handlerNetworkUnavailable];
+    }
 
     dispatch_async(dispatch_get_main_queue(), ^{
         [_presentFilesViewController initLoading];
     });
 
-    [handler handleLink:^(NSArray<FileDto *> *items) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_presentFilesViewController endLoading];
-        });
+    [universalLinkscontext handleLink:^(NSArray *items) {
+
         if (items.count > 0) {
 
             FileDto *fileToOpen =  items.lastObject;
@@ -2893,8 +2903,7 @@ float shortDelay = 0.3;
             });
         }
 
-    } failure:^(NSError *error) {
-
+    } failure:^(OCPrivateLinkError error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [_presentFilesViewController endLoading];
             [_presentFilesViewController showError:@"Sorry :( an error happened trying to show to you the external link!"];
