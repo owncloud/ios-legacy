@@ -304,6 +304,48 @@
     return output;
 }
 
++(FileDto *)getFileDtoByOCid:(NSString *) ocFileId {
+    __block FileDto *output = nil;
+
+    UserDto *mUser = [ManageUsersDB getActiveUser];
+
+    DLog(@"getFileDtoByOCid: %@", ocFileId);
+
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+
+    [queue inDatabase:^(FMDatabase *db) {
+
+        FMResultSet *rs = [db executeQuery:@"SELECT * FROM files WHERE oc_id = ?", ocFileId];
+
+        while ([rs next]) {
+
+            output = [FileDto new];
+
+            output.idFile = [rs intForColumn:@"id"];
+            output.ocId = [rs stringForColumn:@"oc_id"];
+            output.filePath = [NSString stringWithFormat:@"%@%@",[UtilsUrls getRemovedPartOfFilePathAnd:mUser],[rs stringForColumn:@"file_path"]];
+            output.fileName = [rs stringForColumn:@"file_name"];
+            output.isDirectory = [rs intForColumn:@"is_directory"];
+            output.userId = [rs intForColumn:@"user_id"];
+            output.isDownload = [rs intForColumn:@"is_download"];
+            output.size = [rs longForColumn:@"size"];
+            output.fileId = [rs intForColumn:@"file_id"];
+            output.date = [rs longForColumn:@"date"];
+            output.isFavorite = [rs intForColumn:@"is_favorite"];
+            output.localFolder = [UtilsUrls getLocalFolderByFilePath:output.filePath andFileName:output.fileName andUserDto:mUser];
+            output.etag = [rs stringForColumn:@"etag"];
+            output.isRootFolder = [rs intForColumn:@"is_root_folder"];
+            output.isNecessaryUpdate = [rs intForColumn:@"is_necessary_update"];
+            output.sharedFileSource = [rs intForColumn:@"shared_file_source"];
+            output.permissions = [rs stringForColumn:@"permissions"];
+            output.taskIdentifier = [rs intForColumn:@"task_identifier"];
+            output.providingFileId = [rs intForColumn:@"providing_file_id"];
+        }
+        [rs close];
+    }];
+
+    return output;
+}
 
 +(void) setFileIsDownloadState: (NSInteger) idFile andState:(enumDownload)downloadState {
     

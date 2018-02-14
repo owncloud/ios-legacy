@@ -56,6 +56,14 @@
  */
 + (FileDto *) getFileDtoByIdFile:(NSInteger) idFile ;
 
+/**
+ Method that return a fileDTO for the unique OwnCloud Server file id.
+
+ @param ocFileId OwnCloud Server file id of a file.
+ @return file for the oc id.
+ */
++ (FileDto *) getFileDtoByOCid:(NSString *) ocFileId;
+
 /*
  * Method that give a file without the idFile but we know the name, the user and where is the file
  * @fileName -> name of the file

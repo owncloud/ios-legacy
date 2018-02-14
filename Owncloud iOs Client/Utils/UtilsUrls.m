@@ -849,7 +849,7 @@
                                          andUser:(UserDto *)mUserDto {
     NSString *pathOnDB = @"";
 
-    NSString *partToRemove = [NSString stringWithFormat:@"%@%@",[self getFullRemoteServerPath:mUserDto],k_url_files_share_link];
+    NSString *partToRemove = [NSString stringWithFormat:@"%@",k_url_files_private_link];
     if([filePath length] >= [partToRemove length]){
         pathOnDB = [filePath substringFromIndex:[partToRemove length]];
     }
