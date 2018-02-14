@@ -9,4 +9,10 @@
 
 @implementation UniversalLinksContext
 
+@synthesize strategy;
+
+-(void)handleLink:(void (^)(NSArray *))success failure:(void (^)(OCPrivateLinkError))failure {
+    [strategy handleLink:success failure:failure];
+}
+
 @end

@@ -9,7 +9,7 @@
 
 
 #import <Foundation/Foundation.h>
-
+#import "UniversalLinksContext.h"
 /*!
  *  @brief Instances of OpenInAppHandler create a handler to deal with all the process of open the app from a external
  *  univeral Link.
@@ -18,7 +18,7 @@
  *
  *  @warning This class doesn't open the files view with a selected FileDTO.
  */
-@interface OpenInAppHandler : NSObject
+@interface OpenInAppHandler : NSObject <UniversalLinksStrategy>
 
 /*!
  *  Link that the user taps in third party app.

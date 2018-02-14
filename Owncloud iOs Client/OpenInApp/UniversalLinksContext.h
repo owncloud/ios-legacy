@@ -7,6 +7,25 @@
 
 #import <Foundation/Foundation.h>
 
-@interface UniversalLinksContext : NSObject
+typedef NS_ENUM(NSUInteger, OCPrivateLinkError)
+{
+    OCPrivateLinkErrorFileNotCached,
+    OCPrivateLinkErrorFileNotExists,
+    OCPrivateLinkErrorNotAuthorized
+};
+
+@protocol UniversalLinksStrategy <NSObject>
+
+@required
+-(void)handleLink: (void(^)(NSArray *items))success failure:(void(^)(OCPrivateLinkError)) failure;
+
+@end
+
+@interface UniversalLinksContext : NSObject {
+    __unsafe_unretained id<UniversalLinksStrategy> strategy;
+}
+@property (assign) id<UniversalLinksStrategy> strategy;
+
+-(void)handleLink: (void(^)(NSArray *items))success failure:(void(^)(OCPrivateLinkError)) failure;
 
 @end

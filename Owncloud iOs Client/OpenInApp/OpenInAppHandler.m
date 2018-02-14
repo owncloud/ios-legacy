@@ -29,14 +29,15 @@
 
 -(void)handleLink:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
 
-    [self getRedirection:_tappedLinkURL success:^(NSString *redirectedURL) {
 
-        if ([redirectedURL isEqualToString:_tappedLinkURL.absoluteString]) {
+    [self getRedirection:_tappedLinkURL success:^(NSURL *redirectedURL) {
+
+        if (redirectedURL == nil) {
             NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil];
             failure(error);
         }
 
-        __block NSArray<NSString *> *urls = [UtilsUrls getArrayOfWebdavUrlWithUrlInWebScheme:redirectedURL forUser:_user];
+        __block NSArray<NSString *> *urls = [UtilsUrls getArrayOfWebdavUrlWithUrlInWebScheme:redirectedURL.absoluteString forUser:_user];
 
         __block NSMutableArray *files = [NSMutableArray new];
 
@@ -73,10 +74,10 @@
 
 }
 
--(void)getRedirection:(NSURL *)privateLink success:(void (^)(NSString *))success failure:(void (^)(NSError *))failure {
+-(void)getRedirection:(NSURL *)privateLink success:(void (^)(NSURL *))success failure:(void (^)(NSError *))failure {
 
     [[AppDelegate sharedOCCommunication] getFullPathFromPrivateLink:_tappedLinkURL success:^(NSURL *path) {
-        success(path.absoluteString);
+        success(path);
     } failure:^(NSError *error){
         failure(error);
     }];
@@ -156,18 +157,4 @@
     return filesToReturn;
 }
 
--(void)handleLink1:(void (^)(FileDto *))success failure:(void (^)(NSError *))failure {
-    [self getRedirection:_tappedLinkURL success:^(NSString *redirectedURL) {
-        NSArray<NSString *> *urls = [UtilsUrls getArrayOfWebdavUrlWithUrlInWebScheme:redirectedURL forUser:_user];
-
-        [self getFilesFrom:urls.lastObject success:^(NSArray *files) {
-            NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray: files];
-            success(directoryList[1]);
-        } failure:^(NSError *error) {
-            failure(error);
-        }];
-    } failure:^(NSError *error) {
-        failure(error);
-    }];
-}
 @end
