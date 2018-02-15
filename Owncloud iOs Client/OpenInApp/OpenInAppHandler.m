@@ -13,6 +13,7 @@
 #import "UtilsUrls.h"
 #import "ManageFilesDB.h"
 #import "UtilsDtos.h"
+#import "NSString+Encoding.h"
 
 @implementation OpenInAppHandler
 
@@ -37,7 +38,9 @@
             failure(error);
         }
 
-        __block NSArray<NSString *> *urls = [UtilsUrls getArrayOfWebdavUrlWithUrlInWebScheme:redirectedURL.absoluteString forUser:_user];
+        NSString *encodedURL = [[NSString alloc ] initWithString:[redirectedURL.absoluteString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+
+        __block NSArray<NSString *> *urls = [UtilsUrls getArrayOfWebdavUrlWithUrlInWebScheme:encodedURL forUser:_user];
 
         __block NSMutableArray *files = [NSMutableArray new];
 
@@ -146,7 +149,7 @@
         if (parent != nil) {
             [filesToReturn addObject:parent];
         } else {
-            name = [name stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+            name = [name encodeString:NSUTF8StringEncoding];
             parent = [ManageFilesDB getFileDtoByFileName:name andFilePath:path andUser:_user];
             if (parent != nil) {
                 [filesToReturn addObject:parent];
