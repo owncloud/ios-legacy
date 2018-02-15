@@ -33,7 +33,7 @@
 
     if (item.isDownload == 1) {
         if (!item.isDirectory) {
-            FileDto *parent = [ManageFilesDB getFileDtoByIdFile: item.idFile];
+            FileDto *parent = [ManageFilesDB getFileDtoByIdFile: item.fileId];
             [files addObject:parent];
         }
         [files addObject:item];
