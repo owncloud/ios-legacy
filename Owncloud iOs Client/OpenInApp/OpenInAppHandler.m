@@ -28,58 +28,55 @@
     return self;
 }
 
--(void)handleLink:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
+-(void)handleLink:(void (^)(NSArray *))success failure:(void (^)(OCPrivateLinkError))failure {
 
+    [self getRedirection:_tappedLinkURL success:^(NSString *redirectedURL) {
+        NSString *decodedURL = [[NSString alloc ] initWithString:[redirectedURL stringByRemovingPercentEncoding]];
 
-    [self getRedirection:_tappedLinkURL success:^(NSURL *redirectedURL) {
+        [self isItemDirectory:decodedURL completionHandler:^(BOOL isDirectory, NSError *error) {
+            if (error != nil) {
+                failure(OCPrivateLinkErrorFileNotExists);
+            }
 
-        if (redirectedURL == nil) {
-            NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil];
-            failure(error);
-        }
+            __block NSArray<NSString *> *urls = [UtilsUrls getArrayOfWebdavUrlWithUrlInWebScheme:decodedURL forUser:_user isDirectory:isDirectory];
 
-        NSString *encodedURL = [[NSString alloc ] initWithString:[redirectedURL.absoluteString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            __block NSMutableArray *files = [NSMutableArray new];
 
-        __block NSArray<NSString *> *urls = [UtilsUrls getArrayOfWebdavUrlWithUrlInWebScheme:encodedURL forUser:_user];
+            dispatch_group_t group = dispatch_group_create();
+            dispatch_group_enter(group);
 
-        __block NSMutableArray *files = [NSMutableArray new];
+            dispatch_group_async(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+                [urls enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 
-        dispatch_group_t group = dispatch_group_create();
-        dispatch_group_enter(group);
+                    [self getFilesFrom:urls[idx] success:^(NSArray *items) {
+                        NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
+                        files[idx] = directoryList;
 
-        dispatch_group_async(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
-            [urls enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-
-                [self getFilesFrom:urls[idx] success:^(NSArray *items) {
-                    NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
-                    files[idx] = directoryList;
-
-                    if (idx == urls.count - 1) {
+                        if (idx == urls.count - 1) {
+                            dispatch_group_leave(group);
+                        }
+                    } failure:^(NSError *error) {
+                        NSLog(@"LOG ---> error in the request to the url -> %@", urls[idx]);
                         dispatch_group_leave(group);
-                    }
-                } failure:^(NSError *error) {
-                    NSLog(@"LOG ---> error in the request to the url -> %@", urls[idx]);
-                    dispatch_group_leave(group);
-                    failure(error);
+                        failure(OCPrivateLinkErrorFileNotExists);
 
+                    }];
                 }];
-            }];
-        });
+            });
 
-        dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
-            NSMutableArray *filesFromRootToFile = [self syncFilesTreeWithFiles:files andUrls:urls];
-            success([filesFromRootToFile copy]);
-        });
-
+            dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+                NSMutableArray *filesFromRootToFile = [self syncFilesTreeWithFiles:files andUrls:urls];
+                success([filesFromRootToFile copy]);
+            });
+        }];
     } failure:^(NSError *error) {
-        failure(error);
+        failure(OCPrivateLinkErrorFileNotExists);
     }];
-
 }
 
--(void)getRedirection:(NSURL *)privateLink success:(void (^)(NSURL *))success failure:(void (^)(NSError *))failure {
+-(void)getRedirection:(NSURL *)privateLink success:(void (^)(NSString *))success failure:(void (^)(NSError *))failure {
 
-    [[AppDelegate sharedOCCommunication] getFullPathFromPrivateLink:_tappedLinkURL success:^(NSURL *path) {
+    [[AppDelegate sharedOCCommunication] getFullPathFromPrivateLink:_tappedLinkURL.absoluteString success:^(NSString *path) {
         success(path);
     } failure:^(NSError *error){
         failure(error);
@@ -104,7 +101,12 @@
 }
 
 -(void)getFilesFrom:(NSString *)folderPath success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
-    [[AppDelegate sharedOCCommunication] readFolder:folderPath withUserSessionToken:APP_DELEGATE.userSessionCurrentToken onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
+    __block OCCommunication *ocComm;
+//    dispatch_async(dispatch_get_main_queue(), ^{
+       ocComm = [AppDelegate sharedOCCommunication];
+//    });
+
+    [ocComm readFolder:folderPath withUserSessionToken:APP_DELEGATE.userSessionCurrentToken onCommunication:ocComm successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token) {
         success(items);
     } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token, NSString *redirectedServer) {
         failure(error);
@@ -131,6 +133,25 @@
     return path;
 }
 
+-(void)isItemDirectory: (NSString *)itemPath completionHandler:(void (^)(BOOL isDirectory, NSError * error))completionHandler {
+
+    NSString *path = [[[UtilsUrls getFullRemoteServerPath:_user ]  substringToIndex:[[UtilsUrls getFullRemoteServerPath:_user ] length] - 1] stringByAppendingString: itemPath];
+
+    [[AppDelegate sharedOCCommunication] readFile:path onCommunication: [AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+
+        NSMutableArray<FileDto *> *item = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
+
+        if (item[0].isDirectory) {
+            completionHandler(YES, nil);
+        } else {
+            completionHandler(NO, nil);
+        }
+
+    } failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *redirectedServer) {
+        completionHandler(NO, error);
+    }];
+}
+
 -(NSMutableArray *)syncFilesTreeWithFiles: (NSMutableArray *)filesToSync andUrls: (NSArray<NSString *> *)urls {
     NSMutableArray *filesToReturn = [[NSMutableArray alloc] initWithCapacity:urls.count];
     FileDto *parent = nil;
@@ -144,12 +165,12 @@
         if ([path isEqualToString:k_url_webdav_server_with_first_slash]) {
             path = @"";
         }
-
+        name = [name encodeString:NSUTF8StringEncoding];
+        path = [path encodeString:NSUTF8StringEncoding];
         parent = [ManageFilesDB getFileDtoByFileName:name andFilePath:path andUser:_user];
         if (parent != nil) {
             [filesToReturn addObject:parent];
         } else {
-            name = [name encodeString:NSUTF8StringEncoding];
             parent = [ManageFilesDB getFileDtoByFileName:name andFilePath:path andUser:_user];
             if (parent != nil) {
                 [filesToReturn addObject:parent];

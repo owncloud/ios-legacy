@@ -2899,14 +2899,15 @@ float shortDelay = 0.3;
 
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [_presentFilesViewController showError:@"Sorry :( an error happened trying to show to you the external link"];
+                [_presentFilesViewController endLoading];
+                [_presentFilesViewController showError:@"The private link could not be opened"];
             });
         }
 
     } failure:^(OCPrivateLinkError error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [_presentFilesViewController endLoading];
-            [_presentFilesViewController showError:@"Sorry :( an error happened trying to show to you the external link!"];
+            [_presentFilesViewController showError:@"The private link could not be opened"];
         });
         DLog(@"Error getting the redirection");
     }];

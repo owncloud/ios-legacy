@@ -1381,7 +1381,6 @@
 		14EC1953195B297F00B02AB6 /* sharedItem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sharedItem.png; sourceTree = "<group>"; };
 		14EC1954195B297F00B02AB6 /* sharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@2x.png"; sourceTree = "<group>"; };
 		230233B01F9DF401007ED1C5 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
-		230A2D2A2033407A006CE677 /* UniversalLinksStrategy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UniversalLinksStrategy.h; path = OpenInApp/UniversalLinksStrategy.h; sourceTree = "<group>"; };
 		230A2D2C203340F4006CE677 /* OpenInAppHandlerNoInternet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OpenInAppHandlerNoInternet.h; path = OpenInApp/OpenInAppHandlerNoInternet.h; sourceTree = "<group>"; };
 		230A2D2D203340F4006CE677 /* OpenInAppHandlerNoInternet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OpenInAppHandlerNoInternet.m; path = OpenInApp/OpenInAppHandlerNoInternet.m; sourceTree = "<group>"; };
 		230A2D2F20341EB3006CE677 /* UniversalLinksContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UniversalLinksContext.h; path = OpenInApp/UniversalLinksContext.h; sourceTree = "<group>"; };
@@ -2987,7 +2986,6 @@
 			children = (
 				2393E61F202897AB00747F7A /* OpenInAppHandler.h */,
 				2393E61E202897AB00747F7A /* OpenInAppHandler.m */,
-				230A2D2A2033407A006CE677 /* UniversalLinksStrategy.h */,
 				230A2D2C203340F4006CE677 /* OpenInAppHandlerNoInternet.h */,
 				230A2D2D203340F4006CE677 /* OpenInAppHandlerNoInternet.m */,
 				230A2D2F20341EB3006CE677 /* UniversalLinksContext.h */,

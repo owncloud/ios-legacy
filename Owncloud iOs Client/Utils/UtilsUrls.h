@@ -127,6 +127,6 @@
  */
 + (NSString *) getSharedLinkArgumentsFromWebLink:(NSString *)filePath andUser:(UserDto *)mUserDto;
 
-+(NSArray<NSString *> *) getArrayOfWebdavUrlWithUrlInWebScheme: (NSString *)UrlInWebScheme forUser:(UserDto *)user;
++(NSArray<NSString *> *) getArrayOfWebdavUrlWithUrlInWebScheme: (NSString *)UrlInWebScheme forUser:(UserDto *)user isDirectory: (BOOL) isDirectory;
 
 @end

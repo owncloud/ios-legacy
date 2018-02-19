@@ -21,6 +21,7 @@
 #import "Customization.h"
 #import "FileDto.h"
 #import "ManageUploadsDB.h"
+#import "NSString+Encoding.h"
 
 
 @implementation UtilsUrls
@@ -810,46 +811,23 @@
  *  @param user Active user
  *  @return This method returns an array of urls sorted from Root to the folder or file desired.
  */
-+(NSArray<NSString *> *) getArrayOfWebdavUrlWithUrlInWebScheme: (NSString *)UrlInWebScheme forUser:(UserDto *)user {
-    NSString *fileRedirectedURL = [self getFilesQueryFromWebLink:UrlInWebScheme andUser:user];
-    NSArray<NSString *> *queryParameters = [self getQueryParametersFromQueryUrl:fileRedirectedURL];
++(NSArray<NSString *> *) getArrayOfWebdavUrlWithUrlInWebScheme: (NSString *)UrlInWebScheme forUser:(UserDto *)user isDirectory: (BOOL) isDirectory {
 
-    NSMutableArray *detachedFolderParameters = [[queryParameters[0] componentsSeparatedByString:@"/"] mutableCopy];
+    NSString *fileRedirectedURL = [self removeUnnecessaryParts:UrlInWebScheme andUser:user];
 
-    NSNumber *isFile = 0;
+    NSMutableArray<NSString *> *detachedFolderParameters = [[fileRedirectedURL componentsSeparatedByString:@"/"] mutableCopy];
 
-//     if the parameters is only a folder, remove the whitespace. If not, add the file to the parameters.
-    if (queryParameters.count == 1) {
-//        [detachedFolderParameters removeLastObject];
-    } else {
-        isFile = [NSNumber numberWithInt:1];
-        [detachedFolderParameters addObject:queryParameters[1]];
-    }
+    NSArray<NSString *> *urls = [self getUrlsForFilesFromPath:detachedFolderParameters andBaseServerUrl:[self getFullRemoteServerPathWithWebDav:user] isDirectory: isDirectory];
 
-    NSArray<NSString *> *urls = [self getUrlsForFilesFromPath:detachedFolderParameters andBaseServerUrl:[self getFullRemoteServerPathWithWebDav:user] andIsFile:isFile];
-    
     return urls;
 
 }
 
-/*!
- *  @brief This gets a url in a web scheme for file or folder and extracts the query for the file.
- *
- *  This is an example of a url in a web scheme:
- *  @a https://pablos-mbp.solidgear.prv/apps/files/?dir=/Documents/2/3/4/5/6/&fileid=Squirel.jpg
- *
- *  The return should look like:
- *  @a dir=/Documents/2/3/4/5/6/&fileid=Squirel.jpg
- *
- *  @param filePath Url for a file in the server web scheme.
- *  @param mUserDto Current user logged on the app.
- *  @return NSString with path part of the query
- */
-+ (NSString *) getFilesQueryFromWebLink:(NSString *)filePath
++ (NSString *) removeUnnecessaryParts:(NSString *)filePath
                                          andUser:(UserDto *)mUserDto {
     NSString *pathOnDB = @"";
 
-    NSString *partToRemove = [NSString stringWithFormat:@"%@",k_url_files_private_link];
+    NSString *partToRemove = [NSString stringWithFormat:@"%@%@",k_url_files_private_link, mUserDto.username];
     if([filePath length] >= [partToRemove length]){
         pathOnDB = [filePath substringFromIndex:[partToRemove length]];
     }
@@ -881,20 +859,21 @@
  *  @param path The path from root to the desired folder or dile
  *  @return An array of urls sorted from root to the desired folder.
  */
-+ (NSMutableArray *)getUrlsForFilesFromPath: (NSMutableArray*) path
-                           andBaseServerUrl: (NSString *)baseServerUrl andIsFile: (NSNumber *) isFile {
++ (NSMutableArray *)getUrlsForFilesFromPath: (NSMutableArray<NSString *> *) path
+                           andBaseServerUrl: (NSString *)baseServerUrl isDirectory: (BOOL) directory{
     NSMutableArray *urls = [[NSMutableArray alloc] init];
     NSString *urlToAdd = baseServerUrl;
     [urls addObject:urlToAdd];
     for(int i = 1; i < path.count; i++) {
         if(![path[i] isEqualToString: @""]){
-            if (i == path.count - 1 && [isFile isEqual:[[NSNumber alloc] initWithInt:1]]) {
-                urlToAdd = [urlToAdd stringByAppendingString:[path[i] stringByRemovingPercentEncoding]];
+            if (i == path.count - 1 && !directory) {
+                NSString *subPath = [[NSString alloc] initWithString:path[i]];
+                urlToAdd = [urlToAdd stringByAppendingString:subPath];
             } else {
                 urlToAdd = [urlToAdd stringByAppendingString:[path[i] stringByAppendingString: @"/"]];
             }
+            [urls addObject:urlToAdd];
         }
-        [urls addObject:urlToAdd];
     }
 
     return urls;
