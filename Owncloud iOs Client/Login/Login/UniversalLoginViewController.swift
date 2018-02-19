@@ -1036,7 +1036,7 @@ public enum TextfieldType: String {
     }
     
     
-    func setPropertiesOfGlobalUser(url: String, username: String, urlServerRedirected: String) {
+    func setPropertiesOfGlobalUser(url: String, username: String, urlServerRedirected: String?) {
        
         self.user!.url = url
         self.user!.username = username
