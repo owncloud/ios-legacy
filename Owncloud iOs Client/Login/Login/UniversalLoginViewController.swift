@@ -412,10 +412,9 @@ public enum TextfieldType: String {
             
             if (noCredentialsAvailable) {
                 
-                //TODO:show OCLoadingSpinner
                 print("Migrating keychain from login view")
-                OCKeychain.updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType()
-                sleep(5)
+                OCKeychain.waitUntilKindOfCredentialsInAllKeychainItemsAreUpdatedFromDB22to23()
+                
                 self.user = ManageUsersDB.getActiveUser()
                 
                 if (self.user?.credDto != nil && self.user?.credDto.userName != nil
@@ -426,7 +425,7 @@ public enum TextfieldType: String {
                 } else {
                     print("Can not get credentials from keychain in login view")
                     OCKeychain.removeCredentials(ofUser: self.user)
-                    //TODO:expire all accounts and force migration
+                    
                     self.forceAccountMigration = true
                 }
             }

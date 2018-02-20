@@ -135,16 +135,18 @@ float shortDelay = 0.3;
     
     //Configuration UINavigation Bar apperance
     [self setUINavigationBarApperanceForNativeMail];
-    
-    //Init and update the DataBase
-    [InitializeDatabase initDataBase];
+
+    [self showSplashScreen];
     
     if (![ManageUsersDB existAnyUser]) {
         //Reset all keychain items when db need to be updated or when db first init after app has been removed and reinstalled
         [OCKeychain resetKeychain];
+    } else {
+        [OCKeychain waitUntilAccessToKeychainFromDBVersion:[ManageDB getDatabaseVersion]];
     }
     
-    [self showSplashScreenFake];
+    //Init and update the DataBase
+    [InitializeDatabase initDataBase];
     
     //Needed to use on background tasks
     if (!k_is_sso_active) {
@@ -170,35 +172,13 @@ float shortDelay = 0.3;
     [NSURLCache setSharedURLCache:sharedCache];
     sleep(1); //Important sleep. Very ugly but neccesarry.
     
-    UserDto *user = [ManageUsersDB getActiveUser];
     
+    UserDto *user = [ManageUsersDB getActiveUser];
+
     if (user) {
 
         self.activeUser = [user copy];
         [UtilsCookies deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser];
-        
-        int currentDBVersion = [ManageDB getDatabaseVersion];
-        
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSInteger openAfterUpgradeDB23 = [defaults integerForKey:@"openAfterUpgradeDB23"];
-        
-        if (currentDBVersion == 23 && openAfterUpgradeDB23 != 1){
-            NSLog(@"Migrating after first open upgrade, Change kind of credentials in DB version from 21or22 to23");
-            sleep(3);
-            bool migrated = [OCKeychain updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType];
-            sleep(4);
-            self.activeUser = [ManageUsersDB getActiveUser];
-            
-            if (!migrated) {
-                NSLog(@"No migrated credentials at init");
-            } else {
-                NSLog(@"Migrated credentials at init");
-            }
-            //Some users could have migrated correctly from 3.6.2 to 3.7.0.
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            [defaults setInteger:1 forKey:@"openAfterUpgradeDB23"];
-            [defaults synchronize];
-        }
 
         //if we are migrating url not relaunch sync, neither update cookies and server checks
         BOOL isNeccessaryMigrateURL = [UtilsUrls isNecessaryUpdateToPredefinedUrlByPreviousUrl:self.activeUser.predefinedUrl];
@@ -250,7 +230,6 @@ float shortDelay = 0.3;
 
     return YES;
 }
-
 
 
 ///-----------------------------------
@@ -2757,9 +2736,9 @@ float shortDelay = 0.3;
 
 #pragma mark - SplashScreenFake
 
-- (void) showSplashScreenFake {
+- (void) showSplashScreen {
     
-    DLog(@"showSplashScreenFake");
+    DLog(@"showSplashScreen");
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Launch Screen" bundle:nil];
     UIViewController *splashScreenView = [storyboard instantiateViewControllerWithIdentifier:@"SplashScreen"];

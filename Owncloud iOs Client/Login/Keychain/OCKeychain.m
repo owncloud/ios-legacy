@@ -37,11 +37,11 @@
 #pragma mark - set credentials
 
 +(BOOL)storeCredentials:(OCCredentialsDto *)credDto {
-    return [OCKeychain storeCredentials:credDto migratingFromDB9to10:NO];
+    return [OCKeychain storeCredentials:credDto migratingFromDB9to10:NO migratingFromDBAfter23:YES];
 }
 
 // private implementation, common to both setCredentialsOfUser and setCredentialsOfUserToFromDbVersion9To10
-+(BOOL)storeCredentials:(OCCredentialsDto *)credDto migratingFromDB9to10:(BOOL)migratingFromDB9to10 {
++(BOOL)storeCredentials:(OCCredentialsDto *)credDto migratingFromDB9to10:(BOOL)migratingFromDB9to10 migratingFromDBAfter23:(BOOL)migratingFromDBAfter23 {
     
     BOOL output = NO;
     
@@ -52,6 +52,11 @@
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
     [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
+    if (!migratingFromDBAfter23) {
+        [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
+    } else {
+        [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAlways) forKey:(__bridge id)kSecAttrAccessible];
+    }
     [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
@@ -94,7 +99,6 @@
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
     [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
-    [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
     [keychainItem setObject:userId forKey:(__bridge id)kSecAttrAccount];
@@ -164,7 +168,6 @@
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
     [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
-    [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
     NSString *userId = [NSString stringWithFormat:@"%ld",(long)user.userId];
@@ -201,7 +204,6 @@
     NSMutableDictionary *keychainItem = [NSMutableDictionary dictionary];
     
     [keychainItem setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
-    [keychainItem setObject:(__bridge id)(kSecAttrAccessibleAfterFirstUnlock) forKey:(__bridge id)kSecAttrAccessible];
     [keychainItem setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
     
     [keychainItem setObject:credDto.userId forKey:(__bridge id)kSecAttrAccount];
@@ -275,17 +277,38 @@
     return output;
 }
 
++ (BOOL) updateAllKeychainItemsToUseAccessibleAlwaysProperty {
+    
+    BOOL output = NO;
+    
+    NSMutableDictionary *keychainQuery = [NSMutableDictionary dictionary];
+    
+    [keychainQuery setObject:(__bridge id)(kSecClassGenericPassword) forKey:(__bridge id)kSecClass];
+    [keychainQuery setObject:[UtilsUrls getFullBundleSecurityGroup] forKey:(__bridge id)kSecAttrAccessGroup];
+    
+    NSMutableDictionary *attrToUpdate = [NSMutableDictionary dictionary];
+    [attrToUpdate setObject:(__bridge id)(kSecAttrAccessibleAlways) forKey:(__bridge id)kSecAttrAccessible];
+    
+    OSStatus stsUpd = SecItemUpdate((__bridge CFDictionaryRef)(keychainQuery), (__bridge CFDictionaryRef)(attrToUpdate));
+    DLog(@"(updateLockPropertyToAccessibleAlways)Error Code: %d (0 = success)", (int)stsUpd);
+    if (stsUpd == errSecSuccess) {
+        output = YES;
+    }
+    
+    return output;
+}
+
 #pragma mark - keychain updates after some db updates
 
 #pragma mark - used to update from db version 9to10, from db to keychain
-+(BOOL)storeCredentialsOfUserFromDBVersion9To10:(UserDto *)user {
++(BOOL) storeCredentialsOfUserFromDBVersion9To10:(UserDto *)user {
     
-    return [OCKeychain storeCredentials:user.credDto migratingFromDB9to10:YES];
+    return [OCKeychain storeCredentials:user.credDto migratingFromDB9to10:YES migratingFromDBAfter23:NO];
 }
 
 #pragma mark - used to update from db version 22to23
 
-+ (BOOL)updateAllKeychainItemsFromDBVersion21or22To23ToStoreCredentialsDtoAsValueAndAuthenticationType {
++ (void) updateAllKeychainItemsFromDBVersion22To23ToStoreNewKindOfCredentialsDtoAsValueWithCompletion:(void(^)(BOOL isUpdated))completion {
     
     BOOL isUpdated = YES;
     
@@ -297,13 +320,74 @@
             
             user.credDto.authenticationMethod = k_is_sso_active ? AuthenticationMethodSAML_WEB_SSO : AuthenticationMethodBASIC_HTTP_AUTH;
 
-            isUpdated &= [OCKeychain updateCredentials:user.credDto];;
+            isUpdated &= [OCKeychain updateCredentials:user.credDto];
         } else {
             isUpdated &= NO;
             DLog(@"Not possible to update keychain with userId: %ld", (long)user.userId);
         }
     }
-    return isUpdated;
+    completion(isUpdated);
+}
+
+
++ (void) waitUntilKindOfCredentialsInAllKeychainItemsAreUpdatedFromDB22to23 {
+    NSLog(@"Migrating kind of credentials of all keychain items");
+    
+    //We create a semaphore to wait until we have access to the keychain
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_time_t timeout =  timeout = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10.0 * NSEC_PER_SEC));
+
+    [OCKeychain updateAllKeychainItemsFromDBVersion22To23ToStoreNewKindOfCredentialsDtoAsValueWithCompletion:^(BOOL isUpdated) {
+        if (isUpdated){
+            NSLog(@"Migrated credentials at init");
+        }  else {
+            NSLog(@"No Migrated credentials at init");
+        }
+        
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    if (dispatch_semaphore_wait(semaphore, timeout)) {
+        NSLog(@"Waiting for access to the keychain timeout. No Migrated credentials at init");
+    }
+}
+
+#pragma mark - check access
+
++ (void) checkAccessKeychainFromDBVersion:(int)dbVersion withCompletion:(void(^)(BOOL hasAccess))completion {
+    
+    UserDto *user = [ManageUsersDB getActiveUser];
+    OCCredentialsDto *userCred = nil;
+
+    while (userCred == nil) {
+        
+        if (dbVersion < 23) {
+            userCred = [OCKeychain getCredentialsOfUser:user migratingFromDB21or22to23:YES];
+        } else {
+            userCred = [OCKeychain getCredentialsOfUser:user];
+        }
+    }
+
+    completion(YES);
+}
+
++ (void) waitUntilAccessToKeychainFromDBVersion:(int)dbVersion {
+    
+    //We create a semaphore to wait until we have access to the keychain
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_time_t timeout =  timeout = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15.0 * NSEC_PER_SEC));
+    
+    [OCKeychain  checkAccessKeychainFromDBVersion:dbVersion withCompletion:^(BOOL hasAccess) {
+        if (hasAccess){
+            dispatch_semaphore_signal(semaphore);
+        }
+    }];
+    
+    if (dispatch_semaphore_wait(semaphore, timeout)) {
+        NSLog(@"Waiting for access to the keychain timeout. No access to the keychain");
+    } else {
+        NSLog(@"We get access to the keychain");
+    }
 }
 
 
