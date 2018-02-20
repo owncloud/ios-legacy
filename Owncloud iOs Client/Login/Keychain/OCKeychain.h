@@ -68,7 +68,20 @@
 +(BOOL)updateAllKeychainItemsToUseAccessibleAlwaysProperty;
 
 
+///-----------------------------------
+/// @name updateAllKeychainItemsFromDBVersion22To23ToStoreNewKindOfCredentialsDtoAsValueWithCompletion
+///-----------------------------------
+
+/**
+ * Within OC iOS app 3.7.0 (db version 23) new authentication method is supported, OAuth.
+ * In this versions the kind of credentials have been changed to support new accesstoken and more properties
+ * to support all kind of authentication methods that the server can have available
+ * This method update all keychain items stored previous db version 22 with the new kind of credential
+ * Completion used to wait until all items have been updated
+ */
 +(void)updateAllKeychainItemsFromDBVersion22To23ToStoreNewKindOfCredentialsDtoAsValueWithCompletion:(void(^)(BOOL isUpdated))completion;
+
+
 +(void)waitUntilKindOfCredentialsInAllKeychainItemsAreUpdatedFromDB22to23;
 
 @end
