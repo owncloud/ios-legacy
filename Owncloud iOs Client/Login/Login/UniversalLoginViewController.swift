@@ -28,6 +28,14 @@ struct K {
     struct vcId {
         static let vcIdWebViewLogin = "WebViewLoginViewController"
     }
+    
+    struct constant {
+        static let httpsProtocol = "https://"
+        static let httpProtocol = "http://"
+        static let httpsPrefix = "https"
+        static let httpPrefix = "http"
+
+    }
 }
 
 public enum TextfieldType: String {
@@ -538,53 +546,55 @@ public enum TextfieldType: String {
             self.setNetworkActivityIndicator(status: true)
             // get public infor from server
             getPublicInfoFromServerJob.start(serverURL: self.serverURLNormalizer.normalizedURL, withCompletion: { (validatedURL: String?, _ serverAuthenticationMethods: Array<Any>?, _ error: Error?, _ httpStatusCode: NSInteger) in
-            
-                self.setNetworkActivityIndicator(status: false)
-                if (error != nil || validatedURL == nil) {
-                    
-                    self.setConnectButton(status: false)
-                    self.showURLError(
-                        self.manageNetworkErrors.returnErrorMessage(
-                            withHttpStatusCode: httpStatusCode, andError: error
+                
+                DispatchQueue.main.async {
+                    self.setNetworkActivityIndicator(status: false)
+                    if (error != nil || validatedURL == nil) {
+                        
+                        self.setConnectButton(status: false)
+                        self.showURLError(
+                            self.manageNetworkErrors.returnErrorMessage(
+                                withHttpStatusCode: httpStatusCode, andError: error
+                            )
                         )
-                    )
-                    print ("error getting information from URL")
-                    
-                } else if validatedURL != nil {
-                    
-                    self.setURLFooter(isType: .None)
-                    
-                    self.validatedServerURL = validatedURL;
-                    self.allAvailableAuthMethods = serverAuthenticationMethods as! [AuthenticationMethod]
-                    
-                    self.authMethodToLogin = DetectAuthenticationMethod.getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
-                    
-                    if (self.authMethodToLogin != .NONE) {
-                        self.setReconnectionButtons(hiddenStatus: true)
-
-                        if (self.authMethodToLogin == .BASIC_HTTP_AUTH) {
-                            self.textFieldURL.resignFirstResponder()
-                            self.textFieldUsername.becomeFirstResponder()
+                        print ("error getting information from URL")
+                        
+                    } else if (validatedURL != nil && (serverAuthenticationMethods != nil && serverAuthenticationMethods!.count > 0) ) {
+                        
+                        self.setURLFooter(isType: .None)
+                        
+                        self.validatedServerURL = validatedURL;
+                        
+                        self.allAvailableAuthMethods = serverAuthenticationMethods as! [AuthenticationMethod]
+                        
+                        self.authMethodToLogin = DetectAuthenticationMethod.getAuthMethodToLoginFrom(availableAuthMethods: self.allAvailableAuthMethods)
+                        
+                        if (self.authMethodToLogin != .NONE) {
+                            self.setReconnectionButtons(hiddenStatus: true)
                             
-                            if self.loginMode == .update {
-                                self.textFieldUsername.text = self.user?.username
-                                self.textFieldPassword.text = ""
+                            if (self.authMethodToLogin == .BASIC_HTTP_AUTH) {
+                                self.textFieldURL.resignFirstResponder()
+                                self.textFieldUsername.becomeFirstResponder()
+                                
+                                if self.loginMode == .update {
+                                    self.textFieldUsername.text = self.user?.username
+                                    self.textFieldPassword.text = ""
+                                }
+                            } else {
+                                self.setConnectButton(status: false)
+                                self.startAuthenticationWith(authMethod: self.authMethodToLogin)
                             }
+                            
+                            self.showURLSuccess(self.validatedServerURL.hasPrefix(K.constant.httpsProtocol))
+                            
                         } else {
                             self.setConnectButton(status: false)
-                            self.startAuthenticationWith(authMethod: self.authMethodToLogin)
+                            self.showURLError(NSLocalizedString("authentification_not_valid", comment: ""))
                         }
-                        
-                        self.showURLSuccess(self.validatedServerURL.hasPrefix("https://"))
-                        
-                    } else {
-                        self.setConnectButton(status: false)
-                        self.showURLError(NSLocalizedString("authentification_not_valid", comment: ""))
+                        self.updateUIWithNormalizedData(self.serverURLNormalizer)
                     }
-                    self.updateUIWithNormalizedData(self.serverURLNormalizer)
+                    self.updateInputFieldsFromCurrentAuthMethodToLogin()
                 }
-                
-                self.updateInputFieldsFromCurrentAuthMethodToLogin()
             })
         }
     }
@@ -606,14 +616,12 @@ public enum TextfieldType: String {
 
         case .BASIC_HTTP_AUTH:
             self.resetPasswordFooterMessage()
-            let userCredDto: OCCredentialsDto = OCCredentialsDto()
-            userCredDto.userName = self.textFieldUsername.text
-            userCredDto.accessToken = self.textFieldPassword.text
-            userCredDto.authenticationMethod = authMethod
+            self.userNewCredentials = OCCredentialsDto()
+            self.userNewCredentials.userName = self.textFieldUsername.text
+            self.userNewCredentials.accessToken = self.textFieldPassword.text
+            self.userNewCredentials.authenticationMethod = authMethod
             nextErrorShouldBeShownAfterPasswordField = true
-            
-            self.userNewCredentials = (userCredDto.copy() as? OCCredentialsDto)!
-            
+                        
             self.detectUserDataAndValidate(serverPath: self.validatedServerURL)
             
             break
@@ -658,15 +666,9 @@ public enum TextfieldType: String {
         
         self.setNetworkActivityIndicator(status: false)
         
-        let userCredDto :OCCredentialsDto =  OCCredentialsDto()
-        userCredDto.accessToken = cookieString;
-        userCredDto.authenticationMethod = .SAML_WEB_SSO;
-        
-        if self.loginMode == .expire {
-            let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-            userCredDto.userName = app.activeUser.username
-        }
-        
+        self.userNewCredentials =  OCCredentialsDto()
+        self.userNewCredentials.accessToken = cookieString;
+        self.userNewCredentials.authenticationMethod = .SAML_WEB_SSO;
         
         if cookieString == nil || cookieString == "" {
             self.showCredentialsError(NSLocalizedString("authentification_not_valid", comment: "") )
@@ -674,7 +676,6 @@ public enum TextfieldType: String {
             return;
         }
         
-        self.userNewCredentials = (userCredDto.copy() as? OCCredentialsDto)!
         self.detectUserDataAndValidate(serverPath: serverPath!)
     }
     
@@ -876,9 +877,10 @@ public enum TextfieldType: String {
 // MARK: 'private' methods
     
     func detectUserDataAndValidate(serverPath: String) {
-        if loginMode == .migrate || self.forceAccountMigration{
-            //credentials may have changed, remove cookies
-            UtilsCookies.deleteAllCookiesOfActiveUser()
+        
+        if loginMode != .create {
+            //credentials may have changed, remove and update cookies
+            UtilsCookies.updateOfActiveUserInDB()
         }
         
         DetectUserData .getUserDisplayName(ofServer: serverPath, credentials: self.userNewCredentials) { (serverUserID, displayName, error) in
@@ -915,10 +917,7 @@ public enum TextfieldType: String {
             let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
             
             if (listOfFileDtos != nil && !((listOfFileDtos?.isEmpty)!)) {
-                /// credentials allowed access to root folder: well done
-                if self.forceAccountMigration {
-                    OCKeychain.storeCredentials(self.userNewCredentials)
-                }
+                print("credentials allowed access to root folder: well done!")
                 
                 let tryingToUpdateDifferentUser = (self.user != nil &&
                     (self.loginMode == .update || self.loginMode == .expire)
@@ -932,24 +931,27 @@ public enum TextfieldType: String {
                     self.showCredentialsError(NSLocalizedString("credentials_different_user", comment: "") )
                     
                 } else {
-
-                    if self.loginMode == .create || self.loginMode == .migrate || self.forceAccountMigration {
-                        let newUser = UserDto()
-                        if self.loginMode != .create {
-                            newUser.userId = self.user!.userId
-                            if self.loginMode == .migrate {
-                                newUser.predefinedUrl = k_default_url_server
-                            }
-                        }
-                        newUser.url = self.validatedServerURL
-                        newUser.username = self.userNewCredentials.userName
-                        newUser.ssl = self.validatedServerURL.hasPrefix("https")
-                        newUser.urlRedirected = app.urlServerRedirected
-                        
-                        self.user = newUser.copy() as? UserDto
+                    
+                    switch self.loginMode! {
+                        case .create:
+                            self.user = UserDto()
+                            self.setPropertiesOfGlobalUser(url: self.validatedServerURL, username: self.userNewCredentials.userName, urlServerRedirected: app.urlServerRedirected)
+                            break
+                        case .migrate:
+                            self.userNewCredentials.userId = String(self.user!.userId)
+                            self.setPropertiesOfGlobalUser(url: self.validatedServerURL, username: self.userNewCredentials.userName, urlServerRedirected: app.urlServerRedirected)
+                            break
+                        default:
+                            break
                     }
-
+                    
+                    self.user!.predefinedUrl = k_default_url_server
                     self.userNewCredentials.baseURL = UtilsUrls.getFullRemoteServerPath(self.user)
+                    
+                    if self.forceAccountMigration {
+                        self.userNewCredentials.userId = String(self.user!.userId)
+                        OCKeychain.storeCredentials(self.userNewCredentials)
+                    }
 
                     if self.loginMode == .create {
                         
@@ -975,23 +977,28 @@ public enum TextfieldType: String {
                         
                      } else {
                         
+                        self.user?.credDto = (self.userNewCredentials.copy() as? OCCredentialsDto)!
+                        
                         if ( (self.user?.username == nil || self.user?.username == "")
                             && self.userNewCredentials.userName != nil ){
                             self.user?.username = self.userNewCredentials.userName
-                            self.user?.credDto = (self.userNewCredentials.copy() as? OCCredentialsDto)!
                         }
                         
+                        //update active user
                         if (app.activeUser != nil && app.activeUser.userId == self.user?.userId) {
                             app.activeUser = self.user;
                         }
                         
-                        ManageAccounts().updateAccountOfUser(self.user!, withCredentials: self.userNewCredentials)
-                        
+                        //update account
                         if self.loginMode == .migrate || self.forceAccountMigration {
+                             ManageAccounts().migrateAccountOfUser(self.user!, withCredentials: self.userNewCredentials)
+                            
                             // migration mode needs to start a fresh list of files, so that it is updated with the new URL
                             app.generateAppInterface(fromLoginScreen: true)
                               
                         } else {
+                            ManageAccounts().updateAccountOfUser(self.user!, withCredentials: self.userNewCredentials)
+
                             self.closeLoginView()
                         }
                     }
@@ -1026,6 +1033,15 @@ public enum TextfieldType: String {
     @objc func setLoginMode(loginMode: LoginMode, user: UserDto) {
         self.loginMode = loginMode
         self.user = user
+    }
+    
+    
+    func setPropertiesOfGlobalUser(url: String, username: String, urlServerRedirected: String?) {
+       
+        self.user!.url = url
+        self.user!.username = username
+        self.user!.ssl = url.hasPrefix(K.constant.httpsPrefix)
+        self.user!.urlRedirected = urlServerRedirected
     }
     
 }

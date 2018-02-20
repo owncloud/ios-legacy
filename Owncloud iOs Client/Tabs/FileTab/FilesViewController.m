@@ -1324,7 +1324,7 @@
         if (fileCell == nil) {
             NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"CustomCellFileAndDirectory" owner:self options:nil];
             fileCell = (CustomCellFileAndDirectory *)[topLevelObjects objectAtIndex:0];
-        }
+        } 
         
         if (!IS_IPHONE) {
             fileCell.labelTitle.adjustsFontSizeToFitWidth=YES;

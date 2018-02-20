@@ -74,24 +74,19 @@ import Foundation
 @objc func migrateAccountOfUser(_ user: UserDto, withCredentials credDto: OCCredentialsDto) {
         
         //Update parameters after a force url and credentials have not been renewed
+    
         let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
-
-        if Customization.kIsSsoActive() {
-          //  user.username =
-        }
-        
-        user.urlRedirected = app.urlServerRedirected
+    
         user.predefinedUrl = k_default_url_server
-        
+    
         ManageUploadsDB.overrideAllUploads(withNewURL: UtilsUrls.getFullRemoteServerPath(user))
         
-        ManageUsersDB.updateUser(by: user)
-        
-        
         self.updateAccountOfUser(user, withCredentials: credDto)
+    
+        self.updateDisplayNameOfUser(user: user)
         
         app.updateStateAndRestoreUploadsAndDownloads()
-         //[[APP_DELEGATE presentFilesViewController] initFilesView];
+
         let instantUploadManager: InstantUpload = InstantUpload.instantUploadManager()
         instantUploadManager.activate()
     }
@@ -128,7 +123,6 @@ import Foundation
                             user.credDto.userDisplayName = displayName
                             
                             OCKeychain.updateCredentials(user.credDto)
-                            
                             
                             if (user.activeaccount) {
                                 let app: AppDelegate = (UIApplication.shared.delegate as! AppDelegate)
