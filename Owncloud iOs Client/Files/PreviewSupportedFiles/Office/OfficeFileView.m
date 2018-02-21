@@ -147,9 +147,9 @@ CGPoint _lastContentOffset;
             NSString *dataFile = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:url] encoding:NSASCIIStringEncoding];
             
             if (IS_IPHONE) {
-                [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_iphone,k_txt_files_font_family,dataFile] baseURL:nil];
+                [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_iphone,k_txt_files_font_family,dataFile] baseURL:[NSURL URLWithString:@"about:blank"]];
             }else{
-                [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_ipad,k_txt_files_font_family,dataFile] baseURL:nil];
+                [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_ipad,k_txt_files_font_family,dataFile] baseURL:[NSURL URLWithString:@"about:blank"]];
             }
             
         } else if ([ext isEqualToString:@"TXT"]) {
@@ -173,7 +173,8 @@ CGPoint _lastContentOffset;
             NSData *pdfData = [[NSData alloc] initWithContentsOfURL:targetURL];
             [self.webView loadData:pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:url];
         } else {
-            [self.webView loadRequest:[NSMutableURLRequest requestWithURL:url]];
+            NSString *dataFile = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:url] encoding:NSUTF8StringEncoding];
+           [self.webView loadHTMLString:dataFile baseURL: [NSURL URLWithString:@"about:blank"]];
         }
         
         [_webView setHidden:NO];
