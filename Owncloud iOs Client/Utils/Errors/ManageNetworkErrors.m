@@ -97,61 +97,59 @@
         }
     }
     
-    if (error == nil || ![error.domain isEqualToString:k_domain_error_code]) {
-        switch (errorHttp) {
-            case kOCErrorServerBadRequest:
-                // 400 Bad request
-                return NSLocalizedString(@"bad_request", nil);
+    switch (errorHttp) {
+        case kOCErrorServerBadRequest:
+            // 400 Bad request
+            return NSLocalizedString(@"bad_request", nil);
             
-            case kOCErrorServerUnauthorized:
-                //401 Unauthorized (bad username or password)
-                if (k_is_sso_active) {
-                    return NSLocalizedString(@"session_expired", nil);
-                } else {
-                    return NSLocalizedString(@"error_login_message", nil);
-                }
+        case kOCErrorServerUnauthorized:
+            //401 Unauthorized (bad username or password)
+            if (k_is_sso_active) {
+                return NSLocalizedString(@"session_expired", nil);
+            } else {
+                return NSLocalizedString(@"error_login_message", nil);
+            }
             
-            case kOCErrorServerForbidden:
-                //403 Forbidden
-                return NSLocalizedString(@"error_not_permission", nil);
+        case kOCErrorServerForbidden:
+            //403 Forbidden
+            return NSLocalizedString(@"error_not_permission", nil);
             
-            case kOCErrorServerPathNotFound:
-                //404 Not Found. When for example we try to access a path that now not exist
-                return NSLocalizedString(@"error_path", nil);
+        case kOCErrorServerPathNotFound:
+            //404 Not Found. When for example we try to access a path that now not exist
+            return NSLocalizedString(@"error_path", nil);
             
-            case kOCErrorServerMethodNotPermitted:
-                //405 Method not allowed
-                return NSLocalizedString(@"method_not_allowed", nil);
-
-            case kOCErrorProxyAuth:
-                //407 Proxy authentication required
-                return NSLocalizedString(@"proxy_auth_required", nil);
+        case kOCErrorServerMethodNotPermitted:
+            //405 Method not allowed
+            return NSLocalizedString(@"method_not_allowed", nil);
             
-            case kOCErrorServerTimeout:
-                //408
-                return NSLocalizedString(@"not_possible_connect_to_server", nil);
+        case kOCErrorProxyAuth:
+            //407 Proxy authentication required
+            return NSLocalizedString(@"proxy_auth_required", nil);
             
-            case kOCErrorServerConflict:
-                //409
-                return NSLocalizedString(@"conflict", nil);
-
-            case kOCErrorServerInternalError:
-                // 500
-                return NSLocalizedString(@"internal_error", nil);
+        case kOCErrorServerTimeout:
+            //408
+            return NSLocalizedString(@"not_possible_connect_to_server", nil);
             
-            case kOCErrorServerNotImplemented:
-                // 501
-                return NSLocalizedString(@"not_implemented", nil);
+        case kOCErrorServerConflict:
+            //409
+            return NSLocalizedString(@"conflict", nil);
             
-            case kOCErrorServerBadGateway:
-                // 502
-                return NSLocalizedString(@"bad_gateway", nil);
+        case kOCErrorServerInternalError:
+            // 500
+            return NSLocalizedString(@"internal_error", nil);
             
-            case kOCErrorServerMaintenanceError:
-                //503 Maintenance Error
-                return NSLocalizedString(@"maintenance_mode_on_server_message", nil);
+        case kOCErrorServerNotImplemented:
+            // 501
+            return NSLocalizedString(@"not_implemented", nil);
             
-        }
+        case kOCErrorServerBadGateway:
+            // 502
+            return NSLocalizedString(@"bad_gateway", nil);
+            
+        case kOCErrorServerMaintenanceError:
+            //503 Maintenance Error
+            return NSLocalizedString(@"maintenance_mode_on_server_message", nil);
+            
     }
     
     if (error != nil) {
