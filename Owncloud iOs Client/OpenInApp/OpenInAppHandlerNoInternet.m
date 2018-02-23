@@ -14,36 +14,43 @@
 
     self = [super init];
 
-    if (self) {
+    if (self)
+    {
         _tappedLinkURL = linkURL;
         _user = user;
     }
     return self;
 }
 
-- (void)handleLink:(void (^)(NSArray *))success failure:(void (^)(OCPrivateLinkError))failure {
-
+- (void)handleLink:(void (^)(NSArray *))success failure:(void (^)(OCPrivateLinkError))failure
+{
     NSString *ocID = [self getFileIdFromPrivateLinkWithLink:_tappedLinkURL];
     FileDto *item = [ManageFilesDB getFileDtoByOCid:ocID];
     NSMutableArray *files = [[NSMutableArray alloc] init];
 
-    if (item == nil) {
+    if (item == nil)
+    {
         failure(OCPrivateLinkErrorFileNotExists);
     }
 
-    if (item.isDownload == 1) {
-        if (!item.isDirectory) {
+    if (item.isDownload == 1)
+    {
+        if (!item.isDirectory)
+        {
             FileDto *parent = [ManageFilesDB getFileDtoByIdFile: item.fileId];
             [files addObject:parent];
         }
         [files addObject:item];
         success([files copy]);
-    } else {
+    }
+    else
+    {
         failure(OCPrivateLinkErrorFileNotExists);
     }
 }
 
--(NSString *)getFileIdFromPrivateLinkWithLink: (NSURL *)privateLink {
+-(NSString *)getFileIdFromPrivateLinkWithLink: (NSURL *)privateLink
+{
     NSString *ocID = [privateLink lastPathComponent];
     return ocID;
 }

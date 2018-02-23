@@ -2835,8 +2835,8 @@ float shortDelay = 0.3;
             [[NSNotificationCenter defaultCenter] removeObserver:blockForPasscodeSecurity name:@"dismissPassCodeNotification" object:nil];
         }];
 
-
-        if (!_isPasscodeVisible) {
+        if (!_isPasscodeVisible)
+        {
             [self openLinksInAppWithLink:tappedLinkURL];
         }
 
@@ -2849,13 +2849,15 @@ float shortDelay = 0.3;
     UserDto *currentUser = [_activeUser copy];
 
     UniversalLinksContext * universalLinkscontext = [[UniversalLinksContext alloc] init];
-    OpenInAppHandler *handlerNetworkAvailable = [[OpenInAppHandler alloc] initWithLink:url andUser:currentUser];
-    OpenInAppHandlerNoInternet *handlerNetworkUnavailable = [[OpenInAppHandlerNoInternet alloc] initWithLink:url andUser:currentUser];
 
     if ([[CheckAccessToServer sharedManager] isNetworkIsReachable]) {
+
+        OpenInAppHandler *handlerNetworkAvailable = [[OpenInAppHandler alloc] initWithLink:url andUser:currentUser];
         [universalLinkscontext setStrategy:handlerNetworkAvailable];
 
     } else {
+
+        OpenInAppHandlerNoInternet *handlerNetworkUnavailable = [[OpenInAppHandlerNoInternet alloc] initWithLink:url andUser:currentUser];
         [universalLinkscontext setStrategy:handlerNetworkUnavailable];
     }
 
@@ -2863,18 +2865,23 @@ float shortDelay = 0.3;
         [_presentFilesViewController initLoading];
     });
 
-    [universalLinkscontext handleLink:^(NSArray *items) {
+    [universalLinkscontext handleLink:^(NSArray *items)
+    {
 
         if (items.count > 0) {
 
             FileDto *fileToOpen =  items.lastObject;
             dispatch_async(dispatch_get_main_queue(), ^{
 
+                // Set the files view the visible view.
                 [_ocTabBarController setSelectedIndex:0];
 
                 if (fileToOpen.isDirectory) {
+
                     [_presentFilesViewController navigateTo:fileToOpen];
+
                 } else {
+
                     FileDto *root = [ManageFilesDB getRootFileDtoByUser:_activeUser];
                     if (fileToOpen.fileId != root.idFile) {
                         FileDto *parent = items[items.count - 2];
@@ -2883,38 +2890,30 @@ float shortDelay = 0.3;
                 }
             });
 
-            // TODO: this sleep is necessary until we found a better way to handle the preview.
-            [NSThread sleepForTimeInterval:1.0f];
-
-            if (!fileToOpen.isDirectory){
-
+            if (!fileToOpen.isDirectory)
+            {
                 NSInteger type = [FileNameUtils checkTheTypeOfFile:fileToOpen.fileName];
 
-                if (type == otherFileType) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [_presentFilesViewController endLoading];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (type == otherFileType)
+                    {
                         [_presentFilesViewController scrollToFile:fileToOpen];
-                    });
-                } else {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [_presentFilesViewController endLoading];
+                    }
+                    else
+                    {
                         [_presentFilesViewController openFileInPreview:fileToOpen];
-                    });
-                }
+                    }
+                });
             }
 
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_presentFilesViewController endLoading];
-                [_presentFilesViewController showError:@"The private link could not be opened"];
-            });
+        }
+        else
+        {
+            [_presentFilesViewController showError: NSLocalizedString(@"private_link_not_reachable", nil)];
         }
 
     } failure:^(OCPrivateLinkError error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_presentFilesViewController endLoading];
-            [_presentFilesViewController showError:@"The private link could not be opened"];
-        });
+            [_presentFilesViewController showError:NSLocalizedString(@"private_link_not_reachable", nil)];
         DLog(@"Error getting the redirection");
     }];
 }
