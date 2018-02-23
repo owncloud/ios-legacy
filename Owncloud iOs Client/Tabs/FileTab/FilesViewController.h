@@ -70,7 +70,6 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 
 //Table view
 @property(nonatomic, strong) IBOutlet UITableView *tableView;
-
 // Array that contains the files ordered alphabetically
 @property(nonatomic, strong) NSMutableArray *sortedArray;
 //The current directory array

@@ -1682,9 +1682,9 @@
 -(void)navigateToUrl:(NSString *) url andFileId:(NSInteger)fileIdToShowFiles {
     _isLoadingForNavigate = NO;
     [self endLoading];
-    
+
     FilesViewController *filesViewController = [[FilesViewController alloc] initWithNibName:@"FilesViewController" onFolder:url andFileId:fileIdToShowFiles andCurrentLocalFolder:_currentLocalFolder];
-    
+
     filesViewController.isEtagRequestNecessary = YES;
     
     //Set if the selected folder is favorite or if we are in a son of a favorite one
@@ -3684,7 +3684,7 @@
     _selectedFileDto = file;
     
     if (IS_IPHONE){
-        [self goToSelectedFileOrFolder:file andForceDownload:NO];
+        [self goToSelectedFileOrFolder:file andForceDownload:YES];
     } else {
         
         if(file.isDirectory){
@@ -3694,18 +3694,18 @@
             //Select in detail
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             app.detailViewController.sortedArray=_sortedArray;
-            [app.detailViewController handleFile:file fromController:fileListManagerController andIsForceDownload:NO];
-//            [app.detailViewController handleFile:file fromController:fileListManagerController andIsForceDownload:YES];
+            [app.detailViewController handleFile:file fromController:fileListManagerController andIsForceDownload:YES];
         }
     }
 }
 
 -(void)openFileInPreview:(FileDto *)file {
     if (IS_IPHONE){
-        [self goToSelectedFileOrFolder:file andForceDownload:NO];
+        [self goToSelectedFileOrFolder:file andForceDownload:YES];
     } else {
         //Select in detail
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        _selectedFileDto = file;
         app.detailViewController.sortedArray=_sortedArray;
         [app.detailViewController handleFile:file fromController:fileListManagerController andIsForceDownload:YES];
     }

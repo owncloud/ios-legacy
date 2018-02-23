@@ -164,6 +164,38 @@
     }
 }
 
+/*
+ * This method receive the new array of the server and store the changes
+ * in the Database and in the tableview
+ * @param requestArray -> NSArray of path items
+ */
++(void)deleteOldDataFromDBBeforeRefresh:(NSArray *) requestArray parent:(FileDto *) parentFileDTO {
+
+    UserDto *activeUser = [ManageUsersDB getActiveUser];
+    NSMutableArray *directoryList = [NSMutableArray arrayWithArray:requestArray];
+
+    //Change the filePath from the library to our db format
+    for (FileDto *currentFile in directoryList) {
+        currentFile.filePath = [currentFile.filePath stringByReplacingOccurrencesOfString:k_url_webdav_server_with_first_slash withString:@""];
+    }
+
+    for (int i = 0 ; i < directoryList.count ; i++) {
+
+        FileDto *currentFile = [directoryList objectAtIndex:i];
+
+        if (currentFile.fileName == nil) {
+            //This is the fileDto of the current father folder
+            parentFileDTO.etag = currentFile.etag;
+
+            //We update the current folder with the new etag
+            [ManageFilesDB updateEtagOfFileDtoByid:parentFileDTO.idFile andNewEtag: currentFile.etag];
+        }
+    }
+
+    FileDto *upatedParent = [ManageFilesDB getFileDtoByFileName:parentFileDTO.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:parentFileDTO.filePath andUser: activeUser] andUser:activeUser];
+
+    [FileListDBOperations makeTheRefreshProcessWith:directoryList inThisFolder:upatedParent.idFile];
+}
 
 
 @end

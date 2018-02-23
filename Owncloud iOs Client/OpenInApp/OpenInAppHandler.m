@@ -14,6 +14,7 @@
 #import "ManageFilesDB.h"
 #import "UtilsDtos.h"
 #import "NSString+Encoding.h"
+#import "FileListDBOperations.h"
 
 @implementation OpenInAppHandler
 
@@ -31,43 +32,44 @@
 -(void)handleLink:(void (^)(NSArray *))success failure:(void (^)(OCPrivateLinkError))failure {
 
     [self getRedirection:_tappedLinkURL success:^(NSString *redirectedURL) {
-        NSString *decodedURL = [[NSString alloc ] initWithString:[redirectedURL stringByRemovingPercentEncoding]];
+        
+        NSString *decodedURL = [[NSString alloc ] initWithString:redirectedURL];
 
         [self isItemDirectory:decodedURL completionHandler:^(BOOL isDirectory, NSError *error) {
             if (error != nil) {
                 failure(OCPrivateLinkErrorFileNotExists);
-            }
+            } else {
+                __block NSArray<NSString *> *urls = [UtilsUrls getArrayOfWebdavUrlWithUrlInWebScheme:decodedURL forUser:_user isDirectory:isDirectory];
 
-            __block NSArray<NSString *> *urls = [UtilsUrls getArrayOfWebdavUrlWithUrlInWebScheme:decodedURL forUser:_user isDirectory:isDirectory];
+                __block NSMutableArray *files = [NSMutableArray new];
 
-            __block NSMutableArray *files = [NSMutableArray new];
+                dispatch_group_t group = dispatch_group_create();
+                dispatch_group_enter(group);
 
-            dispatch_group_t group = dispatch_group_create();
-            dispatch_group_enter(group);
+                dispatch_group_async(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+                    [urls enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 
-            dispatch_group_async(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
-                [urls enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        [self getFilesFrom:urls[idx] success:^(NSArray *items) {
+                            NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
+                            files[idx] = directoryList;
 
-                    [self getFilesFrom:urls[idx] success:^(NSArray *items) {
-                        NSMutableArray *directoryList = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
-                        files[idx] = directoryList;
-
-                        if (idx == urls.count - 1) {
+                            if (idx == urls.count - 1) {
+                                dispatch_group_leave(group);
+                            }
+                        } failure:^(NSError *error) {
+                            NSLog(@"LOG ---> error in the request to the url -> %@", urls[idx]);
                             dispatch_group_leave(group);
-                        }
-                    } failure:^(NSError *error) {
-                        NSLog(@"LOG ---> error in the request to the url -> %@", urls[idx]);
-                        dispatch_group_leave(group);
-                        failure(OCPrivateLinkErrorFileNotExists);
+                            failure(OCPrivateLinkErrorFileNotExists);
 
+                        }];
                     }];
-                }];
-            });
+                });
 
-            dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
-                NSMutableArray *filesFromRootToFile = [self syncFilesTreeWithFiles:files andUrls:urls];
-                success([filesFromRootToFile copy]);
-            });
+                dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+                    NSMutableArray *filesFromRootToFile = [self syncFilesTreeWithFiles:files andUrls:urls];
+                    success([filesFromRootToFile copy]);
+                });
+            }
         }];
     } failure:^(NSError *error) {
         failure(OCPrivateLinkErrorFileNotExists);
@@ -135,7 +137,8 @@
 
 -(void)isItemDirectory: (NSString *)itemPath completionHandler:(void (^)(BOOL isDirectory, NSError * error))completionHandler {
 
-    NSString *path = [[[UtilsUrls getFullRemoteServerPath:_user ]  substringToIndex:[[UtilsUrls getFullRemoteServerPath:_user ] length] - 1] stringByAppendingString: itemPath];
+
+    NSString *path = [[UtilsUrls getRemoteServerPathWithoutFolders:_user] stringByAppendingString:itemPath];
 
     [[AppDelegate sharedOCCommunication] readFile:path onCommunication: [AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
 
@@ -155,7 +158,9 @@
 -(NSMutableArray *)syncFilesTreeWithFiles: (NSMutableArray *)filesToSync andUrls: (NSArray<NSString *> *)urls {
     NSMutableArray *filesToReturn = [[NSMutableArray alloc] initWithCapacity:urls.count];
     FileDto *parent = nil;
-    for (int i = 1; i < filesToSync.count; i ++) {
+    NSString *rootFileSystem = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)_user.userId];
+    
+    for (int i = 0; i < filesToSync.count; i ++) {
 
         NSString *urlToGetAsParent = urls[i];
         NSString *shortedFileURL = [UtilsUrls getFilePathOnDBByFullPath:urlToGetAsParent andUser:_user];
@@ -176,7 +181,11 @@
                 [filesToReturn addObject:parent];
             }
         }
-        [self syncFolderFilesWithFiles:filesToSync[i] withParent:parent];
+
+        //Now we create the all folders of the current directory
+        [FileListDBOperations deleteOldDataFromDBBeforeRefresh:filesToSync[i] parent:parent];
+        rootFileSystem = [[rootFileSystem stringByAppendingString: [name stringByRemovingPercentEncoding]] stringByReplacingOccurrencesOfString:k_url_webdav_server_with_first_slash withString:@""];
+        [FileListDBOperations createAllFoldersByArrayOfFilesDto:filesToSync[i] andLocalFolder: rootFileSystem];
     }
     return filesToReturn;
 }

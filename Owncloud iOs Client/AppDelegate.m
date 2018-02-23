@@ -2875,7 +2875,11 @@ float shortDelay = 0.3;
                 if (fileToOpen.isDirectory) {
                     [_presentFilesViewController navigateTo:fileToOpen];
                 } else {
-                    [_presentFilesViewController navigateTo: items[items.count - 2]];
+                    FileDto *root = [ManageFilesDB getRootFileDtoByUser:_activeUser];
+                    if (fileToOpen.fileId != root.idFile) {
+                        FileDto *parent = items[items.count - 2];
+                        [_presentFilesViewController navigateTo: parent];
+                    }
                 }
             });
 
@@ -2888,10 +2892,12 @@ float shortDelay = 0.3;
 
                 if (type == otherFileType) {
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        [_presentFilesViewController endLoading];
                         [_presentFilesViewController scrollToFile:fileToOpen];
                     });
                 } else {
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        [_presentFilesViewController endLoading];
                         [_presentFilesViewController openFileInPreview:fileToOpen];
                     });
                 }

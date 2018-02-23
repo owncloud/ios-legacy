@@ -51,4 +51,6 @@
  */
 + (void) createAFolder: (NSString *)folderName inLocalFolder:(NSString *)localFolder;
 
++(void)deleteOldDataFromDBBeforeRefresh:(NSArray *) requestArray parent:(FileDto *) parentFileDTO;
+
 @end
