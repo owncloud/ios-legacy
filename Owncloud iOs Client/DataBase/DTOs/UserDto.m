@@ -43,7 +43,7 @@
     userCopy.pathInstantUpload = self.pathInstantUpload;
     userCopy.onlyWifiInstantUpload = self.onlyWifiInstantUpload;
     userCopy.timestampInstantUploadImage = self.timestampInstantUploadImage;
-    userCopy.timestampInstantUploadImage = self.timestampInstantUploadVideo;
+    userCopy.timestampInstantUploadVideo = self.timestampInstantUploadVideo;
     userCopy.urlRedirected = self.urlRedirected;
     userCopy.capabilitiesDto = self.capabilitiesDto;
     userCopy.sortingType = self.sortingType;
