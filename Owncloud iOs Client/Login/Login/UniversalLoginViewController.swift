@@ -198,8 +198,11 @@ public enum TextfieldType: String {
 
         } else if self.loginMode == .expire{
             
-            self.setTopInfo(message: "session_expired")
-            
+            if (Customization.kIsSsoActive()) {
+                self.setTopInfo(message: "session_expired")
+            } else {
+                self.setTopInfo(message: "error_credential")
+            }
         }
     }
     

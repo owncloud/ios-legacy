@@ -6,7 +6,7 @@
 //
 
 /*
- Copyright (C) 2017, ownCloud GmbH.
+ Copyright (C) 2018, ownCloud GmbH.
  This code is covered by the GNU Public License Version 3.
  For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
  You should have received a copy of this license
@@ -15,7 +15,7 @@
 
 
 //app year
-#define k_year 2017
+#define k_year 2018
 
 //URLs Setting
 #define k_help_url @"http://owncloud.com/mobile/help"

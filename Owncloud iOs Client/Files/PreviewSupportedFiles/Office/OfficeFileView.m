@@ -147,12 +147,16 @@ CGPoint _lastContentOffset;
             NSString *dataFile = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:url] encoding:NSASCIIStringEncoding];
             
             if (IS_IPHONE) {
-                [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_iphone,k_txt_files_font_family,dataFile] baseURL:nil];
+                [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_iphone,k_txt_files_font_family,dataFile] baseURL:[NSURL URLWithString:@"about:blank"]];
             }else{
-                [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_ipad,k_txt_files_font_family,dataFile] baseURL:nil];
+                [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_ipad,k_txt_files_font_family,dataFile] baseURL:[NSURL URLWithString:@"about:blank"]];
             }
             
-        } else if ([ext isEqualToString:@"TXT"]) {
+        } else if ([ext isEqualToString:@"PDF"]) {
+            NSURL *targetURL = [NSURL fileURLWithPath:filePath];
+            NSData *pdfData = [[NSData alloc] initWithContentsOfURL:targetURL];
+            [self.webView loadData:pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:url];
+        } else {
             
             NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
             NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:nil delegateQueue:nil];
@@ -162,18 +166,11 @@ CGPoint _lastContentOffset;
             
             NSURLSessionDataTask *task = [session dataTaskWithRequest:headRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [_webView loadData:[NSData dataWithContentsOfURL: url] MIMEType:response.MIMEType textEncodingName:@"utf-8" baseURL:url];
+                    [self.webView loadData:[NSData dataWithContentsOfURL: url] MIMEType:response.MIMEType textEncodingName:@"utf-8" baseURL: [NSURL URLWithString:@"about:blank"]];
                 });
             }];
             
             [task resume];
-            
-        } else if ([ext isEqualToString:@"PDF"]) {
-            NSURL *targetURL = [NSURL fileURLWithPath:filePath];
-            NSData *pdfData = [[NSData alloc] initWithContentsOfURL:targetURL];
-            [self.webView loadData:pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:url];
-        } else {
-            [self.webView loadRequest:[NSMutableURLRequest requestWithURL:url]];
         }
         
         [_webView setHidden:NO];
