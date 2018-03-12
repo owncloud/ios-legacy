@@ -2259,8 +2259,8 @@
                                delegate:self
                                cancelButtonTitle:NSLocalizedString(@"cancel", nil)
                                destructiveButtonTitle:nil
-                               otherButtonTitles:NSLocalizedString(@"sort_menu_by_name_option", nil), NSLocalizedString(@"sort_menu_by_modification_date_option", nil), nil];
-    
+                               otherButtonTitles:NSLocalizedString(@"sort_menu_by_name_option", nil), NSLocalizedString(@"sort_menu_by_modification_date_option", nil), NSLocalizedString(@"sort_menu_by_kind_option", nil), nil];
+
     self.sortingActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
     self.sortingActionSheet.tag=300;
     
@@ -2423,6 +2423,13 @@
                     [self reloadTableFileList];
                 }
                 break;
+          case 2:
+            if(storedSorting != sortByKind){
+              [self updateActiveUserSortingChoiceTo:sortByKind];
+              _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+              [self reloadTableFileList];
+            }
+            break;
             default:
                 break;
         }

@@ -26,6 +26,7 @@ typedef NS_ENUM(NSInteger, enumHasShareApiSupport) {
 typedef NS_ENUM(NSInteger, enumSortingType) {
     sortByName = 0,
     sortByModificationDate = 1,
+    sortByKind = 2,
 };
 
 @interface UserDto : NSObject <NSCopying>
