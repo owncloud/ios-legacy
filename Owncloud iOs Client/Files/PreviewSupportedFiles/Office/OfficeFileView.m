@@ -156,6 +156,10 @@ CGPoint _lastContentOffset;
             NSURL *targetURL = [NSURL fileURLWithPath:filePath];
             NSData *pdfData = [[NSData alloc] initWithContentsOfURL:targetURL];
             [self.webView loadData:pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:url];
+            
+        } else if ([ext isEqualToString:@"XLS"]) {
+            [self.webView loadRequest:[NSMutableURLRequest requestWithURL:url]];
+                 
         } else {
             
             NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
