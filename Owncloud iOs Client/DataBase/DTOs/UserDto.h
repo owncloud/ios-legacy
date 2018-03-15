@@ -27,6 +27,7 @@ typedef NS_ENUM(NSInteger, enumSortingType) {
     sortByName = 0,
     sortByModificationDate = 1,
     sortByKind = 2,
+    sortMax = 3,
 };
 
 @interface UserDto : NSObject <NSCopying>

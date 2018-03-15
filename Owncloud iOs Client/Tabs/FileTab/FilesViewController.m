@@ -631,8 +631,8 @@
         [self.plusActionSheet dismissWithClickedButtonIndex:4 animated:NO];
     }
     
-    if(self.sortingActionSheet){
-        [self.sortingActionSheet dismissWithClickedButtonIndex:2 animated:NO];
+    if (self.sortingActionSheet) {
+        [self.sortingActionSheet dismissWithClickedButtonIndex:sortMax animated:NO];
     }
     
     DLog(@"Files view Controller willRotate");
