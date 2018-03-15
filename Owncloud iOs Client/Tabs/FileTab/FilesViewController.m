@@ -2410,28 +2410,28 @@
         enumSortingType storedSorting = APP_DELEGATE.activeUser.sortingType;
         switch (buttonIndex) {
             case 0:
-                if(storedSorting != sortByName){
+                if (storedSorting != sortByName) {
                     [self updateActiveUserSortingChoiceTo:sortByName];
                     _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
                     [self reloadTableFileList];
                 }
                 break;
             case 1:
-                if(storedSorting != sortByModificationDate){
+                if (storedSorting != sortByModificationDate) {
                     [self updateActiveUserSortingChoiceTo:sortByModificationDate];
                     _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
                     [self reloadTableFileList];
                 }
                 break;
           case 2:
-            if(storedSorting != sortByKind){
-              [self updateActiveUserSortingChoiceTo:sortByKind];
-              _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
-              [self reloadTableFileList];
-            }
-            break;
-            default:
-                break;
+              if (storedSorting != sortByKind) {
+                  [self updateActiveUserSortingChoiceTo:sortByKind];
+                  _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+                  [self reloadTableFileList];
+              }
+              break;
+          default:
+              break;
         }
     }
 }
