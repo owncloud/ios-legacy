@@ -2831,8 +2831,8 @@ float shortDelay = 0.3;
         __block id blockForPasscodeSecurity;
 
         blockForPasscodeSecurity = [[NSNotificationCenter defaultCenter] addObserverForName:@"dismissPassCodeNotification" object:nil queue:nil usingBlock:^(NSNotification *notification) {
-            [self openLinksInAppWithLink:tappedLinkURL];
             [[NSNotificationCenter defaultCenter] removeObserver:blockForPasscodeSecurity name:@"dismissPassCodeNotification" object:nil];
+            [self openLinksInAppWithLink:tappedLinkURL];
         }];
 
         if (!_isPasscodeVisible)
@@ -2849,15 +2849,14 @@ float shortDelay = 0.3;
     UserDto *currentUser = [_activeUser copy];
 
     UniversalLinksContext * universalLinkscontext = [[UniversalLinksContext alloc] init];
+    OpenInAppHandler *handlerNetworkAvailable = [[OpenInAppHandler alloc] initWithLink:url andUser:currentUser];
+    OpenInAppHandlerNoInternet *handlerNetworkUnavailable = [[OpenInAppHandlerNoInternet alloc] initWithLink:url andUser:currentUser];
 
-    if ([[CheckAccessToServer sharedManager] isNetworkIsReachable]) {
-
-        OpenInAppHandler *handlerNetworkAvailable = [[OpenInAppHandler alloc] initWithLink:url andUser:currentUser];
+    if ([[CheckAccessToServer sharedManager] isNetworkIsReachable])
+    {
         [universalLinkscontext setStrategy:handlerNetworkAvailable];
 
     } else {
-
-        OpenInAppHandlerNoInternet *handlerNetworkUnavailable = [[OpenInAppHandlerNoInternet alloc] initWithLink:url andUser:currentUser];
         [universalLinkscontext setStrategy:handlerNetworkUnavailable];
     }
 
