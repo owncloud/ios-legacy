@@ -532,8 +532,6 @@
 		59BF9B2D1A2C5A5B009D9CF0 /* KKPasscodeLock.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EA68968617F599060033B3C1 /* KKPasscodeLock.bundle */; };
 		59BF9B361A2C8BEA009D9CF0 /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB0AB3819ED356A00764C31 /* DocumentPickerViewController.m */; };
 		59BF9B371A2C8BEA009D9CF0 /* FileListDocumentProviderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 599D80B01A2338100071B66E /* FileListDocumentProviderViewController.m */; };
-		59C0F2B21A963670007FE71B /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 59C0F2B01A963670007FE71B /* iTunesArtwork */; };
-		59C0F2B31A963670007FE71B /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = 59C0F2B11A963670007FE71B /* iTunesArtwork@2x */; };
 		59C3AC1A1A287DE3005433A1 /* KKKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968517F599060033B3C1 /* KKKeychain.m */; };
 		59C3AC1B1A287DE3005433A1 /* KKPasscodeLock.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968817F599060033B3C1 /* KKPasscodeLock.m */; };
 		59C3AC1C1A287DE3005433A1 /* KKPasscodeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA68968A17F599060033B3C1 /* KKPasscodeSettingsViewController.m */; };
@@ -1612,8 +1610,6 @@
 		59A9A724196E8A370042FEAC /* CookiesStorageDto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CookiesStorageDto.m; path = DataBase/DTOs/CookiesStorageDto.m; sourceTree = "<group>"; };
 		59A9A728196E8E3C0042FEAC /* UtilsCookies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilsCookies.h; path = Utils/UtilsCookies.h; sourceTree = "<group>"; };
 		59A9A729196E8E3C0042FEAC /* UtilsCookies.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilsCookies.m; path = Utils/UtilsCookies.m; sourceTree = "<group>"; };
-		59C0F2B01A963670007FE71B /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
-		59C0F2B11A963670007FE71B /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
 		59C71CEA1A9216AE00F66166 /* CGPDFDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPDFDocument.h; sourceTree = "<group>"; };
 		59C71CEB1A9216AE00F66166 /* CGPDFDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPDFDocument.m; sourceTree = "<group>"; };
 		59C71CEC1A9216AE00F66166 /* ReaderConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderConstants.h; sourceTree = "<group>"; };
@@ -2067,8 +2063,6 @@
 		1324298215ADBB3700DF823E /* Owncloud iOs Client */ = {
 			isa = PBXGroup;
 			children = (
-				59C0F2B01A963670007FE71B /* iTunesArtwork */,
-				59C0F2B11A963670007FE71B /* iTunesArtwork@2x */,
 				593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */,
 				1324298B15ADBB3700DF823E /* AppDelegate.h */,
 				1324298C15ADBB3700DF823E /* AppDelegate.m */,
@@ -4189,7 +4183,6 @@
 				EAF7712D1B7340C400ED6E6E /* ShareLinkButtonCell.xib in Resources */,
 				4030D8ED1A16204000DB0871 /* zip_icon@3x.png in Resources */,
 				14A7F7A918ED578E009AF347 /* spreadsheet_icon@2x.png in Resources */,
-				59C0F2B31A963670007FE71B /* iTunesArtwork@2x in Resources */,
 				1487F22C177C35AA004A1A5A /* movie_icon.png in Resources */,
 				EABD88F51BBE82C400DA5281 /* NotificationBackgroundMessage@2x.png in Resources */,
 				40A1F17E1D8857740078C901 /* InfoPlist.strings in Resources */,
@@ -4319,7 +4312,6 @@
 				1487F271177C35AA004A1A5A /* Button@2x.png in Resources */,
 				906414441D005B5C000AEFE5 /* file_synchronizing_icon@2x.png in Resources */,
 				1487F272177C35AA004A1A5A /* gradImage.png in Resources */,
-				59C0F2B21A963670007FE71B /* iTunesArtwork in Resources */,
 				14A7F7A818ED578E009AF347 /* spreadsheet_icon.png in Resources */,
 				1487F273177C35AA004A1A5A /* password.png in Resources */,
 				1487F274177C35AA004A1A5A /* password@2x.png in Resources */,
