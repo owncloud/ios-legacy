@@ -51,7 +51,7 @@
     } else {
         
         //If the _currentDirectoryArray is empty it will have one extra row to show a message in FilesViewController and SimpleFileListTableViewController. If no alphabetical order is required will also be used one row for each section for usual contents
-        if (([currentDirectoryArray count] == 0 && emptyMessageRow) || ([currentDirectoryArray count] > 0 && user.sortingType == sortByModificationDate)) {
+        if (([currentDirectoryArray count] == 0 && emptyMessageRow) || ([currentDirectoryArray count] > 0 && (user.sortingType == sortByModificationDate || user.sortingType == sortByKind))) {
             rows = 1;
         }
     }
@@ -141,6 +141,30 @@
 }
 
 /*
+ * This method sorts an array by kind and configure ot to be used in file lists
+ */
++ (NSMutableArray*) sortByKind:(NSArray*)array {
+
+  DLog(@"sortByKind");
+  NSSortDescriptor *descriptorExtension = [[NSSortDescriptor alloc]
+                                           initWithKey:@"fileName" ascending:YES comparator:^NSComparisonResult(NSString* obj1, NSString *obj2) {
+                                             return [obj1.pathExtension compare:obj2.pathExtension options:NSCaseInsensitiveSearch];
+                                           }];
+  NSSortDescriptor *descriptorFilename = [[NSSortDescriptor alloc] initWithKey:@"fileName" ascending:YES];
+  NSArray *descriptors=[NSArray arrayWithObjects:descriptorExtension, descriptorFilename, nil];
+  array = [array sortedArrayUsingDescriptors:descriptors];
+
+  // an array with another array is needed to follow alphabetical sorting mode
+  NSMutableArray *sortedArrayWithArray = [[NSMutableArray alloc] init];
+
+  for (int i=0; i<array.count; i++) {
+    [sortedArrayWithArray addObject:[NSArray arrayWithObject:array[i]]];
+  }
+
+  return sortedArrayWithArray;
+}
+
+/*
  * This method sorts an array to be shown in the files/folders list
  */
 + (NSMutableArray*) getSortedArrayFromCurrentDirectoryArray:(NSArray*) currentDirectoryArray forUser:(UserDto*)user {
@@ -154,7 +178,10 @@
         case sortByModificationDate:
             sortedArray = [self sortByModificationDate:currentDirectoryArray];
             break;
-            
+        case sortByKind:
+            sortedArray = [self sortByKind:currentDirectoryArray];
+            break;
+
         default:
             DLog(@"Unknown sorted type");
             break;

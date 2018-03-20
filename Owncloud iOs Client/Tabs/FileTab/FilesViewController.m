@@ -631,8 +631,8 @@
         [self.plusActionSheet dismissWithClickedButtonIndex:4 animated:NO];
     }
     
-    if(self.sortingActionSheet){
-        [self.sortingActionSheet dismissWithClickedButtonIndex:2 animated:NO];
+    if (self.sortingActionSheet) {
+        [self.sortingActionSheet dismissWithClickedButtonIndex:sortMax animated:NO];
     }
     
     DLog(@"Files view Controller willRotate");
@@ -2259,8 +2259,8 @@
                                delegate:self
                                cancelButtonTitle:NSLocalizedString(@"cancel", nil)
                                destructiveButtonTitle:nil
-                               otherButtonTitles:NSLocalizedString(@"sort_menu_by_name_option", nil), NSLocalizedString(@"sort_menu_by_modification_date_option", nil), nil];
-    
+                               otherButtonTitles:NSLocalizedString(@"sort_menu_by_name_option", nil), NSLocalizedString(@"sort_menu_by_modification_date_option", nil), NSLocalizedString(@"sort_menu_by_kind_option", nil), nil];
+
     self.sortingActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
     self.sortingActionSheet.tag=300;
     
@@ -2410,21 +2410,28 @@
         enumSortingType storedSorting = APP_DELEGATE.activeUser.sortingType;
         switch (buttonIndex) {
             case 0:
-                if(storedSorting != sortByName){
+                if (storedSorting != sortByName) {
                     [self updateActiveUserSortingChoiceTo:sortByName];
                     _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
                     [self reloadTableFileList];
                 }
                 break;
             case 1:
-                if(storedSorting != sortByModificationDate){
+                if (storedSorting != sortByModificationDate) {
                     [self updateActiveUserSortingChoiceTo:sortByModificationDate];
                     _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
                     [self reloadTableFileList];
                 }
                 break;
-            default:
-                break;
+          case 2:
+              if (storedSorting != sortByKind) {
+                  [self updateActiveUserSortingChoiceTo:sortByKind];
+                  _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+                  [self reloadTableFileList];
+              }
+              break;
+          default:
+              break;
         }
     }
 }
