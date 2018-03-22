@@ -113,20 +113,6 @@ typedef NS_ENUM (NSInteger, kindOfFileEnum){
 + (BOOL) isURLWithSamlFragment:(NSHTTPURLResponse *)response;
 
 
-///-----------------------------------
-/// @name Get the Name of the Brand Image
-///-----------------------------------
-/**
- * This method return a string with the name of the brand image
- * Used by ownCloud and other brands
- *
- * If the day of the year is 354 or more the string return is an
- * especial image for Christmas day.
- *
- * @return image name -> NSString
- */
-+ (NSString *)getTheNameOfTheBrandImage;
-
 
 ///-----------------------------------
 /// @name Get the Name of shared path

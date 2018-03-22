@@ -63,6 +63,7 @@
 #import "SortManager.h"
 #import "EditFileViewController.h"
 #import "CheckFeaturesSupported.h"
+#import "ImageUtils.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -228,8 +229,9 @@
     if(self.fileIdToShowFiles.isRootFolder) {
         
         if(k_show_logo_on_title_file_list) {
-            UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:[FileNameUtils getTheNameOfTheBrandImage]]];
-            self.navigationItem.titleView=imageView;
+
+            UIImageView *imageView = [[UIImageView alloc]initWithImage:[ImageUtils getNavigationLogoImage]];
+            self.navigationItem.titleView = imageView;
         }
     }
 }
@@ -469,8 +471,9 @@
     
     if(self.navigationItem.title == nil) {
         // in MyTableViewController's tableView:didSelectRowAtIndexPath method...
+
         UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
-                                       initWithImage:[UIImage imageNamed:[FileNameUtils getTheNameOfTheBrandImage]]
+                                       initWithImage:[ImageUtils getNavigationLogoImage]
                                        style:UIBarButtonItemStylePlain
                                        target:nil
                                        action:nil];
@@ -1632,8 +1635,9 @@
 
         // If the file is in root folder, show icon instead of folder name.
         if(self.fileIdToShowFiles.isRootFolder){
+
             UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
-                                           initWithImage:[UIImage imageNamed:[FileNameUtils getTheNameOfTheBrandImage]]
+                                           initWithImage:[ImageUtils getNavigationLogoImage]
                                            style:UIBarButtonItemStylePlain
                                            target:nil
                                            action:nil];

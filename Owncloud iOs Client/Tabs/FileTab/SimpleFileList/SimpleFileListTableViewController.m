@@ -35,6 +35,7 @@
 #import "FileListDBOperations.h"
 #import "UIColor+Constants.h"
 #import "SortManager.h"
+#import "ImageUtils.h"
 
 #ifdef CONTAINER_APP
 #import "AppDelegate.h"
@@ -88,7 +89,8 @@
     if(self.currentFolder.isRootFolder) {
         
         if(k_show_logo_on_title_file_list) {
-            UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:[FileNameUtils getTheNameOfTheBrandImage]]];
+
+            UIImageView *imageView = [[UIImageView alloc]initWithImage:[ImageUtils getNavigationLogoImage]];
             self.navigationItem.titleView = imageView;
         }
     } else {
