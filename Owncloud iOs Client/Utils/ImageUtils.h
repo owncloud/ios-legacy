@@ -27,4 +27,29 @@
  */
 + (UIImage *)imageWithColor:(UIColor *)color;
 
+
+///-----------------------------------
+/// @name Get the Name of the Brand Image
+///-----------------------------------
+/**
+ * This method return a string with the name of the brand image
+ * Used by ownCloud and other brands
+ *
+ * If the day of the year is 354 or more the string return is an
+ * especial image for Christmas day.
+ *
+ * @return image name -> NSString
+ */
++ (NSString *)getTheNameOfTheBrandImage;
+
+///-----------------------------------
+/// @name Get Logo Image to use in the navigation bar
+///-----------------------------------
+/**
+ * This method return an image with the rendering mode AlwaysOriginal
+ *
+ * @return image -> UIIMAGE
+ */
++ (UIImage *)getNavigationLogoImage;
+
 @end
