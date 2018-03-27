@@ -87,7 +87,7 @@
 
 -(void)_getRedirection:(NSURL *)privateLink success:(void (^)(NSString *))success failure:(void (^)(NSError *))failure
 {
-    [[AppDelegate sharedOCCommunication] getFullPathFromPrivateLink:_tappedLinkURL.absoluteString success:^(NSString *path)
+    [[AppDelegate sharedOCCommunication] getWebdavLocationPathFromPrivateLinkURL:_tappedLinkURL.absoluteString success:^(NSString *path)
     {
         success(path);
     }
