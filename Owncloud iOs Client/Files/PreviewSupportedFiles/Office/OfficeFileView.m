@@ -20,15 +20,15 @@
 #import "Customization.h"
 #import "UtilsUrls.h"
 
-@interface OfficeFileView ()
-
-@end
-
 @implementation OfficeFileView
+
 @synthesize webView=_webView;
-@synthesize activity=_activity;
+@synthesize activityIndicator=_activityIndicator;
 @synthesize isDocument=_isDocument;
 @synthesize delegate=_delegate;
+@synthesize isFullScreen = _isFullScreen;
+
+
 CGPoint _lastContentOffset;
 
 - (id)initWithFrame:(CGRect)frame
@@ -47,7 +47,7 @@ CGPoint _lastContentOffset;
         [recognizer requireGestureRecognizerToFail:doubleTapRecognizer];
         [self addGestureRecognizer:recognizer];
 
-        _isFullscreen = NO;
+        _isFullScreen = NO;
         _lastContentOffset = CGPointZero;
     }
     return self;
@@ -123,7 +123,12 @@ CGPoint _lastContentOffset;
 - (void)configureWebView{
     
     if (!_webView) {
-        _webView = [[UIWebView alloc] initWithFrame:self.frame];
+        WKPreferences *webViewPreferences = [[WKPreferences alloc] init];
+        [webViewPreferences setJavaScriptEnabled:false];
+        WKWebViewConfiguration *webViewConfiguration = [[WKWebViewConfiguration alloc] init];
+        webViewConfiguration.preferences = webViewPreferences;
+        _webView = [[WKWebView alloc] initWithFrame:self.frame configuration:webViewConfiguration];
+        _webView.navigationDelegate = self;
         _webView.scrollView.delegate = self;
         [self addSubview:_webView];
     }
@@ -155,30 +160,17 @@ CGPoint _lastContentOffset;
         } else if ([ext isEqualToString:@"PDF"]) {
             NSURL *targetURL = [NSURL fileURLWithPath:filePath];
             NSData *pdfData = [[NSData alloc] initWithContentsOfURL:targetURL];
-            [self.webView loadData:pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:url];
+            [self.webView loadData:pdfData MIMEType:@"application/pdf" characterEncodingName:@"utf-8" baseURL:url];
+
             
-        } else if ([ext isEqualToString:@"XLS"]) {
-            [self.webView loadRequest:[NSMutableURLRequest requestWithURL:url]];
+        } else if (([ext isEqualToString:@"XLSX"]) || ([ext isEqualToString:@"XLS"])) {
+            [self.webView loadFileURL: url allowingReadAccessToURL:url];
                  
         } else {
-            
-            NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-            NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:nil delegateQueue:nil];
-            
-            NSMutableURLRequest *headRequest = [NSMutableURLRequest requestWithURL:url];
-            [headRequest setHTTPMethod:@"HEAD"];
-            
-            NSURLSessionDataTask *task = [session dataTaskWithRequest:headRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.webView loadData:[NSData dataWithContentsOfURL: url] MIMEType:response.MIMEType textEncodingName:@"utf-8" baseURL: [NSURL URLWithString:@"about:blank"]];
-                });
-            }];
-            
-            [task resume];
+            [self.webView loadFileURL: url allowingReadAccessToURL:url];
         }
         
         [_webView setHidden:NO];
-        [_webView setScalesPageToFit:YES];
 }
 
 /*
@@ -197,26 +189,26 @@ CGPoint _lastContentOffset;
     
     [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
     _webView.hidden  = NO;
-    _webView.delegate = self;
+    _webView.navigationDelegate = self;
     
     [_webView loadRequest:request];
 }
 
 #pragma mark - Fullscreen Methods
 
-- (void)setIsFullscreen:(BOOL)isFullscreen {
-    if (isFullscreen != _isFullscreen) {
+- (void)setIsFullscreen:(BOOL)isFullScreen {
+    if (isFullScreen != _isFullScreen) {
         if (IS_IPHONE) {
-            [self.delegate setFullscreenOfficeFileView:isFullscreen];
+            [self.delegate setFullscreenOfficeFileView:isFullScreen];
         }
     }
-    _isFullscreen = isFullscreen;
+    _isFullScreen = isFullScreen;
 }
 
 #pragma mark - Gesture Methods
 
 - (void)handleSingleTap:(UIGestureRecognizer *)recognizer {
-    self.isFullscreen = !self.isFullscreen;
+    self.isFullscreen = !self.isFullScreen;
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer *)recognizer {
@@ -229,35 +221,42 @@ CGPoint _lastContentOffset;
     return [otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]];
 }
 
-#pragma mark - UIWebView Delegate Methods
 #pragma mark UIWebView Delegate methods
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     DLog(@"Office webview an error happened during load");
-    [_activity stopAnimating];
+    [_activityIndicator stopAnimating];
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     DLog(@"Office webview loading started");
     
-    if (_activity == nil) {
-        _activity = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        _activity.center = CGPointMake(_webView.frame.size.width/2, _webView.frame.size.height/2);
-        [_webView addSubview:_activity];
+    if (_activityIndicator == nil) {
+        _activityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _activityIndicator.center = CGPointMake(_webView.frame.size.width/2, _webView.frame.size.height/2);
+        [_webView addSubview:_activityIndicator];
     }
-    _activity.center = CGPointMake(_webView.frame.size.width/2, _webView.frame.size.height/2);
-    [_activity startAnimating];
+    _activityIndicator.center = CGPointMake(_webView.frame.size.width/2, _webView.frame.size.height/2);
+    [_activityIndicator startAnimating];
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
     DLog(@"webViewDidFinishLoad");
-    [_activity stopAnimating];
+    [_activityIndicator stopAnimating];
     
     [_webView setHidden:NO];
-    [_webView setScalesPageToFit:YES];
-    
+
     if (_isDocument == NO) {
         [_delegate finishLinkLoad];        
+    }
+}
+
+-(void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+
+    if ([navigationAction navigationType] == WKNavigationTypeOther) {
+        decisionHandler(WKNavigationActionPolicyAllow);
+    } else {
+        decisionHandler(WKNavigationActionPolicyCancel);
     }
 }
 

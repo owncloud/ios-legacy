@@ -565,7 +565,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     } else if (_officeView) {
         CGRect frame = self.view.frame;
         _officeView.frame = frame;
-        _toolBar.hidden = _officeView.isFullscreen;
+        _toolBar.hidden = _officeView.isFullScreen;
     } else {
         _toolBar.hidden = NO;
     }

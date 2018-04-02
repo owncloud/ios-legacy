@@ -14,6 +14,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 
 @protocol OfficeFileDelegate
 
@@ -24,21 +25,13 @@
 @end
 
 
-@interface OfficeFileView : UIView<UIWebViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate>{
-    
-    UIWebView *_webView;
-    UIActivityIndicatorView *_activity;
-    BOOL _isDocument;
-    
-    __weak id<OfficeFileDelegate> _delegate;
-}
+@interface OfficeFileView: UIView< WKNavigationDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate >
 
-@property (nonatomic,strong) UIWebView *webView;
-@property (nonatomic,strong) UIActivityIndicatorView *activity;
+@property (nonatomic, strong) WKWebView *webView;
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic) BOOL isDocument;
-@property (nonatomic) BOOL isFullscreen;
+@property (nonatomic) BOOL isFullScreen;
 @property(nonatomic,weak) __weak id<OfficeFileDelegate> delegate;
-
 
 /*
  * Method to load a document by filePath.
