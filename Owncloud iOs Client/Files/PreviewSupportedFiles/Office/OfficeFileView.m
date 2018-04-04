@@ -119,19 +119,49 @@ CGPoint _lastContentOffset;
     [_webView addSubview:forwardButton];
 }
 
-
 - (void)configureWebView{
     
     if (!_webView) {
         WKPreferences *webViewPreferences = [[WKPreferences alloc] init];
         [webViewPreferences setJavaScriptEnabled:false];
         WKWebViewConfiguration *webViewConfiguration = [[WKWebViewConfiguration alloc] init];
+
+        if (@available(iOS 11.0, *)) {
+
+            NSMutableDictionary *urlFilter = [[NSMutableDictionary alloc] init];
+            [urlFilter setObject:@".*" forKey:@"url-filter"];
+
+            NSMutableDictionary *type = [[NSMutableDictionary alloc] init];
+            [type setObject:@"block" forKey:@"type"];
+
+            NSMutableDictionary *blockRules = [[NSMutableDictionary alloc] init];
+            [blockRules setObject:urlFilter forKey:@"trigger"];
+            [blockRules setObject:type forKey:@"action"];
+
+            NSMutableArray *blockRulesArray = [[NSMutableArray alloc] init];
+            [blockRulesArray addObject:blockRules];
+
+            NSData* jsonData = [NSJSONSerialization dataWithJSONObject:blockRulesArray options:NSJSONWritingPrettyPrinted error:nil];
+
+            NSString* newStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+            [[WKContentRuleListStore defaultStore] compileContentRuleListForIdentifier:@"ContentBlockingRules" encodedContentRuleList:newStr completionHandler:^(WKContentRuleList *blockList, NSError *error) {
+
+                if (error != nil) {
+                    return ;
+                }
+                [webViewConfiguration.userContentController addContentRuleList:blockList];
+
+            }];
+        }
+
         webViewConfiguration.preferences = webViewPreferences;
         _webView = [[WKWebView alloc] initWithFrame:self.frame configuration:webViewConfiguration];
         _webView.navigationDelegate = self;
         _webView.scrollView.delegate = self;
         [self addSubview:_webView];
     }
+
     _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
