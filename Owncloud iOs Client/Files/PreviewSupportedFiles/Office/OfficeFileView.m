@@ -193,13 +193,11 @@ CGPoint _lastContentOffset;
             [self.webView loadData:pdfData MIMEType:@"application/pdf" characterEncodingName:@"utf-8" baseURL:url];
 
             
-        } else if (([ext isEqualToString:@"XLSX"]) || ([ext isEqualToString:@"XLS"])) {
-            [self.webView loadFileURL: url allowingReadAccessToURL:url];
-                 
         } else {
+
             [self.webView loadFileURL: url allowingReadAccessToURL:url];
         }
-        
+    
         [_webView setHidden:NO];
 }
 
