@@ -15,6 +15,7 @@
 #import "UtilsDtos.h"
 #import "NSString+Encoding.h"
 #import "FileListDBOperations.h"
+#import "UtilsFramework.h"
 
 @implementation OpenInAppHandler
 
@@ -31,7 +32,7 @@
     return self;
 }
 
--(void)handleLink:(void (^)(NSArray *))success failure:(void (^)(OCPrivateLinkError))failure
+-(void)handleLink:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure
 {
     [self _getRedirection:_tappedLinkURL success:^(NSString *redirectedURL)
     {
@@ -41,7 +42,7 @@
         {
             if (error != nil)
             {
-                failure(OCPrivateLinkErrorFileNotExists);
+                failure(error);
             }
             else
             {
@@ -68,7 +69,7 @@
                         {
                             NSLog(@"LOG ---> error in the request to the url -> %@", urls[idx]);
                             dispatch_group_leave(group);
-                            failure(OCPrivateLinkErrorFileNotExists);
+                            failure(error);
 
                         }];
                     }];
@@ -76,12 +77,18 @@
 
                 dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
                     NSMutableArray *filesFromRootToFile = [self _syncFilesTreeWithFiles:files andUrls:urls];
-                    success([filesFromRootToFile copy]);
+
+                    if (filesFromRootToFile.count > 0) {
+                        success([filesFromRootToFile copy]);
+                    } else {
+                        failure([UtilsFramework getErrorByCodeId:OCErrorPrivateLinkErrorCachingFile]);
+                    }
+
                 });
             }
         }];
     } failure:^(NSError *error) {
-        failure(OCPrivateLinkErrorFileNotExists);
+        failure(error);
     }];
 }
 
@@ -128,7 +135,7 @@
     }
     failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token, NSString *redirectedServer)
     {
-        failure(error);
+        failure([UtilsFramework getErrorByCodeId:OCErrorPrivateLinkErrorCachingFile]);
     }];
 }
 

@@ -11,7 +11,7 @@
 
 @synthesize strategy;
 
--(void)handleLink:(void (^)(NSArray *))success failure:(void (^)(OCPrivateLinkError))failure {
+-(void)handleLink:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure {
     [strategy handleLink:success failure:failure];
 }
 

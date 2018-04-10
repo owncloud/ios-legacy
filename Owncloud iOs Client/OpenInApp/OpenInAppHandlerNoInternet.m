@@ -7,6 +7,8 @@
 
 #import "OpenInAppHandlerNoInternet.h"
 #import "ManageFilesDB.h"
+#import "UtilsFramework.h"
+#import "OCCommunication.h"
 
 @implementation OpenInAppHandlerNoInternet
 
@@ -22,7 +24,7 @@
     return self;
 }
 
-- (void)handleLink:(void (^)(NSArray *))success failure:(void (^)(OCPrivateLinkError))failure
+- (void)handleLink:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure
 {
     NSString *ocID = [self getFileIdFromPrivateLinkWithLink:_tappedLinkURL];
     FileDto *item = [ManageFilesDB getFileDtoByOCid:ocID];
@@ -30,7 +32,7 @@
 
     if (item == nil)
     {
-        failure(OCPrivateLinkErrorFileNotExists);
+        failure([UtilsFramework getErrorByCodeId: OCErrorPrivateLinkFileNotCachedOffline]);
     }
 
     if (item.isDownload == 1)
@@ -45,7 +47,7 @@
     }
     else
     {
-        failure(OCPrivateLinkErrorFileNotExists);
+        failure([UtilsFramework getErrorByCodeId: OCErrorPrivateLinkFileNotCachedOffline]);
     }
 }
 

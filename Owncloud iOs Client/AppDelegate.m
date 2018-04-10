@@ -2866,9 +2866,6 @@ float shortDelay = 0.3;
 
     [universalLinkscontext handleLink:^(NSArray *items)
     {
-
-        if (items.count > 0) {
-
             FileDto *fileToOpen =  items.lastObject;
             dispatch_async(dispatch_get_main_queue(), ^{
 
@@ -2905,15 +2902,9 @@ float shortDelay = 0.3;
                 });
             }
 
-        }
-        else
-        {
-            [_presentFilesViewController showError: NSLocalizedString(@"private_link_not_reachable", nil)];
-        }
-
-    } failure:^(OCPrivateLinkError error) {
-            [_presentFilesViewController showError:NSLocalizedString(@"private_link_not_reachable", nil)];
+    } failure:^(NSError *error) {
         DLog(@"Error getting the redirection");
+        [_presentFilesViewController showError: error.userInfo[NSLocalizedDescriptionKey]];
     }];
 }
 

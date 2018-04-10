@@ -7,17 +7,10 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, OCPrivateLinkError)
-{
-    OCPrivateLinkErrorFileNotCached,
-    OCPrivateLinkErrorFileNotExists,
-    OCPrivateLinkErrorNotAuthorized
-};
-
 @protocol UniversalLinksStrategy <NSObject>
 
 @required
--(void)handleLink: (void(^)(NSArray *items))success failure:(void(^)(OCPrivateLinkError)) failure;
+-(void)handleLink: (void(^)(NSArray *items))success failure:(void(^)(NSError *)) failure;
 
 @end
 
@@ -52,6 +45,6 @@ typedef NS_ENUM(NSUInteger, OCPrivateLinkError)
 // *  @param success A sorted sequence of FileDTO from Root to the folder or file tapped in the link.
 // *  @param failure Error in the workflow.
 // */
--(void)handleLink: (void(^)(NSArray *items))success failure:(void(^)(OCPrivateLinkError)) failure;
+-(void)handleLink: (void(^)(NSArray *items))success failure:(void(^)(NSError *)) failure;
 
 @end
