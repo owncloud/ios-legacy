@@ -394,6 +394,19 @@
     return serverDomain;
 }
 
+
++(NSString *) getServerSubfolders:(UserDto *)mUser
+{
+    NSString *serverSubfolders = [[self getFullRemoteServerPath:mUser] stringByReplacingOccurrencesOfString:[self getRemoteServerPathWithoutFolders:mUser] withString:@""];
+
+    if ([serverSubfolders isEqualToString:@""] || [serverSubfolders isEqualToString:@"/"])
+    {
+        return nil;
+    }
+
+    return serverSubfolders;
+}
+
 ///-----------------------------------
 /// @name getFullRemoteServerPathWithWebDav
 ///-----------------------------------

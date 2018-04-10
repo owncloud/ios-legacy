@@ -129,4 +129,6 @@
 
 +(NSArray<NSString *> *) getArrayOfWebdavUrlWithUrlInWebScheme: (NSString *)UrlInWebScheme forUser:(UserDto *)user isDirectory: (BOOL) isDirectory;
 
++(NSString *) getServerSubfolders:(UserDto *)mUser;
+
 @end

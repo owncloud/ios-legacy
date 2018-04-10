@@ -111,8 +111,15 @@
 
     for (int i = 0; i < numberOfFiles; i++)
     {
+        NSString *subfolders = [UtilsUrls getServerSubfolders:_user];
+        NSString *stringToTrim = [[NSString alloc] init];
+        if (subfolders == nil) {
+            stringToTrim = k_url_webdav_server_with_first_slash;
+        } else {
+            stringToTrim = [subfolders stringByAppendingString:k_url_webdav_server];
+        }
         FileDto *tmpFileDTO = folderFiles[i];
-        tmpFileDTO.filePath = [tmpFileDTO.filePath stringByReplacingOccurrencesOfString:k_url_webdav_server_with_first_slash withString:@""];
+        tmpFileDTO.filePath = [tmpFileDTO.filePath stringByReplacingOccurrencesOfString:stringToTrim withString:@""];
         FileDto *fileToCache = [ManageFilesDB getFileDtoByFileName:tmpFileDTO.fileName andFilePath:tmpFileDTO.filePath andUser:_user];
 
         if (fileToCache == nil)
@@ -194,6 +201,14 @@
     NSMutableArray *filesToReturn = [[NSMutableArray alloc] initWithCapacity:urls.count];
     FileDto *parent = nil;
     NSString *rootFileSystem = [NSString stringWithFormat:@"%@%ld/", [UtilsUrls getOwnCloudFilePath],(long)_user.userId];
+
+    NSString *subfolders = [UtilsUrls getServerSubfolders:_user];
+    NSString *stringToTrim = [[NSString alloc] init];
+    if (subfolders == nil) {
+        stringToTrim = k_url_webdav_server_with_first_slash;
+    } else {
+        stringToTrim = [subfolders stringByAppendingString:k_url_webdav_server];
+    }
     
     for (int i = 0; i < filesToSync.count; i ++)
     {
@@ -203,7 +218,7 @@
         NSString *name = [self _getFileNameFromURLWithURL:shortedFileURL];
         NSString *path = [self _getFilePathFromURLWithURL:shortedFileURL andFileName:name];
 
-        if ([path isEqualToString:k_url_webdav_server_with_first_slash])
+        if ([path isEqualToString:stringToTrim])
         {
             path = @"";
         }
@@ -227,10 +242,12 @@
 
         //Now we create the all folders of the current directory
         [FileListDBOperations deleteOldDataFromDBBeforeRefresh:filesToSync[i] parent:parent];
-        rootFileSystem = [[rootFileSystem stringByAppendingString: [name stringByRemovingPercentEncoding]] stringByReplacingOccurrencesOfString:k_url_webdav_server_with_first_slash withString:@""];
+        rootFileSystem = [[rootFileSystem stringByAppendingString:
+                           [name stringByRemovingPercentEncoding]] stringByReplacingOccurrencesOfString:stringToTrim withString:@""];
         [FileListDBOperations createAllFoldersByArrayOfFilesDto:filesToSync[i] andLocalFolder: rootFileSystem];
     }
     return filesToReturn;
+
 }
 
 @end

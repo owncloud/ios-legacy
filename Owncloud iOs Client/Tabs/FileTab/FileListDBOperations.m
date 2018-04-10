@@ -174,9 +174,17 @@
     UserDto *activeUser = [ManageUsersDB getActiveUser];
     NSMutableArray *directoryList = [NSMutableArray arrayWithArray:requestArray];
 
+    NSString *subfolders = [UtilsUrls getServerSubfolders: [ManageUsersDB getActiveUser]];
+    NSString *stringToTrim = [[NSString alloc] init];
+    if (subfolders == nil) {
+        stringToTrim = k_url_webdav_server_with_first_slash;
+    } else {
+        stringToTrim = [subfolders stringByAppendingString:k_url_webdav_server];
+    }
+
     //Change the filePath from the library to our db format
     for (FileDto *currentFile in directoryList) {
-        currentFile.filePath = [currentFile.filePath stringByReplacingOccurrencesOfString:k_url_webdav_server_with_first_slash withString:@""];
+        currentFile.filePath = [currentFile.filePath stringByReplacingOccurrencesOfString:stringToTrim withString:@""];
     }
 
     for (int i = 0 ; i < directoryList.count ; i++) {
