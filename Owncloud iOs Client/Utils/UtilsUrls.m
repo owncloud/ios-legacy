@@ -830,6 +830,8 @@
 
     NSMutableArray<NSString *> *detachedFolderParameters = [[fileRedirectedURL componentsSeparatedByString:@"/"] mutableCopy];
 
+    [detachedFolderParameters removeObject:[user username]];
+
     NSArray<NSString *> *urls = [self getUrlsForFilesFromPath:detachedFolderParameters andBaseServerUrl:[self getFullRemoteServerPathWithWebDav:user] isDirectory: isDirectory];
 
     return urls;
