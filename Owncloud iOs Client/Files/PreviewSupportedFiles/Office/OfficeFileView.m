@@ -125,55 +125,69 @@ CGPoint _lastContentOffset;
 - (void)openOfficeFileWithPath:(NSString*)filePath andFileName: (NSString *) fileName {
         _isDocument=YES;
 
-    [[self class] externalContentBlockingRuleListWithCompletionHandler:^(WKContentRuleList *blockList, NSError *error) {
+    __block WKWebViewConfiguration *wkConfiguration;
 
-        WKWebViewConfiguration *wkConfiguration;
+    if ((wkConfiguration = [WKWebViewConfiguration new]) != nil) {
 
-        if ((blockList == nil) || (error!=nil))
-        {
-            return;
-        }
-
-        if ((wkConfiguration = [WKWebViewConfiguration new]) != nil)
-        {
-
-            wkConfiguration.preferences.javaScriptEnabled = NO;
-
-            if (blockList!=nil)
-            {
-                [wkConfiguration.userContentController addContentRuleList:blockList];
-            }
-
-            _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:wkConfiguration];
-            _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
-            [self addSubview:_webView];
+        if (@available(iOS 11.0, *)) {
+            [[self class] externalContentBlockingRuleListWithCompletionHandler:^(WKContentRuleList *blockList, NSError *error) {
 
 
-            NSURL *url = [NSURL fileURLWithPath:filePath];
-
-            NSString *ext=@"";
-            ext = [FileNameUtils getExtension:fileName];
-
-            if ( [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"TEX"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] ) {
-
-                NSString *dataFile = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:url] encoding:NSASCIIStringEncoding];
-
-                if (IS_IPHONE) {
-                    [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_iphone,k_txt_files_font_family,dataFile] baseURL:[NSURL URLWithString:@"about:blank"]];
-                }else{
-                    [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_ipad,k_txt_files_font_family,dataFile] baseURL:[NSURL URLWithString:@"about:blank"]];
+                if ((blockList == nil) || (error!=nil))
+                {
+                    return;
                 }
 
-            } else {
+                wkConfiguration.preferences.javaScriptEnabled = YES;
 
-                [self.webView loadFileURL: url allowingReadAccessToURL:url];
-            }
+                if (blockList!=nil)
+                {
+                    [wkConfiguration.userContentController addContentRuleList:blockList];
+                }
 
-            [_webView setHidden:NO];
+                _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:wkConfiguration];
+
+                [self _openFileWithPath:filePath andName:fileName];
+
+            }];
         }
-    }];
+        else {
+            _webView = [[WKWebView alloc] initWithFrame:CGRectZero];
+            [self _openFileWithPath:filePath andName:fileName];
+
+        }
+    }
 }
+
+-(void)_openFileWithPath:(NSString *)path andName:(NSString *)name {
+    NSURL *url = [NSURL fileURLWithPath:path];
+
+    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+    [self addSubview:_webView];
+
+    NSString *ext=@"";
+    ext = [FileNameUtils getExtension:name];
+
+    if ( [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"TEX"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] ) {
+
+        NSString *dataFile = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:url] encoding:NSASCIIStringEncoding];
+
+        if (IS_IPHONE) {
+            [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_iphone,k_txt_files_font_family,dataFile] baseURL:[NSURL URLWithString:@"about:blank"]];
+        }else{
+            [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_ipad,k_txt_files_font_family,dataFile] baseURL:[NSURL URLWithString:@"about:blank"]];
+        }
+
+    } else {
+
+        [self.webView loadFileURL: url allowingReadAccessToURL:url];
+    }
+
+    [_webView setHidden:NO];
+}
+
+
 
 /*
  * Method to load a link by path
@@ -285,7 +299,7 @@ CGPoint _lastContentOffset;
                                                  },
 
                                          @"action" : @{
-                                                 @"type" : @"ignore-previous-rules"
+                                                 @"type" : @"block"
                                                  }
                                          },
 
