@@ -52,6 +52,9 @@
 #define k_navigation_bar_height_in_iphone_landscape 32
 #define k_iphone_plus_correction 10
 
+#define k_iphone_x_bottom_correction_portrait 34
+#define k_iphone_x_bottom_correction_landscape 21
+
 
 NSString * iPhoneCleanPreviewNotification = @"iPhoneCleanPreviewNotification";
 NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNotConnectionWithServerMessageNotification";
@@ -82,7 +85,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     self.isForceDownload = isForceDownload;
     
     DLog(@"File to preview: %@ with File id: %ld", self.file.fileName, (long)file.idFile);
-    
     
     self = [super initWithNibName:nibNameOrNil bundle:nil];
     return self;
@@ -709,7 +711,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
                 _readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:_documentPDF];
                 
                 CGRect frame = self.view.frame;
-                frame.size.height = frame.size.height-_toolBar.frame.size.height;
+                frame.size.height = frame.size.height-(_toolBar.frame.size.height+30);
                 frame.origin.y = 0;
                 
                 [_readerPDFViewController.view setFrame:frame];

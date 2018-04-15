@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -42,6 +44,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="RhL-9u-Zc2"/>
                     </constraints>
+                    <viewLayoutGuide key="safeArea" id="Eeu-iJ-tCe"/>
                     <items>
                         <barButtonItem image="openWithTB.png" width="60" style="plain" id="7">
                             <connections>
@@ -103,7 +106,7 @@
                 <constraint firstAttribute="centerY" secondItem="4" secondAttribute="centerY" constant="44" id="Gjy-0m-h6E"/>
                 <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" id="Sz7-3p-C9e"/>
                 <constraint firstItem="4" firstAttribute="centerX" secondItem="27" secondAttribute="centerX" id="Yi7-iS-yt9"/>
-                <constraint firstAttribute="bottom" secondItem="6" secondAttribute="bottom" id="fs0-iF-JWa"/>
+                <constraint firstItem="Pfu-a6-yix" firstAttribute="bottom" secondItem="6" secondAttribute="bottom" priority="750" id="fs0-iF-JWa"/>
                 <constraint firstAttribute="centerY" secondItem="22" secondAttribute="centerY" constant="-9.5" id="hr6-Vo-IrT"/>
                 <constraint firstAttribute="centerX" secondItem="19" secondAttribute="centerX" id="ihh-Fj-Nqf"/>
                 <constraint firstAttribute="centerY" secondItem="19" secondAttribute="centerY" constant="-10" id="oN6-it-G7P"/>
@@ -112,6 +115,7 @@
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="Pfu-a6-yix"/>
         </view>
     </objects>
     <resources>
@@ -121,9 +125,4 @@
         <image name="openWithTB.png" width="25" height="25"/>
         <image name="sharedItem.png" width="25" height="25"/>
     </resources>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
-    </simulatedMetricsContainer>
 </document>
