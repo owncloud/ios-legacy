@@ -446,7 +446,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
         if (IS_IPHONE_X) {
             CGRect frame = self.view.frame;
-            frame.size.height = frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_portrait + [[UIApplication sharedApplication] statusBarFrame].size.height);
+            frame.size.height = frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_portrait);
             frame.origin.y = 0;
             self.officeView.frame = frame;
         } else {
