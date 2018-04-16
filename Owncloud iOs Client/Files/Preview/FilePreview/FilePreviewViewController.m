@@ -437,6 +437,24 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             frame.origin.y = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
             self.gifView.frame = frame;
         }
+    } else if (self.officeView) {
+        
+        if (self.officeView.isFullscreen) {
+            self.officeView.isFullscreen = NO;
+            [self setFullscreenOfficeFileView:self.officeView.isFullscreen];
+        }
+        
+        if (IS_IPHONE_X) {
+            CGRect frame = self.view.frame;
+            frame.size.height = frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_portrait + [[UIApplication sharedApplication] statusBarFrame].size.height);
+            frame.origin.y = 0;
+            self.officeView.frame = frame;
+        } else {
+            CGRect frame = self.view.frame;
+            frame.size.height = frame.size.height-(_toolBar.frame.size.height);
+            frame.origin.y = 0;
+            self.officeView.frame = frame;
+        }
     }
 }
 
@@ -467,6 +485,24 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             frame.size.height = frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_landscape + self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
             frame.origin.y = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
             self.gifView.frame = frame;
+        }
+    } else if (self.officeView) {
+        
+        if (self.officeView.isFullscreen) {
+            self.officeView.isFullscreen = NO;
+            [self setFullscreenOfficeFileView:self.officeView.isFullscreen];
+        }
+        
+        if (IS_IPHONE_X) {
+            CGRect frame = self.view.frame;
+            frame.size.height = frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_landscape + [[UIApplication sharedApplication] statusBarFrame].size.height);
+            frame.origin.y = 0;
+            self.officeView.frame = frame;
+        } else {
+            CGRect frame = self.view.frame;
+            frame.size.height = frame.size.height-(_toolBar.frame.size.height);
+            frame.origin.y = 0;
+            self.officeView.frame = frame;
         }
     }
 }
