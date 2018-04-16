@@ -525,8 +525,19 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         [_galleryView prepareScrollViewBeforeTheRotation];
     } else if (_readerPDFViewController) {
         [_readerPDFViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+        
+        CGRect frame = self.view.frame;
+        if (IS_IPHONE_X) {
+            if (IS_PORTRAIT) {
+                frame.size.height = frame.size.height - (_toolBar.frame.size.height + k_iphone_x_bottom_correction_landscape);
+                frame.origin.y = 0;
+            } else {
+                frame.size.height = frame.size.height - (_toolBar.frame.size.height + k_iphone_x_bottom_correction_portrait);
+                frame.origin.y = 0;
+            }
+            [_readerPDFViewController.view setFrame:frame];
+        }
     }
- 
 }
 
 -(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -761,7 +772,16 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
                 _readerPDFViewController = [[ReaderViewController alloc] initWithReaderDocument:_documentPDF];
                 
                 CGRect frame = self.view.frame;
-                frame.size.height = frame.size.height-(_toolBar.frame.size.height+30);
+                if (IS_IPHONE_X) {
+                    if (IS_PORTRAIT) {
+                        frame.size.height = frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_portrait);
+                    } else {
+                        frame.size.height = frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_landscape);
+                    }
+                } else {
+                    frame.size.height = frame.size.height-(_toolBar.frame.size.height);
+                }
+                
                 frame.origin.y = 0;
                 
                 [_readerPDFViewController.view setFrame:frame];
