@@ -727,7 +727,16 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
                 
                 if (!_officeView) {
                     CGRect frame = self.view.frame;
-                    frame.size.height = frame.size.height-_toolBar.frame.size.height;
+                    if (IS_IPHONE_X) {
+                        if (IS_PORTRAIT) {
+                            frame.size.height = frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_portrait);
+                        } else {
+                            frame.size.height = frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_landscape);
+                        }
+                    } else {
+                        frame.size.height = frame.size.height-_toolBar.frame.size.height;
+                    }
+                    
                     frame.origin.y = 0;
                     _officeView=[[OfficeFileView alloc]initWithFrame:frame];
                     _officeView.delegate = self;
@@ -933,7 +942,16 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         OCNavigationController *nc = (OCNavigationController*)self.navigationController;
         [nc manageBackgroundView:NO];
         //Set the new position of the toolBar
-        _toolBar.frame = CGRectMake(0, self.view.frame.size.height-_toolBar.frame.size.height, self.view.frame.size.width, _toolBar.frame.size.height);
+        if (IS_IPHONE_X) {
+            if (IS_PORTRAIT) {
+                _toolBar.frame = CGRectMake(0, self.view.frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_portrait), self.view.frame.size.width, _toolBar.frame.size.height);
+            } else {
+                _toolBar.frame = CGRectMake(0, self.view.frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_landscape), self.view.frame.size.width, _toolBar.frame.size.height);
+            }
+        } else {
+            _toolBar.frame = CGRectMake(0, self.view.frame.size.height-_toolBar.frame.size.height, self.view.frame.size.width, _toolBar.frame.size.height);
+        }
+        
         [self.view bringSubviewToFront:_toolBar];
     } completion:^(BOOL finished){
         //When the animation finish, show the labels in the tollBar
