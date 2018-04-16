@@ -48,4 +48,21 @@
     _lastContentOffset = scrollView.contentOffset.x;
 }
 
+-(void)blinkWithColor:(UIColor *)color count:(int) count {
+    if(count == 0)
+    {
+        return;
+    }
+
+    [UIView animateWithDuration:0.2 animations:^{
+        self.backgroundColor = color;
+    } completion:^(BOOL finished){
+        [UIView animateWithDuration:0.2 animations:^{
+            self.backgroundColor = [UIColor whiteColor];
+        } completion:^(BOOL finished){
+            [self blinkWithColor:color count:count-1];
+        }];
+    }];
+}
+
 @end

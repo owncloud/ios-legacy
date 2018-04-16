@@ -52,6 +52,9 @@
 // This method sorts an array by modification date to be shown in files/folders list
 + (NSMutableArray*) sortByModificationDate:(NSArray*)array;
 
+// This method sorts an array by kind to be shown in files/folders list
++ (NSMutableArray*) sortByKind:(NSArray*)array;
+
 // This method creates an array to be shown in the files/folders list
 + (NSMutableArray*) getSortedArrayFromCurrentDirectoryArray:(NSArray*) currentDirectoryArray forUser:(UserDto*)user;
 

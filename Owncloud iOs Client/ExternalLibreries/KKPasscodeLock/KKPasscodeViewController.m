@@ -346,11 +346,16 @@
 #else
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 #endif
+
 }
 
 
 - (void) viewDidDisappear:(BOOL)animated {
+
     [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] postNotification:
+     [[NSNotification alloc] initWithName:@"dismissPassCodeNotification" object:nil userInfo:nil]];
+
 }
 
 

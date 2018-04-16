@@ -136,9 +136,9 @@
         FileDto *fileDto = [[FileDto alloc]initWithOCFileDto:file];
         [fileDtoArray addObject:fileDto];
     }
-    //Free memory
-    ocFileDtoArray = nil;
 
+    ocFileDtoArray = nil;
+    
     return fileDtoArray;
 }
 

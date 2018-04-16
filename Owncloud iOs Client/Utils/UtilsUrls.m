@@ -21,6 +21,7 @@
 #import "Customization.h"
 #import "FileDto.h"
 #import "ManageUploadsDB.h"
+#import "NSString+Encoding.h"
 
 
 @implementation UtilsUrls
@@ -280,7 +281,6 @@
     return pathOnDB;
 }
 
-
 //----------------------------------------------
 /// @name getFilePathOnDBByFilePathOnFileDto
 ///---------------------------------------------
@@ -392,6 +392,19 @@
     NSString *serverDomain = [UtilsUrls getHttpAndDomainByURL:[UtilsUrls getFullRemoteServerPath:mUser]];
     
     return serverDomain;
+}
+
+
++(NSString *) getServerSubfolders:(UserDto *)mUser
+{
+    NSString *serverSubfolders = [[self getFullRemoteServerPath:mUser] stringByReplacingOccurrencesOfString:[self getRemoteServerPathWithoutFolders:mUser] withString:@""];
+
+    if ([serverSubfolders isEqualToString:@""] || [serverSubfolders isEqualToString:@"/"])
+    {
+        return nil;
+    }
+
+    return serverSubfolders;
 }
 
 ///-----------------------------------
@@ -741,11 +754,6 @@
     return NO;
 }
 
-
-
- 
- 
- 
  ///-----------------------------------
  /// @name getFullRemoteServerPathWithoutProtocolBeginningWithUserDisplayName
  ///-----------------------------------
@@ -766,6 +774,124 @@
 
      return path;
  }
- 
+
+/*!
+ *  @brief This method gets the query of a url, extracts the parameters and inserts them in an array
+ *
+ *  For example if the query is @a ?dir=/Documents/2/3/4/5/6/&fileid=Squirel.jpg
+ *  The return array should be
+ *  @code
+ *  +----------------------+-------------+
+ *  | Documents/2/3/4/5/6/ | Squirel.jpg |
+ *  +----------------------+-------------+
+ *  @endcode
+ *
+ *  In the case that the query only contains a Folder, the array should have only one position and be like:
+ *  @code
+ *  +----------------------+
+ *  | Documents/2/3/4/5/6/ |
+ *  +----------------------+
+ *  @endcode
+ *
+ *  @param queryUrl Query of a url
+ *  @return An array of the query parameter of a url.
+ */
++(NSArray<NSString *> *)getQueryParametersFromQueryUrl:(NSString *) queryUrl {
+
+    NSMutableArray *params = [[NSMutableArray alloc] init];
+    for (NSString *param in [queryUrl componentsSeparatedByString:@"&"]) {
+        NSArray *elts = [param componentsSeparatedByString:@"="];
+        if([elts count] < 2) continue;
+        [params addObject:[elts lastObject]];
+    }
+
+    return [[NSArray<NSString *> alloc] initWithArray:params];
+}
+
+/*!
+ *  @brief This method returns an array of urls starting from a url in a web server scheme and the current active user.
+ *
+ *  @discussion
+ *  If you pass the link
+*  @a https://pablos-mbp.solidgear.prv/apps/files/?dir=/Documents/2/3/4/5/6/&fileid=Squirel.jpg
+ *
+ *  The return of this function should  be:
+ *  ¡@a https://server.com/remote.php/webdav/
+ *  @a https://server.com/remote.php/webdav/Documents
+ *  @a https://server.com/remote.php/webdav/Documents/Photos/
+ *  @a https://server.com/remote.php/webdav/Documents/Photos/Squirrel.jpg
+ *  @param UrlInWebScheme Url in web server scheme
+ *  @param user Active user
+ *  @return This method returns an array of urls sorted from Root to the folder or file desired.
+ */
++(NSArray<NSString *> *) getArrayOfWebdavUrlWithUrlInWebScheme: (NSString *)UrlInWebScheme forUser:(UserDto *)user isDirectory: (BOOL) isDirectory {
+
+    NSString *fileRedirectedURL = [self removeUnnecessaryParts:UrlInWebScheme andUser:user];
+
+    NSMutableArray<NSString *> *detachedFolderParameters = [[fileRedirectedURL componentsSeparatedByString:@"/"] mutableCopy];
+
+    [detachedFolderParameters removeObject:[user username]];
+
+    NSArray<NSString *> *urls = [self getUrlsForFilesFromPath:detachedFolderParameters andBaseServerUrl:[self getFullRemoteServerPathWithWebDav:user] isDirectory: isDirectory];
+
+    return urls;
+
+}
+
++ (NSString *) removeUnnecessaryParts:(NSString *)filePath
+                                         andUser:(UserDto *)mUserDto {
+    NSString *pathOnDB = @"";
+
+    NSString *partToRemove = [NSString stringWithFormat:@"%@%@",k_url_files_private_link, mUserDto.username];
+    if([filePath length] >= [partToRemove length]){
+        pathOnDB = [filePath substringFromIndex:[partToRemove length]];
+    }
+
+    return pathOnDB;
+}
+
+/*!
+ *  @brief This method create a series on URLs from a file or folder Path.
+ *
+ *  This gets as a parameter an array of the query parameters of a Owncloud file from root to the desired folder or file.
+ *
+ *  An example of the path paramater for de file with path = @a /Documents/Photos/Squirrel.jpg @a could be
+ *
+ *  @code
+ *  +-----------+--------+-------------+
+ *  | Documents | Photos | Squirrel.jpg |
+ *  +-----------+--------+-------------+
+ *  @endcode
+ *
+ *  And with the baseServerURl = @a https://server.com/remote.php/webdav
+ *  The output of this method should be a sorted array with:
+ *
+ *  @a https://server.com/remote.php/webdav/
+ *  @a https://server.com/remote.php/webdav/Documents
+ *  @a https://server.com/remote.php/webdav/Documents/Photos/
+ *  @a https://server.com/remote.php/webdav/Documents/Photos/Squirrel.jpg
+ *
+ *  @param path The path from root to the desired folder or dile
+ *  @return An array of urls sorted from root to the desired folder.
+ */
++ (NSMutableArray *)getUrlsForFilesFromPath: (NSMutableArray<NSString *> *) path
+                           andBaseServerUrl: (NSString *)baseServerUrl isDirectory: (BOOL) directory{
+    NSMutableArray *urls = [[NSMutableArray alloc] init];
+    NSString *urlToAdd = baseServerUrl;
+    [urls addObject:urlToAdd];
+    for(int i = 1; i < path.count; i++) {
+        if(![path[i] isEqualToString: @""]){
+            if (i == path.count - 1 && !directory) {
+                NSString *subPath = [[NSString alloc] initWithString:path[i]];
+                urlToAdd = [urlToAdd stringByAppendingString:subPath];
+            } else {
+                urlToAdd = [urlToAdd stringByAppendingString:[path[i] stringByAppendingString: @"/"]];
+            }
+            [urls addObject:urlToAdd];
+        }
+    }
+
+    return urls;
+}
 
 @end

@@ -33,4 +33,6 @@
 //Index path of the cell swipe gesture ocured
 @property (nonatomic, strong) NSIndexPath *indexPath;
 
+-(void)blinkWithColor:(UIColor *)color count:(int) count;
+
 @end

@@ -234,6 +234,23 @@
             self.navigationItem.titleView = imageView;
         }
     }
+    
+
+//    //If is a new user set the file list
+//    if (app.isNewUser) {
+//        //We are changing of user
+//        //Show the file list in the correct place
+//        if (!IS_IPHONE){
+//            [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height + k_status_bar_height)) animated:animated];
+//        } else if (IS_IPHONE && !IS_PORTRAIT) {
+//            [_tableView setContentOffset:CGPointMake(0,-(k_navigation_bar_height_in_iphone_landscape + k_status_bar_height)) animated:animated];
+//        } else {
+//            [_tableView setContentOffset:CGPointMake(0,-(k_status_bar_height + k_navigation_bar_height)) animated:animated];
+//        }
+//        app.isNewUser = NO;
+//    }
+    
+
 }
 
 // Notifies the view controller that its view is about to be added to a view hierarchy.
@@ -634,8 +651,8 @@
         [self.plusActionSheet dismissWithClickedButtonIndex:4 animated:NO];
     }
     
-    if(self.sortingActionSheet){
-        [self.sortingActionSheet dismissWithClickedButtonIndex:2 animated:NO];
+    if (self.sortingActionSheet) {
+        [self.sortingActionSheet dismissWithClickedButtonIndex:sortMax animated:NO];
     }
     
     DLog(@"Files view Controller willRotate");
@@ -1665,9 +1682,9 @@
 -(void)navigateToUrl:(NSString *) url andFileId:(NSInteger)fileIdToShowFiles {
     _isLoadingForNavigate = NO;
     [self endLoading];
-    
+
     FilesViewController *filesViewController = [[FilesViewController alloc] initWithNibName:@"FilesViewController" onFolder:url andFileId:fileIdToShowFiles andCurrentLocalFolder:_currentLocalFolder];
-    
+
     filesViewController.isEtagRequestNecessary = YES;
     
     //Set if the selected folder is favorite or if we are in a son of a favorite one
@@ -2263,8 +2280,8 @@
                                delegate:self
                                cancelButtonTitle:NSLocalizedString(@"cancel", nil)
                                destructiveButtonTitle:nil
-                               otherButtonTitles:NSLocalizedString(@"sort_menu_by_name_option", nil), NSLocalizedString(@"sort_menu_by_modification_date_option", nil), nil];
-    
+                               otherButtonTitles:NSLocalizedString(@"sort_menu_by_name_option", nil), NSLocalizedString(@"sort_menu_by_modification_date_option", nil), NSLocalizedString(@"sort_menu_by_kind_option", nil), nil];
+
     self.sortingActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
     self.sortingActionSheet.tag=300;
     
@@ -2414,21 +2431,28 @@
         enumSortingType storedSorting = APP_DELEGATE.activeUser.sortingType;
         switch (buttonIndex) {
             case 0:
-                if(storedSorting != sortByName){
+                if (storedSorting != sortByName) {
                     [self updateActiveUserSortingChoiceTo:sortByName];
                     _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
                     [self reloadTableFileList];
                 }
                 break;
             case 1:
-                if(storedSorting != sortByModificationDate){
+                if (storedSorting != sortByModificationDate) {
                     [self updateActiveUserSortingChoiceTo:sortByModificationDate];
                     _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
                     [self reloadTableFileList];
                 }
                 break;
-            default:
-                break;
+          case 2:
+              if (storedSorting != sortByKind) {
+                  [self updateActiveUserSortingChoiceTo:sortByKind];
+                  _sortedArray = [SortManager getSortedArrayFromCurrentDirectoryArray:_currentDirectoryArray forUser:APP_DELEGATE.activeUser];
+                  [self reloadTableFileList];
+              }
+              break;
+          default:
+              break;
         }
     }
 }
@@ -3321,6 +3345,7 @@
                             waitUntilDone:YES];
   
      dispatch_async(dispatch_get_main_queue(), ^{
+         [self endLoading];
          [_tableView deselectRowAtIndexPath:[_tableView indexPathForSelectedRow] animated:YES];
      });
 }
@@ -3653,6 +3678,61 @@
         [self downloadTheFile];
         
     }
+}
+
+-(void)navigateTo:(FileDto *)file {
+    
+    _selectedFileDto = file;
+    
+    if (IS_IPHONE){
+        [self goToSelectedFileOrFolder:file andForceDownload:YES];
+    } else {
+        
+        if(file.isDirectory){
+            [self initLoading];
+            [self goToFolder:file];
+        } else {
+            //Select in detail
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            app.detailViewController.sortedArray=_sortedArray;
+            [app.detailViewController handleFile:file fromController:fileListManagerController andIsForceDownload:YES];
+        }
+    }
+}
+
+-(void)openFileInPreview:(FileDto *)file {
+    if (IS_IPHONE){
+        [self goToSelectedFileOrFolder:file andForceDownload:YES];
+    } else {
+        //Select in detail
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        _selectedFileDto = file;
+        app.detailViewController.sortedArray=_sortedArray;
+        [app.detailViewController handleFile:file fromController:fileListManagerController andIsForceDownload:YES];
+    }
+    [self endLoading];
+}
+
+-(void)scrollToFile:(FileDto *)file {
+
+    NSIndexPath *indexpathOfFile = [NSIndexPath alloc];
+
+    for(int i = 0; i < _sortedArray.count; i++) {
+        NSArray *files = _sortedArray[i];
+        for(int j = 0; j < files.count; j++) {
+            FileDto *tmpFile = files[j];
+            if([tmpFile.fileName isEqualToString:file.fileName]) {
+                indexpathOfFile = [NSIndexPath indexPathForRow:j inSection:i];
+            }
+        }
+    }
+
+    [self.tableView scrollToRowAtIndexPath:indexpathOfFile atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+
+    CustomCellFileAndDirectory *cell = [self.tableView cellForRowAtIndexPath:indexpathOfFile];
+    [cell blinkWithColor:[UIColor yellowColor] count:6];
+    [self endLoading];
+
 }
 
 @end

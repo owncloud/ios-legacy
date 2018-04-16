@@ -271,6 +271,9 @@
 		14EC1955195B297F00B02AB6 /* sharedItem.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EC1953195B297F00B02AB6 /* sharedItem.png */; };
 		14EC1956195B297F00B02AB6 /* sharedItem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 14EC1954195B297F00B02AB6 /* sharedItem@2x.png */; };
 		230233B11F9DF401007ED1C5 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230233B01F9DF401007ED1C5 /* LocalAuthentication.framework */; };
+		230A2D2E203340F4006CE677 /* OpenInAppHandlerNoInternet.m in Sources */ = {isa = PBXBuildFile; fileRef = 230A2D2D203340F4006CE677 /* OpenInAppHandlerNoInternet.m */; };
+		230A2D3120341EB3006CE677 /* UniversalLinksContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 230A2D3020341EB3006CE677 /* UniversalLinksContext.m */; };
+		2393E620202897AB00747F7A /* OpenInAppHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2393E61E202897AB00747F7A /* OpenInAppHandler.m */; };
 		4007876D1C44EAEE00486A26 /* ShareEditUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4007876C1C44EAEE00486A26 /* ShareEditUserViewController.xib */; };
 		400787721C44F4D400486A26 /* ShareEditUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 400787711C44F4D400486A26 /* ShareEditUserViewController.m */; };
 		400A63641B4FD75600890579 /* IFTTTAlphaAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A632D1B4FD75600890579 /* IFTTTAlphaAnimation.m */; };
@@ -1378,6 +1381,12 @@
 		14EC1953195B297F00B02AB6 /* sharedItem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sharedItem.png; sourceTree = "<group>"; };
 		14EC1954195B297F00B02AB6 /* sharedItem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sharedItem@2x.png"; sourceTree = "<group>"; };
 		230233B01F9DF401007ED1C5 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
+		230A2D2C203340F4006CE677 /* OpenInAppHandlerNoInternet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OpenInAppHandlerNoInternet.h; path = OpenInApp/OpenInAppHandlerNoInternet.h; sourceTree = "<group>"; };
+		230A2D2D203340F4006CE677 /* OpenInAppHandlerNoInternet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OpenInAppHandlerNoInternet.m; path = OpenInApp/OpenInAppHandlerNoInternet.m; sourceTree = "<group>"; };
+		230A2D2F20341EB3006CE677 /* UniversalLinksContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UniversalLinksContext.h; path = OpenInApp/UniversalLinksContext.h; sourceTree = "<group>"; };
+		230A2D3020341EB3006CE677 /* UniversalLinksContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UniversalLinksContext.m; path = OpenInApp/UniversalLinksContext.m; sourceTree = "<group>"; };
+		2393E61E202897AB00747F7A /* OpenInAppHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OpenInAppHandler.m; path = OpenInApp/OpenInAppHandler.m; sourceTree = "<group>"; };
+		2393E61F202897AB00747F7A /* OpenInAppHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenInAppHandler.h; path = OpenInApp/OpenInAppHandler.h; sourceTree = "<group>"; };
 		4002B01A1D421A7100520FB3 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4002B01C1D421A8300520FB3 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4007876C1C44EAEE00486A26 /* ShareEditUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareEditUserViewController.xib; path = Tabs/FileTab/Share/ShareEditUserViewController.xib; sourceTree = "<group>"; };
@@ -2063,6 +2072,9 @@
 		1324298215ADBB3700DF823E /* Owncloud iOs Client */ = {
 			isa = PBXGroup;
 			children = (
+				2393E61C2028979500747F7A /* OpenInApp */,
+				59C0F2B01A963670007FE71B /* iTunesArtwork */,
+				59C0F2B11A963670007FE71B /* iTunesArtwork@2x */,
 				593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */,
 				1324298B15ADBB3700DF823E /* AppDelegate.h */,
 				1324298C15ADBB3700DF823E /* AppDelegate.m */,
@@ -2967,6 +2979,19 @@
 				14B0083F18FD1B5B004CB06B /* EmptyCell.xib */,
 			);
 			name = EmptyCell;
+			sourceTree = "<group>";
+		};
+		2393E61C2028979500747F7A /* OpenInApp */ = {
+			isa = PBXGroup;
+			children = (
+				2393E61F202897AB00747F7A /* OpenInAppHandler.h */,
+				2393E61E202897AB00747F7A /* OpenInAppHandler.m */,
+				230A2D2C203340F4006CE677 /* OpenInAppHandlerNoInternet.h */,
+				230A2D2D203340F4006CE677 /* OpenInAppHandlerNoInternet.m */,
+				230A2D2F20341EB3006CE677 /* UniversalLinksContext.h */,
+				230A2D3020341EB3006CE677 /* UniversalLinksContext.m */,
+			);
+			name = OpenInApp;
 			sourceTree = "<group>";
 		};
 		400A63251B4FD2C100890579 /* HelpGuide */ = {
@@ -3965,6 +3990,9 @@
 							com.apple.Keychain = {
 								enabled = 1;
 							};
+							com.apple.SafariKeychain = {
+								enabled = 1;
+							};
 						};
 					};
 					EA6606941AA767F700BA2C65 = {
@@ -4722,6 +4750,7 @@
 				148DD62517785D6900FB9977 /* DetailViewController.m in Sources */,
 				EABF69171891379C00A2217C /* SWTableViewCell.m in Sources */,
 				EA8ADE681A31E9AB008D3612 /* FFCircularProgressView.m in Sources */,
+				230A2D3120341EB3006CE677 /* UniversalLinksContext.m in Sources */,
 				148DD62A17785D9800FB9977 /* FilePreviewViewController.m in Sources */,
 				148DD62E17785DDE00FB9977 /* GalleryView.m in Sources */,
 				EABD893A1BBE82D900DA5281 /* TSMessageView.m in Sources */,
@@ -4772,6 +4801,7 @@
 				13AD22B318311A26007E0F1A /* ManageUploadRequest.m in Sources */,
 				148DD69A1778664400FB9977 /* OverwriteFileOptions.m in Sources */,
 				148DD6A01778667000FB9977 /* RenameFile.m in Sources */,
+				2393E620202897AB00747F7A /* OpenInAppHandler.m in Sources */,
 				EAC598601A56A486003192B2 /* ManageProvidingFilesDB.m in Sources */,
 				148DD6A81778668A00FB9977 /* SelectFolderNavigation.m in Sources */,
 				EA68969117F599060033B3C1 /* KKPasscodeViewController.m in Sources */,
@@ -4856,6 +4886,7 @@
 				400A63651B4FD75600890579 /* IFTTTAnimatedPagingScrollViewController.m in Sources */,
 				1487F14C177C315D004A1A5A /* UserDto.m in Sources */,
 				1487F158177C3392004A1A5A /* FMDatabase.m in Sources */,
+				230A2D2E203340F4006CE677 /* OpenInAppHandlerNoInternet.m in Sources */,
 				1487F159177C3392004A1A5A /* FMDatabaseAdditions.m in Sources */,
 				906177E21C4FABF600BBE648 /* ManageTouchID.m in Sources */,
 				59EF1F0E1CE0BD8900184F8F /* DeleteUtils.m in Sources */,

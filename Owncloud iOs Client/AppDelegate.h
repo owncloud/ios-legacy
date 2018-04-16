@@ -323,4 +323,6 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
  */
 - (void) switchActiveUserTo:(UserDto *) user isNewAccount:(BOOL)isNewAccount;
 
+- (void)openLinksInAppWithLink:(NSURL *)url;
+
 @end
