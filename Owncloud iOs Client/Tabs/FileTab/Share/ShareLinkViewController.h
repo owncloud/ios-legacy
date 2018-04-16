@@ -31,9 +31,9 @@ typedef NS_ENUM (NSInteger, LinkOptionsViewMode){
 
 @property (strong, nonatomic) IBOutlet UITableView *shareLinkOptionsTableView;
 
-@property (strong, nonatomic) UIView *datePickerContainerView;
-@property (strong, nonatomic) UIDatePicker *datePickerView;
-@property (strong, nonatomic) UIView *pickerView;
+@property (strong, nonatomic) UIView *datePickerFullScreenBackgroundView;
+@property (strong, nonatomic) UIDatePicker *datePicker;
+@property (strong, nonatomic) UIView *pickerContainerView;
 
 @property (nonatomic, strong) FileDto *fileShared;
 @property (nonatomic, strong) OCSharedDto *sharedDto;
