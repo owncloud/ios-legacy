@@ -774,16 +774,6 @@ typedef NS_ENUM (NSInteger, LinkOption){
         [self.view addSubview: _datePickerFullScreenBackgroundView];
     }
 
-    // Setup the above the picker Toolbar.
-    UIToolbar *controlToolbar = [[UIToolbar alloc] initWithFrame: CGRectMake(0, 0, self.view.frame.size.width, controlToolBarHeight)];
-
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dateSelected:)];
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(closeDatePicker)];
-
-    UIBarButtonItem *toolbarSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
-
-    [controlToolbar setItems:@[cancelButton, toolbarSpacer, doneButton]];
-
     if (_pickerContainerView == nil) {
         _pickerContainerView = [[UIView alloc] initWithFrame:CGRectZero];
         [_pickerContainerView setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -800,6 +790,23 @@ typedef NS_ENUM (NSInteger, LinkOption){
         [_datePickerFullScreenBackgroundView addSubview:_pickerContainerView];
         [_pickerContainerView setHidden:NO]; // TODO: take a look if this is needed.
     }
+
+    // Setup the above the picker Toolbar.
+    UIToolbar *controlToolbar = [[UIToolbar alloc] initWithFrame: CGRectZero];
+    [controlToolbar setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [_pickerContainerView addSubview:controlToolbar];
+    [[controlToolbar.topAnchor constraintEqualToAnchor:_pickerContainerView.topAnchor] setActive:YES];
+    [[controlToolbar.leftAnchor constraintEqualToAnchor:_pickerContainerView.leftAnchor] setActive:YES];
+    [[controlToolbar.rightAnchor constraintEqualToAnchor:_pickerContainerView.rightAnchor] setActive:YES];
+    [[controlToolbar.heightAnchor constraintEqualToConstant:controlToolBarHeight] setActive:YES];
+
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dateSelected:)];
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(closeDatePicker)];
+
+    UIBarButtonItem *toolbarSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+
+    [controlToolbar setItems:@[cancelButton, toolbarSpacer, doneButton]];
+
 
     // Setup the date picker
     if (_datePicker == nil) {
@@ -825,8 +832,6 @@ typedef NS_ENUM (NSInteger, LinkOption){
     } else {
         [_pickerContainerView addSubview:_datePicker];
     }
-
-    [_pickerContainerView addSubview:controlToolbar];
 
 }
 
