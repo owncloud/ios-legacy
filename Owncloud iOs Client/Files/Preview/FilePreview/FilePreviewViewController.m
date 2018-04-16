@@ -430,6 +430,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         } else {
             self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.width, (screenSize.height - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height));
         }
+    } else if (self.gifView) {
+        if (IS_IPHONE_X) {
+            CGRect frame = self.view.frame;
+            frame.size.height = frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_portrait + self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+            frame.origin.y = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
+            self.gifView.frame = frame;
+        }
     }
 }
 
@@ -454,6 +461,13 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             self.avMoviePlayer.view.frame = CGRectMake(0,0, screenSize.height, (screenSize.width - _toolBar.frame.size.height - k_status_bar_height - k_navigation_bar_height_in_iphone_landscape - iPhoneCorrection));
         }
         
+    } else if (self.gifView) {
+        if (IS_IPHONE_X) {
+            CGRect frame = self.view.frame;
+            frame.size.height = frame.size.height-(_toolBar.frame.size.height + k_iphone_x_bottom_correction_landscape + self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+            frame.origin.y = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
+            self.gifView.frame = frame;
+        }
     }
 }
 
@@ -773,7 +787,17 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     self.gifView.clipsToBounds = true;
     
     CGRect frame = self.view.frame;
-    frame.size.height = frame.size.height-(_toolBar.frame.size.height + self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+    
+    if (IS_IPHONE_X) {
+        if (IS_PORTRAIT) {
+            frame.size.height = frame.size.height-((_toolBar.frame.size.height + k_iphone_x_bottom_correction_portrait) + self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+        } else {
+            frame.size.height = frame.size.height-((_toolBar.frame.size.height + k_iphone_x_bottom_correction_landscape) + self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+        }
+    } else {
+        frame.size.height = frame.size.height-(_toolBar.frame.size.height + self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+    }
+    
     frame.origin.y = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
     self.gifView.frame = frame;
     [self.view addSubview:self.gifView];
