@@ -788,7 +788,7 @@ typedef NS_ENUM (NSInteger, LinkOption){
 
     } else {
         [_datePickerFullScreenBackgroundView addSubview:_pickerContainerView];
-        [_pickerContainerView setHidden:NO]; // TODO: take a look if this is needed.
+        [_pickerContainerView setHidden:NO];
     }
 
     // Setup the above the picker Toolbar.
