@@ -104,33 +104,6 @@
     }];
 }
 
--(void)_syncFolderFilesWithFiles:(NSMutableArray *)folderFiles withParent:(FileDto *)parent
-{
-    NSMutableArray *folderToCache = [NSMutableArray new];
-    int numberOfFiles = (int) folderFiles.count;
-
-    for (int i = 0; i < numberOfFiles; i++)
-    {
-        NSString *subfolders = [UtilsUrls getServerSubfolders:_user];
-        NSString *stringToTrim = [[NSString alloc] init];
-        if (subfolders == nil) {
-            stringToTrim = k_url_webdav_server_with_first_slash;
-        } else {
-            stringToTrim = [subfolders stringByAppendingString:k_url_webdav_server];
-        }
-        FileDto *tmpFileDTO = folderFiles[i];
-        tmpFileDTO.filePath = [tmpFileDTO.filePath stringByReplacingOccurrencesOfString:stringToTrim withString:@""];
-        FileDto *fileToCache = [ManageFilesDB getFileDtoByFileName:tmpFileDTO.fileName andFilePath:tmpFileDTO.filePath andUser:_user];
-
-        if (fileToCache == nil)
-        {
-            [folderToCache addObject:tmpFileDTO];
-        }
-    }
-
-    [ManageFilesDB insertManyFiles:folderToCache ofFileId:parent.idFile andUser:APP_DELEGATE.activeUser];
-}
-
 -(void)_getFilesFrom:(NSString *)folderPath success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure
 {
     __block OCCommunication *ocComm;
