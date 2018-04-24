@@ -47,6 +47,7 @@
 #define k_DB_version_22 22
 #define k_DB_version_23 23
 #define k_DB_version_24 24
+#define k_DB_version_25 25
 
 @implementation InitializeDatabase
 
@@ -60,7 +61,7 @@
 + (void) initDataBase {
     
     //New version
-    static int dbVersion = k_DB_version_24;
+    static int dbVersion = k_DB_version_25;
     
     //This method make a new database
     [ManageDB createDataBase];
@@ -123,6 +124,9 @@
                 [OCKeychain waitUntilKindOfCredentialsInAllKeychainItemsAreUpdatedFromDB22to23];//Updates in Keychain
             case k_DB_version_24:
                 [OCKeychain updateAllKeychainItemsToUseAccessibleAlwaysProperty]; //Updates in keychain, accesibility property
+            case k_DB_version_25:
+                [ManageDB updateDBVersion24To25]; //Updates in keychain, accesibility property
+                
             break; //Insert your migration above this final break.
         }
     }

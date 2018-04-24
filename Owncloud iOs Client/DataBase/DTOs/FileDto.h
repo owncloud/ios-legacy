@@ -49,6 +49,7 @@ typedef enum {
 @property NSInteger taskIdentifier;
 @property (nonatomic) NSInteger providingFileId;
 @property (nonatomic, copy) NSString *ocId;
+@property (nonatomic, copy) NSString *ocPrivatelink;
 
 ///-----------------------------------
 /// @name Init with OCFileDto
