@@ -77,6 +77,7 @@
             currentFile.permissions = [rs stringForColumn:@"permissions"];
             currentFile.taskIdentifier = [rs intForColumn:@"task_identifier"];
             currentFile.providingFileId = [rs intForColumn:@"providing_file_id"];
+            currentFile.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
             
             [output addObject:currentFile];
         }
@@ -128,6 +129,7 @@
             currentFile.permissions = [rs stringForColumn:@"permissions"];
             currentFile.taskIdentifier = [rs intForColumn:@"task_identifier"];
             currentFile.providingFileId = [rs intForColumn:@"providing_file_id"];
+            currentFile.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
             
             [output addObject:currentFile];
         }
@@ -170,6 +172,7 @@
             currentFile.permissions = [rs stringForColumn:@"permissions"];
             currentFile.taskIdentifier = [rs intForColumn:@"task_identifier"];
             currentFile.providingFileId = [rs intForColumn:@"providing_file_id"];
+            currentFile.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
             
             [output addObject:currentFile];
         }
@@ -217,6 +220,7 @@
             output.permissions = [rs stringForColumn:@"permissions"];
             output.taskIdentifier = [rs intForColumn:@"task_identifier"];
             output.providingFileId = [rs intForColumn:@"providing_file_id"];
+            output.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
         }
         [rs close];
     }];
@@ -257,6 +261,7 @@
             output.permissions = [rs stringForColumn:@"permissions"];
             output.taskIdentifier = [rs intForColumn:@"task_identifier"];
             output.providingFileId = [rs intForColumn:@"providing_file_id"];
+            output.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
     
         }
         [rs close];
@@ -340,6 +345,7 @@
             output.permissions = [rs stringForColumn:@"permissions"];
             output.taskIdentifier = [rs intForColumn:@"task_identifier"];
             output.providingFileId = [rs intForColumn:@"providing_file_id"];
+            output.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
         }
         [rs close];
     }];
@@ -420,7 +426,7 @@
                 
                 //to jump the first becouse it is not necesary (is the same directory) and the other if is to insert 450 by 450
                 if(numberOfInsertEachTime == 0) {
-                    sql = [NSString stringWithFormat:@"INSERT INTO files SELECT null as id, '%@' as 'file_path','%@' as 'file_name', %ld as 'user_id', %d as 'is_directory',%ld as 'is_download', %ld as 'file_id', %@ as 'size', %@ as 'date', %d as 'is_favorite','%@' as 'etag', %d as 'is_root_folder', %d as 'is_necessary_update', %ld as 'shared_file_source', '%@' as 'permissions', %ld as 'task_identifier', %ld as 'providing_file_id', '%@' as 'oc_id'",
+                    sql = [NSString stringWithFormat:@"INSERT INTO files SELECT null as id, '%@' as 'file_path','%@' as 'file_name', %ld as 'user_id', %d as 'is_directory',%ld as 'is_download', %ld as 'file_id', %@ as 'size', %@ as 'date', %d as 'is_favorite','%@' as 'etag', %d as 'is_root_folder', %d as 'is_necessary_update', %ld as 'shared_file_source', '%@' as 'permissions', %ld as 'task_identifier', %ld as 'providing_file_id', '%@' as 'oc_id', '%@' as 'oc_privatelink'",
                            current.filePath,
                            current.fileName,
                            (long)current.userId,
@@ -437,11 +443,12 @@
                            current.permissions,
                            (long)current.taskIdentifier,
                            (long)current.providingFileId,
-                           current.ocId];
+                           current.ocId,
+                           current.ocPrivatelink];
 
                     //DLog(@"sql!!!: %@", sql);
                 } else {
-                    sql = [NSString stringWithFormat:@"%@ UNION SELECT null, '%@','%@',%ld,%d,%ld,%ld,%@,%@,%d,'%@',%d,%d,%ld,'%@',%ld,%ld,'%@'",
+                    sql = [NSString stringWithFormat:@"%@ UNION SELECT null, '%@','%@',%ld,%d,%ld,%ld,%@,%@,%d,'%@',%d,%d,%ld,'%@',%ld,%ld,'%@','%@'",
                            sql,
                            current.filePath,
                            current.fileName,
@@ -459,7 +466,8 @@
                            current.permissions,
                            (long)current.taskIdentifier,
                            (long)current.providingFileId,
-                           current.ocId];
+                           current.ocId,
+                           current.ocPrivatelink];
 
                 }
                 
@@ -1068,6 +1076,7 @@
             output.fileId = [rs intForColumn:@"file_id"];
             output.date = [rs longForColumn:@"date"];
             output.isFavorite = [rs intForColumn:@"is_favorite"];
+            output.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
             output.localFolder = [UtilsUrls getLocalFolderByFilePath:output.filePath andFileName:output.fileName andUserDto:mUser];
             
         }
@@ -1220,6 +1229,7 @@
             output.permissions = [rs stringForColumn:@"permissions"];
             output.taskIdentifier = [rs intForColumn:@"task_identifier"];
             output.providingFileId = [rs intForColumn:@"providing_file_id"];
+            output.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
             
         }
         [rs close];
@@ -1489,6 +1499,7 @@
             currentFile.permissions = [rs stringForColumn:@"permissions"];
             currentFile.taskIdentifier = [rs intForColumn:@"task_identifier"];
             currentFile.providingFileId = [rs intForColumn:@"providing_file_id"];
+            currentFile.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
             
             [output addObject:currentFile];
         }
@@ -1588,6 +1599,7 @@
                 output.permissions = [rs stringForColumn:@"permissions"];
                 output.taskIdentifier = [rs intForColumn:@"task_identifier"];
                 output.providingFileId = [rs intForColumn:@"providing_file_id"];
+                output.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
                 
             }
         }
@@ -1704,6 +1716,7 @@
             currentFile.permissions = [rs stringForColumn:@"permissions"];
             currentFile.taskIdentifier = [rs intForColumn:@"task_identifier"];
             currentFile.providingFileId = [rs intForColumn:@"providing_file_id"];
+            currentFile.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
             
             [tempArray addObject:currentFile];
 
@@ -1750,6 +1763,7 @@
             currentFile.permissions = [rs stringForColumn:@"permissions"];
             currentFile.taskIdentifier = [rs intForColumn:@"task_identifier"];
             currentFile.providingFileId = [rs intForColumn:@"providing_file_id"];
+            currentFile.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
             
             [tempArray addObject:currentFile];
             
@@ -1834,6 +1848,7 @@
                 currentFile.permissions = [rs stringForColumn:@"permissions"];
                 currentFile.taskIdentifier = [rs intForColumn:@"task_identifier"];
                 currentFile.providingFileId = [rs intForColumn:@"providing_file_id"];
+                currentFile.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
                 
                 [tempArray addObject:currentFile];
                 
@@ -1932,6 +1947,7 @@
             fileTemp.permissions = [rs stringForColumn:@"permissions"];
             fileTemp.taskIdentifier = [rs intForColumn:@"task_identifier"];
             fileTemp.providingFileId = [rs intForColumn:@"providing_file_id"];
+            fileTemp.ocPrivatelink = [rs stringForColumn:@"oc_privatelink"];
         
         }
         
