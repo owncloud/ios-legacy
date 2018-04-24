@@ -54,8 +54,8 @@
 #define heightOfShareLinkHeader 45.0
 #define heightOfHeader 10.0
 
-#define shareTableViewSectionsNumber  3
-#define shareTableViewSectionsNumberCanShare  2
+#define shareTableViewSectionsNumber 3
+#define shareTableViewSectionsNumberCanNotShare 2
 
 //Nº of Rows
 #define fullOptionsForCanEditOption 3
@@ -264,12 +264,12 @@ typedef NS_ENUM (NSInteger, optionPermission){
     
     if (self.updatedOCShare.shareType == shareTypeRemote) {
         if (!(APP_DELEGATE.activeUser.hasFedSharesOptionShareSupport == serverFunctionalitySupported)) {
-            shareTableViewSectionsNumberCanShare;
+            numberOfSections = shareTableViewSectionsNumberCanNotShare;
         }
     }
     
     if (![ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.userId].isFilesSharingReSharingEnabled) {
-        shareTableViewSectionsNumberCanShare;
+        numberOfSections = shareTableViewSectionsNumberCanNotShare;
     }
     
     return numberOfSections;
