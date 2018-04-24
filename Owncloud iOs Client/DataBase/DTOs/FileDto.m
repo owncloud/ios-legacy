@@ -48,6 +48,7 @@
         _sharedFileSource = 0;
         _providingFileId = 0;
         _ocId = ocFileDto.ocId;
+        _ocPrivatelink = ocFileDto.ocPrivatelink;
         
     }
     return self;

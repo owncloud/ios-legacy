@@ -54,7 +54,7 @@
             DLog(@"Error in createDataBase table users");
         }
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL NOT NULL DEFAULT 0, 'is_necessary_update' BOOL NOT NULL DEFAULT 0, 'shared_file_source' INTEGER NOT NULL DEFAULT 0, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER NOT NULL DEFAULT -1, 'providing_file_id' INTEGER NOT NULL DEFAULT 0, 'oc_id' VARCHAR NOT NULL DEFAULT '')"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files' ('id' INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL NOT NULL DEFAULT 0, 'is_necessary_update' BOOL NOT NULL DEFAULT 0, 'shared_file_source' INTEGER NOT NULL DEFAULT 0, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER NOT NULL DEFAULT -1, 'providing_file_id' INTEGER NOT NULL DEFAULT 0, 'oc_id' VARCHAR NOT NULL DEFAULT '', 'oc_privatelink' VARCHAR NOT NULL DEFAULT '')"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table files");
@@ -1285,6 +1285,23 @@
             DLog(@"Error update version 21 to 22 table users add column has_public_share_link_option_upload_only_support");
         }
         
+    }];
+    
+}
+
++ (void) updateDBVersion24To25 {
+    
+    FMDatabaseQueue *queue = Managers.sharedDatabase;
+    
+    [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        
+        BOOL dbOperationSuccessful;
+        
+        dbOperationSuccessful = [db executeUpdate:@"ALTER TABLE files ADD oc_privatelink VARCHAR NOT NULL DEFAULT ''"];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error update version 22 to 23 table files oc_privatelink");
+        }
+    
     }];
     
 }

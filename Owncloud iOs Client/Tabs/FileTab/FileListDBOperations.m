@@ -82,6 +82,7 @@
     initialRootFolder.permissions = @"";
     initialRootFolder.taskIdentifier = -1;
     initialRootFolder.providingFileId = 0;
+    initialRootFolder.ocPrivatelink = @"";
     
     [ManageFilesDB insertFile:initialRootFolder];
     
