@@ -648,7 +648,7 @@
     
     UIButton *cellPrivateLinkButton = [self.shareTableView viewWithTag:-1];
 
-    [self presentActivityViewForShareLink: [NSURL URLWithString:[ShareUtils getPrivateLinkOfFile:self.sharedItem]] inView:cellPrivateLinkButton fromRect:cellPrivateLinkButton.bounds];
+    [self presentActivityViewForShareLink: [NSURL URLWithString:self.sharedItem.ocPrivatelink] inView:cellPrivateLinkButton fromRect:cellPrivateLinkButton.bounds];
 }
 
 - (void) didLongPressPrivateLinkButton:(UILongPressGestureRecognizer*)gesture {
