@@ -365,7 +365,7 @@
 
 + (NSString *) getFileIdFromOcId:(NSString *)ocId {
 
-    NSString *fileIdString = [ocId substringToIndex:8];
+    NSString *fileIdString = ocId;
     
     return [NSString stringWithFormat:@"%d", [fileIdString intValue]];
     
