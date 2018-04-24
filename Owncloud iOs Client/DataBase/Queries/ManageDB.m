@@ -60,7 +60,7 @@
             DLog(@"Error in createDataBase table files");
         }
         
-        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files_backup' ('id' INTEGER, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL, 'is_necessary_update' BOOL, 'shared_file_source' INTEGER, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER, 'providing_file_id' INTEGER NOT NULL DEFAULT 0, 'oc_id' VARCHAR NOT NULL DEFAULT '')"];
+        correctQuery = [db executeUpdate:@"CREATE TABLE IF NOT EXISTS 'files_backup' ('id' INTEGER, 'file_path' VARCHAR, 'file_name' VARCHAR, 'user_id' INTEGER, 'is_directory' BOOL, 'is_download' INTEGER, 'file_id' INTEGER, 'size' LONG, 'date' LONG, 'is_favorite' BOOL, 'etag' VARCHAR NOT NULL DEFAULT '', 'is_root_folder' BOOL, 'is_necessary_update' BOOL, 'shared_file_source' INTEGER, 'permissions' VARCHAR NOT NULL DEFAULT '', 'task_identifier' INTEGER, 'providing_file_id' INTEGER NOT NULL DEFAULT 0, 'oc_id' VARCHAR NOT NULL DEFAULT '', 'oc_privatelink' VARCHAR NOT NULL DEFAULT '')"];
         
         if (!correctQuery) {
             DLog(@"Error in createDataBase table files_backup");
@@ -1300,6 +1300,11 @@
         dbOperationSuccessful = [db executeUpdate:@"ALTER TABLE files ADD oc_privatelink VARCHAR NOT NULL DEFAULT ''"];
         if (!dbOperationSuccessful) {
             DLog(@"Error update version 22 to 23 table files oc_privatelink");
+        }
+        
+        dbOperationSuccessful = [db executeUpdate:@"ALTER TABLE files_backup ADD oc_privatelink VARCHAR NOT NULL DEFAULT ''"];
+        if (!dbOperationSuccessful) {
+            DLog(@"Error update version 22 to 23 table files_backup oc_privatelink");
         }
     
     }];
