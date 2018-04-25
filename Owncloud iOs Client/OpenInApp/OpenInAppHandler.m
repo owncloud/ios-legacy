@@ -77,6 +77,10 @@
 
                 dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
                     NSMutableArray *filesFromRootToFile = [self _syncFilesTreeWithFiles:files andUrls:urls];
+                    
+                    for (FileDto *current in filesFromRootToFile) {
+                        DLog(@"Current file from filesFromRootToFile: %@", current.fileName);
+                    }
 
                     if (filesFromRootToFile.count > 0) {
                         success([filesFromRootToFile copy]);
@@ -106,8 +110,10 @@
 
 -(void)_getFilesFrom:(NSString *)folderPath success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure
 {
+    DLog(@"_getFilesFrom: %@", folderPath);
+    
     __block OCCommunication *ocComm;
-       ocComm = [AppDelegate sharedOCCommunication];
+    ocComm = [AppDelegate sharedOCCommunication];
 
     [ocComm readFolder:folderPath withUserSessionToken:APP_DELEGATE.userSessionCurrentToken onCommunication:ocComm successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token)
     {
@@ -115,7 +121,7 @@
     }
     failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token, NSString *redirectedServer)
     {
-        failure([UtilsFramework getErrorByCodeId:OCErrorPrivateLinkErrorCachingFile]);
+        failure([UtilsFramework getErrorByCodeId:OCErrorPrivateLinkErrorCachingFile4]);
     }];
 }
 

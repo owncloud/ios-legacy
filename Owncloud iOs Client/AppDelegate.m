@@ -2827,6 +2827,8 @@ float shortDelay = 0.3;
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
 
         NSURL *tappedLinkURL = userActivity.webpageURL;
+        
+        DLog(@"URL private link: %@", tappedLinkURL.absoluteString);
 
         __block id blockForPasscodeSecurity;
 
