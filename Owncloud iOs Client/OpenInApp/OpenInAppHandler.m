@@ -50,6 +50,8 @@
 
                 __block NSMutableArray *files = [NSMutableArray new];
 
+                __block BOOL isLeave = NO;
+                
                 dispatch_group_t group = dispatch_group_create();
                 dispatch_group_enter(group);
 
@@ -62,15 +64,20 @@
                             files[idx] = directoryList;
 
                             if (idx == urls.count - 1) {
-                                dispatch_group_leave(group);
+                                if (!isLeave) {
+                                    isLeave = YES;
+                                    dispatch_group_leave(group);
+                                }
                             }
                         }
                         failure:^(NSError *error)
                         {
                             NSLog(@"LOG ---> error in the request to the url -> %@", urls[idx]);
-                            dispatch_group_leave(group);
+                            if (!isLeave) {
+                                isLeave = YES;
+                                dispatch_group_leave(group);
+                            }
                             failure(error);
-
                         }];
                     }];
                 });
