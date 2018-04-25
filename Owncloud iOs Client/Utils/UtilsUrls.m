@@ -813,7 +813,7 @@
  *
  *  @discussion
  *  If you pass the link
-*  @a https://pablos-mbp.solidgear.prv/apps/files/?dir=/Documents/2/3/4/5/6/&fileid=Squirel.jpg
+*  @a https://server.com/apps/files/?dir=/Documents/2/3/4/5/6/&fileid=Squirel.jpg
  *
  *  The return of this function should  be:
  *  ¡@a https://server.com/remote.php/webdav/
