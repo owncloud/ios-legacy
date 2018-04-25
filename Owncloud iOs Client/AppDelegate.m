@@ -2879,18 +2879,21 @@ float shortDelay = 0.3;
                     [_presentFilesViewController navigateTo:fileToOpen];
 
                 } else {
+                    
+                    FileDto *parent = [items objectAtIndex:(items.count-2)];
 
-                    if (_presentFilesViewController.fileIdToShowFiles.idFile != ((FileDto *)[items firstObject]).idFile) {
-                        FileDto *parent = [items firstObject];
+                    if (_presentFilesViewController.fileIdToShowFiles.idFile != parent.idFile) {
                         [_presentFilesViewController navigateTo: parent];
                     }
                 }
             });
 
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             if (!fileToOpen.isDirectory)
             {
                 NSInteger type = [FileNameUtils checkTheTypeOfFile:fileToOpen.fileName];
-
+                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (type == otherFileType)
                     {
@@ -2902,7 +2905,8 @@ float shortDelay = 0.3;
                     }
                 });
             }
-
+        });
+        
     } failure:^(NSError *error) {
         DLog(@"Error getting the redirection");
         [_presentFilesViewController showError: error.userInfo[NSLocalizedDescriptionKey]];
