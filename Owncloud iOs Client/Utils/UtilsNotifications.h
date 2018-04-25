@@ -34,6 +34,8 @@ extern NSString *const IPhoneDoneEditFileTextMessageNotification;
 
 extern NSString *const RelaunchErrorCredentialFilesNotification;
 
+extern NSString *const DismissOpenWithFromPreviewNotification;
+
 @interface UtilsNotifications : NSObject
 
 @end

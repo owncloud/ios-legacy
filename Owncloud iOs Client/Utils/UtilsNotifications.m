@@ -35,5 +35,7 @@ NSString *const IPhoneDoneEditFileTextMessageNotification = @"IPhoneDoneEditFile
 
 NSString *const RelaunchErrorCredentialFilesNotification = @"RelaunchErrorCredentialFilesNotification";
 
+NSString *const DismissOpenWithFromPreviewNotification = @"DismissOpenWithFromPreviewNotification";
+
 @end
 
