@@ -2878,9 +2878,8 @@ float shortDelay = 0.3;
 
                 } else {
 
-                    FileDto *root = [ManageFilesDB getRootFileDtoByUser:_activeUser];
-                    if (fileToOpen.fileId != root.idFile) {
-                        FileDto *parent = items[items.count - 2];
+                    if (_presentFilesViewController.fileIdToShowFiles.idFile != ((FileDto *)[items firstObject]).idFile) {
+                        FileDto *parent = [items firstObject];
                         [_presentFilesViewController navigateTo: parent];
                     }
                 }
