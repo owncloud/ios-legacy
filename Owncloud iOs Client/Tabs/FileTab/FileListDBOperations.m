@@ -174,7 +174,7 @@
     UserDto *activeUser = [ManageUsersDB getActiveUser];
     NSMutableArray *directoryList = [NSMutableArray arrayWithArray:requestArray];
 
-    NSString *subfolders = [UtilsUrls getServerSubfolders: [ManageUsersDB getActiveUser]];
+    NSString *subfolders = [UtilsUrls getServerSubfolders: activeUser];
     NSString *stringToTrim = [[NSString alloc] init];
     if (subfolders == nil) {
         stringToTrim = k_url_webdav_server_with_first_slash;
