@@ -1665,9 +1665,9 @@
 -(void)navigateToUrl:(NSString *) url andFileId:(NSInteger)fileIdToShowFiles {
     _isLoadingForNavigate = NO;
     [self endLoading];
-    
+
     FilesViewController *filesViewController = [[FilesViewController alloc] initWithNibName:@"FilesViewController" onFolder:url andFileId:fileIdToShowFiles andCurrentLocalFolder:_currentLocalFolder];
-    
+
     filesViewController.isEtagRequestNecessary = YES;
     
     //Set if the selected folder is favorite or if we are in a son of a favorite one
@@ -3328,6 +3328,7 @@
                             waitUntilDone:YES];
   
      dispatch_async(dispatch_get_main_queue(), ^{
+         [self endLoading];
          [_tableView deselectRowAtIndexPath:[_tableView indexPathForSelectedRow] animated:YES];
      });
 }
@@ -3660,6 +3661,61 @@
         [self downloadTheFile];
         
     }
+}
+
+-(void)navigateTo:(FileDto *)file {
+    
+    _selectedFileDto = file;
+    
+    if (IS_IPHONE){
+        [self goToSelectedFileOrFolder:file andForceDownload:YES];
+    } else {
+        
+        if(file.isDirectory){
+            [self initLoading];
+            [self goToFolder:file];
+        } else {
+            //Select in detail
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            app.detailViewController.sortedArray=_sortedArray;
+            [app.detailViewController handleFile:file fromController:fileListManagerController andIsForceDownload:YES];
+        }
+    }
+}
+
+-(void)openFileInPreview:(FileDto *)file {
+    if (IS_IPHONE){
+        [self goToSelectedFileOrFolder:file andForceDownload:YES];
+    } else {
+        //Select in detail
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        _selectedFileDto = file;
+        app.detailViewController.sortedArray=_sortedArray;
+        [app.detailViewController handleFile:file fromController:fileListManagerController andIsForceDownload:YES];
+    }
+    [self endLoading];
+}
+
+-(void)scrollToFile:(FileDto *)file {
+
+    NSIndexPath *indexpathOfFile = [NSIndexPath alloc];
+
+    for(int i = 0; i < _sortedArray.count; i++) {
+        NSArray *files = _sortedArray[i];
+        for(int j = 0; j < files.count; j++) {
+            FileDto *tmpFile = files[j];
+            if([tmpFile.fileName isEqualToString:file.fileName]) {
+                indexpathOfFile = [NSIndexPath indexPathForRow:j inSection:i];
+            }
+        }
+    }
+
+    [self.tableView scrollToRowAtIndexPath:indexpathOfFile atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+
+    CustomCellFileAndDirectory *cell = [self.tableView cellForRowAtIndexPath:indexpathOfFile];
+    [cell blinkWithColor:[UIColor yellowColor] count:6];
+    [self endLoading];
+
 }
 
 @end

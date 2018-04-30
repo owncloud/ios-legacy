@@ -14,8 +14,8 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
-
 import Foundation
+
 @objc class DetectListOfFiles: NSObject {
     
     func readFolderOfURL(_ url: NSURL, credentials: OCCredentialsDto,
@@ -49,7 +49,8 @@ import Foundation
             //TODO: chec redirectedserver in status
             
             if ( items != nil && !(items!.isEmpty) ) {
-                success(items!)
+                let files = UtilsDtos.pass(toFileDtoArrayThisOCFileDtoArray: items!) as! [FileDto]
+                success(files)
             } else {
                 let statusCode: NSInteger = (response?.statusCode == nil) ? 0: (response?.statusCode)!
                 failure(statusCode, UtilsFramework.getErrorWithCode(Int(kOCErrorServerUnauthorized), andCustomMessageFromTheServer: "")! as NSError)

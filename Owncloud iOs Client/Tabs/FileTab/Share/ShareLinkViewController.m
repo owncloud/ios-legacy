@@ -737,105 +737,124 @@ typedef NS_ENUM (NSInteger, LinkOption){
 
 #pragma mark - Date Picker methods
 
-- (void) launchDatePicker{
-    
+- (void) launchDatePicker {
+
     static CGFloat controlToolBarHeight = 44.0;
-    static CGFloat datePickerViewYPosition = 40.0;
     static CGFloat datePickerViewHeight = 300.0;
-    static CGFloat pickerViewHeight = 250.0;
-    static CGFloat deltaSpacerWidthiPad = 150.0;
-    
-    
-    self.datePickerContainerView = [[UIView alloc] initWithFrame:self.view.frame];
-    [self.datePickerContainerView setBackgroundColor:[UIColor clearColor]];
-    [self.view addSubview:self.datePickerContainerView];
-    
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapBehind:)];
-    [recognizer setNumberOfTapsRequired:1];
-    recognizer.delegate = self;
-    recognizer.cancelsTouchesInView = true;
-    [self.datePickerContainerView addGestureRecognizer:recognizer];
-    
-    UIToolbar *controlToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, controlToolBarHeight)];
-    [controlToolbar sizeToFit];
-    
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dateSelected:)];
-    
-    UIBarButtonItem *spacer;
-    
-    if (IS_IPHONE) {
-        spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    }else{
-        spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-        CGFloat width = self.view.frame.size.width - deltaSpacerWidthiPad;
-        spacer.width = width;
-    }
-    
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(closeDatePicker)];
-    
-    
-    [controlToolbar setItems:[NSArray arrayWithObjects:cancelButton, spacer, doneButton, nil] animated:NO];
-    
-    if (self.datePickerView == nil) {
-        self.datePickerView = [[UIDatePicker alloc] init];
-        self.datePickerView.datePickerMode = UIDatePickerModeDate;
-        
-        [self.datePickerView setDate:[NSDate dateWithTimeIntervalSince1970:[ShareUtils getDefaultMaxExpirationDateInTimeInterval]]];
-        self.datePickerView.minimumDate = [NSDate dateWithTimeIntervalSince1970:[ShareUtils getDefaultMinExpirationDateInTimeInterval]];
-        if (![ShareUtils hasExpirationRemoveOptionAvailable]) {
-            self.datePickerView.maximumDate = [NSDate dateWithTimeIntervalSince1970:[ShareUtils getDefaultMaxExpirationDateInTimeInterval]];
+
+    // Setup the background view.
+    if (_datePickerFullScreenBackgroundView == nil) {
+
+        _datePickerFullScreenBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+        [_datePickerFullScreenBackgroundView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [_datePickerFullScreenBackgroundView setBackgroundColor:[UIColor clearColor]];
+
+        // Setup the gesture recognizer for the background View.
+        // When the user taps in this view, the date picker should dismiss.
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapBehind:)];
+        recognizer.delegate = self;
+        recognizer.cancelsTouchesInView = YES;
+        [_datePickerFullScreenBackgroundView addGestureRecognizer:recognizer];
+
+        [self.view addSubview: _datePickerFullScreenBackgroundView];
+
+        if (@available(iOS 11.0, *)) {
+            UILayoutGuide *safeArea = [self.view safeAreaLayoutGuide];
+            [[_datePickerFullScreenBackgroundView.bottomAnchor constraintEqualToAnchor:safeArea.bottomAnchor] setActive:YES];
+            [[_datePickerFullScreenBackgroundView.topAnchor constraintEqualToAnchor:safeArea.topAnchor] setActive:YES];
+            [[_datePickerFullScreenBackgroundView.leftAnchor constraintEqualToAnchor:safeArea.leftAnchor] setActive:YES];
+            [[_datePickerFullScreenBackgroundView.rightAnchor constraintEqualToAnchor:safeArea.rightAnchor] setActive:YES];
+        } else {
+            [[_datePickerFullScreenBackgroundView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor] setActive:YES];
+            [[_datePickerFullScreenBackgroundView.topAnchor constraintEqualToAnchor:self.view.topAnchor] setActive:YES];
+            [[_datePickerFullScreenBackgroundView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor] setActive:YES];
+            [[_datePickerFullScreenBackgroundView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor] setActive:YES];
         }
-    }
-    
-    [self.datePickerView setFrame:CGRectMake(0, datePickerViewYPosition, self.view.frame.size.width, datePickerViewHeight)];
-    
-    if (!self.pickerView) {
-        self.pickerView = [[UIView alloc] initWithFrame:self.datePickerView.frame];
     } else {
-        [self.pickerView setHidden:NO];
+        [self.view addSubview: _datePickerFullScreenBackgroundView];
     }
-    
-    
-    [self.pickerView setFrame:CGRectMake(0,
-                                         self.view.frame.size.height,
-                                         self.view.frame.size.width,
-                                         pickerViewHeight)];
-    
-    [self.pickerView setBackgroundColor: [UIColor whiteColor]];
-    [self.pickerView addSubview: controlToolbar];
-    [self.pickerView addSubview: self.datePickerView];
-    [self.datePickerView setHidden: false];
-    
-    [self.datePickerContainerView addSubview:self.pickerView];
-    
-    [UIView animateWithDuration:animationsDelay
-                     animations:^{
-                         [self.pickerView setFrame:CGRectMake(0,
-                                                              self.view.frame.size.height - self.pickerView.frame.size.height,
-                                                              self.view.frame.size.width,
-                                                              pickerViewHeight)];
-                     }
-                     completion:nil];
-    
+
+    if (_pickerContainerView == nil) {
+        _pickerContainerView = [[UIView alloc] initWithFrame:CGRectZero];
+        [_pickerContainerView setTranslatesAutoresizingMaskIntoConstraints:NO];
+
+        [_datePickerFullScreenBackgroundView addSubview:_pickerContainerView];
+
+        [[_pickerContainerView.bottomAnchor constraintEqualToAnchor: _datePickerFullScreenBackgroundView.bottomAnchor] setActive:YES];
+        [[_pickerContainerView.leftAnchor constraintEqualToAnchor:_datePickerFullScreenBackgroundView.leftAnchor] setActive:YES];
+        [[_pickerContainerView.rightAnchor constraintEqualToAnchor:_datePickerFullScreenBackgroundView.rightAnchor] setActive:YES];
+        [[_pickerContainerView.heightAnchor constraintEqualToConstant:datePickerViewHeight] setActive:YES];
+        [_pickerContainerView setBackgroundColor:[UIColor whiteColor]];
+
+    } else {
+        [_datePickerFullScreenBackgroundView addSubview:_pickerContainerView];
+        [_pickerContainerView setHidden:NO];
+    }
+
+    // Setup the above the picker Toolbar.
+    UIToolbar *controlToolbar = [[UIToolbar alloc] initWithFrame: CGRectZero];
+    [controlToolbar setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [_pickerContainerView addSubview:controlToolbar];
+    [[controlToolbar.topAnchor constraintEqualToAnchor:_pickerContainerView.topAnchor] setActive:YES];
+    [[controlToolbar.leftAnchor constraintEqualToAnchor:_pickerContainerView.leftAnchor] setActive:YES];
+    [[controlToolbar.rightAnchor constraintEqualToAnchor:_pickerContainerView.rightAnchor] setActive:YES];
+    [[controlToolbar.heightAnchor constraintEqualToConstant:controlToolBarHeight] setActive:YES];
+
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dateSelected:)];
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(closeDatePicker)];
+
+    UIBarButtonItem *toolbarSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+
+    [controlToolbar setItems:@[cancelButton, toolbarSpacer, doneButton]];
+
+
+    // Setup the date picker
+    if (_datePicker == nil) {
+        _datePicker = [[UIDatePicker alloc] initWithFrame:CGRectZero];
+        [_datePicker setTranslatesAutoresizingMaskIntoConstraints:NO];
+        _datePicker.datePickerMode = UIDatePickerModeDate;
+        [_datePicker setBackgroundColor:[UIColor whiteColor]];
+
+        [_datePicker setDate:[NSDate dateWithTimeIntervalSince1970:[ShareUtils getDefaultMaxExpirationDateInTimeInterval]]];
+        [_datePicker setMinimumDate:[NSDate dateWithTimeIntervalSince1970:[ShareUtils getDefaultMinExpirationDateInTimeInterval]]];
+
+        if (![ShareUtils hasExpirationRemoveOptionAvailable]) {
+            [_datePicker setMaximumDate:[NSDate dateWithTimeIntervalSince1970:[ShareUtils getDefaultMaxExpirationDateInTimeInterval]]];
+        }
+
+        [_pickerContainerView addSubview:_datePicker];
+
+        [[_datePicker.bottomAnchor constraintEqualToAnchor:_pickerContainerView.bottomAnchor] setActive:YES];
+        [[_datePicker.topAnchor constraintEqualToAnchor:_pickerContainerView.topAnchor constant:controlToolBarHeight] setActive:YES];
+        [[_datePicker.leftAnchor constraintEqualToAnchor:_pickerContainerView.leftAnchor] setActive:YES];
+        [[_datePicker.rightAnchor constraintEqualToAnchor:_pickerContainerView.rightAnchor] setActive:YES];
+
+    } else {
+        [_pickerContainerView addSubview:_datePicker];
+    }
+
 }
 
 - (void) dateSelected:(UIBarButtonItem *)sender{
     
     [self closeDatePicker];
         
-    self.updatedExpirationDate = [self.datePickerView.date timeIntervalSince1970];
+    self.updatedExpirationDate = [_datePicker.date timeIntervalSince1970];
     
     [self updateInterfaceWithShareOptionsLinkStatus];
 }
 
 - (void) closeDatePicker {
     [UIView animateWithDuration:animationsDelay animations:^{
-        [self.pickerView setFrame:CGRectMake(self.pickerView.frame.origin.x,
+        [self.pickerContainerView setFrame:CGRectMake(self.pickerContainerView.frame.origin.x,
                                              self.view.frame.size.height,
-                                             self.pickerView.frame.size.width,
-                                             self.pickerView.frame.size.height)];
+                                             self.pickerContainerView.frame.size.width,
+                                             self.pickerContainerView.frame.size.height)];
     } completion:^(BOOL finished) {
-        [self.datePickerContainerView removeFromSuperview];
+        [_datePickerFullScreenBackgroundView removeFromSuperview];
+        _datePickerFullScreenBackgroundView = nil;
+        _pickerContainerView = nil;
+        _datePicker = nil;
         [self updateInterfaceWithShareOptionsLinkStatus];
     }];
     
@@ -843,10 +862,9 @@ typedef NS_ENUM (NSInteger, LinkOption){
 
 - (void)handleTapBehind:(UITapGestureRecognizer *)sender
 {
-    [self.datePickerContainerView removeGestureRecognizer:sender];
+    [_datePickerFullScreenBackgroundView removeGestureRecognizer:sender];
     [self closeDatePicker];
     [self updateInterfaceWithShareOptionsLinkStatus];
 }
-
 
 @end

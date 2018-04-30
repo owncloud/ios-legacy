@@ -60,6 +60,11 @@
 #import "PresentedViewUtils.h"
 #import "OCLoadingSpinner.h"
 #import "OCOAuth2Configuration.h"
+#import "OpenInAppHandler.h"
+#import "FileNameUtils.h"
+#import "UniversalLinksContext.h"
+#import "OpenInAppHandlerNoInternet.h"
+
 
 NSString * CloseAlertViewWhenApplicationDidEnterBackground = @"CloseAlertViewWhenApplicationDidEnterBackground";
 NSString * RefreshSharesItemsAfterCheckServerVersion = @"RefreshSharesItemsAfterCheckServerVersion";
@@ -90,7 +95,6 @@ NSString * NotReachableNetworkForDownloadsNotification = @"NotReachableNetworkFo
 @synthesize databaseOperationsQueue = _databaseOperationsQueue;
 @synthesize isUploadViewVisible = _isUploadViewVisible;
 @synthesize isLoadingVisible = _isLoadingVisible;
-
 
 //Delay Constants
 float fiveSecondsDelay = 5.0;
@@ -130,7 +134,7 @@ float shortDelay = 0.3;
     _isPasscodeVisible = NO;
     
     [self moveIfIsNecessaryFilesAfterUpdateAppFromTheOldFolderArchitecture];
-    
+
     [self moveIfIsNecessaryFolderOfOwnCloudFromContainerAppSandboxToAppGroupSanbox];
     
     //Configuration UINavigation Bar apperance
@@ -2453,8 +2457,10 @@ float shortDelay = 0.3;
         //We get all the files that are with any error
         NSMutableArray *listOfUploadsFailed = [ManageUploadsDB getUploadsByStatus:errorUploading andByKindOfError:notAnError];
         NSMutableArray *listOfPendingToBeCheckFiles = [ManageUploadsDB getUploadsByStatus:pendingToBeCheck andByKindOfError:notAnError];
+        NSString* appID = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
         DLog(@"There are: %ld in the list of uploads failed", (long)listOfUploadsFailed.count);
         DLog(@"There are: %ld files in the list of pending to be check", (long)listOfPendingToBeCheckFiles.count);
+        DLog(@"appid %@", appID);
         
         //First, check if there are
         if (listOfUploadsFailed.count > 0) {
@@ -2813,5 +2819,93 @@ float shortDelay = 0.3;
     });
 }
 
+
+#pragma mark - Open in app URL
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
+
+    if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
+
+        NSURL *tappedLinkURL = userActivity.webpageURL;
+
+        __block id blockForPasscodeSecurity;
+
+        blockForPasscodeSecurity = [[NSNotificationCenter defaultCenter] addObserverForName:@"dismissPassCodeNotification" object:nil queue:nil usingBlock:^(NSNotification *notification) {
+            [[NSNotificationCenter defaultCenter] removeObserver:blockForPasscodeSecurity name:@"dismissPassCodeNotification" object:nil];
+            [self openLinksInAppWithLink:tappedLinkURL];
+        }];
+
+        if (!_isPasscodeVisible)
+        {
+            [self openLinksInAppWithLink:tappedLinkURL];
+        }
+
+    }
+    return YES;
+}
+
+- (void)openLinksInAppWithLink:(NSURL *)url {
+
+    UserDto *currentUser = [_activeUser copy];
+
+    UniversalLinksContext * universalLinkscontext = [[UniversalLinksContext alloc] init];
+    OpenInAppHandler *handlerNetworkAvailable = [[OpenInAppHandler alloc] initWithLink:url andUser:currentUser];
+    OpenInAppHandlerNoInternet *handlerNetworkUnavailable = [[OpenInAppHandlerNoInternet alloc] initWithLink:url andUser:currentUser];
+
+    if ([[CheckAccessToServer sharedManager] isNetworkIsReachable])
+    {
+        [universalLinkscontext setStrategy:handlerNetworkAvailable];
+
+    } else {
+        [universalLinkscontext setStrategy:handlerNetworkUnavailable];
+    }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_presentFilesViewController initLoading];
+    });
+
+    [universalLinkscontext handleLink:^(NSArray *items)
+    {
+            FileDto *fileToOpen =  items.lastObject;
+            dispatch_async(dispatch_get_main_queue(), ^{
+
+                // Set the files view the visible view.
+                [_ocTabBarController setSelectedIndex:0];
+
+                if (fileToOpen.isDirectory) {
+
+                    [_presentFilesViewController navigateTo:fileToOpen];
+
+                } else {
+
+                    FileDto *root = [ManageFilesDB getRootFileDtoByUser:_activeUser];
+                    if (fileToOpen.fileId != root.idFile) {
+                        FileDto *parent = items[items.count - 2];
+                        [_presentFilesViewController navigateTo: parent];
+                    }
+                }
+            });
+
+            if (!fileToOpen.isDirectory)
+            {
+                NSInteger type = [FileNameUtils checkTheTypeOfFile:fileToOpen.fileName];
+
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (type == otherFileType)
+                    {
+                        [_presentFilesViewController scrollToFile:fileToOpen];
+                    }
+                    else
+                    {
+                        [_presentFilesViewController openFileInPreview:fileToOpen];
+                    }
+                });
+            }
+
+    } failure:^(NSError *error) {
+        DLog(@"Error getting the redirection");
+        [_presentFilesViewController showError: error.userInfo[NSLocalizedDescriptionKey]];
+    }];
+}
 
 @end

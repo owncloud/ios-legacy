@@ -70,7 +70,6 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 
 //Table view
 @property(nonatomic, strong) IBOutlet UITableView *tableView;
-
 // Array that contains the files ordered alphabetically
 @property(nonatomic, strong) NSMutableArray *sortedArray;
 //The current directory array
@@ -160,6 +159,9 @@ ELCImagePickerControllerDelegate, UISearchBarDelegate, UIAlertViewDelegate, MBPr
 - (void)reloadTableFileList;
 - (void)goToSelectedFileOrFolder:(FileDto *) selectedFile andForceDownload:(BOOL) isForceDownload;
 - (void)initFilesView;
+-(void)navigateTo:(FileDto *)file;
+-(void)openFileInPreview:(FileDto *)file;
+-(void)scrollToFile:(FileDto *)file;
 
 @end;
 

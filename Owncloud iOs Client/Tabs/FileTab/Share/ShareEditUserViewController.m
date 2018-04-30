@@ -16,6 +16,7 @@
 
 #import "ShareEditUserViewController.h"
 #import "ManageFilesDB.h"
+#import "ManageCapabilitiesDB.h"
 #import "UtilsUrls.h"
 #import "OCSharedDto.h"
 #import "Owncloud_iOs_Client-Swift.h"
@@ -53,8 +54,8 @@
 #define heightOfShareLinkHeader 45.0
 #define heightOfHeader 10.0
 
-#define shareTableViewSectionsNumber  3
-#define shareTableViewSectionsNumberRemote  2
+#define shareTableViewSectionsNumber 3
+#define shareTableViewSectionsNumberCanNotShare 2
 
 //Nº of Rows
 #define fullOptionsForCanEditOption 3
@@ -259,12 +260,19 @@ typedef NS_ENUM (NSInteger, optionPermission){
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
+    int numberOfSections = shareTableViewSectionsNumber;
+    
     if (self.updatedOCShare.shareType == shareTypeRemote) {
         if (!(APP_DELEGATE.activeUser.hasFedSharesOptionShareSupport == serverFunctionalitySupported)) {
-            return shareTableViewSectionsNumberRemote;
+            numberOfSections = shareTableViewSectionsNumberCanNotShare;
         }
     }
-    return shareTableViewSectionsNumber;
+    
+    if (![ManageCapabilitiesDB getCapabilitiesOfUserId:APP_DELEGATE.activeUser.userId].isFilesSharingReSharingEnabled) {
+        numberOfSections = shareTableViewSectionsNumberCanNotShare;
+    }
+    
+    return numberOfSections;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
