@@ -49,7 +49,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.7.3</string>
+	<string>3.7.3.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -82,18 +82,18 @@
 		<key>NSExceptionDomains</key>
 		<dict/>
 	</dict>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Used to allow you unlock your app with your face</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Used to instantly upload your new photos after a significant change in your location</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Used to instantly upload your new photos after a significant change in your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Used to instantly upload your new photos after a significant change in your location</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Used to upload your selected photos to your account</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Used to save your selected photo to your camera roll</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Used to allow you unlock your app with your face</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to upload your selected photos to your account</string>
 	<key>UIApplicationExitsOnSuspend</key>
 	<false/>
 	<key>UIBackgroundModes</key>
