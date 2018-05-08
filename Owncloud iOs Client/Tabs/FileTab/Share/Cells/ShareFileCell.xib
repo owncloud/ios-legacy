@@ -44,8 +44,9 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VOr-hs-YaC">
-                        <rect key="frame" x="282" y="16" width="22" height="22"/>
+                        <rect key="frame" x="259" y="-1" width="62" height="62"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <inset key="imageEdgeInsets" minX="25" minY="20" maxX="15" maxY="20"/>
                         <state key="normal" title="Button" image="CopyLinkShareipad.png"/>
                     </button>
                 </subviews>

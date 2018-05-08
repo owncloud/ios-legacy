@@ -342,19 +342,4 @@
     
 }
 
-
-#pragma mark - private link
-
-+ (NSString *) getPrivateLinkOfFile:(FileDto *)fileDto {
-    
-    NSString *privateLink = @"";
-    
-    privateLink = [NSString stringWithFormat:@"%@%@%@", [UtilsUrls getFullRemoteServerPath:APP_DELEGATE.activeUser], k_pathPrivateLink, [InfoFileUtils getFileIdFromOcId:fileDto.ocId]];
-    
-    
-    return privateLink;
-    
-}
-
-
 @end

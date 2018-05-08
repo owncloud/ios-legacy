@@ -2073,8 +2073,6 @@
 			isa = PBXGroup;
 			children = (
 				2393E61C2028979500747F7A /* OpenInApp */,
-				59C0F2B01A963670007FE71B /* iTunesArtwork */,
-				59C0F2B11A963670007FE71B /* iTunesArtwork@2x */,
 				593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */,
 				1324298B15ADBB3700DF823E /* AppDelegate.h */,
 				1324298C15ADBB3700DF823E /* AppDelegate.m */,

@@ -276,5 +276,13 @@
 + (void) updateDBVersion21To22;
 
 
+/**
+ * Changes:
+ *
+ * Support version 3.7.4
+ * Alter files table, added new field to store the oc_privatelink from the propfind requests.
+ */
++ (void) updateDBVersion24To25;
+
 
 @end

@@ -50,6 +50,8 @@
 
                 __block NSMutableArray *files = [NSMutableArray new];
 
+                __block BOOL isLeave = NO;
+                
                 dispatch_group_t group = dispatch_group_create();
                 dispatch_group_enter(group);
 
@@ -62,15 +64,20 @@
                             files[idx] = directoryList;
 
                             if (idx == urls.count - 1) {
-                                dispatch_group_leave(group);
+                                if (!isLeave) {
+                                    isLeave = YES;
+                                    dispatch_group_leave(group);
+                                }
                             }
                         }
                         failure:^(NSError *error)
                         {
                             NSLog(@"LOG ---> error in the request to the url -> %@", urls[idx]);
-                            dispatch_group_leave(group);
+                            if (!isLeave) {
+                                isLeave = YES;
+                                dispatch_group_leave(group);
+                            }
                             failure(error);
-
                         }];
                     }];
                 });
@@ -106,8 +113,10 @@
 
 -(void)_getFilesFrom:(NSString *)folderPath success:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure
 {
+    DLog(@"_getFilesFrom: %@", folderPath);
+    
     __block OCCommunication *ocComm;
-       ocComm = [AppDelegate sharedOCCommunication];
+    ocComm = [AppDelegate sharedOCCommunication];
 
     [ocComm readFolder:folderPath withUserSessionToken:APP_DELEGATE.userSessionCurrentToken onCommunication:ocComm successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer, NSString *token)
     {

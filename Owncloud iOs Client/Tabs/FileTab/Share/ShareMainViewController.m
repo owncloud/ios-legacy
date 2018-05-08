@@ -505,19 +505,21 @@
     shareFileCell.fileSize.hidden = self.sharedItem.isDirectory;
     shareFileCell.folderName.hidden = !self.sharedItem.isDirectory;
     
-    //Add long press event
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressPrivateLinkButton:)];
-   // longPress.minimumPressDuration = 3; //seconds
-    longPress.delegate = self;
-    [shareFileCell.privateLinkButton addGestureRecognizer:longPress];
-    
-    //Add tap event
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapPrivateLinkButton)];
-    tapGesture.numberOfTapsRequired = 1;
-    tapGesture.numberOfTouchesRequired = 1;
-    [shareFileCell.privateLinkButton addGestureRecognizer:tapGesture];
-    
-    shareFileCell.privateLinkButton.tag = -1;
+    if (self.sharedItem.ocPrivatelink && !([self.sharedItem.ocPrivatelink isEqual:@""])) {
+        //Add long press event
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressPrivateLinkButton:)];
+        longPress.delegate = self;
+        [shareFileCell.privateLinkButton addGestureRecognizer:longPress];
+        
+        //Add tap event
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapPrivateLinkButton)];
+        [shareFileCell.privateLinkButton addGestureRecognizer:tapGesture];
+        
+        shareFileCell.privateLinkButton.tag = -1;
+    } else {
+        shareFileCell.privateLinkButton.hidden = true;
+        shareFileCell.privateLinkButton.enabled = false;
+    }
 
     
     if (self.sharedItem.isDirectory) {
@@ -648,7 +650,7 @@
     
     UIButton *cellPrivateLinkButton = [self.shareTableView viewWithTag:-1];
 
-    [self presentActivityViewForShareLink: [NSURL URLWithString:[ShareUtils getPrivateLinkOfFile:self.sharedItem]] inView:cellPrivateLinkButton fromRect:cellPrivateLinkButton.bounds];
+    [self presentActivityViewForShareLink: [NSURL URLWithString:self.sharedItem.ocPrivatelink] inView:cellPrivateLinkButton fromRect:cellPrivateLinkButton.bounds];
 }
 
 - (void) didLongPressPrivateLinkButton:(UILongPressGestureRecognizer*)gesture {

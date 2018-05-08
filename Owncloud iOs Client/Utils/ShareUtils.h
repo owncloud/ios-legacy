@@ -62,7 +62,4 @@
 
 + (NSString *) getDisplayNameForSharee:(OCShareUser *)sharee;
 
-
-+ (NSString *) getPrivateLinkOfFile:(FileDto *)fileDto;
-
 @end
