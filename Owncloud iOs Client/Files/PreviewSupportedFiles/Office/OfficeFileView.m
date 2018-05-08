@@ -164,7 +164,6 @@ CGPoint _lastContentOffset;
 
     _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
-    [self addSubview:_webView];
 
     NSString *ext=@"";
     ext = [FileNameUtils getExtension:name];
@@ -185,6 +184,14 @@ CGPoint _lastContentOffset;
     }
 
     [_webView setHidden:NO];
+    [self addSubview:_webView];
+    [_webView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [[_webView.leftAnchor constraintEqualToAnchor:self.leftAnchor] setActive:YES];
+    [[_webView.rightAnchor constraintEqualToAnchor:self.rightAnchor] setActive:YES];
+    [[_webView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor] setActive:YES];
+    [[_webView.topAnchor constraintEqualToAnchor:self.topAnchor] setActive:YES];
+    [_webView setBackgroundColor:[UIColor blackColor]];
+    [self layoutIfNeeded];
 }
 
 
