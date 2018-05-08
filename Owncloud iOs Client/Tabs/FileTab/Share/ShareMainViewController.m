@@ -508,7 +508,6 @@
     if (self.sharedItem.ocPrivatelink && !([self.sharedItem.ocPrivatelink isEqual:@""])) {
         //Add long press event
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressPrivateLinkButton:)];
-        // longPress.minimumPressDuration = 3; //seconds
         longPress.delegate = self;
         [shareFileCell.privateLinkButton addGestureRecognizer:longPress];
         
