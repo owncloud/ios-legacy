@@ -762,8 +762,6 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     if (self.openWith) {
         [self.openWith.documentInteractionController dismissMenuAnimated:false];
         [self.openWith.documentInteractionController dismissPreviewAnimated:false];
-        self.openWith.documentInteractionController = nil;
-        self.openWith = nil;
     }
     
     
