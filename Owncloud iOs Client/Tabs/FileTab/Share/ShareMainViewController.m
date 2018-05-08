@@ -513,8 +513,6 @@
         
         //Add tap event
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapPrivateLinkButton)];
-        tapGesture.numberOfTapsRequired = 1;
-        tapGesture.numberOfTouchesRequired = 1;
         [shareFileCell.privateLinkButton addGestureRecognizer:tapGesture];
         
         shareFileCell.privateLinkButton.tag = -1;
