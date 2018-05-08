@@ -84,10 +84,6 @@
 
                 dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
                     NSMutableArray *filesFromRootToFile = [self _syncFilesTreeWithFiles:files andUrls:urls];
-                    
-                    for (FileDto *current in filesFromRootToFile) {
-                        DLog(@"Current file from filesFromRootToFile: %@", current.fileName);
-                    }
 
                     if (filesFromRootToFile.count > 0) {
                         success([filesFromRootToFile copy]);
@@ -128,7 +124,7 @@
     }
     failureRequest:^(NSHTTPURLResponse *response, NSError *error, NSString *token, NSString *redirectedServer)
     {
-        failure([UtilsFramework getErrorByCodeId:OCErrorPrivateLinkErrorCachingFile4]);
+        failure([UtilsFramework getErrorByCodeId:OCErrorPrivateLinkErrorCachingFile]);
     }];
 }
 
