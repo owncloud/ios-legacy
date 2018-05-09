@@ -920,7 +920,6 @@ float shortDelay = 0.3;
         [_presentFilesViewController.folderView dismissWithClickedButtonIndex:0 animated:NO];
     }
     
-    
     if([[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)]) {
         DLog(@"Multitasking Supported");
         
@@ -1799,6 +1798,9 @@ float shortDelay = 0.3;
             [self.settingsViewController.menuAccountActionSheet dismissWithClickedButtonIndex:self.settingsViewController.menuAccountActionSheet.cancelButtonIndex animated:NO];
             self.settingsViewController.menuAccountActionSheet = nil;
         }
+        
+        //CLose the pop-up open with preview iPhone
+        [[NSNotificationCenter defaultCenter] postNotificationName: DismissOpenWithFromPreviewNotification object: nil];
     }
 }
 

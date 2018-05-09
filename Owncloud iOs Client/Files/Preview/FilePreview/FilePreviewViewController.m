@@ -45,6 +45,7 @@
 #import "UtilsBrandedOptions.h"
 #import "UtilsFramework.h"
 #import "CheckAccessToServer.h"
+#import "UtilsNotifications.h"
 
 //Constant for iOS7
 #define k_status_bar_height 20
@@ -753,6 +754,18 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     //Enable back button
     self.navigationController.navigationBar.userInteractionEnabled = YES;
     _toolBar.userInteractionEnabled = YES;
+
+}
+
+- (void) dismissOpenWith {
+    
+    if (self.openWith) {
+        [self.openWith.documentInteractionController dismissMenuAnimated:false];
+        [self.openWith.documentInteractionController dismissPreviewAnimated:false];
+    }
+    
+    
+    
     
 }
 
@@ -1817,6 +1830,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cleanView) name:iPhoneCleanPreviewNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNotConnectionWithServerMessage) name:iPhoneShowNotConnectionWithServerMessageNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissThisView) name:IPhoneDoneEditFileTextMessageNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissOpenWith) name:DismissOpenWithFromPreviewNotification object:nil];
 }
 
 
