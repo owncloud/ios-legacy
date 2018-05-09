@@ -440,9 +440,9 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         }
     } else if (self.officeView) {
         
-        if (self.officeView.isFullscreen) {
-            self.officeView.isFullscreen = NO;
-            [self setFullscreenOfficeFileView:self.officeView.isFullscreen];
+        if (self.officeView.isFullScreen) {
+            self.officeView.isFullScreen = NO;
+            [self setFullscreenOfficeFileView:self.officeView.isFullScreen];
         }
         
         if (IS_IPHONE_X) {
@@ -489,9 +489,9 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         }
     } else if (self.officeView) {
         
-        if (self.officeView.isFullscreen) {
-            self.officeView.isFullscreen = NO;
-            [self setFullscreenOfficeFileView:self.officeView.isFullscreen];
+        if (self.officeView.isFullScreen) {
+            self.officeView.isFullScreen = NO;
+            [self setFullscreenOfficeFileView:self.officeView.isFullScreen];
         }
         
         if (IS_IPHONE_X) {
@@ -565,7 +565,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
     } else if (_officeView) {
         CGRect frame = self.view.frame;
         _officeView.frame = frame;
-        _toolBar.hidden = _officeView.isFullscreen;
+        _toolBar.hidden = _officeView.isFullScreen;
     } else {
         _toolBar.hidden = NO;
     }

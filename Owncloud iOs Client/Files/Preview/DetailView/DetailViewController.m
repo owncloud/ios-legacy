@@ -562,7 +562,7 @@
                 [self.officeView.webView addGestureRecognizer:self.singleTap];
             }
             
-            [self.view addSubview:self.officeView.webView];
+            [self.view addSubview:self.officeView];
         }
         
     }

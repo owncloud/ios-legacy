@@ -20,15 +20,15 @@
 #import "Customization.h"
 #import "UtilsUrls.h"
 
-@interface OfficeFileView ()
-
-@end
-
 @implementation OfficeFileView
+
 @synthesize webView=_webView;
-@synthesize activity=_activity;
+@synthesize activityIndicator=_activityIndicator;
 @synthesize isDocument=_isDocument;
 @synthesize delegate=_delegate;
+@synthesize isFullScreen = _isFullScreen;
+
+
 CGPoint _lastContentOffset;
 
 - (id)initWithFrame:(CGRect)frame
@@ -47,7 +47,7 @@ CGPoint _lastContentOffset;
         [recognizer requireGestureRecognizerToFail:doubleTapRecognizer];
         [self addGestureRecognizer:recognizer];
 
-        _isFullscreen = NO;
+        _isFullScreen = NO;
         _lastContentOffset = CGPointZero;
     }
     return self;
@@ -119,67 +119,82 @@ CGPoint _lastContentOffset;
     [_webView addSubview:forwardButton];
 }
 
-
-- (void)configureWebView{
-    
-    if (!_webView) {
-        _webView = [[UIWebView alloc] initWithFrame:self.frame];
-        _webView.scrollView.delegate = self;
-        [self addSubview:_webView];
-    }
-    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-}
-
 /*
  * Method to load a document by filePath.
  */
 - (void)openOfficeFileWithPath:(NSString*)filePath andFileName: (NSString *) fileName {
         _isDocument=YES;
-        
-        [self configureWebView];
-        NSURL *url = [NSURL fileURLWithPath:filePath];
-        
-        NSString *ext=@"";
-        ext = [FileNameUtils getExtension:fileName];
-        
-        if ( [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"TEX"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] ) {
-            
-            NSString *dataFile = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:url] encoding:NSASCIIStringEncoding];
-            
-            if (IS_IPHONE) {
-                [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_iphone,k_txt_files_font_family,dataFile] baseURL:[NSURL URLWithString:@"about:blank"]];
-            }else{
-                [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_ipad,k_txt_files_font_family,dataFile] baseURL:[NSURL URLWithString:@"about:blank"]];
-            }
-            
-        } else if ([ext isEqualToString:@"PDF"]) {
-            NSURL *targetURL = [NSURL fileURLWithPath:filePath];
-            NSData *pdfData = [[NSData alloc] initWithContentsOfURL:targetURL];
-            [self.webView loadData:pdfData MIMEType:@"application/pdf" textEncodingName:@"utf-8" baseURL:url];
-            
-        } else if ([ext isEqualToString:@"XLS"]) {
-            [self.webView loadRequest:[NSMutableURLRequest requestWithURL:url]];
-                 
-        } else {
-            
-            NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-            NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:nil delegateQueue:nil];
-            
-            NSMutableURLRequest *headRequest = [NSMutableURLRequest requestWithURL:url];
-            [headRequest setHTTPMethod:@"HEAD"];
-            
-            NSURLSessionDataTask *task = [session dataTaskWithRequest:headRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.webView loadData:[NSData dataWithContentsOfURL: url] MIMEType:response.MIMEType textEncodingName:@"utf-8" baseURL: [NSURL URLWithString:@"about:blank"]];
-                });
+
+    __block WKWebViewConfiguration *wkConfiguration;
+
+    if ((wkConfiguration = [WKWebViewConfiguration new]) != nil) {
+
+        if (@available(iOS 11.0, *)) {
+            [[self class] externalContentBlockingRuleListWithCompletionHandler:^(WKContentRuleList *blockList, NSError *error) {
+
+
+                if ((blockList == nil) || (error!=nil))
+                {
+                    return;
+                }
+
+                wkConfiguration.preferences.javaScriptEnabled = YES;
+
+                if (blockList!=nil)
+                {
+                    [wkConfiguration.userContentController addContentRuleList:blockList];
+                }
+
+                _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:wkConfiguration];
+
+                [self _openFileWithPath:filePath andName:fileName];
+
             }];
-            
-            [task resume];
         }
-        
-        [_webView setHidden:NO];
-        [_webView setScalesPageToFit:YES];
+        else {
+            _webView = [[WKWebView alloc] initWithFrame:CGRectZero];
+            [self _openFileWithPath:filePath andName:fileName];
+
+        }
+    }
 }
+
+-(void)_openFileWithPath:(NSString *)path andName:(NSString *)name {
+    NSURL *url = [NSURL fileURLWithPath:path];
+
+    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+
+    NSString *ext=@"";
+    ext = [FileNameUtils getExtension:name];
+
+    if ( [ext isEqualToString:@"CSS"] || [ext isEqualToString:@"PY"] || [ext isEqualToString:@"TEX"] || [ext isEqualToString:@"XML"] || [ext isEqualToString:@"JS"] ) {
+
+        NSString *dataFile = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:url] encoding:NSASCIIStringEncoding];
+
+        if (IS_IPHONE) {
+            [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_iphone,k_txt_files_font_family,dataFile] baseURL:[NSURL URLWithString:@"about:blank"]];
+        }else{
+            [self.webView  loadHTMLString:[NSString stringWithFormat:@"<div style='font-size:%@;font-family:%@;'><pre>%@",k_txt_files_font_size_ipad,k_txt_files_font_family,dataFile] baseURL:[NSURL URLWithString:@"about:blank"]];
+        }
+
+    } else {
+
+        [self.webView loadFileURL: url allowingReadAccessToURL:url];
+    }
+
+    [_webView setHidden:NO];
+    [self addSubview:_webView];
+    [_webView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [[_webView.leftAnchor constraintEqualToAnchor:self.leftAnchor] setActive:YES];
+    [[_webView.rightAnchor constraintEqualToAnchor:self.rightAnchor] setActive:YES];
+    [[_webView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor] setActive:YES];
+    [[_webView.topAnchor constraintEqualToAnchor:self.topAnchor] setActive:YES];
+    [_webView setBackgroundColor:[UIColor blackColor]];
+    [self layoutIfNeeded];
+}
+
+
 
 /*
  * Method to load a link by path
@@ -192,31 +207,29 @@ CGPoint _lastContentOffset;
     
     //Add the user agent
     [request addValue:[UtilsUrls getUserAgent] forHTTPHeaderField:@"User-Agent"];
-    
-    [self configureWebView];
-    
+
     [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
     _webView.hidden  = NO;
-    _webView.delegate = self;
+    _webView.navigationDelegate = self;
     
     [_webView loadRequest:request];
 }
 
 #pragma mark - Fullscreen Methods
 
-- (void)setIsFullscreen:(BOOL)isFullscreen {
-    if (isFullscreen != _isFullscreen) {
+- (void)setIsFullscreen:(BOOL)isFullScreen {
+    if (isFullScreen != _isFullScreen) {
         if (IS_IPHONE) {
-            [self.delegate setFullscreenOfficeFileView:isFullscreen];
+            [self.delegate setFullscreenOfficeFileView:isFullScreen];
         }
     }
-    _isFullscreen = isFullscreen;
+    _isFullScreen = isFullScreen;
 }
 
 #pragma mark - Gesture Methods
 
 - (void)handleSingleTap:(UIGestureRecognizer *)recognizer {
-    self.isFullscreen = !self.isFullscreen;
+    self.isFullscreen = !self.isFullScreen;
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer *)recognizer {
@@ -229,35 +242,42 @@ CGPoint _lastContentOffset;
     return [otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]];
 }
 
-#pragma mark - UIWebView Delegate Methods
 #pragma mark UIWebView Delegate methods
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     DLog(@"Office webview an error happened during load");
-    [_activity stopAnimating];
+    [_activityIndicator stopAnimating];
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     DLog(@"Office webview loading started");
     
-    if (_activity == nil) {
-        _activity = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        _activity.center = CGPointMake(_webView.frame.size.width/2, _webView.frame.size.height/2);
-        [_webView addSubview:_activity];
+    if (_activityIndicator == nil) {
+        _activityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _activityIndicator.center = CGPointMake(_webView.frame.size.width/2, _webView.frame.size.height/2);
+        [_webView addSubview:_activityIndicator];
     }
-    _activity.center = CGPointMake(_webView.frame.size.width/2, _webView.frame.size.height/2);
-    [_activity startAnimating];
+    _activityIndicator.center = CGPointMake(_webView.frame.size.width/2, _webView.frame.size.height/2);
+    [_activityIndicator startAnimating];
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
     DLog(@"webViewDidFinishLoad");
-    [_activity stopAnimating];
+    [_activityIndicator stopAnimating];
     
     [_webView setHidden:NO];
-    [_webView setScalesPageToFit:YES];
-    
+
     if (_isDocument == NO) {
         [_delegate finishLinkLoad];        
+    }
+}
+
+-(void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+
+    if ([navigationAction navigationType] == WKNavigationTypeOther) {
+        decisionHandler(WKNavigationActionPolicyAllow);
+    } else {
+        decisionHandler(WKNavigationActionPolicyCancel);
     }
 }
 
@@ -266,6 +286,77 @@ CGPoint _lastContentOffset;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     self.isFullscreen = _lastContentOffset.y <= scrollView.contentOffset.y;
     _lastContentOffset = scrollView.contentOffset;
+}
+
++ (void)externalContentBlockingRuleListWithCompletionHandler:(void(^)(WKContentRuleList *blockList, NSError *error))completionHandler
+{
+    static dispatch_once_t onceToken;
+    static WKContentRuleList *contentRuleList = nil;
+    static NSError *contentError = nil;
+    static dispatch_queue_t serialQueue;
+
+    dispatch_once(&onceToken, ^{
+        NSData *blockRulesJSONData;
+        NSString *blockRulesJSONString;
+        NSArray *blockRulesArray = @[
+
+                                     @{
+                                         @"trigger" : @{
+                                                 @"url-filter" : @".*"
+                                                 },
+
+                                         @"action" : @{
+                                                 @"type" : @"block"
+                                                 }
+                                         },
+
+                                     @{
+                                         @"trigger" : @{
+                                                 @"url-filter" : @"^file\\:.*"
+                                                 },
+
+                                         @"action" : @{
+                                                 @"type" : @"ignore-previous-rules"
+                                                 }
+                                         },
+
+                                     @{
+                                         @"trigger" : @{
+                                                 @"url-filter" : @"^x\\-apple.*\\:.*"
+                                                 },
+
+                                         @"action" : @{
+                                                 @"type" : @"ignore-previous-rules"
+                                                 }
+                                         }
+                                     ];
+
+        serialQueue = dispatch_queue_create(NULL, DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+
+        dispatch_suspend(serialQueue);
+
+        if ((blockRulesJSONData = [NSJSONSerialization dataWithJSONObject:blockRulesArray options:NSJSONWritingPrettyPrinted error:nil]) != nil)
+        {
+            if ((blockRulesJSONString = [[NSString alloc] initWithData:blockRulesJSONData encoding:NSUTF8StringEncoding]) != nil)
+            {
+                [[WKContentRuleListStore defaultStore] compileContentRuleListForIdentifier:@"ContentBlockingRules" encodedContentRuleList:blockRulesJSONString completionHandler:^(WKContentRuleList *blockList, NSError *error) {
+                    contentRuleList = blockList;
+                    contentError = error;
+
+                    dispatch_resume(serialQueue);
+                }];
+            }
+        }
+    });
+
+    dispatch_async(serialQueue, ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completionHandler != nil)
+            {
+                completionHandler(contentRuleList, contentError);
+            }
+        });
+    });
 }
 
 @end
