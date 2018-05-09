@@ -55,7 +55,7 @@
     [customLabel setClipsToBounds:YES];
     
     customLabel.text = [name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
+    [customLabel sizeToFit];
     return customLabel;
 }
 
