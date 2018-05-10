@@ -17,7 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
+<<<<<<< HEAD
 	<string>3.7.4</string>
+=======
+	<string>3.7.5</string>
+>>>>>>> ee269d28... - Version number bumped
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
