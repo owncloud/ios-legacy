@@ -351,6 +351,8 @@
         if ([[ManageFilesDB getFilesByFileIdForActiveUser:_fileIdToShowFiles.idFile] count] == 0) {
             [self initLoading];
         }
+
+        [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
         
         _isEtagRequestNecessary = YES;
     }

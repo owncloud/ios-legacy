@@ -2799,8 +2799,6 @@ float shortDelay = 0.3;
             //We check the connection here because we need to accept the certificate on the self signed server before go to the files tab
             [[CheckAccessToServer sharedManager] isConnectionToTheServerByUrl:[UtilsUrls getFullRemoteServerPath:user]];
             
-            [CheckFeaturesSupported updateServerFeaturesAndCapabilitiesOfActiveUser];
-
             //we create the user folder to have multiuser
             [UtilsFileSystem createFolderForUser:user];
             
