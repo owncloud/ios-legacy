@@ -830,7 +830,7 @@
 
     NSMutableArray<NSString *> *detachedFolderParameters = [[fileRedirectedURL componentsSeparatedByString:@"/"] mutableCopy];
 
-    [detachedFolderParameters removeObject:[user username]];
+    [detachedFolderParameters removeObjectAtIndex:0]; // This removes the username from the parameters
 
     NSArray<NSString *> *urls = [self getUrlsForFilesFromPath:detachedFolderParameters andBaseServerUrl:[self getFullRemoteServerPathWithWebDav:user] isDirectory: isDirectory];
 
@@ -842,7 +842,7 @@
                                          andUser:(UserDto *)mUserDto {
     NSString *pathOnDB = @"";
 
-    NSString *partToRemove = [NSString stringWithFormat:@"%@%@",k_url_files_private_link, mUserDto.username];
+    NSString *partToRemove = [NSString stringWithFormat:@"%@",k_url_files_private_link];
     if([filePath length] >= [partToRemove length]){
         pathOnDB = [filePath substringFromIndex:[partToRemove length]];
     }
