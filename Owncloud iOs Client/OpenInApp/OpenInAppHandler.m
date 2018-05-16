@@ -83,14 +83,18 @@
                 });
 
                 dispatch_group_notify(group ,dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
-                    NSMutableArray *filesFromRootToFile = [self _syncFilesTreeWithFiles:files andUrls:urls];
 
-                    if (filesFromRootToFile.count > 0) {
-                        success([filesFromRootToFile copy]);
+                    if (files.count == urls.count) {
+                        NSMutableArray *filesFromRootToFile = [self _syncFilesTreeWithFiles:files andUrls:urls];
+
+                        if (filesFromRootToFile.count > 0) {
+                            success([filesFromRootToFile copy]);
+                        } else {
+                            failure([UtilsFramework getErrorByCodeId:OCErrorPrivateLinkErrorCachingFile]);
+                        }
                     } else {
                         failure([UtilsFramework getErrorByCodeId:OCErrorPrivateLinkErrorCachingFile]);
                     }
-
                 });
             }
         }];
@@ -156,9 +160,13 @@
 
 -(void)_isItemDirectory: (NSString *)itemPath completionHandler:(void (^)(BOOL isDirectory, NSError * error))completionHandler
 {
-    NSString *path = [[UtilsUrls getRemoteServerPathWithoutFolders:_user] stringByAppendingString:itemPath];
+    NSError *error = NULL;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(.*)\/remote.php\/dav\/files\/[^\/]*" options:NSRegularExpressionCaseInsensitive error:&error];
+    NSString *result = [regex stringByReplacingMatchesInString:itemPath options:0 range:NSMakeRange(0, [itemPath length]) withTemplate:@""];
 
-    [[AppDelegate sharedOCCommunication] readFile:path onCommunication: [AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer)
+    NSString *path = [[UtilsUrls getRemoteServerPathWithoutFolders:_user] stringByAppendingString: [@"/" stringByAppendingString:[k_url_webdav_server_without_last_slash stringByAppendingString:result]]];
+
+    [[AppDelegate sharedOCCommunication] readFile:path  onCommunication: [AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer)
     {
         NSMutableArray<FileDto *> *item = [UtilsDtos passToFileDtoArrayThisOCFileDtoArray:items];
 

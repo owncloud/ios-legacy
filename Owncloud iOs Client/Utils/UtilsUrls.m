@@ -826,11 +826,11 @@
  */
 +(NSArray<NSString *> *) getArrayOfWebdavUrlWithUrlInWebScheme: (NSString *)UrlInWebScheme forUser:(UserDto *)user isDirectory: (BOOL) isDirectory {
 
-    NSString *fileRedirectedURL = [self removeUnnecessaryParts:UrlInWebScheme andUser:user];
+    NSString *fileRedirectedURL = [self removeUnnecessaryParts:UrlInWebScheme];
 
     NSMutableArray<NSString *> *detachedFolderParameters = [[fileRedirectedURL componentsSeparatedByString:@"/"] mutableCopy];
 
-    [detachedFolderParameters removeObjectAtIndex:0]; // This removes the username from the parameters
+//    [detachedFolderParameters removeObjectAtIndex:0]; // This removes the username from the parameters
 
     NSArray<NSString *> *urls = [self getUrlsForFilesFromPath:detachedFolderParameters andBaseServerUrl:[self getFullRemoteServerPathWithWebDav:user] isDirectory: isDirectory];
 
@@ -838,14 +838,12 @@
 
 }
 
-+ (NSString *) removeUnnecessaryParts:(NSString *)filePath
-                                         andUser:(UserDto *)mUserDto {
++ (NSString *) removeUnnecessaryParts:(NSString *)filePath {
     NSString *pathOnDB = @"";
 
-    NSString *partToRemove = [NSString stringWithFormat:@"%@",k_url_files_private_link];
-    if([filePath length] >= [partToRemove length]){
-        pathOnDB = [filePath substringFromIndex:[partToRemove length]];
-    }
+    NSError *error = NULL;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(.*)\/remote.php\/dav\/files\/[^\/]*" options:NSRegularExpressionCaseInsensitive error:&error];
+    pathOnDB = [regex stringByReplacingMatchesInString:filePath options:0 range:NSMakeRange(0, [filePath length]) withTemplate:@""];
 
     return pathOnDB;
 }
