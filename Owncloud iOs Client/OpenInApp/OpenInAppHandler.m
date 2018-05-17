@@ -161,10 +161,10 @@
 -(void)_isItemDirectory: (NSString *)itemPath completionHandler:(void (^)(BOOL isDirectory, NSError * error))completionHandler
 {
     NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(.*)\/remote.php\/dav\/files\/[^\/]*" options:NSRegularExpressionCaseInsensitive error:&error];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(.*)\/remote.php\/dav\/files\/[^\/]*\/" options:NSRegularExpressionCaseInsensitive error:&error];
     NSString *result = [regex stringByReplacingMatchesInString:itemPath options:0 range:NSMakeRange(0, [itemPath length]) withTemplate:@""];
 
-    NSString *path = [[UtilsUrls getRemoteServerPathWithoutFolders:_user] stringByAppendingString: [@"/" stringByAppendingString:[k_url_webdav_server_without_last_slash stringByAppendingString:result]]];
+    NSString *path = [[UtilsUrls getFullRemoteServerPathWithWebDav:_user] stringByAppendingString:result];
 
     [[AppDelegate sharedOCCommunication] readFile:path  onCommunication: [AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer)
     {
