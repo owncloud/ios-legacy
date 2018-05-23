@@ -1,3 +1,12 @@
+## 3.7.5 (May 2018)
+- Private link 
+- Sort the file list by kind of file
+- Improve iPhoneX support
+- Use WKWebView to display interactive content
+- Fix preview of xls files
+- Improve capability support for resharing
+- Bug fixing
+
 ## 3.7.3 (March 2018)
 - Support whiteListed apps for all iOS version supported
 - Fix preview of files (iPad)
