@@ -131,4 +131,6 @@
 
 +(NSString *) getServerSubfolders:(UserDto *)mUser;
 
++ (NSString *) removeUnnecessaryParts:(NSString *)filePath;
+
 @end

@@ -59,10 +59,6 @@ import Foundation
     
         UtilsCookies.update(inDBOfUser: user)
         
-        if user.activeaccount {
-            CheckFeaturesSupported.updateServerFeaturesAndCapabilitiesOfActiveUser()
-        }
-        
         //Change the state of user uploads with credential error
         ManageUploadsDB.updateErrorCredentialFiles(user.userId)
         
