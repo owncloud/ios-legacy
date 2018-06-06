@@ -1945,9 +1945,11 @@
 - (void) syncFavoritesByFolder:(FileDto *) folder {
     
     //Launch the method to sync the favorites files with specific path
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    [[AppDelegate sharedManageFavorites] syncFavoritesOfFolder:folder withUser:app.activeUser.userId];
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        [[AppDelegate sharedManageFavorites] syncFavoritesOfFolder:folder withUser:app.activeUser.userId];
+    });
+   
 }
 
 /*
