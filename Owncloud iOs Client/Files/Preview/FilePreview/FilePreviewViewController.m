@@ -825,7 +825,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
                     _officeView.delegate = self;
                 }
                 
-                [_officeView openOfficeFileWithPath:_file.localFolder andFileName:_file.fileName];
+                [_officeView openOfficeFileWithPath:_file.localFolder andFileName:_file.fileName gesture:nil];
                 
                 [self.view addSubview:_officeView];
                 if (_file.isNecessaryUpdate) {
