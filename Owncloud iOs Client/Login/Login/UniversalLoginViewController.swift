@@ -65,7 +65,8 @@ public enum TextfieldType: String {
     @IBOutlet var labelTopInfo: UILabel!
     
     @IBOutlet var imageViewLeftURL: UIImageView!
-    @IBOutlet var textFieldURL: UITextField!
+	@IBOutlet var textFieldURL: UITextField!
+	@IBOutlet var labelFixedDomainURL: UILabel!
     @IBOutlet var buttonReconnection: UIButton!
     
     @IBOutlet var buttonReconnectionURL: UIButton!
@@ -319,7 +320,10 @@ public enum TextfieldType: String {
         
         self.labelPasswordFooter.backgroundColor = UIColor.clear
         self.labelPasswordFooter.textColor = UIColor.ofLoginErrorText()
-        
+
+		self.labelFixedDomainURL.backgroundColor = UIColor.clear
+		self.labelFixedDomainURL.textColor = UIColor.ofURLUserPassword()
+
         //text in text fields
         textFieldURL.textColor = UIColor.ofURLUserPassword()
         textFieldUsername.textColor = UIColor.ofURLUserPassword()
@@ -403,6 +407,13 @@ public enum TextfieldType: String {
         //init textField values
         
         self.textFieldURL.text = k_default_url_server
+
+		//Fixed domain
+		if Customization.kFixedDomain() {
+			self.labelFixedDomainURL.text = k_fixed_url_domain
+		} else {
+			self.labelFixedDomainURL.isHidden = true
+		}
         
         //test
 //        self.loginMode = .expire
@@ -503,7 +514,7 @@ public enum TextfieldType: String {
         UIView.animate(withDuration: 0.5, animations: {
             self.buttonReconnectionURL.isHidden = hiddenStatus
         }, completion: { (_) in
-            self.buttonReconnectionURL.isHidden = hiddenStatus
+			self.buttonReconnectionURL.isHidden = hiddenStatus
         })
     }
     
@@ -543,7 +554,13 @@ public enum TextfieldType: String {
         self.setConnectButton(status: false)
         self.setURLFooter(isType: .TestingConnection)
         
-        if let inputURL = textFieldURL.text {
+        if var inputURL = textFieldURL.text {
+
+			//Fixed domain
+			if Customization.kFixedDomain() {
+				inputURL = inputURL + k_fixed_url_domain
+			}
+
             self.serverURLNormalizer.normalize(serverURL: inputURL)
             self.setNetworkActivityIndicator(status: true)
             // get public infor from server

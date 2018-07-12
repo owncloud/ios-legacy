@@ -21,7 +21,11 @@
 //Add all boolean constants to use in swift classes
 
 +(BOOL)kHideUrlServer {
-    return k_hide_url_server;
+	return k_hide_url_server;
+}
+
++(BOOL)kFixedDomain {
+	return k_fixed_domain;
 }
 
 +(BOOL)kForceUpdateOfServerUrl {
