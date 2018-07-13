@@ -36,9 +36,7 @@ import Foundation
         request.setValue("0", forHTTPHeaderField: "Depth")
         request.setValue(UtilsUrls.getUserAgent(), forHTTPHeaderField: "User-Agent")
         request.setValue("application/xml", forHTTPHeaderField: "Content-Type")
-        let body =  "<?xml version=\"1.0\" encoding=\"UTF-8\"?><D:propfind xmlns:D=\"DAV:\"><D:prop><D:resourcetype/><D:getlastmodified/><size xmlns=\"http://owncloud.org/ns\"/><D:creationdate/><id xmlns=\"http://owncloud.org/ns\"/><D:getcontentlength/><D:displayname/><D:quota-available-bytes/><D:getetag/><permissions xmlns=\"http://owncloud.org/ns\"/><D:quota-used-bytes/><D:getcontenttype/></D:prop></D:propfind>"
-        request.httpBody = body.data(using: String.Encoding.utf8)
-        
+
         let configuration = URLSessionConfiguration.ephemeral
         configuration.urlCredentialStorage = nil;   // enforce that no credential is proposed for the auhtentication challenge
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
