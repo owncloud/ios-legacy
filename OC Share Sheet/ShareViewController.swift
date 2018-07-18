@@ -39,7 +39,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 
-@objc class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, KKPasscodeViewControllerDelegate {
+@objc class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, KKPasscodeViewControllerDelegate, SelectFolderDelegate {
     
     @IBOutlet weak var navigationBar: UINavigationBar?
     @IBOutlet weak var shareTable: UITableView?
@@ -546,12 +546,14 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     
     //MARK: Select Folder Selected Delegate Methods
     
-    func folderSelected(_ folder: NSString){
+	func folderSelected(_ folder: String){
         
         print("Folder selected \(folder)")
         
-        self.currentRemotePath = folder as String
-        let name:NSString = (folder.replacingPercentEscapes(using: String.Encoding.utf8.rawValue)! as NSString);
+        self.currentRemotePath = folder
+
+		let name:String = folder.removingPercentEncoding!
+
         let user = ManageUsersDB.getActiveUser()
         let folderPath = UtilsUrls.getFilePathOnDB(byFullPath: name as String, andUser: user)
 
