@@ -403,6 +403,7 @@
 		590849F41A0A811000D3E842 /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF690F1891379C00A2217C /* SWTableViewCell.m */; };
 		590849F51A0A811000D3E842 /* SWUtilityButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF69111891379C00A2217C /* SWUtilityButtonTapGestureRecognizer.m */; };
 		590849F61A0A811000D3E842 /* SWUtilityButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF69131891379C00A2217C /* SWUtilityButtonView.m */; };
+		59317C3621109C9500B4A548 /* Customization.m in Sources */ = {isa = PBXBuildFile; fileRef = 407B51BB1F0A34DB00DDFA65 /* Customization.m */; };
 		593C16D01A09008C006C20AF /* ManageFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13A177C2F73004A1A5A /* ManageFilesDB.m */; };
 		593D14891C60BE1E005161E2 /* SplashImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 593D14881C60BE1E005161E2 /* SplashImage.png */; };
 		593D531D17BF701800191846 /* SSOViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 593D531B17BF701800191846 /* SSOViewController.m */; };
@@ -4941,6 +4942,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59317C3621109C9500B4A548 /* Customization.m in Sources */,
 				59DCB34520FE2F03009565BE /* OCURLSessionManager.m in Sources */,
 				59DCB34420FE2EE7009565BE /* SSLCertificateManager.m in Sources */,
 				59F123E61C89C14D0094CF70 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,

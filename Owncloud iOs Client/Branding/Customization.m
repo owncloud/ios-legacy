@@ -41,8 +41,17 @@
 }
 
 +(BOOL)kIsShownHelpLinkOnLogin {
-    return k_is_shown_help_link_on_login;
+	return k_is_shown_help_link_on_login;
 }
+
++(BOOL)kShowLogoOnTitleFileList {
+	return k_show_logo_on_title_file_list;
+}
+
++(BOOL)kIsSelectFolderAvailableShareIn {
+	return k_is_select_folder_available_share_in;
+}
+
 
 
 @end

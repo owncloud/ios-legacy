@@ -60,6 +60,9 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     override func viewDidLoad() {
         
         InitializeDatabase.initDataBase()
+
+		self.destinyFolderButton?.isEnabled = Customization.kIsSelectFolderAvailableShareIn()
+		self.navigationController?.navigationBar.isTranslucent = false
         
         var delay = 0.1
         
@@ -128,9 +131,14 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         
         let appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as! String
 
-        self.navigationItem.title = appName
+		//If it is the root folder show the icon of root folder
+		if Customization.kShowLogoOnTitleFileList() {
+			let logoImage:UIImageView = UIImageView(image: ImageUtils.getNavigationLogoImage())
+			self.navigationItem.titleView = logoImage;
+		} else {
+			self.navigationItem.title = appName
+		}
 
-        
         self.navigationItem.leftBarButtonItem = leftBarButton
         self.navigationItem.rightBarButtonItem = rightBarButton
         self.navigationItem.hidesBackButton = true
