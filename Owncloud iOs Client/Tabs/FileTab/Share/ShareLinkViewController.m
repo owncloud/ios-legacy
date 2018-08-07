@@ -26,7 +26,6 @@
 //Cells and Sections
 #define shareLinkOptionIdentifer @"ShareLinkOptionIdentifier"
 #define shareLinkOptionNib @"ShareLinkOptionCell"
-#define nOfSectionsWithAllOptionsAvailable 5
 
 #define heightOfShareLinkOptionRow 55.0f
 #define heightOfShareLinkOptionSection 25.0f
@@ -40,12 +39,27 @@
 
 #define k_permissions_when_file_listing_option_enabled 4
 
-typedef NS_ENUM (NSInteger, LinkOption){
-    LinkOptionName,
-    LinkOptionPassword,
-    LinkOptionExpiration,
-    LinkOptionAllowUploads,
-    LinkOptionShowFileListing
+//Sections
+typedef NS_ENUM (NSInteger, Sections){
+	LinkNameSection,
+	LinkPermissionsSection,
+	LinkSecuritySection
+};
+
+//Rows by section
+typedef NS_ENUM (NSInteger, LinkNameSectionEnum){
+	LinkOptionName
+};
+
+typedef NS_ENUM (NSInteger, LinkPermissionsSectionEnum){
+	LinkOptionAllowDownload,
+	LinkOptionAllowUploads,
+	LinkOptionShowFileListing
+};
+
+typedef NS_ENUM (NSInteger, LinkSecuritySectionEnum){
+	LinkOptionPassword,
+	LinkOptionExpiration
 };
 
 @interface ShareLinkViewController ()
@@ -59,7 +73,6 @@ typedef NS_ENUM (NSInteger, LinkOption){
 @property (nonatomic) BOOL isShowFileListingEnabled;
 
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
-
 
 @end
 
@@ -150,24 +163,53 @@ typedef NS_ENUM (NSInteger, LinkOption){
 }
 
 
--(NSInteger) getNumberOfOptionsAvailable {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+-(NSInteger) getNumberOfSectionsAvailable {
 
-    NSInteger nOfOptionsAvailable = nOfSectionsWithAllOptionsAvailable;
+    NSInteger nOfOptionsAvailable = 3;
     
     if (![ShareUtils hasOptionLinkNameToBeShown]) {
         nOfOptionsAvailable = nOfOptionsAvailable -1;
     }
-    
-    if (![ShareUtils hasOptionAllowEditingToBeShownForFile:self.fileShared]) {
-        nOfOptionsAvailable = nOfOptionsAvailable -1;
-    }
-    
-    if (![ShareUtils hasOptionShowFileListingToBeShownForFile:self.fileShared]) {
-        nOfOptionsAvailable = nOfOptionsAvailable -1;
-    }
-    
+
     return nOfOptionsAvailable;
+}
+
+-(NSInteger) getNumberOfRowsAvailableBySection:(Sections) section {
+
+	//Update the section value in case that the first is not available
+	if (![ShareUtils hasOptionLinkNameToBeShown]) {
+		section++;
+	}
+
+	NSInteger numberOfRows = 0;
+
+	switch (section) {
+		case LinkNameSection:
+			numberOfRows = 1;
+			break;
+
+		case LinkPermissionsSection:
+			numberOfRows = 3;
+
+			if (![ShareUtils hasOptionAllowEditingToBeShownForFile:self.fileShared]) {
+				numberOfRows--;
+			}
+
+			if (![ShareUtils hasOptionShowFileListingToBeShownForFile:self.fileShared]) {
+				numberOfRows--;
+			}
+
+			break;
+
+		case LinkSecuritySection:
+			numberOfRows = 2;
+			break;
+
+		default:
+			break;
+	}
+
+	return numberOfRows;
 }
 
 
@@ -175,12 +217,11 @@ typedef NS_ENUM (NSInteger, LinkOption){
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
-    return [self getNumberOfOptionsAvailable];
+    return [self getNumberOfSectionsAvailable];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    return 1;
+	return [self getNumberOfRowsAvailableBySection:section];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -303,6 +344,58 @@ typedef NS_ENUM (NSInteger, LinkOption){
 
     [shareLinkOptionCell.optionSwitch removeTarget:nil action:NULL forControlEvents:UIControlEventValueChanged];
     shareLinkOptionCell.tag = indexPath.section+1;
+
+	NSInteger section = indexPath.section;
+
+	//Update the section value in case that the first is not available
+	if (![ShareUtils hasOptionLinkNameToBeShown]) {
+		section++;
+	}
+
+	/*
+	 LinkNameSection
+	 LinkPermissionsSection
+	 LinkSecuritySection
+	 */
+
+	switch (section) {
+		case LinkNameSection:
+			switch (indexPath.row) {
+				case LinkOptionName:
+					[self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionName];
+					break;
+
+				default:
+					break;
+			}
+			break;
+
+		case LinkPermissionsSection:
+			switch (indexPath.row) {
+				case LinkOptionAllowDownload:
+					//TODO: Add a new download cell, the default one
+					[self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionAllowUploads];
+					break;
+				case LinkOptionAllowUploads:
+					[self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionAllowUploads];
+					break;
+				case LinkOptionShowFileListing:
+					[self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionShowFileListing];
+					break;
+
+				default:
+					break;
+			}
+			break;
+
+		case LinkSecuritySection:
+
+			break;
+
+
+		default:
+			break;
+	}
     
     switch (indexPath.section) {
             
