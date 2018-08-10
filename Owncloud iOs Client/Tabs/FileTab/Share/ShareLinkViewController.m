@@ -43,7 +43,8 @@
 typedef NS_ENUM (NSInteger, Sections){
 	LinkNameSection,
 	LinkPermissionsSection,
-	LinkSecuritySection
+	LinkPasswordSection,
+	LinkExpirationDateSection
 };
 
 //Rows by section
@@ -57,10 +58,15 @@ typedef NS_ENUM (NSInteger, LinkPermissionsSectionEnum){
 	LinkOptionShowFileListing
 };
 
-typedef NS_ENUM (NSInteger, LinkSecuritySectionEnum){
+typedef NS_ENUM (NSInteger, LinkPasswordSectionEnum){
 	LinkOptionPassword,
-	LinkOptionExpiration
 };
+
+typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
+	LinkOptionExpiration,
+};
+
+
 
 @interface ShareLinkViewController ()
 
@@ -165,7 +171,7 @@ typedef NS_ENUM (NSInteger, LinkSecuritySectionEnum){
 
 -(NSInteger) getNumberOfSectionsAvailable {
 
-    NSInteger nOfOptionsAvailable = 3;
+    NSInteger nOfOptionsAvailable = 4;
     
     if (![ShareUtils hasOptionLinkNameToBeShown]) {
         nOfOptionsAvailable = nOfOptionsAvailable -1;
@@ -191,18 +197,23 @@ typedef NS_ENUM (NSInteger, LinkSecuritySectionEnum){
 		case LinkPermissionsSection:
 			numberOfRows = 3;
 
-			if (![ShareUtils hasOptionAllowEditingToBeShownForFile:self.fileShared]) {
+			//TODO: Check it later
+			/*if (![ShareUtils hasOptionAllowEditingToBeShownForFile:self.fileShared]) {
 				numberOfRows--;
 			}
 
 			if (![ShareUtils hasOptionShowFileListingToBeShownForFile:self.fileShared]) {
 				numberOfRows--;
-			}
+			}*/
 
 			break;
 
-		case LinkSecuritySection:
-			numberOfRows = 2;
+		case LinkPasswordSection:
+			numberOfRows = 1;
+			break;
+
+		case LinkExpirationDateSection:
+			numberOfRows = 1;
 			break;
 
 		default:
@@ -225,8 +236,66 @@ typedef NS_ENUM (NSInteger, LinkSecuritySectionEnum){
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    return [self getCellOptionShareLinkByTableView:tableView andIndex:indexPath];
+
+	ShareLinkOptionCell *shareLinkOptionCell = [tableView dequeueReusableCellWithIdentifier:shareLinkOptionIdentifer];
+
+	if (shareLinkOptionCell == nil) {
+		NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkOptionNib owner:self options:nil];
+		shareLinkOptionCell = (ShareLinkOptionCell *)[topLevelObjects objectAtIndex:0];
+	}
+
+	[shareLinkOptionCell.optionSwitch removeTarget:nil action:NULL forControlEvents:UIControlEventValueChanged];
+	shareLinkOptionCell.tag = indexPath.section+1;
+
+	NSInteger section = indexPath.section;
+
+	//Update the section value in case that the first is not available
+	if (![ShareUtils hasOptionLinkNameToBeShown]) {
+		section++;
+	}
+
+	switch (section) {
+		case LinkNameSection:
+			switch (indexPath.row) {
+				case LinkOptionName:
+					[self getLinkNameCell:shareLinkOptionCell];
+					break;
+
+				default:
+					break;
+			}
+			break;
+
+		case LinkPermissionsSection:
+			switch (indexPath.row) {
+				case LinkOptionAllowDownload:
+					[self getOptionAllowsViewCell:shareLinkOptionCell];
+					break;
+				case LinkOptionAllowUploads:
+					[self getOptionAllowsUploadAndViewCell:shareLinkOptionCell];
+					break;
+				case LinkOptionShowFileListing:
+					[self getOptionAllowsOnlyUploadCell:shareLinkOptionCell];
+					break;
+
+				default:
+					break;
+			}
+			break;
+
+		case LinkPasswordSection:
+			[self getPasswordLinkCell:shareLinkOptionCell];
+			break;
+
+		case LinkExpirationDateSection:
+			[self getExpirationDateLinkCell:shareLinkOptionCell];
+			break;
+
+		default:
+			break;
+	}
+
+	return shareLinkOptionCell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -265,29 +334,22 @@ typedef NS_ENUM (NSInteger, LinkSecuritySectionEnum){
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     
     NSString *title = nil;
+
+	//Update the section value in case that the first is not available
+	if (![ShareUtils hasOptionLinkNameToBeShown]) {
+		section++;
+	}
     
     switch (section) {
-        case 0:
-            if ([ShareUtils hasOptionLinkNameToBeShown]) {
-                title = NSLocalizedString(@"title_share_link_option_name", nil);
-            } else {
-                title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"title_share_link_option_password", nil), [ShareUtils hasPasswordRemoveOptionAvailable] ? @"" : @"*"];
-            }
+        case LinkNameSection:
+			title = NSLocalizedString(@"title_share_link_option_name", nil);
             break;
-        case 1:
-            if ([ShareUtils hasOptionLinkNameToBeShown]) {
-                title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"title_share_link_option_password", nil), [ShareUtils hasPasswordRemoveOptionAvailable] ? @"" : @"*"];
-            } else {
+        case LinkPasswordSection:
+			title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"title_share_link_option_password", nil), [ShareUtils hasPasswordRemoveOptionAvailable] ? @"" : @"*"];
+            break;
+        case LinkExpirationDateSection:
                 title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"title_share_link_option_expiration", nil), [ShareUtils hasExpirationRemoveOptionAvailable] ? @"" : @"*"];
-            }
             break;
-        case 2:
-            if ([ShareUtils hasOptionLinkNameToBeShown]) {
-                title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"title_share_link_option_expiration", nil), [ShareUtils hasExpirationRemoveOptionAvailable] ? @"" : @"*"];
-            }
-            
-            break;
-            
         default:
             break;
     }
@@ -333,216 +395,104 @@ typedef NS_ENUM (NSInteger, LinkSecuritySectionEnum){
 
 #pragma mark - cells
 
-- (UITableViewCell *) getCellOptionShareLinkByTableView:(UITableView *) tableView andIndex:(NSIndexPath *) indexPath {
-    //TODO:update with data in other class
-    ShareLinkOptionCell* shareLinkOptionCell = [tableView dequeueReusableCellWithIdentifier:shareLinkOptionIdentifer];
+- (ShareLinkOptionCell *) getLinkNameCell:(ShareLinkOptionCell *)shareLinkOptionCell {
+	shareLinkOptionCell.optionName.hidden = YES;
+	shareLinkOptionCell.optionTextField.hidden = NO;
+	shareLinkOptionCell.optionTextField.placeholder = NSLocalizedString(@"placeholder_share_link_option_name", nil);
+	shareLinkOptionCell.optionTextField.text = self.updatedLinkName;
+	shareLinkOptionCell.optionTextField.inputAccessoryView = [self keyboardToolbarWithDoneButton];
 
-    if (shareLinkOptionCell == nil) {
-        NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:shareLinkOptionNib owner:self options:nil];
-        shareLinkOptionCell = (ShareLinkOptionCell *)[topLevelObjects objectAtIndex:0];
-    }
-
-    [shareLinkOptionCell.optionSwitch removeTarget:nil action:NULL forControlEvents:UIControlEventValueChanged];
-    shareLinkOptionCell.tag = indexPath.section+1;
-
-	NSInteger section = indexPath.section;
-
-	//Update the section value in case that the first is not available
-	if (![ShareUtils hasOptionLinkNameToBeShown]) {
-		section++;
-	}
-
-	/*
-	 LinkNameSection
-	 LinkPermissionsSection
-	 LinkSecuritySection
-	 */
-
-	switch (section) {
-		case LinkNameSection:
-			switch (indexPath.row) {
-				case LinkOptionName:
-					[self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionName];
-					break;
-
-				default:
-					break;
-			}
-			break;
-
-		case LinkPermissionsSection:
-			switch (indexPath.row) {
-				case LinkOptionAllowDownload:
-					//TODO: Add a new download cell, the default one
-					[self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionAllowUploads];
-					break;
-				case LinkOptionAllowUploads:
-					[self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionAllowUploads];
-					break;
-				case LinkOptionShowFileListing:
-					[self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionShowFileListing];
-					break;
-
-				default:
-					break;
-			}
-			break;
-
-		case LinkSecuritySection:
-
-			break;
-
-
-		default:
-			break;
-	}
-    
-    switch (indexPath.section) {
-            
-        case 0:
-            if ([ShareUtils hasOptionLinkNameToBeShown]) {
-                [self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionName];
-            } else {
-                [self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionPassword];
-            }
-            break;
-
-        case 1:
-            if ([ShareUtils hasOptionLinkNameToBeShown]) {
-                [self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionPassword];
-            } else {
-                [self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionExpiration];
-            }
-            break;
-
-        case 2:
-            if ([ShareUtils hasOptionLinkNameToBeShown]) {
-                [self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionExpiration];
-            } else {
-                [self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionAllowUploads];
-            }
-            break;
-            
-        case 3:
-            if ([ShareUtils hasOptionLinkNameToBeShown]) {
-                [self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionAllowUploads];
-            } else {
-                [self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionShowFileListing];
-            }
-            break;
-
-        case 4:
-            [self getUpdatedCell:shareLinkOptionCell toOption:LinkOptionShowFileListing];
-            
-            break;
-            
-        default:
-            break;
-    }
-
-    return shareLinkOptionCell;
+	return shareLinkOptionCell;
 }
 
-- (ShareLinkOptionCell *) getUpdatedCell:(ShareLinkOptionCell *)shareLinkOptionCell toOption:(LinkOption)linkOption {
-    
-    switch (linkOption) {
-            
-        case LinkOptionName:
-            
-            shareLinkOptionCell.optionName.hidden = YES;
-            shareLinkOptionCell.optionTextField.hidden = NO;
-            shareLinkOptionCell.optionTextField.placeholder = NSLocalizedString(@"placeholder_share_link_option_name", nil);
-            shareLinkOptionCell.optionTextField.text = self.updatedLinkName;
-            shareLinkOptionCell.optionTextField.inputAccessoryView = [self keyboardToolbarWithDoneButton];
-            
-            break;
-        
-        case LinkOptionPassword:
-            
-            shareLinkOptionCell.optionName.hidden = YES;
-            shareLinkOptionCell.optionTextField.hidden = NO;
-            shareLinkOptionCell.optionTextField.inputAccessoryView = [self keyboardToolbarWithDoneButton];
-            
-            if ([ShareUtils hasPasswordRemoveOptionAvailable]) {
-                shareLinkOptionCell.optionSwitch.hidden = NO;
-                [shareLinkOptionCell.optionSwitch setOn:self.isPasswordProtectEnabled animated:false];
-                [shareLinkOptionCell.optionSwitch addTarget:self action:@selector(passwordProtectedSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
-            } else {
-                shareLinkOptionCell.optionSwitch.hidden = YES;
-            }
-            
-            if (self.isPasswordProtectEnabled) {
-                shareLinkOptionCell.optionTextField.secureTextEntry = YES;
-                if (self.oldPasswordEnabledState) {
-                    shareLinkOptionCell.optionTextField.placeholder = @"**********";
-                } else {
-                    shareLinkOptionCell.optionTextField.placeholder = NSLocalizedString(@"placeholder_share_link_option_password", nil);
-                }
-                shareLinkOptionCell.optionTextField.userInteractionEnabled = YES;
-            } else {
-                shareLinkOptionCell.optionTextField.secureTextEntry = YES;
-                shareLinkOptionCell.optionTextField.placeholder = NSLocalizedString(@"placeholder_share_link_option_password", nil);
-                shareLinkOptionCell.optionTextField.userInteractionEnabled = NO;
-            }
-            
-            shareLinkOptionCell.optionTextField.text = self.updatedPassword;
-            
-            break;
-        
-        case LinkOptionExpiration:
-            
-            shareLinkOptionCell.optionTextField.placeholder = NSLocalizedString(@"placeholder_share_link_option_expiration", nil);
-            shareLinkOptionCell.optionTextField.inputAccessoryView = [self keyboardToolbarWithDoneButton];
-            
-            if ([ShareUtils hasExpirationRemoveOptionAvailable]) {
-                shareLinkOptionCell.optionSwitch.hidden = NO;
-                [shareLinkOptionCell.optionSwitch setOn:self.isExpirationDateEnabled animated:false];
-                [shareLinkOptionCell.optionSwitch addTarget:self action:@selector(expirationTimeSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
-            } else {
-                shareLinkOptionCell.optionSwitch.hidden = YES;
-            }
-            
-            if (self.isExpirationDateEnabled) {
-                shareLinkOptionCell.optionTextField.hidden = YES;
-                shareLinkOptionCell.optionName.hidden = NO;
-                shareLinkOptionCell.optionName.text = [ShareUtils stringOfDate:[NSDate dateWithTimeIntervalSince1970: self.updatedExpirationDate]];
-            } else {
-                shareLinkOptionCell.optionName.hidden = YES;
-                shareLinkOptionCell.optionTextField.hidden = NO;
-                shareLinkOptionCell.optionTextField.allowsEditingTextAttributes = NO;
-                shareLinkOptionCell.optionTextField.userInteractionEnabled = NO;
-            }
-            
-            break;
-        
-        case LinkOptionAllowUploads:
-            
-            shareLinkOptionCell.optionTextField.hidden = YES;
-            shareLinkOptionCell.optionName.hidden = NO;
-            shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_allow_editing", nil);
-            shareLinkOptionCell.optionSwitch.hidden = NO;
-            [shareLinkOptionCell.optionSwitch setOn:self.isAllowEditingEnabled animated:false];
-            [shareLinkOptionCell.optionSwitch addTarget:self action:@selector(allowEditingSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
-            
-            break;
-            
-        case LinkOptionShowFileListing:
-            
-            shareLinkOptionCell.optionTextField.hidden = YES;
-            shareLinkOptionCell.optionName.hidden = NO;
-            shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_show_file_listing", nil);
-            shareLinkOptionCell.optionSwitch.hidden = NO;
-            [shareLinkOptionCell.optionSwitch setEnabled:self.isAllowEditingEnabled];    // subordinate to "allow editing" option: enabled only if it is checked
-            [shareLinkOptionCell.optionSwitch setOn:self.isShowFileListingEnabled animated:false];
-            [shareLinkOptionCell.optionSwitch addTarget:self action:@selector(showFileListingSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
-            
-            break;
-            
-        default:
-            break;
-    }
-    
-    return shareLinkOptionCell;
+- (ShareLinkOptionCell *) getPasswordLinkCell:(ShareLinkOptionCell *)shareLinkOptionCell {
+	shareLinkOptionCell.optionName.hidden = YES;
+	shareLinkOptionCell.optionTextField.hidden = NO;
+	shareLinkOptionCell.optionTextField.inputAccessoryView = [self keyboardToolbarWithDoneButton];
+
+	if ([ShareUtils hasPasswordRemoveOptionAvailable]) {
+		shareLinkOptionCell.optionSwitch.hidden = NO;
+		[shareLinkOptionCell.optionSwitch setOn:self.isPasswordProtectEnabled animated:false];
+		[shareLinkOptionCell.optionSwitch addTarget:self action:@selector(passwordProtectedSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+	} else {
+		shareLinkOptionCell.optionSwitch.hidden = YES;
+	}
+
+	if (self.isPasswordProtectEnabled) {
+		shareLinkOptionCell.optionTextField.secureTextEntry = YES;
+		if (self.oldPasswordEnabledState) {
+			shareLinkOptionCell.optionTextField.placeholder = @"**********";
+		} else {
+			shareLinkOptionCell.optionTextField.placeholder = NSLocalizedString(@"placeholder_share_link_option_password", nil);
+		}
+		shareLinkOptionCell.optionTextField.userInteractionEnabled = YES;
+	} else {
+		shareLinkOptionCell.optionTextField.secureTextEntry = YES;
+		shareLinkOptionCell.optionTextField.placeholder = NSLocalizedString(@"placeholder_share_link_option_password", nil);
+		shareLinkOptionCell.optionTextField.userInteractionEnabled = NO;
+	}
+
+	shareLinkOptionCell.optionTextField.text = self.updatedPassword;
+}
+
+- (ShareLinkOptionCell *) getExpirationDateLinkCell:(ShareLinkOptionCell *)shareLinkOptionCell {
+	shareLinkOptionCell.optionTextField.placeholder = NSLocalizedString(@"placeholder_share_link_option_expiration", nil);
+	shareLinkOptionCell.optionTextField.inputAccessoryView = [self keyboardToolbarWithDoneButton];
+
+	if ([ShareUtils hasExpirationRemoveOptionAvailable]) {
+		shareLinkOptionCell.optionSwitch.hidden = NO;
+		[shareLinkOptionCell.optionSwitch setOn:self.isExpirationDateEnabled animated:false];
+		[shareLinkOptionCell.optionSwitch addTarget:self action:@selector(expirationTimeSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+	} else {
+		shareLinkOptionCell.optionSwitch.hidden = YES;
+	}
+
+	if (self.isExpirationDateEnabled) {
+		shareLinkOptionCell.optionTextField.hidden = YES;
+		shareLinkOptionCell.optionName.hidden = NO;
+		shareLinkOptionCell.optionName.text = [ShareUtils stringOfDate:[NSDate dateWithTimeIntervalSince1970: self.updatedExpirationDate]];
+	} else {
+		shareLinkOptionCell.optionName.hidden = YES;
+		shareLinkOptionCell.optionTextField.hidden = NO;
+		shareLinkOptionCell.optionTextField.allowsEditingTextAttributes = NO;
+		shareLinkOptionCell.optionTextField.userInteractionEnabled = NO;
+	}
+
+	return shareLinkOptionCell;
+}
+
+- (ShareLinkOptionCell *) getOptionAllowsViewCell:(ShareLinkOptionCell *)shareLinkOptionCell {
+	shareLinkOptionCell.optionTextField.hidden = YES;
+	shareLinkOptionCell.optionName.hidden = NO;
+	shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_allow_view", nil);
+	shareLinkOptionCell.optionSwitch.hidden = NO;
+	[shareLinkOptionCell.optionSwitch setOn:self.isAllowEditingEnabled animated:false];
+	[shareLinkOptionCell.optionSwitch addTarget:self action:@selector(allowEditingSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+
+	return shareLinkOptionCell;
+}
+
+- (ShareLinkOptionCell *) getOptionAllowsUploadAndViewCell:(ShareLinkOptionCell *)shareLinkOptionCell {
+	shareLinkOptionCell.optionTextField.hidden = YES;
+	shareLinkOptionCell.optionName.hidden = NO;
+	shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_allow_editing", nil);
+	shareLinkOptionCell.optionSwitch.hidden = NO;
+	[shareLinkOptionCell.optionSwitch setOn:self.isAllowEditingEnabled animated:false];
+	[shareLinkOptionCell.optionSwitch addTarget:self action:@selector(allowEditingSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+
+	return shareLinkOptionCell;
+}
+
+- (ShareLinkOptionCell *) getOptionAllowsOnlyUploadCell:(ShareLinkOptionCell *)shareLinkOptionCell {
+	shareLinkOptionCell.optionTextField.hidden = YES;
+	shareLinkOptionCell.optionName.hidden = NO;
+	shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_show_file_listing", nil);
+	shareLinkOptionCell.optionSwitch.hidden = NO;
+	[shareLinkOptionCell.optionSwitch setEnabled:self.isAllowEditingEnabled];    // subordinate to "allow editing" option: enabled only if it is checked
+	[shareLinkOptionCell.optionSwitch setOn:self.isShowFileListingEnabled animated:false];
+	[shareLinkOptionCell.optionSwitch addTarget:self action:@selector(showFileListingSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+
+	return shareLinkOptionCell;
 }
 
 #pragma mark - keyboard
