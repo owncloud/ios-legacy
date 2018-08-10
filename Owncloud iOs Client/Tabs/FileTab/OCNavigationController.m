@@ -72,8 +72,6 @@
     
     // Custom initialization
     
-    //self.navigationBar.barTintColor = [UIColor colorOfNavigationBar];
-    
     if (@available(iOS 11.0, *)) {
         self.navigationBar.prefersLargeTitles = NO;
     }
