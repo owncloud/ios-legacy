@@ -66,8 +66,6 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 	LinkOptionExpiration,
 };
 
-
-
 @interface ShareLinkViewController ()
 
 @property (nonatomic) BOOL isPasswordProtectEnabled;
@@ -75,8 +73,9 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 
 @property (nonatomic) NSInteger optionsShownWithShareLink;
 
-@property (nonatomic) BOOL isAllowEditingEnabled;
-@property (nonatomic) BOOL isShowFileListingEnabled;
+@property (nonatomic) BOOL isAllowView;
+@property (nonatomic) BOOL isAllowUploadAndView;
+@property (nonatomic) BOOL isAllowOnlyUpload;
 
 @property (nonatomic, strong) UIPopoverController* activityPopoverController;
 
@@ -116,9 +115,9 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 
             _isPasswordProtectEnabled =  [ShareUtils hasPasswordRemoveOptionAvailable] ? NO : YES;
 
-            _isAllowEditingEnabled = NO;
+            self.isAllowOnlyUpload = NO;
             
-            _isShowFileListingEnabled = YES;    // public links are readable by default
+            self.isAllowUploadAndView = YES;    // public links are readable by default
             
         } else {
             
@@ -197,14 +196,13 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 		case LinkPermissionsSection:
 			numberOfRows = 3;
 
-			//TODO: Check it later
-			/*if (![ShareUtils hasOptionAllowEditingToBeShownForFile:self.fileShared]) {
+			if (![ShareUtils hasOptionAllowEditingToBeShownForFile:self.fileShared]) {
 				numberOfRows--;
 			}
 
 			if (![ShareUtils hasOptionShowFileListingToBeShownForFile:self.fileShared]) {
 				numberOfRows--;
-			}*/
+			}
 
 			break;
 
@@ -433,6 +431,8 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 	}
 
 	shareLinkOptionCell.optionTextField.text = self.updatedPassword;
+
+	return shareLinkOptionCell;
 }
 
 - (ShareLinkOptionCell *) getExpirationDateLinkCell:(ShareLinkOptionCell *)shareLinkOptionCell {
@@ -466,7 +466,7 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 	shareLinkOptionCell.optionName.hidden = NO;
 	shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_allow_view", nil);
 	shareLinkOptionCell.optionSwitch.hidden = NO;
-	[shareLinkOptionCell.optionSwitch setOn:self.isAllowEditingEnabled animated:false];
+	[shareLinkOptionCell.optionSwitch setOn:self.isAllowView animated:false];
 	[shareLinkOptionCell.optionSwitch addTarget:self action:@selector(allowEditingSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
 
 	return shareLinkOptionCell;
@@ -477,7 +477,7 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 	shareLinkOptionCell.optionName.hidden = NO;
 	shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_allow_editing", nil);
 	shareLinkOptionCell.optionSwitch.hidden = NO;
-	[shareLinkOptionCell.optionSwitch setOn:self.isAllowEditingEnabled animated:false];
+	[shareLinkOptionCell.optionSwitch setOn:self.isAllowOnlyUpload animated:false];
 	[shareLinkOptionCell.optionSwitch addTarget:self action:@selector(allowEditingSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
 
 	return shareLinkOptionCell;
@@ -488,8 +488,8 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 	shareLinkOptionCell.optionName.hidden = NO;
 	shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_show_file_listing", nil);
 	shareLinkOptionCell.optionSwitch.hidden = NO;
-	[shareLinkOptionCell.optionSwitch setEnabled:self.isAllowEditingEnabled];    // subordinate to "allow editing" option: enabled only if it is checked
-	[shareLinkOptionCell.optionSwitch setOn:self.isShowFileListingEnabled animated:false];
+	[shareLinkOptionCell.optionSwitch setEnabled:self.isAllowOnlyUpload];    // subordinate to "allow editing" option: enabled only if it is checked
+	[shareLinkOptionCell.optionSwitch setOn:self.isAllowUploadAndView animated:false];
 	[shareLinkOptionCell.optionSwitch addTarget:self action:@selector(showFileListingSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
 
 	return shareLinkOptionCell;
@@ -595,11 +595,11 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
         self.showErrorExpirationForced = NO;
     }
     
-    if (self.isAllowEditingEnabled && self.fileShared.isDirectory) {
+    if (self.isAllowOnlyUpload && self.fileShared.isDirectory) {
         
         updatePublicUpload = self.updatedPublicUpload;
 
-        if (!self.isShowFileListingEnabled) {
+        if (!self.isAllowUploadAndView) {
             permissions = k_permissions_when_file_listing_option_enabled;
         }
     }
@@ -616,6 +616,7 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
     }
     
     //PASSWORD
+	DLog(@"Pass: %@", self.updatedPassword);
     if (self.isPasswordProtectEnabled && ![self.updatedPassword isEqualToString:@""] ) {
 
         [self updateSharedLinkWithPassword:self.updatedPassword expirationDate:nil publicUpload:nil linkName:nil andFileListing:nil];
@@ -681,16 +682,16 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 
 - (void) allowEditingSwithValueChanged:(UISwitch*) sender{
     
-    if (self.isAllowEditingEnabled) {
-        self.isAllowEditingEnabled = NO;
+    if (self.isAllowOnlyUpload) {
+        self.isAllowOnlyUpload = NO;
         self.updatedPublicUpload = @"false";
     
     } else {
-        self.isAllowEditingEnabled = YES;
+        self.isAllowOnlyUpload = YES;
         self.updatedPublicUpload = @"true";
     }
     
-    self.isShowFileListingEnabled = YES;
+    self.isAllowUploadAndView = YES;
     self.updatedShowFileListing= @"true";
     
     [self updateInterfaceWithShareOptionsLinkStatus];  // to update 'enabled' state of subordinate switch "Show file listing" and remain rest of updated fields
@@ -698,11 +699,11 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 
 - (void) showFileListingSwithValueChanged:(UISwitch*) sender{
     
-    if (self.isShowFileListingEnabled) {
-        self.isShowFileListingEnabled = NO;
+    if (self.isAllowUploadAndView) {
+        self.isAllowUploadAndView = NO;
         self.updatedShowFileListing = @"false";
     } else {
-        self.isShowFileListingEnabled = YES;
+        self.isAllowUploadAndView = YES;
         self.updatedShowFileListing= @"true";
     }
 }
@@ -718,14 +719,13 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
         self.isExpirationDateEnabled = YES;
     }
 
-    self.isAllowEditingEnabled = [self.updatedPublicUpload isEqualToString:@"true"];
-    self.isShowFileListingEnabled = [self.updatedShowFileListing isEqualToString:@"true"];
+    self.isAllowOnlyUpload = [self.updatedPublicUpload isEqualToString:@"true"];
+    self.isAllowUploadAndView = [self.updatedShowFileListing isEqualToString:@"true"];
 }
 
 - (void) updateInterfaceWithShareOptionsLinkStatus {
     
     [self updateEnabledOptions];
-    
     [self updateCurrentNameAndPasswordValuesByCheckingTextfields];
     
     [self reloadView];
@@ -903,8 +903,7 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
     
 }
 
-- (void)handleTapBehind:(UITapGestureRecognizer *)sender
-{
+- (void)handleTapBehind:(UITapGestureRecognizer *)sender {
     [_datePickerFullScreenBackgroundView removeGestureRecognizer:sender];
     [self closeDatePicker];
     [self updateInterfaceWithShareOptionsLinkStatus];
