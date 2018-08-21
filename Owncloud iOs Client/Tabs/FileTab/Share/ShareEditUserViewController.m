@@ -166,7 +166,7 @@ typedef NS_ENUM (NSInteger, optionPermission){
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    NSInteger permissionValue = [UtilsFramework getPermissionsValueByCanEdit:self.canEditEnabled andCanCreate:self.canCreateEnabled andCanChange:self.canChangeEnabled andCanDelete:self.canDeleteEnabled andCanShare:self.canShareEnabled andIsFolder:self.sharedItem.isDirectory];
+	NSInteger permissionValue = [UtilsFramework getPermissionsValueByCanRead:YES andCanEdit:self.canEditEnabled andCanCreate:self.canCreateEnabled andCanChange:self.canChangeEnabled andCanDelete:self.canDeleteEnabled andCanShare:self.canShareEnabled andIsFolder:self.sharedItem.isDirectory];
     
     //We update the permission only if the permissions are differents than the current ones
     if (permissionValue != self.updatedOCShare.permissions) {

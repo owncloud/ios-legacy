@@ -30,6 +30,7 @@
 #define heightOfShareLinkOptionRow 55.0f
 #define heightOfShareLinkOptionSection 25.0f
 #define heightOfShareLinkOptionTitleFirstSection 55.0f
+#define heightOfNameOptionFooterSection 10.0f
 #define heightOfShareLinkOptionFooterSection 37.0f
 
 //mail subject key
@@ -73,11 +74,12 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 
 @property (nonatomic) NSInteger optionsShownWithShareLink;
 
-@property (nonatomic) BOOL isAllowView;
-@property (nonatomic) BOOL isAllowUploadAndView;
-@property (nonatomic) BOOL isAllowOnlyUpload;
+@property (nonatomic) BOOL isDownloadViewPermission;
+@property (nonatomic) BOOL isDownloadViewUploadPermission;
+@property (nonatomic) BOOL isUploadOnlyPermission;
 
-@property (nonatomic, strong) UIPopoverController* activityPopoverController;
+@property (nonatomic) UITextField *nameTextField;
+@property (nonatomic) UITextField *passwordTextField;
 
 @end
 
@@ -91,21 +93,13 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
         _linkOptionsViewMode = linkOptionsViewMode;
         _fileShared = fileDto;
         _sharedDto = sharedDto;
-        
-        _oldPublicUploadState = (_sharedDto.permissions > 1) ? @"true" : @"false";
-        // if permission is an odd value, read perimssion (last bit) is enabled
-        _oldShowFileListing = (_sharedDto.permissions % 2 == 1) ? @"true" : @"false";
-        
+
         _updatedPassword = @"";
-        
-        
+
         if (_linkOptionsViewMode == LinkOptionsViewModeCreate) {
             
             _updatedLinkName = defaultLinkName;
             _updatedExpirationDate = [ShareUtils getDefaultMaxExpirationDateInTimeInterval];
-            _updatedPublicUpload = nil;
-            _updatedShowFileListing = nil;
-
             
             if ([ShareUtils hasExpirationDefaultDateToBeShown] || ![ShareUtils hasExpirationRemoveOptionAvailable]) {
                 _isExpirationDateEnabled = YES;
@@ -115,18 +109,26 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 
             _isPasswordProtectEnabled =  [ShareUtils hasPasswordRemoveOptionAvailable] ? NO : YES;
 
-            self.isAllowOnlyUpload = NO;
-            
-            self.isAllowUploadAndView = YES;    // public links are readable by default
-            
+			self.isDownloadViewPermission = YES;
+			self.isDownloadViewUploadPermission = NO;
+			self.isUploadOnlyPermission = NO;
+
         } else {
             
             _updatedLinkName = _sharedDto.name;
             _updatedExpirationDate = _sharedDto.expirationDate;
-            _updatedPublicUpload = (_sharedDto.permissions > 1) ? @"true" : @"false";
-            _updatedShowFileListing = (_sharedDto.permissions % 2 == 1) ? @"true" : @"false";
 
-            
+			//Permissions
+			self.isDownloadViewPermission = [UtilsFramework isPermissionToRead:self.sharedDto.permissions];
+			self.isDownloadViewUploadPermission = [UtilsFramework isPermissionToReadCreateUpdate:self.sharedDto.permissions];
+			self.isUploadOnlyPermission = [UtilsFramework isPermissionToCanCreate:self.sharedDto.permissions];
+
+			//Set the higher permission
+			if (self.isDownloadViewUploadPermission) {
+				self.isDownloadViewPermission = false;
+				self.isUploadOnlyPermission = false;
+			}
+
             if (![_sharedDto.shareWith isEqualToString:@""] && ![ _sharedDto.shareWith isEqualToString:@"NULL"]) {
                 _isPasswordProtectEnabled = YES;
                 _oldPasswordEnabledState = YES;
@@ -173,7 +175,7 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
     NSInteger nOfOptionsAvailable = 4;
     
     if (![ShareUtils hasOptionLinkNameToBeShown]) {
-        nOfOptionsAvailable = nOfOptionsAvailable -1;
+        nOfOptionsAvailable = nOfOptionsAvailable -2;
     }
 
     return nOfOptionsAvailable;
@@ -183,7 +185,7 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 
 	//Update the section value in case that the first is not available
 	if (![ShareUtils hasOptionLinkNameToBeShown]) {
-		section++;
+		section = section + 2;
 	}
 
 	NSInteger numberOfRows = 0;
@@ -225,7 +227,6 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 #pragma mark - TableView delegate methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    
     return [self getNumberOfSectionsAvailable];
 }
 
@@ -243,13 +244,13 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 	}
 
 	[shareLinkOptionCell.optionSwitch removeTarget:nil action:NULL forControlEvents:UIControlEventValueChanged];
-	shareLinkOptionCell.tag = indexPath.section+1;
+	shareLinkOptionCell.tag = indexPath.section + 1;
 
 	NSInteger section = indexPath.section;
 
 	//Update the section value in case that the first is not available
 	if (![ShareUtils hasOptionLinkNameToBeShown]) {
-		section++;
+		section = section + 2;
 	}
 
 	switch (section) {
@@ -297,7 +298,31 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+
+	//Permissions
+	if (indexPath.section == LinkPermissionsSection) {
+
+		switch (indexPath.row) {
+			case LinkOptionAllowDownload:
+				self.isDownloadViewPermission = true;
+				self.isDownloadViewUploadPermission = false;
+				self.isUploadOnlyPermission = false;
+				break;
+			case LinkOptionAllowUploads:
+				self.isDownloadViewPermission = false;
+				self.isDownloadViewUploadPermission = true;
+				self.isUploadOnlyPermission = false;
+				break;
+			case LinkOptionShowFileListing:
+				self.isDownloadViewPermission = false;
+				self.isDownloadViewUploadPermission = false;
+				self.isUploadOnlyPermission = true;
+				break;
+		}
+
+		[self updateInterfaceWithShareOptionsLinkStatus];
+	}
+
     if (self.isExpirationDateEnabled || ![ShareUtils hasExpirationRemoveOptionAvailable]) {
         if (indexPath.section == 2 || (indexPath.section == 1 && ![ShareUtils hasOptionLinkNameToBeShown]) ) {
             //the user want to change the current expiration date
@@ -321,7 +346,11 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return heightOfShareLinkOptionFooterSection;
+	if ([ShareUtils hasOptionLinkNameToBeShown] && section == 0) {
+		return heightOfNameOptionFooterSection;
+	} else {
+		return heightOfShareLinkOptionFooterSection;
+	}
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -335,7 +364,7 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 
 	//Update the section value in case that the first is not available
 	if (![ShareUtils hasOptionLinkNameToBeShown]) {
-		section++;
+		section = section + 2;
 	}
     
     switch (section) {
@@ -371,13 +400,13 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
                     title =  NSLocalizedString(@"show_error_password_enforced", nil);
                 }
             } else if (![ShareUtils hasExpirationRemoveOptionAvailable]) {
-                NSString *nDays = [NSString stringWithFormat:@"%d", APP_DELEGATE.activeUser.capabilitiesDto.filesSharingExpireDateDaysNumber];
+				NSString *nDays = [NSString stringWithFormat:@"%ld", (long)APP_DELEGATE.activeUser.capabilitiesDto.filesSharingExpireDateDaysNumber];
                 title = [NSLocalizedString(@"show_error_expiration_enforced", nil) stringByReplacingOccurrencesOfString:@"$nDays" withString:nDays];
             }
             break;
         case 2:
             if ([ShareUtils hasOptionLinkNameToBeShown] && ![ShareUtils hasExpirationRemoveOptionAvailable]) {
-                NSString *nDays = [NSString stringWithFormat:@"%d", APP_DELEGATE.activeUser.capabilitiesDto.filesSharingExpireDateDaysNumber];
+				NSString *nDays = [NSString stringWithFormat:@"%ld", (long)APP_DELEGATE.activeUser.capabilitiesDto.filesSharingExpireDateDaysNumber];
                 title = [NSLocalizedString(@"show_error_expiration_enforced", nil) stringByReplacingOccurrencesOfString:@"$nDays" withString:nDays];
             }
             break;
@@ -399,6 +428,7 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 	shareLinkOptionCell.optionTextField.placeholder = NSLocalizedString(@"placeholder_share_link_option_name", nil);
 	shareLinkOptionCell.optionTextField.text = self.updatedLinkName;
 	shareLinkOptionCell.optionTextField.inputAccessoryView = [self keyboardToolbarWithDoneButton];
+	self.nameTextField = shareLinkOptionCell.optionTextField;
 
 	return shareLinkOptionCell;
 }
@@ -431,6 +461,7 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 	}
 
 	shareLinkOptionCell.optionTextField.text = self.updatedPassword;
+	self.passwordTextField = shareLinkOptionCell.optionTextField;
 
 	return shareLinkOptionCell;
 }
@@ -462,35 +493,46 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 }
 
 - (ShareLinkOptionCell *) getOptionAllowsViewCell:(ShareLinkOptionCell *)shareLinkOptionCell {
+
+	if (self.isDownloadViewPermission) {
+		shareLinkOptionCell.accessoryType = UITableViewCellAccessoryCheckmark;
+	} else {
+		shareLinkOptionCell.accessoryType = UITableViewCellAccessoryNone;
+	}
+
 	shareLinkOptionCell.optionTextField.hidden = YES;
 	shareLinkOptionCell.optionName.hidden = NO;
-	shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_allow_view", nil);
-	shareLinkOptionCell.optionSwitch.hidden = NO;
-	[shareLinkOptionCell.optionSwitch setOn:self.isAllowView animated:false];
-	[shareLinkOptionCell.optionSwitch addTarget:self action:@selector(allowEditingSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+	shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_allow_dowload_view", nil);
 
 	return shareLinkOptionCell;
 }
 
 - (ShareLinkOptionCell *) getOptionAllowsUploadAndViewCell:(ShareLinkOptionCell *)shareLinkOptionCell {
+
+	if (self.isDownloadViewUploadPermission) {
+		shareLinkOptionCell.accessoryType = UITableViewCellAccessoryCheckmark;
+	} else {
+		shareLinkOptionCell.accessoryType = UITableViewCellAccessoryNone;
+	}
+
 	shareLinkOptionCell.optionTextField.hidden = YES;
 	shareLinkOptionCell.optionName.hidden = NO;
-	shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_allow_editing", nil);
-	shareLinkOptionCell.optionSwitch.hidden = NO;
-	[shareLinkOptionCell.optionSwitch setOn:self.isAllowOnlyUpload animated:false];
-	[shareLinkOptionCell.optionSwitch addTarget:self action:@selector(allowEditingSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+	shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_allow_dowload_view_upload", nil);
 
 	return shareLinkOptionCell;
 }
 
 - (ShareLinkOptionCell *) getOptionAllowsOnlyUploadCell:(ShareLinkOptionCell *)shareLinkOptionCell {
+
+	if (self.isUploadOnlyPermission) {
+		shareLinkOptionCell.accessoryType = UITableViewCellAccessoryCheckmark;
+	} else {
+		shareLinkOptionCell.accessoryType = UITableViewCellAccessoryNone;
+	}
+
 	shareLinkOptionCell.optionTextField.hidden = YES;
 	shareLinkOptionCell.optionName.hidden = NO;
-	shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_show_file_listing", nil);
-	shareLinkOptionCell.optionSwitch.hidden = NO;
-	[shareLinkOptionCell.optionSwitch setEnabled:self.isAllowOnlyUpload];    // subordinate to "allow editing" option: enabled only if it is checked
-	[shareLinkOptionCell.optionSwitch setOn:self.isAllowUploadAndView animated:false];
-	[shareLinkOptionCell.optionSwitch addTarget:self action:@selector(showFileListingSwithValueChanged:) forControlEvents:UIControlEventValueChanged];
+	shareLinkOptionCell.optionName.text = NSLocalizedString(@"title_share_link_option_allow_upload_only", nil);
 
 	return shareLinkOptionCell;
 }
@@ -570,7 +612,6 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 }
 
 #pragma mark - Network requests 
-//TODO: move to other class notsharedFileOrFolder
 
 - (void) createShareLink {
     
@@ -578,7 +619,6 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
     NSString *updatePassword = nil;
     NSString *updateExpirationTime = nil;
     NSString *updatePublicUpload = nil;
-    NSInteger permissions = 0;
 
     
     if (self.updatedLinkName) {
@@ -594,68 +634,59 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
         updateExpirationTime = [ShareUtils convertDateInServerFormat:[NSDate dateWithTimeIntervalSince1970: self.updatedExpirationDate]];
         self.showErrorExpirationForced = NO;
     }
-    
-    if (self.isAllowOnlyUpload && self.fileShared.isDirectory) {
-        
-        updatePublicUpload = self.updatedPublicUpload;
 
-        if (!self.isAllowUploadAndView) {
-            permissions = k_permissions_when_file_listing_option_enabled;
-        }
-    }
-    
-    [self.sharedFileOrFolder doRequestCreateShareLinkOfFile:self.fileShared withPassword:updatePassword expirationTime:updateExpirationTime publicUpload:updatePublicUpload linkName:updateLinkName andPermissions:permissions];
+    [self.sharedFileOrFolder doRequestCreateShareLinkOfFile:self.fileShared withPassword:updatePassword expirationTime:updateExpirationTime publicUpload:updatePublicUpload linkName:updateLinkName andPermissions:[self getPermissions]];
 }
 
 - (void) updateShareOptionsNeeded {
 
     //NAME
     if (![self.updatedLinkName isEqualToString:self.sharedDto.name] && [ShareUtils hasOptionLinkNameToBeShown]) {
-        
-        [self updateSharedLinkWithPassword:nil expirationDate:nil publicUpload:nil linkName:self.updatedLinkName andFileListing:nil];
+		[self updateSharedLinkWithPassword:nil expirationDate:nil linkName:self.updatedLinkName andPermissions:0];
     }
     
     //PASSWORD
-	DLog(@"Pass: %@", self.updatedPassword);
     if (self.isPasswordProtectEnabled && ![self.updatedPassword isEqualToString:@""] ) {
-
-        [self updateSharedLinkWithPassword:self.updatedPassword expirationDate:nil publicUpload:nil linkName:nil andFileListing:nil];
-        
+        [self updateSharedLinkWithPassword:self.updatedPassword expirationDate:nil linkName:nil andPermissions:0];
     } else if (_oldPasswordEnabledState && !self.isPasswordProtectEnabled){
         //Remove previous password
-        [self updateSharedLinkWithPassword:@"" expirationDate:nil publicUpload:nil linkName:nil andFileListing:nil];
+        [self updateSharedLinkWithPassword:@"" expirationDate:nil linkName:nil andPermissions:0];
     }
     
     //EXPIRATION
     if (self.updatedExpirationDate != self.sharedDto.expirationDate) {
         if (self.isExpirationDateEnabled) {
             NSString *dateString = [ShareUtils convertDateInServerFormat:[NSDate dateWithTimeIntervalSince1970: self.updatedExpirationDate]];
-            [self updateSharedLinkWithPassword:nil expirationDate:dateString publicUpload:nil linkName:nil andFileListing:nil];
+            [self updateSharedLinkWithPassword:nil expirationDate:dateString linkName:nil andPermissions:0];
         } else {
-            [self updateSharedLinkWithPassword:nil expirationDate:@"" publicUpload:nil linkName:nil andFileListing:nil];
+            [self updateSharedLinkWithPassword:nil expirationDate:@"" linkName:nil andPermissions:0];
         }
     }
-    
-    //ALLOW UPLOADS
-    if (self.sharedDto.isDirectory && (![self.updatedPublicUpload isEqualToString:self.oldPublicUploadState] || ![self.updatedShowFileListing isEqualToString:self.oldShowFileListing])) {
-        //SHOW FILE LISTING
-        [self updateSharedLinkWithPassword:nil expirationDate:nil publicUpload:self.updatedPublicUpload linkName:nil andFileListing:self.updatedShowFileListing];
-    }
-    
+
+	//PERMISSIONS
+	if (self.sharedDto.permissions != [self getPermissions]) {
+		[self updateSharedLinkWithPassword:nil expirationDate:nil linkName:nil andPermissions:[self getPermissions]];
+	}
 }
 
-- (void) updateSharedLinkWithPassword:(NSString*)password expirationDate:(NSString*)expirationDate publicUpload:(NSString *)publicUpload linkName:(NSString *)linkName andFileListing:(NSString *)fileListing {
-    
-    NSInteger permissions = 0;
-    
-    if ([publicUpload isEqualToString:@"true"] && ![fileListing isEqualToString:@"true"]) {
-        permissions = k_permissions_when_file_listing_option_enabled;
-    }
-    
-    [self.sharedFileOrFolder doRequestUpdateShareLink:self.sharedDto withPassword:password expirationTime:expirationDate publicUpload:publicUpload linkName:linkName andPermissions:permissions];
-    
+- (void) updateSharedLinkWithPassword:(NSString*)password expirationDate:(NSString*)expirationDate linkName:(NSString *)linkName andPermissions:(NSInteger) permissions {
+    [self.sharedFileOrFolder doRequestUpdateShareLink:self.sharedDto withPassword:password expirationTime:expirationDate publicUpload:nil linkName:linkName andPermissions:permissions];
 }
 
+- (NSInteger) getPermissions {
+
+	NSInteger permissions = 0;
+
+	if (self.isDownloadViewPermission) {
+		permissions = [UtilsFramework getPermissionsValueByCanRead: YES andCanEdit:NO andCanCreate:NO andCanChange:NO andCanDelete:NO andCanShare:NO andIsFolder:self.fileShared.isDirectory];
+	} else if (self.isDownloadViewUploadPermission) {
+		permissions = [UtilsFramework getPermissionsValueByCanRead: YES andCanEdit:YES andCanCreate:YES andCanChange:YES andCanDelete:YES andCanShare:NO andIsFolder:self.fileShared.isDirectory];
+	} else if (self.isUploadOnlyPermission) {
+		permissions = [UtilsFramework getPermissionsValueByCanRead: NO andCanEdit:NO andCanCreate:YES andCanChange:NO andCanDelete:NO andCanShare:NO andIsFolder:self.fileShared.isDirectory];
+	}
+
+	return permissions;
+}
 
 #pragma mark - switch changes
 
@@ -680,35 +711,6 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
     }
 }
 
-- (void) allowEditingSwithValueChanged:(UISwitch*) sender{
-    
-    if (self.isAllowOnlyUpload) {
-        self.isAllowOnlyUpload = NO;
-        self.updatedPublicUpload = @"false";
-    
-    } else {
-        self.isAllowOnlyUpload = YES;
-        self.updatedPublicUpload = @"true";
-    }
-    
-    self.isAllowUploadAndView = YES;
-    self.updatedShowFileListing= @"true";
-    
-    [self updateInterfaceWithShareOptionsLinkStatus];  // to update 'enabled' state of subordinate switch "Show file listing" and remain rest of updated fields
-}
-
-- (void) showFileListingSwithValueChanged:(UISwitch*) sender{
-    
-    if (self.isAllowUploadAndView) {
-        self.isAllowUploadAndView = NO;
-        self.updatedShowFileListing = @"false";
-    } else {
-        self.isAllowUploadAndView = YES;
-        self.updatedShowFileListing= @"true";
-    }
-}
-
-
 #pragma mark - update
 
 - (void) updateEnabledOptions {
@@ -718,9 +720,6 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
     }else {
         self.isExpirationDateEnabled = YES;
     }
-
-    self.isAllowOnlyUpload = [self.updatedPublicUpload isEqualToString:@"true"];
-    self.isAllowUploadAndView = [self.updatedShowFileListing isEqualToString:@"true"];
 }
 
 - (void) updateInterfaceWithShareOptionsLinkStatus {
@@ -732,20 +731,14 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 }
 
 - (void) updateCurrentNameAndPasswordValuesByCheckingTextfields {
-    
-    ShareLinkOptionCell *cellName = [self.shareLinkOptionsTableView viewWithTag:1];
-    ShareLinkOptionCell *cellPassword = [self.shareLinkOptionsTableView viewWithTag:2];
-    
+
     if ([ShareUtils hasOptionLinkNameToBeShown]) {
         //option name exist, we update the current value of linkName
-        self.updatedLinkName = cellName.optionTextField.text;
-    } else {
-        //password corresponding to the first section and we not need to update linkname option
-        cellPassword = [self.shareLinkOptionsTableView viewWithTag:1];
+        self.updatedLinkName = self.nameTextField.text;
     }
     
     if (self.isPasswordProtectEnabled) {
-        self.updatedPassword = cellPassword.optionTextField.text;
+        self.updatedPassword = self.passwordTextField.text;
     } else {
         self.updatedPassword = @"";
     }
