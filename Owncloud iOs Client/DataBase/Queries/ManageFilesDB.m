@@ -665,8 +665,10 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT f.id, f.user_id, b.etag, b.is_necessary_update, b.is_download, b.shared_file_source, b.permissions, b.task_identifier, b.providing_file_id FROM files f, (SELECT id, user_id, file_path, file_name, etag, is_necessary_update, is_download, shared_file_source, permissions, task_identifier, providing_file_id FROM files_backup WHERE (files_backup.is_download != 0 or files_backup.shared_file_source != 0 or files_backup.providing_file_id != 0)) b WHERE b.file_path = f.file_path AND b.file_name = f.file_name AND b.user_id = f.user_id"];
+        FMResultSet *rs = [db executeQuery:@"SELECT f.id as 'f.id', f.user_id as 'f.user_id', b.etag as 'b.etag', b.is_necessary_update as 'b.is_necessary_update', b.is_download as 'b.is_download', b.shared_file_source as 'b.shared_file_source', b.permissions as 'b.permissions', b.task_identifier as 'b.task_identifier', b.providing_file_id as 'b.providing_file_id' FROM files f, (SELECT id, user_id, file_path, file_name, etag, is_necessary_update, is_download, shared_file_source, permissions, task_identifier, providing_file_id FROM files_backup WHERE (files_backup.is_download != 0 or files_backup.shared_file_source != 0 or files_backup.providing_file_id != 0)) b WHERE b.file_path = f.file_path AND b.file_name = f.file_name AND b.user_id = f.user_id"];
         while ([rs next]) {
+
+			DLog(@"Columns: %@", [rs resultDictionary]);
             
             FileDto *currentFile = [[FileDto alloc] init];
             currentFile.idFile = [rs intForColumn:@"f.id"];
@@ -909,7 +911,7 @@
     FMDatabaseQueue *queue = Managers.sharedDatabase;
     
     [queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *rs = [db executeQuery:@"SELECT f.id FROM files f, (SELECT id, file_path, user_id, file_name FROM files_backup WHERE files_backup.is_favorite = 1) b WHERE b.file_path = f.file_path AND b.file_name=f.file_name AND f.user_id = b.user_id"];
+        FMResultSet *rs = [db executeQuery:@"SELECT f.id as 'f.id' FROM files f, (SELECT id, file_path, user_id, file_name FROM files_backup WHERE files_backup.is_favorite = 1) b WHERE b.file_path = f.file_path AND b.file_name=f.file_name AND f.user_id = b.user_id"];
         
         while ([rs next]) {
                         
