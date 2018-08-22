@@ -338,8 +338,8 @@
             OCCommunication *sharedCommunication = nil;
             
 #ifdef SHARE_IN
-            sharedCommunication = Managers.sharedOCCommunication;
-            [[Managers sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];
+            sharedCommunication = OCCommunication.shared;
+            [OCCommunication.shared setUserAgent:[UtilsUrls getUserAgent]];
 #else
             sharedCommunication = [AppDelegate sharedOCCommunication];
             [[AppDelegate sharedOCCommunication] setUserAgent:[UtilsUrls getUserAgent]];

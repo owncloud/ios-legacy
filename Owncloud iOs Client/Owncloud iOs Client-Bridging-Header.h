@@ -51,5 +51,7 @@
 #import "OCOAuth2Configuration.h"
 #import "DetectUserData.h"
 #import "UtilsNotifications.h"
+#import "OCURLSessionManager.h"
+#import "SSLCertificateManager.h"
 
 

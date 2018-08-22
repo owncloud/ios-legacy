@@ -315,7 +315,7 @@ public enum TextfieldType: String {
         self.labelTopInfo.textColor = UIColor.ofLoginErrorText()
         
         self.labelURLFooter.backgroundColor = UIColor.clear
-        self.labelURLFooter.textColor = UIColor.ofLoginErrorText()
+        self.labelURLFooter.textColor = UIColor.ofLoginText()
         
         self.labelPasswordFooter.backgroundColor = UIColor.clear
         self.labelPasswordFooter.textColor = UIColor.ofLoginErrorText()

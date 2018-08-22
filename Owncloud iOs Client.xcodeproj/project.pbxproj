@@ -360,10 +360,7 @@
 		40B5700F1F1E137D00A98A8E /* UtilsLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5700E1F1E137D00A98A8E /* UtilsLogin.m */; };
 		40B5AB7E1F7AB6420022F3A2 /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5AB7D1F7AB6420022F3A2 /* SSLCertificateManager.m */; };
 		40B5AB801F7ABBE70022F3A2 /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5AB7D1F7AB6420022F3A2 /* SSLCertificateManager.m */; };
-		40B5AB821F7ABBE70022F3A2 /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5AB7D1F7AB6420022F3A2 /* SSLCertificateManager.m */; };
 		40BCC2BA1F3B5FA500F5DC6F /* (null) in Sources */ = {isa = PBXBuildFile; };
-		40BCC2BC1F3B5FA700F5DC6F /* (null) in Sources */ = {isa = PBXBuildFile; };
-		40BCC2BD1F3B5FA700F5DC6F /* (null) in Sources */ = {isa = PBXBuildFile; };
 		40C01ED91F0FA923002DCAAA /* DetectListOfFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C01ED81F0FA923002DCAAA /* DetectListOfFiles.swift */; };
 		40C0BDB91C46562A0057B1DD /* SharePrivilegeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40C0BDB81C46562A0057B1DD /* SharePrivilegeCell.xib */; };
 		40C0BDBC1C465F390057B1DD /* SharePrivilegeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C0BDBB1C465F390057B1DD /* SharePrivilegeCell.swift */; };
@@ -406,6 +403,7 @@
 		590849F41A0A811000D3E842 /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF690F1891379C00A2217C /* SWTableViewCell.m */; };
 		590849F51A0A811000D3E842 /* SWUtilityButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF69111891379C00A2217C /* SWUtilityButtonTapGestureRecognizer.m */; };
 		590849F61A0A811000D3E842 /* SWUtilityButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = EABF69131891379C00A2217C /* SWUtilityButtonView.m */; };
+		59317C3621109C9500B4A548 /* Customization.m in Sources */ = {isa = PBXBuildFile; fileRef = 407B51BB1F0A34DB00DDFA65 /* Customization.m */; };
 		593C16D01A09008C006C20AF /* ManageFilesDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F13A177C2F73004A1A5A /* ManageFilesDB.m */; };
 		593D14891C60BE1E005161E2 /* SplashImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 593D14881C60BE1E005161E2 /* SplashImage.png */; };
 		593D531D17BF701800191846 /* SSOViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 593D531B17BF701800191846 /* SSOViewController.m */; };
@@ -591,6 +589,11 @@
 		59D774CE1910EE0F004322BA /* UtilsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 59D774CD1910EE0F004322BA /* UtilsTableView.m */; };
 		59DA496619F7A4B600DD3619 /* Owncloud iOs Client.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 593F7CAD19F01134004136F7 /* Owncloud iOs Client.entitlements */; };
 		59DA4F3C1A07A97100472639 /* DocumentPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 59DA4F3B1A07A97100472639 /* DocumentPickerViewController.xib */; };
+		59DCB34420FE2EE7009565BE /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5AB7D1F7AB6420022F3A2 /* SSLCertificateManager.m */; };
+		59DCB34520FE2F03009565BE /* OCURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A6B65619458F6E000B107D /* OCURLSessionManager.m */; };
+		59DCB34620FE30A7009565BE /* OCURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 59A6B65619458F6E000B107D /* OCURLSessionManager.m */; };
+		59DCB34720FE30AD009565BE /* SSLCertificateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B5AB7D1F7AB6420022F3A2 /* SSLCertificateManager.m */; };
+		59DCB34820FE31D8009565BE /* ManageAppSettingsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F134177C2F08004A1A5A /* ManageAppSettingsDB.m */; };
 		59DF586D1B04B35B00EEFA84 /* Managers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7217C1AAF2E0D009F5596 /* Managers.swift */; };
 		59E20C7A1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
 		59E20C7B1AEFAA8E00554D7E /* InitializeDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 59E20C791AEFAA8E00554D7E /* InitializeDatabase.m */; };
@@ -4939,9 +4942,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59317C3621109C9500B4A548 /* Customization.m in Sources */,
+				59DCB34520FE2F03009565BE /* OCURLSessionManager.m in Sources */,
+				59DCB34420FE2EE7009565BE /* SSLCertificateManager.m in Sources */,
 				59F123E61C89C14D0094CF70 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				59F123E41C89C1250094CF70 /* SWCellScrollView.m in Sources */,
-				40B5AB821F7ABBE70022F3A2 /* SSLCertificateManager.m in Sources */,
 				59F123E51C89C1250094CF70 /* SWLongPressGestureRecognizer.m in Sources */,
 				59F123E31C89C1180094CF70 /* SWUtilityButtonView.m in Sources */,
 				59F123E21C89C0E00094CF70 /* SWTableViewCell.m in Sources */,
@@ -4987,7 +4992,6 @@
 				EAC6E5FE1AB0A41900CCF8C4 /* OCNavigationController.m in Sources */,
 				EAF721871AB03DB9009F5596 /* ManageFilesDB.m in Sources */,
 				EA66069A1AA767F800BA2C65 /* ShareViewController.swift in Sources */,
-				40BCC2BD1F3B5FA700F5DC6F /* (null) in Sources */,
 				EA1415A61AB1B89E0083EACE /* OCToolBar.m in Sources */,
 				EAF7217D1AAF2E0D009F5596 /* Managers.swift in Sources */,
 				4056551D1CE1DD5E001266EE /* UtilsFileSystem.m in Sources */,
@@ -5072,6 +5076,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59DCB34820FE31D8009565BE /* ManageAppSettingsDB.m in Sources */,
+				59DCB34720FE30AD009565BE /* SSLCertificateManager.m in Sources */,
+				59DCB34620FE30A7009565BE /* OCURLSessionManager.m in Sources */,
 				59F123DD1C89AEE20094CF70 /* ManageThumbnails.m in Sources */,
 				59BF57CB1B04C8E7000EB221 /* Managers.swift in Sources */,
 				EAE80E241A6CFDE50061BD86 /* UploadsOfflineDto.m in Sources */,
@@ -5087,7 +5094,6 @@
 				EA1F62D81A5EBFC700D6346F /* ManageUsersDB.m in Sources */,
 				EAE80E261A6D317C0061BD86 /* ManageUploadsDB.m in Sources */,
 				EA1F62D71A5EBF8500D6346F /* ManageFilesDB.m in Sources */,
-				40BCC2BC1F3B5FA700F5DC6F /* (null) in Sources */,
 				EA1F62D91A5EBFDF00D6346F /* OCKeychain.m in Sources */,
 				405D06C71BFB670200591604 /* ManageCapabilitiesDB.m in Sources */,
 				EAFDF1771A76372A00655DBF /* NSString+Encoding.m in Sources */,

@@ -2194,7 +2194,7 @@
         path = [path stringByRemovingPercentEncoding];
         
         //Checking the Shared files and folders
-        [[AppDelegate sharedOCCommunication] readSharedByServer:app.activeUser.url andPath:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
+		[[AppDelegate sharedOCCommunication] readSharedByServer:app.activeUser.url andPath:path andSubfiles:YES onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *items, NSString *redirectedServer) {
             
             BOOL isSamlCredentialsError=NO;
             
