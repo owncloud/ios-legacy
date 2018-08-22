@@ -127,6 +127,9 @@
 //Force passcode
 #define k_is_passcode_forced NO
 
+//Show select folder on Share In extension
+#define k_is_select_folder_available_share_in YES
+
 //Oauth2
 #define k_oauth2_authorization_endpoint @"index.php/apps/oauth2/authorize"
 #define k_oauth2_token_endpoint @"index.php/apps/oauth2/api/v1/token"
@@ -162,5 +165,8 @@
 +(BOOL)kIsSsoActive;
 +(BOOL)kIsTextLoginStatusBarWhite;
 +(BOOL)kIsShownHelpLinkOnLogin;
++(BOOL)kShowLogoOnTitleFileList;
++(BOOL)kIsSelectFolderAvailableShareIn;
+
 
 @end

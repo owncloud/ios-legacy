@@ -237,11 +237,11 @@
     
     FileDto *parentFolder = [ManageFilesDB getFileDtoByIdFile:file.fileId];
     
-    NSString *path = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:parentFolder.filePath andUser:APP_DELEGATE.activeUser];
-    path = [path stringByAppendingString:parentFolder.fileName];
+    NSString *path = [UtilsUrls getFilePathOnDBByFilePathOnFileDto:file.filePath andUser:APP_DELEGATE.activeUser];
+    path = [path stringByAppendingString:file.fileName];
     path = [path stringByRemovingPercentEncoding];
     
-    [[AppDelegate sharedOCCommunication] readSharedByServer:APP_DELEGATE.activeUser.url andPath:path onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *listOfShared, NSString *redirectedServer) {
+	[[AppDelegate sharedOCCommunication] readSharedByServer:APP_DELEGATE.activeUser.url andPath:path andSubfiles:NO onCommunication:[AppDelegate sharedOCCommunication] successRequest:^(NSHTTPURLResponse *response, NSArray *listOfShared, NSString *redirectedServer) {
         
         BOOL isSamlCredentialsError=NO;
         
@@ -255,18 +255,12 @@
         }
         
         if (!isSamlCredentialsError) {
-            
-            NSArray *itemsToDelete = [ManageSharesDB getSharesByFolderPath:[NSString stringWithFormat:@"/%@%@", [UtilsUrls getFilePathOnDBByFilePathOnFileDto:parentFolder.filePath andUser:APP_DELEGATE.activeUser], parentFolder.fileName]];
-            
-            //1. We remove the removed shared from the Files table of the current folder
-            [ManageFilesDB setUnShareFilesOfFolder:parentFolder];
-            //2. Delete all shared to not repeat them
-            [ManageSharesDB deleteLSharedByList:itemsToDelete];
-            //3. Delete all the items that we want to insert to not insert them twice
+
+            //1. Delete all the items that we want to insert to not insert them twice
             [ManageSharesDB deleteLSharedByList:listOfShared];
-            //4. We add the new shared on the share list
+            //2. We add the new shared on the share list
             [ManageSharesDB insertSharedList:listOfShared];
-            //5. Update the files with shared info of this folder
+            //3. Update the files with shared info of this folder
             [ManageFilesDB updateFilesAndSetSharedOfUser:APP_DELEGATE.activeUser.userId];
             
             [self endLoading];
