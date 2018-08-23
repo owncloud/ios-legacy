@@ -122,7 +122,7 @@ CGPoint _lastContentOffset;
 /*
  * Method to load a document by filePath.
  */
-- (void)openOfficeFileWithPath:(NSString*)filePath andFileName: (NSString *) fileName {
+- (void)openOfficeFileWithPath:(NSString*)filePath andFileName: (NSString *) fileName gesture: (UIGestureRecognizer *)gestureRecognizer {
         _isDocument=YES;
 
     __block WKWebViewConfiguration *wkConfiguration;
@@ -146,6 +146,9 @@ CGPoint _lastContentOffset;
                 }
 
                 _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:wkConfiguration];
+				if (gestureRecognizer) {
+					[_webView addGestureRecognizer:gestureRecognizer];
+				}
 
                 [self _openFileWithPath:filePath andName:fileName];
 

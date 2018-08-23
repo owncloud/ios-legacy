@@ -35,7 +35,7 @@
 /*
  * Method to load a document by filePath.
  */
-- (void)openOfficeFileWithPath:(NSString*)filePath andFileName: (NSString *)fileName;
+- (void)openOfficeFileWithPath:(NSString*)filePath andFileName: (NSString *) fileName gesture: (UIGestureRecognizer *)gestureRecognizer;
 
 /*
  * Method to load a link by path
