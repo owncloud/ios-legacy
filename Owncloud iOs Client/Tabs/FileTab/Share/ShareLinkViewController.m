@@ -323,9 +323,17 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 		[self updateInterfaceWithShareOptionsLinkStatus];
 	}
 
+	//Expiration date
     if (self.isExpirationDateEnabled || ![ShareUtils hasExpirationRemoveOptionAvailable]) {
-        if (indexPath.section == 2 || (indexPath.section == 1 && ![ShareUtils hasOptionLinkNameToBeShown]) ) {
-            //the user want to change the current expiration date
+
+		NSInteger section = indexPath.section;
+
+		//Update the section value in case that the first is not available
+		if (![ShareUtils hasOptionLinkNameToBeShown]) {
+			section = section - 2;
+		}
+
+        if (indexPath.section == LinkExpirationDateSection) {
             [self didSelectSetExpirationDateLink];
         }
     }
