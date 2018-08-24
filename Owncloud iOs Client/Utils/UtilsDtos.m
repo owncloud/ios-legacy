@@ -138,7 +138,11 @@
     }
 
     ocFileDtoArray = nil;
-    
+
+	//Reorder the array to prevent problems with special characters like emojis or "@"
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"fileName" ascending:YES];
+	fileDtoArray = [NSMutableArray arrayWithArray:[fileDtoArray sortedArrayUsingDescriptors:@[sortDescriptor]]];
+
     return fileDtoArray;
 }
 
