@@ -42,29 +42,17 @@
 
 //Sections
 typedef NS_ENUM (NSInteger, Sections){
-	LinkNameSection,
-	LinkPermissionsSection,
-	LinkPasswordSection,
-	LinkExpirationDateSection
+	SectionName,
+	SectionPermissions,
+	SectionPassword,
+	SectionLinkExpiration
 };
 
-//Rows by section
-typedef NS_ENUM (NSInteger, LinkNameSectionEnum){
-	LinkOptionName
-};
-
-typedef NS_ENUM (NSInteger, LinkPermissionsSectionEnum){
-	LinkOptionAllowDownload,
-	LinkOptionAllowUploads,
-	LinkOptionShowFileListing
-};
-
-typedef NS_ENUM (NSInteger, LinkPasswordSectionEnum){
-	LinkOptionPassword,
-};
-
-typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
-	LinkOptionExpiration,
+//Rows PermissionsSection
+typedef NS_ENUM (NSInteger, PermissionsSection){
+	PermissionsSectionAllowDownload,
+	PermissionsSectionAllowUploads,
+	PermissionsSectionShowFileListing
 };
 
 @interface ShareLinkViewController ()
@@ -191,11 +179,11 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 	NSInteger numberOfRows = 0;
 
 	switch (section) {
-		case LinkNameSection:
+		case SectionName:
 			numberOfRows = 1;
 			break;
 
-		case LinkPermissionsSection:
+		case SectionPermissions:
 			numberOfRows = 3;
 
 			if (![ShareUtils hasOptionAllowEditingToBeShownForFile:self.fileShared]) {
@@ -208,11 +196,11 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 
 			break;
 
-		case LinkPasswordSection:
+		case SectionPassword:
 			numberOfRows = 1;
 			break;
 
-		case LinkExpirationDateSection:
+		case SectionLinkExpiration:
 			numberOfRows = 1;
 			break;
 
@@ -254,39 +242,31 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 	}
 
 	switch (section) {
-		case LinkNameSection:
-			switch (indexPath.row) {
-				case LinkOptionName:
-					[self getLinkNameCell:shareLinkOptionCell];
-					break;
-
-				default:
-					break;
-			}
+		case SectionName:
+			[self getLinkNameCell:shareLinkOptionCell];
 			break;
 
-		case LinkPermissionsSection:
+		case SectionPermissions:
 			switch (indexPath.row) {
-				case LinkOptionAllowDownload:
+				case PermissionsSectionAllowDownload:
 					[self getOptionAllowsViewCell:shareLinkOptionCell];
 					break;
-				case LinkOptionAllowUploads:
+				case PermissionsSectionAllowUploads:
 					[self getOptionAllowsUploadAndViewCell:shareLinkOptionCell];
 					break;
-				case LinkOptionShowFileListing:
+				case PermissionsSectionShowFileListing:
 					[self getOptionAllowsOnlyUploadCell:shareLinkOptionCell];
 					break;
-
 				default:
 					break;
 			}
 			break;
 
-		case LinkPasswordSection:
+		case SectionPassword:
 			[self getPasswordLinkCell:shareLinkOptionCell];
 			break;
 
-		case LinkExpirationDateSection:
+		case SectionLinkExpiration:
 			[self getExpirationDateLinkCell:shareLinkOptionCell];
 			break;
 
@@ -300,20 +280,20 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	//Permissions
-	if (indexPath.section == LinkPermissionsSection) {
+	if (indexPath.section == SectionPermissions) {
 
 		switch (indexPath.row) {
-			case LinkOptionAllowDownload:
+			case PermissionsSectionAllowDownload:
 				self.isDownloadViewPermission = true;
 				self.isDownloadViewUploadPermission = false;
 				self.isUploadOnlyPermission = false;
 				break;
-			case LinkOptionAllowUploads:
+			case PermissionsSectionAllowUploads:
 				self.isDownloadViewPermission = false;
 				self.isDownloadViewUploadPermission = true;
 				self.isUploadOnlyPermission = false;
 				break;
-			case LinkOptionShowFileListing:
+			case PermissionsSectionShowFileListing:
 				self.isDownloadViewPermission = false;
 				self.isDownloadViewUploadPermission = false;
 				self.isUploadOnlyPermission = true;
@@ -330,10 +310,10 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 
 		//Update the section value in case that the first is not available
 		if (![ShareUtils hasOptionLinkNameToBeShown]) {
-			section = section - 2;
+			section = section + 2;
 		}
 
-        if (indexPath.section == LinkExpirationDateSection) {
+        if (section == SectionLinkExpiration) {
             [self didSelectSetExpirationDateLink];
         }
     }
@@ -354,7 +334,7 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-	if ([ShareUtils hasOptionLinkNameToBeShown] && section == 0) {
+	if ([ShareUtils hasOptionLinkNameToBeShown] && section == SectionName) {
 		return heightOfNameOptionFooterSection;
 	} else {
 		return heightOfShareLinkOptionFooterSection;
@@ -376,13 +356,13 @@ typedef NS_ENUM (NSInteger, LinkExpirationDateSectionEnum){
 	}
     
     switch (section) {
-        case LinkNameSection:
+        case SectionName:
 			title = NSLocalizedString(@"title_share_link_option_name", nil);
             break;
-        case LinkPasswordSection:
+        case SectionPassword:
 			title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"title_share_link_option_password", nil), [ShareUtils hasPasswordRemoveOptionAvailable] ? @"" : @"*"];
             break;
-        case LinkExpirationDateSection:
+        case SectionLinkExpiration:
                 title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"title_share_link_option_expiration", nil), [ShareUtils hasExpirationRemoveOptionAvailable] ? @"" : @"*"];
             break;
         default:
