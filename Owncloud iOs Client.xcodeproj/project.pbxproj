@@ -56,7 +56,6 @@
 		1428F675178422AE0092F42A /* UploadsOfflineDto.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F674178422AE0092F42A /* UploadsOfflineDto.m */; };
 		1428F678178422BE0092F42A /* UtilsDtos.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428F677178422BE0092F42A /* UtilsDtos.m */; };
 		145EA7D117786FAC0087CDDB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 145EA7CA17786FAC0087CDDB /* Localizable.strings */; };
-		145EA7D217786FAC0087CDDB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 145EA7CC17786FAC0087CDDB /* InfoPlist.strings */; };
 		1467037519372ACC00087289 /* DownloadUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1467037419372ACC00087289 /* DownloadUtils.m */; };
 		1487F135177C2F08004A1A5A /* ManageAppSettingsDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F134177C2F08004A1A5A /* ManageAppSettingsDB.m */; };
 		1487F138177C2F48004A1A5A /* ManageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487F137177C2F48004A1A5A /* ManageDB.m */; };
@@ -339,7 +338,6 @@
 		40904B2C1EF04ACE00C72619 /* DetectAuthenticationMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40904B2B1EF04ACE00C72619 /* DetectAuthenticationMethod.swift */; };
 		4096E2491EB8650200318240 /* ShareWarningLinkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4096E2471EB8650200318240 /* ShareWarningLinkCell.swift */; };
 		4096E24A1EB8650200318240 /* ShareWarningLinkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4096E2481EB8650200318240 /* ShareWarningLinkCell.xib */; };
-		40A1F17E1D8857740078C901 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 40A1F1801D8857740078C901 /* InfoPlist.strings */; };
 		40A226AB1F179620003C678E /* ManageAccounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A226AA1F179620003C678E /* ManageAccounts.swift */; };
 		40A226AE1F179C2B003C678E /* ManageFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A226AD1F179C2B003C678E /* ManageFiles.swift */; };
 		40A3A0EB1CEC9B3A0056016A /* more-filledBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = 40A3A0E91CEC9B3A0056016A /* more-filledBlack.png */; };
@@ -410,6 +408,7 @@
 		593D531E17BF701800191846 /* SSOViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 593D531C17BF701800191846 /* SSOViewController.xib */; };
 		593F7CAA19EFDE96004136F7 /* UtilsUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 593F7CA919EFDE96004136F7 /* UtilsUrls.m */; };
 		595333FB1A1DF26000C57ED5 /* UIAlertView+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 595333FA1A1DF26000C57ED5 /* UIAlertView+Blocks.m */; };
+		5959B237212DB6C6005E765E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 40A1F1801D8857740078C901 /* InfoPlist.strings */; };
 		596C06081CF47278004BCF51 /* ELCAlbumPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 596C05F71CF47278004BCF51 /* ELCAlbumPickerController.m */; };
 		596C06091CF47278004BCF51 /* ELCAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 596C05F91CF47278004BCF51 /* ELCAsset.m */; };
 		596C060A1CF47278004BCF51 /* ELCAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 596C05FB1CF47278004BCF51 /* ELCAssetCell.m */; };
@@ -4114,6 +4113,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5959B237212DB6C6005E765E /* InfoPlist.strings in Resources */,
 				40DC9C681CDA191B00F5F5EF /* EditFileViewController.xib in Resources */,
 				59DA496619F7A4B600DD3619 /* Owncloud iOs Client.entitlements in Resources */,
 				14A4796A18EC6FDF003500BA /* FileFavoriteIcon.png in Resources */,
@@ -4163,7 +4163,6 @@
 				145EA7D117786FAC0087CDDB /* Localizable.strings in Resources */,
 				59EDC4201C611D6C0050939C /* iphoneFiles@2x.png in Resources */,
 				13A5ADB418883C77000EB617 /* CopyLinkShareipad@2x.png in Resources */,
-				145EA7D217786FAC0087CDDB /* InfoPlist.strings in Resources */,
 				1487F203177C35AA004A1A5A /* CompanyLogo.png in Resources */,
 				1487F204177C35AA004A1A5A /* CompanyLogo@2x.png in Resources */,
 				14A87ADF1933390900D0D5AD /* FileDownloadingIcon.png in Resources */,
@@ -4214,7 +4213,6 @@
 				14A7F7A918ED578E009AF347 /* spreadsheet_icon@2x.png in Resources */,
 				1487F22C177C35AA004A1A5A /* movie_icon.png in Resources */,
 				EABD88F51BBE82C400DA5281 /* NotificationBackgroundMessage@2x.png in Resources */,
-				40A1F17E1D8857740078C901 /* InfoPlist.strings in Resources */,
 				14A6115A19346D0000AECA34 /* sharedItemSwipe@2x.png in Resources */,
 				4096E24A1EB8650200318240 /* ShareWarningLinkCell.xib in Resources */,
 				1487F22D177C35AA004A1A5A /* movie_icon@2x.png in Resources */,
