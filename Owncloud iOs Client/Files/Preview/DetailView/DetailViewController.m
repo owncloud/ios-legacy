@@ -556,11 +556,7 @@
                 [self.officeView.webView removeFromSuperview];
             }
             self.officeView.delegate = self;
-            [self.officeView openOfficeFileWithPath:self.file.localFolder andFileName:self.file.fileName];
-            
-            if (self.singleTap) {
-                [self.officeView.webView addGestureRecognizer:self.singleTap];
-            }
+            [self.officeView openOfficeFileWithPath:self.file.localFolder andFileName:self.file.fileName gesture:self.singleTap];
             
             [self.view addSubview:self.officeView];
         }
@@ -1758,7 +1754,10 @@
     if (self.galleryView) {
         [self adjustGalleryScrollView];
     }
-    
+
+	if (self.officeView) {
+		self.officeView.frame = [self getTheCorrectSize];
+	}
 }
 
 - (void)customDidRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
@@ -2118,6 +2117,10 @@
     if (self.gifView) {
         self.gifView.alpha = 0.0;
     }
+
+	if (self.officeView) {
+		self.officeView.alpha = 0.0;
+	}
     
 }
 
@@ -2161,6 +2164,11 @@
         self.readerPDFViewController.view.alpha = 1.0;
         self.mainScrollView.hidden = YES;
     }
+
+	if (self.officeView) {
+		self.officeView.frame = frame;
+		self.officeView.alpha = 1.0;
+	}
 }
 
 
