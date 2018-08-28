@@ -1,3 +1,10 @@
+## 3.8.0 (Aug 2018)
+- New look for public link view
+- Add control of reshares for the content owner
+- Fix problem in the browsability of target folder selection
+- Fix full screen in MSOffice documents for iPad
+- Bug fixing
+
 ## 3.7.5 (May 2018)
 - Private link 
 - Sort the file list by kind of file
