@@ -40,8 +40,6 @@ typedef NS_ENUM (NSInteger, LinkOptionsViewMode){
 
 @property (nonatomic, strong) NSString *updatedPassword;
 @property (nonatomic) long updatedExpirationDate;
-@property (nonatomic, strong) NSString *updatedPublicUpload;
-@property (nonatomic, strong) NSString *updatedShowFileListing;
 @property (nonatomic, strong) NSString *updatedLinkName;
 
 @property (nonatomic) BOOL oldPasswordEnabledState;
