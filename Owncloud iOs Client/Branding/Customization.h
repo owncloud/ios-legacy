@@ -26,6 +26,9 @@
 //Set a default url server. It must be obligatory if we hide the url server (#define k_hide_url_server YES)
 #define k_default_url_server @""
 
+#define k_fixed_domain YES
+#define k_fixed_url_domain @".owncloud.com"
+
 //force override existing accounts with k_default_url_server. It must be obligatory if we change authentication type (k_is_sso_active)
 #define k_force_update_of_server_url NO
 
@@ -160,6 +163,7 @@
 @interface Customization : NSObject
 
 +(BOOL)kHideUrlServer;
++(BOOL)kFixedDomain;
 +(BOOL)kForceUpdateOfServerUrl;
 +(BOOL)kMultiaccountAvailable;
 +(BOOL)kIsSsoActive;
