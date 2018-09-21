@@ -2,4 +2,5 @@ name: ios
 title: iOS App
 version: master
 
-nav: []
+nav:
+- modules/ROOT/nav.adoc
