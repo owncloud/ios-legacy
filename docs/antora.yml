@@ -1,5 +1,5 @@
 name: ios
-title: ownCloud iOS App Documentation
+title: The iOS App
 version: master
 
 start_page: ROOT:ios_app.adoc
