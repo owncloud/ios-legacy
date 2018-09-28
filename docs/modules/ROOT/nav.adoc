@@ -1,3 +1,2 @@
-* The iOS App 
-** xref:ios_app.adoc[Using the iOS App]
-** xref:ios_faq.adoc[FAQ]
+* xref:ios_app.adoc[Using the iOS App]
+* xref:ios_faq.adoc[FAQ]
