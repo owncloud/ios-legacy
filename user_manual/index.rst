@@ -6,3 +6,4 @@ ownCloud iOS App Manual
    :maxdepth: 2
  
    ios_app
+   ios_faq
