@@ -1,7 +1,6 @@
 name: ios
-title: The iOS App
-version: master
-
+title: Mobile app for iOS
+version: latest
 start_page: ROOT:ios_app.adoc
 nav:
 - modules/ROOT/nav.adoc
