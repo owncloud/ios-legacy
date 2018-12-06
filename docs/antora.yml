@@ -1,6 +1,6 @@
 name: ios
 title: Mobile app for iOS
 version: latest
-start_page: ROOT:ios_app.adoc
+start_page: ROOT:index.adoc
 nav:
 - modules/ROOT/nav.adoc
