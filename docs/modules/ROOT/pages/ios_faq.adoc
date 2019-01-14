@@ -6,7 +6,7 @@
 In order to check for new images to be uploaded, the ownCloud iOS application uses location services to wake the application in background. 
 If new images are ready to be uploaded, they are then uploaded.
 
-The iOS App don’t send location information to any server.
+NOTE: The iOS App don’t send location information to any server.
 
 See https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/LocationAwarenessPG/CoreLocation/CoreLocation.html for more information.
 
