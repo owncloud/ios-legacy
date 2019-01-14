@@ -15,6 +15,7 @@ Release a new version
 - [ ] [DOC] Update user manual https://github.com/owncloud/ios/blob/master/user_manual/ios_app.rst
 - [ ] [GIT] Merge branch release_X.X.X in master and develop
 - [ ] [GIT] Create tag and sign it "version_X.X.X"
+- [ ] [DOC] Update owncloud.org/download version numbers (notify rocketchat #marketing)
 
 If it is required to update third party or OC iOS Library
 - [ ] [DIS] Update THIRD_PARTY.txt
