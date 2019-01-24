@@ -1,4 +1,5 @@
 = Using the ownCloud iOS App
+:experimental:
 
 Accessing your files on your ownCloud server via the Web interface is easy and convenient, as you can use any Web browser on any operating system without installing special client software. 
 However, the ownCloud iOS app offers some advantages over the Web interface:
@@ -115,6 +116,15 @@ Once you have enabled one or both of the Instant Upload options, a new folder, c
 If you click on it, you will see all of the photos and videos which have been automatically uploaded from your iPhone to your ownCloud account, as in the image below.
 
 image:ios-instant-upload-file-list.png[Photos and videos which were automatically uploaded to ownCloud by Instant Upload.]
+
+== Clear the Cache
+
+image:ios-clear-cache.png[Clear the ownCloud account cache on iOS.]
+
+If you need to delete all the local files within the current account, or a specific account if you have more than one enabled, then click the "_More Options icon_"^1^ next to the relevant account.
+Next, click the second menu item, btn:[Clear cache] ^2^, and the local files within that account will be cleared.
+
+IMPORTANT: Available Offline files *won't* be deleted.
 
 [[sharing-files-1]]
 == Sharing Files
