@@ -48,6 +48,6 @@ pdf:
 		-a revnumber=$(VERSION) \
 		-a revdate=$(REVDATE) \
 		--base-dir $(CURDIR) \
-		--out-file ios/$(OUTPUT_VERSION)ownCloud_iOS_Application_Manual.pdf \
+		--out-file ios/$(OUTPUT_VERSION)ownCloud_iOS_App_Manual.pdf \
 		--destination-dir $(BUILD_DIR) \
-		books/ios.adoc
+		books/ownCloud_iOS_App_Manual.adoc
