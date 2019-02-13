@@ -112,10 +112,6 @@
 #endif
         _backgroundView = [[PassthroughView alloc] initWithFrame:bgFrame];
         _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-#ifdef SHARE_IN
-#else
-		_backgroundView.backgroundColor = [UIColor colorOfNavigationBar];
-#endif
         _backgroundView.alpha = 0.6;
         [self.navigationBar addSubview:_backgroundView];
         [self.navigationBar sendSubviewToBack:_backgroundView];
