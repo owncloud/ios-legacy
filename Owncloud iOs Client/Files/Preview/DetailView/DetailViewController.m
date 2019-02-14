@@ -47,7 +47,7 @@
 
 
 #define k_delta_width_for_split_transition 320.0
-#define k_delta_height_toolBar_split_transition 64.0
+#define k_delta_height_toolBar_split_transition 70.0
 
 @interface DetailViewController ()
 
