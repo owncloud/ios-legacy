@@ -107,8 +107,8 @@
         [self copyFileOnTheFileSystemByOrigin:url.path andDestiny:temp];
         
         [self createUploadOfflineWithFile:file fromPath:url.path withUser:file.userId];
-        
-        [self removeItemByUrl:url];
+
+        [self performSelector:@selector(removeItemByUrl:) withObject:url afterDelay:0.5];
         
     }else{
         //Export / Move
