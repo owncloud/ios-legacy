@@ -1140,7 +1140,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             }
         }
         
-        AVPlayer *player;
+        AVPlayer *player = nil;
         UIImage *image = nil;
         
         if (self.file.isDownload) {
