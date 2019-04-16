@@ -1141,7 +1141,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         }
         
         AVPlayer *player;
-        UIImage *image;
+        UIImage *image = nil;
         
         if (self.file.isDownload) {
             
@@ -1187,8 +1187,7 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         
 
         if (image != nil) {
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,300,300)];
-            imageView.image = image;
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
             imageView.translatesAutoresizingMaskIntoConstraints = NO;
             
             [imageView setContentMode:UIViewContentModeScaleAspectFit];
