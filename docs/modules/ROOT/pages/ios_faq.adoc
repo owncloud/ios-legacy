@@ -1,4 +1,5 @@
 = iOS App FAQ
+:toc: right
 
 [[enabling-background-instant-upload-requires-the-owncloud-client-to-have-access-to-location-services]]
 == Enabling Background Instant Upload Requires the ownCloud Client to Have Access to Location Services
